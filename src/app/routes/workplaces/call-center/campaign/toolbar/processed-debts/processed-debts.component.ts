@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-call-center-toolbar-processed-debts',
@@ -6,5 +6,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProcessedDebtsComponent {
+  @Output() close = new EventEmitter<void>();
 
+  onClose(): void {
+    this.close.emit();
+  }
 }

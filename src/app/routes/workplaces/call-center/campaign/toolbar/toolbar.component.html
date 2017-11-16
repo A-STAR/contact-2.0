@@ -1,3 +1,6 @@
-<app-call-center-toolbar-processed-debts></app-call-center-toolbar-processed-debts>
+<app-call-center-toolbar-processed-debts
+  *ngIf="isDialog('processed-debts')"
+  (close)="onCloseDialog()"
+></app-call-center-toolbar-processed-debts>
 
 <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>

@@ -5,12 +5,14 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 import { CampaignService } from '../campaign.service';
 import { DebtService } from '../../../../../core/debt/debt.service';
 
+import { DialogFunctions } from '../../../../../core/dialog';
+
 @Component({
   selector: 'app-call-center-toolbar',
   templateUrl: 'toolbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToolbarComponent {
+export class ToolbarComponent extends DialogFunctions {
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON,
@@ -37,14 +39,18 @@ export class ToolbarComponent {
       type: ToolbarItemTypeEnum.BUTTON,
       icon: 'fa fa-book',
       label: 'Информация о предыдущих долгах',
-      action: () => console.log(),
+      action: () => this.setDialog('processed-debts'),
     },
   ];
+
+  dialog: 'processed-debts' = null;
 
   constructor(
     private campaignService: CampaignService,
     private debtService: DebtService,
-  ) {}
+  ) {
+    super();
+  }
 
   private openDebtorCard(): void {
     this.campaignService.campaignDebt$
