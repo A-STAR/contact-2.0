@@ -114,7 +114,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
     this.setDialog();
-    this.debtorService.navigateToRegistration(this.person.id, 1, contactType, contactId);
+    this.debtorService.navigateToRegistration({ personId: this.person.id, personRole: 1, contactType, contactId });
   }
 
   private getControls(canEdit: boolean): IDynamicFormItem[] {

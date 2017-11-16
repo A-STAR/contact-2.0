@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { IAddress, IDebt, IPhone } from './debt.interface';
+import { IAddress, IContactRegistrationParams, IDebt, IPhone } from './debt.interface';
 
 import { ContentTabService } from '../../shared/components/content-tabstrip/tab/content-tab.service';
 import { UserPermissionsService } from '../user/permissions/user-permissions.service';
@@ -68,15 +68,16 @@ export class DebtService {
     return debt && ![6, 7, 8, 17].includes(debt.statusCode);
   }
 
-  navigateToRegistration(
-    debtId: number,
-    personId: number,
-    personRole: number,
-    contactType: number,
-    contactId: number,
-  ): void {
-    this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
-    const url = `/workplaces/contact-registration/${debtId}/${contactType}/${contactId}`;
-    this.router.navigate([ url ], { queryParams: { personId, personRole } });
+  navigateToDebtorCard(debtId: number, personId: number): void {
+    this.contentTabService.removeTabByPath(`\/workplaces\/debt-processing\/(.+)`);
+    const url = `/workplaces/debt-processing/${personId}/${debtId}`;
+    this.router.navigate([ url ]);
+  }
+
+  navigateToRegistration(params: Partial<IContactRegistrationParams>): void {
+    const { debtId, contactType, contactId, ...queryParams } = params;
+    this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration\/(.+)`);
+    const url = `/workplaces/contact-registration/${Number(debtId)}/${Number(contactType)}/${Number(contactId)}`;
+    this.router.navigate([ url ], { queryParams });
   }
 }

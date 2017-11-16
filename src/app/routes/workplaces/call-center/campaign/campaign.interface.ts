@@ -26,6 +26,8 @@ export interface ICampaignDebt {
   nextCallDateTime: string | Date;
   personComment: string;
   personFirstName: string;
+  personFullName: string;
+  personId: number;
   personLastName: string;
   personMiddleName: string;
   portfolioName: string;

@@ -79,6 +79,7 @@ export class CampaignService {
       personComment: 'I am a person comment.',
       personFirstName: 'John',
       personFullName: 'John Norman Smith',
+      personId: 1,
       personLastName: 'Smith',
       personMiddleName: 'Norman',
       portfolioName: 'Portfolio Name',
