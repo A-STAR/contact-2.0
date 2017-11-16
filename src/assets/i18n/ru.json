@@ -732,9 +732,6 @@
     },
     "attributesTab": {
       "title": "Атрибуты"
-    },
-    "contactLogTab": {
-      "title": "Лог контактов"
     }
   },
   "person": {
@@ -898,6 +895,23 @@
       "autoComment": {
         "title": "Автоматический комментарий"
       }
+    },
+    "campaigns": {
+      "grid": {
+        "id": "ID",
+        "name": "Название",
+        "groupName": "Группа",
+        "statusCode": "Статус",
+        "typeCode": "Тип данных",
+        "startDateTime": "Дата запуска",
+        "finishDateTime": "Дата остановки",
+        "comment": "Комментарий",
+        "timeZoneUsed": "Учет GMT"
+      },
+      "tabs": {
+        "participants": "Участники",
+        "statistics": "Статистика"
+      }
     }
   },
   "notifications": {
@@ -1040,6 +1054,11 @@
         "educationCode": "Образование",
         "linkTypeCode": "Тип",
         "comment": "Комментарий"
+      }
+    },
+    "contactLog": {
+      "dialog": {
+        "title": "История контактов"
       }
     },
     "contactProperty": {
@@ -1410,44 +1429,6 @@
         "comment": "Комментарий"
       }
     },
-    "contactLog": {
-      "dialog": {
-        "title": "История контактов"
-      },
-      "card": {
-        "fullName": "Должник",
-        "contract": "Договор",
-        "contactNumber": "Номер договора",
-        "contactDateTime": "Дата контакта",
-        "contactType": "Тип контакта",
-        "userFullName": "Оператор",
-        "resultName": "Результат",
-        "contactData": "Контактный телефон/адрес",
-        "promiseDate": "Обещанная дата",
-        "promiseAmount": "Обещанная сумма",
-        "comment": "Комментарий",
-        "personRole": "Тип лица",
-        "sentDateTime": "Дата отправки",
-        "status": "Статус",
-        "contactPhone": "Контактный телефон",
-        "text": "Текст сообщения",
-        "startDateTime": "Dispatch date"
-      },
-      "grid": {
-        "contactId": "Ид контакта",
-        "contactNumber": "Номер договора",
-        "debtId": "Ид долга",
-        "creditName": "Название продукта",
-        "createDateTime": "Дата создания",
-        "contactType": "Тип контакта",
-        "fullName": "ФИО",
-        "personRole": "Роль",
-        "contactDateTime": "Дата контакта",
-        "userFullName": "Оператор",
-        "resultName": "Результат",
-        "promiseDate": "Обещанная дата"
-      }
-    },
     "operator": {
       "dialog": {
         "title": "Выбор оператора"
@@ -1577,7 +1558,7 @@
     "employment": {
       "gen": { "singular": "истории трудоустройства", "plural": "записей истории трудоустройства" }
     },
-    "componentLog": {
+    "debtComponents": {
       "gen": { "singular": "компонента долга", "plural": "компонентов долга" }
     },
     "sms": {
@@ -1588,9 +1569,6 @@
     },
     "property": {
       "gen": { "singular": "объекта имущества", "plural": "списка имущества" }
-    },
-    "contactLog": {
-      "gen": { "singular": "контакта с дебитором", "plural": "котнактов с дебиторм" }
     },
     "scenarios": {
       "gen": { "singular": "сценария", "plural": "списка сценариев" }
@@ -1776,7 +1754,9 @@
       "unblock": "Разблокировать",
       "undo": "Отменить",
       "upload": "Загрузить",
-      "visit": "Выезд"
+      "visit": "Выезд",
+      "start": "Запустить",
+      "stop": "Остановить"
     },
     "dateTimeRange": {
       "from": "Начало",

@@ -733,9 +733,6 @@
     },
     "attributesTab": {
       "title": "Attributes"
-    },
-    "contactLogTam": {
-      "title": "Contact log"
     }
   },
   "person": {
@@ -899,6 +896,23 @@
       "autoComment": {
         "title": "Auto Comment"
       }
+    },
+    "campaigns": {
+      "grid": {
+        "id": "ID",
+        "name": "Name",
+        "groupName": "Group",
+        "statusCode": "Status",
+        "typeCode": "Data type",
+        "startDateTime": "Started",
+        "finishDateTime": "Finished",
+        "comment": "Commentary",
+        "timeZoneUsed": "GMT used"
+      },
+      "tabs": {
+        "participants": "Participants",
+        "statistics": "Statistics"
+      }
     }
   },
   "notifications": {
@@ -1041,6 +1055,11 @@
         "educationCode": "Education",
         "linkTypeCode": "Type",
         "comment": "Comment"
+      }
+    },
+    "contactLog": {
+      "dialog": {
+        "title": "Contact Log"
       }
     },
     "contactProperty": {
@@ -1411,44 +1430,6 @@
         "comment": "Comment"
       }
     },
-    "contactLog": {
-      "dialog": {
-        "title": "Contact Log"
-      },
-      "card": {
-        "fullName": "Dedtor",
-        "contract": "Order",
-        "contactNumber": "Order number",
-        "contactDateTime": "Contact date",
-        "contactType": "Contact type",
-        "userFullName": "Operator",
-        "resultName": "Result",
-        "contactData": "Phone/address",
-        "promiseDate": "Promise date",
-        "promiseAmount": "Promised amount",
-        "comment": "Comment",
-        "personRole": "Type of person",
-        "sentDateTime": "Sent date",
-        "status": "Status",
-        "contactPhone": "Contact phone",
-        "text": "Message",
-        "startDateTime": "Dispatch date"
-      },
-      "grid": {
-        "contactId": "Contact Id",
-        "contactNumber": "Order number",
-        "debtId": "Debt ID",
-        "creditName": "Credit name",
-        "createDateTime": "Ceate date",
-        "contactType": "Contact type",
-        "fullName": "Contact person name",
-        "personRole": "Person role",
-        "contactDateTime": "Contact date",
-        "userFullName": "Operator",
-        "resultName": "Result",
-        "promiseDate": "Promise date"
-      }
-    },
     "operator": {
       "dialog": {
         "title": "Select operator"
@@ -1588,10 +1569,7 @@
       "gen": { "singular": "message template", "plural": "message templates" }
     },
     "property": {
-      "gen": { "singular": "property item", "plural": "property list" }
-    },
-    "contactLog": {
-      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
+      "gen": { "singular": "property", "plural": "property list" }
     },
     "scenarios": {
       "gen": { "singular": "scenario", "plural": "scenarios list" }
@@ -1777,7 +1755,9 @@
       "unblock": "Unblock",
       "undo": "Undo",
       "upload": "Upload",
-      "visit": "Visit"
+      "visit": "Visit",
+      "start": "Start",
+      "stop": "Stop"
     },
     "dateTimeRange": {
       "from": "From",

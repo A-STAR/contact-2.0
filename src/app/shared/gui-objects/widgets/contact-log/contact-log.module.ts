@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 
 import { ContactLogDialogModule } from './dialog/contact-log-dialog.module';
 import { ContactLogGridModule } from './grid/contact-log-grid.module';
-import { ContactLogCardModule } from './card/contact-log-card.module';
 
 import { ContactLogService } from './contact-log.service';
 
@@ -14,7 +13,6 @@ import { ContactLogService } from './contact-log.service';
   exports: [
     ContactLogDialogModule,
     ContactLogGridModule,
-    ContactLogCardModule,
   ],
   providers: [
     ContactLogService,

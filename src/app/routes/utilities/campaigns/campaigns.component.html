@@ -1,0 +1,20 @@
+<app-grid
+  class="flat"
+  [styles]="{ height: '250px' }"
+  [columns]="columns"
+  [columnTranslationKey]="'utilities.campaigns'"
+  [rows]="campaigns | async"
+  selectionType="multiClick"
+  (onSelect)="onSelectCampaign($event)">
+</app-grid>
+<app-toolbar-2 class="bordered" [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-tabstrip [disableScrollbar]="true" [inverse]="true">
+  <app-tab [title]="'utilities.campaigns.tabs.participants'" [closable]="false">
+    <app-participants></app-participants>
+  </app-tab>
+  <app-tab [title]="'utilities.campaigns.tabs.statistics'" [closable]="false">
+    <app-statistics></app-statistics>
+  </app-tab>
+</app-tabstrip>

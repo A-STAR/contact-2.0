@@ -21,7 +21,6 @@ import { DebtorPaymentComponent } from './debtor/payment/payment.component';
 import { DebtorPhoneComponent } from './debtor/phone/phone.component';
 import { DebtorPromiseComponent } from './debtor/promise/promise.component';
 import { DebtorPropertyComponent } from './debtor/property/property.component';
-import { ContactLogComponent } from './debtor/contact-log/contact-log.component';
 
 const routes: Routes = [
   { path: '', component: DebtProcessingComponent },
@@ -38,11 +37,6 @@ const routes: Routes = [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorPropertyComponent },
           { path: ':propertyId', component: DebtorPropertyComponent },
-        ]
-      },
-      { path: 'contactLog', children: [
-          { path: 'create', component: ContactLogComponent },
-          { path: ':contactLogId/contactLogType/:contactLogType', component: ContactLogComponent },
         ]
       },
       { path: 'contact', children: [

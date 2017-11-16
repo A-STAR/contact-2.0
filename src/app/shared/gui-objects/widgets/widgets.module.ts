@@ -45,7 +45,6 @@ import { PropertyModule } from './property/property.module';
     PhoneModule,
     PromiseModule,
     PropertyModule,
-    ContactLogModule,
   ],
   exports: [
     AddressModule,
@@ -68,7 +67,6 @@ import { PropertyModule } from './property/property.module';
     PhoneModule,
     PromiseModule,
     PropertyModule,
-    ContactLogModule
   ]
 })
 export class WidgetsModule { }

@@ -14,7 +14,7 @@ export class LayoutComponent {
   titles = {
     ActionsLogComponent: 'ACTIONS_LOG',
     CallCenterComponent: 'CALL_CENTER',
-    CampaignComponent: 'CALL_CENTER',
+    CampaignsComponent: 'CALL_CENTER',
     ConstantsComponent: 'CONSTANTS',
     ContactRegistrationComponent: 'CONTACT_REGISTRATION',
     ContactPropertiesComponent: 'CONTACT_TREES',
@@ -26,8 +26,7 @@ export class LayoutComponent {
     DebtorComponent: 'DEBTOR_CARD',
     DebtorActionLogComponent: 'DEBTOR_ACTION_LOG',
     DebtorAddressComponent: 'DEBTOR_ADDRESS',
-    DebtorContactsComponent: 'DEBTOR_DEBT_CONTACTS',
-    DebtorContactLogComponent: 'DEBTOR_CONTACT_LOG',
+    DebtorContactsComponent: 'DEBTOR_CONTACTS',
     DebtorDebtComponent: 'DEBTOR_DEBT',
     DebtorDebtComponentComponent: 'DEBTOR_DEBT_COMPONENT',
     DebtorDocumentComponent: 'DEBTOR_DOCUMENT',

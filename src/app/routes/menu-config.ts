@@ -94,7 +94,7 @@ export const menuConfig: IMenuConfig = {
   },
   callCampaign: {
     text: 'sidebar.nav.menu.CAMPAIGNS',
-    link: '/utilities/capmaigns',
+    link: '/utilities/campaigns',
     icon: 'icon-rocket'
   },
   schedule: {

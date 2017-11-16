@@ -39,6 +39,8 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT]: 'registerContact',
     [ToolbarItemTypeEnum.BUTTON_VISIT]: 'visit',
     [ToolbarItemTypeEnum.BUTTON_COPY]: 'copy',
+    [ToolbarItemTypeEnum.BUTTON_START]: 'start',
+    [ToolbarItemTypeEnum.BUTTON_STOP]: 'stop',
   };
 
   constructor(
