@@ -274,7 +274,6 @@
           "debtId": "Debt Id",
           "fullName": "Full Name/Company Name",
           "contract": "Contract",
-          "account": "Account",
           "phoneNumber": "Phone Number",
           "fullAddress": "Address",
           "docNumber": "Number",
