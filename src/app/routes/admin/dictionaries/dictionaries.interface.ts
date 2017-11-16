@@ -1,14 +1,10 @@
-import { ILabeledValue } from '../converter/value-converter.interface';
+import { ILabeledValue } from '../../../core/converter/value-converter.interface';
 
 export type IDictionaryValue = number | Array<ILabeledValue>;
 
 export interface IDictionaryItem {
   code: number;
   name: string;
-}
-
-export interface ITypeCodeItem {
-  typeCode: number;
 }
 
 export interface IDictionary {

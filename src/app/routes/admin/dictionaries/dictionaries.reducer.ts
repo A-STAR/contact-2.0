@@ -1,5 +1,5 @@
 import { IDictionariesState } from './dictionaries.interface';
-import { UnsafeAction } from '../../core/state/state.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DictionariesService } from './dictionaries.service';
 

@@ -6,16 +6,16 @@ import 'rxjs/add/observable/empty';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
-import { IAppState } from '../state/state.interface';
+import { IAppState } from '../../../core/state/state.interface';
 import { DictionariesDialogActionEnum, IDictionary, ITerm } from './dictionaries.interface';
-import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
-import { UnsafeAction } from '../../core/state/state.interface';
+import { IEntityTranslation } from '../../../core/entity/translations/entity-translations.interface';
+import { UnsafeAction } from '../../../core/state/state.interface';
 
-import { DataService } from '../data/data.service';
+import { DataService } from '../../../core/data/data.service';
 import { DictionariesService } from './dictionaries.service';
-import { EntityTranslationsService } from '../entity/translations/entity-translations.service';
-import { NotificationsService } from '../notifications/notifications.service';
-import { UserDictionariesService } from '../user/dictionaries/user-dictionaries.service';
+import { EntityTranslationsService } from '../../../core/entity/translations/entity-translations.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 
 @Injectable()
 export class DictionariesEffects {
@@ -300,10 +300,10 @@ export class DictionariesEffects {
   deleteTerm$ = this.actions
     .ofType(DictionariesService.TERM_DELETE)
     .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [_, store]: [UnsafeAction, IAppState] = data;
-      const { code } = store.dictionaries.selectedDictionary;
-      return this.deleteTerm(code, store.dictionaries.selectedTerm.id)
+    .switchMap(store => {
+      const [_, state]: [UnsafeAction, IAppState] = store;
+      const { code } = state.dictionaries.selectedDictionary;
+      return this.deleteTerm(code, state.dictionaries.selectedTerm.id)
         .mergeMap(() => [
           {
             type: DictionariesService.TERMS_FETCH

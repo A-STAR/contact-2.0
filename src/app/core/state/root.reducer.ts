@@ -5,7 +5,7 @@ import * as auth from '../auth/auth.reducer';
 import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import * as constants from '../../routes/admin/constants/constants.reducer';
 import * as debtors from '../../routes/workplaces/debtors/debtors.reducer';
-import * as dictionaries from '../dictionaries/dictionaries.reducer';
+import * as dictionaries from '../../routes/admin/dictionaries/dictionaries.reducer';
 import * as entityAttributes from '../entity/attributes/entity-attributes.reducer';
 import * as guiObjects from '../gui-objects/gui-objects.reducer';
 import * as lookup from '../lookup/lookup.reducer';
