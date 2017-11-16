@@ -29,7 +29,6 @@ export class DebtorService {
   }
 
   navigateToRegistration(params: Partial<IContactRegistrationParams>): void {
-    const debtId = this._debt$.value.id;
     this.debtService.navigateToRegistration({
       ...params,
       debtId: this._debt$.value.id
