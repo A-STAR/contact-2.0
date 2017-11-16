@@ -55,6 +55,12 @@ export class ToolbarComponent {
   private registerSpecial(): void {
     this.campaignService.campaignDebt$
       .take(1)
-      .subscribe(debt => this.debtService.navigateToRegistration(debt.debtId, debt.personId, 1, 7, 0, this.campaignService.campaignId));
+      .subscribe(debt => this.debtService.navigateToRegistration({
+        debtId: debt.debtId,
+        personId: debt.personId,
+        personRole: 1,
+        contactType: 7,
+        campaignId: this.campaignService.campaignId
+      }));
   }
 }
