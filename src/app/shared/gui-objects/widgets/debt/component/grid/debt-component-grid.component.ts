@@ -24,10 +24,14 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
 })
 export class DebtComponentGridComponent implements OnDestroy {
   @Input() action: 'edit' = 'edit';
-  @Input() forCallCenter = false;
+  @Input('debtId') set debtId(debtId: number) {
+    this.debtId$.next(debtId);
+    this.cdRef.markForCheck();
+  }
   @Input() displayToolbar = true;
+  @Input() forCallCenter = false;
 
-  private debtId = (this.route.params as any).value.debtId || null;
+  private debtId$ = new BehaviorSubject<number>(null);
 
   private selectedDebtComponentId$ = new BehaviorSubject<number>(null);
 
@@ -100,12 +104,18 @@ export class DebtComponentGridComponent implements OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.fetchSubscription = this.canViewDebtComponent$.subscribe(hasPermission => {
-      if (hasPermission) {
+    this.fetchSubscription = Observable.combineLatest(
+      this.canViewDebtComponent$,
+      this.debtId$,
+    )
+    .subscribe(([ canView, personId ]) => {
+      if (!canView) {
+        this.notificationsService.error('errors.default.read.403').entity('entities.debtComponents.gen.plural').dispatch();
+        this.clear();
+      } else if (personId) {
         this.fetch();
       } else {
         this.clear();
-        this.notificationsService.error('errors.default.read.403').entity('entities.debtComponents.gen.plural').dispatch();
       }
     });
 
@@ -136,7 +146,7 @@ export class DebtComponentGridComponent implements OnDestroy {
   }
 
   onRemoveSubmit(): void {
-    this.debtComponentService.delete(this.debtId, this.selectedDebtComponentId$.value)
+    this.debtComponentService.delete(this.debtId$.value, this.selectedDebtComponentId$.value)
       .subscribe(() => {
         this.fetch();
         this.dialog$.next(null);
@@ -159,7 +169,7 @@ export class DebtComponentGridComponent implements OnDestroy {
   }
 
   private fetch(): void {
-    this.debtComponentService.fetchAll(this.debtId, this.forCallCenter)
+    this.debtComponentService.fetchAll(this.debtId$.value, this.forCallCenter)
       .subscribe(components => {
         this.components = components;
         this.cdRef.markForCheck();
