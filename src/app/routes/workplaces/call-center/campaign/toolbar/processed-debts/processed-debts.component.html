@@ -3,7 +3,13 @@
     <h3>Информация о предыдущих долгах </h3>
   </div>
 
-  123
+  <app-grid
+    selectionType="single"
+    columnTranslationKey="constants"
+    [columns]="columns"
+    [rows]="rows"
+    [styles]="{ height: '320px' }"
+  ></app-grid>
 
   <div dialog-footer>
     <app-button type="close" (click)="onClose()"></app-button>

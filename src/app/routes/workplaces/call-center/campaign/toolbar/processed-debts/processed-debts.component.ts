@@ -8,6 +8,10 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angul
 export class ProcessedDebtsComponent {
   @Output() close = new EventEmitter<void>();
 
+  columns = [];
+
+  rows = [];
+
   onClose(): void {
     this.close.emit();
   }
