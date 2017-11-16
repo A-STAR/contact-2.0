@@ -31,8 +31,8 @@ export class DebtGroupAddComponent extends DialogFunctions {
   onSelect(group: IEntityGroup): void {
     this.debtGroupService.addToGroup(this.debts, group)
       .subscribe(result => {
-        this.count = result.count;
-        this.successCount = result.successCount;
+        this.count = result.massInfo.total;
+        this.successCount = result.massInfo.processed;
         this.setDialog('addResult');
         this.cdRef.markForCheck();
       });
