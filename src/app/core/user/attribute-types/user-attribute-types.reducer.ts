@@ -4,7 +4,7 @@ import { UnsafeAction } from '../../../core/state/state.interface';
 import { UserAttributeTypesService } from './user-attribute-types.service';
 
 export const defaultState: IUserAttributeTypesState = {
-  attributeTypes: null
+  attributeTypes: {}
 };
 
 export function reducer(
@@ -22,7 +22,7 @@ export function reducer(
           ...state.attributeTypes,
           [key]: {
             status: UserAttributeTypeStatusEnum.PENDING,
-            attributeTypes: state.attributeTypes && state.attributeTypes[key] ? state.attributeTypes[key].attributeTypes : [],
+            attributeTypes: state.attributeTypes[key] ? state.attributeTypes[key].attributeTypes : [],
           },
         }
       };
@@ -52,7 +52,7 @@ export function reducer(
           ...state.attributeTypes,
           [key]: {
             status: UserAttributeTypeStatusEnum.ERROR,
-            attributeTypes: state.attributeTypes && state.attributeTypes[key] ? state.attributeTypes[key].attributeTypes : [],
+            attributeTypes: state.attributeTypes[key] ? state.attributeTypes[key].attributeTypes : [],
           }
         }
       };

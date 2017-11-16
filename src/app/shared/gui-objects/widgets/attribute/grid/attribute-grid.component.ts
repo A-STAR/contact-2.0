@@ -90,14 +90,14 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   ngOnInit(): void {
     Observable.combineLatest(
-      this.userDictionariesService
-        .getDictionariesAsOptions([
+      this.userDictionariesService.getDictionariesAsOptions([
           UserDictionariesService.DICTIONARY_PROPERTY_TYPE,
           UserDictionariesService.DICTIONARY_ENTITY_TYPE,
         ]),
       this.userConstantsService.get('AttributeType.Entity.List'),
       this.userPermissionsService.has('ATTRIBUTE_TYPE_VIEW')
     )
+    .take(1)
     .subscribe(([ dictionaries, constant, canView ]) => {
       this.initTreeTypeSelect(dictionaries, constant);
       this.initTreeSubtypeSelect(dictionaries);
