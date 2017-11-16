@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ICampaignDebt } from '../campaign.interface';
-
 import { CampaignService } from '../campaign.service';
 
 @Component({

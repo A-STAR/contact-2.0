@@ -11,7 +11,7 @@ export class ToolbarComponent {
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON,
-      icon: 'fa fa-user',
+      icon: 'fa fa-newspaper-o',
       label: 'Открытие карточки должника',
       action: () => console.log(),
     },
