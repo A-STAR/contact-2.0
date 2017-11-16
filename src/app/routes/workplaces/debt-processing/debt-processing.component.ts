@@ -1,16 +1,16 @@
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { IDebt } from './debt-processing.interface';
 import { IAGridResponse, IAGridAction } from '../../../shared/components/grid2/grid2.interface';
 import { IContextMenuItem } from '../../../shared/components/grid2/grid2.interface';
+import { IActionGridDialogData } from '../../../shared/components/action-grid/action-grid.interface';
 
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtProcessingService } from './debt-processing.service';
 import { DebtResponsibleService } from '../../../shared/gui-objects/widgets/debt-responsible/debt-responsible.service';
-import { DebtGroupService } from '../../../shared/gui-objects/widgets/debt-group/debt-group.service';
+import { EntityGroupService } from '../../../shared/gui-objects/widgets/entity-group/entity-group.service';
 
 import { ActionGridComponent } from '../../../shared/components/action-grid/action-grid.component';
 
@@ -45,9 +45,13 @@ export class DebtProcessingComponent extends DialogFunctions {
         .map(([ canClear, selected ]) => canClear && !!selected && selected.length > 0),
     },
     {
-      name: DebtGroupService.ACTION_DEBT_GROUP_ADD,
-      enabled: Observable.combineLatest(this.debtGroupService.canAdd$, this.selectedDebts$)
-        .map(([ canAdd, selected ]) => canAdd && !!selected && selected.length > 0)
+      name: EntityGroupService.ACTION_ENTITY_GROUP_ADD,
+      enabled: Observable.combineLatest(this.entityGroupService.getCanAdd$(this.entityTypeId), this.selectedDebts$)
+        .map(([ canAdd, selected ]) => canAdd && !!selected && selected.length > 0),
+      action: (action: IAGridAction) =>
+        Object.assign(action.action, {
+          addOptions: [ { name: 'ids', value: this.selectedDebts$.value.map(debt => debt.debtId) } ]
+        })
     }
   ];
 
@@ -56,8 +60,9 @@ export class DebtProcessingComponent extends DialogFunctions {
     private contentTabService: ContentTabService,
     private debtProcessingService: DebtProcessingService,
     private debtResponsibleService: DebtResponsibleService,
-    private debtGroupService: DebtGroupService,
+    private entityGroupService: EntityGroupService,
     private router: Router,
+    @Inject('entityTypeId') private entityTypeId: number,
   ) {
     super();
   }
@@ -84,7 +89,7 @@ export class DebtProcessingComponent extends DialogFunctions {
     this.selectedDebts$.next(selectedDebts);
   }
 
-  onAction({ action, params }: IAGridAction): void {
+  onAction({ action: { action }, params }: IActionGridDialogData): void {
     this.dialog = action.action;
     this.cdRef.markForCheck();
   }

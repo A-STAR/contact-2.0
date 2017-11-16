@@ -10,12 +10,6 @@
   (close)="onCloseDialog()">
 </app-debt-responsible-clear>
 
-<app-debt-group-add
-  *ngIf="isDialog('objectAddToGroup')"
-  [debts]="selectedDebts$ | async"
-  (close)="onCloseDialog()">
-</app-debt-group-add>
-
 <app-action-grid
   metadataKey="debtsprocessingall"
   persistenceKey="debtsprocessingall"

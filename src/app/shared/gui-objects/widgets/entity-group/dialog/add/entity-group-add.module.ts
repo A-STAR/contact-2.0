@@ -4,26 +4,26 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
 import { ResultDialogModule } from '../../../../../components/dialog/result/result-dialog.module';
-import { EntityGroupModule } from '../../../entity-group/entity-group.module';
+import { EntityGroupDialogModule } from '../../../entity-group/dialog/entity-group-dialog.module';
 
-import { DebtGroupAddComponent } from './debt-group-add.component';
+import { EntityGroupAddComponent } from './entity-group-add.component';
 
 @NgModule({
   imports: [
     CommonModule,
     DialogModule,
     ResultDialogModule,
-    EntityGroupModule,
+    EntityGroupDialogModule,
     TranslateModule,
   ],
   exports: [
-    DebtGroupAddComponent,
+    EntityGroupAddComponent,
   ],
   declarations: [
-    DebtGroupAddComponent,
+    EntityGroupAddComponent,
   ],
   entryComponents: [
-    DebtGroupAddComponent,
+    EntityGroupAddComponent,
   ]
 })
-export class DebtGroupAddModule { }
+export class EntityGroupAddModule { }
