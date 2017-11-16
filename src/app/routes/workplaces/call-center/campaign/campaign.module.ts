@@ -10,6 +10,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { PhonesModule } from './phones/phones.module';
 import { PromisesModule } from './promises/promises.module';
 import { SharedModule } from '../../../../shared/shared.module';
+import { ToolbarModule } from './toolbar/toolbar.module';
 
 import { CampaignComponent } from './campaign.component';
 
@@ -29,6 +30,7 @@ const routes: Routes = [
     PromisesModule,
     RouterModule.forChild(routes),
     SharedModule,
+    ToolbarModule,
   ],
   exports: [
     RouterModule,
