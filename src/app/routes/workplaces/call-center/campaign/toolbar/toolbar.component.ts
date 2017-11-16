@@ -2,6 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { CampaignService } from '../campaign.service';
+import { DebtService } from '../../../../../core/debt/debt.service';
+
 @Component({
   selector: 'app-call-center-toolbar',
   templateUrl: 'toolbar.component.html',
@@ -13,7 +16,7 @@ export class ToolbarComponent {
       type: ToolbarItemTypeEnum.BUTTON,
       icon: 'fa fa-newspaper-o',
       label: 'Открытие карточки должника',
-      action: () => console.log(),
+      action: () => this.openDebtorCard(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
@@ -37,4 +40,15 @@ export class ToolbarComponent {
       action: () => console.log(),
     },
   ];
+
+  constructor(
+    private campaignService: CampaignService,
+    private debtService: DebtService,
+  ) {}
+
+  private openDebtorCard(): void {
+    this.campaignService.campaignDebt$
+      .take(1)
+      .subscribe(debt => this.debtService.navigateToDebtorCard(debt.personId, debt.debtId));
+  }
 }
