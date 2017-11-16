@@ -62,7 +62,28 @@ export class CampaignsService {
   }
 
   private readCampaigns(): Observable<ICampaign[]> {
-    return this.dataService.readAll(this.baseUrl);
+    return (this.dataService.readAll(this.baseUrl)
+      .catch(() => Observable.of([{
+        id: 1,
+        name: 'Иванов Иван Иванович',
+        groupName: 'Some group name',
+        statusCode: 1,
+        typeCode: 1,
+        startDateTime: new Date(),
+        finishDateTime: new Date(),
+        comment: 'bla bla bla',
+        timeZoneUsed: true
+      }, {
+        id: 1,
+        name: 'Иванов Иван Иванович',
+        groupName: 'Some group name',
+        statusCode: 2,
+        typeCode: 2,
+        startDateTime: new Date(),
+        finishDateTime: new Date(),
+        comment: 'bla bla bla',
+        timeZoneUsed: false
+      }])) as Observable<ICampaign[]>);
   }
-
 }
+
