@@ -1,5 +1,5 @@
 <div class="toolbar">
-  <div class="toolbar-item" *ngFor="let item of items">
+  <div class="toolbar-item" [ngClass]="getItemCls(item)" *ngFor="let item of items">
 
     <!-- Button -->
     <ng-container *ngIf="isButton(item)">

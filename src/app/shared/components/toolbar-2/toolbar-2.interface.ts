@@ -31,6 +31,7 @@ export interface IToolbarElement {
   action?: IToolbarAction | Action;
   enabled?: Observable<boolean>;
   label?: string;
+  align?: 'right';
 }
 
 export interface IToolbarButton extends IToolbarElement {
