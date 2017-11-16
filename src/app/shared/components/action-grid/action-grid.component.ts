@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 
 import { IActionGridDialogParams } from './action-grid.interface';
-import { IAGridAction, IAGridRequestParams } from '../grid2/grid2.interface';
+import { IAGridAction, IAGridRequestParams, IContextMenuItem, IAGridSelected } from '../grid2/grid2.interface';
 
 import { Grid2Component } from '../../components/grid2/grid2.component';
 
@@ -31,9 +31,12 @@ export class ActionGridComponent<T> extends DialogFunctions {
   @Input() ngClass: string;
   @Input() rows: T[] = [];
   @Input() rowCount: number;
+  @Input() contextMenuItems: IContextMenuItem;
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
+  @Output() select = new EventEmitter<IAGridSelected>();
+  @Output() action = new EventEmitter<IAGridAction>();
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
@@ -65,6 +68,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
       ...acc,
       [param]: params.node.data[param]
     }), {});
+    this.action.emit({ action, params });
     this.cdRef.markForCheck();
   }
 
@@ -74,5 +78,9 @@ export class ActionGridComponent<T> extends DialogFunctions {
 
   onDblClick(row: T): void {
     this.dblClick.emit(row);
+  }
+
+  onSelect(selected: IAGridSelected): void {
+    this.select.emit(selected);
   }
 }
