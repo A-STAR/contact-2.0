@@ -3,7 +3,7 @@ import { GridComponent } from '../../../../shared/components/grid/grid.component
 import { Observable } from 'rxjs/Observable';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
-import { ICampaignsStatistic, IUserStatistic } from '../campaigns.interface';
+import { ICampaignsStatistic, IUserStatistic, ICampainAgrigatedStatistic } from '../campaigns.interface';
 
 
 import { CampaignsService } from '../campaigns.service';
@@ -21,7 +21,7 @@ export class StatisticsComponent implements OnInit {
   @ViewChild(GridComponent) grid: GridComponent;
 
   campaignStatistics: Observable<IUserStatistic[]>;
-  campaignArgigateStatistic: Observable<any>;
+  campaignArgigateStatistic: Observable<ICampainAgrigatedStatistic>;
 
   columns: Array<IGridColumn> = [
     { prop: 'userFullName', minWidth: 250 },
@@ -57,8 +57,8 @@ export class StatisticsComponent implements OnInit {
           }
           return this.campaignsService.fetchCampaignStat(campain.id);
         })
-        .do(data => data
-          ? this.campaignArgigateStatistic = Observable.of(data)
+        .do(data => data && data.agridatedData
+          ? this.campaignArgigateStatistic = Observable.of(data.agridatedData)
           : this.campaignArgigateStatistic = Observable.of(null) )
         .map(data => data && data.userStatistic && data.userStatistic.length
           ? data.userStatistic

@@ -22,6 +22,10 @@ export interface ICampaign {
 
 export interface ICampaignsStatistic {
   userStatistic: IUserStatistic[];
+  agridatedData: ICampainAgrigatedStatistic;
+}
+
+export interface ICampainAgrigatedStatistic {
   untreated: number;
   successProcessingSum: number;
   unsuccessProcessingSum: number;

@@ -58,14 +58,16 @@ export class CampaignsService {
     // const ind = this.mockNumder++ % 2;
     return Observable.of({
       userStatistic,
-      untreated: 10,
-      successProcessingSum: 2,
-      unsuccessProcessingSum: 5,
-      contacSum: 7,
-      SMSSum: 3,
-      refusalSum: 100,
-      promiseSum: 1000,
-      promiseAmountSum: 1000000
+      agridatedData: {
+        untreated: 10,
+        successProcessingSum: 2,
+        unsuccessProcessingSum: 5,
+        contacSum: 7,
+        SMSSum: 3,
+        refusalSum: 100,
+        promiseSum: 1000,
+        promiseAmountSum: 1000000
+      }
     });
 
     // return this.dataService.read(this.baseUrl)
