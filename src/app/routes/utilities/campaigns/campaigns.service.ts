@@ -98,14 +98,50 @@ export class CampaignsService {
     return this.selectedCampaign
       .take(1)
       .switchMap(selectedCampaign => selectedCampaign ? this.readParticipants(selectedCampaign.id) : Observable.of([]))
+      // add id property for grids
+      .map(participants => this.formatParticipantsForGrids(participants))
       .catch(
       this.notificationsService.error('errors.default.read')
         .entity('entities.participant.gen.plural').dispatchCallback()
       );
   }
 
+  fetchNotAddedParticipants(): Observable<IParticipant[]> {
+    return this.selectedCampaign
+      .take(1)
+      .switchMap(selectedCampaign => this.readNotAddedParticipants(selectedCampaign.id))
+      // add id property for grids
+      .map(participants => this.formatParticipantsForGrids(participants))
+      .catch(
+      this.notificationsService.error('errors.default.read')
+        .entity('entities.participant.gen.plural').dispatchCallback()
+      );
+  }
+
+  addParticipants(participantIds: number[]): Observable<any> {
+    return this.selectedCampaign
+      .take(1)
+      .switchMap(selectedCampaign => this.createParticipants(selectedCampaign.id, participantIds))
+      .catch(this.notificationsService.error('errors.default.create')
+        .entity('entities.participant.gen.plural').dispatchCallback()
+      );
+  }
+
+  removeParticipants(participantIds: number[]): Observable<any> {
+    return this.selectedCampaign
+      .take(1)
+      .switchMap(selectedCampaign => this.deleteParticipants(selectedCampaign.id, participantIds))
+      .catch(this.notificationsService.error('errors.default.delete')
+        .entity('entities.participant.gen.plural').dispatchCallback()
+      );
+  }
+
   private readParticipants(campaignId: number): Observable<IParticipant[]> {
     return this.dataService.readAll(`${this.baseUrl}/{campaignId}/users`, { campaignId });
+  }
+
+  private readNotAddedParticipants(campaignId: number): Observable<IParticipant[]> {
+    return this.dataService.readAll(`${this.baseUrl}/{campaignId}/users/notadded`, { campaignId });
   }
 
   private readCampaigns(): Observable<ICampaign[]> {
@@ -118,6 +154,22 @@ export class CampaignsService {
 
   private deleteCampaign(campaignId: number): Observable<any> {
     return this.dataService.delete(`${this.baseUrl}/{campaignId}`, { campaignId });
+  }
+
+  private createParticipants(campaignId: number, participantIds: number[]): Observable<any> {
+    return this.dataService.create(`${this.baseUrl}/{campaignId}/users/?id={userIds}`,
+     { campaignId}, { userIds: participantIds });
+  }
+
+  private deleteParticipants(campaignId: number, participantIds: number[]): Observable<any> {
+    return this.dataService.delete(`${this.baseUrl}/{campaignId}/users/?id={userIds}`,
+     { campaignId, userIds: participantIds });
+  }
+
+  private formatParticipantsForGrids(participants: IParticipant[]): IParticipant[] {
+    return participants.map(participant => {
+      return { ...participant, id: participant.userId };
+    });
   }
 
 }

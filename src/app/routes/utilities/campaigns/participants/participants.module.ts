@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ParticipantsEditComponent } from './participants-edit/participants-edit.component';
+import { ParticipantsAddComponent } from './participants-add/participants-add.component';
 import { ParticipantsComponent } from './participants.component';
 import { SharedModule } from '../../../../shared/shared.module';
 
@@ -9,7 +9,7 @@ import { SharedModule } from '../../../../shared/shared.module';
     CommonModule,
     SharedModule
   ],
-  exports: [ParticipantsEditComponent, ParticipantsComponent],
-  declarations: [ParticipantsEditComponent, ParticipantsComponent]
+  exports: [ParticipantsAddComponent, ParticipantsComponent],
+  declarations: [ParticipantsAddComponent, ParticipantsComponent]
 })
 export class ParticipantsModule { }

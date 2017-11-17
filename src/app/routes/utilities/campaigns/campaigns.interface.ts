@@ -4,7 +4,6 @@ export enum CampaignsDialogActionEnum {
   CAMPAIGN_EDIT,
   CAMPAIGN_REMOVE,
   PARTICIPANT_ADD,
-  PARTICIPANT_EDIT,
   PARTICIPANT_REMOVE
 }
 

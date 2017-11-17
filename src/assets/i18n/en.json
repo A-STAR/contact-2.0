@@ -977,6 +977,15 @@
           "fullName": "Full name",
           "organization": "Department",
           "position": "Position"
+        },
+        "add":{
+          "title": "Add participant",
+          "grid": {
+            "id": "ID",
+            "fullName": "Full name",
+            "organization": "Department",
+            "position": "Position"
+          }
         }
       },
       "tabs": {

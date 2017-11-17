@@ -1,23 +1,29 @@
-import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
-import { IParticipant, ICampaign } from 'app/routes/utilities/campaigns/campaigns.interface';
-import { IGridColumn } from 'app/shared/components/grid/grid.interface';
+import { Component, OnInit, ViewChild, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { IParticipant, ICampaign } from '../campaigns.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { Subscription } from 'rxjs/Subscription';
-import { CampaignsService } from 'app/routes/utilities/campaigns/campaigns.service';
-import { GridComponent } from 'app/shared/components/grid/grid.component';
-import { ChangeDetectorRef } from '@angular/core';
+import { CampaignsService } from '../campaigns.service';
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { Observable } from 'rxjs/Observable';
+import { CampaignsDialogActionEnum } from '../campaigns.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { DialogFunctions } from '../../../../core/dialog/index';
 
 @Component({
   selector: 'app-participants',
   templateUrl: './participants.component.html',
   styleUrls: ['./participants.component.scss'],
 })
-export class ParticipantsComponent implements OnInit, OnDestroy {
+export class ParticipantsComponent extends DialogFunctions implements OnInit, OnDestroy {
   @Input() campaign: Observable<ICampaign>;
   @ViewChild(GridComponent) grid: GridComponent;
 
   participants: IParticipant[];
+  notAddedParticipants: IParticipant[];
   participantsSub: Subscription;
+
+  dialog: string;
 
   columns: Array<IGridColumn> = [
     { prop: 'userId', minWidth: 40 },
@@ -26,8 +32,37 @@ export class ParticipantsComponent implements OnInit, OnDestroy {
     { prop: 'position', minWidth: 100 },
   ];
 
+  hasPermissionToModifyCampaign$ = Observable.combineLatest(
+    this.userPermissionsService.has('CAMPAIGN_EDIT'),
+    this.campaignsService.selectedCampaign
+  ).map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
+    && selectedCampaign.statusCode === 1 || selectedCampaign.statusCode === 3);
+
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      action: () => this.currentDialogAction = CampaignsDialogActionEnum.PARTICIPANT_ADD,
+      enabled: this.hasPermissionToModifyCampaign$
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => this.currentDialogAction = CampaignsDialogActionEnum.PARTICIPANT_REMOVE,
+      enabled: this.hasPermissionToModifyCampaign$
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.fetchParticipants(),
+      enabled: Observable.of(true)
+    }
+  ];
+
+  private currentDialogAction: CampaignsDialogActionEnum = CampaignsDialogActionEnum.NONE;
+
   constructor(private campaignsService: CampaignsService,
-              private cdRef: ChangeDetectorRef) { }
+              private userPermissionsService: UserPermissionsService,
+              private cdRef: ChangeDetectorRef) {
+                super();
+              }
 
   ngOnInit(): void {
     this.participantsSub = this.campaignsService.selectedCampaign
@@ -37,17 +72,44 @@ export class ParticipantsComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
   }
+
   ngOnDestroy(): void {
     if (this.participantsSub) {
       this.participantsSub.unsubscribe();
     }
   }
 
+  get isEntityBeingCreated(): boolean {
+    return this.currentDialogAction === CampaignsDialogActionEnum.PARTICIPANT_ADD;
+  }
+
+  get isEntityBeingRemoved(): boolean {
+    return this.currentDialogAction === CampaignsDialogActionEnum.PARTICIPANT_REMOVE;
+  }
+
   fetchParticipants(): Observable<IParticipant[]> {
     return this.campaignsService.fetchParticipants();
   }
 
-  onSelectParticipant(data: any): void {
+  onSelectParticipant(selectedParticipant: IParticipant): void {
+    this.campaignsService.selectParticipant(selectedParticipant);
+  }
 
+  onRemove(): void {
+    this.campaignsService.removeParticipants(this.grid.selected.map(selected => selected.userId))
+    .switchMap(() => this.campaignsService.fetchCampaigns())
+    .subscribe(() => this.cdRef.markForCheck());
+  }
+
+  onAddSubmit(data: IParticipant[]): void {
+    this.campaignsService.addParticipants(data.map(participant => participant.id))
+      .switchMap(() => this.campaignsService.fetchCampaigns())
+      .subscribe(() => this.cdRef.markForCheck());
+  }
+
+  cancelAction(): void {
+    this.currentDialogAction = CampaignsDialogActionEnum.NONE;
+    this.grid.clearSelection();
+    this.onCloseDialog();
   }
 }
