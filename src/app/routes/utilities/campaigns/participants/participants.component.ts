@@ -47,7 +47,7 @@ export class ParticipantsComponent implements OnInit, OnDestroy {
     return this.campaignsService.fetchParticipants();
   }
 
-  onSelectParticipant(): void {
+  onSelectParticipant(data: any): void {
 
   }
 }
