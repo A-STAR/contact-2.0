@@ -18,11 +18,12 @@ import { RegisterContactModule } from './register-contact/register-contact.modul
 import { DebtorPropertyAttributesModule } from './property-attributes/property-attributes.module';
 import { DebtorAttributesModule } from './attributes/attributes.module';
 import { InformationModule } from './information/information.module';
-
+import { ContactLogModule } from './contact-log/contact-log.module';
 import { DebtorComponent } from './debtor.component';
 
 @NgModule({
   imports: [
+    ContactLogModule,
     DebtorAddressModule,
     DebtorContactsModule,
     DebtorDebtComponentModule,
