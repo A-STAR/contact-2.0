@@ -15,7 +15,7 @@ import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployee } from '../actions-log.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from '../../../../shared/components/toolbar/toolbar.interface';
-import { IDictionaryItem } from '../../../../core/dictionaries/dictionaries.interface';
+import { IDictionaryItem } from '../../dictionaries/dictionaries.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';

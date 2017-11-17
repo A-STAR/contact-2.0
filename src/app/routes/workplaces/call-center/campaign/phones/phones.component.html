@@ -1,6 +1,8 @@
 <app-phone-grid
   [contactType]="1"
-  [debtId]="1"
-  [personId]="1"
+  [debtId]="debtId$ | async"
+  [forCallCenter]="true"
+  [personId]="personId$ | async"
   [personRole]="1"
 ></app-phone-grid>
+

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged } from 'rxjs/operators';
 
-import { IAppState } from '../state/state.interface';
+import { IAppState } from '../../../core/state/state.interface';
 import {
   DictionariesDialogActionEnum,
   IDictionary,

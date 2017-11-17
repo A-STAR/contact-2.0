@@ -132,6 +132,50 @@
         "name": "Name",
         "comment": "Description"
       },
+      "overview": {
+        "info": {
+          "title": "Overview",
+          "shortInfo": "Overview"
+        },
+        "debtor": {
+          "title": "Debtor",
+          "personFullName": "Name",
+          "birthDate": "Birthdate",
+          "docNumber": "Document #",
+          "personComment": "Comments"
+        },
+        "debt": {
+          "bankName": "Bank",
+          "branchCode": "Branch",
+          "contract": "Contract #",
+          "creditEndDate": "Ends On",
+          "creditName": "Product Name",
+          "creditStartDate": "Issued On",
+          "creditTypeCode": "Credit Product Type",
+          "currencyName": "Currency",
+          "debtAmount": "Debt Amount",
+          "debtComment": "Comments",
+          "debtId": "Debt Id",
+          "debtReasonCode": "Debt Reason",
+          "dict1Code": "Dictionary Attribute 1",
+          "dict2Code": "Dictionary Attribute 2",
+          "dict3Code": "Dictionary Attribute 3",
+          "dict4Code": "Dictionary Attribute 4",
+          "dpd": "DPD",
+          "lastCallDateTime": "Latest Call",
+          "lastPayDate": "Latest Payment",
+          "lastPromDate": "Promise Date",
+          "lastPromStatusCode": "Promise Status",
+          "lastVisitDateTime": "Latest Visit",
+          "nextCallDateTime": "Next Call",
+          "portfolioName": "Portfolio",
+          "regionCode": "Region",
+          "startDate": "Start Date",
+          "statusCode": "Status",
+          "title": "Debt",
+          "totalAmount": "Total Amount"
+        }
+      },
       "tabs": {
         "phonesAndAddresses": "Phones and Addresses",
         "debtComponents": "Debt Components",
@@ -230,7 +274,6 @@
           "debtId": "Debt Id",
           "fullName": "Full Name/Company Name",
           "contract": "Contract",
-          "account": "Account",
           "phoneNumber": "Phone Number",
           "fullAddress": "Address",
           "docNumber": "Number",
@@ -898,6 +941,24 @@
       }
     },
     "campaigns": {
+      "create": {
+        "title": "New campaign"
+      },
+      "edit": {
+        "title": "Edit campaign",
+        "name": "Name",
+        "typeCode": "Type code",
+        "groupName": "Group",
+        "comment": "Comment",
+        "timeZoneUsed": "GMT used"
+      },
+      "remove": {
+        "title": "Delete campaign",
+        "confirmMessage": "Are you sure you want to delete campaign {{ name }}?"
+      },
+      "errors": {
+        "view": "Access to campaigns list denied"
+      },
       "grid": {
         "id": "ID",
         "name": "Name",
@@ -908,6 +969,14 @@
         "finishDateTime": "Finished",
         "comment": "Commentary",
         "timeZoneUsed": "GMT used"
+      },
+      "participants": {
+        "grid": {
+          "id": "ID",
+          "fullName": "Full name",
+          "organization": "Department",
+          "position": "Position"
+        }
       },
       "tabs": {
         "participants": "Participants",
@@ -1453,8 +1522,14 @@
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }
     },
+    "participant": {
+      "gen": { "singular": "participant", "plural": "participants" }
+    },
     "permissions": {
       "gen": { "singular": "permit", "plural": "permits" }
+    },
+    "group": {
+      "gen": { "singular": "group", "plural": "groups" }
     },
     "guiObjects": {
       "gen": { "singular": "GUI object", "plural": "GUI objects" }
@@ -1689,6 +1764,10 @@
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
       },
+      "add": {
+        "403": "You don't have permissions to add {{ entity }}",
+        "*": "Could not add {{ entity }}"
+      },
       "upload": {
         "403": "You don't have permissions to upload {{ entity }}",
         "*": "Could not upload {{ entity }}"
@@ -1801,7 +1880,9 @@
       },
       "actions": {
         "statusChange": "Change Status",
-        "showContactHistory": "Contact Log"
+        "showContactHistory": "Contact Log",
+        "debtSetResponsible": "Set debt responsible",
+        "debtClearResponsible": "Clear debt responsible"
       }
     },
     "filter": {

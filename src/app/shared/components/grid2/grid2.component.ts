@@ -28,7 +28,7 @@ import {
 import {
   IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
   IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
-  IAGridRequest, IAGridSorter } from './grid2.interface';
+  IAGridRequest, IAGridSorter, IContextMenuItem } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -90,6 +90,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
+  @Input() contextMenuItems: IContextMenuItem[] = [];
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -171,8 +172,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.onInit.emit();
       });
 
-      this.langSubscription = this.translate.onLangChange
-        .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
+    this.langSubscription = this.translate.onLangChange
+      .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -688,6 +689,23 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
+  private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
+    return (this.actions || []).map(action => {
+      const contextItem = this.contextMenuItems.find(item => item.name === action.action);
+      const result: MenuItemDef = {
+        ...(contextItem || {}),
+        name: this.translate.instant(`default.grid.actions.${action.action}`),
+        action: () => this.action.emit({ action, params })
+      };
+      if (contextItem && contextItem.enabled) {
+        contextItem.enabled.take(1).subscribe(enabled => result.disabled = !enabled);
+      } else {
+        result.disabled = !this.isContextMenuItemEnabled(action.action);
+      }
+      return result;
+    });
+  }
+
   private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
     return [
       // {
@@ -700,12 +718,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         tooltip: 'Just to test what the tooltip can show'
       },
       'separator',
-      ...(this.actions || []).map(action => ({
-        name: this.translate.instant(`default.grid.actions.${action.action}`),
-        disabled: !this.isContextMenuItemEnabled(action.action),
-        action: () => this.action.emit({ action, params })
-      })),
-      // {
+      ...this.getMetadataMenuItems(params),      // {
       //   name: 'Person',
       //   subMenu: [
       //     {name: 'Niall', action: () => {log('Niall was pressed'); } },

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/distinctUntilChanged';
 
+import { IContactRegistrationParams } from '../../../../core/debt/debt.interface';
 import { IDebt } from '../debt-processing.interface';
 import { IPerson } from './debtor.interface';
 
@@ -27,9 +28,11 @@ export class DebtorService {
     });
   }
 
-  navigateToRegistration(personId: number, personRole: number, contactType: number, contactId: number): void {
-    const debtId = this._debt$.value.id;
-    this.debtService.navigateToRegistration(debtId, personId, personRole, contactType, contactId);
+  navigateToRegistration(params: Partial<IContactRegistrationParams>): void {
+    this.debtService.navigateToRegistration({
+      ...params,
+      debtId: this._debt$.value.id
+    });
   }
 
   get debt$(): Observable<IDebt> {
