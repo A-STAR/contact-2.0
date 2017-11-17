@@ -1,0 +1,12 @@
+<app-debt-grid></app-debt-grid>
+
+<app-hdivider></app-hdivider>
+
+<app-tabstrip [scrollerEnabled]="false" [inverse]="true">
+  <app-tab [title]="'debtor.paymentsTab.title'" [closable]="false">
+    <app-payment-grid></app-payment-grid>
+  </app-tab>
+  <app-tab [title]="'debtor.promisesTab.title'" [closable]="false">
+    <app-promise-grid></app-promise-grid>
+  </app-tab>
+</app-tabstrip>
