@@ -5,6 +5,8 @@ import { DictModule } from './dict/dict.module';
 import { SharedModule } from '../../../shared/shared.module';
 import { TermsModule } from './terms/terms.module';
 
+import { DictionariesService } from './dictionaries.service';
+
 import { DictionariesComponent } from './dictionaries.component';
 
 const routes: Routes = [
@@ -23,6 +25,9 @@ const routes: Routes = [
   ],
   declarations: [
     DictionariesComponent,
+  ],
+  providers: [
+    DictionariesService
   ]
 })
 export class DictionariesModule {}

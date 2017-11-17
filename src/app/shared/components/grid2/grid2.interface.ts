@@ -1,4 +1,5 @@
 import { RowNode, ColDef, GetContextMenuItemsParams } from 'ag-grid';
+import { Observable } from 'rxjs/Observable';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 
@@ -123,4 +124,15 @@ export interface ValueGetterParams {
 export interface IAGridAction {
   action: IMetadataAction;
   params: GetContextMenuItemsParams;
+}
+export interface IContextMenuItem {
+  name: string;
+  enabled?: Observable<boolean>;
+  action?: () => void;
+  disabled?: boolean;
+  shortcut?: string;
+  checked?: boolean;
+  icon?: HTMLElement | string;
+  cssClasses?: string[];
+  tooltip?: string;
 }

@@ -24,6 +24,7 @@ import { DebtCardComponent } from './debt-card.component';
   ],
   exports: [
     DebtCardComponent,
+    DebtComponentModule,
   ],
   declarations: [
     DebtCardComponent,

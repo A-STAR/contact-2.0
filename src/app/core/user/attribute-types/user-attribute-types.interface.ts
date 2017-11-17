@@ -6,17 +6,8 @@ export interface IUserAttributeType {
   children: IUserAttributeType[];
 }
 
-export enum UserAttributeTypeStatusEnum {
-  PENDING,
-  LOADED,
-  ERROR,
-}
-
 export interface IUserAttributeTypes {
-  [key: string]: {
-    attributeTypes: IUserAttributeType[];
-    status: UserAttributeTypeStatusEnum;
-  };
+  [key: string]: IUserAttributeType[];
 }
 
 export interface IUserAttributeTypesState {
