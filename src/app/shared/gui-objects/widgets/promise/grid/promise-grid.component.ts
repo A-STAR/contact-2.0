@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IPromise } from '../promise.interface';
-import { IDebt } from '../../debt/debt/debt.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -26,11 +25,11 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromiseGridComponent implements OnInit, OnDestroy {
+  @Input() callCenter = false;
   @Input('debtId') set debtId(debtId: number) {
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();
   }
-
   @Input('debtStatusCode') set debtStatusCode(debtStatusCode: number) {
     this.debtStatusCode$.next(debtStatusCode);
     this.cdRef.markForCheck();
@@ -151,7 +150,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   onRemove(): void {
     const { id: promiseId } = this.selectedPromise$.value;
-    this.promiseService.delete(this.debtId$.value, promiseId)
+    this.promiseService.delete(this.debtId$.value, promiseId, this.callCenter)
       .subscribe(
         () => this.setDialog().fetch(),
         () => this.setDialog()
@@ -161,7 +160,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   onApprove(): void {
     const { id: promiseId } = this.selectedPromise$.value;
     const promise = { isUnconfirmed: 0 } as IPromise;
-    this.promiseService.update(this.debtId$.value, promiseId, promise)
+    this.promiseService.update(this.debtId$.value, promiseId, promise, this.callCenter)
       .subscribe(
         () => this.setDialog().fetch(),
         () => this.setDialog()
@@ -217,23 +216,27 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    const { debtId } = this;
-    if (!debtId) { return; }
-    this.router.navigate([ `${this.router.url}/debt/promise/create` ]);
+    if (!this.debtId) {
+      return;
+    }
+    this.router.navigate([ this.callCenter ? 'promise/create' : 'debt/promise/create' ], {
+      queryParams: { callCenter: this.callCenter },
+      relativeTo: this.route,
+    });
   }
 
   private fetch(): void {
     const { debtId } = this;
     if (!debtId) { return; }
 
-    this.promiseService.fetchAll(debtId)
+    this.promiseService.fetchAll(debtId, this.callCenter)
       .subscribe(promises => {
         this.rows = [].concat(promises);
         this.selectedPromise$.next(null);
         this.cdRef.markForCheck();
       });
 
-    this.promiseService.getPromiseLimit(debtId)
+    this.promiseService.getPromiseLimit(debtId, this.callCenter)
       .subscribe(({ hasActivePromise }) => {
         this.hasActivePromise$.next(hasActivePromise);
       });

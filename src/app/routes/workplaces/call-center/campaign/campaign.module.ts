@@ -8,9 +8,11 @@ import { DebtComponentsModule } from './debt-components/debt-components.module';
 import { DocumentModule } from './document/document.module';
 import { DocumentsModule } from './documents/documents.module';
 import { OverviewModule } from './overview/overview.module';
+import { PaymentModule } from './payment/payment.module';
 import { PaymentsModule } from './payments/payments.module';
 import { PhoneModule } from './phone/phone.module';
 import { PhonesModule } from './phones/phones.module';
+import { PromiseModule } from './promise/promise.module';
 import { PromisesModule } from './promises/promises.module';
 import { SharedModule } from '../../../../shared/shared.module';
 import { ToolbarModule } from './toolbar/toolbar.module';
@@ -18,7 +20,9 @@ import { ToolbarModule } from './toolbar/toolbar.module';
 import { AddressComponent } from './address/address.component';
 import { CampaignComponent } from './campaign.component';
 import { DocumentComponent } from './document/document.component';
+import { PaymentComponent } from './payment/payment.component';
 import { PhoneComponent } from './phone/phone.component';
+import { PromiseComponent } from './promise/promise.component';
 
 const routes: Routes = [
   { path: '', component: CampaignComponent },
@@ -37,6 +41,16 @@ const routes: Routes = [
     { path: 'create', component: DocumentComponent },
     { path: ':documentId', component: DocumentComponent },
   ]},
+  { path: 'promise', children: [
+    { path: '', redirectTo: '', pathMatch: 'full' },
+    { path: 'create', component: PromiseComponent },
+    { path: ':promiseId', component: PromiseComponent },
+  ]},
+  { path: 'payment', children: [
+    { path: '', redirectTo: '', pathMatch: 'full' },
+    { path: 'create', component: PaymentComponent },
+    { path: ':paymentId', component: PaymentComponent },
+  ]},
 ];
 
 @NgModule({
@@ -48,9 +62,11 @@ const routes: Routes = [
     DocumentModule,
     DocumentsModule,
     OverviewModule,
+    PaymentModule,
     PaymentsModule,
     PhoneModule,
     PhonesModule,
+    PromiseModule,
     PromisesModule,
     RouterModule.forChild(routes),
     SharedModule,
