@@ -22,6 +22,7 @@ import { PaymentModule } from './payment/payment.module';
 import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
+import { EntityGroupModule } from './entity-group/entity-group.module';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { PropertyModule } from './property/property.module';
     PhoneModule,
     PromiseModule,
     PropertyModule,
+    EntityGroupModule,
   ],
   exports: [
     AddressModule,
@@ -70,6 +72,7 @@ import { PropertyModule } from './property/property.module';
     PhoneModule,
     PromiseModule,
     PropertyModule,
+    EntityGroupModule,
   ]
 })
 export class WidgetsModule { }
