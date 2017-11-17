@@ -9,7 +9,7 @@ import { ICampaign,
          ICampaignSelectPayload,
          IParticipantSelectPayload,
          IParticipant,
-         ICampaignsStatistic } from './campaigns.interface';
+         ICampaignsStatistic, IUserStatistic } from './campaigns.interface';
 
 @Injectable()
 export class CampaignsService {
@@ -32,9 +32,8 @@ export class CampaignsService {
 
   mockNumder = 0;
 
-  fetchCampaignStat(campainId: number): Observable<ICampaignsStatistic[]> {
-    const data = [{
-        userStatistic: {
+  fetchCampaignStat(campainId: number): Observable<ICampaignsStatistic> {
+    const userStatistic = [{
           userFullName: 'Операторов Оператор Операторович',
           successProcessing: 1,
           unsuccessProcessing: 1,
@@ -44,9 +43,7 @@ export class CampaignsService {
           refusal: 1,
           promise: 2,
           promiseAmount: 564654
-        }
       }, {
-        userStatistic: {
           userFullName: 'Операторов Оператор Операторович',
           successProcessing: 1,
           unsuccessProcessing: 1,
@@ -56,11 +53,20 @@ export class CampaignsService {
           refusal: 1,
           promise: 2,
           promiseAmount: 564654
-        }
-      }];
+      }] as IUserStatistic[];
 
     // const ind = this.mockNumder++ % 2;
-    return Observable.of(data);
+    return Observable.of({
+      userStatistic,
+      untreated: 10,
+      successProcessingSum: 2,
+      unsuccessProcessingSum: 5,
+      contacSum: 7,
+      SMSSum: 3,
+      refusalSum: 100,
+      promiseSum: 1000,
+      promiseAmountSum: 1000000
+    });
 
     // return this.dataService.read(this.baseUrl)
     //   .catch(() => Observable.of(data) as Observable<ICampaignsStatistic[]>)

@@ -21,6 +21,7 @@ export class StatisticsComponent implements OnInit {
   @ViewChild(GridComponent) grid: GridComponent;
 
   campaignStatistics: Observable<IUserStatistic[]>;
+  campaignArgigateStatistic: Observable<any>;
 
   columns: Array<IGridColumn> = [
     { prop: 'userFullName', minWidth: 250 },
@@ -51,13 +52,17 @@ export class StatisticsComponent implements OnInit {
 
       this.campaignStatistics = this.campaignsService.selectedCampaign
         .flatMap(campain => {
-          console.log('seleted', campain);
           if (!campain) {
             return Observable.of(null);
           }
           return this.campaignsService.fetchCampaignStat(campain.id);
         })
-        .map(data => data ? data.map( res => res.userStatistic) : null);
+        .do(data => data
+          ? this.campaignArgigateStatistic = Observable.of(data)
+          : this.campaignArgigateStatistic = Observable.of(null) )
+        .map(data => data && data.userStatistic && data.userStatistic.length
+          ? data.userStatistic
+          : null);
   }
 
   onSelect(): void {

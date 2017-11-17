@@ -21,7 +21,15 @@ export interface ICampaign {
 }
 
 export interface ICampaignsStatistic {
-  userStatistic: IUserStatistic;
+  userStatistic: IUserStatistic[];
+  untreated: number;
+  successProcessingSum: number;
+  unsuccessProcessingSum: number;
+  contacSum: number;
+  SMSSum: number;
+  refusalSum: number;
+  promiseSum: number;
+  promiseAmountSum: number;
 }
 
 export interface IUserStatistic {
