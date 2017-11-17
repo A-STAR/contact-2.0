@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
@@ -18,14 +18,27 @@ import { UserConstantsService } from '../../../../../core/user/constants/user-co
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
+
 @Component({
   selector: 'app-promise-grid',
   templateUrl: './promise-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromiseGridComponent implements OnInit, OnDestroy {
+  @Input('debtId') set debtId(debtId: number) {
+    this.debtId$.next(debtId);
+    this.cdRef.markForCheck();
+  }
+
+  @Input('debtStatusCode') set debtStatusCode(debtStatusCode: number) {
+    this.debtStatusCode$.next(debtStatusCode);
+    this.cdRef.markForCheck();
+  }
+
   private selectedPromise$ = new BehaviorSubject<IPromise>(null);
-  private debt$ = new BehaviorSubject<IDebt>(null);
+  private debtId$ = new BehaviorSubject<number>(null);
+  private debtStatusCode$ = new BehaviorSubject<number>(null);
   // NOTE: emit true by default, since false means that the user can add another promise
   private hasActivePromise$ = new BehaviorSubject<boolean>(true);
 
@@ -38,16 +51,20 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_OK,
       label: 'debtor.promisesTab.approve.buttonLabel',
-      enabled: Observable.combineLatest(this.canСonfirm$, this.selectedPromise$)
-        .map(([ canConfirm, selectedPromise ]) => canConfirm && !!selectedPromise && selectedPromise.statusCode === 6),
+      enabled: combineLatestAnd([
+        this.canСonfirm$,
+        this.selectedPromise$.map(promise => promise && promise.statusCode === 6),
+      ]),
       action: () => this.setDialog('approve')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      enabled: combineLatestAnd([
+        this.canDelete$,
+        this.canСonfirm$,
+        this.selectedPromise$.map(promise => promise && promise.statusCode === 6),
+      ]),
       action: () => this.setDialog('remove'),
-      enabled: Observable.combineLatest(this.canDelete$, this.canСonfirm$, this.selectedPromise$)
-        .map(([canDelete, canConfirm, selectedPromise]) =>
-          (canDelete && !!selectedPromise) || (canConfirm && !!selectedPromise && selectedPromise.statusCode === 6)),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -74,7 +91,6 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
-  private debtSubscription: Subscription;
 
   gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '300px' };
 
@@ -98,24 +114,15 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.canViewSubscription = this.canView$
-      .subscribe(hasPermission => {
-        if (hasPermission) {
-          this.fetch();
-        } else {
+    this.canViewSubscription = Observable.combineLatest(this.canView$, this.debtId$)
+      .subscribe(([ hasPermission, debtId ]) => {
+        if (!hasPermission) {
           this.notificationsService.error('errors.default.read.403').entity('entities.promises.gen.plural').dispatch();
           this.clear();
-        }
-      });
-
-    this.debtSubscription = this.messageBusService
-      .select(PromiseService.MESSAGE_DEBT_SELECTED)
-      .subscribe((debt: IDebt) => {
-        this.debt$.next(debt);
-        if (!debt.id) {
-          this.clear();
-        } else {
+        } else if (this.debtId) {
           this.fetch();
+        } else {
+          this.clear();
         }
       });
 
@@ -126,11 +133,9 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.selectedPromise$.complete();
-    this.debt$.complete();
     this.hasActivePromise$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    this.debtSubscription.unsubscribe();
   }
 
   onSelect(promise: IPromise): void {
@@ -146,7 +151,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   onRemove(): void {
     const { id: promiseId } = this.selectedPromise$.value;
-    this.promiseService.delete(this.debt$.value.id, promiseId)
+    this.promiseService.delete(this.debtId$.value, promiseId)
       .subscribe(
         () => this.setDialog().fetch(),
         () => this.setDialog()
@@ -156,7 +161,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   onApprove(): void {
     const { id: promiseId } = this.selectedPromise$.value;
     const promise = { isUnconfirmed: 0 } as IPromise;
-    this.promiseService.update(this.debt$.value.id, promiseId, promise)
+    this.promiseService.update(this.debtId$.value, promiseId, promise)
       .subscribe(
         () => this.setDialog().fetch(),
         () => this.setDialog()
@@ -177,7 +182,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   get debtId(): number {
-    return this.debt$.value && this.debt$.value.id;
+    return this.debtId$.value;
   }
 
   get canView$(): Observable<boolean> {
@@ -188,21 +193,19 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     return Observable.combineLatest(
       this.userPermissionsService.has('PROMISE_ADD'),
       this.userConstantsService.get('Promise.SeveralActive.Use'),
-      this.debt$,
+      this.debtStatusCode$,
       this.hasActivePromise$,
     )
-    .map(([canAdd, severalActiveValue, debt, hasActivePromise ]) => {
+    .map(([canAdd, severalActiveValue, debtStatusCode, hasActivePromise ]) => {
       const severalActiveUse = Boolean(severalActiveValue.valueB);
-      return canAdd && this.debtId && ![6, 7, 8, 17].includes(debt.statusCode) &&
+      return canAdd && this.debtId && ![6, 7, 8, 17].includes(debtStatusCode) &&
        (severalActiveUse || (!severalActiveUse && !hasActivePromise));
     })
     .distinctUntilChanged();
   }
 
   get canRefresh$(): Observable<boolean> {
-    return Observable.combineLatest(this.canView$, this.debt$)
-      .map(([ canView, debt ]) => canView && !!debt && !!debt.id)
-      .distinctUntilChanged();
+    return combineLatestAnd([ this.canView$, this.debtId$.map(Boolean) ]).distinctUntilChanged();
   }
 
   get canСonfirm$(): Observable<boolean> {

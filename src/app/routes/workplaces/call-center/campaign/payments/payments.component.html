@@ -1,1 +1,4 @@
-<app-payment-grid></app-payment-grid>
+<app-payment-grid
+  *ngIf="debtExists$ | async"
+  [debtId]="debtId$ | async"
+></app-payment-grid>
