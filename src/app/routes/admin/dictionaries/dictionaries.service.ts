@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/observable/combineLatest';
+import { distinctUntilChanged } from 'rxjs/operators';
 
-import { IAppState } from '../state/state.interface';
+import { IAppState } from '../../../core/state/state.interface';
 import {
   DictionariesDialogActionEnum,
   IDictionary,
   IDictionariesState,
   ITerm,
 } from './dictionaries.interface';
-
-// import { DataService } from '../data/data.service';
 
 @Injectable()
 export class DictionariesService {
@@ -45,24 +42,21 @@ export class DictionariesService {
   static TERM_DIALOG_ACTION         = 'TERM_DIALOG_ACTION';
 
   constructor(
-    // private dataService: DataService,
     private store: Store<IAppState>
   ) {}
 
   get state(): Observable<IDictionariesState> {
-    return this.store.select(state => state.dictionaries)
-      .filter(Boolean)
-      .distinctUntilChanged();
+    return this.store.select(state => state.dictionaries);
   }
 
   get selectedDictionary(): Observable<IDictionary> {
     return this.state.map(dictionaries => dictionaries.selectedDictionary)
-      .distinctUntilChanged();
+      .pipe(distinctUntilChanged());
   }
 
   get selectedTerm(): Observable<ITerm> {
     return this.state.map(dictionaries => dictionaries.selectedTerm)
-      .distinctUntilChanged();
+      .pipe(distinctUntilChanged());
   }
 
   get isSelectedDictionaryExist(): Observable<boolean> {
@@ -83,32 +77,32 @@ export class DictionariesService {
 
   get dialogAction(): Observable<DictionariesDialogActionEnum> {
     return this.state.map(dictionaries => dictionaries.dialogAction)
-      .distinctUntilChanged();
+      .pipe(distinctUntilChanged());
   }
 
   get dictionaries(): Observable<IDictionary[]> {
     return this.state.map(dictionaries => dictionaries.dictionaries)
-      .distinctUntilChanged();
+      .pipe(distinctUntilChanged());
   }
 
   get terms(): Observable<ITerm[]> {
     return this.state.map(dictionaries => dictionaries.terms)
-      .distinctUntilChanged();
+      .pipe(distinctUntilChanged());
   }
 
   get parentTerms(): Observable<ITerm[]> {
     return this.state.map(dictionaries => dictionaries.parentTerms)
-      .distinctUntilChanged();
+      .pipe(distinctUntilChanged());
   }
 
   get dropdownTerms(): Observable<ITerm[]> {
     return this.state.map(dictionaries => dictionaries.parentTerms)
-      .distinctUntilChanged();
+      .pipe(distinctUntilChanged());
   }
 
   get dictionaryTermTypes(): Observable<ITerm[]> {
     return this.state.map(dictionaries => dictionaries.dictionaryTermTypes)
-      .distinctUntilChanged();
+      .pipe(distinctUntilChanged());
   }
 
   fetchDictionaries(): void {

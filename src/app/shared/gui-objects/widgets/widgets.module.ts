@@ -9,6 +9,7 @@ import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
 import { DebtModule } from './debt/debt.module';
+import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DocumentModule } from './documents/document.module';
 import { EmailModule } from './email/email.module';
 import { EmploymentModule } from './employment/employment.module';
@@ -35,6 +36,7 @@ import { PledgorPropertyModule } from './pledgor-property/pledgor-property.modul
     ContactPropertyModule,
     DebtorActionLogModule,
     DebtModule,
+    DebtResponsibleModule,
     DocumentModule,
     EmailModule,
     EmploymentModule,
@@ -60,6 +62,7 @@ import { PledgorPropertyModule } from './pledgor-property/pledgor-property.modul
     ContactPropertyModule,
     DebtorActionLogModule,
     DebtModule,
+    DebtResponsibleModule,
     DocumentModule,
     EmailModule,
     EmploymentModule,

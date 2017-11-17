@@ -1,3 +1,15 @@
+<app-debt-responsible-set 
+  *ngIf="isDialog('debtSetResponsible')"
+  [debts]="selectedDebts$ | async"
+  (close)="onCloseDialog()">
+</app-debt-responsible-set>
+
+<app-debt-responsible-clear
+  *ngIf="isDialog('debtClearResponsible')"
+  [debts]="selectedDebts$ | async"
+  (close)="onCloseDialog()">
+</app-debt-responsible-clear>
+
 <app-action-grid
   metadataKey="debtsprocessingall"
   persistenceKey="debtsprocessingall"
@@ -5,6 +17,9 @@
   [ngClass]="'debt-processing-grid'"
   [rows]="rows"
   [rowCount]="rowCount"
+  [contextMenuItems]="contextMenuItems"
   (request)="onRequest()"
   (dblClick)="onDblClick($event)"
-></app-action-grid>
+  (select)="onSelect($event)"
+  (action)="onAction($event)">
+</app-action-grid>

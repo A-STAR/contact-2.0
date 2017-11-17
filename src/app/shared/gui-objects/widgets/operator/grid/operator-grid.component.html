@@ -1,0 +1,11 @@
+<app-grid
+  *ngIf="columns"
+  columnTranslationKey="widgets.operator"
+  [columns]="columns"
+  [footerHeight]="false"
+  [rows]="operators"
+  selectionType="single"
+  [styles]="gridStyles"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onDblClick($event)">
+</app-grid>

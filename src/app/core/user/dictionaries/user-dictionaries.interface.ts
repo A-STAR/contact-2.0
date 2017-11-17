@@ -26,3 +26,7 @@ export interface IUserDictionaryAction {
 }
 
 export type ITransformCallback<T> = (dictionary: IUserTerm) => T;
+
+export interface ITypeCodeItem {
+  typeCode: number;
+}

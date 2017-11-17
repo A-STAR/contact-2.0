@@ -71,7 +71,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .take(1)
       .subscribe(debtor => {
         const { debtId, personId, personRole } = debtor;
-        this.debtService.navigateToRegistration(debtId, personId, personRole, contactType, contactId);
+        this.debtService.navigateToRegistration({ debtId, personId, personRole, contactType, contactId });
       });
   }
 }

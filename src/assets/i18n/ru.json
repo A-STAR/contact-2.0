@@ -67,6 +67,7 @@
         "DEBTOR_PHONE": "Телефон должника",
         "DEBTOR_PROMISE": "Обещание платежа",
         "DEBTOR_PROPERTY": "Карточка имущества",
+        "DEBTOR_CONTACT_LOG_COMPONENT": "Карточка контакта",
         "DEBTOR_PLEDGE": "Договор залога",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
@@ -132,6 +133,50 @@
       "grid": {
         "name": "Название",
         "comment": "Описание"
+      },
+      "overview": {
+        "info": {
+          "title": "Краткая информация",
+          "shortInfo": "Краткая информация"
+        },
+        "debtor": {
+          "title": "Должник",
+          "personFullName": "ФИО",
+          "birthDate": "Дата рождения",
+          "docNumber": "Номер документа",
+          "personComment": "Комментарий"
+        },
+        "debt": {
+          "bankName": "Банк",
+          "branchCode": "Филиал",
+          "contract": "Номер договора",
+          "creditEndDate": "Дата окончания",
+          "creditName": "Название продукта",
+          "creditStartDate": "Дата выдачи",
+          "creditTypeCode": "Тип кредитного продукта",
+          "currencyName": "Валюта",
+          "debtAmount": "Сумма просроченного долга",
+          "debtComment": "Комментарий",
+          "debtId": "Ид долга",
+          "debtReasonCode": "Причина возникновения задолженности",
+          "dict1Code": "Словарный атрибут 1",
+          "dict2Code": "Словарный атрибут 2",
+          "dict3Code": "Словарный атрибут 3",
+          "dict4Code": "Словарный атрибут 4",
+          "dpd": "DPD",
+          "lastCallDateTime": "Последний звонок",
+          "lastPayDate": "Последний платеж",
+          "lastPromDate": "Обещанная дата",
+          "lastPromStatusCode": "Статус обещания",
+          "lastVisitDateTime": "Последний выезд",
+          "nextCallDateTime": "Следующий звонок",
+          "portfolioName": "Портфолио",
+          "regionCode": "Регион",
+          "startDate": "Дата выхода на просрочку",
+          "statusCode": "Статус",
+          "title": "Долг",
+          "totalAmount": "Общая сумма кредита"
+        }
       },
       "tabs": {
         "phonesAndAddresses": "Телефоны и адреса",
@@ -236,7 +281,7 @@
           "docNumber": "Номер документа",
           "birthDate": "Дата рождения",
           "personRoleCodes": "Роль",
-          "showClosed": "Показывать закрытые долги"
+          "isClosedDebt": "Показывать закрытые долги"
     }
   },
       "debtors": {
@@ -740,6 +785,9 @@
     },
     "attributesTab": {
       "title": "Атрибуты"
+    },
+    "contactLogTab": {
+      "title": "Лог контактов"
     }
   },
   "person": {
@@ -1047,11 +1095,6 @@
         "comment": "Комментарий"
       }
     },
-    "contactLog": {
-      "dialog": {
-        "title": "История контактов"
-      }
-    },
     "contactProperty": {
       "contactType": "Тип контакта",
       "treeType": "Тип дерева",
@@ -1083,7 +1126,7 @@
         "boxColor": "Цвет",
         "commentMode": "Ввод комментария",
         "autoCommentIds": "Ввод автокомментария",
-        "regInvisible": "Добавление файла",
+        "regInvisible": "Не отображается при регистрации контакта",
         "nextCallMode": "Дата повторного звонка",
         "promiseMode": "Ввод обещания",
         "paymentMode": "Ввод неподтверженного платежа",
@@ -1420,6 +1463,44 @@
         "comment": "Комментарий"
       }
     },
+    "contactLog": {
+      "dialog": {
+        "title": "История контактов"
+      },
+      "card": {
+        "fullName": "Должник",
+        "contract": "Договор",
+        "contactNumber": "Номер договора",
+        "contactDateTime": "Дата контакта",
+        "contactType": "Тип контакта",
+        "userFullName": "Оператор",
+        "resultName": "Результат",
+        "contactData": "Контактный телефон/адрес",
+        "promiseDate": "Обещанная дата",
+        "promiseAmount": "Обещанная сумма",
+        "comment": "Комментарий",
+        "personRole": "Тип лица",
+        "sentDateTime": "Дата отправки",
+        "status": "Статус",
+        "contactPhone": "Контактный телефон",
+        "text": "Текст сообщения",
+        "startDateTime": "Dispatch date"
+      },
+      "grid": {
+        "contactId": "Ид контакта",
+        "contactNumber": "Номер договора",
+        "debtId": "Ид долга",
+        "creditName": "Название продукта",
+        "createDateTime": "Дата создания",
+        "contactType": "Тип контакта",
+        "fullName": "ФИО",
+        "personRole": "Роль",
+        "contactDateTime": "Дата контакта",
+        "userFullName": "Оператор",
+        "resultName": "Результат",
+        "promiseDate": "Обещанная дата"
+      }
+    },
     "operator": {
       "dialog": {
         "title": "Выбор оператора"
@@ -1623,7 +1704,7 @@
     "employment": {
       "gen": { "singular": "истории трудоустройства", "plural": "записей истории трудоустройства" }
     },
-    "debtComponents": {
+    "componentLog": {
       "gen": { "singular": "компонента долга", "plural": "компонентов долга" }
     },
     "sms": {
@@ -1634,6 +1715,9 @@
     },
     "property": {
       "gen": { "singular": "объекта имущества", "plural": "списка имущества" }
+    },
+    "contactLog": {
+      "gen": { "singular": "контакта с дебитором", "plural": "котнактов с дебиторм" }
     },
     "scenarios": {
       "gen": { "singular": "сценария", "plural": "списка сценариев" }
@@ -1759,6 +1843,10 @@
         "403": "У вас недостаточно прав для изменения {{ entity }}",
         "*": "При изменении {{ entity }} произошла ошибка"
       },
+      "add": {
+        "403": "У вас недостаточно прав для добавления {{ entity }}",
+        "*": "При добавлении {{ entity }} произошла ошибка"
+      },
       "upload": {
         "403": "У вас недостаточно прав для загрузки {{ entity }}",
         "*": "При загрузке {{ entity }} произошла ошибка"
@@ -1869,7 +1957,9 @@
       },
       "actions": {
         "statusChange": "Изменить статус",
-        "showContactHistory": "История контактов"
+        "showContactHistory": "История контактов",
+        "debtSetResponsible": "Установка ответственного по долгу",
+        "debtClearResponsible": "Снятие ответственного по долгу"
       }
     },
     "filter": {

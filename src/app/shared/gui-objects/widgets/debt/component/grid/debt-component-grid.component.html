@@ -1,15 +1,17 @@
-<app-dialog-action
-  *ngIf="(dialog$ | async) === 'delete'"
-  titleTranslationKey="widgets.debt.component.remove.title"
-  actionTranslationKey="widgets.debt.component.remove.confirmMessage"
-  actionMessage="default.buttons.remove"
-  actionMode="danger"
-  [messageParams]="selectedDebtComponent$ | async"
-  (action)="onRemoveSubmit()"
-  (cancel)="onCloseDialog()">
-</app-dialog-action>
+<ng-container *ngIf="displayToolbar">
+  <app-dialog-action
+    *ngIf="(dialog$ | async) === 'delete'"
+    titleTranslationKey="widgets.debt.component.remove.title"
+    actionTranslationKey="widgets.debt.component.remove.confirmMessage"
+    actionMessage="default.buttons.remove"
+    actionMode="danger"
+    [messageParams]="selectedDebtComponent$ | async"
+    (action)="onRemoveSubmit()"
+    (cancel)="onCloseDialog()">
+  </app-dialog-action>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+  <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+</ng-container>
 
 <app-grid
   columnTranslationKey="widgets.debt.component"

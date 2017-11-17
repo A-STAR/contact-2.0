@@ -22,6 +22,7 @@ import { DebtorPledgeModule } from './pledge/pledge.module';
 import { InformationModule } from './information/information.module';
 
 import { DebtorComponent } from './debtor.component';
+import { ContactLogModule } from './contact-log/contact-log.module';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { DebtorComponent } from './debtor.component';
     DebtorPhoneModule,
     DebtorPromiseModule,
     DebtorPropertyModule,
+    ContactLogModule,
     DebtorPropertyAttributesModule,
     DebtorPledgeAttributesModule,
     DebtorAttributesModule,

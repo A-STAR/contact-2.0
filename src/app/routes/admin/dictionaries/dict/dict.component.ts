@@ -1,27 +1,30 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/observable/forkJoin';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
-import { IDictionary, DictionariesDialogActionEnum, ITerm } from '../../../../core/dictionaries/dictionaries.interface';
+import { IDictionary, DictionariesDialogActionEnum, ITerm } from '../dictionaries.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 
-import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
+import { DictionariesService } from '../dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+
+import { combineLatestAnd } from '../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-dict',
   templateUrl: './dict.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DictComponent implements OnDestroy {
+export class DictComponent implements OnDestroy, OnInit {
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -70,21 +73,27 @@ export class DictComponent implements OnDestroy {
     private gridService: GridService,
     private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
-  ) {
+  ) {}
 
-    this.gridService.setDictionaryRenderers(this.columns)
-      .flatMap(columns => {
-        this.columns = columns;
-        return this.dictionariesService.state;
-      })
-      .take(3)
-      .subscribe(dicState => {
-        const { dictionaries } = dicState;
-        if (dictionaries.length) {
-          const renderers: IRenderer = { parentCode: dictionaries.map(dict => ({ label: dict.name, value: dict.code }))};
-          this.columns = this.gridService.setRenderers(this.columns, renderers);
-          this.cdRef.markForCheck();
-        }
+  ngOnInit(): void {
+    const areDictionariesFetched = this.dictionariesService.state
+      .map(state => state.dictionaries)
+      .map(dictionaries => !!dictionaries.length)
+      .filter(Boolean);
+
+    this.dictionariesService.fetchDictionaries();
+
+    Observable.combineLatest(
+        areDictionariesFetched,
+        this.dictionariesService.state,
+        this.gridService.setDictionaryRenderers(this.columns)
+      )
+      .take(1)
+      .subscribe(([_, state, columns]) => {
+        const { dictionaries } = state;
+        const renderers: IRenderer = { parentCode: dictionaries.map(dict => ({ label: dict.name, value: dict.code }))};
+        this.columns = this.gridService.setRenderers(columns, renderers);
+        this.cdRef.markForCheck();
       });
 
     this.hasViewPermission$ = this.userPermissionsService.has('DICT_VIEW');
@@ -136,19 +145,18 @@ export class DictComponent implements OnDestroy {
   }
 
   get isReadyForCreating(): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatestAnd([
       this.isEntityBeingCreated,
       this.isDictionaryRelationsReady,
-    ).map(([isEntityBeingCreated, isDictionaryRelationsReady]) => isEntityBeingCreated && isDictionaryRelationsReady);
+    ]);
   }
 
   get isReadyForEditing(): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatestAnd([
       this.isEntityBeingEdited,
       this.isDictionaryRelationsReady,
       this.dictionariesService.isSelectedDictionaryReady,
-    ).map(([isEntityBeingEdited, isRelationsReady, isSelectedDictionaryReady]) =>
-        isEntityBeingEdited && isRelationsReady && isSelectedDictionaryReady);
+    ]);
   }
 
   get canEdit(): Observable<boolean> {
