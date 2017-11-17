@@ -234,7 +234,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   private onEdit(payment: IPayment = null): void {
     const { id } = payment || this.selectedPayment$.value;
     this.router.navigate([ this.callCenter ? `payment/${id}` : `debt/payment/${id}` ], {
-      queryParams: { callCenter: this.callCenter },
+      queryParams: { callCenter: Number(this.callCenter) },
       relativeTo: this.route,
     });
   }
@@ -244,7 +244,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
       return;
     }
     this.router.navigate([ this.callCenter ? 'payment/create' : 'debt/payment/create' ], {
-      queryParams: { callCenter: this.callCenter },
+      queryParams: { callCenter: Number(this.callCenter) },
       relativeTo: this.route,
     });
   }

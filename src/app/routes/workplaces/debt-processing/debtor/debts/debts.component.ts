@@ -6,14 +6,16 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtsComponent {
-  debt: any;
+  debtId: number;
+  debtStatusCode: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
   ) {}
 
   onDebtSelect(debt: any): void {
-    this.debt = debt;
+    this.debtId = debt.id;
+    this.debtStatusCode = debt.statusCode;
     this.cdRef.markForCheck();
   }
 }

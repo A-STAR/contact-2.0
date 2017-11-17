@@ -4,9 +4,14 @@
 
 <app-tabstrip [scrollerEnabled]="false" [inverse]="true">
   <app-tab [title]="'debtor.paymentsTab.title'" [closable]="false">
-    <app-payment-grid [debt]="debt"></app-payment-grid>
+    <app-payment-grid
+      [debtId]="debtId"
+    ></app-payment-grid>
   </app-tab>
   <app-tab [title]="'debtor.promisesTab.title'" [closable]="false">
-    <app-promise-grid [debt]="debt"></app-promise-grid>
+    <app-promise-grid
+      [debtId]="debtId"
+      [debtStatusCode]="debtStatusCode"
+    ></app-promise-grid>
   </app-tab>
 </app-tabstrip>

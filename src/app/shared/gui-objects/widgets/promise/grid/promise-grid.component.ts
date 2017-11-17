@@ -220,7 +220,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       return;
     }
     this.router.navigate([ this.callCenter ? 'promise/create' : 'debt/promise/create' ], {
-      queryParams: { callCenter: this.callCenter },
+      queryParams: { callCenter: Number(this.callCenter) },
       relativeTo: this.route,
     });
   }
