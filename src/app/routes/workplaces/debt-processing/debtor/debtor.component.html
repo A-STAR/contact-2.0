@@ -50,7 +50,7 @@
   </app-tab>
 
   <app-tab [title]="'debtor.documentsTab.title'" [closable]="false">
-    <app-document-grid></app-document-grid>
+    <app-document-grid *ngIf="personId$ | async" [personId]="personId$ | async"></app-document-grid>
   </app-tab>
 
   <app-tab [title]="'debtor.employmentRecordTab.title'" [closable]="false" [disabled]="isCompany$ | async">

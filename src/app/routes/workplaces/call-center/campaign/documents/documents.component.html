@@ -1,1 +1,4 @@
-<app-document-grid></app-document-grid>
+<app-document-grid
+  *ngIf="debtExists$ | async"
+  [personId]="personId$ | async"
+></app-document-grid>
