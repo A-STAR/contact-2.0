@@ -129,7 +129,7 @@ export interface IAGridAction {
 export interface IContextMenuItem {
   name: string;
   enabled?: Observable<boolean>;
-  action?: () => void;
+  action?: (action: IAGridAction) => void;
   disabled?: boolean;
   shortcut?: string;
   checked?: boolean;

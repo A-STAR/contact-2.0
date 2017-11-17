@@ -1,1 +1,6 @@
-<app-promise-grid></app-promise-grid>
+<app-promise-grid
+  *ngIf="debtExists$ | async"
+  [callCenter]="true"
+  [debtId]="debtId$ | async"
+  [debtStatusCode]="debtStatusCode$ | async"
+></app-promise-grid>

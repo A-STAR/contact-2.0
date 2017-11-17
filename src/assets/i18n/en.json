@@ -1513,6 +1513,16 @@
         "position": "Position"
       }
     },
+    "entityGroup": {
+      "dialog": {
+        "title": "Select group"
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "comment": "Comment"
+      }
+    },
     "pledgorProperty": {
       "title": "Property information",
       "search": {
@@ -1731,6 +1741,9 @@
     "operator": {
       "gen": { "singular": "operator", "plural": "operators" }
     },
+    "entityGroup": {
+      "gen": { "singular": "group", "plural": "groups" }
+    }
     "pledgeContract": {
       "gen": { "singular": "pledge contract", "plural": "pledge contracts" }
     },
@@ -1959,7 +1972,8 @@
         "statusChange": "Change Status",
         "showContactHistory": "Contact Log",
         "debtSetResponsible": "Set debt responsible",
-        "debtClearResponsible": "Clear debt responsible"
+        "debtClearResponsible": "Clear debt responsible",
+        "objectAddToGroup": "Add to group"
       }
     },
     "filter": {

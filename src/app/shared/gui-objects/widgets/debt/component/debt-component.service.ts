@@ -20,10 +20,9 @@ export class DebtComponentService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(debtId: number, forCallCenter: boolean): Observable<Array<IDebtComponent>> {
-    const url = this.getUrl(this.url, forCallCenter);
+  fetchAll(debtId: number, callCenter: boolean): Observable<Array<IDebtComponent>> {
     return this.dataService
-      .readAll(url, { debtId })
+      .readAll(this.url, { debtId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity(this.errPlural).dispatchCallback());
   }
 
@@ -49,9 +48,5 @@ export class DebtComponentService {
     return this.dataService
       .delete(`${this.url}/{debtComponentId}`, { debtId, debtComponentId })
       .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
-  }
-
-  private getUrl(url: string, forCallCenter: boolean): string {
-    return forCallCenter ? `/callCenter${url}` : url;
   }
 }

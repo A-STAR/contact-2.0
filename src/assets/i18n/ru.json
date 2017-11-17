@@ -1513,6 +1513,16 @@
         "position": "Должность"
       }
     },
+    "entityGroup": {
+      "dialog": {
+        "title": "Выбор группы"
+      },
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "comment": "Комментарий"
+      }
+    },
     "pledgorProperty": {
       "title": "Информация об имуществе",
       "search": {
@@ -1730,6 +1740,9 @@
     },
     "operator": {
       "gen": { "singular": "оператора", "plural": "операторов" }
+    },
+    "entityGroup": {
+      "gen": { "singular": "группы", "plural": "групп" }
     },
     "pledgeContract": {
       "gen": { "singular": "договора залога", "plural": "договоров залога" }
@@ -1959,7 +1972,8 @@
         "statusChange": "Изменить статус",
         "showContactHistory": "История контактов",
         "debtSetResponsible": "Установка ответственного по долгу",
-        "debtClearResponsible": "Снятие ответственного по долгу"
+        "debtClearResponsible": "Снятие ответственного по долгу",
+        "objectAddToGroup": "Добавить в группу"
       }
     },
     "filter": {

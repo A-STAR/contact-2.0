@@ -22,10 +22,9 @@ import { PaymentModule } from './payment/payment.module';
 import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
-import { PledgeModule } from './pledge/pledge.module';
+import { EntityGroupModule } from './entity-group/entity-group.module';
 import { PledgorModule } from './pledgor/pledgor.module';
-import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
-
+import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';import { PledgeModule } from './pledge/pledge.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -50,10 +49,9 @@ import { PledgorPropertyModule } from './pledgor-property/pledgor-property.modul
     PhoneModule,
     PromiseModule,
     PropertyModule,
-    PledgeModule,
+    EntityGroupModule,
     PledgorModule,
-    PledgorPropertyModule,
-  ],
+    PledgorPropertyModule,    PledgeModule,  ],
   exports: [
     AddressModule,
     AttributeModule,
@@ -76,9 +74,9 @@ import { PledgorPropertyModule } from './pledgor-property/pledgor-property.modul
     PhoneModule,
     PromiseModule,
     PropertyModule,
+    EntityGroupModule,
     PledgeModule,
     PledgorModule,
-    PledgorPropertyModule,
-  ]
+    PledgorPropertyModule,  ]
 })
 export class WidgetsModule { }

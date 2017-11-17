@@ -161,7 +161,9 @@ const routes: Routes = [
     DebtProcessingComponent,
   ],
   providers: [
-    DebtProcessingService
+    DebtProcessingService,
+    { provide: 'entityTypeId', useValue: 19 },
+    { provide: 'manualGroup', useValue: true }
   ]
 })
 export class DebtProcessingModule {

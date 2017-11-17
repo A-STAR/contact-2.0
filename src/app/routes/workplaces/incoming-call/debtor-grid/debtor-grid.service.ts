@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+
+import { IQueryParams } from '../../../../core/data/data.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 
@@ -10,10 +11,8 @@ export class DebtorGridService {
     private dataService: DataService,
   ) { }
 
-  fetchAll(params: object): Observable<any[]> {
+  fetchAll(params: IQueryParams): Observable<any[]> {
     // TODO(d.maltsev): notifications
-    const httpParams = Object.keys(params)
-      .reduce((acc, key) => params[key] ? acc.set(key, params[key]) : acc, new HttpParams());
-    return this.dataService.readAll('/incomingCall/search', {}, { params: httpParams });
+    return this.dataService.readAll('/incomingCall/search', {}, { params });
   }
 }

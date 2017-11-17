@@ -13,6 +13,10 @@ export class PhonesComponent {
     private campaignService: CampaignService,
   ) {}
 
+  get debtExists$(): Observable<boolean> {
+    return this.campaignService.campaignDebt$.map(Boolean);
+  }
+
   get debtId$(): Observable<number> {
     return this.campaignService.campaignDebt$.map(debt => debt.debtId);
   }

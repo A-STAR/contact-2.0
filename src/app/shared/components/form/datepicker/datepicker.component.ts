@@ -101,6 +101,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     document.body.removeChild(this.dropdown.nativeElement);
+    this.removeWheelListener();
   }
 
   writeValue(value: Date | string): void {
