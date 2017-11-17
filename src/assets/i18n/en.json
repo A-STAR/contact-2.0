@@ -67,6 +67,7 @@
         "DEBTOR_PHONE": "Debtor's phone",
         "DEBTOR_PROMISE": "Payment promise",
         "DEBTOR_PROPERTY": "Property card",
+        "DEBTOR_CONTACT_LOG_COMPONENT": "Contact card",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_PROTOCOL": "Contact Protocol",
@@ -776,6 +777,9 @@
     },
     "attributesTab": {
       "title": "Attributes"
+    },
+    "contactLogTam": {
+      "title": "Contact log"
     }
   },
   "person": {
@@ -1081,11 +1085,6 @@
         "educationCode": "Education",
         "linkTypeCode": "Type",
         "comment": "Comment"
-      }
-    },
-    "contactLog": {
-      "dialog": {
-        "title": "Contact Log"
       }
     },
     "contactProperty": {
@@ -1456,6 +1455,44 @@
         "comment": "Comment"
       }
     },
+    "contactLog": {
+      "dialog": {
+        "title": "Contact Log"
+      },
+      "card": {
+        "fullName": "Dedtor",
+        "contract": "Order",
+        "contactNumber": "Order number",
+        "contactDateTime": "Contact date",
+        "contactType": "Contact type",
+        "userFullName": "Operator",
+        "resultName": "Result",
+        "contactData": "Phone/address",
+        "promiseDate": "Promise date",
+        "promiseAmount": "Promised amount",
+        "comment": "Comment",
+        "personRole": "Type of person",
+        "sentDateTime": "Sent date",
+        "status": "Status",
+        "contactPhone": "Contact phone",
+        "text": "Message",
+        "startDateTime": "Dispatch date"
+      },
+      "grid": {
+        "contactId": "Contact Id",
+        "contactNumber": "Order number",
+        "debtId": "Debt ID",
+        "creditName": "Credit name",
+        "createDateTime": "Ceate date",
+        "contactType": "Contact type",
+        "fullName": "Contact person name",
+        "personRole": "Person role",
+        "contactDateTime": "Contact date",
+        "userFullName": "Operator",
+        "resultName": "Result",
+        "promiseDate": "Promise date"
+      }
+    },
     "operator": {
       "dialog": {
         "title": "Select operator"
@@ -1595,7 +1632,10 @@
       "gen": { "singular": "message template", "plural": "message templates" }
     },
     "property": {
-      "gen": { "singular": "property", "plural": "property list" }
+      "gen": { "singular": "property item", "plural": "property list" }
+    },
+    "contactLog": {
+      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
     },
     "scenarios": {
       "gen": { "singular": "scenario", "plural": "scenarios list" }
