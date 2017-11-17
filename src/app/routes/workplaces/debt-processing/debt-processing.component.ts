@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+
 import { IDebt } from './debt-processing.interface';
 import { IAGridResponse, IAGridAction } from '../../../shared/components/grid2/grid2.interface';
 import { IContextMenuItem } from '../../../shared/components/grid2/grid2.interface';
@@ -35,23 +37,17 @@ export class DebtProcessingComponent extends DialogFunctions {
   contextMenuItems: IContextMenuItem[] = [
     {
       name: DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_SET,
-      enabled: this.debtResponsibleService.canSet$,
-      action: action => this.selectedDebts$.value || this.selectedDebts$.next([action.params.node.data.debtId])
+      enabled: this.canMakeAction(this.debtResponsibleService.canSet$)
     },
     {
       name: DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_CLEAR,
-      enabled: this.debtResponsibleService.canClear$,
-      action: action => this.selectedDebts$.value || this.selectedDebts$.next([action.params.node.data.debtId])
+      enabled: this.canMakeAction(this.debtResponsibleService.canClear$)
     },
     {
       name: EntityGroupService.ACTION_ENTITY_GROUP_ADD,
-      enabled: this.entityGroupService.getCanAdd$(this.entityTypeId),
-      action: (action: IAGridAction) => {
-        if (!this.selectedDebts$.value) {
-          this.selectedDebts$.next([action.params.node.data.debtId]);
-        }
-        Object.assign(action.action, { addOptions: [ { name: 'ids', value: this.selectedDebts$.value } ] });
-      }
+      enabled: this.canMakeAction(this.entityGroupService.getCanAdd$(this.entityTypeId)),
+      action: (action: IAGridAction) =>
+        Object.assign(action.action, { addOptions: [ { name: 'ids', value: this.selectedDebts$.value } ] })
     }
   ];
 
@@ -65,6 +61,11 @@ export class DebtProcessingComponent extends DialogFunctions {
     @Inject('entityTypeId') private entityTypeId: number,
   ) {
     super();
+  }
+
+  canMakeAction(hasAccess$: Observable<boolean>): Observable<boolean> {
+    return Observable.combineLatest(hasAccess$, this.selectedDebts$)
+      .map(([ canClear, selected ]) => canClear && !!selected && selected.length > 0);
   }
 
   onRequest(): void {
