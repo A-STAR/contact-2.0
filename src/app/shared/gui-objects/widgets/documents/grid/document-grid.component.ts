@@ -34,6 +34,7 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
+  @Input() callCenter = false;
   @Input() personId: number;
 
   @ViewChild('downloader') downloader: DownloaderComponent;
@@ -148,7 +149,8 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   onRemoveDialogSubmit(): void {
-    this.documentService.delete(18, this.personId, this.selectedDocumentId$.value).subscribe(() => this.onSubmitSuccess());
+    this.documentService.delete(18, this.personId, this.selectedDocumentId$.value, this.callCenter)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onDialogClose(): void {
@@ -181,11 +183,13 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(entityType: number): void {
-    this.router.navigate([ `${this.router.url}/document/create` ], { queryParams: { entityType } });
+    const { callCenter } = this;
+    this.router.navigate([ `${this.router.url}/document/create` ], { queryParams: { entityType, callCenter } });
   }
 
   private onEdit(documentId: number): void {
-    this.router.navigate([ `${this.router.url}/document/${documentId}` ]);
+    const { callCenter } = this;
+    this.router.navigate([ `${this.router.url}/document/${documentId}` ], { queryParams: { callCenter } });
   }
 
   private onSubmitSuccess(): void {
@@ -194,7 +198,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.documentService.fetchAll(18, this.personId)
+    this.documentService.fetchAll(18, this.personId, this.callCenter)
       .subscribe(documents => {
         this.documents = documents;
         this.selectedDocumentId$.next(null);

@@ -35,7 +35,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();
   }
-  @Input() forCallCenter = false;
+  @Input() callCenter = false;
   @Input() entityType = 18;
   @Input('personId')
   set personId(personId: number) {
@@ -226,17 +226,17 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.addressService.block(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.forCallCenter, code)
+    this.addressService.block(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.callCenter, code)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.addressService.unblock(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.forCallCenter)
+    this.addressService.unblock(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.forCallCenter)
+    this.addressService.delete(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -341,7 +341,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private onEdit(addressId: number): void {
     this.router.navigate([ `${this.router.url}/address/${addressId}` ], {
-      queryParams: this.forCallCenter ? { forCallCenter: 1 } : {}
+      queryParams: this.callCenter ? { callCenter: 1 } : {}
     });
   }
 
@@ -351,7 +351,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.addressService.fetchAll(this.entityType, this.personId$.value, this.forCallCenter)
+    this.addressService.fetchAll(this.entityType, this.personId$.value, this.callCenter)
       .subscribe(addresses => {
         this._addresses = addresses;
         this.cdRef.markForCheck();
