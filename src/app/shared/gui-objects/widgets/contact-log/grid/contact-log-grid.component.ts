@@ -47,7 +47,12 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
         this.selectedChanged$
       )
       .map(([canEdit, selected]) => canEdit && selected)
-    }
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.fetch(),
+      enabled: Observable.of(true)
+    },
   ];
 
   private _contactLogList: Array<IContactLog> = [];
