@@ -59,4 +59,8 @@ export class StatisticsComponent implements OnInit {
         })
         .map(data => data ? data.map( res => res.userStatistic) : null);
   }
+
+  onSelect(): void {
+
+  }
 }
