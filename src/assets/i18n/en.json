@@ -941,6 +941,24 @@
       }
     },
     "campaigns": {
+      "create": {
+        "title": "New campaign"
+      },
+      "edit": {
+        "title": "Edit campaign",
+        "name": "Name",
+        "typeCode": "Type code",
+        "groupName": "Group",
+        "comment": "Comment",
+        "timeZoneUsed": "GMT used"
+      },
+      "remove": {
+        "title": "Delete campaign",
+        "confirmMessage": "Are you sure you want to delete campaign {{ name }}?"
+      },
+      "errors": {
+        "view": "Access to campaigns list denied"
+      },
       "grid": {
         "id": "ID",
         "name": "Name",
@@ -951,6 +969,14 @@
         "finishDateTime": "Finished",
         "comment": "Commentary",
         "timeZoneUsed": "GMT used"
+      },
+      "participants": {
+        "grid": {
+          "id": "ID",
+          "fullName": "Full name",
+          "organization": "Department",
+          "position": "Position"
+        }
       },
       "tabs": {
         "participants": "Participants",
@@ -1496,8 +1522,14 @@
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }
     },
+    "participant": {
+      "gen": { "singular": "participant", "plural": "participants" }
+    },
     "permissions": {
       "gen": { "singular": "permit", "plural": "permits" }
+    },
+    "group": {
+      "gen": { "singular": "group", "plural": "groups" }
     },
     "guiObjects": {
       "gen": { "singular": "GUI object", "plural": "GUI objects" }

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { DialogFunctions } from '../../../core/dialog';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { ICampaign, CampaignsDialogActionEnum } from './campaigns.interface';
 import { ToolbarItemTypeEnum, IToolbarItem } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-campaigns',
@@ -17,14 +18,15 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./campaigns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CampaignsComponent extends DialogFunctions implements OnInit {
+export class CampaignsComponent extends DialogFunctions implements OnInit, OnDestroy {
   static COMPONENT_NAME = 'CampaignsComponent';
 
   @ViewChild(GridComponent) grid: GridComponent;
 
   dialog: string;
 
-  campaigns: Observable<ICampaign[]>;
+  campaigns: ICampaign[];
+  campaingsSub: Subscription;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 40 },
@@ -105,8 +107,17 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       this.cdRef.markForCheck();
     });
 
-    this.campaigns = this.campaignsService.fetchCampaigns();
+    this.campaingsSub = this.fetchCampaigns();
+  }
 
+  ngOnDestroy(): void {
+    if (this.campaingsSub) {
+      this.campaingsSub.unsubscribe();
+    }
+  }
+
+  get selectedCampaign(): Observable<ICampaign> {
+    return this.campaignsService.selectedCampaign;
   }
 
   get isEntityBeingCreated(): boolean {
@@ -125,8 +136,31 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
     this.campaignsService.selectCampaign(selection[0]);
   }
 
-  fetchCampaigns(): void {
-    this.campaignsService.fetchCampaigns().subscribe(() => this.cancelAction());
+  fetchCampaigns(): Subscription {
+    return this.campaignsService.fetchCampaigns()
+      .subscribe(campaings => {
+        this.campaigns = campaings;
+        this.cancelAction();
+        this.cdRef.markForCheck();
+      });
+  }
+
+  createCampaign(data: ICampaign): void {
+    this.campaignsService.createCampaign(data)
+    .map(() => this.fetchCampaigns())
+    .subscribe(() => this.cdRef.detectChanges());
+  }
+
+  updateCampaign(data: ICampaign): void {
+    this.campaignsService.updateCampaign(data)
+    .map(() => this.fetchCampaigns())
+    .subscribe(() => this.cdRef.detectChanges());
+  }
+
+  onRemove(): void {
+    this.campaignsService.removeCampaign()
+    .switchMap(() => this.campaignsService.fetchCampaigns())
+    .subscribe(() => this.cdRef.detectChanges());
   }
 
   cancelAction(): void {
@@ -142,6 +176,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
     });
     this.cdRef.markForCheck();
   }
+
   onStop(): void {
     this.grid.selected.map(campaign => {
       // get from dict

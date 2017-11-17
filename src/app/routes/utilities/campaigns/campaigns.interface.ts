@@ -8,10 +8,23 @@ export enum CampaignsDialogActionEnum {
   PARTICIPANT_REMOVE
 }
 
+export interface ICampaignGroup {
+  id:	number;
+  name:	string;
+  entityTypeId: number;
+  isManual: number;
+  comment: string;
+}
+
 export interface ICampaign {
   id: number;
   name: string;
-  groupName: any;
+  multiname?: {
+    value: string;
+    languageId: number;
+  };
+  groupId: number;
+  groupName: string;
   statusCode: number;
   typeCode: number;
   startDateTime: string;

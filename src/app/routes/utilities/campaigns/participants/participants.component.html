@@ -1,3 +1,8 @@
-<p>
-  participants works!
-</p>
+<app-grid
+  class="flat" [styles]="{ height: '250px' }"
+  [columns]="columns"
+  [columnTranslationKey]="'utilities.campaigns.participants'"
+  [rows]="participants"
+  selectionType="click"
+  (onSelect)="onSelectParticipant($event)">
+</app-grid>

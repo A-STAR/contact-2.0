@@ -941,16 +941,42 @@
       }
     },
     "campaigns": {
+      "create": {
+        "title": "Новая кампания обзвона"
+      },
+      "edit": {
+        "title": "Редактировать кампанию обзвона",
+        "name": "Название",
+        "typeCode": "Тип",
+        "groupName": "Группа",
+        "comment": "Комментарий",
+        "timeZoneUsed": "Учет GMT"
+      },
+      "remove": {
+        "title": "Удаление кампании обзвона",
+        "confirmMessage": "Вы действительно хотите удалить кампанию {{ name }}?"
+      },
+      "errors": {
+        "view": "Access to campaigns list denied"
+      },
       "grid": {
         "id": "ID",
         "name": "Название",
         "groupName": "Группа",
         "statusCode": "Статус",
-        "typeCode": "Тип данных",
+        "typeCode": "Тип",
         "startDateTime": "Дата запуска",
         "finishDateTime": "Дата остановки",
         "comment": "Комментарий",
         "timeZoneUsed": "Учет GMT"
+      },
+      "participants": {
+        "grid": {
+          "id": "ID",
+          "fullName": "ФИО",
+          "organization": "Подразделение",
+          "position": "Должность"
+        }
       },
       "tabs": {
         "participants": "Участники",
@@ -1496,8 +1522,14 @@
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
     },
+    "participant": {
+      "gen": { "singular": "участника", "plural": "списка участников" }
+    },
     "permissions": {
       "gen": { "singular": "доступа", "plural": "списка доступов" }
+    },
+    "group": {
+      "gen": { "singular": "группы", "plural": "списка групп" }
     },
     "guiObjects": {
       "gen": { "singular": "объекта интерфейса", "plural": "списка объектов интерфейса" }

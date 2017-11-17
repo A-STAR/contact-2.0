@@ -5,6 +5,7 @@ import { DataService } from '../../../core/data/data.service';
 import { IAppState } from '../../../core/state/state.interface';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { ICampaign,
+         ICampaignGroup,
          ICampaignsState,
          ICampaignSelectPayload,
          IParticipantSelectPayload,
@@ -25,7 +26,7 @@ export class CampaignsService {
     return this.readCampaigns()
       .catch(
       this.notificationsService.error('errors.default.read')
-        .entity('entities.campaigns.gen.plural').dispatchCallback()
+        .entity('entities.campaign.gen.plural').dispatchCallback()
       );
   }
 
@@ -61,29 +62,63 @@ export class CampaignsService {
     return { selectedParticipant };
   }
 
-  private readCampaigns(): Observable<ICampaign[]> {
-    return (this.dataService.readAll(this.baseUrl)
-      .catch(() => Observable.of([{
-        id: 1,
-        name: 'Иванов Иван Иванович',
-        groupName: 'Some group name',
-        statusCode: 1,
-        typeCode: 1,
-        startDateTime: new Date(),
-        finishDateTime: new Date(),
-        comment: 'bla bla bla',
-        timeZoneUsed: true
-      }, {
-        id: 1,
-        name: 'Иванов Иван Иванович',
-        groupName: 'Some group name',
-        statusCode: 2,
-        typeCode: 2,
-        startDateTime: new Date(),
-        finishDateTime: new Date(),
-        comment: 'bla bla bla',
-        timeZoneUsed: false
-      }])) as Observable<ICampaign[]>);
+  createCampaign(campaign: ICampaign): Observable<ICampaign[]> {
+    return this.dataService.create(this.baseUrl, {}, campaign)
+      .catch(this.notificationsService.error('errors.default.create')
+        .entity('entities.campaign.gen.singular').dispatchCallback());
   }
+
+  updateCampaign(campaign: ICampaign): Observable<any> {
+    return this.dataService.update(`${this.baseUrl}/{campaignId}`, {
+      campaignId: campaign.id
+    }, campaign)
+      .catch(this.notificationsService.error('errors.default.update').entity('entities.campaign.gen.singular').callback());
+  }
+
+  removeCampaign(): Observable<any> {
+    return this.selectedCampaign
+      .take(1)
+      .switchMap(selectedCampaign => this.deleteCampaign(selectedCampaign.id))
+      .catch(this.notificationsService.error('errors.default.delete').entity('entities.campaign.gen.singular').callback());
+  }
+
+  fetchCampaignGroups(): Observable<ICampaignGroup[]> {
+  return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}&isManual={isManual}`, {
+      // todo: get from dict
+      entityTypeIds: [19],
+      isManual: 0
+    })
+    .catch(
+      this.notificationsService.error('errors.default.read')
+        .entity('entities.groups.gen.plural').dispatchCallback()
+      );
+  }
+
+  fetchParticipants(): Observable<IParticipant[]> {
+    return this.selectedCampaign
+      .take(1)
+      .switchMap(selectedCampaign => selectedCampaign ? this.readParticipants(selectedCampaign.id) : Observable.of([]))
+      .catch(
+      this.notificationsService.error('errors.default.read')
+        .entity('entities.participant.gen.plural').dispatchCallback()
+      );
+  }
+
+  private readParticipants(campaignId: number): Observable<IParticipant[]> {
+    return this.dataService.readAll(`${this.baseUrl}/{campaignId}/users`, { campaignId });
+  }
+
+  private readCampaigns(): Observable<ICampaign[]> {
+    return this.dataService.readAll(this.baseUrl)
+    .catch(
+      this.notificationsService.error('errors.default.read')
+        .entity('entities.campaign.gen.plural').dispatchCallback()
+    );
+  }
+
+  private deleteCampaign(campaignId: number): Observable<any> {
+    return this.dataService.delete(`${this.baseUrl}/{campaignId}`, { campaignId });
+  }
+
 }
 
