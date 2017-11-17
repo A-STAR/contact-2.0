@@ -5,6 +5,7 @@ import { AddressModule } from './address/address.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { DebtComponentsModule } from './debt-components/debt-components.module';
+import { DocumentModule } from './document/document.module';
 import { DocumentsModule } from './documents/documents.module';
 import { OverviewModule } from './overview/overview.module';
 import { PaymentsModule } from './payments/payments.module';
@@ -16,6 +17,7 @@ import { ToolbarModule } from './toolbar/toolbar.module';
 
 import { AddressComponent } from './address/address.component';
 import { CampaignComponent } from './campaign.component';
+import { DocumentComponent } from './document/document.component';
 import { PhoneComponent } from './phone/phone.component';
 
 const routes: Routes = [
@@ -30,6 +32,11 @@ const routes: Routes = [
     { path: 'create', component: AddressComponent },
     { path: ':addressId', component: AddressComponent },
   ]},
+  { path: 'document', children: [
+    { path: '', redirectTo: 'create', pathMatch: 'full' },
+    { path: 'create', component: DocumentComponent },
+    { path: ':documentId', component: DocumentComponent },
+  ]},
 ];
 
 @NgModule({
@@ -38,6 +45,7 @@ const routes: Routes = [
     AddressesModule,
     ContactsModule,
     DebtComponentsModule,
+    DocumentModule,
     DocumentsModule,
     OverviewModule,
     PaymentsModule,
