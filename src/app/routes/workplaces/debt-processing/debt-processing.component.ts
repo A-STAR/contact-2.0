@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { IDebt } from './debt-processing.interface';
 import { IAGridResponse, IAGridAction } from '../../../shared/components/grid2/grid2.interface';
@@ -36,22 +35,23 @@ export class DebtProcessingComponent extends DialogFunctions {
   contextMenuItems: IContextMenuItem[] = [
     {
       name: DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_SET,
-      enabled: Observable.combineLatest(this.debtResponsibleService.canSet$, this.selectedDebts$)
-        .map(([ canSet, selected ]) => canSet && !!selected && selected.length > 0),
+      enabled: this.debtResponsibleService.canSet$,
+      action: action => this.selectedDebts$.value || this.selectedDebts$.next([action.params.node.data.debtId])
     },
     {
       name: DebtResponsibleService.ACTION_DEBT_RESPONSIBLE_CLEAR,
-      enabled: Observable.combineLatest(this.debtResponsibleService.canClear$, this.selectedDebts$)
-        .map(([ canClear, selected ]) => canClear && !!selected && selected.length > 0),
+      enabled: this.debtResponsibleService.canClear$,
+      action: action => this.selectedDebts$.value || this.selectedDebts$.next([action.params.node.data.debtId])
     },
     {
       name: EntityGroupService.ACTION_ENTITY_GROUP_ADD,
-      enabled: Observable.combineLatest(this.entityGroupService.getCanAdd$(this.entityTypeId), this.selectedDebts$)
-        .map(([ canAdd, selected ]) => canAdd && !!selected && selected.length > 0),
-      action: (action: IAGridAction) =>
-        Object.assign(action.action, {
-          addOptions: [ { name: 'ids', value: this.selectedDebts$.value.map(debt => debt.debtId) } ]
-        })
+      enabled: this.entityGroupService.getCanAdd$(this.entityTypeId),
+      action: (action: IAGridAction) => {
+        if (!this.selectedDebts$.value) {
+          this.selectedDebts$.next([action.params.node.data.debtId]);
+        }
+        Object.assign(action.action, { addOptions: [ { name: 'ids', value: this.selectedDebts$.value } ] });
+      }
     }
   ];
 
