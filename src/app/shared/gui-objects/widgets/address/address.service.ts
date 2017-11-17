@@ -19,24 +19,21 @@ export class AddressService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(entityType: number, entityId: number, forCallCenter: boolean): Observable<Array<IAddress>> {
-    const url = this.getUrl(this.baseUrl, forCallCenter);
+  fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<Array<IAddress>> {
     return this.dataService
-      .readAll(url, { entityType, entityId })
+      .readAll(this.baseUrl, { entityType, entityId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity(`${this.entity}.plural`).dispatchCallback());
   }
 
-  fetch(entityType: number, entityId: number, addressId: number, forCallCenter: boolean): Observable<IAddress> {
-    const url = this.getUrl(`${this.baseUrl}/{addressId}`, forCallCenter);
+  fetch(entityType: number, entityId: number, addressId: number, callCenter: boolean): Observable<IAddress> {
     return this.dataService
-      .read(url, { entityType, entityId, addressId })
+      .read(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
-  create(entityType: number, entityId: number, forCallCenter: boolean, address: IAddress): Observable<void> {
-    const url = this.getUrl(this.baseUrl, forCallCenter);
+  create(entityType: number, entityId: number, callCenter: boolean, address: IAddress): Observable<void> {
     return this.dataService
-      .create(url, { entityType, entityId }, address)
+      .create(this.baseUrl, { entityType, entityId }, address, { params: { callCenter } })
       .catch(this.notificationsService.createError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
@@ -44,12 +41,11 @@ export class AddressService {
     entityType: number,
     entityId: number,
     addressId: number,
-    forCallCenter: boolean,
+    callCenter: boolean,
     address: Partial<IAddress>
   ): Observable<void> {
-    const url = this.getUrl(`${this.baseUrl}/{addressId}`, forCallCenter);
     return this.dataService
-      .update(url, { entityType, entityId, addressId }, address)
+      .update(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, address, { params: { callCenter } })
       .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
@@ -57,20 +53,19 @@ export class AddressService {
     entityType: number,
     entityId: number,
     addressId: number,
-    forCallCenter: boolean,
+    callCenter: boolean,
     inactiveReasonCode: number
   ): Observable<void> {
-    return this.update(entityType, entityId, addressId, forCallCenter, { isInactive: 1, inactiveReasonCode });
+    return this.update(entityType, entityId, addressId, callCenter, { isInactive: 1, inactiveReasonCode });
   }
 
-  unblock(entityType: number, entityId: number, addressId: number, forCallCenter: boolean): Observable<void> {
-    return this.update(entityType, entityId, addressId, forCallCenter, { isInactive: 0 });
+  unblock(entityType: number, entityId: number, addressId: number, callCenter: boolean): Observable<void> {
+    return this.update(entityType, entityId, addressId, callCenter, { isInactive: 0 });
   }
 
-  delete(entityType: number, entityId: number, addressId: number, forCallCenter: boolean): Observable<void> {
-    const url = this.getUrl(`${this.baseUrl}/{addressId}`, forCallCenter);
+  delete(entityType: number, entityId: number, addressId: number, callCenter: boolean): Observable<void> {
     return this.dataService
-      .delete(url, { entityType, entityId, addressId })
+      .delete(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, { params: { callCenter } })
       .catch(this.notificationsService.deleteError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
@@ -85,9 +80,5 @@ export class AddressService {
     return this.dataService
       .create('/persons/{personId}/addresses/{addressId}/visits', { personId, addressId }, visit)
       .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());
-  }
-
-  private getUrl(url: string, forCallCenter: boolean): string {
-    return forCallCenter ? `/callCenter${url}` : url;
   }
 }

@@ -18,24 +18,21 @@ export class PhoneService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(entityType: number, entityId: number, forCallCenter: boolean): Observable<IPhone[]> {
-    const url = this.getUrl(this.baseUrl, forCallCenter);
+  fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<IPhone[]> {
     return this.dataService
-      .readAll(url, { entityType, entityId })
+      .readAll(this.baseUrl, { entityType, entityId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.phones.gen.plural').dispatchCallback());
   }
 
-  fetch(entityType: number, entityId: number, phoneId: number, forCallCenter: boolean): Observable<IPhone> {
-    const url = this.getUrl(`${this.baseUrl}/{phoneId}`, forCallCenter);
+  fetch(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<IPhone> {
     return this.dataService
-      .read(url, { entityType, entityId, phoneId })
+      .read(`${this.baseUrl}/{phoneId}`, { entityType, entityId, phoneId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity(this.singular).dispatchCallback());
   }
 
-  create(entityType: number, entityId: number, forCallCenter: boolean, phone: IPhone): Observable<void> {
-    const url = this.getUrl(this.baseUrl, forCallCenter);
+  create(entityType: number, entityId: number, callCenter: boolean, phone: IPhone): Observable<void> {
     return this.dataService
-      .create(url, { entityType, entityId }, phone)
+      .create(this.baseUrl, { entityType, entityId }, phone, { params: { callCenter } })
       .catch(this.notificationsService.createError().entity(this.singular).dispatchCallback());
   }
 
@@ -43,12 +40,11 @@ export class PhoneService {
     entityType: number,
     entityId: number,
     phoneId: number,
-    forCallCenter: boolean,
+    callCenter: boolean,
     phone: Partial<IPhone>,
   ): Observable<void> {
-    const url = this.getUrl(`${this.baseUrl}/{phoneId}`, forCallCenter);
     return this.dataService
-      .update(url, { entityType, entityId, phoneId }, phone)
+      .update(`${this.baseUrl}/{phoneId}`, { entityType, entityId, phoneId }, phone, { params: { callCenter } })
       .catch(this.notificationsService.updateError().entity(this.singular).dispatchCallback());
   }
 
@@ -56,14 +52,14 @@ export class PhoneService {
     entityType: number,
     entityId: number,
     phoneId: number,
-    forCallCenter: boolean,
+    callCenter: boolean,
     inactiveReasonCode: number,
   ): Observable<void> {
-    return this.update(entityType, entityId, phoneId, forCallCenter, { isInactive: 1, inactiveReasonCode });
+    return this.update(entityType, entityId, phoneId, callCenter, { isInactive: 1, inactiveReasonCode });
   }
 
-  unblock(entityType: number, entityId: number, phoneId: number, forCallCenter: boolean): Observable<void> {
-    return this.update(entityType, entityId, phoneId, forCallCenter, { isInactive: 0 });
+  unblock(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<void> {
+    return this.update(entityType, entityId, phoneId, callCenter, { isInactive: 0 });
   }
 
   scheduleSMS(debtId: number, schedule: ISMSSchedule): Observable<void> {
@@ -87,14 +83,9 @@ export class PhoneService {
       .map(response => response.text);
   }
 
-  delete(entityType: number, entityId: number, phoneId: number, forCallCenter: boolean): Observable<void> {
-    const url = this.getUrl(`${this.baseUrl}/{phoneId}`, forCallCenter);
+  delete(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<void> {
     return this.dataService
-      .delete(url, { entityType, entityId, phoneId })
+      .delete(`${this.baseUrl}/{phoneId}`, { entityType, entityId, phoneId }, { params: { callCenter } })
       .catch(this.notificationsService.deleteError().entity(this.singular).dispatchCallback());
-  }
-
-  private getUrl(url: string, forCallCenter: boolean): string {
-    return forCallCenter ? `/callCenter${url}` : url;
   }
 }

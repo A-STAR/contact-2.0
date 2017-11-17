@@ -4,13 +4,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { publishReplay, refCount, finalize } from 'rxjs/operators';
 
-import { IQueryParams } from './data.interface';
+import { IQueryParam, IQueryParams } from './data.interface';
 
 interface RequestOptions {
   body?: any;
   headers?: HttpHeaders;
   observe?: 'response' | 'body' | 'events';
   responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
+  // Params whose value is falsy will NOT be sent
   params?: IQueryParams;
 }
 
@@ -155,7 +156,13 @@ export class DataService {
   }
 
   private prepareHttpParams(params: IQueryParams = {}): HttpParams {
-    return Object.keys(params).reduce((acc, key) => params[key] ? acc.set(key, params[key]) : acc, new HttpParams());
+    return Object.keys(params).reduce((acc, key) => {
+      return params[key] ? acc.set(key, this.toQueryParam(params[key])) : acc;
+    }, new HttpParams());
+  }
+
+  private toQueryParam(value: IQueryParam): string {
+    return value === true ? '1' : `${value}`;
   }
 
   private prepareMultipartFormData(body: object, file: File): FormData {
