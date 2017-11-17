@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IContactLog } from '../contact-log.interface';
@@ -22,6 +23,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   selected: IContactLog[];
+  selectedChanged$ = new BehaviorSubject<boolean>(false);
 
   columns: Array<IGridColumn> = [
     { prop: 'debtId' },
@@ -42,14 +44,15 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
       action: () => this.onEdit(this.selected[0]),
       enabled: Observable.combineLatest(
         this.canEdit$,
-        Observable.of(this.selected)
-      ).map(([canEdit, selectedProperty]) => !!canEdit && selectedProperty && !!selectedProperty[0])
+        this.selectedChanged$
+      )
+      .map(([canEdit, selected]) => canEdit && selected)
     }
   ];
 
   private _contactLogList: Array<IContactLog> = [];
 
-  personId = (this.route.params as any).value.personId || null;
+  personId = (<any>this.route.params).value.personId || null;
 
   private viewPermissionSubscription: Subscription;
   private viewCommentUpdate: Subscription;
@@ -87,10 +90,10 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
           Observable.of(currentContactLogId),
           this.contactLogService.fetchAll(this.personId))
       )
-      .subscribe(([currentContoctLogId, contactLogList]) => {
+      .subscribe(([currentContactLogId, contactLogList]) => {
         this.contactLogList = contactLogList;
         const currentContactLog = contactLogList
-          ? contactLogList.find(row => row.contactId ===  Number(currentContoctLogId)) : null;
+          ? contactLogList.find(row => row.contactId === Number(currentContactLogId)) : null;
         if (currentContactLog) {
           this.selected = [currentContactLog];
         }
@@ -118,20 +121,28 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
     return this.userPermissionsService.has('CONTACT_LOG_VIEW');
   }
 
-  onSelect(property: IContactLog): void {
-    this.selected = [property];
+  get hasSelection(): boolean {
+    return !!this.selected && !!this.selected.length;
+  }
+
+  onSelect(contactLog: IContactLog): void {
+    this.selected = [contactLog];
+    this.selectedChanged$.next(true);
   }
 
   onEdit(contactLog: IContactLog): void {
-    this.router.navigate([ `${this.router.url}/contactLog/${contactLog.contactId}/contactLogType/${contactLog.contactType}`]);
+    const { contactId, contactType } = contactLog;
+    this.router.navigate([ `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`]);
   }
 
 
   private fetch(): void {
-    this.contactLogService.fetchAll(this.personId).subscribe(contactLogList => {
-      this.contactLogList = contactLogList;
-      this.cdRef.markForCheck();
-    });
+    this.contactLogService.fetchAll(this.personId)
+      .subscribe(contactLogList => {
+        this.contactLogList = contactLogList;
+        this.selectedChanged$.next(this.hasSelection);
+        this.cdRef.markForCheck();
+      });
   }
 
   private clear(): void {
