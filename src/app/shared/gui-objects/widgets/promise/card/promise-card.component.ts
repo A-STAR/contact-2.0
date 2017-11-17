@@ -38,6 +38,9 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   private canAddInsufficientAmountSub: Subscription;
   private receiveDateTimeSub: Subscription;
 
+  private queryParams = (<any>this.route.queryParams).value;
+  private callCenter = this.queryParams.callCenter;
+
   controls: IDynamicFormControl[] = [
     {
       label: 'widgets.promise.grid.promiseDate',
@@ -85,10 +88,10 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     Observable.combineLatest(
       this.userPermissionsService.has('PROMISE_ADD'),
-      this.promiseService.getPromiseLimit(this.debtId),
-      this.promiseService.fetchDebt(this.debtId),
+      this.promiseService.getPromiseLimit(this.debtId, this.callCenter),
+      this.promiseService.fetchDebt(this.debtId, this.callCenter),
       this.promiseId
-        ? this.promiseService.fetch(this.debtId, this.promiseId)
+        ? this.promiseService.fetch(this.debtId, this.promiseId, this.callCenter)
         : Observable.of(null),
       this.userConstantsService.get('Promise.MinAmountPercent.Formula'),
       this.userPermissionsService.has('PROMISE_MIN_AMOUNT_PERCENT'),
@@ -202,8 +205,8 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   private save(promise: IPromise = null): void {
     const data: IPromise = promise || this.form.serializedUpdates;
     const action = this.promiseId
-      ? this.promiseService.update(this.debtId, this.promiseId, data)
-      : this.promiseService.create(this.debtId, data);
+      ? this.promiseService.update(this.debtId, this.promiseId, data, this.callCenter)
+      : this.promiseService.create(this.debtId, data, this.callCenter);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(PromiseService.MESSAGE_PROMISE_SAVED);

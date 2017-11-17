@@ -1520,6 +1520,16 @@
         "organization": "Department",
         "position": "Position"
       }
+    },
+    "entityGroup": {
+      "dialog": {
+        "title": "Select group"
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "comment": "Comment"
+      }
     }
   },
   "entities": {
@@ -1667,6 +1677,9 @@
     },
     "operator": {
       "gen": { "singular": "operator", "plural": "operators" }
+    },
+    "entityGroup": {
+      "gen": { "singular": "group", "plural": "groups" }
     }
   },
   "errors": {
@@ -1892,7 +1905,8 @@
         "statusChange": "Change Status",
         "showContactHistory": "Contact Log",
         "debtSetResponsible": "Set debt responsible",
-        "debtClearResponsible": "Clear debt responsible"
+        "debtClearResponsible": "Clear debt responsible",
+        "objectAddToGroup": "Add to group"
       }
     },
     "filter": {

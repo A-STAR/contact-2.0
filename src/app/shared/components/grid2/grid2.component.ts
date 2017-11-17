@@ -689,21 +689,35 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
-  private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
-    return (this.actions || []).map(action => {
-      const contextItem = this.contextMenuItems.find(item => item.name === action.action);
-      const result: MenuItemDef = {
-        ...(contextItem || {}),
-        name: this.translate.instant(`default.grid.actions.${action.action}`),
-        action: () => this.action.emit({ action, params })
-      };
-      if (contextItem && contextItem.enabled) {
-        contextItem.enabled.take(1).subscribe(enabled => result.disabled = !enabled);
-      } else {
-        result.disabled = !this.isContextMenuItemEnabled(action.action);
+  private getContextMenuItem(action: IMetadataAction): IContextMenuItem {
+    return this.contextMenuItems.find(item => item.name === action.action);
+  }
+
+  private createMetadataMenuItem(
+    metadataAction: IMetadataAction,
+    params: GetContextMenuItemsParams,
+    contextItem: IContextMenuItem): MenuItemDef {
+
+    const menuItem: MenuItemDef = {
+      ...(contextItem || {}),
+      name: this.translate.instant(`default.grid.actions.${metadataAction.action}`),
+      action: () => {
+        if (contextItem && contextItem.onAction) {
+          contextItem.onAction.call(this, { metadataAction, params });
+        }
+        this.action.emit({ metadataAction: metadataAction, params });
       }
-      return result;
-    });
+    };
+    if (contextItem && contextItem.enabled) {
+      contextItem.enabled.take(1).subscribe(enabled => menuItem.disabled = !enabled);
+    } else {
+      menuItem.disabled = !this.isContextMenuItemEnabled(metadataAction.action);
+    }
+    return menuItem;
+  }
+
+  private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
+    return (this.actions || []).map(action => this.createMetadataMenuItem(action, params, this.getContextMenuItem(action)));
   }
 
   private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {

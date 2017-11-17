@@ -29,7 +29,7 @@ export class DebtComponentGridComponent implements OnDestroy {
     this.cdRef.markForCheck();
   }
   @Input() displayToolbar = true;
-  @Input() forCallCenter = false;
+  @Input() callCenter = false;
 
   private debtId$ = new BehaviorSubject<number>(null);
 
@@ -163,12 +163,12 @@ export class DebtComponentGridComponent implements OnDestroy {
 
   private onEdit(debtComponentId: number): void {
     this.router.navigate([ `${this.router.url}/debt-component/${debtComponentId}` ], {
-      queryParams: this.forCallCenter ? { forCallCenter: 1 } : {}
+      queryParams: this.callCenter ? { callCenter: 1 } : {}
     });
   }
 
   private fetch(): void {
-    this.debtComponentService.fetchAll(this.debtId$.value, this.forCallCenter)
+    this.debtComponentService.fetchAll(this.debtId$.value, this.callCenter)
       .subscribe(components => {
         this.components = components;
         this.cdRef.markForCheck();
