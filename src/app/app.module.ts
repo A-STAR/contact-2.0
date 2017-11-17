@@ -13,7 +13,7 @@ import { ToasterModule } from 'angular2-toaster';
 import * as R from 'ramda';
 
 import { AuthEffects } from './core/auth/auth.effects';
-import { DictionariesEffects } from './core/dictionaries/dictionaries.effects';
+import { DictionariesEffects } from './routes/admin/dictionaries/dictionaries.effects';
 import { EntityAttributesEffects } from './core/entity/attributes/entity-attributes.effects';
 import { GuiObjectsEffects } from './core/gui-objects/gui-objects.effects';
 import { LookupEffects } from './core/lookup/lookup.effects';

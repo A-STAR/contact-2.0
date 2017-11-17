@@ -26,9 +26,11 @@ export class AddressCardComponent {
   @ViewChild('form') form: DynamicForm2Component;
 
   private routeParams = (<any>this.route.params).value;
+  private queryParams = (<any>this.route.queryParams).value;
   private personId = this.routeParams.personId || null;
   private contactId = this.routeParams.contactId || null;
   private addressId = this.routeParams.addressId || null;
+  private forCallCenter = this.queryParams.forCallCenter;
 
   address$ = new BehaviorSubject<IAddress>(null);
   group$: Observable<IDynamicFormGroup>;
@@ -45,7 +47,8 @@ export class AddressCardComponent {
     this.personId = this.contactId || this.personId;
 
     if (this.addressId) {
-      this.addressService.fetch(18, this.personId, this.addressId).subscribe(address => this.address$.next(address));
+      this.addressService.fetch(18, this.personId, this.addressId, this.forCallCenter)
+        .subscribe(address => this.address$.next(address));
     }
 
     this.group$ = Observable.combineLatest(
@@ -63,8 +66,8 @@ export class AddressCardComponent {
 
   onSubmit(): void {
     const action = this.addressId
-      ? this.addressService.update(18, this.personId, this.addressId, this.form.value)
-      : this.addressService.create(18, this.personId, this.form.value);
+      ? this.addressService.update(18, this.personId, this.addressId, this.forCallCenter, this.form.value)
+      : this.addressService.create(18, this.personId, this.forCallCenter, this.form.value);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(AddressService.MESSAGE_ADDRESS_SAVED);
