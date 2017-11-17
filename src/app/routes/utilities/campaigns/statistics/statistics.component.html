@@ -1,3 +1,9 @@
-<p>
-  statistics works!
-</p>
+<app-grid
+  class="flat"
+  [styles]="{ height: '250px' }"
+  [columns]="columns"
+  [columnTranslationKey]="'utilities.campaigns'"
+  [rows]="campaignStatistics | async"
+  selectionType="single"
+  (onSelect)="onSelectStat($event)">
+</app-grid>

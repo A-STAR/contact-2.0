@@ -8,7 +8,8 @@ import { ICampaign,
          ICampaignsState,
          ICampaignSelectPayload,
          IParticipantSelectPayload,
-         IParticipant} from './campaigns.interface';
+         IParticipant,
+         ICampaignsStatistic } from './campaigns.interface';
 
 @Injectable()
 export class CampaignsService {
@@ -27,6 +28,46 @@ export class CampaignsService {
       this.notificationsService.error('errors.default.read')
         .entity('entities.campaigns.gen.plural').dispatchCallback()
       );
+  }
+
+  mockNumder = 0;
+
+  fetchCampaignStat(campainId: number): Observable<ICampaignsStatistic[]> {
+    const data = [{
+        userStatistic: {
+          userFullName: 'Операторов Оператор Операторович',
+          successProcessing: 1,
+          unsuccessProcessing: 1,
+          contact: 4,
+          SMS: 6426246426426,
+          successContact: 1,
+          refusal: 1,
+          promise: 2,
+          promiseAmount: 564654
+        }
+      }, {
+        userStatistic: {
+          userFullName: 'Операторов Оператор Операторович',
+          successProcessing: 1,
+          unsuccessProcessing: 1,
+          contact: 4,
+          SMS: 6426246426426,
+          successContact: 1,
+          refusal: 1,
+          promise: 2,
+          promiseAmount: 564654
+        }
+      }];
+
+    // const ind = this.mockNumder++ % 2;
+    return Observable.of(data);
+
+    // return this.dataService.read(this.baseUrl)
+    //   .catch(() => Observable.of(data) as Observable<ICampaignsStatistic[]>)
+    //   .catch(
+    //     this.notificationsService.error('errors.default.read')
+    //       .entity('entities.campaigns.gen.signal').dispatchCallback()
+    //     );
   }
 
   get state(): Observable<ICampaignsState> {
@@ -62,15 +103,17 @@ export class CampaignsService {
   }
 
   private readCampaigns(): Observable<ICampaign[]> {
-    return (this.dataService.readAll(this.baseUrl)
-      .catch(() => Observable.of([{
+    // TODO unmock when api will be ready
+    // return (this.dataService.readAll(this.baseUrl)
+    //   .catch(() =>
+    return  Observable.of([{
         id: 1,
         name: 'Иванов Иван Иванович',
         groupName: 'Some group name',
         statusCode: 1,
         typeCode: 1,
-        startDateTime: new Date(),
-        finishDateTime: new Date(),
+        startDateTime: (new Date()).toString(),
+        finishDateTime: (new Date()).toString(),
         comment: 'bla bla bla',
         timeZoneUsed: true
       }, {
@@ -83,7 +126,7 @@ export class CampaignsService {
         finishDateTime: new Date(),
         comment: 'bla bla bla',
         timeZoneUsed: false
-      }])) as Observable<ICampaign[]>);
+      }]) as Observable<ICampaign[]>;
   }
 }
 

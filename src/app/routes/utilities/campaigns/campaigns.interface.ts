@@ -20,6 +20,22 @@ export interface ICampaign {
   timeZoneUsed: boolean;
 }
 
+export interface ICampaignsStatistic {
+  userStatistic: IUserStatistic;
+}
+
+export interface IUserStatistic {
+  userFullName: string;
+  successProcessing: number;
+  unsuccessProcessing: number;
+  contact: number;
+  SMS: number;
+  successContact: number;
+  refusal: number;
+  promise: number;
+  promiseAmount: number;
+}
+
 
 export interface ICampaignSelectPayload {
   selectedCampaign: ICampaign;

@@ -122,6 +122,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
   }
 
   onSelectCampaign(selection: ICampaign[]): void {
+    console.log('in component', selection);
     this.campaignsService.selectCampaign(selection[0]);
   }
 
