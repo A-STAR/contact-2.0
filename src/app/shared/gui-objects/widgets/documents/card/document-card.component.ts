@@ -28,6 +28,9 @@ export class DocumentCardComponent {
   private documentId = (this.route.params as any).value.documentId || null;
   private entityTypeCode = (this.route.queryParams as any).value.entityType || 18;
 
+  private queryParams = (<any>this.route.queryParams).value;
+  private callCenter = this.queryParams.callCenter;
+
   controls: Array<IDynamicFormItem> = null;
   document: IDocument;
 
@@ -43,7 +46,9 @@ export class DocumentCardComponent {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DOCUMENT_TYPE),
       this.userConstantsService.get('FileAttachment.MaxSize'),
-      this.documentId ? this.documentService.fetch(this.entityTypeCode, this.id, this.documentId) : Observable.of(null)
+      this.documentId
+        ? this.documentService.fetch(this.entityTypeCode, this.id, this.documentId, this.callCenter)
+        : Observable.of(null)
     )
     .take(1)
     .subscribe(([ options, maxSize, document ]) => {
@@ -63,8 +68,8 @@ export class DocumentCardComponent {
   public onSubmit(): void {
     const { file, ...document } = this.form.serializedUpdates;
     const action = this.documentId
-      ? this.documentService.update(this.entityTypeCode, this.id, this.documentId, document, file)
-      : this.documentService.create(this.entityTypeCode, this.id, document, file);
+      ? this.documentService.update(this.entityTypeCode, this.id, this.documentId, document, file, this.callCenter)
+      : this.documentService.create(this.entityTypeCode, this.id, document, file, this.callCenter);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(DocumentService.MESSAGE_DOCUMENT_SAVED);

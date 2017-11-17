@@ -45,7 +45,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();
   }
-  @Input() forCallCenter = false;
+  @Input() callCenter = false;
   @Input() entityType = 18;
   @Input('personId')
   set personId(personId: number) {
@@ -212,12 +212,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.phoneService.block(this.entityType, this.personId$.value, this.selectedPhoneId$.value, this.forCallCenter, code)
+    this.phoneService.block(this.entityType, this.personId$.value, this.selectedPhoneId$.value, this.callCenter, code)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.phoneService.unblock(this.entityType, this.personId$.value, this.selectedPhoneId$.value, this.forCallCenter)
+    this.phoneService.unblock(this.entityType, this.personId$.value, this.selectedPhoneId$.value, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -232,7 +232,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onRemoveDialogSubmit(): void {
-    this.phoneService.delete(this.entityType, this.personId$.value, this.selectedPhoneId$.value, this.forCallCenter)
+    this.phoneService.delete(this.entityType, this.personId$.value, this.selectedPhoneId$.value, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -318,7 +318,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private onEdit(phoneId: number): void {
     this.router.navigate([ `${this.router.url}/phone/${phoneId}` ], {
-      queryParams: this.forCallCenter ? { forCallCenter: 1 } : {}
+      queryParams: this.callCenter ? { callCenter: 1 } : {}
     });
   }
 
@@ -328,7 +328,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.phoneService.fetchAll(this.entityType, this.personId$.value, this.forCallCenter)
+    this.phoneService.fetchAll(this.entityType, this.personId$.value, this.callCenter)
       .subscribe(phones => {
         this.phones = phones;
         this.cdRef.markForCheck();

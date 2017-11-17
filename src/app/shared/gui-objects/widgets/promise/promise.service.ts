@@ -20,45 +20,45 @@ export class PromiseService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(debtId: number): Observable<IPromise[]> {
+  fetchAll(debtId: number, callCenter: boolean): Observable<IPromise[]> {
     return this.dataService
-      .readAll(this.baseUrl, { debtId })
+      .readAll(this.baseUrl, { debtId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.promises.gen.plural').dispatchCallback());
   }
 
-  fetch(debtId: number, promiseId: number): Observable<IPromise> {
+  fetch(debtId: number, promiseId: number, callCenter: boolean): Observable<IPromise> {
     return this.dataService
-      .read(this.extUrl, { debtId, promiseId })
+      .read(this.extUrl, { debtId, promiseId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.promises.gen.singular').dispatchCallback());
   }
 
-  create(debtId: number, promise: IPromise): Observable<any> {
+  create(debtId: number, promise: IPromise, callCenter: boolean): Observable<any> {
     return this.dataService
-      .create(this.baseUrl, { debtId }, promise)
+      .create(this.baseUrl, { debtId }, promise, { params: { callCenter } })
       .catch(this.notificationsService.createError().entity('entities.promises.gen.singular').dispatchCallback());
   }
 
-  update(debtId: number, promiseId: number, promise: IPromise): Observable<any> {
+  update(debtId: number, promiseId: number, promise: IPromise, callCenter: boolean): Observable<any> {
     return this.dataService
-      .update(this.extUrl, { debtId, promiseId }, promise)
+      .update(this.extUrl, { debtId, promiseId }, promise, { params: { callCenter } })
       .catch(this.notificationsService.updateError().entity('entities.promises.gen.singular').dispatchCallback());
   }
 
-  delete(debtId: number, promiseId: number): Observable<any> {
+  delete(debtId: number, promiseId: number, callCenter: boolean): Observable<any> {
     return this.dataService
-      .delete(this.extUrl, { debtId, promiseId })
+      .delete(this.extUrl, { debtId, promiseId }, { params: { callCenter } })
       .catch(this.notificationsService.deleteError().entity('entities.promises.gen.singular').dispatchCallback());
   }
 
-  getPromiseLimit(debtId: number): Observable<IPromiseLimit> {
+  getPromiseLimit(debtId: number, callCenter: boolean): Observable<IPromiseLimit> {
     return this.dataService
-      .read('/debts/{debtId}/promiseslimit', { debtId })
+      .read('/debts/{debtId}/promiseslimit', { debtId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.promisesLimit.gen.plural').dispatchCallback());
   }
 
-  fetchDebt(debtId: number): Observable<IDebt> {
+  fetchDebt(debtId: number, callCenter: boolean): Observable<IDebt> {
     return this.dataService
-      .read('/debts/{debtId}', { debtId })
+      .read('/debts/{debtId}', { debtId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 }

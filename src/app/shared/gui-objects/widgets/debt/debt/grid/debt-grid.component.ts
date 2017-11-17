@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -9,7 +9,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/comp
 
 import { DebtService } from '../debt.service';
 import { GridService } from '../../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
@@ -21,6 +20,8 @@ import { combineLatestAnd } from '../../../../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtGridComponent {
+  @Output() select = new EventEmitter<IDebt>();
+
   selectedDebt$ = new BehaviorSubject<IDebt>(null);
 
   toolbarItems: Array<IToolbarItem> = [
@@ -118,7 +119,6 @@ export class DebtGridComponent {
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
@@ -135,12 +135,14 @@ export class DebtGridComponent {
   }
 
   onDoubleClick(debt: IDebt): void {
+    this.selectedDebt$.next(debt);
+    this.select.emit(debt);
     this.onEdit(debt.id);
   }
 
   onSelect(debt: IDebt): void {
     this.selectedDebt$.next(debt);
-    this.messageBusService.dispatch(DebtService.MESSAGE_DEBT_SELECTED, null, debt);
+    this.select.emit(debt);
   }
 
   onDialogClose(): void {

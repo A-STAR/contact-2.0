@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -26,6 +34,9 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
+  @Input() callCenter = false;
+  @Input() personId: number;
+
   @ViewChild('downloader') downloader: DownloaderComponent;
 
   private selectedDocumentId$ = new BehaviorSubject<number>(null);
@@ -88,26 +99,23 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   private _dialog = null;
 
-  private id = (this.route.params as any).value.personId || null;
-
   constructor(
     private documentService: DocumentService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private messageBusService: MessageBusService,
-    private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.gridSubscription = this.gridService.setDictionaryRenderers(this.columns)
       .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
 
     this.busSubscription = this.messageBusService
       .select(DocumentService.MESSAGE_DOCUMENT_SAVED)
       .subscribe(() => this.fetch());
-  }
 
-  ngOnInit(): void {
     this.fetch();
   }
 
@@ -141,7 +149,8 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   onRemoveDialogSubmit(): void {
-    this.documentService.delete(18, this.id, this.selectedDocumentId$.value).subscribe(() => this.onSubmitSuccess());
+    this.documentService.delete(18, this.personId, this.selectedDocumentId$.value, this.callCenter)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onDialogClose(): void {
@@ -174,11 +183,15 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(entityType: number): void {
-    this.router.navigate([ `${this.router.url}/document/create` ], { queryParams: { entityType } });
+    this.router.navigate([ `${this.router.url}/document/create` ], {
+      queryParams: { entityType, callCenter: Number(this.callCenter) }
+    });
   }
 
   private onEdit(documentId: number): void {
-    this.router.navigate([ `${this.router.url}/document/${documentId}` ]);
+    this.router.navigate([ `${this.router.url}/document/${documentId}` ], {
+      queryParams: { callCenter: Number(this.callCenter) }
+    });
   }
 
   private onSubmitSuccess(): void {
@@ -187,7 +200,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.documentService.fetchAll(18, this.id)
+    this.documentService.fetchAll(18, this.personId, this.callCenter)
       .subscribe(documents => {
         this.documents = documents;
         this.selectedDocumentId$.next(null);

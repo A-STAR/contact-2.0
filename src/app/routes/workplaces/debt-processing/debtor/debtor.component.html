@@ -23,19 +23,7 @@
   </app-tab>
 
   <app-tab [title]="'debtor.debtsTab.title'" [closable]="false">
-    <app-debt-grid></app-debt-grid>
-
-    <app-hdivider></app-hdivider>
-
-    <app-tabstrip [scrollerEnabled]="false" [inverse]="true">
-      <app-tab [title]="'debtor.paymentsTab.title'" [closable]="false">
-        <app-payment-grid></app-payment-grid>
-      </app-tab>
-
-      <app-tab [title]="'debtor.promisesTab.title'" [closable]="false">
-        <app-promise-grid></app-promise-grid>
-      </app-tab>
-    </app-tabstrip>
+    <app-debtor-debts></app-debtor-debts>
   </app-tab>
 
   <!-- <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">
@@ -50,7 +38,7 @@
   </app-tab>
 
   <app-tab [title]="'debtor.documentsTab.title'" [closable]="false">
-    <app-document-grid></app-document-grid>
+    <app-document-grid *ngIf="personId$ | async" [personId]="personId$ | async"></app-document-grid>
   </app-tab>
 
   <app-tab [title]="'debtor.employmentRecordTab.title'" [closable]="false" [disabled]="isCompany$ | async">

@@ -18,33 +18,42 @@ export class DocumentService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(entityType: number, entityId: number): Observable<Array<IDocument>> {
+  fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<Array<IDocument>> {
     return this.dataService
-      .readAll(DocumentService.BASE_URL, { entityType, entityId })
+      .readAll(DocumentService.BASE_URL, { entityType, entityId }, { params: { callCenter } })
       .catch(this.notificationsService.error('errors.default.read').entity('entities.documents.gen.plural').dispatchCallback());
   }
 
-  fetch(entityType: number, entityId: number, documentId: number): Observable<IDocument> {
+  fetch(entityType: number, entityId: number, documentId: number, callCenter: boolean): Observable<IDocument> {
     return this.dataService
-      .read(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId })
+      .read(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId }, { params: { callCenter } })
       .catch(this.notificationsService.error('errors.default.read').entity(this.errSingular).dispatchCallback());
   }
 
-  create(entityType: number, entityId: number, document: IDocument, file: File): Observable<void> {
+  create(entityType: number, entityId: number, document: IDocument, file: File, callCenter: boolean): Observable<void> {
     return this.dataService
-      .createMultipart(DocumentService.BASE_URL, { entityType, entityId }, document, file)
+      .createMultipart(DocumentService.BASE_URL, { entityType, entityId }, document, file, { params: { callCenter } })
       .catch(this.notificationsService.error('errors.default.create').entity(this.errSingular).dispatchCallback());
   }
 
-  update(entityType: number, entityId: number, documentId: number, document: Partial<IDocument>, file: File): Observable<void> {
+  update(
+    entityType: number,
+    entityId: number,
+    documentId: number,
+    document: Partial<IDocument>,
+    file: File,
+    callCenter: boolean,
+  ): Observable<void> {
+    const data = { entityType, entityId, documentId };
     return this.dataService
-      .updateMultipart(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId }, document, file)
+      .updateMultipart(`${DocumentService.BASE_URL}/{documentId}`, data, document, file, { params: { callCenter } })
       .catch(this.notificationsService.error('errors.default.update').entity(this.errSingular).dispatchCallback());
   }
 
-  delete(entityType: number, entityId: number, documentId: number): Observable<void> {
+  delete(entityType: number, entityId: number, documentId: number, callCenter: boolean): Observable<void> {
+    const data = { entityType, entityId, documentId };
     return this.dataService
-      .delete(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId })
+      .delete(`${DocumentService.BASE_URL}/{documentId}`, data, { params: { callCenter } })
       .catch(this.notificationsService.error('errors.default.delete').entity(this.errSingular).dispatchCallback());
   }
 }

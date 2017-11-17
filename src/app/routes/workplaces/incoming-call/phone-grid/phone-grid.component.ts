@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { DebtService } from '../../../../core/debt/debt.service';
 import { IncomingCallService } from '../incoming-call.service';
 
+import { invert } from '../../../../core/utils';
+
 @Component({
   selector: 'app-incoming-call-phone-grid',
   templateUrl: 'phone-grid.component.html',
@@ -47,7 +49,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get officeVisitButtonDisabled$(): Observable<boolean> {
-    return this.debtService.canRegisterOfficeVisit$;
+    return this.debtService.canRegisterOfficeVisit$.map(invert);
   }
 
   onSelect(phone: any): void {
