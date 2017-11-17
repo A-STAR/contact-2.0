@@ -46,8 +46,11 @@ export class DebtProcessingComponent extends DialogFunctions {
     {
       name: EntityGroupService.ACTION_ENTITY_GROUP_ADD,
       enabled: this.canMakeAction(this.entityGroupService.getCanAdd$(this.entityTypeId)),
-      action: (action: IAGridAction) =>
-        Object.assign(action.action, { addOptions: [ { name: 'ids', value: this.selectedDebts$.value } ] })
+      onAction: (action: IAGridAction) => {
+        const { metadataAction } = action;
+        metadataAction.addOptions = [].concat({ name: 'ids', value: this.selectedDebts$.value });
+        return action;
+      }
     }
   ];
 
@@ -90,8 +93,9 @@ export class DebtProcessingComponent extends DialogFunctions {
     this.selectedDebts$.next(selectedDebts);
   }
 
-  onAction({ action: { action }, params }: IActionGridDialogData): void {
-    this.dialog = action.action;
+  onAction({ action, params }: IActionGridDialogData): void {
+    const { metadataAction } = action;
+    this.dialog = metadataAction.action;
     this.cdRef.markForCheck();
   }
 }

@@ -694,24 +694,24 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private createMetadataMenuItem(
-    action: IMetadataAction,
+    metadataAction: IMetadataAction,
     params: GetContextMenuItemsParams,
     contextItem: IContextMenuItem): MenuItemDef {
 
     const menuItem: MenuItemDef = {
       ...(contextItem || {}),
-      name: this.translate.instant(`default.grid.actions.${action.action}`),
+      name: this.translate.instant(`default.grid.actions.${metadataAction.action}`),
       action: () => {
-        if (contextItem && contextItem.action) {
-          contextItem.action.call(this, { action, params });
+        if (contextItem && contextItem.onAction) {
+          contextItem.onAction.call(this, { metadataAction, params });
         }
-        this.action.emit({ action, params });
+        this.action.emit({ metadataAction: metadataAction, params });
       }
     };
     if (contextItem && contextItem.enabled) {
       contextItem.enabled.take(1).subscribe(enabled => menuItem.disabled = !enabled);
     } else {
-      menuItem.disabled = !this.isContextMenuItemEnabled(action.action);
+      menuItem.disabled = !this.isContextMenuItemEnabled(metadataAction.action);
     }
     return menuItem;
   }

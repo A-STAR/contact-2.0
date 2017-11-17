@@ -63,11 +63,11 @@ export class ActionGridComponent<T> extends DialogFunctions {
   }
 
   onAction(gridAction: IAGridAction): void {
-    const { action, params } = gridAction;
-    this.dialog = action.action;
+    const { metadataAction, params } = gridAction;
+    this.dialog = metadataAction.action;
     this.dialogData = {
       action: gridAction,
-      params: action.params.reduce((acc, param) => ({
+      params: metadataAction.params.reduce((acc, param) => ({
         ...acc,
         [param]: params.node.data[param]
       }), {})
