@@ -1,6 +1,6 @@
 <app-constant-edit
   *ngIf="isDialog('editConstant')"
-  [editedEntity]="selectedRecord$ | async"
+  [constant]="selectedRecord$ | async"
   (submit)="onSubmit($event)"
   (cancel)="onCloseDialog()"
 >

@@ -68,7 +68,6 @@ export class DebtProcessingComponent extends DialogFunctions {
 
   onDblClick(debt: IDebt): void {
     const { personId, debtId } = debt;
-    // log('debt', debt);
     this.contentTabService.removeTabByPath(`${this.router.url}\/[0-9]+$`);
     this.router.navigate([ `${this.router.url}/${personId}/${debtId}` ]);
   }

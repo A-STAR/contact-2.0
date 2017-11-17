@@ -1,56 +1,77 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  Component, ChangeDetectorRef , ChangeDetectionStrategy, EventEmitter, Input, OnInit, OnDestroy, Output, ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 
-import { EntityBaseComponent } from '../../../../shared/components/entity/base.component';
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IConstant } from '../constants.interface';
+import { IDynamicFormControl, IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+import { makeKey } from '../../../../core/utils';
+
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
+const label = makeKey('constants.edit');
 
 @Component({
   selector: 'app-constant-edit',
-  templateUrl: './constant-edit.component.html'
+  templateUrl: './constant-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConstantEditComponent extends EntityBaseComponent<IConstant> implements OnInit, OnDestroy {
+export class ConstantEditComponent implements OnInit, OnDestroy {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  @Input() constant: IConstant;
+  @Output() submit = new EventEmitter<IConstant>();
+  @Output() cancel = new EventEmitter<void>();
+
   private localizedOptions: any;
   private langSub: Subscription;
 
+  controls: Array<IDynamicFormItem>;
   formData: IConstant;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private translateService: TranslateService,
     private valueConverterService: ValueConverterService,
-  ) {
-    super();
-    this.localizedOptions = this.translateService.instant('default.typeCode');
-    this.langSub = this.translateService.onLangChange
-      .subscribe(event => this.localizedOptions = event.translations.default.typeCode);
+  ) {}
+
+  canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
   }
 
   ngOnInit(): void {
+    this.localizedOptions = this.translateService.instant('default.typeCode');
+    this.langSub = this.translateService.onLangChange
+      .subscribe(event => this.localizedOptions = event.translations.default.typeCode);
+
+    this.controls = this.getControls();
+
     this.formData = {
-      ...this.editedEntity,
-      value: this.editedEntity.typeCode === 2
-        ? this.valueConverterService.fromISO(this.editedEntity.valueD)
-        : this.editedEntity.value
+      ...this.constant,
+      value: this.constant.typeCode === 2
+        ? this.valueConverterService.fromISO(this.constant.valueD)
+        : this.constant.value
     };
-    super.ngOnInit();
+    this.cdRef.markForCheck();
   }
 
   ngOnDestroy(): void {
     this.langSub.unsubscribe();
   }
 
-  toSubmittedValues(constant: IConstant): Partial<IConstant> {
-    return {
-      id: this.editedEntity.id,
-      typeCode: this.editedEntity.typeCode,
-      value: constant.typeCode === 2 ? this.valueConverterService.toISO(constant.value) : constant.value
-    };
+  onSubmit(): void {
+    const typeCode = this.form.getControl('typeCode').value;
+    const data = Object.assign({}, this.form.serializedUpdates, { typeCode });
+    this.submit.emit(data);
   }
 
-  protected getControls(): Array<IDynamicFormControl> {
+  onCancel(): void {
+    this.cancel.emit();
+  }
+
+  private getControls(): Array<IDynamicFormControl> {
     const options = [
       { label: this.localizedOptions.number, value: 1 },
       { label: this.localizedOptions.date, value: 2 },
@@ -61,11 +82,11 @@ export class ConstantEditComponent extends EntityBaseComponent<IConstant> implem
     ];
 
     return [
-      { label: 'id', controlName: 'id', type: 'hidden', required: true, disabled: true },
-      { label: 'constants.edit.name', controlName: 'name', type: 'text', required: true, disabled: true },
-      { label: 'constants.edit.type', controlName: 'typeCode', type: 'select', required: true, disabled: true, options },
-      { label: 'constants.edit.value', controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
-      { label: 'constants.edit.comment', controlName: 'dsc', type: 'textarea', required: true, disabled: true },
+      { label: label('id'), controlName: 'id', type: 'hidden', required: true, disabled: true },
+      { label: label('name'), controlName: 'name', type: 'text', required: true, disabled: true },
+      { label: label('typeCode'), controlName: 'typeCode', type: 'select', required: true, disabled: true, options },
+      { label: label('value'), controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
+      { label: label('dsc'), controlName: 'dsc', type: 'textarea', required: true, disabled: true },
     ];
   }
 }
