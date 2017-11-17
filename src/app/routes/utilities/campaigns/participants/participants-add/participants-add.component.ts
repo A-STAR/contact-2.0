@@ -25,7 +25,7 @@ export class ParticipantsAddComponent implements OnInit, OnDestroy {
   notAddedParticipants: IParticipant[];
 
   columns: Array<IGridColumn> = [
-    { prop: 'userId', minWidth: 40 },
+    { prop: 'id', minWidth: 40 },
     { prop: 'fullName', minWidth: 150 },
     { prop: 'organization', minWidth: 150 },
     { prop: 'position', minWidth: 100 },

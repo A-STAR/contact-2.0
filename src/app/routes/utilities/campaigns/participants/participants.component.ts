@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { CampaignsService } from '../campaigns.service';
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
 import { CampaignsDialogActionEnum } from '../campaigns.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -26,28 +27,31 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
   dialog: string;
 
   columns: Array<IGridColumn> = [
-    { prop: 'userId', minWidth: 40 },
+    { prop: 'id', minWidth: 40 },
     { prop: 'fullName', minWidth: 150 },
     { prop: 'organization', minWidth: 150 },
     { prop: 'position', minWidth: 100 },
   ];
 
-  hasPermissionToModifyCampaign$ = Observable.combineLatest(
-    this.userPermissionsService.has('CAMPAIGN_EDIT'),
-    this.campaignsService.selectedCampaign
-  ).map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
-    && selectedCampaign.statusCode === 1 || selectedCampaign.statusCode === 3);
-
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.currentDialogAction = CampaignsDialogActionEnum.PARTICIPANT_ADD,
-      enabled: this.hasPermissionToModifyCampaign$
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('CAMPAIGN_EDIT'),
+        this.campaignsService.selectedCampaign
+      ).map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
+        && (selectedCampaign.statusCode === 1 || selectedCampaign.statusCode === 3))
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.currentDialogAction = CampaignsDialogActionEnum.PARTICIPANT_REMOVE,
-      enabled: this.hasPermissionToModifyCampaign$
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('CAMPAIGN_EDIT'),
+        this.campaignsService.selectedCampaign,
+        this.campaignsService.selectedParticipant
+      ).map(([hasPermissions, selectedCampaign, selectedParticipant]) => hasPermissions && !!selectedCampaign
+        && !!selectedParticipant && (selectedCampaign.statusCode === 1 || selectedCampaign.statusCode === 3))
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -79,7 +83,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     }
   }
 
-  get isEntityBeingCreated(): boolean {
+  get isEntityBeingAdded(): boolean {
     return this.currentDialogAction === CampaignsDialogActionEnum.PARTICIPANT_ADD;
   }
 
@@ -87,8 +91,13 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     return this.currentDialogAction === CampaignsDialogActionEnum.PARTICIPANT_REMOVE;
   }
 
-  fetchParticipants(): Observable<IParticipant[]> {
-    return this.campaignsService.fetchParticipants();
+  fetchParticipants(): void {
+    this.campaignsService.fetchParticipants()
+    .take(1)
+    .subscribe(participants => {
+      this.participants = participants;
+      this.cdRef.markForCheck();
+    });
   }
 
   onSelectParticipant(selectedParticipant: IParticipant): void {
@@ -97,14 +106,23 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
 
   onRemove(): void {
     this.campaignsService.removeParticipants(this.grid.selected.map(selected => selected.userId))
-    .switchMap(() => this.campaignsService.fetchCampaigns())
-    .subscribe(() => this.cdRef.markForCheck());
+    .switchMap(() => this.campaignsService.fetchParticipants())
+    .take(1)
+    .subscribe(participants => {
+      this.participants = participants;
+      this.cancelAction();
+      this.cdRef.detectChanges();
+    });
   }
 
   onAddSubmit(data: IParticipant[]): void {
     this.campaignsService.addParticipants(data.map(participant => participant.id))
-      .switchMap(() => this.campaignsService.fetchCampaigns())
-      .subscribe(() => this.cdRef.markForCheck());
+      .switchMap(() => this.campaignsService.fetchParticipants())
+      .take(1)
+      .subscribe(participants => {
+        this.participants = participants;
+        this.cdRef.detectChanges();
+      });
   }
 
   cancelAction(): void {

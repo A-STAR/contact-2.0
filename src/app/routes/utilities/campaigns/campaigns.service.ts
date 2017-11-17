@@ -98,8 +98,6 @@ export class CampaignsService {
     return this.selectedCampaign
       .take(1)
       .switchMap(selectedCampaign => selectedCampaign ? this.readParticipants(selectedCampaign.id) : Observable.of([]))
-      // add id property for grids
-      .map(participants => this.formatParticipantsForGrids(participants))
       .catch(
       this.notificationsService.error('errors.default.read')
         .entity('entities.participant.gen.plural').dispatchCallback()
@@ -110,8 +108,6 @@ export class CampaignsService {
     return this.selectedCampaign
       .take(1)
       .switchMap(selectedCampaign => this.readNotAddedParticipants(selectedCampaign.id))
-      // add id property for grids
-      .map(participants => this.formatParticipantsForGrids(participants))
       .catch(
       this.notificationsService.error('errors.default.read')
         .entity('entities.participant.gen.plural').dispatchCallback()
@@ -157,19 +153,13 @@ export class CampaignsService {
   }
 
   private createParticipants(campaignId: number, participantIds: number[]): Observable<any> {
-    return this.dataService.create(`${this.baseUrl}/{campaignId}/users/?id={userIds}`,
-     { campaignId}, { userIds: participantIds });
+    return this.dataService.create(`${this.baseUrl}/{campaignId}/users`,
+     { campaignId}, { usersIds: participantIds });
   }
 
   private deleteParticipants(campaignId: number, participantIds: number[]): Observable<any> {
     return this.dataService.delete(`${this.baseUrl}/{campaignId}/users/?id={userIds}`,
      { campaignId, userIds: participantIds });
-  }
-
-  private formatParticipantsForGrids(participants: IParticipant[]): IParticipant[] {
-    return participants.map(participant => {
-      return { ...participant, id: participant.userId };
-    });
   }
 
 }

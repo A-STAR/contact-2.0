@@ -986,6 +986,10 @@
             "organization": "Department",
             "position": "Position"
           }
+        },
+        "remove": {
+          "title": "Remove participant",
+          "confirmMessage": "Are you sure you want to delete participant {{ name }} from the campaign?"
         }
       },
       "tabs": {

@@ -38,8 +38,7 @@ export interface ICampaignSelectPayload {
 }
 
 export interface IParticipant {
-  id?: number;
-  userId: number;
+  id: number;
   fullName: string;
   // ??
   organization: string;
