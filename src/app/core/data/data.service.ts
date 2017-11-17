@@ -4,12 +4,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { publishReplay, refCount, finalize } from 'rxjs/operators';
 
+import { IQueryParams } from './data.interface';
+
 interface RequestOptions {
   body?: any;
   headers?: HttpHeaders;
   observe?: 'response' | 'body' | 'events';
   responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
-  params?: HttpParams;
+  params?: IQueryParams;
 }
 
 @Injectable()
@@ -139,13 +141,21 @@ export class DataService {
         const route = this.createRoute(url, routeParams);
         const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
 
-        return this.http.request(method, `${rootUrl}${api}`, { ...options, headers });
+        return this.http.request(method, `${rootUrl}${api}`, {
+          ...options,
+          params: this.prepareHttpParams(options.params),
+          headers
+        });
       })
       .pipe(
         finalize(() => {
           this.nRequests$.next(this.nRequests$.value - 1);
         })
       );
+  }
+
+  private prepareHttpParams(params: IQueryParams = {}): HttpParams {
+    return Object.keys(params).reduce((acc, key) => params[key] ? acc.set(key, params[key]) : acc, new HttpParams());
   }
 
   private prepareMultipartFormData(body: object, file: File): FormData {
