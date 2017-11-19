@@ -25,6 +25,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
   participantsSub: Subscription;
 
   dialog: string;
+  selected: IParticipant[] = [];
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 40 },
@@ -101,7 +102,9 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
   }
 
   onSelectParticipant(selectedParticipant: IParticipant): void {
+    console.log(arguments);
     this.campaignsService.selectParticipant(selectedParticipant);
+    this.selected.push(selectedParticipant);
   }
 
   onRemove(): void {

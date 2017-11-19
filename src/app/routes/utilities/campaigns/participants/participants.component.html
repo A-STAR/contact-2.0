@@ -3,7 +3,8 @@
   [columns]="columns"
   [columnTranslationKey]="'utilities.campaigns.participants'"
   [rows]="participants"
-  selectionType="click"
+  selectionType="multi"
+  [selection]="selected"
   (onSelect)="onSelectParticipant($event)">
 </app-grid>
 
@@ -19,8 +20,11 @@
   [actionTranslationKey]="'utilities.campaigns.participants.remove.confirmMessage'"
   [actionMessage]="'default.buttons.remove'"
   [actionMode]="'danger'"
+  selectionType="multi"
+  (onSelect)="onSelectParticipant($event)"
   (action)="onRemove()"
-  (cancel)="cancelAction()">
+  (cancel)="cancelAction()"
+  >
 </app-dialog-action>
 
 
