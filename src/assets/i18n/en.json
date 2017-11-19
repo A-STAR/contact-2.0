@@ -330,11 +330,12 @@
   "constants": {
     "title": "Constants",
     "edit": {
+      "id": "Id",
       "title": "Constant",
       "name": "Name",
-      "type": "Type",
+      "typeCode": "Type",
       "value": "Value",
-      "comment": "Comments"
+      "dsc": "Comments"
     },
     "grid": {
       "id": "Id",
