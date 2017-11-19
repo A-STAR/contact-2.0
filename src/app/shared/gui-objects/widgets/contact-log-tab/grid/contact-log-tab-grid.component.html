@@ -1,0 +1,14 @@
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  [columns]="columns"
+  columnTranslationKey="widgets.contactLog"
+  [footerHeight]="false"
+  [rows]="contactLogList"
+  [selection]="selected"
+  selectionType="single"
+  [styles]="{ height: '400px' }"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onEdit($event)"
+>
+</app-grid>

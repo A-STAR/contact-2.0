@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../../shared/shared.module';
 
-import { DebtorContactLogComponent } from './contact-log.component';
+import { DebtorContactLogTabComponent } from './contact-log-tab.component';
 
 @NgModule({
   imports: [
     SharedModule,
   ],
   exports: [
-    DebtorContactLogComponent
+    DebtorContactLogTabComponent
   ],
   declarations: [
-    DebtorContactLogComponent
+    DebtorContactLogTabComponent
   ],
 })
-export class ContactLogModule {}
+export class ContactLogTabModule {}

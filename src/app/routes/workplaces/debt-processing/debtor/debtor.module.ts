@@ -21,7 +21,7 @@ import { DebtorAttributesModule } from './attributes/attributes.module';
 import { InformationModule } from './information/information.module';
 
 import { DebtorComponent } from './debtor.component';
-import { ContactLogModule } from './contact-log/contact-log.module';
+import { ContactLogTabModule } from './contact-log-tab/contact-log-tab.module';
 
 @NgModule({
   imports: [
@@ -38,7 +38,7 @@ import { ContactLogModule } from './contact-log/contact-log.module';
     DebtorPhoneModule,
     DebtorPromiseModule,
     DebtorPropertyModule,
-    ContactLogModule,
+    ContactLogTabModule,
     DebtorPropertyAttributesModule,
     DebtorAttributesModule,
     DebtsModule,

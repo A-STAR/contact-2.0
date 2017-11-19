@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
 
-import { ContactLogCardComponent } from './contact-log-card.component';
+import { ContactLogTabCardComponent } from './contact-log-card.component';
 
 @NgModule({
   imports: [
@@ -13,13 +13,13 @@ import { ContactLogCardComponent } from './contact-log-card.component';
     DynamicFormModule
   ],
   exports: [
-   ContactLogCardComponent,
+   ContactLogTabCardComponent,
   ],
   declarations: [
-   ContactLogCardComponent,
+   ContactLogTabCardComponent,
   ],
   entryComponents: [
-   ContactLogCardComponent,
+   ContactLogTabCardComponent,
   ]
 })
 export class ContactLogCardModule { }
