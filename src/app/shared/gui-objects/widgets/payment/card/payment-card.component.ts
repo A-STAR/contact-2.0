@@ -29,6 +29,9 @@ export class PaymentCardComponent {
   private debtId = this.routeParams.debtId;
   private paymentId = this.routeParams.paymentId;
 
+  private queryParams = (<any>this.route.queryParams).value;
+  private callCenter = this.queryParams.callCenter;
+
   controls: IDynamicFormControl[] = null;
   dialog: string;
   payment: IPayment;
@@ -54,7 +57,7 @@ export class PaymentCardComponent {
       this.userPermissionsService.has('PAYMENT_USER_EDIT'),
       this.canConfirm$,
       this.paymentId
-        ? this.paymentService.fetch(this.debtId, this.paymentId)
+        ? this.paymentService.fetch(this.debtId, this.paymentId, this.callCenter)
         : Observable.of(null),
     )
     .take(1)
@@ -118,8 +121,8 @@ export class PaymentCardComponent {
   onSubmit(): void {
     const data: IPayment = this.form.serializedUpdates;
     const action = this.paymentId
-      ? this.paymentService.update(this.debtId, this.paymentId, data)
-      : this.paymentService.create(this.debtId, data);
+      ? this.paymentService.update(this.debtId, this.paymentId, data, this.callCenter)
+      : this.paymentService.create(this.debtId, data, this.callCenter);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(PaymentService.MESSAGE_PAYMENT_SAVED);

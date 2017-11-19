@@ -59,7 +59,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
       });
 
     this.searchParamsSubscription = this.incomingCallService.searchParams$
-      .flatMap(params => params ? this.debtorGridService.fetchAll(params) : Observable.of(null))
+      .flatMap(params => params ? this.debtorGridService.fetchAll(params as any) : Observable.of(null))
       .subscribe(debtors => {
         this.debtors = debtors;
         this.incomingCallService.selectedDebtor = null;

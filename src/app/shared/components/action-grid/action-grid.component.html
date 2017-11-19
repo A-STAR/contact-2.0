@@ -4,11 +4,18 @@
   (close)="closeDialog()"
 ></app-contact-log-dialog>
 
+<app-entity-group-add
+  *ngIf="isDialog('objectAddToGroup')"
+  [dialogData]="dialogData"
+  (close)="onCloseDialog()">
+</app-entity-group-add>
+
 <app-grid2
   [columnIds]="columnIds"
   [metadataKey]="metadataKey"
   [ngClass]="ngClass"
   [persistenceKey]="persistenceKey"
+  [rowIdKey]="rowIdKey"
   [rows]="rows"
   [rowCount]="rowCount"
   [contextMenuItems]="contextMenuItems"

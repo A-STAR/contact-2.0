@@ -21,6 +21,7 @@ import { DebtorPaymentComponent } from './debtor/payment/payment.component';
 import { DebtorPhoneComponent } from './debtor/phone/phone.component';
 import { DebtorPromiseComponent } from './debtor/promise/promise.component';
 import { DebtorPropertyComponent } from './debtor/property/property.component';
+import { DebtorContactLogComponent } from './debtor/contact-log/contact-log.component';
 
 const routes: Routes = [
   { path: '', component: DebtProcessingComponent },
@@ -37,6 +38,11 @@ const routes: Routes = [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorPropertyComponent },
           { path: ':propertyId', component: DebtorPropertyComponent },
+        ]
+      },
+      { path: 'contactLog', children: [
+          { path: 'create', component: DebtorContactLogComponent },
+          { path: ':contactLogId/contactLogType/:contactLogType', component: DebtorContactLogComponent },
         ]
       },
       { path: 'contact', children: [
@@ -148,7 +154,9 @@ const routes: Routes = [
     DebtProcessingComponent,
   ],
   providers: [
-    DebtProcessingService
+    DebtProcessingService,
+    { provide: 'entityTypeId', useValue: 19 },
+    { provide: 'manualGroup', useValue: true }
   ]
 })
 export class DebtProcessingModule {

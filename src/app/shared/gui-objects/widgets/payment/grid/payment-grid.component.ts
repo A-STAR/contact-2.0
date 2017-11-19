@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IPayment } from '../payment.interface';
-import { IDebt } from '../../debt/debt/debt.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -17,45 +16,56 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
+
 @Component({
   selector: 'app-payment-grid',
   templateUrl: './payment-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentGridComponent implements OnInit, OnDestroy {
+  @Input() callCenter = false;
+  @Input('debtId') set debtId(debtId: number) {
+    this.debtId$.next(debtId);
+    this.cdRef.markForCheck();
+  }
+
   private selectedPayment$ = new BehaviorSubject<IPayment>(null);
-  private debt$ = new BehaviorSubject<IDebt>(null);
+  private debtId$ = new BehaviorSubject<number>(null);
 
   displayCanceled = false;
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: Observable.combineLatest(this.canAdd$, this.debt$)
-        .map(([ canAdd, debt ]) => canAdd && !!debt && !!debt.id),
-      action: () => this.onAdd()
+      enabled: combineLatestAnd([ this.canAdd$, this.debtId$.map(Boolean) ]),
+      action: () => this.onAdd(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedPayment$)
-        .map(([ canAdd, selectedPayment ]) => canAdd && !!selectedPayment && !selectedPayment.isCanceled),
+      enabled: combineLatestAnd([
+        this.canEdit$,
+        this.selectedPayment$.map(payment => payment && !payment.isCanceled),
+      ]),
       action: () => this.onEdit()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_OK,
       label: 'debtor.paymentsTab.confirm.buttonLabel',
-      enabled: Observable.combineLatest(this.canСonfirm$, this.selectedPayment$)
-      .map(([ canConfirm, selectedPayment ]) =>
-        canConfirm && !!selectedPayment && !selectedPayment.isCanceled && !selectedPayment.isConfirmed),
+      enabled: combineLatestAnd([
+        this.canСonfirm$,
+        this.selectedPayment$.map(payment => payment && !payment.isCanceled && !payment.isConfirmed),
+      ]),
       action: () => this.setDialog('confirm')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_UNDO,
       label: 'debtor.paymentsTab.cancel.buttonLabel',
       action: () => this.setDialog('cancel'),
-      enabled: Observable.combineLatest(this.canCancel$, this.selectedPayment$)
-        .map(([canCancel, selectedPayment]) =>
-          canCancel && !!selectedPayment && !selectedPayment.isCanceled),
+      enabled: combineLatestAnd([
+        this.canCancel$,
+        this.selectedPayment$.map(payment => payment && !payment.isCanceled),
+      ]),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -95,7 +105,6 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
-  private debtSubscription: Subscription;
 
   gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '300px' };
 
@@ -121,24 +130,15 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.canViewSubscription = this.canView$
-      .subscribe(hasPermission => {
-        if (hasPermission) {
-          this.fetch();
-        } else {
+    this.canViewSubscription = Observable.combineLatest(this.canView$, this.debtId$)
+      .subscribe(([ hasPermission, debtId ]) => {
+        if (!hasPermission) {
           this.notificationsService.error('errors.default.read.403').entity('entities.payments.gen.plural').dispatch();
           this.clear();
-        }
-      });
-
-    this.debtSubscription = this.messageBusService
-      .select(PaymentService.MESSAGE_DEBT_SELECTED)
-      .subscribe((debt: IDebt) => {
-        this.debt$.next(debt);
-        if (!debt.id) {
-          this.clear();
-        } else {
+        } else if (debtId) {
           this.fetch();
+        } else {
+          this.clear();
         }
       });
 
@@ -149,14 +149,12 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.selectedPayment$.complete();
-    this.debt$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    this.debtSubscription.unsubscribe();
   }
 
   get debtId(): number {
-    return this.debt$.value && this.debt$.value.id;
+    return this.debtId$.value;
   }
 
   get canView$(): Observable<boolean> {
@@ -172,9 +170,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   }
 
   get canRefresh$(): Observable<boolean> {
-    return Observable.combineLatest(this.canView$, this.debt$)
-      .map(([ canView, debt ]) => canView && !!debt && !!debt.id)
-      .distinctUntilChanged();
+    return combineLatestAnd([ this.canView$, this.debtId$.map(Boolean) ]).distinctUntilChanged();
   }
 
   get canСonfirm$(): Observable<boolean> {
@@ -201,7 +197,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   onConfirm(): void {
     const { id: paymentId } = this.selectedPayment$.value;
     const payment = { isConfirmed: 1 } as IPayment;
-    this.paymentService.update(this.debtId, paymentId, payment)
+    this.paymentService.update(this.debtId, paymentId, payment, this.callCenter)
     .subscribe(
       () => this.setDialog().fetch(),
       () => this.setDialog()
@@ -211,7 +207,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   onCancelConfirm(): void {
     const { id: paymentId } = this.selectedPayment$.value;
     const payment = { isCanceled: 1 } as IPayment;
-    this.paymentService.update(this.debtId, paymentId, payment)
+    this.paymentService.update(this.debtId, paymentId, payment, this.callCenter)
       .subscribe(
         () => this.setDialog().fetch(),
         () => this.setDialog()
@@ -237,20 +233,27 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
 
   private onEdit(payment: IPayment = null): void {
     const { id } = payment || this.selectedPayment$.value;
-    this.router.navigate([ `${this.router.url}/debt/payment/${id}` ]);
+    this.router.navigate([ this.callCenter ? `payment/${id}` : `debt/payment/${id}` ], {
+      queryParams: { callCenter: Number(this.callCenter) },
+      relativeTo: this.route,
+    });
   }
 
   private onAdd(): void {
-    const { debtId } = this;
-    if (!debtId) { return; }
-    this.router.navigate([ `${this.router.url}/debt/payment/create` ]);
+    if (!this.debtId) {
+      return;
+    }
+    this.router.navigate([ this.callCenter ? 'payment/create' : 'debt/payment/create' ], {
+      queryParams: { callCenter: Number(this.callCenter) },
+      relativeTo: this.route,
+    });
   }
 
   private fetch(): void {
     const { debtId } = this;
     if (!debtId) { return; }
 
-    this.paymentService.fetchAll(debtId, this.displayCanceled)
+    this.paymentService.fetchAll(debtId, this.displayCanceled, this.callCenter)
       .subscribe(payments => {
         this.rows = [].concat(payments);
         this.selectedPayment$.next(null);

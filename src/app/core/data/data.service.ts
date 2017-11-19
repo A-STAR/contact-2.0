@@ -4,12 +4,15 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { publishReplay, refCount, finalize } from 'rxjs/operators';
 
+import { IQueryParam, IQueryParams } from './data.interface';
+
 interface RequestOptions {
   body?: any;
   headers?: HttpHeaders;
   observe?: 'response' | 'body' | 'events';
   responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
-  params?: HttpParams;
+  // Params whose value is falsy will NOT be sent
+  params?: IQueryParams;
 }
 
 @Injectable()
@@ -139,13 +142,27 @@ export class DataService {
         const route = this.createRoute(url, routeParams);
         const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
 
-        return this.http.request(method, `${rootUrl}${api}`, { ...options, headers });
+        return this.http.request(method, `${rootUrl}${api}`, {
+          ...options,
+          params: this.prepareHttpParams(options.params),
+          headers
+        });
       })
       .pipe(
         finalize(() => {
           this.nRequests$.next(this.nRequests$.value - 1);
         })
       );
+  }
+
+  private prepareHttpParams(params: IQueryParams = {}): HttpParams {
+    return Object.keys(params).reduce((acc, key) => {
+      return params[key] ? acc.set(key, this.toQueryParam(params[key])) : acc;
+    }, new HttpParams());
+  }
+
+  private toQueryParam(value: IQueryParam): string {
+    return value === true ? '1' : `${value}`;
   }
 
   private prepareMultipartFormData(body: object, file: File): FormData {

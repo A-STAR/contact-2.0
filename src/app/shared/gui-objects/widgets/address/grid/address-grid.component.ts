@@ -30,11 +30,22 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
 })
 export class AddressGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit';
-  @Input() debtId: number;
-  @Input() forCallCenter = false;
+  @Input('debtId')
+  set debtId(debtId: number) {
+    this.debtId$.next(debtId);
+    this.cdRef.markForCheck();
+  }
+  @Input() callCenter = false;
   @Input() entityType = 18;
-  @Input() personId: number;
+  @Input('personId')
+  set personId(personId: number) {
+    this.personId$.next(personId);
+    this.cdRef.markForCheck();
+  }
   @Input() personRole: number;
+
+  private debtId$ = new BehaviorSubject<number>(null);
+  private personId$ = new BehaviorSubject<number>(null);
 
   private _selectedAddressId$ = new BehaviorSubject<number>(null);
 
@@ -98,6 +109,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private canViewSubscription: Subscription;
   private busSubscription: Subscription;
+  private debtSubscription: Subscription;
+
   private debt: IDebt;
 
   private _columns: Array<IGridColumn> = [
@@ -126,34 +139,39 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
-      this.debtService.fetch(this.personId, this.debtId),
-      this.gridService.setDictionaryRenderers(this._columns),
-      this.canViewBlock$,
-    )
-    .take(1)
-    .subscribe(([ debt, columns, canViewBlock ]) => {
-      this.debt = debt;
-
-      const filteredColumns = columns.filter(column => {
-        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
+    this.debtSubscription = this.debtId$
+      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : Observable.of(null))
+      .subscribe(debt => {
+        this.debt = debt;
+        this.cdRef.markForCheck();
       });
 
-      this.columns = this.gridService.setRenderers(filteredColumns);
-      this.cdRef.markForCheck();
-    });
+      Observable.combineLatest(
+        this.gridService.setDictionaryRenderers(this._columns),
+        this.canViewBlock$,
+      )
+      .take(1)
+      .subscribe(([ columns, canViewBlock ]) => {
+        const filteredColumns = columns.filter(column => {
+          return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
+        });
+        this.columns = this.gridService.setRenderers(filteredColumns);
+        this.cdRef.markForCheck();
+      });
 
     this.busSubscription = this.messageBusService
       .select(AddressService.MESSAGE_ADDRESS_SAVED)
       .subscribe(() => this.fetch());
 
-    this.canViewSubscription = this.canView$
-      .filter(canView => canView !== undefined)
-      .subscribe(hasPermission => {
-        if (hasPermission) {
+    this.canViewSubscription = Observable
+      .combineLatest(this.canView$, this.personId$)
+      .subscribe(([ canView, personId ]) => {
+        if (!canView) {
+          this.notificationsService.error('errors.default.read.403').entity('entities.addresses.gen.plural').dispatch();
+          this.clear();
+        } else if (personId) {
           this.fetch();
         } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.addresses.gen.plural').dispatch();
           this.clear();
         }
       });
@@ -181,7 +199,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onMarkClick(): void {
-    this.addressService.check(this.personId, this._selectedAddressId$.value)
+    this.addressService.check(this.personId$.value, this._selectedAddressId$.value)
       .subscribe(result => this.setDialog(result ? 'markConfirm' : 'mark'));
   }
 
@@ -190,7 +208,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onMarkDialogSubmit(data: IAddressMarkData): void {
-    this.addressService.markForVisit(this.personId, this._selectedAddressId$.value, data)
+    this.addressService.markForVisit(this.personId$.value, this._selectedAddressId$.value, data)
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -208,17 +226,17 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.addressService.block(this.entityType, this.personId, this._selectedAddressId$.value, this.forCallCenter, code)
+    this.addressService.block(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.callCenter, code)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.addressService.unblock(this.entityType, this.personId, this._selectedAddressId$.value, this.forCallCenter)
+    this.addressService.unblock(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(this.entityType, this.personId, this._selectedAddressId$.value, this.forCallCenter)
+    this.addressService.delete(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -237,8 +255,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         // Contact type 'Visit' = 3
         // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
-        const url = `/workplaces/contact-registration/${this.debtId}/3/${addressId}`;
-        this.router.navigate([ url ], { queryParams: { personId: this.personId, personRole: this.personRole } });
+        const url = `/workplaces/contact-registration/${this.debtId$.value}/3/${addressId}`;
+        this.router.navigate([ url ], { queryParams: { personId: this.personId$.value, personRole: this.personRole } });
       });
   }
 
@@ -323,7 +341,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private onEdit(addressId: number): void {
     this.router.navigate([ `${this.router.url}/address/${addressId}` ], {
-      queryParams: this.forCallCenter ? { forCallCenter: 1 } : {}
+      queryParams: this.callCenter ? { callCenter: 1 } : {}
     });
   }
 
@@ -333,7 +351,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.addressService.fetchAll(this.entityType, this.personId, this.forCallCenter)
+    this.addressService.fetchAll(this.entityType, this.personId$.value, this.callCenter)
       .subscribe(addresses => {
         this._addresses = addresses;
         this.cdRef.markForCheck();

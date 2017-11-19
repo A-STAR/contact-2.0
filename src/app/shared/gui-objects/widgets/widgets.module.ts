@@ -9,6 +9,7 @@ import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
 import { DebtModule } from './debt/debt.module';
+import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DocumentModule } from './documents/document.module';
 import { EmailModule } from './email/email.module';
 import { EmploymentModule } from './employment/employment.module';
@@ -21,7 +22,7 @@ import { PaymentModule } from './payment/payment.module';
 import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
-import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
+import { EntityGroupModule } from './entity-group/entity-group.module';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { DebtResponsibleModule } from './debt-responsible/debt-responsible.modul
     ContactPropertyModule,
     DebtorActionLogModule,
     DebtModule,
+    DebtResponsibleModule,
     DocumentModule,
     EmailModule,
     EmploymentModule,
@@ -46,7 +48,7 @@ import { DebtResponsibleModule } from './debt-responsible/debt-responsible.modul
     PhoneModule,
     PromiseModule,
     PropertyModule,
-    DebtResponsibleModule,
+    EntityGroupModule,
   ],
   exports: [
     AddressModule,
@@ -56,6 +58,7 @@ import { DebtResponsibleModule } from './debt-responsible/debt-responsible.modul
     ContactPropertyModule,
     DebtorActionLogModule,
     DebtModule,
+    DebtResponsibleModule,
     DocumentModule,
     EmailModule,
     EmploymentModule,
@@ -69,7 +72,7 @@ import { DebtResponsibleModule } from './debt-responsible/debt-responsible.modul
     PhoneModule,
     PromiseModule,
     PropertyModule,
-    DebtResponsibleModule,
+    EntityGroupModule,
   ]
 })
 export class WidgetsModule { }

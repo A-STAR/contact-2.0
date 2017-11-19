@@ -4,7 +4,6 @@ export enum CampaignsDialogActionEnum {
   CAMPAIGN_EDIT,
   CAMPAIGN_REMOVE,
   PARTICIPANT_ADD,
-  PARTICIPANT_EDIT,
   PARTICIPANT_REMOVE
 }
 
@@ -67,8 +66,7 @@ export interface ICampaignSelectPayload {
 }
 
 export interface IParticipant {
-  id?: number;
-  userId: number;
+  id: number;
   fullName: string;
   // ??
   organization: string;

@@ -24,7 +24,6 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   @ViewChild(GridComponent) grid: GridComponent;
 
   dialog: string;
-
   campaigns: ICampaign[];
   campaingsSub: Subscription;
 
@@ -133,8 +132,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   onSelectCampaign(selection: ICampaign[]): void {
-    console.log('in component', selection);
-    this.campaignsService.selectCampaign(selection[0]);
+    this.campaignsService.selectCampaign(selection[selection.length - 1]);
   }
 
   fetchCampaigns(): Subscription {
@@ -166,6 +164,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
 
   cancelAction(): void {
     this.currentDialogAction = CampaignsDialogActionEnum.NONE;
+    this.grid.clearSelection();
     this.onCloseDialog();
   }
 

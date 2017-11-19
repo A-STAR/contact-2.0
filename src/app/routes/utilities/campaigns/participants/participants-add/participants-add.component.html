@@ -1,0 +1,30 @@
+<app-dialog (close)="onCancel()">
+  <div dialog-header>
+    <h3>{{ 'utilities.campaigns.participants.add.title' | translate }}</h3>
+  </div>
+
+  <div style="margin: 0 0 12px">
+    <app-grid
+      class="flat"
+      [styles]="{ height: '250px' }"
+      [columns]="columns"
+      [columnTranslationKey]="'utilities.campaigns.participants.add'"
+      [rows]="notAddedParticipants"
+      selectionType="multiClick">
+    </app-grid>
+  </div>
+
+  <div dialog-footer>
+    <button
+      class="btn btn-success"
+      [disabled]="!canSubmit()"
+      (click)="onSubmit()"
+    >
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>
+

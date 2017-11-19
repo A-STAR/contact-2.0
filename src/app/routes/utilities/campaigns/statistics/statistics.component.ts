@@ -57,9 +57,10 @@ export class StatisticsComponent implements OnInit {
           }
           return this.campaignsService.fetchCampaignStat(campain.id);
         })
-        .do(data => data && data.agridatedData
-          ? this.campaignArgigateStatistic = Observable.of(data.agridatedData)
-          : this.campaignArgigateStatistic = Observable.of(null) )
+        // TODO uncomment when view will be ready
+        // .do(data => data && data.agridatedData
+        //   ? this.campaignArgigateStatistic = Observable.of(data.agridatedData)
+        //   : this.campaignArgigateStatistic = Observable.of(null) )
         .map(data => data && data.userStatistic && data.userStatistic.length
           ? data.userStatistic
           : null);

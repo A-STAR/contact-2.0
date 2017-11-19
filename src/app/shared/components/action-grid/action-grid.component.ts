@@ -9,7 +9,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import { IActionGridDialogParams } from './action-grid.interface';
+import { IActionGridDialogData } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IContextMenuItem, IAGridSelected } from '../grid2/grid2.interface';
 
 import { Grid2Component } from '../../components/grid2/grid2.component';
@@ -31,18 +31,18 @@ export class ActionGridComponent<T> extends DialogFunctions {
   @Input() ngClass: string;
   @Input() rows: T[] = [];
   @Input() rowCount: number;
-  @Input() contextMenuItems: IContextMenuItem;
+  @Input() contextMenuItems: IContextMenuItem[];
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
-  @Output() action = new EventEmitter<IAGridAction>();
+  @Output() action = new EventEmitter<IActionGridDialogData>();
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   dialog: string;
 
-  private dialogParams: IActionGridDialogParams;
+  dialogData: IActionGridDialogData;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -51,7 +51,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
   }
 
   getDialogParam(key: string): number | string {
-    return this.dialogParams[key];
+    return this.dialogData.params[key];
   }
 
   getFilters(): FilterObject {
@@ -62,13 +62,17 @@ export class ActionGridComponent<T> extends DialogFunctions {
     return this.grid.getRequestParams();
   }
 
-  onAction({ action, params }: IAGridAction): void {
-    this.dialog = action.action;
-    this.dialogParams = action.params.reduce((acc, param) => ({
-      ...acc,
-      [param]: params.node.data[param]
-    }), {});
-    this.action.emit({ action, params });
+  onAction(gridAction: IAGridAction): void {
+    const { metadataAction, params } = gridAction;
+    this.dialog = metadataAction.action;
+    this.dialogData = {
+      action: gridAction,
+      params: metadataAction.params.reduce((acc, param) => ({
+        ...acc,
+        [param]: params.node.data[param]
+      }), {})
+    };
+    this.action.emit(this.dialogData);
     this.cdRef.markForCheck();
   }
 

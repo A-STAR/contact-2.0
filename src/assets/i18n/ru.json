@@ -67,6 +67,7 @@
         "DEBTOR_PHONE": "Телефон должника",
         "DEBTOR_PROMISE": "Обещание платежа",
         "DEBTOR_PROPERTY": "Карточка имущества",
+        "DEBTOR_CONTACT_LOG_COMPONENT": "Карточка контакта",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_PROTOCOL": "Протокол контактов",
@@ -976,6 +977,19 @@
           "fullName": "ФИО",
           "organization": "Подразделение",
           "position": "Должность"
+        },
+        "add":{
+          "title": "Добавить участника",
+          "grid": {
+            "id": "ID",
+            "fullName": "ФИО",
+            "organization": "Подразделение",
+            "position": "Должность"
+          }
+        },
+        "remove": {
+          "title": "Удаление участника",
+          "confirmMessage": "Вы действительно хотите удалить участника {{ name }} из кампании?"
         }
       },
       "tabs": {
@@ -1510,6 +1524,16 @@
         "organization": "Подразделение",
         "position": "Должность"
       }
+    },
+    "entityGroup": {
+      "dialog": {
+        "title": "Выбор группы"
+      },
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "comment": "Комментарий"
+      }
     }
   },
   "entities": {
@@ -1657,6 +1681,9 @@
     },
     "operator": {
       "gen": { "singular": "оператора", "plural": "операторов" }
+    },
+    "entityGroup": {
+      "gen": { "singular": "группы", "plural": "групп" }
     }
   },
   "errors": {
@@ -1882,7 +1909,8 @@
         "statusChange": "Изменить статус",
         "showContactHistory": "История контактов",
         "debtSetResponsible": "Установка ответственного по долгу",
-        "debtClearResponsible": "Снятие ответственного по долгу"
+        "debtClearResponsible": "Снятие ответственного по долгу",
+        "objectAddToGroup": "Добавить в группу"
       }
     },
     "filter": {
