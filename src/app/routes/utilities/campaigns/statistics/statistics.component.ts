@@ -88,7 +88,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSelect(): void {
+  onSelect(data: any): void {
 
   }
 
