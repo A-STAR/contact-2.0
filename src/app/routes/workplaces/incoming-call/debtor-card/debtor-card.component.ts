@@ -18,7 +18,7 @@ const labelKey = makeKey('modules.incomingCall.debtorCard.form');
 export class DebtorCardComponent implements AfterViewInit {
   controls = [
     { label: labelKey('userFullName'), controlName: 'userFullName', type: 'text' },
-    { label: labelKey('organization'), controlName: 'organization ', type: 'text' },
+    { label: labelKey('organization'), controlName: 'organization', type: 'text' },
     { label: labelKey('position'), controlName: 'position', type: 'text' },
     { label: labelKey('mobPhone'), controlName: 'mobPhone', type: 'text' },
     { label: labelKey('workPhone'), controlName: 'workPhone', type: 'text' },
