@@ -13,6 +13,7 @@ export interface IOrganization {
 }
 
 export interface IEmployee {
+  id?: number;
   userId: number;
   roleCode: number;
   comment: string;
@@ -21,7 +22,7 @@ export interface IEmployee {
 
 export interface IEmployeeCreateRequest {
   roleCode: number;
-  usersIds: Array<number>;
+  usersIds: number[];
 }
 
 export interface IEmployeeUpdateRequest {
@@ -30,22 +31,16 @@ export interface IEmployeeUpdateRequest {
   isMain: number;
 }
 
-export enum IOrganizationDialogActionEnum {
-  ORGANIZATION_ADD,
-  ORGANIZATION_EDIT,
-  ORGANIZATION_REMOVE,
-  EMPLOYEE_ADD,
-  EMPLOYEE_EDIT,
-  EMPLOYEE_REMOVE
+export interface IOrganizationSelectState {
+  selectedOrganization: ITreeNode;
+  organizations?: ITreeNode[];
 }
 
-export interface IOrganizationsState {
-  organizations: ITreeNode[];
-  selectedOrganization: ITreeNode;
-  employees: Array<IEmployee>;
-  notAddedEmployees: Array<IEmployee>;
+export interface IEmployeeSelectState {
+  employees?: IEmployee[];
   selectedEmployeeUserId: number;
-  dialogAction: IOrganizationDialogActionEnum;
 }
+
+export type IOrganizationsState = IOrganizationSelectState & IEmployeeSelectState;
 
 export type IEmployeeUser = IUser & IEmployee;
