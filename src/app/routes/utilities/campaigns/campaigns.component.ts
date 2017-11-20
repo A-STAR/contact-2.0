@@ -1,4 +1,10 @@
-import { Component, ViewChild, ChangeDetectorRef, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { DialogFunctions } from '../../../core/dialog';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
@@ -7,10 +13,12 @@ import { IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { CampaignsService } from './campaigns.service';
 import { Observable } from 'rxjs/Observable';
-import { ICampaign, CampaignsDialogActionEnum } from './campaigns.interface';
+import { ICampaign, CampaignsDialogActionEnum, CampaignStatus } from './campaigns.interface';
 import { ToolbarItemTypeEnum, IToolbarItem } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-campaigns',
@@ -18,14 +26,13 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./campaigns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CampaignsComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class CampaignsComponent extends DialogFunctions implements OnInit {
   static COMPONENT_NAME = 'CampaignsComponent';
 
   @ViewChild(GridComponent) grid: GridComponent;
 
   dialog: string;
   campaigns: ICampaign[];
-  campaingsSub: Subscription;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 40 },
@@ -73,8 +80,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       align: 'right',
       enabled: this.campaignsService.selectedCampaign
         .map(selectedCampaign =>
-          // todo get status code from dict
-          !!selectedCampaign && selectedCampaign.statusCode === 2)
+          !!selectedCampaign && selectedCampaign.statusCode === CampaignStatus.STARTED)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_START,
@@ -83,8 +89,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       align: 'right',
       enabled: this.campaignsService.selectedCampaign
         .map(selectedCampaign =>
-          // todo get status code from dict
-          !!selectedCampaign && selectedCampaign.statusCode !== 2)
+          !!selectedCampaign && selectedCampaign.statusCode !== CampaignStatus.STARTED)
     },
   ];
 
@@ -94,7 +99,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
               private cdRef: ChangeDetectorRef,
               private campaignsService: CampaignsService,
               private translateService: TranslateService,
-              private userPermissionsService: UserPermissionsService) {
+              private userPermissionsService: UserPermissionsService,
+              private notificationsService: NotificationsService) {
     super();
   }
 
@@ -106,13 +112,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       this.cdRef.markForCheck();
     });
 
-    this.campaingsSub = this.fetchCampaigns();
-  }
-
-  ngOnDestroy(): void {
-    if (this.campaingsSub) {
-      this.campaingsSub.unsubscribe();
-    }
+    this.fetchCampaigns();
   }
 
   get selectedCampaign(): Observable<ICampaign> {
@@ -135,23 +135,39 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     this.campaignsService.selectCampaign(selection[selection.length - 1]);
   }
 
+  onCampaignDblClick(selection: ICampaign): void {
+    const permission = 'CAMPAIGN_EDIT';
+    this.userPermissionsService.has(permission)
+      .take(1)
+      .subscribe(hasPermission => {
+        if (hasPermission) {
+          this.currentDialogAction = CampaignsDialogActionEnum.CAMPAIGN_EDIT;
+        } else {
+          this.notificationsService.error('roles.permissions.messages.no_edit').params({ permission }).dispatch();
+        }
+      });
+  }
+
   fetchCampaigns(): Subscription {
     return this.campaignsService.fetchCampaigns()
-      .subscribe(campaings => {
-        this.campaigns = campaings;
+      .take(1)
+      .subscribe(campaigns => {
+        this.campaigns = campaigns;
         this.cancelAction();
         this.cdRef.markForCheck();
       });
   }
 
-  createCampaign(data: ICampaign): void {
-    this.campaignsService.createCampaign(data)
-    .map(() => this.fetchCampaigns())
-    .subscribe(() => this.cdRef.detectChanges());
+  createCampaign(campaign: ICampaign): void {
+    campaign.statusCode = CampaignStatus.CREATED;
+
+    this.campaignsService.createCampaign(campaign)
+      .map(() => this.fetchCampaigns())
+      .subscribe(() => this.cdRef.detectChanges());
   }
 
-  updateCampaign(data: ICampaign): void {
-    this.campaignsService.updateCampaign(data)
+  updateCampaign(campaign: ICampaign): void {
+    this.campaignsService.updateCampaign(campaign)
     .map(() => this.fetchCampaigns())
     .subscribe(() => this.cdRef.detectChanges());
   }
@@ -169,20 +185,16 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   onStart(): void {
-    this.grid.selected.map(campaign => {
-      // get from dict
-      campaign.statusCode = 2;
-      return campaign;
-    });
-    this.cdRef.markForCheck();
+    const onStartRequests: Observable<any>[] = this.grid.selected
+      .map(campaign => this.campaignsService.startCampaign(campaign));
+
+    forkJoin(onStartRequests).take(1).subscribe(() => this.cdRef.markForCheck());
   }
 
   onStop(): void {
-    this.grid.selected.map(campaign => {
-      // get from dict
-      campaign.statusCode = 4;
-      return campaign;
-    });
-    this.cdRef.markForCheck();
+    const onStopRequests: Observable<any>[] = this.grid.selected
+      .map(campaign => this.campaignsService.stopCampaign(campaign));
+
+    forkJoin(onStopRequests).take(1).subscribe(() => this.cdRef.markForCheck());
   }
 }

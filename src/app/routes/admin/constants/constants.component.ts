@@ -1,9 +1,9 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/filter';
 
 import { IConstant } from './constants.interface';
 import { IGridColumn } from '../../../shared/components/grid/grid.interface';
@@ -24,7 +24,7 @@ import { GridComponent } from '../../../shared/components/grid/grid.component';
   templateUrl: './constants.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConstantsComponent extends DialogFunctions implements AfterViewInit, OnDestroy {
+export class ConstantsComponent extends DialogFunctions implements AfterViewInit, OnDestroy, OnInit {
   static COMPONENT_NAME = 'ConstantsComponent';
 
   @ViewChild(GridComponent) grid: GridComponent;
@@ -74,6 +74,9 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
     private valueConverterService: ValueConverterService,
   ) {
     super();
+  }
+
+  ngOnInit(): void {
     this.columns = this.gridService.setRenderers(this.columns);
     this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
@@ -97,24 +100,25 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
   fetchAll(): void {
     this.constantsService.fetchAll()
       .map(constants => this.valueConverterService.deserializeSet(constants))
-      .subscribe((constants: IConstant[]) => {
+      .flatMap((constants: IConstant[]) => {
         this.rows = constants;
-        this.constantsService.state
-          .map(state => state.currentConstant)
-          .take(1)
-          .subscribe(currentConstant => {
-            if (currentConstant) {
-              const found = this.rows.find(row => row.id === currentConstant.id);
-              this.selection = found ? [found] : [];
-              if (!found) {
-                this.constantsService.changeSelected(null);
-              }
-            } else {
-              this.selection = [];
-            }
-          });
-      this.cdRef.markForCheck();
-    });
+        return this.constantsService.state
+          .map(state => state.currentConstant);
+      })
+      .take(1)
+      .subscribe(currentConstant => {
+        if (currentConstant) {
+          const found = this.rows.find(row => row.id === currentConstant.id);
+          this.selection = found ? [found] : [];
+          if (!found) {
+            this.constantsService.changeSelected(null);
+          }
+        } else {
+          this.selection = [];
+        }
+
+        this.cdRef.markForCheck();
+      });
   }
 
   clear(): void {
@@ -126,23 +130,8 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
   }
 
   onSubmit(constant: IConstant): void {
-    // TODO: move the logic to constants service
-    const { id, typeCode, value } = constant;
-    const fieldMap: object = {
-      1: 'valueN',
-      2: 'valueD',
-      3: 'valueS',
-      4: 'valueB',
-    };
-    const field: string = fieldMap[typeCode];
-    const body = { [field]: value };
-
-    if (typeCode === 4) {
-      // convert the boolean to a number
-      body[field] = Number(value);
-    }
-
-    this.constantsService.update(id, body as IConstant)
+    const body = this.constantsService.serialize(constant);
+    this.constantsService.update(body)
       .subscribe(() => {
         this.fetchAll();
         this.userConstantsService.refresh();

@@ -330,11 +330,12 @@
   "constants": {
     "title": "Constants",
     "edit": {
+      "id": "Id",
       "title": "Constant",
       "name": "Name",
-      "type": "Type",
+      "typeCode": "Type",
       "value": "Value",
-      "comment": "Comments"
+      "dsc": "Comments"
     },
     "grid": {
       "id": "Id",
@@ -949,7 +950,7 @@
         "title": "Edit campaign",
         "name": "Name",
         "typeCode": "Type code",
-        "groupName": "Group",
+        "groupId": "Group",
         "comment": "Comment",
         "timeZoneUsed": "GMT used"
       },
@@ -989,7 +990,7 @@
         },
         "remove": {
           "title": "Remove participant",
-          "confirmMessage": "Are you sure you want to delete participant {{ name }} from the campaign?"
+          "confirmMessage": "Are you sure you want to delete selected participants from the campaign?"
         }
       },
       "tabs": {

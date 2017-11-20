@@ -1,4 +1,12 @@
-import { Component, OnInit, ViewChild, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Input,
+  OnDestroy,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { IParticipant, ICampaign } from '../campaigns.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,9 +22,11 @@ import { DialogFunctions } from '../../../../core/dialog/index';
 @Component({
   selector: 'app-participants',
   templateUrl: './participants.component.html',
-  styleUrls: ['./participants.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantsComponent extends DialogFunctions implements OnInit, OnDestroy {
+  static COMPONENT_NAME = 'ParticipantsComponent';
+
   @Input() campaign: Observable<ICampaign>;
   @ViewChild(GridComponent) grid: GridComponent;
 
@@ -31,7 +41,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     { prop: 'id', minWidth: 40 },
     { prop: 'fullName', minWidth: 150 },
     { prop: 'organization', minWidth: 150 },
-    { prop: 'position', minWidth: 100 },
+    { prop: 'position', minWidth: 100 }
   ];
 
   toolbarItems: Array<IToolbarItem> = [
@@ -101,14 +111,12 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     });
   }
 
-  onSelectParticipant(selectedParticipant: IParticipant): void {
-    console.log(arguments);
-    this.campaignsService.selectParticipant(selectedParticipant);
-    this.selected.push(selectedParticipant);
+  onSelectParticipant(selection: IParticipant[]): void {
+    this.campaignsService.selectParticipant(selection[selection.length - 1]);
   }
 
   onRemove(): void {
-    this.campaignsService.removeParticipants(this.grid.selected.map(selected => selected.userId))
+    this.campaignsService.removeParticipants(this.grid.selected.map(selection => selection.id))
     .switchMap(() => this.campaignsService.fetchParticipants())
     .take(1)
     .subscribe(participants => {

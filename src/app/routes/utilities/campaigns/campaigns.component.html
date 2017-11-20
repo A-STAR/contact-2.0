@@ -5,7 +5,8 @@
   [columnTranslationKey]="'utilities.campaigns'"
   [rows]="campaigns"
   selectionType="multiClick"
-  (onSelect)="onSelectCampaign($event)">
+  (onSelect)="onSelectCampaign($event)"
+  (onDblClick)="onCampaignDblClick($event)">
 </app-grid>
 
 <app-campaigns-edit
@@ -25,6 +26,7 @@
   *ngIf="isEntityBeingRemoved"
   [titleTranslationKey]="'utilities.campaigns.remove.title'"
   [actionTranslationKey]="'utilities.campaigns.remove.confirmMessage'"
+  [messageParams]="selectedCampaign | async"
   [actionMessage]="'default.buttons.remove'"
   [actionMode]="'danger'"
   (action)="onRemove()"

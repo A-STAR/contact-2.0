@@ -7,6 +7,14 @@ export enum CampaignsDialogActionEnum {
   PARTICIPANT_REMOVE
 }
 
+export enum CampaignStatus {
+  NONE,
+  CREATED,
+  STARTED,
+  STOPPED,
+  COMPLETED
+}
+
 export interface ICampaignGroup {
   id:	number;
   name:	string;
@@ -21,10 +29,10 @@ export interface ICampaign {
   multiname?: {
     value: string;
     languageId: number;
-  };
+  }[];
   groupId: number;
   groupName: string;
-  statusCode: number;
+  statusCode: CampaignStatus;
   typeCode: number;
   startDateTime: string;
   finishDateTime: string;
@@ -53,7 +61,7 @@ export interface IUserStatistic {
   successProcessing: number;
   unsuccessProcessing: number;
   contact: number;
-  SMS: number;
+  SMS: string;
   successContact: number;
   refusal: number;
   promise: number;

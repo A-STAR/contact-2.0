@@ -23,18 +23,19 @@ export class StatisticsComponent implements OnInit {
   campaignStatistics: Observable<IUserStatistic[]>;
   campaignArgigateStatistic: Observable<ICampainAgrigatedStatistic>;
 
-  columns: Array<IGridColumn> = [
+  _columns: Array<IGridColumn> = [
     { prop: 'userFullName', minWidth: 250 },
     { prop: 'successProcessing', minWidth: 100 },
     { prop: 'unsuccessProcessing', minWidth: 100 },
     { prop: 'contact', minWidth: 100 },
-    { prop: 'SMS', minWidth: 100 },
+    { prop: 'SMS', minWidth: 100, renderer: 'phoneRenderer'},
     { prop: 'successContact', minWidth: 100 },
     { prop: 'refusal', minWidth: 100 },
-    { prop: 'SMS', minWidth: 100 },
     { prop: 'promise', minWidth: 100 },
     { prop: 'promiseAmount', minWidth: 100 },
   ];
+
+  columns: IGridColumn[] = [];
 
   constructor(
     private gridService: GridService,
@@ -43,12 +44,8 @@ export class StatisticsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .take(1)
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
+
+      this.columns = this.gridService.setRenderers(this._columns);
 
       this.campaignStatistics = this.campaignsService.selectedCampaign
         .flatMap(campain => {

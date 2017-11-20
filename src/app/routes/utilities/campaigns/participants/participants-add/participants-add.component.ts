@@ -1,10 +1,13 @@
-import { Component,
+import {
+  Component,
   ChangeDetectorRef,
+  ChangeDetectionStrategy,
   EventEmitter,
   OnInit,
   Output,
   ViewEncapsulation,
-  ViewChild } from '@angular/core';
+  ViewChild
+} from '@angular/core';
 import { IParticipant } from '../../campaigns.interface';
 import { CampaignsService } from '../../campaigns.service';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
@@ -15,7 +18,8 @@ import { IGridColumn } from '../../../../../shared/components/grid/grid.interfac
 @Component({
   selector: 'app-participants-add',
   templateUrl: './participants-add.component.html',
-  encapsulation: ViewEncapsulation.None
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class ParticipantsAddComponent implements OnInit, OnDestroy {
   @Output() submit: EventEmitter<any> = new EventEmitter();
