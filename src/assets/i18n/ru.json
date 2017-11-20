@@ -1496,7 +1496,7 @@
         "status": "Статус",
         "contactPhone": "Контактный телефон",
         "text": "Текст сообщения",
-        "startDateTime": "Dispatch date"
+        "startDateTime": "Планируемая дата начала отправки"
       },
       "grid": {
         "contactId": "Ид контакта",

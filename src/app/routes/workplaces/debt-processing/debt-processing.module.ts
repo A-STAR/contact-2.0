@@ -22,7 +22,8 @@ import { DebtorPaymentComponent } from './debtor/payment/payment.component';
 import { DebtorPhoneComponent } from './debtor/phone/phone.component';
 import { DebtorPromiseComponent } from './debtor/promise/promise.component';
 import { DebtorPropertyComponent } from './debtor/property/property.component';
-import { DebtorContactLogComponent } from './debtor/contact-log/contact-log.component';
+import { DebtorContactLogTabComponent } from './debtor/contact-log-tab/contact-log-tab.component';
+// import { DebtorContactLogComponent } from './debtor/contact-log/contact-log.component';
 import { DebtorPledgeComponent } from './debtor/pledge/pledge.component';
 
 const routes: Routes = [
@@ -43,8 +44,8 @@ const routes: Routes = [
         ]
       },
       { path: 'contactLog', children: [
-          { path: 'create', component: DebtorContactLogComponent },
-          { path: ':contactLogId/contactLogType/:contactLogType', component: DebtorContactLogComponent },
+          { path: 'create', component: DebtorContactLogTabComponent },
+          { path: ':contactLogId/contactLogType/:contactLogType', component: DebtorContactLogTabComponent },
         ]
       },
       { path: 'pledge', children: [

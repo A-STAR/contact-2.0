@@ -1603,7 +1603,7 @@
         "typeCode": "Type",
         "contractStartDate": "Start date",
         "contractEndDate": "Expiry date",
-        "comment": "Comment"        
+        "comment": "Comment"
       },
       "toolbar": {
         "add": "Add pledgor"
@@ -1755,7 +1755,7 @@
     },
     "entityGroup": {
       "gen": { "singular": "group", "plural": "groups" }
-    }
+    },
     "pledgeContract": {
       "gen": { "singular": "pledge contract", "plural": "pledge contracts" }
     },
