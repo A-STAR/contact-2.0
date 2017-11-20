@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewChild, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/catch';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import {
-  IEmployeeUser, IEmployee, IOrganizationsState, IEmployeeUpdateRequest, IEmployeeCreateRequest
+  IEmployee, IOrganizationsState, IEmployeeUpdateRequest, IEmployeeCreateRequest
 } from '../organizations.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -92,7 +91,6 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
   constructor(
     private gridService: GridService,
     private organizationsService: OrganizationsService,
-    private translateService: TranslateService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
