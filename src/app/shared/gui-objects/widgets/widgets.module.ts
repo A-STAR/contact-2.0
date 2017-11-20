@@ -5,6 +5,7 @@ import { AddressModule } from './address/address.module';
 import { AttributeModule } from './attribute/attribute.module';
 import { AttributeModule as EntityAttributeModule } from './entity-attribute/attribute.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
+import { ContactLogTabModule } from './contact-log-tab/contact-log.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
@@ -23,6 +24,9 @@ import { PhoneModule } from './phone/phone.module';
 import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
 import { EntityGroupModule } from './entity-group/entity-group.module';
+import { PledgorModule } from './pledgor/pledgor.module';
+import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
+import { PledgeModule } from './pledge/pledge.module';
 
 @NgModule({
   imports: [
@@ -30,6 +34,7 @@ import { EntityGroupModule } from './entity-group/entity-group.module';
     AddressModule,
     AttributeModule,
     ContactLogModule,
+    ContactLogTabModule,
     ContactModule,
     ContactPropertyModule,
     DebtorActionLogModule,
@@ -49,11 +54,15 @@ import { EntityGroupModule } from './entity-group/entity-group.module';
     PromiseModule,
     PropertyModule,
     EntityGroupModule,
+    PledgorModule,
+    PledgorPropertyModule,
+    PledgeModule,
   ],
   exports: [
     AddressModule,
     AttributeModule,
     ContactLogModule,
+    ContactLogTabModule,
     ContactModule,
     ContactPropertyModule,
     DebtorActionLogModule,
@@ -73,6 +82,9 @@ import { EntityGroupModule } from './entity-group/entity-group.module';
     PromiseModule,
     PropertyModule,
     EntityGroupModule,
+    PledgeModule,
+    PledgorModule,
+    PledgorPropertyModule,
   ]
 })
 export class WidgetsModule { }

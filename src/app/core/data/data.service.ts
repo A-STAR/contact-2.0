@@ -161,7 +161,7 @@ export class DataService {
     }, new HttpParams());
   }
 
-  private toQueryParam(value: IQueryParam): string {
+  private toQueryParam(value: IQueryParam | IQueryParam[]): string {
     return value === true ? '1' : `${value}`;
   }
 

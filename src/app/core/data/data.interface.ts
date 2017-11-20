@@ -1,7 +1,7 @@
 export type IQueryParam = string | number | boolean;
 
 export interface IQueryParams {
-  [key: string]: IQueryParam;
+  [key: string]: IQueryParam | IQueryParam[];
 }
 
 export interface IResponse<T> {

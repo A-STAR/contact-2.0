@@ -49,6 +49,14 @@
       <app-identity-grid></app-identity-grid>
   </app-tab>
 
+  <app-tab [title]="'debtor.pledgorsTab.title'" [closable]="false">
+    <app-pledge-grid></app-pledge-grid>
+
+    <app-hdivider></app-hdivider>
+    
+    <app-debtor-pledge-attributes></app-debtor-pledge-attributes>
+  </app-tab>
+
   <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">
     <app-property-grid></app-property-grid>
 
@@ -63,5 +71,9 @@
 
   <app-tab [title]="'debtor.attributesTab.title'" [closable]="false">
     <app-debtor-attributes></app-debtor-attributes>
+  </app-tab>
+
+  <app-tab [title]="'debtor.contactLogTab.title'" [closable]="false">
+    <app-contact-log-tab-grid></app-contact-log-tab-grid>
   </app-tab>
 </app-tabstrip>

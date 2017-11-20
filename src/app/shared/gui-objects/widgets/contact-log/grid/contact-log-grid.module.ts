@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { GridModule } from '../../../../components/grid/grid.module';
-import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
+import { Grid2Module } from '../../../../components/grid2/grid2.module';
 
 import { ContactLogGridComponent } from './contact-log-grid.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    GridModule,
-    Toolbar2Module,
+    Grid2Module,
   ],
   exports: [
     ContactLogGridComponent,
@@ -18,9 +16,5 @@ import { ContactLogGridComponent } from './contact-log-grid.component';
   declarations: [
     ContactLogGridComponent,
   ],
-  entryComponents: [
-    ContactLogGridComponent,
-  ]
 })
 export class ContactLogGridModule { }
-
