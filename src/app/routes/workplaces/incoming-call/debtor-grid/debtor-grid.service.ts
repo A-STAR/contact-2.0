@@ -11,8 +11,17 @@ export class DebtorGridService {
     private dataService: DataService,
   ) { }
 
-  fetchAll(params: IQueryParams): Observable<any[]> {
+  fetchAll(queryParams: IQueryParams): Observable<any[]> {
     // TODO(d.maltsev): notifications
-    return this.dataService.readAll('/incomingCall/search', {}, { params });
+    return this.dataService.readAll('/incomingCall/search', {}, { params: this.filterOutFalsyParams(queryParams) });
+  }
+
+  private filterOutFalsyParams(value: IQueryParams): IQueryParams {
+    return Object.keys(value).reduce((acc, key) => {
+      const item = value[key];
+      return (Array.isArray(item) && item.length === 0 || !item)
+        ? acc
+        : { ...acc, [key]: item };
+    }, {});
   }
 }
