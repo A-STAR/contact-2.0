@@ -27,13 +27,13 @@ export class ButtonService {
     save:             { icon: 'fa fa-save',             label: 'default.buttons.save'             },
     search:           { icon: 'fa fa-search',           label: 'default.buttons.search'           },
     select:           { icon: '',                       label: 'default.buttons.select'           },
+    start:            { icon: 'fa fa-play',             label: 'default.buttons.start'            },
+    stop:             { icon: 'fa fa-stop',             label: 'default.buttons.stop'             },
     sms:              { icon: 'fa fa-envelope',         label: 'default.buttons.sms'              },
     unblock:          { icon: 'fa fa-unlock',           label: 'default.buttons.unblock'          },
     undo:             { icon: 'fa fa-undo',             label: 'default.buttons.undo'             },
     upload:           { icon: 'fa fa-cloud-upload',     label: 'default.buttons.upload'           },
     visit:            { icon: 'fa fa-bus',              label: 'default.buttons.visit'            },
-    start:            { icon: 'fa fa-play',             label: 'default.buttons.start'            },
-    stop:             { icon: 'fa fa-stop',             label: 'default.buttons.stop'             },
   };
 
   private styles: IButtonStylesConfig = {

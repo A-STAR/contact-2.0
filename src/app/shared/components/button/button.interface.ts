@@ -30,12 +30,12 @@ export type IButtonType =
   'search' |
   'select' |
   'sms' |
+  'start' |
+  'stop' |
   'unblock' |
   'undo' |
   'upload' |
-  'visit'|
-  'start' |
-  'stop';
+  'visit';
 
 export type IButtonStylesConfig = {
   [K in IButtonStyle]: string;

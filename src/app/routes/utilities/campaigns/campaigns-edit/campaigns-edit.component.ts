@@ -1,4 +1,13 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ICampaign } from '../campaigns.interface';
 import { isObject } from 'util';
@@ -6,22 +15,22 @@ import { CampaignsService } from '../campaigns.service';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { LookupService } from '../../../../core/lookup/lookup.service';
-import { IOption } from '../../../../core/converter/value-converter.interface';
+import { IOption, INamedValue } from '../../../../core/converter/value-converter.interface';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-campaigns-edit',
   templateUrl: './campaigns-edit.component.html',
-  styleUrls: ['./campaigns-edit.component.scss']
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CampaignsEditComponent implements OnInit {
-  @Input() editedEntity: ICampaign | null;
-  @Output() submit: EventEmitter<any> = new EventEmitter();
-  @Output() cancel: EventEmitter<null> = new EventEmitter();
+  @Input() editedEntity: ICampaign;
+  @Output() submit = new EventEmitter();
+  @Output() cancel = new EventEmitter();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   controls: Array<IDynamicFormControl>;
-
+  campaignGroups: Array<INamedValue>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -40,8 +49,9 @@ export class CampaignsEditComponent implements OnInit {
       .take(1)
       .subscribe(([callTypes, groupNames, languages]) => {
         if (this.editedEntity && !isObject(this.editedEntity.name)) {
-          this.editedEntity = this.setMultiTextName(this.editedEntity, languages);
+          this.editedEntity.multiname = this.setMultiTextName(this.editedEntity.name, languages);
         }
+        this.campaignGroups = groupNames;
         this.controls = this.buildControls(callTypes, this.valueConverterService.valuesToOptions(groupNames), languages);
         this.cdRef.markForCheck();
       });
@@ -54,19 +64,16 @@ export class CampaignsEditComponent implements OnInit {
   onCancel(): void {
     this.cancel.emit();
   }
-
   toSubmittedValues(campaign: any): ICampaign {
-    const typeCode = campaign.typeCode || (this.editedEntity && this.editedEntity.typeCode);
-    const groupId = campaign.groupName || (this.editedEntity && this.editedEntity.groupId);
-    const name = campaign.name || (this.editedEntity && this.editedEntity.name);
+    const groupName = this.campaignGroups.find(campaignGroup => campaignGroup.id === campaign.groupId);
+    // todo: ugly, find an api or a better way to handle multitext field
+    const name = campaign.multiname ? campaign.multiname[Object.keys(campaign.multiname)[0]] : undefined;
+    delete campaign.multiname;
     return {
       ...campaign,
       id: this.editedEntity && this.editedEntity.id,
-      name: isObject(name)
-        ? Object.keys(name).reduce((acc, k) => [...acc, { languageId: parseInt(k, 10), value: name[k] }], [])
-        : name,
-      typeCode: Array.isArray(typeCode) ? typeCode[0].value : typeCode,
-      groupId: Array.isArray(groupId) ? groupId[0].value : groupId
+      name,
+      groupName: groupName ? groupName.name : undefined
     };
   }
 
@@ -83,23 +90,21 @@ export class CampaignsEditComponent implements OnInit {
   protected buildControls(callTypes: Array<IOption>, groupNames: Array<IOption>,
     languages: IOption[]): Array<IDynamicFormControl> {
     return [
-      { label: 'utilities.campaigns.edit.name', controlName: 'name', type: 'multitext',
+      { label: 'utilities.campaigns.edit.name', controlName: 'multiname', type: 'multitext',
         options: languages, required: true },
-      { label: 'utilities.campaigns.edit.groupName', controlName: 'groupName', type: 'select',
+      { label: 'utilities.campaigns.edit.groupId', controlName: 'groupId', type: 'select',
         options: groupNames, required: true },
-      { label: 'utilities.campaigns.edit.typeCode', controlName: 'typeCode', type: 'select', options: callTypes },
+      { label: 'utilities.campaigns.edit.typeCode', controlName: 'typeCode', type: 'select',
+        options: callTypes, required: true },
       { label: 'utilities.campaigns.edit.comment', controlName: 'comment', type: 'text' },
       { label: 'utilities.campaigns.edit.timeZoneUsed', controlName: 'timeZoneUsed', type: 'checkbox' },
     ];
   }
 
-  private setMultiTextName(data: { name: string }, languages: IOption[]): any {
-    return {
-      ...data,
-      name: languages.map(language => {
-        return { languageId: language.value, value: data.name };
-      })
-    };
+  private setMultiTextName(name: string, languages: IOption[]): any[] {
+    return languages.map(language => {
+        return { languageId: language.value, value: name };
+    });
   }
 
 }
