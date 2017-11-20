@@ -32,8 +32,8 @@ export class EntityGroupAddComponent extends DialogFunctions {
   }
 
   get ids(): IMetadataActionOption {
-    const { action: { addOptions } } = this.dialogData.action;
-    return (addOptions || []).find(option => option.name === 'ids');
+    const { metadataAction } = this.dialogData.action;
+    return (metadataAction.addOptions || []).find(option => option.name === 'ids');
   }
 
   onSelect(group: IEntityGroup): void {

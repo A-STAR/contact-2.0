@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/forkJoin';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
@@ -35,18 +34,18 @@ export class DictComponent implements OnDestroy, OnInit {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dictionariesService.setDialogEditDictionaryAction(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('DICT_EDIT'),
-        this.dictionariesService.selectedDictionary
-      ).map(([hasPermissions, selectedDictionary]) => hasPermissions && !!selectedDictionary)
+        this.dictionariesService.selectedDictionary.map(Boolean)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dictionariesService.setDialogRemoveDictionaryAction(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('DICT_DELETE'),
-        this.dictionariesService.selectedDictionary
-      ).map(([hasPermissions, selectedDictionary]) => hasPermissions && !!selectedDictionary)
+        this.dictionariesService.selectedDictionary.map(Boolean)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -76,15 +75,10 @@ export class DictComponent implements OnDestroy, OnInit {
   ) {}
 
   ngOnInit(): void {
-    const areDictionariesFetched = this.dictionariesService.state
-      .map(state => state.dictionaries)
-      .map(dictionaries => !!dictionaries.length)
-      .filter(Boolean);
-
     this.dictionariesService.fetchDictionaries();
 
     Observable.combineLatest(
-        areDictionariesFetched,
+        this.areDictionariesFetched,
         this.dictionariesService.state,
         this.gridService.setDictionaryRenderers(this.columns)
       )
@@ -120,6 +114,13 @@ export class DictComponent implements OnDestroy, OnInit {
     return this.dictionariesService.dictionaryTermTypes;
   }
 
+  get areDictionariesFetched(): Observable<boolean> {
+    return this.dictionariesService.state
+      .map(state => state.dictionaries)
+      .map(dictionaries => !!dictionaries.length)
+      .filter(Boolean);
+  }
+
   get isEntityBeingCreated(): Observable<boolean> {
     return this.dictionariesService.dialogAction
       .map(dialogAction => dialogAction === DictionariesDialogActionEnum.DICTIONARY_ADD);
@@ -136,8 +137,7 @@ export class DictComponent implements OnDestroy, OnInit {
   }
 
   get isDictionaryRelationsReady(): Observable<boolean> {
-    return Observable.combineLatest(this.languages, this.dictionaryTermTypes)
-      .map(([languages, dictionaryTermTypes]) => languages && !!dictionaryTermTypes);
+    return combineLatestAnd([this.languages.map(Boolean), this.dictionaryTermTypes.map(Boolean)]);
   }
 
   get selectedDictionary(): Observable<IDictionary> {
