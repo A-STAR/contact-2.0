@@ -61,7 +61,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onRegisterUnidentifiedContact(): void {
-    this.navigateToRegistration(1, 0);
+    this.navigateToRegistration(2, 0);
   }
 
   onRegisterOfficeVisit(): void {
