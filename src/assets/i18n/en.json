@@ -71,7 +71,7 @@
         "DEBTOR_PLEDGE": "Pledge contract",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
-        "CONTACT_PROTOCOL": "Contact Protocol",
+        "CONTACT_LOG": "Contact Log",
         "CALL_CENTER": "Call Center",
         "PAYMENTS": "Payments",
         "COURTS_2": "Courts",
@@ -1592,7 +1592,7 @@
         "typeCode": "Type",
         "contractStartDate": "Start date",
         "contractEndDate": "Expiry date",
-        "comment": "Comment"        
+        "comment": "Comment"
       },
       "toolbar": {
         "add": "Add pledgor"

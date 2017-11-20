@@ -135,8 +135,8 @@ export const menuConfig: IMenuConfig = {
     icon: 'icon-fire'
   },
   contactProtocol: {
-    text: 'sidebar.nav.menu.CONTACT_PROTOCOL',
-    link: '/workplaces/contact-protocol',
+    text: 'sidebar.nav.menu.CONTACT_LOG',
+    link: '/workplaces/contact-log',
     icon: 'icon-call-in'
   },
   callcenter: {
