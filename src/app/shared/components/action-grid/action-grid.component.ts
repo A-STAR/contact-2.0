@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 
 import { IActionGridDialogData } from './action-grid.interface';
-import { IAGridAction, IAGridRequestParams, IContextMenuItem, IAGridSelected } from '../grid2/grid2.interface';
+import { IAGridAction, IAGridRequestParams, IAGridSelected } from '../grid2/grid2.interface';
 
 import { Grid2Component } from '../../components/grid2/grid2.component';
 

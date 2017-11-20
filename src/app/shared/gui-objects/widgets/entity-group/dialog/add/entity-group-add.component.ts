@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, Inject } from '@angular/core';
 
 import { IEntityGroup } from '../../../entity-group/entity-group.interface';
-import { IActionGridDialogData } from '../../../../../components/action-grid/action-grid.interface';
-import { IMetadataActionOption } from '../../../../../../core/metadata/metadata.interface';
 
 import { EntityGroupService } from '../../entity-group.service';
 

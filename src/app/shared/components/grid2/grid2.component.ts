@@ -28,7 +28,7 @@ import {
 import {
   IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
   IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
-  IAGridRequest, IAGridSorter, IContextMenuItem } from './grid2.interface';
+  IAGridRequest, IAGridSorter } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -688,7 +688,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
-  private createMetadataMenuItem(metadataAction: IMetadataAction, params: GetContextMenuItemsParams,): MenuItemDef {
+  private createMetadataMenuItem(metadataAction: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
     console.log(metadataAction);
     return {
       name: this.translate.instant(`default.grid.actions.${metadataAction.action}`),

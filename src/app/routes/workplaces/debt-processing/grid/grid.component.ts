@@ -2,7 +2,6 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   Component,
-  Inject,
   Input,
   ViewChild,
   ViewEncapsulation

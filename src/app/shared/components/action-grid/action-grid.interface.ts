@@ -1,11 +1,15 @@
 import { IAGridAction } from '../grid2/grid2.interface';
 
-export interface IActionGridDialogParams {
+export interface IActionGridDialogNodeParams {
   [key: string]: number | string;
+}
+
+export interface IActionGridDialogSelectionParams {
+  [key: string]: Array<number | string>;
 }
 
 export interface IActionGridDialogData {
   action: IAGridAction;
-  params: IActionGridDialogParams;
-  selection: any;
+  params: IActionGridDialogNodeParams;
+  selection: IActionGridDialogSelectionParams;
 }
