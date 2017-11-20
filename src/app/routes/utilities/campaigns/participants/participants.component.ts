@@ -111,8 +111,13 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     });
   }
 
-  onSelectParticipant(selection: IParticipant[]): void {
-    this.campaignsService.selectParticipant(selection[selection.length - 1]);
+  onSelectParticipant(): void {
+    const selectedParticipants = this.grid.getSelectedRows();
+    if (selectedParticipants && selectedParticipants.length) {
+      this.campaignsService.selectParticipant(selectedParticipants[selectedParticipants.length - 1]);
+    } else {
+      this.campaignsService.selectParticipant(null);
+    }
   }
 
   onRemove(): void {

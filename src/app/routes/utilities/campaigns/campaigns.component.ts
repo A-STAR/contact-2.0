@@ -131,8 +131,13 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
     return this.currentDialogAction === CampaignsDialogActionEnum.CAMPAIGN_REMOVE;
   }
 
-  onSelectCampaign(selection: ICampaign[]): void {
-    this.campaignsService.selectCampaign(selection[selection.length - 1]);
+  onSelectCampaign(): void {
+    const selectedCampaigns = this.grid.getSelectedRows();
+    if (selectedCampaigns && selectedCampaigns.length) {
+      this.campaignsService.selectCampaign(selectedCampaigns[selectedCampaigns.length - 1]);
+    } else {
+      this.campaignsService.selectCampaign(null);
+    }
   }
 
   onCampaignDblClick(selection: ICampaign): void {
@@ -186,14 +191,16 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
 
   onStart(): void {
     const onStartRequests: Observable<any>[] = this.grid.selected
-      .map(campaign => this.campaignsService.startCampaign(campaign));
+      // updates campaign statusCode and returns request observable
+      .map(campaign => this.campaignsService.updateCampaign({ ...campaign, statusCode: CampaignStatus.STARTED }));
 
     forkJoin(onStartRequests).take(1).subscribe(() => this.cdRef.markForCheck());
   }
 
   onStop(): void {
     const onStopRequests: Observable<any>[] = this.grid.selected
-      .map(campaign => this.campaignsService.stopCampaign(campaign));
+      // updates campaign statusCode and returns request observable
+      .map(campaign => this.campaignsService.updateCampaign({ ...campaign, statusCode: CampaignStatus.STOPPED }));
 
     forkJoin(onStopRequests).take(1).subscribe(() => this.cdRef.markForCheck());
   }

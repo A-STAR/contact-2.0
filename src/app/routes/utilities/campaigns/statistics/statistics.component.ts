@@ -1,13 +1,24 @@
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation,  ViewChild } from '@angular/core';
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
-import { ICampaignsStatistic, IUserStatistic, ICampainAgrigatedStatistic } from '../campaigns.interface';
-
-
-import { CampaignsService } from '../campaigns.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+
+import {
+  ICampaignsStatistic,
+  IUserStatistic
+} from '../campaigns.interface';
+import { CampaignsService } from '../campaigns.service';
 
 @Component({
   selector: 'app-statistics',
@@ -16,14 +27,13 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class StatisticsComponent implements OnInit {
+export class StatisticsComponent implements OnInit, OnDestroy {
 
   @ViewChild(GridComponent) grid: GridComponent;
 
-  campaignStatistics: Observable<IUserStatistic[]>;
-  campaignArgigateStatistic: Observable<ICampainAgrigatedStatistic>;
+  campaignUserStatistics: IUserStatistic[];
 
-  _columns: Array<IGridColumn> = [
+  columns: Array<IGridColumn> = [
     { prop: 'userFullName', minWidth: 250 },
     { prop: 'successProcessing', minWidth: 100 },
     { prop: 'unsuccessProcessing', minWidth: 100 },
@@ -35,7 +45,7 @@ export class StatisticsComponent implements OnInit {
     { prop: 'promiseAmount', minWidth: 100 },
   ];
 
-  columns: IGridColumn[] = [];
+  private campaignStatisticSub: Subscription;
 
   constructor(
     private gridService: GridService,
@@ -45,25 +55,41 @@ export class StatisticsComponent implements OnInit {
 
   ngOnInit(): void {
 
-      this.columns = this.gridService.setRenderers(this._columns);
+    this.gridService.setAllRenderers(this.columns)
+    .take(1)
+    .subscribe(columns => {
+      this.columns = [...columns];
+      this.cdRef.markForCheck();
+    });
 
-      this.campaignStatistics = this.campaignsService.selectedCampaign
-        .flatMap(campain => {
-          if (!campain) {
-            return Observable.of(null);
-          }
-          return this.campaignsService.fetchCampaignStat(campain.id);
-        })
-        // TODO uncomment when view will be ready
-        // .do(data => data && data.agridatedData
-        //   ? this.campaignArgigateStatistic = Observable.of(data.agridatedData)
-        //   : this.campaignArgigateStatistic = Observable.of(null) )
-        .map(data => data && data.userStatistic && data.userStatistic.length
-          ? data.userStatistic
-          : null);
+    this.campaignStatisticSub = this.campaignsService.selectedCampaign
+      .flatMap(campaign => {
+        if (!campaign) {
+          return Observable.of(null);
+        }
+        return this.campaignsService.fetchCampaignStat(campaign.id);
+      })
+      // TODO uncomment when view will be ready
+      // .do(data => data && data.agridatedData
+      //   ? this.campaignArgigateStatistic = Observable.of(data.agridatedData)
+      //   : this.campaignArgigateStatistic = Observable.of(null) )
+      .map((statistic: ICampaignsStatistic) => statistic && statistic.userStatistic && statistic.userStatistic.length
+        ? statistic.userStatistic
+        : null)
+      .subscribe((statistics: IUserStatistic[]) => {
+        this.campaignUserStatistics = statistics;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.campaignStatisticSub) {
+      this.campaignStatisticSub.unsubscribe();
+    }
   }
 
   onSelect(): void {
 
   }
+
 }

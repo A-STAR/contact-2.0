@@ -42,10 +42,10 @@ export interface ICampaign {
 
 export interface ICampaignsStatistic {
   userStatistic: IUserStatistic[];
-  agridatedData: ICampainAgrigatedStatistic;
+  aggregatedData: ICampaignAggregatedStatistic;
 }
 
-export interface ICampainAgrigatedStatistic {
+export interface ICampaignAggregatedStatistic {
   untreated: number;
   successProcessingSum: number;
   unsuccessProcessingSum: number;
