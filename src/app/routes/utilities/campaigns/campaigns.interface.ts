@@ -40,6 +40,34 @@ export interface ICampaign {
   timeZoneUsed: boolean;
 }
 
+export interface ICampaignsStatistic {
+  userStatistic: IUserStatistic[];
+  agridatedData: ICampainAgrigatedStatistic;
+}
+
+export interface ICampainAgrigatedStatistic {
+  untreated: number;
+  successProcessingSum: number;
+  unsuccessProcessingSum: number;
+  contacSum: number;
+  SMSSum: number;
+  refusalSum: number;
+  promiseSum: number;
+  promiseAmountSum: number;
+}
+
+export interface IUserStatistic {
+  userFullName: string;
+  successProcessing: number;
+  unsuccessProcessing: number;
+  contact: number;
+  SMS: string;
+  successContact: number;
+  refusal: number;
+  promise: number;
+  promiseAmount: number;
+}
+
 
 export interface ICampaignSelectPayload {
   selectedCampaign: ICampaign;

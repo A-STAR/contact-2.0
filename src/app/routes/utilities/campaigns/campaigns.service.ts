@@ -4,15 +4,14 @@ import { Observable } from 'rxjs/Observable';
 import { DataService } from '../../../core/data/data.service';
 import { IAppState } from '../../../core/state/state.interface';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-import {
-  CampaignStatus,
-  ICampaign,
-  ICampaignGroup,
-  ICampaignsState,
-  ICampaignSelectPayload,
-  IParticipantSelectPayload,
-  IParticipant
-} from './campaigns.interface';
+import { CampaignStatus,
+         ICampaign,
+         ICampaignGroup,
+         ICampaignsState,
+         ICampaignSelectPayload,
+         IParticipantSelectPayload,
+         IParticipant,
+         ICampaignsStatistic, IUserStatistic } from './campaigns.interface';
 
 @Injectable()
 export class CampaignsService {
@@ -31,6 +30,53 @@ export class CampaignsService {
       this.notificationsService.fetchError()
         .entity('entities.campaign.gen.plural').dispatchCallback()
       );
+  }
+
+  mockNumder = 0;
+
+  fetchCampaignStat(campainId: number): Observable<ICampaignsStatistic> {
+    const userStatistic = [{
+          userFullName: 'Операторов Оператор Операторович',
+          successProcessing: 1,
+          unsuccessProcessing: 1,
+          contact: 4,
+          SMS: '74262464264',
+          successContact: 1,
+          refusal: 1,
+          promise: 2,
+          promiseAmount: 564654
+      }, {
+          userFullName: 'Операторов Оператор Операторович',
+          successProcessing: 1,
+          unsuccessProcessing: 1,
+          contact: 4,
+          SMS: '74262464265',
+          successContact: 1,
+          refusal: 1,
+          promise: 2,
+          promiseAmount: 564654
+      }] as IUserStatistic[];
+
+    return Observable.of({
+      userStatistic,
+      agridatedData: {
+        untreated: 10,
+        successProcessingSum: 2,
+        unsuccessProcessingSum: 5,
+        contacSum: 7,
+        SMSSum: 3,
+        refusalSum: 100,
+        promiseSum: 1000,
+        promiseAmountSum: 1000000
+      }
+    });
+
+    // return this.dataService.read(this.baseUrl)
+    //   .catch(() => Observable.of(data) as Observable<ICampaignsStatistic[]>)
+    //   .catch(
+    //     this.notificationsService.error('errors.default.read')
+    //       .entity('entities.campaigns.gen.signal').dispatchCallback()
+    //     );
   }
 
   get state(): Observable<ICampaignsState> {

@@ -32,7 +32,6 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
   @ViewChild(GridComponent) grid: GridComponent;
 
   dialog: string;
-
   campaigns: ICampaign[];
 
   columns: Array<IGridColumn> = [

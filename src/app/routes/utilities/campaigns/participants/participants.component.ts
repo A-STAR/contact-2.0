@@ -35,6 +35,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
   participantsSub: Subscription;
 
   dialog: string;
+  selected: IParticipant[] = [];
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 40 },
