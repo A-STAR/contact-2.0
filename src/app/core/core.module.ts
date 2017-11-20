@@ -2,12 +2,12 @@ import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
+import { DebtModule } from './debt/debt.module';
 import { UserModule } from './user/user.module';
 
 import { ActionsLogService } from './actions-log/actions-log.service';
 import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
 import { DataService } from './data/data.service';
-import { DictionariesService } from './dictionaries/dictionaries.service';
 import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
@@ -26,6 +26,7 @@ import { environment } from '../../environments/environment';
 
 @NgModule({
   imports: [
+    DebtModule,
     UserModule,
   ],
   providers: [
@@ -33,7 +34,6 @@ import { environment } from '../../environments/environment';
     ContentTabService,
     EntityAttributesService,
     EntityTranslationsService,
-    DictionariesService,
     DatePipe,
     DataService,
     LookupService,

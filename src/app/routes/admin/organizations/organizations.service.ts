@@ -10,9 +10,8 @@ import {
   IEmployee,
   IEmployeeCreateRequest,
   IEmployeeUpdateRequest,
-  IEmployeeSelectPayload,
-  IOrganizationSelectPayload,
-  IEmployeeViewEntity
+  IEmployeeSelectState,
+  IOrganizationSelectState,
 } from './organizations.interface';
 
 import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
@@ -24,12 +23,12 @@ import { NotificationsService } from 'app/core/notifications/notifications.servi
 export class OrganizationsService {
   static ORGANIZATION_SELECT               = 'ORGANIZATION_SELECT';
   static EMPLOYEE_SELECT                   = 'EMPLOYEE_SELECT';
-  static DIALOG_ACTION                     = 'DIALOG_ACTION';
+
   public baseUrl = '/organizations';
 
   constructor(private store: Store<IAppState>,
     private dataService: DataService,
-    private converterService: OrganizationsTreeService,
+    private treeService: OrganizationsTreeService,
     private notificationsService: NotificationsService) {
   }
 
@@ -47,10 +46,10 @@ export class OrganizationsService {
 
   get selectedOrganization(): Observable<ITreeNode> {
     return this.store
-    .select(state => state.organizations.selectedOrganization);
+      .select(state => state.organizations.selectedOrganization);
   }
 
-  get employees(): Observable<IEmployeeViewEntity[]> {
+  get employees(): Observable<IEmployee[]> {
     return this.store
       .select(state => state.organizations.employees)
       .distinctUntilChanged();
@@ -66,36 +65,33 @@ export class OrganizationsService {
       .map(_organizations => this.convertToTreeNodes(_organizations))
       .map(organizations => this.selectOrganization(null, organizations))
       .map(onOrganizationSelect => onOrganizationSelect.organizations)
-      .catch(
-        this.notificationsService.error('errors.default.read')
-          .entity('entities.organizations.gen.plural').dispatchCallback()
-      );
+      .catch(this.notificationsService.fetchError().entity('entities.organizations.gen.plural').dispatchCallback());
   }
 
-  fetchEmployees(): Observable<IEmployeeViewEntity[]> {
+  fetchEmployees(): Observable<IEmployee[]> {
     return this.selectedOrganization
       .take(1)
       .switchMap(organization => {
         return organization ? this.readEmployees(organization.id) : Observable.of([]);
       })
       // because grid component relies on row's property id
-      .map(employees => employees.map<IEmployeeViewEntity>(employee => (employee.id = employee.userId) && employee))
+      .map(employees => employees.map<IEmployee>(employee => (employee.id = employee.userId) && employee))
       .map(employees => this.selectEmployee(null, employees))
       .map(onEmployeeSelect => onEmployeeSelect.employees)
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.employees.gen.plural').dispatchCallback());
   }
 
   fetchNotAddedEmployees(): Observable<IEmployee[]> {
     return this.selectedOrganization
       .take(1)
       .switchMap(organization => this.readNotAddedEmployees(organization.id))
-      .map(employees => employees.map<IEmployeeViewEntity>(employee => {
+      .map(employees => employees.map<IEmployee>(employee => {
         return {
           ...employee,
           id: employee.userId
         };
       }))
-      .catch(this.notificationsService.error('errors.default.read').entity('entities.employees.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.employees.gen.plural').dispatchCallback());
   }
 
   createOrganization(organization: IOrganization): Observable<any> {
@@ -106,7 +102,7 @@ export class OrganizationsService {
         return this.dataService.create(this.baseUrl, {}, { ...organization, parentId });
       })
       .switchMap(() => this.fetchOrganizations())
-      .catch(this.notificationsService.error('errors.default.create').entity('entities.organizations.gen.singular').callback());
+      .catch(this.notificationsService.createError().entity('entities.organizations.gen.singular').callback());
   }
 
   updateOrganization(organization: ITreeNode, id?: number): Observable<any> {
@@ -115,13 +111,12 @@ export class OrganizationsService {
   }
 
   updateOrganizationNoFetch(organization: ITreeNode, id?: number): Observable<any> {
-    return (id ? Observable.of({ id }) : this.selectedOrganization
-      .take(1))
+    return (id ? Observable.of({ id }) : this.selectedOrganization.take(1))
       .switchMap(selectedOrganization =>
         this.dataService.update(`${this.baseUrl}/{organizationId}`, {
           organizationId: selectedOrganization.id
         }, organization))
-      .catch(this.notificationsService.error('errors.default.update').entity('entities.organizations.gen.singular').callback());
+      .catch(this.notificationsService.updateError().entity('entities.organizations.gen.singular').callback());
   }
 
   removeOrganization(): Observable<any> {
@@ -131,7 +126,7 @@ export class OrganizationsService {
         this.deleteOrganization(selectedOrganization.id)
       )
       .switchMap(() => this.fetchOrganizations())
-      .catch(this.notificationsService.error('errors.default.delete').entity('entities.organizations.gen.singular').callback());
+      .catch(this.notificationsService.deleteError().entity('entities.organizations.gen.singular').callback());
   }
 
   readNotAddedEmployees(organizationId: number): Observable<IEmployee[]> {
@@ -148,21 +143,22 @@ export class OrganizationsService {
     }
       )
       .switchMap(() => this.fetchEmployees())
-      .catch(this.notificationsService.error('errors.default.create').entity('entities.employees.gen.singular').callback());
+      .catch(this.notificationsService.createError().entity('entities.employees.gen.singular').callback());
 
   }
 
   updateEmployee(employee: IEmployeeUpdateRequest): Observable<any> {
     return Observable.combineLatest(
-      this.selectedOrganization,
-      this.selectedEmployeeId)
+        this.selectedOrganization,
+        this.selectedEmployeeId
+      )
       .take(1)
-      .switchMap(data => this.dataService.update(`${this.baseUrl}/{organizationId}/users/{userId}`, {
-        organizationId: data[0].id,
-        userId: data[1]
-      }, employee))
+      .switchMap(([ organization, userId ]) => {
+        return this.dataService.update(`${this.baseUrl}/{organizationId}/users/{userId}`,
+          { organizationId: organization.id, userId }, employee);
+      })
       .switchMap(() => this.fetchEmployees())
-      .catch(this.notificationsService.error('errors.default.update').entity('entities.employees.gen.singular').callback());
+      .catch(this.notificationsService.updateError().entity('entities.employees.gen.singular').callback());
   }
 
   removeEmployee(): Observable<any> {
@@ -178,7 +174,7 @@ export class OrganizationsService {
           })
       )
       .switchMap(() => this.fetchEmployees())
-      .catch(this.notificationsService.error('errors.default.update').entity('entities.employees.gen.singular').callback());
+      .catch(this.notificationsService.updateError().entity('entities.employees.gen.singular').callback());
   }
 
   clearAll(): void {
@@ -196,8 +192,8 @@ export class OrganizationsService {
     return Observable.of([]);
   }
 
-  selectOrganization(selectedOrganization: ITreeNode, organizations?: ITreeNode[]): IOrganizationSelectPayload {
-    const onOrganizationSelectPayload: IOrganizationSelectPayload = {
+  selectOrganization(selectedOrganization: ITreeNode, organizations?: ITreeNode[]): IOrganizationSelectState {
+    const onOrganizationSelectPayload: IOrganizationSelectState = {
       selectedOrganization
     };
     if (organizations) {
@@ -214,8 +210,8 @@ export class OrganizationsService {
     this.selectEmployee(null, []);
   }
 
-  selectEmployee(selectedEmployeeUserId: number, employees?: IEmployeeViewEntity[]): IEmployeeSelectPayload {
-    const onEmployeeSelectPayload: IEmployeeSelectPayload = {
+  selectEmployee(selectedEmployeeUserId: number, employees?: IEmployee[]): IEmployeeSelectState {
+    const onEmployeeSelectPayload: IEmployeeSelectState = {
       selectedEmployeeUserId
     };
     if (employees) {
@@ -247,7 +243,7 @@ export class OrganizationsService {
   }
 
   private convertToTreeNodes(organizations: IOrganization[]): ITreeNode[] {
-    return this.converterService.toTreeNodes(organizations, this.getExpandedNodes(organizations));
+    return this.treeService.toTreeNodes(organizations, this.getExpandedNodes(organizations));
   }
 
   private observeOrganizations(nodes: ITreeNode[], expandedNodes: Set<number>): void {

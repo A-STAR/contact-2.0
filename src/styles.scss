@@ -4,6 +4,7 @@
 @import './app/shared/styles/bootstrap.scss';
 
 //== Application
+@import './app/core/preloader/preloader.scss';
 @import './app/shared/styles/app.scss';
 @import '~primeng/resources/primeng.min.css';
 @import './app/shared/styles/primeng/theme/omega.scss';

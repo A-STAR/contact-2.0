@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild, Output, Input, EventEm
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IOrganization, IEmployeeViewEntity } from '../../organizations.interface';
+import { IOrganization, IEmployee } from '../../organizations.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -14,10 +14,12 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 })
 export class OrganizationEditComponent implements OnInit {
   // angular-cli/issues/2034
-  @Input() editedEntity: IEmployeeViewEntity | null;
-  @Output() submit: EventEmitter<any> = new EventEmitter();
-  @Output() cancel: EventEmitter<null> = new EventEmitter();
+  @Input() editedEntity: IEmployee = null;
+  @Output() submit = new EventEmitter<IOrganization>();
+  @Output() cancel = new EventEmitter<void>();
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   controls: Array<IDynamicFormControl>;
 
   constructor(
@@ -37,7 +39,7 @@ export class OrganizationEditComponent implements OnInit {
     return this.editedEntity ? 'organizations.organizations.edit.title' : 'organizations.organizations.create.title';
   }
 
-  toSubmittedValues(organization: any): IOrganization {
+  serialize(organization: any): IOrganization {
     return {
       ...organization,
       boxColor: Array.isArray(organization.boxColor) ? organization.boxColor[0].value : organization.boxColor,
@@ -51,7 +53,7 @@ export class OrganizationEditComponent implements OnInit {
 
   onSubmit(): void {
     const organization = this.form.serializedUpdates;
-    this.submit.emit(this.toSubmittedValues(organization));
+    this.submit.emit(this.serialize(organization));
     this.onCancel();
   }
 

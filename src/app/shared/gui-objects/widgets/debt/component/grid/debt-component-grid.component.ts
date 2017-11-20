@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -23,7 +23,15 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtComponentGridComponent implements OnDestroy {
-  private debtId = (this.route.params as any).value.debtId || null;
+  @Input() action: 'edit' = 'edit';
+  @Input('debtId') set debtId(debtId: number) {
+    this.debtId$.next(debtId);
+    this.cdRef.markForCheck();
+  }
+  @Input() displayToolbar = true;
+  @Input() callCenter = false;
+
+  private debtId$ = new BehaviorSubject<number>(null);
 
   private selectedDebtComponentId$ = new BehaviorSubject<number>(null);
 
@@ -81,7 +89,6 @@ export class DebtComponentGridComponent implements OnDestroy {
     private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -96,12 +103,18 @@ export class DebtComponentGridComponent implements OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.fetchSubscription = this.canViewDebtComponent$.subscribe(hasPermission => {
-      if (hasPermission) {
+    this.fetchSubscription = Observable.combineLatest(
+      this.canViewDebtComponent$,
+      this.debtId$,
+    )
+    .subscribe(([ canView, personId ]) => {
+      if (!canView) {
+        this.notificationsService.error('errors.default.read.403').entity('entities.debtComponents.gen.plural').dispatch();
+        this.clear();
+      } else if (personId) {
         this.fetch();
       } else {
         this.clear();
-        this.notificationsService.error('errors.default.read.403').entity('entities.debtComponents.gen.plural').dispatch();
       }
     });
 
@@ -126,15 +139,18 @@ export class DebtComponentGridComponent implements OnDestroy {
   }
 
   onDoubleClick(debtComponent: IDebtComponent): void {
-    this.onEdit(debtComponent.id);
+    if (this.action === 'edit') {
+      this.onEdit(debtComponent.id);
+    }
   }
 
   onRemoveSubmit(): void {
-    this.debtComponentService.delete(this.debtId, this.selectedDebtComponentId$.value).subscribe(() => {
-      this.fetch();
-      this.dialog$.next(null);
-      this.selectedDebtComponentId$.next(null);
-    });
+    this.debtComponentService.delete(this.debtId$.value, this.selectedDebtComponentId$.value)
+      .subscribe(() => {
+        this.fetch();
+        this.dialog$.next(null);
+        this.selectedDebtComponentId$.next(null);
+      });
   }
 
   onCloseDialog(): void {
@@ -146,14 +162,17 @@ export class DebtComponentGridComponent implements OnDestroy {
   }
 
   private onEdit(debtComponentId: number): void {
-    this.router.navigate([ `${this.router.url}/debt-component/${debtComponentId}` ]);
+    this.router.navigate([ `${this.router.url}/debt-component/${debtComponentId}` ], {
+      queryParams: this.callCenter ? { callCenter: 1 } : {}
+    });
   }
 
   private fetch(): void {
-    this.debtComponentService.fetchAll(this.debtId).subscribe(components => {
-      this.components = components;
-      this.cdRef.markForCheck();
-    });
+    this.debtComponentService.fetchAll(this.debtId$.value, this.callCenter)
+      .subscribe(components => {
+        this.components = components;
+        this.cdRef.markForCheck();
+      });
   }
 
   private clear(): void {

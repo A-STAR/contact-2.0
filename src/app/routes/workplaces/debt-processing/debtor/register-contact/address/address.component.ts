@@ -6,7 +6,7 @@ import { IGridColumn } from '../../../../../../shared/components/grid/grid.inter
 
 import { AddressService } from '../../../../../../shared/gui-objects/widgets/address/address.service';
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
-import { DebtorService } from '../../debtor.service';
+import { DebtService } from '../../../../../../core/debt/debt.service';
 
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -37,7 +37,7 @@ export class AddressGridComponent implements OnInit {
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
-    private debtorService: DebtorService,
+    private debtService: DebtService,
     private gridService: GridService,
   ) {}
 
@@ -46,14 +46,14 @@ export class AddressGridComponent implements OnInit {
       .take(1)
       .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
 
-    this.addressService.fetchAll(this.entityType, this.entityId).subscribe(addresses => {
+    this.addressService.fetchAll(this.entityType, this.entityId, false).subscribe(addresses => {
       this.addresses = addresses.filter(address => !address.isInactive);
       this.cdRef.markForCheck();
     });
   }
 
   get canRegisterSelectedAddress$(): Observable<boolean> {
-    return this.debtorService.canRegisterAddress$(this.selectedAddress);
+    return this.debtService.canRegisterAddressVisit$(this.selectedAddress);
   }
 
   get selectedAddress(): IAddress {

@@ -26,7 +26,8 @@ export class LayoutComponent {
     DebtorComponent: 'DEBTOR_CARD',
     DebtorActionLogComponent: 'DEBTOR_ACTION_LOG',
     DebtorAddressComponent: 'DEBTOR_ADDRESS',
-    DebtorContactsComponent: 'DEBTOR_CONTACTS',
+    DebtorContactsComponent: 'DEBTOR_DEBT_CONTACTS',
+    DebtorContactLogTabComponent: 'DEBTOR_CONTACT_LOG_COMPONENT',
     DebtorDebtComponent: 'DEBTOR_DEBT',
     DebtorDebtComponentComponent: 'DEBTOR_DEBT_COMPONENT',
     DebtorDocumentComponent: 'DEBTOR_DOCUMENT',
@@ -38,6 +39,7 @@ export class LayoutComponent {
     DebtorPhoneComponent: 'DEBTOR_PHONE',
     DebtorPromiseComponent: 'DEBTOR_PROMISE',
     DebtorPropertyComponent: 'DEBTOR_PROPERTY',
+    DebtorPledgeComponent: 'DEBTOR_PLEDGE',
     DebtorsComponent: 'DEBT_LIST',
     DebtProcessingComponent: 'DEBTS',
     DictionariesComponent: 'DICTIONARIES',
@@ -60,12 +62,12 @@ export class LayoutComponent {
   }
 
   deactivate(component: any): void {
-    // console.log('deactivated', component.name);
+    // log('deactivated', component.name);
   }
 
   activate(config: any): void {
     const { component, factory, injector } = config;
-    // console.log('activate', component.COMPONENT_NAME);
+    // log('activate', component.COMPONENT_NAME);
     const path: string = this.router.url;
     const key = this.titles[component.COMPONENT_NAME];
     const title: string = key ? `sidebar.nav.menu.${key}` : 'Title';

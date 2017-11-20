@@ -3,7 +3,7 @@ import { Input, Component, OnInit, ViewChild, Output, EventEmitter } from '@angu
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
-import { IEmployeeViewEntity } from '../../organizations.interface';
+import { IEmployee } from '../../organizations.interface';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
@@ -13,18 +13,16 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 export class EmployeeEditComponent implements OnInit {
   @Input() employeeRoleOptions: Array<any> = [];
   // angular-cli/issues/2034
-  @Input() editedEntity: IEmployeeViewEntity | null;
-  @Output() submit: EventEmitter<any> = new EventEmitter();
-  @Output() cancel: EventEmitter<null> = new EventEmitter();
+  @Input() editedEntity: IEmployee = null;
+  @Output() submit = new EventEmitter<any>();
+  @Output() cancel = new EventEmitter<any>();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   formData: any;
   controls: Array<IDynamicFormItem>;
   private canEdit = false;
 
-  constructor(private userPermissionsService: UserPermissionsService) {
-
-  }
+  constructor(private userPermissionsService: UserPermissionsService) {}
 
   ngOnInit(): void {
 

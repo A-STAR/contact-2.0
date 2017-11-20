@@ -9,8 +9,8 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import { IActionGridDialogParams } from './action-grid.interface';
-import { IAGridAction, IAGridRequestParams } from '../grid2/grid2.interface';
+import { IActionGridDialogData } from './action-grid.interface';
+import { IAGridAction, IAGridRequestParams, IAGridSelected } from '../grid2/grid2.interface';
 
 import { Grid2Component } from '../../components/grid2/grid2.component';
 
@@ -34,12 +34,13 @@ export class ActionGridComponent<T> extends DialogFunctions {
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
+  @Output() select = new EventEmitter<IAGridSelected>();
+  @Output() action = new EventEmitter<IActionGridDialogData>();
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   dialog: string;
-
-  private dialogParams: IActionGridDialogParams;
+  dialogData: IActionGridDialogData;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -47,8 +48,16 @@ export class ActionGridComponent<T> extends DialogFunctions {
     super();
   }
 
-  getDialogParam(key: string): number | string {
-    return this.dialogParams[key];
+  get selection(): T[] {
+    return this.grid.selected as any[];
+  }
+
+  getSelectionParam(key: number): any[] {
+    return this.dialogData.selection[key];
+  }
+
+  getDialogParam(key: number): number | string {
+    return this.dialogData.params[key];
   }
 
   getFilters(): FilterObject {
@@ -59,12 +68,20 @@ export class ActionGridComponent<T> extends DialogFunctions {
     return this.grid.getRequestParams();
   }
 
-  onAction({ action, params }: IAGridAction): void {
-    this.dialog = action.action;
-    this.dialogParams = action.params.reduce((acc, param) => ({
-      ...acc,
-      [param]: params.node.data[param]
-    }), {});
+  onAction(gridAction: IAGridAction): void {
+    const { metadataAction, params } = gridAction;
+    this.dialog = metadataAction.action;
+    this.dialogData = {
+      action: gridAction,
+      params: metadataAction.params.reduce((acc, param, i) => ({
+        ...acc,
+        [i]: params.node.data[param]
+      }), {}),
+      selection: metadataAction.params.reduce((acc, param, i) => ({
+        ...acc,
+        [i]: this.selection.map(item => item[param])
+      }), {}),
+    };
     this.cdRef.markForCheck();
   }
 
@@ -74,5 +91,9 @@ export class ActionGridComponent<T> extends DialogFunctions {
 
   onDblClick(row: T): void {
     this.dblClick.emit(row);
+  }
+
+  onSelect(selected: number[]): void {
+    this.select.emit(selected);
   }
 }

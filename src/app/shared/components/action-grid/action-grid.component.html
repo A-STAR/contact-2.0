@@ -1,14 +1,33 @@
 <app-contact-log-dialog
   *ngIf="isDialog('showContactHistory')"
-  [personId]="getDialogParam('personId')"
+  [personId]="getDialogParam(0)"
   (close)="closeDialog()"
 ></app-contact-log-dialog>
+
+<app-debt-responsible-set
+  *ngIf="isDialog('debtSetResponsible')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-debt-responsible-set>
+
+<app-debt-responsible-clear
+  *ngIf="isDialog('debtClearResponsible')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-debt-responsible-clear>
+
+<app-entity-group-add
+  *ngIf="isDialog('objectAddToGroup')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseDialog()">
+</app-entity-group-add>
 
 <app-grid2
   [columnIds]="columnIds"
   [metadataKey]="metadataKey"
   [ngClass]="ngClass"
   [persistenceKey]="persistenceKey"
+  [rowIdKey]="rowIdKey"
   [rows]="rows"
   [rowCount]="rowCount"
   (action)="onAction($event)"
@@ -17,4 +36,5 @@
   (onPage)="onRequest()"
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
+  (onSelect)="onSelect($event)"
 ></app-grid2>

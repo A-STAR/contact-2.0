@@ -18,9 +18,9 @@ export class DebtProcessingService {
     private notifications: NotificationsService,
   ) {}
 
-  fetch(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IDebt>> {
+  fetch(name: string, filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IDebt>> {
     const request = this.gridService.buildRequest(params, filters);
-    return this.dataService.create('/list?name=debtsprocessingall', {}, request)
+    return this.dataService.create(`/list?name=${name}`, {}, request)
       .catch(this.notifications.fetchError().entity('entities.actionsLog.gen.plural').dispatchCallback());
   }
 }

@@ -1,5 +1,7 @@
 <app-address-grid
-  [debtId]="1"
-  [personId]="1"
+  *ngIf="debtExists$ | async"
+  [debtId]="debtId$ | async"
+  [callCenter]="true"
+  [personId]="personId$ | async"
   [personRole]="1"
 ></app-address-grid>

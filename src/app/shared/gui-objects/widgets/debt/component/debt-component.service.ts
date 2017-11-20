@@ -10,42 +10,43 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 export class DebtComponentService {
   static MESSAGE_DEBT_COMPONENT_SAVED = 'MESSAGE_DEBT_COMPONENT_SAVED';
 
-  errSingular = 'entities.debtComponents.gen.singular';
+  private errPlural = 'entities.debtComponents.gen.plural';
+  private errSingular = 'entities.debtComponents.gen.singular';
+
+  private url = '/debts/{debtId}/components';
 
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(debtId: number): Observable<Array<IDebtComponent>> {
+  fetchAll(debtId: number, callCenter: boolean): Observable<Array<IDebtComponent>> {
     return this.dataService
-      .readAll('/debts/{debtId}/components', { debtId })
-      .catch(this.notificationsService
-        .error('errors.default.read').entity('entities.debtComponents.gen.plural').dispatchCallback()
-      );
+      .readAll(this.url, { debtId }, { params: { callCenter } })
+      .catch(this.notificationsService.fetchError().entity(this.errPlural).dispatchCallback());
   }
 
   fetch(debtId: number, debtComponentId: number): Observable<IDebtComponent> {
     return this.dataService
-      .read('/debts/{debtId}/components/{debtComponentId}', { debtId, debtComponentId })
-      .catch(this.notificationsService.error('errors.default.read').entity(this.errSingular).dispatchCallback());
+      .read(`${this.url}/{debtComponentId}`, { debtId, debtComponentId })
+      .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
   }
 
   create(debtId: number, debtComponent: IDebtComponent): Observable<void> {
     return this.dataService
-      .create('/debts/{debtId}/components', { debtId }, debtComponent)
-      .catch(this.notificationsService.error('errors.default.create').entity(this.errSingular).dispatchCallback());
+      .create(this.url, { debtId }, debtComponent)
+      .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
   update(debtId: number, debtComponentId: number, debtComponent: Partial<IDebtComponent>): Observable<void> {
     return this.dataService
-      .update('/debts/{debtId}/components/{debtComponentId}', { debtId, debtComponentId }, debtComponent)
-      .catch(this.notificationsService.error('errors.default.update').entity(this.errSingular).dispatchCallback());
+      .update(`${this.url}/{debtComponentId}`, { debtId, debtComponentId }, debtComponent)
+      .catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
   }
 
   delete(debtId: number, debtComponentId: number): Observable<void> {
     return this.dataService
-      .delete('/debts/{debtId}/components/{debtComponentId}', { debtId, debtComponentId })
-      .catch(this.notificationsService.error('errors.default.delete').entity(this.errSingular).dispatchCallback());
+      .delete(`${this.url}/{debtComponentId}`, { debtId, debtComponentId })
+      .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
 }

@@ -5,7 +5,7 @@ import * as auth from '../auth/auth.reducer';
 import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import * as constants from '../../routes/admin/constants/constants.reducer';
 import * as debtors from '../../routes/workplaces/debtors/debtors.reducer';
-import * as dictionaries from '../dictionaries/dictionaries.reducer';
+import * as dictionaries from '../../routes/admin/dictionaries/dictionaries.reducer';
 import * as entityAttributes from '../entity/attributes/entity-attributes.reducer';
 import * as guiObjects from '../gui-objects/gui-objects.reducer';
 import * as lookup from '../lookup/lookup.reducer';
@@ -20,35 +20,26 @@ import * as userDictionaries from '../user/dictionaries/user-dictionaries.reduce
 import * as userPermissions from '../user/permissions/user-permissions.reducer';
 import * as userTemplates from '../user/templates/user-templates.reducer';
 
-// import { AuthService } from '../auth/auth.service';
-
-export function reset(nextReducer: any): any {
-  // return function resetReducer(state: IAppState, action: UnsafeAction): IAppState {
-  //   return nextReducer(action.type === AuthService.AUTH_GLOBAL_RESET ? undefined : state, action);
-  // };
-  return nextReducer;
-}
-
 export const reducers = {
-  actionsLog: reset(actionsLog.reducer),
+  actionsLog: actionsLog.reducer,
   auth: auth.reducer,
-  contractorsAndPortfolios: reset(contractorsAndPortfolios.reducer),
-  constants: reset(constants.reducer),
-  debtors: reset(debtors.reducer),
-  dictionaries: reset(dictionaries.reducer),
-  entityAttributes: reset(entityAttributes.reducer),
-  guiObjects: reset(guiObjects.reducer),
-  lookup: reset(lookup.reducer),
-  metadata: reset(metadata.reducer),
-  notifications: reset(notifications.reducer),
-  organizations: reset(organizations.reducer),
-  permissions: reset(permissions.reducer),
-  users: reset(users.reducer),
-  userAttributeTypes: reset(userAttributeTypes.reducer),
-  userConstants: reset(userConstants.reducer),
-  userDictionaries: reset(userDictionaries.reducer),
-  userPermissions: reset(userPermissions.reducer),
-  userTemplates: reset(userTemplates.reducer),
+  contractorsAndPortfolios: contractorsAndPortfolios.reducer,
+  constants: constants.reducer,
+  debtors: debtors.reducer,
+  dictionaries: dictionaries.reducer,
+  entityAttributes: entityAttributes.reducer,
+  guiObjects: guiObjects.reducer,
+  lookup: lookup.reducer,
+  metadata: metadata.reducer,
+  notifications: notifications.reducer,
+  organizations: organizations.reducer,
+  permissions: permissions.reducer,
+  users: users.reducer,
+  userAttributeTypes: userAttributeTypes.reducer,
+  userConstants: userConstants.reducer,
+  userDictionaries: userDictionaries.reducer,
+  userPermissions: userPermissions.reducer,
+  userTemplates: userTemplates.reducer,
 };
 
 export const initialState: Partial<IAppState> = {

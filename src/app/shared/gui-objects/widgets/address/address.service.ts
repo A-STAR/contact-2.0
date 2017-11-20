@@ -19,41 +19,53 @@ export class AddressService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(entityType: number, entityId: number): Observable<Array<IAddress>> {
+  fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<Array<IAddress>> {
     return this.dataService
-      .readAll(this.baseUrl, { entityType, entityId })
+      .readAll(this.baseUrl, { entityType, entityId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity(`${this.entity}.plural`).dispatchCallback());
   }
 
-  fetch(entityType: number, entityId: number, addressId: number): Observable<IAddress> {
+  fetch(entityType: number, entityId: number, addressId: number, callCenter: boolean): Observable<IAddress> {
     return this.dataService
-      .read(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId })
+      .read(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
-  create(entityType: number, entityId: number, address: IAddress): Observable<void> {
+  create(entityType: number, entityId: number, callCenter: boolean, address: IAddress): Observable<void> {
     return this.dataService
-      .create(this.baseUrl, { entityType, entityId }, address)
+      .create(this.baseUrl, { entityType, entityId }, address, { params: { callCenter } })
       .catch(this.notificationsService.createError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
-  update(entityType: number, entityId: number, addressId: number, address: Partial<IAddress>): Observable<void> {
+  update(
+    entityType: number,
+    entityId: number,
+    addressId: number,
+    callCenter: boolean,
+    address: Partial<IAddress>
+  ): Observable<void> {
     return this.dataService
-      .update(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, address)
+      .update(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, address, { params: { callCenter } })
       .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
-  block(entityType: number, entityId: number, addressId: number, inactiveReasonCode: number): Observable<void> {
-    return this.update(entityType, entityId, addressId, { isInactive: 1, inactiveReasonCode });
+  block(
+    entityType: number,
+    entityId: number,
+    addressId: number,
+    callCenter: boolean,
+    inactiveReasonCode: number
+  ): Observable<void> {
+    return this.update(entityType, entityId, addressId, callCenter, { isInactive: 1, inactiveReasonCode });
   }
 
-  unblock(entityType: number, entityId: number, addressId: number): Observable<void> {
-    return this.update(entityType, entityId, addressId, { isInactive: 0 });
+  unblock(entityType: number, entityId: number, addressId: number, callCenter: boolean): Observable<void> {
+    return this.update(entityType, entityId, addressId, callCenter, { isInactive: 0 });
   }
 
-  delete(entityType: number, entityId: number, addressId: number): Observable<void> {
+  delete(entityType: number, entityId: number, addressId: number, callCenter: boolean): Observable<void> {
     return this.dataService
-      .delete(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId })
+      .delete(`${this.baseUrl}/{addressId}`, { entityType, entityId, addressId }, { params: { callCenter } })
       .catch(this.notificationsService.deleteError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 

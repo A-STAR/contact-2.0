@@ -1,3 +1,6 @@
-<div>
-  Debt Components
-</div>
+<app-debt-component-grid
+  [action]="null"
+  [debtId]="debtId$ | async"
+  [displayToolbar]="false"
+  [callCenter]="true"
+></app-debt-component-grid>

@@ -67,6 +67,8 @@
         "DEBTOR_PHONE": "Debtor's phone",
         "DEBTOR_PROMISE": "Payment promise",
         "DEBTOR_PROPERTY": "Property card",
+        "DEBTOR_CONTACT_LOG_COMPONENT": "Contact card",
+        "DEBTOR_PLEDGE": "Pledge contract",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_PROTOCOL": "Contact Protocol",
@@ -131,6 +133,50 @@
       "grid": {
         "name": "Name",
         "comment": "Description"
+      },
+      "overview": {
+        "info": {
+          "title": "Overview",
+          "shortInfo": "Overview"
+        },
+        "debtor": {
+          "title": "Debtor",
+          "personFullName": "Name",
+          "birthDate": "Birthdate",
+          "docNumber": "Document #",
+          "personComment": "Comments"
+        },
+        "debt": {
+          "bankName": "Bank",
+          "branchCode": "Branch",
+          "contract": "Contract #",
+          "creditEndDate": "Ends On",
+          "creditName": "Product Name",
+          "creditStartDate": "Issued On",
+          "creditTypeCode": "Credit Product Type",
+          "currencyName": "Currency",
+          "debtAmount": "Debt Amount",
+          "debtComment": "Comments",
+          "debtId": "Debt Id",
+          "debtReasonCode": "Debt Reason",
+          "dict1Code": "Dictionary Attribute 1",
+          "dict2Code": "Dictionary Attribute 2",
+          "dict3Code": "Dictionary Attribute 3",
+          "dict4Code": "Dictionary Attribute 4",
+          "dpd": "DPD",
+          "lastCallDateTime": "Latest Call",
+          "lastPayDate": "Latest Payment",
+          "lastPromDate": "Promise Date",
+          "lastPromStatusCode": "Promise Status",
+          "lastVisitDateTime": "Latest Visit",
+          "nextCallDateTime": "Next Call",
+          "portfolioName": "Portfolio",
+          "regionCode": "Region",
+          "startDate": "Start Date",
+          "statusCode": "Status",
+          "title": "Debt",
+          "totalAmount": "Total Amount"
+        }
       },
       "tabs": {
         "phonesAndAddresses": "Phones and Addresses",
@@ -224,24 +270,31 @@
         "title": "Confirmation"
       }
     },
+    "debtsProcessing": {
+      "all": {
+        "title": "All"
+      },
+      "callBack": {
+        "title": "To Call Back"
+      },
+      "currentJob": {
+        "title": "Current Job"
+      }
+    },
     "incomingCall": {
       "filter": {
         "form": {
           "debtId": "Debt Id",
           "fullName": "Full Name/Company Name",
           "contract": "Contract",
-          "account": "Account",
           "phoneNumber": "Phone Number",
           "fullAddress": "Address",
-          "docSeries": "Series",
           "docNumber": "Number",
-          "clientId": "Client Id",
           "birthDate": "Birth Date",
-          "showDebtors": "Show Debtors",
-          "showGuarantors": "Show Guarantors",
-          "showClosed": "Show Closed Debts"
-        }
-      },
+          "personRoleCodes": "Role",
+          "isClosedDebt": "Show Closed Debts"
+    }
+  },
       "debtors": {
         "grid": {
           "bankName": "Bank",
@@ -289,11 +342,12 @@
   "constants": {
     "title": "Constants",
     "edit": {
+      "id": "Id",
       "title": "Constant",
       "name": "Name",
-      "type": "Type",
+      "typeCode": "Type",
       "value": "Value",
-      "comment": "Comments"
+      "dsc": "Comments"
     },
     "grid": {
       "id": "Id",
@@ -671,6 +725,13 @@
         "title": "Property attributes"
       }
     },
+    "pledgorsTab": {
+      "title": "Pledgors",
+      "remove": {
+        "title": "Delete the contract",
+        "confirmMessage": "Do you really want to delete this pledge contract?"
+      }
+    },
     "guarantorsTab": {
       "title": "Guarantors",
       "remove": {
@@ -736,6 +797,9 @@
     },
     "attributesTab": {
       "title": "Attributes"
+    },
+    "contactLogTam": {
+      "title": "Contact log"
     }
   },
   "person": {
@@ -1043,11 +1107,6 @@
         "comment": "Comment"
       }
     },
-    "contactLog": {
-      "dialog": {
-        "title": "Contact Log"
-      }
-    },
     "contactProperty": {
       "contactType": "Contact Type",
       "treeType": "Tree Type",
@@ -1079,7 +1138,7 @@
         "boxColor": "Color",
         "commentMode": "Comment Input Mode",
         "autoCommentIds": "Autocomment input",
-        "regInvisible": "Uploading Files",
+        "regInvisible": "Hidden When Registering Contact",
         "nextCallMode": "Next Call Date",
         "promiseMode": "Promis Input",
         "paymentMode": "Unverified Payment Input",
@@ -1416,6 +1475,44 @@
         "comment": "Comment"
       }
     },
+    "contactLog": {
+      "dialog": {
+        "title": "Contact Log"
+      },
+      "card": {
+        "fullName": "Dedtor",
+        "contract": "Order",
+        "contactNumber": "Order number",
+        "contactDateTime": "Contact date",
+        "contactType": "Contact type",
+        "userFullName": "Operator",
+        "resultName": "Result",
+        "contactData": "Phone/address",
+        "promiseDate": "Promise date",
+        "promiseAmount": "Promised amount",
+        "comment": "Comment",
+        "personRole": "Type of person",
+        "sentDateTime": "Sent date",
+        "status": "Status",
+        "contactPhone": "Contact phone",
+        "text": "Message",
+        "startDateTime": "Dispatch date"
+      },
+      "grid": {
+        "contactId": "Contact Id",
+        "contactNumber": "Order number",
+        "debtId": "Debt ID",
+        "creditName": "Credit name",
+        "createDateTime": "Ceate date",
+        "contactType": "Contact type",
+        "fullName": "Contact person name",
+        "personRole": "Person role",
+        "contactDateTime": "Contact date",
+        "userFullName": "Operator",
+        "resultName": "Result",
+        "promiseDate": "Promise date"
+      }
+    },
     "operator": {
       "dialog": {
         "title": "Select operator"
@@ -1426,6 +1523,90 @@
         "debtCnt": "Active debt count",
         "organization": "Department",
         "position": "Position"
+      }
+    },
+    "entityGroup": {
+      "dialog": {
+        "title": "Select group"
+      },
+      "grid": {
+        "id": "Id",
+        "name": "Name",
+        "comment": "Comment"
+      }
+    },
+    "pledgorProperty": {
+      "title": "Property information",
+      "search": {
+        "title": "Find property"
+      },
+      "dialog": {
+        "title": "Select property",
+        "notFound": "Could not find property. Please try to change the search criteria."
+      },
+      "grid": {
+        "propertyType": "Property type",
+        "pledgeValue": "Pledge value",
+        "marketValue": "Market value",
+        "currencyId": "Currency"
+      }
+    },
+    "pledgor": {
+      "title": "Pledgor",
+      "search": {
+        "title": "Find pledgors"
+      },
+      "dialog": {
+        "title": "Select a pledgor",
+        "notFound": "Could not find the pledgor. Please try to change the search criteria."
+      },
+      "grid": {
+        "id": "Id",
+        "firstName": "First name",
+        "middleName": "Middle name",
+        "lastName": "Last name / Company",
+        "birthDate": "Date of birth",
+        "birthPlace": "Place of birth",
+        "educationCode": "Education",
+        "familyStatusCode": "Marital status",
+        "genderCode": "Gender",
+        "passportNumber": "Passport No",
+        "typeCode": "Type",
+        "comment": "Comment",
+        "stringValue1": "Add. attribute 1",
+        "stringValue2": "Add. attribute 2",
+        "stringValue3": "Add. attribute 3",
+        "stringValue4": "Add. attribute 4",
+        "stringValue5": "Add. attribute 5",
+        "stringValue6": "Add. attribute 6",
+        "stringValue7": "Add. attribute 7",
+        "stringValue8": "Add. attribute 8",
+        "stringValue9": "Add. attribute 9",
+        "stringValue10": "Add. attribute 10"
+      }
+    },
+    "pledgeContract": {
+      "title": "Contract information",
+      "grid": {
+        "id": "Id",
+        "contractNumber": "Contract No",
+        "fullName": "Full name",
+        "typeCode": "Type",
+        "contractStartDate": "Start date",
+        "contractEndDate": "Expiry date",
+        "comment": "Comment",
+        "propertyType": "Property type",
+        "propertyName": "Property name"
+      },
+      "card": {
+        "contractNumber": "Contract No",
+        "typeCode": "Type",
+        "contractStartDate": "Start date",
+        "contractEndDate": "Expiry date",
+        "comment": "Comment"
+      },
+      "toolbar": {
+        "add": "Add pledgor"
       }
     }
   },
@@ -1555,7 +1736,10 @@
       "gen": { "singular": "message template", "plural": "message templates" }
     },
     "property": {
-      "gen": { "singular": "property", "plural": "property list" }
+      "gen": { "singular": "property item", "plural": "property list" }
+    },
+    "contactLog": {
+      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
     },
     "scenarios": {
       "gen": { "singular": "scenario", "plural": "scenarios list" }
@@ -1568,6 +1752,15 @@
     },
     "operator": {
       "gen": { "singular": "operator", "plural": "operators" }
+    },
+    "entityGroup": {
+      "gen": { "singular": "group", "plural": "groups" }
+    },
+    "pledgeContract": {
+      "gen": { "singular": "pledge contract", "plural": "pledge contracts" }
+    },
+    "pledgors": {
+      "gen": { "singular": "pledgor", "plural": "pledgors" }
     }
   },
   "errors": {
@@ -1674,6 +1867,10 @@
       "update": {
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
+      },
+      "add": {
+        "403": "You don't have permissions to add {{ entity }}",
+        "*": "Could not add {{ entity }}"
       },
       "upload": {
         "403": "You don't have permissions to upload {{ entity }}",
@@ -1785,7 +1982,10 @@
       },
       "actions": {
         "statusChange": "Change Status",
-        "showContactHistory": "Contact Log"
+        "showContactHistory": "Contact Log",
+        "debtSetResponsible": "Set debt responsible",
+        "debtClearResponsible": "Clear debt responsible",
+        "objectAddToGroup": "Add to group"
       }
     },
     "filter": {

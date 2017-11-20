@@ -1,6 +1,6 @@
-<app-dialog (close)="onClose()">
+<app-dialog (close)="onCancel()">
   <div dialog-header>
-    <h3>{{ 'constants.edit.title' | translate }}: {{ editedEntity.id }}</h3>
+    <h3>{{ 'constants.edit.title' | translate }}: {{ constant.id }}</h3>
   </div>
 
   <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>

@@ -1,3 +1,5 @@
-<div>
-  Documents
-</div>
+<app-document-grid
+  *ngIf="debtExists$ | async"
+  [callCenter]="true"
+  [personId]="personId$ | async"
+></app-document-grid>

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, ViewChild, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -6,11 +6,8 @@ import 'rxjs/add/operator/catch';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import {
-  IEmployee,
-  IEmployeeViewEntity,
-  OrganizationDialogActionEnum,
-  IOrganizationsState,
-  IEmployeeUpdateRequest} from '../organizations.interface';
+  IEmployeeUser, IEmployee, IOrganizationsState, IEmployeeUpdateRequest, IEmployeeCreateRequest
+} from '../organizations.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
@@ -20,41 +17,44 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { DialogFunctions } from 'app/core/dialog';
+import { combineLatestAnd } from '../../../../core/utils/helpers';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-employees',
-  templateUrl: './employees.component.html'
+  templateUrl: './employees.component.html',
 })
 export class EmployeesComponent extends DialogFunctions implements OnInit, OnDestroy {
-  @Input() employees: Array<IEmployee>;
   @ViewChild(GridComponent) grid: GridComponent;
+
+  @Input() employees: Array<IEmployee>;
+
   dialog: string;
-  private currentDialogAction: OrganizationDialogActionEnum = OrganizationDialogActionEnum.NONE;
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.currentDialogAction = OrganizationDialogActionEnum.EMPLOYEE_ADD,
-      enabled: Observable.combineLatest(
+      action: () => this.setDialog('create'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
-        Observable.of(this.organizationsService.selectedOrganization)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
+        this.organizationsService.selectedOrganization.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.currentDialogAction = OrganizationDialogActionEnum.EMPLOYEE_EDIT,
-      enabled: Observable.combineLatest(
+      action: () => this.setDialog('edit'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
         this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.currentDialogAction = OrganizationDialogActionEnum.EMPLOYEE_REMOVE,
-      enabled: Observable.combineLatest(
-        this.userPermissionsService.has('ORGANIZATION_EDIT'),
+      action: () => this.setDialog('remove'),
+      enabled: combineLatestAnd([
+        this.userPermissionsService.has('ORGANIZATION_DELETE'),
         this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -73,12 +73,14 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
   ];
 
-  editedEntity: IEmployeeViewEntity;
+  // action: IOrganizationDialogActionEnum;
+
+  editedEntity: IEmployee;
 
   // TODO(d.maltsev): type
   employeeRoleOptions$: Observable<Array<any>>;
 
-  employees$: Observable<Array<IEmployeeViewEntity>>;
+  employees$: Observable<IEmployee[]>;
 
   emptyMessage$: Observable<string>;
 
@@ -107,7 +109,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     this.selectedEmployeeSubscription = Observable.combineLatest(
       this.organizationsService.selectedEmployeeId,
       this.organizationsService.employees
-    ).subscribe((data: [number, IEmployeeViewEntity[]]) => {
+    ).subscribe((data: [number, IEmployee[]]) => {
       this.editedEntity = data[1].find(employee => employee.userId === data[0]);
     });
 
@@ -140,22 +142,6 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     return this.organizationsService.state;
   }
 
-  get isEntityBeingCreated(): boolean {
-    return this.currentDialogAction === OrganizationDialogActionEnum.EMPLOYEE_ADD;
-  }
-
-  get isEntityBeingEdited(): boolean {
-    return this.currentDialogAction === OrganizationDialogActionEnum.EMPLOYEE_EDIT;
-  }
-
-  get isEntityBeingRemoved(): boolean {
-    return this.currentDialogAction === OrganizationDialogActionEnum.EMPLOYEE_REMOVE;
-  }
-
-  transformIsInactive(isInactive: number): string {
-    return this.translateService.instant(isInactive ? 'default.yesNo.Yes' : 'default.yesNo.No');
-  }
-
   onSelect(employee: IEmployee): void {
     if (employee) {
       this.organizationsService.selectEmployee(employee.userId);
@@ -168,13 +154,13 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
       .subscribe(hasEditPermission => {
         if (hasEditPermission) {
           const selectedEmployeeUserId = employee.userId;
-          this.currentDialogAction = OrganizationDialogActionEnum.EMPLOYEE_EDIT;
           this.organizationsService.selectEmployee(selectedEmployeeUserId);
+          this.setDialog('edit');
         }
       });
   }
 
-  onAddSubmit(data: any): void {
+  onAddSubmit(data: IEmployeeCreateRequest): void {
     this.organizationsService.createEmployee(data).subscribe(() => this.cancelAction());
   }
 
@@ -187,7 +173,6 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   cancelAction(): void {
-    this.currentDialogAction = OrganizationDialogActionEnum.NONE;
     this.onCloseDialog();
   }
 

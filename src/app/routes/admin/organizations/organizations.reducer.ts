@@ -15,6 +15,7 @@ export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNod
   if (!selectedOrganizationNode) {
     return null;
   }
+
   let result;
   (nodes || []).forEach(
     node => result = result || (node.id === selectedOrganizationNode.id
@@ -22,6 +23,11 @@ export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNod
       : findOrganizationNode(node.children, selectedOrganizationNode))
   );
   return result;
+
+  // return (nodes || []).reduce((acc, node) => acc || (node.id === selectedOrganizationNode.id
+  //     ? node
+  //     : findOrganizationNode(node.children, selectedOrganizationNode))
+  // , null);
 }
 
 export function reducer(state: IOrganizationsState = defaultState, action: SafeAction<IOrganizationsState>): IOrganizationsState {
@@ -29,11 +35,11 @@ export function reducer(state: IOrganizationsState = defaultState, action: SafeA
     case OrganizationsService.ORGANIZATION_SELECT:
       return {
         ...state,
-        organizations: action.payload.organizations || state.organizations,
-        selectedOrganization: action.payload.selectedOrganization ||
-          // Here state.selectedOrganization is pointed to old instance from the previous state.organizations instance
-          // so we should find him actual mirror by id
-          findOrganizationNode(state.organizations, state.selectedOrganization)
+        organizations: action.payload.organizations
+          ? [...action.payload.organizations]
+          : [...state.organizations],
+        selectedOrganization: action.payload.selectedOrganization
+          || findOrganizationNode(state.organizations, state.selectedOrganization)
       };
     case OrganizationsService.EMPLOYEE_SELECT:
       return {

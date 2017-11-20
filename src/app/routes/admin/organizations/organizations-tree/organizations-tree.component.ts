@@ -7,15 +7,14 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
 
-import { OrganizationDialogActionEnum } from '../organizations.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree/treenode/treenode.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from 'app/shared/components/toolbar-2/toolbar-2.interface';
+import { ITreeNode, ITreeNodeInfo } from 'app/shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from '../organizations.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
 import { DialogFunctions } from 'app/core/dialog';
+import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,29 +25,28 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
   permissionSub: Subscription;
   organizations: Observable<ITreeNode[]>;
   dialog: string;
-  private currentDialogAction: OrganizationDialogActionEnum = OrganizationDialogActionEnum.NONE;
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.currentDialogAction = OrganizationDialogActionEnum.ORGANIZATION_ADD,
+      action: () => this.setDialog('create'),
       enabled: this.userPermissionsService.has('ORGANIZATION_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.currentDialogAction = OrganizationDialogActionEnum.ORGANIZATION_EDIT,
-      enabled: Observable.combineLatest(
+      action: () => this.setDialog('edit'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
-        this.organizationsService.selectedOrganization
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
+        this.organizationsService.selectedOrganization.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.currentDialogAction = OrganizationDialogActionEnum.ORGANIZATION_REMOVE,
-      enabled: Observable.combineLatest(
+      action: () => this.setDialog('remove'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('ORGANIZATION_DELETE'),
-        this.organizationsService.selectedOrganization
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
+        this.organizationsService.selectedOrganization.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -67,8 +65,10 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
 
   ngOnInit(): void {
     this.permissionSub = this.canViewOrganization.do(hasViewPermission => hasViewPermission
-      ? (this.organizations = Observable.merge(this.organizationsService.fetchOrganizations(),
-       this.organizationsService.organizations))
+      ? (this.organizations = Observable.merge(
+          this.organizationsService.fetchOrganizations(),
+          this.organizationsService.organizations)
+        )
       : this.organizationsService.clearOrganizations()
     ).subscribe(() => {
       this.cdRef.markForCheck();
@@ -82,18 +82,6 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
 
   get selectedOrganization(): Observable<ITreeNode> {
     return this.organizationsService.selectedOrganization;
-  }
-
-  get isEntityBeingCreated(): boolean {
-    return this.currentDialogAction === OrganizationDialogActionEnum.ORGANIZATION_ADD;
-  }
-
-  get isEntityBeingEdited(): boolean {
-    return this.currentDialogAction === OrganizationDialogActionEnum.ORGANIZATION_EDIT;
-  }
-
-  get isEntityBeingRemoved(): boolean {
-    return this.currentDialogAction === OrganizationDialogActionEnum.ORGANIZATION_REMOVE;
   }
 
   get canViewOrganization(): Observable<boolean> {
@@ -118,13 +106,11 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
   }
 
   onNodeEdit(node: ITreeNode): void {
-    this.currentDialogAction = OrganizationDialogActionEnum.ORGANIZATION_EDIT;
+    this.setDialog('edit');
     this.organizationsService.selectOrganization(node);
   }
 
   cancelAction(): void {
-    this.currentDialogAction = OrganizationDialogActionEnum.NONE;
-    // reset previously selected organization
     this.organizationsService.selectOrganization(null);
     this.onCloseDialog();
     this.cdRef.markForCheck();
@@ -132,6 +118,7 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
 
   fetchOrganizations(): void {
     this.organizationsService.fetchOrganizations().subscribe(() => {
+      this.organizationsService.selectOrganization(null);
       this.cdRef.markForCheck();
     });
   }

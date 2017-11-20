@@ -67,6 +67,8 @@
         "DEBTOR_PHONE": "Телефон должника",
         "DEBTOR_PROMISE": "Обещание платежа",
         "DEBTOR_PROPERTY": "Карточка имущества",
+        "DEBTOR_CONTACT_LOG_COMPONENT": "Карточка контакта",
+        "DEBTOR_PLEDGE": "Договор залога",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_PROTOCOL": "Протокол контактов",
@@ -131,6 +133,50 @@
       "grid": {
         "name": "Название",
         "comment": "Описание"
+      },
+      "overview": {
+        "info": {
+          "title": "Краткая информация",
+          "shortInfo": "Краткая информация"
+        },
+        "debtor": {
+          "title": "Должник",
+          "personFullName": "ФИО",
+          "birthDate": "Дата рождения",
+          "docNumber": "Номер документа",
+          "personComment": "Комментарий"
+        },
+        "debt": {
+          "bankName": "Банк",
+          "branchCode": "Филиал",
+          "contract": "Номер договора",
+          "creditEndDate": "Дата окончания",
+          "creditName": "Название продукта",
+          "creditStartDate": "Дата выдачи",
+          "creditTypeCode": "Тип кредитного продукта",
+          "currencyName": "Валюта",
+          "debtAmount": "Сумма просроченного долга",
+          "debtComment": "Комментарий",
+          "debtId": "Ид долга",
+          "debtReasonCode": "Причина возникновения задолженности",
+          "dict1Code": "Словарный атрибут 1",
+          "dict2Code": "Словарный атрибут 2",
+          "dict3Code": "Словарный атрибут 3",
+          "dict4Code": "Словарный атрибут 4",
+          "dpd": "DPD",
+          "lastCallDateTime": "Последний звонок",
+          "lastPayDate": "Последний платеж",
+          "lastPromDate": "Обещанная дата",
+          "lastPromStatusCode": "Статус обещания",
+          "lastVisitDateTime": "Последний выезд",
+          "nextCallDateTime": "Следующий звонок",
+          "portfolioName": "Портфолио",
+          "regionCode": "Регион",
+          "startDate": "Дата выхода на просрочку",
+          "statusCode": "Статус",
+          "title": "Долг",
+          "totalAmount": "Общая сумма кредита"
+        }
       },
       "tabs": {
         "phonesAndAddresses": "Телефоны и адреса",
@@ -224,24 +270,31 @@
         "title": "Подтверждение данных"
       }
     },
+    "debtsProcessing": {
+      "all": {
+        "title": "Все"
+      },
+      "callBack": {
+        "title": "Необходимо перезвонить"
+      },
+      "currentJob": {
+        "title": "Текущая работа"
+      }
+    },
     "incomingCall": {
       "filter": {
         "form": {
           "debtId": "Ид долга",
           "fullName": "ФИО/Название",
           "contract": "Договор",
-          "account": "Лицевой счет",
           "phoneNumber": "Номер телефона",
           "fullAddress": "Адрес",
-          "docSeries": "Серия",
-          "docNumber": "Номер",
-          "clientId": "Ид клиента",
+          "docNumber": "Номер документа",
           "birthDate": "Дата рождения",
-          "showDebtors": "По должникам",
-          "showGuarantors": "По поручителям",
-          "showClosed": "Показывать закрытые долги"
-        }
-      },
+          "personRoleCodes": "Роль",
+          "isClosedDebt": "Показывать закрытые долги"
+    }
+  },
       "debtors": {
         "grid": {
           "bankName": "Банк",
@@ -289,11 +342,12 @@
   "constants": {
     "title": "Константы",
     "edit": {
+      "id": "Ид",
       "title": "Константа",
       "name": "Название",
-      "type": "Тип",
+      "typeCode": "Тип",
       "value": "Значение",
-      "comment": "Комментарий"
+      "dsc": "Комментарий"
     },
     "grid": {
       "id": "Ид",
@@ -671,6 +725,13 @@
         "title": "Параметры имущества"
       }
     },
+    "pledgorsTab": {
+      "title": "Залогодатели",
+      "remove": {
+        "title": "Удалить запись",
+        "confirmMessage": "Вы действительно хотите удалить выбранный договор залога?"
+      }
+    },
     "guarantorsTab": {
       "title": "Поручители",
       "remove": {
@@ -736,6 +797,9 @@
     },
     "attributesTab": {
       "title": "Атрибуты"
+    },
+    "contactLogTab": {
+      "title": "Лог контактов"
     }
   },
   "person": {
@@ -1043,11 +1107,6 @@
         "comment": "Комментарий"
       }
     },
-    "contactLog": {
-      "dialog": {
-        "title": "История контактов"
-      }
-    },
     "contactProperty": {
       "contactType": "Тип контакта",
       "treeType": "Тип дерева",
@@ -1079,7 +1138,7 @@
         "boxColor": "Цвет",
         "commentMode": "Ввод комментария",
         "autoCommentIds": "Ввод автокомментария",
-        "regInvisible": "Добавление файла",
+        "regInvisible": "Не отображается при регистрации контакта",
         "nextCallMode": "Дата повторного звонка",
         "promiseMode": "Ввод обещания",
         "paymentMode": "Ввод неподтверженного платежа",
@@ -1416,6 +1475,44 @@
         "comment": "Комментарий"
       }
     },
+    "contactLog": {
+      "dialog": {
+        "title": "История контактов"
+      },
+      "card": {
+        "fullName": "Должник",
+        "contract": "Договор",
+        "contactNumber": "Номер договора",
+        "contactDateTime": "Дата контакта",
+        "contactType": "Тип контакта",
+        "userFullName": "Оператор",
+        "resultName": "Результат",
+        "contactData": "Контактный телефон/адрес",
+        "promiseDate": "Обещанная дата",
+        "promiseAmount": "Обещанная сумма",
+        "comment": "Комментарий",
+        "personRole": "Тип лица",
+        "sentDateTime": "Дата отправки",
+        "status": "Статус",
+        "contactPhone": "Контактный телефон",
+        "text": "Текст сообщения",
+        "startDateTime": "Планируемая дата начала отправки"
+      },
+      "grid": {
+        "contactId": "Ид контакта",
+        "contactNumber": "Номер договора",
+        "debtId": "Ид долга",
+        "creditName": "Название продукта",
+        "createDateTime": "Дата создания",
+        "contactType": "Тип контакта",
+        "fullName": "ФИО",
+        "personRole": "Роль",
+        "contactDateTime": "Дата контакта",
+        "userFullName": "Оператор",
+        "resultName": "Результат",
+        "promiseDate": "Обещанная дата"
+      }
+    },
     "operator": {
       "dialog": {
         "title": "Выбор оператора"
@@ -1426,6 +1523,90 @@
         "debtCnt": "Количество активных долгов",
         "organization": "Подразделение",
         "position": "Должность"
+      }
+    },
+    "entityGroup": {
+      "dialog": {
+        "title": "Выбор группы"
+      },
+      "grid": {
+        "id": "Ид",
+        "name": "Название",
+        "comment": "Комментарий"
+      }
+    },
+    "pledgorProperty": {
+      "title": "Информация об имуществе",
+      "search": {
+        "title": "Поиск имущества"
+      },
+      "dialog": {
+        "title": "Выбор имущества",
+        "notFound": "Не удалось найти имущество. Попробуйте изменить параметры поиска."
+      },
+      "grid": {
+        "propertyType": "Тип имущества",
+        "pledgeValue": "Залоговая стоимость",
+        "marketValue": "Рыночная стоимость",
+        "currencyId": "Валюта"
+      }
+    },
+    "pledgor": {
+      "title": "Залогодатель",
+      "search": {
+        "title": "Поиск залогодателей"
+      },
+      "dialog": {
+        "title": "Выбор залогодателя",
+        "notFound": "Не удалось найти залогодателя. Попробуйте изменить параметры поиска."
+      },
+      "grid": {
+        "id": "Ид",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "lastName": "Фамилия / Наименование",
+        "birthDate": "Дата рождения",
+        "birthPlace": "Место рождения",
+        "educationCode": "Образование",
+        "familyStatusCode": "Семейное положение",
+        "genderCode": "Пол",
+        "passportNumber": "№ паспорта",
+        "typeCode": "Тип",
+        "comment": "Комментарий",
+        "stringValue1": "Доп. значение 1",
+        "stringValue2": "Доп. значение 2",
+        "stringValue3": "Доп. значение 3",
+        "stringValue4": "Доп. значение 4",
+        "stringValue5": "Доп. значение 5",
+        "stringValue6": "Доп. значение 6",
+        "stringValue7": "Доп. значение 7",
+        "stringValue8": "Доп. значение 8",
+        "stringValue9": "Доп. значение 9",
+        "stringValue10": "Доп. значение 10"
+      }
+    },
+    "pledgeContract": {
+      "title": "Информация о договоре",
+      "grid": {
+        "id": "Ид",
+        "contractNumber": "Номер договора",
+        "fullName": "ФИО",
+        "typeCode": "Тип",
+        "contractStartDate": "Начало",
+        "contractEndDate": "Окончание",
+        "comment": "Комментарий",
+        "propertyType": "Тип имущества",
+        "propertyName": "Название имущества"
+      },
+      "card": {
+        "contractNumber": "Номер договора",
+        "contractStartDate": "Начало",
+        "contractEndDate": "Окончание",
+        "typeCode": "Тип",
+        "comment": "Комментарий"        
+      },
+      "toolbar": {
+        "add": "Добавить залогодателя"
       }
     }
   },
@@ -1545,7 +1726,7 @@
     "employment": {
       "gen": { "singular": "истории трудоустройства", "plural": "записей истории трудоустройства" }
     },
-    "debtComponents": {
+    "componentLog": {
       "gen": { "singular": "компонента долга", "plural": "компонентов долга" }
     },
     "sms": {
@@ -1556,6 +1737,9 @@
     },
     "property": {
       "gen": { "singular": "объекта имущества", "plural": "списка имущества" }
+    },
+    "contactLog": {
+      "gen": { "singular": "контакта с дебитором", "plural": "котнактов с дебиторм" }
     },
     "scenarios": {
       "gen": { "singular": "сценария", "plural": "списка сценариев" }
@@ -1568,6 +1752,15 @@
     },
     "operator": {
       "gen": { "singular": "оператора", "plural": "операторов" }
+    },
+    "entityGroup": {
+      "gen": { "singular": "группы", "plural": "групп" }
+    },
+    "pledgeContract": {
+      "gen": { "singular": "договора залога", "plural": "договоров залога" }
+    },
+    "pledgors": {
+      "gen": { "singular": "залогодателя", "plural": "залогодателей" }
     }
   },
   "errors": {
@@ -1674,6 +1867,10 @@
       "update": {
         "403": "У вас недостаточно прав для изменения {{ entity }}",
         "*": "При изменении {{ entity }} произошла ошибка"
+      },
+      "add": {
+        "403": "У вас недостаточно прав для добавления {{ entity }}",
+        "*": "При добавлении {{ entity }} произошла ошибка"
       },
       "upload": {
         "403": "У вас недостаточно прав для загрузки {{ entity }}",
@@ -1785,7 +1982,10 @@
       },
       "actions": {
         "statusChange": "Изменить статус",
-        "showContactHistory": "История контактов"
+        "showContactHistory": "История контактов",
+        "debtSetResponsible": "Установка ответственного по долгу",
+        "debtClearResponsible": "Снятие ответственного по долгу",
+        "objectAddToGroup": "Добавить в группу"
       }
     },
     "filter": {

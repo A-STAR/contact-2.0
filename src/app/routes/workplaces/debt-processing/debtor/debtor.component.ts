@@ -82,6 +82,10 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     this.personSubscription.unsubscribe();
   }
 
+  get personId$(): Observable<number> {
+    return this.debtorService.debtor$.map(debtor => debtor.id);
+  }
+
   get isCompany$(): Observable<boolean> {
     return this.debtorService.isCompany$;
   }
@@ -114,7 +118,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
     this.setDialog();
-    this.debtorService.navigateToRegistration(this.person.id, 1, contactType, contactId);
+    this.debtorService.navigateToRegistration({ personId: this.person.id, personRole: 1, contactType, contactId });
   }
 
   private getControls(canEdit: boolean): IDynamicFormItem[] {

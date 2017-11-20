@@ -5,23 +5,24 @@ export enum ToolbarItemTypeEnum {
   BUTTON,
   BUTTON_ADD,
   BUTTON_ADD_USER,
+  BUTTON_BLOCK,
+  BUTTON_CHANGE_STATUS,
+  BUTTON_CLOSE,
+  BUTTON_COPY,
   BUTTON_DELETE,
   BUTTON_DOWNLOAD,
   BUTTON_EDIT,
   BUTTON_MOVE,
+  BUTTON_NEXT,
+  BUTTON_OK,
   BUTTON_REFRESH,
+  BUTTON_REGISTER_CONTACT,
   BUTTON_SAVE,
   BUTTON_SMS,
-  BUTTON_UPLOAD,
-  BUTTON_BLOCK,
   BUTTON_UNBLOCK,
-  BUTTON_CHANGE_STATUS,
-  BUTTON_CLOSE,
   BUTTON_UNDO,
-  BUTTON_OK,
-  BUTTON_REGISTER_CONTACT,
+  BUTTON_UPLOAD,
   BUTTON_VISIT,
-  BUTTON_COPY,
   CHECKBOX,
 }
 
@@ -31,6 +32,7 @@ export interface IToolbarElement {
   action?: IToolbarAction | Action;
   enabled?: Observable<boolean>;
   label?: string;
+  align?: 'right';
 }
 
 export interface IToolbarButton extends IToolbarElement {

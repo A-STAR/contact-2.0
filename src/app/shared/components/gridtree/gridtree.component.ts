@@ -67,7 +67,7 @@ export class GridTreeComponent<T> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.dnd) {
+    if (this.gridTreeServiceSubscription) {
       this.gridTreeServiceSubscription.unsubscribe();
     }
   }

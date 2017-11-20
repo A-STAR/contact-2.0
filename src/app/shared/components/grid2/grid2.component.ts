@@ -14,10 +14,9 @@ import {
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ColDef, Column, ColumnChangeEvent, GetContextMenuItemsParams,
-  GridOptions, ICellRendererParams, MenuItemDef, RowNode,
+  ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
+  GridOptions, ICellRendererParams, MenuItemDef, PostProcessPopupParams, RowNode
 } from 'ag-grid/main';
-import { PostProcessPopupParams } from 'ag-grid-enterprise';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import {
@@ -111,7 +110,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   page: number = this.startPage;
   paginationPanel: IToolbarAction[] = [];
   initCallbacks: Function[] = [];
-  actions: IMetadataAction[];
+  actions: IMetadataAction[] = [];
 
   private gridSettings: IAGridSettings;
   private initialized = false;
@@ -172,8 +171,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.onInit.emit();
       });
 
-      this.langSubscription = this.translate.onLangChange
-        .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
+    this.langSubscription = this.translate.onLangChange
+      .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -231,7 +230,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
     const newSize = payload.value[0].value;
-    console.log('new page size', newSize);
+    // log('new page size', newSize);
     this.pageSize = newSize || this.pageSize;
     this.onPageSize.emit(this.pageSize);
   }
@@ -284,8 +283,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
             filter.operator = 'IN';
             const column = this.columns.find(col => col.colId === key);
             if (column && column.filterValues && Array.isArray(model)) {
-              // console.log(column.filterValues);
-              // console.log('model', model);
+              // log(column.filterValues);
+              // log('model', model);
               filter.values = model.map(value => column.filterValues.find(val => val.name === value))
                 .map(val => val.code);
             } else {
@@ -665,7 +664,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       showToolPanel: false,
       suppressMenuHide: true,
       suppressPaginationPanel: true,
-      suppressRowHoverClass: true,
+      // suppressRowHoverClass: true,
       suppressScrollOnNewData: true,
       toolPanelSuppressRowGroups: true,
       toolPanelSuppressValues: true,
@@ -689,6 +688,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
+  private createMetadataMenuItem(metadataAction: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
+    console.log(metadataAction);
+    return {
+      name: this.translate.instant(`default.grid.actions.${metadataAction.action}`),
+      action: () => this.action.emit({ metadataAction, params }),
+      disabled: !this.isContextMenuItemEnabled(metadataAction.action),
+    };
+  }
+
+  private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
+    return this.actions.map(action => this.createMetadataMenuItem(action, params));
+  }
+
   private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
     return [
       // {
@@ -701,28 +713,24 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         tooltip: 'Just to test what the tooltip can show'
       },
       'separator',
-      ...(this.actions || []).map(action => ({
-        name: this.translate.instant(`default.grid.actions.${action.action}`),
-        disabled: !this.isContextMenuItemEnabled(action.action),
-        action: () => this.action.emit({ action, params })
-      })),
+      ...this.getMetadataMenuItems(params),
       // {
       //   name: 'Person',
       //   subMenu: [
-      //     {name: 'Niall', action: () => {console.log('Niall was pressed'); } },
-      //     {name: 'Sean', action: () => {console.log('Sean was pressed'); } },
-      //     {name: 'John', action: () => {console.log('John was pressed'); } },
-      //     {name: 'Alberto', action: () => {console.log('Alberto was pressed'); } },
-      //     {name: 'Tony', action: () => {console.log('Tony was pressed'); } },
-      //     {name: 'Andrew', action: () => {console.log('Andrew was pressed'); } },
-      //     {name: 'Lola', action: () => {console.log('Lola was pressed'); } },
+      //     {name: 'Niall', action: () => {log('Niall was pressed'); } },
+      //     {name: 'Sean', action: () => {log('Sean was pressed'); } },
+      //     {name: 'John', action: () => {log('John was pressed'); } },
+      //     {name: 'Alberto', action: () => {log('Alberto was pressed'); } },
+      //     {name: 'Tony', action: () => {log('Tony was pressed'); } },
+      //     {name: 'Andrew', action: () => {log('Andrew was pressed'); } },
+      //     {name: 'Lola', action: () => {log('Lola was pressed'); } },
       //   ]
       // },
       'separator',
       // {
       //   name: 'Checked',
       //   checked: true,
-      //   action: () => { console.log('Checked Selected'); }
+      //   action: () => { log('Checked Selected'); }
       // },
       'copy',
       'copyWithHeaders',
@@ -737,9 +745,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   // TODO(d.maltsev): this looks a bit messy.
-  // Maybe we should get permissions from server as well or get all metadata from client service
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'debtClearResponsible':
+        return this.userPermissionsBag.has('DEBT_RESPONSIBLE_CLEAR') && this.selected.length > 0;
+      case 'debtSetResponsible':
+        return this.userPermissionsBag.hasOneOf([ 'DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET' ]) && this.selected.length > 0;
+      case 'objectAddToGroup':
+        // TODO(d.maltsev, i.kibisov): pass entityTypeId
+        return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
       case 'showContactHistory':
         return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
       default:
@@ -768,9 +782,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     ePopup.style.left = newLeft + px;
   }
 
-  private onColumnRowGroupChanged(event: ColumnChangeEvent): void {
+  private onColumnRowGroupChanged(event: ColumnRowGroupChangedEvent): void {
     // NOTE: emit colId's only as an array
-    this.onColumnGroup.emit(event.getColumns().map(column => column.getColId()));
+    this.onColumnGroup.emit(event.columns.map(column => column.getColId()));
   }
 
   private calculateGridSettings(): void {

@@ -57,7 +57,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
     Observable.combineLatest(
       this.contactRegistrationService.selectedNode$,
       this.debtService.fetch(null, this.debtId),
-      this.promiseService.getPromiseLimit(this.debtId),
+      this.promiseService.getPromiseLimit(this.debtId, false),
       this.canAddInsufficientAmount$,
     )
     .subscribe(([ node, debt, limit, canAddInsufficientAmount ]) => {

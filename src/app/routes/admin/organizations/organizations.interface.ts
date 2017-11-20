@@ -13,19 +13,16 @@ export interface IOrganization {
 }
 
 export interface IEmployee {
+  id?: number;
   userId: number;
   roleCode: number;
   comment: string;
   isMain: boolean;
 }
 
-export interface IEmployeeViewEntity extends IEmployee {
-  id: number;
-}
-
 export interface IEmployeeCreateRequest {
   roleCode: number;
-  usersIds: Array<number>;
+  usersIds: number[];
 }
 
 export interface IEmployeeUpdateRequest {
@@ -34,26 +31,16 @@ export interface IEmployeeUpdateRequest {
   isMain: number;
 }
 
-export enum OrganizationDialogActionEnum {
-  NONE,
-  ORGANIZATION_ADD,
-  ORGANIZATION_EDIT,
-  ORGANIZATION_REMOVE,
-  EMPLOYEE_ADD,
-  EMPLOYEE_EDIT,
-  EMPLOYEE_REMOVE
-}
-
-export interface IOrganizationSelectPayload {
+export interface IOrganizationSelectState {
   selectedOrganization: ITreeNode;
   organizations?: ITreeNode[];
 }
 
-export interface IEmployeeSelectPayload {
-  employees?: Array<IEmployeeViewEntity>;
+export interface IEmployeeSelectState {
+  employees?: IEmployee[];
   selectedEmployeeUserId: number;
 }
 
-export type IOrganizationsState = IOrganizationSelectPayload & IEmployeeSelectPayload;
+export type IOrganizationsState = IOrganizationSelectState & IEmployeeSelectState;
 
 export type IEmployeeUser = IUser & IEmployee;

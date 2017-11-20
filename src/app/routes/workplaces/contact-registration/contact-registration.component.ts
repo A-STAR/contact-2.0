@@ -20,11 +20,12 @@ import { combineLatestOr } from '../../../core/utils/helpers';
 export class ContactRegistrationComponent {
   static COMPONENT_NAME = 'ContactRegistrationComponent';
 
-  debtId = Number(this.routeParams.debtId);
+  campaignId      = Number(this.queryParams.campaignId);
+  contactId       = Number(this.routeParams.contactId);
   contactTypeCode = Number(this.routeParams.contactTypeCode);
-  contactId = Number(this.routeParams.contactId);
-  personId = Number(this.queryParams.personId);
-  personRole = Number(this.queryParams.personRole);
+  debtId          = Number(this.routeParams.debtId);
+  personId        = Number(this.queryParams.personId);
+  personRole      = Number(this.queryParams.personRole);
 
   selectedIndex = 0;
 

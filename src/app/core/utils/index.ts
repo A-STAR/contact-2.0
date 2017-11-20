@@ -9,6 +9,14 @@ export const propOr = (prop: string, orValue: any) => obj => Object.hasOwnProper
 
 export const makeKey = (prefix: string) => (fieldName: string) => `${prefix}.${fieldName}`;
 
+export const addLabel = (key: string) => {
+  const labelKey = makeKey(key);
+  return control => ({
+    ...control,
+    label: control.label || labelKey(control.controlName)
+  });
+};
+
 export const toLabeledValues = item => ({ label: item.name, value: item.code });
 
 type IValueToOption<T> = (value: T) => IOption;

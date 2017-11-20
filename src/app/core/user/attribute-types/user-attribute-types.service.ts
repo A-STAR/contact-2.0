@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserAttributeType, IUserAttributeTypes, UserAttributeTypeStatusEnum } from './user-attribute-types.interface';
-import { UnsafeAction } from '../../../core/state/state.interface';
+import { IUserAttributeType, IUserAttributeTypes, IUserAttributeTypesAction } from './user-attribute-types.interface';
+import { SafeAction } from '../../../core/state/state.interface';
+
+import { DataService } from '../../data/data.service';
 
 @Injectable()
 export class UserAttributeTypesService {
@@ -14,13 +14,11 @@ export class UserAttributeTypesService {
   static USER_ATTRIBUTE_TYPES_FETCH_SUCCESS = 'USER_ATTRIBUTE_TYPES_FETCH_SUCCESS';
   static USER_ATTRIBUTE_TYPES_FETCH_FAILURE = 'USER_ATTRIBUTE_TYPES_FETCH_FAILURE';
 
-  private attributeTypes: IUserAttributeTypes;
+  private url = '/lookup/entityTypes/{entityTypeId}/entitySubtypes/{entitySubtypeCode}/attributeTypes';
 
-  constructor(private store: Store<IAppState>) {
-    this.attributeTypes$.subscribe(attributeTypes => this.attributeTypes = attributeTypes);
-  }
+  constructor(private store: Store<IAppState>, private dataService: DataService) {}
 
-  createRefreshAction(entityTypeId: number, entitySubtypeCode: number): UnsafeAction {
+  createRefreshAction(entityTypeId: number, entitySubtypeCode: number): SafeAction<IUserAttributeTypesAction> {
     return {
       type: UserAttributeTypesService.USER_ATTRIBUTE_TYPES_FETCH,
       payload: {
@@ -37,20 +35,35 @@ export class UserAttributeTypesService {
 
   getAttributeTypes(entityTypeId: number, entitySubtypeCode: number): Observable<IUserAttributeType[]> {
     const key = `${entityTypeId}/${entitySubtypeCode}`;
-    const status = this.attributeTypes && this.attributeTypes[key] && this.attributeTypes[key].status;
-    if (status !== UserAttributeTypeStatusEnum.PENDING && status !== UserAttributeTypeStatusEnum.LOADED) {
-      this.refresh(entityTypeId, entitySubtypeCode);
-    }
+
     return this.attributeTypes$
-      .map(state => state[key])
-      .filter(slice => slice && slice.status === UserAttributeTypeStatusEnum.LOADED)
-      .map(slice => slice.attributeTypes)
-      .distinctUntilChanged();
+      .map(slice => slice[key])
+      .switchMap(values => {
+        return !values
+          ? this.read(entityTypeId, entitySubtypeCode)
+              .do(attributeTypes => {
+                this.store.dispatch({
+                  type: UserAttributeTypesService.USER_ATTRIBUTE_TYPES_FETCH_SUCCESS,
+                  payload: {
+                    entityTypeId,
+                    entitySubtypeCode,
+                    attributeTypes
+                  }
+                });
+              })
+              .switchMap(_ => {
+                return this.attributeTypes$.map(slice => slice[key]);
+              })
+          : Observable.of(values);
+      });
   }
 
   private get attributeTypes$(): Observable<IUserAttributeTypes> {
     return this.store.select(state => state.userAttributeTypes)
-      .filter(Boolean)
       .map(state => state.attributeTypes);
+  }
+
+  private read(entityTypeId: number, entitySubtypeCode: number): Observable<IUserAttributeType[]> {
+    return this.dataService.readAll(this.url, { entityTypeId, entitySubtypeCode });
   }
 }

@@ -17,29 +17,23 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 })
 export class EmployeeAddComponent implements OnInit {
   @Input() employeeRoleOptions: Array<any> = [];
-  @Output() submit: EventEmitter<any> = new EventEmitter();
-  @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
+  @Output() submit = new EventEmitter<any>();
+  @Output() cancel = new EventEmitter<void>();
   @ViewChild(GridComponent) addEmployeeGrid: GridComponent;
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private selectedEmployees: Array<IEmployeeUser> = [];
+
   notAddedEmployees: Observable<IEmployee[]>;
   controls: Array<IDynamicFormControl> = [];
 
   columns: Array<IGridColumn> = [
     { prop: 'fullName', minWidth: 200 },
     { prop: 'position' },
-    // TODO: display column depending on filter
     { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
   ];
 
-  get formData(): any {
-    return {
-      roleCode: [
-        this.employeeRoleOptions[0]
-      ]
-    };
-  }
+  formData: any = {};
 
   constructor(
     private gridService: GridService,
@@ -55,7 +49,21 @@ export class EmployeeAddComponent implements OnInit {
     this.gridService.setAllRenderers(this.columns)
       .take(1)
       .subscribe(columns => this.columns = [...columns]);
-    this.setControls();
+
+    this.controls = [
+      {
+        label: 'users.edit.role',
+        controlName: 'roleCode',
+        type: 'select',
+        required: true,
+        options: this.employeeRoleOptions
+      },
+    ];
+    this.formData = {
+      roleCode: [
+        this.employeeRoleOptions[0]
+      ]
+    };
   }
 
   onSelectEmployees(): void {
@@ -75,17 +83,5 @@ export class EmployeeAddComponent implements OnInit {
 
   onCancel(): void {
     this.cancel.emit();
-  }
-
-  private setControls(): void {
-    this.controls = [
-      {
-        label: 'users.edit.role',
-        controlName: 'roleCode',
-        type: 'select',
-        required: true,
-        options: this.employeeRoleOptions
-      },
-    ];
   }
 }

@@ -25,9 +25,11 @@ export class PhoneCardComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
+  private queryParams = (<any>this.route.queryParams).value;
   private personId = this.routeParams.personId || null;
   private contactId = this.routeParams.contactId || null;
   private phoneId = this.routeParams.phoneId || null;
+  private callCenter = this.queryParams.callCenter;
 
   controls: Array<IDynamicFormItem> = null;
   phone: IPhone;
@@ -47,7 +49,7 @@ export class PhoneCardComponent {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
       this.phoneId ? this.userPermissionsService.has('PHONE_EDIT') : Observable.of(true),
       this.phoneId ? this.userPermissionsService.has('PHONE_COMMENT_EDIT') : Observable.of(true),
-      this.phoneId ? this.phoneService.fetch(18, this.personId, this.phoneId) : Observable.of(null)
+      this.phoneId ? this.phoneService.fetch(18, this.personId, this.phoneId, this.callCenter) : Observable.of(null)
     )
     .take(1)
     .subscribe(([ options, canEdit, canEditComment, phone ]) => {
@@ -64,8 +66,8 @@ export class PhoneCardComponent {
 
   onSubmit(): void {
     const action = this.phoneId
-      ? this.phoneService.update(18, this.personId, this.phoneId, this.form.serializedUpdates)
-      : this.phoneService.create(18, this.personId, this.form.serializedUpdates);
+      ? this.phoneService.update(18, this.personId, this.phoneId, this.callCenter, this.form.serializedUpdates)
+      : this.phoneService.create(18, this.personId, this.callCenter, this.form.serializedUpdates);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(PhoneService.MESSAGE_PHONE_SAVED);

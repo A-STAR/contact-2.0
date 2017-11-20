@@ -1,51 +1,52 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
 
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
-import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../../../../core/dictionaries/dictionaries.interface';
+import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../dictionaries.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { DictionariesService } from '../../../../core/dictionaries/dictionaries.service';
+import { DictionariesService } from '../dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
+import { combineLatestAnd } from '../../../../core/utils/helpers';
+
 @Component({
   selector: 'app-terms',
   templateUrl: './terms.component.html'
 })
-export class TermsComponent implements OnDestroy {
+export class TermsComponent implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.dictionariesService.setDialogAddTermAction(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('DICT_TERM_ADD'),
         this.dictionariesService.isSelectedDictionaryExist
-      ).map(([hasPermissions, isSelectedDictionaryExist]) => hasPermissions && isSelectedDictionaryExist)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dictionariesService.setDialogEditTermAction(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('DICT_TERM_EDIT'),
         this.dictionariesService.isSelectedTermExist
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dictionariesService.setDialogRemoveTermAction(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('DICT_TERM_DELETE'),
         this.dictionariesService.isSelectedTermExist
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -80,10 +81,12 @@ export class TermsComponent implements OnDestroy {
     private gridService: GridService,
     private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
-  ) {
-    this.gridService.setDictionaryRenderers(this.columns)
+  ) {}
+
+  ngOnInit(): void {
+    this.gridService.setAllRenderers(this.columns)
       .map(columns => {
-        this.columns = this.gridService.setRenderers(columns);
+        this.columns = [ ...columns ];
       })
       .take(1)
       .subscribe();
@@ -144,22 +147,20 @@ export class TermsComponent implements OnDestroy {
   }
 
   get isReadyForCreating(): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatestAnd([
       this.isEntityBeingCreated,
       this.isTermRelationsReady,
       this.isDropdownTermsReady,
-    ).map(([isEntityBeingCreated, isDictionaryRelationsReady, isDropdownTermsReady]) =>
-      isEntityBeingCreated && isDictionaryRelationsReady && isDropdownTermsReady);
+    ]);
   }
 
   get isReadyForEditing(): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatestAnd([
       this.isEntityBeingEdited,
       this.isTermRelationsReady,
       this.dictionariesService.isSelectedTermReady,
       this.isDropdownTermsReady,
-    ).map(([isEntityBeingEdited, isRelationsReady, isSelectedTermReady, isDropdownTermsReady]) =>
-      isEntityBeingEdited && isRelationsReady && isSelectedTermReady && isDropdownTermsReady);
+    ]);
   }
 
   get isDropdownTermsReady(): Observable<boolean> {

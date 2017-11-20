@@ -4,7 +4,7 @@ import { IAuthState } from '../auth/auth.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
 import { IContractorsAndPortfoliosState } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDebtorsState } from '../../routes/workplaces/debtors/debtors.interface';
-import { IDictionariesState } from '../dictionaries/dictionaries.interface';
+import { IDictionariesState } from '../../routes/admin/dictionaries/dictionaries.interface';
 import { IEntityAttributesState } from '../entity/attributes/entity-attributes.interface';
 import { IGuiObjectsState } from '../gui-objects/gui-objects.interface';
 import { ILookupState } from '../lookup/lookup.interface';

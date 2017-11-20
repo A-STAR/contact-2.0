@@ -13,7 +13,7 @@ import { ToasterModule } from 'angular2-toaster';
 import * as R from 'ramda';
 
 import { AuthEffects } from './core/auth/auth.effects';
-import { DictionariesEffects } from './core/dictionaries/dictionaries.effects';
+import { DictionariesEffects } from './routes/admin/dictionaries/dictionaries.effects';
 import { EntityAttributesEffects } from './core/entity/attributes/entity-attributes.effects';
 import { GuiObjectsEffects } from './core/gui-objects/gui-objects.effects';
 import { LookupEffects } from './core/lookup/lookup.effects';
@@ -25,7 +25,7 @@ import { LayoutModule } from './layout/layout.module';
 import { RoutesModule } from './routes/routes.module';
 import { SharedModule } from './shared/shared.module';
 
-import { IAppState } from './core/state/state.interface';
+import { IAppState, UnsafeAction } from './core/state/state.interface';
 import { AppComponent } from './app.component';
 
 import { AuthService } from './core/auth/auth.service';
@@ -44,6 +44,12 @@ export function getInitialState(): Partial<IAppState> {
 
 export function authTokenGetter(): string {
   return R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.TOKEN_NAME));
+}
+
+export function reset(nextReducer: any): any {
+  return function resetReducer(state: IAppState, action: UnsafeAction): IAppState {
+    return nextReducer(action.type === AuthService.AUTH_GLOBAL_RESET ? undefined : state, action);
+  };
 }
 
 @NgModule({
@@ -69,10 +75,13 @@ export function authTokenGetter(): string {
       config: {
         tokenGetter: authTokenGetter,
         whitelistedDomains: [
+          '*',
           'localhost:4200',
           'localhost:8080',
           'appservertest.luxbase.int:4100',
-          'appservertest.luxbase.int:4300'
+          'appservertest.luxbase.int:4300',
+          'go.luxbase.ru:3000',
+          'go.luxbase.ru:4300',
         ],
         throwNoTokenError: false
       }
@@ -80,7 +89,7 @@ export function authTokenGetter(): string {
     LayoutModule,
     RoutesModule,
     SharedModule.forRoot(),
-    StoreModule.forRoot(reducers, { initialState: getInitialState }),
+    StoreModule.forRoot(reducers, { initialState: getInitialState, metaReducers: [reset] }),
     !environment.production
       ? StoreDevtoolsModule.instrument({ maxAge: 1024 })
       : [],

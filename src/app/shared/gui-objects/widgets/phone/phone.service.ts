@@ -11,7 +11,6 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 export class PhoneService {
   static MESSAGE_PHONE_SAVED = 'MESSAGE_PHONE_SAVED';
   baseUrl = '/entityTypes/{entityType}/entities/{entityId}/phones';
-  extUrl = `${this.baseUrl}/{phoneId}`;
   singular = 'entities.phones.gen.singular';
 
   constructor(
@@ -19,36 +18,48 @@ export class PhoneService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(entityType: number, entityId: number): Observable<IPhone[]> {
+  fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<IPhone[]> {
     return this.dataService
-      .readAll(this.baseUrl, { entityType, entityId })
+      .readAll(this.baseUrl, { entityType, entityId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.phones.gen.plural').dispatchCallback());
   }
 
-  fetch(entityType: number, entityId: number, phoneId: number): Observable<IPhone> {
+  fetch(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<IPhone> {
     return this.dataService
-      .read(this.extUrl, { entityType, entityId, phoneId })
+      .read(`${this.baseUrl}/{phoneId}`, { entityType, entityId, phoneId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity(this.singular).dispatchCallback());
   }
 
-  create(entityType: number, entityId: number, phone: IPhone): Observable<void> {
+  create(entityType: number, entityId: number, callCenter: boolean, phone: IPhone): Observable<void> {
     return this.dataService
-      .create(this.baseUrl, { entityType, entityId }, phone)
+      .create(this.baseUrl, { entityType, entityId }, phone, { params: { callCenter } })
       .catch(this.notificationsService.createError().entity(this.singular).dispatchCallback());
   }
 
-  update(entityType: number, entityId: number, phoneId: number, phone: Partial<IPhone>): Observable<void> {
+  update(
+    entityType: number,
+    entityId: number,
+    phoneId: number,
+    callCenter: boolean,
+    phone: Partial<IPhone>,
+  ): Observable<void> {
     return this.dataService
-      .update(this.extUrl, { entityType, entityId, phoneId }, phone)
+      .update(`${this.baseUrl}/{phoneId}`, { entityType, entityId, phoneId }, phone, { params: { callCenter } })
       .catch(this.notificationsService.updateError().entity(this.singular).dispatchCallback());
   }
 
-  block(entityType: number, entityId: number, phoneId: number, inactiveReasonCode: number): Observable<void> {
-    return this.update(entityType, entityId, phoneId, { isInactive: 1, inactiveReasonCode });
+  block(
+    entityType: number,
+    entityId: number,
+    phoneId: number,
+    callCenter: boolean,
+    inactiveReasonCode: number,
+  ): Observable<void> {
+    return this.update(entityType, entityId, phoneId, callCenter, { isInactive: 1, inactiveReasonCode });
   }
 
-  unblock(entityType: number, entityId: number, phoneId: number): Observable<void> {
-    return this.update(entityType, entityId, phoneId, { isInactive: 0 });
+  unblock(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<void> {
+    return this.update(entityType, entityId, phoneId, callCenter, { isInactive: 0 });
   }
 
   scheduleSMS(debtId: number, schedule: ISMSSchedule): Observable<void> {
@@ -72,9 +83,9 @@ export class PhoneService {
       .map(response => response.text);
   }
 
-  delete(entityType: number, entityId: number, phoneId: number): Observable<void> {
+  delete(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<void> {
     return this.dataService
-      .delete(this.extUrl, { entityType, entityId, phoneId })
+      .delete(`${this.baseUrl}/{phoneId}`, { entityType, entityId, phoneId }, { params: { callCenter } })
       .catch(this.notificationsService.deleteError().entity(this.singular).dispatchCallback());
   }
 }

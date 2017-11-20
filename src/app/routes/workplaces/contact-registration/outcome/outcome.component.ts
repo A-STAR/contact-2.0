@@ -34,6 +34,7 @@ const labelKey = makeKey('modules.contactRegistration.outcome');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() campaignId: number;
   @Input() contactId: number;
   @Input() contactTypeCode: number;
   @Input() debtId: number;
@@ -133,26 +134,33 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   onNextClick(): void {
     const code = this.contactRegistrationService.selectedNode$.value.data.code;
     const data = this.buildPayload(this.contactTypeCode, this.contactId);
-    this.outcomeService.initRegistration(this.debtId, { ...data, code, personId: this.personId, personRole: this.personRole })
-      .subscribe(guid => {
-        const { autoComment, autoCommentId } = this.form.serializedValue;
-        this.contactRegistrationService.guid = guid;
-        this.contactRegistrationService.autoComment$.next({ autoComment, autoCommentId });
-        this.accordionService.next();
-        this.cdRef.markForCheck();
-      });
+    this.outcomeService.initRegistration(this.debtId, {
+      ...data,
+      code,
+      personId: this.personId,
+      personRole: this.personRole,
+      campaignId: this.campaignId,
+    })
+    .subscribe(guid => {
+      const { autoComment, autoCommentId } = this.form.serializedValue;
+      this.contactRegistrationService.guid = guid;
+      this.contactRegistrationService.autoComment$.next({ autoComment, autoCommentId });
+      this.accordionService.next();
+      this.cdRef.markForCheck();
+    });
   }
 
   private buildPayload(contactTypeCode: number, contactId: number): object {
-    switch (contactTypeCode) {
-      case 1:
-      case 2:
-        return { phoneId: contactId };
-      case 3:
-        return { addressId: contactId };
-      default:
-        return {};
+    if (contactId) {
+      switch (contactTypeCode) {
+        case 1:
+        case 2:
+          return { phoneId: contactId };
+        case 3:
+          return { addressId: contactId };
+      }
     }
+    return {};
   }
 
   private enableField(key: string): void {
