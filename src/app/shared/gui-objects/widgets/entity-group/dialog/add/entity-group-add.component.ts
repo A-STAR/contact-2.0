@@ -15,7 +15,7 @@ import { DialogFunctions } from '../../../../../../core/dialog';
 })
 export class EntityGroupAddComponent extends DialogFunctions {
 
-  @Input() dialogData: IActionGridDialogData;
+  @Input() debts: number[];
 
   @Output() close = new EventEmitter<boolean>();
 
@@ -31,14 +31,8 @@ export class EntityGroupAddComponent extends DialogFunctions {
     super();
   }
 
-  get ids(): IMetadataActionOption {
-    const { metadataAction } = this.dialogData.action;
-    return (metadataAction.addOptions || []).find(option => option.name === 'ids');
-  }
-
   onSelect(group: IEntityGroup): void {
-    const ids = this.ids;
-    this.entityGroupService.addToGroup(this.entityTypeId, group.id, ids ? ids.value as number[] : null)
+    this.entityGroupService.addToGroup(this.entityTypeId, group.id, this.debts)
       .subscribe(result => {
         this.count = result.massInfo.total;
         this.successCount = result.massInfo.processed;

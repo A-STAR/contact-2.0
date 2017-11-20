@@ -31,7 +31,6 @@ export class ActionGridComponent<T> extends DialogFunctions {
   @Input() ngClass: string;
   @Input() rows: T[] = [];
   @Input() rowCount: number;
-  @Input() contextMenuItems: IContextMenuItem[];
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
@@ -41,7 +40,6 @@ export class ActionGridComponent<T> extends DialogFunctions {
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   dialog: string;
-
   dialogData: IActionGridDialogData;
 
   constructor(
@@ -50,7 +48,15 @@ export class ActionGridComponent<T> extends DialogFunctions {
     super();
   }
 
-  getDialogParam(key: string): number | string {
+  get selection(): T[] {
+    return this.grid.selected as any[];
+  }
+
+  getSelectionParam(key: number): any[] {
+    return this.dialogData.selection[key];
+  }
+
+  getDialogParam(key: number): number | string {
     return this.dialogData.params[key];
   }
 
@@ -67,12 +73,15 @@ export class ActionGridComponent<T> extends DialogFunctions {
     this.dialog = metadataAction.action;
     this.dialogData = {
       action: gridAction,
-      params: metadataAction.params.reduce((acc, param) => ({
+      params: metadataAction.params.reduce((acc, param, i) => ({
         ...acc,
-        [param]: params.node.data[param]
-      }), {})
+        [i]: params.node.data[param]
+      }), {}),
+      selection: metadataAction.params.reduce((acc, param, i) => ({
+        ...acc,
+        [i]: this.selection.map(item => item[param])
+      }), {}),
     };
-    this.action.emit(this.dialogData);
     this.cdRef.markForCheck();
   }
 
@@ -84,7 +93,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
     this.dblClick.emit(row);
   }
 
-  onSelect(selected: IAGridSelected): void {
+  onSelect(selected: number[]): void {
     this.select.emit(selected);
   }
 }

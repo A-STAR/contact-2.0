@@ -90,7 +90,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
-  @Input() contextMenuItems: IContextMenuItem[] = [];
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -111,7 +110,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   page: number = this.startPage;
   paginationPanel: IToolbarAction[] = [];
   initCallbacks: Function[] = [];
-  actions: IMetadataAction[];
+  actions: IMetadataAction[] = [];
 
   private gridSettings: IAGridSettings;
   private initialized = false;
@@ -689,35 +688,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
-  private getContextMenuItem(action: IMetadataAction): IContextMenuItem {
-    return this.contextMenuItems.find(item => item.name === action.action);
-  }
-
-  private createMetadataMenuItem(
-    metadataAction: IMetadataAction,
-    params: GetContextMenuItemsParams,
-    contextItem: IContextMenuItem): MenuItemDef {
-
-    const menuItem: MenuItemDef = {
-      ...(contextItem || {}),
+  private createMetadataMenuItem(metadataAction: IMetadataAction, params: GetContextMenuItemsParams,): MenuItemDef {
+    console.log(metadataAction);
+    return {
       name: this.translate.instant(`default.grid.actions.${metadataAction.action}`),
-      action: () => {
-        if (contextItem && contextItem.onAction) {
-          contextItem.onAction.call(this, { metadataAction, params });
-        }
-        this.action.emit({ metadataAction: metadataAction, params });
-      }
+      action: () => this.action.emit({ metadataAction, params }),
+      disabled: !this.isContextMenuItemEnabled(metadataAction.action),
     };
-    if (contextItem && contextItem.enabled) {
-      contextItem.enabled.take(1).subscribe(enabled => menuItem.disabled = !enabled);
-    } else {
-      menuItem.disabled = !this.isContextMenuItemEnabled(metadataAction.action);
-    }
-    return menuItem;
   }
 
   private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
-    return (this.actions || []).map(action => this.createMetadataMenuItem(action, params, this.getContextMenuItem(action)));
+    return this.actions.map(action => this.createMetadataMenuItem(action, params));
   }
 
   private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
@@ -732,7 +713,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         tooltip: 'Just to test what the tooltip can show'
       },
       'separator',
-      ...this.getMetadataMenuItems(params),      // {
+      ...this.getMetadataMenuItems(params),
+      // {
       //   name: 'Person',
       //   subMenu: [
       //     {name: 'Niall', action: () => {log('Niall was pressed'); } },
@@ -763,9 +745,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   // TODO(d.maltsev): this looks a bit messy.
-  // Maybe we should get permissions from server as well or get all metadata from client service
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'debtClearResponsible':
+        return this.userPermissionsBag.has('DEBT_RESPONSIBLE_CLEAR') && this.selected.length > 0;
+      case 'debtSetResponsible':
+        return this.userPermissionsBag.hasOneOf([ 'DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET' ]) && this.selected.length > 0;
+      case 'objectAddToGroup':
+        // TODO(d.maltsev, i.kibisov): pass entityTypeId
+        return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
       case 'showContactHistory':
         return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
       default:

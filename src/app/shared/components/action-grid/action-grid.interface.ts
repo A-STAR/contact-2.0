@@ -7,4 +7,5 @@ export interface IActionGridDialogParams {
 export interface IActionGridDialogData {
   action: IAGridAction;
   params: IActionGridDialogParams;
+  selection: any;
 }
