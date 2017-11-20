@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { DataService } from '../../../core/data/data.service';
@@ -33,11 +33,10 @@ export class CampaignsService {
       );
   }
 
-  mockNumder = 0;
-/**
- * Uses mock response, since there is no api in backend yet
- * @param campaignId
- */
+  /**
+   * Uses mock response, since there is no api in backend yet
+   * @param campaignId
+   */
   fetchCampaignStat(campaignId: number): Observable<ICampaignsStatistic> {
     // return this.dataService.read(this.baseUrl)
     //   .catch(() => Observable.of(data) as Observable<ICampaignsStatistic[]>)
@@ -211,4 +210,6 @@ export class CampaignsService {
   }
 
 }
+
+export const CAMPAIGN_ENTITY_ID = new InjectionToken<number>('campaignsEntityId');
 

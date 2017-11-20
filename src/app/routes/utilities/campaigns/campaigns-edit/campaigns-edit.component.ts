@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Inject,
   Input,
   OnInit,
   Output,
@@ -11,13 +12,16 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { ICampaign } from '../campaigns.interface';
 import { isObject } from 'util';
+import { CAMPAIGN_ENTITY_ID } from '../campaigns.service';
 import { CampaignsService } from '../campaigns.service';
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, TControlTypes } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { IOption, INamedValue } from '../../../../core/converter/value-converter.interface';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
+import { IEntityTranslation } from 'app/core/entity/translations/entity-translations.interface';
 
 @Component({
   selector: 'app-campaigns-edit',
@@ -37,22 +41,27 @@ export class CampaignsEditComponent implements OnInit {
     private userDictionariesService: UserDictionariesService,
     private valueConverterService: ValueConverterService,
     private campaignsService: CampaignsService,
-    private lookupService: LookupService
+    private lookupService: LookupService,
+    private entityTranslationsService: EntityTranslationsService,
+    @Inject(CAMPAIGN_ENTITY_ID) private campaignEntityId: number
   ) { }
 
   ngOnInit(): void {
     Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CALL_CAMPAIGN_TYPE),
       this.campaignsService.fetchCampaignGroups(),
-      this.lookupService.lookupAsOptions('languages')
+      // didn't get how to use it
+      this.entityTranslationsService.readAttributeNameTranslations(this.editedEntity.id)
     )
       .take(1)
-      .subscribe(([callTypes, groupNames, languages]) => {
-        if (this.editedEntity && !isObject(this.editedEntity.name)) {
-          this.editedEntity.multiname = this.setMultiTextName(this.editedEntity.name, languages);
-        }
+      .subscribe(([groupNames, translations]) => {
         this.campaignGroups = groupNames;
-        this.controls = this.buildControls(callTypes, this.valueConverterService.valuesToOptions(groupNames), languages);
+        if (this.editedEntity) {
+          this.editedEntity.multiName = translations;
+        }
+        this.controls = this.buildControls(
+          this.valueConverterService.valuesToOptions(groupNames),
+          this.entityTranslationsToSelectOptions(translations)
+        );
         this.cdRef.markForCheck();
       });
   }
@@ -64,16 +73,16 @@ export class CampaignsEditComponent implements OnInit {
   onCancel(): void {
     this.cancel.emit();
   }
+
   toSubmittedValues(campaign: any): ICampaign {
-    const groupName = this.campaignGroups.find(campaignGroup => campaignGroup.id === campaign.groupId);
-    // todo: ugly, find an api or a better way to handle multitext field
-    const name = campaign.multiname ? campaign.multiname[Object.keys(campaign.multiname)[0]] : undefined;
-    delete campaign.multiname;
+    const groupName = this.campaignGroups.find(campaignGroup => campaignGroup.id === campaign.groupName);
+    const isMultiNameChanged = campaign.multiName && Object.keys(campaign.multiName).length;
     return {
       ...campaign,
       id: this.editedEntity && this.editedEntity.id,
-      name,
-      groupName: groupName ? groupName.name : undefined
+      name: isMultiNameChanged ? this.selectOptionsToEntityTranslations(campaign.multiName) : campaign.name,
+      groupName: groupName ? groupName.name : undefined,
+      groupId: campaign.groupId
     };
   }
 
@@ -87,24 +96,51 @@ export class CampaignsEditComponent implements OnInit {
     return this.form && this.form.canSubmit;
   }
 
-  protected buildControls(callTypes: Array<IOption>, groupNames: Array<IOption>,
-    languages: IOption[]): Array<IDynamicFormControl> {
+  protected buildControls(groupNames: Array<IOption>,
+    languageOptions: IOption[]): Array<IDynamicFormControl> {
+    const nameControlOptions = this.getNameControlConfig(!!this.editedEntity, languageOptions);
     return [
-      { label: 'utilities.campaigns.edit.name', controlName: 'multiname', type: 'multitext',
-        options: languages, required: true },
+      { ...nameControlOptions },
       { label: 'utilities.campaigns.edit.groupId', controlName: 'groupId', type: 'select',
         options: groupNames, required: true },
-      { label: 'utilities.campaigns.edit.typeCode', controlName: 'typeCode', type: 'select',
-        options: callTypes, required: true },
+      { label: 'utilities.campaigns.edit.typeCode', controlName: 'typeCode', type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_CALL_CAMPAIGN_TYPE, required: true },
       { label: 'utilities.campaigns.edit.comment', controlName: 'comment', type: 'text' },
       { label: 'utilities.campaigns.edit.timeZoneUsed', controlName: 'timeZoneUsed', type: 'checkbox' },
     ];
   }
 
-  private setMultiTextName(name: string, languages: IOption[]): any[] {
-    return languages.map(language => {
-        return { languageId: language.value, value: name };
+  private selectOptionsToEntityTranslations(selection: { [key: number]: string }[]): IEntityTranslation[] {
+    return Object.keys(selection).map(selectedLanguageId => {
+      return {
+        languageId: parseInt(selectedLanguageId, 10),
+        value: selection[selectedLanguageId]
+      };
     });
+  }
+
+  private entityTranslationsToSelectOptions(translations: IEntityTranslation[]): IOption[] {
+    return translations.map(translation => {
+      return {
+        label: translation.value,
+        value: translation.languageId
+      };
+    });
+  }
+
+  private getNameControlConfig(isEditMode: boolean, languageOptions: IOption[]): IDynamicFormControl {
+    let config: IDynamicFormControl;
+    if (isEditMode) {
+      config = {
+        label: 'utilities.campaigns.edit.name', controlName: 'multiName', type: 'multitext',
+        options: languageOptions, required: true
+      };
+    } else {
+      config = {
+        label: 'utilities.campaigns.edit.name', controlName: 'name', type: 'text', required: true
+      };
+    }
+    return config;
   }
 
 }

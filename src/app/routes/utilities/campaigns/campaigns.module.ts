@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 import { ParticipantsModule } from '../../../routes/utilities/campaigns/participants/participants.module';
 import { StatisticsModule } from '../../../routes/utilities/campaigns/statistics/statistics.module';
-import { CampaignsService } from './campaigns.service';
+import { CampaignsService, CAMPAIGN_ENTITY_ID } from './campaigns.service';
 import { CampaignsComponent } from './campaigns.component';
 import { CampaignsEditComponent } from './campaigns-edit/campaigns-edit.component';
 
@@ -28,7 +28,13 @@ const routes: Routes = [
     CampaignsEditComponent
   ],
   providers: [
-    CampaignsService
+    CampaignsService,
+    {
+      provide: CAMPAIGN_ENTITY_ID,
+      // this is correct value, but it is absent in DB
+      // useValue: 402
+      useValue: 35
+    }
   ],
 })
 export class CampaignsModule { }

@@ -13,12 +13,15 @@ import { IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { CampaignsService } from './campaigns.service';
 import { Observable } from 'rxjs/Observable';
-import { ICampaign, CampaignsDialogActionEnum, CampaignStatus } from './campaigns.interface';
+import { ICampaign, CampaignStatus } from './campaigns.interface';
 import { ToolbarItemTypeEnum, IToolbarItem } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { of } from 'rxjs/observable/of';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-campaigns',
@@ -33,6 +36,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
 
   dialog: string;
   campaigns: ICampaign[];
+  selectedRows$ = new BehaviorSubject<ICampaign[]>([]);
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 40 },
@@ -40,71 +44,70 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
     { prop: 'groupName', minWidth: 150 },
     { prop: 'statusCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_CALL_CAMPAIGN_STATUS },
     { prop: 'typeCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_CALL_CAMPAIGN_TYPE },
-    { prop: 'startDateTime', minWidth: 100 },
-    { prop: 'finishDateTime', minWidth: 100 },
+    { prop: 'startDateTime', minWidth: 150 },
+    { prop: 'finishDateTime', minWidth: 150 },
     { prop: 'comment', minWidth: 100 },
-    { prop: 'timeZoneUsed', minWidth: 150, renderer: 'checkboxRenderer' },
+    { prop: 'timeZoneUsed', minWidth: 50, renderer: 'checkboxRenderer' },
   ];
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.currentDialogAction = CampaignsDialogActionEnum.CAMPAIGN_ADD,
+      action: () => this.setDialog('CAMPAIGN_ADD'),
       enabled: this.userPermissionsService.has('CAMPAIGN_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.currentDialogAction = CampaignsDialogActionEnum.CAMPAIGN_EDIT,
+      action: () => this.setDialog('CAMPAIGN_EDIT'),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
-        this.campaignsService.selectedCampaign
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
+        this.selectedRows$
+      ).map(([hasPermissions, selectedItems]) => hasPermissions && (selectedItems.length === 1))
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.currentDialogAction = CampaignsDialogActionEnum.CAMPAIGN_REMOVE,
+      action: () => this.setDialog('CAMPAIGN_REMOVE'),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('CAMPAIGN_DELETE'),
-        this.campaignsService.selectedCampaign
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
+        this.selectedRows$
+      ).map(([hasPermissions, selectedItems]) => hasPermissions && (selectedItems.length > 0)
+        && selectedItems.every(selectedCampaign => selectedCampaign.statusCode !== CampaignStatus.STARTED))
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetchCampaigns(),
-      enabled: Observable.of(true)
+      action: () => this.fetchCampaigns().subscribe(campaigns => this.onCampaignsFetch(campaigns)),
+      enabled: this.userPermissionsService.has('CAMPAIGN_VIEW')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_STOP,
       action: () => this.onStop(),
       label: this.translateService.instant('default.buttons.stop'),
       align: 'right',
-      enabled: this.campaignsService.selectedCampaign
-        .map(selectedCampaign =>
-          !!selectedCampaign && selectedCampaign.statusCode === CampaignStatus.STARTED)
+      enabled: this.selectedRows$
+        .map(campaigns => campaigns.every(selectedCampaign => selectedCampaign.statusCode === CampaignStatus.STARTED))
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_START,
       action: () => this.onStart(),
       label: this.translateService.instant('default.buttons.start'),
       align: 'right',
-      enabled: this.campaignsService.selectedCampaign
-        .map(selectedCampaign =>
-          !!selectedCampaign && selectedCampaign.statusCode !== CampaignStatus.STARTED)
+      enabled: this.selectedRows$
+        .map(campaigns => campaigns.every(selectedCampaign => selectedCampaign.statusCode !== CampaignStatus.STARTED))
     },
   ];
-
-  private currentDialogAction: CampaignsDialogActionEnum = CampaignsDialogActionEnum.NONE;
 
   constructor(private gridService: GridService,
               private cdRef: ChangeDetectorRef,
               private campaignsService: CampaignsService,
               private translateService: TranslateService,
               private userPermissionsService: UserPermissionsService,
+              private valueConverterService: ValueConverterService,
               private notificationsService: NotificationsService) {
     super();
   }
 
   ngOnInit(): void {
+
     this.gridService.setAllRenderers(this.columns)
     .take(1)
     .subscribe(columns => {
@@ -112,32 +115,22 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       this.cdRef.markForCheck();
     });
 
-    this.fetchCampaigns();
+    this.fetchCampaigns()
+    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   get selectedCampaign(): Observable<ICampaign> {
     return this.campaignsService.selectedCampaign;
   }
 
-  get isEntityBeingCreated(): boolean {
-    return this.currentDialogAction === CampaignsDialogActionEnum.CAMPAIGN_ADD;
-  }
-
-  get isEntityBeingEdited(): boolean {
-    return this.currentDialogAction === CampaignsDialogActionEnum.CAMPAIGN_EDIT;
-  }
-
-  get isEntityBeingRemoved(): boolean {
-    return this.currentDialogAction === CampaignsDialogActionEnum.CAMPAIGN_REMOVE;
-  }
-
-  onSelectCampaign(): void {
+  onSelectCampaign(selection: any): void {
     const selectedCampaigns = this.grid.getSelectedRows();
-    if (selectedCampaigns && selectedCampaigns.length) {
-      this.campaignsService.selectCampaign(selectedCampaigns[selectedCampaigns.length - 1]);
+    if (selectedCampaigns.length) {
+      this.campaignsService.selectCampaign(selectedCampaigns[0]);
     } else {
       this.campaignsService.selectCampaign(null);
     }
+    this.selectedRows$.next(selectedCampaigns);
   }
 
   onCampaignDblClick(selection: ICampaign): void {
@@ -146,62 +139,83 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       .take(1)
       .subscribe(hasPermission => {
         if (hasPermission) {
-          this.currentDialogAction = CampaignsDialogActionEnum.CAMPAIGN_EDIT;
+          this.setDialog(permission);
         } else {
           this.notificationsService.error('roles.permissions.messages.no_edit').params({ permission }).dispatch();
         }
       });
   }
 
-  fetchCampaigns(): Subscription {
+  fetchCampaigns(): Observable<ICampaign[]> {
     return this.campaignsService.fetchCampaigns()
-      .take(1)
-      .subscribe(campaigns => {
-        this.campaigns = campaigns;
-        this.cancelAction();
-        this.cdRef.markForCheck();
-      });
+      .take(1);
   }
 
   createCampaign(campaign: ICampaign): void {
     campaign.statusCode = CampaignStatus.CREATED;
 
     this.campaignsService.createCampaign(campaign)
-      .map(() => this.fetchCampaigns())
-      .subscribe(() => this.cdRef.detectChanges());
+      .switchMap(() => this.fetchCampaigns())
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   updateCampaign(campaign: ICampaign): void {
     this.campaignsService.updateCampaign(campaign)
-    .map(() => this.fetchCampaigns())
-    .subscribe(() => this.cdRef.detectChanges());
+    .switchMap(() => this.fetchCampaigns())
+    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onRemove(): void {
     this.campaignsService.removeCampaign()
-    .switchMap(() => this.campaignsService.fetchCampaigns())
-    .subscribe(() => this.cdRef.detectChanges());
+    .switchMap(() => this.fetchCampaigns())
+    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   cancelAction(): void {
-    this.currentDialogAction = CampaignsDialogActionEnum.NONE;
+    this.closeDialog();
     this.grid.clearSelection();
-    this.onCloseDialog();
   }
 
   onStart(): void {
     const onStartRequests: Observable<any>[] = this.grid.selected
       // updates campaign statusCode and returns request observable
-      .map(campaign => this.campaignsService.updateCampaign({ ...campaign, statusCode: CampaignStatus.STARTED }));
+      .map(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STARTED }));
 
-    forkJoin(onStartRequests).take(1).subscribe(() => this.cdRef.markForCheck());
+    forkJoin(onStartRequests)
+    .switchMap((...results) => this.fetchCampaigns())
+    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onStop(): void {
     const onStopRequests: Observable<any>[] = this.grid.selected
       // updates campaign statusCode and returns request observable
-      .map(campaign => this.campaignsService.updateCampaign({ ...campaign, statusCode: CampaignStatus.STOPPED }));
+      .map(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STOPPED }));
 
-    forkJoin(onStopRequests).take(1).subscribe(() => this.cdRef.markForCheck());
+    forkJoin(onStopRequests)
+    .switchMap((...results) => this.fetchCampaigns())
+    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+  }
+
+  onCampaignsFetch(campaigns: ICampaign[]): void {
+    this.campaigns = this.formatCampaignsDates(campaigns);
+    this.cancelAction();
+    this.cdRef.markForCheck();
+  }
+
+  private formatCampaignsDates(campaings: ICampaign[]): ICampaign[] {
+    return campaings.map(campaign => {
+      let finishDateTime, startDateTime;
+      if (campaign.finishDateTime) {
+        finishDateTime = this.valueConverterService.toLocalDateTime(this.valueConverterService.fromISO(campaign.finishDateTime));
+      }
+      if (campaign.startDateTime) {
+        startDateTime = this.valueConverterService.toLocalDateTime(this.valueConverterService.fromISO(campaign.startDateTime))
+      }
+      return {
+        ...campaign,
+        startDateTime,
+        finishDateTime
+      };
+    });
   }
 }

@@ -1,12 +1,3 @@
-export enum CampaignsDialogActionEnum {
-  NONE,
-  CAMPAIGN_ADD,
-  CAMPAIGN_EDIT,
-  CAMPAIGN_REMOVE,
-  PARTICIPANT_ADD,
-  PARTICIPANT_REMOVE
-}
-
 export enum CampaignStatus {
   NONE,
   CREATED,
@@ -25,19 +16,19 @@ export interface ICampaignGroup {
 
 export interface ICampaign {
   id: number;
-  name: string;
-  multiname?: {
+  name?: string;
+  multiName?: {
     value: string;
     languageId: number;
   }[];
-  groupId: number;
-  groupName: string;
-  statusCode: CampaignStatus;
-  typeCode: number;
-  startDateTime: string;
-  finishDateTime: string;
-  comment: string;
-  timeZoneUsed: boolean;
+  groupId?: number;
+  groupName?: string;
+  statusCode?: CampaignStatus;
+  typeCode?: number;
+  startDateTime?: string;
+  finishDateTime?: string;
+  comment?: string;
+  timeZoneUsed?: boolean;
 }
 
 export interface ICampaignsStatistic {

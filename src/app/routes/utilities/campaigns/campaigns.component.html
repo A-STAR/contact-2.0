@@ -1,3 +1,30 @@
+<app-campaigns-edit
+  *ngIf="isDialog('CAMPAIGN_ADD')"
+  (submit)="createCampaign($event)"
+  (cancel)="cancelAction()">
+</app-campaigns-edit>
+
+<app-campaigns-edit
+  *ngIf="isDialog('CAMPAIGN_EDIT')"
+  [editedEntity]="selectedCampaign | async"
+  (submit)="updateCampaign($event)"
+  (cancel)="cancelAction()">
+</app-campaigns-edit>
+
+<app-dialog-action
+  *ngIf="isDialog('CAMPAIGN_REMOVE')"
+  [titleTranslationKey]="'utilities.campaigns.remove.title'"
+  [actionTranslationKey]="'utilities.campaigns.remove.confirmMessage'"
+  [messageParams]="selectedCampaign | async"
+  [actionMessage]="'default.buttons.remove'"
+  [actionMode]="'danger'"
+  (action)="onRemove()"
+  (cancel)="cancelAction()">
+</app-dialog-action>
+
+<app-toolbar-2 class="bordered" [items]="toolbarItems">
+</app-toolbar-2>
+
 <app-grid
   class="flat"
   [styles]="{ height: '250px' }"
@@ -8,34 +35,6 @@
   (onSelect)="onSelectCampaign($event)"
   (onDblClick)="onCampaignDblClick($event)">
 </app-grid>
-
-<app-campaigns-edit
-  *ngIf="isEntityBeingCreated"
-  (submit)="createCampaign($event)"
-  (cancel)="cancelAction()">
-</app-campaigns-edit>
-
-<app-campaigns-edit
-  *ngIf="isEntityBeingEdited"
-  [editedEntity]="selectedCampaign | async"
-  (submit)="updateCampaign($event)"
-  (cancel)="cancelAction()">
-</app-campaigns-edit>
-
-<app-dialog-action
-  *ngIf="isEntityBeingRemoved"
-  [titleTranslationKey]="'utilities.campaigns.remove.title'"
-  [actionTranslationKey]="'utilities.campaigns.remove.confirmMessage'"
-  [messageParams]="selectedCampaign | async"
-  [actionMessage]="'default.buttons.remove'"
-  [actionMode]="'danger'"
-  (action)="onRemove()"
-  (cancel)="cancelAction()">
-</app-dialog-action>
-
-
-<app-toolbar-2 class="bordered" [items]="toolbarItems">
-</app-toolbar-2>
 
 <app-tabstrip [disableScrollbar]="true" [inverse]="true">
   <app-tab [title]="'utilities.campaigns.tabs.participants'" [closable]="false">

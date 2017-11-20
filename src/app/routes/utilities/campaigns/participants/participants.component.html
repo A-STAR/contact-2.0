@@ -1,32 +1,31 @@
+
+<app-participants-add
+*ngIf="isDialog('PARTICIPANT_ADD')"
+(submit)="onAddSubmit($event)"
+(cancel)="cancelAction()">
+</app-participants-add>
+
+<app-dialog-action
+*ngIf="isDialog('PARTICIPANT_REMOVE')"
+[titleTranslationKey]="'utilities.campaigns.participants.remove.title'"
+[actionTranslationKey]="'utilities.campaigns.participants.remove.confirmMessage'"
+[actionMessage]="'default.buttons.remove'"
+[actionMode]="'danger'"
+selectionType="multi"
+(onSelect)="onSelectParticipant($event)"
+(action)="onRemove()"
+(cancel)="cancelAction()"
+>
+</app-dialog-action>
+
+<app-toolbar-2 class="bordered" [items]="toolbarItems">
+</app-toolbar-2>
+
 <app-grid
   class="flat" [styles]="{ height: '250px' }"
   [columns]="columns"
   [columnTranslationKey]="'utilities.campaigns.participants'"
   [rows]="participants"
   selectionType="multiClick"
-  [selection]="selected"
   (onSelect)="onSelectParticipant($event)">
 </app-grid>
-
-<app-participants-add
-  *ngIf="isEntityBeingAdded"
-  (submit)="onAddSubmit($event)"
-  (cancel)="cancelAction()">
-</app-participants-add>
-
-<app-dialog-action
-  *ngIf="isEntityBeingRemoved"
-  [titleTranslationKey]="'utilities.campaigns.participants.remove.title'"
-  [actionTranslationKey]="'utilities.campaigns.participants.remove.confirmMessage'"
-  [actionMessage]="'default.buttons.remove'"
-  [actionMode]="'danger'"
-  selectionType="multi"
-  (onSelect)="onSelectParticipant($event)"
-  (action)="onRemove()"
-  (cancel)="cancelAction()"
-  >
-</app-dialog-action>
-
-
-<app-toolbar-2 class="bordered" [items]="toolbarItems">
-</app-toolbar-2>
