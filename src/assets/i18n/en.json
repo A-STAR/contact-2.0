@@ -270,6 +270,17 @@
         "title": "Confirmation"
       }
     },
+    "debtsProcessing": {
+      "all": {
+        "title": "All"
+      },
+      "callBack": {
+        "title": "To Call Back"
+      },
+      "currentJob": {
+        "title": "Current Job"
+      }
+    },
     "incomingCall": {
       "filter": {
         "form": {
