@@ -1,3 +1,5 @@
-<app-debt-processing-grid
-  gridKey="debtsprocessingall"
-></app-debt-processing-grid>
+<app-tabstrip [disableScrollbar]="true" [inverse]="true">
+  <app-tab *ngFor="let grid of grids" [title]="grid.title" [closable]="false">
+    <app-debt-processing-grid [gridKey]="grid.key"></app-debt-processing-grid>
+  </app-tab>
+</app-tabstrip>
