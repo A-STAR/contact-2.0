@@ -24,7 +24,9 @@ import { PromiseModule } from './promise/promise.module';
 import { PropertyModule } from './property/property.module';
 import { EntityGroupModule } from './entity-group/entity-group.module';
 import { PledgorModule } from './pledgor/pledgor.module';
-import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';import { PledgeModule } from './pledge/pledge.module';
+import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
+import { PledgeModule } from './pledge/pledge.module';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -51,7 +53,9 @@ import { PledgorPropertyModule } from './pledgor-property/pledgor-property.modul
     PropertyModule,
     EntityGroupModule,
     PledgorModule,
-    PledgorPropertyModule,    PledgeModule,  ],
+    PledgorPropertyModule,
+    PledgeModule,
+  ],
   exports: [
     AddressModule,
     AttributeModule,
@@ -77,6 +81,7 @@ import { PledgorPropertyModule } from './pledgor-property/pledgor-property.modul
     EntityGroupModule,
     PledgeModule,
     PledgorModule,
-    PledgorPropertyModule,  ]
+    PledgorPropertyModule,
+  ]
 })
 export class WidgetsModule { }
