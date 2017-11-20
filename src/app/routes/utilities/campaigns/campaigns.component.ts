@@ -16,12 +16,10 @@ import { Observable } from 'rxjs/Observable';
 import { ICampaign, CampaignStatus } from './campaigns.interface';
 import { ToolbarItemTypeEnum, IToolbarItem } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs/Subscription';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import { of } from 'rxjs/observable/of';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-campaigns',
@@ -209,7 +207,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
         finishDateTime = this.valueConverterService.toLocalDateTime(this.valueConverterService.fromISO(campaign.finishDateTime));
       }
       if (campaign.startDateTime) {
-        startDateTime = this.valueConverterService.toLocalDateTime(this.valueConverterService.fromISO(campaign.startDateTime))
+        startDateTime = this.valueConverterService.toLocalDateTime(this.valueConverterService.fromISO(campaign.startDateTime));
       }
       return {
         ...campaign,

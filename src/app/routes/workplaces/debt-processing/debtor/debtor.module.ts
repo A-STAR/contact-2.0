@@ -27,7 +27,6 @@ import { ContactLogTabModule } from './contact-log-tab/contact-log-tab.module';
 
 @NgModule({
   imports: [
-    ContactLogModule,
     DebtorAddressModule,
     DebtorContactsModule,
     DebtorDebtComponentModule,

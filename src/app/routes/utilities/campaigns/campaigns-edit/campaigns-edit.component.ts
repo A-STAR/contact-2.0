@@ -11,17 +11,14 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ICampaign } from '../campaigns.interface';
-import { isObject } from 'util';
-import { CAMPAIGN_ENTITY_ID } from '../campaigns.service';
-import { CampaignsService } from '../campaigns.service';
-import { IDynamicFormControl, TControlTypes } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { CAMPAIGN_ENTITY_ID, CampaignsService } from '../campaigns.service';
+import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { LookupService } from '../../../../core/lookup/lookup.service';
 import { IOption, INamedValue } from '../../../../core/converter/value-converter.interface';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
-import { IEntityTranslation } from 'app/core/entity/translations/entity-translations.interface';
+import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 
 @Component({
   selector: 'app-campaigns-edit',
@@ -38,10 +35,8 @@ export class CampaignsEditComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private userDictionariesService: UserDictionariesService,
     private valueConverterService: ValueConverterService,
     private campaignsService: CampaignsService,
-    private lookupService: LookupService,
     private entityTranslationsService: EntityTranslationsService,
     @Inject(CAMPAIGN_ENTITY_ID) private campaignEntityId: number
   ) { }
@@ -50,7 +45,7 @@ export class CampaignsEditComponent implements OnInit {
     Observable.combineLatest(
       this.campaignsService.fetchCampaignGroups(),
       // didn't get how to use it
-      this.entityTranslationsService.readAttributeNameTranslations(this.editedEntity.id)
+      this.entityTranslationsService.readAttributeNameTranslations(this.campaignEntityId)
     )
       .take(1)
       .subscribe(([groupNames, translations]) => {
