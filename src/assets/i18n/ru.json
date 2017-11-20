@@ -68,6 +68,7 @@
         "DEBTOR_PROMISE": "Обещание платежа",
         "DEBTOR_PROPERTY": "Карточка имущества",
         "DEBTOR_CONTACT_LOG_COMPONENT": "Карточка контакта",
+        "DEBTOR_PLEDGE": "Договор залога",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_PROTOCOL": "Протокол контактов",
@@ -281,8 +282,8 @@
           "birthDate": "Дата рождения",
           "personRoleCodes": "Роль",
           "isClosedDebt": "Показывать закрытые долги"
-        }
-      },
+    }
+  },
       "debtors": {
         "grid": {
           "bankName": "Банк",
@@ -711,6 +712,13 @@
       },
       "attributes": {
         "title": "Параметры имущества"
+      }
+    },
+    "pledgorsTab": {
+      "title": "Залогодатели",
+      "remove": {
+        "title": "Удалить запись",
+        "confirmMessage": "Вы действительно хотите удалить выбранный договор залога?"
       }
     },
     "guarantorsTab": {
@@ -1515,6 +1523,80 @@
         "name": "Название",
         "comment": "Комментарий"
       }
+    },
+    "pledgorProperty": {
+      "title": "Информация об имуществе",
+      "search": {
+        "title": "Поиск имущества"
+      },
+      "dialog": {
+        "title": "Выбор имущества",
+        "notFound": "Не удалось найти имущество. Попробуйте изменить параметры поиска."
+      },
+      "grid": {
+        "propertyType": "Тип имущества",
+        "pledgeValue": "Залоговая стоимость",
+        "marketValue": "Рыночная стоимость",
+        "currencyId": "Валюта"
+      }
+    },
+    "pledgor": {
+      "title": "Залогодатель",
+      "search": {
+        "title": "Поиск залогодателей"
+      },
+      "dialog": {
+        "title": "Выбор залогодателя",
+        "notFound": "Не удалось найти залогодателя. Попробуйте изменить параметры поиска."
+      },
+      "grid": {
+        "id": "Ид",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "lastName": "Фамилия / Наименование",
+        "birthDate": "Дата рождения",
+        "birthPlace": "Место рождения",
+        "educationCode": "Образование",
+        "familyStatusCode": "Семейное положение",
+        "genderCode": "Пол",
+        "passportNumber": "№ паспорта",
+        "typeCode": "Тип",
+        "comment": "Комментарий",
+        "stringValue1": "Доп. значение 1",
+        "stringValue2": "Доп. значение 2",
+        "stringValue3": "Доп. значение 3",
+        "stringValue4": "Доп. значение 4",
+        "stringValue5": "Доп. значение 5",
+        "stringValue6": "Доп. значение 6",
+        "stringValue7": "Доп. значение 7",
+        "stringValue8": "Доп. значение 8",
+        "stringValue9": "Доп. значение 9",
+        "stringValue10": "Доп. значение 10"
+      }
+    },
+    "pledgeContract": {
+      "title": "Информация о договоре",
+      "grid": {
+        "id": "Ид",
+        "contractNumber": "Номер договора",
+        "fullName": "ФИО",
+        "typeCode": "Тип",
+        "contractStartDate": "Начало",
+        "contractEndDate": "Окончание",
+        "comment": "Комментарий",
+        "propertyType": "Тип имущества",
+        "propertyName": "Название имущества"
+      },
+      "card": {
+        "contractNumber": "Номер договора",
+        "contractStartDate": "Начало",
+        "contractEndDate": "Окончание",
+        "typeCode": "Тип",
+        "comment": "Комментарий"        
+      },
+      "toolbar": {
+        "add": "Добавить залогодателя"
+      }
     }
   },
   "entities": {
@@ -1662,6 +1744,12 @@
     },
     "entityGroup": {
       "gen": { "singular": "группы", "plural": "групп" }
+    },
+    "pledgeContract": {
+      "gen": { "singular": "договора залога", "plural": "договоров залога" }
+    },
+    "pledgors": {
+      "gen": { "singular": "залогодателя", "plural": "залогодателей" }
     }
   },
   "errors": {
