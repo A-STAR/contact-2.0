@@ -6,6 +6,7 @@ import { DebtService } from '../../../../core/debt/debt.service';
 import { IncomingCallService } from '../incoming-call.service';
 
 import { invert } from '../../../../core/utils';
+import { combineLatestAnd } from '../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-incoming-call-phone-grid',
@@ -48,8 +49,18 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return !this.selectedPhoneId;
   }
 
+  get unidentifiedContactButtonDisabled$(): Observable<boolean> {
+    return this.incomingCallService.selectedDebtor$
+      .map(Boolean)
+      .map(invert);
+  }
+
   get officeVisitButtonDisabled$(): Observable<boolean> {
-    return this.debtService.canRegisterOfficeVisit$.map(invert);
+    return combineLatestAnd([
+      this.debtService.canRegisterOfficeVisit$,
+      this.incomingCallService.selectedDebtor$.map(Boolean),
+    ])
+    .map(invert);
   }
 
   onSelect(phone: any): void {
