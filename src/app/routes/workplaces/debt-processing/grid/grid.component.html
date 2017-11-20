@@ -11,8 +11,8 @@
 ></app-debt-responsible-clear>
 
 <app-action-grid
-  metadataKey="debtsprocessingall"
-  persistenceKey="debtsprocessingall"
+  [metadataKey]="gridKey"
+  [persistenceKey]="gridKey"
   rowIdKey="debtId"
   [ngClass]="'debt-processing-grid'"
   [rows]="rows"

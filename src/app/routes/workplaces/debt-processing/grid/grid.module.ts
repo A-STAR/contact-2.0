@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { AllComponent } from './all.component';
+import { GridComponent } from './grid.component';
 
 @NgModule({
   imports: [
@@ -11,10 +11,10 @@ import { AllComponent } from './all.component';
     SharedModule,
   ],
   exports: [
-    AllComponent,
+    GridComponent,
   ],
   declarations: [
-    AllComponent,
+    GridComponent,
   ],
 })
-export class AllModule { }
+export class GridModule { }

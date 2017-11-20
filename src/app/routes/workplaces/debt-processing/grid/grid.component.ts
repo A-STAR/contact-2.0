@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation, Inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  Input,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -18,13 +26,15 @@ import { ActionGridComponent } from '../../../../shared/components/action-grid/a
 import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
-  selector: 'app-debt-processing-all',
-  templateUrl: './all.component.html',
-  styleUrls: [ './all.component.scss' ],
+  selector: 'app-debt-processing-grid',
+  templateUrl: './grid.component.html',
+  styleUrls: [ './grid.component.scss' ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AllComponent extends DialogFunctions {
+export class GridComponent extends DialogFunctions {
+  @Input() gridKey: string;
+
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IDebt>;
 
   rows: IDebt[] = [];
@@ -72,7 +82,7 @@ export class AllComponent extends DialogFunctions {
   onRequest(): void {
     const filters = this.grid.getFilters();
     const params = this.grid.getRequestParams();
-    this.debtProcessingService.fetch('debtsprocessingall', filters, params)
+    this.debtProcessingService.fetch(this.gridKey, filters, params)
       .subscribe((response: IAGridResponse<IDebt>) => {
         this.rows = [...response.data];
         this.rowCount = response.total;
