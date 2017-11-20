@@ -1,14 +1,12 @@
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
-
-<app-grid
-  [columns]="columns"
-  columnTranslationKey="widgets.contactLog"
-  [footerHeight]="false"
-  [rows]="contactLogList"
-  [selection]="selected"
-  selectionType="single"
-  [styles]="{ height: '400px' }"
-  (onSelect)="onSelect($event)"
-  (onDblClick)="onEdit($event)"
->
-</app-grid>
+<app-grid2
+  metadataKey="contactSearchContactLog"
+  persistenceKey="contactSearchContactLog"
+  [columnIds]="columnIds"
+  [ngClass]="'contact-log-grid'"
+  [rowCount]="rowCount"
+  [rows]="data"
+  (onFilter)="onRequest()"
+  (onPage)="onRequest()"
+  (onPageSize)="onRequest()"
+  (onSort)="onRequest()"
+></app-grid2>

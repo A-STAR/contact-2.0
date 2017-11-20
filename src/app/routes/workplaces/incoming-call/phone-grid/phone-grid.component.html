@@ -28,6 +28,7 @@
     color="secondary"
     type="registerContact"
     label="Регистрация контакта по неопределенному номеру"
+    [disabled]="unidentifiedContactButtonDisabled$ | async"
     (click)="onRegisterUnidentifiedContact()"
   ></app-button>
 </div>

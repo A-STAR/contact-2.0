@@ -270,6 +270,17 @@
         "title": "Подтверждение данных"
       }
     },
+    "debtsProcessing": {
+      "all": {
+        "title": "Все"
+      },
+      "callBack": {
+        "title": "Необходимо перезвонить"
+      },
+      "currentJob": {
+        "title": "Текущая работа"
+      }
+    },
     "incomingCall": {
       "filter": {
         "form": {
@@ -1485,7 +1496,7 @@
         "status": "Статус",
         "contactPhone": "Контактный телефон",
         "text": "Текст сообщения",
-        "startDateTime": "Dispatch date"
+        "startDateTime": "Планируемая дата начала отправки"
       },
       "grid": {
         "contactId": "Ид контакта",

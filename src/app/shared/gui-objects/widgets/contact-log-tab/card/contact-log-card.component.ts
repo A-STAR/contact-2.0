@@ -25,7 +25,7 @@ const label = makeKey('widgets.contactLog.card');
   templateUrl: './contact-log-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactLogCardComponent implements OnInit {
+export class ContactLogTabCardComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
   private contactId = (this.route.params as any).value.contactLogId || null;
