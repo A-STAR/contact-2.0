@@ -43,7 +43,7 @@ export class ContactLogService {
         userFullName: 'Иванов Иван Иванович',
         startDateTime: new Date('2017-07-26T05:00:00Z'),
         comment: 'Контакт. Тестовый. Долг 1  .1033',
-        text: 'nsthsnthsou aesnt hant senh aonuh aneh ansh nsauh aneht thnth',
+        text: 'Тестовый текст сообщения СМС',
         status: 1,
         contactType: 4,
         userId: 100
