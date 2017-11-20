@@ -151,15 +151,16 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private buildPayload(contactTypeCode: number, contactId: number): object {
-    switch (contactTypeCode) {
-      case 1:
-      case 2:
-        return { phoneId: contactId };
-      case 3:
-        return { addressId: contactId };
-      default:
-        return {};
+    if (contactId) {
+      switch (contactTypeCode) {
+        case 1:
+        case 2:
+          return { phoneId: contactId };
+        case 3:
+          return { addressId: contactId };
+      }
     }
+    return {};
   }
 
   private enableField(key: string): void {

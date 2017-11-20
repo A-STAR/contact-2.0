@@ -1,5 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { DebtorCardService } from './debtor-card.service';
 import { IncomingCallService } from '../incoming-call.service';
@@ -15,10 +16,12 @@ const labelKey = makeKey('modules.incomingCall.debtorCard.form');
   templateUrl: 'debtor-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DebtorCardComponent implements AfterViewInit {
+export class DebtorCardComponent implements AfterViewInit, OnDestroy {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   controls = [
     { label: labelKey('userFullName'), controlName: 'userFullName', type: 'text' },
-    { label: labelKey('organization'), controlName: 'organization ', type: 'text' },
+    { label: labelKey('organization'), controlName: 'organization', type: 'text' },
     { label: labelKey('position'), controlName: 'position', type: 'text' },
     { label: labelKey('mobPhone'), controlName: 'mobPhone', type: 'text' },
     { label: labelKey('workPhone'), controlName: 'workPhone', type: 'text' },
@@ -28,7 +31,7 @@ export class DebtorCardComponent implements AfterViewInit {
 
   data = {};
 
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  private selectedDebtorSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -37,13 +40,16 @@ export class DebtorCardComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    // TODO(d.maltsev): unsubscribing
-    this.incomingCallService.selectedDebtor$
+    this.selectedDebtorSubscription = this.incomingCallService.selectedDebtor$
       .flatMap(debtor => debtor ? this.debtorCardService.fetch(debtor.debtId) : Observable.of(null))
       .subscribe(data => {
         this.form.reset();
         this.data = data;
         this.cdRef.markForCheck();
       });
+  }
+
+  ngOnDestroy(): void {
+    this.selectedDebtorSubscription.unsubscribe();
   }
 }
