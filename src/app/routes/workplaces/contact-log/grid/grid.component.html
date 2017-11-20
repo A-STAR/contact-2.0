@@ -1,0 +1,10 @@
+<app-action-grid
+  [metadataKey]="gridKey"
+  [persistenceKey]="gridKey"
+  rowIdKey="debtId"
+  [ngClass]="'contact-log-grid'"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (request)="onRequest()"
+  (dblClick)="onDblClick($event)"
+></app-action-grid>

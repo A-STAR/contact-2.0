@@ -187,6 +187,17 @@
         "documents": "Документы"
       }
     },
+    "contactLog": {
+      "contact": {
+        "title": "Контакты"
+      },
+      "promise": {
+        "title": "Обещания"
+      },
+      "sms": {
+        "title": "СМС"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {
