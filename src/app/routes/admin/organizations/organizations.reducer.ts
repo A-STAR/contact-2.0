@@ -1,6 +1,6 @@
 import { IOrganizationsState } from './organizations.interface';
 import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
-import { UnsafeAction } from '../../../core/state/state.interface';
+import { SafeAction } from '../../../core/state/state.interface';
 
 import { OrganizationsService } from './organizations.service';
 
@@ -8,15 +8,14 @@ export const defaultState: IOrganizationsState = {
   organizations: [],
   selectedOrganization: null,
   employees: [],
-  notAddedEmployees: [],
-  selectedEmployeeUserId: null,
-  dialogAction: null
+  selectedEmployeeUserId: null
 };
 
 export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNode: ITreeNode): ITreeNode {
   if (!selectedOrganizationNode) {
     return null;
   }
+
   let result;
   (nodes || []).forEach(
     node => result = result || (node.id === selectedOrganizationNode.id
@@ -24,55 +23,29 @@ export function findOrganizationNode(nodes: ITreeNode[], selectedOrganizationNod
       : findOrganizationNode(node.children, selectedOrganizationNode))
   );
   return result;
+
+  // return (nodes || []).reduce((acc, node) => acc || (node.id === selectedOrganizationNode.id
+  //     ? node
+  //     : findOrganizationNode(node.children, selectedOrganizationNode))
+  // , null);
 }
 
-export function reducer(state: IOrganizationsState = defaultState, action: UnsafeAction): IOrganizationsState {
+export function reducer(state: IOrganizationsState = defaultState, action: SafeAction<IOrganizationsState>): IOrganizationsState {
   switch (action.type) {
-    case OrganizationsService.ORGANIZATIONS_FETCH_SUCCESS:
-      return {
-        ...state,
-        organizations: action.payload.organizations
-      };
     case OrganizationsService.ORGANIZATION_SELECT:
       return {
         ...state,
-        selectedOrganization: action.payload.organization ||
-          // Here state.selectedOrganization is pointed to old instance from the previous state.organizations instance
-          // so we should find him actual mirror by id
-          findOrganizationNode(state.organizations, state.selectedOrganization)
-      };
-    case OrganizationsService.ORGANIZATIONS_CLEAR:
-      return {
-        ...state,
-        organizations: [],
-        selectedOrganization: null
-      };
-    case OrganizationsService.EMPLOYEES_FETCH_SUCCESS:
-      return {
-        ...state,
-        employees: action.payload.employees
-      };
-    case OrganizationsService.EMPLOYEES_FETCH_NOT_ADDED_SUCCESS:
-      return {
-        ...state,
-        notAddedEmployees: action.payload.employees
+        organizations: action.payload.organizations
+          ? [...action.payload.organizations]
+          : [...state.organizations],
+        selectedOrganization: action.payload.selectedOrganization
+          || findOrganizationNode(state.organizations, state.selectedOrganization)
       };
     case OrganizationsService.EMPLOYEE_SELECT:
       return {
         ...state,
-        selectedEmployeeUserId: action.payload.employeeUserId
-      };
-    case OrganizationsService.EMPLOYEES_CLEAR:
-      return {
-        ...state,
-        employees: [],
-        selectedEmployeeUserId: null
-      };
-    case OrganizationsService.DIALOG_ACTION:
-      return {
-        ...state,
-        dialogAction: action.payload.dialogAction,
-        ...action.payload.data
+        employees: action.payload.employees || state.employees,
+        selectedEmployeeUserId: action.payload.selectedEmployeeUserId
       };
     default:
       return state;
