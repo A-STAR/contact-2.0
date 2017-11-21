@@ -1,0 +1,7 @@
+<app-tabstrip [disableScrollbar]="true" [inverse]="true">
+  <app-tab *ngFor="let grid of grids" [title]="grid.title" [closable]="false">
+    <app-workplaces-contact-log-grid
+      [gridKey]="grid.key"
+    ></app-workplaces-contact-log-grid>
+  </app-tab>
+</app-tabstrip>

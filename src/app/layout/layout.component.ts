@@ -16,6 +16,7 @@ export class LayoutComponent {
     CallCenterComponent: 'CALL_CENTER',
     CampaignComponent: 'CALL_CENTER',
     ConstantsComponent: 'CONSTANTS',
+    ContactLogComponent: 'CONTACT_LOG',
     ContactRegistrationComponent: 'CONTACT_REGISTRATION',
     ContactPropertiesComponent: 'CONTACT_TREES',
     ContractorsAndPortfoliosComponent: 'PORTFOLIOS',
