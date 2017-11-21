@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../../../../../shared/shared.module';
 
+import { FilterService } from './filter.service';
+
 import { FilterComponent } from './filter.component';
 
 @NgModule({
@@ -15,6 +17,9 @@ import { FilterComponent } from './filter.component';
   ],
   declarations: [
     FilterComponent,
+  ],
+  providers: [
+    FilterService,
   ],
 })
 export class FilterModule { }

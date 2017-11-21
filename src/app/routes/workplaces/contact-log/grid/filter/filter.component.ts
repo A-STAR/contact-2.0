@@ -7,15 +7,19 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IEntityAttributes } from '../../../../../core/entity/attributes/entity-attributes.interface';
 
 import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
+import { FilterService } from './filter.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
+import { DialogFunctions } from '../../../../../core/dialog';
 import { FilterObject } from '../../../../../shared/components/grid2/filter/grid-filter';
 
 import { makeKey, range } from '../../../../../core/utils';
@@ -27,19 +31,36 @@ const labelKey = makeKey('modules.contactLog.filters');
   selector: 'app-workplaces-contact-log-grid-filter',
   templateUrl: 'filter.component.html'
 })
-export class FilterComponent implements OnInit {
+export class FilterComponent extends DialogFunctions implements OnInit {
   @Output() search = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
+  dialog: string;
+
+  users = [];
+  userColumns: IGridColumn[] = [
+    { prop: 'id', width: 100 },
+    { prop: 'fullName' },
+    { prop: 'organization' },
+    { prop: 'position' },
+  ];
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private entityAttributesService: EntityAttributesService,
-  ) {}
+    private filterService: FilterService,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
+    this.filterService.fetchUsers().subscribe(users => {
+      this.users = users;
+      this.cdRef.markForCheck();
+    });
+
     this.entityAttributesService.getDictValueAttributes()
       .subscribe(attributes => {
         this.controls = this.buildControls(attributes);
@@ -69,7 +90,7 @@ export class FilterComponent implements OnInit {
 
   private buildControls(attributes: IEntityAttributes): IDynamicFormControl[] {
     return [
-      { controlName: 'portfolioId', type: 'number', min: 1 },
+      { controlName: 'portfolioId', type: 'text' },
       { controlName: 'outPortfolioId', type: 'number', min: 1 },
       { controlName: 'branchCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
       { controlName: 'regionCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_REGIONS },
@@ -79,7 +100,7 @@ export class FilterComponent implements OnInit {
         dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
         display: attributes[EntityAttributesService[`DICT_VALUE_${i}`]].isUsed,
       })),
-      { controlName: 'userId', type: 'number', min: 1 },
+      { controlName: 'userId', type: 'dialog', action: () => this.setDialog('userId') },
       { controlName: 'receiveDateTime', type: 'datepicker' },
     ]
     .map(control => ({
