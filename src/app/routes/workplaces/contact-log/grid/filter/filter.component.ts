@@ -39,7 +39,7 @@ export class FilterComponent implements OnInit {
     private entityAttributesService: EntityAttributesService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.entityAttributesService.getDictValueAttributes()
       .subscribe(attributes => {
         this.controls = this.buildControls(attributes);

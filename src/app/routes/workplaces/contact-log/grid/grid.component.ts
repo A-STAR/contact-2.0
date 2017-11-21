@@ -15,8 +15,6 @@ import { ContactLogService } from '../contact-log.service';
 import { ActionGridComponent } from '../../../../shared/components/action-grid/action-grid.component';
 import { FilterComponent } from './filter/filter.component';
 
-import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
-
 @Component({
   selector: 'app-workplaces-contact-log-grid',
   templateUrl: './grid.component.html',
