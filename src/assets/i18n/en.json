@@ -1991,7 +1991,8 @@
         "showContactHistory": "Contact Log",
         "debtSetResponsible": "Set debt responsible",
         "debtClearResponsible": "Clear debt responsible",
-        "objectAddToGroup": "Add to group"
+        "objectAddToGroup": "Add to group",
+        "confirmPromise": "Confirm promises"
       }
     },
     "filter": {

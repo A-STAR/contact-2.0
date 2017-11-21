@@ -19,8 +19,14 @@
 <app-entity-group-add
   *ngIf="isDialog('objectAddToGroup')"
   [debts]="getSelectionParam(0)"
-  (close)="onCloseDialog()">
-</app-entity-group-add>
+  (close)="onCloseDialog()"
+></app-entity-group-add>
+
+<app-promise-confirm-dialog
+  *ngIf="isDialog('confirmPromise')"
+  [promises]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-promise-confirm-dialog>
 
 <app-grid2
   [columnIds]="columnIds"

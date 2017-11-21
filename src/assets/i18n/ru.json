@@ -1991,7 +1991,8 @@
         "showContactHistory": "История контактов",
         "debtSetResponsible": "Установка ответственного по долгу",
         "debtClearResponsible": "Снятие ответственного по долгу",
-        "objectAddToGroup": "Добавить в группу"
+        "objectAddToGroup": "Добавить в группу",
+        "confirmPromise": "Подтвердить обещания"
       }
     },
     "filter": {
