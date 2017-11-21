@@ -43,7 +43,7 @@ export class CampaignsEditComponent implements OnInit {
   ngOnInit(): void {
     Observable.combineLatest(
       this.campaignsService.fetchCampaignGroups(),
-      this.entityTranslationsService.readCampaignNameTranslations(this.editedEntity.id)
+      (this.editedEntity ? this.entityTranslationsService.readCampaignNameTranslations(this.editedEntity.id) : Observable.of([]))
     )
       .take(1)
       .subscribe(([groupNames, translations]) => {
