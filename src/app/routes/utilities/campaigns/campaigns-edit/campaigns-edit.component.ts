@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
@@ -67,7 +66,7 @@ export class CampaignsEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  toSubmittedValues(campaign: any): ICampaign {
+  serialize(campaign: any): ICampaign {
     const groupName = this.campaignGroups.find(campaignGroup => campaignGroup.id === campaign.groupName);
     const isMultiNameChanged = campaign.multiName && Object.keys(campaign.multiName).length;
     return {
@@ -81,7 +80,7 @@ export class CampaignsEditComponent implements OnInit {
 
   onSubmit(): void {
     const campaign = this.form.serializedUpdates;
-    this.submit.emit(this.toSubmittedValues(campaign));
+    this.submit.emit(this.serialize(campaign));
     this.onCancel();
   }
 
