@@ -48,6 +48,7 @@ export class LayoutComponent {
     IncomingCallComponent: 'INCOMING_CALL',
     MessageTemplatesComponent: 'MESSAGE_SCENARIOS',
     OrganizationsComponent: 'DEPARTMENTS',
+    PaymentsComponent: 'PAYMENTS',
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     UsersComponent: 'USERS',
     UserEditComponent: 'USER_EDIT',
