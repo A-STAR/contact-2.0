@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 
 import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
+import { IContactLogEntry } from '../contact-log.interface';
 
 import { ContactLogService } from '../contact-log.service';
 
@@ -15,9 +16,6 @@ import { ActionGridComponent } from '../../../../shared/components/action-grid/a
 import { FilterComponent } from './filter/filter.component';
 
 import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
-
-// TODO(d.maltsev)
-type T = any;
 
 @Component({
   selector: 'app-workplaces-contact-log-grid',
@@ -30,9 +28,9 @@ export class GridComponent {
   @Input() gridKey: string;
 
   @ViewChild(FilterComponent) filter: FilterComponent;
-  @ViewChild(ActionGridComponent) grid: ActionGridComponent<T>;
+  @ViewChild(ActionGridComponent) grid: ActionGridComponent<IContactLogEntry>;
 
-  rows: T[] = [];
+  rows: IContactLogEntry[] = [];
   rowCount = 0;
 
   constructor(
@@ -45,14 +43,14 @@ export class GridComponent {
     filters.addFilter(this.filter.filters);
     const params = this.grid.getRequestParams();
     this.contactLogService.fetch(this.gridKey, filters, params)
-      .subscribe((response: IAGridResponse<T>) => {
+      .subscribe((response: IAGridResponse<IContactLogEntry>) => {
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
         this.cdRef.markForCheck();
       });
   }
 
-  onDblClick(debt: T): void {
+  onDblClick(entry: IContactLogEntry): void {
 
   }
 }
