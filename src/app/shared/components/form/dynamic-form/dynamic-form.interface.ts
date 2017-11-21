@@ -72,6 +72,9 @@ export interface IDynamicFormControl {
   toolbar?: boolean;
   // options for segmented input
   segmentedInputOptions?: ISegmentedInputOption[];
+  // min & max value for number input
+  min?: number;
+  max?: number;
 }
 
 export type TControlTypes =

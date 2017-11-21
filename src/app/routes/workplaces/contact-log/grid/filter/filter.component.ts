@@ -69,8 +69,8 @@ export class FilterComponent implements OnInit {
 
   private buildControls(attributes: IEntityAttributes): IDynamicFormControl[] {
     return [
-      { controlName: 'portfolioId', type: 'number' },
-      { controlName: 'outPortfolioId', type: 'number' },
+      { controlName: 'portfolioId', type: 'number', min: 1 },
+      { controlName: 'outPortfolioId', type: 'number', min: 1 },
       { controlName: 'branchCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
       { controlName: 'regionCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_REGIONS },
       ...range(1, 4).map(i => ({
@@ -79,7 +79,7 @@ export class FilterComponent implements OnInit {
         dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
         display: attributes[EntityAttributesService[`DICT_VALUE_${i}`]].isUsed,
       })),
-      { controlName: 'userId', type: 'number' },
+      { controlName: 'userId', type: 'number', min: 1 },
       { controlName: 'receiveDateTime', type: 'datepicker' },
     ]
     .map(control => ({
