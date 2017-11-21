@@ -18,4 +18,10 @@ export class PromiseResolveService {
       .update(`${this.url}/confirm`, {}, { idData: { ids: promiseIds } })
       .catch(this.notificationsService.updateError().entity('entities.promises.gen.plural').dispatchCallback());
   }
+
+  remove(promiseIds: number[]): Observable<any> {
+    return this.dataService
+      .update(`${this.url}/delete`, {}, { idData: { ids: promiseIds } })
+      .catch(this.notificationsService.deleteError().entity('entities.promises.gen.plural').dispatchCallback());
+  }
 }

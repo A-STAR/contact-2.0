@@ -1375,6 +1375,12 @@
         "message": "Do you really want to confirm the marked promises?"
       }
     },
+    "promiseRemove": {
+      "dialog": {
+        "title": "Deleting promises",
+        "message": "Do you really want to delete the marked promises?"
+      }
+    },
     "debt": {
       "toolbar": {
         "call": "Call Back",
