@@ -77,12 +77,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         UserDictionariesService.DICTIONARY_DEBT_LIST_3,
         UserDictionariesService.DICTIONARY_DEBT_LIST_4,
       ]),
-      this.entityAttributesService.getAttributes([
-        EntityAttributesService.DICT_VALUE_1,
-        EntityAttributesService.DICT_VALUE_2,
-        EntityAttributesService.DICT_VALUE_3,
-        EntityAttributesService.DICT_VALUE_4,
-      ]),
+      this.entityAttributesService.getDictValueAttributes(),
       this.userTemplatesService.getTemplates(4, 0).map(valuesToOptions),
       this.userAttributeTypesService.getAttributeTypes(19, 0),
       this.lookupService.lookupAsOptions('languages'),

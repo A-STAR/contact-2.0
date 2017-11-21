@@ -60,12 +60,7 @@ export class DebtCardComponent {
         UserDictionariesService.DICTIONARY_DEBT_LIST_3,
         UserDictionariesService.DICTIONARY_DEBT_LIST_4,
       ]),
-      this.entityAttributesService.getAttributes([
-        EntityAttributesService.DICT_VALUE_1,
-        EntityAttributesService.DICT_VALUE_2,
-        EntityAttributesService.DICT_VALUE_3,
-        EntityAttributesService.DICT_VALUE_4,
-      ]),
+      this.entityAttributesService.getDictValueAttributes(),
       this.userPermissionsService.has('DEBT_EDIT'),
       this.userPermissionsService.has('DEBT_PORTFOLIO_EDIT'),
       this.userPermissionsService.has('DEBT_COMPONENT_AMOUNT_EDIT'),
