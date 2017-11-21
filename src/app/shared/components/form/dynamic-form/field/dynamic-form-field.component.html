@@ -8,6 +8,8 @@
       </span>
       <input type="number"
              class="form-control"
+             [attr.min]="control.min"
+             [attr.max]="control.max"
              [attr.placeholder]="(control.placeholder || '') | translate"
              [formControlName]="control.controlName"
              (input)="control.onChange ? control.onChange($event) : undefined">

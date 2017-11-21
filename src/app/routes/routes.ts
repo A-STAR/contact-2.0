@@ -42,6 +42,7 @@ export const routes: Route[] = [
           },
           { path: 'incoming-call', loadChildren: './workplaces/incoming-call/incoming-call.module#IncomingCallModule' },
           { path: 'call-center', loadChildren: './workplaces/call-center/call-center.module#CallCenterModule' },
+          { path: 'contact-log', loadChildren: './workplaces/contact-log/contact-log.module#ContactLogModule' },
         ]
       },
       {
@@ -54,6 +55,10 @@ export const routes: Route[] = [
           {
             path: 'message-templates',
             loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',
+          },
+          {
+            path: 'campaigns',
+            loadChildren: './utilities/campaigns/campaigns.module#CampaignsModule',
           },
         ]
       },

@@ -71,7 +71,7 @@
         "DEBTOR_PLEDGE": "Pledge contract",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
-        "CONTACT_PROTOCOL": "Contact Protocol",
+        "CONTACT_LOG": "Contact Log",
         "CALL_CENTER": "Call Center",
         "PAYMENTS": "Payments",
         "COURTS_2": "Courts",
@@ -185,6 +185,29 @@
         "payments": "Payments",
         "promises": "Promises",
         "documents": "Documents"
+      }
+    },
+    "contactLog": {
+      "contact": {
+        "title": "Contacts"
+      },
+      "filters": {
+        "branchCode": "Branch",
+        "dictValue1": "Dictionary Value 1",
+        "dictValue2": "Dictionary Value 2",
+        "dictValue3": "Dictionary Value 3",
+        "dictValue4": "Dictionary Value 4",
+        "outPortfolioId": "Registry",
+        "portfolioId": "Portfolio",
+        "receiveDateTime": "Received",
+        "regionCode": "Region",
+        "userId": "Operator"
+      },
+      "promise": {
+        "title": "Promises"
+      },
+      "sms": {
+        "title": "SMS"
       }
     },
     "contactRegistration": {
@@ -797,9 +820,6 @@
     },
     "attributesTab": {
       "title": "Attributes"
-    },
-    "contactLogTam": {
-      "title": "Contact log"
     }
   },
   "person": {
@@ -963,6 +983,62 @@
       "autoComment": {
         "title": "Auto Comment"
       }
+    },
+    "campaigns": {
+      "create": {
+        "title": "New campaign"
+      },
+      "edit": {
+        "title": "Edit campaign",
+        "name": "Name",
+        "typeCode": "Type code",
+        "groupId": "Group",
+        "comment": "Comment",
+        "timeZoneUsed": "GMT used"
+      },
+      "remove": {
+        "title": "Delete campaign",
+        "confirmMessage": "Are you sure you want to delete campaign {{ name }}?"
+      },
+      "errors": {
+        "view": "Access to campaigns list denied"
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Name",
+        "groupName": "Group",
+        "statusCode": "Status",
+        "typeCode": "Data type",
+        "startDateTime": "Started",
+        "finishDateTime": "Finished",
+        "comment": "Commentary",
+        "timeZoneUsed": "GMT used"
+      },
+      "participants": {
+        "grid": {
+          "id": "ID",
+          "fullName": "Full name",
+          "organization": "Department",
+          "position": "Position"
+        },
+        "add":{
+          "title": "Add participant",
+          "grid": {
+            "id": "ID",
+            "fullName": "Full name",
+            "organization": "Department",
+            "position": "Position"
+          }
+        },
+        "remove": {
+          "title": "Remove participant",
+          "confirmMessage": "Are you sure you want to delete selected participants from the campaign?"
+        }
+      },
+      "tabs": {
+        "participants": "Participants",
+        "statistics": "Statistics"
+      }
     }
   },
   "notifications": {
@@ -1105,6 +1181,11 @@
         "educationCode": "Education",
         "linkTypeCode": "Type",
         "comment": "Comment"
+      }
+    },
+    "contactLog": {
+      "dialog": {
+        "title": "Contact Log"
       }
     },
     "contactProperty": {
@@ -1487,44 +1568,6 @@
         "comment": "Comment"
       }
     },
-    "contactLog": {
-      "dialog": {
-        "title": "Contact Log"
-      },
-      "card": {
-        "fullName": "Dedtor",
-        "contract": "Order",
-        "contactNumber": "Order number",
-        "contactDateTime": "Contact date",
-        "contactType": "Contact type",
-        "userFullName": "Operator",
-        "resultName": "Result",
-        "contactData": "Phone/address",
-        "promiseDate": "Promise date",
-        "promiseAmount": "Promised amount",
-        "comment": "Comment",
-        "personRole": "Type of person",
-        "sentDateTime": "Sent date",
-        "status": "Status",
-        "contactPhone": "Contact phone",
-        "text": "Message",
-        "startDateTime": "Dispatch date"
-      },
-      "grid": {
-        "contactId": "Contact Id",
-        "contactNumber": "Order number",
-        "debtId": "Debt ID",
-        "creditName": "Credit name",
-        "createDateTime": "Ceate date",
-        "contactType": "Contact type",
-        "fullName": "Contact person name",
-        "personRole": "Person role",
-        "contactDateTime": "Contact date",
-        "userFullName": "Operator",
-        "resultName": "Result",
-        "promiseDate": "Promise date"
-      }
-    },
     "operator": {
       "dialog": {
         "title": "Select operator"
@@ -1632,8 +1675,14 @@
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }
     },
+    "participant": {
+      "gen": { "singular": "participant", "plural": "participants" }
+    },
     "permissions": {
       "gen": { "singular": "permit", "plural": "permits" }
+    },
+    "group": {
+      "gen": { "singular": "group", "plural": "groups" }
     },
     "guiObjects": {
       "gen": { "singular": "GUI object", "plural": "GUI objects" }
@@ -1748,10 +1797,7 @@
       "gen": { "singular": "message template", "plural": "message templates" }
     },
     "property": {
-      "gen": { "singular": "property item", "plural": "property list" }
-    },
-    "contactLog": {
-      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
+      "gen": { "singular": "property", "plural": "property list" }
     },
     "scenarios": {
       "gen": { "singular": "scenario", "plural": "scenarios list" }
@@ -1950,7 +1996,9 @@
       "unblock": "Unblock",
       "undo": "Undo",
       "upload": "Upload",
-      "visit": "Visit"
+      "visit": "Visit",
+      "start": "Start",
+      "stop": "Stop"
     },
     "dateTimeRange": {
       "from": "From",

@@ -36,6 +36,8 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT]: 'registerContact',
     [ToolbarItemTypeEnum.BUTTON_SAVE]: 'save',
     [ToolbarItemTypeEnum.BUTTON_SMS]: 'sms',
+    [ToolbarItemTypeEnum.BUTTON_START]: 'start',
+    [ToolbarItemTypeEnum.BUTTON_STOP]: 'stop',
     [ToolbarItemTypeEnum.BUTTON_UNBLOCK]: 'unblock',
     [ToolbarItemTypeEnum.BUTTON_UNDO]: 'undo',
     [ToolbarItemTypeEnum.BUTTON_UPLOAD]: 'upload',

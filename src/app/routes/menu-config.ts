@@ -94,7 +94,7 @@ export const menuConfig: IMenuConfig = {
   },
   callCampaign: {
     text: 'sidebar.nav.menu.CAMPAIGNS',
-    link: '/utilities/capmaigns',
+    link: '/utilities/campaigns',
     icon: 'icon-rocket'
   },
   schedule: {
@@ -135,8 +135,8 @@ export const menuConfig: IMenuConfig = {
     icon: 'icon-fire'
   },
   contactProtocol: {
-    text: 'sidebar.nav.menu.CONTACT_PROTOCOL',
-    link: '/workplaces/contact-protocol',
+    text: 'sidebar.nav.menu.CONTACT_LOG',
+    link: '/workplaces/contact-log',
     icon: 'icon-call-in'
   },
   callcenter: {
