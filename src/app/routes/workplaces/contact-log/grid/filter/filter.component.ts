@@ -7,7 +7,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -125,8 +124,8 @@ export class FilterComponent extends DialogFunctions implements OnInit {
 
   private getOperatorForControl(controlName: string): FilterOperatorType {
     const control = this.controls.find(c => c.controlName === controlName);
-    switch (control.type) {
-      case 'dialog':
+    switch (control.controlName) {
+      case 'userId':
         return 'IN';
       default:
         return '==';
