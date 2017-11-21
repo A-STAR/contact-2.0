@@ -28,6 +28,12 @@
   (close)="onCloseDialog()"
 ></app-promise-confirm-dialog>
 
+<app-promise-remove-dialog
+  *ngIf="isDialog('deletePromise')"
+  [promises]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-promise-remove-dialog>
+
 <app-grid2
   [columnIds]="columnIds"
   [metadataKey]="metadataKey"

@@ -1998,7 +1998,8 @@
         "debtSetResponsible": "Set debt responsible",
         "debtClearResponsible": "Clear debt responsible",
         "objectAddToGroup": "Add to group",
-        "confirmPromise": "Confirm promises"
+        "confirmPromise": "Confirm promises",
+        "deletePromise": "Delete promises"
       }
     },
     "filter": {

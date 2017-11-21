@@ -1998,7 +1998,8 @@
         "debtSetResponsible": "Установка ответственного по долгу",
         "debtClearResponsible": "Снятие ответственного по долгу",
         "objectAddToGroup": "Добавить в группу",
-        "confirmPromise": "Подтвердить обещания"
+        "confirmPromise": "Подтвердить обещания",
+        "deletePromise": "Удалить обещания"
       }
     },
     "filter": {
