@@ -28,13 +28,7 @@ const routes: Routes = [
     CampaignsEditComponent
   ],
   providers: [
-    CampaignsService,
-    {
-      provide: CAMPAIGN_ENTITY_ID,
-      // this is correct value, but it is absent in DB
-      // useValue: 402
-      useValue: 35
-    }
+    CampaignsService
   ],
 })
 export class CampaignsModule { }

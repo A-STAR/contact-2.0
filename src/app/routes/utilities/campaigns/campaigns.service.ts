@@ -211,5 +211,3 @@ export class CampaignsService {
 
 }
 
-export const CAMPAIGN_ENTITY_ID = new InjectionToken<number>('campaignsEntityId');
-

@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ICampaign } from '../campaigns.interface';
-import { CAMPAIGN_ENTITY_ID, CampaignsService } from '../campaigns.service';
+import { CampaignsService } from '../campaigns.service';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IOption, INamedValue } from '../../../../core/converter/value-converter.interface';
@@ -37,15 +37,13 @@ export class CampaignsEditComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private valueConverterService: ValueConverterService,
     private campaignsService: CampaignsService,
-    private entityTranslationsService: EntityTranslationsService,
-    @Inject(CAMPAIGN_ENTITY_ID) private campaignEntityId: number
+    private entityTranslationsService: EntityTranslationsService
   ) { }
 
   ngOnInit(): void {
     Observable.combineLatest(
       this.campaignsService.fetchCampaignGroups(),
-      // didn't get how to use it
-      this.entityTranslationsService.readAttributeNameTranslations(this.campaignEntityId)
+      this.entityTranslationsService.readCampaignNameTranslations(this.editedEntity.id)
     )
       .take(1)
       .subscribe(([groupNames, translations]) => {
