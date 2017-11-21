@@ -153,7 +153,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.gridService
       .getActions(this.metadataKey)
       .take(1)
-      .subscribe(actions => this.actions = actions);
+      .subscribe(actions => {
+        console.log(actions);
+        this.actions = actions;
+        // TODO mock
+        this.actions.push({
+            action: 'paymentsConfirm',
+            params: ['debtId'], // should be
+            addOptions: [{
+              name: 'availableStatuses',
+              value: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19']
+            }]
+          }
+        );
+      });
 
     this.gridService
       .getColumnMeta(this.metadataKey, {})

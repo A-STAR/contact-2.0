@@ -1,3 +1,9 @@
+<app-payments-confirm-dialog
+  *ngIf="isDialog('paymentsConfirm')"
+  [paymentsNumber]="getSelectionParam(0).length"
+  (close)="onCloseDialog()">
+</app-payments-confirm-dialog>
+
 <app-contact-log-dialog
   *ngIf="isDialog('showContactHistory')"
   [personId]="getDialogParam(0)"
