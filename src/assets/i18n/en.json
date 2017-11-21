@@ -192,16 +192,26 @@
         "title": "Contacts"
       },
       "filters": {
-        "branchCode": "Branch",
-        "dictValue1": "Dictionary Value 1",
-        "dictValue2": "Dictionary Value 2",
-        "dictValue3": "Dictionary Value 3",
-        "dictValue4": "Dictionary Value 4",
-        "outPortfolioId": "Registry",
-        "portfolioId": "Portfolio",
-        "receiveDateTime": "Received",
-        "regionCode": "Region",
-        "userId": "Operator"
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "outPortfolioId": "Registry",
+          "portfolioId": "Portfolio",
+          "receiveDateTime": "Received",
+          "regionCode": "Region",
+          "userId": "Operator"
+        },
+        "userId": {
+          "grid": {
+            "fullName": "Operator",
+            "id": "Id",
+            "organization": "Department",
+            "position": "Position"
+          }
+        }
       },
       "promise": {
         "title": "Promises"

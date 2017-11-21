@@ -3,34 +3,25 @@
   titleTranslationKey="modules.contactLog.filters.userId.title"
   actionTranslationKey="default.buttons.ok"
   [styles]="{ width: '80%', 'max-width': '80%' }"
-  (action)="onFilterSelect()"
+  (action)="onUsersFilterSelect()"
   (cancel)="onCloseDialog()"
 >
-  <div class="row">
-    <div class="col-md-6">
-      <app-grid
-        [columns]="userColumns"
-        [footerHeight]="false"
-        [rows]="users"
-        [styles]="{ height: '480px' }"
-      ></app-grid>
-    </div>
-    <div class="col-md-6">
-      <app-grid
-        [columns]="userColumns"
-        [footerHeight]="false"
-        [rows]="[]"
-        [styles]="{ height: '480px' }"
-      ></app-grid>
-    </div>
-  </div>
+  <app-multi-select
+    #usersSelect
+    columnsTranslationKeyFrom="modules.contactLog.filters.userId"
+    columnsTranslationKeyTo="modules.contactLog.filters.userId"
+    [height]="480"
+    [rowsFrom]="users"
+    [columnsFrom]="userColumns"
+    [columnsTo]="userColumns"
+  ></app-multi-select>
 </app-action-dialog>
 
 <div class="mb">
   <app-dynamic-form
     *ngIf="controls"
     [controls]="controls"
-    [data]="{}"
+    [data]="data"
   ></app-dynamic-form>
 </div>
 

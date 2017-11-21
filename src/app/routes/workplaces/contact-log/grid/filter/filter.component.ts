@@ -12,19 +12,21 @@ import { Observable } from 'rxjs/Observable';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IEntityAttributes } from '../../../../../core/entity/attributes/entity-attributes.interface';
+import { FilterOperatorType } from '../../../../../shared/components/grid2/filter/grid-filter';
 
 import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
 import { FilterService } from './filter.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { MultiSelectComponent } from '../../../../../shared/components/form/multi-select/multi-select.component';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 import { FilterObject } from '../../../../../shared/components/grid2/filter/grid-filter';
 
 import { makeKey, range } from '../../../../../core/utils';
 
-const labelKey = makeKey('modules.contactLog.filters');
+const labelKey = makeKey('modules.contactLog.filters.form');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,8 +37,10 @@ export class FilterComponent extends DialogFunctions implements OnInit {
   @Output() search = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  @ViewChild('usersSelect') usersSelect: MultiSelectComponent;
 
   controls: IDynamicFormControl[];
+  data: any = {};
   dialog: string;
 
   users = [];
@@ -76,7 +80,7 @@ export class FilterComponent extends DialogFunctions implements OnInit {
         const f = FilterObject
           .create()
           .setName(key)
-          .setOperator('==')
+          .setOperator(this.getOperatorForControl(key))
           .setValues(data[key]);
         filter.addFilter(f);
       }
@@ -86,6 +90,15 @@ export class FilterComponent extends DialogFunctions implements OnInit {
 
   onSearch(): void {
     this.search.emit();
+  }
+
+  onUsersFilterSelect(): void {
+    this.data = {
+      ...this.data,
+      userId: this.usersSelect.rowsTo.map(user => user.id)
+    };
+    this.closeDialog();
+    this.cdRef.markForCheck();
   }
 
   private buildControls(attributes: IEntityAttributes): IDynamicFormControl[] {
@@ -108,5 +121,15 @@ export class FilterComponent extends DialogFunctions implements OnInit {
       label: labelKey(control.controlName),
       width: 3
     } as IDynamicFormControl));
+  }
+
+  private getOperatorForControl(controlName: string): FilterOperatorType {
+    const control = this.controls.find(c => c.controlName === controlName);
+    switch (control.type) {
+      case 'dialog':
+        return 'IN';
+      default:
+        return '==';
+    }
   }
 }
