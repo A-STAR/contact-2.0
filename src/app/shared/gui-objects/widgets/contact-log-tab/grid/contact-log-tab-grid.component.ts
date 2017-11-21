@@ -26,16 +26,16 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   selectedChanged$ = new BehaviorSubject<boolean>(false);
 
   columns: Array<IGridColumn> = [
-    { prop: 'debtId' },
-    { prop: 'contactId' },
-    { prop: 'creditName' },
-    { prop: 'fullName'},
-    { prop: 'personRole', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-    { prop: 'contactDateTime' },
-    { prop: 'contactType', dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
-    { prop: 'userFullName' },
-    { prop: 'resultName' },
-    { prop: 'promiseDate' },
+    { prop: 'debtId', width: 50 },
+    { prop: 'contactId', width: 70 },
+    { prop: 'creditName', width: 80 },
+    { prop: 'fullName', maxWidth: 200},
+    { prop: 'personRole', width: 90, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
+    { prop: 'contactDateTime', maxWidth: 150, renderer: 'dateRenderer' },
+    { prop: 'contactType', maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
+    { prop: 'userFullName', maxWidth: 200 },
+    { prop: 'resultName', maxWidth: 200},
+    { prop: 'promiseDate', width: 70 },
   ];
 
   toolbarItems: Array<IToolbarItem> = [
@@ -51,7 +51,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetch(),
-      enabled: Observable.of(true)
+      enabled: this.canEdit$
     },
   ];
 
