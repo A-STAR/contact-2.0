@@ -43,15 +43,15 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selected[0]),
       enabled: Observable.combineLatest(
-        this.canEdit$,
+        this.canView$,
         this.selectedChanged$
       )
-      .map(([canEdit, selected]) => canEdit && selected)
+      .map(([canView, selected]) => canView && selected)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetch(),
-      enabled: this.canEdit$
+      enabled: this.canView$
     },
   ];
 
@@ -81,7 +81,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    this.viewPermissionSubscription = this.canEdit$.subscribe(hasViewPermission => {
+    this.viewPermissionSubscription = this.canView$.subscribe(hasViewPermission => {
       if (hasViewPermission) {
         this.fetch();
       } else {
@@ -122,7 +122,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     return this._contactLogList;
   }
 
-  get canEdit$(): Observable<boolean> {
+  get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('CONTACT_LOG_VIEW');
   }
 

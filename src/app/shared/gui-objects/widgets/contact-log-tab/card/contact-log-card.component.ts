@@ -38,8 +38,8 @@ export class ContactLogTabCardComponent implements OnInit {
   constructor(
     private contentTabService: ContentTabService,
     private contactLogService: ContactLogService,
-    private messageBusService: MessageBusService,
     private cdRef: ChangeDetectorRef,
+    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
