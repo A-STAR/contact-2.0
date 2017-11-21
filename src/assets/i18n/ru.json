@@ -820,9 +820,6 @@
     },
     "attributesTab": {
       "title": "Атрибуты"
-    },
-    "contactLogTab": {
-      "title": "Лог контактов"
     }
   },
   "person": {
@@ -986,6 +983,62 @@
       "autoComment": {
         "title": "Автоматический комментарий"
       }
+    },
+    "campaigns": {
+      "create": {
+        "title": "Новая кампания обзвона"
+      },
+      "edit": {
+        "title": "Редактировать кампанию обзвона",
+        "name": "Название",
+        "typeCode": "Тип",
+        "groupId": "Группа",
+        "comment": "Комментарий",
+        "timeZoneUsed": "Учет GMT"
+      },
+      "remove": {
+        "title": "Удаление кампании обзвона",
+        "confirmMessage": "Вы действительно хотите удалить кампанию {{ name }}?"
+      },
+      "errors": {
+        "view": "Access to campaigns list denied"
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Название",
+        "groupName": "Группа",
+        "statusCode": "Статус",
+        "typeCode": "Тип",
+        "startDateTime": "Дата запуска",
+        "finishDateTime": "Дата остановки",
+        "comment": "Комментарий",
+        "timeZoneUsed": "Учет GMT"
+      },
+      "participants": {
+        "grid": {
+          "id": "ID",
+          "fullName": "ФИО",
+          "organization": "Подразделение",
+          "position": "Должность"
+        },
+        "add":{
+          "title": "Добавить участника",
+          "grid": {
+            "id": "ID",
+            "fullName": "ФИО",
+            "organization": "Подразделение",
+            "position": "Должность"
+          }
+        },
+        "remove": {
+          "title": "Удаление участника",
+          "confirmMessage": "Вы действительно хотите удалить выбранных участников из кампании?"
+        }
+      },
+      "tabs": {
+        "participants": "Участники",
+        "statistics": "Статистика"
+      }
     }
   },
   "notifications": {
@@ -1128,6 +1181,11 @@
         "educationCode": "Образование",
         "linkTypeCode": "Тип",
         "comment": "Комментарий"
+      }
+    },
+    "contactLog": {
+      "dialog": {
+        "title": "История контактов"
       }
     },
     "contactProperty": {
@@ -1643,8 +1701,14 @@
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
     },
+    "participant": {
+      "gen": { "singular": "участника", "plural": "списка участников" }
+    },
     "permissions": {
       "gen": { "singular": "доступа", "plural": "списка доступов" }
+    },
+    "group": {
+      "gen": { "singular": "группы", "plural": "списка групп" }
     },
     "guiObjects": {
       "gen": { "singular": "объекта интерфейса", "plural": "списка объектов интерфейса" }
@@ -1749,7 +1813,7 @@
     "employment": {
       "gen": { "singular": "истории трудоустройства", "plural": "записей истории трудоустройства" }
     },
-    "componentLog": {
+    "debtComponents": {
       "gen": { "singular": "компонента долга", "plural": "компонентов долга" }
     },
     "sms": {
@@ -1760,9 +1824,6 @@
     },
     "property": {
       "gen": { "singular": "объекта имущества", "plural": "списка имущества" }
-    },
-    "contactLog": {
-      "gen": { "singular": "контакта с дебитором", "plural": "котнактов с дебиторм" }
     },
     "scenarios": {
       "gen": { "singular": "сценария", "plural": "списка сценариев" }
@@ -1961,7 +2022,9 @@
       "unblock": "Разблокировать",
       "undo": "Отменить",
       "upload": "Загрузить",
-      "visit": "Выезд"
+      "visit": "Выезд",
+      "start": "Запустить",
+      "stop": "Остановить"
     },
     "dateTimeRange": {
       "from": "Начало",

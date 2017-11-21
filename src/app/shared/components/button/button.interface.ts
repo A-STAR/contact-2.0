@@ -30,6 +30,8 @@ export type IButtonType =
   'search' |
   'select' |
   'sms' |
+  'start' |
+  'stop' |
   'unblock' |
   'undo' |
   'upload' |

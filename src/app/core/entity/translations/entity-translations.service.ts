@@ -26,6 +26,10 @@ export class EntityTranslationsService {
     return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_CONTACT_TREE_NAME);
   }
 
+  readCampaignNameTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
+    return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_CAMPAIGN_NAME);
+  }
+
   private readTranslations(entityId: string|number, entityAttributesId: number|string): Observable<IEntityTranslation[]> {
     return this.dataService
       .readAll('/entityAttributes/{entityAttributesId}/entities/{entitiesId}', {

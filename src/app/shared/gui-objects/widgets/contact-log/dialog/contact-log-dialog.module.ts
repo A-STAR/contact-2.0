@@ -20,3 +20,4 @@ import { ContactLogDialogComponent } from './contact-log-dialog.component';
   ]
 })
 export class ContactLogDialogModule { }
+
