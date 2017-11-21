@@ -13,7 +13,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { GuaranteeService } from '../guarantee.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -95,7 +94,6 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
     private cdRef: ChangeDetectorRef,
     private guaranteeService: GuaranteeService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -158,8 +156,8 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   onRemove(): void {
-    const { contractId } = this.selectedContract$.value;
-    this.guaranteeService.delete(this.debtId, contractId, this.selectedContract$.value.personId)
+    const { contractId, personId } = this.selectedContract$.value;
+    this.guaranteeService.delete(this.debtId, contractId, personId)
       .subscribe(() => {
         this.setDialog(null);
         this.fetch();
@@ -171,17 +169,17 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/guaranteeContract/create` ]);
+    this.router.navigate([ `${this.router.url}/guarantee/create` ]);
   }
 
   private onAddGuarantor(contract: IGuaranteeContract): void {
-    this.messageBusService.passValue('contract', contract);
-    this.router.navigate([ `${this.router.url}/guaranteeContract/addGuarantor` ]);
+    const { contractId } = this.selectedContract$.value;
+    this.router.navigate([ `${this.router.url}/guarantee/${contractId}/guarantor/add` ]);
   }
 
   private onEdit(contract: IGuaranteeContract): void {
-    this.messageBusService.passValue('contract', contract);
-    this.router.navigate([ `${this.router.url}/guaranteeContract/edit` ]);
+    const { contractId, personId } = this.selectedContract$.value;
+    this.router.navigate([ `${this.router.url}/guarantee/${contractId}/guarantor/${personId}` ]);
   }
 
   private fetch(): void {

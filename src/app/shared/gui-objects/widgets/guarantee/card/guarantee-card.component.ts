@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy, ViewChild
+import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -25,13 +25,24 @@ const label = makeKey('widgets.guaranteeContract.grid');
   selector: 'app-guarantee-card',
   templateUrl: './guarantee-card.component.html'
 })
-export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy {
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+export class GuaranteeCardComponent implements OnInit, OnDestroy {
+  @ViewChild(DynamicFormComponent) set form(guaranteeForm: DynamicFormComponent) {
+    this._form = guaranteeForm;
+    if (guaranteeForm) {
+      this.onFormInit();
+    }
+  }
 
+  get form(): DynamicFormComponent {
+    return this._form;
+  }
+
+  private _form: DynamicFormComponent;
   private canEdit: boolean;
   private routeParams = (<any>this.route.params).value;
   private debtId = this.routeParams.debtId || null;
-  private personId: number;
+  private contractId = this.routeParams.contractId || null;
+  private personId = this.routeParams.guarantorId || null;
   private guarantorSelectionSub: Subscription;
 
   controls: IDynamicFormGroup[] = null;
@@ -56,20 +67,24 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   get isAddingGuarantor(): boolean {
-    return this.isRoute('addGuarantor');
+    return this.isRoute('guarantor/add');
+  }
+
+  get contract$(): Observable<IGuaranteeContract> {
+    return this.guaranteeService.fetch(this.debtId, +this.contractId, +this.personId);
   }
 
   ngOnInit(): void {
-    const contract = this.messageBusService.takeValue<IGuaranteeContract>('contract') || {};
-
     Observable.combineLatest(
+      this.guaranteeService.fetchAll(this.debtId),
+      this.contract$,
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE),
-      contract.id
-        ? this.userPermissionsService.has('GUARANTEE_EDIT')
-        : this.userPermissionsService.has('GUARANTEE_ADD'),
+      this.contract$.flatMap(
+        contract => this.userPermissionsService.has(contract && contract.id ? 'GUARANTEE_EDIT' : 'GUARANTEE_ADD')
+      )
     )
     .take(1)
-    .subscribe(([ respTypeOpts, canEdit ]) => {
+    .subscribe(([ contacts, contract, respTypeOpts, canEdit ]) => {
       const controls: IDynamicFormGroup[] = [
         {
           title: 'widgets.guaranteeContract.title', collapsible: true,
@@ -87,7 +102,7 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
         },
       ];
 
-      this.personId = contract.personId;
+      this.personId = this.personId;
       this.controls = controls;
       this.contract = contract;
       this.canEdit = canEdit;
@@ -103,8 +118,8 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
       });
   }
 
-  ngAfterViewInit(): void {
-    if ((this.isAddingGuarantor || this.isRoute('view') || !this.canEdit) && this.form) {
+  onFormInit(): void {
+    if (this.isAddingGuarantor || !this.canEdit) {
       this.form.form.disable();
       this.cdRef.detectChanges();
     }
@@ -117,16 +132,16 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 2);
+    this.contentTabService.gotoParent(this.router, this.isRoute('create') ? 2 : 4);
   }
 
   onSubmit(): void {
     const data = this.form.serializedUpdates;
     const action = this.isAddingGuarantor
-      ? this.guaranteeService.addGuarantor(this.debtId, this.contract.contractId, data.personId)
+      ? this.guaranteeService.addGuarantor(this.debtId, this.contractId, data.personId)
       : this.isRoute('create')
         ? this.guaranteeService.create(this.debtId, data)
-        : this.guaranteeService.update(this.debtId, this.contract.contractId, data);
+        : this.guaranteeService.update(this.debtId, this.contractId, data);
 
     action.subscribe(() => {
       this.guaranteeService.notify(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
@@ -135,6 +150,6 @@ export class GuaranteeCardComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('') === segment;
+    return this.route.snapshot.url.join('/').indexOf(segment) !== -1;
   }
 }
