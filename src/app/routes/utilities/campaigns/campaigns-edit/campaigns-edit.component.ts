@@ -16,7 +16,6 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
 import { IOption, INamedValue } from '../../../../core/converter/value-converter.interface';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
-import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { LookupService } from 'app/core/lookup/lookup.service';
 
@@ -37,15 +36,14 @@ export class CampaignsEditComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private valueConverterService: ValueConverterService,
     private campaignsService: CampaignsService,
-    private lookupService: LookupService,
-    private entityTranslationsService: EntityTranslationsService
+    private lookupService: LookupService
   ) { }
 
   ngOnInit(): void {
     Observable.combineLatest(
       this.campaignsService.fetchCampaignGroups(),
       this.lookupService.lookupAsOptions('languages'),
-      (this.editedEntity ? this.entityTranslationsService.readCampaignNameTranslations(this.editedEntity.id) : Observable.of([]))
+      (this.editedEntity ? this.campaignsService.readCampaignNameTranslations(this.editedEntity.id) : Observable.of([]))
     )
       .take(1)
       .subscribe(([groupNames, languages, translations]) => {
@@ -116,7 +114,7 @@ export class CampaignsEditComponent implements OnInit {
       groupName: groupName && groupName.name
     };
   }
-  // should it be somewhere in utils?
+
   private selectOptionsToEntityTranslations(selection: { [key: number]: string }[]): IEntityTranslation[] {
     return Object.keys(selection).map(selectedLanguageId => {
       return {

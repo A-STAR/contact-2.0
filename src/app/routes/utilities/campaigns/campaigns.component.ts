@@ -68,8 +68,9 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('CAMPAIGN_DELETE'),
         this.selectedRows$
-      ).map(([hasPermissions, selectedItems]) => hasPermissions && (selectedItems.length > 0)
-        && selectedItems.every(selectedCampaign => selectedCampaign.statusCode !== CampaignStatus.STARTED))
+      )
+        .map(([hasPermissions, selectedItems]) => hasPermissions && (selectedItems.length > 0)
+          && selectedItems.every(selectedCampaign => selectedCampaign.statusCode !== CampaignStatus.STARTED))
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -107,14 +108,14 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
   ngOnInit(): void {
 
     this.gridService.setAllRenderers(this.columns)
-    .take(1)
-    .subscribe(columns => {
-      this.columns = [...columns];
-      this.cdRef.markForCheck();
-    });
+      .take(1)
+      .subscribe(columns => {
+        this.columns = [...columns];
+        this.cdRef.markForCheck();
+      });
 
     this.fetchCampaigns()
-    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   get selectedCampaign(): Observable<ICampaign> {
@@ -159,14 +160,14 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
 
   updateCampaign(campaign: ICampaign): void {
     this.campaignsService.updateCampaign(campaign)
-    .switchMap(() => this.fetchCampaigns())
-    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .switchMap(() => this.fetchCampaigns())
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onRemove(): void {
     this.campaignsService.removeCampaign()
-    .switchMap(() => this.fetchCampaigns())
-    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .switchMap(() => this.fetchCampaigns())
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   cancelAction(): void {
@@ -180,8 +181,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       .map(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STARTED }));
 
     forkJoin(onStartRequests)
-    .switchMap((...results) => this.fetchCampaigns())
-    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .switchMap((...results) => this.fetchCampaigns())
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onStop(): void {
@@ -190,8 +191,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       .map(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STOPPED }));
 
     forkJoin(onStopRequests)
-    .switchMap((...results) => this.fetchCampaigns())
-    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .switchMap((...results) => this.fetchCampaigns())
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onCampaignsFetch(campaigns: ICampaign[]): void {
