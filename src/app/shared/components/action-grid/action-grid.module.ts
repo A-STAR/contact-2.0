@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ContactLogModule } from '../../gui-objects/widgets/contact-log/contact-log.module';
 import { EntityGroupModule } from '../../gui-objects/widgets/entity-group/entity-group.module';
+import { DebtResponsibleModule } from '../../gui-objects/widgets/debt-responsible/debt-responsible.module';
 import { Grid2Module } from '../grid2/grid2.module';
 
 import { ActionGridComponent } from './action-grid.component';
@@ -11,6 +12,7 @@ import { ActionGridComponent } from './action-grid.component';
   imports: [
     CommonModule,
     ContactLogModule,
+    DebtResponsibleModule,
     EntityGroupModule,
     Grid2Module,
   ],

@@ -1,4 +1,4 @@
-<app-dialog (close)="onClose()">
+<app-dialog (close)="onCancel()">
   <div dialog-header>
     <h3>{{ 'organizations.employees.add.title' | translate }}</h3>
   </div>
@@ -10,7 +10,7 @@
       [styles]="{ height: '250px' }"
       [columns]="columns"
       [columnTranslationKey]="'organizations.employees.add'"
-      [rows]="(state | async).notAddedEmployees"
+      [rows]="notAddedEmployees | async"
       (onSelect)="onSelectEmployees()">
     </app-grid>
   </div>

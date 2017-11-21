@@ -57,6 +57,8 @@ export interface IDynamicFormControl {
   width?: number;
   // image height (px)
   height?: number;
+  // image url
+  url?: string;
   // options for dialog input
   action?: () => void;
   // options for grid select

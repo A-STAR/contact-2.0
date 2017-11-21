@@ -1,52 +1,56 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
 
-import { IOrganizationDialogActionEnum } from '../organizations.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree/treenode/treenode.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from 'app/shared/components/toolbar-2/toolbar-2.interface';
+import { ITreeNode, ITreeNodeInfo } from 'app/shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from '../organizations.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
+import { DialogFunctions } from 'app/core/dialog';
+import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-organizations-tree',
   templateUrl: './organizations-tree.component.html',
 })
-export class OrganizationsTreeComponent implements OnDestroy {
+export class OrganizationsTreeComponent extends DialogFunctions implements OnDestroy, OnInit {
   permissionSub: Subscription;
+  organizations: Observable<ITreeNode[]>;
+  dialog: string;
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_ADD),
+      action: () => this.setDialog('create'),
       enabled: this.userPermissionsService.has('ORGANIZATION_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT),
-      enabled: Observable.combineLatest(
+      action: () => this.setDialog('edit'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('ORGANIZATION_EDIT'),
-        this.organizationsService.selectedOrganization
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
+        this.organizationsService.selectedOrganization.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_REMOVE),
-      enabled: Observable.combineLatest(
+      action: () => this.setDialog('remove'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('ORGANIZATION_DELETE'),
-        this.organizationsService.selectedOrganization
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
+        this.organizationsService.selectedOrganization.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.organizationsService.fetchOrganizations(),
+      action: () => this.fetchOrganizations(),
       enabled: this.userPermissionsService.has('ORGANIZATION_VIEW')
     },
   ];
@@ -54,13 +58,21 @@ export class OrganizationsTreeComponent implements OnDestroy {
   constructor(
     private organizationsService: OrganizationsService,
     private userPermissionsService: UserPermissionsService,
+    private cdRef: ChangeDetectorRef
   ) {
-    this.permissionSub = this.canViewOrganization.subscribe(hasViewPermission => hasViewPermission
-      ? this.organizationsService.fetchOrganizations()
-      : this.organizationsService.clearOrganizations()
-    );
+      super();
+  }
 
-    this.organizations.subscribe(() => {});
+  ngOnInit(): void {
+    this.permissionSub = this.canViewOrganization.do(hasViewPermission => hasViewPermission
+      ? (this.organizations = Observable.merge(
+          this.organizationsService.fetchOrganizations(),
+          this.organizationsService.organizations)
+        )
+      : this.organizationsService.clearOrganizations()
+    ).subscribe(() => {
+      this.cdRef.markForCheck();
+    });
   }
 
   ngOnDestroy(): void {
@@ -68,28 +80,8 @@ export class OrganizationsTreeComponent implements OnDestroy {
     this.organizationsService.clearAll();
   }
 
-  get organizations(): Observable<ITreeNode[]> {
-    return this.organizationsService.organizations;
-  }
-
-  get action(): Observable<IOrganizationDialogActionEnum> {
-    return this.organizationsService.dialogAction;
-  }
-
   get selectedOrganization(): Observable<ITreeNode> {
     return this.organizationsService.selectedOrganization;
-  }
-
-  get isEntityBeingCreated(): Observable<boolean> {
-    return this.action.map(dialogAction => dialogAction === IOrganizationDialogActionEnum.ORGANIZATION_ADD);
-  }
-
-  get isEntityBeingEdited(): Observable<boolean> {
-    return this.action.map(dialogAction => dialogAction === IOrganizationDialogActionEnum.ORGANIZATION_EDIT);
-  }
-
-  get isEntityBeingRemoved(): Observable<boolean> {
-    return this.action.map(dialogAction => dialogAction === IOrganizationDialogActionEnum.ORGANIZATION_REMOVE);
   }
 
   get canViewOrganization(): Observable<boolean> {
@@ -101,30 +93,43 @@ export class OrganizationsTreeComponent implements OnDestroy {
   }
 
   onChangeNodesLocation(payload: ITreeNodeInfo[]): void {
-    this.organizationsService.updateOrganizations(payload);
+    this.organizationsService.updateOrganizations(payload).subscribe(() => {});
   }
 
   onNodeSelect({ node }: { node: ITreeNode }): void {
     this.organizationsService.selectOrganization(node);
+    this.organizationsService.fetchEmployees().subscribe(() => {});
   }
 
   onRemove(): void {
-    this.organizationsService.deleteOrganization();
+    this.organizationsService.removeOrganization().subscribe(() => this.cancelAction());
   }
 
   onNodeEdit(node: ITreeNode): void {
-    this.organizationsService.setDialogAction(IOrganizationDialogActionEnum.ORGANIZATION_EDIT, { selectedOrganization: node });
+    this.setDialog('edit');
+    this.organizationsService.selectOrganization(node);
   }
 
   cancelAction(): void {
-    this.organizationsService.setDialogAction(null);
+    this.organizationsService.selectOrganization(null);
+    this.onCloseDialog();
+    this.cdRef.markForCheck();
+  }
+
+  fetchOrganizations(): void {
+    this.organizationsService.fetchOrganizations().subscribe(() => {
+      this.organizationsService.selectOrganization(null);
+      this.cdRef.markForCheck();
+    });
   }
 
   createOrganization(data: any): void {
-    this.organizationsService.createOrganization(data);
+    this.organizationsService.createOrganization(data).subscribe(() => {
+      this.cancelAction();
+    });
   }
 
   updateOrganization(data: any): void {
-    this.organizationsService.updateOrganization(data);
+    this.organizationsService.updateOrganization(data).subscribe(() => this.cancelAction());
   }
 }

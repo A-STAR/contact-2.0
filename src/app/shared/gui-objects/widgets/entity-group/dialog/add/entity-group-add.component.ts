@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, Inject } from '@angular/core';
 
 import { IEntityGroup } from '../../../entity-group/entity-group.interface';
-import { IActionGridDialogData } from '../../../../../components/action-grid/action-grid.interface';
-import { IMetadataActionOption } from '../../../../../../core/metadata/metadata.interface';
 
 import { EntityGroupService } from '../../entity-group.service';
 
@@ -15,7 +13,7 @@ import { DialogFunctions } from '../../../../../../core/dialog';
 })
 export class EntityGroupAddComponent extends DialogFunctions {
 
-  @Input() dialogData: IActionGridDialogData;
+  @Input() debts: number[];
 
   @Output() close = new EventEmitter<boolean>();
 
@@ -31,14 +29,8 @@ export class EntityGroupAddComponent extends DialogFunctions {
     super();
   }
 
-  get ids(): IMetadataActionOption {
-    const { metadataAction } = this.dialogData.action;
-    return (metadataAction.addOptions || []).find(option => option.name === 'ids');
-  }
-
   onSelect(group: IEntityGroup): void {
-    const ids = this.ids;
-    this.entityGroupService.addToGroup(this.entityTypeId, group.id, ids ? ids.value as number[] : null)
+    this.entityGroupService.addToGroup(this.entityTypeId, group.id, this.debts)
       .subscribe(result => {
         this.count = result.massInfo.total;
         this.successCount = result.massInfo.processed;
