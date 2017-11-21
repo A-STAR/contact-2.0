@@ -6,7 +6,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 @Injectable()
 export class PromiseResolveService {
-  private url = '/mass/promise';
+  private url = '/mass/promises';
 
   constructor(
     private dataService: DataService,
