@@ -71,7 +71,7 @@
         "DEBTOR_PLEDGE": "Договор залога",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
-        "CONTACT_PROTOCOL": "Протокол контактов",
+        "CONTACT_LOG": "Протокол контактов",
         "CALL_CENTER": "Центр обзвона",
         "PAYMENTS": "Платежи",
         "COURTS_2": "Судебное и исполнительное производство",
@@ -185,6 +185,29 @@
         "payments": "Платежи",
         "promises": "Обещания",
         "documents": "Документы"
+      }
+    },
+    "contactLog": {
+      "contact": {
+        "title": "Контакты"
+      },
+      "filters": {
+        "branchCode": "Филиал",
+        "dictValue1": "Словарный атрибут 1",
+        "dictValue2": "Словарный атрибут 2",
+        "dictValue3": "Словарный атрибут 3",
+        "dictValue4": "Словарный атрибут 4",
+        "outPortfolioId": "Реестр КА",
+        "portfolioId": "Портфели",
+        "receiveDateTime": "Получен",
+        "regionCode": "Регион",
+        "userId": "Оператор"
+      },
+      "promise": {
+        "title": "Обещания"
+      },
+      "sms": {
+        "title": "СМС"
       }
     },
     "contactRegistration": {
@@ -1661,7 +1684,7 @@
         "contractStartDate": "Начало",
         "contractEndDate": "Окончание",
         "typeCode": "Тип",
-        "comment": "Комментарий"        
+        "comment": "Комментарий"
       },
       "toolbar": {
         "add": "Добавить залогодателя"

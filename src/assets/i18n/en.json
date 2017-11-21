@@ -71,7 +71,7 @@
         "DEBTOR_PLEDGE": "Pledge contract",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
-        "CONTACT_PROTOCOL": "Contact Protocol",
+        "CONTACT_LOG": "Contact Log",
         "CALL_CENTER": "Call Center",
         "PAYMENTS": "Payments",
         "COURTS_2": "Courts",
@@ -185,6 +185,29 @@
         "payments": "Payments",
         "promises": "Promises",
         "documents": "Documents"
+      }
+    },
+    "contactLog": {
+      "contact": {
+        "title": "Contacts"
+      },
+      "filters": {
+        "branchCode": "Branch",
+        "dictValue1": "Dictionary Value 1",
+        "dictValue2": "Dictionary Value 2",
+        "dictValue3": "Dictionary Value 3",
+        "dictValue4": "Dictionary Value 4",
+        "outPortfolioId": "Registry",
+        "portfolioId": "Portfolio",
+        "receiveDateTime": "Received",
+        "regionCode": "Region",
+        "userId": "Operator"
+      },
+      "promise": {
+        "title": "Promises"
+      },
+      "sms": {
+        "title": "SMS"
       }
     },
     "contactRegistration": {

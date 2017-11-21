@@ -23,6 +23,15 @@ export class EntityAttributesService {
     this.state$.subscribe(state => this._state = state);
   }
 
+  getDictValueAttributes(): Observable<IEntityAttributes> {
+    return this.getAttributes([
+      EntityAttributesService.DICT_VALUE_1,
+      EntityAttributesService.DICT_VALUE_2,
+      EntityAttributesService.DICT_VALUE_3,
+      EntityAttributesService.DICT_VALUE_4,
+    ]);
+  }
+
   getAttributes(ids: Array<number>): Observable<IEntityAttributes> {
     ids.forEach(id => {
       const status = this._state[id] && this._state[id].status;

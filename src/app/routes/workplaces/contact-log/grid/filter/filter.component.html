@@ -1,0 +1,9 @@
+<div class="mb">
+  <app-dynamic-form
+    *ngIf="controls"
+    [controls]="controls"
+    [data]="{}"
+  ></app-dynamic-form>
+</div>
+
+<app-button type="search" (click)="onSearch()"></app-button>
