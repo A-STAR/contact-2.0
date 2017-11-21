@@ -18,6 +18,7 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
+import { LookupService } from 'app/core/lookup/lookup.service';
 
 @Component({
   selector: 'app-campaigns-edit',
@@ -29,30 +30,32 @@ export class CampaignsEditComponent implements OnInit {
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-  controls: Array<IDynamicFormControl>;
-  campaignGroups: Array<INamedValue>;
+  controls: IDynamicFormControl[];
+  campaignGroups: INamedValue[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private valueConverterService: ValueConverterService,
     private campaignsService: CampaignsService,
+    private lookupService: LookupService,
     private entityTranslationsService: EntityTranslationsService
   ) { }
 
   ngOnInit(): void {
     Observable.combineLatest(
       this.campaignsService.fetchCampaignGroups(),
+      this.lookupService.lookupAsOptions('languages'),
       (this.editedEntity ? this.entityTranslationsService.readCampaignNameTranslations(this.editedEntity.id) : Observable.of([]))
     )
       .take(1)
-      .subscribe(([groupNames, translations]) => {
+      .subscribe(([groupNames, languages, translations]) => {
         this.campaignGroups = groupNames;
         if (this.editedEntity) {
           this.editedEntity.multiName = translations;
         }
         this.controls = this.buildControls(
           this.valueConverterService.valuesToOptions(groupNames),
-          this.entityTranslationsToSelectOptions(translations)
+          languages
         );
         this.cdRef.markForCheck();
       });
@@ -68,14 +71,7 @@ export class CampaignsEditComponent implements OnInit {
 
   serialize(campaign: any): ICampaign {
     const groupName = this.campaignGroups.find(campaignGroup => campaignGroup.id === campaign.groupName);
-    const isMultiNameChanged = campaign.multiName && Object.keys(campaign.multiName).length;
-    return {
-      ...campaign,
-      id: this.editedEntity && this.editedEntity.id,
-      name: isMultiNameChanged ? this.selectOptionsToEntityTranslations(campaign.multiName) : campaign.name,
-      groupName: groupName ? groupName.name : undefined,
-      groupId: campaign.groupId
-    };
+    return this.editedEntity ? this.serializeEditMode(campaign) : this.serializeCreateMode(campaign, groupName);
   }
 
   onSubmit(): void {
@@ -102,20 +98,30 @@ export class CampaignsEditComponent implements OnInit {
     ];
   }
 
+  private serializeEditMode(campaign: any, groupName?: INamedValue): ICampaign {
+    const isMultiNameChanged = campaign.multiName && Object.keys(campaign.multiName).length;
+    const result = {
+      ...campaign,
+      id: this.editedEntity && this.editedEntity.id,
+      name: isMultiNameChanged ? this.selectOptionsToEntityTranslations(campaign.multiName) : campaign.name,
+      groupName: groupName && groupName.name
+    };
+    delete result.multiName;
+    return result;
+  }
+
+  private serializeCreateMode(campaign: any, groupName?: INamedValue): ICampaign {
+    return {
+      ...campaign,
+      groupName: groupName && groupName.name
+    };
+  }
+  // should it be somewhere in utils?
   private selectOptionsToEntityTranslations(selection: { [key: number]: string }[]): IEntityTranslation[] {
     return Object.keys(selection).map(selectedLanguageId => {
       return {
         languageId: parseInt(selectedLanguageId, 10),
         value: selection[selectedLanguageId]
-      };
-    });
-  }
-
-  private entityTranslationsToSelectOptions(translations: IEntityTranslation[]): IOption[] {
-    return translations.map(translation => {
-      return {
-        label: translation.value,
-        value: translation.languageId
       };
     });
   }
