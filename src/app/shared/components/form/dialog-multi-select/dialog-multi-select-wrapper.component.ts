@@ -19,7 +19,7 @@ import { GridFiltersService } from '../../../../core/filters/grid-filters.servic
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DialogMultiSelectWrapperComponent<T> implements ControlValueAccessor, OnInit {
+export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, OnInit {
   @Input() filterType: IDialogMultiSelectFilterType;
 
   private value: IDialogMultiSelectValue[];
