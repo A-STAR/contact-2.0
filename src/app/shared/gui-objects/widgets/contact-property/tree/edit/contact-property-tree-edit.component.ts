@@ -139,16 +139,17 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     const { autoCommentIds, template, name, nextCallDays, parentId, ...formData } = this.form.serializedUpdates;
 
-    const attribute = flatten(this.attributeTypes, 'data')
+    const attributes = flatten(this.attributeTypes, 'data')
       .filter(attr => attr.isDisplayed)
-      .map(attr => ({ code: attr.code, mandatory: attr.isMandatory }));
+      .map(attr => ({ code: attr.code, mandatory: Number(attr.isMandatory) }));
+
     const data = {
       ...formData,
       ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
       ...(name ? { name: this.isEditing ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
       ...(template ? { [template.name]: template.value } : {}),
       ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),
-      ...(isEmpty(attribute) ? {} : { attribute }),
+      ...(isEmpty(attributes) ? {} : { attributes }),
       ...(this.isEditing ? {} : { parentId: this.selectedId }),
     };
     this.submit.emit(data);
