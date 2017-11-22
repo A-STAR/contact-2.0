@@ -97,7 +97,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   get selectedNodeId$(): Observable<number> {
-    return this.selectedNode$.map(node => node.id);
+    return this.selectedNode$.map(node => node && node.id);
   }
 
   get canCopy$(): Observable<boolean> {
