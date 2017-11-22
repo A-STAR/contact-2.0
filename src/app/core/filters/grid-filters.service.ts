@@ -19,7 +19,7 @@ export class GridFiltersService {
       .catch(this.notificationsService.fetchError().entity('entities.portfolios.gen.plural').dispatchCallback());
   }
 
-  fetchDicts(dictsCode: number[]): Observable<IFilterDictionary[]> {
+  fetchDictionaries(dictsCode: number[]): Observable<IFilterDictionary[]> {
     return this.dataService.readAll(`filters/dicts/{dictsCode}`, {
       dictsCode
     })
