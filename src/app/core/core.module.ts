@@ -9,6 +9,7 @@ import { DataService } from './data/data.service';
 import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
 import { ErrorHandlerService } from './error/error-handler.service';
+import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { LookupService } from './lookup/lookup.service';
 import { MessageBusService } from './message-bus/message-bus.service';
@@ -35,6 +36,7 @@ import { environment } from '../../environments/environment';
     DatePipe,
     DataService,
     LookupService,
+    GridFiltersService,
     GuiObjectsService,
     MessageBusService,
     MetadataService,
