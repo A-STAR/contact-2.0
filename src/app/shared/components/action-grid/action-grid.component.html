@@ -1,6 +1,6 @@
 <app-payments-confirm-dialog
   *ngIf="isDialog('paymentsConfirm')"
-  [paymentsNumber]="getSelectionParam(0).length"
+  [paymentsIds]="getSelectionParam(0)"
   (close)="onCloseDialog()">
 </app-payments-confirm-dialog>
 

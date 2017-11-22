@@ -1,7 +1,20 @@
-<app-dialog [styles]="{ width: '80%' }" (close)="onClose()">
+<app-dialog-action
+  *ngIf="isDialog('enqueryConfirm')"
+  titleTranslationKey="massOperations.paymentsConfirm.title"
+  actionTranslationKey="massOperations.paymentsConfirm.ConfirmInquery"
+  actionMessage="default.buttons.ok"
+  [messageParams]="paymentsCounter"
+  (action)="onConfirmPayments()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+<app-dialog
+  *ngIf="isDialog('infoConfirm')"
+  [styles]="{ width: '20%' }" (close)="onCloseDialog()">
   <div dialog-header>
     <h3>#Окно подтверждения платежей#</h3>
   </div>
+  <p>{{any | json}}
+  </p>
   <div>
     <p>#Будет изменен стартус {{paymentsNumber}} платежей#</p>
   </div>

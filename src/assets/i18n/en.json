@@ -1763,6 +1763,12 @@
       "gen": { "singular": "pledgor", "plural": "pledgors" }
     }
   },
+  "massOperations": {
+    "paymentsConfirm": {
+      "ConfirmInquery": "Are you shere to confirm selected {{ count }} payments?",
+      "title": "Payments confirmation"
+    }
+  },
   "errors": {
     "server": {
       "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
@@ -1985,7 +1991,8 @@
         "showContactHistory": "Contact Log",
         "debtSetResponsible": "Set debt responsible",
         "debtClearResponsible": "Clear debt responsible",
-        "objectAddToGroup": "Add to group"
+        "objectAddToGroup": "Add to group",
+        "paymentsConfirm": "Payments confirm"
       }
     },
     "filter": {

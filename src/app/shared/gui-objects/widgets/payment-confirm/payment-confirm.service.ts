@@ -19,11 +19,23 @@ export class PaymentConfirmService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(
-    personId: number,
-    filters: FilterObject,
-    params: IAGridRequestParams,
-  ): void { }
+  private baseUrl = 'mass/payments/confirm';
+
+  paymentsConfirm(
+    ids: number[]
+  ): Observable<any> {
+      return this.dataService.update(this.baseUrl, null, { idData: { ids } } )
+      // TODO unmock when api ready
+         .catch(() => {
+           console.log('from service catch');
+           return Observable.of({
+            success: true,
+            massInfo:    {
+              total: 2,
+              processed: 2
+            }
+        }); });
+   }
   // : Observable<IAGridResponse<IContact>>
 
     // const request = this.gridService.buildRequest(params, filters);

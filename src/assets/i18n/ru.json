@@ -1603,7 +1603,7 @@
         "contractStartDate": "Начало",
         "contractEndDate": "Окончание",
         "typeCode": "Тип",
-        "comment": "Комментарий"        
+        "comment": "Комментарий"
       },
       "toolbar": {
         "add": "Добавить залогодателя"
@@ -1761,6 +1761,12 @@
     },
     "pledgors": {
       "gen": { "singular": "залогодателя", "plural": "залогодателей" }
+    }
+  },
+  "massOperations": {
+    "paymentsConfirm": {
+      "ConfirmInquery": "Вы действительно хотите подтвердить отмеченные {{ count }} платежей?",
+      "title": "Подтверждение платежей"
     }
   },
   "errors": {
@@ -1985,7 +1991,8 @@
         "showContactHistory": "История контактов",
         "debtSetResponsible": "Установка ответственного по долгу",
         "debtClearResponsible": "Снятие ответственного по долгу",
-        "objectAddToGroup": "Добавить в группу"
+        "objectAddToGroup": "Добавить в группу",
+        "paymentsConfirm": "Подтвердить платежи"
       }
     },
     "filter": {
