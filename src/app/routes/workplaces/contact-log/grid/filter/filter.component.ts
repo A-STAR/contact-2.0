@@ -10,7 +10,6 @@ import {
 import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IEntityAttributes } from '../../../../../core/entity/attributes/entity-attributes.interface';
 import { FilterOperatorType } from '../../../../../shared/components/grid2/filter/grid-filter';
 
@@ -19,7 +18,6 @@ import { FilterService } from './filter.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { MultiSelectComponent } from '../../../../../shared/components/form/multi-select/multi-select.component';
 
 import { FilterObject } from '../../../../../shared/components/grid2/filter/grid-filter';
 
