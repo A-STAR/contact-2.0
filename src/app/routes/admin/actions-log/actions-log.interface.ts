@@ -4,6 +4,7 @@ export interface IEmployee {
   id: number;
   lastName: string;
   firstName: string;
+  fullName?: string;
   middleName: string;
   position: string;
   organization: string;

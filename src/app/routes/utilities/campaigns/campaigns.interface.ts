@@ -6,7 +6,7 @@ export enum CampaignStatus {
   COMPLETED
 }
 
-export interface ICampaignGroup {
+export interface IEntityGroup {
   id:	number;
   name:	string;
   entityTypeId: number;

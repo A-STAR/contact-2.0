@@ -6,7 +6,7 @@ import { IAppState } from '../../../core/state/state.interface';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import {
   ICampaign,
-  ICampaignGroup,
+  IEntityGroup,
   ICampaignsState,
   ICampaignSelectPayload,
   IParticipantSelectPayload,
@@ -132,17 +132,17 @@ export class CampaignsService {
       .catch(this.notificationsService.deleteError().entity('entities.campaign.gen.singular').callback());
   }
 
-  fetchCampaignGroups(): Observable<ICampaignGroup[]> {
-  return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}&isManual={isManual}`, {
-      // todo: get from dict
-      entityTypeIds: [19],
-      // where should I get this?
-      isManual: 0
-    })
-    .catch(
-      this.notificationsService.fetchError()
-        .entity('entities.groups.gen.plural').dispatchCallback()
-      );
+  fetchCampaignGroups(): Observable<IEntityGroup[]> {
+    return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}&isManual={isManual}`, {
+        // todo: get from dict
+        entityTypeIds: [19],
+        // where should I get this?
+        isManual: 0
+      })
+      .catch(
+        this.notificationsService.fetchError()
+          .entity('entities.groups.gen.plural').dispatchCallback()
+        );
   }
 
   fetchParticipants(): Observable<IParticipant[]> {
