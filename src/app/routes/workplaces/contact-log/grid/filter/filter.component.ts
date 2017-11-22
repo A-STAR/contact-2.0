@@ -14,7 +14,6 @@ import { IEntityAttributes } from '../../../../../core/entity/attributes/entity-
 import { FilterOperatorType } from '../../../../../shared/components/grid2/filter/grid-filter';
 
 import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
-import { FilterService } from './filter.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -40,18 +39,14 @@ export class FilterComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private entityAttributesService: EntityAttributesService,
-    private filterService: FilterService,
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
-      this.entityAttributesService.getDictValueAttributes(),
-      this.filterService.fetchUsers(),
-    )
-    .subscribe(([ attributes, users ]) => {
-      this.controls = this.buildControls(attributes, users);
-      this.cdRef.markForCheck();
-    });
+    this.entityAttributesService.getDictValueAttributes()
+      .subscribe(attributes => {
+        this.controls = this.buildControls(attributes);
+        this.cdRef.markForCheck();
+      });
   }
 
   get filters(): FilterObject {
@@ -74,7 +69,7 @@ export class FilterComponent implements OnInit {
     this.search.emit();
   }
 
-  private buildControls(attributes: IEntityAttributes, users: any[]): IDynamicFormControl[] {
+  private buildControls(attributes: IEntityAttributes): IDynamicFormControl[] {
     return [
       // TODO(d.maltsev): dialogmultiselect
       { controlName: 'portfolioId', type: 'number', min: 1 },
@@ -88,23 +83,7 @@ export class FilterComponent implements OnInit {
         dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
         display: attributes[EntityAttributesService[`DICT_VALUE_${i}`]].isUsed,
       })),
-      // TODO(d.maltsev): dialogmultiselect wrapper that renders necessary grids and fetches data via filters service
-      {
-        controlName: 'userId',
-        type: 'dialogmultiselect',
-        gridColumnsFrom: [
-          { prop: 'id' },
-          { prop: 'lastName' },
-          { prop: 'organization' },
-          { prop: 'position' },
-        ],
-        gridColumnsTo: [
-          { prop: 'lastName' },
-        ],
-        gridLabelGetter: row => row.lastName,
-        gridRows: users,
-        gridValueGetter: row => row.id,
-      },
+      { controlName: 'userId', type: 'dialogmultiselectwrapper', filterType: 'users' },
       { controlName: 'receiveDateTime', type: 'datepicker' },
     ]
     .map(control => ({

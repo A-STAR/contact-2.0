@@ -8,6 +8,7 @@ import { DialogModule } from '../../dialog/dialog.module';
 import { GridModule } from '../../grid/grid.module';
 
 import { DialogMultiSelectComponent } from './dialog-multi-select.component';
+import { DialogMultiSelectWrapperComponent } from './dialog-multi-select-wrapper.component';
 
 @NgModule({
   imports: [
@@ -20,9 +21,11 @@ import { DialogMultiSelectComponent } from './dialog-multi-select.component';
   ],
   exports: [
     DialogMultiSelectComponent,
+    DialogMultiSelectWrapperComponent,
   ],
   declarations: [
     DialogMultiSelectComponent,
+    DialogMultiSelectWrapperComponent,
   ],
 })
 export class DialogMultiSelectModule { }
