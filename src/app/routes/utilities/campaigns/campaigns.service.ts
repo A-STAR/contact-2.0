@@ -41,53 +41,6 @@ export class CampaignsService {
       );
   }
 
-  /**
-   * Uses mock response, since there is no api in backend yet
-   * @param campaignId
-   */
-  fetchCampaignStat(campaignId: number): Observable<ICampaignsStatistic> {
-    // return this.dataService.read(this.baseUrl)
-    //   .catch(() => Observable.of(data) as Observable<ICampaignsStatistic[]>)
-    //   .catch(
-    //     this.notificationsService.error('errors.default.read')
-    //       .entity('entities.campaigns.gen.signal').dispatchCallback()
-    //     );
-    const userStatistic = [{
-          userFullName: 'Операторов Оператор Операторович',
-          successProcessing: 1,
-          unsuccessProcessing: 1,
-          contact: 4,
-          SMS: '74262464264',
-          successContact: 1,
-          refusal: 1,
-          promise: 2,
-          promiseAmount: 564654
-      }, {
-          userFullName: 'Операторов Оператор Операторович',
-          successProcessing: 1,
-          unsuccessProcessing: 1,
-          contact: 4,
-          SMS: '74262464265',
-          successContact: 1,
-          refusal: 1,
-          promise: 2,
-          promiseAmount: 564654
-      }] as IUserStatistic[];
-
-    return Observable.of({
-      userStatistic,
-      aggregatedData: {
-        untreated: 10,
-        successProcessingSum: 2,
-        unsuccessProcessingSum: 5,
-        contacSum: 7,
-        SMSSum: 3,
-        refusalSum: 100,
-        promiseSum: 1000,
-        promiseAmountSum: 1000000
-      }
-    });
-  }
 
   get state(): Observable<ICampaignsState> {
     return this.store
@@ -96,12 +49,12 @@ export class CampaignsService {
 
   get selectedCampaign(): Observable<ICampaign> {
     return this.store
-    .select(state => state.campaigns.selectedCampaign);
+      .select(state => state.campaigns.selectedCampaign);
   }
 
   get selectedParticipant(): Observable<IParticipant> {
     return this.store
-    .select(state => state.campaigns.selectedParticipant);
+      .select(state => state.campaigns.selectedParticipant);
   }
 
   selectCampaign(selectedCampaign: ICampaign): ICampaignSelectPayload {
@@ -122,8 +75,7 @@ export class CampaignsService {
 
   createCampaign(campaign: ICampaign): Observable<ICampaign[]> {
     return this.dataService.create(this.baseUrl, {}, campaign)
-      .catch(this.notificationsService.createError()
-        .entity('entities.campaign.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.createError().entity('entities.campaign.gen.singular').dispatchCallback());
   }
 
   updateCampaign(campaign: ICampaign): Observable<any> {
@@ -141,16 +93,14 @@ export class CampaignsService {
   }
 
   fetchCampaignGroups(): Observable<ICampaignGroup[]> {
-    return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}&isManual={isManual}`, {
-        // todo: get from dict
-        entityTypeIds: [19],
-        // where should I get this?
-        isManual: 0
-      })
+    return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}`, {
+      // todo: get from dict
+      entityTypeIds: [19]
+    })
       .catch(
-        this.notificationsService.fetchError()
-          .entity('entities.groups.gen.plural').dispatchCallback()
-        );
+      this.notificationsService.fetchError()
+        .entity('entities.groups.gen.plural').dispatchCallback()
+      );
   }
 
   fetchParticipants(): Observable<IParticipant[]> {
@@ -187,13 +137,61 @@ export class CampaignsService {
       .take(1)
       .switchMap(selectedCampaign => this.deleteParticipants(selectedCampaign.id, participantIds))
       .catch(this.notificationsService.deleteError()
-        .entity('entities.participant.gen.plural').dispatchCallback()
+      .entity('entities.participant.gen.plural').dispatchCallback()
       );
-  }
+    }
 
-  readCampaignNameTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
-    return this.entityTranslationService.readTranslations(entityId, this.campaignNameId);
-  }
+    readCampaignNameTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
+      return this.entityTranslationService.readTranslations(entityId, this.campaignNameId);
+    }
+
+    /**
+     * Uses mock response, since there is no api in backend yet
+     * @param campaignId
+     */
+    fetchCampaignStat(campaignId: number): Observable<ICampaignsStatistic> {
+      // return this.dataService.read(this.baseUrl)
+      //   .catch(() => Observable.of(data) as Observable<ICampaignsStatistic[]>)
+      //   .catch(
+      //     this.notificationsService.error('errors.default.read')
+      //       .entity('entities.campaigns.gen.signal').dispatchCallback()
+      //     );
+      const userStatistic = [{
+            userFullName: 'Операторов Оператор Операторович',
+            successProcessing: 1,
+            unsuccessProcessing: 1,
+            contact: 4,
+            SMS: '74262464264',
+            successContact: 1,
+            refusal: 1,
+            promise: 2,
+            promiseAmount: 564654
+        }, {
+            userFullName: 'Операторов Оператор Операторович',
+            successProcessing: 1,
+            unsuccessProcessing: 1,
+            contact: 4,
+            SMS: '74262464265',
+            successContact: 1,
+            refusal: 1,
+            promise: 2,
+            promiseAmount: 564654
+        }] as IUserStatistic[];
+
+      return Observable.of({
+        userStatistic,
+        aggregatedData: {
+          untreated: 10,
+          successProcessingSum: 2,
+          unsuccessProcessingSum: 5,
+          contacSum: 7,
+          SMSSum: 3,
+          refusalSum: 100,
+          promiseSum: 1000,
+          promiseAmountSum: 1000000
+        }
+      });
+    }
 
   private readParticipants(campaignId: number): Observable<IParticipant[]> {
     return this.dataService.readAll(`${this.baseUrl}/{campaignId}/users`, { campaignId });
@@ -214,11 +212,11 @@ export class CampaignsService {
   private createParticipants(campaignId: number, participantIds: number[]): Observable<any> {
     return this.dataService.create(`${this.baseUrl}/{campaignId}/users`,
      { campaignId}, { usersIds: participantIds });
-  }
+    }
 
   private deleteParticipants(campaignId: number, participantIds: number[]): Observable<any> {
     return this.dataService.delete(`${this.baseUrl}/{campaignId}/users/?id={userIds}`,
-     { campaignId, userIds: participantIds });
+    { campaignId, userIds: participantIds });
   }
 
 }

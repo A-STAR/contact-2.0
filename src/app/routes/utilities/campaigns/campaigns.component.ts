@@ -2,11 +2,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { forkJoin } from 'rxjs/observable/forkJoin';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -28,17 +27,15 @@ import { DialogFunctions } from '../../../core/dialog';
 @Component({
   selector: 'app-campaigns',
   templateUrl: './campaigns.component.html',
-  styleUrls: ['./campaigns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CampaignsComponent extends DialogFunctions implements OnInit {
+export class CampaignsComponent extends DialogFunctions implements OnInit, OnDestroy {
   static COMPONENT_NAME = 'CampaignsComponent';
 
   @ViewChild(GridComponent) grid: GridComponent;
 
   dialog: string;
   campaigns: ICampaign[];
-  selectedRows$ = new BehaviorSubject<ICampaign[]>([]);
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 40 },
@@ -63,18 +60,18 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       action: () => this.setDialog('CAMPAIGN_EDIT'),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
-        this.selectedRows$
-      ).map(([hasPermissions, selectedItems]) => hasPermissions && (selectedItems.length === 1))
+        this.selectedCampaign
+      ).map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('CAMPAIGN_REMOVE'),
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('CAMPAIGN_DELETE'),
-        this.selectedRows$
+        this.selectedCampaign
       )
-        .map(([hasPermissions, selectedItems]) => hasPermissions && (selectedItems.length > 0)
-          && selectedItems.every(selectedCampaign => selectedCampaign.statusCode !== CampaignStatus.STARTED))
+        .map(([hasPermissions, selectedCampaign]) => hasPermissions &&
+          !!selectedCampaign && selectedCampaign.statusCode !== CampaignStatus.STARTED)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -86,16 +83,24 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       action: () => this.onStop(),
       label: this.translateService.instant('default.buttons.stop'),
       align: 'right',
-      enabled: this.selectedRows$
-        .map(campaigns => campaigns.every(selectedCampaign => selectedCampaign.statusCode === CampaignStatus.STARTED))
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('CAMPAIGN_EDIT'),
+        this.selectedCampaign
+      )
+        .map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
+          && selectedCampaign.statusCode === CampaignStatus.STARTED)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_START,
       action: () => this.onStart(),
       label: this.translateService.instant('default.buttons.start'),
       align: 'right',
-      enabled: this.selectedRows$
-        .map(campaigns => campaigns.every(selectedCampaign => selectedCampaign.statusCode !== CampaignStatus.STARTED))
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('CAMPAIGN_EDIT'),
+        this.selectedCampaign
+      )
+        .map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
+          && selectedCampaign.statusCode !== CampaignStatus.STARTED)
     },
   ];
 
@@ -122,18 +127,16 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
+  ngOnDestroy(): void {
+    this.campaignsService.selectCampaign(null);
+  }
+
   get selectedCampaign(): Observable<ICampaign> {
     return this.campaignsService.selectedCampaign;
   }
 
-  onSelectCampaign(selection: any): void {
-    const selectedCampaigns = this.grid.getSelectedRows();
-    if (selectedCampaigns.length) {
-      this.campaignsService.selectCampaign(selectedCampaigns[0]);
-    } else {
-      this.campaignsService.selectCampaign(null);
-    }
-    this.selectedRows$.next(selectedCampaigns);
+  onSelectCampaign(campaign?: ICampaign): void {
+    this.campaignsService.selectCampaign(campaign);
   }
 
   onCampaignDblClick(selection: ICampaign): void {
@@ -180,21 +183,17 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
   }
 
   onStart(): void {
-    const onStartRequests: Observable<any>[] = this.grid.selected
-      // updates campaign statusCode and returns request observable
-      .map(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STARTED }));
-
-    forkJoin(onStartRequests)
+    this.selectedCampaign
+      .take(1)
+      .switchMap(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STARTED }))
       .switchMap((...results) => this.fetchCampaigns())
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onStop(): void {
-    const onStopRequests: Observable<any>[] = this.grid.selected
-      // updates campaign statusCode and returns request observable
-      .map(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STOPPED }));
-
-    forkJoin(onStopRequests)
+    this.selectedCampaign
+      .take(1)
+      .switchMap(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STOPPED }))
       .switchMap((...results) => this.fetchCampaigns())
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
