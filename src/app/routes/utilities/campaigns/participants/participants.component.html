@@ -1,20 +1,18 @@
 
 <app-participants-add
-*ngIf="isDialog('PARTICIPANT_ADD')"
-(submit)="onAddSubmit($event)"
-(cancel)="cancelAction()">
+  *ngIf="isDialog('PARTICIPANT_ADD')"
+  (submit)="onAddSubmit($event)"
+  (cancel)="cancelAction()">
 </app-participants-add>
 
 <app-dialog-action
-*ngIf="isDialog('PARTICIPANT_REMOVE')"
-[titleTranslationKey]="'utilities.campaigns.participants.remove.title'"
-[actionTranslationKey]="'utilities.campaigns.participants.remove.confirmMessage'"
-[actionMessage]="'default.buttons.remove'"
-[actionMode]="'danger'"
-selectionType="multi"
-(onSelect)="onSelectParticipant($event)"
-(action)="onRemove()"
-(cancel)="cancelAction()"
+  *ngIf="isDialog('PARTICIPANT_REMOVE')"
+  [titleTranslationKey]="'utilities.campaigns.participants.remove.title'"
+  [actionTranslationKey]="'utilities.campaigns.participants.remove.confirmMessage'"
+  [actionMessage]="'default.buttons.remove'"
+  [actionMode]="'danger'"
+  (action)="onRemove()"
+  (cancel)="closeDialog()"
 >
 </app-dialog-action>
 
