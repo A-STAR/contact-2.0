@@ -43,6 +43,7 @@ export class FilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.entityAttributesService.getDictValueAttributes()
+      .take(1)
       .subscribe(attributes => {
         this.controls = this.buildControls(attributes);
         this.cdRef.markForCheck();
