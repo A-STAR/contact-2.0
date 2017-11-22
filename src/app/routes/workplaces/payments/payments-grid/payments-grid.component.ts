@@ -34,15 +34,19 @@ export class PaymentsGridComponent {
   ) {}
 
   onRequest(): void {
-    // const filters = this.grid.getFilters();
-    // filters.addFilter(this.filter.filters);
+    const filters = this.grid.getFilters();
+    filters.addFilter(this.filter.filters);
     const params = this.grid.getRequestParams();
-    this.paymentsService.fetch(params, {})
+    this.paymentsService.fetch(filters, params)
       .subscribe((response: IAGridResponse<IPayment>) => {
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
         this.cdRef.markForCheck();
       });
+  }
+
+  onDblClick(entry: IPayment): void {
+
   }
 
 }

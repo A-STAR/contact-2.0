@@ -1,3 +1,9 @@
-<p>
-  payments-filter works!
-</p>
+<div class="mb">
+  <app-dynamic-form
+    *ngIf="controls"
+    [controls]="controls"
+    [data]="data"
+  ></app-dynamic-form>
+</div>
+
+<app-button type="search" (click)="onSearch()"></app-button>

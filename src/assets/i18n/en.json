@@ -220,6 +220,30 @@
         "title": "SMS"
       }
     },
+    "payments": {
+      "filters":{
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "outPortfolioId": "Registry",
+          "portfolioId": "Portfolio",
+          "paymentDateTime": "Payment date",
+          "regionCode": "Region",
+          "userId": "Operator"
+        },
+        "userId": {
+          "grid": {
+            "fullName": "Operator",
+            "id": "Id",
+            "organization": "Department",
+            "position": "Position"
+          }
+        }
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {
