@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+
+import { IDialogMultiSelectValue, IDialogMultiSelectFilterType } from './dialog-multi-select.interface';
+import { IGridColumn } from '../../grid/grid.interface';
 
 import { GridFiltersService } from '../../../../core/filters/grid-filters.service';
-
-type IValue = string | number;
 
 @Component({
   selector: 'app-dialog-multi-select-wrapper',
@@ -18,22 +20,25 @@ type IValue = string | number;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogMultiSelectWrapperComponent<T> implements ControlValueAccessor, OnInit {
-  @Input() filterType: 'dictionaries' | 'entityGroups' | 'portfolios' |  'users';
+  @Input() filterType: IDialogMultiSelectFilterType;
 
-  private value: IValue[];
+  private value: IDialogMultiSelectValue[];
 
   private config = {
     users: {
       columnsFrom: [
         { prop: 'id' },
+        // TODO(d.maltsev): should be fullName - API not implemented yet
         { prop: 'lastName' },
         { prop: 'organization' },
         { prop: 'position' },
       ],
       columnsTo: [
+        // TODO(d.maltsev): should be fullName - API not implemented yet
         { prop: 'lastName' },
       ],
       fetch: this.gridFiltersService.fetchUsers(0),
+      // TODO(d.maltsev): should be fullName - API not implemented yet
       labelGetter: row => row.lastName,
       valueGetter: row => row.id,
     },
@@ -42,34 +47,24 @@ export class DialogMultiSelectWrapperComponent<T> implements ControlValueAccesso
   isDisabled = false;
   rows: any[] = [];
 
-  get columnsFrom(): any[] {
-    return this.filterType
-      ? this.config[this.filterType].columnsFrom
-      : [];
+  get columnsFrom(): IGridColumn[] {
+    return this.config[this.filterType].columnsFrom;
   }
 
-  get columnsTo(): any[] {
-    return this.filterType
-      ? this.config[this.filterType].columnsTo
-      : [];
+  get columnsTo(): IGridColumn[] {
+    return this.config[this.filterType].columnsTo;
   }
 
-  get fetch(): any {
-    return this.filterType
-      ? this.config[this.filterType].fetch
-      : null;
+  get fetch(): Observable<any> {
+    return this.config[this.filterType].fetch;
   }
 
-  get labelGetter(): any[] {
-    return this.filterType
-      ? this.config[this.filterType].labelGetter
-      : [];
+  get labelGetter(): (row: any) => string {
+    return this.config[this.filterType].labelGetter;
   }
 
-  get valueGetter(): any[] {
-    return this.filterType
-      ? this.config[this.filterType].valueGetter
-      : [];
+  get valueGetter(): (row: any) => IDialogMultiSelectValue {
+    return this.config[this.filterType].valueGetter;
   }
 
   constructor(
@@ -84,7 +79,7 @@ export class DialogMultiSelectWrapperComponent<T> implements ControlValueAccesso
     });
   }
 
-  writeValue(value: IValue[]): void {
+  writeValue(value: IDialogMultiSelectValue[]): void {
     this.value = value || [];
     this.cdRef.markForCheck();
   }
@@ -100,7 +95,7 @@ export class DialogMultiSelectWrapperComponent<T> implements ControlValueAccesso
     this.isDisabled = isDisabled;
   }
 
-  onChange(value: IValue[]): void {
+  onChange(value: IDialogMultiSelectValue[]): void {
     this.value = value;
     this.propagateChange(value);
   }
