@@ -8,29 +8,31 @@ import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class GridFiltersService {
-
-  constructor(private dataService: DataService, private notificationsService: NotificationsService) { }
+  constructor(
+    private dataService: DataService,
+    private notificationsService: NotificationsService,
+  ) {}
 
   fetchPortfolios(statusCodes: number[], directionCodes: number[]): Observable<IFilterPortfolio[]> {
-    return this.dataService.readAll(`filters/portfolios?statusCodes={statusCodes}&directionCodes={directionCodes}`, {
+    return this.dataService.readAll(`/filters/portfolios?statusCodes={statusCodes}&directionCodes={directionCodes}`, {
       statusCodes,
       directionCodes
     })
-      .catch(this.notificationsService.fetchError().entity('entities.portfolios.gen.plural').dispatchCallback());
+    .catch(this.notificationsService.fetchError().entity('entities.portfolios.gen.plural').dispatchCallback());
   }
 
   fetchDictionaries(dictsCode: number[]): Observable<IFilterDictionary[]> {
-    return this.dataService.readAll(`filters/dicts/{dictsCode}`, {
+    return this.dataService.readAll(`/filters/dicts/{dictsCode}`, {
       dictsCode
     })
-      .catch(this.notificationsService.fetchError().entity('entities.dictionaries.gen.plural').dispatchCallback());
+    .catch(this.notificationsService.fetchError().entity('entities.dictionaries.gen.plural').dispatchCallback());
   }
 
   fetchUsers(isInactive: number): Observable<IFilterUser[]> {
-    return this.dataService.readAll(`filters/users?isInactive={isInactive}`, {
+    return this.dataService.readAll(`/filters/users?isInactive={isInactive}`, {
       isInactive
     })
-      .catch(this.notificationsService.fetchError().entity('entities.users.gen.plural').dispatchCallback());
+    .catch(this.notificationsService.fetchError().entity('entities.users.gen.plural').dispatchCallback());
   }
 
   fetchEntitiesGroups(entityTypeIds: number[], isManual: number): Observable<IFilterGroup[]> {
@@ -38,6 +40,6 @@ export class GridFiltersService {
       entityTypeIds,
       isManual
     })
-      .catch(this.notificationsService.fetchError().entity('entities.groups.gen.plural').dispatchCallback());
+    .catch(this.notificationsService.fetchError().entity('entities.groups.gen.plural').dispatchCallback());
   }
 }

@@ -1,5 +1,6 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 
+import { IDialogMultiSelectFilterType } from '../dialog-multi-select/dialog-multi-select.interface';
 import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { ILookupKey } from '../../../../core/lookup/lookup.interface';
@@ -61,16 +62,14 @@ export interface IDynamicFormControl {
   url?: string;
   // options for dialog input
   action?: () => void;
-  // options for grid select and dialog multiselect
+  // options for grid select
   gridRows?: Array<any>;
   gridLabelGetter?: Function;
   gridValueGetter?: Function;
   gridOnSelect?: Function;
-  // options for grid select
   gridColumns?: IGridColumn[];
   // options for dialog multiselect
-  gridColumnsFrom?: IGridColumn[];
-  gridColumnsTo?: IGridColumn[];
+  filterType?: IDialogMultiSelectFilterType;
   // options for radio group
   radioOptions?: Array<IRadioGroupOption>;
   // options for rich text editor

@@ -1,0 +1,10 @@
+<app-dialog-multi-select
+  [columnsFrom]="columnsFrom"
+  [columnsTo]="columnsTo"
+  [disabled]="isDisabled"
+  [labelGetter]="labelGetter"
+  [ngModel]="value"
+  [rows]="rows"
+  [valueGetter]="valueGetter"
+  (ngModelChange)="onChange($event)"
+></app-dialog-multi-select>
