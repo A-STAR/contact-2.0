@@ -28,7 +28,6 @@ import { DialogFunctions } from '../../../core/dialog';
 @Component({
   selector: 'app-campaigns',
   templateUrl: './campaigns.component.html',
-  styleUrls: ['./campaigns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CampaignsComponent extends DialogFunctions implements OnInit {
