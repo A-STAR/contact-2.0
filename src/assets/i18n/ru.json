@@ -1450,6 +1450,18 @@
         "fullName": "Оператор"
       }
     },
+    "promiseConfirm": {
+      "dialog": {
+        "title": "Подтверждение обещаний",
+        "message": "Вы действительно хотите подтвердить отмеченные обещания?"
+      }
+    },
+    "promiseRemove": {
+      "dialog": {
+        "title": "Удаление обещаний",
+        "message": "Вы действительно хотите удалить отмеченные обещания?"
+      }
+    },
     "debt": {
       "toolbar": {
         "call": "Необходимо перезвонить",
@@ -2071,7 +2083,9 @@
         "showContactHistory": "История контактов",
         "debtSetResponsible": "Установка ответственного по долгу",
         "debtClearResponsible": "Снятие ответственного по долгу",
-        "objectAddToGroup": "Добавить в группу"
+        "objectAddToGroup": "Добавить в группу",
+        "confirmPromise": "Подтвердить обещания",
+        "deletePromise": "Удалить обещания"
       }
     },
     "filter": {
