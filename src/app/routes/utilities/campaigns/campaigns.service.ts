@@ -93,11 +93,9 @@ export class CampaignsService {
   }
 
   fetchCampaignGroups(): Observable<ICampaignGroup[]> {
-    return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}&isManual={isManual}`, {
+    return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}`, {
       // todo: get from dict
-      entityTypeIds: [19],
-      // where should I get this?
-      isManual: 0
+      entityTypeIds: [19]
     })
       .catch(
       this.notificationsService.fetchError()
