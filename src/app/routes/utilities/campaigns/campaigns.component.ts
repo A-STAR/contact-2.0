@@ -5,21 +5,25 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { DialogFunctions } from '../../../core/dialog';
-import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
-import { IGridColumn } from '../../../shared/components/grid/grid.interface';
-import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
-import { CampaignsService } from './campaigns.service';
-import { Observable } from 'rxjs/Observable';
-import { ICampaign, CampaignStatus } from './campaigns.interface';
-import { ToolbarItemTypeEnum, IToolbarItem } from '../../../shared/components/toolbar-2/toolbar-2.interface';
-import { TranslateService } from '@ngx-translate/core';
-import { forkJoin } from 'rxjs/observable/forkJoin';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ValueConverterService } from '../../../core/converter/value-converter.service';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { Observable } from 'rxjs/Observable';
+import { TranslateService } from '@ngx-translate/core';
+
+import { ICampaign, CampaignStatus } from './campaigns.interface';
+import { IGridColumn } from '../../../shared/components/grid/grid.interface';
+import { ToolbarItemTypeEnum, IToolbarItem } from '../../../shared/components/toolbar-2/toolbar-2.interface';
+
+import { CampaignsService } from './campaigns.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
+import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
+
+import { GridComponent } from '../../../shared/components/grid/grid.component';
+
+import { DialogFunctions } from '../../../core/dialog';
 
 @Component({
   selector: 'app-campaigns',
@@ -68,8 +72,9 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       enabled: Observable.combineLatest(
         this.userPermissionsService.has('CAMPAIGN_DELETE'),
         this.selectedRows$
-      ).map(([hasPermissions, selectedItems]) => hasPermissions && (selectedItems.length > 0)
-        && selectedItems.every(selectedCampaign => selectedCampaign.statusCode !== CampaignStatus.STARTED))
+      )
+        .map(([hasPermissions, selectedItems]) => hasPermissions && (selectedItems.length > 0)
+          && selectedItems.every(selectedCampaign => selectedCampaign.statusCode !== CampaignStatus.STARTED))
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -107,14 +112,14 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
   ngOnInit(): void {
 
     this.gridService.setAllRenderers(this.columns)
-    .take(1)
-    .subscribe(columns => {
-      this.columns = [...columns];
-      this.cdRef.markForCheck();
-    });
+      .take(1)
+      .subscribe(columns => {
+        this.columns = [...columns];
+        this.cdRef.markForCheck();
+      });
 
     this.fetchCampaigns()
-    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   get selectedCampaign(): Observable<ICampaign> {
@@ -159,14 +164,14 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
 
   updateCampaign(campaign: ICampaign): void {
     this.campaignsService.updateCampaign(campaign)
-    .switchMap(() => this.fetchCampaigns())
-    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .switchMap(() => this.fetchCampaigns())
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onRemove(): void {
     this.campaignsService.removeCampaign()
-    .switchMap(() => this.fetchCampaigns())
-    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .switchMap(() => this.fetchCampaigns())
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   cancelAction(): void {
@@ -180,8 +185,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       .map(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STARTED }));
 
     forkJoin(onStartRequests)
-    .switchMap((...results) => this.fetchCampaigns())
-    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .switchMap((...results) => this.fetchCampaigns())
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onStop(): void {
@@ -190,8 +195,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit {
       .map(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STOPPED }));
 
     forkJoin(onStopRequests)
-    .switchMap((...results) => this.fetchCampaigns())
-    .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .switchMap((...results) => this.fetchCampaigns())
+      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onCampaignsFetch(campaigns: ICampaign[]): void {

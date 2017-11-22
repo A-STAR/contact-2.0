@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { SharedModule } from '../../../../shared/shared.module';
+
 import { ParticipantsAddComponent } from './participants-add/participants-add.component';
 import { ParticipantsComponent } from './participants.component';
-import { SharedModule } from '../../../../shared/shared.module';
 
 @NgModule({
   imports: [

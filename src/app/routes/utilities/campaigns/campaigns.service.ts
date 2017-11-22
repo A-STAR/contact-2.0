@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { DataService } from '../../../core/data/data.service';
+
 import { IAppState } from '../../../core/state/state.interface';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
 import {
   ICampaign,
   ICampaignGroup,
@@ -13,6 +12,13 @@ import {
   IParticipant,
   ICampaignsStatistic, IUserStatistic
 } from './campaigns.interface';
+import { IEntityTranslation } from '../../../core/entity/translations/entity-translations.interface';
+
+import { DataService } from '../../../core/data/data.service';
+import { EntityTranslationsService } from '../../../core/entity/translations/entity-translations.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
+
+export const CAMPAIGN_NAME_ID = new InjectionToken<number>('CAMPAIGN_NAME_ID');
 
 @Injectable()
 export class CampaignsService {
@@ -22,7 +28,9 @@ export class CampaignsService {
 
   constructor(private store: Store<IAppState>,
     private dataService: DataService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private entityTranslationService: EntityTranslationsService,
+    @Inject(CAMPAIGN_NAME_ID) private campaignNameId: number
   ) { }
 
   fetchCampaigns(): Observable<ICampaign[]> {
@@ -183,6 +191,10 @@ export class CampaignsService {
       );
   }
 
+  readCampaignNameTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
+    return this.entityTranslationService.readTranslations(entityId, this.campaignNameId);
+  }
+
   private readParticipants(campaignId: number): Observable<IParticipant[]> {
     return this.dataService.readAll(`${this.baseUrl}/{campaignId}/users`, { campaignId });
   }
@@ -210,4 +222,3 @@ export class CampaignsService {
   }
 
 }
-
