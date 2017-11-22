@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ActionsSubject } from '@ngrx/store';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IContractor } from '../../contractors-and-portfolios.interface';
@@ -16,6 +16,8 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 
+import { makeKey } from '../../../../../core/utils';
+
 @Component({
   selector: 'app-contractor-edit',
   templateUrl: './contractor-edit.component.html'
@@ -23,16 +25,16 @@ import { MessageBusService } from '../../../../../core/message-bus/message-bus.s
 export class ContractorEditComponent {
   static COMPONENT_NAME = 'ContractorEditComponent';
 
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
-  needToCloseDialog$ = new BehaviorSubject<string>(null);
 
   private closeDialogSubscription: Subscription;
   private contractorId = Number((this.route.params as any).value.id);
 
   constructor(
+    private actions: ActionsSubject,
     private route: ActivatedRoute,
     private router: Router,
     private messageBusService: MessageBusService,
@@ -41,30 +43,26 @@ export class ContractorEditComponent {
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
-      this.lookupService.userOptions,
-      this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : Observable.of(null)
+      this.lookupService.lookupAsOptions('users'),
+      this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : of(null)
     )
     .take(1)
     .subscribe(([ contractorTypeOptions, userOptions, contractor ]) => {
+      const label = makeKey('contractors.grid');
       this.controls = [
-        { label: 'contractors.grid.name', controlName: 'name', type: 'text', required: true },
-        { label: 'contractors.grid.fullName', controlName: 'fullName', type: 'text', required: true },
-        { label: 'contractors.grid.smsName', controlName: 'smsName', type: 'text' },
-        { label: 'contractors.grid.responsibleId', controlName: 'responsibleId', type: 'select', options: userOptions },
-        { label: 'contractors.grid.typeCode', controlName: 'typeCode', type: 'select', options: contractorTypeOptions },
-        { label: 'contractors.grid.phone', controlName: 'phone', type: 'text' },
-        { label: 'contractors.grid.address', controlName: 'address', type: 'text' },
-        { label: 'contractors.grid.comment', controlName: 'comment', type: 'textarea' },
+        { label: label('name'), controlName: 'name', type: 'text', required: true },
+        { label: label('fullName'), controlName: 'fullName', type: 'text', required: true },
+        { label: label('smsName'), controlName: 'smsName', type: 'text' },
+        { label: label('responsibleId'), controlName: 'responsibleId', type: 'select', options: userOptions },
+        { label: label('typeCode'), controlName: 'typeCode', type: 'select', options: contractorTypeOptions },
+        { label: label('phone'), controlName: 'phone', type: 'text' },
+        { label: label('address'), controlName: 'address', type: 'text' },
+        { label: label('comment'), controlName: 'comment', type: 'textarea' },
       ];
       this.formData = contractor;
     });
-
-    this.needToCloseDialog$
-      .filter(Boolean)
-      .take(1)
-      .subscribe(() => this.onBack());
   }
 
   canSubmit(): boolean {
@@ -78,7 +76,8 @@ export class ContractorEditComponent {
       : this.contractorsAndPortfoliosService.createContractor(contractor))
           .subscribe(() => {
             this.messageBusService.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_FETCH);
-            this.needToCloseDialog$.next(' ');
+            this.actions.next({ type: ContractorsAndPortfoliosService.CONTRACTOR_FETCH });
+            this.onBack();
           });
   }
 

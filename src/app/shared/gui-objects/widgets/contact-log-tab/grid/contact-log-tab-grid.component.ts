@@ -91,7 +91,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     });
 
     this.viewCommentUpdate = this.messageBusService.select(ContactLogService.COMMENT_CONTACT_LOG_SAVED)
-      .flatMap( (currentContactLogId ) => Observable.combineLatest(
+      .flatMap(currentContactLogId => Observable.combineLatest(
           Observable.of(currentContactLogId),
           this.contactLogService.fetchAll(this.personId))
       )
@@ -136,6 +136,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   }
 
   onEdit(contactLog: IContactLog): void {
+    console.log(contactLog);
     const { contactId, contactType } = contactLog;
     this.router.navigate([ `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`]);
   }

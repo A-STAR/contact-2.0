@@ -326,8 +326,8 @@
           "birthDate": "Birth Date",
           "personRoleCodes": "Role",
           "isClosedDebt": "Show Closed Debts"
-    }
-  },
+        }
+      },
       "debtors": {
         "grid": {
           "bankName": "Bank",
@@ -773,7 +773,7 @@
       }
     },
     "contactsTab": {
-      "title": "Contacts",
+      "title": "Contact",
       "remove": {
         "title": "Delete the contact",
         "confirmMessage": "Do you really want to delete the contact {{ fullName }} ?"
@@ -830,6 +830,9 @@
     },
     "attributesTab": {
       "title": "Attributes"
+    },
+    "contactLogTab": {
+      "title": "Contact log"
     }
   },
   "person": {
@@ -1191,11 +1194,6 @@
         "educationCode": "Education",
         "linkTypeCode": "Type",
         "comment": "Comment"
-      }
-    },
-    "contactLog": {
-      "dialog": {
-        "title": "Contact Log"
       }
     },
     "contactProperty": {
@@ -1576,6 +1574,44 @@
         "typeCode": "Property Type",
         "isConfirmed": "Is confirmed",
         "comment": "Comment"
+      }
+    },
+    "contactLog": {
+      "dialog": {
+        "title": "Contact history"
+      },
+      "card": {
+        "fullName": "Debtor",
+        "contract": "Contract",
+        "contactDateTime": "Contact date",
+        "contactNumber": "Contact No",
+        "contactPhone": "Contact phone",
+        "contactType": "Contact type",
+        "userFullName": "Operator",
+        "contactData": "Contact phone/address",
+        "promiseDate": "Promise date",
+        "promiseAmount": "Promise amount",
+        "comment": "Comments",
+        "personRole": "Person role",
+        "resultName": "Result",
+        "sentDateTime": "Sent on",
+        "status": "Status",
+        "text": "Message text",
+        "startDateTime": "Planned sending date"
+      },
+      "grid": {
+        "contactId": "Contact Id",
+        "contactDateTime": "Contact date",
+        "contactType": "Contact type",
+        "contract": "Contact No",
+        "createDateTime": "Created at",
+        "creditName": "Product name",
+        "debtId": "Debt id",
+        "fullName": "Full name",
+        "personRole": "Role",
+        "promiseDate": "Promise date",
+        "resultName": "Result",
+        "userFullName": "Operator"
       }
     },
     "operator": {

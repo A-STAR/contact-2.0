@@ -16,9 +16,4 @@
 
 <br>
 
-<app-dynamic-form
-  #form
-  *ngIf="controls"
-  [controls]="controls"
-  [data]="formData">
-</app-dynamic-form>
+<app-dynamic-form *ngIf="controls" [controls]="controls" [data]="formData"></app-dynamic-form>
