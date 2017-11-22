@@ -6,7 +6,7 @@ import { IAppState } from '../../../core/state/state.interface';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import {
   ICampaign,
-  IEntityGroup,
+  ICampaignGroup,
   ICampaignsState,
   ICampaignSelectPayload,
   IParticipantSelectPayload,
@@ -132,7 +132,7 @@ export class CampaignsService {
       .catch(this.notificationsService.deleteError().entity('entities.campaign.gen.singular').callback());
   }
 
-  fetchCampaignGroups(): Observable<IEntityGroup[]> {
+  fetchCampaignGroups(): Observable<ICampaignGroup[]> {
     return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}&isManual={isManual}`, {
         // todo: get from dict
         entityTypeIds: [19],
