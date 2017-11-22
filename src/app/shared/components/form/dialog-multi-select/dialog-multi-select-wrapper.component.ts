@@ -22,8 +22,6 @@ import { GridFiltersService } from '../../../../core/filters/grid-filters.servic
 export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, OnInit {
   @Input() filterType: IDialogMultiSelectFilterType;
 
-  private value: IDialogMultiSelectValue[];
-
   private config = {
     users: {
       columnsFrom: [
@@ -46,6 +44,7 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
 
   isDisabled = false;
   rows: any[] = [];
+  value: IDialogMultiSelectValue[];
 
   get columnsFrom(): IGridColumn[] {
     return this.config[this.filterType].columnsFrom;
