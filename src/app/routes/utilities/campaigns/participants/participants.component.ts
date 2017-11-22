@@ -7,15 +7,19 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { IParticipant, ICampaign } from '../campaigns.interface';
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
-import { Subscription } from 'rxjs/Subscription';
-import { CampaignsService } from '../campaigns.service';
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
+import { Subscription } from 'rxjs/Subscription';
+
+import { ICampaign, IParticipant } from '../campaigns.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+
+import { CampaignsService } from '../campaigns.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
+
 import { DialogFunctions } from '../../../../core/dialog/index';
 
 @Component({
