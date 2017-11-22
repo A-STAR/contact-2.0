@@ -133,16 +133,16 @@ export class CampaignsService {
   }
 
   fetchCampaignGroups(): Observable<ICampaignGroup[]> {
-  return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}&isManual={isManual}`, {
-      // todo: get from dict
-      entityTypeIds: [19],
-      // where should I get this?
-      isManual: 0
-    })
-    .catch(
-      this.notificationsService.fetchError()
-        .entity('entities.groups.gen.plural').dispatchCallback()
-      );
+    return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}&isManual={isManual}`, {
+        // todo: get from dict
+        entityTypeIds: [19],
+        // where should I get this?
+        isManual: 0
+      })
+      .catch(
+        this.notificationsService.fetchError()
+          .entity('entities.groups.gen.plural').dispatchCallback()
+        );
   }
 
   fetchParticipants(): Observable<IParticipant[]> {
