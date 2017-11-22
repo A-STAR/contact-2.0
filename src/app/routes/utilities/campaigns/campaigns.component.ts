@@ -83,16 +83,24 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.onStop(),
       label: this.translateService.instant('default.buttons.stop'),
       align: 'right',
-      enabled: this.selectedCampaign
-        .map(selectedCampaign => !!selectedCampaign && selectedCampaign.statusCode === CampaignStatus.STARTED)
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('CAMPAIGN_EDIT'),
+        this.selectedCampaign
+      )
+        .map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
+          && selectedCampaign.statusCode === CampaignStatus.STARTED)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_START,
       action: () => this.onStart(),
       label: this.translateService.instant('default.buttons.start'),
       align: 'right',
-      enabled: this.selectedCampaign
-        .map(selectedCampaign => !!selectedCampaign && selectedCampaign.statusCode !== CampaignStatus.STARTED)
+      enabled: Observable.combineLatest(
+        this.userPermissionsService.has('CAMPAIGN_EDIT'),
+        this.selectedCampaign
+      )
+        .map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
+          && selectedCampaign.statusCode !== CampaignStatus.STARTED)
     },
   ];
 
