@@ -1,14 +1,14 @@
 <app-campaigns-edit
   *ngIf="isDialog('CAMPAIGN_ADD')"
   (submit)="createCampaign($event)"
-  (cancel)="cancelAction()">
+  (cancel)="closeDialog()">
 </app-campaigns-edit>
 
 <app-campaigns-edit
   *ngIf="isDialog('CAMPAIGN_EDIT')"
   [editedEntity]="selectedCampaign | async"
   (submit)="updateCampaign($event)"
-  (cancel)="cancelAction()">
+  (cancel)="closeDialog()">
 </app-campaigns-edit>
 
 <app-dialog-action
@@ -19,7 +19,7 @@
   [actionMessage]="'default.buttons.remove'"
   [actionMode]="'danger'"
   (action)="onRemove()"
-  (cancel)="cancelAction()">
+  (cancel)="closeDialog()">
 </app-dialog-action>
 
 <app-toolbar-2 class="bordered" [items]="toolbarItems">
@@ -31,7 +31,7 @@
   [columns]="columns"
   [columnTranslationKey]="'utilities.campaigns'"
   [rows]="campaigns"
-  selectionType="multiClick"
+  selectionType="single"
   (onSelect)="onSelectCampaign($event)"
   (onDblClick)="onCampaignDblClick($event)">
 </app-grid>
