@@ -7,8 +7,6 @@ export const defaultState: IContractorsAndPortfoliosState = {
   selectedContractorId: null,
 };
 
-// This should NOT be an arrow function in order to pass AoT compilation
-// See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
 export function reducer(
   state: IContractorsAndPortfoliosState = defaultState,
   action: UnsafeAction

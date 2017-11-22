@@ -23,7 +23,6 @@ import { DebtorPhoneComponent } from './debtor/phone/phone.component';
 import { DebtorPromiseComponent } from './debtor/promise/promise.component';
 import { DebtorPropertyComponent } from './debtor/property/property.component';
 import { DebtorContactLogTabComponent } from './debtor/contact-log-tab/contact-log-tab.component';
-// import { DebtorContactLogComponent } from './debtor/contact-log/contact-log.component';
 import { DebtorPledgeComponent } from './debtor/pledge/pledge.component';
 
 const routes: Routes = [
@@ -44,7 +43,7 @@ const routes: Routes = [
         ]
       },
       { path: 'contactLog', children: [
-          { path: 'create', component: DebtorContactLogTabComponent },
+          // { path: '', redirectTo: '..', pathMatch: 'full' },
           { path: ':contactLogId/contactLogType/:contactLogType', component: DebtorContactLogTabComponent },
         ]
       },

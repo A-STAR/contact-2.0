@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
-import { INode } from '../../../../../shared/gui-objects/container/container.interface';
+import { INode } from 'app/shared/gui-objects/container/container.interface';
 
 import {
   ContactLogTabCardComponent
-} from '../../../../../shared/gui-objects/widgets/contact-log-tab/card/contact-log-card.component';
+} from 'app/shared/gui-objects/widgets/contact-log-tab/card/contact-log-card.component';
 
 @Component({
   selector: 'app-contact-log-tab',
