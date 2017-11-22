@@ -46,7 +46,11 @@
 
 <span class="input-group">
   <span class="form-control" (click)="onShowDialog()">
-    {{ displayValue }}
+    <ng-container [ngSwitch]="selectionLength">
+      <ng-container *ngSwitchCase="0"></ng-container>
+      <ng-container *ngSwitchCase="1">{{ displayValue }}</ng-container>
+      <ng-container *ngSwitchDefault>{{ 'default.select.selected' | translate }}: {{ selectionLength }}</ng-container>
+    </ng-container>
   </span>
   <span class="input-group-btn">
     <button class="btn btn-default" type="button" (click)="onShowDialog()">

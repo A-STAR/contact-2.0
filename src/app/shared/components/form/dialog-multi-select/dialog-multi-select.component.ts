@@ -42,6 +42,10 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
   @Input() labelGetter: (row: T) => string = () => null;
   @Input() valueGetter: (row: T) => IValue = () => null;
 
+  get selectionLength(): number {
+    return this.value.length;
+  }
+
   get displayValue(): string {
     return this.rows
       .filter(row => this.value.includes(this.valueGetter(row)))
@@ -78,22 +82,22 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
       ...this.value,
       ...this.selectionFrom.map(this.valueGetter),
     ];
-    this.cdRef.markForCheck();
+    this.updateValue();
   }
 
   onSelectAll(): void {
     this.value = this.rows.map(this.valueGetter);
-    this.cdRef.markForCheck();
+    this.updateValue();
   }
 
   onUnselect(): void {
     this.value = this.value.filter(rowValue => !this.selectionTo.map(this.valueGetter).includes(rowValue));
-    this.cdRef.markForCheck();
+    this.updateValue();
   }
 
   onUnselectAll(): void {
     this.value = [];
-    this.cdRef.markForCheck();
+    this.updateValue();
   }
 
   onSubmit(): void {
@@ -121,6 +125,11 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
   }
 
   private propagateChange: Function = () => {};
+
+  private updateValue(): void {
+    this.propagateChange(this.value);
+    this.cdRef.markForCheck();
+  }
 
   private get selectionFrom(): T[] {
     return this.gridFrom && this.gridFrom.selected || [];

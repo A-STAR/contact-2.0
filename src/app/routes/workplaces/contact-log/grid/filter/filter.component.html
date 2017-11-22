@@ -1,22 +1,3 @@
-<app-action-dialog
-  *ngIf="isDialog('userId')"
-  titleTranslationKey="modules.contactLog.filters.userId.title"
-  actionTranslationKey="default.buttons.ok"
-  [styles]="{ width: '80%', 'max-width': '80%' }"
-  (action)="onUsersFilterSelect()"
-  (cancel)="onCloseDialog()"
->
-  <app-multi-select
-    #usersSelect
-    columnsTranslationKeyFrom="modules.contactLog.filters.userId"
-    columnsTranslationKeyTo="modules.contactLog.filters.userId"
-    [height]="480"
-    [rowsFrom]="users"
-    [columnsFrom]="userColumns"
-    [columnsTo]="userColumns"
-  ></app-multi-select>
-</app-action-dialog>
-
 <div class="mb">
   <app-dynamic-form
     *ngIf="controls"
