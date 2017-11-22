@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 
-import { Actions } from '@ngrx/effects';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -90,7 +89,6 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '500px' };
 
   constructor(
-    private actions: Actions,
     private cdRef: ChangeDetectorRef,
     private guaranteeService: GuaranteeService,
     private gridService: GridService,
@@ -120,8 +118,8 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
         }
       });
 
-    this.actionSubscription = this.actions
-      .ofType(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED)
+    this.actionSubscription = this.guaranteeService
+      .select(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED)
       .subscribe(() => this.fetch());
   }
 

@@ -11,7 +11,6 @@ import { IGuaranteeContract, IGuarantor } from '../guarantee.interface';
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GuaranteeService } from '../guarantee.service';
 import { GuarantorService } from '../../guarantor/guarantor.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -52,7 +51,6 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private guaranteeService: GuaranteeService,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -109,8 +107,8 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.guarantorSelectionSub = this.messageBusService
-      .select<string, IGuarantor>(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED)
+    this.guarantorSelectionSub = this.guaranteeService
+      .select<IGuarantor>(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED)
       .subscribe(guarantor => {
         const personId = this.form.getControl('personId');
         personId.setValue(guarantor.id);

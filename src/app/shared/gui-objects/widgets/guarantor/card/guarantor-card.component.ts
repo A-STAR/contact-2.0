@@ -10,7 +10,6 @@ import { IGuarantor, IGuaranteeContract } from '../../guarantee/guarantee.interf
 
 import { GuaranteeService } from '../../guarantee/guarantee.service';
 import { GuarantorService } from '../../guarantor/guarantor.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -57,7 +56,6 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
     private cdRef: ChangeDetectorRef,
     private guaranteeService: GuaranteeService,
     private guarantorService: GuarantorService,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userContantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
@@ -183,7 +181,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
     form.enable();
     form.patchValue({ typeCode: this.currentTypeCode });
     form.get('typeCode').markAsDirty();
-    this.messageBusService.dispatch(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, null, {});
+    this.guaranteeService.notify(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, {});
     this.cdRef.markForCheck();
   }
 
@@ -198,7 +196,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
     form.patchValue(guarantor);
     form.get('typeCode').markAsDirty();
     form.disable();
-    this.messageBusService.dispatch(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, null, guarantor);
+    this.guaranteeService.notify(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, guarantor);
     this.cdRef.markForCheck();
   }
 
