@@ -11,7 +11,6 @@ import { IPledgeContract } from '../../pledge/pledge.interface';
 import { IPledgorProperty } from '../pledgor-property.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PledgeService } from '../../pledge/pledge.service';
 import { PledgorService } from '../../pledgor/pledgor.service';
 import { PledgorPropertyService } from '../../pledgor-property/pledgor-property.service';
@@ -60,7 +59,6 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private pledgeService: PledgeService,
     private pledgorService: PledgorService,
@@ -103,8 +101,8 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
       this.cdRef.markForCheck();
     });
 
-    this.pledgorSubscription = this.messageBusService
-      .select<string, IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
+    this.pledgorSubscription = this.pledgeService
+      .select<IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
       .subscribe(pledgor => {
         this.onClear();
         this.pledgorId = pledgor ? pledgor.id : null;
@@ -121,7 +119,7 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
     this.formSubscription = this.form.form.valueChanges
       .map(updates => this.form.serializedValue)
       .subscribe(property => {
-        this.messageBusService.dispatch(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED, null, {
+        this.pledgeService.notify(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED, {
           id: property.id,
           pledgeValue: property.pledgeValue,
           marketValue: property.marketValue,

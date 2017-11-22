@@ -12,7 +12,6 @@ import { IPledgor } from '../pledgor.interface';
 import { IPledgeContract } from '../../pledge/pledge.interface';
 import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
 
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PledgorService } from '../../pledgor/pledgor.service';
 import { PledgeService } from '../../pledge/pledge.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
@@ -58,7 +57,6 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private messageBusService: MessageBusService,
     private pledgorService: PledgorService,
     private pledgeService: PledgeService,
     private route: ActivatedRoute,
@@ -150,7 +148,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
     form.enable();
     form.patchValue({ typeCode: this.currentTypeCode });
     form.get('typeCode').markAsDirty();
-    this.messageBusService.dispatch(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, null, {});
+    this.pledgeService.notify(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, {});
     this.cdRef.markForCheck();
   }
 
@@ -165,7 +163,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
     form.patchValue(pledgor);
     form.get('typeCode').markAsDirty();
     form.disable();
-    this.messageBusService.dispatch(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, null, pledgor);
+    this.pledgeService.notify(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, pledgor);
     this.cdRef.markForCheck();
   }
 

@@ -11,7 +11,6 @@ import { IPledgorProperty } from '../../pledgor-property/pledgor-property.interf
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PledgeService } from '../pledge.service';
 import { PledgorService } from '../../pledgor/pledgor.service';
 import { PledgorPropertyService } from '../../pledgor-property/pledgor-property.service';
@@ -55,7 +54,6 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
-    private messageBusService: MessageBusService,
     private pledgeService: PledgeService,
     private route: ActivatedRoute,
     private router: Router,
@@ -82,8 +80,8 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
       this.canEdit = canEdit;
     });
 
-    this.pledgorSelectionSub = this.messageBusService
-      .select<string, IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
+    this.pledgorSelectionSub = this.pledgeService
+      .select<IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
       .subscribe(pledgor => {
         this.personId = pledgor.id;
         const personId = this.form.getControl('personId');
@@ -91,8 +89,8 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
         personId.markAsDirty();
       });
 
-    this.pledgorPropertySelectionSub = this.messageBusService
-      .select<string, IPledgorProperty>(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED)
+    this.pledgorPropertySelectionSub = this.pledgeService
+      .select<IPledgorProperty>(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED)
       .subscribe(pledgorProperty => {
         this.propertyId = pledgorProperty.id;
         const propertyId = this.form.getControl('propertyId');
@@ -159,7 +157,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
         );
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
+      this.pledgeService.notify(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
       this.onBack();
     });
   }

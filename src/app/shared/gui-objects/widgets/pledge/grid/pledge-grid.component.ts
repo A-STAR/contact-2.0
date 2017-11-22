@@ -9,7 +9,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { PledgeService } from '../pledge.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -83,7 +82,6 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
     private cdRef: ChangeDetectorRef,
     private pledgeService: PledgeService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -108,11 +106,12 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       }
     });
 
-    this.actionSubscription = this.messageBusService.select(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED)
+    this.actionSubscription = this.pledgeService
+      .select(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED)
       .subscribe(() => this.fetch());
 
     this.selectedContract$.subscribe(
-      pledge => this.messageBusService.dispatch(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED, null, pledge)
+      pledge => this.pledgeService.notify(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED, pledge)
     );
   }
 
