@@ -22,19 +22,55 @@ export class DialogMultiSelectWrapperComponent<T> implements ControlValueAccesso
 
   private value: IValue[];
 
+  private config = {
+    users: {
+      columnsFrom: [
+        { prop: 'id' },
+        { prop: 'lastName' },
+        { prop: 'organization' },
+        { prop: 'position' },
+      ],
+      columnsTo: [
+        { prop: 'lastName' },
+      ],
+      fetch: this.gridFiltersService.fetchUsers(0),
+      labelGetter: row => row.lastName,
+      valueGetter: row => row.id,
+    },
+  };
+
   isDisabled = false;
   rows: any[] = [];
 
-  columnsFrom = [
-    { prop: 'id' },
-    { prop: 'lastName' },
-    { prop: 'organization' },
-    { prop: 'position' },
-  ];
+  get columnsFrom(): any[] {
+    return this.filterType
+      ? this.config[this.filterType].columnsFrom
+      : [];
+  }
 
-  columnsTo = [
-    { prop: 'lastName' },
-  ];
+  get columnsTo(): any[] {
+    return this.filterType
+      ? this.config[this.filterType].columnsTo
+      : [];
+  }
+
+  get fetch(): any {
+    return this.filterType
+      ? this.config[this.filterType].fetch
+      : null;
+  }
+
+  get labelGetter(): any[] {
+    return this.filterType
+      ? this.config[this.filterType].labelGetter
+      : [];
+  }
+
+  get valueGetter(): any[] {
+    return this.filterType
+      ? this.config[this.filterType].valueGetter
+      : [];
+  }
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -42,14 +78,11 @@ export class DialogMultiSelectWrapperComponent<T> implements ControlValueAccesso
   ) {}
 
   ngOnInit(): void {
-    this.gridFiltersService.fetchUsers(0).subscribe(users => {
-      this.rows = users;
+    this.fetch.subscribe(rows => {
+      this.rows = rows;
       this.cdRef.markForCheck();
     });
   }
-
-  labelGetter = row => row.lastName;
-  valueGetter = row => row.id;
 
   writeValue(value: IValue[]): void {
     this.value = value || [];
