@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { IDialogMultiSelectValue } from './dialog-multi-select.interface';
+
 import { GridComponent } from '../../grid/grid.component';
 
 import { DialogFunctions } from '../../../../core/dialog';
 
 import { isEmpty } from '../../../../core/utils';
-
-type IValue = string | number;
 
 @Component({
   selector: 'app-dialog-multi-select',
@@ -33,14 +33,14 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
   dialog: string;
 
   private isDisabled = false;
-  private value: IValue[];
+  private value: IDialogMultiSelectValue[];
 
   constructor(private cdRef: ChangeDetectorRef) {
     super();
   }
 
   @Input() labelGetter: (row: T) => string = () => null;
-  @Input() valueGetter: (row: T) => IValue = () => null;
+  @Input() valueGetter: (row: T) => IDialogMultiSelectValue = () => null;
 
   get selectionLength(): number {
     return this.value.length;
@@ -108,7 +108,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
     this.setDialog('on');
   }
 
-  writeValue(value: IValue[]): void {
+  writeValue(value: IDialogMultiSelectValue[]): void {
     this.value = value || [];
     this.cdRef.markForCheck();
   }
