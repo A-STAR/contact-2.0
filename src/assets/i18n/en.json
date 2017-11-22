@@ -1450,6 +1450,18 @@
         "fullName": "Operator"
       }
     },
+    "promiseConfirm": {
+      "dialog": {
+        "title": "Confirmation of promises",
+        "message": "Do you really want to confirm the marked promises?"
+      }
+    },
+    "promiseRemove": {
+      "dialog": {
+        "title": "Deleting promises",
+        "message": "Do you really want to delete the marked promises?"
+      }
+    },
     "debt": {
       "toolbar": {
         "call": "Call Back",
@@ -2033,7 +2045,9 @@
         "showContactHistory": "Contact Log",
         "debtSetResponsible": "Set debt responsible",
         "debtClearResponsible": "Clear debt responsible",
-        "objectAddToGroup": "Add to group"
+        "objectAddToGroup": "Add to group",
+        "confirmPromise": "Confirm promises",
+        "deletePromise": "Delete promises"
       }
     },
     "filter": {

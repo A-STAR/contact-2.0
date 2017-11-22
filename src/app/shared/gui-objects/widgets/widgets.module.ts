@@ -27,6 +27,7 @@ import { EntityGroupModule } from './entity-group/entity-group.module';
 import { PledgorModule } from './pledgor/pledgor.module';
 import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
 import { PledgeModule } from './pledge/pledge.module';
+import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 
 @NgModule({
   imports: [
@@ -57,6 +58,7 @@ import { PledgeModule } from './pledge/pledge.module';
     PledgorModule,
     PledgorPropertyModule,
     PledgeModule,
+    PromiseResolveModule,
   ],
   exports: [
     AddressModule,
@@ -85,6 +87,7 @@ import { PledgeModule } from './pledge/pledge.module';
     PledgeModule,
     PledgorModule,
     PledgorPropertyModule,
+    PromiseResolveModule,
   ]
 })
 export class WidgetsModule { }
