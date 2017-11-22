@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked, Component, ViewChild, ChangeDetectionStrategy,
+  Component, ViewChild, ChangeDetectionStrategy,
   ChangeDetectorRef, OnInit, OnDestroy
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -29,11 +29,26 @@ const label = makeKey('widgets.pledgor.grid');
   selector: 'app-pledgor-card',
   templateUrl: './pledgor-card.component.html'
 })
-export class PledgorCardComponent extends DialogFunctions implements OnInit, AfterViewChecked, OnDestroy {
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+export class PledgorCardComponent extends DialogFunctions implements OnInit, OnDestroy {
+  @ViewChild(DynamicFormComponent) set form(pledgorForm: DynamicFormComponent) {
+    this._form = pledgorForm;
+    if (pledgorForm) {
+      this.onFormInit();
+    }
+  }
 
+  get form(): DynamicFormComponent {
+    return this._form;
+  }
+
+  private _form: DynamicFormComponent;
   private currentTypeCode: number;
   private canEdit: boolean;
+  private routeParams = (<any>this.route.params).value;
+  private debtId = this.routeParams.debtId || null;
+  private contractId = this.routeParams.contractId || null;
+  private personId = this.routeParams.pledgorId || null;
+  private propertyId = this.routeParams.propertyId || null;
 
   controls: IDynamicFormGroup[] = null;
   dialog: string = null;
@@ -53,19 +68,24 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, Aft
     super();
   }
 
-  ngOnInit(): void {
-    const contract = this.messageBusService.takeValue<IPledgeContract>('contract');
+  get contract$(): Observable<IPledgeContract> {
+    return this.pledgeService.fetch(this.debtId, +this.contractId, +this.personId, +this.propertyId);
+  }
 
+  ngOnInit(): void {
     Observable.combineLatest(
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_FAMILY_STATUS),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EDUCATION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
-      contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$,
-      contract && contract.id && !this.isRoute('pledgor/add')
+      this.contract$.flatMap(
+        contract => contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$
+      ),
+      this.contract$.flatMap(contract => contract && contract.id && !this.isRoute('pledgor/add')
         ? this.pledgorService.fetch(contract.personId)
         : Observable.of(null)
+      )
     )
     .take(1)
     .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, person ]) => {
@@ -79,16 +99,10 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, Aft
   }
 
   onFormInit(): void {
-    if (this.isRoute('edit') || !this.canEdit) {
+    if ((!this.isRoute('pledgor/add') && !this.isRoute('create')) || !this.canEdit) {
       this.form.form.disable();
       this.cdRef.detectChanges();
     }
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.typeCodeSubscription || !this.form) { return ; }
-
-    this.onFormInit();
 
     this.typeCodeSubscription = this.form.onCtrlValueChange('typeCode')
       .map(value => value && Array.isArray(value) ? value[0] : {})
@@ -225,6 +239,6 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, Aft
   }
 
   private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('/') === segment;
+    return this.route.snapshot.url.join('/').indexOf(segment) !== -1;
   }
 }

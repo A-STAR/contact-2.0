@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs/Subject';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
@@ -14,6 +15,8 @@ export class PledgeService {
 
   private baseUrl = '/debts/{debtId}/pledgeContract';
   private errSingular = 'entities.pledgeContract.gen.singular';
+
+  private contracts$ = new Subject<IPledgeContract[]>();
 
   constructor(
     private dataService: DataService,
@@ -38,8 +41,16 @@ export class PledgeService {
   }
 
   fetchAll(debtId: number): Observable<Array<IPledgeContract>> {
-    return this.dataService.readAll(this.baseUrl, { debtId })
+    return this.dataService
+      .readAll(this.baseUrl, { debtId })
+      .do(contracts => this.contracts$.next(contracts))
       .catch(this.notificationsService.fetchError().entity('entities.pledgeContract.gen.plural').dispatchCallback());
+  }
+
+  // TODO: fetch one item form server
+  fetch(debtId: number, contractId: number, personId: number = null, propertyId: number = null): Observable<IPledgeContract> {
+    return this.contracts$.map(contracts => contracts.find(contract => contract.contractId === contractId
+      && (!personId || contract.personId === personId) && (!propertyId || contract.propertyId === propertyId)));
   }
 
   createPledgeContractInformation(contract: IPledgeContract): IPledgeContractInformation {
