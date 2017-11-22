@@ -1,0 +1,56 @@
+<app-dialog *ngIf="isDialog('on')" [styles]="{ width: '80%' }" (close)="onCloseDialog()">
+  <div dialog-header>
+    <h3>Dialog MultiSelect Title</h3>
+  </div>
+
+  <div class="grids-container">
+    <div class="grid-container left">
+      <app-grid
+        #gridFrom
+        [columns]="columnsFrom"
+        [footerHeight]="false"
+        [rows]="rowsFrom"
+        [styles]="{ height: '320px' }"
+      ></app-grid>
+    </div>
+    <div class="buttons-container">
+      <button class="btn btn-block btn-default" (click)="onSelect()" [disabled]="isSelectIconDisabled">
+        <i class="fa fa-angle-right"></i>
+      </button>
+      <button class="btn btn-block btn-default" (click)="onSelectAll()" [disabled]="isSelectAllIconDisabled">
+        <i class="fa fa-angle-double-right"></i>
+      </button>
+      <button class="btn btn-block btn-default" (click)="onUnselect()" [disabled]="isUnselectIconDisabled">
+        <i class="fa fa-angle-left"></i>
+      </button>
+      <button class="btn btn-block btn-default" (click)="onUnselectAll()" [disabled]="isUnselectAllIconDisabled">
+        <i class="fa fa-angle-double-left"></i>
+      </button>
+    </div>
+    <div class="grid-container right">
+      <app-grid
+        #gridTo
+        [columns]="columnsTo"
+        [footerHeight]="false"
+        [rows]="rowsTo"
+        [styles]="{ height: '320px' }"
+      ></app-grid>
+    </div>
+  </div>
+
+  <div dialog-footer>
+    <app-button type="ok" (click)="onSubmit()"></app-button>
+    <app-button type="cancel" (click)="onCloseDialog()"></app-button>
+  </div>
+</app-dialog>
+
+<span class="input-group">
+  <span class="form-control" (click)="onShowDialog()">
+    {{ displayValue }}
+  </span>
+  <span class="input-group-btn">
+    <button class="btn btn-default" type="button" (click)="onShowDialog()">
+      <i class="fa fa-ellipsis-h"></i>
+    </button>
+  </span>
+</span>

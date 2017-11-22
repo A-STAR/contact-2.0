@@ -61,12 +61,16 @@ export interface IDynamicFormControl {
   url?: string;
   // options for dialog input
   action?: () => void;
-  // options for grid select
-  gridColumns?: Array<IGridColumn>;
+  // options for grid select and dialog multiselect
   gridRows?: Array<any>;
   gridLabelGetter?: Function;
   gridValueGetter?: Function;
   gridOnSelect?: Function;
+  // options for grid select
+  gridColumns?: IGridColumn[];
+  // options for dialog multiselect
+  gridColumnsFrom?: IGridColumn[];
+  gridColumnsTo?: IGridColumn[];
   // options for radio group
   radioOptions?: Array<IRadioGroupOption>;
   // options for rich text editor
@@ -86,24 +90,25 @@ export type TControlTypes =
   | 'colorpicker'
   | 'datepicker'
   | 'dialog'
+  | 'dialogmultiselect'
   | 'dynamic'
   | 'file'
   | 'gridselect'
   | 'hidden'
   | 'image'
   | 'multiselect'
+  | 'multiselectwrapper'
   | 'multitext'
   | 'number'
   | 'password'
   | 'radio'
   | 'richtexteditor'
+  | 'segmented'
   | 'select'
   | 'selectwrapper'
   | 'singleselectwrapper'
-  | 'multiselectwrapper'
   | 'text'
   | 'textarea'
-  | 'segmented'
 ;
 
 export interface IValue {

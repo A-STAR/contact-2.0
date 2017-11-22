@@ -7,6 +7,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -39,7 +40,9 @@ export class FilterComponent extends DialogFunctions implements OnInit {
   @ViewChild('usersSelect') usersSelect: MultiSelectComponent;
 
   controls: IDynamicFormControl[];
-  data: any = {};
+  data: any = {
+    portfolioId: [ 1 ],
+  };
   dialog: string;
 
   users = [];
@@ -64,11 +67,14 @@ export class FilterComponent extends DialogFunctions implements OnInit {
       this.cdRef.markForCheck();
     });
 
-    this.entityAttributesService.getDictValueAttributes()
-      .subscribe(attributes => {
-        this.controls = this.buildControls(attributes);
-        this.cdRef.markForCheck();
-      });
+    Observable.combineLatest(
+      this.entityAttributesService.getDictValueAttributes(),
+      this.filterService.fetchUsers(),
+    )
+    .subscribe(([ attributes, users ]) => {
+      this.controls = this.buildControls(attributes, users);
+      this.cdRef.markForCheck();
+    });
   }
 
   get filters(): FilterObject {
@@ -100,9 +106,24 @@ export class FilterComponent extends DialogFunctions implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  private buildControls(attributes: IEntityAttributes): IDynamicFormControl[] {
+  private buildControls(attributes: IEntityAttributes, users: any[]): IDynamicFormControl[] {
     return [
-      { controlName: 'portfolioId', type: 'text' },
+      {
+        controlName: 'portfolioId',
+        type: 'dialogmultiselect',
+        gridColumnsFrom: [
+          { prop: 'id' },
+          { prop: 'lastName' },
+          { prop: 'organization' },
+          { prop: 'position' },
+        ],
+        gridColumnsTo: [
+          { prop: 'lastName' },
+        ],
+        gridLabelGetter: row => row.lastName,
+        gridRows: users,
+        gridValueGetter: row => row.id,
+      },
       { controlName: 'outPortfolioId', type: 'number', min: 1 },
       { controlName: 'branchCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
       { controlName: 'regionCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_REGIONS },

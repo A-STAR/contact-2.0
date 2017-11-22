@@ -30,6 +30,7 @@ import { ColorPickerModule } from './components/form/colorpicker/colorpicker.mod
 import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 import { DialogModule } from './components/dialog/dialog.module';
+import { DialogMultiSelectModule } from './components/form/dialog-multi-select/dialog-multi-select.module';
 import { DialogActionModule } from './components/dialog-action/dialog-action.module';
 import { DownloaderModule } from './components/downloader/downloader.module';
 import { DropdownModule } from './components/dropdown/dropdown.module';
@@ -88,6 +89,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
+    DialogMultiSelectModule,
     DownloaderModule,
     DropdownModule,
     DropdownInputModule,
@@ -165,6 +167,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
+    DialogMultiSelectModule,
     DownloaderModule,
     DropdownModule,
     DropdownInputModule,
