@@ -9,15 +9,18 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+
 import { ICampaign } from '../campaigns.interface';
-import { CampaignsService } from '../campaigns.service';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { IOption, INamedValue } from '../../../../core/converter/value-converter.interface';
+import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
+import { INamedValue, IOption } from '../../../../core/converter/value-converter.interface';
+
+import { CampaignsService } from '../campaigns.service';
+import { LookupService } from 'app/core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
-import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
-import { LookupService } from 'app/core/lookup/lookup.service';
+
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-campaigns-edit',

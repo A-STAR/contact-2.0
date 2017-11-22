@@ -1,11 +1,8 @@
 import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { DataService } from '../../../core/data/data.service';
+
 import { IAppState } from '../../../core/state/state.interface';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { IEntityTranslation } from '../../../core/entity/translations/entity-translations.interface';
-import { EntityTranslationsService } from '../../../core/entity/translations/entity-translations.service';
 import {
   ICampaign,
   ICampaignGroup,
@@ -15,6 +12,11 @@ import {
   IParticipant,
   ICampaignsStatistic, IUserStatistic
 } from './campaigns.interface';
+import { IEntityTranslation } from '../../../core/entity/translations/entity-translations.interface';
+
+import { DataService } from '../../../core/data/data.service';
+import { EntityTranslationsService } from '../../../core/entity/translations/entity-translations.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 export const CAMPAIGN_NAME_ID = new InjectionToken<number>('CAMPAIGN_NAME_ID');
 

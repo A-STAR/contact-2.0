@@ -10,9 +10,11 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+
 import { GridService } from '../../../../shared/components/grid/grid.service';
+
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
 
 import {
   ICampaignsStatistic,

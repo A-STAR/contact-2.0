@@ -5,21 +5,25 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { DialogFunctions } from '../../../core/dialog';
-import { GridComponent } from '../../../shared/components/grid/grid.component';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
-import { IGridColumn } from '../../../shared/components/grid/grid.interface';
-import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
-import { CampaignsService } from './campaigns.service';
-import { Observable } from 'rxjs/Observable';
-import { ICampaign, CampaignStatus } from './campaigns.interface';
-import { ToolbarItemTypeEnum, IToolbarItem } from '../../../shared/components/toolbar-2/toolbar-2.interface';
-import { TranslateService } from '@ngx-translate/core';
-import { forkJoin } from 'rxjs/observable/forkJoin';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ValueConverterService } from '../../../core/converter/value-converter.service';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { Observable } from 'rxjs/Observable';
+import { TranslateService } from '@ngx-translate/core';
+
+import { ICampaign, CampaignStatus } from './campaigns.interface';
+import { IGridColumn } from '../../../shared/components/grid/grid.interface';
+import { ToolbarItemTypeEnum, IToolbarItem } from '../../../shared/components/toolbar-2/toolbar-2.interface';
+
+import { CampaignsService } from './campaigns.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
+import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '../../../core/converter/value-converter.service';
+
+import { GridComponent } from '../../../shared/components/grid/grid.component';
+
+import { DialogFunctions } from '../../../core/dialog';
 
 @Component({
   selector: 'app-campaigns',
