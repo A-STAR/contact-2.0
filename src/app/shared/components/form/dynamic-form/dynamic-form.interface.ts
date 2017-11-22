@@ -1,5 +1,6 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 
+import { IDialogMultiSelectFilterType } from '../dialog-multi-select/dialog-multi-select.interface';
 import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { ILookupKey } from '../../../../core/lookup/lookup.interface';
@@ -62,11 +63,13 @@ export interface IDynamicFormControl {
   // options for dialog input
   action?: () => void;
   // options for grid select
-  gridColumns?: Array<IGridColumn>;
   gridRows?: Array<any>;
   gridLabelGetter?: Function;
   gridValueGetter?: Function;
   gridOnSelect?: Function;
+  gridColumns?: IGridColumn[];
+  // options for dialog multiselect
+  filterType?: IDialogMultiSelectFilterType;
   // options for radio group
   radioOptions?: Array<IRadioGroupOption>;
   // options for rich text editor
@@ -86,24 +89,25 @@ export type TControlTypes =
   | 'colorpicker'
   | 'datepicker'
   | 'dialog'
+  | 'dialogmultiselect'
   | 'dynamic'
   | 'file'
   | 'gridselect'
   | 'hidden'
   | 'image'
   | 'multiselect'
+  | 'multiselectwrapper'
   | 'multitext'
   | 'number'
   | 'password'
   | 'radio'
   | 'richtexteditor'
+  | 'segmented'
   | 'select'
   | 'selectwrapper'
   | 'singleselectwrapper'
-  | 'multiselectwrapper'
   | 'text'
   | 'textarea'
-  | 'segmented'
 ;
 
 export interface IValue {

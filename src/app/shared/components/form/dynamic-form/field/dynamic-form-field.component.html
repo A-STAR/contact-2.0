@@ -215,6 +215,19 @@
     </app-grid-dropdown>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'dialogmultiselectwrapper'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-dialog-multi-select-wrapper
+      [filterType]="control.filterType"
+      [formControlName]="control.controlName"
+    ></app-dialog-multi-select-wrapper>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'password'">
     <label>
       <span class="form-label">

@@ -755,6 +755,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
       case 'showContactHistory':
         return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+      case 'confirmPromise':
+        return this.userPermissionsBag.has('PROMISE_CONFIRM') && this.selected.length > 0;
+      case 'deletePromise':
+        return this.userPermissionsBag.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]) && this.selected.length > 0;
       default:
         return true;
     }

@@ -3,17 +3,20 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   EventEmitter,
+  OnDestroy,
   OnInit,
   Output,
   ViewEncapsulation,
   ViewChild
 } from '@angular/core';
-import { IParticipant } from '../../campaigns.interface';
-import { CampaignsService } from '../../campaigns.service';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Subscription } from 'rxjs/Subscription';
-import { GridComponent } from '../../../../../shared/components/grid/grid.component';
+
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IParticipant } from '../../campaigns.interface';
+
+import { CampaignsService } from '../../campaigns.service';
+
+import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-participants-add',
