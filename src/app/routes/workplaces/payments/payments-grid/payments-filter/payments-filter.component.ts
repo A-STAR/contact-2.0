@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-payments-filter',
+  selector: 'app-workplaces-payments-grid-filter',
   templateUrl: './payments-filter.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

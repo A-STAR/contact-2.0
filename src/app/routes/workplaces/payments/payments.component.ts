@@ -1,18 +1,16 @@
 import {
   ChangeDetectionStrategy,
-  Component,
-  OnInit } from '@angular/core';
+  Component
+} from '@angular/core';
 
 @Component({
-  selector: 'app-payments',
+  selector: 'app-workplaces-payments',
   templateUrl: './payments.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PaymentsComponent implements OnInit {
+export class PaymentsComponent {
   static COMPONENT_NAME = 'PaymentsComponent';
-  constructor() { }
 
-  ngOnInit(): void {
-  }
+  constructor() { }
 
 }

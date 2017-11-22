@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import { PaymentsComponent } from './payments.component';
+
 import { PaymentsGridModule } from './payments-grid/payments-grid.module';
+
+import { PaymentsService } from './payments.service';
+
+import { PaymentsComponent } from './payments.component';
 
 const routes: Routes = [
   { path: '', component: PaymentsComponent },
@@ -14,6 +18,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     PaymentsGridModule
   ],
+  providers: [ PaymentsService ],
   declarations: [PaymentsComponent]
 })
 export class PaymentsModule { }

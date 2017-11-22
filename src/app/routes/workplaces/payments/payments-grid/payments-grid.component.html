@@ -1,3 +1,16 @@
-<p>
-  payments-grid works!
-</p>
+<div class="mv">
+  <app-workplaces-payments-grid-filter
+    (search)="onRequest()"
+  ></app-workplaces-payments-grid-filter>
+</div>
+
+<app-action-grid
+  [metadataKey]="'payments'"
+  [persistenceKey]="'payments'"
+  rowIdKey="paymentId"
+  [ngClass]="'payments-grid'"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (request)="onRequest()"
+  (dblClick)="onDblClick($event)"
+></app-action-grid>
