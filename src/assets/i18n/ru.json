@@ -2095,6 +2095,31 @@
       "from": "Начало",
       "to": "Окончание"
     },
+    "filters": {
+      "portfolios": {
+        "grid": {
+          "contractorName": "Контрагент",
+          "directionCode": "Направление",
+          "endWorkDate": "Дата окончания работ",
+          "id": "Ид",
+          "name": "Название",
+          "signDate": "Дата подписания портфеля",
+          "stageCode": "Стадия",
+          "startWorkDate": "Дата начала работ",
+          "statusCode": "Статус"
+        },
+        "title": "Выберите портфели"
+      },
+      "users": {
+        "grid": {
+          "fullName": "ФИО",
+          "id": "Ид",
+          "organization": "Подразделение",
+          "position": "Должность"
+        },
+        "title": "Выберите пользователей"
+      }
+    },
     "grid": {
       "empty": "Нет данных для отображения",
       "filter": {

@@ -2095,6 +2095,31 @@
       "from": "From",
       "to": "To"
     },
+    "filters": {
+      "portfolios": {
+        "grid": {
+          "contractorName": "Contractor",
+          "directionCode": "Direction",
+          "endWorkDate": "End Date",
+          "id": "Id",
+          "name": "Name",
+          "signDate": "Signed On",
+          "stageCode": "Stage",
+          "startWorkDate": "Start Date",
+          "statusCode": "Status"
+        },
+        "title": "Select Portfolios"
+      },
+      "users": {
+        "grid": {
+          "fullName": "Name",
+          "id": "Id",
+          "organization": "Organization",
+          "position": "Position"
+        },
+        "title": "Select Users"
+      }
+    },
     "grid": {
       "empty": "No data to display",
       "filter": {
