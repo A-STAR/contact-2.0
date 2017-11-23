@@ -24,8 +24,11 @@ import { isEmpty } from '../../../../core/utils';
 })
 export class DialogMultiSelectComponent<T> extends DialogFunctions implements ControlValueAccessor {
   @Input() columnsFrom = [];
+  @Input() columnsFromTranslationKey: string;
   @Input() columnsTo = [];
+  @Input() columnsToTranslationKey: string;
   @Input() rows: T[] = [];
+  @Input() title: string;
 
   @ViewChild('gridFrom') gridFrom: GridComponent;
   @ViewChild('gridTo') gridTo: GridComponent;
