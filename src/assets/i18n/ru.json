@@ -1878,6 +1878,16 @@
       "gen": { "singular": "залогодателя", "plural": "залогодателей" }
     }
   },
+  "massOperations": {
+    "paymentsConfirm": {
+      "ConfirmInquery": "Вы действительно хотите подтвердить отмеченные {{ count }} платежей?",
+      "title": "Подтверждение платежей"
+    },
+    "paymentsCancel": {
+      "cancelInquery": "Вы действительно хотите отменить отмеченные {{ count }} платежей?",
+      "title": "Отмена платежей"
+    }
+  },
   "errors": {
     "server": {
       "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
@@ -2103,6 +2113,8 @@
         "debtSetResponsible": "Установка ответственного по долгу",
         "debtClearResponsible": "Снятие ответственного по долгу",
         "objectAddToGroup": "Добавить в группу",
+        "paymentsConfirm": "Подтвердить платежи",
+        "paymentsCancel": "Отменить платежи",
         "confirmPromise": "Подтвердить обещания",
         "deletePromise": "Удалить обещания",
         "confirmPaymentsChanges": "Подтвердить изменения платежей",

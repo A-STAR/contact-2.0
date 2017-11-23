@@ -1595,12 +1595,11 @@
       "card": {
         "fullName": "Debtor",
         "contract": "Contract",
+        "contactData": "Contact phone/address",
         "contactDateTime": "Contact date",
-        "contactNumber": "Contact No",
         "contactPhone": "Contact phone",
         "contactType": "Contact type",
         "userFullName": "Operator",
-        "contactData": "Contact phone/address",
         "promiseDate": "Promise date",
         "promiseAmount": "Promise amount",
         "comment": "Comments",
@@ -1879,6 +1878,16 @@
       "gen": { "singular": "pledgor", "plural": "pledgors" }
     }
   },
+  "massOperations": {
+    "paymentsConfirm": {
+      "ConfirmInquery": "Are you sure to confirm selected {{ count }} payments?",
+      "title": "Payments confirmation"
+    },
+    "paymentsCancel": {
+      "cancelInquery": "Are you sure to cancel selected {{ count }} payments?",
+      "title": "Cancel payments"
+    }
+  },
   "errors": {
     "server": {
       "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
@@ -2104,6 +2113,8 @@
         "debtSetResponsible": "Set debt responsible",
         "debtClearResponsible": "Clear debt responsible",
         "objectAddToGroup": "Add to group",
+        "paymentsConfirm": "Payments confirm",
+        "paymentsCancel": "Payments cancel",
         "confirmPromise": "Confirm promises",
         "deletePromise": "Delete promises",
         "confirmPaymentsChanges": "Confirm payments changes",

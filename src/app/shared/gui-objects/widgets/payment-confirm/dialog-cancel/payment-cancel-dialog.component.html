@@ -1,0 +1,16 @@
+<app-dialog-action
+  *ngIf="isDialog('enqueryCancel')"
+  titleTranslationKey="massOperations.paymentsCancel.title"
+  actionTranslationKey="massOperations.paymentsCancel.cancelInquery"
+  actionMessage="default.buttons.ok"
+  [messageParams]="paymentsCounter"
+  (action)="onCancelPayments()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<app-result-dialog
+  *ngIf="isDialog('infoCancel')"
+  [count]="totalCount"
+  [successCount]="successCount"
+  (close)="onCloseDialog()">
+</app-result-dialog>
