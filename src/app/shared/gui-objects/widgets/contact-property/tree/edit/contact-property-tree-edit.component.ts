@@ -77,12 +77,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         UserDictionariesService.DICTIONARY_DEBT_LIST_3,
         UserDictionariesService.DICTIONARY_DEBT_LIST_4,
       ]),
-      this.entityAttributesService.getAttributes([
-        EntityAttributesService.DICT_VALUE_1,
-        EntityAttributesService.DICT_VALUE_2,
-        EntityAttributesService.DICT_VALUE_3,
-        EntityAttributesService.DICT_VALUE_4,
-      ]),
+      this.entityAttributesService.getDictValueAttributes(),
       this.userTemplatesService.getTemplates(4, 0).map(valuesToOptions),
       this.userAttributeTypesService.getAttributeTypes(19, 0),
       this.lookupService.lookupAsOptions('languages'),
@@ -144,16 +139,17 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     const { autoCommentIds, template, name, nextCallDays, parentId, ...formData } = this.form.serializedUpdates;
 
-    const attribute = flatten(this.attributeTypes, 'data')
+    const attributes = flatten(this.attributeTypes, 'data')
       .filter(attr => attr.isDisplayed)
-      .map(attr => ({ code: attr.code, mandatory: attr.isMandatory }));
+      .map(attr => ({ code: attr.code, mandatory: Number(attr.isMandatory) }));
+
     const data = {
       ...formData,
       ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
       ...(name ? { name: this.isEditing ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
       ...(template ? { [template.name]: template.value } : {}),
       ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),
-      ...(isEmpty(attribute) ? {} : { attribute }),
+      ...(isEmpty(attributes) ? {} : { attributes }),
       ...(this.isEditing ? {} : { parentId: this.selectedId }),
     };
     this.submit.emit(data);

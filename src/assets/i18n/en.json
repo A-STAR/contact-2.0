@@ -71,7 +71,7 @@
         "DEBTOR_PLEDGE": "Pledge contract",
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
-        "CONTACT_PROTOCOL": "Contact Protocol",
+        "CONTACT_LOG": "Contact Log",
         "CALL_CENTER": "Call Center",
         "PAYMENTS": "Payments",
         "COURTS_2": "Courts",
@@ -187,6 +187,39 @@
         "documents": "Documents"
       }
     },
+    "contactLog": {
+      "contact": {
+        "title": "Contacts"
+      },
+      "filters": {
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "outPortfolioId": "Registry",
+          "portfolioId": "Portfolio",
+          "receiveDateTime": "Received",
+          "regionCode": "Region",
+          "userId": "Operator"
+        },
+        "userId": {
+          "grid": {
+            "fullName": "Operator",
+            "id": "Id",
+            "organization": "Department",
+            "position": "Position"
+          }
+        }
+      },
+      "promise": {
+        "title": "Promises"
+      },
+      "sms": {
+        "title": "SMS"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {
@@ -293,8 +326,8 @@
           "birthDate": "Birth Date",
           "personRoleCodes": "Role",
           "isClosedDebt": "Show Closed Debts"
-    }
-  },
+        }
+      },
       "debtors": {
         "grid": {
           "bankName": "Bank",
@@ -740,7 +773,7 @@
       }
     },
     "contactsTab": {
-      "title": "Contacts",
+      "title": "Contact",
       "remove": {
         "title": "Delete the contact",
         "confirmMessage": "Do you really want to delete the contact {{ fullName }} ?"
@@ -798,7 +831,7 @@
     "attributesTab": {
       "title": "Attributes"
     },
-    "contactLogTam": {
+    "contactLogTab": {
       "title": "Contact log"
     }
   },
@@ -962,6 +995,62 @@
       },
       "autoComment": {
         "title": "Auto Comment"
+      }
+    },
+    "campaigns": {
+      "create": {
+        "title": "New campaign"
+      },
+      "edit": {
+        "title": "Edit campaign",
+        "name": "Name",
+        "typeCode": "Type code",
+        "groupId": "Group",
+        "comment": "Comment",
+        "timeZoneUsed": "GMT used"
+      },
+      "remove": {
+        "title": "Delete campaign",
+        "confirmMessage": "Are you sure you want to delete campaign {{ name }}?"
+      },
+      "errors": {
+        "view": "Access to campaigns list denied"
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Name",
+        "groupName": "Group",
+        "statusCode": "Status",
+        "typeCode": "Data type",
+        "startDateTime": "Started",
+        "finishDateTime": "Finished",
+        "comment": "Commentary",
+        "timeZoneUsed": "GMT used"
+      },
+      "participants": {
+        "grid": {
+          "id": "ID",
+          "fullName": "Full name",
+          "organization": "Department",
+          "position": "Position"
+        },
+        "add":{
+          "title": "Add participant",
+          "grid": {
+            "id": "ID",
+            "fullName": "Full name",
+            "organization": "Department",
+            "position": "Position"
+          }
+        },
+        "remove": {
+          "title": "Remove participant",
+          "confirmMessage": "Are you sure you want to delete selected participants from the campaign?"
+        }
+      },
+      "tabs": {
+        "participants": "Participants",
+        "statistics": "Statistics"
       }
     }
   },
@@ -1369,6 +1458,18 @@
         "fullName": "Operator"
       }
     },
+    "promiseConfirm": {
+      "dialog": {
+        "title": "Confirmation of promises",
+        "message": "Do you really want to confirm the marked promises?"
+      }
+    },
+    "promiseRemove": {
+      "dialog": {
+        "title": "Deleting promises",
+        "message": "Do you really want to delete the marked promises?"
+      }
+    },
     "debt": {
       "toolbar": {
         "call": "Call Back",
@@ -1477,40 +1578,40 @@
     },
     "contactLog": {
       "dialog": {
-        "title": "Contact Log"
+        "title": "Contact history"
       },
       "card": {
-        "fullName": "Dedtor",
-        "contract": "Order",
-        "contactNumber": "Order number",
+        "fullName": "Debtor",
+        "contract": "Contract",
         "contactDateTime": "Contact date",
+        "contactNumber": "Contact No",
+        "contactPhone": "Contact phone",
         "contactType": "Contact type",
         "userFullName": "Operator",
-        "resultName": "Result",
-        "contactData": "Phone/address",
+        "contactData": "Contact phone/address",
         "promiseDate": "Promise date",
-        "promiseAmount": "Promised amount",
-        "comment": "Comment",
-        "personRole": "Type of person",
-        "sentDateTime": "Sent date",
+        "promiseAmount": "Promise amount",
+        "comment": "Comments",
+        "personRole": "Person role",
+        "resultName": "Result",
+        "sentDateTime": "Sent on",
         "status": "Status",
-        "contactPhone": "Contact phone",
-        "text": "Message",
-        "startDateTime": "Dispatch date"
+        "text": "Message text",
+        "startDateTime": "Planned sending date"
       },
       "grid": {
         "contactId": "Contact Id",
-        "contactNumber": "Order number",
-        "debtId": "Debt ID",
-        "creditName": "Credit name",
-        "createDateTime": "Ceate date",
-        "contactType": "Contact type",
-        "fullName": "Contact person name",
-        "personRole": "Person role",
         "contactDateTime": "Contact date",
-        "userFullName": "Operator",
+        "contactType": "Contact type",
+        "contract": "Contact No",
+        "createDateTime": "Created at",
+        "creditName": "Product name",
+        "debtId": "Debt id",
+        "fullName": "Full name",
+        "personRole": "Role",
+        "promiseDate": "Promise date",
         "resultName": "Result",
-        "promiseDate": "Promise date"
+        "userFullName": "Operator"
       }
     },
     "operator": {
@@ -1620,8 +1721,14 @@
     "roles": {
       "gen": { "singular": "role", "plural": "roles" }
     },
+    "participant": {
+      "gen": { "singular": "participant", "plural": "participants" }
+    },
     "permissions": {
       "gen": { "singular": "permit", "plural": "permits" }
+    },
+    "group": {
+      "gen": { "singular": "group", "plural": "groups" }
     },
     "guiObjects": {
       "gen": { "singular": "GUI object", "plural": "GUI objects" }
@@ -1736,10 +1843,7 @@
       "gen": { "singular": "message template", "plural": "message templates" }
     },
     "property": {
-      "gen": { "singular": "property item", "plural": "property list" }
-    },
-    "contactLog": {
-      "gen": { "singular": "debtor contact", "plural": "debtor contacts" }
+      "gen": { "singular": "property", "plural": "property list" }
     },
     "scenarios": {
       "gen": { "singular": "scenario", "plural": "scenarios list" }
@@ -1948,7 +2052,9 @@
       "unblock": "Unblock",
       "undo": "Undo",
       "upload": "Upload",
-      "visit": "Visit"
+      "visit": "Visit",
+      "start": "Start",
+      "stop": "Stop"
     },
     "dateTimeRange": {
       "from": "From",
@@ -1997,7 +2103,9 @@
         "debtClearResponsible": "Clear debt responsible",
         "objectAddToGroup": "Add to group",
         "paymentsConfirm": "Payments confirm",
-        "paymentsCancel": "Payments cancel"
+        "paymentsCancel": "Payments cancel",
+        "confirmPromise": "Confirm promises",
+        "deletePromise": "Delete promises"
       }
     },
     "filter": {

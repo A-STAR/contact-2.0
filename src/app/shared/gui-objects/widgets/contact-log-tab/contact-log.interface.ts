@@ -7,6 +7,7 @@ export interface IContactLog {
   contactId?: number;
   contactPhone?: string;
   contactType?: number;
+  contract?: number;
   createDateTime?: Date | string;
   creditName?: string;
   debtId?: number;
@@ -20,4 +21,5 @@ export interface IContactLog {
   status?: string;
   text?: string;
   userFullName?: string;
+  userId?: number;
 }

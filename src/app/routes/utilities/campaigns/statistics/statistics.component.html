@@ -1,0 +1,9 @@
+<app-grid
+  class="flat"
+  [styles]="{ height: '250px' }"
+  [columns]="columns"
+  [columnTranslationKey]="'utilities.campaigns'"
+  [rows]="campaignUserStatistics"
+  selectionType="single"
+  (onSelect)="onSelect($event)">
+</app-grid>

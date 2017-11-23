@@ -65,7 +65,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     { prop: 'typeCode', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE },
     { prop: 'phone', minWidth: 100, maxWidth: 150 },
     { prop: 'address', minWidth: 100, maxWidth: 250 },
-    { prop: 'comment', minWidth: 100, maxWidth: 250 },
+    { prop: 'comment', minWidth: 100 },
   ];
 
   dialog: string;
@@ -77,7 +77,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
 
   private canViewSubscription: Subscription;
   private contractorsSubscription: Subscription;
-  private viewSubFromChildDelete: Subscription;
+  // private viewSubFromChildDelete: Subscription;
   private viewSubFromChildCreate: Subscription;
 
   constructor(
@@ -147,11 +147,10 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-
     this.lastManagerLessContractorId$.unsubscribe();
     this.needToReadAllContractors$.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    this.viewSubFromChildDelete.unsubscribe();
+    // this.viewSubFromChildDelete.unsubscribe();
     this.viewSubFromChildCreate.unsubscribe();
     this.contractorsSubscription.unsubscribe();
     this.clearContractors();
@@ -159,7 +158,6 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
 
   clearContractors(): void {
     this.contractorsAndPortfoliosService.selectContractor(null);
-    this.contractors = [];
   }
 
   get canView$(): Observable<boolean> {

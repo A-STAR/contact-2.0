@@ -1,12 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
 
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
 import { ITreeNode } from '../../../../components/flowtree/treenode/treenode.interface';
+import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
 
 import { ContactPropertyService } from '../contact-property.service';
+import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -59,6 +62,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private userConstantsService: UserConstantsService,
     private contactPropertyService: ContactPropertyService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
@@ -67,18 +71,21 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   ngOnInit(): void {
-    this.userDictionariesService
-      .getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_CONTACT_TYPE,
-        UserDictionariesService.DICTIONARY_CONTACT_TREE_TYPE,
-      ])
-      .take(1)
-      .subscribe(dictionaries => {
-        this.initContactTypeSelect(dictionaries);
-        this.initTreeTypeSelect(dictionaries);
-        this.cdRef.markForCheck();
-        this.fetch();
-      });
+    Observable.combineLatest(
+      this.userConstantsService.get('ContactTree.ContactType.List'),
+      this.userDictionariesService
+        .getDictionariesAsOptions([
+          UserDictionariesService.DICTIONARY_CONTACT_TYPE,
+          UserDictionariesService.DICTIONARY_CONTACT_TREE_TYPE,
+        ])
+    )
+    .take(1)
+    .subscribe(([ contactType, dictionaries ]) => {
+      this.initContactTypeSelect(dictionaries, contactType);
+      this.initTreeTypeSelect(dictionaries);
+      this.cdRef.markForCheck();
+      this.fetch();
+    });
   }
 
   get nodes(): ITreeNode[] {
@@ -90,7 +97,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   get selectedNodeId$(): Observable<number> {
-    return this.selectedNode$.map(node => node.id);
+    return this.selectedNode$.map(node => node && node.id);
   }
 
   get canCopy$(): Observable<boolean> {
@@ -154,8 +161,9 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
       .subscribe(() => this.onSuccess(true));
   }
 
-  private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }): void {
-    this.contactTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_TYPE];
+  private initContactTypeSelect(dictionaries: { [key: number]: IOption[] }, types: IUserConstant): void {
+    this.contactTypeOptions = dictionaries[UserDictionariesService.DICTIONARY_CONTACT_TYPE]
+      .filter(option => types.valueS.split(',').includes(String(option.value)));
     this.contactType = this.contactTypeOptions.length ? this.contactTypeOptions[0].value : null;
   }
 

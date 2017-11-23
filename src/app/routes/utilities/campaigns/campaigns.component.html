@@ -1,0 +1,46 @@
+<app-campaigns-edit
+  *ngIf="isDialog('CAMPAIGN_ADD')"
+  (submit)="createCampaign($event)"
+  (cancel)="closeDialog()">
+</app-campaigns-edit>
+
+<app-campaigns-edit
+  *ngIf="isDialog('CAMPAIGN_EDIT')"
+  [editedEntity]="selectedCampaign | async"
+  (submit)="updateCampaign($event)"
+  (cancel)="closeDialog()">
+</app-campaigns-edit>
+
+<app-dialog-action
+  *ngIf="isDialog('CAMPAIGN_REMOVE')"
+  [titleTranslationKey]="'utilities.campaigns.remove.title'"
+  [actionTranslationKey]="'utilities.campaigns.remove.confirmMessage'"
+  [messageParams]="selectedCampaign | async"
+  [actionMessage]="'default.buttons.remove'"
+  [actionMode]="'danger'"
+  (action)="onRemove()"
+  (cancel)="closeDialog()">
+</app-dialog-action>
+
+<app-toolbar-2 class="bordered" [items]="toolbarItems">
+</app-toolbar-2>
+
+<app-grid
+  class="flat"
+  [styles]="{ height: '250px' }"
+  [columns]="columns"
+  [columnTranslationKey]="'utilities.campaigns'"
+  [rows]="campaigns"
+  selectionType="single"
+  (onSelect)="onSelectCampaign($event)"
+  (onDblClick)="onCampaignDblClick($event)">
+</app-grid>
+
+<app-tabstrip [disableScrollbar]="true" [inverse]="true">
+  <app-tab [title]="'utilities.campaigns.tabs.participants'" [closable]="false">
+    <app-participants></app-participants>
+  </app-tab>
+  <app-tab [title]="'utilities.campaigns.tabs.statistics'" [closable]="false">
+    <app-statistics></app-statistics>
+  </app-tab>
+</app-tabstrip>

@@ -28,17 +28,12 @@ export class OverviewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.entityAttributesService.getAttributes([
-      EntityAttributesService.DICT_VALUE_1,
-      EntityAttributesService.DICT_VALUE_2,
-      EntityAttributesService.DICT_VALUE_3,
-      EntityAttributesService.DICT_VALUE_4,
-    ])
-    .take(1)
-    .subscribe(attributes => {
-      this.controls = this.buildControls(attributes);
-      this.cdRef.markForCheck();
-    });
+    this.entityAttributesService.getDictValueAttributes()
+      .take(1)
+      .subscribe(attributes => {
+        this.controls = this.buildControls(attributes);
+        this.cdRef.markForCheck();
+      });
   }
 
   get campaignDebt$(): Observable<ICampaignDebt> {

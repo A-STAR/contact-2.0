@@ -8,6 +8,8 @@
       </span>
       <input type="number"
              class="form-control"
+             [attr.min]="control.min"
+             [attr.max]="control.max"
              [attr.placeholder]="(control.placeholder || '') | translate"
              [formControlName]="control.controlName"
              (input)="control.onChange ? control.onChange($event) : undefined">
@@ -211,6 +213,19 @@
       [valueGetter]="control.gridValueGetter"
       (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
     </app-grid-dropdown>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'dialogmultiselectwrapper'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-dialog-multi-select-wrapper
+      [filterType]="control.filterType"
+      [formControlName]="control.controlName"
+    ></app-dialog-multi-select-wrapper>
   </ng-container>
 
   <ng-container *ngSwitchCase="'password'">

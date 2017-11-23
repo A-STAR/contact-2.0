@@ -26,16 +26,16 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   selectedChanged$ = new BehaviorSubject<boolean>(false);
 
   columns: Array<IGridColumn> = [
-    { prop: 'debtId' },
-    { prop: 'contactId' },
-    { prop: 'creditName' },
-    { prop: 'fullName'},
-    { prop: 'personRole', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-    { prop: 'contactDateTime' },
-    { prop: 'contactType', dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
-    { prop: 'userFullName' },
-    { prop: 'resultName' },
-    { prop: 'promiseDate' },
+    { prop: 'debtId', width: 50 },
+    { prop: 'contactId', width: 70 },
+    { prop: 'creditName', width: 80 },
+    { prop: 'fullName', maxWidth: 200},
+    { prop: 'personRole', width: 90, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
+    { prop: 'contactDateTime', maxWidth: 150, renderer: 'dateRenderer' },
+    { prop: 'contactType', maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
+    { prop: 'userFullName', maxWidth: 200 },
+    { prop: 'resultName', maxWidth: 200},
+    { prop: 'promiseDate', width: 70 },
   ];
 
   toolbarItems: Array<IToolbarItem> = [
@@ -43,15 +43,15 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selected[0]),
       enabled: Observable.combineLatest(
-        this.canEdit$,
+        this.canView$,
         this.selectedChanged$
       )
-      .map(([canEdit, selected]) => canEdit && selected)
+      .map(([canView, selected]) => canView && selected)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetch(),
-      enabled: Observable.of(true)
+      enabled: this.canView$
     },
   ];
 
@@ -81,7 +81,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    this.viewPermissionSubscription = this.canEdit$.subscribe(hasViewPermission => {
+    this.viewPermissionSubscription = this.canView$.subscribe(hasViewPermission => {
       if (hasViewPermission) {
         this.fetch();
       } else {
@@ -91,7 +91,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     });
 
     this.viewCommentUpdate = this.messageBusService.select(ContactLogService.COMMENT_CONTACT_LOG_SAVED)
-      .flatMap( (currentContactLogId ) => Observable.combineLatest(
+      .flatMap(currentContactLogId => Observable.combineLatest(
           Observable.of(currentContactLogId),
           this.contactLogService.fetchAll(this.personId))
       )
@@ -122,7 +122,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     return this._contactLogList;
   }
 
-  get canEdit$(): Observable<boolean> {
+  get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('CONTACT_LOG_VIEW');
   }
 
@@ -136,6 +136,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   }
 
   onEdit(contactLog: IContactLog): void {
+    console.log(contactLog);
     const { contactId, contactType } = contactLog;
     this.router.navigate([ `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`]);
   }

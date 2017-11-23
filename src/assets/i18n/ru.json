@@ -71,7 +71,7 @@
         "DEBTOR_PLEDGE": "Договор залога",
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
-        "CONTACT_PROTOCOL": "Протокол контактов",
+        "CONTACT_LOG": "Протокол контактов",
         "CALL_CENTER": "Центр обзвона",
         "PAYMENTS": "Платежи",
         "COURTS_2": "Судебное и исполнительное производство",
@@ -187,6 +187,39 @@
         "documents": "Документы"
       }
     },
+    "contactLog": {
+      "contact": {
+        "title": "Контакты"
+      },
+      "filters": {
+        "form": {
+          "branchCode": "Филиал",
+          "dictValue1": "Словарный атрибут 1",
+          "dictValue2": "Словарный атрибут 2",
+          "dictValue3": "Словарный атрибут 3",
+          "dictValue4": "Словарный атрибут 4",
+          "outPortfolioId": "Реестр КА",
+          "portfolioId": "Портфели",
+          "receiveDateTime": "Получен",
+          "regionCode": "Регион",
+          "userId": "Оператор"
+        },
+        "userId": {
+          "grid": {
+            "fullName": "Оператор",
+            "id": "Ид",
+            "organization": "Подразделение",
+            "position": "Должность"
+          }
+        }
+      },
+      "promise": {
+        "title": "Обещания"
+      },
+      "sms": {
+        "title": "СМС"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {
@@ -295,30 +328,30 @@
           "isClosedDebt": "Показывать закрытые долги"
     }
   },
-      "debtors": {
-        "grid": {
-          "bankName": "Банк",
-          "branchCode": "Филиал",
-          "contact": "Договор",
-          "creditEndDate": "Дата окончания кредитного срока",
-          "creditName": "Название продукта",
-          "creditStartDate": "Дата выдачи кредита",
-          "creditTypeCode": "Тип продукта",
-          "currencyName": "Валюта",
-          "debtAmount": "Остаток",
-          "debtId": "Ид долга",
-          "debtorId": "Ид должника",
-          "docNumber": "Номер документа",
-          "fullName": "ФИО/Название",
-          "outPortfolioName": "Название исходящего портфеля",
-          "personId": "Ид персоны",
-          "personRole": "Роль персоны",
-          "portfolioName": "Название портфеля",
-          "regionCode": "Регион",
-          "startDate": "Дата выхода на просрочку",
-          "statusCode": "Статус"
-        }
-      },
+  "debtors": {
+    "grid": {
+      "bankName": "Банк",
+      "branchCode": "Филиал",
+      "contact": "Договор",
+      "creditEndDate": "Дата окончания кредитного срока",
+      "creditName": "Название продукта",
+      "creditStartDate": "Дата выдачи кредита",
+      "creditTypeCode": "Тип продукта",
+      "currencyName": "Валюта",
+      "debtAmount": "Остаток",
+      "debtId": "Ид долга",
+      "debtorId": "Ид должника",
+      "docNumber": "Номер документа",
+      "fullName": "ФИО/Название",
+      "outPortfolioName": "Название исходящего портфеля",
+      "personId": "Ид персоны",
+      "personRole": "Роль персоны",
+      "portfolioName": "Название портфеля",
+      "regionCode": "Регион",
+      "startDate": "Дата выхода на просрочку",
+      "statusCode": "Статус"
+    }
+  },
       "debtorCard": {
         "form": {
           "userFullName": "Ответственный",
@@ -799,7 +832,7 @@
       "title": "Атрибуты"
     },
     "contactLogTab": {
-      "title": "Лог контактов"
+      "title": "История контактов"
     }
   },
   "person": {
@@ -962,6 +995,62 @@
       },
       "autoComment": {
         "title": "Автоматический комментарий"
+      }
+    },
+    "campaigns": {
+      "create": {
+        "title": "Новая кампания обзвона"
+      },
+      "edit": {
+        "title": "Редактировать кампанию обзвона",
+        "name": "Название",
+        "typeCode": "Тип",
+        "groupId": "Группа",
+        "comment": "Комментарий",
+        "timeZoneUsed": "Учет GMT"
+      },
+      "remove": {
+        "title": "Удаление кампании обзвона",
+        "confirmMessage": "Вы действительно хотите удалить кампанию {{ name }}?"
+      },
+      "errors": {
+        "view": "Access to campaigns list denied"
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Название",
+        "groupName": "Группа",
+        "statusCode": "Статус",
+        "typeCode": "Тип",
+        "startDateTime": "Дата запуска",
+        "finishDateTime": "Дата остановки",
+        "comment": "Комментарий",
+        "timeZoneUsed": "Учет GMT"
+      },
+      "participants": {
+        "grid": {
+          "id": "ID",
+          "fullName": "ФИО",
+          "organization": "Подразделение",
+          "position": "Должность"
+        },
+        "add":{
+          "title": "Добавить участника",
+          "grid": {
+            "id": "ID",
+            "fullName": "ФИО",
+            "organization": "Подразделение",
+            "position": "Должность"
+          }
+        },
+        "remove": {
+          "title": "Удаление участника",
+          "confirmMessage": "Вы действительно хотите удалить выбранных участников из кампании?"
+        }
+      },
+      "tabs": {
+        "participants": "Участники",
+        "statistics": "Статистика"
       }
     }
   },
@@ -1369,6 +1458,18 @@
         "fullName": "Оператор"
       }
     },
+    "promiseConfirm": {
+      "dialog": {
+        "title": "Подтверждение обещаний",
+        "message": "Вы действительно хотите подтвердить отмеченные обещания?"
+      }
+    },
+    "promiseRemove": {
+      "dialog": {
+        "title": "Удаление обещаний",
+        "message": "Вы действительно хотите удалить отмеченные обещания?"
+      }
+    },
     "debt": {
       "toolbar": {
         "call": "Необходимо перезвонить",
@@ -1482,35 +1583,34 @@
       "card": {
         "fullName": "Должник",
         "contract": "Договор",
-        "contactNumber": "Номер договора",
+        "contactData": "Контактный телефон/адрес",
         "contactDateTime": "Дата контакта",
+        "contactPhone": "Контактный телефон",
         "contactType": "Тип контакта",
         "userFullName": "Оператор",
         "resultName": "Результат",
-        "contactData": "Контактный телефон/адрес",
         "promiseDate": "Обещанная дата",
         "promiseAmount": "Обещанная сумма",
         "comment": "Комментарий",
         "personRole": "Тип лица",
         "sentDateTime": "Дата отправки",
         "status": "Статус",
-        "contactPhone": "Контактный телефон",
         "text": "Текст сообщения",
-        "startDateTime": "Планируемая дата начала отправки"
+        "startDateTime": "Планируемая дата отправки"
       },
       "grid": {
         "contactId": "Ид контакта",
-        "contactNumber": "Номер договора",
-        "debtId": "Ид долга",
-        "creditName": "Название продукта",
-        "createDateTime": "Дата создания",
+        "contactDateTime": "Дата контакта",
         "contactType": "Тип контакта",
+        "contract": "Номер договора",
+        "createDateTime": "Дата создания",
+        "creditName": "Название продукта",
+        "debtId": "Ид долга",
         "fullName": "ФИО",
         "personRole": "Роль",
-        "contactDateTime": "Дата контакта",
-        "userFullName": "Оператор",
+        "promiseDate": "Обещанная дата",
         "resultName": "Результат",
-        "promiseDate": "Обещанная дата"
+        "userFullName": "Оператор"
       }
     },
     "operator": {
@@ -1620,8 +1720,14 @@
     "roles": {
       "gen": { "singular": "роли", "plural": "списка ролей" }
     },
+    "participant": {
+      "gen": { "singular": "участника", "plural": "списка участников" }
+    },
     "permissions": {
       "gen": { "singular": "доступа", "plural": "списка доступов" }
+    },
+    "group": {
+      "gen": { "singular": "группы", "plural": "списка групп" }
     },
     "guiObjects": {
       "gen": { "singular": "объекта интерфейса", "plural": "списка объектов интерфейса" }
@@ -1726,7 +1832,7 @@
     "employment": {
       "gen": { "singular": "истории трудоустройства", "plural": "записей истории трудоустройства" }
     },
-    "componentLog": {
+    "debtComponents": {
       "gen": { "singular": "компонента долга", "plural": "компонентов долга" }
     },
     "sms": {
@@ -1737,9 +1843,6 @@
     },
     "property": {
       "gen": { "singular": "объекта имущества", "plural": "списка имущества" }
-    },
-    "contactLog": {
-      "gen": { "singular": "контакта с дебитором", "plural": "котнактов с дебиторм" }
     },
     "scenarios": {
       "gen": { "singular": "сценария", "plural": "списка сценариев" }
@@ -1948,7 +2051,9 @@
       "unblock": "Разблокировать",
       "undo": "Отменить",
       "upload": "Загрузить",
-      "visit": "Выезд"
+      "visit": "Выезд",
+      "start": "Запустить",
+      "stop": "Остановить"
     },
     "dateTimeRange": {
       "from": "Начало",
@@ -1997,7 +2102,9 @@
         "debtClearResponsible": "Снятие ответственного по долгу",
         "objectAddToGroup": "Добавить в группу",
         "paymentsConfirm": "Подтвердить платежи",
-        "paymentsCancel": "Отменить платежи"
+        "paymentsCancel": "Отменить платежи",
+        "confirmPromise": "Подтвердить обещания",
+        "deletePromise": "Удалить обещания"
       }
     },
     "filter": {
