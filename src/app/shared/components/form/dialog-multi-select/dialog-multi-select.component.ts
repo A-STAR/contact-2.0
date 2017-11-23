@@ -77,6 +77,19 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
     return isEmpty(this.rowsTo);
   }
 
+  onFromDoubleClick(row: T): void {
+    this.value = [
+      ...this.value,
+      this.valueGetter(row),
+    ];
+    this.updateValue();
+  }
+
+  onToDoubleClick(row: T): void {
+    this.value = this.value.filter(rowValue => rowValue !== this.valueGetter(row));
+    this.updateValue();
+  }
+
   onSelect(): void {
     this.value = [
       ...this.value,

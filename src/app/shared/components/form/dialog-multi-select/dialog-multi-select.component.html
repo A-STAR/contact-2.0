@@ -11,6 +11,7 @@
         [footerHeight]="false"
         [rows]="rowsFrom"
         [styles]="{ height: '320px' }"
+        (onDblClick)="onFromDoubleClick($event)"
       ></app-grid>
     </div>
     <div class="buttons-container">
@@ -34,6 +35,7 @@
         [footerHeight]="false"
         [rows]="rowsTo"
         [styles]="{ height: '320px' }"
+        (onDblClick)="onToDoubleClick($event)"
       ></app-grid>
     </div>
   </div>
