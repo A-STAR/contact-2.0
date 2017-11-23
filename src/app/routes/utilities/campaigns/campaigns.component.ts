@@ -186,7 +186,6 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
 
   cancelAction(): void {
     this.closeDialog();
-    this.grid.clearSelection();
   }
 
   onStart(): void {
@@ -222,9 +221,15 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   onCampaignsFetch(campaigns: ICampaign[]): void {
-    this.campaigns = this.formatCampaignsDates(campaigns);
     this.cancelAction();
+    this.resetSelection();
+    this.campaigns = this.formatCampaignsDates(campaigns);
     this.cdRef.markForCheck();
+  }
+
+  resetSelection(): void {
+    this.grid.clearSelection();
+    this.campaignsService.selectCampaign(null);
   }
 
   private formatCampaignsDates(campaings: ICampaign[]): ICampaign[] {
