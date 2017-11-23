@@ -154,16 +154,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       .getActions(this.metadataKey)
       .take(1)
       .subscribe(actions => {
-        console.log(actions);
         this.actions = actions;
-        // TODO mock
+        // TODO unmock when grid will be ready
+        console.log(actions);
         this.actions.push({
             action: 'paymentsConfirm',
-            params: ['debtId'], // should be
-            addOptions: [{
-              name: 'availableStatuses',
-              value: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19']
-            }]
+            params: ['debtId'], // should be paymentId
+            addOptions: null
           }
         );
       });
@@ -769,6 +766,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
       case 'showContactHistory':
         return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+      case 'paymentsConfirm':
+        return this.userPermissionsBag.has('PAYMENT_CONFIRM');
       default:
         return true;
     }

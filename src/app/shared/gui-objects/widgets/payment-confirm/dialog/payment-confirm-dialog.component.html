@@ -7,15 +7,10 @@
   (action)="onConfirmPayments()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
-<app-dialog
+
+<app-result-dialog
   *ngIf="isDialog('infoConfirm')"
-  [styles]="{ width: '20%' }" (close)="onCloseDialog()">
-  <div dialog-header>
-    <h3>#Окно подтверждения платежей#</h3>
-  </div>
-  <p>{{any | json}}
-  </p>
-  <div>
-    <p>#Будет изменен стартус {{paymentsNumber}} платежей#</p>
-  </div>
-</app-dialog>
+  [count]="totalCount"
+  [successCount]="successCount"
+  (close)="onCloseDialog()">
+</app-result-dialog>

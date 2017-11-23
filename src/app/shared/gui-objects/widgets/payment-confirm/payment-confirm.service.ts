@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-
 import { IAGridRequestParams, IAGridResponse } from '../../../components/grid2/grid2.interface';
 
 import { IPaymentDialog } from './payment-confirm.interface';
@@ -11,6 +10,8 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 import { FilterObject } from '../../../components/grid2/filter/grid-filter';
 
+import 'rxjs/add/operator/delay';
+
 @Injectable()
 export class PaymentConfirmService {
   constructor(
@@ -19,28 +20,20 @@ export class PaymentConfirmService {
     private notificationsService: NotificationsService,
   ) {}
 
-  private baseUrl = 'mass/payments/confirm';
+  private baseUrl = '/mass/payments/confirm';
 
   paymentsConfirm(
     ids: number[]
   ): Observable<any> {
-      return this.dataService.update(this.baseUrl, null, { idData: { ids } } )
-      // TODO unmock when api ready
-         .catch(() => {
-           console.log('from service catch');
-           return Observable.of({
-            success: true,
-            massInfo:    {
-              total: 2,
-              processed: 2
-            }
-        }); });
+      return this.dataService.update(this.baseUrl, {}, { idData: { ids } } )
+        .do(res => {
+          if (!res.success) {
+            // TODO make dict when its will be fixed
+            this.notificationsService.error('errors.default.read').entity('entities.user.constants.gen.plural').callback();
+            return;
+          }
+        });
+      // TODO unmock when api ready, make dict for catc
+      // .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
    }
-  // : Observable<IAGridResponse<IContact>>
-
-    // const request = this.gridService.buildRequest(params, filters);
-    // return this.dataService
-    //   .create('/persons/{personId}/contacts?isOnlyContactLog=1', { personId }, request)
-    //   .catch(this.notificationsService.fetchError().entity(`entities.contacts.gen.plural`).dispatchCallback());
-  // }
 }

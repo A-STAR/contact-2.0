@@ -1,14 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef,
+         Component, EventEmitter, Input, Output, OnChanges, OnInit } from '@angular/core';
+
 import { DialogFunctions } from '../../../../../core/dialog';
 
 import { PaymentConfirmService } from '../payment-confirm.service';
+import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-payments-confirm-dialog',
   templateUrl: 'payment-confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PaymentConfirmDialogComponent extends DialogFunctions implements OnChanges {
+export class PaymentConfirmDialogComponent extends DialogFunctions implements OnChanges, OnInit {
   @Input() paymentsIds: number[];
   @Output() close = new EventEmitter<void>();
   @Output() action = new EventEmitter<number[]>();
@@ -19,42 +22,36 @@ export class PaymentConfirmDialogComponent extends DialogFunctions implements On
     count: null
   };
 
+  totalCount: number;
+  successCount: number;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private paymentConfirmService: PaymentConfirmService,
+    private notificationsService: NotificationsService,
   ) {
     super();
+  }
+
+  ngOnInit(): void {
     this.setDialog('enqueryConfirm');
   }
+
   ngOnChanges(): void {
-    console.log(this.paymentsIds);
-    if (this.paymentsIds) {
-      this.paymentsCounter.count = this.paymentsIds.length;
-    }
-      this.cdRef.markForCheck();
+    this.paymentsCounter.count = this.paymentsIds &&  this.paymentsIds.length ;
+    this.cdRef.markForCheck();
   }
 
-  public any: any;
-
-
   onConfirmPayments(): void {
-    // setInterval(() => {
-    //   this.setDialog();
-    // }, 5000);
-    console.log('start on confirm', this.paymentsIds);
+    this.setDialog();
+    this.cdRef.markForCheck();
     this.paymentConfirmService.paymentsConfirm(this.paymentsIds)
-    .catch((err) => {
-      console.log('catchen error');
-      return err;
-    })
-    .subscribe((res) => {
-      console.log('res from server', res);
-      setTimeout(() => {
-        this.setDialog('infoConfirm');
-        this.any = res;
+      .subscribe((res) => {
+          this.setDialog('infoConfirm');
+          this.totalCount = res.massInfo.total;
+          this.successCount = res.massInfo.processed;
           this.cdRef.markForCheck();
-        }, 2000);
-      });
+        });
   }
 
   onCloseDialog(): void {
