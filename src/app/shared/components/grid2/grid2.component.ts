@@ -759,6 +759,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         return this.userPermissionsBag.has('PROMISE_CONFIRM') && this.selected.length > 0;
       case 'deletePromise':
         return this.userPermissionsBag.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]) && this.selected.length > 0;
+      case 'confirmPaymentsChanges':
+      case 'rejectPaymentsChanges':
+        return this.userPermissionsBag.has('PAYMENTS_OPERATOR_CHANGE') && this.selected.length > 0;
       default:
         return true;
     }

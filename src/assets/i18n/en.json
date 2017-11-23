@@ -1494,6 +1494,18 @@
         "message": "Do you really want to delete the marked promises?"
       }
     },
+    "paymentsChangesConfirm": {
+      "dialog": {
+        "title": "Confirmation of changes",
+        "message": "Do you really want to confirm changes of the operator for the selected payments?"
+      }
+    },
+    "paymentsChangesReject": {
+      "dialog": {
+        "title": "Rejection of changes",
+        "message": "Do you really want to reject changes of the operator for the selected payments?"
+      }
+    },
     "debt": {
       "toolbar": {
         "call": "Call Back",
@@ -2117,7 +2129,9 @@
         "debtClearResponsible": "Clear debt responsible",
         "objectAddToGroup": "Add to group",
         "confirmPromise": "Confirm promises",
-        "deletePromise": "Delete promises"
+        "deletePromise": "Delete promises",
+        "confirmPaymentsChanges": "Confirm payments changes",
+        "rejectPaymentsChanges": "Reject payments changes"
       }
     },
     "filter": {
