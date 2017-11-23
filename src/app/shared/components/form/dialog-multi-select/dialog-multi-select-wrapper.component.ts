@@ -6,6 +6,8 @@ import { IDialogMultiSelectValue, IDialogMultiSelectFilterType } from './dialog-
 import { IGridColumn } from '../../grid/grid.interface';
 
 import { GridFiltersService } from '../../../../core/filters/grid-filters.service';
+import { GridService } from '../../grid/grid.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   selector: 'app-dialog-multi-select-wrapper',
@@ -30,9 +32,9 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
         { prop: 'id' },
         { prop: 'name' },
         { prop: 'contractorName' },
-        { prop: 'statusCode' },
-        { prop: 'stageCode' },
-        { prop: 'directionCode' },
+        { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS },
+        { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE },
+        { prop: 'directionCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION },
         { prop: 'signDate' },
         { prop: 'startWorkDate', renderer: 'dateTimeRenderer' },
         { prop: 'startWorkDate', renderer: 'dateTimeRenderer' },
@@ -63,17 +65,12 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
     },
   };
 
+  columnsFrom: IGridColumn[] = [];
+  columnsTo: IGridColumn[] = [];
+
   isDisabled = false;
   rows: any[] = [];
   value: IDialogMultiSelectValue[];
-
-  get columnsFrom(): IGridColumn[] {
-    return this.config[this.filterType].columnsFrom;
-  }
-
-  get columnsTo(): IGridColumn[] {
-    return this.config[this.filterType].columnsTo;
-  }
 
   get fetch(): () => Observable<any> {
     return this.config[this.filterType].fetch;
@@ -90,9 +87,18 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridFiltersService: GridFiltersService,
+    private gridService: GridService,
   ) {}
 
   ngOnInit(): void {
+    const { columnsFrom, columnsTo } = this.config[this.filterType];
+    this.gridService.setDictionaryRenderers([ ...columnsFrom, ...columnsTo ])
+      .take(1)
+      .subscribe(columns => {
+        this.columnsFrom = this.gridService.setRenderers(columnsFrom);
+        this.columnsTo = this.gridService.setRenderers(columnsTo);
+      });
+
     this.fetch().subscribe(rows => {
       this.rows = rows;
       this.cdRef.markForCheck();
