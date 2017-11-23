@@ -23,7 +23,7 @@ export class UserConstantsEffects {
             data: constants
           }
         }))
-        .catch(this.notificationService.error('errors.default.read').entity('entities.user.constants.gen.plural').callback());
+        .catch(this.notificationService.fetchError().entity('entities.user.constants.gen.plural').callback());
     });
 
   constructor(
