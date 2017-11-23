@@ -14,32 +14,26 @@ export class GridFiltersService {
   ) {}
 
   fetchPortfolios(statusCodes: number[], directionCodes: number[]): Observable<IFilterPortfolio[]> {
-    return this.dataService.readAll(`/filters/portfolios?statusCodes={statusCodes}&directionCodes={directionCodes}`, {
-      statusCodes,
-      directionCodes
-    })
-    .catch(this.notificationsService.fetchError().entity('entities.portfolios.gen.plural').dispatchCallback());
+    return this.dataService
+      .readAll('/filters/portfolios', {}, { params: { statusCodes, directionCodes } })
+      .catch(this.notificationsService.fetchError().entity('entities.portfolios.gen.plural').dispatchCallback());
   }
 
   fetchDictionaries(dictsCode: number[]): Observable<IFilterDictionary[]> {
-    return this.dataService.readAll(`/filters/dicts/{dictsCode}`, {
-      dictsCode
-    })
-    .catch(this.notificationsService.fetchError().entity('entities.dictionaries.gen.plural').dispatchCallback());
+    return this.dataService
+      .readAll(`/filters/dicts/{dictsCode}`, { dictsCode })
+      .catch(this.notificationsService.fetchError().entity('entities.dictionaries.gen.plural').dispatchCallback());
   }
 
   fetchUsers(isInactive: number): Observable<IFilterUser[]> {
-    return this.dataService.readAll(`/filters/users?isInactive={isInactive}`, {
-      isInactive
-    })
-    .catch(this.notificationsService.fetchError().entity('entities.users.gen.plural').dispatchCallback());
+    return this.dataService
+      .readAll('/filters/users', {}, { params: { isInactive } })
+      .catch(this.notificationsService.fetchError().entity('entities.users.gen.plural').dispatchCallback());
   }
 
   fetchEntitiesGroups(entityTypeIds: number[], isManual: number): Observable<IFilterGroup[]> {
-    return this.dataService.readAll(`/filters/groups?entityTypeIds={entityTypeIds}&isManual={isManual}`, {
-      entityTypeIds,
-      isManual
-    })
-    .catch(this.notificationsService.fetchError().entity('entities.groups.gen.plural').dispatchCallback());
+    return this.dataService
+      .readAll('/filters/groups', {}, { params: { entityTypeIds, isManual } })
+      .catch(this.notificationsService.fetchError().entity('entities.groups.gen.plural').dispatchCallback());
   }
 }

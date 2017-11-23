@@ -15,7 +15,6 @@ export class ContactLogComponent {
   grids = [
     // { key: 'contactLogPromise', title: labelKey('promise.title') },
     { key: 'contactLogContact', title: labelKey('contact.title') },
-    // TODO(d.maltsev): correct key
-    // { key: /* 'contactLogSMS' */ 'debtsprocessingall', title: labelKey('sms.title') },
+    // { key: 'contactLogSMS', title: labelKey('sms.title') },
   ];
 }

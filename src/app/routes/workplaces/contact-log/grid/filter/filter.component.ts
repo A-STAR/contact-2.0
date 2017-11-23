@@ -71,10 +71,8 @@ export class FilterComponent implements OnInit {
 
   private buildControls(attributes: IEntityAttributes): IDynamicFormControl[] {
     return [
-      // TODO(d.maltsev): dialogmultiselect
-      { controlName: 'portfolioId', type: 'number', min: 1 },
-      // TODO(d.maltsev): dialogmultiselect
-      { controlName: 'outPortfolioId', type: 'number', min: 1 },
+      { controlName: 'portfolioId', type: 'dialogmultiselectwrapper', filterType: 'portfolios' },
+      { controlName: 'outPortfolioId', type: 'dialogmultiselectwrapper', filterType: 'portfolios' },
       { controlName: 'branchCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
       { controlName: 'regionCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_REGIONS },
       ...range(1, 4).map(i => ({

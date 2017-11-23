@@ -28,9 +28,10 @@ const label = makeKey('widgets.contactLog.card');
 export class ContactLogTabCardComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private contactId = (this.route.params as any).value.contactLogId || null;
-  private debtId = (this.route.params as any).value.debtId || null;
-  private contactLogType = (this.route.params as any).value.contactLogType || null;
+  private routeParams = (<any>this.route.params).value;
+  private contactId = this.routeParams.contactLogId;
+  private debtId = this.routeParams.debtId;
+  private contactLogType = this.routeParams.contactLogType;
 
   controls: Array<IDynamicFormItem> = null;
   contactLog: IContactLog;
@@ -48,6 +49,7 @@ export class ContactLogTabCardComponent implements OnInit {
   ngOnInit(): void {
     Observable.combineLatest(
       this.userPermissionsService.has('CONTACT_COMMENT_EDIT'),
+      Observable.of(this.contactLogType),
       this.contactId ? this.contactLogService.fetch(this.debtId, this.contactId, this.contactLogType) : Observable.of(null),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTACT_TYPE),
       Number(this.contactLogType) === 4 ?
@@ -58,15 +60,15 @@ export class ContactLogTabCardComponent implements OnInit {
         : Observable.of(null)
     )
     .take(1)
-    .subscribe(([ canEditComment, contactLog, contactTypeOpts, roleOpts, smsStatusOpts ]) => {
+    .subscribe(([ canEditComment, contactLogType, contactLog, contactTypeOpts, roleOpts, smsStatusOpts ]) => {
       this.controls = this
         .initControls(
           contactTypeOpts,
+          contactLogType,
           roleOpts,
           smsStatusOpts,
           canEditComment,
-          contactLog.contactType,
-          contactLog
+          contactLog,
         );
       this.contactLog = contactLog;
       this.cdRef.markForCheck();
@@ -91,14 +93,15 @@ export class ContactLogTabCardComponent implements OnInit {
 
   private initControls(
     contactTypeOptions: IOption[],
+    contactLogType: number,
     roleOpts: IOption[],
     smsStatusOpts: IOption[],
     canEditComment: boolean,
-    contactType: number,
     contactLog: IContactLog
   ): Array<IDynamicFormItem> {
-    if (Number(contactType) !== 4) {
-      const controls =  [
+    if (Number(contactLogType) !== 4) {
+      let contactNumber, promiseAmount;
+      const baseControls = [
         { label: label('contract'), controlName: 'contract',
           type: 'text',  width: 6, disabled: true },
         { label: label('contactDateTime'), controlName: 'contactDateTime',
@@ -110,53 +113,51 @@ export class ContactLogTabCardComponent implements OnInit {
         { label: label('resultName'), controlName: 'resultName', type: 'text',
           width: 6, disabled: true },
         { label: label('contactData'), controlName: 'contactData',
-          type: 'text', width: 6, disabled: true }];
+          type: 'text', width: 6, disabled: true },
+      ];
 
       if (contactLog.promiseDate) {
-        controls.push(
-          { label: label('contactNumber'), controlName: 'contactNumber',
-            type: 'text', width: 6, disabled: true },
-        );
+        contactNumber = {
+          label: label('contactNumber'), controlName: 'contactNumber',
+          type: 'text', width: 6, disabled: true
+        };
       }
 
       if (contactLog.promiseAmount) {
-        controls.push(
-          { label: label('promiseAmount'), controlName: 'promiseAmount',
-            type: 'text', width: 6, disabled: true}
-        );
+        promiseAmount = {
+          label: label('promiseAmount'), controlName: 'promiseAmount',
+          type: 'text', width: 6, disabled: true
+        };
       }
 
-      controls.push(
-         { label: label('comment'),
-           controlName: 'comment',
-           type: 'text', width: 12, disabled: !canEditComment }
-       );
+      const comment = {
+        label: label('comment'), controlName: 'comment',
+        type: 'textarea', width: 12, disabled: !canEditComment
+      };
 
-       return controls as IDynamicFormItem[];
-
-    } else {
-
-      return [
-        { label: label('contract'), controlName: 'contract',
-          type: 'number',  width: 6, disabled: true },
-        { label: label('userFullName'), controlName: 'userFullName', type: 'text',
-          width: 6,  disabled: true },
-        { label: label('sentDateTime'), controlName: 'sentDateTime',
-          type: 'datepicker', width: 6, disabled: true },
-        { label: label('startDateTime'), controlName: 'startDateTime',
-          type: 'datepicker', width: 6, disabled: true },
-        { label: label('fullName'), controlName: 'fullName', type: 'text',
-          width: 6, disabled: true },
-        { label: label('contactPhone'), controlName: 'contactPhone',
-          type: 'text', width: 6, disabled: true },
-        { label: label('personRole'), controlName: 'personRole', options: roleOpts,
-          width: 6, disabled: true, type: 'select'},
-        { label: label('status'), controlName: 'status', options: smsStatusOpts,
-          width: 6, disabled: true, type: 'select'},
-        { label: label('text'), controlName: 'text',
-          type: 'text', width: 12, disabled: true },
-      ];
+       return [...baseControls, promiseAmount, comment].filter(Boolean) as IDynamicFormItem[];
     }
+
+    return [
+      { label: label('contract'), controlName: 'contract',
+        type: 'number',  width: 6, disabled: true },
+      { label: label('userFullName'), controlName: 'userFullName', type: 'text',
+        width: 6,  disabled: true },
+      { label: label('sentDateTime'), controlName: 'sentDateTime',
+        type: 'datepicker', width: 6, disabled: true },
+      { label: label('startDateTime'), controlName: 'startDateTime',
+        type: 'datepicker', width: 6, disabled: true },
+      { label: label('fullName'), controlName: 'fullName', type: 'text',
+        width: 6, disabled: true },
+      { label: label('contactPhone'), controlName: 'contactPhone',
+        type: 'text', width: 6, disabled: true },
+      { label: label('personRole'), controlName: 'personRole', options: roleOpts,
+        width: 6, disabled: true, type: 'select'},
+      { label: label('status'), controlName: 'status', options: smsStatusOpts,
+        width: 6, disabled: true, type: 'select'},
+      { label: label('text'), controlName: 'text',
+        type: 'textarea', width: 12, disabled: true },
+    ];
   }
 }
 

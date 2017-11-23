@@ -7,6 +7,8 @@ import { ButtonModule } from '../../button/button.module';
 import { DialogModule } from '../../dialog/dialog.module';
 import { GridModule } from '../../grid/grid.module';
 
+import { DialogMultiSelectWrapperService } from './dialog-multi-select-wrapper.service';
+
 import { DialogMultiSelectComponent } from './dialog-multi-select.component';
 import { DialogMultiSelectWrapperComponent } from './dialog-multi-select-wrapper.component';
 
@@ -27,5 +29,8 @@ import { DialogMultiSelectWrapperComponent } from './dialog-multi-select-wrapper
     DialogMultiSelectComponent,
     DialogMultiSelectWrapperComponent,
   ],
+  providers: [
+    DialogMultiSelectWrapperService,
+  ]
 })
 export class DialogMultiSelectModule { }
