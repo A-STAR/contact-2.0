@@ -163,6 +163,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
             addOptions: null
           }
         );
+
+        this.actions.push({
+          action: 'paymentsCancel',
+          params: ['debtId'], // should be paymentId
+          addOptions: null
+        }
+      );
       });
 
     this.gridService

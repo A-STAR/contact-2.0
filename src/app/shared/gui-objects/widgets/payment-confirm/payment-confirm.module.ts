@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { PaymentConfirmDialogModule } from './dialog/payment-confirm-dialog.module';
+import { PaymentConfirmDialogModule } from './dialog-confirm/payment-confirm-dialog.module';
+import { PaymentCancelDialogModule } from './dialog-cancel/payment-cancel-dialog.module';
 
 import { PaymentConfirmService } from './payment-confirm.service';
 
@@ -9,9 +10,11 @@ import { PaymentConfirmService } from './payment-confirm.service';
   imports: [
     CommonModule,
     PaymentConfirmDialogModule,
+    PaymentCancelDialogModule,
   ],
   exports: [
     PaymentConfirmDialogModule,
+    PaymentCancelDialogModule,
   ],
   providers: [
     PaymentConfirmService,

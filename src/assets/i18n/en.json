@@ -1765,8 +1765,12 @@
   },
   "massOperations": {
     "paymentsConfirm": {
-      "ConfirmInquery": "Are you shere to confirm selected {{ count }} payments?",
+      "ConfirmInquery": "Are you sure to confirm selected {{ count }} payments?",
       "title": "Payments confirmation"
+    },
+    "paymentsCancel": {
+      "cancelInquery": "Are you sure to cancel selected {{ count }} payments?",
+      "title": "Cancel payments"
     }
   },
   "errors": {
@@ -1992,7 +1996,8 @@
         "debtSetResponsible": "Set debt responsible",
         "debtClearResponsible": "Clear debt responsible",
         "objectAddToGroup": "Add to group",
-        "paymentsConfirm": "Payments confirm"
+        "paymentsConfirm": "Payments confirm",
+        "paymentsCancel": "Payments cancel"
       }
     },
     "filter": {

@@ -1767,6 +1767,10 @@
     "paymentsConfirm": {
       "ConfirmInquery": "Вы действительно хотите подтвердить отмеченные {{ count }} платежей?",
       "title": "Подтверждение платежей"
+    },
+    "paymentsCancel": {
+      "cancelInquery": "Вы действительно хотите отменить отмеченные {{ count }} платежей?",
+      "title": "Отмена платежей"
     }
   },
   "errors": {
@@ -1992,7 +1996,8 @@
         "debtSetResponsible": "Установка ответственного по долгу",
         "debtClearResponsible": "Снятие ответственного по долгу",
         "objectAddToGroup": "Добавить в группу",
-        "paymentsConfirm": "Подтвердить платежи"
+        "paymentsConfirm": "Подтвердить платежи",
+        "paymentsCancel": "Отменить платежи"
       }
     },
     "filter": {

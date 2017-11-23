@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { IAGridRequestParams, IAGridResponse } from '../../../components/grid2/grid2.interface';
 
-import { IPaymentDialog } from './payment-confirm.interface';
-
 import { DataService } from '../../../../core/data/data.service';
 import { GridService } from '../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -20,12 +18,29 @@ export class PaymentConfirmService {
     private notificationsService: NotificationsService,
   ) {}
 
-  private baseUrl = '/mass/payments/confirm';
+  private confirmUrl = '/mass/payments/confirm';
+  private cancelUrl = '/mass/payments/cancel';
+
 
   paymentsConfirm(
     ids: number[]
   ): Observable<any> {
-      return this.dataService.update(this.baseUrl, {}, { idData: { ids } } )
+      return this.dataService.update(this.confirmUrl, {}, { idData: { ids } } )
+        .do(res => {
+          if (!res.success) {
+            // TODO make dict when its will be fixed
+            this.notificationsService.error('errors.default.read').entity('entities.user.constants.gen.plural').callback();
+            return;
+          }
+        });
+      // TODO unmock when api ready, make dict for catc
+      // .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
+   }
+
+   paymentsCancel(
+    ids: number[]
+  ): Observable<any> {
+      return this.dataService.update(this.cancelUrl, {}, { idData: { ids } } )
         .do(res => {
           if (!res.success) {
             // TODO make dict when its will be fixed

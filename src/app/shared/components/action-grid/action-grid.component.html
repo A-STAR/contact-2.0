@@ -1,3 +1,8 @@
+<app-payments-cancel-dialog
+  *ngIf="isDialog('paymentsCancel')"
+  [paymentsIds]="getSelectionParam(0)"
+  (close)="onCloseDialog()">
+</app-payments-cancel-dialog>
 <app-payments-confirm-dialog
   *ngIf="isDialog('paymentsConfirm')"
   [paymentsIds]="getSelectionParam(0)"
