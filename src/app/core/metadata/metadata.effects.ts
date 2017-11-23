@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/mergeMap';
 
 import { IMetadata } from './metadata.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
@@ -16,7 +16,7 @@ export class MetadataEffects {
   @Effect()
   fetchMetadata$ = this.actions
     .ofType(MetadataService.METADATA_FETCH)
-    .switchMap((action: UnsafeAction) => {
+    .mergeMap((action: UnsafeAction) => {
       return this.read(action.payload.key)
         .map(list => ({
           type: MetadataService.METADATA_FETCH_SUCCESS,
