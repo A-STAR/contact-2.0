@@ -1583,12 +1583,11 @@
       "card": {
         "fullName": "Debtor",
         "contract": "Contract",
+        "contactData": "Contact phone/address",
         "contactDateTime": "Contact date",
-        "contactNumber": "Contact No",
         "contactPhone": "Contact phone",
         "contactType": "Contact type",
         "userFullName": "Operator",
-        "contactData": "Contact phone/address",
         "promiseDate": "Promise date",
         "promiseAmount": "Promise amount",
         "comment": "Comments",
