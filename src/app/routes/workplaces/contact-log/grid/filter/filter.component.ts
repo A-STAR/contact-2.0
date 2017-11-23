@@ -104,6 +104,8 @@ export class FilterComponent implements OnInit {
   private getOperatorForControl(controlName: string): FilterOperatorType {
     const control = this.controls.find(c => c.controlName === controlName);
     switch (control.controlName) {
+      case 'portfolioId':
+      case 'outPortfolioId':
       case 'userId':
         return 'IN';
       default:
