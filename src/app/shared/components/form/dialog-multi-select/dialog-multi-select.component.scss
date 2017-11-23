@@ -1,27 +1,15 @@
-@import "../../../../shared/styles/bootstrap/bootstrap/mixins/_clearfix.scss";
-
 .grids-container {
-  @include clearfix;
-
-  position: relative;
+  display: flex;
 
   .buttons-container {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    // TODO(d.maltsev): this looks a bit blurry
-    transform: translate(-50%, -50%);
+    display: flex;
+    flex: 0 0 0;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
   }
 
   .grid-container {
-    box-sizing: border-box;
-    float: left;
-    width: 50%;
-    &.left {
-      padding-right: 32px;
-    }
-    &.right {
-      padding-left: 32px;
-    }
+    flex: 1 0 0;
   }
 }
