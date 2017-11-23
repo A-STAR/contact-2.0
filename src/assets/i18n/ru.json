@@ -2132,17 +2132,19 @@
         "filterOoo": "фильтр..."
       },
       "actions": {
-        "statusChange": "Изменить статус",
-        "showContactHistory": "История контактов",
-        "debtSetResponsible": "Установка ответственного по долгу",
-        "debtClearResponsible": "Снятие ответственного по долгу",
-        "objectAddToGroup": "Добавить в группу",
-        "paymentsConfirm": "Подтвердить платежи",
-        "paymentsCancel": "Отменить платежи",
-        "confirmPromise": "Подтвердить обещания",
-        "deletePromise": "Удалить обещания",
         "confirmPaymentsChanges": "Подтвердить изменения платежей",
-        "rejectPaymentsChanges": "Отклонить изменения платежей"
+        "confirmPromise": "Подтвердить обещания",
+        "debtChangeAttribute": "Изменить атрибуты долга",
+        "debtClearResponsible": "Снятие ответственного по долгу",
+        "debtSetResponsible": "Установка ответственного по долгу",
+        "deletePromise": "Удалить обещания",
+        "objectAddToGroup": "Добавить в группу",
+        "openDebtCard": "Открыть карточку долга",
+        "paymentsCancel": "Отменить платежи",
+        "paymentsConfirm": "Подтвердить платежи",
+        "rejectPaymentsChanges": "Отклонить изменения платежей",
+        "showContactHistory": "История контактов",
+        "statusChange": "Изменить статус"
       }
     },
     "filter": {
