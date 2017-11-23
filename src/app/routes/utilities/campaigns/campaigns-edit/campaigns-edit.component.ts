@@ -105,7 +105,9 @@ export class CampaignsEditComponent implements OnInit {
       ...campaign,
       id: this.editedEntity && this.editedEntity.id,
       name: isMultiNameChanged ? this.selectOptionsToEntityTranslations(campaign.multiName) : campaign.name,
-      groupName: groupName && groupName.name
+      groupName: groupName && groupName.name,
+      // todo: temporary
+      timeZoneUsed: campaign.timeZoneUsed || this.editedEntity.timeZoneUsed
     };
     delete result.multiName;
     return result;
