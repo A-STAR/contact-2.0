@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/toPromise';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
@@ -123,8 +123,8 @@ export class GridService {
         const dictionaryIds = metadata
           .filter(column => !!column.dictCode)
           .map(column => column.dictCode);
-        return Observable.combineLatest(
-          Observable.of(metadata),
+        return combineLatest(
+          of(metadata),
           this.userDictionariesService.getDictionaries(dictionaryIds)
         );
       })
@@ -174,8 +174,8 @@ export class GridService {
     const lookupKeys = srcColumns.filter(col => !!col.lookupKey).map(col => col.lookupKey);
     // 1. Set the lookup renderers
     const lookupColumnObs = !lookupKeys.length
-      ? Observable.of([])
-      : Observable.combineLatest(lookupKeys.map(key => {
+      ? of([])
+      : combineLatest(lookupKeys.map(key => {
           return this.lookupService.lookupAsOptions(key)
             .map(options => {
               const column = srcColumns.find(col => col.lookupKey === key);
@@ -184,7 +184,7 @@ export class GridService {
         }));
 
     // 2. Set the dictionary renderers
-    return Observable.combineLatest(this.setDictionaryRenderers(srcColumns), lookupColumnObs)
+    return combineLatest(this.setDictionaryRenderers(srcColumns), lookupColumnObs)
       .map(([columns, lookupColumns]) => {
         return columns.map(column => {
           const found = lookupColumns.find(col => col.lookupKey === column.lookupKey);
