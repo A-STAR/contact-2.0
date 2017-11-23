@@ -1,0 +1,16 @@
+<app-dialog-action
+  *ngIf="isDialog('confirm')"
+  actionMode="danger"
+  actionTranslationKey="widgets.paymentsChangesReject.dialog.message"
+  actionMessage="default.yesNo.Yes"
+  titleTranslationKey="widgets.paymentsChangesReject.dialog.title"
+  (action)="onConfirm()"
+  (cancel)="onClose(false)">
+</app-dialog-action>
+
+<app-result-dialog
+  *ngIf="isDialog('result')"
+  [count]="count"
+  [successCount]="successCount"
+  (close)="onClose(true)">
+</app-result-dialog>

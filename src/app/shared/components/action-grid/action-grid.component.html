@@ -34,6 +34,18 @@
   (close)="onCloseDialog()"
 ></app-promise-remove-dialog>
 
+<app-payments-changes-confirm-dialog
+  *ngIf="isDialog('confirmPaymentsChanges')"
+  [payments]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-payments-changes-confirm-dialog>
+
+<app-payments-changes-reject-dialog
+  *ngIf="isDialog('rejectPaymentsChanges')"
+  [payments]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-payments-changes-reject-dialog>
+
 <app-grid2
   [columnIds]="columnIds"
   [metadataKey]="metadataKey"

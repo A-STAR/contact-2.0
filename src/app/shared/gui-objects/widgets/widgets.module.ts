@@ -28,6 +28,7 @@ import { PledgorModule } from './pledgor/pledgor.module';
 import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
 import { PledgeModule } from './pledge/pledge.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
+import { PaymentsChangesModule } from './payments-changes/payments-changes.module';
 
 @NgModule({
   imports: [
@@ -59,6 +60,7 @@ import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
     PledgorPropertyModule,
     PledgeModule,
     PromiseResolveModule,
+    PaymentsChangesModule,
   ],
   exports: [
     AddressModule,
@@ -88,6 +90,7 @@ import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
     PledgorModule,
     PledgorPropertyModule,
     PromiseResolveModule,
+    PaymentsChangesModule,
   ]
 })
 export class WidgetsModule { }
