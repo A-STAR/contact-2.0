@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { DialogModule } from '../../../../components/dialog/dialog.module';
 import { DialogActionModule } from '../../../../components/dialog-action/dialog-action.module';
 import { ResultDialogModule } from '../../../../components/dialog/result/result-dialog.module';
-import { SharedModule } from '../../../../../shared/shared.module';
 
 
 import { PaymentCancelDialogComponent } from './payment-cancel-dialog.component';

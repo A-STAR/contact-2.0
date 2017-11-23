@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef,
 import { DialogFunctions } from '../../../../../core/dialog';
 
 import { PaymentConfirmService } from '../payment-confirm.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 
 @Component({
   selector: 'app-payments-confirm-dialog',
@@ -28,7 +27,6 @@ export class PaymentConfirmDialogComponent extends DialogFunctions implements On
   constructor(
     private cdRef: ChangeDetectorRef,
     private paymentConfirmService: PaymentConfirmService,
-    private notificationsService: NotificationsService,
   ) {
     super();
   }

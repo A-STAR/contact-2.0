@@ -1,20 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { IAGridRequestParams, IAGridResponse } from '../../../components/grid2/grid2.interface';
 
 import { DataService } from '../../../../core/data/data.service';
-import { GridService } from '../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-
-import { FilterObject } from '../../../components/grid2/filter/grid-filter';
-
-import 'rxjs/add/operator/delay';
 
 @Injectable()
 export class PaymentConfirmService {
   constructor(
     private dataService: DataService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
   ) {}
 
