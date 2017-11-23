@@ -47,9 +47,9 @@ export class PaymentConfirmDialogComponent extends DialogFunctions implements On
     this.cdRef.markForCheck();
     this.paymentConfirmService.paymentsConfirm(this.paymentsIds)
       .subscribe((res) => {
-          this.setDialog('infoConfirm');
           this.totalCount = res.massInfo.total;
           this.successCount = res.massInfo.processed;
+          this.setDialog('infoConfirm');
           this.cdRef.markForCheck();
         });
   }

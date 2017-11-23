@@ -46,12 +46,12 @@ export class PaymentCancelDialogComponent extends DialogFunctions implements OnC
     this.setDialog();
     this.cdRef.markForCheck();
     this.paymentConfirmService.paymentsCancel(this.paymentsIds)
-      .subscribe((res) => {
-          this.setDialog('infoCancel');
+    .subscribe((res) => {
           this.totalCount = res.massInfo.total;
           this.successCount = res.massInfo.processed;
+          this.setDialog('infoCancel');
           this.cdRef.markForCheck();
-        });
+      });
   }
 
   onCloseDialog(): void {
