@@ -730,11 +730,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //   name: 'Alert value',
       //   action: () => { window.alert('Alerting about ' + params.value); },
       // },
-      {
-        name: 'Always disabled',
-        disabled: true,
-        tooltip: 'Just to test what the tooltip can show'
-      },
+      // {
+      //   name: 'Always disabled',
+      //   disabled: true,
+      //   tooltip: 'Just to test what the tooltip can show'
+      // },
       'separator',
       ...this.getMetadataMenuItems(params),
       // {
