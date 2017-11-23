@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import { IDialogMultiSelectValue, IDialogMultiSelectFilterType } from './dialog-multi-select.interface';
 import { IGridColumn } from '../../grid/grid.interface';
 
-import { GridFiltersService } from '../../../../core/filters/grid-filters.service';
+import { DialogMultiSelectWrapperService } from './dialog-multi-select-wrapper.service';
+import { GridService } from '../../grid/grid.service';
 
 @Component({
   selector: 'app-dialog-multi-select-wrapper',
@@ -22,57 +23,41 @@ import { GridFiltersService } from '../../../../core/filters/grid-filters.servic
 export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, OnInit {
   @Input() filterType: IDialogMultiSelectFilterType;
 
-  private config = {
-    users: {
-      columnsFrom: [
-        { prop: 'id' },
-        // TODO(d.maltsev): should be fullName - API not implemented yet
-        { prop: 'lastName' },
-        { prop: 'organization' },
-        { prop: 'position' },
-      ],
-      columnsTo: [
-        // TODO(d.maltsev): should be fullName - API not implemented yet
-        { prop: 'lastName' },
-      ],
-      fetch: this.gridFiltersService.fetchUsers(0),
-      // TODO(d.maltsev): should be fullName - API not implemented yet
-      labelGetter: row => row.lastName,
-      valueGetter: row => row.id,
-    },
-  };
-
+  columnsFrom: IGridColumn[] = [];
+  columnsTo: IGridColumn[] = [];
   isDisabled = false;
   rows: any[] = [];
   value: IDialogMultiSelectValue[];
 
-  get columnsFrom(): IGridColumn[] {
-    return this.config[this.filterType].columnsFrom;
-  }
-
-  get columnsTo(): IGridColumn[] {
-    return this.config[this.filterType].columnsTo;
-  }
-
-  get fetch(): Observable<any> {
-    return this.config[this.filterType].fetch;
+  get fetch(): () => Observable<any> {
+    return this.dialogMultiSelectWrapperService.getFetchCallback(this.filterType);
   }
 
   get labelGetter(): (row: any) => string {
-    return this.config[this.filterType].labelGetter;
+    return this.dialogMultiSelectWrapperService.getLabelGetter(this.filterType);
   }
 
   get valueGetter(): (row: any) => IDialogMultiSelectValue {
-    return this.config[this.filterType].valueGetter;
+    return this.dialogMultiSelectWrapperService.getValueGetter(this.filterType);
   }
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridFiltersService: GridFiltersService,
+    private dialogMultiSelectWrapperService: DialogMultiSelectWrapperService,
+    private gridService: GridService,
   ) {}
 
   ngOnInit(): void {
-    this.fetch.subscribe(rows => {
+    const columnsFrom = this.dialogMultiSelectWrapperService.getColumnsFrom(this.filterType);
+    const columnsTo = this.dialogMultiSelectWrapperService.getColumnsTo(this.filterType);
+    this.gridService.setDictionaryRenderers([ ...columnsFrom, ...columnsTo ])
+      .take(1)
+      .subscribe(columns => {
+        this.columnsFrom = this.gridService.setRenderers(columnsFrom);
+        this.columnsTo = this.gridService.setRenderers(columnsTo);
+      });
+
+    this.fetch().subscribe(rows => {
       this.rows = rows;
       this.cdRef.markForCheck();
     });
