@@ -26,7 +26,7 @@ export class DialogMultiSelectWrapperService {
       columnsTo: [
         { prop: 'name' },
       ],
-      fetchCallback: () => this.gridFiltersService.fetchPortfolios(null, [ 1 ]),
+      fetchCallback: ({ directionCodes }) => this.gridFiltersService.fetchPortfolios(null, directionCodes),
       labelGetter: row => row.name,
       valueGetter: row => row.id,
     },
@@ -61,7 +61,7 @@ export class DialogMultiSelectWrapperService {
     return this.config[key].columnsTo;
   }
 
-  getFetchCallback(key: IDialogMultiSelectFilterType): () => Observable<any> {
+  getFetchCallback(key: IDialogMultiSelectFilterType): (filterParams: any) => Observable<any> {
     return this.config[key].fetchCallback;
   }
 

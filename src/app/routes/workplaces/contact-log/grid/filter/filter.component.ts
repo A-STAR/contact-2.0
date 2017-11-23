@@ -71,8 +71,18 @@ export class FilterComponent implements OnInit {
 
   private buildControls(attributes: IEntityAttributes): IDynamicFormControl[] {
     return [
-      { controlName: 'portfolioId', type: 'dialogmultiselectwrapper', filterType: 'portfolios' },
-      { controlName: 'outPortfolioId', type: 'dialogmultiselectwrapper', filterType: 'portfolios' },
+      {
+        controlName: 'portfolioId',
+        type: 'dialogmultiselectwrapper',
+        filterType: 'portfolios',
+        filterParams: { directionCodes: [ 1 ] }
+      },
+      {
+        controlName: 'outPortfolioId',
+        type: 'dialogmultiselectwrapper',
+        filterType: 'portfolios',
+        filterParams: { directionCodes: [ 2 ] }
+      },
       { controlName: 'branchCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
       { controlName: 'regionCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_REGIONS },
       ...range(1, 4).map(i => ({
