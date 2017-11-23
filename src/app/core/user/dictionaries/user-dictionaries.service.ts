@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 
 import { IAppState } from '../../state/state.interface';
@@ -79,24 +80,12 @@ export class UserDictionariesService {
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
   static USER_DICTIONARY_FETCH_FAILURE = 'USER_DICTIONARY_FETCH_FAILURE';
 
-  private state: IUserDictionariesState;
   private isFetching: object = {};
-  private hasRun = false;
 
   constructor(
     // private dataService: DataService,
     private store: Store<IAppState>,
-  ) {
-    this.state$.subscribe(state => this.state = state);
-  }
-
-  runOnce(): boolean {
-    if (!this.hasRun) {
-      this.hasRun = true;
-      return false;
-    }
-    return true;
-  }
+  ) {}
 
   createRefreshAction(dictionaryId: number): SafeAction<IUserDictionaryAction> {
     return {
@@ -130,7 +119,7 @@ export class UserDictionariesService {
     if (this.isFetching[dictionaryId]) {
       // log('dictionary is being fetched:', dictionaryId);
       return this.state$
-        .map(dictionaries => dictionaries[dictionaryId])
+        .map(state => state.dictionaries[dictionaryId])
         .filter(Boolean)
         .do(dict => {
           // log('dictionary has been fetched:', dictionaryId);
@@ -165,14 +154,6 @@ export class UserDictionariesService {
   */
 
   private loadDictionaries<T>(ids: Array<number>, transform: ITransformCallback<T>): Observable<{ [key: number]: Array<T> }> {
-    ids.forEach(id => {
-      if (!this.state.dictionaries[id] && !this.isFetching[id]) {
-        this.isFetching[id] = true;
-        // log('fetching id:', id);
-        const action = this.createRefreshAction(id);
-        this.store.dispatch(action);
-      }
-    });
 
     // const dictionariesObs = ids.map(id => this.loadDictionary(id));
     // return Observable.combineLatest(dictionariesObs, of(ids))
@@ -195,24 +176,29 @@ export class UserDictionariesService {
         //   };
         // }, {});
       // })
-      // if (!this.runOnce()) {
-      //   Observable.combineLatest(dictionariesObs).take(1).subscribe(
-      //     ([dict]) => { log('combine resolved', dict); }
-      //   );
-      // }
 
     return this.state$
-      .map(state => ids.reduce((acc, id) => {
+      .do(state => {
+        ids.forEach(id => {
+          if (!state.dictionaries[id] && !this.isFetching[id]) {
+            this.isFetching[id] = true;
+            console.log('fetching id:', id);
+            const action = this.createRefreshAction(id);
+            this.store.dispatch(action);
+          }
+        });
+      })
+      .switchMap(state => of(ids.reduce((acc, id) => {
         const dictionary = state.dictionaries[id];
         return {
           ...acc,
           [id]: dictionary ? dictionary.map(transform) : null
         };
-      }, {}))
+      }, {})))
       .filter(dictionaries => Object.keys(dictionaries).reduce((acc, key) => acc && !!dictionaries[key], true))
       .pipe(distinctUntilChanged())
       .do(() => ids.forEach(id => this.isFetching[id] = false));
-      // Note: debug here
+      // NOTE: debug here
       // .do(() => log('fetched:', ids.join(',')));
   }
 
