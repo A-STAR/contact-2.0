@@ -29,15 +29,12 @@ const label = makeKey('widgets.pledgor.grid');
   templateUrl: './pledgor-card.component.html'
 })
 export class PledgorCardComponent extends DialogFunctions implements OnInit, OnDestroy {
+
   @ViewChild(DynamicFormComponent) set form(pledgorForm: DynamicFormComponent) {
     this._form = pledgorForm;
     if (pledgorForm) {
       this.onFormInit();
     }
-  }
-
-  get form(): DynamicFormComponent {
-    return this._form;
   }
 
   private _form: DynamicFormComponent;
@@ -64,6 +61,10 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
     private userDictionariesService: UserDictionariesService,
   ) {
     super();
+  }
+
+  get form(): DynamicFormComponent {
+    return this._form;
   }
 
   get contract$(): Observable<IPledgeContract> {

@@ -25,15 +25,12 @@ const label = makeKey('widgets.guaranteeContract.grid');
   templateUrl: './guarantee-card.component.html'
 })
 export class GuaranteeCardComponent implements OnInit, OnDestroy {
+
   @ViewChild(DynamicFormComponent) set form(guaranteeForm: DynamicFormComponent) {
     this._form = guaranteeForm;
     if (guaranteeForm) {
       this.onFormInit();
     }
-  }
-
-  get form(): DynamicFormComponent {
-    return this._form;
   }
 
   private _form: DynamicFormComponent;
@@ -66,6 +63,10 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
 
   get isAddingGuarantor(): boolean {
     return this.isRoute('guarantor/add');
+  }
+
+  get form(): DynamicFormComponent {
+    return this._form;
   }
 
   get contract$(): Observable<IGuaranteeContract> {

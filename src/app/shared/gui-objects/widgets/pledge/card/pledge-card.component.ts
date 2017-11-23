@@ -27,15 +27,12 @@ const label = makeKey('widgets.pledgeContract.card');
   templateUrl: './pledge-card.component.html'
 })
 export class PledgeCardComponent implements OnInit, OnDestroy {
+
   @ViewChild(DynamicFormComponent) set form(pledgeForm: DynamicFormComponent) {
     this._form = pledgeForm;
     if (pledgeForm) {
       this.onFormInit();
     }
-  }
-
-  get form(): DynamicFormComponent {
-    return this._form;
   }
 
   private _form: DynamicFormComponent;
@@ -59,6 +56,10 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
     private router: Router,
     private userDictionariesService: UserDictionariesService,
   ) {}
+
+  get form(): DynamicFormComponent {
+    return this._form;
+  }
 
   get contract$(): Observable<IPledgeContract> {
     return this.pledgeService.fetch(this.debtId, +this.contractId, +this.personId, +this.propertyId);

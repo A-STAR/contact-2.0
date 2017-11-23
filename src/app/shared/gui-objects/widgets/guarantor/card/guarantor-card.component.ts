@@ -34,10 +34,6 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
     }
   }
 
-  get form(): DynamicFormComponent {
-    return this._form;
-  }
-
   private _form: DynamicFormComponent;
   private canEdit: boolean;
   private currentTypeCode: number;
@@ -72,6 +68,10 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('GUARANTEE_VIEW');
+  }
+
+  get form(): DynamicFormComponent {
+    return this._form;
   }
 
   get contract$(): Observable<IGuaranteeContract> {
