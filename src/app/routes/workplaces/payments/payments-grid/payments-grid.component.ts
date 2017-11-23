@@ -17,6 +17,7 @@ import { PaymentsFilterComponent } from './payments-filter/payments-filter.compo
 @Component({
   selector: 'app-workplaces-payments-grid',
   templateUrl: './payments-grid.component.html',
+  styleUrls: ['./payments-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })

@@ -71,8 +71,18 @@ export class PaymentsFilterComponent implements OnInit {
 
     private buildControls(attributes: IEntityAttributes): IDynamicFormControl[] {
       return [
-        { controlName: 'portfolioId', type: 'dialogmultiselectwrapper', filterType: 'portfolios' },
-        { controlName: 'outPortfolioId', type: 'dialogmultiselectwrapper', filterType: 'portfolios' },
+        {
+          controlName: 'portfolioId',
+          type: 'dialogmultiselectwrapper',
+          filterType: 'portfolios',
+          filterParams: { directionCodes: [ 1 ] }
+        },
+        {
+          controlName: 'outPortfolioId',
+          type: 'dialogmultiselectwrapper',
+          filterType: 'portfolios',
+          filterParams: { directionCodes: [ 2 ] }
+        },
         { controlName: 'branchCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
         { controlName: 'regionCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_REGIONS },
         ...range(1, 4).map(i => ({
@@ -84,11 +94,11 @@ export class PaymentsFilterComponent implements OnInit {
         { controlName: 'userId', type: 'dialogmultiselectwrapper', filterType: 'users' },
         { controlName: 'paymentDateTime', type: 'datepicker' },
       ]
-      .map(control => ({
-        ...control,
-        label: labelKey(control.controlName),
-        width: 3
-      } as IDynamicFormControl));
+        .map(control => ({
+          ...control,
+          label: labelKey(control.controlName),
+          width: 3
+        } as IDynamicFormControl));
     }
 
     private getOperatorForControl(controlName: string): FilterOperatorType {
