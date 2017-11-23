@@ -2104,7 +2104,9 @@
         "debtClearResponsible": "Снятие ответственного по долгу",
         "objectAddToGroup": "Добавить в группу",
         "confirmPromise": "Подтвердить обещания",
-        "deletePromise": "Удалить обещания"
+        "deletePromise": "Удалить обещания",
+        "confirmPaymentsChanges": "Подтвердить изменения платежей",
+        "rejectPaymentsChanges": "Отклонить изменения платежей"
       }
     },
     "filter": {

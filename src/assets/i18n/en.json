@@ -2105,7 +2105,9 @@
         "debtClearResponsible": "Clear debt responsible",
         "objectAddToGroup": "Add to group",
         "confirmPromise": "Confirm promises",
-        "deletePromise": "Delete promises"
+        "deletePromise": "Delete promises",
+        "confirmPaymentsChanges": "Confirm payments changes",
+        "rejectPaymentsChanges": "Reject payments changes"
       }
     },
     "filter": {
