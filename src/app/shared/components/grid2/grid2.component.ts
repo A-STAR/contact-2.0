@@ -153,7 +153,24 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.gridService
       .getActions(this.metadataKey)
       .take(1)
-      .subscribe(actions => this.actions = actions);
+      .subscribe(actions => {
+        this.actions = actions;
+        // TODO unmock when grid will be ready
+        console.log(actions);
+        this.actions.push({
+            action: 'paymentsConfirm',
+            params: ['debtId'], // should be paymentId
+            addOptions: null
+          }
+        );
+
+        this.actions.push({
+          action: 'paymentsCancel',
+          params: ['debtId'], // should be paymentId
+          addOptions: null
+        }
+      );
+      });
 
     this.gridService
       .getColumnMeta(this.metadataKey, {})
@@ -755,10 +772,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
       case 'showContactHistory':
         return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+      case 'paymentsConfirm':
+        return this.userPermissionsBag.has('PAYMENT_CONFIRM');
+      case 'paymentsCancel':
+        return this.userPermissionsBag.has('PAYMENT_CANCEL');
       case 'confirmPromise':
         return this.userPermissionsBag.has('PROMISE_CONFIRM') && this.selected.length > 0;
       case 'deletePromise':
         return this.userPermissionsBag.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]) && this.selected.length > 0;
+      case 'confirmPaymentsChanges':
+      case 'rejectPaymentsChanges':
+        return this.userPermissionsBag.has('PAYMENTS_OPERATOR_CHANGE') && this.selected.length > 0;
       default:
         return true;
     }

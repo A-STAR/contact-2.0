@@ -22,6 +22,7 @@ import { GridService } from '../../grid/grid.service';
 })
 export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, OnInit {
   @Input() filterType: IDialogMultiSelectFilterType;
+  @Input() filterParams: any = {};
 
   columnsFrom: IGridColumn[] = [];
   columnsTo: IGridColumn[] = [];
@@ -29,7 +30,7 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
   rows: any[] = [];
   value: IDialogMultiSelectValue[];
 
-  get fetch(): () => Observable<any> {
+  get fetch(): (filterParams: any) => Observable<any> {
     return this.dialogMultiSelectWrapperService.getFetchCallback(this.filterType);
   }
 
@@ -57,7 +58,7 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
         this.columnsTo = this.gridService.setRenderers(columnsTo);
       });
 
-    this.fetch().subscribe(rows => {
+    this.fetch(this.filterParams).subscribe(rows => {
       this.rows = rows;
       this.cdRef.markForCheck();
     });

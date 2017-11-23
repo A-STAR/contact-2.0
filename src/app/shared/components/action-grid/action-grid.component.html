@@ -1,3 +1,14 @@
+<app-payments-cancel-dialog
+  *ngIf="isDialog('paymentsCancel')"
+  [paymentsIds]="getSelectionParam(0)"
+  (close)="onCloseDialog()">
+</app-payments-cancel-dialog>
+<app-payments-confirm-dialog
+  *ngIf="isDialog('paymentsConfirm')"
+  [paymentsIds]="getSelectionParam(0)"
+  (close)="onCloseDialog()">
+</app-payments-confirm-dialog>
+
 <app-contact-log-dialog
   *ngIf="isDialog('showContactHistory')"
   [personId]="getDialogParam(0)"
@@ -33,6 +44,18 @@
   [promises]="getSelectionParam(0)"
   (close)="onCloseDialog()"
 ></app-promise-remove-dialog>
+
+<app-payments-changes-confirm-dialog
+  *ngIf="isDialog('confirmPaymentsChanges')"
+  [payments]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-payments-changes-confirm-dialog>
+
+<app-payments-changes-reject-dialog
+  *ngIf="isDialog('rejectPaymentsChanges')"
+  [payments]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-payments-changes-reject-dialog>
 
 <app-grid2
   [columnIds]="columnIds"
