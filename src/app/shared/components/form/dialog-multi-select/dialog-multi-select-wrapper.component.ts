@@ -22,7 +22,28 @@ import { GridFiltersService } from '../../../../core/filters/grid-filters.servic
 export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, OnInit {
   @Input() filterType: IDialogMultiSelectFilterType;
 
+  // TODO(d.maltsev): move to singleton service
   private config = {
+    // TODO(d.maltsev): incoming and outgoing portfolios
+    portfolios: {
+      columnsFrom: [
+        { prop: 'id' },
+        { prop: 'name' },
+        { prop: 'contractorName' },
+        { prop: 'statusCode' },
+        { prop: 'stageCode' },
+        { prop: 'directionCode' },
+        { prop: 'signDate' },
+        { prop: 'startWorkDate', renderer: 'dateTimeRenderer' },
+        { prop: 'startWorkDate', renderer: 'dateTimeRenderer' },
+      ],
+      columnsTo: [
+        { prop: 'name' },
+      ],
+      fetch: () => this.gridFiltersService.fetchPortfolios(null, [ 1 ]),
+      labelGetter: row => row.name,
+      valueGetter: row => row.id,
+    },
     users: {
       columnsFrom: [
         { prop: 'id' },
@@ -35,7 +56,7 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
         // TODO(d.maltsev): should be fullName - API not implemented yet
         { prop: 'lastName' },
       ],
-      fetch: this.gridFiltersService.fetchUsers(0),
+      fetch: () => this.gridFiltersService.fetchUsers(0),
       // TODO(d.maltsev): should be fullName - API not implemented yet
       labelGetter: row => row.lastName,
       valueGetter: row => row.id,
@@ -54,7 +75,7 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
     return this.config[this.filterType].columnsTo;
   }
 
-  get fetch(): Observable<any> {
+  get fetch(): () => Observable<any> {
     return this.config[this.filterType].fetch;
   }
 
@@ -72,7 +93,7 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
   ) {}
 
   ngOnInit(): void {
-    this.fetch.subscribe(rows => {
+    this.fetch().subscribe(rows => {
       this.rows = rows;
       this.cdRef.markForCheck();
     });
