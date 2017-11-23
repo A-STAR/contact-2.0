@@ -2132,17 +2132,19 @@
         "filterOoo": "filter..."
       },
       "actions": {
-        "statusChange": "Change Status",
-        "showContactHistory": "Contact Log",
-        "debtSetResponsible": "Set debt responsible",
-        "debtClearResponsible": "Clear debt responsible",
-        "objectAddToGroup": "Add to group",
-        "paymentsConfirm": "Payments confirm",
-        "paymentsCancel": "Payments cancel",
-        "confirmPromise": "Confirm promises",
-        "deletePromise": "Delete promises",
         "confirmPaymentsChanges": "Confirm payments changes",
-        "rejectPaymentsChanges": "Reject payments changes"
+        "confirmPromise": "Confirm promises",
+        "debtChangeAttribute": "Change debt attributes",
+        "debtClearResponsible": "Clear debt responsible",
+        "debtSetResponsible": "Set debt responsible",
+        "deletePromise": "Delete promises",
+        "objectAddToGroup": "Add to group",
+        "openDebtCard": "Open debt card",
+        "paymentsCancel": "Payments cancel",
+        "paymentsConfirm": "Payments confirm",
+        "rejectPaymentsChanges": "Reject payments changes",
+        "showContactHistory": "Contact Log",
+        "statusChange": "Change status"
       }
     },
     "filter": {
