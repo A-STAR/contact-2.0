@@ -182,7 +182,7 @@ export class UserDictionariesService {
         ids.forEach(id => {
           if (!state.dictionaries[id] && !this.isFetching[id]) {
             this.isFetching[id] = true;
-            console.log('fetching id:', id);
+            // log('fetching id:', id);
             const action = this.createRefreshAction(id);
             this.store.dispatch(action);
           }
