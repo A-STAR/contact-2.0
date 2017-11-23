@@ -82,11 +82,13 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
       ...this.value,
       this.valueGetter(row),
     ];
+    this.gridFrom.clearSelection();
     this.updateValue();
   }
 
   onToDoubleClick(row: T): void {
     this.value = this.value.filter(rowValue => rowValue !== this.valueGetter(row));
+    this.gridTo.clearSelection();
     this.updateValue();
   }
 
@@ -95,21 +97,25 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
       ...this.value,
       ...this.selectionFrom.map(this.valueGetter),
     ];
+    this.gridFrom.clearSelection();
     this.updateValue();
   }
 
   onSelectAll(): void {
     this.value = this.rows.map(this.valueGetter);
+    this.gridFrom.clearSelection();
     this.updateValue();
   }
 
   onUnselect(): void {
     this.value = this.value.filter(rowValue => !this.selectionTo.map(this.valueGetter).includes(rowValue));
+    this.gridTo.clearSelection();
     this.updateValue();
   }
 
   onUnselectAll(): void {
     this.value = [];
+    this.gridTo.clearSelection();
     this.updateValue();
   }
 
