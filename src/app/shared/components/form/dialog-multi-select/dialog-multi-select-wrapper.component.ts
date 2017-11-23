@@ -5,9 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import { IDialogMultiSelectValue, IDialogMultiSelectFilterType } from './dialog-multi-select.interface';
 import { IGridColumn } from '../../grid/grid.interface';
 
-import { GridFiltersService } from '../../../../core/filters/grid-filters.service';
+import { DialogMultiSelectWrapperService } from './dialog-multi-select-wrapper.service';
 import { GridService } from '../../grid/grid.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   selector: 'app-dialog-multi-select-wrapper',
@@ -24,74 +23,33 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, OnInit {
   @Input() filterType: IDialogMultiSelectFilterType;
 
-  // TODO(d.maltsev): move to singleton service
-  private config = {
-    // TODO(d.maltsev): incoming and outgoing portfolios
-    portfolios: {
-      columnsFrom: [
-        { prop: 'id' },
-        { prop: 'name' },
-        { prop: 'contractorName' },
-        { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS },
-        { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE },
-        { prop: 'directionCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION },
-        { prop: 'signDate' },
-        { prop: 'startWorkDate', renderer: 'dateTimeRenderer' },
-        { prop: 'startWorkDate', renderer: 'dateTimeRenderer' },
-      ],
-      columnsTo: [
-        { prop: 'name' },
-      ],
-      fetch: () => this.gridFiltersService.fetchPortfolios(null, [ 1 ]),
-      labelGetter: row => row.name,
-      valueGetter: row => row.id,
-    },
-    users: {
-      columnsFrom: [
-        { prop: 'id' },
-        // TODO(d.maltsev): should be fullName - API not implemented yet
-        { prop: 'lastName' },
-        { prop: 'organization' },
-        { prop: 'position' },
-      ],
-      columnsTo: [
-        // TODO(d.maltsev): should be fullName - API not implemented yet
-        { prop: 'lastName' },
-      ],
-      fetch: () => this.gridFiltersService.fetchUsers(0),
-      // TODO(d.maltsev): should be fullName - API not implemented yet
-      labelGetter: row => row.lastName,
-      valueGetter: row => row.id,
-    },
-  };
-
   columnsFrom: IGridColumn[] = [];
   columnsTo: IGridColumn[] = [];
-
   isDisabled = false;
   rows: any[] = [];
   value: IDialogMultiSelectValue[];
 
   get fetch(): () => Observable<any> {
-    return this.config[this.filterType].fetch;
+    return this.dialogMultiSelectWrapperService.getFetchCallback(this.filterType);
   }
 
   get labelGetter(): (row: any) => string {
-    return this.config[this.filterType].labelGetter;
+    return this.dialogMultiSelectWrapperService.getLabelGetter(this.filterType);
   }
 
   get valueGetter(): (row: any) => IDialogMultiSelectValue {
-    return this.config[this.filterType].valueGetter;
+    return this.dialogMultiSelectWrapperService.getValueGetter(this.filterType);
   }
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridFiltersService: GridFiltersService,
+    private dialogMultiSelectWrapperService: DialogMultiSelectWrapperService,
     private gridService: GridService,
   ) {}
 
   ngOnInit(): void {
-    const { columnsFrom, columnsTo } = this.config[this.filterType];
+    const columnsFrom = this.dialogMultiSelectWrapperService.getColumnsFrom(this.filterType);
+    const columnsTo = this.dialogMultiSelectWrapperService.getColumnsTo(this.filterType);
     this.gridService.setDictionaryRenderers([ ...columnsFrom, ...columnsTo ])
       .take(1)
       .subscribe(columns => {
