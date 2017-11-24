@@ -157,23 +157,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
     this.gridService
       .getActions(this.metadataKey)
-      .take(1)
+      // .take(1)
       .subscribe(actions => {
         this.actions = actions;
-        // TODO unmock when grid will be ready
-        this.actions.push({
-            action: 'paymentsConfirm',
-            params: ['debtId'], // should be paymentId
-            addOptions: null
-          }
-        );
-
-        this.actions.push({
-          action: 'paymentsCancel',
-          params: ['debtId'], // should be paymentId
-          addOptions: null
-        }
-      );
       });
 
     this.gridService

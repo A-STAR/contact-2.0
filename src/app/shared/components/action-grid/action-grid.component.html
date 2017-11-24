@@ -1,3 +1,10 @@
+<app-sms-delete-dialog
+  *ngIf="isDialog('deleteSMS')"
+  [smsId]="getSelectionParam(0)"
+  (close)="onCloseDelete($event)"
+>
+</app-sms-delete-dialog>
+
 <app-payments-cancel-dialog
   *ngIf="isDialog('paymentsCancel')"
   [paymentsIds]="getSelectionParam(0)"
