@@ -61,7 +61,7 @@ export class FilterComponent implements OnInit {
     this.metadataSub = this.store
       .select(state => state.metadata)
       .filter(Boolean)
-      .map(metadata => this.getMedataSlice(metadata))
+      .map(metadata => this.getMetadataSlice(metadata))
       .filter(Boolean)
       .map(contactLog => contactLog.columns)
       .map(columns => columns.find(column => column.name === this.getDateControlName()))
@@ -158,7 +158,7 @@ export class FilterComponent implements OnInit {
     }
   }
 
-  private getMedataSlice(metadata: any): any {
+  private getMetadataSlice(metadata: any): any {
     switch (this.gridKey) {
       case ContactsGridKeys.CONTACT:
         return metadata.contactLogContact;
