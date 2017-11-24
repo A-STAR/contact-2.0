@@ -6,7 +6,7 @@ import { EntityGroupModule } from '../../gui-objects/widgets/entity-group/entity
 import { DebtResponsibleModule } from '../../gui-objects/widgets/debt-responsible/debt-responsible.module';
 import { PaymentConfirmModule } from '../../gui-objects/widgets/payment-confirm/payment-confirm.module';
 import { PromiseResolveModule } from '../../gui-objects/widgets/promise-resolve/promise-resolve.module';
-import { PaymentsChangesModule } from '../../gui-objects/widgets/payments-changes/payments-changes.module';
+import { PaymentOperatorModule } from '../../gui-objects/widgets/payment-operator/payment-operator.module';
 import { Grid2Module } from '../grid2/grid2.module';
 
 import { ActionGridComponent } from './action-grid.component';
@@ -17,7 +17,7 @@ import { ActionGridComponent } from './action-grid.component';
     ContactLogModule,
     DebtResponsibleModule,
     PromiseResolveModule,
-    PaymentsChangesModule,
+    PaymentOperatorModule,
     EntityGroupModule,
     Grid2Module,
     PaymentConfirmModule,

@@ -37,6 +37,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
 
   private isDisabled = false;
   private value: IDialogMultiSelectValue[];
+  private previousValue: IDialogMultiSelectValue[];
 
   constructor(private cdRef: ChangeDetectorRef) {
     super();
@@ -123,6 +124,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
   }
 
   onSubmit(): void {
+    this.previousValue = [...this.value];
     this.closeDialog();
   }
 
@@ -130,7 +132,16 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
     this.setDialog('on');
   }
 
-  writeValue(value: IDialogMultiSelectValue[]): void {
+  /**
+   * @override
+   */
+  onCloseDialog(): void {
+    this.writeValue(this.previousValue);
+    this.updateValue();
+    super.onCloseDialog();
+  }
+
+  writeValue(value?: IDialogMultiSelectValue[]): void {
     this.value = value || [];
     this.cdRef.markForCheck();
   }

@@ -85,15 +85,16 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   }
 
   private getUrlByDebtor(debtor: any): string {
+    const { debtorId, debtId, contractId, personId } = debtor;
     switch (debtor.personRole) {
       case 2:
-        return `/workplaces/debt-processing/${debtor.debtorId}/${debtor.debtId}/guaranteeContract/edit`;
+        return `/workplaces/debt-processing/${debtorId}/${debtId}/guarantee/${contractId}/guarantor/${personId}`;
       case 3:
         // TODO(d.maltsev): return correct url when the module is finished
         // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=133529625#id-Входящийзвонок-Открытиекарточки
         return null;
       case 4:
-        return `/workplaces/debt-processing/${debtor.debtorId}/${debtor.debtId}/contact/${debtor.personId}`;
+        return `/workplaces/debt-processing/${debtorId}/${debtId}/contact/${personId}`;
     }
   }
 }

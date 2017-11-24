@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { ICampaignDebt } from './campaign.interface';
+import { ICampaignDebt, ICampaignProcessedDebt } from './campaign.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { DebtService } from '../../../../core/debt/debt.service';
@@ -51,6 +51,12 @@ export class CampaignService {
   changeStatusToProblematic(data: any): any {
     const { debtId, personId } = this._campaignDebt$.value;
     return this.debtCRUDService.changeStatus(personId, debtId, { ...data, statusCode: 9 });
+  }
+
+  fetchProcessedDebtsForCurrentCampaign(): Observable<ICampaignProcessedDebt[]> {
+    const { campaignId } = this;
+    return this.dataService.readAll('/campaigns/{campaignId}/debts/processed', { campaignId })
+      .catch(this.notificationsService.fetchError().entity('entities.debts.gen.plural').dispatchCallback());
   }
 
   private fetchDebtId(campaignId: number): Observable<number> {

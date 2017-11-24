@@ -93,6 +93,12 @@ export class FilterComponent implements OnInit {
       })),
       { controlName: 'userId', type: 'dialogmultiselectwrapper', filterType: 'users' },
       { controlName: 'receiveDateTime', type: 'datepicker' },
+      {
+        controlName: 'searchBtn',
+        type: 'searchBtn',
+        iconCls: 'fa-search',
+        action: () => this.onSearch(),
+      },
     ]
     .map(control => ({
       ...control,

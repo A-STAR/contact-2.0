@@ -37,3 +37,13 @@ export interface ICampaignDebt {
   statusCode: number;
   totalAmount: number;
 }
+
+export interface ICampaignProcessedDebt {
+  personFullName: string;
+  debtId: number;
+  contract: string;
+  statusCode: number;
+  debtAmount: number;
+  currencyName: string;
+  dpd: number;
+}
