@@ -51,7 +51,7 @@ export class StatusDialogComponent implements OnInit {
   }
 
   get isFormDisabled(): boolean {
-    return !this.form.canSubmit;
+    return !(this.form && this.form.canSubmit);
   }
 
   onSubmit(): void {
