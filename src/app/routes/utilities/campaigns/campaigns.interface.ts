@@ -52,7 +52,7 @@ export interface IUserStatistic {
   successProcessing: number;
   unsuccessProcessing: number;
   contact: number;
-  SMS: string;
+  SMS: number;
   successContact: number;
   refusal: number;
   promise: number;

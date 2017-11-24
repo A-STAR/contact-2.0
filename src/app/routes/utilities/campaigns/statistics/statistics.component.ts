@@ -36,15 +36,24 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   campaignUserStatistics: IUserStatistic[];
 
   columns: Array<IGridColumn> = [
-    { prop: 'userFullName', minWidth: 250 },
-    { prop: 'successProcessing', minWidth: 100 },
-    { prop: 'unsuccessProcessing', minWidth: 100 },
-    { prop: 'contact', minWidth: 100 },
-    { prop: 'SMS', minWidth: 100, renderer: 'phoneRenderer'},
-    { prop: 'successContact', minWidth: 100 },
-    { prop: 'refusal', minWidth: 100 },
-    { prop: 'promise', minWidth: 100 },
-    { prop: 'promiseAmount', minWidth: 100 },
+    { prop: 'userFullName', minWidth: 200 },
+    { prop: 'successProcessing', minWidth: 250 },
+    { prop: 'unsuccessProcessing', minWidth: 250 },
+    { prop: 'contact', minWidth: 200 },
+    { prop: 'SMS', minWidth: 200 },
+    { prop: 'successContact', minWidth: 200 },
+    { prop: 'refusal', minWidth: 200 },
+    { prop: 'promise', minWidth: 200 },
+    { prop: 'promiseAmount', minWidth: 200 },
+    // todo: move it to aggregated statistics
+    // { prop: 'untreated', minWidth: 200 },
+    // { prop: 'successProcessingSum', minWidth: 200 },
+    // { prop: 'unsuccessProcessingSum', minWidth: 200 },
+    // { prop: 'contactSum', minWidth: 200 },
+    // { prop: 'SMSSum', minWidth: 200 },
+    // { prop: 'refusalSum', minWidth: 200 },
+    // { prop: 'promiseSum', minWidth: 200 },
+    // { prop: 'promiseAmountSum', minWidth: 200 },
   ];
 
   private campaignStatisticSub: Subscription;

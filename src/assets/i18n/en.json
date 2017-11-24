@@ -1068,8 +1068,29 @@
           }
         },
         "remove": {
-          "title": "Remove participant",
+          "title": "Remove participants",
           "confirmMessage": "Are you sure you want to delete selected participants from the campaign?"
+        }
+      },
+      "statistics": {
+        "grid": {
+          "userFullName": "User fullname",
+          "successProcessing": "Successfully processed debts",
+          "unsuccessProcessing": "Unseccessfully processed debts",
+          "contact": "Contacts count",
+          "SMS": "SMS count",
+          "successContact": "Successful contacts count",
+          "refusal": "Refusals count",
+          "promise": "Promises count",
+          "promiseAmount": "Promise amount",
+          "untreated": "Untreated debts",
+          "successProcessingSum": "Success processing sum",
+          "unsuccessProcessingSum": "Unsuccess processing sum",
+          "contactSum": "Contacts sum",
+          "SMSSum": "SMS sum",
+          "refusalSum": "Refusal sum",
+          "promiseSum": "Promise sum",
+          "promiseAmountSum": "Promise amount sum"
         }
       },
       "tabs": {
