@@ -59,6 +59,13 @@ export class CampaignService {
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.plural').dispatchCallback());
   }
 
+  markCurrentDebtAsFinished(): Observable<null> {
+    const { campaignId } = this;
+    const { debtId } = this._campaignDebt$.value;
+    return this.dataService.update('/campaigns/{campaignId}/debts/{debtId}', { campaignId, debtId }, {})
+      .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
+  }
+
   private fetchDebtId(campaignId: number): Observable<number> {
     return Observable.of(1);
 

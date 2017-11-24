@@ -38,7 +38,7 @@ export class ToolbarComponent extends DialogFunctions {
     {
       type: ToolbarItemTypeEnum.BUTTON_NEXT,
       label: 'Переход к следующему долгу',
-      action: () => console.log(),
+      action: () => this.toNextDebt(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON,
@@ -81,5 +81,13 @@ export class ToolbarComponent extends DialogFunctions {
         contactType: 7,
         campaignId: this.campaignService.campaignId
       }));
+  }
+
+  private toNextDebt(): void {
+    this.campaignService
+      .markCurrentDebtAsFinished()
+      .subscribe(() => {
+        this.campaignService.preloadCampaignDebt();
+      });
   }
 }
