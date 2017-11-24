@@ -25,7 +25,7 @@ export class DebtorPledgeAttributesComponent {
         inject: {
           entityTypeId$: Observable.of(DebtorPledgeAttributesComponent.ENTITY_TYPE_PROPERY),
           entityId$: this.pledgeService
-            .select<IPledgeContract>(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED)
+            .getPayload<IPledgeContract>(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED)
             .map(pledge => pledge ? pledge.propertyId : null)
         }
       }

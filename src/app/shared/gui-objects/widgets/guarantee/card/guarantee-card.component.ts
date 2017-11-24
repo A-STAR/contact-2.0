@@ -109,7 +109,7 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
     });
 
     this.guarantorSelectionSub = this.guaranteeService
-      .select<IGuarantor>(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED)
+      .getPayload<IGuarantor>(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED)
       .subscribe(guarantor => {
         const personId = this.form.getControl('personId');
         personId.setValue(guarantor.id);
@@ -143,7 +143,7 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
         : this.guaranteeService.update(this.debtId, this.contractId, data);
 
     action.subscribe(() => {
-      this.guaranteeService.notify(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
+      this.guaranteeService.setPayload(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
       this.onBack();
     });
   }

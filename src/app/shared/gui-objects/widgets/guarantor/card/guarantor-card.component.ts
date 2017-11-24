@@ -181,7 +181,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
     form.enable();
     form.patchValue({ typeCode: this.currentTypeCode });
     form.get('typeCode').markAsDirty();
-    this.guaranteeService.notify(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, {});
+    this.guaranteeService.setPayload(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, {});
     this.cdRef.markForCheck();
   }
 
@@ -196,7 +196,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
     form.patchValue(guarantor);
     form.get('typeCode').markAsDirty();
     form.disable();
-    this.guaranteeService.notify(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, guarantor);
+    this.guaranteeService.setPayload(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, guarantor);
     this.cdRef.markForCheck();
   }
 

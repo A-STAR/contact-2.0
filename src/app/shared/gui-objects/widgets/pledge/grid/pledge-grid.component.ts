@@ -107,11 +107,11 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
     });
 
     this.actionSubscription = this.pledgeService
-      .select(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED)
+      .getPayload(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED)
       .subscribe(() => this.fetch());
 
     this.selectedContract$.subscribe(
-      pledge => this.pledgeService.notify(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED, pledge)
+      pledge => this.pledgeService.setPayload(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED, pledge)
     );
   }
 

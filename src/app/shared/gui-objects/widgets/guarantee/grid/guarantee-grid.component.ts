@@ -119,7 +119,7 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
       });
 
     this.actionSubscription = this.guaranteeService
-      .select(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED)
+      .getPayload(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED)
       .subscribe(() => this.fetch());
   }
 

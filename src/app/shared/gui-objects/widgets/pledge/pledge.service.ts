@@ -127,11 +127,11 @@ export class PledgeService {
       ).catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
 
-  notify(type: string, payload?: any): void {
+  setPayload(type: string, payload?: any): void {
     this.store.dispatch({ type, payload });
   }
 
-  select<T = any>(type: string): Observable<T> {
+  getPayload<T>(type: string): Observable<T> {
     return this.actions.ofType(type)
       .map(action => (action as UnsafeAction).payload);
   }

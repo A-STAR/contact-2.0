@@ -149,7 +149,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
     form.enable();
     form.patchValue({ typeCode: this.currentTypeCode });
     form.get('typeCode').markAsDirty();
-    this.pledgeService.notify(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, {});
+    this.pledgeService.setPayload(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, {});
     this.cdRef.markForCheck();
   }
 
@@ -164,7 +164,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
     form.patchValue(pledgor);
     form.get('typeCode').markAsDirty();
     form.disable();
-    this.pledgeService.notify(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, pledgor);
+    this.pledgeService.setPayload(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, pledgor);
     this.cdRef.markForCheck();
   }
 

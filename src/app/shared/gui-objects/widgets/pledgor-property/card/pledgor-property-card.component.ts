@@ -103,7 +103,7 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
     });
 
     this.pledgorSubscription = this.pledgeService
-      .select<IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
+      .getPayload<IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
       .subscribe(pledgor => {
         this.onClear();
         this.pledgorId = pledgor ? pledgor.id : null;
@@ -120,7 +120,7 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
     this.formSubscription = this.form.form.valueChanges
       .map(updates => this.form.serializedValue)
       .subscribe(property => {
-        this.pledgeService.notify(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED, {
+        this.pledgeService.setPayload(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED, {
           id: property.id,
           pledgeValue: property.pledgeValue,
           marketValue: property.marketValue,

@@ -82,7 +82,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
     });
 
     this.pledgorSelectionSub = this.pledgeService
-      .select<IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
+      .getPayload<IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
       .subscribe(pledgor => {
         this.personId = pledgor.id;
         const personId = this.form.getControl('personId');
@@ -91,7 +91,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
       });
 
     this.pledgorPropertySelectionSub = this.pledgeService
-      .select<IPledgorProperty>(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED)
+      .getPayload<IPledgorProperty>(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED)
       .subscribe(pledgorProperty => {
         this.propertyId = pledgorProperty.id;
         const propertyId = this.form.getControl('propertyId');
@@ -158,7 +158,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
         );
 
     action.subscribe(() => {
-      this.pledgeService.notify(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
+      this.pledgeService.setPayload(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
       this.onBack();
     });
   }
