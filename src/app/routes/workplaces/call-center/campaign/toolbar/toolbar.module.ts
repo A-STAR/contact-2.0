@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { ProcessedDebtsModule } from './processed-debts/processed-debts.module';
 import { SharedModule } from '../../../../../shared/shared.module';
+import { StatusDialogModule } from './status-dialog/status-dialog.module';
 
 import { ToolbarComponent } from './toolbar.component';
 
@@ -9,6 +10,7 @@ import { ToolbarComponent } from './toolbar.component';
   imports: [
     ProcessedDebtsModule,
     SharedModule,
+    StatusDialogModule,
   ],
   exports: [
     ToolbarComponent,

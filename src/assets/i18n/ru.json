@@ -185,6 +185,18 @@
         "payments": "Платежи",
         "promises": "Обещания",
         "documents": "Документы"
+      },
+      "processedDebts": {
+        "grid": {
+          "contract": "Договор",
+          "currencyName": "Валюта",
+          "debtAmount": "Сумма просроченного долга",
+          "debtId": "Ид долга",
+          "dpd": "DPD",
+          "personFullName": "ФИО",
+          "statusCode": "Статус"
+        },
+        "title": "Информация о предыдущих долгах"
       }
     },
     "contactLog": {
@@ -1518,16 +1530,16 @@
         "message": "Вы действительно хотите удалить отмеченные обещания?"
       }
     },
-    "paymentsChangesConfirm": {
+    "paymentOperatorConfirm": {
       "dialog": {
         "title": "Подтверждение изменений",
-        "message": "Вы действительно хотите подтвердить изменения оператора для выбранных платежей?"
+        "message": "Вы действительно хотите подтвердить изменение оператора для выбранных платежей?"
       }
     },
-    "paymentsChangesReject": {
+    "paymentOperatorReject": {
       "dialog": {
         "title": "Отмена изменений",
-        "message": "Вы действительно хотите отклонить изменения оператора для выбранных платежей?"
+        "message": "Вы действительно хотите отклонить изменение оператора для выбранных платежей?"
       }
     },
     "debt": {
@@ -2181,7 +2193,7 @@
         "filterOoo": "фильтр..."
       },
       "actions": {
-        "confirmPaymentsChanges": "Подтвердить изменения платежей",
+        "confirmPaymentsOperator": "Подтвердить изменение оператора",
         "confirmPromise": "Подтвердить обещания",
         "debtChangeAttribute": "Изменить атрибуты долга",
         "debtClearResponsible": "Снять ответственного по долгу",
@@ -2193,7 +2205,7 @@
         "openDebtCard": "Открыть карточку долга",
         "paymentsCancel": "Отменить платежи",
         "paymentsConfirm": "Подтвердить платежи",
-        "rejectPaymentsChanges": "Отклонить изменения платежей",
+        "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
         "statusChange": "Изменить статус"
       }
