@@ -125,7 +125,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
   }
 
   private needToReadPortfolios$ = new BehaviorSubject<string>(null);
-  private actionsSubscription: Subscription;
+  // private actionsSubscription: Subscription;
   private canViewSubscription: Subscription;
   private contractorSubscription: Subscription;
   private _portfolios: IPortfolio[];
@@ -181,7 +181,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
  }
 
   ngOnDestroy(): void {
-    this.actionsSubscription.unsubscribe();
+    // this.actionsSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.contractorSubscription.unsubscribe();
     this.needToReadPortfolios$.unsubscribe();

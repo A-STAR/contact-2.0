@@ -2095,6 +2095,31 @@
       "from": "From",
       "to": "To"
     },
+    "filters": {
+      "portfolios": {
+        "grid": {
+          "contractorName": "Contractor",
+          "directionCode": "Direction",
+          "endWorkDate": "End Date",
+          "id": "Id",
+          "name": "Name",
+          "signDate": "Signed On",
+          "stageCode": "Stage",
+          "startWorkDate": "Start Date",
+          "statusCode": "Status"
+        },
+        "title": "Select Portfolios"
+      },
+      "users": {
+        "grid": {
+          "fullName": "Name",
+          "id": "Id",
+          "organization": "Organization",
+          "position": "Position"
+        },
+        "title": "Select Users"
+      }
+    },
     "grid": {
       "empty": "No data to display",
       "filter": {
@@ -2132,17 +2157,21 @@
         "filterOoo": "filter..."
       },
       "actions": {
-        "statusChange": "Change Status",
-        "showContactHistory": "Contact Log",
-        "debtSetResponsible": "Set debt responsible",
-        "debtClearResponsible": "Clear debt responsible",
-        "objectAddToGroup": "Add to group",
-        "paymentsConfirm": "Payments confirm",
-        "paymentsCancel": "Payments cancel",
-        "confirmPromise": "Confirm promises",
-        "deletePromise": "Delete promises",
         "confirmPaymentsChanges": "Confirm payments changes",
-        "rejectPaymentsChanges": "Reject payments changes"
+        "confirmPromise": "Confirm promises",
+        "debtChangeAttribute": "Change debt attributes",
+        "debtClearResponsible": "Clear debt responsible",
+        "debtNextCallDate": "Set next call date",
+        "debtSetResponsible": "Set debt responsible",
+        "deletePromise": "Delete promises",
+        "objectAddToGroup": "Add to group",
+        "objectChangeColor": "Change color",
+        "openDebtCard": "Open debt card",
+        "paymentsCancel": "Payments cancel",
+        "paymentsConfirm": "Payments confirm",
+        "rejectPaymentsChanges": "Reject payments changes",
+        "showContactHistory": "Contact Log",
+        "statusChange": "Change status"
       }
     },
     "filter": {

@@ -13,8 +13,8 @@ export class ContactLogComponent {
   static COMPONENT_NAME = 'ContactLogComponent';
 
   grids = [
-    // { key: 'contactLogPromise', title: labelKey('promise.title') },
+    { key: 'contactLogPromise', title: labelKey('promise.title') },
     { key: 'contactLogContact', title: labelKey('contact.title') },
-    // { key: 'contactLogSMS', title: labelKey('sms.title') },
+    { key: 'contactLogSMS', title: labelKey('sms.title') },
   ];
 }

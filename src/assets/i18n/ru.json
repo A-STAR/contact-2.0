@@ -2095,6 +2095,31 @@
       "from": "Начало",
       "to": "Окончание"
     },
+    "filters": {
+      "portfolios": {
+        "grid": {
+          "contractorName": "Контрагент",
+          "directionCode": "Направление",
+          "endWorkDate": "Дата окончания работ",
+          "id": "Ид",
+          "name": "Название",
+          "signDate": "Дата подписания портфеля",
+          "stageCode": "Стадия",
+          "startWorkDate": "Дата начала работ",
+          "statusCode": "Статус"
+        },
+        "title": "Выберите портфели"
+      },
+      "users": {
+        "grid": {
+          "fullName": "ФИО",
+          "id": "Ид",
+          "organization": "Подразделение",
+          "position": "Должность"
+        },
+        "title": "Выберите пользователей"
+      }
+    },
     "grid": {
       "empty": "Нет данных для отображения",
       "filter": {
@@ -2132,17 +2157,21 @@
         "filterOoo": "фильтр..."
       },
       "actions": {
-        "statusChange": "Изменить статус",
-        "showContactHistory": "История контактов",
-        "debtSetResponsible": "Установка ответственного по долгу",
-        "debtClearResponsible": "Снятие ответственного по долгу",
-        "objectAddToGroup": "Добавить в группу",
-        "paymentsConfirm": "Подтвердить платежи",
-        "paymentsCancel": "Отменить платежи",
-        "confirmPromise": "Подтвердить обещания",
-        "deletePromise": "Удалить обещания",
         "confirmPaymentsChanges": "Подтвердить изменения платежей",
-        "rejectPaymentsChanges": "Отклонить изменения платежей"
+        "confirmPromise": "Подтвердить обещания",
+        "debtChangeAttribute": "Изменить атрибуты долга",
+        "debtClearResponsible": "Снять ответственного по долгу",
+        "debtNextCallDate": "Установить дату следующего звонка",
+        "debtSetResponsible": "Установить ответственного по долгу",
+        "deletePromise": "Удалить обещания",
+        "objectAddToGroup": "Добавить в группу",
+        "objectChangeColor": "Изменить цвет",
+        "openDebtCard": "Открыть карточку долга",
+        "paymentsCancel": "Отменить платежи",
+        "paymentsConfirm": "Подтвердить платежи",
+        "rejectPaymentsChanges": "Отклонить изменения платежей",
+        "showContactHistory": "История контактов",
+        "statusChange": "Изменить статус"
       }
     },
     "filter": {
