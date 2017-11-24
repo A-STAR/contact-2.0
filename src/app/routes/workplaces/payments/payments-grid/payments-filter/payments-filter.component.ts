@@ -20,6 +20,7 @@ import { TYPE_CODES } from '../../../../../core/utils/value';
 
 import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -47,7 +48,8 @@ export class PaymentsFilterComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private entityAttributesService: EntityAttributesService,
-    private store: Store<IAppState>
+    private store: Store<IAppState>,
+    private valueConverterService: ValueConverterService
   ) { }
 
   ngOnInit(): void {
@@ -140,13 +142,9 @@ export class PaymentsFilterComponent implements OnInit, OnDestroy {
   private transformFilterValue(key: string, value: any): any {
     switch (key) {
       case 'paymentDateTime':
-        return this.paymentDateTimeFormat === TYPE_CODES.DATETIME ? this.formatDateToISOString(value) : value;
+        return this.paymentDateTimeFormat === TYPE_CODES.DATETIME ? this.valueConverterService.dateStringToISO(value) : value;
       default:
         return value;
     }
-  }
-
-  private formatDateToISOString(date: string): string {
-    return moment(date, this.dateFormat).toISOString();
   }
 }
