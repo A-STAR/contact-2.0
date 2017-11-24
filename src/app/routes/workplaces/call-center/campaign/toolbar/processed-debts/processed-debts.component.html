@@ -1,14 +1,14 @@
-<app-dialog (close)="onClose()">
+<app-dialog [styles]="{ width: '80%' }" (close)="onClose()">
   <div dialog-header>
-    <h3>Информация о предыдущих долгах </h3>
+    <h3>{{ 'modules.callCenter.processedDebts.title' | translate }}</h3>
   </div>
 
   <app-grid
     selectionType="single"
-    columnTranslationKey="constants"
+    columnTranslationKey="modules.callCenter.processedDebts"
     [columns]="columns"
     [rows]="rows"
-    [styles]="{ height: '320px' }"
+    [styles]="{ height: '480px' }"
   ></app-grid>
 
   <div dialog-footer>

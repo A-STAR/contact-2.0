@@ -185,6 +185,18 @@
         "payments": "Payments",
         "promises": "Promises",
         "documents": "Documents"
+      },
+      "processedDebts": {
+        "grid": {
+          "contract": "Contract",
+          "currencyName": "Currency",
+          "debtAmount": "Debt Amount",
+          "debtId": "Debt Id",
+          "dpd": "DPD",
+          "personFullName": "Full Name",
+          "statusCode": "Status"
+        },
+        "title": "Previous Debts"
       }
     },
     "contactLog": {

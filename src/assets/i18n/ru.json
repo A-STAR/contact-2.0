@@ -185,6 +185,18 @@
         "payments": "Платежи",
         "promises": "Обещания",
         "documents": "Документы"
+      },
+      "processedDebts": {
+        "grid": {
+          "contract": "Договор",
+          "currencyName": "Валюта",
+          "debtAmount": "Сумма просроченного долга",
+          "debtId": "Ид долга",
+          "dpd": "DPD",
+          "personFullName": "ФИО",
+          "statusCode": "Статус"
+        },
+        "title": "Информация о предыдущих долгах"
       }
     },
     "contactLog": {
