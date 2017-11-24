@@ -10,24 +10,20 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '../../../../../core/state/state.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '../../../../../core/entity/attributes/entity-attributes.interface';
 import { FilterObject, FilterOperatorType } from '../../../../../shared/components/grid2/filter/grid-filter';
-
+import { TYPE_CODES } from '../../../../../core/utils/value';
 
 import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-
 import { range, makeKey } from '../../../../../core/utils';
-
-import { TYPE_CODES } from '../../../../../core/utils/value';
 
 const labelKey = makeKey('modules.payments.filters.form');
 
