@@ -3,10 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { ICampaignDebt } from './campaign.interface';
+import { ICampaignDebt, ICampaignProcessedDebt } from './campaign.interface';
 
-// import { DataService } from '../../../../core/data/data.service';
-// import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { DataService } from '../../../../core/data/data.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 interface ICampaignRouteParams {
   campaignId: number;
@@ -17,8 +17,8 @@ export class CampaignService {
   private _campaignDebt$ = new BehaviorSubject<ICampaignDebt>(null);
 
   constructor(
-    // private dataService: DataService,
-    // private notificationsService: NotificationsService,
+    private dataService: DataService,
+    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
   ) {}
 
@@ -38,6 +38,12 @@ export class CampaignService {
     this.fetchDebtId(this.campaignId)
       .flatMap(debtId => this.fetchCampaignDebt(this.campaignId, debtId))
       .subscribe(campaignDebt => this._campaignDebt$.next(campaignDebt));
+  }
+
+  fetchProcessedDebtsForCurrentCampaign(): Observable<ICampaignProcessedDebt[]> {
+    const { campaignId } = this;
+    return this.dataService.readAll('/campaigns/{campaignId}/debts/processed', { campaignId })
+      .catch(this.notificationsService.fetchError().entity('entities.debts.gen.plural').dispatchCallback());
   }
 
   private fetchDebtId(campaignId: number): Observable<number> {
