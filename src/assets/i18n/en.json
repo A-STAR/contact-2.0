@@ -201,6 +201,7 @@
           "outPortfolioId": "Registry",
           "portfolioId": "Portfolio",
           "receiveDateTime": "Received",
+          "createDateTime": "Created",
           "regionCode": "Region",
           "userId": "Operator",
           "searchBtn": "Search"

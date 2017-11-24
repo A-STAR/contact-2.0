@@ -201,6 +201,7 @@
           "outPortfolioId": "Реестр КА",
           "portfolioId": "Портфели",
           "receiveDateTime": "Получен",
+          "createDateTime": "Создан",
           "regionCode": "Регион",
           "userId": "Оператор",
           "searchBtn": "Искать"
