@@ -27,7 +27,7 @@ export class CampaignService {
   ) {}
 
   get isCampaignDebtActive$(): Observable<boolean> {
-    return this._campaignDebt$.do(console.log).map(debt => this.debtService.isDebtActive(debt));
+    return this._campaignDebt$.map(debt => this.debtService.isDebtActive(debt));
   }
 
   get campaignDebt$(): Observable<ICampaignDebt> {
