@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { CampaignService } from '../campaign.service';
 import { DebtService } from '../../../../../core/debt/debt.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
+
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-call-center-toolbar',
@@ -29,6 +33,7 @@ export class ToolbarComponent extends DialogFunctions {
       type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
       label: 'Перевод в проблемные',
       action: () => this.setDialog('change-status'),
+      enabled: this.canChangeStatusToProblematic$,
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_NEXT,
@@ -48,8 +53,16 @@ export class ToolbarComponent extends DialogFunctions {
   constructor(
     private campaignService: CampaignService,
     private debtService: DebtService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
+
+  get canChangeStatusToProblematic$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.campaignService.isCampaignDebtActive$,
+      this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 9),
+    ]);
   }
 
   private openDebtorCard(): void {

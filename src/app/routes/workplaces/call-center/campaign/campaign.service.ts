@@ -5,8 +5,10 @@ import { Observable } from 'rxjs/Observable';
 
 import { ICampaignDebt } from './campaign.interface';
 
-// import { DataService } from '../../../../core/data/data.service';
-// import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { DataService } from '../../../../core/data/data.service';
+import { DebtService } from '../../../../core/debt/debt.service';
+import { DebtService as DebtCRUDService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 interface ICampaignRouteParams {
   campaignId: number;
@@ -17,10 +19,16 @@ export class CampaignService {
   private _campaignDebt$ = new BehaviorSubject<ICampaignDebt>(null);
 
   constructor(
-    // private dataService: DataService,
-    // private notificationsService: NotificationsService,
+    private dataService: DataService,
+    private debtService: DebtService,
+    private debtCRUDService: DebtCRUDService,
+    private notificationsService: NotificationsService,
     private route: ActivatedRoute,
   ) {}
+
+  get isCampaignDebtActive$(): Observable<boolean> {
+    return this._campaignDebt$.do(console.log).map(debt => this.debtService.isDebtActive(debt));
+  }
 
   get campaignDebt$(): Observable<ICampaignDebt> {
     return this._campaignDebt$;
@@ -38,6 +46,11 @@ export class CampaignService {
     this.fetchDebtId(this.campaignId)
       .flatMap(debtId => this.fetchCampaignDebt(this.campaignId, debtId))
       .subscribe(campaignDebt => this._campaignDebt$.next(campaignDebt));
+  }
+
+  changeStatusToProblematic(data: any): any {
+    const { debtId, personId } = this._campaignDebt$.value;
+    return this.debtCRUDService.changeStatus(personId, debtId, { ...data, statusCode: 9 });
   }
 
   private fetchDebtId(campaignId: number): Observable<number> {

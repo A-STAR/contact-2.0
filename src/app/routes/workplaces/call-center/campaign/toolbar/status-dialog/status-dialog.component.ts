@@ -11,6 +11,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormControl } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
+import { CampaignService } from '../../campaign.service';
+import { UserConstantsService } from '../../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -26,49 +28,58 @@ const label = makeKey('widgets.debt.dialogs.statusChange');
 })
 export class StatusDialogComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
-  @Output() submit = new EventEmitter<void>();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
 
   constructor(
+    private campaignService: CampaignService,
     private cdRef: ChangeDetectorRef,
+    private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    this.userDictionariesService.getDictionaries([
-      UserDictionariesService.DICTIONARY_DEBT_STATUS,
-      UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE,
-    ])
-    .take(1)
-    .subscribe(dictionaries => {
-      const options = [];
-      this.controls = this.buildControls(options);
-      this.cdRef.markForCheck();
-    });
+    this.userConstantsService.get('Debt.StatusReason.MandatoryList')
+      .take(1)
+      .map(constant => constant.valueS)
+      .subscribe(constant => {
+        const isReasonRequired = constant === 'ALL' || constant.split(',').map(Number).includes(9);
+        this.controls = this.buildControls(isReasonRequired);
+        this.cdRef.markForCheck();
+      });
+  }
+
+  get isFormDisabled(): boolean {
+    return !this.form.canSubmit;
   }
 
   onSubmit(): void {
-    // const { customStatusCode, statusCode, ...rest } = this.form.serializedUpdates;
-    // const value = {
-    //   ...rest,
-    //   statusCode: customStatusCode || statusCode,
-    // };
-    // this.debtService.changeStatus(this.personId, this.debt.id, value).subscribe(() => {
-    //   this.submit.emit();
-    //   this.close.emit();
-    // });
+    this.campaignService
+      .changeStatusToProblematic(this.form.serializedUpdates)
+      .subscribe(() => {
+        this.campaignService.preloadCampaignDebt();
+        this.close.emit();
+      });
   }
 
   onClose(): void {
     this.close.emit();
   }
 
-  private buildControls(options: any[]): IDynamicFormControl[] {
+  private buildControls(isReasonRequired: boolean): IDynamicFormControl[] {
     return [
-      { controlName: 'reasonCode', type: 'select', options },
-      { controlName: 'comment', type: 'textarea' },
+      {
+        controlName: 'reasonCode',
+        type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE,
+        parentCode: 6,
+        required: isReasonRequired,
+      },
+      {
+        controlName: 'comment',
+        type: 'textarea',
+      },
     ].map(control => ({ ...control, label: label(control.controlName) } as IDynamicFormControl));
   }
 }
