@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { IAddress, IContactRegistrationParams, IDebt, IPhone } from './debt.interface';
+import { IAddress, IContactRegistrationParams, IPhone } from './debt.interface';
 
 import { ContentTabService } from '../../shared/components/content-tabstrip/tab/content-tab.service';
 import { UserPermissionsService } from '../user/permissions/user-permissions.service';
@@ -52,7 +52,7 @@ export class DebtService {
     return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_OFFICE_VISIT);
   }
 
-  canRegisterContactForDebt$(debt: IDebt): Observable<boolean> {
+  canRegisterContactForDebt$(debt: { statusCode: number }): Observable<boolean> {
     return Observable.combineLatest(
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG'),
       this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [
@@ -64,7 +64,7 @@ export class DebtService {
     ).map(([ canRegisterClosed, canRegister ]) => (this.isDebtActive(debt) || canRegisterClosed) && canRegister);
   }
 
-  isDebtActive(debt: IDebt): boolean {
+  isDebtActive(debt: { statusCode: number }): boolean {
     return debt && ![6, 7, 8, 17].includes(debt.statusCode);
   }
 

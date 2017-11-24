@@ -185,6 +185,18 @@
         "payments": "Payments",
         "promises": "Promises",
         "documents": "Documents"
+      },
+      "processedDebts": {
+        "grid": {
+          "contract": "Contract",
+          "currencyName": "Currency",
+          "debtAmount": "Debt Amount",
+          "debtId": "Debt Id",
+          "dpd": "DPD",
+          "personFullName": "Full Name",
+          "statusCode": "Status"
+        },
+        "title": "Previous Debts"
       }
     },
     "contactLog": {
@@ -1517,16 +1529,16 @@
         "message": "Do you really want to delete the marked promises?"
       }
     },
-    "paymentsChangesConfirm": {
+    "paymentOperatorConfirm": {
       "dialog": {
         "title": "Confirmation of changes",
-        "message": "Do you really want to confirm changes of the operator for the selected payments?"
+        "message": "Do you really want to confirm operator change for the selected payments?"
       }
     },
-    "paymentsChangesReject": {
+    "paymentOperatorReject": {
       "dialog": {
         "title": "Rejection of changes",
-        "message": "Do you really want to reject changes of the operator for the selected payments?"
+        "message": "Do you really want to reject operator change for the selected payments?"
       }
     },
     "debt": {
@@ -2180,7 +2192,7 @@
         "filterOoo": "filter..."
       },
       "actions": {
-        "confirmPaymentsChanges": "Confirm payments changes",
+        "confirmPaymentsOperator": "Confirm change operator",
         "confirmPromise": "Confirm promises",
         "debtChangeAttribute": "Change debt attributes",
         "debtClearResponsible": "Clear debt responsible",
@@ -2192,7 +2204,7 @@
         "openDebtCard": "Open debt card",
         "paymentsCancel": "Payments cancel",
         "paymentsConfirm": "Payments confirm",
-        "rejectPaymentsChanges": "Reject payments changes",
+        "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
         "statusChange": "Change status"
       }

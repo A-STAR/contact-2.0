@@ -40,6 +40,12 @@
       cursor: default;
     }
   }
+
+  &::ng-deep {
+    .app-select-unselectable {
+      height: 32px;
+    }
+  }
 }
 
 :host.toolbar-border /deep/ {

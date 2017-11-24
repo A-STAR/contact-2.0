@@ -19,6 +19,13 @@ export class MessageBusService {
    */
   private box = new Map<string, any>();
 
+  /**
+   * Please prefer using the store's dispatch to pass arbitrary data to other components
+   * @deprecated
+   * @param type
+   * @param key
+   * @param payload
+   */
   dispatch<T, P>(type: T, key: string = null, payload: P = null): void {
     this.bus$.next({ type, key, payload });
   }

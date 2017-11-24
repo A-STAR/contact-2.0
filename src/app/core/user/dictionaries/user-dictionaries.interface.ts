@@ -13,9 +13,7 @@ export interface IUserDictionaries {
 }
 
 export interface IUserDictionariesState {
-  dictionaries: {
-    [key: number]: TUserDictionary;
-  };
+  [key: number]: TUserDictionary;
 }
 
 export interface IUserDictionaryAction {
