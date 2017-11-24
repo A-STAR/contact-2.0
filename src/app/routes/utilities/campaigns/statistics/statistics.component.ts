@@ -102,6 +102,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
           this.campaignUserStatistics = [];
           this.cdRef.markForCheck();
         }
+        console.log('start');
         return canView;
       })
       .map(([canView, campain]) => campain)
