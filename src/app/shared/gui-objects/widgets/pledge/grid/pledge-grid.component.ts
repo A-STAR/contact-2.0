@@ -9,7 +9,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { PledgeService } from '../pledge.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -83,7 +82,6 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
     private cdRef: ChangeDetectorRef,
     private pledgeService: PledgeService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -108,11 +106,12 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       }
     });
 
-    this.actionSubscription = this.messageBusService.select(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED)
+    this.actionSubscription = this.pledgeService
+      .getPayload(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED)
       .subscribe(() => this.fetch());
 
     this.selectedContract$.subscribe(
-      pledge => this.messageBusService.dispatch(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED, null, pledge)
+      pledge => this.pledgeService.setPayload(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED, pledge)
     );
   }
 
@@ -150,13 +149,13 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   private onAddPledgor(contract: IPledgeContract): void {
-    this.messageBusService.passValue('contract', contract);
-    this.router.navigate([ `${this.router.url}/pledge/pledgor/add` ]);
+    const { contractId } = contract;
+    this.router.navigate([ `${this.router.url}/pledge/${contractId}/pledgor/add` ]);
   }
 
   private onEdit(contract: IPledgeContract): void {
-    this.messageBusService.passValue('contract', contract);
-    this.router.navigate([ `${this.router.url}/pledge/edit` ]);
+    const { contractId, personId, propertyId } = contract;
+    this.router.navigate([ `${this.router.url}/pledge/${contractId}/pledgor/${personId}/${propertyId}` ]);
   }
 
   private fetch(): void {

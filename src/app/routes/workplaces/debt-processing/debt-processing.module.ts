@@ -29,11 +29,11 @@ const routes: Routes = [
   { path: '', component: DebtProcessingComponent },
   { path: ':personId/:debtId', children: [
       { path: '', pathMatch: 'full', component: DebtorComponent },
-      { path: 'guaranteeContract', children: [
+      { path: 'guarantee', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorGuarantorComponent },
-          { path: 'edit', component: DebtorGuarantorComponent },
-          { path: 'addGuarantor', component: DebtorGuarantorComponent },
+          { path: ':contractId/guarantor/add', component: DebtorGuarantorComponent },
+          { path: ':contractId/guarantor/:guarantorId', component: DebtorGuarantorComponent },
         ]
       },
       { path: 'property', children: [
@@ -50,8 +50,8 @@ const routes: Routes = [
       { path: 'pledge', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
           { path: 'create', component: DebtorPledgeComponent },
-          { path: 'edit', component: DebtorPledgeComponent },
-          { path: 'pledgor/add', component: DebtorPledgeComponent },
+          { path: ':contractId/pledgor/add', component: DebtorPledgeComponent },
+          { path: ':contractId/pledgor/:pledgorId/:propertyId', component: DebtorPledgeComponent },
         ]
       },      { path: 'contact', children: [
           { path: '', redirectTo: 'create', pathMatch: 'full' },
