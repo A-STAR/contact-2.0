@@ -28,7 +28,7 @@ export class ToolbarComponent extends DialogFunctions {
     {
       type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
       label: 'Перевод в проблемные',
-      action: () => console.log(),
+      action: () => this.setDialog('change-status'),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_NEXT,
@@ -43,7 +43,7 @@ export class ToolbarComponent extends DialogFunctions {
     },
   ];
 
-  dialog: 'processed-debts' = null;
+  dialog: 'processed-debts' | 'change-status' = null;
 
   constructor(
     private campaignService: CampaignService,
