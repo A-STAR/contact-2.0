@@ -1,16 +1,16 @@
 <app-dialog-action
-*ngIf="isDialog('inqueryDelete')"
-titleTranslationKey="massOperations.smsDelete.title"
-actionTranslationKey="massOperations.smsDelete.deleteInquery"
-actionMessage="default.buttons.ok"
-[messageParams]="paymentsCounter"
-(action)="onConfirmPayments()"
-(cancel)="onCloseDialog()">
+  *ngIf="isDialog('inqueryDelete')"
+  titleTranslationKey="massOperations.smsDelete.title"
+  actionTranslationKey="massOperations.smsDelete.deleteInquery"
+  actionMessage="default.buttons.ok"
+  [messageParams]="smsCounter"
+  (action)="onConfirmDelete()"
+  (cancel)="onCloseDialog()">
 </app-dialog-action>
 
 <app-result-dialog
-*ngIf="isDialog('infoDelete')"
-[count]="totalCount"
-[successCount]="successCount"
-(close)="onCloseDialog()">
+  *ngIf="isDialog('infoDelete')"
+  [count]="totalCount"
+  [successCount]="successCount"
+  (close)="onCloseDialog()">
 </app-result-dialog>

@@ -18,7 +18,7 @@ export class SmsDeleteDialogComponent extends DialogFunctions implements OnChang
   dialog = null;
 
   smsCounter = {
-  count: null
+    count: null
   };
 
   totalCount: number;
@@ -40,7 +40,7 @@ export class SmsDeleteDialogComponent extends DialogFunctions implements OnChang
     this.cdRef.markForCheck();
   }
 
-  onConfirmPayments(): void {
+  onConfirmDelete(): void {
     this.setDialog();
     this.cdRef.markForCheck();
     this.smsDeleteService.smsDelete(this.smsId)

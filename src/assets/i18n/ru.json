@@ -1945,6 +1945,10 @@
     "paymentsCancel": {
       "cancelInquery": "Вы действительно хотите отменить отмеченные {{ count }} платежей?",
       "title": "Отмена платежей"
+    },
+    "smsDelete": {
+      "deleteInquery": "Вы действительно хотите удалить отмеченные {{ count }} SMS?",
+      "title": "Удаление SMS"
     }
   },
   "errors": {
@@ -2206,7 +2210,8 @@
         "paymentsConfirm": "Подтвердить платежи",
         "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
-        "statusChange": "Изменить статус"
+        "statusChange": "Изменить статус",
+        "deleteSMS": "Удалить SMS"
       }
     },
     "filter": {
