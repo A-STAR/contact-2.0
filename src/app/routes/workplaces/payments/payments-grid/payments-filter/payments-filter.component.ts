@@ -9,7 +9,6 @@ import {
   OnDestroy
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as moment from 'moment';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '../../../../../core/state/state.interface';
@@ -42,7 +41,6 @@ export class PaymentsFilterComponent implements OnInit, OnDestroy {
   controls: IDynamicFormControl[];
 
   private paymentDateTimeFormat: number;
-  private dateFormat = 'YYYY-MM-DD';
   private metadataSub: Subscription;
 
   constructor(
