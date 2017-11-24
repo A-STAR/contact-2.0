@@ -232,7 +232,8 @@
           "portfolioId": "Портфели",
           "paymentDateTime": "Дата оплаты",
           "regionCode": "Регион",
-          "userId": "Оператор"
+          "userId": "Оператор",
+          "searchBtn": "Искать"
         },
         "userId": {
           "grid": {
