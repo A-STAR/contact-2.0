@@ -280,6 +280,22 @@
     </button>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'searchBtn'">
+    <label><span class="form-label">&nbsp;</span></label>
+    <button
+      class="btn btn-search btn-default form-control"
+      type="button"
+      (click)="control.action()"
+      [disabled]="control.disabled"
+    >
+      <span>
+        <i *ngIf="control.iconCls" class="fa" [ngClass]="control.iconCls" aria-hidden="true"></i>
+      </span>
+      {{ control.label | translate }}
+      <b *ngIf="control.required" class="text-danger">*</b>
+    </button>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'richtexteditor'">
     <label>
       <span class="form-label">

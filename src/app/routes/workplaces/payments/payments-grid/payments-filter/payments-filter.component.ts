@@ -119,6 +119,12 @@ export class PaymentsFilterComponent implements OnInit, OnDestroy {
       })),
       { controlName: 'userId', type: 'dialogmultiselectwrapper', filterType: 'users' },
       { controlName: 'paymentDateTime', type: 'datepicker' },
+      {
+        controlName: 'searchBtn',
+        type: 'searchBtn',
+        iconCls: 'fa-search',
+        action: () => this.onSearch(),
+      },
     ]
       .map(control => ({
         ...control,

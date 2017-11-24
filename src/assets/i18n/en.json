@@ -214,7 +214,8 @@
           "portfolioId": "Portfolio",
           "receiveDateTime": "Received",
           "regionCode": "Region",
-          "userId": "Operator"
+          "userId": "Operator",
+          "searchBtn": "Search"
         },
         "userId": {
           "grid": {
@@ -244,7 +245,8 @@
           "portfolioId": "Portfolio",
           "paymentDateTime": "Payment date",
           "regionCode": "Region",
-          "userId": "Operator"
+          "userId": "Operator",
+          "searchBtn": "Search"
         },
         "userId": {
           "grid": {
