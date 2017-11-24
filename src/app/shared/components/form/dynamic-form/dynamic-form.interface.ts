@@ -102,6 +102,7 @@ export type TControlTypes =
   | 'password'
   | 'radio'
   | 'richtexteditor'
+  | 'searchBtn'
   | 'segmented'
   | 'select'
   | 'selectwrapper'

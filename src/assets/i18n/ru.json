@@ -202,7 +202,8 @@
           "portfolioId": "Портфели",
           "receiveDateTime": "Получен",
           "regionCode": "Регион",
-          "userId": "Оператор"
+          "userId": "Оператор",
+          "searchBtn": "Искать"
         },
         "userId": {
           "grid": {
