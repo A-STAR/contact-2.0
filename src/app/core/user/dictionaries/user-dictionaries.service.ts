@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 
 import { IAppState } from '../../state/state.interface';
 import { IOption } from '../../converter/value-converter.interface';
@@ -8,6 +10,8 @@ import {
   ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserTerm, IUserDictionaryAction
 } from './user-dictionaries.interface';
 import { SafeAction } from '../../../core/state/state.interface';
+
+// import { DataService } from 'app/core/data/data.service';
 
 @Injectable()
 export class UserDictionariesService {
@@ -76,11 +80,12 @@ export class UserDictionariesService {
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
   static USER_DICTIONARY_FETCH_FAILURE = 'USER_DICTIONARY_FETCH_FAILURE';
 
-  private state: IUserDictionariesState;
+  private isFetching: object = {};
 
-  constructor(private store: Store<IAppState>) {
-    this.state$.subscribe(state => this.state = state);
-  }
+  constructor(
+    // private dataService: DataService,
+    private store: Store<IAppState>,
+  ) {}
 
   createRefreshAction(dictionaryId: number): SafeAction<IUserDictionaryAction> {
     return {
@@ -89,7 +94,7 @@ export class UserDictionariesService {
     };
   }
 
-  getDictionary(id: number): Observable<Array<IUserTerm>> {
+  getDictionary(id: number): Observable<IUserTerm[]> {
     return this.loadDictionaries([ id ], term => term).map(dictionaries => dictionaries[id]);
   }
 
@@ -97,35 +102,111 @@ export class UserDictionariesService {
     return this.loadDictionaries(ids, term => term);
   }
 
-  getDictionaryAsOptions(id: number): Observable<Array<IOption>> {
+  getDictionaryAsOptions(id: number): Observable<IOption[]> {
     return this.loadDictionaries([ id ], term => ({ value: term.code, label: term.name })).map(dictionaries => dictionaries[id]);
   }
 
-  getDictionariesAsOptions(ids: Array<number>): Observable<{ [key: number]: Array<IOption> }> {
+  getDictionariesAsOptions(ids: Array<number>): Observable<{ [key: number]: IOption[] }> {
     return this.loadDictionaries(ids, term => ({ value: term.code, label: term.name }));
   }
 
-  private loadDictionaries<T>(ids: Array<number>, transform: ITransformCallback<T>): Observable<{ [key: number]: Array<T> }> {
-    ids.forEach(id => {
-      if (!this.state.dictionaries[id]) {
-        const action = this.createRefreshAction(id);
-        this.store.dispatch(action);
-      }
-    });
+  /*
+  private loadDictionary<T>(dictionaryId: number): Observable<T> {
+    // log('id', dictionaryId);
+
+    // If the dictionary is already being fetched, just wait for it
+    // then reset `isFetching` to false
+    if (this.isFetching[dictionaryId]) {
+      // log('dictionary is being fetched:', dictionaryId);
+      return this.state$
+        .map(state => state.dictionaries[dictionaryId])
+        .filter(Boolean)
+        .do(dict => {
+          // log('dictionary has been fetched:', dictionaryId);
+          this.isFetching[dictionaryId] = false;
+        });
+    }
 
     return this.state$
-      .map(state => ids.reduce((acc, id) => {
+      .map(dictionaries => dictionaries[dictionaryId])
+      .switchMap((dictionary) => {
+        // log('dictionary request:', dictionaryId);
+        // The dictionary is in the store, just return it
+        if (dictionary) {
+          this.isFetching[dictionaryId] = false;
+          return of(dictionary);
+        }
+
+        // If the dictionary is not found in the store, set `isFetching` to true,
+        // fetch the dictionary, then reset `isFetching` to false
+        this.isFetching[dictionaryId] = false;
+        return this.read(dictionaryId)
+            .do(terms => {
+              // log('dictionary fetched:', dictionaryId);
+              this.store.dispatch({
+                type: UserDictionariesService.USER_DICTIONARY_FETCH_SUCCESS,
+                payload: { dictionaryId, terms }
+              });
+            })
+            .switchMap(_ => this.state$.map(dictionaries => dictionaries[dictionaryId]).filter(Boolean));
+      });
+  }
+  */
+
+  private loadDictionaries<T>(ids: Array<number>, transform: ITransformCallback<T>): Observable<{ [key: number]: Array<T> }> {
+
+    // const dictionariesObs = ids.map(id => this.loadDictionary(id));
+    // return Observable.combineLatest(dictionariesObs, of(ids))
+    //   .map(([dictionaries, idss]) => {
+    //     return idss.reduce((acc, id, i) => {
+    //       const dictionary = dictionaries[i];
+    //       return {
+    //         ...acc,
+    //         [id]: dictionary ? dictionary.map(transform) : null
+    //       };
+    //     }, {});
+    //   })
+    //   .filter(dictionaries => Object.keys(dictionaries).reduce((acc, key) => acc && !!dictionaries[key], true))
+    //   .pipe(distinctUntilChanged());
+      // .flatMap(dictionaries => {
+        // return dictionaries.reduce((acc, dictionary, id) => {
+        //   return {
+        //     ...acc,
+        //     [id]: dictionary.map(transform)
+        //   };
+        // }, {});
+      // })
+
+    return this.state$
+      .do(state => {
+        ids.forEach(id => {
+          if (!state.dictionaries[id] && !this.isFetching[id]) {
+            this.isFetching[id] = true;
+            // log('fetching id:', id);
+            const action = this.createRefreshAction(id);
+            this.store.dispatch(action);
+          }
+        });
+      })
+      .switchMap(state => of(ids.reduce((acc, id) => {
         const dictionary = state.dictionaries[id];
         return {
           ...acc,
           [id]: dictionary ? dictionary.map(transform) : null
         };
-      }, {}))
+      }, {})))
       .filter(dictionaries => Object.keys(dictionaries).reduce((acc, key) => acc && !!dictionaries[key], true))
-      .distinctUntilChanged();
+      .pipe(distinctUntilChanged())
+      .do(() => ids.forEach(id => this.isFetching[id] = false));
+      // NOTE: debug here
+      // .do(() => log('fetched:', ids.join(',')));
   }
 
   private get state$(): Observable<IUserDictionariesState> {
     return this.store.select(state => state.userDictionaries);
   }
+
+  // private read(dictionaryId: number): Observable<IUserTerm[]> {
+  //   return this.dataService.readAll('/lookup/dictionaries/{dictionaryId}/terms', { dictionaryId });
+  // }
 }

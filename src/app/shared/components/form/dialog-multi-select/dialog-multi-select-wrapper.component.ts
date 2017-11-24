@@ -30,12 +30,24 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
   rows: any[] = [];
   value: IDialogMultiSelectValue[];
 
+  get columnsFromTranslationKey(): string {
+    return this.dialogMultiSelectWrapperService.getColumnsFromTranslationKey(this.filterType);
+  }
+
+  get columnsToTranslationKey(): string {
+    return this.dialogMultiSelectWrapperService.getColumnsToTranslationKey(this.filterType);
+  }
+
   get fetch(): (filterParams: any) => Observable<any> {
     return this.dialogMultiSelectWrapperService.getFetchCallback(this.filterType);
   }
 
   get labelGetter(): (row: any) => string {
     return this.dialogMultiSelectWrapperService.getLabelGetter(this.filterType);
+  }
+
+  get title(): string {
+    return this.dialogMultiSelectWrapperService.getTitle(this.filterType);
   }
 
   get valueGetter(): (row: any) => IDialogMultiSelectValue {

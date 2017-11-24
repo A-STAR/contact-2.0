@@ -1068,8 +1068,29 @@
           }
         },
         "remove": {
-          "title": "Удаление участника",
+          "title": "Удаление участников",
           "confirmMessage": "Вы действительно хотите удалить выбранных участников из кампании?"
+        }
+      },
+      "statistics": {
+        "grid": {
+          "userFullName": "ФИО участника",
+          "successProcessing": "Кол-во успешно обработанных долгов",
+          "unsuccessProcessing": "Кол-во неуспешно обработанных долгов",
+          "contact": "Кол-во контактов",
+          "SMS": "Кол-во SMS",
+          "successContact": "Кол-во успешных контактов",
+          "refusal": "Кол-во отказов",
+          "promise": "Кол-во обещаний",
+          "promiseAmount": "Сумма обещаний",
+          "untreated": "Количество необработанных долгов",
+          "successProcessingSum": "Общее кол-во успешно обработанных долгов",
+          "unsuccessProcessingSum": "Общее кол-во неуспешно обработанных долгов",
+          "contactSum": "Общее кол-во контактов",
+          "SMSSum": "Общее кол-во СМС",
+          "refusalSum": "Общее кол-во отказов",
+          "promiseSum": "Общее количество обещаний",
+          "promiseAmountSum": "Общая сумма обещаний"
         }
       },
       "tabs": {
@@ -2095,6 +2116,31 @@
       "from": "Начало",
       "to": "Окончание"
     },
+    "filters": {
+      "portfolios": {
+        "grid": {
+          "contractorName": "Контрагент",
+          "directionCode": "Направление",
+          "endWorkDate": "Дата окончания работ",
+          "id": "Ид",
+          "name": "Название",
+          "signDate": "Дата подписания портфеля",
+          "stageCode": "Стадия",
+          "startWorkDate": "Дата начала работ",
+          "statusCode": "Статус"
+        },
+        "title": "Выберите портфели"
+      },
+      "users": {
+        "grid": {
+          "fullName": "ФИО",
+          "id": "Ид",
+          "organization": "Подразделение",
+          "position": "Должность"
+        },
+        "title": "Выберите пользователей"
+      }
+    },
     "grid": {
       "empty": "Нет данных для отображения",
       "filter": {
@@ -2132,17 +2178,21 @@
         "filterOoo": "фильтр..."
       },
       "actions": {
-        "statusChange": "Изменить статус",
-        "showContactHistory": "История контактов",
-        "debtSetResponsible": "Установка ответственного по долгу",
-        "debtClearResponsible": "Снятие ответственного по долгу",
-        "objectAddToGroup": "Добавить в группу",
-        "paymentsConfirm": "Подтвердить платежи",
-        "paymentsCancel": "Отменить платежи",
-        "confirmPromise": "Подтвердить обещания",
-        "deletePromise": "Удалить обещания",
         "confirmPaymentsChanges": "Подтвердить изменения платежей",
-        "rejectPaymentsChanges": "Отклонить изменения платежей"
+        "confirmPromise": "Подтвердить обещания",
+        "debtChangeAttribute": "Изменить атрибуты долга",
+        "debtClearResponsible": "Снять ответственного по долгу",
+        "debtNextCallDate": "Установить дату следующего звонка",
+        "debtSetResponsible": "Установить ответственного по долгу",
+        "deletePromise": "Удалить обещания",
+        "objectAddToGroup": "Добавить в группу",
+        "objectChangeColor": "Изменить цвет",
+        "openDebtCard": "Открыть карточку долга",
+        "paymentsCancel": "Отменить платежи",
+        "paymentsConfirm": "Подтвердить платежи",
+        "rejectPaymentsChanges": "Отклонить изменения платежей",
+        "showContactHistory": "История контактов",
+        "statusChange": "Изменить статус"
       }
     },
     "filter": {
