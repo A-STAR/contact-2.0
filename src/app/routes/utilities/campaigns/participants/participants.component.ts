@@ -107,8 +107,8 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
 
   onRemove(): void {
     this.campaignsService.removeParticipants(this.grid.selected.map(selection => selection.id))
-    .switchMap(() => this.fetchParticipants())
-    .subscribe(participants => this.onParticipantsFetch(participants));
+      .switchMap(() => this.fetchParticipants())
+      .subscribe(participants => this.onParticipantsFetch(participants));
   }
 
   onAddSubmit(data: IParticipant[]): void {
@@ -118,13 +118,18 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
   }
 
   cancelAction(): void {
-    this.grid.clearSelection();
     this.closeDialog();
   }
 
   onParticipantsFetch(participants: IParticipant[]): void {
     this.participants = participants;
+    this.resetSelection();
     this.cancelAction();
     this.cdRef.markForCheck();
+  }
+
+  resetSelection(): void {
+    this.grid.clearSelection();
+    this.campaignsService.selectParticipant(null);
   }
 }

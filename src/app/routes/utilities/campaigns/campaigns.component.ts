@@ -75,7 +75,10 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetchCampaigns().subscribe(campaigns => this.onCampaignsFetch(campaigns)),
+      action: () => this.fetchCampaigns()
+        // todo: temporary
+        .map(campaigns => this.copyTimeZoneUsed(campaigns, ...this.campaigns))
+        .subscribe(campaigns => this.onCampaignsFetch(campaigns)),
       enabled: this.userPermissionsService.has('CAMPAIGN_VIEW')
     },
     {
@@ -162,12 +165,16 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
 
     this.campaignsService.createCampaign(campaign)
       .switchMap(() => this.fetchCampaigns())
+      // todo: temporary
+      .map(campaigns => this.copyTimeZoneUsed(campaigns, campaign))
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   updateCampaign(campaign: ICampaign): void {
     this.campaignsService.updateCampaign(campaign)
       .switchMap(() => this.fetchCampaigns())
+      // todo: temporary
+      .map(campaigns => this.copyTimeZoneUsed(campaigns, campaign))
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
@@ -179,29 +186,50 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
 
   cancelAction(): void {
     this.closeDialog();
-    this.grid.clearSelection();
   }
 
   onStart(): void {
+    // todo: temporary
+    let tempCmp: ICampaign;
     this.selectedCampaign
       .take(1)
-      .switchMap(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STARTED }))
+      .switchMap(campaign => {
+        // todo: temporary
+        tempCmp = campaign;
+        return this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STARTED });
+      })
       .switchMap((...results) => this.fetchCampaigns())
+      // todo: temporary
+      .map(campaigns => this.copyTimeZoneUsed(campaigns, tempCmp))
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onStop(): void {
+    // todo: temporary
+    let tempCmp: ICampaign;
     this.selectedCampaign
       .take(1)
-      .switchMap(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STOPPED }))
+      .switchMap(campaign => {
+        // todo: temporary
+        tempCmp = campaign;
+        return this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STOPPED });
+      })
       .switchMap((...results) => this.fetchCampaigns())
+      // todo: temporary
+      .map(campaigns => this.copyTimeZoneUsed(campaigns, tempCmp))
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onCampaignsFetch(campaigns: ICampaign[]): void {
-    this.campaigns = this.formatCampaignsDates(campaigns);
     this.cancelAction();
+    this.resetSelection();
+    this.campaigns = this.formatCampaignsDates(campaigns);
     this.cdRef.markForCheck();
+  }
+
+  resetSelection(): void {
+    this.grid.clearSelection();
+    this.campaignsService.selectCampaign(null);
   }
 
   private formatCampaignsDates(campaings: ICampaign[]): ICampaign[] {
@@ -219,5 +247,21 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
         finishDateTime
       };
     });
+  }
+
+ /**
+ * todo: This is temporary, since BE does not save timeZoneUsed flag
+ * Copies timeZoneUsed from source campaigns to dest campaigns
+ * @param campaigns
+ * @param campaign
+ */
+  private copyTimeZoneUsed(destCampaigns: ICampaign[], ...sourceCampaigns: ICampaign[]): ICampaign[] {
+    sourceCampaigns.forEach(campaign => {
+      if (destCampaigns.length) {
+        (campaign.id ? destCampaigns.find(c => c.id === campaign.id) : destCampaigns[destCampaigns.length - 1])
+          .timeZoneUsed = campaign.timeZoneUsed;
+      }
+    });
+    return destCampaigns;
   }
 }
