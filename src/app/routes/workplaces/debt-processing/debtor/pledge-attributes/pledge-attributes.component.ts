@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 import { IPledgeContract } from '../../../../../shared/gui-objects/widgets/pledge/pledge.interface';
 
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PledgeService } from '../../../../../shared/gui-objects/widgets/pledge/pledge.service';
 
 import { AttributeGridComponent } from '../../../../../shared/gui-objects/widgets/entity-attribute/grid/attribute-grid.component';
@@ -25,13 +24,13 @@ export class DebtorPledgeAttributesComponent {
         title: 'debtor.propertyTab.attributes.title',
         inject: {
           entityTypeId$: Observable.of(DebtorPledgeAttributesComponent.ENTITY_TYPE_PROPERY),
-          entityId$: this.messageBusService
-            .select(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED)
-            .map((pledge: IPledgeContract) => pledge ? pledge.propertyId : null)
+          entityId$: this.pledgeService
+            .getPayload<IPledgeContract>(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED)
+            .map(pledge => pledge ? pledge.propertyId : null)
         }
       }
     ]
   };
 
-  constructor(private messageBusService: MessageBusService) {}
+  constructor(private pledgeService: PledgeService) {}
 }

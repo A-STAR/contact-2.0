@@ -1,9 +1,12 @@
+import { Actions } from '@ngrx/effects';
+import { Subject } from 'rxjs/Subject';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
 import { IGuaranteeContract } from './guarantee.interface';
+import { UnsafeAction } from '../../../../core/state/state.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -16,7 +19,10 @@ export class GuaranteeService {
   private url = '/debts/{debtId}/guaranteeContract';
   private errSingular = 'entities.guaranteeContract.gen.singular';
 
+  private contracts$ = new Subject<IGuaranteeContract[]>();
+
   constructor(
+    private actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
@@ -25,7 +31,15 @@ export class GuaranteeService {
   fetchAll(debtId: number): Observable<IGuaranteeContract[]> {
     return this.dataService
       .readAll(this.url, { debtId })
+      .do(contracts => this.contracts$.next(contracts))
       .catch(this.notificationsService.fetchError().entity('entities.guaranteeContract.gen.plural').dispatchCallback());
+  }
+
+  // TODO: fetch one item form server
+  fetch(debtId: number, contractId: number, personId: number = null): Observable<IGuaranteeContract> {
+    return this.contracts$.map(contracts => contracts.find(
+      contract => contract.contractId === contractId && (!personId || contract.personId === personId))
+    );
   }
 
   create(debtId: number, contract: IGuaranteeContract): Observable<any> {
@@ -52,7 +66,12 @@ export class GuaranteeService {
       .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
 
-  notify(type: string): void {
-    this.store.dispatch({ type });
+  setPayload(type: string, payload?: any): void {
+    this.store.dispatch({ type, payload });
+  }
+
+  getPayload<T>(type: string): Observable<T> {
+    return this.actions.ofType(type)
+      .map(action => (action as UnsafeAction).payload);
   }
 }

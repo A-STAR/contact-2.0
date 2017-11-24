@@ -1,4 +1,4 @@
-<div class="row">
+<div *ngIf="hasDebt$ | async" class="row">
   <div class="col-lg-4">
     <app-call-center-overview></app-call-center-overview>
   </div>
