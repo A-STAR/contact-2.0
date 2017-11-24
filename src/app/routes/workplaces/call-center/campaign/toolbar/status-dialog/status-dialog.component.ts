@@ -7,7 +7,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormControl } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -36,7 +35,6 @@ export class StatusDialogComponent implements OnInit {
     private campaignService: CampaignService,
     private cdRef: ChangeDetectorRef,
     private userConstantsService: UserConstantsService,
-    private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
