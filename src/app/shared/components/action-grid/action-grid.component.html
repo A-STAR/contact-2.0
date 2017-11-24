@@ -45,17 +45,17 @@
   (close)="onCloseDialog()"
 ></app-promise-remove-dialog>
 
-<app-payments-changes-confirm-dialog
-  *ngIf="isDialog('confirmPaymentsChanges')"
+<app-payment-operator-confirm-dialog
+  *ngIf="isDialog('confirmPaymentsOperator')"
   [payments]="getSelectionParam(0)"
   (close)="onCloseDialog()"
-></app-payments-changes-confirm-dialog>
+></app-payment-operator-confirm-dialog>
 
-<app-payments-changes-reject-dialog
-  *ngIf="isDialog('rejectPaymentsChanges')"
+<app-payment-operator-reject-dialog
+  *ngIf="isDialog('rejectPaymentsOperator')"
   [payments]="getSelectionParam(0)"
   (close)="onCloseDialog()"
-></app-payments-changes-reject-dialog>
+></app-payment-operator-reject-dialog>
 
 <app-grid2
   [columnIds]="columnIds"

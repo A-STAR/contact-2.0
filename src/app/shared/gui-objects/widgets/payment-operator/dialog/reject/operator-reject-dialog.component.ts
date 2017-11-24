@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
-import { PaymentsChangesService } from '../../payments-changes.service';
+import { PaymentOperatorService } from '../../payment-operator.service';
 
 import { DialogFunctions } from '../../../../../../core/dialog';
 
 @Component({
-  selector: 'app-payments-changes-confirm-dialog',
-  templateUrl: './changes-confirm-dialog.component.html',
+  selector: 'app-payment-operator-reject-dialog',
+  templateUrl: './operator-reject-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChangesConfirmDialogComponent extends DialogFunctions implements OnInit {
+export class OperatorRejectDialogComponent extends DialogFunctions implements OnInit {
 
   @Input() payments: number[];
 
@@ -21,7 +21,7 @@ export class ChangesConfirmDialogComponent extends DialogFunctions implements On
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private paymentsChangesService: PaymentsChangesService,
+    private paymentOperatorService: PaymentOperatorService,
   ) {
     super();
   }
@@ -31,7 +31,7 @@ export class ChangesConfirmDialogComponent extends DialogFunctions implements On
   }
 
   onConfirm(): void {
-    this.paymentsChangesService.confirm(this.payments)
+    this.paymentOperatorService.reject(this.payments)
       .subscribe(result => {
         this.count = result.massInfo.total;
         this.successCount = result.massInfo.processed;

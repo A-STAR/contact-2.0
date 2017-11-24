@@ -6,7 +6,7 @@ import { DialogModule } from '../../../../../components/dialog/dialog.module';
 import { ResultDialogModule } from '../../../../../components/dialog/result/result-dialog.module';
 import { DialogActionModule } from '../../../../../components/dialog-action/dialog-action.module';
 
-import { ChangesRejectDialogComponent } from './changes-reject-dialog.component';
+import { OperatorConfirmDialogComponent } from './operator-confirm-dialog.component';
 
 @NgModule({
   imports: [
@@ -17,13 +17,13 @@ import { ChangesRejectDialogComponent } from './changes-reject-dialog.component'
     TranslateModule,
   ],
   exports: [
-    ChangesRejectDialogComponent,
+    OperatorConfirmDialogComponent,
   ],
   declarations: [
-    ChangesRejectDialogComponent,
+    OperatorConfirmDialogComponent,
   ],
   entryComponents: [
-    ChangesRejectDialogComponent,
+    OperatorConfirmDialogComponent,
   ]
 })
-export class ChangesRejectDialogModule { }
+export class OperatorConfirmDialogModule { }
