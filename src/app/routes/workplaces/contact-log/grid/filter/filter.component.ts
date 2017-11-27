@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 
 import { ContactsGridKeys } from '../../contact-log.interface';
 import { FilterObject, FilterOperatorType } from '../../../../../shared/components/grid2/filter/grid-filter';
@@ -53,7 +54,7 @@ export class FilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.entityAttributesService.getDictValueAttributes()
-      .take(1)
+      .pipe(first())
       .subscribe(attributes => {
         this.controls = this.buildControls(attributes);
         this.cdRef.markForCheck();

@@ -3,6 +3,7 @@ import {
   Component, OnDestroy, ViewChild, ViewEncapsulation
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -74,7 +75,7 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
           this.notificationsService.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
         } else {
           this.actionsLogService.getEmployeesAndActionTypes()
-            .take(1)
+            .pipe(first())
             .subscribe();
           // load data
           if (this.grid.gridOptions.api) {

@@ -1,6 +1,7 @@
 import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
@@ -87,7 +88,7 @@ export class CampaignsService {
 
   removeCampaign(): Observable<any> {
     return this.selectedCampaign
-      .take(1)
+      .pipe(first())
       .switchMap(selectedCampaign => this.deleteCampaign(selectedCampaign.id))
       .catch(this.notificationsService.deleteError().entity('entities.campaign.gen.singular').callback());
   }
@@ -105,7 +106,7 @@ export class CampaignsService {
 
   fetchParticipants(): Observable<IParticipant[]> {
     return this.selectedCampaign
-      .take(1)
+      .pipe(first())
       .switchMap(selectedCampaign => selectedCampaign ? this.readParticipants(selectedCampaign.id) : Observable.of([]))
       .catch(
       this.notificationsService.fetchError()
@@ -115,7 +116,7 @@ export class CampaignsService {
 
   fetchNotAddedParticipants(): Observable<IParticipant[]> {
     return this.selectedCampaign
-      .take(1)
+      .pipe(first())
       .switchMap(selectedCampaign => this.readNotAddedParticipants(selectedCampaign.id))
       .catch(
       this.notificationsService.fetchError()
@@ -125,7 +126,7 @@ export class CampaignsService {
 
   addParticipants(participantIds: number[]): Observable<any> {
     return this.selectedCampaign
-      .take(1)
+      .pipe(first())
       .switchMap(selectedCampaign => this.createParticipants(selectedCampaign.id, participantIds))
       .catch(this.notificationsService.createError()
         .entity('entities.participant.gen.plural').dispatchCallback()
@@ -134,7 +135,7 @@ export class CampaignsService {
 
   removeParticipants(participantIds: number[]): Observable<any> {
     return this.selectedCampaign
-      .take(1)
+      .pipe(first())
       .switchMap(selectedCampaign => this.deleteParticipants(selectedCampaign.id, participantIds))
       .catch(this.notificationsService.deleteError()
       .entity('entities.participant.gen.plural').dispatchCallback()

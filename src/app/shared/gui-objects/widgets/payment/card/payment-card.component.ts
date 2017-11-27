@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -60,7 +61,7 @@ export class PaymentCardComponent {
         ? this.paymentService.fetch(this.debtId, this.paymentId, this.callCenter)
         : Observable.of(null),
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ purposeOptions, currencyOptions, userOptions, canAdd, canEdit, canEditUser, canConfirm, payment ]) => {
       this.payment = payment ? payment : { receiveDateTime: new Date(), paymentDateTime: new Date() };
       const controls: IDynamicFormControl[] = [

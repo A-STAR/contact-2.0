@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
@@ -14,6 +13,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
+import { first } from 'rxjs/operators';
 
 const labelKey = makeKey('widgets.email.card');
 
@@ -45,7 +45,7 @@ export class EmailCardComponent {
       // TODO(d.maltsev): pass entity type
       this.emailId ? this.emailService.fetch(18, this.id, this.emailId) : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ options, canEdit, canEditComment, email ]) => {
       this.controls = [
         { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },

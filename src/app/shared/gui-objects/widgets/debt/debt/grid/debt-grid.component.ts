@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Ou
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
 
 import { IDebt } from '../debt.interface';
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
@@ -125,7 +126,7 @@ export class DebtGridComponent {
   ) {
 
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();

@@ -159,12 +159,6 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
 
   set managers(newManagers: IContractorManager[]) {
     this._managers = newManagers;
-    if ( this.contractorsAndPortfoliosService.managerMapping &&
-      this.contractorsAndPortfoliosService.managerMapping[this.contractorId] && this._managers.length) {
-      this.selection =
-        [ this._managers.find((manager) => manager.id ===
-          this.contractorsAndPortfoliosService.managerMapping[this.contractorId])];
-    }
   }
 
   get managers(): IContractorManager[] {

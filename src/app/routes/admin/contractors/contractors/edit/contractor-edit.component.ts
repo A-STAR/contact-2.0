@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionsSubject } from '@ngrx/store';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -48,7 +49,7 @@ export class ContractorEditComponent {
       this.lookupService.lookupAsOptions('users'),
       this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ contractorTypeOptions, userOptions, contractor ]) => {
       const label = makeKey('contractors.grid');
       this.controls = [

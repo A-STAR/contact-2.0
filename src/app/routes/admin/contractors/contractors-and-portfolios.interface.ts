@@ -3,7 +3,10 @@ export interface IContractor {
   name: string;
   fullName: string;
   smsName: string;
-  responsibleName: string;
+  responsibleFirstName?: string;
+  responsibleLastName?: string;
+  responsibleMiddleName?: string;
+  responsibleFullName?: string;
   typeCode: number;
   phone: string;
   address: string;
@@ -46,6 +49,5 @@ export interface INumberMap { [n: number]: number; }
 
 export interface IContractorsAndPortfoliosState {
   selectedContractorId: number;
-  mapContractorToSelectedManager?: INumberMap;
-  mapContractorToSelectedPortfolio?: INumberMap;
+  selectedPortfolioId: number;
 }

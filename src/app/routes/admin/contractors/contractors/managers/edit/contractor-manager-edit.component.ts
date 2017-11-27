@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IContractorManager } from '../../../contractors-and-portfolios.interface';
@@ -53,7 +54,7 @@ export class ContractorManagerEditComponent implements OnInit {
         ? this.contractorsAndPortfoliosService.readManager(this.contractorId, this.managerId)
         : of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ branchesOptions, genderOptions, manager ]) => {
       this.initFormControls(branchesOptions, genderOptions);
       this.formData = manager;

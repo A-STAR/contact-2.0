@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 
@@ -150,7 +151,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         this.gridService.setDictionaryRenderers(this._columns),
         this.canViewBlock$,
       )
-      .take(1)
+      .pipe(first())
       .subscribe(([ columns, canViewBlock ]) => {
         const filteredColumns = columns.filter(column => {
           return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
@@ -250,7 +251,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   registerContact(): void {
     this.selectedAddressId$
-      .take(1)
+      .pipe(first())
       .subscribe(addressId => {
         this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         // Contact type 'Visit' = 3

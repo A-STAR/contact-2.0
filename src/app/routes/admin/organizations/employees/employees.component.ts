@@ -17,6 +17,7 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { DialogFunctions } from 'app/core/dialog';
 import { combineLatestAnd } from '../../../../core/utils/helpers';
+import { first } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -99,7 +100,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
       });
@@ -148,7 +149,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
 
   onEdit(employee: IEmployee): void {
     this.userPermissionsService.has('ORGANIZATION_EDIT')
-      .take(1)
+      .pipe(first())
       .subscribe(hasEditPermission => {
         if (hasEditPermission) {
           const selectedEmployeeUserId = employee.userId;

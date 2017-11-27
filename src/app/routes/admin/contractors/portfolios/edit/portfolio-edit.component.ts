@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IPortfolio } from '../../contractors-and-portfolios.interface';
@@ -51,7 +52,7 @@ export class PortfolioEditComponent {
         ? this.contractorsAndPortfoliosService.readPortfolio(this.contractorId, this.portfolioId)
         : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ directionOptions, stageOptions, statusOptions, portfolio ]) => {
       this.formData = portfolio ? {
         ...portfolio,

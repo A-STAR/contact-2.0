@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IProperty } from '../property.interface';
@@ -47,7 +48,7 @@ export class PropertyCardComponent implements OnInit {
       this.propertyId ? this.propertyService.fetch(this.personId, this.propertyId) : Observable.of(this.getFormData()),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ canEdit, property, respTypeOpts ]) => {
       this.controls = this.initControls(canEdit, respTypeOpts);
       this.property = property;

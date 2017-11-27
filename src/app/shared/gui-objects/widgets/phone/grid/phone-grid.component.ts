@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/of';
 
 import { IDebt } from '../../debt/debt/debt.interface';
@@ -165,7 +166,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ columns, canViewBlock ]) => {
       const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
@@ -246,7 +247,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   registerContact(): void {
     this.selectedPhoneId$
-      .take(1)
+      .pipe(first())
       .subscribe(phoneId => {
         this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         const url = `/workplaces/contact-registration/${this.debtId$.value}/${this.contactType}/${phoneId}`;
