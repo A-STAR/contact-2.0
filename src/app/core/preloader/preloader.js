@@ -19,7 +19,9 @@
     const remaining = 100 - counter;
     counter = counter + (0.015 * Math.pow(1 - Math.sqrt(remaining), 2));
 
-    progressBar.style.width = Math.round(counter) + '%';
+    if (progressBar) {
+      progressBar.style.width = Math.round(counter) + '%';
+    }
 
     timeout = setTimeout(startCounter, 20);
   }
@@ -28,7 +30,9 @@
 
     clearTimeout(timeout);
 
-    progressBar.style.width = '100%';
+    if (progressBar) {
+      progressBar.style.width = '100%';
+    }
 
     setTimeout(function() {
       // animate preloader hiding
