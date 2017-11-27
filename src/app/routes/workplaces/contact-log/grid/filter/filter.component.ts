@@ -5,19 +5,24 @@ import {
   EventEmitter,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
+  Input
 } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs/Subscription';
 
+import { ContactsGridKeys } from '../../contact-log.interface';
+import { FilterObject, FilterOperatorType } from '../../../../../shared/components/grid2/filter/grid-filter';
+import { IAppState } from '../../../../../core/state/state.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '../../../../../core/entity/attributes/entity-attributes.interface';
-import { FilterOperatorType } from '../../../../../shared/components/grid2/filter/grid-filter';
+import { TYPE_CODES } from '../../../../../core/utils/value';
 
 import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
-
-import { FilterObject } from '../../../../../shared/components/grid2/filter/grid-filter';
 
 import { makeKey, range } from '../../../../../core/utils';
 
@@ -29,15 +34,21 @@ const labelKey = makeKey('modules.contactLog.filters.form');
   templateUrl: 'filter.component.html'
 })
 export class FilterComponent implements OnInit {
+  @Input() gridKey: ContactsGridKeys;
   @Output() search = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
 
+  private dateTimeFormat: number;
+  private metadataSub: Subscription;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private entityAttributesService: EntityAttributesService,
+    private store: Store<IAppState>,
+    private valueConverterService: ValueConverterService
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +58,15 @@ export class FilterComponent implements OnInit {
         this.controls = this.buildControls(attributes);
         this.cdRef.markForCheck();
       });
+    this.metadataSub = this.store
+      .select(state => state.metadata)
+      .filter(Boolean)
+      .map(metadata => this.getMetadataSlice(metadata))
+      .filter(Boolean)
+      .map(contactLog => contactLog.columns)
+      .map(columns => columns.find(column => column.name === this.getDateControlName()))
+      .map(column => column && column.dataType)
+      .subscribe(columnDataType => this.dateTimeFormat = columnDataType);
   }
 
   get filters(): FilterObject {
@@ -58,7 +78,7 @@ export class FilterComponent implements OnInit {
           .create()
           .setName(key)
           .setOperator(this.getOperatorForControl(key))
-          .setValues(data[key]);
+          .setValues(this.transformFilterValue(key, data[key]));
         filter.addFilter(f);
       }
     });
@@ -92,7 +112,7 @@ export class FilterComponent implements OnInit {
         display: attributes[EntityAttributesService[`DICT_VALUE_${i}`]].isUsed,
       })),
       { controlName: 'userId', type: 'dialogmultiselectwrapper', filterType: 'users' },
-      { controlName: 'receiveDateTime', type: 'datepicker' },
+      { controlName: this.getDateControlName(), type: 'datepicker' },
       {
         controlName: 'searchBtn',
         type: 'searchBtn',
@@ -116,6 +136,36 @@ export class FilterComponent implements OnInit {
         return 'IN';
       default:
         return '==';
+    }
+  }
+
+  private transformFilterValue(key: string, value: any): any {
+    switch (key) {
+      case this.getDateControlName():
+        return this.dateTimeFormat === TYPE_CODES.DATETIME ? this.valueConverterService.dateStringToISO(value) : value;
+      default:
+        return value;
+    }
+  }
+
+  private getDateControlName(): string {
+    switch (this.gridKey) {
+      case ContactsGridKeys.CONTACT:
+      case ContactsGridKeys.SMS:
+        return 'createDateTime';
+      case ContactsGridKeys.PROMISE:
+        return 'receiveDateTime';
+    }
+  }
+
+  private getMetadataSlice(metadata: any): any {
+    switch (this.gridKey) {
+      case ContactsGridKeys.CONTACT:
+        return metadata.contactLogContact;
+      case ContactsGridKeys.PROMISE:
+        return metadata.contactLogPromise;
+      case ContactsGridKeys.SMS:
+        return metadata.contactLogSMS;
     }
   }
 }

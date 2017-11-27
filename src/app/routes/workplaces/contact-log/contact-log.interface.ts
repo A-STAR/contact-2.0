@@ -43,3 +43,9 @@ export interface IContactLogEntry {
   userFullName: string;
   userId: number;
 }
+
+export enum ContactsGridKeys {
+  PROMISE = 'contactLogPromise',
+  SMS = 'contactLogSMS',
+  CONTACT = 'contactLogContact'
+}
