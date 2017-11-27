@@ -49,7 +49,7 @@
 <app-promise-remove-dialog
   *ngIf="isDialog('deletePromise')"
   [promises]="getSelectionParam(0)"
-  (close)="onCloseDialog()"
+  (close)="onCloseDelete()"
 ></app-promise-remove-dialog>
 
 <app-payment-operator-confirm-dialog
