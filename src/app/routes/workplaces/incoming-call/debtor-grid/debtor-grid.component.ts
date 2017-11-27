@@ -72,7 +72,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(debtor: any): void {
-    this.incomingCallService.selectedDebtor = debtor;
+    this.incomingCallService.selectedDebtor = debtor && debtor[0];
   }
 
   onDoubleClick(debtor: any): void {
