@@ -1,8 +1,12 @@
 <app-action-grid
   columnTranslationKey="modules.incomingCall.debtors"
+  contextFieldName="fullName"
+  [contextMenuEnabled]="true"
   [styles]="{ height: '600px' }"
   [columns]="columns"
   [rows]="debtors"
+  [ctxMenuOptions]="ctxMenuOptions"
+  (action)="onAction($event)"
   (select)="onSelect($event)"
   (dblClick)="onDoubleClick($event)"
 ></app-action-grid>

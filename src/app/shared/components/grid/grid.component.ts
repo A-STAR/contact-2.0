@@ -22,6 +22,7 @@ import 'rxjs/add/operator/debounceTime';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
+import { IContextMenuItem } from './grid.interface';
 import { IMessages, TSelectionType, IGridColumn } from './grid.interface';
 
 import { SettingsService } from '../../../core/settings/settings.service';
@@ -47,6 +48,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() styles: { [key: string]: any };
   @Input() contextMenuEnabled = false;
   @Input() contextFieldName: string;
+  @Input() ctxMenuOptions: IContextMenuItem[] = [];
+  @Output() action = new EventEmitter<any>();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
@@ -97,10 +100,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           this.onDblClick.emit(row);
         }
       });
-
-    this.ctxFieldNameTranslation = {
-      field: this.contextFieldName ? this.translate.instant(this.contextFieldName) : this.contextFieldName
-    };
   }
 
   @Input() rowClass = () => undefined;
@@ -119,6 +118,15 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     const gridMessagesKey = 'grid.messages';
     const translationKeys = [gridMessagesKey];
     this.columnDefs = [].concat(this.columns);
+
+    const ctxMenuFieldAction = this.ctxMenuOptions.find(option => !!option.fieldActions);
+
+    this.contextFieldName = this.contextFieldName || (ctxMenuFieldAction && ctxMenuFieldAction.prop);
+
+    this.ctxFieldNameTranslation = {
+      field: this.contextFieldName ? this.translate.instant(this.contextFieldName) : this.contextFieldName
+    };
+
 
     if (this.columnTranslationKey) {
       translationKeys.push(this.columnTranslationKey);
@@ -162,7 +170,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     if (emptyMessage) {
       if (emptyMessage.currentValue) {
         this.messages.emptyMessage = this.translate.instant(emptyMessage.currentValue);
-
       } else {
         const gridMessagesKey = 'grid.messages';
         this.translate.get([gridMessagesKey])
@@ -262,34 +269,11 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
   }
 
-  onCtxMenuClick(event: MouseEvent, prop: string): void {
-    const data = prop ? this.ctxRow[prop] : this.ctxRow;
-    const copyAsPlaintext = (content) => {
-      const copyFrom = document.createElement('textarea');
-      copyFrom.textContent = content;
-      const body = document.querySelector('body');
-      body.appendChild(copyFrom);
-      copyFrom.select();
-
-      document.execCommand('copy');
-      body.removeChild(copyFrom);
-    };
-
-    const formattedData = prop
-      ? data
-      : this.columns
-          .filter(column => data[column.prop] !== null)
-          .map(column => {
-            return column.type === 'boolean'
-              ? Boolean(data[column.prop])
-              : column.$$valueGetter && column.dictCode
-                ? column.$$valueGetter(data, column.prop)
-                : data[column.prop];
-          })
-          .join('\t');
-
-    copyAsPlaintext(formattedData);
+  onAction($event?: string): void {
     this.hideCtxMenu();
+    if (this.action) {
+      this.action.emit($event);
+    }
   }
 
   clearSelection(): void {
