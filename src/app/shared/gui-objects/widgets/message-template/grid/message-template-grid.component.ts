@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
 
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IMessageTemplate } from '../message-template.interface';
@@ -131,7 +132,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
 
       this.gridService.setDictionaryRenderers(this.columns)
         .map(columns => this.columns = this.gridService.setRenderers(columns))
-        .take(1)
+        .pipe(first())
         .subscribe();
     }
   }

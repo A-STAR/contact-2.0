@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 
 import { DebtService } from '../../../../core/debt/debt.service';
 import { IncomingCallService } from '../incoming-call.service';
@@ -81,7 +82,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private navigateToRegistration(contactType: number, contactId: number): void {
     this.incomingCallService.selectedDebtor$
-      .take(1)
+      .pipe(first())
       .subscribe(debtor => {
         const { debtId, personId, personRole } = debtor;
         this.debtService.navigateToRegistration({ debtId, personId, personRole, contactType, contactId });

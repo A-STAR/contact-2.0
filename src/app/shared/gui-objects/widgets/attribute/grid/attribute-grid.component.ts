@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/operator/combineLatest';
 
 import { IAttribute } from '../attribute.interface';
@@ -97,7 +98,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
       this.userConstantsService.get('AttributeType.Entity.List'),
       this.userPermissionsService.has('ATTRIBUTE_TYPE_VIEW')
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ dictionaries, constant, canView ]) => {
       this.initTreeTypeSelect(dictionaries, constant);
       this.initTreeSubtypeSelect(dictionaries);
@@ -146,7 +147,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   onEdit(attribute: IAttribute): void {
     this.selectedAttribute$.next(attribute);
     this.canEdit$
-      .take(1)
+      .pipe(first())
       .filter(Boolean)
       .subscribe(() => {
         this.setDialog('edit');

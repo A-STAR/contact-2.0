@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
@@ -100,7 +101,7 @@ export class ContractorsAndPortfoliosService {
 
   deleteContractor(contractorId: Number): Observable<any> {
     return this.dataService.delete('/contractors/{contractorId}', { contractorId })
-            .take(1)
+            .pipe(first())
             .catch(this.notificationsService.deleteError().entity('entities.contractors.gen.singular').callback());
   }
 

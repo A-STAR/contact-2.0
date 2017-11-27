@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
 
 import { IProperty } from '../property.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -80,7 +81,7 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-    .take(1)
+    .pipe(first())
     .subscribe(columns => {
       this.columns = [...columns];
       this.cdRef.markForCheck();

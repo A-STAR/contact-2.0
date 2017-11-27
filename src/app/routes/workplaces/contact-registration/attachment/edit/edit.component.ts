@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -33,7 +34,7 @@ export class AttachmentEditComponent implements OnInit {
   ngOnInit(): void {
     // TODO(d.maltsev): file form control wrapper that injects constants service (similar to select wrapper)
     this.userConstantsService.get('FileAttachment.MaxSize')
-      .take(1)
+      .pipe(first())
       .subscribe(maxSize => {
         this.controls = this.buildControls(maxSize);
         this.cdRef.markForCheck();

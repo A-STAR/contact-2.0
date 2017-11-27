@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { ICampaignProcessedDebt } from '../../campaign.interface';
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
@@ -34,7 +35,7 @@ export class ProcessedDebtsComponent implements OnInit {
 
   ngOnInit(): void {
     this.gridService.setDictionaryRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = this.gridService.setRenderers(columns);
         this.cdRef.markForCheck();

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynamic-form.interface';
 
@@ -28,7 +29,7 @@ export class BlockDialogComponent implements OnInit {
   ngOnInit(): void {
     this.userDictionariesService
       .getDictionaryAsOptions(this.dictionaryId)
-      .take(1)
+      .pipe(first())
       .subscribe(options => {
         this.controls = [
           { label: this.labelTranslationKey, controlName: 'inactiveReasonCode', type: 'select', required: true, options }

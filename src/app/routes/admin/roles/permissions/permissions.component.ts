@@ -15,6 +15,7 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-permissions',
@@ -137,7 +138,7 @@ export class PermissionsComponent implements OnDestroy {
 
   onBeforeEditPermission(): void {
     this.userPermissionsService.has('PERMIT_EDIT')
-      .take(1)
+      .pipe(first())
       .subscribe(hasPermission => {
         if (hasPermission && this.currentPermission) {
           this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT);

@@ -10,6 +10,8 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
+import { range, makeKey } from '../../../../../core/utils';
+import { first } from 'rxjs/operators';
 
 import { IAppState } from '../../../../../core/state/state.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -23,7 +25,6 @@ import { ValueConverterService } from '../../../../../core/converter/value-conve
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-import { range, makeKey } from '../../../../../core/utils';
 
 const labelKey = makeKey('modules.payments.filters.form');
 
@@ -52,7 +53,7 @@ export class PaymentsFilterComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.entityAttributesService.getDictValueAttributes()
-      .take(1)
+      .pipe(first())
       .subscribe(attributes => {
         this.controls = this.buildControls(attributes);
         this.cdRef.markForCheck();

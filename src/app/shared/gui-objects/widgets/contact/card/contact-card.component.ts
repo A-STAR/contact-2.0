@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IContact } from '../contact.interface';
@@ -82,7 +83,7 @@ export class ContactCardComponent {
         : this.userPermissionsService.has('CONTACT_PERSON_ADD'),
       this.contactId ? this.contactService.fetch(this.personId, this.contactId) : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ options, canEdit, contact ]) => {
       const genderOptions = options[UserDictionariesService.DICTIONARY_GENDER];
       const familyOptions = options[UserDictionariesService.DICTIONARY_FAMILY_STATUS];

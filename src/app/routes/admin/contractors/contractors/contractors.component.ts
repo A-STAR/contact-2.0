@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
 
 import { IContractor } from '../contractors-and-portfolios.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
@@ -87,7 +88,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   ) {
     super();
     this.gridService.setDictionaryRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = this.gridService.setRenderers(columns);
       });
@@ -122,7 +123,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
       this.onSelect(this.selectedContractor[0]);
       this.contractorsAndPortfoliosService.state
           .map(state => state.selectedContractorId)
-          .take(1)
+          .pipe(first())
           .subscribe(contractorId => {
             this.selectedContractor = this.contractors && this.contractors.find((contractor) => contractor.id === contractorId)
               ? [this.contractors.find((contractor) => contractor.id === contractorId)]

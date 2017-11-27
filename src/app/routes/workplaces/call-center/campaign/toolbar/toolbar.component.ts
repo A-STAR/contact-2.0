@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -67,13 +68,13 @@ export class ToolbarComponent extends DialogFunctions {
 
   private openDebtorCard(): void {
     this.campaignService.campaignDebt$
-      .take(1)
+      .pipe(first())
       .subscribe(debt => this.debtService.navigateToDebtorCard(debt.debtId, debt.personId));
   }
 
   private registerSpecial(): void {
     this.campaignService.campaignDebt$
-      .take(1)
+      .pipe(first())
       .subscribe(debt => this.debtService.navigateToRegistration({
         debtId: debt.debtId,
         personId: debt.personId,
