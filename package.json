@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
+    "postinstall": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "ng serve --port 4200",
     "start:prod": "ng serve --aot --port 8000",
     "start:proxy": "npm start -- --proxy-config proxy.conf.json",
