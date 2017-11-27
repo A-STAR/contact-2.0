@@ -24,8 +24,11 @@ import { isEmpty } from '../../../../core/utils';
 })
 export class DialogMultiSelectComponent<T> extends DialogFunctions implements ControlValueAccessor {
   @Input() columnsFrom = [];
+  @Input() columnsFromTranslationKey: string;
   @Input() columnsTo = [];
+  @Input() columnsToTranslationKey: string;
   @Input() rows: T[] = [];
+  @Input() title: string;
 
   @ViewChild('gridFrom') gridFrom: GridComponent;
   @ViewChild('gridTo') gridTo: GridComponent;
@@ -34,6 +37,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
 
   private isDisabled = false;
   private value: IDialogMultiSelectValue[];
+  private previousValue: IDialogMultiSelectValue[];
 
   constructor(private cdRef: ChangeDetectorRef) {
     super();
@@ -77,30 +81,50 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
     return isEmpty(this.rowsTo);
   }
 
+  onFromDoubleClick(row: T): void {
+    this.value = [
+      ...this.value,
+      this.valueGetter(row),
+    ];
+    this.gridFrom.clearSelection();
+    this.updateValue();
+  }
+
+  onToDoubleClick(row: T): void {
+    this.value = this.value.filter(rowValue => rowValue !== this.valueGetter(row));
+    this.gridTo.clearSelection();
+    this.updateValue();
+  }
+
   onSelect(): void {
     this.value = [
       ...this.value,
       ...this.selectionFrom.map(this.valueGetter),
     ];
+    this.gridFrom.clearSelection();
     this.updateValue();
   }
 
   onSelectAll(): void {
     this.value = this.rows.map(this.valueGetter);
+    this.gridFrom.clearSelection();
     this.updateValue();
   }
 
   onUnselect(): void {
     this.value = this.value.filter(rowValue => !this.selectionTo.map(this.valueGetter).includes(rowValue));
+    this.gridTo.clearSelection();
     this.updateValue();
   }
 
   onUnselectAll(): void {
     this.value = [];
+    this.gridTo.clearSelection();
     this.updateValue();
   }
 
   onSubmit(): void {
+    this.previousValue = [...this.value];
     this.closeDialog();
   }
 
@@ -108,7 +132,16 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
     this.setDialog('on');
   }
 
-  writeValue(value: IDialogMultiSelectValue[]): void {
+  /**
+   * @override
+   */
+  onCloseDialog(): void {
+    this.writeValue(this.previousValue);
+    this.updateValue();
+    super.onCloseDialog();
+  }
+
+  writeValue(value?: IDialogMultiSelectValue[]): void {
     this.value = value || [];
     this.cdRef.markForCheck();
   }

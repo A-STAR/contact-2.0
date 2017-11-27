@@ -14,7 +14,7 @@ export class LayoutComponent {
   titles = {
     ActionsLogComponent: 'ACTIONS_LOG',
     CallCenterComponent: 'CALL_CENTER',
-    CampaignsComponent: 'CAMPAIGNS',
+    CampaignComponent: 'CALL_CENTER',
     ConstantsComponent: 'CONSTANTS',
     ContactLogComponent: 'CONTACT_LOG',
     ContactRegistrationComponent: 'CONTACT_REGISTRATION',
@@ -48,6 +48,7 @@ export class LayoutComponent {
     IncomingCallComponent: 'INCOMING_CALL',
     MessageTemplatesComponent: 'MESSAGE_SCENARIOS',
     OrganizationsComponent: 'DEPARTMENTS',
+    PaymentsComponent: 'PAYMENTS',
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     UsersComponent: 'USERS',
     UserEditComponent: 'USER_EDIT',

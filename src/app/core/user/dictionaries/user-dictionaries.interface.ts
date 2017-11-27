@@ -6,18 +6,14 @@ export interface IUserTerm {
   parentCode: number;
 }
 
-export interface IUserDictionary {
-  [key: number]: IUserTerm;
-}
+export type TUserDictionary = IUserTerm[];
 
 export interface IUserDictionaries {
-  [key: number]: IUserTerm[];
+  [key: number]: TUserDictionary;
 }
 
 export interface IUserDictionariesState {
-  dictionaries: {
-    [key: number]: IUserTerm[];
-  };
+  [key: number]: TUserDictionary;
 }
 
 export interface IUserDictionaryAction {
@@ -25,7 +21,7 @@ export interface IUserDictionaryAction {
   terms?: IUserTerm[];
 }
 
-export type ITransformCallback<T> = (dictionary: IUserTerm) => T;
+export type ITransformCallback<T> = (term: IUserTerm) => T;
 
 export interface ITypeCodeItem {
   typeCode: number;

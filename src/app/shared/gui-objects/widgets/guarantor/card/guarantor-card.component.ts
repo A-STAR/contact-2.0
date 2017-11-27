@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, OnInit
+import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, OnInit
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -8,8 +8,8 @@ import 'rxjs/add/observable/combineLatest';
 import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuarantor, IGuaranteeContract } from '../../guarantee/guarantee.interface';
 
+import { GuaranteeService } from '../../guarantee/guarantee.service';
 import { GuarantorService } from '../../guarantor/guarantor.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -25,11 +25,22 @@ const label = makeKey('widgets.guarantor.grid');
   selector: 'app-guarantor-card',
   templateUrl: './guarantor-card.component.html'
 })
-export class GuarantorCardComponent extends DialogFunctions implements AfterViewChecked, OnInit, OnDestroy {
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+export class GuarantorCardComponent extends DialogFunctions implements OnInit, OnDestroy {
 
+  @ViewChild(DynamicFormComponent) set form(guarantorForm: DynamicFormComponent) {
+    this._form = guarantorForm;
+    if (guarantorForm) {
+      this.onFormInit();
+    }
+  }
+
+  private _form: DynamicFormComponent;
   private canEdit: boolean;
   private currentTypeCode: number;
+  private routeParams = (<any>this.route.params).value;
+  private debtId = this.routeParams.debtId || null;
+  private contractId = this.routeParams.contractId || null;
+  private personId = this.routeParams.guarantorId || null;
 
   controls: IDynamicFormGroup[] = null;
   dialog: string = null;
@@ -39,8 +50,8 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private guaranteeService: GuaranteeService,
     private guarantorService: GuarantorService,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userContantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
@@ -59,22 +70,31 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
     return this.userPermissionsService.has('GUARANTEE_VIEW');
   }
 
-  ngOnInit(): void {
-    const contract = this.messageBusService.takeValueAndRemove<IGuaranteeContract>('contract') || {};
+  get form(): DynamicFormComponent {
+    return this._form;
+  }
 
+  get contract$(): Observable<IGuaranteeContract> {
+    return this.guaranteeService.fetch(this.debtId, +this.contractId, +this.personId);
+  }
+
+  ngOnInit(): void {
     Observable.combineLatest(
+      this.contract$,
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_FAMILY_STATUS),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EDUCATION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
-      contract.id
-        ? this.userPermissionsService.has('GUARANTEE_EDIT')
-        : this.userPermissionsService.has('GUARANTEE_ADD'),
-      contract.id ? this.guarantorService.fetch(contract.personId) : Observable.of(null)
+      this.contract$.flatMap(
+        contract => this.userPermissionsService.has(contract && contract.id ? 'GUARANTEE_EDIT' : 'GUARANTEE_ADD')
+      ),
+      this.contract$.flatMap(
+        contract => contract && contract.id ? this.guarantorService.fetch(contract.personId) : Observable.of(null)
+      )
     )
     .take(1)
-    .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, guarantor ]) => {
+    .subscribe(([ contract, attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, guarantor ]) => {
       const additionalControlNames = this.makeControlsFromAttributeList(<string>attributeList.valueS)
         .map(ctrl => ctrl.controlName);
 
@@ -108,27 +128,20 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
 
       this.canEdit = canEdit;
       this.controls = controls as IDynamicFormGroup[];
-      this.guarantor = guarantor && !this.isRoute('addGuarantor') ? guarantor : { typeCode: 1 };
-      this.currentTypeCode = guarantor && !this.isRoute('addGuarantor') ? guarantor.typeCode : 1;
+      this.guarantor = guarantor && !this.isRoute('guarantor/add') ? guarantor : { typeCode: 1 };
+      this.currentTypeCode = guarantor && !this.isRoute('guarantor/add') ? guarantor.typeCode : 1;
       this.cdRef.markForCheck();
     });
   }
 
   onFormInit(): void {
-    if (this.isRoute('edit') || !this.canEdit) {
+    if ((!this.isRoute('guarantor/add') && !this.isRoute('create')) || !this.canEdit) {
       this.form.form.disable();
       this.cdRef.detectChanges();
     }
-  }
 
-  ngAfterViewChecked(): void {
-    if (this.typeCodeSubscription || !this.form) { return ; }
-    // NOTE: the components ngAfterViewInit does not guarantee that the form is present,
-    // so this is a workaround to call the `init` manually
-    this.onFormInit();
-
-    // observe the user choosing between 1: person, 2: enterprise, 3: entrepreneur
-    this.typeCodeSubscription = this.form.onCtrlValueChange('typeCode')
+     // observe the user choosing between 1: person, 2: enterprise, 3: entrepreneur
+     this.typeCodeSubscription = this.form.onCtrlValueChange('typeCode')
       .map(value => value && Array.isArray(value) ? value[0] : {})
       .map(value => value.value)
       .filter(Boolean)
@@ -168,7 +181,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
     form.enable();
     form.patchValue({ typeCode: this.currentTypeCode });
     form.get('typeCode').markAsDirty();
-    this.messageBusService.dispatch(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, null, {});
+    this.guaranteeService.setPayload(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, {});
     this.cdRef.markForCheck();
   }
 
@@ -183,7 +196,7 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
     form.patchValue(guarantor);
     form.get('typeCode').markAsDirty();
     form.disable();
-    this.messageBusService.dispatch(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, null, guarantor);
+    this.guaranteeService.setPayload(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, guarantor);
     this.cdRef.markForCheck();
   }
 
@@ -195,6 +208,6 @@ export class GuarantorCardComponent extends DialogFunctions implements AfterView
   }
 
   private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('/') === segment;
+    return this.route.snapshot.url.join('/').indexOf(segment) !== -1;
   }
 }

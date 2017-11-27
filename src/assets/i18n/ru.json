@@ -185,6 +185,18 @@
         "payments": "Платежи",
         "promises": "Обещания",
         "documents": "Документы"
+      },
+      "processedDebts": {
+        "grid": {
+          "contract": "Договор",
+          "currencyName": "Валюта",
+          "debtAmount": "Сумма просроченного долга",
+          "debtId": "Ид долга",
+          "dpd": "DPD",
+          "personFullName": "ФИО",
+          "statusCode": "Статус"
+        },
+        "title": "Информация о предыдущих долгах"
       }
     },
     "contactLog": {
@@ -201,8 +213,10 @@
           "outPortfolioId": "Реестр КА",
           "portfolioId": "Портфели",
           "receiveDateTime": "Получен",
+          "createDateTime": "Создан",
           "regionCode": "Регион",
-          "userId": "Оператор"
+          "userId": "Оператор",
+          "searchBtn": "Искать"
         },
         "userId": {
           "grid": {
@@ -218,6 +232,31 @@
       },
       "sms": {
         "title": "СМС"
+      }
+    },
+    "payments": {
+      "filters": {
+        "form": {
+          "branchCode": "Филиал",
+          "dictValue1": "Словарный атрибут 1",
+          "dictValue2": "Словарный атрибут 2",
+          "dictValue3": "Словарный атрибут 3",
+          "dictValue4": "Словарный атрибут 4",
+          "outPortfolioId": "Реестр КА",
+          "portfolioId": "Портфели",
+          "paymentDateTime": "Дата оплаты",
+          "regionCode": "Регион",
+          "userId": "Оператор",
+          "searchBtn": "Искать"
+        },
+        "userId": {
+          "grid": {
+            "fullName": "Оператор",
+            "id": "Ид",
+            "organization": "Подразделение",
+            "position": "Должность"
+          }
+        }
       }
     },
     "contactRegistration": {
@@ -1044,8 +1083,29 @@
           }
         },
         "remove": {
-          "title": "Удаление участника",
+          "title": "Удаление участников",
           "confirmMessage": "Вы действительно хотите удалить выбранных участников из кампании?"
+        }
+      },
+      "statistics": {
+        "grid": {
+          "userFullName": "ФИО участника",
+          "successProcessing": "Кол-во успешно обработанных долгов",
+          "unsuccessProcessing": "Кол-во неуспешно обработанных долгов",
+          "contact": "Кол-во контактов",
+          "SMS": "Кол-во SMS",
+          "successContact": "Кол-во успешных контактов",
+          "refusal": "Кол-во отказов",
+          "promise": "Кол-во обещаний",
+          "promiseAmount": "Сумма обещаний",
+          "untreated": "Количество необработанных долгов",
+          "successProcessingSum": "Общее кол-во успешно обработанных долгов",
+          "unsuccessProcessingSum": "Общее кол-во неуспешно обработанных долгов",
+          "contactSum": "Общее кол-во контактов",
+          "SMSSum": "Общее кол-во СМС",
+          "refusalSum": "Общее кол-во отказов",
+          "promiseSum": "Общее количество обещаний",
+          "promiseAmountSum": "Общая сумма обещаний"
         }
       },
       "tabs": {
@@ -1470,6 +1530,18 @@
         "message": "Вы действительно хотите удалить отмеченные обещания?"
       }
     },
+    "paymentOperatorConfirm": {
+      "dialog": {
+        "title": "Подтверждение изменений",
+        "message": "Вы действительно хотите подтвердить изменение оператора для выбранных платежей?"
+      }
+    },
+    "paymentOperatorReject": {
+      "dialog": {
+        "title": "Отмена изменений",
+        "message": "Вы действительно хотите отклонить изменение оператора для выбранных платежей?"
+      }
+    },
     "debt": {
       "toolbar": {
         "call": "Необходимо перезвонить",
@@ -1866,6 +1938,16 @@
       "gen": { "singular": "залогодателя", "plural": "залогодателей" }
     }
   },
+  "massOperations": {
+    "paymentsConfirm": {
+      "ConfirmInquery": "Вы действительно хотите подтвердить отмеченные {{ count }} платежей?",
+      "title": "Подтверждение платежей"
+    },
+    "paymentsCancel": {
+      "cancelInquery": "Вы действительно хотите отменить отмеченные {{ count }} платежей?",
+      "title": "Отмена платежей"
+    }
+  },
   "errors": {
     "server": {
       "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
@@ -2049,6 +2131,31 @@
       "from": "Начало",
       "to": "Окончание"
     },
+    "filters": {
+      "portfolios": {
+        "grid": {
+          "contractorName": "Контрагент",
+          "directionCode": "Направление",
+          "endWorkDate": "Дата окончания работ",
+          "id": "Ид",
+          "name": "Название",
+          "signDate": "Дата подписания портфеля",
+          "stageCode": "Стадия",
+          "startWorkDate": "Дата начала работ",
+          "statusCode": "Статус"
+        },
+        "title": "Выберите портфели"
+      },
+      "users": {
+        "grid": {
+          "fullName": "ФИО",
+          "id": "Ид",
+          "organization": "Подразделение",
+          "position": "Должность"
+        },
+        "title": "Выберите пользователей"
+      }
+    },
     "grid": {
       "empty": "Нет данных для отображения",
       "filter": {
@@ -2086,13 +2193,21 @@
         "filterOoo": "фильтр..."
       },
       "actions": {
-        "statusChange": "Изменить статус",
-        "showContactHistory": "История контактов",
-        "debtSetResponsible": "Установка ответственного по долгу",
-        "debtClearResponsible": "Снятие ответственного по долгу",
-        "objectAddToGroup": "Добавить в группу",
+        "confirmPaymentsOperator": "Подтвердить изменение оператора",
         "confirmPromise": "Подтвердить обещания",
-        "deletePromise": "Удалить обещания"
+        "debtChangeAttribute": "Изменить атрибуты долга",
+        "debtClearResponsible": "Снять ответственного по долгу",
+        "debtNextCallDate": "Установить дату следующего звонка",
+        "debtSetResponsible": "Установить ответственного по долгу",
+        "deletePromise": "Удалить обещания",
+        "objectAddToGroup": "Добавить в группу",
+        "objectChangeColor": "Изменить цвет",
+        "openDebtCard": "Открыть карточку долга",
+        "paymentsCancel": "Отменить платежи",
+        "paymentsConfirm": "Подтвердить платежи",
+        "rejectPaymentsOperator": "Отклонить изменение оператора",
+        "showContactHistory": "История контактов",
+        "statusChange": "Изменить статус"
       }
     },
     "filter": {

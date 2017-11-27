@@ -51,7 +51,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.needToReadAllContractors$.next(''),
+      action: () => this.fetchContractors(),
       enabled: this.canView$
     }
   ];
@@ -71,8 +71,6 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   dialog: string;
   selectedContractor: IContractor[] = [];
   selection: IContractor[] ;
-  rows: IContractor[];
-  needToReadAllContractors$ = new BehaviorSubject<string>(null);
   private _contractors: IContractor[];
 
   private canViewSubscription: Subscription;
@@ -96,15 +94,9 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
         this.columns = this.gridService.setRenderers(columns);
       });
 
-    this.needToReadAllContractors$
-      .flatMap(() => this.contractorsAndPortfoliosService.readAllContractors())
-      .subscribe((contractors: IContractor[]) => {
-        this.contractors = contractors;
-      });
-
     this.canViewSubscription = this.canView$.subscribe(canView => {
       if (canView) {
-        this.needToReadAllContractors$.next('');
+        this.fetchContractors();
       } else {
         this.clearContractors();
         this.notificationsService.error('errors.default.read.403').entity('entities.contractors.gen.plural').dispatch();
@@ -119,7 +111,7 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
 
     this.viewSubFromChildCreate = this.messageBusService
       .select(ContractorsAndPortfoliosService.CONTRACTOR_FETCH)
-      .subscribe(() => this.needToReadAllContractors$.next(''));
+      .subscribe(() => this.fetchContractors());
 
     this.viewSubFromChildCreate = this.messageBusService
       .select(ContractorsAndPortfoliosService.EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED)
@@ -148,7 +140,6 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
 
   ngOnDestroy(): void {
     this.lastManagerLessContractorId$.unsubscribe();
-    this.needToReadAllContractors$.unsubscribe();
     this.canViewSubscription.unsubscribe();
     // this.viewSubFromChildDelete.unsubscribe();
     this.viewSubFromChildCreate.unsubscribe();
@@ -192,7 +183,14 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     this.contractorsAndPortfoliosService.deleteContractor(this.selectedContractor[0].id)
       .subscribe(() => {
         this.setDialog();
-        this.needToReadAllContractors$.next('');
+        this.fetchContractors();
+      });
+  }
+
+  private fetchContractors(): void {
+    this.contractorsAndPortfoliosService.readAllContractors()
+      .subscribe((contractors: IContractor[]) => {
+        this.contractors = contractors;
       });
   }
 }

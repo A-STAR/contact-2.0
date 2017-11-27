@@ -1,3 +1,15 @@
+<app-payments-cancel-dialog
+  *ngIf="isDialog('paymentsCancel')"
+  [paymentsIds]="getSelectionParam(0)"
+  (close)="onCloseDialog()">
+</app-payments-cancel-dialog>
+
+<app-payments-confirm-dialog
+  *ngIf="isDialog('paymentsConfirm')"
+  [paymentsIds]="getSelectionParam(0)"
+  (close)="onCloseDialog()">
+</app-payments-confirm-dialog>
+
 <app-contact-log-dialog
   *ngIf="isDialog('showContactHistory')"
   [personId]="getDialogParam(0)"
@@ -34,7 +46,21 @@
   (close)="onCloseDialog()"
 ></app-promise-remove-dialog>
 
+<app-payment-operator-confirm-dialog
+  *ngIf="isDialog('confirmPaymentsOperator')"
+  [payments]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-payment-operator-confirm-dialog>
+
+<app-payment-operator-reject-dialog
+  *ngIf="isDialog('rejectPaymentsOperator')"
+  [payments]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-payment-operator-reject-dialog>
+
 <app-grid2
+  #grid
+  *ngIf="isUsingAGGrid; else simpleGrid"
   [columnIds]="columnIds"
   [metadataKey]="metadataKey"
   [ngClass]="ngClass"
@@ -50,3 +76,15 @@
   (onSort)="onRequest()"
   (onSelect)="onSelect($event)"
 ></app-grid2>
+
+<ng-template #simpleGrid>
+  <app-grid
+    #grid
+    [columns]="columns"
+    [columnTranslationKey]="columnTranslationKey"
+    [rows]="rows"
+    [styles]="styles"
+    (onDblClick)="onDblClick($event)"
+    (onSelect)="onSelect($event)"
+  ></app-grid>
+</ng-template>

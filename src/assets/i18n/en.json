@@ -185,6 +185,18 @@
         "payments": "Payments",
         "promises": "Promises",
         "documents": "Documents"
+      },
+      "processedDebts": {
+        "grid": {
+          "contract": "Contract",
+          "currencyName": "Currency",
+          "debtAmount": "Debt Amount",
+          "debtId": "Debt Id",
+          "dpd": "DPD",
+          "personFullName": "Full Name",
+          "statusCode": "Status"
+        },
+        "title": "Previous Debts"
       }
     },
     "contactLog": {
@@ -201,8 +213,10 @@
           "outPortfolioId": "Registry",
           "portfolioId": "Portfolio",
           "receiveDateTime": "Received",
+          "createDateTime": "Created",
           "regionCode": "Region",
-          "userId": "Operator"
+          "userId": "Operator",
+          "searchBtn": "Search"
         },
         "userId": {
           "grid": {
@@ -218,6 +232,31 @@
       },
       "sms": {
         "title": "SMS"
+      }
+    },
+    "payments": {
+      "filters":{
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "outPortfolioId": "Registry",
+          "portfolioId": "Portfolio",
+          "paymentDateTime": "Payment date",
+          "regionCode": "Region",
+          "userId": "Operator",
+          "searchBtn": "Search"
+        },
+        "userId": {
+          "grid": {
+            "fullName": "Operator",
+            "id": "Id",
+            "organization": "Department",
+            "position": "Position"
+          }
+        }
       }
     },
     "contactRegistration": {
@@ -1044,8 +1083,29 @@
           }
         },
         "remove": {
-          "title": "Remove participant",
+          "title": "Remove participants",
           "confirmMessage": "Are you sure you want to delete selected participants from the campaign?"
+        }
+      },
+      "statistics": {
+        "grid": {
+          "userFullName": "User fullname",
+          "successProcessing": "Successfully processed debts",
+          "unsuccessProcessing": "Unseccessfully processed debts",
+          "contact": "Contacts count",
+          "SMS": "SMS count",
+          "successContact": "Successful contacts count",
+          "refusal": "Refusals count",
+          "promise": "Promises count",
+          "promiseAmount": "Promise amount",
+          "untreated": "Untreated debts",
+          "successProcessingSum": "Success processing sum",
+          "unsuccessProcessingSum": "Unsuccess processing sum",
+          "contactSum": "Contacts sum",
+          "SMSSum": "SMS sum",
+          "refusalSum": "Refusal sum",
+          "promiseSum": "Promise sum",
+          "promiseAmountSum": "Promise amount sum"
         }
       },
       "tabs": {
@@ -1470,6 +1530,18 @@
         "message": "Do you really want to delete the marked promises?"
       }
     },
+    "paymentOperatorConfirm": {
+      "dialog": {
+        "title": "Confirmation of changes",
+        "message": "Do you really want to confirm operator change for the selected payments?"
+      }
+    },
+    "paymentOperatorReject": {
+      "dialog": {
+        "title": "Rejection of changes",
+        "message": "Do you really want to reject operator change for the selected payments?"
+      }
+    },
     "debt": {
       "toolbar": {
         "call": "Call Back",
@@ -1583,12 +1655,11 @@
       "card": {
         "fullName": "Debtor",
         "contract": "Contract",
+        "contactData": "Contact phone/address",
         "contactDateTime": "Contact date",
-        "contactNumber": "Contact No",
         "contactPhone": "Contact phone",
         "contactType": "Contact type",
         "userFullName": "Operator",
-        "contactData": "Contact phone/address",
         "promiseDate": "Promise date",
         "promiseAmount": "Promise amount",
         "comment": "Comments",
@@ -1867,6 +1938,16 @@
       "gen": { "singular": "pledgor", "plural": "pledgors" }
     }
   },
+  "massOperations": {
+    "paymentsConfirm": {
+      "ConfirmInquery": "Are you sure to confirm selected {{ count }} payments?",
+      "title": "Payments confirmation"
+    },
+    "paymentsCancel": {
+      "cancelInquery": "Are you sure to cancel selected {{ count }} payments?",
+      "title": "Cancel payments"
+    }
+  },
   "errors": {
     "server": {
       "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
@@ -2050,6 +2131,31 @@
       "from": "From",
       "to": "To"
     },
+    "filters": {
+      "portfolios": {
+        "grid": {
+          "contractorName": "Contractor",
+          "directionCode": "Direction",
+          "endWorkDate": "End Date",
+          "id": "Id",
+          "name": "Name",
+          "signDate": "Signed On",
+          "stageCode": "Stage",
+          "startWorkDate": "Start Date",
+          "statusCode": "Status"
+        },
+        "title": "Select Portfolios"
+      },
+      "users": {
+        "grid": {
+          "fullName": "Name",
+          "id": "Id",
+          "organization": "Organization",
+          "position": "Position"
+        },
+        "title": "Select Users"
+      }
+    },
     "grid": {
       "empty": "No data to display",
       "filter": {
@@ -2087,13 +2193,21 @@
         "filterOoo": "filter..."
       },
       "actions": {
-        "statusChange": "Change Status",
-        "showContactHistory": "Contact Log",
-        "debtSetResponsible": "Set debt responsible",
-        "debtClearResponsible": "Clear debt responsible",
-        "objectAddToGroup": "Add to group",
+        "confirmPaymentsOperator": "Confirm change operator",
         "confirmPromise": "Confirm promises",
-        "deletePromise": "Delete promises"
+        "debtChangeAttribute": "Change debt attributes",
+        "debtClearResponsible": "Clear debt responsible",
+        "debtNextCallDate": "Set next call date",
+        "debtSetResponsible": "Set debt responsible",
+        "deletePromise": "Delete promises",
+        "objectAddToGroup": "Add to group",
+        "objectChangeColor": "Change color",
+        "openDebtCard": "Open debt card",
+        "paymentsCancel": "Payments cancel",
+        "paymentsConfirm": "Payments confirm",
+        "rejectPaymentsOperator": "Reject change operator",
+        "showContactHistory": "Contact Log",
+        "statusChange": "Change status"
       }
     },
     "filter": {

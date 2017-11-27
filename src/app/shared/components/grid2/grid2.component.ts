@@ -11,6 +11,8 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -40,8 +42,8 @@ import { ValueConverterService } from '../../../core/converter/value-converter.s
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
-
 import { UserPermissions } from '../../../core/user/permissions/user-permissions';
+
 
 interface ITranslations {
   translations: { [index: string]: string };
@@ -115,7 +117,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private gridSettings: IAGridSettings;
   private initialized = false;
   private langSubscription: EventEmitter<any>;
+  private saveChangesDebounce = new Subject<void>();
+  private saveChangesDebounceSub: Subscription;
   private userPermissionsBag: UserPermissions;
+  private userPermissionsSub: Subscription;
+
   private viewportDatasource: ViewPortDatasource;
 
   constructor(
@@ -146,14 +152,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       throw new Error(`Can't initialise since no [metadataKey] key provided.`);
     }
 
-    // TODO(d.maltsev): subscription
-    this.userPermissionsService.bag()
+    this.userPermissionsSub = this.userPermissionsService.bag()
       .subscribe(bag => this.userPermissionsBag = bag);
 
     this.gridService
       .getActions(this.metadataKey)
       .take(1)
-      .subscribe(actions => this.actions = actions);
+      .subscribe(actions => {
+        this.actions = actions;
+      });
 
     this.gridService
       .getColumnMeta(this.metadataKey, {})
@@ -173,6 +180,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
     this.langSubscription = this.translate.onLangChange
       .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
+
+    this.saveChangesDebounceSub = this.saveChangesDebounce
+      .debounceTime(2000)
+      .subscribe(() => {
+        this.saveGridSettings();
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -199,6 +212,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.saveGridSettings();
     this.langSubscription.unsubscribe();
+    this.saveChangesDebounceSub.unsubscribe();
+    this.userPermissionsSub.unsubscribe();
   }
 
   onPageChange(action: IToolbarAction): void {
@@ -353,11 +368,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
     return request;
   }
-
-  // fetch(filters: FilterObject, params: IAGridRequestParams): void {
-  //   const payload = { filters, ...params };
-  //   this.gridService.fetch(payload);
-  // }
 
   private getTextFilter(model: any): any {
     const { filter, type } = model;
@@ -706,11 +716,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //   name: 'Alert value',
       //   action: () => { window.alert('Alerting about ' + params.value); },
       // },
-      {
-        name: 'Always disabled',
-        disabled: true,
-        tooltip: 'Just to test what the tooltip can show'
-      },
+      // {
+      //   name: 'Always disabled',
+      //   disabled: true,
+      //   tooltip: 'Just to test what the tooltip can show'
+      // },
       'separator',
       ...this.getMetadataMenuItems(params),
       // {
@@ -755,10 +765,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
       case 'showContactHistory':
         return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+      case 'paymentsConfirm':
+        return this.userPermissionsBag.has('PAYMENT_CONFIRM');
+      case 'paymentsCancel':
+        return this.userPermissionsBag.has('PAYMENT_CANCEL');
       case 'confirmPromise':
         return this.userPermissionsBag.has('PROMISE_CONFIRM') && this.selected.length > 0;
       case 'deletePromise':
         return this.userPermissionsBag.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]) && this.selected.length > 0;
+      case 'confirmPaymentsOperator':
+      case 'rejectPaymentsOperator':
+        return this.userPermissionsBag.has('PAYMENTS_OPERATOR_CHANGE') && this.selected.length > 0;
       default:
         return true;
     }
@@ -796,6 +813,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       { width: column.getActualWidth(), hide: !column.isVisible(), colId: column.getColId() }
     ));
     this.gridSettings = { sortModel, colDefs };
+    this.saveChangesDebounce.next();
   }
 
   private resetGridSettings(): void {

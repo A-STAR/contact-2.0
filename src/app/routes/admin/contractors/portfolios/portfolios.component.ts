@@ -84,9 +84,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
     { prop: 'signDate', minWidth: 100, maxWidth: 150, renderer: 'dateRenderer' },
     { prop: 'startWorkDate', minWidth: 100, maxWidth: 150, renderer: 'dateRenderer' },
     { prop: 'endWorkDate', minWidth: 100, maxWidth: 150, renderer: 'dateRenderer' },
-    { prop: 'comment', minWidth: 100, maxWidth: 250 },
+    { prop: 'comment', minWidth: 100 },
   ];
-
 
   dialog: string;
   selectedContractor: IContractor;
@@ -94,7 +93,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
   selection: IPortfolio[];
 
   set portfolios(newPortfolios: IPortfolio[]) {
-    // TODO refactor this function
+    // TODO(m.bobryshev): refactor this function
     if (!newPortfolios) {
       this._portfolios = null;
       return;
@@ -125,7 +124,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
   }
 
   private needToReadPortfolios$ = new BehaviorSubject<string>(null);
-  private actionsSubscription: Subscription;
   private canViewSubscription: Subscription;
   private contractorSubscription: Subscription;
   private _portfolios: IPortfolio[];
@@ -181,7 +179,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
  }
 
   ngOnDestroy(): void {
-    this.actionsSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
     this.contractorSubscription.unsubscribe();
     this.needToReadPortfolios$.unsubscribe();

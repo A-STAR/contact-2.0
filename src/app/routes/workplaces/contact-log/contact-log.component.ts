@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { ContactsGridKeys } from './contact-log.interface';
+
 import { makeKey } from '../../../core/utils';
 
 const labelKey = makeKey('modules.contactLog');
@@ -13,9 +15,8 @@ export class ContactLogComponent {
   static COMPONENT_NAME = 'ContactLogComponent';
 
   grids = [
-    // { key: 'contactLogPromise', title: labelKey('promise.title') },
-    { key: 'contactLogContact', title: labelKey('contact.title') },
-    // TODO(d.maltsev): correct key
-    // { key: /* 'contactLogSMS' */ 'debtsprocessingall', title: labelKey('sms.title') },
+    { key: ContactsGridKeys.PROMISE, title: labelKey('promise.title') },
+    { key: ContactsGridKeys.CONTACT, title: labelKey('contact.title') },
+    { key: ContactsGridKeys.SMS, title: labelKey('sms.title') },
   ];
 }

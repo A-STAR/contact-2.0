@@ -1,9 +1,8 @@
-<app-grid
+<app-action-grid
   columnTranslationKey="modules.incomingCall.debtors"
-  selectionType="single"
   [styles]="{ height: '600px' }"
   [columns]="columns"
   [rows]="debtors"
-  (onSelect)="onSelect($event)"
-  (onDblClick)="onDoubleClick($event)"
-></app-grid>
+  (select)="onSelect($event)"
+  (dblClick)="onDoubleClick($event)"
+></app-action-grid>

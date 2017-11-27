@@ -14,6 +14,7 @@ import {
 @Injectable()
 export class ValueConverterService {
   private formats: IDateFormats = this.translateService.instant('default.date.format');
+  private dateFormat = 'YYYY-MM-DD';
 
   constructor(private translateService: TranslateService) {}
 
@@ -108,7 +109,7 @@ export class ValueConverterService {
   }
 
   toDateOnly(date: Date): string {
-    return moment(date).utcOffset(0, true).format('YYYY-MM-DD');
+    return moment(date).utcOffset(0, true).format(this.dateFormat);
   }
 
   fromISO(value: string): Date {
@@ -121,6 +122,10 @@ export class ValueConverterService {
 
   fromLocalDate(value: string): Date | false {
     return this.fromLocal(value, this.formats.date);
+  }
+
+  dateStringToISO(date: string): string {
+    return moment(date, this.dateFormat).toISOString();
   }
 
   makeRangeFromLocalDate(value: string): Array<string> {
