@@ -4,7 +4,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
   ViewChild,
   ViewEncapsulation
@@ -26,7 +25,7 @@ import { FilterObject } from '../grid2/filter/grid-filter';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
+export class ActionGridComponent<T> extends DialogFunctions {
   @Input() columnIds: string[];
   @Input() columns: IGridColumn[];
   @Input() columnTranslationKey: string;
@@ -54,29 +53,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     super();
   }
 
-  ngOnInit(): void {
-    if (this.isUsingSimpleGrid && this.isUsingAGGrid) {
-      throw new Error('Received inputs for both simple grid and ag-grid.');
-    }
-  }
-
   get selection(): T[] {
     return this.grid.selected as any[];
   }
 
-  get isUsingSimpleGrid(): boolean {
-    return !!this.columns
-      || !!this.columnTranslationKey
-      || !!this.styles;
-  }
-
   get isUsingAGGrid(): boolean {
-    return !!this.columnIds
-      || !!this.metadataKey
-      || !!this.persistenceKey
-      || !!this.rowIdKey
-      || !!this.ngClass
-      || !!this.rowCount;
+    return !!this.metadataKey;
   }
 
   getSelectionParam(key: number): any[] {
