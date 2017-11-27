@@ -1,6 +1,5 @@
 import { async as Async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { random } from 'faker';
 import { Observable } from 'rxjs/Observable';
@@ -95,7 +94,6 @@ describe('ButtonComponent', () => {
   });
 
   it('should render button with no label', () => {
-    const customIconClass = random.uuid();
     fixture.componentInstance.label = false;
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('button > span'))).toBeFalsy();
