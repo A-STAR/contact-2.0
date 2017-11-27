@@ -157,7 +157,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
     this.gridService
       .getActions(this.metadataKey)
-      // .take(1)
+      .take(1)
       .subscribe(actions => {
         this.actions = actions;
       });

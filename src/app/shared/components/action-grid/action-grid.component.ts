@@ -89,6 +89,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
     if (ref) {
       this.request.emit();
     }
+    this.onCloseDialog();
   }
 
   onRequest(): void {
