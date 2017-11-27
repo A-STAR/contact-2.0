@@ -10,12 +10,13 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components
 
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { MessageBusService } from '../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
-import { MessageBusService } from '../../../../core/message-bus/message-bus.service';
 import { DialogFunctions } from '../../../../core/dialog';
+import { combineLatestAnd } from '../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-contractors',
@@ -34,20 +35,18 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedContractorId$
-      ).map(([hasPermissions, selectedContractor]) => hasPermissions && !!selectedContractor)
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('delete'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedContractorId$,
-        this.lastManagerLessContractorId$
-      ).map(([hasPermissions, selectedContractorId, lastManagerLessContractorId]) =>
-              hasPermissions && selectedContractorId && (selectedContractorId === lastManagerLessContractorId))
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -75,7 +74,6 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
 
   private canViewSubscription: Subscription;
   private contractorsSubscription: Subscription;
-  // private viewSubFromChildDelete: Subscription;
   private viewSubFromChildCreate: Subscription;
 
   constructor(
@@ -141,7 +139,6 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   ngOnDestroy(): void {
     this.lastManagerLessContractorId$.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    // this.viewSubFromChildDelete.unsubscribe();
     this.viewSubFromChildCreate.unsubscribe();
     this.contractorsSubscription.unsubscribe();
     this.clearContractors();

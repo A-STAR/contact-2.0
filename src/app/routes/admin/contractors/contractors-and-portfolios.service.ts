@@ -52,16 +52,17 @@ export class ContractorsAndPortfoliosService {
       .distinctUntilChanged();
   }
 
-  get selectedManagerId$(): Observable<any> {
+  get selectedPortfolioId$(): Observable<number> {
     return this.state
-      .map(state => {
-        this.managerMapping = state.mapContractorToSelectedManager;
-        return state.mapContractorToSelectedManager;
-      })
+      .map(state => state.selectedPortfolioId)
       .distinctUntilChanged();
   }
 
-  managerMapping: INumberMap;
+  get selectedManagerId$(): Observable<number> {
+    return this.state
+      .map(state => null)
+      .distinctUntilChanged();
+  }
 
   readAllContractors(): Observable<IContractor[]> {
     return this.dataService.readAll('/contractors')
@@ -69,6 +70,7 @@ export class ContractorsAndPortfoliosService {
         this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
       ) as Observable<IContractor[]>;
   }
+
   readAllContractorsExeptCurrent(currentContractorId: number): Observable<IContractor[]> {
     return this.dataService.readAll('/contractors')
       .map(contractors => contractors ? contractors.filter(contractor => contractor.id !== currentContractorId) : null )
@@ -76,13 +78,14 @@ export class ContractorsAndPortfoliosService {
         this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
       ) as Observable<IContractor[]>;
   }
+
   readContractor(contractorId: number): Observable<IContractor> {
     return this.dataService.read('/contractors/{contractorId}', { contractorId })
       .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
   }
 
   selectContractor(contractorId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { contractorId });
+    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { selectedContractorId: contractorId });
   }
 
   createContractor(contractor: IContractor): Observable<void> {
@@ -108,9 +111,7 @@ export class ContractorsAndPortfoliosService {
 
   selectManager(contractorId: number, managerId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, {
-      mapContractorToSelectedManager: {
-        [contractorId]: managerId
-      }
+       [contractorId]: managerId
     });
   }
 
@@ -171,15 +172,6 @@ export class ContractorsAndPortfoliosService {
       .catch(this.notificationsService.error('errors.default.move').entity('entities.portfolios.gen.singular').callback());
   }
 
-  get mapContractorToSelectedPortfolio$(): Observable<any> {
-    return this.state
-      .map(state => {
-        this.portfolioMapping = state.mapContractorToSelectedPortfolio;
-        return state.mapContractorToSelectedPortfolio;
-      })
-      .distinctUntilChanged();
-  }
-
   portfolioMapping: INumberMap;
 
   deletePortfolio(contractorId: number, portfolioId: number): Observable<any> {
@@ -188,17 +180,15 @@ export class ContractorsAndPortfoliosService {
       .catch(this.notificationsService.deleteError().entity('entities.portfolios.entity.singular').callback());
   }
 
-  selectPortfolio(contractorId: number, portfolioId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_SELECT, {
-        mapContractorToSelectedPortfolio: {
-        [contractorId]: portfolioId
-      }
-    });
+  selectPortfolio(portfolioId: number): void {
+    this.dispatch(
+      ContractorsAndPortfoliosService.PORTFOLIO_SELECT,
+      { selectedPortfolioId: portfolioId }
+    );
   }
 
   get state(): Observable<IContractorsAndPortfoliosState> {
-    return this.store.select(state => state.contractorsAndPortfolios)
-      .filter(Boolean);
+    return this.store.select(state => state.contractorsAndPortfolios);
   }
 
   private dispatch(type: string, payload?: any): void {
