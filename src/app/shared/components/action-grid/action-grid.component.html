@@ -58,20 +58,9 @@
   (close)="onCloseDialog()"
 ></app-payment-operator-reject-dialog>
 
-<app-grid
-  #grid
-  *ngIf="isUsingSimpleGrid"
-  [columns]="columns"
-  [columnTranslationKey]="columnTranslationKey"
-  [rows]="rows"
-  [styles]="styles"
-  (onDblClick)="onDblClick($event)"
-  (onSelect)="onSelect($event)"
-></app-grid>
-
 <app-grid2
   #grid
-  *ngIf="isUsingAGGrid"
+  *ngIf="isUsingAGGrid; else simpleGrid"
   [columnIds]="columnIds"
   [metadataKey]="metadataKey"
   [ngClass]="ngClass"
@@ -87,3 +76,15 @@
   (onSort)="onRequest()"
   (onSelect)="onSelect($event)"
 ></app-grid2>
+
+<ng-template #simpleGrid>
+  <app-grid
+    #grid
+    [columns]="columns"
+    [columnTranslationKey]="columnTranslationKey"
+    [rows]="rows"
+    [styles]="styles"
+    (onDblClick)="onDblClick($event)"
+    (onSelect)="onSelect($event)"
+  ></app-grid>
+</ng-template>

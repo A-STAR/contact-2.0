@@ -65,7 +65,7 @@ export class PaymentsFilterComponent implements OnInit, OnDestroy {
       .filter(Boolean)
       .map(payments => payments.columns)
       .map(columns => columns.find(column => column.name === 'paymentDateTime'))
-      .map(column => column.dataType)
+      .map(column => column && column.dataType)
       .subscribe(columnDataType => this.paymentDateTimeFormat = columnDataType);
   }
 
