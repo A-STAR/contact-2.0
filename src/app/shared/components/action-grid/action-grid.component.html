@@ -3,6 +3,7 @@
   [paymentsIds]="getSelectionParam(0)"
   (close)="onCloseDialog()">
 </app-payments-cancel-dialog>
+
 <app-payments-confirm-dialog
   *ngIf="isDialog('paymentsConfirm')"
   [paymentsIds]="getSelectionParam(0)"
@@ -57,7 +58,20 @@
   (close)="onCloseDialog()"
 ></app-payment-operator-reject-dialog>
 
+<app-grid
+  #grid
+  *ngIf="isUsingSimpleGrid"
+  [columns]="columns"
+  [columnTranslationKey]="columnTranslationKey"
+  [rows]="rows"
+  [styles]="styles"
+  (onDblClick)="onDblClick($event)"
+  (onSelect)="onSelect($event)"
+></app-grid>
+
 <app-grid2
+  #grid
+  *ngIf="isUsingAGGrid"
   [columnIds]="columnIds"
   [metadataKey]="metadataKey"
   [ngClass]="ngClass"
