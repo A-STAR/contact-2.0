@@ -150,47 +150,62 @@ export class CampaignsService {
      * @param campaignId
      */
     fetchCampaignStat(campaignId: number): Observable<ICampaignsStatistic> {
-      return this.dataService.read(this.baseUrl + '/{campaignId}/statistics', { campaignId })
-        .catch(
-          this.notificationsService.fetchError()
-            .entity('entities.campaigns.gen.signal').dispatchCallback()
-          );
-    //   const userStatistic = [{
-    //         userFullName: 'Операторов Оператор Операторович',
-    //         successProcessing: 1,
-    //         unsuccessProcessing: 1,
-    //         contact: 4,
-    //         SMS: 23,
-    //         successContact: 1,
-    //         refusal: 1,
-    //         promise: 2,
-    //         promiseAmount: 564654
-    //     }, {
-    //         userFullName: 'Операторов Оператор Операторович',
-    //         successProcessing: 1,
-    //         unsuccessProcessing: 1,
-    //         contact: 4,
-    //         SMS: 35,
-    //         successContact: 1,
-    //         refusal: 1,
-    //         promise: 2,
-    //         promiseAmount: 564654
-    //     }] as IUserStatistic[];
+      // return this.dataService.read(this.baseUrl + '/{campaignId}/statistics', { campaignId })
+      //   .catch(
+      //     this.notificationsService.fetchError()
+      //       .entity('entities.campaigns.gen.signal').dispatchCallback()
+      //     );
+      //   }
+      const userStatistic = [
+        [{
+            userFullName: 'Операторов Оператор Операторович',
+            successProcessing: 1,
+            unsuccessProcessing: 1,
+            contact: 4,
+            SMS: 23,
+            successContact: 1,
+            refusal: 1,
+            promise: 2,
+            promiseAmount: 564654
+        }, {
+            userFullName: 'Операторов Оператор Операторович',
+            successProcessing: 1,
+            unsuccessProcessing: 1,
+            contact: 4,
+            SMS: 35,
+            successContact: 1,
+            refusal: 1,
+            promise: 2,
+            promiseAmount: 564654
+        }] as IUserStatistic[],
+        [
+          {
+            userFullName: 'Операторов Оператор Операторович',
+            successProcessing: 1,
+            unsuccessProcessing: 1,
+            contact: 4,
+            SMS: 23,
+            successContact: 1,
+            refusal: 1,
+            promise: 2,
+            promiseAmount: 564654
+        }] as IUserStatistic[]
+      ];
 
-    //   return Observable.of({
-    //     userStatistic,
-    //     aggregatedData: {
-    //       untreated: 10,
-    //       successProcessingSum: 2,
-    //       unsuccessProcessingSum: 5,
-    //       contacSum: 7,
-    //       SMSSum: 3,
-    //       refusalSum: 100,
-    //       promiseSum: 1000,
-    //       promiseAmountSum: 1000000
-    //     }
-    //   });
-    // }
+      return Observable.of({
+        userStatistic: userStatistic[campaignId - 1],
+        aggregatedData: {
+          untreated: 10,
+          successProcessingSum: 2,
+          unsuccessProcessingSum: 5,
+          contacSum: 7,
+          SMSSum: 3,
+          refusalSum: 100,
+          promiseSum: 1000,
+          promiseAmountSum: 1000000
+        }
+      });
+    }
 
   private readParticipants(campaignId: number): Observable<IParticipant[]> {
     return this.dataService.readAll(`${this.baseUrl}/{campaignId}/users`, { campaignId });
