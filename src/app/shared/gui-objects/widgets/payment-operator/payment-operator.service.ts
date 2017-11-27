@@ -5,7 +5,7 @@ import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class PaymentsChangesService {
+export class PaymentOperatorService {
   private url = '/mass/payments';
 
   constructor(

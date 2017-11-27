@@ -3,4 +3,9 @@
   (close)="onCloseDialog()"
 ></app-call-center-toolbar-processed-debts>
 
+<app-call-center-toolbar-status-dialog
+  *ngIf="isDialog('change-status')"
+  (close)="onCloseDialog()"
+></app-call-center-toolbar-status-dialog>
+
 <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>

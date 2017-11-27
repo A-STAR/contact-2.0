@@ -22,6 +22,16 @@ app-grid2 {
     }
   }
 
+  .ag-icon-filter {
+    display: inline-block;
+    height: 12px;
+    opacity: 1;
+    width: 12px;
+    &:before {
+      content: "...";
+    }
+  }
+
   .header-item-wrapper {
     width: 100%;
     text-align: left;

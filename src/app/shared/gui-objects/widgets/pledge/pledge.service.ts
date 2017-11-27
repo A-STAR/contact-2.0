@@ -1,8 +1,14 @@
+import { Actions } from '@ngrx/effects';
+import { Subject } from 'rxjs/Subject';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IPledgeContract, IPledgeContractInformation, IContractInformation,
   IContractProperty, IContractPledgor } from './pledge.interface';
+import { UnsafeAction } from '../../../../core/state/state.interface';
+
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -15,10 +21,14 @@ export class PledgeService {
   private baseUrl = '/debts/{debtId}/pledgeContract';
   private errSingular = 'entities.pledgeContract.gen.singular';
 
+  private contracts$ = new Subject<IPledgeContract[]>();
+
   constructor(
+    private actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
+    private store: Store<IAppState>,
   ) {}
 
   get canView$(): Observable<boolean> {
@@ -38,8 +48,16 @@ export class PledgeService {
   }
 
   fetchAll(debtId: number): Observable<Array<IPledgeContract>> {
-    return this.dataService.readAll(this.baseUrl, { debtId })
+    return this.dataService
+      .readAll(this.baseUrl, { debtId })
+      .do(contracts => this.contracts$.next(contracts))
       .catch(this.notificationsService.fetchError().entity('entities.pledgeContract.gen.plural').dispatchCallback());
+  }
+
+  // TODO: fetch one item form server
+  fetch(debtId: number, contractId: number, personId: number = null, propertyId: number = null): Observable<IPledgeContract> {
+    return this.contracts$.map(contracts => contracts.find(contract => contract.contractId === contractId
+      && (!personId || contract.personId === personId) && (!propertyId || contract.propertyId === propertyId)));
   }
 
   createPledgeContractInformation(contract: IPledgeContract): IPledgeContractInformation {
@@ -107,5 +125,14 @@ export class PledgeService {
         `${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`,
         { debtId, contractId, pledgorId, propertyId }
       ).catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
+  }
+
+  setPayload(type: string, payload?: any): void {
+    this.store.dispatch({ type, payload });
+  }
+
+  getPayload<T>(type: string): Observable<T> {
+    return this.actions.ofType(type)
+      .map(action => (action as UnsafeAction).payload);
   }
 }

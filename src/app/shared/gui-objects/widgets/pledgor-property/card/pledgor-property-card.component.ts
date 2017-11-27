@@ -1,5 +1,5 @@
 import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef,
-  OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
+  OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -11,7 +11,6 @@ import { IPledgeContract } from '../../pledge/pledge.interface';
 import { IPledgorProperty } from '../pledgor-property.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PledgeService } from '../../pledge/pledge.service';
 import { PledgorService } from '../../pledgor/pledgor.service';
 import { PledgorPropertyService } from '../../pledgor-property/pledgor-property.service';
@@ -29,9 +28,16 @@ const label = makeKey('widgets.pledgorProperty.grid');
   selector: 'app-pledgor-property-card',
   templateUrl: './pledgor-property-card.component.html'
 })
-export class PledgorPropertyCardComponent extends DialogFunctions implements OnInit, OnDestroy, AfterViewChecked {
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+export class PledgorPropertyCardComponent extends DialogFunctions implements OnInit, OnDestroy {
 
+  @ViewChild(DynamicFormComponent) set form(propertyForm: DynamicFormComponent) {
+    this._form = propertyForm;
+    if (propertyForm) {
+      this.onFormInit();
+    }
+  }
+
+  private _form: DynamicFormComponent;
   private pledgorId: number;
 
   controls: IDynamicFormGroup[] = null;
@@ -42,10 +48,14 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
   private pledgorSubscription: Subscription;
   private formSubscription: Subscription;
   private canEdit: boolean;
+  private routeParams = (<any>this.route.params).value;
+  private debtId = this.routeParams.debtId || null;
+  private contractId = this.routeParams.contractId || null;
+  private personId = this.routeParams.pledgorId || null;
+  private propertyId = this.routeParams.propertyId || null;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private pledgeService: PledgeService,
     private pledgorService: PledgorService,
@@ -56,20 +66,32 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
     super();
   }
 
-  ngOnInit(): void {
-    const contract = this.messageBusService.takeValueAndRemove<IPledgeContract>('contract');
+  get form(): DynamicFormComponent {
+    return this._form;
+  }
 
+  get contract$(): Observable<IPledgeContract> {
+    return this.pledgeService.fetch(this.debtId, +this.contractId, +this.personId, +this.propertyId);
+  }
+
+  ngOnInit(): void {
     Observable.combineLatest(
       this.lookupService.currencyOptions,
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
-      contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$,
-      contract && contract.id && !this.isRoute('pledgor/add')
-        ? this.pledgorPropertyService.fetch(contract.personId, contract.propertyId)
-          .map(property => this.getFormData(contract, property))
-        : Observable.of(this.getFormData()),
-      contract && contract.id && !this.isRoute('pledgor/add')
-        ? this.pledgorService.fetch(contract.personId)
-        : Observable.of(null)
+      this.contract$.flatMap(
+        contract => contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$
+      ),
+      this.contract$.flatMap(
+        contract => contract && contract.id && !this.isRoute('pledgor/add')
+          ? this.pledgorPropertyService.fetch(contract.personId, contract.propertyId)
+            .map(property => this.getFormData(contract, property))
+          : Observable.of(this.getFormData())
+      ),
+      this.contract$.flatMap(
+        contract => contract && contract.id && !this.isRoute('pledgor/add')
+          ? this.pledgorService.fetch(contract.personId)
+          : Observable.of(null)
+      )
     )
     .take(1)
     .subscribe(([ currencyOptions, propertyTypeOptions, canEdit, property, pledgor ]) => {
@@ -80,8 +102,8 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
       this.cdRef.markForCheck();
     });
 
-    this.pledgorSubscription = this.messageBusService
-      .select<string, IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
+    this.pledgorSubscription = this.pledgeService
+      .getPayload<IPledgor>(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED)
       .subscribe(pledgor => {
         this.onClear();
         this.pledgorId = pledgor ? pledgor.id : null;
@@ -90,21 +112,15 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
   }
 
   onFormInit(): void {
-    if (this.isRoute('edit') || !this.canEdit) {
+    if ((!this.isRoute('pledgor/add') && !this.isRoute('create')) || !this.canEdit) {
       this.form.getControl('propertyType').disable();
       this.cdRef.detectChanges();
     }
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.formSubscription || !this.form) { return ; }
-
-    this.onFormInit();
 
     this.formSubscription = this.form.form.valueChanges
       .map(updates => this.form.serializedValue)
       .subscribe(property => {
-        this.messageBusService.dispatch(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED, null, {
+        this.pledgeService.setPayload(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED, {
           id: property.id,
           pledgeValue: property.pledgeValue,
           marketValue: property.marketValue,
@@ -186,6 +202,6 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
   }
 
   private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('/') === segment;
+    return this.route.snapshot.url.join('/').indexOf(segment) !== -1;
   }
 }

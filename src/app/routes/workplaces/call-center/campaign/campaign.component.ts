@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { CampaignService } from './campaign.service';
 
@@ -19,5 +20,9 @@ export class CampaignComponent implements OnInit {
 
   ngOnInit(): void {
     this.campaignService.preloadCampaignDebt();
+  }
+
+  get hasDebt$(): Observable<boolean> {
+    return this.campaignService.campaignDebt$.map(Boolean);
   }
 }

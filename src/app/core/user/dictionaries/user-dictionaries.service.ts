@@ -119,7 +119,7 @@ export class UserDictionariesService {
     if (this.isFetching[dictionaryId]) {
       // log('dictionary is being fetched:', dictionaryId);
       return this.state$
-        .map(state => state.dictionaries[dictionaryId])
+        .map(dictionaries => dictionaries[dictionaryId])
         .filter(Boolean)
         .do(dict => {
           // log('dictionary has been fetched:', dictionaryId);
@@ -178,9 +178,9 @@ export class UserDictionariesService {
       // })
 
     return this.state$
-      .do(state => {
+      .do(dictionaries => {
         ids.forEach(id => {
-          if (!state.dictionaries[id] && !this.isFetching[id]) {
+          if (!dictionaries[id] && !this.isFetching[id]) {
             this.isFetching[id] = true;
             // log('fetching id:', id);
             const action = this.createRefreshAction(id);
@@ -188,8 +188,8 @@ export class UserDictionariesService {
           }
         });
       })
-      .switchMap(state => of(ids.reduce((acc, id) => {
-        const dictionary = state.dictionaries[id];
+      .switchMap(dictionaries => of(ids.reduce((acc, id) => {
+        const dictionary = dictionaries[id];
         return {
           ...acc,
           [id]: dictionary ? dictionary.map(transform) : null
