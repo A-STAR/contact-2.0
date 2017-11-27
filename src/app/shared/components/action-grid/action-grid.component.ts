@@ -64,6 +64,21 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return this.grid.selected as any[];
   }
 
+  get isUsingSimpleGrid(): boolean {
+    return !!this.columns
+      || !!this.columnTranslationKey
+      || !!this.styles;
+  }
+
+  get isUsingAGGrid(): boolean {
+    return !!this.columnIds
+      || !!this.metadataKey
+      || !!this.persistenceKey
+      || !!this.rowIdKey
+      || !!this.ngClass
+      || !!this.rowCount;
+  }
+
   getSelectionParam(key: number): any[] {
     return this.dialogData.selection[key];
   }
@@ -111,20 +126,5 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   onSelect(selected: number[]): void {
     this.select.emit(selected);
-  }
-
-  private get isUsingSimpleGrid(): boolean {
-    return !!this.columns
-      || !!this.columnTranslationKey
-      || !!this.styles;
-  }
-
-  private get isUsingAGGrid(): boolean {
-    return !!this.columnIds
-      || !!this.metadataKey
-      || !!this.persistenceKey
-      || !!this.rowIdKey
-      || !!this.ngClass
-      || !!this.rowCount;
   }
 }
