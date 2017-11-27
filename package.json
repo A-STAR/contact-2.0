@@ -11,7 +11,7 @@
     "build": "ng build",
     "build:check": "ng build --aot",
     "test": "ng test --browsers Chrome --auto-watch",
-    "test:prod": "ng test --aot --browsers ChromeHeadless --single-run",
+    "test:prod": "ng test --browsers ChromeHeadless --single-run",
     "lint": "ng lint --type-check",
     "e2e": "ng e2e",
     "ng-update": "npm up @angular/animations @angular/common @angular/compiler @angular/compiler-cli @angular/core @angular/forms @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/cli"
