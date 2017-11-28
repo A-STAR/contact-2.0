@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -23,6 +23,8 @@ const labelKey = makeKey('widgets.phone.card');
   templateUrl: './phone-card.component.html'
 })
 export class PhoneCardComponent {
+  @Input() readOnly = false;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
@@ -55,11 +57,38 @@ export class PhoneCardComponent {
     .pipe(first())
     .subscribe(([ options, canEdit, canEditComment, phone ]) => {
       this.controls = [
-        { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
-        { label: labelKey('phoneNumber'), controlName: 'phone', type: 'text', required: true, disabled: !canEdit },
-        { label: labelKey('stopAutoSms'), controlName: 'stopAutoSms', type: 'checkbox', disabled: !canEdit },
-        { label: labelKey('stopAutoInfo'), controlName: 'stopAutoInfo', type: 'checkbox', disabled: !canEdit },
-        { label: labelKey('comment'), controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
+        {
+          label: labelKey('typeCode'),
+          controlName: 'typeCode',
+          type: 'select',
+          required: true,
+          options,
+          disabled: !canEdit || this.readOnly
+        },
+        {
+          label: labelKey('phoneNumber'),
+          controlName: 'phone',
+          type: 'text',
+          required: true,
+          disabled: !canEdit || this.readOnly },
+        {
+          label: labelKey('stopAutoSms'),
+          controlName: 'stopAutoSms',
+          type: 'checkbox',
+          disabled: !canEdit || this.readOnly
+        },
+        {
+          label: labelKey('stopAutoInfo'),
+          controlName: 'stopAutoInfo',
+          type: 'checkbox',
+          disabled: !canEdit || this.readOnly
+        },
+        {
+          label: labelKey('comment'),
+          controlName: 'comment',
+          type: 'textarea',
+          disabled: !canEdit && !canEditComment || this.readOnly
+        },
       ];
       this.phone = phone;
     });

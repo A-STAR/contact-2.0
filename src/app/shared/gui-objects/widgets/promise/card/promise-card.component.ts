@@ -1,4 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -26,6 +34,8 @@ import { minStrict } from '../../../../../core/validators';
   templateUrl: './promise-card.component.html'
 })
 export class PromiseCardComponent implements AfterViewInit, OnDestroy {
+  @Input() readOnly = false;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
@@ -66,7 +76,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       required: true,
     },
     { label: 'widgets.promise.grid.comment', controlName: 'comment', type: 'textarea' },
-  ];
+  ].map(item => ({ ...item, disabled: this.readOnly } as IDynamicFormControl));
 
   dialog: string;
   promise: IPromise;

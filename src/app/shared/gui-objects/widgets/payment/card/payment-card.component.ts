@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -24,6 +24,8 @@ import { minStrict } from '../../../../../core/validators';
   templateUrl: './payment-card.component.html'
 })
 export class PaymentCardComponent {
+  @Input() readOnly = false;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
@@ -94,14 +96,14 @@ export class PaymentCardComponent {
           label: 'widgets.payment.grid.isConfirmed', controlName: 'isConfirmed', disabled: !canConfirm,
           type: 'checkbox', required: true, width: 12
         },
-      ];
+      ].map(item => ({ ...item, disabled: this.readOnly } as IDynamicFormControl));
 
       this.controls =  this.payment.isCanceled
         ? controls.map(control => ({ ...control, disabled: true }))
         : !canConfirm && !this.paymentId
-        ? controls.filter(control => control.controlName !== 'isConfirmed')
-            .map(control => canAdd ? control : { ...control, disabled: true })
-        : controls.map(control => canAdd ? control : { ...control, disabled: true });
+          ? controls.filter(control => control.controlName !== 'isConfirmed')
+              .map(control => canAdd ? control : { ...control, disabled: true })
+          : controls.map(control => canAdd ? control : { ...control, disabled: true });
 
       this.cdRef.markForCheck();
     });

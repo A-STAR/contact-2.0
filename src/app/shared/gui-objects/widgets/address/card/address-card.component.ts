@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -23,6 +23,8 @@ import { oneOfGroupRequired } from '../../../../../core/validators';
   templateUrl: './address-card.component.html'
 })
 export class AddressCardComponent {
+  @Input() readOnly = false;
+
   @ViewChild('form') form: DynamicForm2Component;
 
   private routeParams = (<any>this.route.params).value;
@@ -94,7 +96,7 @@ export class AddressCardComponent {
           width: 6,
           translationKey: 'widgets.address.card',
           children: [
-            { type: 'text', name: 'postalCode', disabled: !canEdit },
+            { type: 'text', name: 'postalCode', disabled: !canEdit || this.readOnly },
             {
               type: 'group',
               bordered: true,
@@ -104,17 +106,17 @@ export class AddressCardComponent {
               required: true,
               validators: oneOfGroupRequired,
               children: [
-                { type: 'text', name: 'country', disabled: !canEdit },
-                { type: 'text', name: 'region', disabled: !canEdit },
-                { type: 'text', name: 'area', disabled: !canEdit },
-                { type: 'text', name: 'city', disabled: !canEdit },
-                { type: 'text', name: 'settlement', disabled: !canEdit },
-                { type: 'text', name: 'cityDistrict', disabled: !canEdit },
-                { type: 'text', name: 'street', disabled: !canEdit },
-                { type: 'text', name: 'house', disabled: !canEdit },
-                { type: 'text', name: 'building', disabled: !canEdit },
-                { type: 'text', name: 'flat', disabled: !canEdit },
-              ]
+                { type: 'text', name: 'country' },
+                { type: 'text', name: 'region' },
+                { type: 'text', name: 'area' },
+                { type: 'text', name: 'city' },
+                { type: 'text', name: 'settlement' },
+                { type: 'text', name: 'cityDistrict' },
+                { type: 'text', name: 'street' },
+                { type: 'text', name: 'house' },
+                { type: 'text', name: 'building' },
+                { type: 'text', name: 'flat' },
+              ].map(item => ({ ...item, disabled: !canEdit || this.readOnly }))
             },
           ]
         },
@@ -125,9 +127,9 @@ export class AddressCardComponent {
           width: 6,
           translationKey: 'widgets.address.card',
           children: [
-            { type: 'select', name: 'typeCode', options, required: true, disabled: !canEdit },
-            { type: 'textarea', name: 'comment', disabled: !canEdit && !canEditComment },
-            { type: 'checkbox', name: 'isResidence', disabled: !canEdit },
+            { type: 'select', name: 'typeCode', options, required: true, disabled: !canEdit || this.readOnly },
+            { type: 'textarea', name: 'comment', disabled: !canEdit && !canEditComment || this.readOnly },
+            { type: 'checkbox', name: 'isResidence', disabled: !canEdit || this.readOnly },
           ]
         },
       ]
@@ -140,10 +142,10 @@ export class AddressCardComponent {
       name: 'rootGroup',
       translationKey: 'widgets.address.card',
       children: [
-        { name: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
-        { name: 'fullAddress', type: 'text', required: true, disabled: !canEdit },
-        { name: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
-        { name: 'isResidence', type: 'checkbox', disabled: !canEdit },
+        { name: 'typeCode', type: 'select', required: true, options, disabled: !canEdit || this.readOnly },
+        { name: 'fullAddress', type: 'text', required: true, disabled: !canEdit || this.readOnly },
+        { name: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment || this.readOnly },
+        { name: 'isResidence', type: 'checkbox', disabled: !canEdit || this.readOnly },
       ]
     } as IDynamicFormGroup;
   }

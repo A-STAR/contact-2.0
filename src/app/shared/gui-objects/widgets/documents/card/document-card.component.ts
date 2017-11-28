@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -23,6 +23,8 @@ import { maxFileSize } from '../../../../../core/validators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocumentCardComponent {
+  @Input() readOnly = false;
+
   @ViewChild('form') form: DynamicFormComponent;
 
   private id = (this.route.params as any).value.personId || null;
@@ -60,7 +62,11 @@ export class DocumentCardComponent {
         { controlName: 'docNumber', type: 'text' },
         { controlName: 'comment', type: 'textarea' },
         { controlName: 'file', type: 'file', fileName: document && document.fileName, validators: [ fileSizeValidator ] },
-      ].map(control => ({ ...control, label: `widgets.document.grid.${control.controlName}` } as IDynamicFormItem));
+      ].map(control => ({
+        ...control,
+        label: `widgets.document.grid.${control.controlName}`,
+        disabled: this.readOnly,
+      } as IDynamicFormItem));
       this.document = document;
       this.cdRef.markForCheck();
     });
