@@ -3,6 +3,7 @@ import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestro
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -82,7 +83,7 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
         contract => this.userPermissionsService.has(contract && contract.id ? 'GUARANTEE_EDIT' : 'GUARANTEE_ADD')
       )
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ contacts, contract, respTypeOpts, canEdit ]) => {
       const controls: IDynamicFormGroup[] = [
         {

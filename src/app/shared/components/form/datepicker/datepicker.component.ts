@@ -15,6 +15,7 @@ import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } fro
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
@@ -68,7 +69,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   ) {
     this.subscription = Observable.merge(
       this.translateService.get('default.date')
-        .take(1),
+        .pipe(first()),
       this.translateService.onLangChange
         .distinctUntilChanged()
         .map(data => data.translations.default.date)

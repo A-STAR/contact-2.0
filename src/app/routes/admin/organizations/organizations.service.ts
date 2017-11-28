@@ -18,6 +18,7 @@ import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode
 import { DataService } from 'app/core/data/data.service';
 import { OrganizationsTreeService } from 'app/routes/admin/organizations/organizations-tree/organizations-tree.service';
 import { NotificationsService } from 'app/core/notifications/notifications.service';
+import { first } from 'rxjs/operators';
 
 @Injectable()
 export class OrganizationsService {
@@ -70,7 +71,7 @@ export class OrganizationsService {
 
   fetchEmployees(): Observable<IEmployee[]> {
     return this.selectedOrganization
-      .take(1)
+      .pipe(first())
       .switchMap(organization => {
         return organization ? this.readEmployees(organization.id) : Observable.of([]);
       })
@@ -83,7 +84,7 @@ export class OrganizationsService {
 
   fetchNotAddedEmployees(): Observable<IEmployee[]> {
     return this.selectedOrganization
-      .take(1)
+      .pipe(first())
       .switchMap(organization => this.readNotAddedEmployees(organization.id))
       .map(employees => employees.map<IEmployee>(employee => {
         return {
@@ -96,7 +97,7 @@ export class OrganizationsService {
 
   createOrganization(organization: IOrganization): Observable<any> {
     return this.selectedOrganization
-      .take(1)
+      .pipe(first())
       .switchMap(selectedOrganization => {
         const parentId = selectedOrganization && selectedOrganization.id;
         return this.dataService.create(this.baseUrl, {}, { ...organization, parentId });
@@ -111,7 +112,7 @@ export class OrganizationsService {
   }
 
   updateOrganizationNoFetch(organization: ITreeNode, id?: number): Observable<any> {
-    return (id ? Observable.of({ id }) : this.selectedOrganization.take(1))
+    return (id ? Observable.of({ id }) : this.selectedOrganization.pipe(first()))
       .switchMap(selectedOrganization =>
         this.dataService.update(`${this.baseUrl}/{organizationId}`, {
           organizationId: selectedOrganization.id
@@ -121,7 +122,7 @@ export class OrganizationsService {
 
   removeOrganization(): Observable<any> {
     return this.selectedOrganization
-      .take(1)
+      .pipe(first())
       .switchMap(selectedOrganization =>
         this.deleteOrganization(selectedOrganization.id)
       )
@@ -135,7 +136,7 @@ export class OrganizationsService {
 
   createEmployee(employee: IEmployeeCreateRequest): Observable<any> {
     return this.selectedOrganization
-      .take(1)
+      .pipe(first())
       .switchMap(selectedOrganization => {
         return this.dataService.create(`${this.baseUrl}/{organizationId}/users`, {
         organizationId: selectedOrganization.id
@@ -152,7 +153,7 @@ export class OrganizationsService {
         this.selectedOrganization,
         this.selectedEmployeeId
       )
-      .take(1)
+      .pipe(first())
       .switchMap(([ organization, userId ]) => {
         return this.dataService.update(`${this.baseUrl}/{organizationId}/users/{userId}`,
           { organizationId: organization.id, userId }, employee);
@@ -165,7 +166,7 @@ export class OrganizationsService {
     return Observable.combineLatest(
       this.selectedOrganization,
       this.selectedEmployeeId)
-      .take(1)
+      .pipe(first())
       .switchMap(data =>
         this.dataService.delete(`${this.baseUrl}/{organizationId}/users/?id={userId}`,
           {

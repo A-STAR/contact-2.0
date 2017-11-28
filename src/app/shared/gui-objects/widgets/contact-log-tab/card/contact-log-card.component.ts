@@ -2,6 +2,7 @@ import {  ViewChild } from '@angular/core';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IContactLog } from '../contact-log.interface';
@@ -59,7 +60,7 @@ export class ContactLogTabCardComponent implements OnInit {
          this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_STATUS)
         : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ canEditComment, contactLogType, contactLog, contactTypeOpts, roleOpts, smsStatusOpts ]) => {
       this.controls = this
         .initControls(

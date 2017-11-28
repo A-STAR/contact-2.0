@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, OnDestroy, Output, ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -78,7 +79,7 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
 
         return this.gridService.setAllRenderers(columns.concat(addColumns as IGridColumn[]));
       })
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();

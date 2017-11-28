@@ -5,6 +5,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -86,7 +87,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
         : Observable.of(null)
       )
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, person ]) => {
       const pledgor = person && !this.isRoute('pledgor/add') ? person : this.getFormData();
       this.initControls(canEdit, this.getFormData(), attributeList, { genderOpts, familyStatusOpts, educationOpts, typeOpts });

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { first } from 'rxjs/operators';
 
 import { IImage } from './image-upload.interface';
 
@@ -37,7 +38,7 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
     if (this.url) {
       this.dataService
       .readBlob(this.url)
-      .take(1)
+      .pipe(first())
       .subscribe(image => {
         this.image = image;
         this.changeDetectorRef.markForCheck();

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -47,7 +48,7 @@ export class EmployeeAddComponent implements OnInit {
   ngOnInit(): void {
     this.notAddedEmployees = this.organizationsService.fetchNotAddedEmployees();
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => this.columns = [...columns]);
 
     this.controls = [

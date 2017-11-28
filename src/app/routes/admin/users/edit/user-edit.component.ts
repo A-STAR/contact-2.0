@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from
 import { ActivatedRoute } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/of';
 
 import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -61,7 +62,7 @@ export class UserEditComponent extends DialogFunctions {
       this.lookupService.roleOptions,
       this.userId ? this.usersService.fetchOne(this.userId) : Observable.of(null),
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([
       canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, languages, roles, user
     ]) => {

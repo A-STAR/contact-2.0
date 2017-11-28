@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -78,7 +79,7 @@ export class PortfolioMoveComponent implements OnDestroy {
         this.haveContractor$, this.havePortfolio$
       )
       .filter(([contractor, portfolio]) => !!(contractor && portfolio))
-      .take(1)
+      .pipe(first())
       .flatMap(([contractor, portfolio]) => {
         console.log(portfolio);
         return this.contractorsAndPortfoliosService.readAllContractorsExeptCurrent(contractor.id);

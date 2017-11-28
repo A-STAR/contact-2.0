@@ -3,6 +3,7 @@ import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnDes
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -93,7 +94,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
         contract => contract && contract.id ? this.guarantorService.fetch(contract.personId) : Observable.of(null)
       )
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ contract, attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, guarantor ]) => {
       const additionalControlNames = this.makeControlsFromAttributeList(<string>attributeList.valueS)
         .map(ctrl => ctrl.controlName);

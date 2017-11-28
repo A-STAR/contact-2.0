@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
@@ -82,7 +83,7 @@ export class DictComponent implements OnDestroy, OnInit {
         this.dictionariesService.state,
         this.gridService.setDictionaryRenderers(this.columns)
       )
-      .take(1)
+      .pipe(first())
       .subscribe(([_, state, columns]) => {
         const { dictionaries } = state;
         const renderers: IRenderer = { parentCode: dictionaries.map(dict => ({ label: dict.name, value: dict.code }))};
