@@ -7,7 +7,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -105,7 +105,6 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private messageBusService: MessageBusService,
-    private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {}
