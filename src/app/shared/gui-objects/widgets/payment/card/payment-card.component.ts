@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
@@ -41,7 +41,6 @@ export class PaymentCardComponent {
     private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private paymentService: PaymentService,
-    private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -114,8 +113,7 @@ export class PaymentCardComponent {
   }
 
   onBack(): void {
-    // this.contentTabService.gotoParent(this.router, 4);
-    this.contentTabService.back();
+    this.contentTabService.gotoParent(this.router, 4);
   }
 
   onSubmit(): void {
