@@ -9,8 +9,10 @@ export interface IMenuItem {
   link: string;
   icon: string;
   children: Array<IMenuItem>;
+  isActive?: boolean;
 }
 
 export interface IGuiObjectsState {
   data: Array<IGuiObject>;
+  selectedObject: IGuiObject;
 }

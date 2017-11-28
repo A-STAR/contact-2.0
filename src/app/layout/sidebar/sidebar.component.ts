@@ -23,11 +23,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private router: Router,
     public settings: SettingsService,
   ) {
-    this.menuSubscription = this.menuService.menuChildItems.subscribe(items => {
-      console.log(items);
-      this.menuItems = items;
-      this.cdRef.markForCheck();
-    });
+    this.menuSubscription = this.menuService
+      .selectedMenuItem
+      .filter(selectedMenuItem => !!selectedMenuItem.children && !!selectedMenuItem.children.length)
+      .subscribe(menuItem => {
+        this.menuItems = menuItem.children;
+        this.cdRef.markForCheck();
+      });
   }
 
   ngOnInit(): void {
@@ -64,9 +66,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     $('.nav-floating').remove();
   }
 
-  isSidebarCollapsed(): boolean {
-    return this.settings.layout.isCollapsed;
-  }
   isSidebarCollapsedText(): boolean {
     return this.settings.layout.isCollapsedText;
   }

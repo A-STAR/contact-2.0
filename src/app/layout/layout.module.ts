@@ -10,6 +10,7 @@ import { HeaderComponent } from './header/header.component';
 import { NavsearchComponent } from './header/navsearch/navsearch.component';
 import { NotificationsComponent } from './header/notifications/notifications.component';
 import { SidebarToggleComponent } from './sidebar/sidebar-toggle/sidebar-toggle.component';
+import { HeaderMenuComponent } from './header/header-menu/header-menu.component';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { SidebarToggleComponent } from './sidebar/sidebar-toggle/sidebar-toggle.
     NotificationsComponent,
     SidebarComponent,
     SidebarToggleComponent,
+    HeaderMenuComponent,
   ],
   exports: [
     HeaderComponent,

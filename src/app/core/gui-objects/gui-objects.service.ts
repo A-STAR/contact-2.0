@@ -11,10 +11,12 @@ import { menuConfig } from '../../routes/menu-config';
 export class GuiObjectsService {
   static GUI_OBJECTS_FETCH         = 'GUI_OBJECTS_FETCH';
   static GUI_OBJECTS_FETCH_SUCCESS = 'GUI_OBJECTS_FETCH_SUCCESS';
+  static GUI_OBJECTS_SELECTED = 'GUI_OBJECTS_SELECTED';
 
   private _guiObjects: Array<IGuiObject>;
 
   constructor(private store: Store<IAppState>) {
+    // is it really neccessary?
     this.state$.subscribe(state => this._guiObjects = state.data);
   }
 
@@ -24,17 +26,14 @@ export class GuiObjectsService {
       .distinctUntilChanged();
   }
 
-  get menuMainItems(): Observable<IMenuItem[]> {
-    return this.getGuiObjects()
-      .map(guiObjects => guiObjects.filter(guiObject => !guiObject.children))
-      .map(guiObjects => guiObjects.map(guiObject => this.prepareGuiObject(guiObject)));
-  }
-
-  get menuChildItems(): Observable<IMenuItem[]> {
-    return this.getGuiObjects()
-      .map(guiObjects => guiObjects.filter(guiObject => !!guiObject.children && !!guiObject.children.length))
-      .map(guiObjects => guiObjects.map(guiObject => this.prepareGuiObject(guiObject)))
-      .map(menuItems => this.getMenuItemsChildren(menuItems));
+  get selectedMenuItem(): Observable<IMenuItem> {
+    return this.state$
+      .map(state => state.selectedObject)
+      .filter(Boolean)
+      .map(guiObject => ({
+        ...menuConfig[guiObject.name],
+        ...guiObject
+      }));
   }
 
   get menuItemIds(): Observable<any> {
@@ -58,13 +57,6 @@ export class GuiObjectsService {
       ...menuConfig[guiObject.name],
       children: children && children.length ? children.map(child => this.prepareGuiObject(child)) : null
     };
-  }
-
-  private getMenuItemsChildren(menuItems: IMenuItem[]): IMenuItem[] {
-    return menuItems.reduce((acc, menuItem) => [
-      ...acc,
-      ...menuItem.children
-    ], []);
   }
 
   private flattenGuiObjectIds(appGuiObjects: Array<IGuiObject>): any {
