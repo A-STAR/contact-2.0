@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ICellPayload, IErrorsResponse, IDataResponse, IOpenFileResponse, IPagingPayload } from './data-upload.interface';
+import {
+  ICellPayload,
+  IErrorsResponse,
+  IDataResponse,
+  IOpenFileResponse,
+  IPagingPayload,
+} from './data-upload.interface';
 
 @Injectable()
 export class DataUploadService {
