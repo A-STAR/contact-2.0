@@ -30,7 +30,6 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   @Input('debtId') set debtId(debtId: number) {
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();
-    console.log('set debt id', debtId);
   }
 
   private selectedPayment$ = new BehaviorSubject<IPayment>(null);
