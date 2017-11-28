@@ -43,13 +43,11 @@ const routes: Routes = [
   ]},
   { path: 'promise', children: [
     { path: '', redirectTo: '', pathMatch: 'full' },
-    { path: 'create', component: PromiseComponent },
-    { path: ':promiseId', component: PromiseComponent },
+    { path: ':debtId/:promiseId', component: PromiseComponent },
   ]},
   { path: 'payment', children: [
     { path: '', redirectTo: '', pathMatch: 'full' },
-    { path: 'create', component: PaymentComponent },
-    { path: ':paymentId', component: PaymentComponent },
+    { path: ':debtId/:paymentId', component: PaymentComponent },
   ]},
 ];
 

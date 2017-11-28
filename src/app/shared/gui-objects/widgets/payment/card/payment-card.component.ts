@@ -26,12 +26,10 @@ import { minStrict } from '../../../../../core/validators';
 export class PaymentCardComponent {
   @Input() callCenter = false;
   @Input() readOnly = false;
+  @Input() debtId: number;
+  @Input() paymentId: number;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
-  private routeParams = (<any>this.route.params).value;
-  private debtId = this.routeParams.debtId;
-  private paymentId = this.routeParams.paymentId;
 
   controls: IDynamicFormControl[] = null;
   dialog: string;
@@ -116,7 +114,8 @@ export class PaymentCardComponent {
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 4);
+    // this.contentTabService.gotoParent(this.router, 4);
+    this.contentTabService.back();
   }
 
   onSubmit(): void {

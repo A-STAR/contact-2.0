@@ -148,7 +148,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     const { debtId } = this;
     if (!debtId) { return; }
     this.router.navigate([
-      this.callCenter ? `promise/${promiseId}` : `debt/promise/${promiseId}`
+      this.callCenter ? `promise/${this.debtId}/${promiseId}` : `debt/promise/${promiseId}`
     ], {
       relativeTo: this.route,
     });
@@ -225,7 +225,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     if (!this.debtId) {
       return;
     }
-    this.router.navigate([ this.callCenter ? 'promise/create' : 'debt/promise/create' ], {
+    this.router.navigate([ 'debt/promise/create' ], {
       relativeTo: this.route,
     });
   }

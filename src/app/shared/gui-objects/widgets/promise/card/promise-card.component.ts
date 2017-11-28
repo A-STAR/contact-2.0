@@ -36,14 +36,13 @@ import { minStrict } from '../../../../../core/validators';
 export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   @Input() callCenter = false;
   @Input() readOnly = false;
+  @Input() debtId: number;
+  @Input() promiseId: number;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  private routeParams = (<any>this.route.params).value;
   private canAddInsufficientAmount: boolean;
-  private debtId = this.routeParams.debtId;
   private debt: IDebt;
-  private promiseId = this.routeParams.promiseId;
   private promiseLimit: IPromiseLimit;
   private minAmountPercentFormula: number;
   private minAmountPercentPermission: boolean;

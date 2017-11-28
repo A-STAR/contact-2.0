@@ -235,18 +235,15 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
 
   private onEdit(payment: IPayment = null): void {
     const { id } = payment || this.selectedPayment$.value;
-    this.router.navigate([ this.callCenter ? `payment/${id}` : `debt/payment/${id}` ], {
-      relativeTo: this.route,
-    });
+    const url = this.callCenter ? `payment/${this.debtId}/${id}` : `debt/payment/${id}`;
+    this.router.navigate([ url ], { relativeTo: this.route });
   }
 
   private onAdd(): void {
     if (!this.debtId) {
       return;
     }
-    this.router.navigate([ this.callCenter ? 'payment/create' : 'debt/payment/create' ], {
-      relativeTo: this.route,
-    });
+    this.router.navigate([ 'debt/payment/create' ], { relativeTo: this.route });
   }
 
   private fetch(): void {
