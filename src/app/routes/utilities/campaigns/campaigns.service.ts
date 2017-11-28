@@ -151,13 +151,14 @@ export class CampaignsService {
      * @param campaignId
      */
     fetchCampaignStat(campaignId: number): Observable<ICampaignsStatistic> {
-      // return this.dataService.read(this.baseUrl)
-      //   .catch(() => Observable.of(data) as Observable<ICampaignsStatistic[]>)
+      // return this.dataService.read(this.baseUrl + '/{campaignId}/statistics', { campaignId })
       //   .catch(
-      //     this.notificationsService.error('errors.default.read')
+      //     this.notificationsService.fetchError()
       //       .entity('entities.campaigns.gen.signal').dispatchCallback()
       //     );
-      const userStatistic = [{
+      //   }
+      const userStatistic = [
+        [{
             userFullName: 'Операторов Оператор Операторович',
             successProcessing: 1,
             unsuccessProcessing: 1,
@@ -177,10 +178,23 @@ export class CampaignsService {
             refusal: 1,
             promise: 2,
             promiseAmount: 564654
-        }] as IUserStatistic[];
+        }] as IUserStatistic[],
+        [
+          {
+            userFullName: 'Операторов Оператор Операторович',
+            successProcessing: 1,
+            unsuccessProcessing: 1,
+            contact: 4,
+            SMS: 23,
+            successContact: 1,
+            refusal: 1,
+            promise: 2,
+            promiseAmount: 564654
+        }] as IUserStatistic[]
+      ];
 
       return Observable.of({
-        userStatistic,
+        userStatistic: userStatistic[campaignId - 1],
         aggregatedData: {
           untreated: 10,
           successProcessingSum: 2,
