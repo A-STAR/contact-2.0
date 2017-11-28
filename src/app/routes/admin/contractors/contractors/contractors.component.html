@@ -4,8 +4,8 @@
   actionTranslationKey="contractors.remove.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedContractor[0]"
-  (action)="onRemoveSubmit($event)"
+  [messageParams]="selection[0]"
+  (action)="onRemove($event)"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
@@ -15,7 +15,7 @@
   columnTranslationKey="contractors"
   selectionType="single"
   *ngIf="contractors"
-  [selection]="selectedContractor"
+  [selection]="selection"
   [styles]="{height: '300px'}"
   [columns]="columns"
   [rows]="contractors"

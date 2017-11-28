@@ -45,9 +45,8 @@ export interface IContractorManager {
   comment: string;
 }
 
-export interface INumberMap { [n: number]: number; }
-
 export interface IContractorsAndPortfoliosState {
   selectedContractorId: number;
   selectedPortfolioId: number;
+  selectedManagerId: number;
 }

@@ -4,7 +4,6 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "postinstall": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "ng serve --port 4200",
     "start:prod": "ng serve --aot --port 8000",
     "start:proxy": "npm start -- --proxy-config proxy.conf.json",
@@ -14,7 +13,8 @@
     "test": "ng test",
     "lint": "ng lint --type-check",
     "e2e": "ng e2e",
-    "ng-update": "npm up @angular/animations @angular/common @angular/compiler @angular/compiler-cli @angular/core @angular/forms @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/cli"
+    "ng-update": "npm up @angular/animations @angular/common @angular/compiler @angular/compiler-cli @angular/core @angular/forms @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/cli",
+    "wm-update": "node node_modules/protractor/bin/webdriver-manager update"
   },
   "private": true,
   "dependencies": {
