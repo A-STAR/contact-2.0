@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -20,7 +20,8 @@ const labelKey = makeKey('widgets.phone.card');
 
 @Component({
   selector: 'app-phone-card',
-  templateUrl: './phone-card.component.html'
+  templateUrl: './phone-card.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneCardComponent {
   @Input() callCenter = false;
@@ -32,10 +33,11 @@ export class PhoneCardComponent {
   private contactId = this.routeParams.contactId || null;
   private phoneId = this.routeParams.phoneId || null;
 
-  controls: Array<IDynamicFormItem> = null;
+  controls: IDynamicFormItem[] = null;
   phone: IPhone;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private messageBusService: MessageBusService,
     private phoneService: PhoneService,
@@ -62,6 +64,7 @@ export class PhoneCardComponent {
         { label: labelKey('comment'), controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
       ];
       this.phone = phone;
+      this.cdRef.markForCheck();
     });
   }
 
