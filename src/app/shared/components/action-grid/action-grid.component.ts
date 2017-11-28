@@ -98,7 +98,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
     this.cdRef.markForCheck();
   }
 
-  onCloseWithRefreshOption(ref: boolean): void {
+  onDeleteWithRefreshOption(ref: boolean): void {
     if (ref) {
       this.request.emit();
     }

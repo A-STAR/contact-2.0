@@ -144,6 +144,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return this.gridOptions.api ? this.gridOptions.api.getSelectedRows() : [];
   }
 
+  deselectAll(): void {
+    this.gridOptions.api.deselectAll();
+  }
+
   ngOnInit(): void {
     this.viewportDatasource = new ViewPortDatasource(this);
     if (!this.persistenceKey) {
@@ -515,7 +519,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private clearRangeSelections(): void {
-    this.gridOptions.api.deselectAll();
     this.gridOptions.api.clearRangeSelection();
     this.gridOptions.api.clearFocusedCell();
   }

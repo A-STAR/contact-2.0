@@ -14,6 +14,9 @@ import { ContactLogService } from '../contact-log.service';
 
 import { ActionGridComponent } from '../../../../shared/components/action-grid/action-grid.component';
 import { FilterComponent } from './filter/filter.component';
+import { Grid2Component } from '../../../../shared/components/grid2/grid2.component';
+
+
 
 @Component({
   selector: 'app-workplaces-contact-log-grid',
@@ -42,6 +45,7 @@ export class GridComponent {
     const params = this.grid.getRequestParams();
     this.contactLogService.fetch(this.gridKey, filters, params)
       .subscribe((response: IAGridResponse<IContactLogEntry>) => {
+        (this.grid.grid as Grid2Component).deselectAll();
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
         this.cdRef.markForCheck();
