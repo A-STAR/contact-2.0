@@ -68,16 +68,6 @@ export class HeaderComponent implements OnInit {
     this.settings.layout.offsidebarOpen = !this.settings.layout.offsidebarOpen;
   }
 
-  toggleCollapsedSidebar(): void {
-    this.settings.layout.isCollapsed = !this.settings.layout.isCollapsed;
-    this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
-  }
-
-  toggleAside(): void {
-    this.settings.layout.asideToggled = !this.settings.layout.asideToggled;
-    this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
-  }
-
   isCollapsedText(): void {
     return this.settings.layout.isCollapsedText;
   }

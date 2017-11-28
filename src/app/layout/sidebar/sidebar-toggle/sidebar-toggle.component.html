@@ -1,0 +1,9 @@
+<a class="hidden-xs" trigger-resize="" (click)="toggleCollapsedSidebar()" *ngIf="!isCollapsedText()">
+  <i class="fa fa-chevron-left"></i>
+  <i class="fa fa-navicon"></i>
+  {{ 'sidebar.nav.hide' | translate }}
+</a>
+<a class="visible-xs sidebar-toggle" (click)="toggleAside()">
+  <i class="fa fa-navicon"></i>
+  <i class="fa fa-chevron-right"></i>
+</a>

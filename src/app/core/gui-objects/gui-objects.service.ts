@@ -24,6 +24,19 @@ export class GuiObjectsService {
       .distinctUntilChanged();
   }
 
+  get menuMainItems(): Observable<IMenuItem[]> {
+    return this.getGuiObjects()
+      .map(guiObjects => guiObjects.filter(guiObject => !guiObject.children))
+      .map(guiObjects => guiObjects.map(guiObject => this.prepareGuiObject(guiObject)));
+  }
+
+  get menuChildItems(): Observable<IMenuItem[]> {
+    return this.getGuiObjects()
+      .map(guiObjects => guiObjects.filter(guiObject => !!guiObject.children && !!guiObject.children.length))
+      .map(guiObjects => guiObjects.map(guiObject => this.prepareGuiObject(guiObject)))
+      .map(menuItems => this.getMenuItemsChildren(menuItems));
+  }
+
   get menuItemIds(): Observable<any> {
     return this.getGuiObjects()
       .map(guiObjects => this.flattenGuiObjectIds(guiObjects))
@@ -45,6 +58,13 @@ export class GuiObjectsService {
       ...menuConfig[guiObject.name],
       children: children && children.length ? children.map(child => this.prepareGuiObject(child)) : null
     };
+  }
+
+  private getMenuItemsChildren(menuItems: IMenuItem[]): IMenuItem[] {
+    return menuItems.reduce((acc, menuItem) => [
+      ...acc,
+      ...menuItem.children
+    ], []);
   }
 
   private flattenGuiObjectIds(appGuiObjects: Array<IGuiObject>): any {

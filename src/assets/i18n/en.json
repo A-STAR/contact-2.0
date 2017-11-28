@@ -82,7 +82,8 @@
         "ARBITRARY_REPORTS": "Ad-hoc Reports",
         "HELP": "Help",
         "INCOMING_CALL": "Incoming Call"
-      }
+      },
+      "hide": "Hide menu"
     },
     "messages": {
       "loadError": "Could not load menu"
