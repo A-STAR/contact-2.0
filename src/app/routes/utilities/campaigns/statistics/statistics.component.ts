@@ -67,7 +67,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.campaignsService.fetchCampaignStat(this.selectedCampaign.id)
-        .take(1)
+        .pipe(first())
         .map((statistic: ICampaignsStatistic) => statistic && statistic.userStatistic)
         .subscribe((statistics: IUserStatistic[]) => {
           this.campaignUserStatistics = statistics;
