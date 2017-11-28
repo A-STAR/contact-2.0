@@ -263,7 +263,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       this.showCtxMenu();
       const { x, y } = this.ctxEvent;
       // position ctx menu relative to datatable
-      this.ctxStyles = this.computeCtxMenuXY(x, y);
+      this.ctxStyles = this.computeCtxMenuStyles(x, y);
+      this.cdRef.detectChanges();
     } else {
       // Should you need to hook to the column header click, uncomment the next line
       // this.ctxColumn = ctxEvent.content;
@@ -295,7 +296,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     this.cdRef.markForCheck();
   }
 
-  private computeCtxMenuXY(eventX: number, eventY: number): { left: string, top: string } {
+  private computeCtxMenuStyles(eventX: number, eventY: number): { left: string, top: string } {
     const dataTableClientRect = this.dataTableRef.nativeElement.getBoundingClientRect();
     // compute datatable position relative to window
     const dataTablePosition = {
