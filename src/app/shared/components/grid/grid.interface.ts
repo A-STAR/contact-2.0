@@ -48,7 +48,7 @@ export interface IContextMenuItem {
   enabled: Observable<boolean>;
   action?: (action: any) => any;
   prop?: string;
-  name?: string;
+  label?: string;
   fieldActions?: string[];
   fieldAction?: string;
   translationKey?: string;

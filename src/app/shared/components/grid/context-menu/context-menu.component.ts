@@ -37,8 +37,8 @@ export class ContextMenuComponent implements OnInit {
             acc.push({
               ...option,
               fieldAction: name,
-              name: this.translationService.instant(option.translationKey + '.' + name, this.ctxFieldNameTranslation)
-                || option.name
+              label: this.translationService.instant(option.translationKey + '.' + name, this.ctxFieldNameTranslation)
+                || option.label
             });
           });
           return acc;
@@ -80,7 +80,7 @@ export class ContextMenuComponent implements OnInit {
 
   onAction(item: IContextMenuItem): void {
     if (item.action) {
-      item.action(item.name);
+      item.action(item.label);
     }
     if (this.action) {
       this.action.emit();

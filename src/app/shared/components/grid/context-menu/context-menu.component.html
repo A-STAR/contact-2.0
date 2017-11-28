@@ -3,10 +3,10 @@
     tabindex="-1">
   <ul class="ngx-datatable-context-menu">
     <li *ngFor="let item of actionItems" (click)="onAction(item)">
-      {{ item.name }}
+      {{ item.label | translate }}
     </li>
     <li *ngFor="let item of fieldActionItems" (click)="onCtxMenuClick($event, item)">
-      {{ item.name }}
+      {{ item.label }}
     </li>
   </ul>
 </div>

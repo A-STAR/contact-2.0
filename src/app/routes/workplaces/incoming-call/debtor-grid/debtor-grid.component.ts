@@ -55,7 +55,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     // uncomment to test
     // {
     //   action: (actionName => this.onAction(actionName)),
-    //   name: 'Do something',
+    //   label: 'default.grid.empty',
     //   enabled: Observable.of(true)
     // }
   ];
