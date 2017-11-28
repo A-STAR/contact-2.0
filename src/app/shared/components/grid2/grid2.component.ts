@@ -758,6 +758,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   // TODO(d.maltsev): this looks a bit messy.
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'deleteSMS':
+        return this.userPermissionsBag.notEmpty('SMS_DELETE_STATUS_LIST') && this.selected.length > 0;
       case 'debtClearResponsible':
         return this.userPermissionsBag.has('DEBT_RESPONSIBLE_CLEAR') && this.selected.length > 0;
       case 'debtSetResponsible':
