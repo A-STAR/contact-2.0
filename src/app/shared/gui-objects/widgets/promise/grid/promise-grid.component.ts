@@ -147,11 +147,10 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     const { id: promiseId } = promise || this.selectedPromise$.value;
     const { debtId } = this;
     if (!debtId) { return; }
-    this.router.navigate([
-      this.callCenter ? `promise/${this.debtId}/${promiseId}` : `debt/promise/${promiseId}`
-    ], {
-      relativeTo: this.route,
-    });
+    const url = this.callCenter
+      ? `${this.router.url}/promise/${this.debtId}/${promiseId}`
+      : `${this.router.url}/debt/promise/${promiseId}`;
+    this.router.navigate([ url ]);
   }
 
   onRemove(): void {
@@ -225,9 +224,8 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     if (!this.debtId) {
       return;
     }
-    this.router.navigate([ 'debt/promise/create' ], {
-      relativeTo: this.route,
-    });
+    const url = `${this.router.url}/debt/promise/create`;
+    this.router.navigate([ url ]);
   }
 
   private fetch(): void {
