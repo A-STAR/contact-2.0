@@ -45,14 +45,19 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   ctxMenuOptions: IContextMenuItem[] = [
     {
       fieldActions: [
-       'copyField',
-       'copyRow'
+        'copyField',
+        'copyRow'
       ],
       translationKey: 'default.grid.localeText',
       prop: 'fullName',
-      action: (actionName => this.onAction(actionName)),
       enabled: Observable.of(true)
-    }
+    },
+    // uncomment to test
+    // {
+    //   action: (actionName => this.onAction(actionName)),
+    //   name: 'Do something',
+    //   enabled: Observable.of(true)
+    // }
   ];
 
   private searchParamsSubscription: Subscription;
