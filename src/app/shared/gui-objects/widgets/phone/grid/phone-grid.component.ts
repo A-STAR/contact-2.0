@@ -314,13 +314,17 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/phone/create` ]);
+    const url = this.callCenter
+      ? `${this.router.url}/phone/${this.personId$.value}/create`
+      : `${this.router.url}/phone/create`;
+    this.router.navigate([ url ]);
   }
 
   private onEdit(phoneId: number): void {
-    this.router.navigate([ `${this.router.url}/phone/${phoneId}` ], {
-      queryParams: this.callCenter ? { callCenter: 1 } : {}
-    });
+    const url = this.callCenter
+      ? `${this.router.url}/phone/${this.personId$.value}/${phoneId}`
+      : `${this.router.url}/phone/${phoneId}`;
+    this.router.navigate([ url ]);
   }
 
   private onSubmitSuccess(): void {
