@@ -7,7 +7,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -105,6 +105,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private messageBusService: MessageBusService,
+    private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -184,14 +185,16 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(entityType: number): void {
-    this.router.navigate([ `${this.router.url}/document/create` ], {
-      queryParams: { entityType, callCenter: Number(this.callCenter) }
+    this.router.navigate([ `document/create` ], {
+      queryParams: { entityType, callCenter: Number(this.callCenter) },
+      relativeTo: this.route,
     });
   }
 
   private onEdit(documentId: number): void {
-    this.router.navigate([ `${this.router.url}/document/${documentId}` ], {
-      queryParams: { callCenter: Number(this.callCenter) }
+    this.router.navigate([ `document/${documentId}` ], {
+      queryParams: { callCenter: Number(this.callCenter) },
+      relativeTo: this.route,
     });
   }
 

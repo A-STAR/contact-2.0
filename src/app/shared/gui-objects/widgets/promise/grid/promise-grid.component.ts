@@ -144,10 +144,15 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(promise: IPromise): void {
-    const { id: promiseId } = this.selectedPromise$.value;
+    const { id: promiseId } = promise || this.selectedPromise$.value;
     const { debtId } = this;
     if (!debtId) { return; }
-    this.router.navigate([ `${this.router.url}/debt/promise/${promiseId}` ]);
+    this.router.navigate([
+      this.callCenter ? `promise/${promiseId}` : `debt/promise/${promiseId}`
+    ], {
+      queryParams: { callCenter: Number(this.callCenter) },
+      relativeTo: this.route,
+    });
   }
 
   onRemove(): void {
