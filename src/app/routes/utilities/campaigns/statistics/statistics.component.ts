@@ -66,6 +66,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.campaignsService.fetchCampaignStat(this.selectedCampaign.id)
+        .take(1)
         .map((statistic: ICampaignsStatistic) => statistic && statistic.userStatistic)
         .subscribe((statistics: IUserStatistic[]) => {
           this.campaignUserStatistics = statistics;
@@ -97,15 +98,14 @@ export class StatisticsComponent implements OnInit, OnDestroy {
       .combineLatest(
         this.canView$,
         this.campaignsService.selectedCampaign)
-      .filter(([canView, campain]) => {
+      .filter(([canView, campaign]) => {
         if (!canView) {
           this.campaignUserStatistics = [];
           this.cdRef.markForCheck();
         }
-        console.log('start');
         return canView;
       })
-      .map(([canView, campain]) => campain)
+      .map(([canView, campaign]) => campaign)
       .flatMap(campaign => {
         if (!campaign) {
           return Observable.of(null);
