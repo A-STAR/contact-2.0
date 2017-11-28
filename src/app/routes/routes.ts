@@ -50,16 +50,20 @@ export const routes: Route[] = [
         path: 'utilities',
         children: [
           {
+            path: 'campaigns',
+            loadChildren: './utilities/campaigns/campaigns.module#CampaignsModule',
+          },
+          {
             path: 'contact-properties',
             loadChildren: './utilities/contact-properties/contact-properties.module#ContactPropertiesModule',
           },
           {
-            path: 'message-templates',
-            loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',
+            path: 'data-upload',
+            loadChildren: './utilities/data-upload/data-upload.module#DataUploadModule',
           },
           {
-            path: 'campaigns',
-            loadChildren: './utilities/campaigns/campaigns.module#CampaignsModule',
+            path: 'message-templates',
+            loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',
           },
         ]
       },

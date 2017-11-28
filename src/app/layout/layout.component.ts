@@ -24,6 +24,7 @@ export class LayoutComponent {
     ContractorManagersComponent: 'CONTRACTOR_MANAGERS',
     ContractorManagerEditComponent: 'CONTRACTOR_MANAGER',
     DashboardComponent: 'HOME',
+    DataUploadComponent: 'DATA_UPLOAD',
     DebtorComponent: 'DEBTOR_CARD',
     DebtorActionLogComponent: 'DEBTOR_ACTION_LOG',
     DebtorAddressComponent: 'DEBTOR_ADDRESS',
