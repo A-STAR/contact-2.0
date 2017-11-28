@@ -43,7 +43,7 @@
 <app-grid
   *ngIf="canDisplayGrid"
   columnTranslationKey="debtor.information.phone"
-  contextFieldName="phone"
+  [ctxMenuOptions]="ctxMenuOptions"
   [contextMenuEnabled]="true"
   selectionType="single"
   [styles]="styles"

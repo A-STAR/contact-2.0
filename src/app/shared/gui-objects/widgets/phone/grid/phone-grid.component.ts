@@ -16,7 +16,7 @@ import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/of';
 
 import { IDebt } from '../../debt/debt/debt.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
 import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
@@ -103,6 +103,18 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: this.canView$,
       action: () => this.fetch()
+    },
+  ];
+
+  ctxMenuOptions: IContextMenuItem[] = [
+    {
+      fieldActions: [
+        'copyField',
+        'copyRow'
+      ],
+      translationKey: 'default.grid.localeText',
+      prop: 'phone',
+      enabled: Observable.of(true)
     },
   ];
 
