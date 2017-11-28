@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -23,6 +23,8 @@ import { oneOfGroupRequired } from '../../../../../core/validators';
   templateUrl: './address-card.component.html'
 })
 export class AddressCardComponent {
+  @Input() callCenter = false;
+
   @ViewChild('form') form: DynamicForm2Component;
 
   private routeParams = (<any>this.route.params).value;
@@ -30,7 +32,6 @@ export class AddressCardComponent {
   private personId = this.routeParams.personId || null;
   private contactId = this.routeParams.contactId || null;
   private addressId = this.routeParams.addressId || null;
-  private callCenter = this.queryParams.callCenter;
 
   address$ = new BehaviorSubject<IAddress>(null);
   group$: Observable<IDynamicFormGroup>;

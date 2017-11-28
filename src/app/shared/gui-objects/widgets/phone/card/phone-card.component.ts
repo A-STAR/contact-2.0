@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -23,14 +23,14 @@ const labelKey = makeKey('widgets.phone.card');
   templateUrl: './phone-card.component.html'
 })
 export class PhoneCardComponent {
+  @Input() callCenter = false;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
-  private queryParams = (<any>this.route.queryParams).value;
   private personId = this.routeParams.personId || null;
   private contactId = this.routeParams.contactId || null;
   private phoneId = this.routeParams.phoneId || null;
-  private callCenter = this.queryParams.callCenter;
 
   controls: Array<IDynamicFormItem> = null;
   phone: IPhone;

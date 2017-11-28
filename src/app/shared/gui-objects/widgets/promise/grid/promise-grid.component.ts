@@ -150,7 +150,6 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     this.router.navigate([
       this.callCenter ? `promise/${promiseId}` : `debt/promise/${promiseId}`
     ], {
-      queryParams: { callCenter: Number(this.callCenter) },
       relativeTo: this.route,
     });
   }
@@ -227,7 +226,6 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
       return;
     }
     this.router.navigate([ this.callCenter ? 'promise/create' : 'debt/promise/create' ], {
-      queryParams: { callCenter: Number(this.callCenter) },
       relativeTo: this.route,
     });
   }

@@ -24,6 +24,7 @@ import { minStrict } from '../../../../../core/validators';
   templateUrl: './payment-card.component.html'
 })
 export class PaymentCardComponent {
+  @Input() callCenter = false;
   @Input() readOnly = false;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -31,9 +32,6 @@ export class PaymentCardComponent {
   private routeParams = (<any>this.route.params).value;
   private debtId = this.routeParams.debtId;
   private paymentId = this.routeParams.paymentId;
-
-  private queryParams = (<any>this.route.queryParams).value;
-  private callCenter = this.queryParams.callCenter;
 
   controls: IDynamicFormControl[] = null;
   dialog: string;

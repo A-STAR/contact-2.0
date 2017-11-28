@@ -34,6 +34,7 @@ import { minStrict } from '../../../../../core/validators';
   templateUrl: './promise-card.component.html'
 })
 export class PromiseCardComponent implements AfterViewInit, OnDestroy {
+  @Input() callCenter = false;
   @Input() readOnly = false;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -48,9 +49,6 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   private minAmountPercentPermission: boolean;
   private canAddInsufficientAmountSub: Subscription;
   private receiveDateTimeSub: Subscription;
-
-  private queryParams = (<any>this.route.queryParams).value;
-  private callCenter = this.queryParams.callCenter;
 
   controls: IDynamicFormControl[] = [
     {

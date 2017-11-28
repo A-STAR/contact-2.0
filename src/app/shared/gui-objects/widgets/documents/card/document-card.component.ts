@@ -23,6 +23,7 @@ import { maxFileSize } from '../../../../../core/validators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocumentCardComponent {
+  @Input() callCenter = false;
   @Input() readOnly = false;
 
   @ViewChild('form') form: DynamicFormComponent;
@@ -30,9 +31,6 @@ export class DocumentCardComponent {
   private id = (this.route.params as any).value.personId || null;
   private documentId = (this.route.params as any).value.documentId || null;
   private entityTypeCode = (this.route.queryParams as any).value.entityType || 18;
-
-  private queryParams = (<any>this.route.queryParams).value;
-  private callCenter = this.queryParams.callCenter;
 
   controls: Array<IDynamicFormItem> = null;
   document: IDocument;

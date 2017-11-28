@@ -186,14 +186,13 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   private onAdd(entityType: number): void {
     this.router.navigate([ `document/create` ], {
-      queryParams: { entityType, callCenter: Number(this.callCenter) },
+      queryParams: { entityType },
       relativeTo: this.route,
     });
   }
 
   private onEdit(documentId: number): void {
     this.router.navigate([ `document/${documentId}` ], {
-      queryParams: { callCenter: Number(this.callCenter) },
       relativeTo: this.route,
     });
   }
