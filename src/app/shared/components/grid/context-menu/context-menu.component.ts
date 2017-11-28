@@ -6,7 +6,6 @@ import {
   Output,
   ViewEncapsulation
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IContextMenuItem, IGridColumn } from '../grid.interface';
