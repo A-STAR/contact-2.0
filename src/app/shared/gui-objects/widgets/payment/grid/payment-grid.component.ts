@@ -30,6 +30,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   @Input('debtId') set debtId(debtId: number) {
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();
+    console.log('set debt id', debtId);
   }
 
   private selectedPayment$ = new BehaviorSubject<IPayment>(null);
@@ -82,20 +83,20 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     }
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: IGridColumn[] = [
     { prop: 'amount', minWidth: 110, width: 110, maxWidth: 130, renderer: 'numberRenderer' },
-    { prop: 'paymentDateTime', minWidth: 120, maxWidth: 130, renderer: 'dateTimeRenderer' },
+    { prop: 'paymentDateTime', minWidth: 130, maxWidth: 150, renderer: 'dateTimeRenderer' },
     { prop: 'currencyName', minWidth: 90, maxWidth: 110 },
-    { prop: 'amountMainCurrency', minWidth: 130, maxWidth: 130, renderer: 'numberRenderer' },
-    { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130, renderer: 'dateTimeRenderer' },
-    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PAYMENT_STATUS },
-    { prop: 'purposeCode', dictCode: UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE },
-    { prop: 'comment' },
-    { prop: 'userFullName' },
-    { prop: 'reqUserFullName' },
-    { prop: 'payerName' },
+    { prop: 'amountMainCurrency', minWidth: 120, maxWidth: 150, renderer: 'numberRenderer' },
+    { prop: 'receiveDateTime', minWidth: 130, maxWidth: 150, renderer: 'dateTimeRenderer' },
+    { prop: 'statusCode', minWidth: 120, maxWidth: 130, dictCode: UserDictionariesService.DICTIONARY_PAYMENT_STATUS },
+    { prop: 'purposeCode', minWidth: 120, maxWidth: 130, dictCode: UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE },
+    { prop: 'comment', minWidth: 100 },
+    { prop: 'userFullName', minWidth: 150 },
+    { prop: 'reqUserFullName', minWidth: 150 },
+    { prop: 'payerName', minWidth: 120 },
     { prop: 'receiptNumber', minWidth: 110, maxWidth: 130 },
-    { prop: 'commission', minWidth: 110, maxWidth: 130, renderer: 'numberRenderer' },
+    { prop: 'commission', minWidth: 100, renderer: 'numberRenderer' },
     // TODO(atymchuk): the currency should appear in the promiseAmount column header
     // { prop: 'currencyId', hidden: true, lookupKey: 'currencies', },
   ];

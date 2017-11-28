@@ -74,13 +74,13 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: IGridColumn[] = [
     { prop: 'promiseDate', minWidth: 110, maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'promiseAmount', minWidth: 130, maxWidth: 130, renderer: 'numberRenderer' },
-    { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130, renderer: 'dateTimeRenderer' },
-    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PROMISE_STATUS },
-    { prop: 'comment' },
-    { prop: 'fullName' },
+    { prop: 'promiseAmount', minWidth: 120, maxWidth: 130, renderer: 'numberRenderer' },
+    { prop: 'receiveDateTime', minWidth: 130, maxWidth: 150, renderer: 'dateTimeRenderer' },
+    { prop: 'statusCode', minWidth: 120, dictCode: UserDictionariesService.DICTIONARY_PROMISE_STATUS },
+    { prop: 'comment', minWidth: 100 },
+    { prop: 'fullName', minWidth: 120 },
     // TODO(atymchuk): the currency should appear in the promiseAmount column header
     // { prop: 'currencyId', hidden: true, lookupKey: 'currencies', },
   ];
