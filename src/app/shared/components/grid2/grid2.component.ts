@@ -514,6 +514,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private clearRangeSelections(): void {
+    this.gridOptions.api.deselectAll();
     this.gridOptions.api.clearRangeSelection();
     this.gridOptions.api.clearFocusedCell();
   }

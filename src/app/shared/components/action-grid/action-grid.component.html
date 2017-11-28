@@ -1,7 +1,7 @@
 <app-sms-delete-dialog
   *ngIf="isDialog('deleteSMS')"
   [smsId]="getSelectionParam(0)"
-  (close)="onCloseDelete($event)"
+  (close)="onCloseWithRefreshOption($event)"
 >
 </app-sms-delete-dialog>
 
