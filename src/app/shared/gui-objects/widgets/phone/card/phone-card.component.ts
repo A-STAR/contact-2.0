@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -51,7 +52,7 @@ export class PhoneCardComponent {
       this.phoneId ? this.userPermissionsService.has('PHONE_COMMENT_EDIT') : Observable.of(true),
       this.phoneId ? this.phoneService.fetch(18, this.personId, this.phoneId, this.callCenter) : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ options, canEdit, canEditComment, phone ]) => {
       this.controls = [
         { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },

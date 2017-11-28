@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { IFilters, INotification } from '../../core/notifications/notifications.interface';
 
@@ -93,7 +94,7 @@ export class HeaderComponent implements OnInit {
     // STUB: to test the language switching options
     const lang = this.translateService.currentLang;
     const nextLang = lang === 'ru' ? 'en' : 'ru';
-    this.translateService.use(nextLang).take(1).subscribe();
+    this.translateService.use(nextLang).pipe(first()).subscribe();
   }
 
   resetSettings(event: UIEvent): void {

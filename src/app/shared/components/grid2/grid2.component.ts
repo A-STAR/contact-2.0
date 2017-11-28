@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
+import { first } from 'rxjs/operators';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -157,14 +158,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
     this.gridService
       .getActions(this.metadataKey)
-      .take(1)
+      .pipe(first())
       .subscribe(actions => {
         this.actions = actions;
       });
 
     this.gridService
       .getColumnMeta(this.metadataKey, {})
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         const { colDefs } = this.restoreGridSettings();
 

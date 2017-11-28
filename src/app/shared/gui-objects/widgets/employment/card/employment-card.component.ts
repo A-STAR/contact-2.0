@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -50,7 +51,7 @@ export class EmploymentCardComponent {
         : this.userPermissionsService.has('EMPLOYMENT_ADD'),
       this.employmentId ? this.employmentService.fetch(this.personId, this.employmentId) : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ options, currencyOptions, canEdit, employment ]) => {
       const controls: IDynamicFormControl[] = [
         { label: 'widgets.employment.grid.workTypeCode', controlName: 'workTypeCode', type: 'select', options, required: true },

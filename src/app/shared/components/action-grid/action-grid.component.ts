@@ -11,7 +11,9 @@ import {
 
 import { IActionGridDialogData } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected } from '../grid2/grid2.interface';
+import { IGridColumn } from '../grid/grid.interface';
 
+import { GridComponent } from '../../components/grid/grid.component';
 import { Grid2Component } from '../../components/grid2/grid2.component';
 
 import { DialogFunctions } from '../../../core/dialog';
@@ -25,19 +27,22 @@ import { FilterObject } from '../grid2/filter/grid-filter';
 })
 export class ActionGridComponent<T> extends DialogFunctions {
   @Input() columnIds: string[];
+  @Input() columns: IGridColumn[];
+  @Input() columnTranslationKey: string;
   @Input() metadataKey: string;
   @Input() persistenceKey: string;
   @Input() rowIdKey: string;
   @Input() ngClass: string;
   @Input() rows: T[] = [];
   @Input() rowCount: number;
+  @Input() styles: CSSStyleDeclaration;
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IActionGridDialogData>();
 
-  @ViewChild(Grid2Component) grid: Grid2Component;
+  @ViewChild('grid') grid: GridComponent | Grid2Component;
 
   dialog: string;
   dialogData: IActionGridDialogData;
@@ -52,6 +57,10 @@ export class ActionGridComponent<T> extends DialogFunctions {
     return this.grid.selected as any[];
   }
 
+  get isUsingAGGrid(): boolean {
+    return !!this.metadataKey;
+  }
+
   getSelectionParam(key: number): any[] {
     return this.dialogData.selection[key];
   }
@@ -61,11 +70,15 @@ export class ActionGridComponent<T> extends DialogFunctions {
   }
 
   getFilters(): FilterObject {
-    return this.grid.getFilters();
+    return this.grid instanceof Grid2Component
+      ? this.grid.getFilters()
+      : null;
   }
 
   getRequestParams(): IAGridRequestParams {
-    return this.grid.getRequestParams();
+    return this.grid instanceof Grid2Component
+      ? this.grid.getRequestParams()
+      : null;
   }
 
   onAction(gridAction: IAGridAction): void {

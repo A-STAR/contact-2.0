@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavigationStart, NavigationEnd, Router } from '@angular/router';
+import { first } from 'rxjs/operators';
 
 import { ITab, ITabEvent, TabEventStageEnum } from './content-tab.interface';
 
@@ -143,7 +144,7 @@ export class ContentTabService {
 
   private logAction(name: string, delay: number): void {
     this.guiObjectsService.menuItemIds
-      .take(1)
+      .pipe(first())
       .subscribe(menuItemIds => {
         if (menuItemIds[name] > 0) {
           this.actionsLogService.log(name, delay, menuItemIds[name]);

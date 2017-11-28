@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy,  } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IContractor, IPortfolio } from '../contractors-and-portfolios.interface';
@@ -14,64 +14,59 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
+import { combineLatestAnd } from '../../../../core/utils/helpers';
 import { DialogFunctions } from '../../../../core/dialog';
-import { MessageBusService } from '../../../../core/message-bus/message-bus.service';
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-portfolios',
   templateUrl: './portfolios.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
+export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDestroy {
+  @ViewChild(GridComponent) grid: GridComponent;
+
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.onAdd(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canAdd$,
-        this.contractorsAndPortfoliosService.selectedContractorId$
-      ).map(([hasPermissions, selectedContractorId]) => hasPermissions && !!selectedContractorId)
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedContractorId$,
-        this.contractorsAndPortfoliosService.mapContractorToSelectedPortfolio$
-      ).map(([hasPermissions, selectedContractorId, mapContractorToSelectedPortfolio]) =>
-                  hasPermissions && mapContractorToSelectedPortfolio && selectedContractorId
-                  && !!mapContractorToSelectedPortfolio[selectedContractorId])
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_MOVE,
       action: () => this.toMovePortfolio(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canMove$,
-        this.contractorsAndPortfoliosService.selectedContractorId$,
-        this.contractorsAndPortfoliosService.mapContractorToSelectedPortfolio$
-      ).map(([hasPermissions, selectedContractorId, mapContractorToSelectedPortfolio]) =>
-                  hasPermissions && mapContractorToSelectedPortfolio && selectedContractorId
-                  && !!mapContractorToSelectedPortfolio[selectedContractorId])
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('delete'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedContractorId$,
-        this.contractorsAndPortfoliosService.mapContractorToSelectedPortfolio$
-      ).map(([hasPermissions, selectedContractorId, mapContractorToSelectedPortfolio]) =>
-                  hasPermissions && mapContractorToSelectedPortfolio && selectedContractorId
-                  && !!mapContractorToSelectedPortfolio[selectedContractorId])
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.needToReadPortfolios$.next(' '),
-      enabled: Observable.combineLatest(
-        this.canView$,
-        this.contractorsAndPortfoliosService.selectedContractorId$
-      ).map(([hasPermissions, selectedContractorId]) => hasPermissions && !!selectedContractorId)
+      action: () => this.fetchAll(),
+      enabled: this.canView$
     }
   ];
 
@@ -93,37 +88,15 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
   selection: IPortfolio[];
 
   set portfolios(newPortfolios: IPortfolio[]) {
-    // TODO(m.bobryshev): refactor this function
-    if (!newPortfolios) {
-      this._portfolios = null;
-      return;
-    }
-    if (!newPortfolios.length) {
-      this.messageBusService.dispatch(
-        ContractorsAndPortfoliosService.EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED,
-        null,
-        this.selectedContractorId);
-    }
-
     this._portfolios = newPortfolios;
-
-    if (!(this.contractorsAndPortfoliosService.portfolioMapping
-          && this.contractorsAndPortfoliosService.portfolioMapping[this.selectedContractorId])) {
-      return;
-    }
-
-    this.selection = this.portfolios.find(portfolio => portfolio.id ===
-      this.contractorsAndPortfoliosService.portfolioMapping[this.selectedContractorId])
-      ? [this.portfolios.find(portfolio => portfolio.id ===
-        this.contractorsAndPortfoliosService.portfolioMapping[this.selectedContractorId])]
-      : [];
+    this.selection = [];
+    this.cdRef.markForCheck();
   }
 
   get portfolios(): IPortfolio[] {
     return this._portfolios;
   }
 
-  private needToReadPortfolios$ = new BehaviorSubject<string>(null);
   private canViewSubscription: Subscription;
   private contractorSubscription: Subscription;
   private _portfolios: IPortfolio[];
@@ -133,33 +106,23 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private messageBusService: MessageBusService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
-    this.gridService.setDictionaryRenderers(this.columns)
-      .take(1)
+ }
+
+  ngOnInit(): void {
+    this.gridService.setAllRenderers(this.columns)
+      .pipe(first())
       .subscribe(columns => {
-        this.columns = this.gridService.setRenderers(columns);
+        this.columns = [...columns];
         this.cdRef.markForCheck();
       });
 
-    this.needToReadPortfolios$
-      .filter(Boolean)
-      .flatMap(() => this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractorId))
-      .subscribe((portfolios) => {
-        this.portfolios = portfolios as IPortfolio[];
-        this.cdRef.markForCheck();
-      });
-
-    this.canViewSubscription = Observable.combineLatest(
-      this.canView$,
-      this.contractorsAndPortfoliosService.selectedContractorId$
-    ).subscribe(([canView, selectedContractorId]) => {
-      if (canView && selectedContractorId) {
-        this.selectedContractorId = selectedContractorId;
-        this.needToReadPortfolios$.next(' ');
+    this.canViewSubscription = this.canView$.subscribe(canView => {
+      if (canView) {
+        // this.selectedContractorId = selectedContractorId;
       } else {
         this.clearPortfolios();
         if (!canView) {
@@ -168,20 +131,21 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
       }
     });
 
-    this.messageBusService
-      .select(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH)
-      .subscribe(() => {
-        this.needToReadPortfolios$.next(' ');
-      });
-
     this.contractorSubscription = this.contractorsAndPortfoliosService.selectedContractorId$
-      .subscribe(contractorId => this.selectedContractorId = contractorId);
- }
+      .switchMap(contractorId => {
+        console.log(contractorId);
+        this.selectedContractorId = contractorId;
+        return contractorId
+          ? this.contractorsAndPortfoliosService.readPortfolios(contractorId)
+          : Observable.of([]);
+      })
+      .subscribe(portfolios => this.portfolios = portfolios);
+  }
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.contractorSubscription.unsubscribe();
-    this.needToReadPortfolios$.unsubscribe();
+    // this.needToReadPortfolios$.unsubscribe();
     this.clearPortfolios();
   }
 
@@ -215,15 +179,14 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
 
   onSelect(portfolio: IPortfolio): void {
     this.selection = [portfolio];
-    this.contractorsAndPortfoliosService.selectPortfolio(this.selectedContractorId, portfolio.id);
+    this.contractorsAndPortfoliosService.selectPortfolio(portfolio.id);
   }
 
   onRemoveSubmit(): void {
     this.contractorsAndPortfoliosService.deletePortfolio(this.selectedContractorId, this.selection[0].id)
-        .subscribe(() => {
-          this.setDialog();
-          this.needToReadPortfolios$.next(' ');
-        });
+      .subscribe(() => {
+        this.setDialog();
+      });
   }
 
   onMoveSubmit(contractor: IContractor): void {
@@ -231,17 +194,20 @@ export class PortfoliosComponent extends DialogFunctions implements OnDestroy {
       .movePortfolio(this.selectedContractorId, this.selection[0].id, { newContractorId: contractor.id } )
       .subscribe(() => {
         this.setDialog();
-        this.needToReadPortfolios$.next(' ');
       });
   }
 
   toMovePortfolio(): void {
     this.contractorsAndPortfoliosService.readContractor(this.selectedContractorId)
-    .subscribe(contractor => {
-        this.selectedContractor = contractor;
-        this.setDialog('move');
-        this.cdRef.markForCheck();
-      });
+      .subscribe(contractor => {
+          this.selectedContractor = contractor;
+          this.setDialog('move');
+          this.cdRef.markForCheck();
+        });
+  }
+
+  fetchAll(): void {
+    // this.contractorsAndPortfoliosService.readPortfolios()
   }
 
   private clearPortfolios(): void {

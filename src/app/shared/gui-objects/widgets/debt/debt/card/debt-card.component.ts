@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDebt } from '../debt.interface';
@@ -71,7 +72,7 @@ export class DebtCardComponent {
         'DEBT_DICT4_EDIT_LIST'
       ]),
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([
       contractorOptions, debt, portfolios, currencyOptions, dictionaries, attributes,
       debtEditPerm,

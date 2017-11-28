@@ -23,6 +23,7 @@ import { ValueConverterService } from '../../../core/converter/value-converter.s
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 import { DialogFunctions } from '../../../core/dialog';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-campaigns',
@@ -117,7 +118,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   ngOnInit(): void {
 
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();
@@ -142,7 +143,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   onCampaignDblClick(selection: ICampaign): void {
     const permission = 'CAMPAIGN_EDIT';
     this.userPermissionsService.has(permission)
-      .take(1)
+      .pipe(first())
       .subscribe(hasPermission => {
         if (hasPermission) {
           this.setDialog(permission);
@@ -154,7 +155,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
 
   fetchCampaigns(): Observable<ICampaign[]> {
     return this.campaignsService.fetchCampaigns()
-      .take(1);
+      .pipe(first());
   }
 
   createCampaign(campaign: ICampaign): void {
@@ -183,7 +184,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
 
   onStart(): void {
     this.selectedCampaign
-      .take(1)
+      .pipe(first())
       .switchMap(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STARTED }))
       .switchMap((...results) => this.fetchCampaigns())
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
@@ -191,7 +192,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
 
   onStop(): void {
     this.selectedCampaign
-      .take(1)
+      .pipe(first())
       .switchMap(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STOPPED }))
       .switchMap((...results) => this.fetchCampaigns())
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
