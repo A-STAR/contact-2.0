@@ -262,7 +262,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       this.ctxColumn = undefined;
       this.showCtxMenu();
       const { x, y } = this.ctxEvent;
-      this.ctxStyles = { left: x + 'px', top: y + 'px' };
+      // position ctx menu relative to datatable
+      this.ctxStyles = this.computeCtxMenuXY(x, y);
     } else {
       // Should you need to hook to the column header click, uncomment the next line
       // this.ctxColumn = ctxEvent.content;
@@ -270,11 +271,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
   }
 
-  onAction($event?: string): void {
+
+  onAction(): void {
     this.hideCtxMenu();
-    if (this.action) {
-      this.action.emit($event);
-    }
   }
 
   clearSelection(): void {
@@ -294,6 +293,16 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   private hideCtxMenu(): void {
     this.ctxShowMenu = false;
     this.cdRef.markForCheck();
+  }
+
+  private computeCtxMenuXY(eventX: number, eventY: number): { left: string, top: string } {
+    const dataTableClientRect = this.dataTableRef.nativeElement.getBoundingClientRect();
+    // compute datatable position relative to window
+    const dataTablePosition = {
+      top: dataTableClientRect.top + this.dataTableRef.nativeElement.clientTop,
+      left: dataTableClientRect.left + this.dataTableRef.nativeElement.clientLeft
+    };
+    return { left: (eventX - dataTablePosition.left) + 'px', top: (eventY - dataTablePosition.top) + 'px' };
   }
 
   private translateColumns(columnTranslations: object): void {

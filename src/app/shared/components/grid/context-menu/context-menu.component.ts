@@ -48,10 +48,6 @@ export class ContextMenuComponent implements OnInit {
     }
   }
 
-  onAction($event: any): void {
-    this.action.emit($event);
-  }
-
   onCtxMenuClick(event: MouseEvent, item: IContextMenuItem): void {
     const isCopyField = item.fieldAction === 'copyField';
     const data = isCopyField ? this.tableRow[item.prop] : this.tableRow;
@@ -81,6 +77,15 @@ export class ContextMenuComponent implements OnInit {
           .join('\t');
 
     copyAsPlaintext(formattedData);
+  }
+
+  onAction(item: IContextMenuItem): void {
+    if (item.action) {
+      item.action(item.name);
+    }
+    if (this.action) {
+      this.action.emit();
+    }
   }
 
 }
