@@ -26,6 +26,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
 })
 export class PaymentGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
+  @Input() hideToolbar = false;
   @Input('debtId') set debtId(debtId: number) {
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();

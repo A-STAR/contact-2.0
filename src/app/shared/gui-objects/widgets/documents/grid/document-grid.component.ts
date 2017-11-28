@@ -35,6 +35,7 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
+  @Input() hideToolbar = false;
   @Input() personId: number;
 
   @ViewChild('downloader') downloader: DownloaderComponent;
