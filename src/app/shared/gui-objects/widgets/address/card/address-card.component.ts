@@ -28,7 +28,6 @@ export class AddressCardComponent {
   @ViewChild('form') form: DynamicForm2Component;
 
   private routeParams = (<any>this.route.params).value;
-  private queryParams = (<any>this.route.queryParams).value;
   private personId = this.routeParams.personId || null;
   private contactId = this.routeParams.contactId || null;
   private addressId = this.routeParams.addressId || null;
