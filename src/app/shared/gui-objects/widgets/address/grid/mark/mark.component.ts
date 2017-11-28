@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { IAddressMarkData, IDebt } from './mark.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -65,7 +66,7 @@ export class AddressGridMarkComponent implements OnInit {
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [ ...columns ];
         this.cdRef.markForCheck();

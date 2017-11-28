@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, OnDestroy, Output, ViewChild
 } from '@angular/core';
 import 'rxjs/add/observable/combineLatest';
+import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IPledgor } from '../../pledgor/pledgor.interface';
@@ -59,7 +60,7 @@ export class PledgorGridComponent extends DialogFunctions implements OnInit, OnD
         const columns: IGridColumn[] = this.creatateColumns(this.searchParams.typeCode);
         return this.gridService.setAllRenderers(columns.concat(addColumns as IGridColumn[]));
       })
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();

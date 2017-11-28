@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { IAddress } from '../../../../../../shared/gui-objects/widgets/address/address.interface';
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
@@ -43,7 +44,7 @@ export class AddressGridComponent implements OnInit {
 
   ngOnInit(): void {
     this.gridService.setDictionaryRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
 
     this.addressService.fetchAll(this.entityType, this.entityId, false).subscribe(addresses => {

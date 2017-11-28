@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 
 import { IContactLog } from '../contact-log.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -75,7 +76,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();

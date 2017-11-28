@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -74,7 +75,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
       ),
       this.contract$.flatMap(contract => Observable.of(contract || this.getFormData()))
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ contracts, typeOptions, canEdit, pledgeContract ]) => {
       this.initControls(canEdit, typeOptions);
       this.contract = pledgeContract;

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IOption } from '../../../../../core/converter/value-converter.interface';
@@ -79,7 +80,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
           UserDictionariesService.DICTIONARY_CONTACT_TREE_TYPE,
         ])
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ contactType, dictionaries ]) => {
       this.initContactTypeSelect(dictionaries, contactType);
       this.initTreeTypeSelect(dictionaries);

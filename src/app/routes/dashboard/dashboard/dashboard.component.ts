@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { ColorsService } from '../../../shared/colors/colors.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'app-dashboard',
@@ -98,7 +99,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.get('assets/server/chart/spline.json')
-      .take(1)
+      .pipe(first())
       .subscribe(
         data => this.splineData = data,
         () => this.notificationsService.error('dashboard.messages.chartLoadError').dispatch()

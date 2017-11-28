@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
 
 import { IPledgeContract } from '../pledge.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -91,7 +92,7 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-    .take(1)
+    .pipe(first())
     .subscribe(columns => {
       this.columns = [ ...columns ];
       this.cdRef.markForCheck();

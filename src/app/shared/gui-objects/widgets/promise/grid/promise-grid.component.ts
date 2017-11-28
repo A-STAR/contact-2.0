@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -105,7 +106,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
   ) {
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();

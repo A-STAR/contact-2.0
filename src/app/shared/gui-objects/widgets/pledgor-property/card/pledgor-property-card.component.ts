@@ -3,7 +3,7 @@ import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef,
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
+import { first } from 'rxjs/operators';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPledgor } from '../../pledgor/pledgor.interface';
@@ -93,7 +93,7 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
           : Observable.of(null)
       )
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ currencyOptions, propertyTypeOptions, canEdit, property, pledgor ]) => {
       this.initControls(canEdit, propertyTypeOptions, currencyOptions);
       this.property = property;

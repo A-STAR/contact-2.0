@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDebtComponent } from '../debt-component.interface';
@@ -40,7 +41,7 @@ export class DebtComponentCardComponent {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DEBT_COMPONENTS),
       this.debtComponentId ? this.debtComponentService.fetch(this.debtId, this.debtComponentId) : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ currencyOptions, debtComponentTypeOptions, debtComponent ]) => {
       this.controls = [
         {

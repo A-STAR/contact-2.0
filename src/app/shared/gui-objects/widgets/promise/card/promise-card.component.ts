@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, O
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import * as moment from 'moment';
 
@@ -96,7 +97,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       this.userConstantsService.get('Promise.MinAmountPercent.Formula'),
       this.userPermissionsService.has('PROMISE_MIN_AMOUNT_PERCENT'),
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([
       canAdd, promiseLimit, debt, promise, minAmountPercentFormula, minAmountPercentPermission
     ]) => {

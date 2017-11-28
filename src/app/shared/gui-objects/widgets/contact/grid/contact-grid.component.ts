@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { take } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -88,7 +89,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
         this.columns = columns;
         this.cdRef.markForCheck();
       })
-      .take(4)
+      .pipe(take(4))
       .subscribe();
   }
 

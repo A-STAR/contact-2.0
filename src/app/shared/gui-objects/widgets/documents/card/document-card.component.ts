@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDocument } from '../document.interface';
@@ -50,7 +51,7 @@ export class DocumentCardComponent {
         ? this.documentService.fetch(this.entityTypeCode, this.id, this.documentId, this.callCenter)
         : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ options, maxSize, document ]) => {
       const fileSizeValidator = maxFileSize(1e3 * maxSize.valueN);
       this.controls = [

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 import { IVisit } from './visits.interface';
@@ -45,7 +46,7 @@ export class AddressGridVisitsComponent implements OnInit {
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [ ...columns ];
         this.cdRef.markForCheck();

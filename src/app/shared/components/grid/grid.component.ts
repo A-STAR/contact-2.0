@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/debounceTime';
@@ -137,7 +138,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
 
     this.subscription = Observable.merge(
-      this.translate.get(translationKeys).take(1),
+      this.translate.get(translationKeys).pipe(first()),
       this.translate.onLangChange
         .map(data => data.translations)
         .map(translations => translationKeys.reduce((acc, key) => {
@@ -173,7 +174,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       } else {
         const gridMessagesKey = 'grid.messages';
         this.translate.get([gridMessagesKey])
-          .take(1)
+          .pipe(first())
           .subscribe(translations => this.messages = { ...translations[gridMessagesKey] });
       }
     }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Inject, Component, OnInit, 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
 
 import { IAttribute } from '../attribute.interface';
 import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
@@ -148,7 +149,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   onRowDblClick(attribute: IAttribute): void {
     this.selectedAttribute$.next(attribute);
     this.canEdit$
-      .take(1)
+      .pipe(first())
       .filter(Boolean)
       .subscribe(() => {
         this.setDialog('edit');
