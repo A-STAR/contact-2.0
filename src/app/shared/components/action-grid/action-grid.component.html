@@ -59,22 +59,22 @@
 ></app-payment-operator-reject-dialog>
 
 <app-grid2
-#grid
-*ngIf="isUsingAGGrid; else simpleGrid"
-[columnIds]="columnIds"
-[metadataKey]="metadataKey"
-[ngClass]="ngClass"
-[persistenceKey]="persistenceKey"
-[rowIdKey]="rowIdKey"
-[rows]="rows"
-[rowCount]="rowCount"
-(action)="onAction($event)"
-(onDblClick)="onDblClick($event)"
-(onFilter)="onRequest()"
-(onPage)="onRequest()"
-(onPageSize)="onRequest()"
-(onSort)="onRequest()"
-(onSelect)="onSelect($event)"
+  #grid
+  *ngIf="isUsingAGGrid; else simpleGrid"
+  [columnIds]="columnIds"
+  [metadataKey]="metadataKey"
+  [ngClass]="ngClass"
+  [persistenceKey]="persistenceKey"
+  [rowIdKey]="rowIdKey"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (action)="onAction($event)"
+  (onDblClick)="onDblClick($event)"
+  (onFilter)="onRequest()"
+  (onPage)="onRequest()"
+  (onPageSize)="onRequest()"
+  (onSort)="onRequest()"
+  (onSelect)="onSelect($event)"
 ></app-grid2>
 
 <ng-template #simpleGrid>

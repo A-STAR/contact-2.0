@@ -24,11 +24,11 @@
   </div>
   <app-context-menu
     *ngIf="ctxShowMenu"
-    [ctxStyles]="ctxStyles"
+    [styles]="ctxStyles"
     [options]="contextMenuOptions"
     [tableRow]="ctxRow"
     [columns]="columns"
-    [ctxFieldNameTranslation]="ctxFieldNameTranslation"
+    [fieldNameTranslation]="ctxFieldNameTranslation"
     (action)="onAction()"
   >
   </app-context-menu>

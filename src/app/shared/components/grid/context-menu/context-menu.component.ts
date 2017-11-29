@@ -5,7 +5,7 @@ import {
   Input,
   OnInit,
   Output,
-  ViewEncapsulation
+  // ViewEncapsulation
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -16,14 +16,15 @@ import { IContextMenuItem, IGridColumn } from '../grid.interface';
   templateUrl: './context-menu.component.html',
   styleUrls: ['./context-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  // encapsulation: ViewEncapsulation.None
 })
 export class ContextMenuComponent implements OnInit {
   @Input() tableRow: any;
   @Input() columns: IGridColumn[];
-  @Input() ctxFieldNameTranslation: { field: string };
+  @Input() fieldNameTranslation: { field: string };
   @Input() options: IContextMenuItem[];
-  @Input() ctxStyles: CSSStyleDeclaration;
+  @Input() styles: CSSStyleDeclaration;
+
   @Output() action = new EventEmitter<any>();
 
   actionItems: IContextMenuItem[];
@@ -33,13 +34,14 @@ export class ContextMenuComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.options && this.options.length) {
-      this.fieldActionItems = this.options.filter(option => option.fieldActions && option.fieldActions.length)
+      this.fieldActionItems = this.options
+        .filter(option => option.fieldActions && option.fieldActions.length)
         .reduce((acc, option) => {
           option.fieldActions.forEach(name => {
             acc.push({
               ...option,
               fieldAction: name,
-              label: this.translationService.instant(option.translationKey + '.' + name, this.ctxFieldNameTranslation)
+              label: this.translationService.instant(option.translationKey + '.' + name, this.fieldNameTranslation)
                 || option.label
             });
           });
