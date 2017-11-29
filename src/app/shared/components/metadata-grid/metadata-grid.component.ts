@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { GridOptions } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
@@ -73,7 +74,11 @@ export class MetadataGridComponent<T> implements OnInit {
   }
 
   get selected(): T[] {
-    return this.grid.selected as any[];
+    return this.grid && this.grid.selected || [] as any[];
+  }
+
+  get gridOptions(): GridOptions {
+    return this.grid && this.grid.gridOptions;
   }
 
   get actions(): IMetadataAction[] {

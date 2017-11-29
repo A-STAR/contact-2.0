@@ -83,7 +83,7 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
           this.notifications.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
         } else {
           // load data
-          if (this.grid.grid.gridOptions.api) {
+          if (this.grid && this.grid.gridOptions) {
             this.onRequest();
           }
         }

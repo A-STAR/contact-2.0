@@ -78,7 +78,7 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
             .pipe(first())
             .subscribe();
           // load data
-          if (this.grid.grid.gridOptions.api) {
+          if (this.grid && this.grid.gridOptions) {
             this.onRequest();
           }
         }
