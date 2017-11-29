@@ -73,6 +73,7 @@
   <app-tab [title]="'debtor.contactLogTab.title'" [closable]="false">
     <app-contact-log-tab-grid
       *ngIf="personId$ | async"
+      [debtId]="debtId$ | async"
       [personId]="personId$ | async"
     ></app-contact-log-tab-grid>
   </app-tab>

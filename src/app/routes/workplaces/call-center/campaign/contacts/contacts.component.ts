@@ -17,6 +17,10 @@ export class ContactsComponent {
     return this.campaignService.campaignDebt$.map(Boolean);
   }
 
+  get debtId$(): Observable<number> {
+    return this.campaignService.campaignDebt$.map(debt => debt.debtId);
+  }
+
   get personId$(): Observable<number> {
     return this.campaignService.campaignDebt$.map(debt => debt.personId);
   }

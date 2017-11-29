@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-// import { ActivatedRoute } from '@angular/router';
-// import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-call-center-contact',
@@ -10,24 +10,21 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 export class ContactComponent {
   static COMPONENT_NAME = 'ContactLogComponent';
 
-  // private routeParams = (this.route.params as BehaviorSubject<any>).value;
+  private routeParams = (this.route.params as BehaviorSubject<any>).value;
 
   constructor(
-    // private route: ActivatedRoute,
+    private route: ActivatedRoute,
   ) {}
 
   get contactId(): number {
-    // return this.routeParams.contactLogId;
-    return 1;
+    return this.routeParams.contactId;
   }
 
   get debtId(): number {
-    // return this.routeParams.debtId;
-    return 1;
+    return this.routeParams.debtId;
   }
 
   get contactLogType(): number {
-    // return this.routeParams.contactLogType;
-    return 1;
+    return this.routeParams.contactType;
   }
 }

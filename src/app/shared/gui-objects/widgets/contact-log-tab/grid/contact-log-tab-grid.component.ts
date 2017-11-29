@@ -22,6 +22,8 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactLogTabGridComponent implements OnInit, OnDestroy {
+  @Input() callCenter = false;
+  @Input() debtId: number;
   @Input() hideToolbar = false;
   @Input() personId: number;
 
@@ -138,7 +140,10 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
 
   onEdit(contactLog: IContactLog): void {
     const { contactId, contactType } = contactLog;
-    this.router.navigate([ `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`]);
+    const url = this.callCenter
+      ? `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`
+      : `${this.router.url}/contactLog/${this.debtId}/${contactId}/contactLogType/${contactType}`;
+    this.router.navigate([ url ]);
   }
 
   private fetch(): void {

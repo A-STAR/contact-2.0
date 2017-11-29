@@ -39,11 +39,10 @@ const routes: Routes = [
     { path: ':personId/:addressId', component: AddressComponent },
   ]},
   { path: 'contactLog', children: [
-    { path: ':contactId/contactLogType/:contactType', component: ContactComponent },
+    { path: ':debtId/:contactId/contactLogType/:contactType', component: ContactComponent },
   ]},
   { path: 'document', children: [
     { path: '', redirectTo: 'create', pathMatch: 'full' },
-    { path: 'create', component: DocumentComponent },
     { path: ':documentId', component: DocumentComponent },
   ]},
   { path: 'promise', children: [
