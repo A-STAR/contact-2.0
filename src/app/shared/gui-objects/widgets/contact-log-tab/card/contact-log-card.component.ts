@@ -1,5 +1,4 @@
-import {  ViewChild } from '@angular/core';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -27,12 +26,16 @@ const label = makeKey('widgets.contactLog.card');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactLogTabCardComponent implements OnInit {
+  @Input() contactId: number;
+  @Input() debtId: number;
+  @Input() contactLogType: number;
+
   @ViewChild('form') form: DynamicFormComponent;
 
-  private routeParams = (<any>this.route.params).value;
-  private contactId = this.routeParams.contactLogId;
-  private debtId = this.routeParams.debtId;
-  private contactLogType = this.routeParams.contactLogType;
+  // private routeParams = (<any>this.route.params).value;
+  // private contactId = this.routeParams.contactLogId;
+  // private debtId = this.routeParams.debtId;
+  // private contactLogType = this.routeParams.contactLogType;
 
   controls: Array<IDynamicFormItem> = null;
   contactLog: IContactLog;

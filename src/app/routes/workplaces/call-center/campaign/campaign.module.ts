@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AddressModule } from './address/address.module';
 import { AddressesModule } from './addresses/addresses.module';
+import { ContactModule } from './contact/contact.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { DebtComponentsModule } from './debt-components/debt-components.module';
 import { DocumentModule } from './document/document.module';
@@ -19,6 +20,7 @@ import { ToolbarModule } from './toolbar/toolbar.module';
 
 import { AddressComponent } from './address/address.component';
 import { CampaignComponent } from './campaign.component';
+import { ContactComponent } from './contact/contact.component';
 import { DocumentComponent } from './document/document.component';
 import { PaymentComponent } from './payment/payment.component';
 import { PhoneComponent } from './phone/phone.component';
@@ -35,6 +37,9 @@ const routes: Routes = [
     { path: '', redirectTo: 'create', pathMatch: 'full' },
     { path: 'create', component: AddressComponent },
     { path: ':addressId', component: AddressComponent },
+  ]},
+  { path: 'contactLog', children: [
+    { path: ':contactId/contactLogType/:contactType', component: ContactComponent },
   ]},
   { path: 'document', children: [
     { path: '', redirectTo: 'create', pathMatch: 'full' },
@@ -57,6 +62,7 @@ const routes: Routes = [
   imports: [
     AddressModule,
     AddressesModule,
+    ContactModule,
     ContactsModule,
     DebtComponentsModule,
     DocumentModule,
