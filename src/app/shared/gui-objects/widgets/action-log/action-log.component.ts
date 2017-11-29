@@ -16,7 +16,7 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
-import { Grid2Component } from '../../../../shared/components/grid2/grid2.component';
+import { MetadataGridComponent } from '../../../../shared/components/metadata-grid/metadata-grid.component';
 
 import { makeKey } from '../../../../core/utils';
 
@@ -32,7 +32,7 @@ const labelKey = makeKey('widgets.actionLog.form');
 export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'DebtorActionLogComponent';
 
-  @ViewChild(Grid2Component) grid: Grid2Component;
+  @ViewChild(MetadataGridComponent) grid: MetadataGridComponent<any>;
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private personId = (this.route.params as any).value.personId || null;
@@ -83,7 +83,7 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
           this.notifications.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
         } else {
           // load data
-          if (this.grid.gridOptions.api) {
+          if (this.grid.grid.gridOptions.api) {
             this.onRequest();
           }
         }

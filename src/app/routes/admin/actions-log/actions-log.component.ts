@@ -21,7 +21,7 @@ import { UserPermissionsService } from '../../../core/user/permissions/user-perm
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 import { DownloaderComponent } from '../../../shared/components/downloader/downloader.component';
-import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
+import { MetadataGridComponent } from '../../../shared/components/metadata-grid/metadata-grid.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,7 +44,7 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('downloader') downloader: DownloaderComponent;
   @ViewChild('filter') filter: ActionsLogFilterComponent;
-  @ViewChild(Grid2Component) grid: Grid2Component;
+  @ViewChild(MetadataGridComponent) grid: MetadataGridComponent<any>;
 
   rows: IActionLog[] = [];
   rowCount = 0;
@@ -78,7 +78,7 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
             .pipe(first())
             .subscribe();
           // load data
-          if (this.grid.gridOptions.api) {
+          if (this.grid.grid.gridOptions.api) {
             this.onRequest();
           }
         }
@@ -103,8 +103,8 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   doExport(): void {
     const filters = this.getCombinedFilters();
     const params = this.grid.getRequestParams();
-    const request = this.grid.buildRequest(params, filters);
-    const columns = this.grid.getExportableColumns();
+    const request = this.grid.grid.buildRequest(params, filters);
+    const columns = this.grid.grid.getExportableColumns();
     const body = { columns, ...request };
 
     this.downloader.download(body);
