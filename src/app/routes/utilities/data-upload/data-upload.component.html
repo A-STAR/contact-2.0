@@ -1,4 +1,4 @@
-<div>
+<div class="mb">
   <app-button label="Открыть файл"></app-button>
   <app-button label="Обработать"></app-button>
   <app-button label="Выгрузить Excel"></app-button>
@@ -6,6 +6,19 @@
   <app-button label="Отмена"></app-button>
 </div>
 
-<div>
-  Data Upload Component
-</div>
+<app-grid2
+  [actions]="actions"
+  [columns]="columns"
+  [ngClass]="'data-upload'"
+  [persistenceKey]="'data-upload'"
+  [rowIdKey]="rowIdKey"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (action)="onAction($event)"
+  (onDblClick)="onDblClick($event)"
+  (onFilter)="onRequest()"
+  (onPage)="onRequest()"
+  (onPageSize)="onRequest()"
+  (onSort)="onRequest()"
+  (onSelect)="onSelect($event)"
+></app-grid2>
