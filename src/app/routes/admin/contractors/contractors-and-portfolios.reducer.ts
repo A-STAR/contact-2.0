@@ -6,6 +6,7 @@ import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.se
 export const defaultState: IContractorsAndPortfoliosState = {
   selectedContractorId: null,
   selectedPortfolioId: null,
+  selectedManagerId: null,
 };
 
 export function reducer(
@@ -14,16 +15,20 @@ export function reducer(
 ): IContractorsAndPortfoliosState {
   switch (action.type) {
     case ContractorsAndPortfoliosService.CONTRACTOR_SELECT:
-    return {
-      ...state,
-      ...action.payload
-    };
+      return {
+        ...state,
+        ...action.payload
+      };
     case ContractorsAndPortfoliosService.PORTFOLIO_SELECT:
-    return {
-      ...state,
-      ...action.payload
-    };
+      return {
+        ...state,
+        ...action.payload
+      };
     case ContractorsAndPortfoliosService.MANAGER_SELECT:
+      return {
+        ...state,
+        ...action.payload
+      };
     default:
       return state;
   }

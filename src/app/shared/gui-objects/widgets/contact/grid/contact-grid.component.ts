@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { take } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -83,17 +83,17 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
-  ) {
-    this.gridService.setDictionaryRenderers(this.gridService.setRenderers(this.columns))
-      .map(columns => {
-        this.columns = columns;
-        this.cdRef.markForCheck();
-      })
-      .pipe(take(4))
-      .subscribe();
-  }
+  ) { }
 
   ngOnInit(): void {
+    this.gridService.setAllRenderers(this.columns)
+      .map(columns => {
+        this.columns = [...columns];
+        this.cdRef.markForCheck();
+      })
+      .pipe(first())
+      .subscribe();
+
     this.canViewSubscription = this.canView$
       .subscribe(hasPermission => {
         if (hasPermission) {
@@ -186,5 +186,4 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     this.selectedContact$.next(null);
     this.cdRef.markForCheck();
   }
-
 }
