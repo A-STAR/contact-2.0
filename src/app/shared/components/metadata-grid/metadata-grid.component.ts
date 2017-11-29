@@ -4,15 +4,21 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IAGridColumn, IAGridRequestParams } from '../grid2/grid2.interface';
+import {
+  IAGridAction,
+  IAGridColumn,
+  IAGridRequestParams,
+  IAGridSelected,
+  IAGridSortModel,
+} from '../grid2/grid2.interface';
 
 import { GridService } from '../grid/grid.service';
 
@@ -34,13 +40,13 @@ export class MetadataGridComponent<T> implements OnInit {
   @Input() rows: T[] = [];
   @Input() rowCount: number;
 
-  @Output() action = new EventEmitter<any>();
-  @Output() onDblClick = new EventEmitter<any>();
-  @Output() onFilter = new EventEmitter<any>();
-  @Output() onPage = new EventEmitter<any>();
-  @Output() onPageSize = new EventEmitter<any>();
-  @Output() onSort = new EventEmitter<any>();
-  @Output() onSelect = new EventEmitter<any>();
+  @Output() action = new EventEmitter<IAGridAction>();
+  @Output() onDblClick = new EventEmitter<T>();
+  @Output() onFilter = new EventEmitter<FilterObject>();
+  @Output() onPage = new EventEmitter<number>();
+  @Output() onPageSize = new EventEmitter<number>();
+  @Output() onSort = new EventEmitter<IAGridSortModel[]>();
+  @Output() onSelect = new EventEmitter<IAGridSelected>();
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
