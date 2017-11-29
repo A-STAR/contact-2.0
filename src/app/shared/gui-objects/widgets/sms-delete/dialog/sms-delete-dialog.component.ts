@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef,
-  Component, EventEmitter, Input, Output, OnChanges, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component, EventEmitter, Input, Output, OnChanges
+} from '@angular/core';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
@@ -10,19 +12,16 @@ import { SmsDeleteService } from '../sms-delete.service';
   templateUrl: './sms-delete-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SmsDeleteDialogComponent extends DialogFunctions implements OnChanges, OnInit {
+export class SmsDeleteDialogComponent extends DialogFunctions implements OnChanges {
   @Input() smsId: number[];
   @Output() close = new EventEmitter<boolean>();
-  @Output() action = new EventEmitter<number[]>();
 
   dialog = null;
-
   smsCounter = {
     count: null
   };
-
-  totalCount: number;
   successCount: number;
+  totalCount: number;
 
   constructor(
   private cdRef: ChangeDetectorRef,
@@ -31,12 +30,8 @@ export class SmsDeleteDialogComponent extends DialogFunctions implements OnChang
     super();
   }
 
-  ngOnInit(): void {
-    this.setDialog('inqueryDelete');
-  }
-
   ngOnChanges(): void {
-    this.smsCounter.count = this.smsId &&  this.smsId.length ;
+    this.smsCounter.count = this.smsId && this.smsId.length ;
     this.cdRef.markForCheck();
   }
 
@@ -44,10 +39,9 @@ export class SmsDeleteDialogComponent extends DialogFunctions implements OnChang
     this.setDialog();
     this.cdRef.markForCheck();
     this.smsDeleteService.smsDelete(this.smsId)
-      .subscribe((res) => {
-        this.totalCount = res.massInfo.total;
-        this.successCount = res.massInfo.processed;
-        this.setDialog('infoDelete');
+      .subscribe(res => {
+        // this.totalCount = res.massInfo.total;
+        // this.successCount = res.massInfo.processed;
         this.cdRef.markForCheck();
       });
   }

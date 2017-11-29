@@ -1948,7 +1948,7 @@
       "title": "Cancel payments"
     },
     "smsDelete": {
-      "deleteInquery": "Are you sure to delete {{ count }} sms?",
+      "delete": "Are you sure to delete {{ count }} sms?",
       "title": "Delete SMS"
     }
   },

@@ -1,16 +1,8 @@
 <app-dialog-action
-  *ngIf="isDialog('inqueryDelete')"
   titleTranslationKey="massOperations.smsDelete.title"
-  actionTranslationKey="massOperations.smsDelete.deleteInquery"
+  actionTranslationKey="massOperations.smsDelete.delete"
   actionMessage="default.buttons.ok"
   [messageParams]="smsCounter"
   (action)="onConfirmDelete()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
-
-<app-result-dialog
-  *ngIf="isDialog('infoDelete')"
-  [count]="totalCount"
-  [successCount]="successCount"
-  (close)="onCloseDialog()">
-</app-result-dialog>

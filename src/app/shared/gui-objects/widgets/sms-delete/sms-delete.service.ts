@@ -11,20 +11,18 @@ export class SmsDeleteService {
     private notificationsService: NotificationsService,
   ) {}
 
-  private deleteUrl = '/mass/sms/delete';
+  private url = '/mass/sms/delete';
 
-  smsDelete(
-    ids: number[]
-  ): Observable<any> {
-      return this.dataService.update(this.deleteUrl, {}, { idData: { ids } } )
-        .do(res => {
-          if (!res.success) {
-            // TODO make dict when its will be fixed
-            this.notificationsService.error('errors.default.read').entity('entities.user.constants.gen.plural').callback();
-            return;
-          }
-        });
-      // TODO unmock when api ready, make dict for catc
-      // .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
+  smsDelete(ids: number[]): Observable<any> {
+    return this.dataService.update(this.url, {}, { idData: { ids } } )
+      .do(res => {
+        if (!res.success) {
+          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
+        } else {
+          // check for 0 successful deletions
+          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
+        }
+      })
+      .catch(this.notificationsService.deleteError().entity('entities.sms.gen.plural').dispatchCallback());
    }
 }
