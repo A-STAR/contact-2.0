@@ -102,10 +102,11 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
       }
     });
   }
-  // uncomment to test action for context menu
-  // onAction($event: string): void {
-  //   console.log(`Action was fired for ${$event}`);
-  // }
+
+  onAction($event: string): void {
+    // uncomment to test action for context menu
+    // console.log(`Action was fired for ${$event}`);
+  }
 
   private getUrlByDebtor(debtor: any): string {
     const { debtorId, debtId, contractId, personId } = debtor;
