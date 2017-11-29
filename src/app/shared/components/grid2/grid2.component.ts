@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
-import { first } from 'rxjs/operators';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -34,7 +33,6 @@ import {
   IAGridRequest, IAGridSorter } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PersistenceService } from '../../../core/persistence/persistence.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
@@ -44,11 +42,6 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { UserPermissions } from '../../../core/user/permissions/user-permissions';
-
-
-interface ITranslations {
-  translations: { [index: string]: string };
-}
 
 @Component({
   selector: 'app-grid2',
@@ -125,7 +118,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private notificationService: NotificationsService,
     private persistenceService: PersistenceService,
     private translate: TranslateService,
@@ -471,14 +463,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           return btn;
       }
     });
-  }
-
-  private refreshTranslations(translations: { [index: string]: any }): void {
-    this.refreshRowCount();
-    this.translateOptionsMessages();
-    // this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
-
-    this.cdRef.markForCheck();
   }
 
   private translateOptionsMessages(): any {
