@@ -1,14 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ChangeDetectorRef} from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router} from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IContractorManager } from '../../contractors-and-portfolios.interface';
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ContractorManagerActionEnum } from './contractor-managers.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
@@ -17,18 +15,15 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 import { DialogFunctions } from '../../../../../core/dialog';
-
-
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 
 @Component({
   selector: 'app-contractor-managers',
-  templateUrl: './contractor-managers.component.html',
+  templateUrl: './managers.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractorManagersComponent extends DialogFunctions  implements OnDestroy {
+export class ContractorManagersComponent extends DialogFunctions implements OnDestroy, OnInit {
   static COMPONENT_NAME = 'ContractorManagersComponent';
 
   dialog: string;
@@ -42,22 +37,22 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedManagerId$
-      ).map(([hasPermissions, mappedId]) => hasPermissions && mappedId && !!mappedId[this.contractorId])
+        this.contractorsAndPortfoliosService.selectedManagerId$.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('delete'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedManagerId$
-      ).map(([hasPermissions, mappedId]) => hasPermissions && mappedId && !!mappedId[this.contractorId])
+        this.contractorsAndPortfoliosService.selectedManagerId$.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.needToReadAllManagers$.next(' '),
+      action: () => this.fetchAll(),
       enabled: this.canView$
     }
   ];
@@ -67,9 +62,9 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
     { prop: 'lastName', minWidth: 120, maxWidth: 200 },
     { prop: 'firstName', minWidth: 120, maxWidth: 200 },
     { prop: 'middleName', minWidth: 120, maxWidth: 200 },
-    { prop: 'genderCode', minWidth: 100, maxWidth: 150 },
+    { prop: 'genderCode', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_GENDER },
     { prop: 'position', minWidth: 100, maxWidth: 150 },
-    { prop: 'branchCode', minWidth: 100, maxWidth: 150 },
+    { prop: 'branchCode', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
     { prop: 'mobPhone', minWidth: 100, maxWidth: 150 },
     { prop: 'workPhone', minWidth: 100, maxWidth: 150 },
     { prop: 'intPhone', minWidth: 100, maxWidth: 150 },
@@ -78,91 +73,50 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
     { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
-  selection: IContractorManager[];
-  rows: IContractorManager[];
-
-  private contractorId = Number((this.activatedRoute.params as any).value.id);
+  private contractorId = (<any>this.activatedRoute.params).value.contractorId;
   private canViewSubscription: Subscription;
-  private dialogAction: ContractorManagerActionEnum;
-  private dictionariesSubscription: Subscription;
   private managersSubscription: Subscription;
-  private viewCreateManagerOnChild: Subscription;
 
-  private _managers: IContractorManager[];
-  private needToReadAllManagers$ = new BehaviorSubject<string>(null);
-
-  private renderers: IRenderer = {
-    branchCode: [],
-    genderCode: []
-  };
+  managers: IContractorManager[];
+  selection: IContractorManager[];
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private router: Router,
-    private messageBusService: MessageBusService,
-    private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private userDictionariesService: UserDictionariesService,
+    private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
 
-    this.dictionariesSubscription = Observable.combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER)
-    ).subscribe(([ branchOptions, genderOptions ]) => {
-      this.renderers.branchCode = [].concat(branchOptions);
-      this.renderers.genderCode = [].concat(genderOptions);
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    });
-
-    this.needToReadAllManagers$
-      .flatMap(() => this.contractorsAndPortfoliosService.readManagersForContractor(this.contractorId))
-      .subscribe((managers: IContractorManager[]) => {
-        this.managers = managers;
-        this.cdRef.markForCheck();
+  ngOnInit(): void {
+    this.gridService.setAllRenderers(this.columns)
+      .subscribe(columns => {
+        this.columns = [...columns];
       });
 
     this.canViewSubscription = this.canView$.subscribe(canView => {
       if (canView) {
-        this.needToReadAllManagers$.next(' ');
+        this.fetchAll();
       } else {
         this.clearManagers();
         this.notificationsService.error('errors.default.read.403').entity('entities.managers.gen.plural').dispatch();
       }
     });
 
-    this.viewCreateManagerOnChild = this.messageBusService
-          .select(ContractorsAndPortfoliosService.MANAGERS_FETCH)
-          .subscribe(() => {
-            this.needToReadAllManagers$.next(' ');
-          });
-
-    this.managersSubscription = this.contractorsAndPortfoliosService.selectedManagerId$
-      .subscribe(mappedId => {
-        this.selection = mappedId && mappedId[this.contractorId] &&
-            this.managers && this.managers.find(manager => manager.id === mappedId[this.contractorId])
-        ? [ this.managers.find(manager => manager.id === mappedId[this.contractorId]) ]
-        : [];
+    this.managersSubscription = this.contractorsAndPortfoliosService.getAction(ContractorsAndPortfoliosService.MANAGERS_FETCH)
+      .subscribe(action => {
+        this.fetchAll();
       });
   }
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
-    this.dictionariesSubscription.unsubscribe();
     this.managersSubscription.unsubscribe();
-    this.viewCreateManagerOnChild.unsubscribe();
-  }
-
-  set managers(newManagers: IContractorManager[]) {
-    this._managers = newManagers;
-  }
-
-  get managers(): IContractorManager[] {
-    return this._managers;
   }
 
   clearManagers (): void {
@@ -170,24 +124,20 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
     this.managers = [];
   }
 
-  get isManagerBeingRemoved(): boolean {
-    return this.dialogAction === ContractorManagerActionEnum.DELETE;
-  }
-
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_MANAGER_VIEW').filter(permission => permission !== undefined);
+    return this.userPermissionsService.has('CONTRACTOR_MANAGER_VIEW');
   }
 
   get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_MANAGER_ADD').filter(permission => permission !== undefined);
+    return this.userPermissionsService.has('CONTRACTOR_MANAGER_ADD');
   }
 
   get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_MANAGER_EDIT').filter(permission => permission !== undefined);
+    return this.userPermissionsService.has('CONTRACTOR_MANAGER_EDIT');
   }
 
   get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('CONTRACTOR_MANAGER_DELETE').filter(permission => permission !== undefined);
+    return this.userPermissionsService.has('CONTRACTOR_MANAGER_DELETE');
   }
 
   onAdd(): void {
@@ -211,11 +161,21 @@ export class ContractorManagersComponent extends DialogFunctions  implements OnD
     this.contractorsAndPortfoliosService.deleteManager(this.contractorId, this.selection[0].id)
       .subscribe(() => {
         this.setDialog();
-        this.needToReadAllManagers$.next('');
+        this.fetchAll();
       });
   }
 
   onCloseDialog(): void {
     this.setDialog();
+  }
+
+  private fetchAll(): void {
+    this.contractorsAndPortfoliosService.readManagersForContractor(this.contractorId)
+      .subscribe(managers => {
+        this.selection = [];
+        this.contractorsAndPortfoliosService.selectManager(this.contractorId, null);
+        this.managers = managers;
+        this.cdRef.detectChanges();
+      });
   }
 }

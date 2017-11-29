@@ -989,7 +989,7 @@
       "fullName": "Full name",
       "smsName": "Name fot SMS",
       "responsibleId": "Manager",
-      "responsibleName": "Manager",
+      "responsibleFullName": "Manager",
       "typeCode": "Type",
       "phone": "Phone",
       "address": "Address",
