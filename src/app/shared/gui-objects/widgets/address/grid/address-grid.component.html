@@ -60,8 +60,7 @@
 <app-grid
   *ngIf="canDisplayGrid"
   columnTranslationKey="debtor.information.address"
-  [contextMenuEnabled]="true"
-  [ctxMenuOptions]="ctxMenuOptions"
+  [contextMenuOptions]="contextMenuOptions"
   selectionType="single"
   [styles]="{height: '230px'}"
   [columns]="columns"

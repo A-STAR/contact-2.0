@@ -104,7 +104,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  ctxMenuOptions: IContextMenuItem[] = [
+  contextMenuOptions: IContextMenuItem[] = [
     {
       fieldActions: [
         'copyField',

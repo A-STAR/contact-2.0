@@ -47,18 +47,17 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() selection: Array<any> = [];
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
-  @Input() contextMenuEnabled = false;
-  @Input() contextFieldName: string;
-  @Input() ctxMenuOptions: IContextMenuItem[] = [];
+  @Input() contextMenuOptions: IContextMenuItem[] = [];
   @Output() action = new EventEmitter<any>();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
+  contextFieldName: string;
   clickDebouncer: Subject<{ type: string; row: any}>;
   columnDefs: IGridColumn[];
   // Context Menu
   ctxColumn: any;
-  ctxFieldNameTranslation = { field: this.contextFieldName };
+  ctxFieldNameTranslation: { field: string };
   ctxRow: any;
   ctxEvent: MouseEvent;
   ctxOutsideListener: Function;
@@ -120,9 +119,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     const translationKeys = [gridMessagesKey];
     this.columnDefs = [].concat(this.columns);
 
-    const ctxMenuFieldAction = this.ctxMenuOptions.find(option => !!option.fieldActions);
+    const ctxMenuFieldAction = this.contextMenuOptions.find(option => !!option.fieldActions);
 
-    this.contextFieldName = this.contextFieldName || (ctxMenuFieldAction && ctxMenuFieldAction.prop);
+    this.contextFieldName = ctxMenuFieldAction && ctxMenuFieldAction.prop;
 
     this.ctxFieldNameTranslation = {
       field: this.contextFieldName ? this.translate.instant(this.contextFieldName) : this.contextFieldName
@@ -151,7 +150,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
         this.messages = { ...translations[gridMessagesKey] };
         if (this.columnTranslationKey) {
           this.translateColumns(translations[this.columnTranslationKey].grid);
-          if (this.contextMenuEnabled && this.contextFieldName) {
+          if (this.contextMenuOptions.length) {
             this.ctxFieldNameTranslation = {
               field: translations[this.columnTranslationKey].grid[this.contextFieldName] || this.contextFieldName
             };
@@ -191,7 +190,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   ngAfterViewInit(): void {
-    if (this.contextMenuEnabled) {
+    if (this.contextMenuOptions.length) {
       this.ctxOutsideListener = this.renderer.listen('document', 'click', this.onDocumentClick);
     }
     // Define a possible height of the datatable
@@ -251,7 +250,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     ctxEvent.event.preventDefault();
     ctxEvent.event.stopPropagation();
 
-    if (!this.contextMenuEnabled || !this.hasSingleSelection) {
+    if (!this.contextMenuOptions.length || !this.hasSingleSelection) {
       return;
     }
 

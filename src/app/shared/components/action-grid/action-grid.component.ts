@@ -35,10 +35,8 @@ export class ActionGridComponent<T> extends DialogFunctions {
   @Input() ngClass: string;
   @Input() rows: T[] = [];
   @Input() rowCount: number;
-  @Input() ctxMenuOptions: IContextMenuItem[];
+  @Input() contextMenuOptions: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
-  @Input() contextFieldName: string;
-  @Input() contextMenuEnabled: boolean;
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();

@@ -42,7 +42,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   debtors: any[];
 
-  ctxMenuOptions: IContextMenuItem[] = [
+  contextMenuOptions: IContextMenuItem[] = [
     {
       fieldActions: [
         'copyField',
@@ -102,10 +102,10 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  onAction($event: string): void {
-    console.log(`Action was fired for ${$event}`);
-  }
+  // uncomment to test action for context menu
+  // onAction($event: string): void {
+  //   console.log(`Action was fired for ${$event}`);
+  // }
 
   private getUrlByDebtor(debtor: any): string {
     const { debtorId, debtId, contractId, personId } = debtor;
