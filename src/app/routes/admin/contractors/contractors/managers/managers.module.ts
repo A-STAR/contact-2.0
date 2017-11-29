@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 
+import { ContractorManagerEditModule } from './edit/manager-edit.module';
 import { SharedModule } from '../../../../../shared/shared.module';
 
-import { ContractorManagerEditModule } from './edit/contractor-manager-edit.module';
-
-import { ContractorManagersComponent } from './contractor-managers.component';
+import { ContractorManagersComponent } from './managers.component';
 
 @NgModule({
   imports: [

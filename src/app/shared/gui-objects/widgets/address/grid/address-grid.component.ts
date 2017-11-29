@@ -10,7 +10,7 @@ import 'rxjs/add/observable/of';
 import { IAddress } from '../address.interface';
 import { IAddressMarkData } from './mark/mark.interface';
 import { IDebt } from '../../debt/debt/debt.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
@@ -102,6 +102,18 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       enabled: this.canView$,
       action: () => this.fetch()
     },
+  ];
+
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      fieldActions: [
+        'copyField',
+        'copyRow'
+      ],
+      translationKey: 'default.grid.localeText',
+      prop: 'fullAddress',
+      enabled: Observable.of(true)
+    }
   ];
 
   columns: Array<IGridColumn> = [];
@@ -337,13 +349,17 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/address/create` ]);
+    const url = this.callCenter
+      ? `${this.router.url}/address/${this.personId$.value}/create`
+      : `${this.router.url}/address/create`;
+    this.router.navigate([ url ]);
   }
 
   private onEdit(addressId: number): void {
-    this.router.navigate([ `${this.router.url}/address/${addressId}` ], {
-      queryParams: this.callCenter ? { callCenter: 1 } : {}
-    });
+    const url = this.callCenter
+      ? `${this.router.url}/address/${this.personId$.value}/${addressId}`
+      : `${this.router.url}/address/${addressId}`;
+    this.router.navigate([ url ]);
   }
 
   private onSubmitSuccess(): void {

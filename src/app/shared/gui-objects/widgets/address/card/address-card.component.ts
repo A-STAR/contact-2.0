@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -23,14 +23,14 @@ import { oneOfGroupRequired } from '../../../../../core/validators';
   templateUrl: './address-card.component.html'
 })
 export class AddressCardComponent {
+  @Input() callCenter = false;
+
   @ViewChild('form') form: DynamicForm2Component;
 
   private routeParams = (<any>this.route.params).value;
-  private queryParams = (<any>this.route.queryParams).value;
   private personId = this.routeParams.personId || null;
   private contactId = this.routeParams.contactId || null;
   private addressId = this.routeParams.addressId || null;
-  private callCenter = this.queryParams.callCenter;
 
   address$ = new BehaviorSubject<IAddress>(null);
   group$: Observable<IDynamicFormGroup>;
@@ -94,7 +94,7 @@ export class AddressCardComponent {
           width: 6,
           translationKey: 'widgets.address.card',
           children: [
-            { type: 'text', name: 'postalCode', disabled: !canEdit },
+            { type: 'text', name: 'postalCode', disabled: !canEdit},
             {
               type: 'group',
               bordered: true,
@@ -104,17 +104,17 @@ export class AddressCardComponent {
               required: true,
               validators: oneOfGroupRequired,
               children: [
-                { type: 'text', name: 'country', disabled: !canEdit },
-                { type: 'text', name: 'region', disabled: !canEdit },
-                { type: 'text', name: 'area', disabled: !canEdit },
-                { type: 'text', name: 'city', disabled: !canEdit },
-                { type: 'text', name: 'settlement', disabled: !canEdit },
-                { type: 'text', name: 'cityDistrict', disabled: !canEdit },
-                { type: 'text', name: 'street', disabled: !canEdit },
-                { type: 'text', name: 'house', disabled: !canEdit },
-                { type: 'text', name: 'building', disabled: !canEdit },
-                { type: 'text', name: 'flat', disabled: !canEdit },
-              ]
+                { type: 'text', name: 'country' },
+                { type: 'text', name: 'region' },
+                { type: 'text', name: 'area' },
+                { type: 'text', name: 'city' },
+                { type: 'text', name: 'settlement' },
+                { type: 'text', name: 'cityDistrict' },
+                { type: 'text', name: 'street' },
+                { type: 'text', name: 'house' },
+                { type: 'text', name: 'building' },
+                { type: 'text', name: 'flat' },
+              ].map(item => ({ ...item, disabled: !canEdit }))
             },
           ]
         },

@@ -173,7 +173,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       .subscribe(columns => {
         const { colDefs } = this.restoreGridSettings();
 
-        this.columns = columns.slice();
+        this.columns = [...columns];
         this.columnDefs = this.setColumnDefs(colDefs);
         this.setGridOptions();
         this.setPagination();
