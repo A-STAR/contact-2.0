@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-call-center-payment',
@@ -7,4 +9,20 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 })
 export class PaymentComponent {
   static COMPONENT_NAME = 'DebtorPaymentComponent';
+
+  constructor(
+    private route: ActivatedRoute,
+  ) {}
+
+  get debtId(): Observable<number> {
+    return this.routeParams.debtId;
+  }
+
+  get paymentId(): number {
+    return this.routeParams.paymentId;
+  }
+
+  private get routeParams(): any {
+    return (this.route.params as any).value;
+  }
 }

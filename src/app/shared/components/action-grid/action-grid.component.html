@@ -58,7 +58,7 @@
   (close)="onCloseDialog()"
 ></app-payment-operator-reject-dialog>
 
-<app-grid2
+<app-metadata-grid
   #grid
   *ngIf="isUsingAGGrid; else simpleGrid"
   [columnIds]="columnIds"
@@ -75,13 +75,14 @@
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
   (onSelect)="onSelect($event)"
-></app-grid2>
+></app-metadata-grid>
 
 <ng-template #simpleGrid>
   <app-grid
     #grid
     [columns]="columns"
     [columnTranslationKey]="columnTranslationKey"
+    [contextMenuOptions]="contextMenuOptions"
     [rows]="rows"
     [styles]="styles"
     (onDblClick)="onDblClick($event)"

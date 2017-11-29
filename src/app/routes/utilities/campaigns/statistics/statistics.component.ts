@@ -12,14 +12,17 @@ import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
-
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+
 
 import {
   ICampaignsStatistic,
-  IUserStatistic
+  IUserStatistic,
+  ICampaign,
 } from '../campaigns.interface';
 import { CampaignsService } from '../campaigns.service';
 
@@ -58,11 +61,29 @@ export class StatisticsComponent implements OnInit, OnDestroy {
   ];
 
   private campaignStatisticSub: Subscription;
+  private selectedCampaign: ICampaign;
+
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.campaignsService.fetchCampaignStat(this.selectedCampaign.id)
+        .pipe(first())
+        .map((statistic: ICampaignsStatistic) => statistic && statistic.userStatistic)
+        .subscribe((statistics: IUserStatistic[]) => {
+          this.campaignUserStatistics = statistics;
+          this.cdRef.markForCheck();
+        }),
+      enabled: Observable.combineLatest(this.userPermissionsService.has('CAMPAIGN_VIEW_STATISTICS'),
+        this.campaignsService.selectedCampaign).map(([hasRights, selected]) => hasRights && !!selected)
+    }
+  ];
+
 
   constructor(
     private gridService: GridService,
     private cdRef: ChangeDetectorRef,
     private campaignsService: CampaignsService,
+    private userPermissionsService: UserPermissionsService,
   ) { }
 
   ngOnInit(): void {
@@ -74,24 +95,34 @@ export class StatisticsComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.campaignStatisticSub = this.campaignsService.selectedCampaign
+    this.campaignStatisticSub = Observable
+      .combineLatest(
+        this.canView$,
+        this.campaignsService.selectedCampaign)
+      .filter(([canView, campaign]) => {
+        if (!canView) {
+          this.campaignUserStatistics = [];
+          this.cdRef.markForCheck();
+        }
+        return canView;
+      })
+      .map(([canView, campaign]) => campaign)
       .flatMap(campaign => {
         if (!campaign) {
           return Observable.of(null);
         }
+        this.selectedCampaign = campaign;
         return this.campaignsService.fetchCampaignStat(campaign.id);
       })
-      // TODO uncomment when view will be ready
-      // .do(data => data && data.agridatedData
-      //   ? this.campaignArgigateStatistic = Observable.of(data.agridatedData)
-      //   : this.campaignArgigateStatistic = Observable.of(null) )
-      .map((statistic: ICampaignsStatistic) => statistic && statistic.userStatistic && statistic.userStatistic.length
-        ? statistic.userStatistic
-        : null)
+      .map((statistic: ICampaignsStatistic) => statistic && statistic.userStatistic)
       .subscribe((statistics: IUserStatistic[]) => {
         this.campaignUserStatistics = statistics;
         this.cdRef.markForCheck();
       });
+  }
+
+  private get canView$(): Observable<boolean> {
+    return this.userPermissionsService.has('CAMPAIGN_VIEW_STATISTICS');
   }
 
   ngOnDestroy(): void {

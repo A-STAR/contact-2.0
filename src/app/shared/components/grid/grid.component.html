@@ -22,18 +22,15 @@
     >
     </ngx-datatable>
   </div>
+  <app-context-menu
+    *ngIf="ctxShowMenu"
+    [styles]="ctxStyles"
+    [options]="contextMenuOptions"
+    [tableRow]="ctxRow"
+    [columns]="columns"
+    [fieldNameTranslation]="ctxFieldNameTranslation"
+    (action)="onAction()"
+  >
+  </app-context-menu>
 </div>
 
-<div
-  *ngIf="ctxShowMenu"
-  class="ngx-datatable-context-menu-wrapper"
-  [ngStyle]="ctxStyles"
-  tabindex="-1"
->
-  <ul class="ngx-datatable-context-menu">
-    <li *ngIf="contextFieldName" (click)="onCtxMenuClick($event, contextFieldName)">
-      {{ 'default.grid.localeText.copyField' | translate: ctxFieldNameTranslation }}
-    </li>
-    <li (click)="onCtxMenuClick($event)">{{ 'default.grid.localeText.copyRow' | translate }}</li>
-  </ul>
-</div>

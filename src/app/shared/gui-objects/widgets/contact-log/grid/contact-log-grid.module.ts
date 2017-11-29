@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Grid2Module } from '../../../../components/grid2/grid2.module';
+import { MetadataGridModule } from '../../../../components/metadata-grid/metadata-grid.module';
 
 import { ContactLogGridComponent } from './contact-log-grid.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    Grid2Module,
+    MetadataGridModule,
   ],
   exports: [
     ContactLogGridComponent,

@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
-import { first } from 'rxjs/operators';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -34,7 +33,6 @@ import {
   IAGridRequest, IAGridSorter } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PersistenceService } from '../../../core/persistence/persistence.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
@@ -44,11 +42,6 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { UserPermissions } from '../../../core/user/permissions/user-permissions';
-
-
-interface ITranslations {
-  translations: { [index: string]: string };
-}
 
 @Component({
   selector: 'app-grid2',
@@ -74,6 +67,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static SELECTED_ROWS      = 'AGRID_SELECTED_ROWS';
   static DESTROY_STATE      = 'AGRID_DESTROY_STATE';
 
+  @Input() actions: IMetadataAction[] = [];
+  @Input() columns: IAGridColumn[];
   @Input() columnIds: string[];
   @Input() disableFilters = false;
   @Input() fetchUrl: string;
@@ -101,23 +96,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onDblClick = new EventEmitter<any>();
   @Output() onFilter = new EventEmitter<FilterObject>();
   @Output() onPage = new EventEmitter<number>();
-  @Output() onInit = new EventEmitter<void>();
   @Output() onPageSize = new EventEmitter<number>();
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IAGridAction>();
 
-  columns: IAGridColumn[];
   columnDefs: ColDef[];
   gridOptions: GridOptions = {};
   page: number = this.startPage;
   paginationPanel: IToolbarAction[] = [];
   initCallbacks: Function[] = [];
-  actions: IMetadataAction[] = [];
 
   private gridSettings: IAGridSettings;
   private initialized = false;
-  private langSubscription: EventEmitter<any>;
   private saveChangesDebounce = new Subject<void>();
   private saveChangesDebounceSub: Subscription;
   private userPermissionsBag: UserPermissions;
@@ -127,7 +118,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private notificationService: NotificationsService,
     private persistenceService: PersistenceService,
     private translate: TranslateService,
@@ -149,38 +139,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.persistenceKey) {
       console.warn('Please provide the [persistenceKey] or the grid will not be able to save its settings');
     }
-    if (!this.metadataKey) {
-      throw new Error(`Can't initialise since no [metadataKey] key provided.`);
-    }
 
     this.userPermissionsSub = this.userPermissionsService.bag()
       .subscribe(bag => this.userPermissionsBag = bag);
 
-    this.gridService
-      .getActions(this.metadataKey)
-      .pipe(first())
-      .subscribe(actions => {
-        this.actions = actions;
-      });
-
-    this.gridService
-      .getColumnMeta(this.metadataKey, {})
-      .pipe(first())
-      .subscribe(columns => {
-        const { colDefs } = this.restoreGridSettings();
-
-        this.columns = columns.slice();
-        this.columnDefs = this.setColumnDefs(colDefs);
-        this.setGridOptions();
-        this.setPagination();
-
-        this.initialized = true;
-        this.cdRef.markForCheck();
-        this.onInit.emit();
-      });
-
-    this.langSubscription = this.translate.onLangChange
-      .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
+    const { colDefs } = this.restoreGridSettings();
+    this.columnDefs = this.setColumnDefs(colDefs);
+    this.setGridOptions();
+    this.setPagination();
+    this.initialized = true;
+    this.cdRef.markForCheck();
 
     this.saveChangesDebounceSub = this.saveChangesDebounce
       .debounceTime(2000)
@@ -212,7 +180,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveGridSettings();
-    this.langSubscription.unsubscribe();
     this.saveChangesDebounceSub.unsubscribe();
     this.userPermissionsSub.unsubscribe();
   }
@@ -496,14 +463,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           return btn;
       }
     });
-  }
-
-  private refreshTranslations(translations: { [index: string]: any }): void {
-    this.refreshRowCount();
-    this.translateOptionsMessages();
-    // this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
-
-    this.cdRef.markForCheck();
   }
 
   private translateOptionsMessages(): any {

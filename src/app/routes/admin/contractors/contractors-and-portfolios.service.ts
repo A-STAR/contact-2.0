@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, Action } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
@@ -7,7 +8,6 @@ import { IAppState } from '../../../core/state/state.interface';
 import {
   IContractor, IContractorsAndPortfoliosState,
   IContractorManager, IPortfolio, IPortfolioMoveRequest,
-  INumberMap
 } from './contractors-and-portfolios.interface';
 
 import { DataService } from '../../../core/data/data.service';
@@ -38,13 +38,12 @@ export class ContractorsAndPortfoliosService {
   static PORTFOLIO_UPDATE                       = 'PORTFOLIO_UPDATE';
   static PORTFOLIO_MOVE                         = 'PORTFOLIO_MOVE';
   static PORTFOLIO_DELETE                       = 'PORTFOLIO_DELETE';
-  static PORTFOLIO_DELETE_SUCCESS               = 'PORTFOLIO_DELETE_SUCCESS';
-  static EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED = 'EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED';
 
   constructor(
-    private store: Store<IAppState>,
+    private actions$: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    private store: Store<IAppState>,
   ) {}
 
   get selectedContractorId$(): Observable<number> {
@@ -61,23 +60,23 @@ export class ContractorsAndPortfoliosService {
 
   get selectedManagerId$(): Observable<number> {
     return this.state
-      .map(state => null)
+      .map(state => state.selectedManagerId)
       .distinctUntilChanged();
   }
 
   readAllContractors(): Observable<IContractor[]> {
-    return this.dataService.readAll('/contractors')
+    return <Observable<IContractor[]>>this.dataService.readAll('/contractors')
       .catch(
         this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
-      ) as Observable<IContractor[]>;
+      );
   }
 
   readAllContractorsExeptCurrent(currentContractorId: number): Observable<IContractor[]> {
-    return this.dataService.readAll('/contractors')
-      .map(contractors => contractors ? contractors.filter(contractor => contractor.id !== currentContractorId) : null )
+    return <Observable<IContractor[]>>this.readAllContractors()
+      .map(contractors => contractors.filter(contractor => contractor.id !== currentContractorId))
       .catch(
         this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
-      ) as Observable<IContractor[]>;
+      );
   }
 
   readContractor(contractorId: number): Observable<IContractor> {
@@ -112,7 +111,7 @@ export class ContractorsAndPortfoliosService {
 
   selectManager(contractorId: number, managerId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, {
-       [contractorId]: managerId
+       selectedManagerId: managerId
     });
   }
 
@@ -143,7 +142,6 @@ export class ContractorsAndPortfoliosService {
 
   readPortfolio(contractorId: number, portfolioId: number): Observable<any> {
     return this.dataService.read('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId })
-      // TODO create and use matching key in dictionary
       .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
   }
 
@@ -173,8 +171,6 @@ export class ContractorsAndPortfoliosService {
       .catch(this.notificationsService.error('errors.default.move').entity('entities.portfolios.gen.singular').callback());
   }
 
-  portfolioMapping: INumberMap;
-
   deletePortfolio(contractorId: number, portfolioId: number): Observable<any> {
     return this.dataService
       .delete('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId })
@@ -192,7 +188,11 @@ export class ContractorsAndPortfoliosService {
     return this.store.select(state => state.contractorsAndPortfolios);
   }
 
-  private dispatch(type: string, payload?: any): void {
+  dispatch(type: string, payload?: any): void {
     this.store.dispatch({ type, payload });
+  }
+
+  getAction(action: string): Observable<Action> {
+    return this.actions$.ofType(action);
   }
 }
