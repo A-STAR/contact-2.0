@@ -1813,6 +1813,9 @@
     "actionsLog": {
       "gen": { "singular": "записи лога действий", "plural": "лога действий" }
     },
+    "filterGrid": {
+      "gen": { "singular": "записи", "plural": "записей" }
+    },
     "constants": {
       "gen": { "singular": "константы", "plural": "списка констант" }
     },

@@ -1813,6 +1813,9 @@
     "actionsLog": {
       "gen": { "singular": "actions log entry", "plural": "action log" }
     },
+    "filterGrid": {
+      "gen": { "singular": "record", "plural": "records" }
+    },
     "constants": {
       "gen": { "singular": "constant", "plural": "constants" }
     },
