@@ -1,0 +1,8 @@
+<app-dialog-action
+  titleTranslationKey="massOperations.smsDelete.title"
+  actionTranslationKey="massOperations.smsDelete.delete"
+  actionMessage="default.buttons.ok"
+  [messageParams]="smsCounter"
+  (action)="onConfirmDelete()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
