@@ -10,7 +10,7 @@ import 'rxjs/add/observable/of';
 import { IAddress } from '../address.interface';
 import { IAddressMarkData } from './mark/mark.interface';
 import { IDebt } from '../../debt/debt/debt.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
@@ -102,6 +102,18 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       enabled: this.canView$,
       action: () => this.fetch()
     },
+  ];
+
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      fieldActions: [
+        'copyField',
+        'copyRow'
+      ],
+      translationKey: 'default.grid.localeText',
+      prop: 'fullAddress',
+      enabled: Observable.of(true)
+    }
   ];
 
   columns: Array<IGridColumn> = [];
