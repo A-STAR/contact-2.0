@@ -30,13 +30,13 @@ const routes: Routes = [
   { path: '', component: CampaignComponent },
   { path: 'phone', children: [
     { path: '', redirectTo: 'create', pathMatch: 'full' },
-    { path: 'create', component: PhoneComponent },
-    { path: ':phoneId', component: PhoneComponent },
+    { path: ':personId/create', component: PhoneComponent },
+    { path: ':personId/:phoneId', component: PhoneComponent },
   ]},
   { path: 'address', children: [
     { path: '', redirectTo: 'create', pathMatch: 'full' },
-    { path: 'create', component: AddressComponent },
-    { path: ':addressId', component: AddressComponent },
+    { path: ':personId/create', component: AddressComponent },
+    { path: ':personId/:addressId', component: AddressComponent },
   ]},
   { path: 'contactLog', children: [
     { path: ':contactId/contactLogType/:contactType', component: ContactComponent },
@@ -48,13 +48,11 @@ const routes: Routes = [
   ]},
   { path: 'promise', children: [
     { path: '', redirectTo: '', pathMatch: 'full' },
-    { path: 'create', component: PromiseComponent },
-    { path: ':promiseId', component: PromiseComponent },
+    { path: ':debtId/:promiseId', component: PromiseComponent },
   ]},
   { path: 'payment', children: [
     { path: '', redirectTo: '', pathMatch: 'full' },
-    { path: 'create', component: PaymentComponent },
-    { path: ':paymentId', component: PaymentComponent },
+    { path: ':debtId/:paymentId', component: PaymentComponent },
   ]},
 ];
 

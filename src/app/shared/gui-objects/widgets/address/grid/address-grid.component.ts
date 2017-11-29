@@ -337,13 +337,17 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/address/create` ]);
+    const url = this.callCenter
+      ? `${this.router.url}/address/${this.personId$.value}/create`
+      : `${this.router.url}/address/create`;
+    this.router.navigate([ url ]);
   }
 
   private onEdit(addressId: number): void {
-    this.router.navigate([ `${this.router.url}/address/${addressId}` ], {
-      queryParams: this.callCenter ? { callCenter: 1 } : {}
-    });
+    const url = this.callCenter
+      ? `${this.router.url}/address/${this.personId$.value}/${addressId}`
+      : `${this.router.url}/address/${addressId}`;
+    this.router.navigate([ url ]);
   }
 
   private onSubmitSuccess(): void {

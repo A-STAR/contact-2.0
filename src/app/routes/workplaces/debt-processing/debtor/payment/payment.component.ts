@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-
-import { INode } from '../../../../../shared/gui-objects/container/container.interface';
-
-import { PaymentCardComponent } from '../../../../../shared/gui-objects/widgets/payment/card/payment-card.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-debtor-payment',
@@ -11,9 +8,19 @@ import { PaymentCardComponent } from '../../../../../shared/gui-objects/widgets/
 export class DebtorPaymentComponent {
   static COMPONENT_NAME = 'DebtorPaymentComponent';
 
-  get node(): INode {
-    return {
-      component: PaymentCardComponent
-    };
+  constructor(
+    private route: ActivatedRoute,
+  ) {}
+
+  get debtId(): number {
+    return this.routeParams.debtId;
+  }
+
+  get paymentId(): number {
+    return this.routeParams.paymentId;
+  }
+
+  private get routeParams(): any {
+    return (this.route.params as any).value;
   }
 }
