@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -72,7 +72,6 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
-    private route: ActivatedRoute,
     private router: Router,
   ) {}
 
