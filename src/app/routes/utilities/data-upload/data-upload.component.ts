@@ -60,7 +60,10 @@ export class DataUploadComponent {
       cellId: cell.id,
       value: cell.value,
     };
-    console.log(payload);
+    this.dataUploadService.editCell(payload).subscribe(response => {
+      this.rows[row.id] = response.rows[0];
+      this.cdRef.markForCheck();
+    });
   }
 
   onFileOpenClick(): void {
