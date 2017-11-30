@@ -31,15 +31,23 @@ export class DataUploadService {
             cells: [
               { id: 1, value: '1', statusCode: 0, errorMsg: null },
               { id: 2, value: 'Иванов Иван Иванович', statusCode: 0, errorMsg: null },
-              { id: 3, value: 'Долг за машину', statusCode: 0, errorMsg: null },
+              { id: 3, value: 'Долг за машину', statusCode: 1, errorMsg: null },
             ]
           },
           {
             id: 2,
             cells: [
               { id: 1, value: '2', statusCode: 0, errorMsg: null },
-              { id: 2, value: 'Петров Петр Петрович', statusCode: 0, errorMsg: null },
-              { id: 3, value: 'Долг за квартиру', statusCode: 0, errorMsg: null },
+              { id: 2, value: 'Петров Петр Петрович', statusCode: 2, errorMsg: null },
+              { id: 3, value: 'Долг за квартиру', statusCode: 3, errorMsg: null },
+            ]
+          },
+          {
+            id: 3,
+            cells: [
+              { id: 1, value: '3', statusCode: 4, errorMsg: null },
+              { id: 2, value: 'Сидоров Сидор Сидорович', statusCode: 5, errorMsg: null },
+              { id: 3, value: 'Долг за яхту', statusCode: 6, errorMsg: null },
             ]
           },
         ],

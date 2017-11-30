@@ -1,6 +1,7 @@
 import { RowNode, ColDef, GetContextMenuItemsParams } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
 
+import { ICellRendererParams } from 'ag-grid/dist/lib/rendering/cellRenderers/iCellRenderer';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 
 import { FilterObject } from './filter/grid-filter';
@@ -11,6 +12,7 @@ export type IAGridSelected = Array<any>;
 
 export interface IAGridColumn {
   colId: string;
+  cellStyle?: (params: ICellRendererParams) => Partial<CSSStyleDeclaration>;
   dataType: number;
   dictCode?: number;
   disabled?: boolean;

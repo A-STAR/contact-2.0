@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
+import { ICellRendererParams } from 'ag-grid/dist/lib/rendering/cellRenderers/iCellRenderer';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse } from './data-upload.interface';
+import { IOpenFileResponse, ICell } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
 
@@ -75,10 +76,11 @@ export class DataUploadComponent {
       .sort((a, b) => a.order - b.order)
       .map((column, i) => ({
         colId: i.toString(),
+        cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
         dataType: column.typeCode,
         editable: true,
         label: column.name,
-        valueGetter: params => params.data.cells[params.column.colId].value,
+        valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
       }));
   }
 
@@ -89,5 +91,31 @@ export class DataUploadComponent {
         ...row,
         cells: row.cells.reduce((acc, cell, i) => ({ ...acc, [i]: cell }), {}),
       }));
+  }
+
+  private getCellValue(params: ICellRendererParams): string {
+    return this.getCell(params).value;
+  }
+
+  private getCellStyle(params: ICellRendererParams): Partial<CSSStyleDeclaration> {
+    return {
+      backgroundColor: this.getCellColorByStatusCode(this.getCell(params).statusCode),
+    };
+  }
+
+  private getCell(params: ICellRendererParams): ICell {
+    return params.data.cells[params.column.getColId()];
+  }
+
+  private getCellColorByStatusCode(code: number): string {
+    switch (code) {
+      case 1: return '#eff';
+      case 2: return '#fef';
+      case 3: return '#ffe';
+      case 4: return '#fee';
+      case 5: return '#efe';
+      case 6: return '#eef';
+      default: return null;
+    }
   }
 }
