@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
-
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
+import { IOpenFileResponse } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
 
@@ -19,18 +19,22 @@ import { DataUploadService } from './data-upload.service';
 export class DataUploadComponent {
   static COMPONENT_NAME = 'DataUploadComponent';
 
+  @ViewChild('fileInput') fileInput: any;
+
   actions: IMetadataAction[] = [
     { action: 'foo', params: [], addOptions: [] },
   ];
 
-  columns: IAGridColumn[] = [
-    { colId: 'id', dataType: 1, label: 'Id' },
-    { colId: 'name', dataType: 1, label: 'Name' },
-  ];
+  columns: IAGridColumn[];
 
-  rows = [];
+  rows: any[];
   rowCount = 0;
   rowIdKey = 'id';
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private dataUploadService: DataUploadService,
+  ) {}
 
   onRequest(): void {
     //
@@ -46,5 +50,45 @@ export class DataUploadComponent {
 
   onAction(event: any): void {
     //
+  }
+
+  onFileOpenClick(): void {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileChange(): void {
+    const file = (this.fileInput.nativeElement as HTMLInputElement).files[0];
+    this.dataUploadService
+      .openFile(file)
+      .subscribe(response => {
+        this.columns = this.getColumnsFromResponse(response);
+        // The following line makes grid2 set `initialized = true` internally
+        this.cdRef.detectChanges();
+        this.rows = this.getRowsFromResponse(response);
+        this.rowCount = this.rows.length;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  private getColumnsFromResponse(response: IOpenFileResponse): IAGridColumn[] {
+    return response.columns
+      .sort((a, b) => a.order - b.order)
+      .map(column => ({
+        colId: column.name,
+        dataType: column.typeCode,
+        label: column.name,
+      }));
+  }
+
+  private getRowsFromResponse(response: IOpenFileResponse): any[] {
+    return response.rows
+      .sort((a, b) => a.id - b.id)
+      .map(row => row.cells.reduce((acc, cell, i) => {
+        const prop = response.columns[i].name;
+        return {
+          ...acc,
+          [prop]: cell.value,
+        };
+      }, {}));
   }
 }

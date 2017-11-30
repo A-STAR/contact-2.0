@@ -17,9 +17,30 @@ export class DataUploadService {
     // POST /load/debtSetOperator
     return Observable
       .of({
-        columns: [],
+        columns: [
+          { name: 'id', order: 0, typeCode: 1, dictCode: null },
+          { name: 'name', order: 1, typeCode: 3, dictCode: null },
+          { name: 'debt', order: 2, typeCode: 3, dictCode: null },
+        ],
         guid: 0,
-        rows: [],
+        rows: [
+          {
+            id: 1,
+            cells: [
+              { id: 1, value: '1', statusCode: 0, errorMsg: null },
+              { id: 2, value: 'Foo', statusCode: 0, errorMsg: null },
+              { id: 3, value: 'Debt 1', statusCode: 0, errorMsg: null },
+            ]
+          },
+          {
+            id: 2,
+            cells: [
+              { id: 1, value: '2', statusCode: 0, errorMsg: null },
+              { id: 2, value: 'Bar', statusCode: 0, errorMsg: null },
+              { id: 3, value: 'Debt 2', statusCode: 0, errorMsg: null },
+            ]
+          },
+        ],
       })
       .do(response => this.guid = response.guid);
   }

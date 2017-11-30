@@ -1,11 +1,13 @@
+export interface ICell {
+  id: number;
+  value: string;
+  statusCode: number;
+  errorMsg: string;
+}
+
 export interface IRow {
   id: number;
-  cells: {
-    id: number;
-    value: string;
-    statusCode: number;
-    errorMsg: string;
-  };
+  cells: ICell[];
 }
 
 export interface IColumn {

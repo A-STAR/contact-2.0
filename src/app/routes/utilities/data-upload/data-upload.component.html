@@ -1,12 +1,15 @@
 <div class="mb">
-  <app-button label="Открыть файл"></app-button>
-  <app-button label="Обработать"></app-button>
-  <app-button label="Выгрузить Excel"></app-button>
-  <app-button label="Выгрузить CSV"></app-button>
+  <app-button label="Открыть файл" (click)="onFileOpenClick()"></app-button>
+  <app-button label="Загрузить"></app-button>
   <app-button label="Отмена"></app-button>
 </div>
 
+<div hidden>
+  <input #fileInput type="file" (change)="onFileChange()">
+</div>
+
 <app-grid2
+  *ngIf="columns"
   [actions]="actions"
   [columns]="columns"
   [ngClass]="'data-upload'"
