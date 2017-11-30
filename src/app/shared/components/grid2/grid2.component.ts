@@ -542,6 +542,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         valueGetter: column.valueGetter,
         cellEditor: column.editable ? this.getCellEditor(column) : null,
         cellEditorParams: column.editable ? this.getCellEditorParams(column) : null,
+        cellRenderer: column.cellRenderer,
         cellStyle: column.cellStyle,
         colId: column.colId,
         editable: column.editable,
@@ -575,6 +576,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           break;
       }
       if (column.$$valueGetter) {
+        // TODO(d.maltsev): what if cellRenderer is also passed as column prop?
         colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
         colDef.valueGetter = colDef.cellRenderer;
       }

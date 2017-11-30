@@ -30,8 +30,8 @@ export class DataUploadService {
             id: 1,
             cells: [
               { id: 1, value: '1', statusCode: 0, errorMsg: null },
-              { id: 2, value: 'Иванов Иван Иванович', statusCode: 0, errorMsg: null },
-              { id: 3, value: 'Долг за машину', statusCode: 1, errorMsg: null },
+              { id: 2, value: 'Иванов Иван Иванович', statusCode: 0, errorMsg: 'Иванов - нехороший человек.' },
+              { id: 3, value: 'Долг за машину', statusCode: 1, errorMsg: 'Иванов должен денег за машину. Иванов, верни деньги.' },
             ]
           },
           {

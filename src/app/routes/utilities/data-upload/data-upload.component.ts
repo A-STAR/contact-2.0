@@ -76,6 +76,7 @@ export class DataUploadComponent {
       .sort((a, b) => a.order - b.order)
       .map((column, i) => ({
         colId: i.toString(),
+        cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
         cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
         dataType: column.typeCode,
         editable: true,
@@ -91,6 +92,14 @@ export class DataUploadComponent {
         ...row,
         cells: row.cells.reduce((acc, cell, i) => ({ ...acc, [i]: cell }), {}),
       }));
+  }
+
+  private getCellRenderer(params: ICellRendererParams): string {
+    return `
+      <div title="${this.getCell(params).errorMsg || ''}">
+        ${this.getCell(params).value}
+      </div>
+    `;
   }
 
   private getCellValue(params: ICellRendererParams): string {

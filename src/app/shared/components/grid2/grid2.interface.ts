@@ -12,6 +12,7 @@ export type IAGridSelected = Array<any>;
 
 export interface IAGridColumn {
   colId: string;
+  cellRenderer?: (params: ICellRendererParams) => string;
   cellStyle?: (params: ICellRendererParams) => Partial<CSSStyleDeclaration>;
   dataType: number;
   dictCode?: number;
