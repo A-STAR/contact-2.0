@@ -268,7 +268,11 @@
           "dictValue3": "Словарный атрибут 3",
           "dictValue4": "Словарный атрибут 4",
           "portfolioId": "Реестр КА",
-          "regionCode": "Регион"
+          "regionCode": "Регион",
+          "userId": "Оператор",
+          "addressTypeCode": "Тип адреса",
+          "visitStatusCode": "Статус выезда",
+          "visitPurposeCode": "Цель выезда"
         }
       },
       "newDebt": {

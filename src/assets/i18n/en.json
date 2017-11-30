@@ -268,7 +268,11 @@
           "dictValue3": "Dictionary Value 3",
           "dictValue4": "Dictionary Value 4",
           "portfolioId": "Portfolio",
-          "regionCode": "Region"
+          "regionCode": "Region",
+          "userId": "Operator",
+          "addressTypeCode": "Тип адреса",
+          "visitStatusCode": "Статус выезда",
+          "visitPurposeCode": "Цель выезда"
         }
       },
       "newDebt": {

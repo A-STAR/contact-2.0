@@ -1,6 +1,7 @@
-<app-tabstrip [disableScrollbar]="true" [inverse]="true">
-  <app-tab *ngFor="let grid of grids" [title]="grid.title" [closable]="false">
+<app-tabstrip [disableScrollbar]="true" [inverse]="true" (select)="onTabSelect($event)">
+  <app-tab *ngFor="let grid of grids; let i = index" [title]="grid.title" [closable]="false">
     <app-filter-grid
+      *ngIf="selectedTabIndex === i"
       [gridKey]="grid.key"
       [controls]="grid.filterControls"
     ></app-filter-grid>
