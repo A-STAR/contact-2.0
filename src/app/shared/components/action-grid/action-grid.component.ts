@@ -11,6 +11,7 @@ import {
 
 import { IActionGridDialogData } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected } from '../grid2/grid2.interface';
+import { IActionGridDialogSelectionParams } from '../action-grid/action-grid.interface';
 import { IGridColumn } from '../grid/grid.interface';
 
 import { GridComponent } from '../../components/grid/grid.component';
@@ -63,6 +64,11 @@ export class ActionGridComponent<T> extends DialogFunctions {
 
   getSelectionParam(key: number): any[] {
     return this.dialogData.selection[key];
+  }
+
+  getPluralSelectionParams(): IActionGridDialogSelectionParams {
+    console.log(this.dialogData.selection);
+    return this.dialogData.selection;
   }
 
   getDialogParam(key: number): number | string {

@@ -1939,6 +1939,9 @@
     }
   },
   "massOperations": {
+    "visitAdd": {
+      "title": "Установка отметки необходимости выезда, {{ count }} адресов"
+    },
     "paymentsConfirm": {
       "ConfirmInquery": "Вы действительно хотите подтвердить отмеченные {{ count }} платежей?",
       "title": "Подтверждение платежей"
@@ -2207,7 +2210,8 @@
         "paymentsConfirm": "Подтвердить платежи",
         "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
-        "statusChange": "Изменить статус"
+        "statusChange": "Изменить статус",
+        "visitAdd": "Отметить необходимость"
       }
     },
     "filter": {

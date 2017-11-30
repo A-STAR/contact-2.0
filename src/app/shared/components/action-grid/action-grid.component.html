@@ -1,3 +1,10 @@
+<app-visit-add-dialog
+  *ngIf="isDialog('visitAdd')"
+  [visitRelsIds]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+>
+</app-visit-add-dialog>
+
 <app-payments-cancel-dialog
   *ngIf="isDialog('paymentsCancel')"
   [paymentsIds]="getSelectionParam(0)"
@@ -43,7 +50,7 @@
 <app-promise-remove-dialog
   *ngIf="isDialog('deletePromise')"
   [promises]="getSelectionParam(0)"
-  (close)="onCloseDialog()"
+  (close)="onCloseDelete()"
 ></app-promise-remove-dialog>
 
 <app-payment-operator-confirm-dialog

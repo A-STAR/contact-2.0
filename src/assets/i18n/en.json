@@ -1939,6 +1939,9 @@
     }
   },
   "massOperations": {
+    "visitAdd": {
+      "title": "Setting a visit note, {{ count }} addresses"
+    },
     "paymentsConfirm": {
       "ConfirmInquery": "Are you sure to confirm selected {{ count }} payments?",
       "title": "Payments confirmation"
@@ -2207,7 +2210,8 @@
         "paymentsConfirm": "Payments confirm",
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
-        "statusChange": "Change status"
+        "statusChange": "Change status",
+        "visitAdd": "Make necessary"
       }
     },
     "filter": {

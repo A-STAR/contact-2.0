@@ -161,6 +161,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       .pipe(first())
       .subscribe(actions => {
         this.actions = actions;
+        this.actions.push({
+          action: 'visitAdd',
+          addOptions: null,
+          params: ['debtId', 'addressId', 'personId']
+        });
+        console.log(actions);
       });
 
     this.gridService
@@ -757,6 +763,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   // TODO(d.maltsev): this looks a bit messy.
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'visitAdd':
+        return true; // this.userPermissionsBag.has('VISIT_ADD') && this.selected.length > 0;
       case 'debtClearResponsible':
         return this.userPermissionsBag.has('DEBT_RESPONSIBLE_CLEAR') && this.selected.length > 0;
       case 'debtSetResponsible':
