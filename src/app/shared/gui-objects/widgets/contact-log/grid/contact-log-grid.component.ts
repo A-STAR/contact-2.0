@@ -4,7 +4,7 @@ import { IContact } from '../contact-log.interface';
 
 import { ContactLogService } from '../contact-log.service';
 
-import { Grid2Component } from '../../../../components/grid2/grid2.component';
+import { MetadataGridComponent } from '../../../../components/metadata-grid/metadata-grid.component';
 
 @Component({
   selector: 'app-contact-log-grid',
@@ -16,7 +16,7 @@ import { Grid2Component } from '../../../../components/grid2/grid2.component';
 export class ContactLogGridComponent {
   @Input() personId: number;
 
-  @ViewChild(Grid2Component) grid: Grid2Component;
+  @ViewChild(MetadataGridComponent) grid: MetadataGridComponent<IContact>;
 
   columnIds = [
     'contactDateTime',

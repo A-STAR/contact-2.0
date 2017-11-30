@@ -9,7 +9,7 @@ import { PromiseResolveModule } from '../../gui-objects/widgets/promise-resolve/
 import { PaymentOperatorModule } from '../../gui-objects/widgets/payment-operator/payment-operator.module';
 import { SmsDeleteModule } from '../../gui-objects/widgets/sms-delete/sms-delete.module';
 import { GridModule } from '../grid/grid.module';
-import { Grid2Module } from '../grid2/grid2.module';
+import { MetadataGridModule } from '../metadata-grid/metadata-grid.module';
 
 import { ActionGridComponent } from './action-grid.component';
 
@@ -22,7 +22,7 @@ import { ActionGridComponent } from './action-grid.component';
     PaymentOperatorModule,
     EntityGroupModule,
     GridModule,
-    Grid2Module,
+    MetadataGridModule,
     PaymentConfirmModule,
     SmsDeleteModule
   ],

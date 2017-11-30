@@ -2,7 +2,7 @@
   <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
 </div>
 
-<app-grid2
+<app-metadata-grid
   metadataKey="personActions"
   persistenceKey="personactionlog"
   rowIdKey="id"
@@ -13,5 +13,4 @@
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
   (onFilter)="onRequest()"
->
-</app-grid2>
+></app-metadata-grid>
