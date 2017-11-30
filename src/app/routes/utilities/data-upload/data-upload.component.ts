@@ -73,8 +73,8 @@ export class DataUploadComponent {
   private getColumnsFromResponse(response: IOpenFileResponse): IAGridColumn[] {
     return response.columns
       .sort((a, b) => a.order - b.order)
-      .map(column => ({
-        colId: column.name,
+      .map((column, i) => ({
+        colId: i.toString(),
         dataType: column.typeCode,
         label: column.name,
       }));
@@ -84,10 +84,9 @@ export class DataUploadComponent {
     return response.rows
       .sort((a, b) => a.id - b.id)
       .map(row => row.cells.reduce((acc, cell, i) => {
-        const prop = response.columns[i].name;
         return {
           ...acc,
-          [prop]: cell.value,
+          [i]: cell.value,
         };
       }, {}));
   }
