@@ -1,6 +1,6 @@
 <app-visit-add-dialog
   *ngIf="isDialog('visitAdd')"
-  [visitRelsIds]="getSelectionParam(0)"
+  [visitRelsIds]="getConfiguredParams()"
   (close)="onCloseDialog()"
 >
 </app-visit-add-dialog>

@@ -37,7 +37,7 @@ const label = makeKey('massOperations.visitAdd');
 })
 export class VisitAddDialogComponent extends DialogFunctions implements OnChanges, OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-  @Input() visitRelsIds: ISingleVisitRels[];
+  @Input() visitRelsIds: any[];
   @Input() buff: IActionGridDialogSelectionParams;
   @Output() close = new EventEmitter<void>();
   // @Output() submit = new EventEmitter<IConstant>();
@@ -70,6 +70,7 @@ export class VisitAddDialogComponent extends DialogFunctions implements OnChange
   }
 
   ngOnInit(): void {
+    console.log(this.visitRelsIds);
     Observable.combineLatest(
       this.userPermissionsService.has('VISIT_ADD'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_VISIT_PURPOSE)
@@ -101,14 +102,14 @@ export class VisitAddDialogComponent extends DialogFunctions implements OnChange
     this.cdRef.markForCheck();
   }
 
-  onConfirmPayments(): void {
+  onSubmit(): void {
     this.setDialog();
     this.cdRef.markForCheck();
     this.visitAddService.createVisit(this.visitRelsIds, this.purposeCode, this.comment)
       .subscribe((res) => {
-          this.totalCount = res.massInfo.total;
-          this.successCount = res.massInfo.processed;
-          this.setDialog('infoConfirm');
+          // this.totalCount = res.massInfo.total;
+          // this.successCount = res.massInfo.processed;
+          this.onCloseDialog();
           this.cdRef.markForCheck();
         });
   }

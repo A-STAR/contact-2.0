@@ -764,7 +764,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
       case 'visitAdd':
-        return true; // this.userPermissionsBag.has('VISIT_ADD') && this.selected.length > 0;
+        return  this.selected.length > 0; // this.userPermissionsBag.has('VISIT_ADD') &&
       case 'debtClearResponsible':
         return this.userPermissionsBag.has('DEBT_RESPONSIBLE_CLEAR') && this.selected.length > 0;
       case 'debtSetResponsible':

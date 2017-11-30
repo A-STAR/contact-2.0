@@ -66,9 +66,21 @@ export class ActionGridComponent<T> extends DialogFunctions {
     return this.dialogData.selection[key];
   }
 
-  getPluralSelectionParams(): IActionGridDialogSelectionParams {
-    console.log(this.dialogData.selection);
-    return this.dialogData.selection;
+  getConfiguredParams(): any[] {
+    const idNames = this.dialogData.action.metadataAction.params;
+    const rowsOfIdValues = this.dialogData.selection;
+    // TODO ref with Array.prototype.reduce (m.bobryshev)
+    const acc = [];
+    idNames.forEach((idName, idNum) => {
+      rowsOfIdValues[idNum].forEach( ( current, ind ) => {
+        if (!acc[ind]) {
+          acc[ind] = {};
+        }
+        acc[ind][idName] = current;
+        return acc;
+      });
+    });
+    return acc;
   }
 
   getDialogParam(key: number): number | string {
