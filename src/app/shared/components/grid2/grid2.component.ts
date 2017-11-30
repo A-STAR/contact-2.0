@@ -509,19 +509,41 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return {};
   }
 
+  private getCellEditor(column: IAGridColumn): string {
+    switch (column.dataType) {
+      case 2:
+      case 7:
+        return 'date';
+      case 4:
+        // TODO(d.maltsev): boolean
+        return null;
+      case 6:
+        return 'select';
+      default:
+        return 'text';
+    }
+  }
+
+  private getCellEditorParams(column: IAGridColumn): object {
+    switch (column.dataType) {
+      case 6:
+        // TODO(d.maltsev): real dictionary
+        return { values: [ 'Foo', 'Bar', 'Baz' ] };
+      default:
+        return null;
+    }
+  }
+
   private setColumnDefs(savedColDefs: ColDef[]): ColDef[] {
     const mapColumns = (column: IAGridColumn, originalIndex: number) => {
       // need indices to sort the columns
       let index;
       const colDef: ColDef = {
         valueGetter: column.valueGetter,
-
-        cellEditor: 'select',
-        cellEditorParams: {
-          values: [ 'Foo', 'Bar', 'Baz' ]
-        },
-
+        cellEditor: column.editable ? this.getCellEditor(column) : null,
+        cellEditorParams: column.editable ? this.getCellEditorParams(column) : null,
         colId: column.colId,
+        editable: column.editable,
         field: column.colId,
         filter: this.getCustomFilter(column),
         filterParams: this.getCustomFilterParams(column),

@@ -76,16 +76,18 @@ export class DataUploadComponent {
       .map((column, i) => ({
         colId: i.toString(),
         dataType: column.typeCode,
+        editable: true,
         label: column.name,
-        valueGetter: params => params.data[params.column.colId].value,
+        valueGetter: params => params.data.cells[params.column.colId].value,
       }));
   }
 
   private getRowsFromResponse(response: IOpenFileResponse): any[] {
     return response.rows
       .sort((a, b) => a.id - b.id)
-      .map(row => row.cells.reduce((acc, cell, i) => {
-        return { ...acc, [i]: cell };
-      }, {}));
+      .map(row => ({
+        ...row,
+        cells: row.cells.reduce((acc, cell, i) => ({ ...acc, [i]: cell }), {}),
+      }));
   }
 }

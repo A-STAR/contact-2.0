@@ -14,6 +14,7 @@ export interface IAGridColumn {
   dataType: number;
   dictCode?: number;
   disabled?: boolean;
+  editable?: boolean;
   filter?: string;
   filterValues?: Array<any>;
   hidden?: boolean;
