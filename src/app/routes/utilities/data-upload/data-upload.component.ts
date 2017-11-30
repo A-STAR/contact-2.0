@@ -36,15 +36,15 @@ export class DataUploadComponent {
     //
   }
 
-  onSelect(): void {
+  onSelect(event: any): void {
     //
   }
 
-  onDblClick(): void {
+  onDblClick(event: any): void {
     //
   }
 
-  onAction(): void {
+  onAction(event: any): void {
     //
   }
 }
