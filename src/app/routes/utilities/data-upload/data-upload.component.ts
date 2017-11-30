@@ -3,7 +3,7 @@ import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 
 import { IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse, ICell } from './data-upload.interface';
+import { IOpenFileResponse, ICell, ICellPayload } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
 
@@ -54,7 +54,13 @@ export class DataUploadComponent {
   }
 
   onCellValueChange(event: CellValueChangedEvent): void {
-    // console.log(event);
+    const cell = this.getCell(event as any);
+    const payload: ICellPayload = {
+      rowId: event.data.id,
+      cellId: cell.id,
+      value: cell.value,
+    };
+    console.log(payload);
   }
 
   onFileOpenClick(): void {
