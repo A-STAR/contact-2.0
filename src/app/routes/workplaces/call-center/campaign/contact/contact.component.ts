@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
-  selector: 'app-contact-log-tab',
-  templateUrl: './contact-log-tab.component.html'
+  selector: 'app-call-center-contact',
+  templateUrl: 'contact.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DebtorContactLogTabComponent {
-  static COMPONENT_NAME = 'DebtorContactLogTabComponent';
+export class ContactComponent {
+  static COMPONENT_NAME = 'ContactLogComponent';
 
   private routeParams = (this.route.params as BehaviorSubject<any>).value;
 
@@ -16,7 +17,7 @@ export class DebtorContactLogTabComponent {
   ) {}
 
   get contactId(): number {
-    return this.routeParams.contactLogId;
+    return this.routeParams.contactId;
   }
 
   get debtId(): number {
@@ -24,6 +25,6 @@ export class DebtorContactLogTabComponent {
   }
 
   get contactLogType(): number {
-    return this.routeParams.contactLogType;
+    return this.routeParams.contactType;
   }
 }

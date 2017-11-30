@@ -1,4 +1,4 @@
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2 *ngIf="!hideToolbar" class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
   [columns]="columns"
