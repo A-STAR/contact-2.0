@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { filter } from 'rxjs/operators/filter';
+import { map } from 'rxjs/operators/map';
 
 import { IBusMessage } from './message-bus.interface';
 
@@ -26,7 +28,9 @@ export class MessageBusService {
    */
   select<T, P>(type: T, key: string = null): Observable<P> {
     return this.bus$
-      .filter(message => type === message.type && (key === null || key === message.key))
-      .map(message => message.payload);
+      .pipe(
+        filter(message => type === message.type && (key === null || key === message.key)),
+        map(message => message.payload)
+      );
   }
 }
