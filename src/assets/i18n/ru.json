@@ -259,6 +259,34 @@
         }
       }
     },
+    "workTask": {
+      "filters": {
+        "form": {
+          "branchCode": "Филиал",
+          "dictValue1": "Словарный атрибут 1",
+          "dictValue2": "Словарный атрибут 2",
+          "dictValue3": "Словарный атрибут 3",
+          "dictValue4": "Словарный атрибут 4",
+          "portfolioId": "Реестр КА",
+          "regionCode": "Регион"
+        }
+      },
+      "newDebt": {
+        "title": "Новые долги"
+      },
+      "problemDebt": {
+        "title": "Проблемные"
+      },
+      "searchInformation": {
+        "title": "Поиск информации"
+      },
+      "debtToContractor": {
+        "title": "К передаче клиенту"
+      },
+      "prepareVisits": {
+        "title": "Подготовка выездов"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {

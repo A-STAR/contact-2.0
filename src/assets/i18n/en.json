@@ -259,6 +259,34 @@
         }
       }
     },
+    "workTask": {
+      "filters": {
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "portfolioId": "Portfolio",
+          "regionCode": "Region"
+        }
+      },
+      "newDebt": {
+        "title": "New Debts"
+      },
+      "problemDebt": {
+        "title": "Problem Debts"
+      },
+      "searchInformation": {
+        "title": "Search Information"
+      },
+      "debtToContractor": {
+        "title": "Debt to contractor"
+      },
+      "prepareVisits": {
+        "title": "Prepare Visits"
+      }
+    },
     "contactRegistration": {
       "dialogs": {
         "contactType": {

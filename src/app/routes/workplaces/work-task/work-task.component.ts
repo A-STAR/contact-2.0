@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 
 import { IEntityAttributes } from 'app/core/entity/attributes/entity-attributes.interface';
-import { IGridDef } from './work-task.interface';
+import { IFilterGridDef } from './work-task.interface';
 import { IFilterControl } from 'app/shared/components/filter-grid/filter-grid.interface';
 
 import { EntityAttributesService } from '../../../core/entity/attributes/entity-attributes.service';
@@ -18,24 +18,33 @@ import { makeKey, range } from '../../../core/utils';
 export class WorkTaskComponent implements OnInit {
   static COMPONENT_NAME = 'WorkTaskComponent';
 
-  grids: IGridDef[] = [
-    { key: 'contactLogPromise', translationKey: 'modules.contactLog', title: 'modules.contactLog.promise.title' }
+  grids: IFilterGridDef[] = [
+    {
+      key: 'contactLogPromise',
+      translationKey: 'modules.workTask',
+      title: 'modules.workTask.newDebt.title',
+      filterDef: [
+        'portfolioId', 'dictValue1', 'dictValue2', 'dictValue3',
+        'dictValue4', 'regionCode', 'branchCode', 'searchBtn'
+      ]
+    }
   ];
 
-  constructor(private entityAttributesService: EntityAttributesService) {
+  constructor(private cdRef: ChangeDetectorRef, private entityAttributesService: EntityAttributesService) {
   }
 
   ngOnInit(): void {
     this.entityAttributesService.getDictValueAttributes()
       .pipe(first())
-      .subscribe(attributes =>
-        this.grids.forEach(grid => grid.filterControls = this.createFilterControls(grid, attributes))
-      );
+      .subscribe(attributes => {
+        this.grids.forEach(grid => grid.filterControls = this.createFilterControls(grid, attributes));
+        this.cdRef.markForCheck();
+      });
   }
 
-  private createFilterControls(gridDef: IGridDef, attributes: IEntityAttributes): IFilterControl[] {
+  private createFilterControls(gridDef: IFilterGridDef, attributes: IEntityAttributes): IFilterControl[] {
     const labelKey = makeKey(`${gridDef.translationKey}.filters.form`);
-    return [
+    return (<IFilterControl[]>[
       {
         label: labelKey('portfolioId'),
         controlName: 'portfolioId',
@@ -73,6 +82,6 @@ export class WorkTaskComponent implements OnInit {
         iconCls: 'fa-search',
         width: 3
       }
-    ];
+    ]).filter(control => gridDef.filterDef.find(filterDef => filterDef === control.controlName));
   }
 }
