@@ -35,6 +35,7 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
+  @Input() hideToolbar = false;
   @Input() personId: number;
 
   @ViewChild('downloader') downloader: DownloaderComponent;
@@ -184,14 +185,12 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
 
   private onAdd(entityType: number): void {
     this.router.navigate([ `${this.router.url}/document/create` ], {
-      queryParams: { entityType, callCenter: Number(this.callCenter) }
+      queryParams: { entityType },
     });
   }
 
   private onEdit(documentId: number): void {
-    this.router.navigate([ `${this.router.url}/document/${documentId}` ], {
-      queryParams: { callCenter: Number(this.callCenter) }
-    });
+    this.router.navigate([ `${this.router.url}/document/${documentId}` ]);
   }
 
   private onSubmitSuccess(): void {

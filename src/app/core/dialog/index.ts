@@ -27,4 +27,8 @@ export abstract class DialogFunctions {
   onCloseDialog(): void {
     this.setDialog();
   }
+
+  onResult(result: any): void {
+
+  }
 }

@@ -144,6 +144,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return this.gridOptions.api ? this.gridOptions.api.getSelectedRows() : [];
   }
 
+  deselectAll(): void {
+    this.gridOptions.api.deselectAll();
+  }
+
   ngOnInit(): void {
     this.viewportDatasource = new ViewPortDatasource(this);
     if (!this.persistenceKey) {
@@ -169,7 +173,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       .subscribe(columns => {
         const { colDefs } = this.restoreGridSettings();
 
-        this.columns = columns.slice();
+        this.columns = [...columns];
         this.columnDefs = this.setColumnDefs(colDefs);
         this.setGridOptions();
         this.setPagination();
@@ -757,6 +761,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   // TODO(d.maltsev): this looks a bit messy.
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'deleteSMS':
+        return this.userPermissionsBag.notEmpty('SMS_DELETE_STATUS_LIST') && this.selected.length > 0;
       case 'debtClearResponsible':
         return this.userPermissionsBag.has('DEBT_RESPONSIBLE_CLEAR') && this.selected.length > 0;
       case 'debtSetResponsible':

@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core
 import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IContractor, IPortfolio } from '../../contractors-and-portfolios.interface';
@@ -62,26 +61,21 @@ export class PortfolioMoveComponent implements OnDestroy {
 
   private selectedContractor: IContractor;
 
-  private dictionariesSubscription: Subscription;
-
   constructor(
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
   ) {
 
-    this.dictionariesSubscription = this.gridService.setDictionaryRenderers(this.columns)
+    this.gridService.setAllRenderers(this.columns)
       .subscribe(columns => {
-        this.columns = this.gridService.setRenderers(columns);
+        this.columns = [...columns];
       });
 
-    Observable.combineLatest(
-        this.haveContractor$, this.havePortfolio$
-      )
+    Observable.combineLatest(this.haveContractor$, this.havePortfolio$)
       .filter(([contractor, portfolio]) => !!(contractor && portfolio))
       .pipe(first())
       .flatMap(([contractor, portfolio]) => {
-        console.log(portfolio);
         return this.contractorsAndPortfoliosService.readAllContractorsExeptCurrent(contractor.id);
       })
       .subscribe(contractors => {
@@ -91,7 +85,7 @@ export class PortfolioMoveComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.dictionariesSubscription.unsubscribe();
+    // this.dictionariesSubscription.unsubscribe();
   }
 
   get canSubmit(): boolean {

@@ -16,7 +16,7 @@ import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/of';
 
 import { IDebt } from '../../debt/debt/debt.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
 import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
@@ -103,6 +103,18 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: this.canView$,
       action: () => this.fetch()
+    },
+  ];
+
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      fieldActions: [
+        'copyField',
+        'copyRow'
+      ],
+      translationKey: 'default.grid.localeText',
+      prop: 'phone',
+      enabled: Observable.of(true)
     },
   ];
 
@@ -314,13 +326,17 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/phone/create` ]);
+    const url = this.callCenter
+      ? `${this.router.url}/phone/${this.personId$.value}/create`
+      : `${this.router.url}/phone/create`;
+    this.router.navigate([ url ]);
   }
 
   private onEdit(phoneId: number): void {
-    this.router.navigate([ `${this.router.url}/phone/${phoneId}` ], {
-      queryParams: this.callCenter ? { callCenter: 1 } : {}
-    });
+    const url = this.callCenter
+      ? `${this.router.url}/phone/${this.personId$.value}/${phoneId}`
+      : `${this.router.url}/phone/${phoneId}`;
+    this.router.navigate([ url ]);
   }
 
   private onSubmitSuccess(): void {

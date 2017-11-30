@@ -1021,7 +1021,7 @@
       "fullName": "Full name",
       "smsName": "Name fot SMS",
       "responsibleId": "Manager",
-      "responsibleName": "Manager",
+      "responsibleFullName": "Manager",
       "typeCode": "Type",
       "phone": "Phone",
       "address": "Address",
@@ -1982,6 +1982,10 @@
     "paymentsCancel": {
       "cancelInquery": "Are you sure to cancel selected {{ count }} payments?",
       "title": "Cancel payments"
+    },
+    "smsDelete": {
+      "delete": "Are you sure to delete {{ count }} sms?",
+      "title": "Delete SMS"
     }
   },
   "errors": {
@@ -2243,7 +2247,8 @@
         "paymentsConfirm": "Payments confirm",
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
-        "statusChange": "Change status"
+        "statusChange": "Change status",
+        "deleteSMS": "Delete SMS"
       }
     },
     "filter": {
