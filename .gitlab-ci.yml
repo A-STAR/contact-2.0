@@ -9,7 +9,7 @@ job_test:
     - cd $CI_PROJECT_DIR
     - echo $CI_PROJECT_DIR
     - node -v && npm -v
-    - npm install
+    - npm install && increase-memory-limit
     - npm run lint && npm run build -- --aot --progress=false
   except:
     - dev
@@ -19,7 +19,7 @@ job_build:
   script:
     - cd $CI_PROJECT_DIR
     - echo $CI_PROJECT_DIR
-    - node -v && npm -v && npm install
+    - node -v && npm -v && npm install && increase-memory-limit
     - npm run build -- --aot --progress=false
   artifacts:
     name: "frontend_default_build"
