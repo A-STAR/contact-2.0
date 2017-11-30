@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { ICellRendererParams } from 'ag-grid/dist/lib/rendering/cellRenderers/iCellRenderer';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
+import { ValueSetterParams } from 'ag-grid/dist/lib/entities/colDef';
 
 import { FilterObject } from './filter/grid-filter';
 
@@ -29,6 +30,7 @@ export interface IAGridColumn {
   // compatibility between @swimlane/ngx-datatable and ag-grid
   $$valueGetter?: Function;
   valueGetter?: (params: ValueGetterParams) => any | string;
+  valueSetter?: (params: ValueSetterParams) => any | string;
   sort?: string;
   type?: string;
   width?: number;

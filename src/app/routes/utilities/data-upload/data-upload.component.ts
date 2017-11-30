@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 
 import { IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
-import { ICellRendererParams } from 'ag-grid/dist/lib/rendering/cellRenderers/iCellRenderer';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import { IOpenFileResponse, ICell } from './data-upload.interface';
 
@@ -53,6 +53,10 @@ export class DataUploadComponent {
     //
   }
 
+  onCellValueChange(event: CellValueChangedEvent): void {
+    // console.log(event);
+  }
+
   onFileOpenClick(): void {
     this.fileInput.nativeElement.click();
   }
@@ -82,6 +86,7 @@ export class DataUploadComponent {
         editable: true,
         label: column.name,
         valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
+        valueSetter: (params: any) => this.setCellValue(params),
       }));
   }
 
@@ -97,13 +102,17 @@ export class DataUploadComponent {
   private getCellRenderer(params: ICellRendererParams): string {
     return `
       <div title="${this.getCell(params).errorMsg || ''}">
-        ${this.getCell(params).value}
+        ${params.getValue()}
       </div>
     `;
   }
 
   private getCellValue(params: ICellRendererParams): string {
     return this.getCell(params).value;
+  }
+
+  private setCellValue(params: any): void {
+    this.getCell(params).value = params.newValue;
   }
 
   private getCellStyle(params: ICellRendererParams): Partial<CSSStyleDeclaration> {

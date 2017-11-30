@@ -8,6 +8,7 @@
     [rowSelection]="rowSelection"
     (dragStarted)="dragStarted()"
     (dragStopped)="dragStopped()"
+    (cellValueChanged)="onCellValueChanged($event)"
     (rowDoubleClicked)="rowDoubleClicked($event)"
   ></ag-grid-angular>
 </div>

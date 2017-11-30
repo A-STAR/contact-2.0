@@ -16,7 +16,7 @@ import { Subject } from 'rxjs/Subject';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
+  CellValueChangedEvent, ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
   GridOptions, ICellRendererParams, MenuItemDef, PostProcessPopupParams, RowNode
 } from 'ag-grid/main';
 
@@ -100,6 +100,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IAGridAction>();
+  @Output() cellValueChange = new EventEmitter<CellValueChangedEvent>();
 
   columnDefs: ColDef[];
   gridOptions: GridOptions = {};
@@ -231,6 +232,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     const selected = this.selected.map(row => row[this.rowIdKey]);
     this.refreshRowCount();
     this.onSelect.emit(selected);
+  }
+
+  onCellValueChanged(event: CellValueChangedEvent): void {
+    this.cellValueChange.emit(event);
   }
 
   rowDoubleClicked(row: RowNode): void {
@@ -540,6 +545,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       let index;
       const colDef: ColDef = {
         valueGetter: column.valueGetter,
+        valueSetter: column.valueSetter,
         cellEditor: column.editable ? this.getCellEditor(column) : null,
         cellEditorParams: column.editable ? this.getCellEditorParams(column) : null,
         cellRenderer: column.cellRenderer,
