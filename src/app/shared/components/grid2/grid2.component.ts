@@ -514,6 +514,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       // need indices to sort the columns
       let index;
       const colDef: ColDef = {
+        valueGetter: column.valueGetter,
+
+        cellEditor: 'select',
+        cellEditorParams: {
+          values: [ 'Foo', 'Bar', 'Baz' ]
+        },
+
         colId: column.colId,
         field: column.colId,
         filter: this.getCustomFilter(column),

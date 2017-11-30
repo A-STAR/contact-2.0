@@ -77,6 +77,7 @@ export class DataUploadComponent {
         colId: i.toString(),
         dataType: column.typeCode,
         label: column.name,
+        valueGetter: params => params.data[params.column.colId].value,
       }));
   }
 
@@ -84,10 +85,7 @@ export class DataUploadComponent {
     return response.rows
       .sort((a, b) => a.id - b.id)
       .map(row => row.cells.reduce((acc, cell, i) => {
-        return {
-          ...acc,
-          [i]: cell.value,
-        };
+        return { ...acc, [i]: cell };
       }, {}));
   }
 }
