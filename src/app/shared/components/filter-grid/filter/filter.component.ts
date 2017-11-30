@@ -14,15 +14,17 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { FilterObject, FilterOperatorType } from '../../../../shared/components/grid2/filter/grid-filter';
 import { IAppState } from '../../../../core/state/state.interface';
+import { IDynamicFormControl } from '../../form/dynamic-form/dynamic-form.interface';
 import { IFilterControl } from '../filter-grid.interface';
 import { IEntityAttributes } from '../../../../core/entity/attributes/entity-attributes.interface';
-import { TYPE_CODES } from '../../../../core/utils/value';
 import { IMetadataColumn } from '../../../../core/metadata/metadata.interface';
 
 import { EntityAttributesService } from '../../../../core/entity/attributes/entity-attributes.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
+import { TYPE_CODES } from '../../../../core/utils/value';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,6 +38,8 @@ export class GridFilterComponent implements OnInit {
   @Output() filter = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  formControls: IDynamicFormControl[];
 
   private metadata: IMetadataColumn[];
 
@@ -55,7 +59,7 @@ export class GridFilterComponent implements OnInit {
     )
     .pipe(first())
     .subscribe(([attributes, metadata]) => {
-      this.controls = this.buildControls(attributes);
+      this.formControls = this.buildControls(attributes);
       this.metadata = metadata.columns;
       this.cdRef.markForCheck();
     });
@@ -81,7 +85,7 @@ export class GridFilterComponent implements OnInit {
     this.filter.emit();
   }
 
-  private buildControls(attributes: IEntityAttributes): IFilterControl[] {
+  private buildControls(attributes: IEntityAttributes): IDynamicFormControl[] {
     return [
       ...this.controls.map(
         control => control.type === 'searchBtn'
