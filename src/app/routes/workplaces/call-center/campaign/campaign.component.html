@@ -1,4 +1,4 @@
-<div *ngIf="hasDebt$ | async" class="row">
+<div *ngIf="hasDebt$ | async; else noActiveDebts" class="row">
   <div class="col-lg-4">
     <app-call-center-overview></app-call-center-overview>
   </div>
@@ -35,3 +35,9 @@
     </div>
   </div>
 </div>
+
+<ng-template #noActiveDebts>
+  <div class="message-container">
+    {{ 'modules.callCenter.messages.noActiveDebts' | translate }}
+  </div>
+</ng-template>

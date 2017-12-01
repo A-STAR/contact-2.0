@@ -7,7 +7,7 @@ import { first } from 'rxjs/operators';
 import { IAppState } from '../../../core/state/state.interface';
 import {
   IContractor, IContractorsAndPortfoliosState,
-  IContractorManager, IPortfolio, IPortfolioMoveRequest,
+  IContractorManager, IPortfolio, IPortfolioMoveRequest, IPortfolioOutsourceRequest,
 } from './contractors-and-portfolios.interface';
 
 import { DataService } from '../../../core/data/data.service';
@@ -52,9 +52,9 @@ export class ContractorsAndPortfoliosService {
       .distinctUntilChanged();
   }
 
-  get selectedPortfolioId$(): Observable<number> {
+  get selectedPortfolio$(): Observable<IPortfolio> {
     return this.state
-      .map(state => state.selectedPortfolioId)
+      .map(state => state.selectedPortfolio)
       .distinctUntilChanged();
   }
 
@@ -177,10 +177,46 @@ export class ContractorsAndPortfoliosService {
       .catch(this.notificationsService.deleteError().entity('entities.portfolios.entity.singular').callback());
   }
 
-  selectPortfolio(portfolioId: number): void {
+  formOutsourcePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio): Observable<any> {
+    return Observable.of({ success: true });
+    // todo: uncomment, when implemented on be
+    // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/form', {
+    //   contractorId, portfolioId
+    // }, portfolio)
+    // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+  }
+
+  sendOutsourcePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
+    return Observable.of({ success: true });
+    // todo: uncomment, when implemented on be
+    // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
+    //   contractorId, portfolioId
+    // }, { ...portfolio, debtStatusCode: 14 })
+    // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+  }
+
+  returnOutsourcePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
+    return Observable.of({ success: true });
+    // todo: uncomment, when implemented on be
+    // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/return', {
+    //   contractorId, portfolioId
+    // }, portfolio)
+    // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+  }
+
+  selectPortfolio(portfolio: IPortfolio): void {
     this.dispatch(
       ContractorsAndPortfoliosService.PORTFOLIO_SELECT,
-      { selectedPortfolioId: portfolioId }
+      { selectedPortfolio: portfolio }
     );
   }
 

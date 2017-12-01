@@ -18,11 +18,11 @@ import { makeKey, range } from '../../../core/utils';
 export class WorkTaskComponent implements OnInit {
   static COMPONENT_NAME = 'WorkTaskComponent';
 
-  selectedTabIndex: number;
+  selectedTabIndex = 0;
 
   grids: IFilterGridDef[] = [
     {
-      key: 'contactLogPromise',
+      key: 'workTask.NewDebt',
       translationKey: 'modules.workTask',
       title: 'modules.workTask.newDebt.title',
       filterDef: [
@@ -31,7 +31,7 @@ export class WorkTaskComponent implements OnInit {
       ]
     },
     {
-      key: 'contactLogPromise',
+      key: 'workTask.ProblemDebt',
       translationKey: 'modules.workTask',
       title: 'modules.workTask.problemDebt.title',
       filterDef: [
@@ -40,7 +40,7 @@ export class WorkTaskComponent implements OnInit {
       ]
     },
     {
-      key: 'contactLogPromise',
+      key: 'workTask.SearchInformation',
       translationKey: 'modules.workTask',
       title: 'modules.workTask.searchInformation.title',
       filterDef: [
@@ -49,7 +49,7 @@ export class WorkTaskComponent implements OnInit {
       ]
     },
     {
-      key: 'contactLogPromise',
+      key: 'workTask.DebtToContractor',
       translationKey: 'modules.workTask',
       title: 'modules.workTask.debtToContractor.title',
       filterDef: [
@@ -58,7 +58,7 @@ export class WorkTaskComponent implements OnInit {
       ]
     },
     {
-      key: 'contactLogPromise',
+      key: 'workTask.PrepareVisits',
       translationKey: 'modules.workTask',
       title: 'modules.workTask.prepareVisits.title',
       filterDef: [

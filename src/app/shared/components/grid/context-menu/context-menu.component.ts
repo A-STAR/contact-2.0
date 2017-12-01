@@ -4,19 +4,18 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Output,
-  // ViewEncapsulation
+  Output
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IContextMenuItem, IGridColumn } from '../grid.interface';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-context-menu',
   templateUrl: './context-menu.component.html',
   styleUrls: ['./context-menu.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  // encapsulation: ViewEncapsulation.None
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContextMenuComponent implements OnInit {
   @Input() tableRow: any;
@@ -80,6 +79,10 @@ export class ContextMenuComponent implements OnInit {
           .join('\t');
 
     copyAsPlaintext(formattedData);
+  }
+
+  isDisabled(item: IContextMenuItem): Observable<boolean> {
+    return item.enabled ? item.enabled.map(enabled => !enabled) : Observable.of(false);
   }
 
   onAction(item: IContextMenuItem): void {

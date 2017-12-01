@@ -89,6 +89,10 @@ export class PortfolioEditComponent {
 
   onSubmit(): void {
     const portfolio = this.form.serializedUpdates;
+    // see requirements
+    if (portfolio.directionCode === 2) {
+      portfolio.statusCode = null;
+    }
     const action = (this.contractorId && this.portfolioId
       ? this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio)
       : this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, portfolio));

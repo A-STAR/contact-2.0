@@ -19,7 +19,7 @@ export class SmsDeleteDialogComponent extends DialogFunctions implements OnInit 
   };
 
   constructor(
-  private smsDeleteService: SmsDeleteService,
+    private smsDeleteService: SmsDeleteService,
   ) {
     super();
   }
@@ -33,9 +33,8 @@ export class SmsDeleteDialogComponent extends DialogFunctions implements OnInit 
     this.smsDeleteService.smsDelete(this.smsId)
       .subscribe(res => {
         const refresh = !!res.massInfo && !!res.massInfo.total;
-        // NOTE: do nto refresh if the total is 0
+        // NOTE: do not refresh if the total is 0
         this.close.emit(refresh);
-        this.setDialog();
       });
   }
 

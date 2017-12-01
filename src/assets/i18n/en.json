@@ -135,6 +135,9 @@
         "name": "Name",
         "comment": "Description"
       },
+      "messages": {
+        "noActiveDebts": "No active debts in campaign"
+      },
       "overview": {
         "info": {
           "title": "Overview",
@@ -1052,6 +1055,19 @@
     },
     "move": {
       "title": "move portfolio {{ name }}"
+    },
+    "outsourcing": {
+      "form": {
+        "menu": "Form outsourcing portfolio"
+      },
+      "send": {
+        "menu": "Send portfolio for outsourcing",
+        "title": "Send portfolio"
+      },
+      "return": {
+        "menu": "Return outsourcing portfolio",
+        "title": "Return portfolio"
+      }
     }
   },
   "utilities": {
@@ -2306,7 +2322,8 @@
     "dialog": {
       "result": {
         "title": "Operation result",
-        "message": "Operation was successful for {{successCount}} of {{count}} records"
+        "message": "Operation was successful for {{successCount}} of {{count}} records",
+        "messageUnsuccessful": "Unseccessful operation for {{total}} records"
       }
     },
     "NA": "N/A"

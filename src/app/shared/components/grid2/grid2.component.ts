@@ -16,7 +16,7 @@ import { Subject } from 'rxjs/Subject';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
+  CellValueChangedEvent, ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
   GridOptions, ICellRendererParams, MenuItemDef, PostProcessPopupParams, RowNode
 } from 'ag-grid/main';
 
@@ -100,6 +100,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IAGridAction>();
+  @Output() cellValueChange = new EventEmitter<CellValueChangedEvent>();
 
   columnDefs: ColDef[];
   gridOptions: GridOptions = {};
@@ -235,6 +236,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     const selected = this.selected.map(row => row[this.rowIdKey]);
     this.refreshRowCount();
     this.onSelect.emit(selected);
+  }
+
+  onCellValueChanged(event: CellValueChangedEvent): void {
+    this.cellValueChange.emit(event);
   }
 
   rowDoubleClicked(row: RowNode): void {
@@ -513,12 +518,44 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return {};
   }
 
+  private getCellEditor(column: IAGridColumn): string {
+    switch (column.dataType) {
+      case 2:
+      case 7:
+        return 'date';
+      case 4:
+        // TODO(d.maltsev): boolean
+        return null;
+      case 6:
+        return 'select';
+      default:
+        return 'text';
+    }
+  }
+
+  private getCellEditorParams(column: IAGridColumn): object {
+    switch (column.dataType) {
+      case 6:
+        // TODO(d.maltsev): real dictionary
+        return { values: [ 'Foo', 'Bar', 'Baz' ] };
+      default:
+        return null;
+    }
+  }
+
   private setColumnDefs(savedColDefs: ColDef[]): ColDef[] {
     const mapColumns = (column: IAGridColumn, originalIndex: number) => {
       // need indices to sort the columns
       let index;
       const colDef: ColDef = {
+        valueGetter: column.valueGetter,
+        valueSetter: column.valueSetter,
+        cellEditor: column.editable ? this.getCellEditor(column) : null,
+        cellEditorParams: column.editable ? this.getCellEditorParams(column) : null,
+        cellRenderer: column.cellRenderer,
+        cellStyle: column.cellStyle,
         colId: column.colId,
+        editable: column.editable,
         field: column.colId,
         filter: this.getCustomFilter(column),
         filterParams: this.getCustomFilterParams(column),
@@ -549,6 +586,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           break;
       }
       if (column.$$valueGetter) {
+        // TODO(d.maltsev): what if cellRenderer is also passed as column prop?
         colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
         colDef.valueGetter = colDef.cellRenderer;
       }
@@ -739,11 +777,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         // TODO(d.maltsev, i.kibisov): pass entityTypeId
         return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
       case 'showContactHistory':
-        return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+        return this.userPermissionsBag.has('CONTACT_LOG_VIEW') && this.selected.length > 0;
       case 'paymentsConfirm':
-        return this.userPermissionsBag.has('PAYMENT_CONFIRM');
+        return this.userPermissionsBag.has('PAYMENT_CONFIRM') && this.selected.length > 0;
       case 'paymentsCancel':
-        return this.userPermissionsBag.has('PAYMENT_CANCEL');
+        return this.userPermissionsBag.has('PAYMENT_CANCEL') && this.selected.length > 0;
       case 'confirmPromise':
         return this.userPermissionsBag.has('PROMISE_CONFIRM') && this.selected.length > 0;
       case 'deletePromise':
