@@ -2299,7 +2299,8 @@
     "dialog": {
       "result": {
         "title": "Operation result",
-        "message": "Operation was successful for {{successCount}} of {{count}} records"
+        "message": "Operation was successful for {{successCount}} of {{count}} records",
+        "messageUnsuccessful": "Unseccessful operation for {{total}} records"
       }
     },
     "NA": "N/A"
