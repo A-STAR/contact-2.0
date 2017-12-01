@@ -181,30 +181,36 @@ export class ContractorsAndPortfoliosService {
     contractorId: number,
     portfolioId: number,
     portfolio: IPortfolio): Observable<any> {
-    return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/form', {
-      contractorId, portfolioId
-    }, portfolio)
-    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+    return Observable.of({ success: true });
+    // todo: uncomment, when implemented on be
+    // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/form', {
+    //   contractorId, portfolioId
+    // }, portfolio)
+    // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
   sendOutsourcePortfolio(
     contractorId: number,
     portfolioId: number,
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
-    return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
-      contractorId, portfolioId
-    }, { ...portfolio, debtStatusCode: 14 })
-    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+    return Observable.of({ success: true });
+    // todo: uncomment, when implemented on be
+    // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
+    //   contractorId, portfolioId
+    // }, { ...portfolio, debtStatusCode: 14 })
+    // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
   returnOutsourcePortfolio(
     contractorId: number,
     portfolioId: number,
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
-    return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/return', {
-      contractorId, portfolioId
-    }, portfolio)
-    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+    return Observable.of({ success: true });
+    // todo: uncomment, when implemented on be
+    // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/return', {
+    //   contractorId, portfolioId
+    // }, portfolio)
+    // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
   selectPortfolio(portfolio: IPortfolio): void {
