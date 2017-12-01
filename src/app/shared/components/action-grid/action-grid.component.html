@@ -1,13 +1,22 @@
+<app-sms-delete-dialog
+  *ngIf="isDialog('deleteSMS')"
+  [smsId]="getSelectionParam(0)"
+  (close)="onCloseRefresh($event)"
+>
+</app-sms-delete-dialog>
+
 <app-payments-cancel-dialog
   *ngIf="isDialog('paymentsCancel')"
   [paymentsIds]="getSelectionParam(0)"
-  (close)="onCloseDialog()">
+  (close)="onCloseRefresh($event)"
+>
 </app-payments-cancel-dialog>
 
 <app-payments-confirm-dialog
   *ngIf="isDialog('paymentsConfirm')"
   [paymentsIds]="getSelectionParam(0)"
-  (close)="onCloseDialog()">
+  (close)="onCloseRefresh($event)"
+>
 </app-payments-confirm-dialog>
 
 <app-contact-log-dialog
@@ -58,7 +67,7 @@
   (close)="onCloseDialog()"
 ></app-payment-operator-reject-dialog>
 
-<app-grid2
+<app-metadata-grid
   #grid
   *ngIf="isUsingAGGrid; else simpleGrid"
   [columnIds]="columnIds"
@@ -75,13 +84,14 @@
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
   (onSelect)="onSelect($event)"
-></app-grid2>
+></app-metadata-grid>
 
 <ng-template #simpleGrid>
   <app-grid
     #grid
     [columns]="columns"
     [columnTranslationKey]="columnTranslationKey"
+    [contextMenuOptions]="contextMenuOptions"
     [rows]="rows"
     [styles]="styles"
     (onDblClick)="onDblClick($event)"

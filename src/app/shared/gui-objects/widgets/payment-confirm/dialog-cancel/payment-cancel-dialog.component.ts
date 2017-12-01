@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef,
-         Component, EventEmitter, Input, Output, OnChanges, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
@@ -10,9 +9,9 @@ import { PaymentConfirmService } from '../payment-confirm.service';
   templateUrl: 'payment-cancel-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PaymentCancelDialogComponent extends DialogFunctions implements OnChanges, OnInit {
+export class PaymentCancelDialogComponent extends DialogFunctions implements OnInit {
   @Input() paymentsIds: number[];
-  @Output() close = new EventEmitter<void>();
+  @Output() close = new EventEmitter<boolean>();
   @Output() action = new EventEmitter<number[]>();
 
   dialog = null;
@@ -21,34 +20,23 @@ export class PaymentCancelDialogComponent extends DialogFunctions implements OnC
     count: null
   };
 
-  totalCount: number;
-  successCount: number;
-
   constructor(
-    private cdRef: ChangeDetectorRef,
     private paymentConfirmService: PaymentConfirmService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.setDialog('enqueryCancel');
-  }
-
-  ngOnChanges(): void {
     this.paymentsCounter.count = this.paymentsIds &&  this.paymentsIds.length ;
-    this.cdRef.markForCheck();
   }
 
   onCancelPayments(): void {
     this.setDialog();
-    this.cdRef.markForCheck();
     this.paymentConfirmService.paymentsCancel(this.paymentsIds)
-    .subscribe((res) => {
-          this.totalCount = res.massInfo.total;
-          this.successCount = res.massInfo.processed;
-          this.setDialog('infoCancel');
-          this.cdRef.markForCheck();
+      .subscribe(res => {
+        const refresh = !!res.massInfo && !!res.massInfo.total;
+        // NOTE: do not refresh if the total is 0
+        this.close.emit(refresh);
       });
   }
 

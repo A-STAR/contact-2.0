@@ -72,6 +72,7 @@
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_LOG": "Contact Log",
+        "WORK_TASK": "Work Tasks",
         "CALL_CENTER": "Call Center",
         "PAYMENTS": "Payments",
         "COURTS_2": "Courts",
@@ -134,6 +135,9 @@
       "grid": {
         "name": "Name",
         "comment": "Description"
+      },
+      "messages": {
+        "noActiveDebts": "No active debts in campaign"
       },
       "overview": {
         "info": {
@@ -258,6 +262,38 @@
             "position": "Position"
           }
         }
+      }
+    },
+    "workTask": {
+      "filters": {
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "portfolioId": "Portfolio",
+          "regionCode": "Region",
+          "userId": "Operator",
+          "addressTypeCode": "Тип адреса",
+          "visitStatusCode": "Статус выезда",
+          "visitPurposeCode": "Цель выезда"
+        }
+      },
+      "newDebt": {
+        "title": "New Debts"
+      },
+      "problemDebt": {
+        "title": "Problem Debts"
+      },
+      "searchInformation": {
+        "title": "Search Information"
+      },
+      "debtToContractor": {
+        "title": "Debt to contractor"
+      },
+      "prepareVisits": {
+        "title": "Prepare Visits"
       }
     },
     "contactRegistration": {
@@ -1814,6 +1850,9 @@
     "actionsLog": {
       "gen": { "singular": "actions log entry", "plural": "action log" }
     },
+    "filterGrid": {
+      "gen": { "singular": "record", "plural": "records" }
+    },
     "constants": {
       "gen": { "singular": "constant", "plural": "constants" }
     },
@@ -1947,6 +1986,10 @@
     "paymentsCancel": {
       "cancelInquery": "Are you sure to cancel selected {{ count }} payments?",
       "title": "Cancel payments"
+    },
+    "smsDelete": {
+      "delete": "Are you sure to delete {{ count }} sms?",
+      "title": "Delete SMS"
     }
   },
   "errors": {
@@ -2208,7 +2251,8 @@
         "paymentsConfirm": "Payments confirm",
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
-        "statusChange": "Change status"
+        "statusChange": "Change status",
+        "deleteSMS": "Delete SMS"
       }
     },
     "filter": {
@@ -2256,7 +2300,8 @@
     "dialog": {
       "result": {
         "title": "Operation result",
-        "message": "Operation was successful for {{successCount}} of {{count}} records"
+        "message": "Operation was successful for {{successCount}} of {{count}} records",
+        "messageUnsuccessful": "Unseccessful operation for {{total}} records"
       }
     },
     "NA": "N/A"

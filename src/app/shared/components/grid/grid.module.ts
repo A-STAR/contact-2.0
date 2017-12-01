@@ -6,6 +6,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ToolbarModule } from '../toolbar/toolbar.module';
 import { GridComponent } from './grid.component';
 import { GridService } from './grid.service';
+import { ContextMenuComponent } from './context-menu/context-menu.component';
 
 @NgModule({
   imports: [
@@ -15,10 +16,11 @@ import { GridService } from './grid.service';
     ToolbarModule,
   ],
   exports: [
-    GridComponent,
+    GridComponent
   ],
   declarations: [
-    GridComponent,
+    ContextMenuComponent,
+    GridComponent
   ],
   providers: [
     GridService,

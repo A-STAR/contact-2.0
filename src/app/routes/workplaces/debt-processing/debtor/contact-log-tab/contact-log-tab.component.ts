@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
-
-import { INode } from 'app/shared/gui-objects/container/container.interface';
-
-import {
-  ContactLogTabCardComponent
-} from 'app/shared/gui-objects/widgets/contact-log-tab/card/contact-log-card.component';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-contact-log-tab',
@@ -13,9 +9,21 @@ import {
 export class DebtorContactLogTabComponent {
   static COMPONENT_NAME = 'DebtorContactLogTabComponent';
 
-  get node(): INode {
-    return {
-      component: ContactLogTabCardComponent
-    };
+  private routeParams = (this.route.params as BehaviorSubject<any>).value;
+
+  constructor(
+    private route: ActivatedRoute,
+  ) {}
+
+  get contactId(): number {
+    return this.routeParams.contactLogId;
+  }
+
+  get debtId(): number {
+    return this.routeParams.debtId;
+  }
+
+  get contactLogType(): number {
+    return this.routeParams.contactLogType;
   }
 }

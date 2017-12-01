@@ -20,7 +20,8 @@
 
 <app-phone-grid-schedule
   *ngIf="isDialog('schedule')"
-  [personId]="personId"
+  [debtId]="debtId$ | async"
+  [personId]="personId$ | async"
   [personRole]="personRole"
   [phoneId]="selectedPhoneId$ | async"
   (submit)="onScheduleDialogSubmit($event)"
@@ -43,8 +44,7 @@
 <app-grid
   *ngIf="canDisplayGrid"
   columnTranslationKey="debtor.information.phone"
-  contextFieldName="phone"
-  [contextMenuEnabled]="true"
+  [contextMenuOptions]="contextMenuOptions"
   selectionType="single"
   [styles]="styles"
   [columns]="columns"

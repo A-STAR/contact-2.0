@@ -44,22 +44,27 @@ export const routes: Route[] = [
           { path: 'call-center', loadChildren: './workplaces/call-center/call-center.module#CallCenterModule' },
           { path: 'contact-log', loadChildren: './workplaces/contact-log/contact-log.module#ContactLogModule' },
           { path: 'payments', loadChildren: './workplaces/payments/payments.module#PaymentsModule' },
+          { path: 'tasks', loadChildren: './workplaces/work-task/work-task.module#WorkTaskModule' },
         ]
       },
       {
         path: 'utilities',
         children: [
           {
+            path: 'campaigns',
+            loadChildren: './utilities/campaigns/campaigns.module#CampaignsModule',
+          },
+          {
             path: 'contact-properties',
             loadChildren: './utilities/contact-properties/contact-properties.module#ContactPropertiesModule',
           },
           {
-            path: 'message-templates',
-            loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',
+            path: 'data-upload',
+            loadChildren: './utilities/data-upload/data-upload.module#DataUploadModule',
           },
           {
-            path: 'campaigns',
-            loadChildren: './utilities/campaigns/campaigns.module#CampaignsModule',
+            path: 'message-templates',
+            loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',
           },
         ]
       },

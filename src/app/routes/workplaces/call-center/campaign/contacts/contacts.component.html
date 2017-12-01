@@ -1,1 +1,6 @@
-Contacts
+<app-contact-log-tab-grid
+  *ngIf="debtExists$ | async"
+  [hideToolbar]="true"
+  [debtId]="debtId$ | async"
+  [personId]="personId$ | async"
+></app-contact-log-tab-grid>

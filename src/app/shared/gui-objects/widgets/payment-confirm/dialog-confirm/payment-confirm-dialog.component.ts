@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef,
-         Component, EventEmitter, Input, Output, OnChanges, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
@@ -10,9 +9,9 @@ import { PaymentConfirmService } from '../payment-confirm.service';
   templateUrl: 'payment-confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PaymentConfirmDialogComponent extends DialogFunctions implements OnChanges, OnInit {
+export class PaymentConfirmDialogComponent extends DialogFunctions implements OnInit {
   @Input() paymentsIds: number[];
-  @Output() close = new EventEmitter<void>();
+  @Output() close = new EventEmitter<boolean>();
   @Output() action = new EventEmitter<number[]>();
 
   dialog = null;
@@ -21,35 +20,22 @@ export class PaymentConfirmDialogComponent extends DialogFunctions implements On
     count: null
   };
 
-  totalCount: number;
-  successCount: number;
-
-  constructor(
-    private cdRef: ChangeDetectorRef,
-    private paymentConfirmService: PaymentConfirmService,
-  ) {
+  constructor(private paymentConfirmService: PaymentConfirmService) {
     super();
   }
 
   ngOnInit(): void {
-    this.setDialog('enqueryConfirm');
-  }
-
-  ngOnChanges(): void {
-    this.paymentsCounter.count = this.paymentsIds &&  this.paymentsIds.length ;
-    this.cdRef.markForCheck();
+    this.paymentsCounter.count = this.paymentsIds && this.paymentsIds.length ;
   }
 
   onConfirmPayments(): void {
     this.setDialog();
-    this.cdRef.markForCheck();
     this.paymentConfirmService.paymentsConfirm(this.paymentsIds)
-      .subscribe((res) => {
-          this.totalCount = res.massInfo.total;
-          this.successCount = res.massInfo.processed;
-          this.setDialog('infoConfirm');
-          this.cdRef.markForCheck();
-        });
+      .subscribe(res => {
+        const refresh = !!res.massInfo && !!res.massInfo.total;
+        // NOTE: do not refresh if the total is 0
+        this.close.emit(refresh);
+      });
   }
 
   onCloseDialog(): void {

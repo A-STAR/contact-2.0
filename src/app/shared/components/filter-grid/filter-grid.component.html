@@ -1,0 +1,18 @@
+<div class="mv">
+  <app-grid-filter
+    *ngIf="controls"
+    [gridKey]="gridKey"
+    [controls]="controls"
+    (filter)="onRequest()"
+  ></app-grid-filter>
+</div>
+
+<app-action-grid
+  [metadataKey]="gridKey"
+  [persistenceKey]="gridKey"
+  rowIdKey="debtId"
+  [ngClass]="'filter-grid'"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (request)="onRequest()"
+></app-action-grid>

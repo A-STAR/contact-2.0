@@ -1,9 +1,12 @@
 <app-phone-grid
   *ngIf="debtExists$ | async"
+  action="edit"
   [contactType]="1"
   [debtId]="debtId$ | async"
   [callCenter]="true"
+  [ignoreViewPermissions]="true"
+  [ignoreSmsSingleFormPersonRoleListPermissions]="true"
+  [ignoreDebtRegContactTypeListPermissions]="true"
   [personId]="personId$ | async"
   [personRole]="1"
 ></app-phone-grid>
-

@@ -14,6 +14,10 @@ export class AddressGridComponent {
     return this.routeParams.debtId;
   }
 
+  get debtorId(): number {
+    return this.routeParams.personId;
+  }
+
   get personId(): number {
     return this.routeParams.contactId || this.routeParams.personId;
   }
