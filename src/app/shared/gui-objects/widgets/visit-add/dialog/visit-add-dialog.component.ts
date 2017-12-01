@@ -15,7 +15,6 @@ import { ISingleVisit, IVisitsBundle } from '../visit-add.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { DialogFunctions } from '../../../../../core/dialog';
 import { makeKey } from '../../../../../core/utils';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -29,14 +28,14 @@ const label = makeKey('massOperations.visitAdd');
   templateUrl: 'visit-add-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VisitAddDialogComponent extends DialogFunctions implements  OnInit {
+export class VisitAddDialogComponent  implements  OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Input() visitRelsIds: ISingleVisit[];
   @Output() close = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
   controls: Array<IDynamicFormItem>;
-  dialog = null;
+  // dialog = null;
   formData: IVisitsBundle;
 
   addressCounter = {
@@ -53,9 +52,7 @@ export class VisitAddDialogComponent extends DialogFunctions implements  OnInit 
     private visitAddService: VisitAddService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-  ) {
-    super();
-  }
+  ) { }
 
   canSubmit(): boolean {
     return this.form && this.form.canSubmit;
@@ -84,7 +81,6 @@ export class VisitAddDialogComponent extends DialogFunctions implements  OnInit 
   }
 
   onSubmit(): void {
-    this.setDialog();
     const actionData = this.form.serializedUpdates;
     this.visitAddService.createVisit(this.visitRelsIds, actionData)
       .subscribe(() => {
@@ -93,7 +89,7 @@ export class VisitAddDialogComponent extends DialogFunctions implements  OnInit 
   }
 
   onCancel(): void {
-    this.setDialog();
+    // this.setDialog();
     this.close.emit();
   }
 
