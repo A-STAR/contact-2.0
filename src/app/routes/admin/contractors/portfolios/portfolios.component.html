@@ -17,6 +17,23 @@
   (onCancel)="onCloseDialog()">
 </app-portfolio-move>
 
+<app-portfolio-send
+  *ngIf="isDialog('send')"
+  [portfolio]="selection[0]"
+  (onSubmit)="onSendSubmit($event)"
+  (onCancel)="onCloseDialog()"
+>
+</app-portfolio-send>
+
+<app-portfolio-send
+  *ngIf="isDialog('return')"
+  [isReturn]="true"
+  [portfolio]="selection[0]"
+  (onSubmit)="onReturnSubmit($event)"
+  (onCancel)="onCloseDialog()"
+>
+</app-portfolio-send>
+
 <app-toolbar-2
   class="bordered"
   [items]="toolbarItems">
@@ -30,6 +47,7 @@
   [columns]="columns"
   [rows]="portfolios"
   [allowDblClick]="canEdit$ | async"
+  [contextMenuOptions]="contextMenuOptions"
   (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>

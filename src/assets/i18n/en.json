@@ -1055,6 +1055,19 @@
     },
     "move": {
       "title": "move portfolio {{ name }}"
+    },
+    "outsourcing": {
+      "form": {
+        "menu": "Form outsourcing portfolio"
+      },
+      "send": {
+        "menu": "Send portfolio for outsourcing",
+        "title": "Send portfolio"
+      },
+      "return": {
+        "menu": "Return outsourcing portfolio",
+        "title": "Return portfolio"
+      }
     }
   },
   "utilities": {
