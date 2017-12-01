@@ -38,6 +38,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
   @Input() debtorId: number;
+  @Input() ignoreDebtRegContactTypeListPermissions = false;
   @Input() ignoreViewPermissions = false;
   @Input() ignoreVisitAddPermissions = false;
   @Input() ignoreVisitViewPermissions = false;
@@ -353,7 +354,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     // TODO(d.maltsev): use debtor service
     return combineLatestAnd([
       this.selectedAddress$.map(address => address && !address.isInactive),
-      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3),
+      this.ignoreDebtRegContactTypeListPermissions
+        ? Observable.of(true)
+        : this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }
