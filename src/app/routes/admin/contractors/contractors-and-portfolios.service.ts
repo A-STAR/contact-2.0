@@ -181,7 +181,7 @@ export class ContractorsAndPortfoliosService {
     contractorId: number,
     portfolioId: number,
     portfolio: IPortfolio): Observable<any> {
-    return this.dataService.update('/contractors/{contractorsId}/portfolios/{portfoliosId}/outsourcing/form', {
+    return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/form', {
       contractorId, portfolioId
     }, portfolio)
     .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
@@ -191,7 +191,7 @@ export class ContractorsAndPortfoliosService {
     contractorId: number,
     portfolioId: number,
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
-    return this.dataService.update('/contractors/{contractorsId}/portfolios/{portfoliosId}/outsourcing/send', {
+    return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
       contractorId, portfolioId
     }, { portfolio, debtStatusCode: 14 })
     .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
@@ -201,7 +201,7 @@ export class ContractorsAndPortfoliosService {
     contractorId: number,
     portfolioId: number,
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
-    return this.dataService.update('/contractors/{contractorsId}/portfolios/{portfoliosId}/outsourcing/return', {
+    return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/return', {
       contractorId, portfolioId
     }, portfolio)
     .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
