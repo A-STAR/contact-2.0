@@ -61,7 +61,8 @@ export class DataUploadComponent {
       value: cell.value,
     };
     this.dataUploadService.editCell(payload).subscribe(response => {
-      this.rows[row.id] = response.rows[0];
+      const row = response.rows[0];
+      this.rows[row.id] = row;
       this.cdRef.markForCheck();
     });
   }
@@ -100,12 +101,7 @@ export class DataUploadComponent {
   }
 
   private getRowsFromResponse(response: IOpenFileResponse): any[] {
-    return response.rows
-      .sort((a, b) => a.id - b.id)
-      .map(row => ({
-        ...row,
-        cells: row.cells.reduce((acc, cell, i) => ({ ...acc, [i]: cell }), {}),
-      }));
+    return response.rows.sort((a, b) => a.id - b.id);
   }
 
   private getCellRenderer(params: ICellRendererParams): string {
