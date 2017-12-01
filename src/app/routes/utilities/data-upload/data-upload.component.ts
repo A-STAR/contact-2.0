@@ -38,6 +38,8 @@ export class DataUploadComponent {
 
   columns: IAGridColumn[];
 
+  isFirstRequest = true;
+
   rows: any[];
   rowCount = 0;
   rowIdKey = 'id';
@@ -48,14 +50,18 @@ export class DataUploadComponent {
   ) {}
 
   onRequest(): void {
-    const params = this.grid.getRequestParams();
-    this.dataUploadService
-      .fetch(params)
-      .subscribe(response => {
-        this.rows = this.getRowsFromResponse(response);
-        this.rowCount = this.rows.length;
-        this.cdRef.markForCheck();
-      });
+    if (this.isFirstRequest) {
+      this.isFirstRequest = false;
+    } else {
+      const params = this.grid.getRequestParams();
+      this.dataUploadService
+        .fetch(params)
+        .subscribe(response => {
+          this.rows = this.getRowsFromResponse(response);
+          this.rowCount = this.rows.length;
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
   onAction(event: IAGridAction): void {
@@ -100,6 +106,7 @@ export class DataUploadComponent {
         this.cdRef.detectChanges();
         this.rows = this.getRowsFromResponse(response);
         this.rowCount = this.rows.length;
+        this.isFirstRequest = true;
         this.cdRef.markForCheck();
       });
   }
