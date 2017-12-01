@@ -1,11 +1,10 @@
 <div class="mb">
   <app-button label="Открыть файл" (click)="onFileOpenClick()"></app-button>
-  <app-button label="Загрузить"></app-button>
-  <app-button label="Отмена"></app-button>
+  <app-button label="Сохранить в БД" [disabled]="hasErrors"></app-button>
 </div>
 
 <div hidden>
-  <input #fileInput type="file" (change)="onFileChange()">
+  <input #fileInput type="file" accept=".xls,.xlsx" (change)="onFileChange()">
 </div>
 
 <app-grid2
@@ -18,11 +17,9 @@
   [rows]="rows"
   [rowCount]="rowCount"
   (action)="onAction($event)"
-  (onDblClick)="onDblClick($event)"
   (onFilter)="onRequest()"
   (onPage)="onRequest()"
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
-  (onSelect)="onSelect($event)"
   (cellValueChange)="onCellValueChange($event)"
 ></app-grid2>
