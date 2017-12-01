@@ -44,7 +44,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       enabled: combineLatestAnd([
         this.canEdit$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
       ])
     },
     {
@@ -53,7 +53,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       enabled: combineLatestAnd([
         this.canMove$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
       ])
     },
     {
@@ -62,7 +62,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       enabled: combineLatestAnd([
         this.canDelete$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
       ])
     },
     {
@@ -79,28 +79,24 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       enabled: combineLatestAnd([
         this.canForm$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
-        Observable.of(this.isPortfolioCanForm)
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanForm(o)),
       ])
     },
     {
       label: this.translateService.instant('portfolios.outsourcing.send.menu'),
-      action: () => this.onForm(),
+      action: () => this.onSend(),
       enabled: combineLatestAnd([
         this.canSend$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
-        Observable.of(this.isPortfolioCanSend)
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanSend(o)),
       ])
     },
     {
       label: this.translateService.instant('portfolios.outsourcing.return.menu'),
-      action: () => this.onForm(),
+      action: () => this.onReturn(),
       enabled: combineLatestAnd([
         this.canReturn$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
-        Observable.of(this.isPortfolioCanReturn)
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanReturn(o)),
       ])
     }
   ];
@@ -196,19 +192,23 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_RETURN');
   }
 
-  get isPortfolioCanForm(): boolean {
-    const selectedPortfolio = this.selection && this.selection[0];
-    return selectedPortfolio && selectedPortfolio.directionCode === 2 && selectedPortfolio.statusCode === 4;
+  isPortfolioCanForm(portfolio: IPortfolio): boolean {
+    // todo: uncomment when fixed on be
+    // return portfolio &&
+    //   portfolio.directionCode === 2 && portfolio.statusCode === 4;
+    return !!portfolio;
   }
 
-  get isPortfolioCanSend(): boolean {
-    const selectedPortfolio = this.selection && this.selection[0];
-    return selectedPortfolio && selectedPortfolio.directionCode === 2 && selectedPortfolio.statusCode === 5;
+  isPortfolioCanSend(portfolio: IPortfolio): boolean {
+    // todo: uncomment when fixed on be
+    // return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 5;
+    return !!portfolio;
   }
 
-  get isPortfolioCanReturn(): boolean {
-    const selectedPortfolio = this.selection && this.selection[0];
-    return selectedPortfolio && selectedPortfolio.directionCode === 2 && selectedPortfolio.statusCode === 6;
+  isPortfolioCanReturn(portfolio: IPortfolio): boolean {
+    // todo: uncomment when fixed on be
+    // return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 6;
+    return !!portfolio;
   }
 
   onAdd(): void {
@@ -244,7 +244,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   onSelect(portfolio: IPortfolio): void {
     this.selection = [portfolio];
-    this.contractorsAndPortfoliosService.selectPortfolio(portfolio.id);
+    this.contractorsAndPortfoliosService.selectPortfolio(portfolio);
   }
 
   onRemoveSubmit(): void {

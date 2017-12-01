@@ -51,6 +51,6 @@ export interface IContractorManager {
 
 export interface IContractorsAndPortfoliosState {
   selectedContractorId: number;
-  selectedPortfolioId: number;
+  selectedPortfolio: IPortfolio;
   selectedManagerId: number;
 }

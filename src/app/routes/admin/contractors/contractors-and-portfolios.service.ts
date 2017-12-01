@@ -52,9 +52,9 @@ export class ContractorsAndPortfoliosService {
       .distinctUntilChanged();
   }
 
-  get selectedPortfolioId$(): Observable<number> {
+  get selectedPortfolio$(): Observable<IPortfolio> {
     return this.state
-      .map(state => state.selectedPortfolioId)
+      .map(state => state.selectedPortfolio)
       .distinctUntilChanged();
   }
 
@@ -193,7 +193,7 @@ export class ContractorsAndPortfoliosService {
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
     return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
       contractorId, portfolioId
-    }, { portfolio, debtStatusCode: 14 })
+    }, { ...portfolio, debtStatusCode: 14 })
     .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
@@ -207,10 +207,10 @@ export class ContractorsAndPortfoliosService {
     .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
-  selectPortfolio(portfolioId: number): void {
+  selectPortfolio(portfolio: IPortfolio): void {
     this.dispatch(
       ContractorsAndPortfoliosService.PORTFOLIO_SELECT,
-      { selectedPortfolioId: portfolioId }
+      { selectedPortfolio: portfolio }
     );
   }
 
