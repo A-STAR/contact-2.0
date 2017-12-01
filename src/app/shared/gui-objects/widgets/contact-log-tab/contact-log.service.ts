@@ -21,17 +21,17 @@ export class ContactLogService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(personId: number): Observable<Array<IContactLog>> {
-    return this.dataService.create(this.baseUrl, { personId }, {})
-    .map(res => res.data)
-    .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.plural').dispatchCallback());
+  fetchAll(personId: number, callCenter: boolean): Observable<Array<IContactLog>> {
+    return this.dataService.create(this.baseUrl, { personId }, {}, { params: { callCenter } })
+      .map(res => res.data)
+      .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.plural').dispatchCallback());
   }
 
-  fetch(debtId: number, contactsLogId: number, contactType: number): Observable<IContactLog> {
+  fetch(debtId: number, contactsLogId: number, contactType: number, callCenter: boolean): Observable<IContactLog> {
     const isSms = Number(contactType) === 4;
     const url = isSms ? this.extUrlSmsMessage : this.extUrlNotSmsMessage;
 
-    return this.dataService.read(url, { debtId, contactsLogId })
+    return this.dataService.read(url, { debtId, contactsLogId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.singular').dispatchCallback());
   }
 
