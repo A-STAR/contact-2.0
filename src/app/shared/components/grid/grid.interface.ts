@@ -46,7 +46,7 @@ export interface IMessages {
 
 export interface IContextMenuItem {
   enabled: Observable<boolean>;
-  action?: (action: any) => any;
+  action?: string | ((action: any) => any);
   prop?: string;
   label?: string;
   fieldActions?: string[];
@@ -54,4 +54,6 @@ export interface IContextMenuItem {
   translationKey?: string;
   icon?: HTMLElement | string;
   cssClasses?: string[];
+  params?: string[];
+  addOptions?: { name: string; value: Array<number|string> }[];
 }
