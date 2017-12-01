@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ISingleVisitRels, IVisitsBundle } from './visit-add.interface';
+import { ISingleVisit, IVisitsBundle } from './visit-add.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -16,8 +16,9 @@ export class VisitAddService {
   private baseUrl = '/mass/visits';
 
   createVisit(
-    aims: ISingleVisitRels[], perposeCode: number, comment: string
+    aims: ISingleVisit[], actionData: IVisitsBundle
   ): Observable<any> {
+    console.log(actionData);
       return this.dataService.update(
         this.baseUrl,
         {},
@@ -25,9 +26,9 @@ export class VisitAddService {
           idData: {
             complexIdList: aims
           },
-          actionData: { perposeCode, comment }
+          actionData
         })
-        // mock on catch
+        // mock on catch (m.bobryshev)
         .catch(() => Observable.of({
             success: true,
             massInfo: {
@@ -37,23 +38,24 @@ export class VisitAddService {
         }))
         .do(res => {
           if (!res.success) {
-            this.notificationsService.info().entity('default.dialog.result.message')
-              .response(res).dispatch();
+            this.notificationsService.warning('default.dialog.result.message')
+              .params({
+                'successCount': res.massInfo.processed.toString(),
+                'count':        res.massInfo.processed.toString(),
+              })
+              .dispatch();
           } else {
-            // check for 0 successful deletions
-            this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
+            this.notificationsService.info('default.dialog.result.message')
+              .params({
+                'successCount': res.massInfo.processed.toString(),
+                'count':        res.massInfo.processed.toString(),
+              })
+              .dispatch();
           }
         })
-        .catch(this.notificationsService.deleteError().entity('entities.sms.gen.plural').dispatchCallback());
-
-        // .do(res => {
-        //   if (!res.success) {
-        //     // TODO make dict when its will be fixed
-        //     this.notificationsService.error('errors.default.read').entity('entities.user.constants.gen.plural').callback();
-        //     return;
-        //   }
-        // });
-      // TODO unmock when api ready, make dict for catc
-      // .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
+        .catch(() => {
+          this.notificationsService.error('errors.default.massOp').entity('entities.massOps.addVisit').dispatch();
+          return Observable.of(null);
+        });
    }
 }

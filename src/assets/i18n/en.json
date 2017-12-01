@@ -1861,6 +1861,9 @@
     "debts": {
       "gen": { "singular": "debt", "plural": "debts" }
     },
+    "massOps": {
+      "addVisit": "add visit"
+    },
     "metadata": {
       "gen": { "plural": "metadata" }
     },
@@ -2054,6 +2057,7 @@
         "403": "You don't have permissions to move {{ entity }}",
         "*": "Could not move {{ entity }}"
       },
+      "massOp": "An error occurred while completing the {{ entity }} operation",
       "update": {
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"

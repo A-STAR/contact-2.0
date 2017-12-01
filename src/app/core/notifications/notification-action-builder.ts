@@ -34,6 +34,7 @@ export class NotificationActionBuilder {
   }
 
   response(response: HttpResponseBase): NotificationActionBuilder {
+    console.log(this);
     this._response = response;
     return this;
   }

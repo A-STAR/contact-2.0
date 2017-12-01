@@ -161,12 +161,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       .pipe(first())
       .subscribe(actions => {
         this.actions = actions;
+        //  TODO mock (m.bobryshev)
         this.actions.push({
           action: 'visitAdd',
           addOptions: null,
-          params: ['debtId', 'addressId', 'personId']
+          //  TODO mock (m.bobryshev), sh.b. debtId, addressesId, personRole
+          params: ['debtId', 'personId', 'regionCode']
         });
-        console.log(actions);
       });
 
     this.gridService

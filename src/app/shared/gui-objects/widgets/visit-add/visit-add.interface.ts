@@ -1,13 +1,12 @@
-export interface ISingleVisitRels {
+//  TODO mock (m.bobryshev), sh.b. debtId, addressesId, personRole
+export interface ISingleVisit {
   debtId: number;
-  addressId: number;
-  personRole: number;
+  personId: number;
+  regionCode: number;
 }
 
 export interface IVisitsBundle {
-  idData: {
-    complexIdList: ISingleVisitRels[]
-  };
+  // TODO make type exact (m.bobryshev)
   actionData: {
     purposeCode: number;
     comment: string;

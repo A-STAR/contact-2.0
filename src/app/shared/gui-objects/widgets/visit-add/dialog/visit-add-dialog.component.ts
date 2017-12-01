@@ -16,7 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { IActionGridDialogSelectionParams } from '../../../../components/action-grid/action-grid.interface';
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { ISingleVisitRels, IVisitsBundle } from '../visit-add.interface';
+import { ISingleVisit, IVisitsBundle } from '../visit-add.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -70,32 +70,25 @@ export class VisitAddDialogComponent extends DialogFunctions implements OnChange
   }
 
   ngOnInit(): void {
-    console.log(this.visitRelsIds);
     Observable.combineLatest(
-      this.userPermissionsService.has('VISIT_ADD'),
+      // TODO swap with VISIT_ADD when permission will be founded
+      this.userPermissionsService.has('VISIT_CANCEL'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_VISIT_PURPOSE)
     ).subscribe(([canAddVisit, options]) => {
-      console.log(canAddVisit, options);
-      // if (!canAddVisit) {
-      //   return;
-      // }
+      if (!canAddVisit) {
+        return;
+      }
       this.controls = this.getControls(options);
-      this.addressCounter.count = 53;
+      this.addressCounter.count = this.visitRelsIds.length;
       this.formData = {
-        idData: null,
         actionData: {
-          purposeCode: 1,
-          comment: 'tnhnht'
+          purposeCode: null,
+          comment: null
         }
       };
       this.cdRef.markForCheck();
     });
   }
-
-
-  // ngOnInit(): void {
-  //   this.setDialog('enqueryVisitAdd');
-  // }
 
   ngOnChanges(): void {
     this.addressCounter.count = this.visitRelsIds &&  this.visitRelsIds.length ;
@@ -105,16 +98,15 @@ export class VisitAddDialogComponent extends DialogFunctions implements OnChange
   onSubmit(): void {
     this.setDialog();
     this.cdRef.markForCheck();
-    this.visitAddService.createVisit(this.visitRelsIds, this.purposeCode, this.comment)
+    const actionData = this.form.serializedUpdates;
+    this.visitAddService.createVisit(this.visitRelsIds, actionData)
       .subscribe((res) => {
-          // this.totalCount = res.massInfo.total;
-          // this.successCount = res.massInfo.processed;
-          this.onCloseDialog();
+          this.onCancel();
           this.cdRef.markForCheck();
         });
   }
 
-  onCloseDialog(): void {
+  onCancel(): void {
     this.setDialog();
     this.close.emit();
   }
@@ -122,9 +114,9 @@ export class VisitAddDialogComponent extends DialogFunctions implements OnChange
   private getControls(options: IOption[]): Array<IDynamicFormControl> {
     return [
       { label: label('idData'), controlName: 'idData', type: 'hidden', required: true, disabled: true },
-      { label: label('purposeCode'), controlName: 'actionData.purposeCode',
+      { label: label('purposeCode'), controlName: 'purposeCode',
         type: 'select', required: true, disabled: false, options },
-      { label: label('comment'), controlName: 'actionData.comment', type: 'textarea', required: false, disabled: false },
+      { label: label('comment'), controlName: 'comment', type: 'textarea', required: false, disabled: false },
     ];
   }
 }
