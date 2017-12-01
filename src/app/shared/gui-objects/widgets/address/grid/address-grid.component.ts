@@ -32,6 +32,7 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
 export class AddressGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit';
   @Input() callCenter = false;
+  @Input() campaignId: number;
   @Input('debtId')
   set debtId(debtId: number) {
     this._debtId$.next(debtId);
@@ -277,7 +278,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         // Contact type 'Visit' = 3
         // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
         const url = `/workplaces/contact-registration/${this._debtId$.value}/3/${addressId}`;
-        this.router.navigate([ url ], { queryParams: { personId: this._personId$.value, personRole: this.personRole } });
+        this.router.navigate([ url ], { queryParams: {
+          campaignId: this.campaignId,
+          personId: this._personId$.value,
+          personRole: this.personRole,
+        } });
       });
   }
 
