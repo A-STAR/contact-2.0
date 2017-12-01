@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
+import { first } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { IDynamicFormControl } from '../../../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -58,11 +59,16 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
       this.useTemplate ?
         this.phoneService.fetchSMSTemplates(2, 1, true) :
         Observable.of(null)
-    ).subscribe(([ defaultSender, useSender, senderOptions, templates ]) => {
+    )
+    .pipe(first())
+    .subscribe(([ defaultSender, useSender, senderOptions, templates ]) => {
       this.initControls(useSender, senderOptions, templates);
       this.cdRef.detectChanges();
       if (this.useTemplate) {
-        this._templateIdSubscription = this.form.getControl('templateId').valueChanges.subscribe(() => this.fetchTemplateText());
+        this._templateIdSubscription = this.form.getControl('templateId')
+          .valueChanges
+          .distinctUntilChanged()
+          .subscribe(() => this.fetchTemplateText());
       }
       if (senderOptions.find(option => option.value === defaultSender.valueN)) {
         this.data = {
@@ -134,7 +140,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
     this.phoneService.fetchMessageTemplateText(this.debtId, this.personId, this.personRole, templateId)
       .subscribe(text => {
         this.data = {
-          ...this.data,
+          ...this.form.value,
           text
         };
         this.cdRef.markForCheck();
