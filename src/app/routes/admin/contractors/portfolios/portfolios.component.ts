@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
 import { IContractor, IPortfolio } from '../contractors-and-portfolios.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -18,6 +19,8 @@ import { GridComponent } from '../../../../shared/components/grid/grid.component
 
 import { combineLatestAnd } from '../../../../core/utils/helpers';
 import { DialogFunctions } from '../../../../core/dialog';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-portfolios',
@@ -70,6 +73,39 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     }
   ];
 
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      label: this.translateService.instant('portfolios.outsourcing.form'),
+      action: () => this.onForm(),
+      enabled: combineLatestAnd([
+        this.canForm$,
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+        Observable.of(this.isPortfolioCanForm)
+      ])
+    },
+    {
+      label: this.translateService.instant('portfolios.outsourcing.send'),
+      action: () => this.onForm(),
+      enabled: combineLatestAnd([
+        this.canSend$,
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+        Observable.of(this.isPortfolioCanSend)
+      ])
+    },
+    {
+      label: this.translateService.instant('portfolios.outsourcing.return'),
+      action: () => this.onForm(),
+      enabled: combineLatestAnd([
+        this.canReturn$,
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+        Observable.of(this.isPortfolioCanReturn)
+      ])
+    }
+  ];
+
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 50 },
     { prop: 'name', minWidth: 120, maxWidth: 200 },
@@ -97,6 +133,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     private notificationsService: NotificationsService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
+    private translateService: TranslateService
   ) {
     super();
   }
@@ -148,6 +185,33 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     return this.userPermissionsService.has('PORTFOLIO_DELETE');
   }
 
+  get canForm$(): Observable<boolean> {
+    return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_FORM');
+  }
+
+  get canSend$(): Observable<boolean> {
+    return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_SEND');
+  }
+
+  get canReturn$(): Observable<boolean> {
+    return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_RETURN');
+  }
+
+  get isPortfolioCanForm(): boolean {
+    const selectedPortfolio = this.selection && this.selection[0];
+    return selectedPortfolio && selectedPortfolio.directionCode === 2 && selectedPortfolio.statusCode === 4;
+  }
+
+  get isPortfolioCanSend(): boolean {
+    const selectedPortfolio = this.selection && this.selection[0];
+    return selectedPortfolio && selectedPortfolio.directionCode === 2 && selectedPortfolio.statusCode === 5;
+  }
+
+  get isPortfolioCanReturn(): boolean {
+    const selectedPortfolio = this.selection && this.selection[0];
+    return selectedPortfolio && selectedPortfolio.directionCode === 2 && selectedPortfolio.statusCode === 6;
+  }
+
   onAdd(): void {
     this.router.navigate([`/admin/contractors/${this.selectedContractorId}/portfolios/create`]);
   }
@@ -163,6 +227,18 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
         this.setDialog('move');
         this.cdRef.markForCheck();
       });
+  }
+
+  onForm(): void {
+    this.setDialog('form');
+  }
+
+  onSend(): void {
+    this.setDialog('send');
+  }
+
+  onReturn(): void {
+    this.setDialog('return');
   }
 
   onSelect(portfolio: IPortfolio): void {

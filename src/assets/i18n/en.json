@@ -1052,6 +1052,11 @@
     },
     "move": {
       "title": "move portfolio {{ name }}"
+    },
+    "outsourcing": {
+      "form": "Form outsourcing portfolio",
+      "send": "Send portfolio for outsourcing",
+      "return": "Return outsourcing portfolio"
     }
   },
   "utilities": {

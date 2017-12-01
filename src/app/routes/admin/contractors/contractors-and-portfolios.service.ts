@@ -7,7 +7,7 @@ import { first } from 'rxjs/operators';
 import { IAppState } from '../../../core/state/state.interface';
 import {
   IContractor, IContractorsAndPortfoliosState,
-  IContractorManager, IPortfolio, IPortfolioMoveRequest,
+  IContractorManager, IPortfolio, IPortfolioMoveRequest, IPortfolioOutsourceRequest,
 } from './contractors-and-portfolios.interface';
 
 import { DataService } from '../../../core/data/data.service';
@@ -175,6 +175,33 @@ export class ContractorsAndPortfoliosService {
     return this.dataService
       .delete('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId })
       .catch(this.notificationsService.deleteError().entity('entities.portfolios.entity.singular').callback());
+  }
+
+  formOutsourcePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio): Observable<any> {
+    return this.dataService.update('/contractors/{contractorsId}/portfolios/{portfoliosId}/outsourcing/form', {
+      contractorId, portfolioId
+    }, portfolio);
+  }
+
+  sendOutsourcePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
+    return this.dataService.update('/contractors/{contractorsId}/portfolios/{portfoliosId}/outsourcing/send', {
+      contractorId, portfolioId
+    }, { portfolio, debtStatusCode: 14 });
+  }
+
+  returnOutsourcePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
+    return this.dataService.update('/contractors/{contractorsId}/portfolios/{portfoliosId}/outsourcing/return', {
+      contractorId, portfolioId
+    }, portfolio);
   }
 
   selectPortfolio(portfolioId: number): void {

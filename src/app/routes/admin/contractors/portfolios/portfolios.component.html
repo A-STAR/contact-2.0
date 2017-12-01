@@ -30,6 +30,7 @@
   [columns]="columns"
   [rows]="portfolios"
   [allowDblClick]="canEdit$ | async"
+  [contextMenuOptions]="contextMenuOptions"
   (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>
