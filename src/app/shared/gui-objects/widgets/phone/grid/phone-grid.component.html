@@ -20,7 +20,8 @@
 
 <app-phone-grid-schedule
   *ngIf="isDialog('schedule')"
-  [personId]="personId"
+  [debtId]="debtId$ | async"
+  [personId]="personId$ | async"
   [personRole]="personRole"
   [phoneId]="selectedPhoneId$ | async"
   (submit)="onScheduleDialogSubmit($event)"
