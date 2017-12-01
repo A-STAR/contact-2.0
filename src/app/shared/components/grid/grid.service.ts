@@ -7,7 +7,7 @@ import * as R from 'ramda';
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
 import { IGridColumn, IRenderer, TRendererType } from './grid.interface';
 import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
-import { IMetadataColumn } from '../../../core/metadata/metadata.interface';
+import { IMetadataAction, IMetadataColumn } from '../../../core/metadata/metadata.interface';
 import { IUserDictionaries, ITypeCodeItem } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
 import { LookupService } from '../../../core/lookup/lookup.service';
@@ -64,7 +64,7 @@ export class GridService {
     return request;
   }
 
-  getActions(metadataKey: string): Observable<any[]> {
+  getActions(metadataKey: string): Observable<IMetadataAction[]> {
     return this.metadataService.getActions(metadataKey);
   }
 

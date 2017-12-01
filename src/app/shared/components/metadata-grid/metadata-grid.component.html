@@ -1,0 +1,18 @@
+<app-grid2
+  *ngIf="initialized"
+  [actions]="actions"
+  [columns]="columns"
+  [columnIds]="columnIds"
+  [ngClass]="ngClass"
+  [persistenceKey]="persistenceKey"
+  [rowIdKey]="rowIdKey"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (action)="onAction($event)"
+  (onDblClick)="onDblClickHandler($event)"
+  (onFilter)="onFilterHandler()"
+  (onPage)="onPageHandler()"
+  (onPageSize)="onPageSizeHandler()"
+  (onSort)="onSortHandler()"
+  (onSelect)="onSelectHandler($event)"
+></app-grid2>

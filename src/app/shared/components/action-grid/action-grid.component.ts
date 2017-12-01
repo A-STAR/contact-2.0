@@ -14,7 +14,7 @@ import { IAGridAction, IAGridRequestParams, IAGridSelected } from '../grid2/grid
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 
 import { GridComponent } from '../../components/grid/grid.component';
-import { Grid2Component } from '../../components/grid2/grid2.component';
+import { MetadataGridComponent } from '../../components/metadata-grid/metadata-grid.component';
 
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
@@ -42,7 +42,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
   @Output() select = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IActionGridDialogData>();
 
-  @ViewChild('grid') grid: GridComponent | Grid2Component;
+  @ViewChild('grid') grid: GridComponent | MetadataGridComponent<T>;
 
   dialog: string;
   dialogData: IActionGridDialogData;
@@ -70,13 +70,13 @@ export class ActionGridComponent<T> extends DialogFunctions {
   }
 
   getFilters(): FilterObject {
-    return this.grid instanceof Grid2Component
+    return this.grid instanceof MetadataGridComponent
       ? this.grid.getFilters()
       : null;
   }
 
   getRequestParams(): IAGridRequestParams {
-    return this.grid instanceof Grid2Component
+    return this.grid instanceof MetadataGridComponent
       ? this.grid.getRequestParams()
       : null;
   }
@@ -96,6 +96,13 @@ export class ActionGridComponent<T> extends DialogFunctions {
       }), {}),
     };
     this.cdRef.markForCheck();
+  }
+
+  onCloseRefresh(result: boolean): void {
+    if (result) {
+      this.onRequest();
+    }
+    this.onCloseDialog();
   }
 
   onRequest(): void {

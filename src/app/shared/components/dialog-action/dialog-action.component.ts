@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-dialog-action',
-  templateUrl: './dialog-action.html'
+  templateUrl: './dialog-action.component.html'
 })
 export class DialogActionComponent {
 
@@ -24,10 +24,6 @@ export class DialogActionComponent {
   }
 
   onCancel(): void {
-    this.close();
-  }
-
-  private close(): void {
     this.cancel.emit();
   }
 }

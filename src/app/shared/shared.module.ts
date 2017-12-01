@@ -37,6 +37,7 @@ import { DropdownModule } from './components/dropdown/dropdown.module';
 import { DropdownInputModule } from './components/form/dropdown/dropdown-input.module';
 import { DynamicFormModule } from './components/form/dynamic-form/dynamic-form.module';
 import { DynamicForm2Module } from './components/form/dynamic-form-2/dynamic-form-2.module';
+import { FilterGridModule } from './components/filter-grid/filter-grid.module';
 import { FileUploadModule } from './components/form/file-upload/file-upload.module';
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
@@ -47,6 +48,7 @@ import { HDividerModule } from './components/hdivider/hdivider.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { ListModule } from './components/list/list.module';
+import { MetadataGridModule } from './components/metadata-grid/metadata-grid.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
 import { MultiTextModule } from './components/form/multi-text/multi-text.module';
 import { PasswordModule } from './components/form/password/password.module';
@@ -95,6 +97,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DropdownInputModule,
     DynamicFormModule,
     DynamicForm2Module,
+    FilterGridModule,
     FileUploadModule,
     GridModule,
     Grid2Module,
@@ -105,6 +108,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ImageUploadModule,
     InfoDialogModule,
     ListModule,
+    MetadataGridModule,
     MultiSelectModule,
     MultiTextModule,
     PasswordModule,
@@ -174,6 +178,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DynamicFormModule,
     DynamicForm2Module,
     DialogModule,
+    FilterGridModule,
     FileUploadModule,
     GridModule,
     Grid2Module,
@@ -184,6 +189,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ImageUploadModule,
     InfoDialogModule,
     ListModule,
+    MetadataGridModule,
     MultiSelectModule,
     MultiTextModule,
     NumericInputComponent,

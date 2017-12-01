@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToasterConfig } from 'angular2-toaster';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/debounceTime';
+import { debounceTime } from 'rxjs/operators/debounceTime';
 
 import { AuthService } from './core/auth/auth.service';
 import { DataService } from './core/data/data.service';
@@ -30,7 +30,7 @@ export class AppComponent {
   static LOADER_DEBOUNCE_INTERVAL = 200;
 
   toasterConfig = new ToasterConfig({
-    animation: 'flyLeft',
+    animation: 'slideUp',
     limit: 10,
     mouseoverTimerStop: true,
     positionClass: 'toaster-container',
@@ -66,6 +66,6 @@ export class AppComponent {
       (isLoading, event) => isLoading || !(event instanceof NavigationEnd)
     )
     .distinctUntilChanged()
-    .debounceTime(AppComponent.LOADER_DEBOUNCE_INTERVAL);
+    .pipe(debounceTime(AppComponent.LOADER_DEBOUNCE_INTERVAL));
   }
 }
