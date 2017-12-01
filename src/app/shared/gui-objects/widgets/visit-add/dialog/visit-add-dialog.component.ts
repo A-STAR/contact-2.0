@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
   ViewChild
@@ -31,7 +30,7 @@ const label = makeKey('massOperations.visitAdd');
   templateUrl: 'visit-add-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VisitAddDialogComponent extends DialogFunctions implements OnChanges, OnInit {
+export class VisitAddDialogComponent extends DialogFunctions implements  OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Input() visitRelsIds: ISingleVisit[];
   @Output() close = new EventEmitter<void>();
@@ -64,6 +63,7 @@ export class VisitAddDialogComponent extends DialogFunctions implements OnChange
   }
 
   ngOnInit(): void {
+    this.addressCounter.count = this.visitRelsIds.length ;
     Observable.combineLatest(
       // TODO mock (m.bobryshev) swap with VISIT_ADD when permission will be founded
       this.userPermissionsService.has('VISIT_CANCEL'),
@@ -84,19 +84,12 @@ export class VisitAddDialogComponent extends DialogFunctions implements OnChange
     });
   }
 
-  ngOnChanges(): void {
-    this.addressCounter.count = this.visitRelsIds &&  this.visitRelsIds.length ;
-    this.cdRef.markForCheck();
-  }
-
   onSubmit(): void {
     this.setDialog();
-    this.cdRef.markForCheck();
     const actionData = this.form.serializedUpdates;
     this.visitAddService.createVisit(this.visitRelsIds, actionData)
-      .subscribe((res) => {
+      .subscribe(() => {
           this.onCancel();
-          this.cdRef.markForCheck();
         });
   }
 
