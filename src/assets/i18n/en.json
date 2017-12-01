@@ -135,6 +135,9 @@
         "name": "Name",
         "comment": "Description"
       },
+      "messages": {
+        "noActiveDebts": "No active debts in campaign"
+      },
       "overview": {
         "info": {
           "title": "Overview",
