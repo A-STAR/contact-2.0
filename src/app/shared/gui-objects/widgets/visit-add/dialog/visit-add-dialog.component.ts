@@ -34,9 +34,7 @@ const label = makeKey('massOperations.visitAdd');
 export class VisitAddDialogComponent extends DialogFunctions implements OnChanges, OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Input() visitRelsIds: any[];
-  @Input() buff: IActionGridDialogSelectionParams;
   @Output() close = new EventEmitter<void>();
-  // @Output() submit = new EventEmitter<IConstant>();
   @Output() cancel = new EventEmitter<void>();
 
   controls: Array<IDynamicFormItem>;
@@ -67,7 +65,7 @@ export class VisitAddDialogComponent extends DialogFunctions implements OnChange
 
   ngOnInit(): void {
     Observable.combineLatest(
-      // TODO swap with VISIT_ADD when permission will be founded
+      // TODO mock (m.bobryshev) swap with VISIT_ADD when permission will be founded
       this.userPermissionsService.has('VISIT_CANCEL'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_VISIT_PURPOSE)
     ).subscribe(([canAddVisit, options]) => {
