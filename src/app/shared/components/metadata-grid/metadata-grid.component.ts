@@ -24,6 +24,7 @@ import {
 import { GridService } from '../grid/grid.service';
 
 import { Grid2Component } from '../grid2/grid2.component';
+import { MetadataFilterComponent } from '../metadata-grid/filter/metadata-filter.component';
 
 import { FilterObject } from '../grid2/filter/grid-filter';
 
@@ -50,6 +51,7 @@ export class MetadataGridComponent<T> implements OnInit {
   @Output() onSelect = new EventEmitter<IAGridSelected>();
 
   @ViewChild(Grid2Component) grid: Grid2Component;
+  @ViewChild(MetadataFilterComponent) filter: MetadataFilterComponent;
 
   private _actions: IMetadataAction[];
   private _columns: IAGridColumn[];
@@ -122,7 +124,9 @@ export class MetadataGridComponent<T> implements OnInit {
   }
 
   getFilters(): FilterObject {
-    return this.grid.getFilters();
+    const filters = this.grid.getFilters();
+    filters.addFilter(this.filter.filters);
+    return filters;
   }
 
   getRequestParams(): IAGridRequestParams {

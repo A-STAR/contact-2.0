@@ -109,6 +109,7 @@ export type TControlTypes =
   | 'singleselectwrapper'
   | 'text'
   | 'textarea'
+  | 'dialogmultiselectwrapper'
 ;
 
 export interface IValue {

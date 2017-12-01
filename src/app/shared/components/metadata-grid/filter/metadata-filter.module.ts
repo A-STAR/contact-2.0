@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { DynamicFormModule } from '../../form/dynamic-form/dynamic-form.module';
 
-import { GridFilterComponent } from './filter.component';
+import { MetadataFilterService } from './metadata-filter.service';
+
+import { MetadataFilterComponent } from './metadata-filter.component';
 
 @NgModule({
   imports: [
@@ -11,10 +13,13 @@ import { GridFilterComponent } from './filter.component';
     DynamicFormModule,
   ],
   exports: [
-    GridFilterComponent,
+    MetadataFilterComponent,
   ],
   declarations: [
-    GridFilterComponent,
+    MetadataFilterComponent,
   ],
+  providers: [
+    MetadataFilterService
+  ]
 })
-export class GridFilterModule { }
+export class MetadataFilterModule { }
