@@ -2,10 +2,18 @@
     [ngStyle]="styles"
     tabindex="-1">
   <ul class="ngx-datatable-context-menu">
-    <li *ngFor="let item of actionItems" (click)="onAction(item)">
+    <li
+      *ngFor="let item of actionItems"
+      (click)="onAction(item)"
+      [ngClass]="{'disabled': isDisabled(item) | async }"
+    >
       {{ item.label | translate }}
     </li>
-    <li *ngFor="let item of fieldActionItems" (click)="onCtxMenuClick($event, item)">
+    <li
+      *ngFor="let item of fieldActionItems"
+      (click)="onCtxMenuClick($event, item)"
+      [ngClass]="{'disabled': isDisabled(item) | async }"
+    >
       {{ item.label }}
     </li>
   </ul>

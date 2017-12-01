@@ -2,9 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
 import { IContractor, IPortfolio } from '../contractors-and-portfolios.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -42,7 +44,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       enabled: combineLatestAnd([
         this.canEdit$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
       ])
     },
     {
@@ -51,7 +53,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       enabled: combineLatestAnd([
         this.canMove$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
       ])
     },
     {
@@ -60,13 +62,42 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       enabled: combineLatestAnd([
         this.canDelete$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolioId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
       ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetchAll(),
       enabled: this.canView$
+    }
+  ];
+
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      label: this.translateService.instant('portfolios.outsourcing.form.menu'),
+      action: () => this.onForm(),
+      enabled: combineLatestAnd([
+        this.canForm$,
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanForm(o)),
+      ])
+    },
+    {
+      label: this.translateService.instant('portfolios.outsourcing.send.menu'),
+      action: () => this.onSend(),
+      enabled: combineLatestAnd([
+        this.canSend$,
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanSend(o)),
+      ])
+    },
+    {
+      label: this.translateService.instant('portfolios.outsourcing.return.menu'),
+      action: () => this.onReturn(),
+      enabled: combineLatestAnd([
+        this.canReturn$,
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanReturn(o)),
+      ])
     }
   ];
 
@@ -97,6 +128,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     private notificationsService: NotificationsService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
+    private translateService: TranslateService
   ) {
     super();
   }
@@ -148,6 +180,37 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     return this.userPermissionsService.has('PORTFOLIO_DELETE');
   }
 
+  get canForm$(): Observable<boolean> {
+    return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_FORM');
+  }
+
+  get canSend$(): Observable<boolean> {
+    return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_SEND');
+  }
+
+  get canReturn$(): Observable<boolean> {
+    return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_RETURN');
+  }
+
+  isPortfolioCanForm(portfolio: IPortfolio): boolean {
+    // todo: uncomment when fixed on be
+    // return portfolio &&
+    //   portfolio.directionCode === 2 && portfolio.statusCode === 4;
+    return !!portfolio;
+  }
+
+  isPortfolioCanSend(portfolio: IPortfolio): boolean {
+    // todo: uncomment when fixed on be
+    // return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 5;
+    return !!portfolio;
+  }
+
+  isPortfolioCanReturn(portfolio: IPortfolio): boolean {
+    // todo: uncomment when fixed on be
+    // return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 6;
+    return !!portfolio;
+  }
+
   onAdd(): void {
     this.router.navigate([`/admin/contractors/${this.selectedContractorId}/portfolios/create`]);
   }
@@ -165,9 +228,23 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       });
   }
 
+  onForm(): void {
+    this.contractorsAndPortfoliosService
+      .formOutsourcePortfolio(this.selectedContractorId, this.selection[0].id, this.selection[0])
+      .subscribe(() => {});
+  }
+
+  onSend(): void {
+    this.setDialog('send');
+  }
+
+  onReturn(): void {
+    this.setDialog('return');
+  }
+
   onSelect(portfolio: IPortfolio): void {
     this.selection = [portfolio];
-    this.contractorsAndPortfoliosService.selectPortfolio(portfolio.id);
+    this.contractorsAndPortfoliosService.selectPortfolio(portfolio);
   }
 
   onRemoveSubmit(): void {
@@ -180,6 +257,22 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   onMoveSubmit(contractor: IContractor): void {
     this.contractorsAndPortfoliosService
       .movePortfolio(this.selectedContractorId, this.selection[0].id, { newContractorId: contractor.id } )
+      .subscribe(() => {
+        this.setDialog();
+      });
+  }
+
+  onSendSubmit(portfolio: IPortfolio): void {
+    this.contractorsAndPortfoliosService.sendOutsourcePortfolio(this.selectedContractorId,
+      this.selection[0].id, portfolio)
+      .subscribe(() => {
+        this.setDialog();
+      });
+  }
+
+  onReturnSubmit(portfolio: IPortfolio): void {
+    this.contractorsAndPortfoliosService.returnOutsourcePortfolio(this.selectedContractorId,
+      this.selection[0].id, portfolio)
       .subscribe(() => {
         this.setDialog();
       });
