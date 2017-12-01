@@ -665,10 +665,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private createMetadataMenuItem(metadataAction: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
     return {
       name: this.translate.instant(`default.grid.actions.${metadataAction.action}`),
-      action: () =>  {
-        console.log(metadataAction, params);
-        this.action.emit({ metadataAction, params });
-        },
+      action: () =>  this.action.emit({ metadataAction, params }),
       disabled: !this.isContextMenuItemEnabled(metadataAction.action),
     };
   }
