@@ -98,7 +98,7 @@ export class GridService {
                 column.$$valueGetter = (row: ITypeCodeItem) => {
                   const dictCode = row[column.name];
                   const dictValue = dictionaryHash[dictCode];
-                  return  dictValue !== undefined ? dictValue : dictCode;
+                  return dictValue !== undefined ? dictValue : dictCode;
                 };
                 column.filterValues = dictionary.map(item => ({ code: item.code, name: item.name }));
               }
