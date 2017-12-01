@@ -38,11 +38,11 @@ export class DataUploadComponent {
 
   columns: IAGridColumn[];
 
-  isFirstRequest = true;
-
   rows: any[];
   rowCount = 0;
   rowIdKey = 'id';
+
+  private isFirstRequest = true;
 
   constructor(
     private cdRef: ChangeDetectorRef,
