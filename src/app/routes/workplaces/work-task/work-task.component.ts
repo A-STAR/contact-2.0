@@ -18,7 +18,7 @@ import { makeKey, range } from '../../../core/utils';
 export class WorkTaskComponent implements OnInit {
   static COMPONENT_NAME = 'WorkTaskComponent';
 
-  selectedTabIndex: number = 0;
+  selectedTabIndex = 0;
 
   grids: IFilterGridDef[] = [
     {
