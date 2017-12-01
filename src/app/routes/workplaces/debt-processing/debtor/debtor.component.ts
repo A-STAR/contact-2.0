@@ -82,6 +82,10 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     this.personSubscription.unsubscribe();
   }
 
+  get debtId$(): Observable<number> {
+    return this.debtorService.debt$.map(debt => debt.id);
+  }
+
   get personId$(): Observable<number> {
     return this.debtorService.debtor$.map(debtor => debtor.id);
   }

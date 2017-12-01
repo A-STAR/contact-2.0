@@ -72,6 +72,7 @@
         "TASKS": "Постановка задач",
         "DEBTS": "Обработка долгов",
         "CONTACT_LOG": "Протокол контактов",
+        "WORK_TASK": "Постановка задач",
         "CALL_CENTER": "Центр обзвона",
         "PAYMENTS": "Платежи",
         "COURTS_2": "Судебное и исполнительное производство",
@@ -257,6 +258,38 @@
             "position": "Должность"
           }
         }
+      }
+    },
+    "workTask": {
+      "filters": {
+        "form": {
+          "branchCode": "Филиал",
+          "dictValue1": "Словарный атрибут 1",
+          "dictValue2": "Словарный атрибут 2",
+          "dictValue3": "Словарный атрибут 3",
+          "dictValue4": "Словарный атрибут 4",
+          "portfolioId": "Реестр КА",
+          "regionCode": "Регион",
+          "userId": "Оператор",
+          "addressTypeCode": "Тип адреса",
+          "visitStatusCode": "Статус выезда",
+          "visitPurposeCode": "Цель выезда"
+        }
+      },
+      "newDebt": {
+        "title": "Новые долги"
+      },
+      "problemDebt": {
+        "title": "Проблемные"
+      },
+      "searchInformation": {
+        "title": "Поиск информации"
+      },
+      "debtToContractor": {
+        "title": "К передаче клиенту"
+      },
+      "prepareVisits": {
+        "title": "Подготовка выездов"
       }
     },
     "contactRegistration": {
@@ -988,7 +1021,7 @@
       "fullName": "Полное название",
       "smsName": "Название для СМС",
       "responsibleId": "Менеджер",
-      "responsibleName": "Менеджер",
+      "responsibleFullName": "Менеджер",
       "typeCode": "Тип",
       "phone": "Телефон",
       "address": "Адрес",
@@ -1813,6 +1846,9 @@
     "actionsLog": {
       "gen": { "singular": "записи лога действий", "plural": "лога действий" }
     },
+    "filterGrid": {
+      "gen": { "singular": "записи", "plural": "записей" }
+    },
     "constants": {
       "gen": { "singular": "константы", "plural": "списка констант" }
     },
@@ -1954,6 +1990,10 @@
     "paymentsCancel": {
       "cancelInquery": "Вы действительно хотите отменить отмеченные {{ count }} платежей?",
       "title": "Отмена платежей"
+    },
+    "smsDelete": {
+      "delete": "Вы действительно хотите удалить отмеченные {{ count }} SMS?",
+      "title": "Удаление SMS"
     }
   },
   "errors": {
@@ -2217,6 +2257,7 @@
         "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
         "statusChange": "Изменить статус",
+        "deleteSMS": "Удалить SMS",
         "visitAdd": "Отметить необходимость"
       }
     },
@@ -2265,7 +2306,7 @@
     "dialog": {
       "result": {
         "title": "Результат операции",
-        "message": "Операция выполнена успешно для {{successCount}} из {{count}} записей"
+        "message": "Операция выполнена успешно для {{processed}} из {{total}} записей"
       }
     },
     "NA": "Не установлен"

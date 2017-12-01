@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-
-import { INode } from '../../../../../shared/gui-objects/container/container.interface';
-
-import { PromiseCardComponent } from '../../../../../shared/gui-objects/widgets/promise/card/promise-card.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-debtor-promise',
@@ -11,9 +8,19 @@ import { PromiseCardComponent } from '../../../../../shared/gui-objects/widgets/
 export class DebtorPromiseComponent {
   static COMPONENT_NAME = 'DebtorPromiseComponent';
 
-  get node(): INode {
-    return {
-      component: PromiseCardComponent
-    };
+  constructor(
+    private route: ActivatedRoute,
+  ) {}
+
+  get debtId(): number {
+    return this.routeParams.debtId;
+  }
+
+  get promiseId(): number {
+    return this.routeParams.promiseId;
+  }
+
+  private get routeParams(): any {
+    return (this.route.params as any).value;
   }
 }

@@ -1,4 +1,3 @@
-import { HttpResponseBase } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
@@ -17,7 +16,7 @@ import {
 
 export class NotificationActionBuilder {
   private _prefix: string;
-  private _response: HttpResponseBase;
+  private _response: object;
   private _params: IMessageParams = {};
   private _alert = true;
 
@@ -33,7 +32,7 @@ export class NotificationActionBuilder {
     return this;
   }
 
-  response(response: HttpResponseBase): NotificationActionBuilder {
+  response(response: object): NotificationActionBuilder {
     this._response = response;
     return this;
   }
@@ -76,12 +75,12 @@ export class NotificationActionBuilder {
     this.store.dispatch(this.action());
   }
 
-  callback(): (response: HttpResponseBase) => Array<UnsafeAction> {
-    return (response: HttpResponseBase) => [ this.response(response).action() ];
+  callback(): (response: object) => Array<UnsafeAction> {
+    return (response: object) => [ this.response(response).action() ];
   }
 
-  dispatchCallback(): (response: HttpResponseBase) => Observable<null> {
-    return (response: HttpResponseBase) => {
+  dispatchCallback(): (response: object) => Observable<null> {
+    return (response: object) => {
       this.response(response).dispatch();
       return Observable.throw(response);
     };
@@ -98,15 +97,28 @@ export class NotificationActionBuilder {
     }, {});
 
     if (message.response) {
-      const { status } = message.response;
+      const { response } = message;
+      // const { status } = message.response;
+      const status = '';
 
-      const json = this.parseMessageResponse(message);
+      if (response && response.message) {
+        const { code, payload } = response.message;
 
-      if (json && json.message) {
-        const { code, payload } = json.message;
-        const payloadParams = payload ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {}) : {};
+        const payloadParams = payload
+          ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {})
+          : {};
 
         const translatedMessageKey = `errors.server.${code}`;
+        const translatedMessage = this.translateService.instant(translatedMessageKey, payloadParams);
+        if (translatedMessage !== translatedMessageKey) {
+          return translatedMessage;
+        }
+
+      } else if (response && response.massInfo) {
+        const { massInfo } = response;
+        const payloadParams = massInfo || {};
+
+        const translatedMessageKey = message.params.entity;
         const translatedMessage = this.translateService.instant(translatedMessageKey, payloadParams);
         if (translatedMessage !== translatedMessageKey) {
           return translatedMessage;
@@ -127,14 +139,6 @@ export class NotificationActionBuilder {
     }
 
     return this.translateService.instant(message.text, translatedParams);
-  }
-
-  private parseMessageResponse(message: IMessageOptions): any {
-    try {
-      return JSON.parse(message.response.statusText);
-    } catch (e) {
-      return null;
-    }
   }
 
   private createAction(type: INotificationActionType, payload?: INotificationActionPayload): UnsafeAction {

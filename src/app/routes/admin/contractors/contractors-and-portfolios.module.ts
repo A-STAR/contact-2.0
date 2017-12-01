@@ -9,14 +9,14 @@ import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.se
 
 import { ContractorsAndPortfoliosComponent } from './contractors-and-portfolios.component';
 import { ContractorEditComponent } from './contractors/edit/contractor-edit.component';
-import { ContractorManagersComponent } from './contractors/managers/contractor-managers.component';
-import { ContractorManagerEditComponent } from './contractors/managers/edit/contractor-manager-edit.component';
+import { ContractorManagersComponent } from './contractors/managers/managers.component';
+import { ContractorManagerEditComponent } from './contractors/managers/edit/manager-edit.component';
 import { PortfolioEditComponent } from './portfolios/edit/portfolio-edit.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: ContractorsAndPortfoliosComponent },
   { path: 'create', component: ContractorEditComponent },
-  { path: ':id', children: [
+  { path: ':contractorId', children: [
       { path: '', pathMatch: 'full', component: ContractorEditComponent },
       { path: 'managers', children: [
           { path: '', pathMatch: 'full', component: ContractorManagersComponent },

@@ -1,4 +1,5 @@
 import { ILookupKey } from '../../../core/lookup/lookup.interface';
+import { Observable } from 'rxjs/Observable';
 
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
@@ -41,4 +42,16 @@ export interface IRenderer {
 
 export interface IMessages {
   [key: string]: string;
+}
+
+export interface IContextMenuItem {
+  enabled: Observable<boolean>;
+  action?: (action: any) => any;
+  prop?: string;
+  label?: string;
+  fieldActions?: string[];
+  fieldAction?: string;
+  translationKey?: string;
+  icon?: HTMLElement | string;
+  cssClasses?: string[];
 }

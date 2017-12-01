@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
 
 import { DebtorGridService } from './debtor-grid.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
@@ -41,6 +41,24 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   ];
 
   debtors: any[];
+
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      fieldActions: [
+        'copyField',
+        'copyRow'
+      ],
+      translationKey: 'default.grid.localeText',
+      prop: 'fullName',
+      enabled: Observable.of(true)
+    },
+    // uncomment to test
+    // {
+    //   action: (actionName => this.onAction(actionName)),
+    //   label: 'default.grid.empty',
+    //   enabled: Observable.of(true)
+    // }
+  ];
 
   private searchParamsSubscription: Subscription;
 
@@ -83,6 +101,11 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
         this.router.navigate([ nextUrl ]);
       }
     });
+  }
+
+  onAction($event: string): void {
+    // uncomment to test action for context menu
+    // console.log(`Action was fired for ${$event}`);
   }
 
   private getUrlByDebtor(debtor: any): string {
