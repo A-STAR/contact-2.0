@@ -146,7 +146,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.contactLogService.fetchAll(this.personId)
+    this.contactLogService.fetchAll(this.personId, this.callCenter)
       .subscribe(contactLogList => {
         this.contactLogList = contactLogList;
         this.selectedChanged$.next(this.hasSelection);
