@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IActionGridDialogSelectionParams } from '../../../../components/action-grid/action-grid.interface';
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { ISingleVisit, IVisitsBundle } from '../visit-add.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
@@ -28,7 +27,7 @@ const label = makeKey('massOperations.visitAdd');
 @Component({
   selector: 'app-visit-add-dialog',
   templateUrl: 'visit-add-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VisitAddDialogComponent extends DialogFunctions implements  OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
