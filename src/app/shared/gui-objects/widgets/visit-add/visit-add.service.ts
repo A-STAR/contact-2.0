@@ -31,18 +31,16 @@ export class VisitAddService {
         .catch(() => Observable.of({
             success: true,
             massInfo: {
-              total: 2,
-              processed: 1
+              total: '2',
+              processed: '1'
             }
         }))
         .do(res => {
-          const processed = res.massInfo.processed.toString();
-          const total = res.massInfo.total.toString();
-          const params = { processed, total };
-
-          !!res.success
-            ? this.notificationsService.info('default.dialog.result.message').params(params).dispatch()
-            : this.notificationsService.warning('default.dialog.result.message').params(params).dispatch();
+          if (!res.success) {
+            this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
+          } else {
+            this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
+          }
         })
         .catch(() => {
           this.notificationsService.error('errors.default.massOp').entity('entities.massOps.addVisit').dispatch();
