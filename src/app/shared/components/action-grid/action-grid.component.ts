@@ -68,18 +68,14 @@ export class ActionGridComponent<T> extends DialogFunctions {
   getConfiguredParams(): any[] {
     const idNames = this.dialogData.action.metadataAction.params;
     const rowsOfIdValues = this.dialogData.selection;
-    // TODO ref with Array.prototype.reduce (m.bobryshev)
-    const acc = [];
-    idNames.forEach((idName, idNum) => {
+    // make [{},{}...]
+    const container = Array(rowsOfIdValues[0].length).join('.').split('.').map(() => new Object());
+    return idNames.reduce((acc, idName, idNum) => {
       rowsOfIdValues[idNum].forEach( ( current, ind ) => {
-        if (!acc[ind]) {
-          acc[ind] = {};
-        }
         acc[ind][idName] = current;
-        return acc;
       });
-    });
-    return acc;
+      return acc;
+    }, container );
   }
 
   getDialogParam(key: number): number | string {
