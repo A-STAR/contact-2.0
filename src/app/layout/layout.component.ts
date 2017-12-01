@@ -18,6 +18,7 @@ export class LayoutComponent {
     CampaignsComponent: 'CAMPAIGNS',
     ConstantsComponent: 'CONSTANTS',
     ContactLogComponent: 'CONTACT_LOG',
+    WorkTaskComponent: 'WORK_TASK',
     ContactRegistrationComponent: 'CONTACT_REGISTRATION',
     ContactPropertiesComponent: 'CONTACT_TREES',
     ContractorsAndPortfoliosComponent: 'PORTFOLIOS',

@@ -72,6 +72,7 @@
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_LOG": "Contact Log",
+        "WORK_TASK": "Work Tasks",
         "CALL_CENTER": "Call Center",
         "PAYMENTS": "Payments",
         "COURTS_2": "Courts",
@@ -257,6 +258,38 @@
             "position": "Position"
           }
         }
+      }
+    },
+    "workTask": {
+      "filters": {
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "portfolioId": "Portfolio",
+          "regionCode": "Region",
+          "userId": "Operator",
+          "addressTypeCode": "Тип адреса",
+          "visitStatusCode": "Статус выезда",
+          "visitPurposeCode": "Цель выезда"
+        }
+      },
+      "newDebt": {
+        "title": "New Debts"
+      },
+      "problemDebt": {
+        "title": "Problem Debts"
+      },
+      "searchInformation": {
+        "title": "Search Information"
+      },
+      "debtToContractor": {
+        "title": "Debt to contractor"
+      },
+      "prepareVisits": {
+        "title": "Prepare Visits"
       }
     },
     "contactRegistration": {
@@ -1812,6 +1845,9 @@
     },
     "actionsLog": {
       "gen": { "singular": "actions log entry", "plural": "action log" }
+    },
+    "filterGrid": {
+      "gen": { "singular": "record", "plural": "records" }
     },
     "constants": {
       "gen": { "singular": "constant", "plural": "constants" }
