@@ -183,7 +183,8 @@ export class ContractorsAndPortfoliosService {
     portfolio: IPortfolio): Observable<any> {
     return this.dataService.update('/contractors/{contractorsId}/portfolios/{portfoliosId}/outsourcing/form', {
       contractorId, portfolioId
-    }, portfolio);
+    }, portfolio)
+    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
   sendOutsourcePortfolio(
@@ -192,7 +193,8 @@ export class ContractorsAndPortfoliosService {
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
     return this.dataService.update('/contractors/{contractorsId}/portfolios/{portfoliosId}/outsourcing/send', {
       contractorId, portfolioId
-    }, { portfolio, debtStatusCode: 14 });
+    }, { portfolio, debtStatusCode: 14 })
+    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
   returnOutsourcePortfolio(
@@ -201,7 +203,8 @@ export class ContractorsAndPortfoliosService {
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
     return this.dataService.update('/contractors/{contractorsId}/portfolios/{portfoliosId}/outsourcing/return', {
       contractorId, portfolioId
-    }, portfolio);
+    }, portfolio)
+    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
   selectPortfolio(portfolioId: number): void {

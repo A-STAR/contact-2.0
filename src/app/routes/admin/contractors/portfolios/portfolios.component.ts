@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
@@ -19,8 +20,6 @@ import { GridComponent } from '../../../../shared/components/grid/grid.component
 
 import { combineLatestAnd } from '../../../../core/utils/helpers';
 import { DialogFunctions } from '../../../../core/dialog';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-portfolios',
@@ -75,7 +74,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   contextMenuOptions: IContextMenuItem[] = [
     {
-      label: this.translateService.instant('portfolios.outsourcing.form'),
+      label: this.translateService.instant('portfolios.outsourcing.form.menu'),
       action: () => this.onForm(),
       enabled: combineLatestAnd([
         this.canForm$,
@@ -85,7 +84,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       ])
     },
     {
-      label: this.translateService.instant('portfolios.outsourcing.send'),
+      label: this.translateService.instant('portfolios.outsourcing.send.menu'),
       action: () => this.onForm(),
       enabled: combineLatestAnd([
         this.canSend$,
@@ -95,7 +94,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       ])
     },
     {
-      label: this.translateService.instant('portfolios.outsourcing.return'),
+      label: this.translateService.instant('portfolios.outsourcing.return.menu'),
       action: () => this.onForm(),
       enabled: combineLatestAnd([
         this.canReturn$,
@@ -230,7 +229,9 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onForm(): void {
-    this.setDialog('form');
+    this.contractorsAndPortfoliosService
+      .formOutsourcePortfolio(this.selectedContractorId, this.selection[0].id, this.selection[0])
+      .subscribe(() => {});
   }
 
   onSend(): void {
@@ -256,6 +257,22 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   onMoveSubmit(contractor: IContractor): void {
     this.contractorsAndPortfoliosService
       .movePortfolio(this.selectedContractorId, this.selection[0].id, { newContractorId: contractor.id } )
+      .subscribe(() => {
+        this.setDialog();
+      });
+  }
+
+  onSendSubmit(portfolio: IPortfolio): void {
+    this.contractorsAndPortfoliosService.sendOutsourcePortfolio(this.selectedContractorId,
+      this.selection[0].id, portfolio)
+      .subscribe(() => {
+        this.setDialog();
+      });
+  }
+
+  onReturnSubmit(portfolio: IPortfolio): void {
+    this.contractorsAndPortfoliosService.returnOutsourcePortfolio(this.selectedContractorId,
+      this.selection[0].id, portfolio)
       .subscribe(() => {
         this.setDialog();
       });
