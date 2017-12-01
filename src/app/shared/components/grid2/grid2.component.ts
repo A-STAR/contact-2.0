@@ -674,21 +674,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
-    // // TODO mock (m.bobryshev)
-    // this.actions = actions;
-    // //  TODO mock (m.bobryshev)
-    const a = this.actions.map(action => this.createMetadataMenuItem(action, params));
-    console.log(a);
-    return a;
-
-
-    // return this.actions.push({
-    //     action: 'visitAdd',
-    //     addOptions: null,
-    //     //  TODO mock (m.bobryshev), sh.b. debtId, addressesId, personRole
-    //     params: ['debtId', 'personId', 'regionCode']
-    //   });
-
+    //  TODO mock (m.bobryshev)
+    this.actions.push({
+      action: 'visitAdd',
+      addOptions: null,
+      //  TODO mock (m.bobryshev), sh.b. debtId, addressesId, personRole
+      params: ['debtId', 'personId', 'regionCode']
+    });
+    return this.actions.map(action => this.createMetadataMenuItem(action, params));
   }
 
   private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {

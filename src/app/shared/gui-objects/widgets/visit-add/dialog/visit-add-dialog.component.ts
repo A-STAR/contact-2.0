@@ -6,23 +6,19 @@ import {
   Input,
   OnChanges,
   OnInit,
-  OnDestroy,
   Output,
   ViewChild
 } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { TranslateService } from '@ngx-translate/core';
 
 import { IActionGridDialogSelectionParams } from '../../../../components/action-grid/action-grid.interface';
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { ISingleVisit, IVisitsBundle } from '../visit-add.interface';
+import {  IVisitsBundle } from '../visit-add.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { DialogFunctions } from '../../../../../core/dialog';
 import { makeKey } from '../../../../../core/utils';
-import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 

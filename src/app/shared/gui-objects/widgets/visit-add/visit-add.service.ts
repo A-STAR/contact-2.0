@@ -40,15 +40,15 @@ export class VisitAddService {
           if (!res.success) {
             this.notificationsService.warning('default.dialog.result.message')
               .params({
-                'successCount': res.massInfo.processed.toString(),
-                'count':        res.massInfo.processed.toString(),
+                'processed': res.massInfo.processed.toString(),
+                'total':        res.massInfo.processed.toString(),
               })
               .dispatch();
           } else {
             this.notificationsService.info('default.dialog.result.message')
               .params({
-                'successCount': res.massInfo.processed.toString(),
-                'count':        res.massInfo.processed.toString(),
+                'processed': res.massInfo.processed.toString(),
+                'total':        res.massInfo.processed.toString(),
               })
               .dispatch();
           }

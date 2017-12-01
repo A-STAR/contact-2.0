@@ -11,7 +11,6 @@ import {
 
 import { IActionGridDialogData } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected } from '../grid2/grid2.interface';
-import { IActionGridDialogSelectionParams } from '../action-grid/action-grid.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 
 import { GridComponent } from '../../components/grid/grid.component';
