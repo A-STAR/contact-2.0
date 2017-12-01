@@ -63,7 +63,7 @@ export class DataUploadService {
     // POST /load/debtSetOperator/guid/{tempDataGuid}
     // const request = this.gridService.buildRequest(params, {});
     return Observable.of({
-      rows: [],
+      rows: this.rows,
     });
   }
 
@@ -81,21 +81,22 @@ export class DataUploadService {
 
   deleteRow(rowId: number): Observable<void> {
     // DELETE /load/debtSetOperator/guid/{tempDataGuid}/row/{rowIds}
-    return Observable.of();
+    this.rows = this.rows.filter(row => row.id !== rowId);
+    return Observable.of(null);
   }
 
   save(): Observable<void> {
     // POST /load/debtSetOperator/guid/{tempDataGuid}/save
-    return Observable.of();
+    return Observable.of(null);
   }
 
   getErrors(): Observable<IErrorsResponse> {
     // GET /load/debtSetOperator/guid/{tempDataGuid}/error
-    return Observable.of();
+    return Observable.of(null);
   }
 
   cancel(): Observable<void> {
     // DELETE /load/debtSetOperator/guid/{tempDataGuid}
-    return Observable.of();
+    return Observable.of(null);
   }
 }
