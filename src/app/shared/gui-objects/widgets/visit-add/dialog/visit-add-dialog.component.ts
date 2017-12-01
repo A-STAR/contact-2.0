@@ -35,10 +35,9 @@ export class VisitAddDialogComponent  implements  OnInit {
   @Output() cancel = new EventEmitter<void>();
 
   controls: Array<IDynamicFormItem>;
-  // dialog = null;
   formData: IVisitsBundle;
 
-  addressCounter = {
+  visitsCounter = {
     count: null
   };
 
@@ -59,7 +58,7 @@ export class VisitAddDialogComponent  implements  OnInit {
   }
 
   ngOnInit(): void {
-    this.addressCounter.count = this.visitRelsIds.length ;
+    this.visitsCounter.count = this.visitRelsIds.length ;
     Observable.combineLatest(
       // TODO mock (m.bobryshev) swap with VISIT_ADD when permission will be founded
       this.userPermissionsService.has('VISIT_CANCEL'),
@@ -69,7 +68,7 @@ export class VisitAddDialogComponent  implements  OnInit {
         return;
       }
       this.controls = this.getControls(options);
-      this.addressCounter.count = this.visitRelsIds.length;
+      this.visitsCounter.count = this.visitRelsIds.length;
       this.formData = {
         actionData: {
           purposeCode: null,
@@ -89,7 +88,6 @@ export class VisitAddDialogComponent  implements  OnInit {
   }
 
   onCancel(): void {
-    // this.setDialog();
     this.close.emit();
   }
 
