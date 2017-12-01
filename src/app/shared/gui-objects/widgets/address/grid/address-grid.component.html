@@ -32,7 +32,7 @@
 <app-address-grid-visits
   *ngIf="isDialog('visits')"
   [addressId]="selectedAddressId$ | async"
-  [personId]="personId"
+  [personId]="personId$ | async"
   (cancel)="onCloseDialog()">
 </app-address-grid-visits>
 
@@ -49,7 +49,7 @@
 <app-address-grid-mark
   *ngIf="isDialog('mark')"
   [debtorId]="debtorId"
-  [personId]="personId"
+  [personId]="personId$ | async"
   [personRole]="personRole"
   (submit)="onMarkDialogSubmit($event)"
   (cancel)="onCloseDialog()">

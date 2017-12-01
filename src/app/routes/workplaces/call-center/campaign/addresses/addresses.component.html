@@ -2,7 +2,11 @@
   *ngIf="debtExists$ | async"
   action="edit"
   [debtId]="debtId$ | async"
+  [debtorId]="personId$ | async"
   [callCenter]="true"
+  [ignoreViewPermissions]="true"
+  [ignoreVisitAddPermissions]="true"
+  [ignoreVisitViewPermissions]="true"
   [personId]="personId$ | async"
   [personRole]="1"
 ></app-address-grid>
