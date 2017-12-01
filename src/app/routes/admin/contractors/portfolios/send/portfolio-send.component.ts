@@ -59,6 +59,10 @@ export class PortfolioSendComponent implements OnInit {
 
   }
 
+  canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
   submit(): void {
     const portfolio = this.form.serializedUpdates;
     this.onSubmit.emit(portfolio);
