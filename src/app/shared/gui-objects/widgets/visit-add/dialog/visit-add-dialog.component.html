@@ -1,20 +1,3 @@
-<!-- <app-dialog-action
-  *ngIf="isDialog('enqueryConfirm')"
-  titleTranslationKey="massOperations.paymentsConfirm.title"
-  actionTranslationKey="massOperations.paymentsConfirm.ConfirmInquery"
-  actionMessage="default.buttons.ok"
-  [messageParams]="paymentsCounter"
-  (action)="onConfirmPayments()"
-  (cancel)="onCloseDialog()">
-</app-dialog-action>
-
-<app-result-dialog
-  *ngIf="isDialog('infoConfirm')"
-  [count]="totalCount"
-  [successCount]="successCount"
-  (close)="onCloseDialog()">
-</app-result-dialog> -->
-
 <app-dialog (close)="onCancel()">
   <div dialog-header>
      <h3>{{ 'massOperations.visitAdd.title' | translate: {count: addressCounter.count} }}</h3>
