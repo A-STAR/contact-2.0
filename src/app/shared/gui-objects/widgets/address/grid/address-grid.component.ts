@@ -37,6 +37,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
   @Input() callCenter = false;
+  @Input() ignoreViewPermissions = false;
+  @Input() ignoreVisitAddPermissions = false;
+  @Input() ignoreVisitViewPermissions = false;
   @Input() entityType = 18;
   @Input('personId')
   set personId(personId: number) {
@@ -282,7 +285,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_VIEW');
+    return this.ignoreViewPermissions
+      ? Observable.of(true)
+      : this.userPermissionsService.has('ADDRESS_VIEW');
   }
 
   get canViewBlock$(): Observable<boolean> {
@@ -323,14 +328,18 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   get canViewVisitLog$(): Observable<boolean> {
     return combineLatestAnd([
-      this.userPermissionsService.has('ADDRESS_VISIT_VIEW'),
+      this.ignoreVisitViewPermissions
+        ? Observable.of(true)
+        : this.userPermissionsService.has('ADDRESS_VISIT_VIEW'),
       this.selectedAddress$.map(Boolean),
     ]);
   }
 
   get canMarkVisit$(): Observable<boolean> {
     return combineLatestAnd([
-      this.userPermissionsService.has('ADDRESS_VISIT_ADD'),
+      this.ignoreVisitAddPermissions
+        ? Observable.of(true)
+        : this.userPermissionsService.has('ADDRESS_VISIT_ADD'),
       this.selectedAddress$.map(address => address && address.statusCode !== 3 && !address.isInactive),
     ]);
   }

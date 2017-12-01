@@ -48,6 +48,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
   @Input() callCenter = false;
   @Input() entityType = 18;
+  @Input() ignoreViewPermissions = false;
+  @Input() ignoreSmsSingleFormPersonRoleListPermissions = false;
+  @Input() ignoreDebtRegContactTypeListPermissions = false;
   @Input('personId')
   set personId(personId: number) {
     this.personId$.next(personId);
@@ -272,7 +275,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('PHONE_VIEW');
+    return this.ignoreViewPermissions
+      ? Observable.of(true)
+      : this.userPermissionsService.has('PHONE_VIEW');
   }
 
   get canViewBlock$(): Observable<boolean> {
@@ -306,7 +311,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
           this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST', phone.statusCode),
-          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this.personRole),
+          this.ignoreSmsSingleFormPersonRoleListPermissions
+            ? Observable.of(true)
+            : this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this.personRole),
         ])
         : Observable.of(false);
     });
@@ -316,7 +323,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     // TODO(d.maltsev): use debtor service
     return combineLatestAnd([
       this.selectedPhone$.map(phone => phone && !phone.isInactive),
-      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),
+      this.ignoreDebtRegContactTypeListPermissions
+        ? Observable.of(true)
+        : this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }
