@@ -27,11 +27,6 @@ export interface IDataResponse {
   rows: IRow[];
 }
 
-export interface IPagingPayload {
-  pageNumber: number;
-  resultsPerPage: number;
-}
-
 export interface ICellPayload {
   rowId: number;
   cellId: number;

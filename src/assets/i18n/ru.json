@@ -2255,7 +2255,9 @@
         "debtClearResponsible": "Снять ответственного по долгу",
         "debtNextCallDate": "Установить дату следующего звонка",
         "debtSetResponsible": "Установить ответственного по долгу",
+        "delete": "Удалить",
         "deletePromise": "Удалить обещания",
+        "deleteSMS": "Удалить SMS",
         "objectAddToGroup": "Добавить в группу",
         "objectChangeColor": "Изменить цвет",
         "openDebtCard": "Открыть карточку долга",
@@ -2263,8 +2265,7 @@
         "paymentsConfirm": "Подтвердить платежи",
         "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
-        "statusChange": "Изменить статус",
-        "deleteSMS": "Удалить SMS"
+        "statusChange": "Изменить статус"
       }
     },
     "filter": {

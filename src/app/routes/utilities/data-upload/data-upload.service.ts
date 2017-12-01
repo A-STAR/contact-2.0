@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
@@ -8,7 +9,6 @@ import {
   IErrorsResponse,
   IDataResponse,
   IOpenFileResponse,
-  IPagingPayload,
 } from './data-upload.interface';
 
 @Injectable()
@@ -59,8 +59,9 @@ export class DataUploadService {
       .do(response => this.guid = response.guid);
   }
 
-  fetch(pagingParams: IPagingPayload): Observable<IDataResponse> {
+  fetch(params: IAGridRequestParams): Observable<IDataResponse> {
     // POST /load/debtSetOperator/guid/{tempDataGuid}
+    // const request = this.gridService.buildRequest(params, {});
     return Observable.of({
       rows: [],
     });

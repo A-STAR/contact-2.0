@@ -1,11 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 
-import { IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse, ICell, ICellPayload } from './data-upload.interface';
+import { IOpenFileResponse, ICell, ICellPayload, IDataResponse } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
+
+import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 @Component({
   selector: 'app-data-upload',
@@ -20,10 +29,11 @@ import { DataUploadService } from './data-upload.service';
 export class DataUploadComponent {
   static COMPONENT_NAME = 'DataUploadComponent';
 
-  @ViewChild('fileInput') fileInput: any;
+  @ViewChild(Grid2Component) grid: Grid2Component;
+  @ViewChild('fileInput') fileInput: ElementRef;
 
   actions: IMetadataAction[] = [
-    { action: 'foo', params: [], addOptions: [] },
+    { action: 'delete', params: [], addOptions: [] },
   ];
 
   columns: IAGridColumn[];
@@ -38,19 +48,22 @@ export class DataUploadComponent {
   ) {}
 
   onRequest(): void {
-    //
+    const params = this.grid.getRequestParams();
+    this.dataUploadService
+      .fetch(params)
+      .subscribe(response => {
+        this.rows = this.getRowsFromResponse(response);
+        this.rowCount = this.rows.length;
+        this.cdRef.markForCheck();
+      });
   }
 
-  onSelect(event: any): void {
-    //
-  }
-
-  onDblClick(event: any): void {
-    //
-  }
-
-  onAction(event: any): void {
-    //
+  onAction(event: IAGridAction): void {
+    const { action } = event.metadataAction;
+    const { id } = event.params.node;
+    this.dataUploadService
+      .deleteRow(Number(id))
+      .subscribe(() => this.onRequest());
   }
 
   onCellValueChange(event: CellValueChangedEvent): void {
@@ -60,11 +73,13 @@ export class DataUploadComponent {
       cellId: cell.id,
       value: cell.value,
     };
-    this.dataUploadService.editCell(payload).subscribe(response => {
-      const row = response.rows[0];
-      this.rows[row.id] = row;
-      this.cdRef.markForCheck();
-    });
+    this.dataUploadService
+      .editCell(payload)
+      .subscribe(response => {
+        const row = response.rows[0];
+        this.rows[row.id] = row;
+        this.cdRef.markForCheck();
+      });
   }
 
   onFileOpenClick(): void {
@@ -100,7 +115,7 @@ export class DataUploadComponent {
       }));
   }
 
-  private getRowsFromResponse(response: IOpenFileResponse): any[] {
+  private getRowsFromResponse(response: IDataResponse): any[] {
     return response.rows.sort((a, b) => a.id - b.id);
   }
 

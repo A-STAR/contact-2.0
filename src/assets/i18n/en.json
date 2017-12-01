@@ -2255,7 +2255,9 @@
         "debtClearResponsible": "Clear debt responsible",
         "debtNextCallDate": "Set next call date",
         "debtSetResponsible": "Set debt responsible",
+        "delete": "Удалить",
         "deletePromise": "Delete promises",
+        "deleteSMS": "Delete SMS",
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
@@ -2263,8 +2265,7 @@
         "paymentsConfirm": "Payments confirm",
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
-        "statusChange": "Change status",
-        "deleteSMS": "Delete SMS"
+        "statusChange": "Change status"
       }
     },
     "filter": {
