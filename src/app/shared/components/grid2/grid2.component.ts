@@ -730,11 +730,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         // TODO(d.maltsev, i.kibisov): pass entityTypeId
         return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
       case 'showContactHistory':
-        return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+        return this.userPermissionsBag.has('CONTACT_LOG_VIEW') && this.selected.length > 0;
       case 'paymentsConfirm':
-        return this.userPermissionsBag.has('PAYMENT_CONFIRM');
+        return this.userPermissionsBag.has('PAYMENT_CONFIRM') && this.selected.length > 0;
       case 'paymentsCancel':
-        return this.userPermissionsBag.has('PAYMENT_CANCEL');
+        return this.userPermissionsBag.has('PAYMENT_CANCEL') && this.selected.length > 0;
       case 'confirmPromise':
         return this.userPermissionsBag.has('PROMISE_CONFIRM') && this.selected.length > 0;
       case 'deletePromise':

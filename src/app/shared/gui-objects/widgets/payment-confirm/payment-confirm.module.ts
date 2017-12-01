@@ -1,20 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { PaymentConfirmDialogModule } from './dialog-confirm/payment-confirm-dialog.module';
-import { PaymentCancelDialogModule } from './dialog-cancel/payment-cancel-dialog.module';
+import { DialogActionModule } from '../../../components/dialog-action/dialog-action.module';
+
+import { PaymentCancelDialogComponent } from './dialog-cancel/payment-cancel-dialog.component';
+import { PaymentConfirmDialogComponent } from './dialog-confirm/payment-confirm-dialog.component';
 
 import { PaymentConfirmService } from './payment-confirm.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    PaymentConfirmDialogModule,
-    PaymentCancelDialogModule,
+    DialogActionModule,
+  ],
+  declarations: [
+    PaymentCancelDialogComponent,
+    PaymentConfirmDialogComponent,
   ],
   exports: [
-    PaymentConfirmDialogModule,
-    PaymentCancelDialogModule,
+    PaymentCancelDialogComponent,
+    PaymentConfirmDialogComponent,
   ],
   providers: [
     PaymentConfirmService,

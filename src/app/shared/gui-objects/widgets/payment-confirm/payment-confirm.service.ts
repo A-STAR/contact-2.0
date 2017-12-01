@@ -14,34 +14,27 @@ export class PaymentConfirmService {
   private confirmUrl = '/mass/payments/confirm';
   private cancelUrl = '/mass/payments/cancel';
 
-
-  paymentsConfirm(
-    ids: number[]
-  ): Observable<any> {
+  paymentsConfirm(ids: number[]): Observable<any> {
       return this.dataService.update(this.confirmUrl, {}, { idData: { ids } } )
         .do(res => {
           if (!res.success) {
-            // TODO make dict when its will be fixed
-            this.notificationsService.error('errors.default.read').entity('entities.user.constants.gen.plural').callback();
-            return;
+            this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
+          } else {
+            this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
           }
-        });
-      // TODO unmock when api ready, make dict for catc
-      // .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
+        })
+        .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').dispatchCallback());
    }
 
-   paymentsCancel(
-    ids: number[]
-  ): Observable<any> {
+   paymentsCancel(ids: number[]): Observable<any> {
       return this.dataService.update(this.cancelUrl, {}, { idData: { ids } } )
         .do(res => {
           if (!res.success) {
-            // TODO make dict when its will be fixed
-            this.notificationsService.error('errors.default.read').entity('entities.user.constants.gen.plural').callback();
-            return;
+            this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
+          } else {
+            this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
           }
-        });
-      // TODO unmock when api ready, make dict for catc
-      // .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').callback());
+        })
+      .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').dispatchCallback());
    }
 }

@@ -17,9 +17,8 @@ export class SmsDeleteService {
     return this.dataService.update(this.url, {}, { idData: { ids } } )
       .do(res => {
         if (!res.success) {
-          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
+          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
         } else {
-          // check for 0 successful deletions
           this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
         }
       })
