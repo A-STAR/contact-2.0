@@ -2,6 +2,7 @@
   *ngIf="debtExists$ | async"
   action="edit"
   [debtId]="debtId$ | async"
+  [debtorId]="personId$ | async"
   [callCenter]="true"
   [ignoreViewPermissions]="true"
   [ignoreVisitAddPermissions]="true"
