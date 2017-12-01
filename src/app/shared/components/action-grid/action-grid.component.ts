@@ -9,7 +9,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import { IActionGridDialogData } from './action-grid.interface';
+import { IActionGridDialogData, ICloseAction } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected } from '../grid2/grid2.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 
@@ -98,9 +98,17 @@ export class ActionGridComponent<T> extends DialogFunctions {
     this.cdRef.markForCheck();
   }
 
-  onCloseRefresh(result: boolean): void {
-    if (result) {
+  onCloseAction(action: ICloseAction): void {
+    if (action.refresh) {
       this.onRequest();
+    }
+    if (action.deselectAll) {
+      const grid = (this.grid as MetadataGridComponent<T>);
+      if (grid.grid) {
+        grid.grid.deselectAll();
+      } else {
+        (this.grid as GridComponent).clearSelection();
+      }
     }
     this.onCloseDialog();
   }

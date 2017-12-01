@@ -13,3 +13,8 @@ export interface IActionGridDialogData {
   params: IActionGridDialogNodeParams;
   selection: IActionGridDialogSelectionParams;
 }
+
+export interface ICloseAction {
+  refresh?: boolean;
+  deselectAll?: boolean;
+}

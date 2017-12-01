@@ -16,11 +16,13 @@ export function reducer(state: IUsersState = defaultState, action: UnsafeAction)
         ...state,
         selectedUserId: action.payload.userId
       };
+
     case UsersService.USER_TOGGLE_INACTIVE:
       return {
         ...state,
         displayInactive: !state.displayInactive
       };
+
     default:
       return state;
   }
