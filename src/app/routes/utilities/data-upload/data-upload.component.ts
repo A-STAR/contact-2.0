@@ -60,10 +60,14 @@ export class DataUploadComponent {
 
   onAction(event: IAGridAction): void {
     const { action } = event.metadataAction;
-    const { id } = event.params.node;
-    this.dataUploadService
-      .deleteRow(Number(id))
-      .subscribe(() => this.onRequest());
+    switch (action) {
+      case 'delete':
+        const { id } = event.params.node;
+        this.dataUploadService
+          .deleteRow(Number(id))
+          .subscribe(() => this.onRequest());
+        break;
+    }
   }
 
   onCellValueChange(event: CellValueChangedEvent): void {
