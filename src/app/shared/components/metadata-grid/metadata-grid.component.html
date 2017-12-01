@@ -1,4 +1,4 @@
-<div class="mv">
+<div class="mv" *ngIf="showFilter">
   <app-metadata-filter
     [metadataKey]="metadataKey"
     (filter)="onFilterHandler()"

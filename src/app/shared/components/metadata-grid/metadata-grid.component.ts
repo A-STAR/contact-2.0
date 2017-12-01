@@ -41,6 +41,7 @@ export class MetadataGridComponent<T> implements OnInit {
   @Input() rowIdKey: string;
   @Input() rows: T[] = [];
   @Input() rowCount: number;
+  @Input() showFilter = false;
 
   @Output() action = new EventEmitter<IAGridAction>();
   @Output() onDblClick = new EventEmitter<T>();
@@ -125,7 +126,9 @@ export class MetadataGridComponent<T> implements OnInit {
 
   getFilters(): FilterObject {
     const filters = this.grid.getFilters();
-    filters.addFilter(this.filter.filters);
+    if (this.filter) {
+      filters.addFilter(this.filter.filters);
+    }
     return filters;
   }
 
