@@ -94,6 +94,7 @@
     [contextMenuOptions]="contextMenuOptions"
     [rows]="rows"
     [styles]="styles"
+    (action)="onSimpleGridAction($event)"
     (onDblClick)="onDblClick($event)"
     (onSelect)="onSelect($event)"
   ></app-grid>

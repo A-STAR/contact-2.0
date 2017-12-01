@@ -25,7 +25,7 @@ export class ContextMenuComponent implements OnInit {
   @Input() options: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
 
-  @Output() action = new EventEmitter<any>();
+  @Output() action = new EventEmitter<IContextMenuItem>();
 
   actionItems: IContextMenuItem[];
   fieldActionItems: IContextMenuItem[];
@@ -83,12 +83,11 @@ export class ContextMenuComponent implements OnInit {
   }
 
   onAction(item: IContextMenuItem): void {
-    if (item.action) {
+    if (item.action && typeof item.action === 'function') {
       item.action(item.label);
     }
     if (this.action) {
-      this.action.emit();
+      this.action.emit(item);
     }
   }
-
 }

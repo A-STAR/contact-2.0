@@ -9,7 +9,7 @@ export interface IActionGridDialogSelectionParams {
 }
 
 export interface IActionGridDialogData {
-  action: IAGridAction;
+  addOptions: { name: string; value: (string | number)[] }[];
   params: IActionGridDialogNodeParams;
   selection: IActionGridDialogSelectionParams;
 }
