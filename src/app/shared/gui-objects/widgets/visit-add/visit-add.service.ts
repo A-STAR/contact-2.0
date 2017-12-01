@@ -18,7 +18,6 @@ export class VisitAddService {
   createVisit(
     aims: ISingleVisit[], actionData: IVisitsBundle
   ): Observable<any> {
-    console.log(actionData);
       return this.dataService.update(
         this.baseUrl,
         {},
@@ -33,25 +32,17 @@ export class VisitAddService {
             success: true,
             massInfo: {
               total: 2,
-              processed: 2
+              processed: 1
             }
         }))
         .do(res => {
-          if (!res.success) {
-            this.notificationsService.warning('default.dialog.result.message')
-              .params({
-                'processed': res.massInfo.processed.toString(),
-                'total':        res.massInfo.processed.toString(),
-              })
-              .dispatch();
-          } else {
-            this.notificationsService.info('default.dialog.result.message')
-              .params({
-                'processed': res.massInfo.processed.toString(),
-                'total':        res.massInfo.processed.toString(),
-              })
-              .dispatch();
-          }
+          const processed = res.massInfo.processed.toString();
+          const total = res.massInfo.total.toString();
+          const params = { processed, total };
+
+          !!res.success
+            ? this.notificationsService.info('default.dialog.result.message').params(params).dispatch()
+            : this.notificationsService.warning('default.dialog.result.message').params(params).dispatch();
         })
         .catch(() => {
           this.notificationsService.error('errors.default.massOp').entity('entities.massOps.addVisit').dispatch();
