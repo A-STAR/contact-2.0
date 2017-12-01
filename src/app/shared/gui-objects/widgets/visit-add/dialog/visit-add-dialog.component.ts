@@ -13,7 +13,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IActionGridDialogSelectionParams } from '../../../../components/action-grid/action-grid.interface';
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import {  IVisitsBundle } from '../visit-add.interface';
+import { ISingleVisit, IVisitsBundle } from '../visit-add.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -33,7 +33,7 @@ const label = makeKey('massOperations.visitAdd');
 })
 export class VisitAddDialogComponent extends DialogFunctions implements OnChanges, OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-  @Input() visitRelsIds: any[];
+  @Input() visitRelsIds: ISingleVisit[];
   @Output() close = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
