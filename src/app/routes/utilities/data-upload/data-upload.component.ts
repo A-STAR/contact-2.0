@@ -10,7 +10,7 @@ import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse, ICell, ICellPayload, IDataResponse } from './data-upload.interface';
+import { IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
 
@@ -48,6 +48,10 @@ export class DataUploadComponent {
     private cdRef: ChangeDetectorRef,
     private dataUploadService: DataUploadService,
   ) {}
+
+  get hasErrors(): boolean {
+    return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
+  }
 
   onRequest(): void {
     if (this.isFirstRequest) {
@@ -109,6 +113,11 @@ export class DataUploadComponent {
         this.isFirstRequest = true;
         this.cdRef.markForCheck();
       });
+  }
+
+  private rowHasErrors(row: IRow): boolean {
+    // TODO(d.maltsev): how to check for errors?
+    return row.cells.reduce((acc, cell) => acc || !!cell.errorMsg, false);
   }
 
   private getColumnsFromResponse(response: IOpenFileResponse): IAGridColumn[] {

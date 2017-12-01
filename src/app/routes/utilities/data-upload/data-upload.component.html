@@ -1,7 +1,6 @@
 <div class="mb">
   <app-button label="Открыть файл" (click)="onFileOpenClick()"></app-button>
-  <app-button label="Загрузить"></app-button>
-  <app-button label="Отмена"></app-button>
+  <app-button label="Сохранить в БД" [disabled]="hasErrors"></app-button>
 </div>
 
 <div hidden>
