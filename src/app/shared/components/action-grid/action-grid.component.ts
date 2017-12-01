@@ -61,6 +61,11 @@ export class ActionGridComponent<T> extends DialogFunctions {
     return !!this.metadataKey;
   }
 
+  getAddOptions(name: string): (number|string)[] {
+    // TODO(d.maltsev): not optimized; better to convert to key: value object on initialization
+    return this.dialogData.addOptions.find(option => option.name === name).value;
+  }
+
   getSelectionParam(key: number): any[] {
     return this.dialogData.selection[key];
   }
@@ -85,10 +90,26 @@ export class ActionGridComponent<T> extends DialogFunctions {
     const { metadataAction, params } = gridAction;
     this.dialog = metadataAction.action;
     this.dialogData = {
-      action: gridAction,
+      addOptions: metadataAction.addOptions,
       params: metadataAction.params.reduce((acc, param, i) => ({
         ...acc,
         [i]: params.node.data[param]
+      }), {}),
+      selection: metadataAction.params.reduce((acc, param, i) => ({
+        ...acc,
+        [i]: this.selection.map(item => item[param])
+      }), {}),
+    };
+    this.cdRef.markForCheck();
+  }
+
+  onSimpleGridAction(metadataAction: any): void {
+    this.dialog = metadataAction.action;
+    this.dialogData = {
+      addOptions: metadataAction.addOptions,
+      params: metadataAction.params.reduce((acc, param, i) => ({
+        ...acc,
+        [i]: this.selection[0][param]
       }), {}),
       selection: metadataAction.params.reduce((acc, param, i) => ({
         ...acc,

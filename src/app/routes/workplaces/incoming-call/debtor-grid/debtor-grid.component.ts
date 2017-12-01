@@ -52,12 +52,34 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
       prop: 'fullName',
       enabled: Observable.of(true)
     },
-    // uncomment to test
-    // {
-    //   action: (actionName => this.onAction(actionName)),
-    //   label: 'default.grid.empty',
-    //   enabled: Observable.of(true)
-    // }
+    {
+      action: 'showContactHistory',
+      label: 'default.grid.actions.showContactHistory',
+      enabled: Observable.of(true),
+      params: [ 'personId' ],
+    },
+    {
+      action: 'debtSetResponsible',
+      label: 'default.grid.actions.debtSetResponsible',
+      enabled: Observable.of(true),
+      params: [ 'debtId' ]
+    },
+    {
+      action: 'debtClearResponsible',
+      label: 'default.grid.actions.debtClearResponsible',
+      enabled: Observable.of(true),
+      params: [ 'debtId' ]
+    },
+    {
+      action: 'objectAddToGroup',
+      label: 'default.grid.actions.objectAddToGroup',
+      enabled: Observable.of(true),
+      params: [ 'debtId' ],
+      // TODO(d.maltsev, i.kibisov): currently using injection instead of this
+      addOptions: [
+        { name: 'entityTypeId', value: [ 19 ] }
+      ]
+    },
   ];
 
   private searchParamsSubscription: Subscription;
