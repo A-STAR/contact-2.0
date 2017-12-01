@@ -1,0 +1,28 @@
+<div class="mb">
+  <app-button label="Открыть файл" (click)="onFileOpenClick()"></app-button>
+  <app-button label="Загрузить"></app-button>
+  <app-button label="Отмена"></app-button>
+</div>
+
+<div hidden>
+  <input #fileInput type="file" (change)="onFileChange()">
+</div>
+
+<app-grid2
+  *ngIf="columns"
+  [actions]="actions"
+  [columns]="columns"
+  [ngClass]="'data-upload'"
+  [persistenceKey]="'data-upload'"
+  [rowIdKey]="rowIdKey"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (action)="onAction($event)"
+  (onDblClick)="onDblClick($event)"
+  (onFilter)="onRequest()"
+  (onPage)="onRequest()"
+  (onPageSize)="onRequest()"
+  (onSort)="onRequest()"
+  (onSelect)="onSelect($event)"
+  (cellValueChange)="onCellValueChange($event)"
+></app-grid2>

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { ISMSSchedule } from '../../phone.interface';
@@ -14,6 +13,7 @@ import { PhoneGridScheduleFormComponent } from './form/phone-grid-schedule-form.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridScheduleComponent {
+  @Input() debtId: number;
   @Input() personId: number;
   @Input() personRole: number;
   @Input() phoneId: number;
@@ -25,13 +25,9 @@ export class PhoneGridScheduleComponent {
   @ViewChild('formTemplate') formTemplate: PhoneGridScheduleFormComponent;
 
   private tabIndex: number;
-  private routeParams = (<any>this.route.params).value;
-
-  debtId = this.routeParams.debtId || null;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
