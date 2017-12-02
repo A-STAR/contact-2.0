@@ -127,7 +127,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   onAction($event: string): void {
     // uncomment to test action for context menu
-    // console.log(`Action was fired for ${$event}`);
+    // log(`Action was fired for ${$event}`);
   }
 
   private getUrlByDebtor(debtor: any): string {

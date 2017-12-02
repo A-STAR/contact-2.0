@@ -1,17 +1,27 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { VisitAddDialogModule } from './dialog/visit-add-dialog.module';
+import { DialogModule } from '../../../components/dialog/dialog.module';
+import { DynamicFormModule } from '../../../components/form/dynamic-form/dynamic-form.module';
 
 import { VisitAddService } from './visit-add.service';
+
+import { VisitAddDialogComponent } from './visit-add.component';
+
 
 @NgModule({
   imports: [
     CommonModule,
-    VisitAddDialogModule,
+    DialogModule,
+    DynamicFormModule,
+    TranslateModule,
+  ],
+  declarations: [
+    VisitAddDialogComponent
   ],
   exports: [
-    VisitAddDialogModule,
+    VisitAddDialogComponent,
   ],
   providers: [
     VisitAddService,

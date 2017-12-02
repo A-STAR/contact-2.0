@@ -16,8 +16,6 @@ export function reducer(
     case UserAttributeTypesService.USER_ATTRIBUTE_TYPES_FETCH_SUCCESS: {
       const { entityTypeId, entitySubtypeCode, attributeTypes } = action.payload;
       const key = `${entityTypeId}/${entitySubtypeCode}`;
-      console.log('state', state);
-      console.log('attribute types', attributeTypes);
       return {
         attributeTypes: {
           ...state.attributeTypes,

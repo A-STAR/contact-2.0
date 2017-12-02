@@ -10,27 +10,29 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { ISingleVisit, IVisitsBundle } from '../visit-add.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IDynamicFormControl, IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { ISingleVisit, IVisitsBundle } from './visit-add.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { makeKey } from '../../../../../core/utils';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { makeKey } from '../../../../core/utils';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
-import { VisitAddService } from '../visit-add.service';
+import { VisitAddService } from './visit-add.service';
 
 const label = makeKey('massOperations.visitAdd');
 
 @Component({
   selector: 'app-visit-add-dialog',
-  templateUrl: 'visit-add-dialog.component.html',
+  templateUrl: 'visit-add.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VisitAddDialogComponent  implements  OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   @Input() visitRelsIds: ISingleVisit[];
+
   @Output() close = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -60,10 +62,11 @@ export class VisitAddDialogComponent  implements  OnInit {
   ngOnInit(): void {
     this.visitsCounter.count = this.visitRelsIds.length ;
     Observable.combineLatest(
-      // TODO mock (m.bobryshev) swap with VISIT_ADD when permission will be founded
+      // TODO(m.bobryshev): replace with VISIT_ADD once the permission is ready
       this.userPermissionsService.has('VISIT_CANCEL'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_VISIT_PURPOSE)
-    ).subscribe(([canAddVisit, options]) => {
+    )
+    .subscribe(([canAddVisit, options]) => {
       if (!canAddVisit) {
         return;
       }
@@ -83,8 +86,8 @@ export class VisitAddDialogComponent  implements  OnInit {
     const actionData = this.form.serializedUpdates;
     this.visitAddService.createVisit(this.visitRelsIds, actionData)
       .subscribe(() => {
-          this.onCancel();
-        });
+        this.onCancel();
+      });
   }
 
   onCancel(): void {
@@ -94,8 +97,7 @@ export class VisitAddDialogComponent  implements  OnInit {
   private getControls(options: IOption[]): Array<IDynamicFormControl> {
     return [
       { label: label('idData'), controlName: 'idData', type: 'hidden', required: true, disabled: true },
-      { label: label('purposeCode'), controlName: 'purposeCode',
-        type: 'select', required: true, disabled: false, options },
+      { label: label('purposeCode'), controlName: 'purposeCode', type: 'select', required: true, disabled: false, options },
       { label: label('comment'), controlName: 'comment', type: 'textarea', required: false, disabled: false },
     ];
   }

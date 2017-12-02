@@ -730,7 +730,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //   disabled: true,
       //   tooltip: 'Just to test what the tooltip can show'
       // },
-      'separator',
+      // 'separator',
       ...this.getMetadataMenuItems(params),
       // {
       //   name: 'Person',
