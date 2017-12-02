@@ -32,12 +32,14 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
 export class AddressGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit';
   @Input() callCenter = false;
+  @Input() campaignId: number;
   @Input('debtId')
   set debtId(debtId: number) {
     this._debtId$.next(debtId);
     this.cdRef.markForCheck();
   }
   @Input() debtorId: number;
+  @Input() ignoreDebtRegContactTypeListPermissions = false;
   @Input() ignoreViewPermissions = false;
   @Input() ignoreVisitAddPermissions = false;
   @Input() ignoreVisitViewPermissions = false;
@@ -277,7 +279,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         // Contact type 'Visit' = 3
         // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
         const url = `/workplaces/contact-registration/${this._debtId$.value}/3/${addressId}`;
-        this.router.navigate([ url ], { queryParams: { personId: this._personId$.value, personRole: this.personRole } });
+        this.router.navigate([ url ], { queryParams: {
+          campaignId: this.campaignId,
+          personId: this._personId$.value,
+          personRole: this.personRole,
+        } });
       });
   }
 
@@ -353,7 +359,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     // TODO(d.maltsev): use debtor service
     return combineLatestAnd([
       this.selectedAddress$.map(address => address && !address.isInactive),
-      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3),
+      this.ignoreDebtRegContactTypeListPermissions
+        ? Observable.of(true)
+        : this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }

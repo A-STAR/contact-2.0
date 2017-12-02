@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { DialogActionModule } from '../../../components/dialog-action/dialog-action.module';
 
-import { PaymentCancelDialogComponent } from './dialog-cancel/payment-cancel-dialog.component';
-import { PaymentConfirmDialogComponent } from './dialog-confirm/payment-confirm-dialog.component';
+import { PaymentCancelDialogComponent } from './cancel/cancel-dialog.component';
+import { PaymentConfirmDialogComponent } from './confirm/confirm-dialog.component';
 
 import { PaymentConfirmService } from './payment-confirm.service';
 

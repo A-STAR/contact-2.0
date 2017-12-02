@@ -1,18 +1,20 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
+import { ICloseAction } from '../../../../components/action-grid/action-grid.interface';
+
 import { DialogFunctions } from '../../../../../core/dialog';
 
 import { PaymentConfirmService } from '../payment-confirm.service';
 
 @Component({
   selector: 'app-payments-confirm-dialog',
-  templateUrl: 'payment-confirm-dialog.component.html',
+  templateUrl: 'confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentConfirmDialogComponent extends DialogFunctions implements OnInit {
   @Input() paymentsIds: number[];
-  @Output() close = new EventEmitter<boolean>();
-  @Output() action = new EventEmitter<number[]>();
+
+  @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;
 
@@ -34,12 +36,12 @@ export class PaymentConfirmDialogComponent extends DialogFunctions implements On
       .subscribe(res => {
         const refresh = !!res.massInfo && !!res.massInfo.total;
         // NOTE: do not refresh if the total is 0
-        this.close.emit(refresh);
+        this.close.emit({ refresh });
       });
   }
 
   onCloseDialog(): void {
     this.setDialog();
-    this.close.emit();
+    this.close.emit({});
   }
 }
