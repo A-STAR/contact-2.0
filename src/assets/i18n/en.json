@@ -1901,6 +1901,9 @@
     "debts": {
       "gen": { "singular": "debt", "plural": "debts" }
     },
+    "massOps": {
+      "addVisit": "add visit"
+    },
     "metadata": {
       "gen": { "plural": "metadata" }
     },
@@ -1979,6 +1982,11 @@
     }
   },
   "massOperations": {
+    "visitAdd": {
+      "title": "Setting a visit note, {{ count }} addresses",
+      "purposeCode": "Purpose of visit",
+      "comment": "Comment"
+    },
     "paymentsConfirm": {
       "message": "Are you sure to confirm selected {{ count }} payments?",
       "title": "Payments confirmation"
@@ -2105,6 +2113,7 @@
         "403": "You don't have permissions to move {{ entity }}",
         "*": "Could not move {{ entity }}"
       },
+      "massOp": "An error occurred while completing the {{ entity }} operation",
       "update": {
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
@@ -2265,7 +2274,9 @@
         "paymentsConfirm": "Payments confirm",
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
-        "statusChange": "Change status"
+        "statusChange": "Change status",
+        "deleteSMS": "Delete SMS",
+        "visitAdd": "Make necessary"
       }
     },
     "filter": {

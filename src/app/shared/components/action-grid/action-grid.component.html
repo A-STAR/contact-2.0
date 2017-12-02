@@ -1,3 +1,10 @@
+<app-visit-add-dialog
+  *ngIf="isDialog('visitAdd')"
+  [visitRelsIds]="getConfiguredParams()"
+  (close)="onCloseDialog()"
+>
+</app-visit-add-dialog>
+
 <app-sms-delete-dialog
   *ngIf="isDialog('deleteSMS')"
   [smsId]="getSelectionParam(0)"

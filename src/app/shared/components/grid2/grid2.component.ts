@@ -703,12 +703,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private createMetadataMenuItem(metadataAction: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
     return {
       name: this.translate.instant(`default.grid.actions.${metadataAction.action}`),
-      action: () => this.action.emit({ metadataAction, params }),
+      action: () =>  this.action.emit({ metadataAction, params }),
       disabled: !this.isContextMenuItemEnabled(metadataAction.action),
     };
   }
 
   private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
+    //  TODO mock (m.bobryshev)
+    this.actions.push({
+      action: 'visitAdd',
+      addOptions: null,
+      //  TODO mock (m.bobryshev), sh.b. debtId, addressesId, personRole
+      params: ['debtId', 'personId', 'regionCode']
+    });
     return this.actions.map(action => this.createMetadataMenuItem(action, params));
   }
 
@@ -723,7 +730,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //   disabled: true,
       //   tooltip: 'Just to test what the tooltip can show'
       // },
-      'separator',
+      // 'separator',
       ...this.getMetadataMenuItems(params),
       // {
       //   name: 'Person',
@@ -758,6 +765,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   // TODO(d.maltsev): this looks a bit messy.
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'visitAdd':
+        return  this.selected.length > 0; // TODO mock (m.bobryshev) this.userPermissionsBag.has('VISIT_ADD') &&
       case 'deleteSMS':
         return this.userPermissionsBag.notEmpty('SMS_DELETE_STATUS_LIST') && this.selected.length > 0;
       case 'debtClearResponsible':

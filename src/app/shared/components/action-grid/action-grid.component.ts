@@ -54,7 +54,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
   }
 
   get selection(): T[] {
-    return this.grid.selected as any[];
+    return this.grid.selected as T[];
   }
 
   get isUsingAGGrid(): boolean {
@@ -68,6 +68,19 @@ export class ActionGridComponent<T> extends DialogFunctions {
 
   getSelectionParam(key: number): any[] {
     return this.dialogData.selection[key];
+  }
+
+  getConfiguredParams(): any[] {
+    // const idNames = this.dialogData.params;
+    // const { selection } = this.dialogData;
+    // const container = Array(selection[0].length).fill({});
+    // return idNames.reduce((acc, idName, id) => {
+    //   selection[id].forEach((item, ind) => {
+    //     acc[ind][idName] = item;
+    //   });
+    //   return acc as string;
+    // }, container);
+    return [ { debtId: 2, personId: 63, regionCode: 1 } ];
   }
 
   getDialogParam(key: number): number | string {
