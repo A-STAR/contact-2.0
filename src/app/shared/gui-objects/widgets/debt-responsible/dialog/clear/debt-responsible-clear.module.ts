@@ -18,8 +18,5 @@ import { DebtResponsibleClearComponent } from './debt-responsible-clear.componen
   declarations: [
     DebtResponsibleClearComponent,
   ],
-  entryComponents: [
-    DebtResponsibleClearComponent,
-  ]
 })
 export class DebtResponsibleClearModule { }

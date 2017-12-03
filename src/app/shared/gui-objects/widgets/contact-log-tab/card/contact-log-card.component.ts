@@ -25,6 +25,7 @@ const label = makeKey('widgets.contactLog.card');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactLogTabCardComponent implements OnInit {
+  @Input() callCenter = false;
   @Input() contactId: number;
   @Input() debtId: number;
   @Input() disabled = false;
@@ -48,7 +49,9 @@ export class ContactLogTabCardComponent implements OnInit {
     Observable.combineLatest(
       this.userPermissionsService.has('CONTACT_COMMENT_EDIT'),
       Observable.of(this.contactLogType),
-      this.contactId ? this.contactLogService.fetch(this.debtId, this.contactId, this.contactLogType) : Observable.of(null),
+      this.contactId
+        ? this.contactLogService.fetch(this.debtId, this.contactId, this.contactLogType, this.callCenter)
+        : Observable.of(null),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTACT_TYPE),
       Number(this.contactLogType) === 4 ?
         this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)

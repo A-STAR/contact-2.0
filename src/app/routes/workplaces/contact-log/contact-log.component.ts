@@ -15,8 +15,8 @@ export class ContactLogComponent {
   static COMPONENT_NAME = 'ContactLogComponent';
 
   grids = [
-    { key: ContactsGridKeys.PROMISE, title: labelKey('promise.title') },
     { key: ContactsGridKeys.CONTACT, title: labelKey('contact.title') },
+    { key: ContactsGridKeys.PROMISE, title: labelKey('promise.title') },
     { key: ContactsGridKeys.SMS, title: labelKey('sms.title') },
   ];
 }
