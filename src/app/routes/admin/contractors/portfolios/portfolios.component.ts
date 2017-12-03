@@ -67,7 +67,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetchAll(),
+      action: () => this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios)),
       enabled: this.canView$
     }
   ];
@@ -148,7 +148,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     .subscribe(([canView, contractorId]) => {
       if (canView) {
         this.selectedContractorId = contractorId;
-        this.fetchAll();
+        this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios));
       } else {
         this.clearPortfolios();
         this.notificationsService.error('errors.default.read.403').entity('entities.portfolios.gen.plural').dispatch();
@@ -193,22 +193,16 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   isPortfolioCanForm(portfolio: IPortfolio): boolean {
-    // todo: uncomment when fixed on be
-    // return portfolio &&
-    //   portfolio.directionCode === 2 && portfolio.statusCode === 4;
-    return !!portfolio;
+    return portfolio &&
+      portfolio.directionCode === 2 && portfolio.statusCode === 4;
   }
 
   isPortfolioCanSend(portfolio: IPortfolio): boolean {
-    // todo: uncomment when fixed on be
-    // return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 5;
-    return !!portfolio;
+    return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 5;
   }
 
   isPortfolioCanReturn(portfolio: IPortfolio): boolean {
-    // todo: uncomment when fixed on be
-    // return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 6;
-    return !!portfolio;
+    return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 6;
   }
 
   onAdd(): void {
@@ -228,12 +222,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       });
   }
 
-  onForm(): void {
-    this.contractorsAndPortfoliosService
-      .formOutsourcePortfolio(this.selectedContractorId, this.selection[0].id, this.selection[0])
-      .subscribe(() => {});
-  }
-
   onSend(): void {
     this.setDialog('send');
   }
@@ -249,42 +237,55 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   onRemoveSubmit(): void {
     this.contractorsAndPortfoliosService.deletePortfolio(this.selectedContractorId, this.selection[0].id)
-      .subscribe(() => {
+    .switchMap(() => this.fetchAll())
+    .subscribe(portfolios => {
+      this.setDialog();
+      this.onPortfoliosFetch(portfolios);
+    });
+  }
+
+  onForm(): void {
+    this.contractorsAndPortfoliosService
+      .formOutsourcePortfolio(this.selectedContractorId, this.selection[0].id, this.selection[0])
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => {
         this.setDialog();
+        this.onPortfoliosFetch(portfolios);
       });
   }
 
   onMoveSubmit(contractor: IContractor): void {
     this.contractorsAndPortfoliosService
       .movePortfolio(this.selectedContractorId, this.selection[0].id, { newContractorId: contractor.id } )
-      .subscribe(() => {
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => {
         this.setDialog();
+        this.onPortfoliosFetch(portfolios);
       });
   }
 
   onSendSubmit(portfolio: IPortfolio): void {
     this.contractorsAndPortfoliosService.sendOutsourcePortfolio(this.selectedContractorId,
       this.selection[0].id, portfolio)
-      .subscribe(() => {
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => {
         this.setDialog();
+        this.onPortfoliosFetch(portfolios);
       });
   }
 
   onReturnSubmit(portfolio: IPortfolio): void {
     this.contractorsAndPortfoliosService.returnOutsourcePortfolio(this.selectedContractorId,
       this.selection[0].id, portfolio)
-      .subscribe(() => {
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => {
         this.setDialog();
+        this.onPortfoliosFetch(portfolios);
       });
   }
 
-  private fetchAll(): void {
-    this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractorId)
-      .subscribe(portfolios => {
-        this.selection = [];
-        this.portfolios = portfolios;
-        this.cdRef.detectChanges();
-      });
+  private fetchAll(): Observable<IPortfolio[]> {
+    return this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractorId);
   }
 
   private clearPortfolios(): void {
@@ -292,5 +293,11 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     this.portfolios = [];
     this.contractorsAndPortfoliosService.selectPortfolio(null);
     this.cdRef.markForCheck();
+  }
+
+  private onPortfoliosFetch(portfolios: IPortfolio[]): void {
+    this.selection = [];
+    this.portfolios = portfolios;
+    this.cdRef.detectChanges();
   }
 }

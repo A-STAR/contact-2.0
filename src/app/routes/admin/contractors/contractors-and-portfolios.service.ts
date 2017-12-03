@@ -182,7 +182,7 @@ export class ContractorsAndPortfoliosService {
     portfolioId: number,
     portfolio: IPortfolio): Observable<any> {
     return Observable.of({ success: true });
-    // todo: uncomment, when implemented on be
+    // TODO(i.lobanov): uncomment, when implemented on be
     // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/form', {
     //   contractorId, portfolioId
     // }, portfolio)
@@ -194,7 +194,7 @@ export class ContractorsAndPortfoliosService {
     portfolioId: number,
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
     return Observable.of({ success: true });
-    // todo: uncomment, when implemented on be
+    // TODO(i.lobanov): uncomment, when implemented on be
     // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
     //   contractorId, portfolioId
     // }, { ...portfolio, debtStatusCode: 14 })
@@ -206,7 +206,7 @@ export class ContractorsAndPortfoliosService {
     portfolioId: number,
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
     return Observable.of({ success: true });
-    // todo: uncomment, when implemented on be
+    // TODO(i.lobanov): uncomment, when implemented on be
     // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/return', {
     //   contractorId, portfolioId
     // }, portfolio)
