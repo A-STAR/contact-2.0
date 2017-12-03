@@ -40,6 +40,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
 })
 export class PhoneGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit';
+  @Input() campaignId: number;
   @Input() contactType: number;
   @Input('debtId')
   set debtId(debtId: number) {
@@ -248,6 +249,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   onScheduleDialogSubmit(schedule: ISMSSchedule): void {
     const data = {
       ...schedule,
+      ...(this.campaignId ? { campaignId: this.campaignId } : {}),
       personId: this._personId$.value,
       personRole: this.personRole,
       phoneId: this.selectedPhoneId$.value
@@ -274,7 +276,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .subscribe(phoneId => {
         this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         const url = `/workplaces/contact-registration/${this._debtId$.value}/${this.contactType}/${phoneId}`;
-        this.router.navigate([ url ], { queryParams: { personId: this._personId$.value, personRole: this.personRole } });
+        this.router.navigate([ url ], { queryParams: {
+          campaignId: this.campaignId,
+          personId: this._personId$.value,
+          personRole: this.personRole,
+        }});
       });
   }
 

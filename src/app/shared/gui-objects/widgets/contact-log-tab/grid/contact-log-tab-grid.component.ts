@@ -95,7 +95,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     this.viewCommentUpdate = this.messageBusService.select(ContactLogService.COMMENT_CONTACT_LOG_SAVED)
       .flatMap(currentContactLogId => Observable.combineLatest(
           Observable.of(currentContactLogId),
-          this.contactLogService.fetchAll(this.personId))
+          this.contactLogService.fetchAll(this.personId, this.callCenter)),
       )
       .subscribe(([currentContactLogId, contactLogList]) => {
         this.contactLogList = contactLogList;
@@ -146,7 +146,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.contactLogService.fetchAll(this.personId)
+    this.contactLogService.fetchAll(this.personId, this.callCenter)
       .subscribe(contactLogList => {
         this.contactLogList = contactLogList;
         this.selectedChanged$.next(this.hasSelection);

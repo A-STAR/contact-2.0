@@ -9,7 +9,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import { IActionGridDialogData } from './action-grid.interface';
+import { IActionGridDialogData, ICloseAction } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected } from '../grid2/grid2.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 
@@ -54,15 +54,33 @@ export class ActionGridComponent<T> extends DialogFunctions {
   }
 
   get selection(): T[] {
-    return this.grid.selected as any[];
+    return this.grid.selected as T[];
   }
 
   get isUsingAGGrid(): boolean {
     return !!this.metadataKey;
   }
 
+  getAddOptions(name: string): (number|string)[] {
+    // TODO(d.maltsev): not optimized; better to convert to key: value object on initialization
+    return this.dialogData.addOptions.find(option => option.name === name).value;
+  }
+
   getSelectionParam(key: number): any[] {
     return this.dialogData.selection[key];
+  }
+
+  getConfiguredParams(): any[] {
+    // const idNames = this.dialogData.params;
+    // const { selection } = this.dialogData;
+    // const container = Array(selection[0].length).fill({});
+    // return idNames.reduce((acc, idName, id) => {
+    //   selection[id].forEach((item, ind) => {
+    //     acc[ind][idName] = item;
+    //   });
+    //   return acc as string;
+    // }, container);
+    return [ { debtId: 2, personId: 63, regionCode: 1 } ];
   }
 
   getDialogParam(key: number): number | string {
@@ -85,7 +103,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
     const { metadataAction, params } = gridAction;
     this.dialog = metadataAction.action;
     this.dialogData = {
-      action: gridAction,
+      addOptions: metadataAction.addOptions,
       params: metadataAction.params.reduce((acc, param, i) => ({
         ...acc,
         [i]: params.node.data[param]
@@ -98,9 +116,33 @@ export class ActionGridComponent<T> extends DialogFunctions {
     this.cdRef.markForCheck();
   }
 
-  onCloseRefresh(result: boolean): void {
-    if (result) {
+  onSimpleGridAction(metadataAction: any): void {
+    this.dialog = metadataAction.action;
+    this.dialogData = {
+      addOptions: metadataAction.addOptions,
+      params: metadataAction.params.reduce((acc, param, i) => ({
+        ...acc,
+        [i]: this.selection[0][param]
+      }), {}),
+      selection: metadataAction.params.reduce((acc, param, i) => ({
+        ...acc,
+        [i]: this.selection.map(item => item[param])
+      }), {}),
+    };
+    this.cdRef.markForCheck();
+  }
+
+  onCloseAction(action: ICloseAction): void {
+    if (action.refresh) {
       this.onRequest();
+    }
+    if (action.deselectAll) {
+      const grid = (this.grid as MetadataGridComponent<T>);
+      if (grid.grid) {
+        grid.grid.deselectAll();
+      } else {
+        (this.grid as GridComponent).clearSelection();
+      }
     }
     this.onCloseDialog();
   }

@@ -1,5 +1,3 @@
-import { IAGridAction } from '../grid2/grid2.interface';
-
 export interface IActionGridDialogNodeParams {
   [key: string]: number | string;
 }
@@ -9,7 +7,12 @@ export interface IActionGridDialogSelectionParams {
 }
 
 export interface IActionGridDialogData {
-  action: IAGridAction;
+  addOptions: { name: string; value: (string | number)[] }[];
   params: IActionGridDialogNodeParams;
   selection: IActionGridDialogSelectionParams;
+}
+
+export interface ICloseAction {
+  refresh?: boolean;
+  deselectAll?: boolean;
 }
