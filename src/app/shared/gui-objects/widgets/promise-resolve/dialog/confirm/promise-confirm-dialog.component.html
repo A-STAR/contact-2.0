@@ -12,5 +12,5 @@
   *ngIf="isDialog('result')"
   [count]="count"
   [successCount]="successCount"
-  (close)="onClose(true)">
+  (close)="onClose({refresh: true})">
 </app-result-dialog>

@@ -44,6 +44,6 @@ export class PaymentCancelDialogComponent extends DialogFunctions implements OnI
 
   onCloseDialog(): void {
     this.setDialog();
-    this.close.emit({});
+    this.close.emit();
   }
 }

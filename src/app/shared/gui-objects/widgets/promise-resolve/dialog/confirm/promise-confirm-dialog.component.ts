@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
 import { PromiseResolveService } from '../../promise-resolve.service';
+import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
 
 import { DialogFunctions } from '../../../../../../core/dialog';
 
@@ -13,7 +14,7 @@ export class PromiseConfirmDialogComponent extends DialogFunctions implements On
 
   @Input() promises: number[];
 
-  @Output() close = new EventEmitter<boolean>();
+  @Output() close = new EventEmitter<ICloseAction>();
 
   dialog: string = null;
   count: number;
@@ -40,7 +41,7 @@ export class PromiseConfirmDialogComponent extends DialogFunctions implements On
       });
   }
 
-  onClose(result: boolean): void {
+  onClose(result: ICloseAction): void {
     this.close.emit(result);
   }
 }

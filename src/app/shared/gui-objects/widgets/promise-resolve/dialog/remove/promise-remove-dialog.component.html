@@ -5,12 +5,12 @@
   actionMessage="default.yesNo.Yes"
   titleTranslationKey="widgets.promiseRemove.dialog.title"
   (action)="onConfirm()"
-  (cancel)="onClose(false)">
+  (cancel)="onClose()">
 </app-dialog-action>
 
 <app-result-dialog
   *ngIf="isDialog('result')"
   [count]="count"
   [successCount]="successCount"
-  (close)="onClose(true)">
+  (close)="onClose({refresh: true})">
 </app-result-dialog>

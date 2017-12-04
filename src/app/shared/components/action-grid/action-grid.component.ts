@@ -141,10 +141,10 @@ export class ActionGridComponent<T> extends DialogFunctions {
   }
 
   onCloseAction(action: ICloseAction): void {
-    if (action.refresh) {
+    if (action && action.refresh) {
       this.onRequest();
     }
-    if (action.deselectAll) {
+    if (action && action.deselectAll) {
       const grid = (this.grid as MetadataGridComponent<T>);
       if (grid.grid) {
         grid.grid.deselectAll();
