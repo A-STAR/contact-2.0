@@ -8,7 +8,7 @@ import { ILabeledValue } from '../../../core/converter/value-converter.interface
 import { IGridColumn, IRenderer, TRendererType } from './grid.interface';
 import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction, IMetadataColumn } from '../../../core/metadata/metadata.interface';
-import { IUserDictionaries, ITypeCodeItem } from '../../../core/user/dictionaries/user-dictionaries.interface';
+import { IUserDictionaries } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
 import { LookupService } from '../../../core/lookup/lookup.service';
 import { MetadataService } from '../../../core/metadata/metadata.service';
