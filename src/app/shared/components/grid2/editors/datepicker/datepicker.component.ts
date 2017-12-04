@@ -10,7 +10,8 @@ export class DatePickerComponent implements AgEditorComponent {
   @ViewChild(Calendar) calendar: Calendar;
 
   private params: any;
-  private value: Date;
+
+  value: Date;
 
   agInit(params: any): void {
     this.value = this.calendar.value;
