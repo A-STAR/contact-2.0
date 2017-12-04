@@ -7,12 +7,14 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
+import { Observable } from 'rxjs/Observable';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import { IOpenFileResponse, ICell, ICellPayload, IDataResponse /*, IRow */ } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
 
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
@@ -53,6 +55,7 @@ export class DataUploadComponent extends DialogFunctions {
   constructor(
     private cdRef: ChangeDetectorRef,
     private dataUploadService: DataUploadService,
+    private gridService: GridService,
   ) {
     super();
   }
@@ -119,7 +122,11 @@ export class DataUploadComponent extends DialogFunctions {
     this.dataUploadService
       .openFile(file)
       .subscribe(response => {
-        this.columns = this.getColumnsFromResponse(response);
+        this.getColumnsFromResponse(response)
+          .subscribe(columns => {
+            this.columns = columns;
+            this.cdRef.markForCheck();
+          });
         // The following line makes grid2 set `initialized = true` internally
         this.cdRef.detectChanges();
         this.rows = this.getRowsFromResponse(response);
@@ -174,8 +181,8 @@ export class DataUploadComponent extends DialogFunctions {
   //   return row.cells.reduce((acc, cell) => acc || !!cell.errorMsg, false);
   // }
 
-  private getColumnsFromResponse(response: IOpenFileResponse): IAGridColumn[] {
-    return response.columns
+  private getColumnsFromResponse(response: IOpenFileResponse): Observable<IAGridColumn[]> {
+    const columns = response.columns
       .sort((a, b) => a.order - b.order)
       .map((column, i) => ({
         colId: i.toString(),
@@ -188,6 +195,7 @@ export class DataUploadComponent extends DialogFunctions {
         valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
         valueSetter: (params: any) => this.setCellValue(params),
       }));
+    return this.gridService.getColumns(columns, {});
   }
 
   private getRowsFromResponse(response: IDataResponse): any[] {

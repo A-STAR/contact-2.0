@@ -76,9 +76,33 @@ export class GridService {
    * @param {object} renderers Column renderers, i.e. getters
    * @returns {Observable<IAGridColumn[]>} Column defininitions
    */
-  getColumnMeta(metadataKey: string, renderers: object): Observable<IAGridColumn[]> {
-    const mapColumns = ([metadata, dictionaries]: [IMetadataColumn[], IUserDictionaries]) => {
+  getColumnsFromMetadata(metadataKey: string, renderers: object): Observable<IAGridColumn[]> {
+    return this.metadataService.getMetadata(metadataKey)
+      .flatMap(metadata => {
+        const dictionaryIds = metadata
+          .filter(column => !!column.dictCode)
+          .map(column => column.dictCode);
+        return combineLatest(
+          of(metadata),
+          this.userDictionariesService.getDictionaries(dictionaryIds)
+        );
+      })
+      .map(this.mapColumns(renderers));
+  }
 
+  getColumns(columns: Partial<IMetadataColumn>[], renderers: object): Observable<IAGridColumn[]> {
+    const dictionaryIds = columns
+      .filter(column => !!column.dictCode)
+      .map(column => column.dictCode);
+
+    return combineLatest(
+      of(columns),
+      this.userDictionariesService.getDictionaries(dictionaryIds)
+    ).map(this.mapColumns(renderers));
+  }
+
+  mapColumns(renderers: object): any {
+    return ([metadata, dictionaries]: [IMetadataColumn[], IUserDictionaries]) => {
       const columns: IAGridColumn[] = metadata
         .map(metaColumn => {
           return { ...metaColumn, colId: metaColumn.name } as IAGridColumn;
@@ -113,22 +137,10 @@ export class GridService {
               // String
             default:
           }
-          return column;
+        return column;
       });
       return this.setValueGetters(columns, renderers);
     };
-
-    return this.metadataService.getMetadata(metadataKey)
-      .flatMap(metadata => {
-        const dictionaryIds = metadata
-          .filter(column => !!column.dictCode)
-          .map(column => column.dictCode);
-        return combineLatest(
-          of(metadata),
-          this.userDictionariesService.getDictionaries(dictionaryIds)
-        );
-      })
-      .map(mapColumns);
   }
 
   setRenderers(columns: IGridColumn[], renderers?: IRenderer): IGridColumn[] {
