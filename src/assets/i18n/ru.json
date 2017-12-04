@@ -135,6 +135,9 @@
         "name": "Название",
         "comment": "Описание"
       },
+      "messages": {
+        "noActiveDebts": "В кампании нет активных долгов"
+      },
       "overview": {
         "info": {
           "title": "Краткая информация",
@@ -158,7 +161,7 @@
           "currencyName": "Валюта",
           "debtAmount": "Сумма просроченного долга",
           "debtComment": "Комментарий",
-          "debtId": "Ид долга",
+          "debtId": "ID долга",
           "debtReasonCode": "Причина возникновения задолженности",
           "dict1Code": "Словарный атрибут 1",
           "dict2Code": "Словарный атрибут 2",
@@ -192,7 +195,7 @@
           "contract": "Договор",
           "currencyName": "Валюта",
           "debtAmount": "Сумма просроченного долга",
-          "debtId": "Ид долга",
+          "debtId": "ID долга",
           "dpd": "DPD",
           "personFullName": "ФИО",
           "statusCode": "Статус"
@@ -222,7 +225,7 @@
         "userId": {
           "grid": {
             "fullName": "Оператор",
-            "id": "Ид",
+            "id": "ID",
             "organization": "Подразделение",
             "position": "Должность"
           }
@@ -233,6 +236,18 @@
       },
       "sms": {
         "title": "СМС"
+      }
+    },
+    "dataUpload": {
+      "dialogs": {
+        "cancel": {
+          "message": "Вы уверены, что хотите отменить операцию?",
+          "title": "Отмена"
+        },
+        "error": {
+          "message": "Скачать файл с описанием ошибок?",
+          "title": "Не удалось сохранить в БД"
+        }
       }
     },
     "payments": {
@@ -253,7 +268,7 @@
         "userId": {
           "grid": {
             "fullName": "Оператор",
-            "id": "Ид",
+            "id": "ID",
             "organization": "Подразделение",
             "position": "Должность"
           }
@@ -389,7 +404,7 @@
     "incomingCall": {
       "filter": {
         "form": {
-          "debtId": "Ид долга",
+          "debtId": "ID долга",
           "fullName": "ФИО/Название",
           "contract": "Договор",
           "phoneNumber": "Номер телефона",
@@ -411,12 +426,12 @@
       "creditTypeCode": "Тип продукта",
       "currencyName": "Валюта",
       "debtAmount": "Остаток",
-      "debtId": "Ид долга",
-      "debtorId": "Ид должника",
+      "debtId": "ID долга",
+      "debtorId": "ID должника",
       "docNumber": "Номер документа",
       "fullName": "ФИО/Название",
       "outPortfolioName": "Название исходящего портфеля",
-      "personId": "Ид персоны",
+      "personId": "ID персоны",
       "personRole": "Роль персоны",
       "portfolioName": "Название портфеля",
       "regionCode": "Регион",
@@ -447,7 +462,7 @@
   "constants": {
     "title": "Константы",
     "edit": {
-      "id": "Ид",
+      "id": "ID",
       "title": "Константа",
       "name": "Название",
       "typeCode": "Тип",
@@ -455,7 +470,7 @@
       "dsc": "Комментарий"
     },
     "grid": {
-      "id": "Ид",
+      "id": "ID",
       "name": "Название",
       "value": "Значение",
       "dsc": "Комментарий"
@@ -472,7 +487,7 @@
         "placeholder": "Выберите операторов",
         "inactive": "Отображать заблокированных",
         "grid": {
-          "id": "Ид",
+          "id": "ID",
           "position": "Должность",
           "fullName": "ФИО",
           "organization": "Подразделение"
@@ -488,7 +503,7 @@
       }
     },
     "grid": {
-      "id": "Ид",
+      "id": "ID",
       "fullName": "ФИО",
       "position": "Должность",
       "createDateTime": "Дата",
@@ -540,7 +555,7 @@
       "title": "Новый пользователь"
     },
     "grid": {
-      "id": "Ид",
+      "id": "ID",
       "login": "Логин",
       "lastName": "Фамилия",
       "firstName": "Имя",
@@ -679,7 +694,7 @@
         "confirmMessage": "Вы действительно хотите удалить роль {{ name }}?"
       },
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "name": "Название",
         "comment": "Комментарий"
       },
@@ -720,7 +735,7 @@
         "confirmMessage": "Вы действительно хотите удалить доступ {{ name }}?"
       },
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "name": "Название",
         "value": "Значение",
         "dsc": "Описание",
@@ -739,7 +754,7 @@
   },
   "debtor": {
     "title": "Карточка должника",
-    "id": "Ид",
+    "id": "ID",
     "firstName": "Имя",
     "lastName": "Фамилия",
     "middleName": "Отчество",
@@ -765,7 +780,7 @@
         "confirmMessage": "Для должника уже создан документ с признаком \"Основной\". Вы действительно хотите установить данный документ в качестве основного?"
       },
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "docTypeCode": "Тип",
         "docNumber": "№",
         "issueDate": "Дата выдачи",
@@ -927,9 +942,9 @@
   },
   "debtors": {
     "grid": {
-      "id": "Ид",
+      "id": "ID",
       "fullName": "ФИО",
-      "debtId": "Ид долга",
+      "debtId": "ID долга",
       "type": "Тип должника",
       "product": "Продукт",
       "city": "Город"
@@ -1016,7 +1031,7 @@
       "confirmMessage": "Вы действительно хотите удалить контрагента {{ name }}?"
     },
     "grid": {
-      "id": "Ид",
+      "id": "ID",
       "name": "Краткое название",
       "fullName": "Полное название",
       "smsName": "Название для СМС",
@@ -1036,7 +1051,7 @@
   },
   "portfolios": {
     "grid": {
-      "id": "Ид",
+      "id": "ID",
       "name": "Название",
       "directionCode": "Направление",
       "stageCode": "Стадия",
@@ -1052,6 +1067,19 @@
     },
     "move": {
       "title": "Переместить портфель {{ name }}"
+    },
+    "outsourcing": {
+      "form": {
+        "menu": "Сформировать портфель для аутсорсинга"
+      },
+      "send": {
+        "menu": "Передать портфель для аутсорсинга",
+        "title": "Передать портфель"
+      },
+      "return": {
+        "menu": "Отозвать портфель",
+        "title": "Отозвать портфель"
+      }
     }
   },
   "utilities": {
@@ -1214,8 +1242,8 @@
         "visits": {
           "title": "Просмотр истории выездов",
           "grid": {
-            "id": "Ид",
-            "debtId": "Ид долга",
+            "id": "ID",
+            "debtId": "ID долга",
             "contract": "Номер договора",
             "statusCode": "Статус",
             "purposeCode": "Цель",
@@ -1237,7 +1265,7 @@
         "mark": {
           "title": "Отметка необходимости выезда",
           "grid": {
-            "id": "Ид",
+            "id": "ID",
             "contract": "Номер договора",
             "statusCode": "Статус",
             "debtAmount": "Сумма просроченного долга",
@@ -1391,7 +1419,7 @@
         "notFound": "Не удалось найти поручителя. Попробуйте изменить параметры поиска."
       },
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "firstName": "Имя",
         "middleName": "Отчество",
         "lastName": "Фамилия / Наименование",
@@ -1418,7 +1446,7 @@
     "guaranteeContract": {
       "title": "Договор поручительства",
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "contractNumber": "Номер договора",
         "fullName": "ФИО",
         "typeCode": "Тип",
@@ -1458,7 +1486,7 @@
         }
       },
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "name": "Название",
         "text": "Текст",
         "isSingleSending": "Единичная рассылка",
@@ -1476,7 +1504,7 @@
         }
       },
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "name": "Название"
       }
     },
@@ -1563,18 +1591,6 @@
         "message": "Вы действительно хотите удалить отмеченные обещания?"
       }
     },
-    "paymentOperatorConfirm": {
-      "dialog": {
-        "title": "Подтверждение изменений",
-        "message": "Вы действительно хотите подтвердить изменение оператора для выбранных платежей?"
-      }
-    },
-    "paymentOperatorReject": {
-      "dialog": {
-        "title": "Отмена изменений",
-        "message": "Вы действительно хотите отклонить изменение оператора для выбранных платежей?"
-      }
-    },
     "debt": {
       "toolbar": {
         "call": "Необходимо перезвонить",
@@ -1583,7 +1599,7 @@
         "terminate": "Завершить работу с долгом"
       },
       "grid": {
-        "id": "Ид долга",
+        "id": "ID долга",
         "portfolioId": "Портфель",
         "bankId": "Банк",
         "creditTypeCode": "Тип продукта",
@@ -1674,7 +1690,7 @@
         "comment": "Комментарий"
       },
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "name": "Название",
         "typeCode": "Тип имущества",
         "isConfirmed": "Подтверждено",
@@ -1704,13 +1720,13 @@
         "startDateTime": "Планируемая дата отправки"
       },
       "grid": {
-        "contactId": "Ид контакта",
+        "contactId": "ID контакта",
         "contactDateTime": "Дата контакта",
         "contactType": "Тип контакта",
         "contract": "Номер договора",
         "createDateTime": "Дата создания",
         "creditName": "Название продукта",
-        "debtId": "Ид долга",
+        "debtId": "ID долга",
         "fullName": "ФИО",
         "personRole": "Роль",
         "promiseDate": "Обещанная дата",
@@ -1723,7 +1739,7 @@
         "title": "Выбор оператора"
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "fullName": "ФИО",
         "debtCnt": "Количество активных долгов",
         "organization": "Подразделение",
@@ -1735,7 +1751,7 @@
         "title": "Выбор группы"
       },
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "name": "Название",
         "comment": "Комментарий"
       }
@@ -1766,7 +1782,7 @@
         "notFound": "Не удалось найти залогодателя. Попробуйте изменить параметры поиска."
       },
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "firstName": "Имя",
         "middleName": "Отчество",
         "lastName": "Фамилия / Наименование",
@@ -1793,7 +1809,7 @@
     "pledgeContract": {
       "title": "Информация о договоре",
       "grid": {
-        "id": "Ид",
+        "id": "ID",
         "contractNumber": "Номер договора",
         "fullName": "ФИО",
         "typeCode": "Тип",
@@ -1846,8 +1862,8 @@
     "actionsLog": {
       "gen": { "singular": "записи лога действий", "plural": "лога действий" }
     },
-    "filterGrid": {
-      "gen": { "singular": "записи", "plural": "записей" }
+    "workTask": {
+      "gen": { "singular": "задач", "plural": "списка задач" }
     },
     "constants": {
       "gen": { "singular": "константы", "plural": "списка констант" }
@@ -1896,6 +1912,9 @@
     },
     "debts": {
       "gen": { "singular": "долга", "plural": "списка долгов" }
+    },
+    "massOps": {
+      "addVisit": "отметка необходимости вызова"
     },
     "metadata": {
       "gen": { "plural": "метаданных" }
@@ -1975,16 +1994,29 @@
     }
   },
   "massOperations": {
+    "visitAdd": {
+      "title": "Установка отметки необходимости выезда, {{ count }} адресов",
+      "purposeCode": "Цель выезда",
+      "comment": "Комментарий"
+    },
     "paymentsConfirm": {
-      "ConfirmInquery": "Вы действительно хотите подтвердить отмеченные {{ count }} платежей?",
+      "message": "Вы действительно хотите подтвердить отмеченные {{ count }} платежей?",
       "title": "Подтверждение платежей"
     },
     "paymentsCancel": {
-      "cancelInquery": "Вы действительно хотите отменить отмеченные {{ count }} платежей?",
+      "message": "Вы действительно хотите отменить отмеченные {{ count }} платежей?",
       "title": "Отмена платежей"
     },
+    "paymentOperatorConfirm": {
+      "title": "Подтверждение изменений",
+      "message": "Вы действительно хотите подтвердить изменение оператора для выбранных платежей?"
+    },
+    "paymentOperatorReject": {
+      "title": "Отмена изменений",
+      "message": "Вы действительно хотите отклонить изменение оператора для выбранных платежей?"
+    },
     "smsDelete": {
-      "delete": "Вы действительно хотите удалить отмеченные {{ count }} SMS?",
+      "message": "Вы действительно хотите удалить отмеченные {{ count }} SMS?",
       "title": "Удаление SMS"
     }
   },
@@ -1994,14 +2026,14 @@
       "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
       "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
-      "contactPersonNotFound": "Не найдено контактное лицо по Id",
+      "contactPersonNotFound": "Не найдено контактное лицо по ID",
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
       "currencyNotFound": "Не найдена валюта по id",
       "currencyRateNotFound": "Не найден курс валюты на определенную дату",
       "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
-      "debtComponentAmountNotFound": "Не найден объект DebtComponentAmount (таблица debt_component_amount) по Id",
-      "debtPromiseNotFound": "Не найдено обещание по Id",
+      "debtComponentAmountNotFound": "Не найден объект DebtComponentAmount (таблица debt_component_amount) по ID",
+      "debtPromiseNotFound": "Не найдено обещание по ID",
       "dictTermAlreadyExists": "Словарный термин уже существует",
       "dictionaryAlreadyExists": "Словарь термин уже существует",
       "dictionaryNotFound": "Словарь не найден",
@@ -2062,7 +2094,7 @@
       "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",
       "phoneNotFound": "Не найден телефон по id",
       "roleCodeEmpty": "Во входной модели для обновления oraganization_user_link не указан ID роли",
-      "tempalteNotFound": "Не найден шаблон по Id",
+      "tempalteNotFound": "Не найден шаблон по ID",
       "thereAreUsersInTheRole": "Невозможно удалить роль {{ $1 }}, в которой есть пользователи",
       "tokenInvalid": "Неверный токен сессии",
       "unknownDataType": "Неизвестный тип данных {{ $1 }} (нет в словаре №1)",
@@ -2089,6 +2121,7 @@
         "403": "У вас недостаточно прав для перемещения {{ entity }}",
         "*": "При перемещении {{ entity }} произошла ошибка"
       },
+      "massOp": "При совершении операции {{ entity }} произошла ошибка",
       "update": {
         "403": "У вас недостаточно прав для изменения {{ entity }}",
         "*": "При изменении {{ entity }} произошла ошибка"
@@ -2177,7 +2210,7 @@
           "contractorName": "Контрагент",
           "directionCode": "Направление",
           "endWorkDate": "Дата окончания работ",
-          "id": "Ид",
+          "id": "ID",
           "name": "Название",
           "signDate": "Дата подписания портфеля",
           "stageCode": "Стадия",
@@ -2189,11 +2222,26 @@
       "users": {
         "grid": {
           "fullName": "ФИО",
-          "id": "Ид",
+          "id": "ID",
           "organization": "Подразделение",
           "position": "Должность"
         },
         "title": "Выберите пользователей"
+      },
+      "fields": {
+        "branchCode": "Филиал",
+        "dictValue1": "Словарный атрибут 1",
+        "dictValue2": "Словарный атрибут 2",
+        "dictValue3": "Словарный атрибут 3",
+        "dictValue4": "Словарный атрибут 4",
+        "outPortfolioId": "Реестр КА",
+        "portfolioId": "Портфели",
+        "paymentDateTime": "Дата оплаты",
+        "regionCode": "Регион",
+        "userId": "Оператор",
+        "addressTypeCode": "Тип адреса",
+        "visitPurposeCode": "Цель выезда",
+        "visitStatusCode": "Статус выезда"
       }
     },
     "grid": {
@@ -2233,22 +2281,27 @@
         "filterOoo": "фильтр..."
       },
       "actions": {
+        "addVisit": "Отметить необходимость",
+        "cancelVisit": "Отменить выезд",
         "confirmPaymentsOperator": "Подтвердить изменение оператора",
         "confirmPromise": "Подтвердить обещания",
         "debtChangeAttribute": "Изменить атрибуты долга",
         "debtClearResponsible": "Снять ответственного по долгу",
         "debtNextCallDate": "Установить дату следующего звонка",
         "debtSetResponsible": "Установить ответственного по долгу",
+        "delete": "Удалить",
         "deletePromise": "Удалить обещания",
+        "deleteSMS": "Удалить SMS",
         "objectAddToGroup": "Добавить в группу",
         "objectChangeColor": "Изменить цвет",
         "openDebtCard": "Открыть карточку долга",
         "paymentsCancel": "Отменить платежи",
         "paymentsConfirm": "Подтвердить платежи",
+        "prepareVisit": "Подготовить выезд",
         "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
         "statusChange": "Изменить статус",
-        "deleteSMS": "Удалить SMS"
+        "visitAdd": "Отметить необходимость"
       }
     },
     "filter": {
@@ -2296,7 +2349,8 @@
     "dialog": {
       "result": {
         "title": "Результат операции",
-        "message": "Операция выполнена успешно для {{processed}} из {{total}} записей"
+        "message": "Операция выполнена успешно для {{processed}} из {{total}} записей",
+        "messageUnsuccessful": "Операция не выполнена для {{total}} записей"
       }
     },
     "NA": "Не установлен"

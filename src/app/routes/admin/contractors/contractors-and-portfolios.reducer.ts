@@ -5,8 +5,8 @@ import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.se
 
 export const defaultState: IContractorsAndPortfoliosState = {
   selectedContractorId: null,
-  selectedPortfolioId: null,
   selectedManagerId: null,
+  selectedPortfolio: null,
 };
 
 export function reducer(

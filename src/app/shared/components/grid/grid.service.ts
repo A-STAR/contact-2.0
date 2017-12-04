@@ -8,7 +8,7 @@ import { ILabeledValue } from '../../../core/converter/value-converter.interface
 import { IGridColumn, IRenderer, TRendererType } from './grid.interface';
 import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction, IMetadataColumn } from '../../../core/metadata/metadata.interface';
-import { IUserDictionaries, ITypeCodeItem } from '../../../core/user/dictionaries/user-dictionaries.interface';
+import { IUserDictionaries } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
 import { LookupService } from '../../../core/lookup/lookup.service';
 import { MetadataService } from '../../../core/metadata/metadata.service';
@@ -76,48 +76,7 @@ export class GridService {
    * @param {object} renderers Column renderers, i.e. getters
    * @returns {Observable<IAGridColumn[]>} Column defininitions
    */
-  getColumnMeta(metadataKey: string, renderers: object): Observable<IAGridColumn[]> {
-    const mapColumns = ([metadata, dictionaries]: [IMetadataColumn[], IUserDictionaries]) => {
-
-      const columns: IAGridColumn[] = metadata
-        .map(metaColumn => {
-          return { ...metaColumn, colId: metaColumn.name } as IAGridColumn;
-        })
-        .map(column => {
-          // Data types
-          switch (column.dataType) {
-            case 2:
-              // Date
-              column.$$valueGetter = (item: any) => this.converterService.ISOToLocalDate(item[column.colId]);
-              break;
-            case 6:
-              // Dictionary
-              const dictionary = dictionaries[column.dictCode];
-              if (dictionary) {
-                const dictionaryHash = dictionary.reduce((acc, item) => { acc[item.code] = item.name; return acc; }, {});
-                column.$$valueGetter = (row: ITypeCodeItem) => {
-                  const dictCode = row[column.name];
-                  const dictValue = dictionaryHash[dictCode];
-                  return  dictValue !== undefined ? dictValue : dictCode;
-                };
-                column.filterValues = dictionary.map(item => ({ code: item.code, name: item.name }));
-              }
-              break;
-            case 7:
-              // Datetime
-              column.$$valueGetter = (item: any) => this.converterService.ISOToLocalDateTime(item[column.colId]);
-              break;
-            case 1:
-              // Number
-            case 3:
-              // String
-            default:
-          }
-          return column;
-      });
-      return this.setValueGetters(columns, renderers);
-    };
-
+  getColumnsFromMetadata(metadataKey: string, renderers: object): Observable<IAGridColumn[]> {
     return this.metadataService.getMetadata(metadataKey)
       .flatMap(metadata => {
         const dictionaryIds = metadata
@@ -128,7 +87,59 @@ export class GridService {
           this.userDictionariesService.getDictionaries(dictionaryIds)
         );
       })
-      .map(mapColumns);
+      .map(this.mapColumns(renderers));
+  }
+
+  getColumns(columns: Partial<IMetadataColumn>[], renderers: object): Observable<IAGridColumn[]> {
+    const dictionaryIds = columns
+      .filter(column => !!column.dictCode)
+      .map(column => column.dictCode);
+
+    return combineLatest(
+      of(columns),
+      this.userDictionariesService.getDictionaries(dictionaryIds)
+    ).map(this.mapColumns(renderers));
+  }
+
+  mapColumns(renderers: object): any {
+    return ([metadata, dictionaries]: [IMetadataColumn[], IUserDictionaries]) => {
+      const columns: IAGridColumn[] = metadata
+        .map(metaColumn => {
+          return { ...metaColumn, colId: metaColumn.name } as IAGridColumn;
+        })
+        .map(column => {
+          // Data types
+          switch (column.dataType) {
+            case 2:
+              // Date
+              column.$$valueGetter = (value: any) => this.converterService.ISOToLocalDate(value);
+              break;
+            case 6:
+              // Dictionary
+              const dictionary = dictionaries[column.dictCode];
+              if (dictionary) {
+                const dictionaryHash = dictionary.reduce((acc, item) => { acc[item.code] = item.name; return acc; }, {});
+                column.$$valueGetter = (value: any) => {
+                  const dictValue = dictionaryHash[value];
+                  return dictValue !== undefined ? dictValue : value;
+                };
+                column.filterValues = dictionary.map(item => ({ code: item.code, name: item.name }));
+              }
+              break;
+            case 7:
+              // Datetime
+              column.$$valueGetter = (value: any) => this.converterService.ISOToLocalDateTime(value);
+              break;
+            case 1:
+              // Number
+            case 3:
+              // String
+            default:
+          }
+        return column;
+      });
+      return this.setValueGetters(columns, renderers);
+    };
   }
 
   setRenderers(columns: IGridColumn[], renderers?: IRenderer): IGridColumn[] {

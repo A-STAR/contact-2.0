@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
-import { DialogFunctions } from '../../../../core/dialog';
+import { ICloseAction } from '../../../components/action-grid/action-grid.interface';
 
 import { SmsDeleteService } from './sms-delete.service';
+
+import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
   selector: 'app-sms-delete-dialog',
@@ -11,7 +13,7 @@ import { SmsDeleteService } from './sms-delete.service';
 })
 export class SmsDeleteDialogComponent extends DialogFunctions implements OnInit {
   @Input() smsId: number[];
-  @Output() close = new EventEmitter<boolean>();
+  @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;
   smsCounter = {
@@ -19,7 +21,7 @@ export class SmsDeleteDialogComponent extends DialogFunctions implements OnInit 
   };
 
   constructor(
-  private smsDeleteService: SmsDeleteService,
+    private smsDeleteService: SmsDeleteService,
   ) {
     super();
   }
@@ -33,14 +35,9 @@ export class SmsDeleteDialogComponent extends DialogFunctions implements OnInit 
     this.smsDeleteService.smsDelete(this.smsId)
       .subscribe(res => {
         const refresh = !!res.massInfo && !!res.massInfo.total;
-        // NOTE: do nto refresh if the total is 0
-        this.close.emit(refresh);
-        this.setDialog();
+        // NOTE: do not refresh, neither deselect if the total is 0
+        this.close.emit({ refresh, deselectAll: refresh });
       });
   }
 
-  onCloseDialog(): void {
-    this.close.emit(false);
-    this.setDialog();
-  }
 }

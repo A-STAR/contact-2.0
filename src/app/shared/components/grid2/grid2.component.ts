@@ -16,7 +16,7 @@ import { Subject } from 'rxjs/Subject';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
+  CellValueChangedEvent, ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
   GridOptions, ICellRendererParams, MenuItemDef, PostProcessPopupParams, RowNode
 } from 'ag-grid/main';
 
@@ -38,7 +38,9 @@ import { PersistenceService } from '../../../core/persistence/persistence.servic
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
+import { DatePickerComponent } from './editors/datepicker/datepicker.component';
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
+
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { UserPermissions } from '../../../core/user/permissions/user-permissions';
@@ -100,6 +102,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IAGridAction>();
+  @Output() cellValueChange = new EventEmitter<CellValueChangedEvent>();
 
   columnDefs: ColDef[];
   gridOptions: GridOptions = {};
@@ -235,6 +238,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     const selected = this.selected.map(row => row[this.rowIdKey]);
     this.refreshRowCount();
     this.onSelect.emit(selected);
+  }
+
+  onCellValueChanged(event: CellValueChangedEvent): void {
+    this.cellValueChange.emit(event);
   }
 
   rowDoubleClicked(row: RowNode): void {
@@ -513,12 +520,33 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return {};
   }
 
+  private getCellEditor(column: IAGridColumn): Partial<ColDef> {
+    switch (column.dataType) {
+      case 2:
+      case 7:
+        return { cellEditorFramework: DatePickerComponent };
+      case 4:
+        // TODO(d.maltsev): boolean
+        return null;
+      case 6:
+        return { cellEditor: 'select', cellEditorParams: { values: [ 'Foo', 'Bar', 'Baz' ] } };
+      default:
+        return { cellEditor: 'text' };
+    }
+  }
+
   private setColumnDefs(savedColDefs: ColDef[]): ColDef[] {
     const mapColumns = (column: IAGridColumn, originalIndex: number) => {
       // need indices to sort the columns
       let index;
       const colDef: ColDef = {
+        valueGetter: column.valueGetter,
+        valueSetter: column.valueSetter,
+        ...(column.editable ? this.getCellEditor(column) : {}),
+        cellRenderer: column.cellRenderer,
+        cellStyle: column.cellStyle,
         colId: column.colId,
+        editable: column.editable,
         field: column.colId,
         filter: this.getCustomFilter(column),
         filterParams: this.getCustomFilterParams(column),
@@ -549,8 +577,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           break;
       }
       if (column.$$valueGetter) {
-        colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
-        colDef.valueGetter = colDef.cellRenderer;
+        colDef.valueFormatter = (params: ICellRendererParams) => column.$$valueGetter(params.value);
+        // TODO(d.maltsev): check that filters have not been broken
+        // colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
+        // colDef.valueGetter = colDef.cellRenderer;
       }
 
       return { column: colDef, index, originalIndex };
@@ -665,12 +695,22 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private createMetadataMenuItem(metadataAction: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
     return {
       name: this.translate.instant(`default.grid.actions.${metadataAction.action}`),
-      action: () => this.action.emit({ metadataAction, params }),
+      action: () =>  this.action.emit({ metadataAction, params }),
       disabled: !this.isContextMenuItemEnabled(metadataAction.action),
     };
   }
 
   private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
+    // TODO(m.bobryshev): remove once the BE returns this action
+    // const visitAdd = {
+    //   action: 'visitAdd',
+    //   addOptions: null,
+    //   params: ['debtId', 'personId', 'regionCode']
+    // };
+
+    // const found = this.actions.find(action => action.action === 'visitAdd');
+    // this.actions = found ? this.actions : this.actions.concat(visitAdd);
+
     return this.actions.map(action => this.createMetadataMenuItem(action, params));
   }
 
@@ -685,7 +725,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //   disabled: true,
       //   tooltip: 'Just to test what the tooltip can show'
       // },
-      'separator',
+      // 'separator',
       ...this.getMetadataMenuItems(params),
       // {
       //   name: 'Person',
@@ -720,6 +760,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   // TODO(d.maltsev): this looks a bit messy.
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'visitAdd':
+        return  this.selected.length > 0; // TODO mock (m.bobryshev) this.userPermissionsBag.has('VISIT_ADD') &&
       case 'deleteSMS':
         return this.userPermissionsBag.notEmpty('SMS_DELETE_STATUS_LIST') && this.selected.length > 0;
       case 'debtClearResponsible':
@@ -730,11 +772,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         // TODO(d.maltsev, i.kibisov): pass entityTypeId
         return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
       case 'showContactHistory':
-        return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+        return this.userPermissionsBag.has('CONTACT_LOG_VIEW') && this.selected.length > 0;
       case 'paymentsConfirm':
-        return this.userPermissionsBag.has('PAYMENT_CONFIRM');
+        return this.userPermissionsBag.has('PAYMENT_CONFIRM') && this.selected.length > 0;
       case 'paymentsCancel':
-        return this.userPermissionsBag.has('PAYMENT_CANCEL');
+        return this.userPermissionsBag.has('PAYMENT_CANCEL') && this.selected.length > 0;
       case 'confirmPromise':
         return this.userPermissionsBag.has('PROMISE_CONFIRM') && this.selected.length > 0;
       case 'deletePromise':

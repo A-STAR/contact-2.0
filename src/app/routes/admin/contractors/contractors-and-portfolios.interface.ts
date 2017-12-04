@@ -29,6 +29,10 @@ export interface IPortfolioMoveRequest {
   newContractorId: number;
 }
 
+export interface IPortfolioOutsourceRequest {
+  debtStatusCode: number;
+}
+
 export interface IContractorManager {
   id: number;
   fullName: string;
@@ -47,6 +51,6 @@ export interface IContractorManager {
 
 export interface IContractorsAndPortfoliosState {
   selectedContractorId: number;
-  selectedPortfolioId: number;
+  selectedPortfolio: IPortfolio;
   selectedManagerId: number;
 }
