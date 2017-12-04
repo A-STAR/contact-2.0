@@ -90,6 +90,7 @@ export type TControlTypes =
   | 'datepicker'
   | 'dialog'
   | 'dialogmultiselect'
+  | 'dialogmultiselectwrapper'
   | 'dynamic'
   | 'file'
   | 'gridselect'

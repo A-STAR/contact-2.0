@@ -37,6 +37,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
   @Input() rowCount: number;
   @Input() contextMenuOptions: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
+  @Input() showFilter: boolean;
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
