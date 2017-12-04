@@ -16,7 +16,6 @@ import { DebtResponsibleService } from './debt-responsible.service';
   ],
   providers: [
     DebtResponsibleService,
-    DebtResponsibleClearModule,
   ]
 })
 export class DebtResponsibleModule { }

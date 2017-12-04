@@ -271,9 +271,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
   }
 
-
-  onAction(): void {
+  onAction(action: IContextMenuItem): void {
     this.hideCtxMenu();
+    this.action.emit(action);
   }
 
   clearSelection(): void {
