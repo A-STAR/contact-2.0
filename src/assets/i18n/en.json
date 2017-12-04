@@ -238,6 +238,18 @@
         "title": "SMS"
       }
     },
+    "dataUpload": {
+      "dialogs": {
+        "cancel": {
+          "message": "Are you sure you want to cancel?",
+          "title": "Cancel"
+        },
+        "error": {
+          "message": "Download error log?",
+          "title": "Could not save to DB"
+        }
+      }
+    },
     "payments": {
       "filters":{
         "form": {
@@ -2275,7 +2287,6 @@
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
         "statusChange": "Change status",
-        "deleteSMS": "Delete SMS",
         "visitAdd": "Make necessary"
       }
     },

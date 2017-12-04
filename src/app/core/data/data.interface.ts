@@ -8,3 +8,11 @@ export interface IResponse<T> {
   success: boolean;
   data: T;
 }
+
+export interface IMassInfoResponse {
+  success: boolean;
+  massInfo: {
+    processed: number;
+    total: number;
+  };
+}

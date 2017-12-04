@@ -238,6 +238,18 @@
         "title": "СМС"
       }
     },
+    "dataUpload": {
+      "dialogs": {
+        "cancel": {
+          "message": "Вы уверены, что хотите отменить операцию?",
+          "title": "Отмена"
+        },
+        "error": {
+          "message": "Скачать файл с описанием ошибок?",
+          "title": "Не удалось сохранить в БД"
+        }
+      }
+    },
     "payments": {
       "filters": {
         "form": {
@@ -2271,7 +2283,6 @@
         "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
         "statusChange": "Изменить статус",
-        "deleteSMS": "Удалить SMS",
         "visitAdd": "Отметить необходимость"
       }
     },

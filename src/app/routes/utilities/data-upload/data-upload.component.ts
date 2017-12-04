@@ -16,6 +16,10 @@ import { DataUploadService } from './data-upload.service';
 
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
+import { DialogFunctions } from '../../../core/dialog';
+
+import { isEmpty } from '../../../core/utils';
+
 @Component({
   selector: 'app-data-upload',
   templateUrl: './data-upload.component.html',
@@ -26,7 +30,7 @@ import { Grid2Component } from '../../../shared/components/grid2/grid2.component
     DataUploadService,
   ]
 })
-export class DataUploadComponent {
+export class DataUploadComponent extends DialogFunctions {
   static COMPONENT_NAME = 'DataUploadComponent';
 
   @ViewChild(Grid2Component) grid: Grid2Component;
@@ -38,6 +42,8 @@ export class DataUploadComponent {
 
   columns: IAGridColumn[];
 
+  dialog: 'cancel' | 'errorLogPrompt';
+
   rows: any[];
   rowCount = 0;
   rowIdKey = 'id';
@@ -47,10 +53,18 @@ export class DataUploadComponent {
   constructor(
     private cdRef: ChangeDetectorRef,
     private dataUploadService: DataUploadService,
-  ) {}
+  ) {
+    super();
+  }
+
+  get hasFile(): boolean {
+    return !isEmpty(this.columns);
+  }
 
   get hasErrors(): boolean {
-    return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
+    return false;
+    // TODO(d.maltsev): uncomment
+    // return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
   }
 
   onRequest(): void {
@@ -111,6 +125,46 @@ export class DataUploadComponent {
         this.rows = this.getRowsFromResponse(response);
         this.rowCount = this.rows.length;
         this.isFirstRequest = true;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  onSaveClick(): void {
+    this.dataUploadService
+      .save()
+      .subscribe(response => {
+        const { processed, total } = response.massInfo;
+        if (processed !== total) {
+          this.setDialog('errorLogPrompt');
+          this.cdRef.markForCheck();
+        }
+      });
+  }
+
+  onErrorLogSubmit(): void {
+    this.dataUploadService
+      .getErrors()
+      .subscribe(() => {
+        this.closeDialog();
+        this.cdRef.markForCheck();
+      });
+  }
+
+  onCancelClick(): void {
+    this.setDialog('cancel');
+    this.cdRef.markForCheck();
+  }
+
+  onCancelSubmit(): void {
+    this.dataUploadService
+      .cancel()
+      .subscribe(() => {
+        this.columns = null;
+        this.rows = [];
+        this.rowCount = 0;
+        // TODO(d.maltsev): maybe reset form instead?
+        this.fileInput.nativeElement.value = '';
+        this.closeDialog();
         this.cdRef.markForCheck();
       });
   }

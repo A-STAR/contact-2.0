@@ -10,6 +10,7 @@ import {
   IDataResponse,
   IOpenFileResponse,
 } from './data-upload.interface';
+import { IMassInfoResponse } from '../../../core/data/data.interface';
 
 @Injectable()
 export class DataUploadService {
@@ -85,9 +86,15 @@ export class DataUploadService {
     return Observable.of(null);
   }
 
-  save(): Observable<void> {
+  save(): Observable<IMassInfoResponse> {
     // POST /load/debtSetOperator/guid/{tempDataGuid}/save
-    return Observable.of(null);
+    return Observable.of({
+      success: true,
+      massInfo: {
+        processed: 1,
+        total: 2,
+      },
+    });
   }
 
   getErrors(): Observable<IErrorsResponse> {
