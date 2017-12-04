@@ -70,17 +70,24 @@ export class ActionGridComponent<T> extends DialogFunctions {
     return this.dialogData.selection[key];
   }
 
-  getConfiguredParams(): any[] {
-    // const idNames = this.dialogData.params;
-    // const { selection } = this.dialogData;
-    // const container = Array(selection[0].length).fill({});
-    // return idNames.reduce((acc, idName, id) => {
-    //   selection[id].forEach((item, ind) => {
-    //     acc[ind][idName] = item;
-    //   });
-    //   return acc as string;
-    // }, container);
-    return [ { debtId: 2, personId: 63, regionCode: 1 } ];
+  getConfiguredParams(paramName: string): any[] {
+    if (!(this.grid as MetadataGridComponent<T>).grid.actions) {
+      // NOTE: this function is not available on grid1
+      return;
+    }
+
+    const idNames = (this.grid as  MetadataGridComponent<T>).grid.actions
+      .filter(a => a.action === paramName)[0].params;
+
+    const { selection } = this.dialogData;
+    const container = Array(selection[0].length).fill({});
+
+    return idNames.reduce((acc, idName, idNum) => {
+      const item = selection[idNum].forEach((current, ind) => {
+        acc[ind][idName] = current;
+      });
+      return acc;
+    }, container);
   }
 
   getDialogParam(key: number): number | string {

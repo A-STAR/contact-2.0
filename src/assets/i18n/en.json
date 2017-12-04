@@ -2275,8 +2275,9 @@
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
         "statusChange": "Change status",
-        "deleteSMS": "Delete SMS",
-        "visitAdd": "Make necessary"
+        "addVisit": "Add a visit",
+        "prepareVisit": "Prepare a visit",
+        "cancelVisit": "Cancel a visit"
       }
     },
     "filter": {

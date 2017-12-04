@@ -2271,8 +2271,9 @@
         "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
         "statusChange": "Изменить статус",
-        "deleteSMS": "Удалить SMS",
-        "visitAdd": "Отметить необходимость"
+        "addVisit": "Отметить необходимость",
+        "prepareVisit": "Подготовить выезд",
+        "cancelVisit": "Отменить выезд"
       }
     },
     "filter": {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { ISingleVisit, IVisitsBundle } from './visit-add.interface';
+import { IVisitParam, IVisitsBundle } from './visit-add.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -15,9 +15,10 @@ export class VisitAddService {
 
   private baseUrl = '/mass/visits';
 
-  createVisit(aims: ISingleVisit[], actionData: IVisitsBundle): Observable<any> {
-    return this.dataService.update(this.baseUrl, {}, { idData: { complexIdList: aims }, actionData })
-      .catch(() => Observable.of({
+  createVisit(params: IVisitParam[], actionData: IVisitsBundle): Observable<any> {
+    return this.dataService.create(this.baseUrl, {}, { idData: { complexIdList: params }, actionData })
+    // TODO(m.bobryshev): remove catch once the API is ready
+    .catch(() => Observable.of({
         success: true,
         massInfo: { total: 2, processed: 1 }
       }))
