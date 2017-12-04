@@ -91,7 +91,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       submenu: [
         {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.outsourcing'),
-          action: () => this.onSendOutsource(),
+          action: () => this.onAction('sendOutsource'),
           // TODO(i.lobanov): get it from parent?
           enabled: combineLatestAnd([
             this.canSend$,
@@ -99,7 +99,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
           ]),
         }, {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.cessia'),
-          action: () => this.onSendCessia(),
+          action: () => this.onAction('sendCessia'),
           // TODO(i.lobanov): get it from parent?
           enabled: combineLatestAnd([
             this.canSend$,
@@ -110,7 +110,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     },
     {
       label: this.translateService.instant('portfolios.outsourcing.return.menu'),
-      action: () => this.onReturn(),
+      action: () => this.onAction('return'),
       enabled: combineLatestAnd([
         this.canReturn$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
@@ -241,15 +241,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       });
   }
 
-  onSendOutsource(): void {
-    this.setDialog('sendOutsource');
-  }
-
-  onSendCessia(): void {
-    this.setDialog('sendCessia');
-  }
-  onReturn(): void {
-    this.setDialog('return');
+  onAction(action: 'sendOutsource' | 'sendCessia' | 'return'): void {
+    this.setDialog(action);
   }
 
   onSelect(portfolio: IPortfolio): void {
