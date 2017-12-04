@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { GuiObjectsService } from '../../core/gui-objects/gui-objects.service';
 import { SettingsService } from '../../core/settings/settings.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,22 +24,27 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private router: Router,
     public settings: SettingsService,
   ) {
-    this.menuSubscription = this.menuService
-      .selectedMenuItem
-      .filter(selectedMenuItem => !!selectedMenuItem.children && !!selectedMenuItem.children.length)
-      .subscribe(menuItem => {
-        this.menuItems = menuItem.children;
-        this.cdRef.markForCheck();
-      });
+
   }
 
   ngOnInit(): void {
-    this.router.events.subscribe((val) => {
-      // close any submenu opened when route changes
-      this.removeFloatingNav();
-      // scroll view to top
-      window.scrollTo(0, 0);
-    });
+    this.menuSubscription = this.menuService
+      .selectedMenuItem
+      .subscribe(menuItem => {
+        this.menuItems = menuItem.children;
+        if (menuItem.link === '/home') {
+          this.router.navigate(['home']);
+        }
+        this.cdRef.markForCheck();
+      });
+    this.menuService.menuItems
+      .pipe(first())
+      .subscribe(menuItems => {
+        const selectedItem = this.menuService.findItemByLink(menuItems, this.router.url);
+        if (selectedItem) {
+          this.menuService.selectMenuItem(selectedItem);
+        }
+      });
   }
 
   ngOnDestroy(): void {

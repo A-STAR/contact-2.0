@@ -51,6 +51,19 @@ export class GuiObjectsService {
     this.store.dispatch(action);
   }
 
+  selectMenuItem(menuItem: IMenuItem): void {
+    this.store.dispatch({
+      type: GuiObjectsService.GUI_OBJECTS_SELECTED,
+      payload: menuItem
+    });
+  }
+
+  findItemByLink(menuItems: IMenuItem[], link: string): IMenuItem {
+    return menuItems.find(menuItem => {
+      return menuItem.link === link || (menuItem.children && !!this.findItemByLink(menuItem.children, link));
+    });
+  }
+
   private prepareGuiObject(guiObject: IGuiObject): IMenuItem {
     const children = guiObject.children;
     return {

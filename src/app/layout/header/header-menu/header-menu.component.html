@@ -3,10 +3,11 @@
       class="header-menu__item"
       (click)="onMainItemClick(item)"
     >
-    <a *ngIf="item.text"
-    [ngClass]="{'header-menu__item--active': item.isActive}"
-     [title]="item.text | translate">
-      <span>{{ item.text | translate }}</span>
+    <a
+      *ngIf="item.text"
+      [ngClass]="{'header-menu__item--active': item.isActive}"
+      [title]="item.text | translate">
+        <span>{{ item.text | translate }}</span>
     </a>
   </li>
 </ul>
