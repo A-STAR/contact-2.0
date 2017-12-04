@@ -11,7 +11,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { ISingleVisit, IVisitsBundle } from './visit-add.interface';
+import { IVisitParam, IVisitsBundle } from './visit-add.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -31,7 +31,7 @@ const label = makeKey('massOperations.visitAdd');
 export class VisitAddDialogComponent  implements  OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  @Input() visitRelsIds: ISingleVisit[];
+  @Input() visitParams: IVisitParam[];
 
   @Output() close = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
@@ -60,10 +60,9 @@ export class VisitAddDialogComponent  implements  OnInit {
   }
 
   ngOnInit(): void {
-    this.visitsCounter.count = this.visitRelsIds.length ;
+    this.visitsCounter.count = this.visitParams.length ;
     Observable.combineLatest(
-      // TODO(m.bobryshev): replace with VISIT_ADD once the permission is ready
-      this.userPermissionsService.has('VISIT_CANCEL'),
+      this.userPermissionsService.has('ADDRESS_VISIT_ADD'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_VISIT_PURPOSE)
     )
     .subscribe(([canAddVisit, options]) => {
@@ -71,7 +70,7 @@ export class VisitAddDialogComponent  implements  OnInit {
         return;
       }
       this.controls = this.getControls(options);
-      this.visitsCounter.count = this.visitRelsIds.length;
+      this.visitsCounter.count = this.visitParams.length;
       this.formData = {
         actionData: {
           purposeCode: null,
@@ -84,7 +83,7 @@ export class VisitAddDialogComponent  implements  OnInit {
 
   onSubmit(): void {
     const actionData = this.form.serializedUpdates;
-    this.visitAddService.createVisit(this.visitRelsIds, actionData)
+    this.visitAddService.createVisit(this.visitParams, actionData)
       .subscribe(() => {
         this.onCancel();
       });

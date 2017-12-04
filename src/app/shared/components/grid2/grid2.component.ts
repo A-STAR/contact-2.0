@@ -38,7 +38,9 @@ import { PersistenceService } from '../../../core/persistence/persistence.servic
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
+import { DatePickerComponent } from './editors/datepicker/datepicker.component';
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
+
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { UserPermissions } from '../../../core/user/permissions/user-permissions';
@@ -518,28 +520,18 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return {};
   }
 
-  private getCellEditor(column: IAGridColumn): string {
+  private getCellEditor(column: IAGridColumn): Partial<ColDef> {
     switch (column.dataType) {
       case 2:
       case 7:
-        return 'date';
+        return { cellEditorFramework: DatePickerComponent };
       case 4:
         // TODO(d.maltsev): boolean
         return null;
       case 6:
-        return 'select';
+        return { cellEditor: 'select', cellEditorParams: { values: [ 'Foo', 'Bar', 'Baz' ] } };
       default:
-        return 'text';
-    }
-  }
-
-  private getCellEditorParams(column: IAGridColumn): object {
-    switch (column.dataType) {
-      case 6:
-        // TODO(d.maltsev): real dictionary
-        return { values: [ 'Foo', 'Bar', 'Baz' ] };
-      default:
-        return null;
+        return { cellEditor: 'text' };
     }
   }
 
@@ -550,8 +542,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       const colDef: ColDef = {
         valueGetter: column.valueGetter,
         valueSetter: column.valueSetter,
-        cellEditor: column.editable ? this.getCellEditor(column) : null,
-        cellEditorParams: column.editable ? this.getCellEditorParams(column) : null,
+        ...(column.editable ? this.getCellEditor(column) : {}),
         cellRenderer: column.cellRenderer,
         cellStyle: column.cellStyle,
         colId: column.colId,
@@ -586,9 +577,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           break;
       }
       if (column.$$valueGetter) {
-        // TODO(d.maltsev): what if cellRenderer is also passed as column prop?
-        colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
-        colDef.valueGetter = colDef.cellRenderer;
+        colDef.valueFormatter = (params: ICellRendererParams) => column.$$valueGetter(params.value);
+        // TODO(d.maltsev): check that filters have not been broken
+        // colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
+        // colDef.valueGetter = colDef.cellRenderer;
       }
 
       return { column: colDef, index, originalIndex };
@@ -709,13 +701,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
-    //  TODO mock (m.bobryshev)
-    this.actions.push({
-      action: 'visitAdd',
-      addOptions: null,
-      //  TODO mock (m.bobryshev), sh.b. debtId, addressesId, personRole
-      params: ['debtId', 'personId', 'regionCode']
-    });
+    // TODO(m.bobryshev): remove once the BE returns this action
+    // const visitAdd = {
+    //   action: 'visitAdd',
+    //   addOptions: null,
+    //   params: ['debtId', 'personId', 'regionCode']
+    // };
+
+    // const found = this.actions.find(action => action.action === 'visitAdd');
+    // this.actions = found ? this.actions : this.actions.concat(visitAdd);
+
     return this.actions.map(action => this.createMetadataMenuItem(action, params));
   }
 

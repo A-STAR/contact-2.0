@@ -1,6 +1,6 @@
 <app-visit-add-dialog
-  *ngIf="isDialog('visitAdd')"
-  [visitRelsIds]="getConfiguredParams()"
+  *ngIf="isDialog('addVisit')"
+  [visitParams]="getConfiguredParams('addVisit')"
   (close)="onCloseDialog()"
 >
 </app-visit-add-dialog>
@@ -84,6 +84,7 @@
   [rowIdKey]="rowIdKey"
   [rows]="rows"
   [rowCount]="rowCount"
+  [showFilter]="showFilter"
   (action)="onAction($event)"
   (onDblClick)="onDblClick($event)"
   (onFilter)="onRequest()"

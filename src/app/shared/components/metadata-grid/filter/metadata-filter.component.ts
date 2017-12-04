@@ -15,12 +15,12 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { FilterObject, FilterOperatorType } from '../../../../shared/components/grid2/filter/grid-filter';
 import { IAppState } from '../../../../core/state/state.interface';
 import { IDynamicFormControl } from '../../form/dynamic-form/dynamic-form.interface';
-import { IFilterControl } from '../filter-grid.interface';
-import { IEntityAttributes } from '../../../../core/entity/attributes/entity-attributes.interface';
-import { IMetadataColumn } from '../../../../core/metadata/metadata.interface';
+import { IFilterControl } from './metadata-filter.interface';
+import { IMetadataColumn, IMetadataFilter } from '../../../../core/metadata/metadata.interface';
 
 import { EntityAttributesService } from '../../../../core/entity/attributes/entity-attributes.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+import { MetadataFilterService } from 'app/shared/components/metadata-grid/filter/metadata-filter.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -28,39 +28,44 @@ import { TYPE_CODES } from '../../../../core/utils/value';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-grid-filter',
-  templateUrl: 'filter.component.html'
+  selector: 'app-metadata-filter',
+  templateUrl: './metadata-filter.component.html'
 })
-export class GridFilterComponent implements OnInit {
-  @Input() gridKey: string;
-  @Input() controls: IFilterControl[];
+export class MetadataFilterComponent implements OnInit {
+  @Input() metadataKey: string;
 
   @Output() filter = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  filterControls: IFilterControl[];
   formControls: IDynamicFormControl[];
 
-  private metadata: IMetadataColumn[];
+  private columnsMetadata: IMetadataColumn[];
+  private filtersMetadata: IMetadataFilter[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private entityAttributesService: EntityAttributesService,
     private store: Store<IAppState>,
-    private valueConverterService: ValueConverterService
+    private valueConverterService: ValueConverterService,
+    private metadataFilterService: MetadataFilterService
   ) {}
 
   ngOnInit(): void {
     combineLatest(
       this.entityAttributesService.getDictValueAttributes(),
       this.store.select(state => state.metadata)
-        .map(metadata => metadata && metadata[this.gridKey])
+        .map(metadata => metadata && metadata[this.metadataKey])
         .filter(Boolean)
     )
     .pipe(first())
+    .filter(([attributes, metadata]) => metadata.columns && metadata.filters)
     .subscribe(([attributes, metadata]) => {
-      this.formControls = this.buildControls(attributes);
-      this.metadata = metadata.columns;
+      this.filterControls = this.metadataFilterService.createFilterControls(metadata.filters);
+      this.formControls = this.buildFormControls(this.filterControls);
+      this.columnsMetadata = metadata.columns;
+      this.filtersMetadata = metadata.baseFilters;
       this.cdRef.markForCheck();
     });
   }
@@ -85,23 +90,27 @@ export class GridFilterComponent implements OnInit {
     this.filter.emit();
   }
 
-  private buildControls(attributes: IEntityAttributes): IDynamicFormControl[] {
+  private buildFormControls(filterControls: IFilterControl[]): IDynamicFormControl[] {
     return [
-      ...this.controls.map(
-        control => control.type === 'searchBtn'
-          ? { ...control, action: () => this.onFilter() }
-          : control
-      )
+      ...filterControls,
+      {
+        label: 'default.buttons.search',
+        controlName: 'searchBtn',
+        type: 'searchBtn',
+        iconCls: 'fa-search',
+        width: 3,
+        action: () => this.onFilter()
+      }
     ];
   }
 
   private getOperatorForControl(controlName: string): FilterOperatorType {
-    const control = this.controls.find(c => c.controlName === controlName);
+    const control = this.filterControls.find(c => c.controlName === controlName);
     return control.operator || '==';
   }
 
   private transformFilterValue(key: string, value: any): any {
-    const columnMetadata = this.metadata.find(column => column.name === key);
+    const columnMetadata = this.columnsMetadata.find(column => column.name === key);
     switch (columnMetadata.dataType) {
       case TYPE_CODES.DATETIME:
         return this.valueConverterService.dateStringToISO(value);

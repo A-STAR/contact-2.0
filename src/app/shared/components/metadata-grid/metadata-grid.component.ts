@@ -24,6 +24,7 @@ import {
 import { GridService } from '../grid/grid.service';
 
 import { Grid2Component } from '../grid2/grid2.component';
+import { MetadataFilterComponent } from '../metadata-grid/filter/metadata-filter.component';
 
 import { FilterObject } from '../grid2/filter/grid-filter';
 
@@ -40,6 +41,7 @@ export class MetadataGridComponent<T> implements OnInit {
   @Input() rowIdKey: string;
   @Input() rows: T[] = [];
   @Input() rowCount: number;
+  @Input() showFilter = false;
 
   @Output() action = new EventEmitter<IAGridAction>();
   @Output() onDblClick = new EventEmitter<T>();
@@ -50,6 +52,7 @@ export class MetadataGridComponent<T> implements OnInit {
   @Output() onSelect = new EventEmitter<IAGridSelected>();
 
   @ViewChild(Grid2Component) grid: Grid2Component;
+  @ViewChild(MetadataFilterComponent) filter: MetadataFilterComponent;
 
   private _actions: IMetadataAction[];
   private _columns: IAGridColumn[];
@@ -63,7 +66,7 @@ export class MetadataGridComponent<T> implements OnInit {
   ngOnInit(): void {
     Observable.combineLatest(
       this.gridService.getActions(this.metadataKey).pipe(first()),
-      this.gridService.getColumnMeta(this.metadataKey, {}).pipe(first()),
+      this.gridService.getColumnsFromMetadata(this.metadataKey, {}).pipe(first()),
     )
     .subscribe(([ actions, columns ]) => {
       this._actions = actions;
@@ -122,7 +125,11 @@ export class MetadataGridComponent<T> implements OnInit {
   }
 
   getFilters(): FilterObject {
-    return this.grid.getFilters();
+    const filters = this.grid.getFilters();
+    if (this.filter) {
+      filters.addFilter(this.filter.filters);
+    }
+    return filters;
   }
 
   getRequestParams(): IAGridRequestParams {
