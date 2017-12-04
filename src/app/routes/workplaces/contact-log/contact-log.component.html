@@ -2,6 +2,7 @@
   <app-tab *ngFor="let grid of grids" [title]="grid.title" [closable]="false">
     <app-workplaces-contact-log-grid
       [gridKey]="grid.key"
+      [rowIdKey]="grid.rowIdKey"
     ></app-workplaces-contact-log-grid>
   </app-tab>
 </app-tabstrip>
