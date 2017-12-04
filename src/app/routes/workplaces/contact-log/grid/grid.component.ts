@@ -24,6 +24,7 @@ import { FilterComponent } from './filter/filter.component';
 })
 export class GridComponent {
   @Input() gridKey: string;
+  @Input() rowIdKey: string;
 
   @ViewChild(FilterComponent) filter: FilterComponent;
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IContactLogEntry>;
