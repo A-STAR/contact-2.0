@@ -55,5 +55,9 @@ export interface IContextMenuItem {
   icon?: HTMLElement | string;
   cssClasses?: string[];
   params?: string[];
+  submenu?: IContextMenuItem[];
   addOptions?: { name: string; value: Array<number|string> }[];
+  // these are two internal collections
+  fieldActionItems?: IContextMenuItem[];
+  actionItems?: IContextMenuItem[];
 }

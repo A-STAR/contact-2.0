@@ -90,17 +90,15 @@ export class PortfolioEditComponent {
   onSubmit(): void {
     const portfolio = this.form.serializedUpdates;
     // see requirements
-    if (portfolio.directionCode === 2) {
-      portfolio.statusCode = null;
-    }
+    portfolio.statusCode = portfolio.directionCode === 2 ? null : this.formData.statusCode;
     const action = (this.contractorId && this.portfolioId
       ? this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio)
       : this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, portfolio));
 
-    action.subscribe(() => {
-      this.contractorsAndPortfoliosService.dispatch(ContractorsAndPortfoliosService.PORTFOLIOS_FETCH);
-      this.onBack();
-    });
+      action.switchMap(result => this.contractorsAndPortfoliosService.readPortfolios(this.contractorId))
+      .subscribe(() => {
+        this.onBack();
+      });
   }
 
   onBack(): void {

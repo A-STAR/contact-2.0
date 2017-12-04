@@ -182,7 +182,7 @@ export class ContractorsAndPortfoliosService {
     portfolioId: number,
     portfolio: IPortfolio): Observable<any> {
     return Observable.of({ success: true });
-    // todo: uncomment, when implemented on be
+    // TODO(i.lobanov): uncomment, when implemented on be
     // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/form', {
     //   contractorId, portfolioId
     // }, portfolio)
@@ -194,10 +194,22 @@ export class ContractorsAndPortfoliosService {
     portfolioId: number,
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
     return Observable.of({ success: true });
-    // todo: uncomment, when implemented on be
+    // TODO(i.lobanov): uncomment, when implemented on be
     // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
     //   contractorId, portfolioId
     // }, { ...portfolio, debtStatusCode: 14 })
+    // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+  }
+
+  sendCessionPortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
+    return Observable.of({ success: true });
+    // TODO(i.lobanov): uncomment, when implemented on be
+    // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
+    //   contractorId, portfolioId
+    // }, { ...portfolio, debtStatusCode: 17 })
     // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
@@ -206,7 +218,7 @@ export class ContractorsAndPortfoliosService {
     portfolioId: number,
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
     return Observable.of({ success: true });
-    // todo: uncomment, when implemented on be
+    // TODO(i.lobanov): uncomment, when implemented on be
     // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/return', {
     //   contractorId, portfolioId
     // }, portfolio)
