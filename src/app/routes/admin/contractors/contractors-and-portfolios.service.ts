@@ -201,6 +201,18 @@ export class ContractorsAndPortfoliosService {
     // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
+  sendCessiaPortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
+    return Observable.of({ success: true });
+    // TODO(i.lobanov): uncomment, when implemented on be
+    // return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
+    //   contractorId, portfolioId
+    // }, { ...portfolio, debtStatusCode: 17 })
+    // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+  }
+
   returnOutsourcePortfolio(
     contractorId: number,
     portfolioId: number,

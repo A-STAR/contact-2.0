@@ -83,12 +83,30 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       ])
     },
     {
-      label: this.translateService.instant('portfolios.outsourcing.send.menu'),
-      action: () => this.onSend(),
+      label: this.translateService.instant('portfolios.outsourcing.send.menu.title'),
       enabled: combineLatestAnd([
         this.canSend$,
         this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanSend(o)),
-      ])
+      ]),
+      submenu: [
+        {
+          label: this.translateService.instant('portfolios.outsourcing.send.menu.outsourcing'),
+          action: () => this.onSendOutsource(),
+          // TODO(i.lobanov): get it from parent?
+          enabled: combineLatestAnd([
+            this.canSend$,
+            this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanSend(o)),
+          ]),
+        }, {
+          label: this.translateService.instant('portfolios.outsourcing.send.menu.cessia'),
+          action: () => this.onSendCessia(),
+          // TODO(i.lobanov): get it from parent?
+          enabled: combineLatestAnd([
+            this.canSend$,
+            this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanSend(o)),
+          ]),
+        }
+      ]
     },
     {
       label: this.translateService.instant('portfolios.outsourcing.return.menu'),
@@ -198,7 +216,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   isPortfolioCanSend(portfolio: IPortfolio): boolean {
-    return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 5;
+    // return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 5;
+    return !!portfolio;
   }
 
   isPortfolioCanReturn(portfolio: IPortfolio): boolean {
@@ -222,10 +241,13 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       });
   }
 
-  onSend(): void {
-    this.setDialog('send');
+  onSendOutsource(): void {
+    this.setDialog('sendOutsource');
   }
 
+  onSendCessia(): void {
+    this.setDialog('sendCessia');
+  }
   onReturn(): void {
     this.setDialog('return');
   }
@@ -264,7 +286,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       });
   }
 
-  onSendSubmit(portfolio: IPortfolio): void {
+  onSendOutsourceSubmit(portfolio: IPortfolio): void {
     this.contractorsAndPortfoliosService.sendOutsourcePortfolio(this.selectedContractorId,
       this.selection[0].id, portfolio)
       .switchMap(() => this.fetchAll())
@@ -274,6 +296,15 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       });
   }
 
+  onSendCessiaSubmit(portfolio: IPortfolio): void {
+    this.contractorsAndPortfoliosService.sendCessiaPortfolio(this.selectedContractorId,
+      this.selection[0].id, portfolio)
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => {
+        this.setDialog();
+        this.onPortfoliosFetch(portfolios);
+      });
+  }
   onReturnSubmit(portfolio: IPortfolio): void {
     this.contractorsAndPortfoliosService.returnOutsourcePortfolio(this.selectedContractorId,
       this.selection[0].id, portfolio)

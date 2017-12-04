@@ -6,10 +6,10 @@ import {
   OnInit,
   Output
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IContextMenuItem, IGridColumn } from '../grid.interface';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-context-menu',
@@ -33,20 +33,8 @@ export class ContextMenuComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.options && this.options.length) {
-      this.fieldActionItems = this.options
-        .filter(option => option.fieldActions && option.fieldActions.length)
-        .reduce((acc, option) => {
-          option.fieldActions.forEach(name => {
-            acc.push({
-              ...option,
-              fieldAction: name,
-              label: this.translationService.instant(option.translationKey + '.' + name, this.fieldNameTranslation)
-                || option.label
-            });
-          });
-          return acc;
-        }, []);
-      this.actionItems = this.options.filter(option => !option.fieldActions);
+      this.fieldActionItems = this.prepareFieldActionItems(this.options);
+      this.actionItems = this.prepareActionItems(this.options);
     }
   }
 
@@ -92,5 +80,35 @@ export class ContextMenuComponent implements OnInit {
     if (this.action) {
       this.action.emit(item);
     }
+  }
+
+  private prepareActionItems(config: IContextMenuItem[]): IContextMenuItem[] {
+    return config.filter(option => !option.fieldActions).map(option => {
+      if (option.submenu && option.submenu.length) {
+        option.actionItems = this.prepareActionItems(option.submenu);
+        option.fieldActionItems = this.prepareFieldActionItems(option.submenu);
+      }
+      return option;
+    });
+  }
+
+  private prepareFieldActionItems(config: IContextMenuItem[]): IContextMenuItem[] {
+    return config
+      .filter(option => option.fieldActions && option.fieldActions.length)
+      .reduce((acc, option) => {
+        option.fieldActions.forEach(name => {
+          if (option.submenu && option.submenu.length) {
+            option.actionItems = this.prepareActionItems(option.submenu);
+            option.fieldActionItems = this.prepareFieldActionItems(option.submenu);
+          }
+          acc.push({
+            ...option,
+            fieldAction: name,
+            label: this.translationService.instant(option.translationKey + '.' + name, this.fieldNameTranslation)
+              || option.label
+          });
+        });
+        return acc;
+      }, []);
   }
 }

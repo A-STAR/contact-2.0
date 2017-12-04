@@ -18,9 +18,17 @@
 </app-portfolio-move>
 
 <app-portfolio-send
-  *ngIf="isDialog('send')"
+  *ngIf="isDialog('sendOutsource')"
   [portfolio]="selection[0]"
-  (onSubmit)="onSendSubmit($event)"
+  (onSubmit)="onSendOutsourceSubmit($event)"
+  (onCancel)="onCloseDialog()"
+>
+</app-portfolio-send>
+
+<app-portfolio-send
+  *ngIf="isDialog('sendCessia')"
+  [portfolio]="selection[0]"
+  (onSubmit)="onSendCessiaSubmit($event)"
   (onCancel)="onCloseDialog()"
 >
 </app-portfolio-send>
