@@ -182,6 +182,7 @@ export class DataUploadComponent extends DialogFunctions {
         cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
         cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
         dataType: column.typeCode,
+        typeCode: column.typeCode,
         editable: true,
         label: column.name,
         valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
