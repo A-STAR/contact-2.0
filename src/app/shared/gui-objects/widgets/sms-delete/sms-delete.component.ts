@@ -4,8 +4,6 @@ import { ICloseAction } from '../../../components/action-grid/action-grid.interf
 
 import { SmsDeleteService } from './sms-delete.service';
 
-import { DialogFunctions } from '../../../../core/dialog';
-
 @Component({
   selector: 'app-sms-delete-dialog',
   templateUrl: './sms-delete.component.html',
