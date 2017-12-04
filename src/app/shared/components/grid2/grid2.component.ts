@@ -577,9 +577,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           break;
       }
       if (column.$$valueGetter) {
-        // TODO(d.maltsev): what if cellRenderer is also passed as column prop?
-        colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
-        colDef.valueGetter = colDef.cellRenderer;
+        colDef.valueFormatter = (params: ICellRendererParams) => column.$$valueGetter(params.value);
+        // TODO(d.maltsev): check that filters have not been broken
+        // colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
+        // colDef.valueGetter = colDef.cellRenderer;
       }
 
       return { column: colDef, index, originalIndex };

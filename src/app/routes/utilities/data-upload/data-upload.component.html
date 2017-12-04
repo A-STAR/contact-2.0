@@ -20,7 +20,7 @@
 
 <div class="mb">
   <app-button label="Открыть файл" [disabled]="hasFile" (click)="onFileOpenClick()"></app-button>
-  <app-button label="Сохранить в БД" [disabled]="hasErrors" (click)="onSaveClick()"></app-button>
+  <app-button label="Сохранить в БД" [disabled]="!hasFile || hasErrors" (click)="onSaveClick()"></app-button>
   <app-button label="Отмена" [disabled]="!hasFile" (click)="onCancelClick()"></app-button>
 </div>
 

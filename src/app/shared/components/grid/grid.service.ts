@@ -112,24 +112,23 @@ export class GridService {
           switch (column.dataType) {
             case 2:
               // Date
-              column.$$valueGetter = (item: any) => this.converterService.ISOToLocalDate(item[column.colId]);
+              column.$$valueGetter = (value: any) => this.converterService.ISOToLocalDate(value);
               break;
             case 6:
               // Dictionary
               const dictionary = dictionaries[column.dictCode];
               if (dictionary) {
                 const dictionaryHash = dictionary.reduce((acc, item) => { acc[item.code] = item.name; return acc; }, {});
-                column.$$valueGetter = (row: ITypeCodeItem) => {
-                  const dictCode = row[column.name];
-                  const dictValue = dictionaryHash[dictCode];
-                  return dictValue !== undefined ? dictValue : dictCode;
+                column.$$valueGetter = (value: any) => {
+                  const dictValue = dictionaryHash[value];
+                  return dictValue !== undefined ? dictValue : value;
                 };
                 column.filterValues = dictionary.map(item => ({ code: item.code, name: item.name }));
               }
               break;
             case 7:
               // Datetime
-              column.$$valueGetter = (item: any) => this.converterService.ISOToLocalDateTime(item[column.colId]);
+              column.$$valueGetter = (value: any) => this.converterService.ISOToLocalDateTime(value);
               break;
             case 1:
               // Number

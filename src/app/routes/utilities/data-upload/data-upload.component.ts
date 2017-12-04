@@ -205,7 +205,7 @@ export class DataUploadComponent extends DialogFunctions {
   private getCellRenderer(params: ICellRendererParams): string {
     return `
       <div title="${this.getCell(params).errorMsg || ''}">
-        ${params.getValue()}
+        ${params.valueFormatted}
       </div>
     `;
   }
