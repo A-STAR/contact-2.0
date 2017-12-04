@@ -90,6 +90,7 @@ export type TControlTypes =
   | 'datepicker'
   | 'dialog'
   | 'dialogmultiselect'
+  | 'dialogmultiselectwrapper'
   | 'dynamic'
   | 'file'
   | 'gridselect'
@@ -109,7 +110,6 @@ export type TControlTypes =
   | 'singleselectwrapper'
   | 'text'
   | 'textarea'
-  | 'dialogmultiselectwrapper'
 ;
 
 export interface IValue {
