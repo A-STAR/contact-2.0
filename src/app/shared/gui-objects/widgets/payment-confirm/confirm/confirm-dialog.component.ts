@@ -42,6 +42,6 @@ export class PaymentConfirmDialogComponent extends DialogFunctions implements On
 
   onCloseDialog(): void {
     this.setDialog();
-    this.close.emit({});
+    this.close.emit();
   }
 }
