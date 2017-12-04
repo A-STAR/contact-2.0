@@ -121,10 +121,7 @@ export class DataUploadComponent extends DialogFunctions {
     const file = (this.fileInput.nativeElement as HTMLInputElement).files[0];
     this.dataUploadService
       .openFile(file)
-      .flatMap(response => {
-        return this.getColumnsFromResponse(response)
-          .map(columns => ({ response, columns }));
-      })
+      .flatMap(response => this.getColumnsFromResponse(response).map(columns => ({ response, columns })))
       .subscribe(({ response, columns }) => {
         this.columns = [ ...columns ];
         // The following line makes grid2 set `initialized = true` internally
