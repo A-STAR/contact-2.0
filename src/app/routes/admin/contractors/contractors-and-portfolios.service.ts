@@ -201,7 +201,7 @@ export class ContractorsAndPortfoliosService {
     // .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
-  sendCessiaPortfolio(
+  sendCessionPortfolio(
     contractorId: number,
     portfolioId: number,
     portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {

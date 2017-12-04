@@ -26,18 +26,18 @@
 </app-portfolio-send>
 
 <app-portfolio-send
-  *ngIf="isDialog('sendCessia')"
+  *ngIf="isDialog('sendCession')"
   [portfolio]="selection[0]"
-  (onSubmit)="onSendCessiaSubmit($event)"
+  (onSubmit)="onSendCessionSubmit($event)"
   (onCancel)="onCloseDialog()"
 >
 </app-portfolio-send>
 
 <app-portfolio-send
-  *ngIf="isDialog('return')"
+  *ngIf="isDialog('returnOutsource')"
   [isReturn]="true"
   [portfolio]="selection[0]"
-  (onSubmit)="onReturnSubmit($event)"
+  (onSubmit)="onReturnOutsourceSubmit($event)"
   (onCancel)="onCloseDialog()"
 >
 </app-portfolio-send>
