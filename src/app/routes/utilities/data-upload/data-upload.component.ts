@@ -169,10 +169,10 @@ export class DataUploadComponent extends DialogFunctions {
       });
   }
 
-  private rowHasErrors(row: IRow): boolean {
-    // TODO(d.maltsev): how to check for errors?
-    return row.cells.reduce((acc, cell) => acc || !!cell.errorMsg, false);
-  }
+  // private rowHasErrors(row: IRow): boolean {
+  //   // TODO(d.maltsev): how to check for errors?
+  //   return row.cells.reduce((acc, cell) => acc || !!cell.errorMsg, false);
+  // }
 
   private getColumnsFromResponse(response: IOpenFileResponse): IAGridColumn[] {
     return response.columns
