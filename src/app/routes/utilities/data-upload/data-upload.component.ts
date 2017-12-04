@@ -102,7 +102,7 @@ export class DataUploadComponent extends DialogFunctions {
     const payload: ICellPayload = {
       rowId: event.data.id,
       cellId: cell.id,
-      value: cell.value,
+      value: String(cell.value),
     };
     this.dataUploadService
       .editCell(payload)
@@ -121,12 +121,12 @@ export class DataUploadComponent extends DialogFunctions {
     const file = (this.fileInput.nativeElement as HTMLInputElement).files[0];
     this.dataUploadService
       .openFile(file)
-      .subscribe(response => {
-        this.getColumnsFromResponse(response)
-          .subscribe(columns => {
-            this.columns = columns;
-            this.cdRef.markForCheck();
-          });
+      .flatMap(response => {
+        return this.getColumnsFromResponse(response)
+          .map(columns => ({ response, columns }));
+      })
+      .subscribe(({ response, columns }) => {
+        this.columns = [ ...columns ];
         // The following line makes grid2 set `initialized = true` internally
         this.cdRef.detectChanges();
         this.rows = this.getRowsFromResponse(response);
@@ -185,11 +185,11 @@ export class DataUploadComponent extends DialogFunctions {
     const columns = response.columns
       .sort((a, b) => a.order - b.order)
       .map((column, i) => ({
-        colId: i.toString(),
+        name: i.toString(),
         cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
         cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
         dataType: column.typeCode,
-        typeCode: column.typeCode,
+        dictCode: column.dictCode,
         editable: true,
         label: column.name,
         valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
@@ -210,7 +210,7 @@ export class DataUploadComponent extends DialogFunctions {
     `;
   }
 
-  private getCellValue(params: ICellRendererParams): string {
+  private getCellValue(params: ICellRendererParams): number | string {
     return this.getCell(params).value;
   }
 

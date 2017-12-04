@@ -17,10 +17,11 @@ export class DataUploadService {
   private guid: number;
 
   private columns = [
-    { name: 'Ид', order: 0, typeCode: 1, dictCode: null },
-    { name: 'Оператор', order: 1, typeCode: 3, dictCode: null },
-    { name: 'Дата платежа', order: 2, typeCode: 2, dictCode: null},
-    { name: 'Долг', order: 3, typeCode: 3, dictCode: null },
+    { name: 'Ид', order: 0, typeCode: 1 },
+    { name: 'Оператор', order: 1, typeCode: 3 },
+    { name: 'Дата платежа', order: 2, typeCode: 2 },
+    { name: 'Долг', order: 3, typeCode: 3 },
+    { name: 'Статус', order: 4, typeCode: 6, dictCode: 1 },
   ];
 
   private rows = [
@@ -31,6 +32,7 @@ export class DataUploadService {
         { id: 2, value: 'Иванов Иван Иванович', statusCode: 0, errorMsg: 'Иванов - нехороший человек.' },
         { id: 3, value: '2017-01-01T15:00:00', statusCode: 0, errorMsg: null },
         { id: 4, value: 'Долг за машину', statusCode: 1, errorMsg: 'Иванов должен денег за машину. Иванов, верни деньги.' },
+        { id: 5, value: 1, statusCode: 0, errorMsg: null },
       ]
     },
     {
@@ -40,6 +42,7 @@ export class DataUploadService {
         { id: 2, value: 'Петров Петр Петрович', statusCode: 2, errorMsg: null },
         { id: 3, value: '2017-02-01T12:30:00', statusCode: 0, errorMsg: null },
         { id: 4, value: 'Долг за квартиру', statusCode: 3, errorMsg: null },
+        { id: 5, value: 1, statusCode: 0, errorMsg: null },
       ]
     },
     {
@@ -49,6 +52,7 @@ export class DataUploadService {
         { id: 2, value: 'Сидоров Сидор Сидорович', statusCode: 5, errorMsg: null },
         { id: 3, value: '2017-03-01T10:45:00', statusCode: 0, errorMsg: null },
         { id: 4, value: 'Долг за яхту', statusCode: 6, errorMsg: null },
+        { id: 5, value: 1, statusCode: 0, errorMsg: null },
       ]
     },
   ];
