@@ -1,5 +1,5 @@
 //  TODO mock (m.bobryshev), sh.b. debtId, addressesId, personRole
-export interface ISingleVisit {
+export interface IVisitParam {
   debtId: number;
   personId: number;
   regionCode: number;

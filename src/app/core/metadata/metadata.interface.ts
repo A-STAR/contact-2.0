@@ -24,10 +24,24 @@ export interface IMetadataColumn {
   width?: number;
 }
 
+export type IMetadataFilterType = 'dictionaries' | 'entityGroups' | 'portfolios' | 'users';
+
+export interface IMetadataFilterOption {
+  name: string;
+  value: Array<number|string>;
+}
+
+export interface IMetadataFilter {
+  type: IMetadataFilterType;
+  column: string;
+  addOptions?: IMetadataFilterOption[];
+}
+
 export interface IMetadata {
   name: string;
   actions: IMetadataAction[];
   data: IMetadataColumn[];
+  baseFilters: IMetadataFilter[];
 }
 
 export interface IMetadataState {
@@ -35,6 +49,7 @@ export interface IMetadataState {
     actions: IMetadataAction[];
     columns: Array<IMetadataColumn>;
     status: MetadataListStatusEnum;
+    filters: IMetadataFilter[];
   };
 }
 
