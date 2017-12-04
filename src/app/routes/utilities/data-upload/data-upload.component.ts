@@ -10,7 +10,7 @@ import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow } from './data-upload.interface';
+import { IOpenFileResponse, ICell, ICellPayload, IDataResponse /*, IRow */ } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
 
