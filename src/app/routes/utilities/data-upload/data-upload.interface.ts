@@ -1,6 +1,6 @@
 export interface ICell {
   id: number;
-  value: string;
+  value: number | string;
   statusCode: number;
   errorMsg: string;
 }
@@ -12,9 +12,9 @@ export interface IRow {
 
 export interface IColumn {
   name: string;
-  order: number;
+  order?: number;
   typeCode: number;
-  dictCode: number;
+  dictCode?: number;
 }
 
 export interface IOpenFileResponse {
