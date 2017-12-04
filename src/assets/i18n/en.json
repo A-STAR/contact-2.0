@@ -1862,8 +1862,8 @@
     "actionsLog": {
       "gen": { "singular": "actions log entry", "plural": "action log" }
     },
-    "filterGrid": {
-      "gen": { "singular": "record", "plural": "records" }
+    "workTask": {
+      "gen": { "singular": "task", "plural": "tasks" }
     },
     "constants": {
       "gen": { "singular": "constant", "plural": "constants" }
@@ -2231,6 +2231,21 @@
           "position": "Position"
         },
         "title": "Select Users"
+      },
+      "fields": {
+        "branchCode": "Branch",
+        "dictValue1": "Dictionary Value 1",
+        "dictValue2": "Dictionary Value 2",
+        "dictValue3": "Dictionary Value 3",
+        "dictValue4": "Dictionary Value 4",
+        "outPortfolioId": "Registry",
+        "portfolioId": "Portfolio",
+        "paymentDateTime": "Payment date",
+        "regionCode": "Region",
+        "userId": "Operator",
+        "addressTypeCode": "Address",
+        "visitPurposeCode": "Visit purpose",
+        "visitStatusCode": "Visit status"
       }
     },
     "grid": {
@@ -2270,6 +2285,8 @@
         "filterOoo": "filter..."
       },
       "actions": {
+        "addVisit": "Add a visit",
+        "cancelVisit": "Cancel a visit",
         "confirmPaymentsOperator": "Confirm change operator",
         "confirmPromise": "Confirm promises",
         "debtChangeAttribute": "Change debt attributes",
@@ -2284,6 +2301,7 @@
         "openDebtCard": "Open debt card",
         "paymentsCancel": "Payments cancel",
         "paymentsConfirm": "Payments confirm",
+        "prepareVisit": "Prepare a visit",
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
         "statusChange": "Change status",
