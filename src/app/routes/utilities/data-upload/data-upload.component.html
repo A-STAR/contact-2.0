@@ -1,6 +1,27 @@
+<app-dialog-action
+  *ngIf="isDialog('errorLogPrompt')"
+  titleTranslationKey="modules.dataUpload.dialogs.error.title"
+  actionTranslationKey="modules.dataUpload.dialogs.error.message"
+  actionMessage="default.buttons.ok"
+  actionMode="primary"
+  (action)="onErrorLogSubmit()"
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
+
+<app-dialog-action
+  *ngIf="isDialog('cancel')"
+  titleTranslationKey="modules.dataUpload.dialogs.cancel.title"
+  actionTranslationKey="modules.dataUpload.dialogs.cancel.message"
+  actionMessage="default.buttons.ok"
+  actionMode="danger"
+  (action)="onCancelSubmit()"
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
+
 <div class="mb">
-  <app-button label="Открыть файл" (click)="onFileOpenClick()"></app-button>
-  <app-button label="Сохранить в БД" [disabled]="hasErrors"></app-button>
+  <app-button label="Открыть файл" [disabled]="hasFile" (click)="onFileOpenClick()"></app-button>
+  <app-button label="Сохранить в БД" [disabled]="!hasFile || hasErrors" (click)="onSaveClick()"></app-button>
+  <app-button label="Отмена" [disabled]="!hasFile" (click)="onCancelClick()"></app-button>
 </div>
 
 <div hidden>

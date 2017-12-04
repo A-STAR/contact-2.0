@@ -66,7 +66,7 @@ export class MetadataGridComponent<T> implements OnInit {
   ngOnInit(): void {
     Observable.combineLatest(
       this.gridService.getActions(this.metadataKey).pipe(first()),
-      this.gridService.getColumnMeta(this.metadataKey, {}).pipe(first()),
+      this.gridService.getColumnsFromMetadata(this.metadataKey, {}).pipe(first()),
     )
     .subscribe(([ actions, columns ]) => {
       this._actions = actions;

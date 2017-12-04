@@ -238,6 +238,18 @@
         "title": "СМС"
       }
     },
+    "dataUpload": {
+      "dialogs": {
+        "cancel": {
+          "message": "Вы уверены, что хотите отменить операцию?",
+          "title": "Отмена"
+        },
+        "error": {
+          "message": "Скачать файл с описанием ошибок?",
+          "title": "Не удалось сохранить в БД"
+        }
+      }
+    },
     "payments": {
       "filters": {
         "form": {
@@ -2269,6 +2281,8 @@
         "filterOoo": "фильтр..."
       },
       "actions": {
+        "addVisit": "Отметить необходимость",
+        "cancelVisit": "Отменить выезд",
         "confirmPaymentsOperator": "Подтвердить изменение оператора",
         "confirmPromise": "Подтвердить обещания",
         "debtChangeAttribute": "Изменить атрибуты долга",
@@ -2283,12 +2297,11 @@
         "openDebtCard": "Открыть карточку долга",
         "paymentsCancel": "Отменить платежи",
         "paymentsConfirm": "Подтвердить платежи",
+        "prepareVisit": "Подготовить выезд",
         "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
         "statusChange": "Изменить статус",
-        "addVisit": "Отметить необходимость",
-        "prepareVisit": "Подготовить выезд",
-        "cancelVisit": "Отменить выезд"
+        "visitAdd": "Отметить необходимость"
       }
     },
     "filter": {

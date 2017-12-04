@@ -84,7 +84,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
     const container = Array(selection[0].length).fill({});
 
     return idNames.reduce((acc, idName, idNum) => {
-      const item = selection[idNum].forEach((current, ind) => {
+      selection[idNum].forEach((current, ind) => {
         acc[ind][idName] = current;
       });
       return acc;

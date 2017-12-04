@@ -238,6 +238,18 @@
         "title": "SMS"
       }
     },
+    "dataUpload": {
+      "dialogs": {
+        "cancel": {
+          "message": "Are you sure you want to cancel?",
+          "title": "Cancel"
+        },
+        "error": {
+          "message": "Download error log?",
+          "title": "Could not save to DB"
+        }
+      }
+    },
     "payments": {
       "filters":{
         "form": {
@@ -2273,6 +2285,8 @@
         "filterOoo": "filter..."
       },
       "actions": {
+        "addVisit": "Add a visit",
+        "cancelVisit": "Cancel a visit",
         "confirmPaymentsOperator": "Confirm change operator",
         "confirmPromise": "Confirm promises",
         "debtChangeAttribute": "Change debt attributes",
@@ -2287,12 +2301,11 @@
         "openDebtCard": "Open debt card",
         "paymentsCancel": "Payments cancel",
         "paymentsConfirm": "Payments confirm",
+        "prepareVisit": "Prepare a visit",
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
         "statusChange": "Change status",
-        "addVisit": "Add a visit",
-        "prepareVisit": "Prepare a visit",
-        "cancelVisit": "Cancel a visit"
+        "visitAdd": "Make necessary"
       }
     },
     "filter": {
