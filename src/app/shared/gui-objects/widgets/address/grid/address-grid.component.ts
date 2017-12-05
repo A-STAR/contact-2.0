@@ -296,9 +296,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   get canView$(): Observable<boolean> {
-    return this.ignoreViewPermissions
-      ? Observable.of(true)
-      : this.userPermissionsService.has('ADDRESS_VIEW');
+    return this.userPermissionsService.has('ADDRESS_VIEW')
+      .map(hasPermission => hasPermission || this.ignoreViewPermissions);
   }
 
   get canViewBlock$(): Observable<boolean> {
@@ -339,18 +338,16 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   get canViewVisitLog$(): Observable<boolean> {
     return combineLatestAnd([
-      this.ignoreVisitViewPermissions
-        ? Observable.of(true)
-        : this.userPermissionsService.has('ADDRESS_VISIT_VIEW'),
+      this.userPermissionsService.has('ADDRESS_VISIT_VIEW')
+        .map(hasPermission => hasPermission || this.ignoreVisitViewPermissions),
       this.selectedAddress$.map(Boolean),
     ]);
   }
 
   get canMarkVisit$(): Observable<boolean> {
     return combineLatestAnd([
-      this.ignoreVisitAddPermissions
-        ? Observable.of(true)
-        : this.userPermissionsService.has('ADDRESS_VISIT_ADD'),
+      this.userPermissionsService.has('ADDRESS_VISIT_ADD')
+        .map(hasPermission => hasPermission || this.ignoreVisitAddPermissions),
       this.selectedAddress$.map(address => address && address.statusCode !== 3 && !address.isInactive),
     ]);
   }
@@ -359,9 +356,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     // TODO(d.maltsev): use debtor service
     return combineLatestAnd([
       this.selectedAddress$.map(address => address && !address.isInactive),
-      this.ignoreDebtRegContactTypeListPermissions
-        ? Observable.of(true)
-        : this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3),
+      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3)
+        .map(hasPermission => hasPermission || this.ignoreDebtRegContactTypeListPermissions),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }
