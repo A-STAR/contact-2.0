@@ -1,47 +1,36 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input } from '@angular/core';
 
 import { PromiseResolveService } from '../../promise-resolve.service';
 import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
-
-import { DialogFunctions } from '../../../../../../core/dialog';
 
 @Component({
   selector: 'app-promise-remove-dialog',
   templateUrl: './promise-remove-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PromiseRemoveDialogComponent extends DialogFunctions implements OnInit {
+export class PromiseRemoveDialogComponent {
 
   @Input() promises: number[];
 
   @Output() close = new EventEmitter<ICloseAction>();
 
-  dialog: string = null;
-  count: number;
-  successCount: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private promiseResolveService: PromiseResolveService,
-  ) {
-    super();
-  }
+  ) {}
 
-  ngOnInit(): void {
-    this.setDialog('confirm');
-  }
+
 
   onConfirm(): void {
     this.promiseResolveService.remove(this.promises)
       .subscribe(result => {
-        this.count = result.massInfo.total;
-        this.successCount = result.massInfo.processed;
-        this.setDialog('result');
+        this.close.emit({ refresh: true });
         this.cdRef.markForCheck();
       });
   }
 
-  onClose(result: ICloseAction): void {
-    this.close.emit(result);
+  onClose(): void {
+    this.close.emit();
   }
 }

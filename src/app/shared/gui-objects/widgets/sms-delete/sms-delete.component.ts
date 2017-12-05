@@ -28,7 +28,7 @@ export class SmsDeleteDialogComponent  implements OnInit {
   onConfirmDelete(): void {
     this.smsDeleteService.smsDelete(this.smsId)
       .subscribe(res => {
-        const refresh = !!res.massInfo && !!res.massInfo.total;
+        const refresh = res.massInfo.result.massInfo && !!res.massInfo.processed ;
         // NOTE: do not refresh, neither deselect if the total is 0
         this.close.emit({ refresh, deselectAll: refresh });
       });
