@@ -34,8 +34,8 @@ export class SmsDeleteDialogComponent extends DialogFunctions implements OnInit 
     this.setDialog();
     this.smsDeleteService.smsDelete(this.smsId)
       .subscribe(res => {
-        const refresh = !!res.massInfo && !!res.massInfo.total;
-        // NOTE: do not refresh, neither deselect if the total is 0
+        const refresh = !!res.massInfo && !!res.massInfo.processed;
+        // NOTE: do not refresh, neither deselect if the processed is 0
         this.close.emit({ refresh, deselectAll: refresh });
       });
   }

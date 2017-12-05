@@ -52,8 +52,6 @@ import { UserPermissions } from '../../../core/user/permissions/user-permissions
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: [
     './grid2.component.scss',
-    './grid2.component.ag-base.scss',
-    './grid2.component.theme.scss',
   ],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy {
@@ -75,7 +73,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() disableFilters = false;
   @Input() fetchUrl: string;
   @Input() groupColumnMinWidth = 120;
-  @Input() headerHeight = 25;
+  @Input() headerHeight = 42;
   @Input() metadataKey: string;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() pagination = true;
@@ -83,7 +81,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() persistenceKey: string;
   @Input() remoteSorting = true;
   @Input() rowCount = 0;
-  @Input() rowHeight = 25;
+  @Input() rowHeight = 36;
   @Input() rowIdKey = 'id';
   @Input() rows: any[] = [];
   @Input() rowSelection = 'multiple';
@@ -629,27 +627,25 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         },
         headerComponentParams: {
           headerHeight: this.headerHeight,
-          enableMenu: false,
+          enableMenu: true,
         },
-        // icons: {
-        //   sortAscending: '<i class="fa fa-sort-amount-asc"/>',
-        //   sortDescending: '<i class="fa fa-sort-amount-desc"/>'
-        // },
         /* to set the menu tabs for a column */
         // menuTabs: ['filterMenuTab', 'generalMenuTab', 'columnsMenuTab'],
         menuTabs: ['filterMenuTab', 'columnsMenuTab'],
-        suppressMenu: true,
+        // suppressMenu: true,
       },
       enableColResize: true,
       enableRangeSelection: true,
       enableServerSideFilter: true,
       enableServerSideSorting: true,
-      floatingFilter: !this.disableFilters,
+      // floatingFilter: !this.disableFilters,
+      floatingFilter: false,
       getContextMenuItems: this.getContextMenuItems.bind(this),
       getMainMenuItems: (params) => {
         // hide the tool menu
         return params.defaultItems.slice(0, params.defaultItems.length - 1);
       },
+      getRowNodeId: row => row[this.rowIdKey],
       headerHeight: this.headerHeight,
       // NOTE: There is a huge translation under `localeText` pulled from *.json
       localeText: {},
@@ -662,18 +658,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       rowHeight: this.rowHeight,
       rowModelType: 'viewport',
-      viewportDatasource: this.viewportDatasource,
-      getRowNodeId: row => row[this.rowIdKey],
       rowSelection: this.rowSelection,
       showToolPanel: false,
-      suppressMenuHide: true,
+      suppressMenuHide: false,
       suppressPaginationPanel: true,
-      // suppressRowHoverClass: true,
       suppressScrollOnNewData: true,
       toolPanelSuppressRowGroups: true,
       toolPanelSuppressValues: true,
       toolPanelSuppressPivots: true,
       toolPanelSuppressPivotMode: true,
+      viewportDatasource: this.viewportDatasource,
       viewportRowModelPageSize: this.pageSize,
       viewportRowModelBufferSize: 0,
       isExternalFilterPresent: () => !this.disableFilters,
