@@ -23,7 +23,7 @@ export class PromiseConfirmDialogComponent  {
   onConfirm(): void {
     this.promiseResolveService.confirm(this.promises)
       .subscribe(result => {
-        this.close.emit({ refresh: true });
+        this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
         this.cdRef.markForCheck();
       });
   }
