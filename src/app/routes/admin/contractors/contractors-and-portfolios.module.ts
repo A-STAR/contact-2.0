@@ -17,22 +17,29 @@ import { ContractorAttributesComponent } from './contractors/edit/attributes/con
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: ContractorsAndPortfoliosComponent },
   { path: 'create', component: ContractorEditComponent },
-  { path: ':contractorId', children: [
+  {
+    path: ':contractorId', children: [
       { path: '', pathMatch: 'full', component: ContractorEditComponent },
-      { path: 'managers', children: [
+      {
+        path: 'managers', children: [
           { path: '', pathMatch: 'full', component: ContractorManagersComponent },
           { path: 'create', component: ContractorManagerEditComponent },
           { path: ':managerId', component: ContractorManagerEditComponent },
         ]
       },
-      { path: 'portfolios', children: [
+      {
+        path: 'portfolios', children: [
           { path: '', pathMatch: 'full', redirectTo: 'create' },
           { path: 'create', component: PortfolioEditComponent },
           { path: ':portfolioId', component: PortfolioEditComponent },
         ]
       },
-      { path: 'attributes', component: ContractorAttributesComponent }
-    ]
+      {
+        path: 'attributes', children: [
+          { path: '', pathMatch: 'full', component: ContractorAttributesComponent }
+        ]
+      }
+    ],
   },
 ];
 

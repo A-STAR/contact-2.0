@@ -1008,6 +1008,7 @@
         "confirmMessage": "Вы действительно хотите удалить менеджера {{ lastName }} ?"
       },
       "grid": {
+        "attributes": "Атрибуты",
         "fullName": "ФИО",
         "firstName": "Имя",
         "middleName": "Отчество",

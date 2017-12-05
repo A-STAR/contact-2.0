@@ -1,4 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
+import { INode } from '../../../../../../shared/gui-objects/container/container.interface';
+
+import {
+  AttributeGridComponent
+} from '../../../../../../shared/gui-objects/widgets/entity-attribute/grid/attribute-grid.component';
 
 @Component({
   selector: 'app-contractor-attributes',
@@ -7,7 +15,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContractorAttributesComponent implements OnInit {
 
-  constructor() { }
+  static ENTITY_TYPE_CONTRACTOR = 13;
+
+    node: INode = {
+      container: 'flat',
+      children: [
+        {
+          component: AttributeGridComponent,
+          inject: {
+            entityTypeId$: Observable.of(ContractorAttributesComponent.ENTITY_TYPE_CONTRACTOR),
+            entityId$: Observable.of((<any>this.route.params).value.contractorId)
+          }
+        }
+      ]
+    };
+
+    constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
   }

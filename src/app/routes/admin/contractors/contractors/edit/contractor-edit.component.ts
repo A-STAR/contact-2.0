@@ -58,7 +58,7 @@ export class ContractorEditComponent implements OnInit {
         { label: label('smsName'), controlName: 'smsName', type: 'text' },
         { label: label('responsibleId'), controlName: 'responsibleId', type: 'select', options: userOptions },
         { label: label('typeCode'), controlName: 'typeCode', type: 'select', options: contractorTypeOptions },
-        { label: label('attribute'), controlName: 'attributes', type: 'button', action: () => this.onAttributesClick() },
+        { label: label('attributes'), controlName: 'attributes', type: 'button', action: () => this.onAttributesClick() },
         { label: label('phone'), controlName: 'phone', type: 'text' },
         { label: label('address'), controlName: 'address', type: 'text' },
         { label: label('comment'), controlName: 'comment', type: 'textarea' },
