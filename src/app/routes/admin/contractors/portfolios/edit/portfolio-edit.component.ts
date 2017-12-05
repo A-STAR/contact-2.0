@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
@@ -23,7 +23,7 @@ const label = makeKey('portfolios.grid');
   templateUrl: './portfolio-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PortfolioEditComponent {
+export class PortfolioEditComponent implements OnInit {
   static COMPONENT_NAME = 'ContractorEditComponent';
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -42,6 +42,9 @@ export class PortfolioEditComponent {
     private userDictionariesService: UserDictionariesService,
     private valueConverterService: ValueConverterService,
   ) {
+  }
+
+  ngOnInit(): void {
     const routeParams = (<any>this.route.params).value;
     this.contractorId = routeParams.contractorId;
     this.portfolioId = routeParams.portfolioId;
@@ -54,33 +57,39 @@ export class PortfolioEditComponent {
         ? this.contractorsAndPortfoliosService.readPortfolio(this.contractorId, this.portfolioId)
         : of(null)
     )
-    .pipe(first())
-    .subscribe(([ directionOptions, stageOptions, statusOptions, portfolio ]) => {
-      this.formData = portfolio
-        ? {
-          ...portfolio,
-          signDate: this.valueConverterService.fromISO(portfolio.signDate),
-          startWorkDate: this.valueConverterService.fromISO(portfolio.startWorkDate),
-          endWorkDate: this.valueConverterService.fromISO(portfolio.endWorkDate),
-        }
-        : null;
+      .pipe(first())
+      .subscribe(([directionOptions, stageOptions, statusOptions, portfolio]) => {
+        this.formData = portfolio
+          ? {
+            ...portfolio,
+            signDate: this.valueConverterService.fromISO(portfolio.signDate),
+            startWorkDate: this.valueConverterService.fromISO(portfolio.startWorkDate),
+            endWorkDate: this.valueConverterService.fromISO(portfolio.endWorkDate),
+          }
+          : null;
 
-      this.controls = [
-        { label: label('name'), controlName: 'name', type: 'text', required: true },
-        { label: label('directionCode'), controlName: 'directionCode', type: 'select', required: true,
-            disabled: !!portfolio, options: directionOptions },
-        { label: label('stageCode'), controlName: 'stageCode', type: 'select',
-          // NOTE: must be true, but the dictionary is empty
-          required: false, options: stageOptions },
-        { label: label('statusCode'), controlName: 'statusCode', type: 'select', required: true,
-            disabled: portfolio && portfolio.directionCode === 2, options: statusOptions },
-        { label: label('signDate'), controlName: 'signDate', type: 'datepicker' },
-        { label: label('startWorkDate'), controlName: 'startWorkDate', type: 'datepicker' },
-        { label: label('endWorkDate'), controlName: 'endWorkDate', type: 'datepicker' },
-        { label: label('comment'), controlName: 'comment', type: 'textarea' },
-      ];
-      this.cdRef.markForCheck();
-    });
+        this.controls = [
+          { label: label('name'), controlName: 'name', type: 'text', required: true },
+          {
+            label: label('directionCode'), controlName: 'directionCode', type: 'select', required: true,
+            disabled: !!portfolio, options: directionOptions
+          },
+          {
+            label: label('stageCode'), controlName: 'stageCode', type: 'select',
+            // NOTE: must be true, but the dictionary is empty
+            required: false, options: stageOptions
+          },
+          {
+            label: label('statusCode'), controlName: 'statusCode', type: 'select', required: true,
+            disabled: portfolio && portfolio.directionCode === 2, options: statusOptions
+          },
+          { label: label('signDate'), controlName: 'signDate', type: 'datepicker' },
+          { label: label('startWorkDate'), controlName: 'startWorkDate', type: 'datepicker' },
+          { label: label('endWorkDate'), controlName: 'endWorkDate', type: 'datepicker' },
+          { label: label('comment'), controlName: 'comment', type: 'textarea' },
+        ];
+        this.cdRef.markForCheck();
+      });
   }
 
   canSubmit(): boolean {
