@@ -1,4 +1,4 @@
-import { ILabeledValue } from '../../../core/converter/value-converter.interface';
+import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 
 export enum ToolbarControlEnum {
   BUTTON,
@@ -8,17 +8,17 @@ export enum ToolbarControlEnum {
 }
 
 export enum ToolbarActionTypeEnum {
+  ADD,
+  EDIT,
+  CLONE,
+  REMOVE,
   REFRESH,
+  SEARCH,
+  SAVE,
   GO_FORWARD,
   GO_BACKWARD,
   GO_FIRST,
   GO_LAST,
-}
-
-export interface IToolbarButton {
-  disabled: boolean;
-  type?: ToolbarActionTypeEnum;
-
 }
 
 export interface IToolbarAction {
