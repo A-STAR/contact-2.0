@@ -90,6 +90,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
+  @Input() onArrowKey: () => (params: any) => any;
+  @Input() onTabKey: () => (params: any) => any;
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -687,6 +689,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       onColumnMoved: () => this.calculateGridSettings(),
       onSelectionChanged: this.onSelectionChanged.bind(this),
       onSortChanged: this.onSortChanged.bind(this),
+      navigateToNextCell: this.onArrowKey ? this.onArrowKey() : null,
+      tabToNextCell: this.onTabKey ? this.onTabKey() : null,
     };
 
     this.translateOptionsMessages();
