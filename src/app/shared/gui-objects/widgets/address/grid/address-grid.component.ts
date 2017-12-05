@@ -231,7 +231,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onMarkDialogSubmit(data: IAddressMarkData): void {
-    this.addressService.markForVisit(this._personId$.value, this._selectedAddressId$.value, data)
+    this.addressService.markForVisit(this._personId$.value, this._selectedAddressId$.value, data, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 

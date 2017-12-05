@@ -15,6 +15,7 @@ import { VisitService } from './visits.service';
 })
 export class AddressGridVisitsComponent implements OnInit {
   @Input() addressId: number;
+  @Input() callCenter: boolean;
   @Input() personId: number;
 
   @Output() cancel = new EventEmitter<void>();
@@ -52,7 +53,7 @@ export class AddressGridVisitsComponent implements OnInit {
         this.cdRef.markForCheck();
       });
 
-    this.visitService.fetchAll(this.personId, this.addressId).subscribe(visits => {
+    this.visitService.fetchAll(this.personId, this.addressId, this.callCenter).subscribe(visits => {
       this.visits = visits;
       this.cdRef.markForCheck();
     });

@@ -13,9 +13,9 @@ export class VisitService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(personId: number, addressId: number): Observable<IVisit[]> {
+  fetchAll(personId: number, addressId: number, callCenter: boolean): Observable<IVisit[]> {
     return this.dataService
-      .readAll('/persons/{personId}/addresses/{addressId}/visits', { personId, addressId })
+      .readAll('/persons/{personId}/addresses/{addressId}/visits', { personId, addressId }, { params: { callCenter }})
       .catch(this.notificationsService.fetchError().entity('entities.visit.gen.plural').dispatchCallback());
   }
 }

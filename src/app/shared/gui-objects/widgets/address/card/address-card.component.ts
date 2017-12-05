@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -22,7 +22,7 @@ import { oneOfGroupRequired } from '../../../../../core/validators';
   selector: 'app-address-card',
   templateUrl: './address-card.component.html'
 })
-export class AddressCardComponent {
+export class AddressCardComponent implements OnInit {
   @Input() callCenter = false;
 
   @ViewChild('form') form: DynamicForm2Component;
@@ -45,7 +45,9 @@ export class AddressCardComponent {
   ) {
     // NOTE: on deper routes we should take the contactId
     this.personId = this.contactId || this.personId;
+  }
 
+  ngOnInit(): void {
     if (this.addressId) {
       this.addressService.fetch(18, this.personId, this.addressId, this.callCenter)
         .subscribe(address => this.address$.next(address));
