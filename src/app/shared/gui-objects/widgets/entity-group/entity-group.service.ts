@@ -40,6 +40,6 @@ export class EntityGroupService {
           this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
         }
       })
-      .catch(this.notificationsService.updateError().entity('entities.entityGroup.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.updateError().entity('entities.group.gen.singular').dispatchCallback());
   }
 }
