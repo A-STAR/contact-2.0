@@ -28,7 +28,7 @@ export class PromiseConfirmDialogComponent  {
       });
   }
 
-  onClose(result: ICloseAction): void {
+  onClose(): void {
     this.close.emit();
   }
 }

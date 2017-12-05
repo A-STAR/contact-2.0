@@ -17,12 +17,16 @@ export class OperatorConfirmDialogComponent  {
 
   constructor(private paymentOperatorService: PaymentOperatorService) {}
 
-    onConfirm(): void {
+  onConfirm(): void {
 
     this.paymentOperatorService.confirm(this.payments)
       .subscribe(res => {
         const refresh = res.massInfo && !!res.massInfo.processed;
         this.close.emit({ refresh });
       });
+  }
+
+  onCloseDialog(): void {
+    this.close.emit();
   }
 }

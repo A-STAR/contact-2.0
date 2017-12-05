@@ -24,4 +24,7 @@ export class OperatorRejectDialogComponent  {
       });
   }
 
+  onCloseDialog(): void {
+    this.close.emit();
+  }
 }

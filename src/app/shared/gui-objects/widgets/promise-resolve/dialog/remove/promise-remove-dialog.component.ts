@@ -30,7 +30,7 @@ export class PromiseRemoveDialogComponent {
       });
   }
 
-  onClose(result: ICloseAction): void {
+  onClose(): void {
     this.close.emit();
   }
 }
