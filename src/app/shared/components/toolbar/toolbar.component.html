@@ -9,19 +9,7 @@
    <li *ngIf="!action.hidden" class="app-control">
 
     <ng-container [ngSwitch]="action.control">
-      <span
-        *ngSwitchCase="ToolbarControlEnum.CHECKBOX"
-        class="checkbox mt0 mb0"
-      >
-        <label>
-          <input type="checkbox"
-                 [checked]="action.value"
-                 (change)="onActionClick(action, $event)">
-          <ng-container
-            *ngTemplateOutlet="labelTemplate; context: { action: action }">
-          </ng-container>
-        </label>
-      </span>
+
       <ng-container *ngSwitchCase="ToolbarControlEnum.SELECT">
         <app-select
           [active]="action.activeValue"
@@ -35,22 +23,25 @@
         >
         </app-select>
       </ng-container>
+
       <ng-container *ngSwitchCase="ToolbarControlEnum.LABEL">
         <span class="app-label">{{ action.text }}</span>
       </ng-container>
+
       <button
         *ngSwitchDefault
         [attr.title]="action.text | translate"
         [disabled]="isActionDisabled(action) | async"
         (click)="onActionClick(action, $event)"
-        class="app-button"
+        class="toolbar-button"
         aria-hidden="true"
       >
-        <i class="fa fa-{{ toIconCls(action) }}" aria-hidden="true"></i>
+        <i class="fa fa-{{ getIconCls(action) }}" aria-hidden="true"></i>
         <ng-container
           *ngTemplateOutlet="labelTemplate; context: { action: action }">
         </ng-container>
       </button>
+
     </ng-container>
 
    </li>
