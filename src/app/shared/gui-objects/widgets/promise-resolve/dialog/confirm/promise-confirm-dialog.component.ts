@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input } from '@angular/core';
 
 import { PromiseResolveService } from '../../promise-resolve.service';
 import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
-
-import { DialogFunctions } from '../../../../../../core/dialog';
 
 @Component({
   selector: 'app-promise-confirm-dialog',
