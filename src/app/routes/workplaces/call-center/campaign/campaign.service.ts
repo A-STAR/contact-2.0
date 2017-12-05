@@ -35,7 +35,7 @@ export class CampaignService {
   }
 
   get campaignId(): number {
-    return this.routeParams.campaignId;
+    return Number(this.routeParams.campaignId);
   }
 
   get routeParams(): ICampaignRouteParams {
@@ -50,7 +50,7 @@ export class CampaignService {
 
   changeStatusToProblematic(data: any): any {
     const { debtId, personId } = this._campaignDebt$.value;
-    return this.debtCRUDService.changeStatus(personId, debtId, { ...data, statusCode: 9 });
+    return this.debtCRUDService.changeStatus(personId, debtId, { ...data, statusCode: 9 }, true);
   }
 
   fetchProcessedDebtsForCurrentCampaign(): Observable<ICampaignProcessedDebt[]> {

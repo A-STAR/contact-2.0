@@ -1,12 +1,4 @@
-<app-result-dialog
-  *ngIf="isDialog('addResult')"
-  [count]="count"
-  [successCount]="successCount"
-  (close)="onAddResult()">
-</app-result-dialog>
-
 <app-entity-group-dialog
-  *ngIf="!isDialog('addResult')"
   (select)="onSelect($event)"
   (close)="onClose()">
 </app-entity-group-dialog>

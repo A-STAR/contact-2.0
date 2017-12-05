@@ -13,10 +13,10 @@ export class MarkService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchDebtsForPerson(personId: number, personRole: number, debtorId: number): Observable<IDebt[]> {
+  fetchDebtsForPerson(personId: number, personRole: number, debtorId: number, callCenter: boolean): Observable<IDebt[]> {
     const data = { personId, personRole, debtorId };
     return this.dataService
-      .readAll('/persons/{personId}/personRoles/{personRole}/debtors/{debtorId}/debtsForVisit', data)
+      .readAll('/persons/{personId}/personRoles/{personRole}/debtors/{debtorId}/debtsForVisit', data, { params: { callCenter }})
       .catch(this.notificationsService.fetchError().entity('entities.addresses.gen.singular').dispatchCallback());
   }
 }

@@ -76,7 +76,7 @@ export class DebtGridCloseDialogComponent implements AfterViewInit {
       ...this.form.serializedUpdates,
       statusCode: this.statusCode
     };
-    this.debtService.changeStatus(this.personId, this.debt.id, data).subscribe(() => {
+    this.debtService.changeStatus(this.personId, this.debt.id, data, false).subscribe(() => {
       this.submit.emit();
       this.close.emit();
     });

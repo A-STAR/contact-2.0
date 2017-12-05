@@ -33,6 +33,13 @@ export class EntityGroupService {
   addToGroup(entityTypeId: number, groupId: number, debts: number[]): Observable<any> {
     return this.dataService
       .create(`/mass/entityType/{entityTypeId}/groups/{groupId}/add`, { entityTypeId, groupId }, { idData: { ids: debts } })
+      .do(res => {
+        if (!res.success) {
+          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
+        } else {
+          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
+        }
+      })
       .catch(this.notificationsService.updateError().entity('entities.entityGroup.gen.singular').dispatchCallback());
   }
 }
