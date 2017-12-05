@@ -15,6 +15,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
+import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-contractor-edit',
@@ -37,23 +38,27 @@ export class ContractorEditComponent implements OnInit {
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
-  ) {}
+    private userPermissionsService: UserPermissionsService
+  ) { }
 
   ngOnInit(): void {
     combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
-      this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : of(null)
+      this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : of(null),
+      this.userPermissionsService.has('ENTITY_ATTRIBUTE_VIEW_LIST')
     )
     .pipe(first())
-    .subscribe(([ contractorTypeOptions, userOptions, contractor ]) => {
+    .subscribe(([ contractorTypeOptions, userOptions, contractor, permissions ]) => {
       const label = makeKey('contractors.grid');
+      console.log(permissions);
       this.controls = [
         { label: label('name'), controlName: 'name', type: 'text', required: true },
         { label: label('fullName'), controlName: 'fullName', type: 'text', required: true },
         { label: label('smsName'), controlName: 'smsName', type: 'text' },
         { label: label('responsibleId'), controlName: 'responsibleId', type: 'select', options: userOptions },
         { label: label('typeCode'), controlName: 'typeCode', type: 'select', options: contractorTypeOptions },
+        { label: label('attribute'), controlName: 'attributes', type: 'button', action: () => this.onAttributesClick() },
         { label: label('phone'), controlName: 'phone', type: 'text' },
         { label: label('address'), controlName: 'address', type: 'text' },
         { label: label('comment'), controlName: 'comment', type: 'textarea' },
@@ -84,5 +89,9 @@ export class ContractorEditComponent implements OnInit {
 
   onManagersClick(): void {
     this.router.navigate([`/admin/contractors/${this.contractorId}/managers`]);
+  }
+
+  onAttributesClick(): void {
+    this.router.navigate([`/admin/contractors/${this.contractorId}/attributes`]);
   }
 }

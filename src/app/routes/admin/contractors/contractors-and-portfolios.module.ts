@@ -12,6 +12,7 @@ import { ContractorEditComponent } from './contractors/edit/contractor-edit.comp
 import { ContractorManagersComponent } from './contractors/managers/managers.component';
 import { ContractorManagerEditComponent } from './contractors/managers/edit/manager-edit.component';
 import { PortfolioEditComponent } from './portfolios/edit/portfolio-edit.component';
+import { ContractorAttributesComponent } from './contractors/edit/attributes/contractor-attributes.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: ContractorsAndPortfoliosComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
           { path: ':portfolioId', component: PortfolioEditComponent },
         ]
       },
+      { path: 'attributes', component: ContractorAttributesComponent }
     ]
   },
 ];
