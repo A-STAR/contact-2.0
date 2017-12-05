@@ -35,6 +35,7 @@
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Reference",
         "PORTFOLIOS": "Portfolios",
+        "ATTRIBUTES": "Attributes",
         "CONTRACTOR": "Contractor",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
         "CONTRACTOR_MANAGER": "Contractor Manager",
@@ -1008,7 +1009,6 @@
         "confirmMessage": "Are you sure you want to delete the manager {{ lastName }}?"
       },
       "grid": {
-        "attributes": "Attributes",
         "fullName": "Full name",
         "firstName": "First name",
         "middleName": "Middle name",
@@ -1047,6 +1047,7 @@
       "accessDenied": "Access to contractors list denied"
     },
     "buttons": {
+      "attributes": "Attributes",
       "managers": "Managers"
     }
   },

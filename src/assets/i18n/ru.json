@@ -35,6 +35,7 @@
         "CONSTANTS": "Константы",
         "DICTIONARIES": "Справочники",
         "PORTFOLIOS": "Клиенты и портфели",
+        "ATTRIBUTES": "Атрибуты",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
         "CONTRACTOR_MANAGER": "Менеджер контрагента",
@@ -1008,7 +1009,7 @@
         "confirmMessage": "Вы действительно хотите удалить менеджера {{ lastName }} ?"
       },
       "grid": {
-        "attributes": "Атрибуты",
+
         "fullName": "ФИО",
         "firstName": "Имя",
         "middleName": "Отчество",
@@ -1047,6 +1048,7 @@
       "accessDenied": "Доступ к списку контрагентов ограничен"
     },
     "buttons": {
+      "attributes": "Атрибуты",
       "managers": "Менеджеры"
     }
   },

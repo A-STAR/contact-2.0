@@ -28,6 +28,7 @@ export class ContractorEditComponent implements OnInit {
 
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
+  canViewAttributes: boolean;
 
   private contractorId = (<any>this.route.params).value.contractorId;
 
@@ -46,19 +47,19 @@ export class ContractorEditComponent implements OnInit {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
       this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : of(null),
-      this.userPermissionsService.has('ENTITY_ATTRIBUTE_VIEW_LIST')
+      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
     )
     .pipe(first())
-    .subscribe(([ contractorTypeOptions, userOptions, contractor, permissions ]) => {
+    // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
+    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes]) => {
+      this.canViewAttributes = true;
       const label = makeKey('contractors.grid');
-      console.log(permissions);
       this.controls = [
         { label: label('name'), controlName: 'name', type: 'text', required: true },
         { label: label('fullName'), controlName: 'fullName', type: 'text', required: true },
         { label: label('smsName'), controlName: 'smsName', type: 'text' },
         { label: label('responsibleId'), controlName: 'responsibleId', type: 'select', options: userOptions },
         { label: label('typeCode'), controlName: 'typeCode', type: 'select', options: contractorTypeOptions },
-        { label: label('attributes'), controlName: 'attributes', type: 'button', action: () => this.onAttributesClick() },
         { label: label('phone'), controlName: 'phone', type: 'text' },
         { label: label('address'), controlName: 'address', type: 'text' },
         { label: label('comment'), controlName: 'comment', type: 'textarea' },

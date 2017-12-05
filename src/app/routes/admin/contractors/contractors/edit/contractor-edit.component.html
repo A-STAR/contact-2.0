@@ -11,6 +11,9 @@
     <button class="btn btn-default" (click)="onManagersClick()">
       <i class="icon-people"></i> {{ 'contractors.buttons.managers' | translate }}
     </button>
+    <button class="btn btn-default" (click)="onAttributesClick()" [disabled]="!canViewAttributes">
+      <i class="icon-people"></i> {{ 'contractors.buttons.attributes' | translate }}
+    </button>
   </div>
 </div>
 
