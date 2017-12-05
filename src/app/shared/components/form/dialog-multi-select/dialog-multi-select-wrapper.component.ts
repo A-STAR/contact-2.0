@@ -31,6 +31,8 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
   rows: any[] = [];
   value: IDialogMultiSelectValue[];
 
+  private isInitialized = false;
+
   get columnsFromTranslationKey(): string {
     return this.dialogMultiSelectWrapperService.getColumnsFromTranslationKey(this.filterType);
   }
@@ -70,11 +72,16 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
         this.columnsFrom = this.gridService.setRenderers(columnsFrom);
         this.columnsTo = this.gridService.setRenderers(columnsTo);
       });
+  }
 
-    this.fetch(this.filterParams).subscribe(rows => {
-      this.rows = rows;
-      this.cdRef.markForCheck();
-    });
+  onShowDialog(): void {
+    if (!this.isInitialized) {
+      this.isInitialized = true;
+      this.fetch(this.filterParams).subscribe(rows => {
+        this.rows = rows;
+        this.cdRef.markForCheck();
+      });
+    }
   }
 
   writeValue(value: IDialogMultiSelectValue[]): void {

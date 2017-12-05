@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
-import { IContractor, IPortfolio } from '../contractors-and-portfolios.interface';
+import { IContractor, IPortfolio, PortfolioAction } from '../contractors-and-portfolios.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
@@ -67,7 +67,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetchAll(),
+      action: () => this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios)),
       enabled: this.canView$
     }
   ];
@@ -79,24 +79,38 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       enabled: combineLatestAnd([
         this.canForm$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanForm(o)),
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canForm(o)),
       ])
     },
     {
-      label: this.translateService.instant('portfolios.outsourcing.send.menu'),
-      action: () => this.onSend(),
-      enabled: combineLatestAnd([
-        this.canSend$,
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanSend(o)),
-      ])
+      label: this.translateService.instant('portfolios.outsourcing.send.menu.title'),
+      // we check for availability in children menu items
+      enabled: Observable.of(true),
+      submenu: [
+        {
+          label: this.translateService.instant('portfolios.outsourcing.send.menu.outsourcing'),
+          action: () => this.onAction('sendOutsource'),
+          enabled: combineLatestAnd([
+            this.canSend$,
+            this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canSend(o)),
+          ]),
+        }, {
+          label: this.translateService.instant('portfolios.outsourcing.send.menu.cession'),
+          action: () => this.onAction('sendCession'),
+          enabled: combineLatestAnd([
+            this.canSend$,
+            this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canSend(o)),
+          ]),
+        }
+      ]
     },
     {
       label: this.translateService.instant('portfolios.outsourcing.return.menu'),
-      action: () => this.onReturn(),
+      action: () => this.onAction('returnOutsource'),
       enabled: combineLatestAnd([
         this.canReturn$,
         this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.isPortfolioCanReturn(o)),
+        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canReturn(o)),
       ])
     }
   ];
@@ -148,7 +162,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     .subscribe(([canView, contractorId]) => {
       if (canView) {
         this.selectedContractorId = contractorId;
-        this.fetchAll();
+        this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios));
       } else {
         this.clearPortfolios();
         this.notificationsService.error('errors.default.read.403').entity('entities.portfolios.gen.plural').dispatch();
@@ -192,23 +206,18 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_RETURN');
   }
 
-  isPortfolioCanForm(portfolio: IPortfolio): boolean {
-    // todo: uncomment when fixed on be
-    // return portfolio &&
-    //   portfolio.directionCode === 2 && portfolio.statusCode === 4;
-    return !!portfolio;
+  canForm(portfolio: IPortfolio): boolean {
+    return portfolio &&
+      portfolio.directionCode === 2 && portfolio.statusCode === 4;
   }
 
-  isPortfolioCanSend(portfolio: IPortfolio): boolean {
-    // todo: uncomment when fixed on be
+  canSend(portfolio: IPortfolio): boolean {
     // return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 5;
     return !!portfolio;
   }
 
-  isPortfolioCanReturn(portfolio: IPortfolio): boolean {
-    // todo: uncomment when fixed on be
-    // return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 6;
-    return !!portfolio;
+  canReturn(portfolio: IPortfolio): boolean {
+    return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 6;
   }
 
   onAdd(): void {
@@ -228,18 +237,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       });
   }
 
-  onForm(): void {
-    this.contractorsAndPortfoliosService
-      .formOutsourcePortfolio(this.selectedContractorId, this.selection[0].id, this.selection[0])
-      .subscribe(() => {});
-  }
-
-  onSend(): void {
-    this.setDialog('send');
-  }
-
-  onReturn(): void {
-    this.setDialog('return');
+  onAction(action: PortfolioAction): void {
+    this.setDialog(action);
   }
 
   onSelect(portfolio: IPortfolio): void {
@@ -249,42 +248,64 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   onRemoveSubmit(): void {
     this.contractorsAndPortfoliosService.deletePortfolio(this.selectedContractorId, this.selection[0].id)
-      .subscribe(() => {
+    .switchMap(() => this.fetchAll())
+    .subscribe(portfolios => {
+      this.setDialog();
+      this.onPortfoliosFetch(portfolios);
+    });
+  }
+
+  onForm(): void {
+    this.contractorsAndPortfoliosService
+      .formOutsourcePortfolio(this.selectedContractorId, this.selection[0].id, this.selection[0])
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => {
         this.setDialog();
+        this.onPortfoliosFetch(portfolios);
       });
   }
 
   onMoveSubmit(contractor: IContractor): void {
     this.contractorsAndPortfoliosService
       .movePortfolio(this.selectedContractorId, this.selection[0].id, { newContractorId: contractor.id } )
-      .subscribe(() => {
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => {
         this.setDialog();
+        this.onPortfoliosFetch(portfolios);
       });
   }
 
-  onSendSubmit(portfolio: IPortfolio): void {
+  onSendOutsourceSubmit(portfolio: IPortfolio): void {
     this.contractorsAndPortfoliosService.sendOutsourcePortfolio(this.selectedContractorId,
       this.selection[0].id, portfolio)
-      .subscribe(() => {
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => {
         this.setDialog();
+        this.onPortfoliosFetch(portfolios);
       });
   }
 
-  onReturnSubmit(portfolio: IPortfolio): void {
+  onSendCessionSubmit(portfolio: IPortfolio): void {
+    this.contractorsAndPortfoliosService.sendCessionPortfolio(this.selectedContractorId,
+      this.selection[0].id, portfolio)
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => {
+        this.setDialog();
+        this.onPortfoliosFetch(portfolios);
+      });
+  }
+  onReturnOutsourceSubmit(portfolio: IPortfolio): void {
     this.contractorsAndPortfoliosService.returnOutsourcePortfolio(this.selectedContractorId,
       this.selection[0].id, portfolio)
-      .subscribe(() => {
+      .switchMap(() => this.fetchAll())
+      .subscribe(portfolios => {
         this.setDialog();
+        this.onPortfoliosFetch(portfolios);
       });
   }
 
-  private fetchAll(): void {
-    this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractorId)
-      .subscribe(portfolios => {
-        this.selection = [];
-        this.portfolios = portfolios;
-        this.cdRef.detectChanges();
-      });
+  private fetchAll(): Observable<IPortfolio[]> {
+    return this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractorId);
   }
 
   private clearPortfolios(): void {
@@ -292,5 +313,11 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     this.portfolios = [];
     this.contractorsAndPortfoliosService.selectPortfolio(null);
     this.cdRef.markForCheck();
+  }
+
+  private onPortfoliosFetch(portfolios: IPortfolio[]): void {
+    this.selection = [];
+    this.portfolios = portfolios;
+    this.cdRef.detectChanges();
   }
 }

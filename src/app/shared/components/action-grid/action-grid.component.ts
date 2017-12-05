@@ -140,7 +140,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
     this.cdRef.markForCheck();
   }
 
-  onCloseAction(action: ICloseAction): void {
+  onCloseAction(action: ICloseAction = {}): void {
     if (action.refresh) {
       this.onRequest();
     }

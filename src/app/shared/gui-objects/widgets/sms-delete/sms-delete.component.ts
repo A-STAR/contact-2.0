@@ -4,34 +4,28 @@ import { ICloseAction } from '../../../components/action-grid/action-grid.interf
 
 import { SmsDeleteService } from './sms-delete.service';
 
-import { DialogFunctions } from '../../../../core/dialog';
-
 @Component({
   selector: 'app-sms-delete-dialog',
   templateUrl: './sms-delete.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SmsDeleteDialogComponent extends DialogFunctions implements OnInit {
+export class SmsDeleteDialogComponent  implements OnInit {
   @Input() smsId: number[];
   @Output() close = new EventEmitter<ICloseAction>();
 
-  dialog = null;
   smsCounter = {
     count: null
   };
 
   constructor(
     private smsDeleteService: SmsDeleteService,
-  ) {
-    super();
-  }
+  ) { }
 
   ngOnInit(): void {
     this.smsCounter.count = this.smsId && this.smsId.length;
   }
 
   onConfirmDelete(): void {
-    this.setDialog();
     this.smsDeleteService.smsDelete(this.smsId)
       .subscribe(res => {
         const refresh = !!res.massInfo && !!res.massInfo.total;
@@ -40,4 +34,7 @@ export class SmsDeleteDialogComponent extends DialogFunctions implements OnInit 
       });
   }
 
+  onCloseDialog(): void {
+    this.close.emit();
+  }
 }

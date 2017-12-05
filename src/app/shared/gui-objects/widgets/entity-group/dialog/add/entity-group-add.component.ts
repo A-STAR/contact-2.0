@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, Inject } from '@angular/core';
 
+import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IEntityGroup } from '../../../entity-group/entity-group.interface';
 
 import { EntityGroupService } from '../../entity-group.service';
@@ -15,7 +16,7 @@ export class EntityGroupAddComponent extends DialogFunctions {
 
   @Input() debts: number[];
 
-  @Output() close = new EventEmitter<boolean>();
+  @Output() close = new EventEmitter<ICloseAction>();
 
   dialog: string = null;
   count: number;
@@ -40,10 +41,10 @@ export class EntityGroupAddComponent extends DialogFunctions {
   }
 
   onAddResult(): void {
-    this.close.emit(true);
+    this.close.emit({ refresh: true });
   }
 
   onClose(): void {
-    this.close.emit(false);
+    this.close.emit();
   }
 }

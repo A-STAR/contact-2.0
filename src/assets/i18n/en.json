@@ -1074,7 +1074,11 @@
         "menu": "Form outsourcing portfolio"
       },
       "send": {
-        "menu": "Send portfolio for outsourcing",
+        "menu": {
+          "title": "Send portfolio for outsourcing",
+          "outsourcing": "Outsourcing",
+          "cession": "Cession"
+        },
         "title": "Send portfolio"
       },
       "return": {
