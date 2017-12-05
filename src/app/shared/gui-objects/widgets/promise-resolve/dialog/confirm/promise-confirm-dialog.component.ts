@@ -10,38 +10,27 @@ import { DialogFunctions } from '../../../../../../core/dialog';
   templateUrl: './promise-confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PromiseConfirmDialogComponent extends DialogFunctions implements OnInit {
+export class PromiseConfirmDialogComponent  {
 
   @Input() promises: number[];
 
   @Output() close = new EventEmitter<ICloseAction>();
 
-  dialog: string = null;
-  count: number;
-  successCount: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private promiseResolveService: PromiseResolveService,
-  ) {
-    super();
-  }
-
-  ngOnInit(): void {
-    this.setDialog('confirm');
-  }
+  ) { }
 
   onConfirm(): void {
     this.promiseResolveService.confirm(this.promises)
       .subscribe(result => {
-        this.count = result.massInfo.total;
-        this.successCount = result.massInfo.processed;
-        this.setDialog('result');
+        this.close.emit({ refresh: true });
         this.cdRef.markForCheck();
       });
   }
 
   onClose(result: ICloseAction): void {
-    this.close.emit(result);
+    this.close.emit();
   }
 }
