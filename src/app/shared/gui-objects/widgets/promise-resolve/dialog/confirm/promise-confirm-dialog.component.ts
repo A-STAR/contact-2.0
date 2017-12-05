@@ -1,46 +1,34 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input } from '@angular/core';
 
 import { PromiseResolveService } from '../../promise-resolve.service';
-
-import { DialogFunctions } from '../../../../../../core/dialog';
+import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
 
 @Component({
   selector: 'app-promise-confirm-dialog',
   templateUrl: './promise-confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PromiseConfirmDialogComponent extends DialogFunctions implements OnInit {
+export class PromiseConfirmDialogComponent  {
 
   @Input() promises: number[];
 
-  @Output() close = new EventEmitter<boolean>();
+  @Output() close = new EventEmitter<ICloseAction>();
 
-  dialog: string = null;
-  count: number;
-  successCount: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private promiseResolveService: PromiseResolveService,
-  ) {
-    super();
-  }
-
-  ngOnInit(): void {
-    this.setDialog('confirm');
-  }
+  ) { }
 
   onConfirm(): void {
     this.promiseResolveService.confirm(this.promises)
       .subscribe(result => {
-        this.count = result.massInfo.total;
-        this.successCount = result.massInfo.processed;
-        this.setDialog('result');
+        this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
         this.cdRef.markForCheck();
       });
   }
 
-  onClose(result: boolean): void {
-    this.close.emit(result);
+  onClose(): void {
+    this.close.emit();
   }
 }

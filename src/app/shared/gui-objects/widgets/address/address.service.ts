@@ -76,9 +76,9 @@ export class AddressService {
       .catch(this.notificationsService.fetchError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 
-  markForVisit(personId: number, addressId: number, visit: IAddressMarkData): Observable<void> {
+  markForVisit(personId: number, addressId: number, visit: IAddressMarkData, callCenter: boolean): Observable<void> {
     return this.dataService
-      .create('/persons/{personId}/addresses/{addressId}/visits', { personId, addressId }, visit)
+      .create('/persons/{personId}/addresses/{addressId}/visits', { personId, addressId }, visit, { params: { callCenter } })
       .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());
   }
 }

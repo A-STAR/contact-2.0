@@ -1,12 +1,15 @@
 /* ========================================================================
      Component: dropdown-extras
  ========================================================================== */
- 
-// 
+
+//
 // Dropdopwn extras
-// 
+//
 // ------------------------------
 
+$border-color: #141414;
+$arrow-width: 6px;
+$arrow-margin: 0;
 
 // place components with more space
 .dropdown-lg > .dropdown-menu {
@@ -15,7 +18,7 @@
 
 // Allows to mix list group inside dropdowns
 .dropdown-list {
-  
+
   > .dropdown-menu {
     padding: 0;
     min-width: 220px;
@@ -59,4 +62,50 @@
   padding: 10px 15px;
   background-color: #fafafa;
   border-bottom: 1px solid $dropdown-border;
+}
+
+.arrow {
+  &:before,
+  &:after {
+    bottom: 0;
+    transform: translateY(-50%);
+    border-color: transparent;
+    border: solid transparent;
+    content: ' ';
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  &:before {
+    border-width: $arrow-width;
+    margin-left: -$arrow-width;
+  }
+
+  &:after {
+    border-width: $arrow-width - 1;
+    margin-left: -($arrow-width - 1);
+  }
+  &.left {
+    &:before {
+      border-right-color: $border-color;
+    }
+    &:before,
+    &:after {
+      left: $arrow-margin;
+      right: auto;
+    }
+  }
+
+  &.right {
+    &:before {
+      border-left-color: $border-color;
+    }
+    &:before,
+    &:after {
+      left: auto;
+      right: $arrow-margin;
+    }
+  }
 }

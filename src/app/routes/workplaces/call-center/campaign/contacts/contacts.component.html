@@ -1,5 +1,6 @@
 <app-contact-log-tab-grid
   *ngIf="debtExists$ | async"
+  [callCenter]="true"
   [hideToolbar]="true"
   [debtId]="debtId$ | async"
   [personId]="personId$ | async"

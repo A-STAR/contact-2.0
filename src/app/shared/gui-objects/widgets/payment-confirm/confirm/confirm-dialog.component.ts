@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit
 
 import { ICloseAction } from '../../../../components/action-grid/action-grid.interface';
 
-import { DialogFunctions } from '../../../../../core/dialog';
-
 import { PaymentConfirmService } from '../payment-confirm.service';
 
 @Component({
@@ -11,37 +9,33 @@ import { PaymentConfirmService } from '../payment-confirm.service';
   templateUrl: 'confirm-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PaymentConfirmDialogComponent extends DialogFunctions implements OnInit {
+export class PaymentConfirmDialogComponent implements OnInit {
   @Input() paymentsIds: number[];
 
   @Output() close = new EventEmitter<ICloseAction>();
 
-  dialog = null;
 
   paymentsCounter = {
     count: null
   };
 
-  constructor(private paymentConfirmService: PaymentConfirmService) {
-    super();
-  }
+  constructor(private paymentConfirmService: PaymentConfirmService) { }
 
   ngOnInit(): void {
-    this.paymentsCounter.count = this.paymentsIds && this.paymentsIds.length ;
+    this.paymentsCounter.count = this.paymentsIds && this.paymentsIds.length;
   }
 
   onConfirmPayments(): void {
-    this.setDialog();
+
     this.paymentConfirmService.paymentsConfirm(this.paymentsIds)
       .subscribe(res => {
-        const refresh = !!res.massInfo && !!res.massInfo.total;
+        const refresh = res.massInfo && !!res.massInfo.processed;
         // NOTE: do not refresh if the total is 0
         this.close.emit({ refresh });
       });
   }
 
   onCloseDialog(): void {
-    this.setDialog();
-    this.close.emit({});
+    this.close.emit();
   }
 }

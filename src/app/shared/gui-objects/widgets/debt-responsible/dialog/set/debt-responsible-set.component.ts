@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input } from '@angular/core';
 
+import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IOperator } from '../../../operator/operator.interface';
 
 import { DebtResponsibleService } from '../../debt-responsible.service';
 
 import { DialogFunctions } from '../../../../../../core/dialog';
+
+
 
 @Component({
   selector: 'app-debt-responsible-set',
@@ -15,7 +18,7 @@ export class DebtResponsibleSetComponent extends DialogFunctions {
 
   @Input() debts: number[];
 
-  @Output() close = new EventEmitter<boolean>();
+  @Output() close = new EventEmitter<ICloseAction>();
 
   dialog: string = null;
   count: number;
@@ -39,10 +42,10 @@ export class DebtResponsibleSetComponent extends DialogFunctions {
   }
 
   onSetResult(): void {
-    this.close.emit(true);
+    this.close.emit({ refresh: true });
   }
 
   onClose(): void {
-    this.close.emit(false);
+    this.close.emit();
   }
 }
