@@ -13,6 +13,7 @@ import { ContractorManagersComponent } from './contractors/managers/managers.com
 import { ContractorManagerEditComponent } from './contractors/managers/edit/manager-edit.component';
 import { PortfolioEditComponent } from './portfolios/edit/portfolio-edit.component';
 import { ContractorAttributesComponent } from './contractors/edit/attributes/contractor-attributes.component';
+import { PortfolioAttributesComponent } from './portfolios/edit/attributes/portfolio-attributes.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: ContractorsAndPortfoliosComponent },
@@ -31,12 +32,21 @@ const routes: Routes = [
         path: 'portfolios', children: [
           { path: '', pathMatch: 'full', redirectTo: 'create' },
           { path: 'create', component: PortfolioEditComponent },
-          { path: ':portfolioId', component: PortfolioEditComponent },
+          {
+            path: ':portfolioId', children: [
+              { path: '', pathMatch: 'full', component: PortfolioEditComponent },
+              {
+                path: 'attributes', children: [
+                  { path: '', component: PortfolioAttributesComponent }
+                ]
+              }
+            ]
+          },
         ]
       },
       {
         path: 'attributes', children: [
-          { path: '', pathMatch: 'full', component: ContractorAttributesComponent }
+          { path: '', component: ContractorAttributesComponent }
         ]
       }
     ],

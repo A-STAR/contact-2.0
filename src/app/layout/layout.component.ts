@@ -53,6 +53,8 @@ export class LayoutComponent {
     MessageTemplatesComponent: 'MESSAGE_SCENARIOS',
     OrganizationsComponent: 'DEPARTMENTS',
     PaymentsComponent: 'PAYMENTS',
+    PortfolioAttributesComponent: 'ATTRIBUTES',
+    PortfolioEditComponent: 'PORTFOLIO',
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     UsersComponent: 'USERS',
     UserEditComponent: 'USER_EDIT',

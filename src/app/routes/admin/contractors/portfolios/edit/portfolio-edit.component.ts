@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -10,11 +10,12 @@ import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
-import { makeKey } from '../../../../../core/utils';
-
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
+import { makeKey } from '../../../../../core/utils';
 
 const label = makeKey('portfolios.grid');
 
@@ -24,12 +25,13 @@ const label = makeKey('portfolios.grid');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortfolioEditComponent implements OnInit {
-  static COMPONENT_NAME = 'ContractorEditComponent';
+  static COMPONENT_NAME = 'PortfolioEditComponent';
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   formData: IPortfolio = null;
+  canViewAttributes: boolean;
 
   private contractorId: number;
   private portfolioId: number;
@@ -37,9 +39,11 @@ export class PortfolioEditComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private router: Router,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {
   }
@@ -55,10 +59,13 @@ export class PortfolioEditComponent implements OnInit {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
       this.contractorId && this.portfolioId
         ? this.contractorsAndPortfoliosService.readPortfolio(this.contractorId, this.portfolioId)
-        : of(null)
+        : of(null),
+      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
     )
       .pipe(first())
-      .subscribe(([directionOptions, stageOptions, statusOptions, portfolio]) => {
+      // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
+      .subscribe(([directionOptions, stageOptions, statusOptions, portfolio, canViewAttributes]) => {
+        this.canViewAttributes = true;
         this.formData = portfolio
           ? {
             ...portfolio,
@@ -112,5 +119,9 @@ export class PortfolioEditComponent implements OnInit {
 
   onBack(): void {
     this.contentTabService.navigate('/admin/contractors');
+  }
+
+  onAttributesClick(): void {
+    this.router.navigate([`/admin/contractors/${this.contractorId}/portfolios/${this.portfolioId}/attributes`]);
   }
 }
