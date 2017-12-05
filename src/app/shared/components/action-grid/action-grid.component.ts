@@ -145,9 +145,8 @@ export class ActionGridComponent<T> extends DialogFunctions {
       this.onRequest();
     }
     if (action.deselectAll) {
-      const grid = (this.grid as MetadataGridComponent<T>);
-      if (grid.grid) {
-        grid.grid.deselectAll();
+      if (this.isUsingAGGrid) {
+        (<MetadataGridComponent<T>>this.grid).grid.deselectAll();
       } else {
         (this.grid as GridComponent).clearSelection();
       }
