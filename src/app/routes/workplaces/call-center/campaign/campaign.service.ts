@@ -35,7 +35,7 @@ export class CampaignService {
   }
 
   get campaignId(): number {
-    return this.routeParams.campaignId;
+    return Number(this.routeParams.campaignId);
   }
 
   get routeParams(): ICampaignRouteParams {
