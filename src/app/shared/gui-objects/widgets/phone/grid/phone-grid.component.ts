@@ -249,7 +249,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   onScheduleDialogSubmit(schedule: ISMSSchedule): void {
     const data = {
       ...schedule,
-      ...(this.campaignId ? { campaignId: this.campaignId } : {}),
+      // Here '!=' instead of '!==' is correct because `campaignId` can equal 0
+      ...(this.campaignId != null ? { campaignId: this.campaignId } : {}),
       personId: this._personId$.value,
       personRole: this.personRole,
       phoneId: this.selectedPhoneId$.value
