@@ -1,8 +1,12 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 
 import { IGridDef, IWorkTaskEntry } from './work-task.interface';
 
 import { ActionGridComponent } from 'app/shared/components/action-grid/action-grid.component';
+
+import { makeKey } from '../../../core/utils';
+
+const label = makeKey('modules.workTask');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,14 +23,18 @@ export class WorkTaskComponent {
   selectedTabIndex = 0;
 
   grids: IGridDef[] = [
-    { key: 'workTask.NewDebt', title: 'modules.workTask.newDebt.title' },
-    { key: 'workTask.ProblemDebt', title: 'modules.workTask.problemDebt.title' },
-    { key: 'workTask.SearchInformation', title: 'modules.workTask.searchInformation.title' },
-    { key: 'workTask.DebtToContractor', title: 'modules.workTask.debtToContractor.title' },
-    { key: 'workTask.PrepareVisits', title: 'modules.workTask.prepareVisits.title' }
+    { rowIdKey: 'id', key: 'workTask.NewDebt', title: label('newDebt.title'), isInitialized: true },
+    { key: 'workTask.ProblemDebt', title: label('problemDebt.title'), isInitialized: false },
+    { key: 'workTask.SearchInformation', title: label('searchInformation.title'), isInitialized: false },
+    { key: 'workTask.DebtToContractor', title: label('debtToContractor.title'), isInitialized: false },
+    { rowIdKey: 'id', key: 'workTask.PrepareVisits', title: label('prepareVisits.title'), isInitialized: false }
   ];
 
+  constructor(private cdRef: ChangeDetectorRef) { }
+
   onTabSelect(tabIndex: number): void {
+    this.grids[tabIndex].isInitialized = true;
     this.selectedTabIndex = tabIndex;
+    this.cdRef.markForCheck();
   }
 }
