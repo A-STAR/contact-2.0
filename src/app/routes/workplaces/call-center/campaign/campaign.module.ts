@@ -41,10 +41,6 @@ const routes: Routes = [
   { path: 'contactLog', children: [
     { path: ':debtId/:contactId/contactLogType/:contactType', component: ContactComponent },
   ]},
-  { path: 'document', children: [
-    { path: '', redirectTo: 'create', pathMatch: 'full' },
-    { path: ':documentId', component: DocumentComponent },
-  ]},
   { path: 'promise', children: [
     { path: '', redirectTo: '', pathMatch: 'full' },
     { path: ':debtId/:promiseId', component: PromiseComponent },
