@@ -139,6 +139,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(document: IDocument): void {
+    this.selectedDocumentId$.next(document.id);
     switch (this.action) {
       case 'edit':
         this.onEdit(document.id);
