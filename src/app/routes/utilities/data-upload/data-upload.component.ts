@@ -175,15 +175,17 @@ export class DataUploadComponent extends DialogFunctions {
 
   onNextProblematicCellClick(): void {
     this.grid.focusNextCell(cell => {
-      console.log(cell);
-      return true;
+      const { rowIndex } = cell;
+      const colId = cell.column.getColId();
+      return this.rows[rowIndex].cells[colId].statusCode;
     });
   }
 
   onNextCriticalCellClick(): void {
     this.grid.focusNextCell(cell => {
-      console.log(cell);
-      return true;
+      const { rowIndex } = cell;
+      const colId = cell.column.getColId();
+      return this.rows[rowIndex].cells[colId].statusCode;
     });
   }
 
