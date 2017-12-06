@@ -1,0 +1,19 @@
+<app-attribute-version-edit
+  *ngIf="isDialog('edit')"
+  [selectedVersion]="selectedVersion$ | async"
+  [selectedAttributeId]="selectedAttributeId"
+  [entityTypeId]="entityTypeId"
+  (submit)="onEditDialogSubmit($event)"
+  (cancel)="onCloseDialog()">
+>
+</app-attribute-version-edit>
+<app-grid
+  class="flat"
+  [styles]="{ height: '250px' }"
+  [columns]="columns"
+  [columnTranslationKey]=""
+  [rows]="rows"
+  selectionType="single"
+  (onSelect)="onSelectCampaign($event)"
+  (onDblClick)="onCampaignDblClick($event)">
+</app-grid>

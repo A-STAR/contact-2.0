@@ -88,6 +88,17 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
       ])
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_VERSION,
+      action: () => this.setDialog('version'),
+      enabled: combineLatestAnd([
+        this.entityTypeId$.flatMap(
+          entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
+        ),
+        // TODO:(i.lobanov) add version === 1 check when clarified what it is
+        this.selectedAttribute$.map(attribute => attribute && !attribute.disabledValue)
+      ])
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.entityTypeId && this.entityId && this.fetch(),
     },
