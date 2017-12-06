@@ -173,6 +173,22 @@ export class PaymentsUploadComponent extends DialogFunctions {
       });
   }
 
+  onNextProblematicCellClick(): void {
+    this.grid.focusNextCell(cell => {
+      const { rowIndex } = cell;
+      const colId = cell.column.getColId();
+      return this.rows[rowIndex].cells[colId].statusCode;
+    });
+  }
+
+  onNextCriticalCellClick(): void {
+    this.grid.focusNextCell(cell => {
+      const { rowIndex } = cell;
+      const colId = cell.column.getColId();
+      return this.rows[rowIndex].cells[colId].statusCode === 1;
+    });
+  }
+
   // private rowHasErrors(row: IRow): boolean {
   //   // TODO(d.maltsev): how to check for errors?
   //   return row.cells.reduce((acc, cell) => acc || !!cell.errorMsg, false);
@@ -227,12 +243,12 @@ export class PaymentsUploadComponent extends DialogFunctions {
 
   private getCellColorByStatusCode(code: number): string {
     switch (code) {
-      case 1: return '#eff';
-      case 2: return '#fef';
-      case 3: return '#ffe';
-      case 4: return '#fee';
-      case 5: return '#efe';
-      case 6: return '#eef';
+      case 1: return '#fdd';
+      case 2: return '#efe';
+      case 3: return '#eef';
+      case 4: return '#eff';
+      case 5: return '#fef';
+      case 6: return '#ffe';
       default: return null;
     }
   }
