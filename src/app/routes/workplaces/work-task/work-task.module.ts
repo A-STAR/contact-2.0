@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { GridModule } from './grid/grid.module';
+import { SleekTabstripModule } from './tabstrip/tabstrip.module';
 
 import { WorkTaskService } from './work-task.service';
 
@@ -14,9 +15,10 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    GridModule,
     RouterModule.forChild(routes),
     SharedModule,
-    GridModule,
+    SleekTabstripModule,
   ],
   declarations: [
     WorkTaskComponent,

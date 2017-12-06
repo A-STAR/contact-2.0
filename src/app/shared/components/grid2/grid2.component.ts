@@ -470,7 +470,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         styles: { width: '60px' },
         value: this.pageSizes.map(pageSize => ({ value: pageSize })),
       },
-      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: true },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: false },
     ];
   }
 
@@ -524,7 +524,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           return btn;
         case 7:
           // refreshBtn
-          btn.disabled = !pageCount;
+          // btn.disabled = !pageCount;
           return btn;
         default:
           return btn;
