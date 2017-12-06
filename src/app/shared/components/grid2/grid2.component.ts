@@ -52,8 +52,6 @@ import { UserPermissions } from '../../../core/user/permissions/user-permissions
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: [
     './grid2.component.scss',
-    './grid2.component.ag-base.scss',
-    './grid2.component.theme.scss',
   ],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy {
@@ -75,7 +73,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() disableFilters = false;
   @Input() fetchUrl: string;
   @Input() groupColumnMinWidth = 120;
-  @Input() headerHeight = 25;
+  @Input() headerHeight = 42;
   @Input() metadataKey: string;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() pagination = true;
@@ -83,7 +81,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() persistenceKey: string;
   @Input() remoteSorting = true;
   @Input() rowCount = 0;
-  @Input() rowHeight = 25;
+  @Input() rowHeight = 36;
   @Input() rowIdKey = 'id';
   @Input() rows: any[] = [];
   @Input() rowSelection = 'multiple';
@@ -213,6 +211,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         break;
       case ToolbarActionTypeEnum.GO_LAST:
         this.page = this.getPageCount();
+        this.onPage.emit(this.page);
+        break;
+      case ToolbarActionTypeEnum.REFRESH:
         this.onPage.emit(this.page);
         break;
     }
@@ -377,8 +378,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private getNumberFilter(model: any): any {
-    // NOTE: `filter` here means `filterFrom`
-    const { filter, filterTo, type } = model;
+    // NOTE: `filter` in ag-grid means `filterFrom`
+    const { filter: filterFrom, filterTo, type } = model;
     const operators = {
       lessThan: '<',
       greaterThan: '>',
@@ -393,9 +394,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       values: [],
     };
     if (type === 'inRange') {
-      result.values = [filter, filterTo];
+      result.values = [filterFrom, filterTo];
     } else {
-      result.values = [filter];
+      result.values = [filterFrom];
     }
     return result;
   }
@@ -406,19 +407,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
 
     this.paginationPanel = [
-      { control: ToolbarControlEnum.LABEL, text: '0 выбрано / 0 всего' },
-      { type: ToolbarActionTypeEnum.GO_FIRST, disabled: true },
-      { type: ToolbarActionTypeEnum.GO_BACKWARD, disabled: true },
-      { control: ToolbarControlEnum.LABEL, text: '0 / 0' },
-      { type: ToolbarActionTypeEnum.GO_FORWARD, disabled: true },
-      { type: ToolbarActionTypeEnum.GO_LAST, disabled: true },
+      { control: ToolbarControlEnum.LABEL,  text: '0 выбрано / 0 всего' },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_FIRST, disabled: true },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_BACKWARD, disabled: true },
+      { control: ToolbarControlEnum.LABEL,  text: '0 / 0' },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_FORWARD, disabled: true },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_LAST, disabled: true },
       {
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
         control: ToolbarControlEnum.SELECT,
         disabled: true,
-        styles: { width: '100px' },
+        styles: { width: '60px' },
         value: this.pageSizes.map(pageSize => ({ value: pageSize })),
-      }
+      },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: true },
     ];
   }
 
@@ -470,6 +472,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           // pageSize selector
           btn.disabled = !canPaginate;
           return btn;
+        case 7:
+          // refreshBtn
+          btn.disabled = !pageCount;
+          return btn;
         default:
           return btn;
       }
@@ -488,10 +494,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.gridOptions.api.clearRangeSelection();
     this.gridOptions.api.clearFocusedCell();
   }
-
-  // private getRendererByName(field: string): Function {
-  //   return this.columns.find(column => column.colId === field).renderer;
-  // }
 
   private getPageCount(): number {
     return Math.ceil(this.rowCount / this.pageSize);
@@ -629,27 +631,25 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         },
         headerComponentParams: {
           headerHeight: this.headerHeight,
-          enableMenu: false,
+          enableMenu: true,
         },
-        // icons: {
-        //   sortAscending: '<i class="fa fa-sort-amount-asc"/>',
-        //   sortDescending: '<i class="fa fa-sort-amount-desc"/>'
-        // },
         /* to set the menu tabs for a column */
         // menuTabs: ['filterMenuTab', 'generalMenuTab', 'columnsMenuTab'],
         menuTabs: ['filterMenuTab', 'columnsMenuTab'],
-        suppressMenu: true,
+        // suppressMenu: true,
       },
       enableColResize: true,
       enableRangeSelection: true,
       enableServerSideFilter: true,
       enableServerSideSorting: true,
-      floatingFilter: !this.disableFilters,
+      // floatingFilter: !this.disableFilters,
+      floatingFilter: false,
       getContextMenuItems: this.getContextMenuItems.bind(this),
       getMainMenuItems: (params) => {
         // hide the tool menu
         return params.defaultItems.slice(0, params.defaultItems.length - 1);
       },
+      getRowNodeId: row => row[this.rowIdKey],
       headerHeight: this.headerHeight,
       // NOTE: There is a huge translation under `localeText` pulled from *.json
       localeText: {},
@@ -662,18 +662,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       rowHeight: this.rowHeight,
       rowModelType: 'viewport',
-      viewportDatasource: this.viewportDatasource,
-      getRowNodeId: row => row[this.rowIdKey],
       rowSelection: this.rowSelection,
       showToolPanel: false,
-      suppressMenuHide: true,
+      suppressMenuHide: false,
       suppressPaginationPanel: true,
-      // suppressRowHoverClass: true,
       suppressScrollOnNewData: true,
       toolPanelSuppressRowGroups: true,
       toolPanelSuppressValues: true,
       toolPanelSuppressPivots: true,
       toolPanelSuppressPivotMode: true,
+      viewportDatasource: this.viewportDatasource,
       viewportRowModelPageSize: this.pageSize,
       viewportRowModelBufferSize: 0,
       isExternalFilterPresent: () => !this.disableFilters,
