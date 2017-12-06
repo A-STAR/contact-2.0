@@ -84,7 +84,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
 
   getId = variable => variable.id;
 
-  getName = variable => variable.name;
+  getName = variable => variable.userName;
 
   private initControls(canEdit: boolean): void {
     this.controls = [

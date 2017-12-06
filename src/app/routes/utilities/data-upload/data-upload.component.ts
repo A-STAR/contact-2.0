@@ -173,6 +173,22 @@ export class DataUploadComponent extends DialogFunctions {
       });
   }
 
+  onNextProblematicCellClick(): void {
+    this.grid.focusNextCell(cell => {
+      const { rowIndex } = cell;
+      const colId = cell.column.getColId();
+      return this.rows[rowIndex].cells[colId].statusCode;
+    });
+  }
+
+  onNextCriticalCellClick(): void {
+    this.grid.focusNextCell(cell => {
+      const { rowIndex } = cell;
+      const colId = cell.column.getColId();
+      return this.rows[rowIndex].cells[colId].statusCode;
+    });
+  }
+
   // private rowHasErrors(row: IRow): boolean {
   //   // TODO(d.maltsev): how to check for errors?
   //   return row.cells.reduce((acc, cell) => acc || !!cell.errorMsg, false);

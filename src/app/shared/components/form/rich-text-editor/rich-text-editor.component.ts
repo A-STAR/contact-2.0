@@ -57,7 +57,10 @@ export class RichTextEditorComponent implements ControlValueAccessor, OnInit {
     this.updateDisabled();
 
     this._quill.on('text-change', () => {
-      const html = this.editor.nativeElement.children[0].innerHTML;
+      const element = this.editor.nativeElement.children[0];
+      const html = this.toolbar
+        ? element.innerHTML
+        : element.textContent;
       const text = html === '<p><br></p>' ? null : html;
       this._value = text;
       this.onSelectionChange();
