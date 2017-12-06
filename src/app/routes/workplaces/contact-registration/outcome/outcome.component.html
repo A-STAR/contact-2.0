@@ -1,6 +1,7 @@
 <div *ngIf="hasTemplate" class="mb">
   <label>{{ 'modules.contactRegistration.outcome.template' | translate }}</label>
-  <div class="form-control template" [innerHTML]="template"></div>
+  <!-- Angular sanitizes innerHTML behind the scenes -->
+  <div class="form-control template" [innerHtml]="template"></div>
 </div>
 
 <div class="mb">
