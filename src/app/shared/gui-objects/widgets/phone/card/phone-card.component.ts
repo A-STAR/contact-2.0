@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -23,7 +23,7 @@ const labelKey = makeKey('widgets.phone.card');
   templateUrl: './phone-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneCardComponent {
+export class PhoneCardComponent implements OnInit {
   @Input() callCenter = false;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -47,7 +47,9 @@ export class PhoneCardComponent {
   ) {
     // NOTE: on deper routes we should take the contactId
     this.personId = this.contactId || this.personId;
+  }
 
+  ngOnInit(): void {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
       this.phoneId ? this.userPermissionsService.has('PHONE_EDIT') : Observable.of(true),

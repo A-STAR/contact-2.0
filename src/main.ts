@@ -11,5 +11,4 @@ if (environment.production) {
 }
 
 const app = platformBrowserDynamic().bootstrapModule(AppModule);
-// tslint:disable-next-line:no-unused-expression
-app.then(() => { (<any>window).appBootstrap && (<any>window).appBootstrap(); });
+app.then(() => {});

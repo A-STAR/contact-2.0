@@ -1,6 +1,7 @@
 <app-phone-grid
   *ngIf="debtExists$ | async"
   action="edit"
+  [campaignId]="campaignId"
   [contactType]="1"
   [debtId]="debtId$ | async"
   [callCenter]="true"

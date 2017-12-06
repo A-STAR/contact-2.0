@@ -249,7 +249,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   onScheduleDialogSubmit(schedule: ISMSSchedule): void {
     const data = {
       ...schedule,
-      ...(this.campaignId ? { campaignId: this.campaignId } : {}),
+      // Here '!=' instead of '!==' is correct because `campaignId` can equal 0
+      ...(this.campaignId != null ? { campaignId: this.campaignId } : {}),
       personId: this._personId$.value,
       personRole: this.personRole,
       phoneId: this.selectedPhoneId$.value
@@ -289,9 +290,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get canView$(): Observable<boolean> {
-    return this.ignoreViewPermissions
-      ? Observable.of(true)
-      : this.userPermissionsService.has('PHONE_VIEW');
+    return this.userPermissionsService.has('PHONE_VIEW')
+      .map(hasPermission => hasPermission || this.ignoreViewPermissions);
   }
 
   get canViewBlock$(): Observable<boolean> {
@@ -325,9 +325,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
           this.userConstantsService.get('SMS.Use').map(constant => constant.valueB),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST', phone.statusCode),
-          this.ignoreSmsSingleFormPersonRoleListPermissions
-            ? Observable.of(true)
-            : this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this.personRole),
+          this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this.personRole)
+            .map(hasPermission => hasPermission || this.ignoreSmsSingleFormPersonRoleListPermissions),
         ])
         : Observable.of(false);
     });
@@ -337,9 +336,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     // TODO(d.maltsev): use debtor service
     return combineLatestAnd([
       this.selectedPhone$.map(phone => phone && !phone.isInactive),
-      this.ignoreDebtRegContactTypeListPermissions
-        ? Observable.of(true)
-        : this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1),
+      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1)
+        .map(hasPermission => hasPermission || this.ignoreDebtRegContactTypeListPermissions),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }

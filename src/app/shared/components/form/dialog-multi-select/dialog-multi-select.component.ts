@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IDialogMultiSelectValue } from './dialog-multi-select.interface';
@@ -29,6 +38,8 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
   @Input() columnsToTranslationKey: string;
   @Input() rows: T[] = [];
   @Input() title: string;
+
+  @Output() show = new EventEmitter<void>();
 
   @ViewChild('gridFrom') gridFrom: GridComponent;
   @ViewChild('gridTo') gridTo: GridComponent;
@@ -130,6 +141,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
 
   onShowDialog(): void {
     this.setDialog('on');
+    this.show.emit();
   }
 
   /**

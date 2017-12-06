@@ -31,6 +31,7 @@ const labelKey = makeKey('widgets.address.dialogs.mark.form');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressGridMarkComponent implements OnInit {
+  @Input() callCenter: boolean;
   @Input() debtorId: number;
   @Input() personId: number;
   @Input() personRole: number;
@@ -72,7 +73,7 @@ export class AddressGridMarkComponent implements OnInit {
         this.cdRef.markForCheck();
       });
 
-    this.markService.fetchDebtsForPerson(this.personId, this.personRole, this.debtorId)
+    this.markService.fetchDebtsForPerson(this.personId, this.personRole, this.debtorId, this.callCenter)
       .subscribe(debts => {
         this.debts = debts;
         if (debts.length === 1) {

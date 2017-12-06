@@ -133,7 +133,7 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
       ...rest,
       statusCode: customStatusCode || statusCode,
     };
-    this.debtService.changeStatus(this.personId, this.debt.id, value).subscribe(() => {
+    this.debtService.changeStatus(this.personId, this.debt.id, value, false).subscribe(() => {
       this.submit.emit();
       this.close.emit();
     });
