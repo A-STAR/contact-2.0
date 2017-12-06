@@ -2309,7 +2309,8 @@
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
         "statusChange": "Change status",
-        "visitAdd": "Make necessary"
+        "visitAdd": "Make necessary",
+        "openUserById": "Open debtor card"
       }
     },
     "filter": {
