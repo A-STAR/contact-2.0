@@ -19,9 +19,22 @@
 ></app-dialog-action>
 
 <div class="mb">
-  <app-button label="Открыть файл" [disabled]="hasFile" (click)="onFileOpenClick()"></app-button>
-  <app-button label="Сохранить в БД" [disabled]="!hasFile || hasErrors" (click)="onSaveClick()"></app-button>
-  <app-button label="Отмена" [disabled]="!hasFile" (click)="onCancelClick()"></app-button>
+  <div class="row">
+    <div class="col-md-9">
+      <app-button label="Открыть файл" [disabled]="hasFile" (click)="onFileOpenClick()"></app-button>
+      <app-button label="Сохранить в БД" [disabled]="!hasFile || hasErrors" (click)="onSaveClick()"></app-button>
+      <app-button label="Отмена" [disabled]="!hasFile" (click)="onCancelClick()"></app-button>
+    </div>
+    <div class="col-md-3">
+      <app-select-wrapper
+        [dictCode]="62"
+        [disabled]="hasFile"
+        [ngModel]="format"
+        [nullable]="false"
+        (ngModelChange)="onFormatChange($event)"
+      ></app-select-wrapper>
+    </div>
+  </div>
 </div>
 
 <div hidden>

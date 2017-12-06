@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse, ICell, ICellPayload, IDataResponse /*, IRow */ } from './payments-upload.interface';
+import { IOpenFileResponse, ICell, ICellPayload, IDataResponse } from './payments-upload.interface';
 
 import { PaymentsUploadService } from './payments-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -68,6 +68,14 @@ export class PaymentsUploadComponent extends DialogFunctions {
     return false;
     // TODO(d.maltsev): uncomment
     // return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
+  }
+
+  get format(): number {
+    return this.paymentsUploadService.format;
+  }
+
+  onFormatChange(format: number): void {
+    this.paymentsUploadService.format = format;
   }
 
   onRequest(): void {
