@@ -1050,6 +1050,15 @@
     "buttons": {
       "attributes": "Attributes",
       "managers": "Managers"
+    },
+    "attributeVersion": {
+      "grid": {
+        "code": "Code",
+        "value": "Value",
+        "fromDateTime": "Date start",
+        "toDateTime": "Date end",
+        "userFullName": "Operator"
+      }
     }
   },
   "portfolios": {
@@ -1086,6 +1095,15 @@
       "return": {
         "menu": "Return outsourcing portfolio",
         "title": "Return portfolio"
+      }
+    },
+    "attributeVersion": {
+      "grid": {
+        "code": "Code",
+        "value": "Value",
+        "fromDateTime": "Date start",
+        "toDateTime": "Date end",
+        "userFullName": "Operator"
       }
     }
   },

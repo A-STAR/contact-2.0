@@ -1010,7 +1010,6 @@
         "confirmMessage": "Вы действительно хотите удалить менеджера {{ lastName }} ?"
       },
       "grid": {
-
         "fullName": "ФИО",
         "firstName": "Имя",
         "middleName": "Отчество",
@@ -1051,6 +1050,15 @@
     "buttons": {
       "attributes": "Атрибуты",
       "managers": "Менеджеры"
+    },
+    "attributeVersion": {
+      "grid": {
+        "code": "Код",
+        "value": "Значение",
+        "fromDateTime": "Дата начала",
+        "toDateTime": "Дата окончания",
+        "userFullName": "Оператор"
+      }
     }
   },
   "portfolios": {
@@ -1087,6 +1095,15 @@
       "return": {
         "menu": "Отозвать портфель",
         "title": "Отозвать портфель"
+      }
+    },
+    "attributeVersion": {
+      "grid": {
+        "code": "Код",
+        "value": "Значение",
+        "fromDateTime": "Дата начала",
+        "toDateTime": "Дата окончания",
+        "userFullName": "Оператор"
       }
     }
   },

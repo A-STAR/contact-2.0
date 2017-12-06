@@ -7,13 +7,14 @@
   (cancel)="onCloseDialog()">
 >
 </app-attribute-version-edit>
+
 <app-grid
   class="flat"
   [styles]="{ height: '250px' }"
   [columns]="columns"
-  [columnTranslationKey]=""
+  [columnTranslationKey]="'attributeVersion'"
   [rows]="rows"
   selectionType="single"
-  (onSelect)="onSelectCampaign($event)"
-  (onDblClick)="onCampaignDblClick($event)">
+  (onSelect)="onRowSelect($event)"
+  (onDblClick)="onRowDblClick($event)">
 </app-grid>

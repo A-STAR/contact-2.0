@@ -14,6 +14,7 @@ export interface IAttribute {
   sortOrder: number;
   disabledValue: number;
   children?: IAttribute[];
+  version?: number;
 }
 
 export interface IAttributeForm {
