@@ -264,6 +264,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.page = this.getPageCount();
         this.onPage.emit(this.page);
         break;
+      case ToolbarActionTypeEnum.REFRESH:
+        this.onPage.emit(this.page);
+        break;
     }
   }
 
@@ -426,8 +429,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private getNumberFilter(model: any): any {
-    // NOTE: `filter` here means `filterFrom`
-    const { filter, filterTo, type } = model;
+    // NOTE: `filter` in ag-grid means `filterFrom`
+    const { filter: filterFrom, filterTo, type } = model;
     const operators = {
       lessThan: '<',
       greaterThan: '>',
@@ -442,9 +445,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       values: [],
     };
     if (type === 'inRange') {
-      result.values = [filter, filterTo];
+      result.values = [filterFrom, filterTo];
     } else {
-      result.values = [filter];
+      result.values = [filterFrom];
     }
     return result;
   }
@@ -455,19 +458,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
 
     this.paginationPanel = [
-      { control: ToolbarControlEnum.LABEL, text: '0 выбрано / 0 всего' },
-      { type: ToolbarActionTypeEnum.GO_FIRST, disabled: true },
-      { type: ToolbarActionTypeEnum.GO_BACKWARD, disabled: true },
-      { control: ToolbarControlEnum.LABEL, text: '0 / 0' },
-      { type: ToolbarActionTypeEnum.GO_FORWARD, disabled: true },
-      { type: ToolbarActionTypeEnum.GO_LAST, disabled: true },
+      { control: ToolbarControlEnum.LABEL,  text: '0 выбрано / 0 всего' },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_FIRST, disabled: true },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_BACKWARD, disabled: true },
+      { control: ToolbarControlEnum.LABEL,  text: '0 / 0' },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_FORWARD, disabled: true },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_LAST, disabled: true },
       {
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
         control: ToolbarControlEnum.SELECT,
         disabled: true,
-        styles: { width: '100px' },
+        styles: { width: '60px' },
         value: this.pageSizes.map(pageSize => ({ value: pageSize })),
-      }
+      },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: true },
     ];
   }
 
@@ -519,6 +523,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           // pageSize selector
           btn.disabled = !canPaginate;
           return btn;
+        case 7:
+          // refreshBtn
+          btn.disabled = !pageCount;
+          return btn;
         default:
           return btn;
       }
@@ -537,10 +545,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.gridOptions.api.clearRangeSelection();
     this.gridOptions.api.clearFocusedCell();
   }
-
-  // private getRendererByName(field: string): Function {
-  //   return this.columns.find(column => column.colId === field).renderer;
-  // }
 
   private getPageCount(): number {
     return Math.ceil(this.rowCount / this.pageSize);

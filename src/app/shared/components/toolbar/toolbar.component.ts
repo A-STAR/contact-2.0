@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { IToolbarAction, IToolbarActionSelect, ToolbarControlEnum } from './toolbar.interface';
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
 
-import { IconsService } from '../../icons/icons.service';
+import { ToolbarService } from './toolbar.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class ToolbarComponent {
   ToolbarControlEnum = ToolbarControlEnum;
 
   constructor(
-    private iconsService: IconsService,
+    private toolbarService: ToolbarService,
     private userPermissionsService: UserPermissionsService
   ) {}
 
@@ -45,7 +45,7 @@ export class ToolbarComponent {
       .map(permission => !!action.disabled || !(!action.permission || permission));
   }
 
-  toIconCls(action: IToolbarAction): string {
-    return this.iconsService.fromActionType(action.type);
+  getIconCls(action: IToolbarAction): string {
+    return this.toolbarService.getIconClass(action.type);
   }
 }

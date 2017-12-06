@@ -64,7 +64,6 @@ import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
 import { ValueInputModule } from './components/form/value/value.module';
 
-import { IconsService } from './icons/icons.service';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
 
 import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
@@ -126,7 +125,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
   ],
   providers: [
     ColorsService,
-    IconsService,
     QBuilderService
   ],
   declarations: [
