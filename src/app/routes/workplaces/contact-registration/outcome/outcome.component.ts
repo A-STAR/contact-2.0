@@ -31,6 +31,7 @@ const labelKey = makeKey('modules.contactRegistration.outcome');
 @Component({
   selector: 'app-contact-registration-outcome',
   templateUrl: './outcome.component.html',
+  styleUrls: [ './outcome.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -44,13 +45,13 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = [
-    { label: labelKey('template'), controlName: 'template', type: 'textarea', rows: 3, disabled: true },
     { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'select', options: [], disabled: true },
     { label: labelKey('autoComment'), controlName: 'autoComment', type: 'textarea', rows: 3, disabled: true },
     { label: labelKey('comment'), controlName: 'comment', type: 'textarea', rows: 3, disabled: true },
   ];
   data = {};
   nodes: ITreeNode[];
+  template: string;
 
   private autoCommentIdSubscription: Subscription;
   private selectedNodeSubscription: Subscription;
@@ -64,7 +65,6 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.getControl('template').type = [1, 2].includes(this.contactTypeCode) ? 'textarea' : 'hidden';
     this.userTemplatesService.getTemplates(4, 0)
       .map(valuesToOptions)
       .subscribe(autoCommentOptions => {
@@ -89,18 +89,25 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedNodeSubscription = this.selectedNode$
       .distinctUntilChanged()
       .flatMap(selectedNode => {
-        return selectedNode && isEmpty(selectedNode.children)
+        return selectedNode && isEmpty(selectedNode.children) && this.hasTemplate
           ? this.outcomeService
             .fetchScenario(this.debtId, this.contactTypeCode, selectedNode.id)
             .catch(() => Observable.of(null))
           : Observable.of(null);
       })
-      .subscribe(template => this.updateData('template', template));
+      .subscribe(template => {
+        this.template = template;
+        this.cdRef.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {
     this.autoCommentIdSubscription.unsubscribe();
     this.selectedNodeSubscription.unsubscribe();
+  }
+
+  get hasTemplate(): boolean {
+    return [1, 2].includes(this.contactTypeCode);
   }
 
   get canSubmit$(): Observable<boolean> {
