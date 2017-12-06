@@ -37,20 +37,22 @@ export interface IMetadataFilter {
   addOptions?: IMetadataFilterOption[];
 }
 
-export interface IMetadata {
+export interface IMetadataResponse {
   name: string;
   actions: IMetadataAction[];
   data: IMetadataColumn[];
   baseFilters: IMetadataFilter[];
 }
 
+export interface IMetadata {
+  actions: IMetadataAction[];
+  columns: Array<IMetadataColumn>;
+  status: MetadataListStatusEnum;
+  filters: IMetadataFilter[];
+}
+
 export interface IMetadataState {
-  [key: string]: {
-    actions: IMetadataAction[];
-    columns: Array<IMetadataColumn>;
-    status: MetadataListStatusEnum;
-    filters: IMetadataFilter[];
-  };
+  [key: string]: IMetadata;
 }
 
 export enum MetadataListStatusEnum {

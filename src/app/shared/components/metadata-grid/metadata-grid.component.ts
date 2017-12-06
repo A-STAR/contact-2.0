@@ -9,7 +9,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { GridOptions } from 'ag-grid/main';
-import { Observable } from 'rxjs/Observable';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import {

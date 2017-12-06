@@ -5,7 +5,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/filter';
 
 import { IAppState } from '../state/state.interface';
-import { IMetadataAction, IMetadataColumn, IMetadataState, MetadataListStatusEnum } from './metadata.interface';
+import { IMetadata, IMetadataState, MetadataListStatusEnum } from './metadata.interface';
 
 @Injectable()
 export class MetadataService {
@@ -26,7 +26,7 @@ export class MetadataService {
     });
   }
 
-  getData(key: string): Observable<any> {
+  getData(key: string): Observable<IMetadata> {
     const status = this.state[key] && this.state[key].status;
     if (!status || status === MetadataListStatusEnum.ERROR) {
       this.refresh(key);

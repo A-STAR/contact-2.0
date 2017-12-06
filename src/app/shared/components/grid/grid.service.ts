@@ -75,10 +75,10 @@ export class GridService {
   getMetadata(metadataKey: string, renderers: object): Observable<{ actions: IMetadataAction[], columns: IAGridColumn[] }> {
     return this.metadataService.getData(metadataKey)
       .flatMap(metadata => {
-        const { actions, columns } = metadata;
+        const { columns } = metadata;
         const dictionaryIds = this.getDictionaryIdsFromColumns(columns);
         return this.buildColumns(columns, dictionaryIds, renderers)
-          .map(cols => ({ columns: cols as IAGridColumn[], actions }));
+          .map(cols => ({ ...metadata, columns: cols as IAGridColumn[] }));
       });
   }
 
@@ -173,13 +173,13 @@ export class GridService {
       });
   }
 
-  private getDictionaryIdsFromColumns(columns: IAGridColumn[]): number[] {
+  private getDictionaryIdsFromColumns(columns: IMetadataColumn[]): number[] {
     return columns
       .filter(column => !!column.dictCode)
       .map(column => column.dictCode);
   }
 
-  private buildColumns(columns: IAGridColumn[], dictionaryIds: number[], renderers: object): Observable<IAGridColumn[]> {
+  private buildColumns(columns: IMetadataColumn[], dictionaryIds: number[], renderers: object): Observable<IAGridColumn[]> {
     return this.userDictionariesService.getDictionaries(dictionaryIds)
       .map(dictionaries => [ columns, dictionaries ])
       .map(this.mapColumns(renderers));
