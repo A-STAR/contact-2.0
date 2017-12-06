@@ -212,8 +212,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   canSend(portfolio: IPortfolio): boolean {
-    // return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 5;
-    return !!portfolio;
+    return portfolio && portfolio.directionCode === 2 && portfolio.statusCode === 5;
   }
 
   canReturn(portfolio: IPortfolio): boolean {

@@ -34,6 +34,7 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
+  @Input() action: 'edit' | 'download' = 'edit';
   @Input() callCenter = false;
   @Input() hideToolbar = false;
   @Input() personId: number;
@@ -138,7 +139,15 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(document: IDocument): void {
-    this.onEdit(document.id);
+    this.selectedDocumentId$.next(document.id);
+    switch (this.action) {
+      case 'edit':
+        this.onEdit(document.id);
+        break;
+      case 'download':
+        this.onDownload();
+        break;
+    }
   }
 
   onSelect(document: IDocument): void {
