@@ -18,7 +18,6 @@ export class LayoutComponent {
     CampaignsComponent: 'CAMPAIGNS',
     ConstantsComponent: 'CONSTANTS',
     ContactLogComponent: 'CONTACT_LOG',
-    WorkTaskComponent: 'WORK_TASK',
     ContactRegistrationComponent: 'CONTACT_REGISTRATION',
     ContactPropertiesComponent: 'CONTACT_TREES',
     ContractorsAndPortfoliosComponent: 'PORTFOLIOS',
@@ -59,6 +58,7 @@ export class LayoutComponent {
     RolesAndPermissionsComponent: 'ROLES_AND_PERMISSIONS',
     UsersComponent: 'USERS',
     UserEditComponent: 'USER_EDIT',
+    WorkTaskComponent: 'WORK_TASK',
   };
 
   constructor(

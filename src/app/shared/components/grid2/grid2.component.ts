@@ -16,8 +16,17 @@ import { Subject } from 'rxjs/Subject';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  CellValueChangedEvent, ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
-  GridOptions, ICellRendererParams, MenuItemDef, PostProcessPopupParams, RowNode
+  CellValueChangedEvent,
+  ColDef,
+  Column,
+  ColumnRowGroupChangedEvent,
+  GetContextMenuItemsParams,
+  GridCellDef,
+  GridOptions,
+  ICellRendererParams,
+  MenuItemDef,
+  PostProcessPopupParams,
+  RowNode,
 } from 'ag-grid/main';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
@@ -44,6 +53,7 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { UserPermissions } from '../../../core/user/permissions/user-permissions';
+// import { GridCell } from 'ag-grid/dist/lib/entities/gridCell';
 
 @Component({
   selector: 'app-grid2',
@@ -187,6 +197,46 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.saveGridSettings();
     this.saveChangesDebounceSub.unsubscribe();
     this.userPermissionsSub.unsubscribe();
+  }
+
+  focusNextCell(callback: (cell: GridCellDef) => boolean): GridCellDef {
+    const { api, columnApi } = this.gridOptions;
+    const columns = columnApi.getAllGridColumns();
+    const nRows = api.getModel().getRowCount();
+    if (!columns || !columns[0] || nRows === 0) {
+      return;
+    }
+
+    let nextCell: GridCellDef = api.getFocusedCell();
+    if (!nextCell) {
+      api.setFocusedCell(0, columns[0]);
+    }
+
+    while (true) {
+      if (nextCell) {
+        const nextColumn = columnApi.getDisplayedColAfter(nextCell.column);
+        nextCell = {
+          column: nextColumn || columns[0],
+          floating: nextCell.floating,
+          rowIndex: nextColumn ? nextCell.rowIndex : nextCell.rowIndex + 1,
+        };
+      } else {
+        nextCell = api.getFocusedCell();
+      }
+
+      if (!nextCell.column || nextCell.rowIndex >= nRows) {
+        api.clearFocusedCell();
+        return;
+      }
+
+      if (callback(nextCell)) {
+        break;
+      }
+    }
+
+    if (nextCell) {
+      api.setFocusedCell(nextCell.rowIndex, nextCell.column);
+    }
   }
 
   onPageChange(action: IToolbarAction): void {

@@ -7,11 +7,14 @@ import { ITab, ITabEvent, TabEventStageEnum } from './content-tab.interface';
 
 import { ActionsLogService } from '../../../../core/actions-log/actions-log.service';
 import { GuiObjectsService } from '../../../../core/gui-objects/gui-objects.service';
+import { PersistenceService } from '../../../../core/persistence/persistence.service';
 
 import { menuConfig } from '../../../../routes/menu-config';
 
 @Injectable()
 export class ContentTabService {
+  static STORAGE_KEY = 'state/contentTabs';
+
   private _tabs: ITab[] = [];
   private _activeIndex: number;
   private lastTabEvent: ITabEvent = null;
@@ -20,6 +23,7 @@ export class ContentTabService {
     private actionsLogService: ActionsLogService,
     private guiObjectsService: GuiObjectsService,
     private location: Location,
+    private persistence: PersistenceService,
     private router: Router,
   ) {
     this.onSectionLoadStart();
@@ -123,6 +127,11 @@ export class ContentTabService {
     if (tabIndex !== null) {
       this.removeTab(tabIndex);
     }
+  }
+
+  saveState(): void {
+    const currentTab = this.getCurrentTab();
+    this.persistence.set(ContentTabService.STORAGE_KEY, currentTab.path);
   }
 
   private onSectionLoadStart(): void {
