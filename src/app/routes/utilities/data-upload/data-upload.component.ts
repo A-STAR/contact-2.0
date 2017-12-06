@@ -70,41 +70,6 @@ export class DataUploadComponent extends DialogFunctions {
     // return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
   }
 
-  onArrowKey = () => {
-    return (params) => {
-      const { gridOptions } = this.grid;
-      // Using Column API in case column order has changed
-      const allColumns = gridOptions.columnApi.getAllGridColumns();
-      // Again, some rows can be filtered out, so using Grid API to get only displayed rows
-      const rowModel = gridOptions.api.getModel();
-      const currentCell = gridOptions.api.getFocusedCell();
-
-      for (let rowIndex = currentCell.rowIndex; rowIndex < rowModel.getRowCount(); rowIndex++) {
-        const row = rowModel.getRow(rowIndex);
-        for (const column of allColumns) {
-          const colId = column.getColId();
-          const cell = row.data.cells.find(c => Number(c.id) === Number(colId));
-          if (cell && cell.statusCode) {
-            console.log(cell);
-            return {
-              rowIndex,
-              column,
-              floating: false,
-            };
-          }
-        }
-      }
-      return null;
-    };
-  }
-
-  onTabKey(): any {
-    return (params) => {
-      console.log(params);
-      return null;
-    };
-  }
-
   onRequest(): void {
     if (this.isFirstRequest) {
       this.isFirstRequest = false;
@@ -206,6 +171,20 @@ export class DataUploadComponent extends DialogFunctions {
         this.closeDialog();
         this.cdRef.markForCheck();
       });
+  }
+
+  onNextProblematicCellClick(): void {
+    this.grid.focusNextCell(cell => {
+      console.log(cell);
+      return true;
+    });
+  }
+
+  onNextCriticalCellClick(): void {
+    this.grid.focusNextCell(cell => {
+      console.log(cell);
+      return true;
+    });
   }
 
   // private rowHasErrors(row: IRow): boolean {
