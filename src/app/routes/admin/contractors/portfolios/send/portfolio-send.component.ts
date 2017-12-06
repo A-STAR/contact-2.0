@@ -65,7 +65,7 @@ export class PortfolioSendComponent implements OnInit {
 
   submit(): void {
     const portfolio = this.form.serializedUpdates;
-    this.onSubmit.emit(portfolio);
+    this.onSubmit.emit({ ...portfolio, directionCode: this.portfolio.directionCode });
   }
 
   cancel(): void {
