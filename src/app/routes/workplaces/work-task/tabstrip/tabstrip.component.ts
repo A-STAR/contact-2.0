@@ -1,12 +1,10 @@
 import {
   AfterContentInit,
-  ChangeDetectorRef,
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
   ElementRef,
   EventEmitter,
-  Input,
   Output,
   Renderer2,
   QueryList,
@@ -27,7 +25,6 @@ export class SleekTabstripComponent implements AfterContentInit {
   @Output() select = new EventEmitter<number>();
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private el: ElementRef,
     private renderer: Renderer2,
   ) { }
