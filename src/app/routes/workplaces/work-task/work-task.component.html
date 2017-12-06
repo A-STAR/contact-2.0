@@ -1,8 +1,9 @@
-<app-tabstrip [disableScrollbar]="true" [inverse]="true" (select)="onTabSelect($event)">
-  <app-tab *ngFor="let grid of grids; let i = index" [title]="grid.title" [closable]="false">
+<app-sleek-tabstrip (select)="onTabSelect($event)">
+  <app-sleek-tab *ngFor="let grid of grids; let i = index" [title]="grid.title" [closable]="false">
     <app-work-task-grid
-      *ngIf="selectedTabIndex === i"
+      *ngIf="grid.isInitialized"
       [gridKey]="grid.key"
+      [rowIdKey]="grid.rowIdKey"
     ></app-work-task-grid>
-  </app-tab>
-</app-tabstrip>
+  </app-sleek-tab>
+</app-sleek-tabstrip>

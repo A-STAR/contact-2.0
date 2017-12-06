@@ -40,8 +40,8 @@ export class TabstripComponent implements AfterContentInit, AfterViewInit, DoChe
 
   constructor(
     private elementRef: ElementRef,
-    private cdRef: ChangeDetectorRef) {
-  }
+    private cdRef: ChangeDetectorRef
+  ) { }
 
   ngDoCheck(): void {
     if (this.scrollerEnabled) {
