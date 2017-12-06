@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
@@ -40,7 +40,7 @@ export class PermissionsService {
 
   get roles(): Observable<IPermissionRole[]> {
     return this.permissions.map(state => state.roles)
-      .distinctUntilChanged();
+      .pipe(distinctUntilChanged());
   }
 
   fetchRoles(): void {
