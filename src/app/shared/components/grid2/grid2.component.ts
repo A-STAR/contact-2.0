@@ -217,7 +217,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         const nextColumn = columnApi.getDisplayedColAfter(nextCell.column);
         nextCell = {
           column: nextColumn || columns[0],
-          // TODO(d.maltsev): what is this?
           floating: nextCell.floating,
           rowIndex: nextColumn ? nextCell.rowIndex : nextCell.rowIndex + 1,
         };
@@ -236,7 +235,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
 
     if (nextCell) {
-      api.setFocusedCell(nextCell.rowIndex, nextCell.column, nextCell.floating);
+      api.setFocusedCell(nextCell.rowIndex, nextCell.column);
     }
   }
 
