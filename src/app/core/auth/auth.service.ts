@@ -1,11 +1,9 @@
-import { Injectable, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/do';
 
 import { IAppState } from '../state/state.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
@@ -13,7 +11,7 @@ import { UnsafeAction } from '../../core/state/state.interface';
 import { PersistenceService } from '../persistence/persistence.service';
 
 @Injectable()
-export class AuthService implements CanActivate, OnDestroy, OnInit {
+export class AuthService implements CanActivate {
   static TOKEN_NAME = 'auth/token';
   static LANGUAGE_TOKEN = 'auth/language';
 
@@ -29,8 +27,8 @@ export class AuthService implements CanActivate, OnDestroy, OnInit {
   static AUTH_CREATE_SESSION  = 'AUTH_CREATE_SESSION';
   static AUTH_DESTROY_SESSION = 'AUTH_DESTROY_SESSION';
   static AUTH_GLOBAL_RESET    = 'AUTH_GLOBAL_RESET';
+  static AUTH_RETRIEVE_TOKEN  = 'AUTH_RETRIEVE_TOKEN';
 
-  private tokenSubscription: Subscription;
   private tokenTimer = null;
   private url: string = null;
 
@@ -43,26 +41,9 @@ export class AuthService implements CanActivate, OnDestroy, OnInit {
     private zone: NgZone,
   ) { }
 
-  ngOnInit(): void {
-    this.tokenSubscription = this.token$.subscribe(token => {
-      if (this.isTokenValid(token)) {
-        this.initTokenTimer(token);
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.tokenSubscription.unsubscribe();
-  }
-
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.token$
-      .map(token => this.isTokenValid(token))
-      .do(isTokenValid => {
-        if (!isTokenValid) {
-          this.dispatchResetAction(state.url);
-        }
-      });
+      .map(token => this.isTokenValid(token) || this.isRetrievedTokenValid());
   }
 
   dispatchLoginAction(login: string, password: string): void {
@@ -141,14 +122,19 @@ export class AuthService implements CanActivate, OnDestroy, OnInit {
   }
 
   private isTokenValid(token: string): boolean {
-    return token && !this.jwtHelper.isTokenExpired(token);
+    return !!token && !this.jwtHelper.isTokenExpired(token);
+  }
+
+  private isRetrievedTokenValid(): boolean {
+    const token = this.persistenceService.get(AuthService.TOKEN_NAME);
+    const isValid = this.isTokenValid(token);
+    if (isValid) {
+      this.store.dispatch({ type: AuthService.AUTH_RETRIEVE_TOKEN, payload: { token } });
+    }
+    return isValid;
   }
 
   private get token$(): Observable<string> {
-    return this.store
-      .select(state => state.auth)
-      .filter(Boolean)
-      .map(state => state.token)
-      .distinctUntilChanged();
+    return this.store.select(state => state.auth.token);
   }
 }
