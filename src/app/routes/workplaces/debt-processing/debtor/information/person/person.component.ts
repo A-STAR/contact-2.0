@@ -107,14 +107,6 @@ export class PersonComponent implements OnInit, OnDestroy {
         disabled: !canEdit,
         width: 3,
       },
-      ...this.attributeIds.map((id, i) => ({
-        label: `person.stringValue${i + 1}`,
-        controlName: `stringValue${i + 1}`,
-        type: 'text',
-        width: 3,
-        display: displayedStringValues.includes(id) && attributes[id].isUsed,
-        required: attributes[id].isMandatory,
-      }) as IDynamicFormItem),
       {
         label: 'person.stageCode',
         controlName: 'stageCode',
@@ -123,6 +115,14 @@ export class PersonComponent implements OnInit, OnDestroy {
         disabled: !canEdit,
         width: 3,
       },
+      ...this.attributeIds.map((id, i) => ({
+        label: `person.stringValue${i + 1}`,
+        controlName: `stringValue${i + 1}`,
+        type: 'text',
+        width: 3,
+        display: displayedStringValues.includes(id) && attributes[id].isUsed,
+        required: attributes[id].isMandatory,
+      }) as IDynamicFormItem),
       {
         label: 'person.comment',
         controlName: 'comment',
