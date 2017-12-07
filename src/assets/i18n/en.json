@@ -1050,15 +1050,6 @@
     "buttons": {
       "attributes": "Attributes",
       "managers": "Managers"
-    },
-    "attributeVersion": {
-      "grid": {
-        "code": "Code",
-        "value": "Value",
-        "fromDateTime": "Date start",
-        "toDateTime": "Date end",
-        "userFullName": "Operator"
-      }
     }
   },
   "portfolios": {
@@ -1095,15 +1086,6 @@
       "return": {
         "menu": "Return outsourcing portfolio",
         "title": "Return portfolio"
-      }
-    },
-    "attributeVersion": {
-      "grid": {
-        "code": "Code",
-        "value": "Value",
-        "fromDateTime": "Date start",
-        "toDateTime": "Date end",
-        "userFullName": "Operator"
       }
     }
   },
@@ -1313,6 +1295,9 @@
         "delete": {
           "title": "Delete attribute",
           "confirmMessage": "Are you sure you want to delete attribute {{ name }}?"
+        },
+        "version": {
+          "title": "Attribute version edit"
         }
       },
       "grid": {
@@ -1321,6 +1306,8 @@
         "value": "Value",
         "userFullName": "Operator",
         "changeDateTime": "Change date/time",
+        "fromDateTime": "Date start",
+        "toDateTime": "Date end",
         "comment": "Comments",
         "typeCode": "Data Type",
         "dictNameCode": "Dictionary",

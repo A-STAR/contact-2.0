@@ -1050,15 +1050,6 @@
     "buttons": {
       "attributes": "Атрибуты",
       "managers": "Менеджеры"
-    },
-    "attributeVersion": {
-      "grid": {
-        "code": "Код",
-        "value": "Значение",
-        "fromDateTime": "Дата начала",
-        "toDateTime": "Дата окончания",
-        "userFullName": "Оператор"
-      }
     }
   },
   "portfolios": {
@@ -1095,15 +1086,6 @@
       "return": {
         "menu": "Отозвать портфель",
         "title": "Отозвать портфель"
-      }
-    },
-    "attributeVersion": {
-      "grid": {
-        "code": "Код",
-        "value": "Значение",
-        "fromDateTime": "Дата начала",
-        "toDateTime": "Дата окончания",
-        "userFullName": "Оператор"
       }
     }
   },
@@ -1313,6 +1295,9 @@
         "delete": {
           "title": "Удалить атрибут",
           "confirmMessage": "Вы действительно хотите удалить атрибут {{ name }}?"
+        },
+        "version": {
+          "title": "Редактирование версии"
         }
       },
       "grid": {
@@ -1321,6 +1306,8 @@
         "value": "Значение",
         "userFullName": "Оператор",
         "changeDateTime": "Дата/время изменения",
+        "fromDateTime": "Дата начала",
+        "toDateTime": "Дата окончания",
         "comment": "Комментарий",
         "typeCode": "Тип данных",
         "dictNameCode": "Словарь",
