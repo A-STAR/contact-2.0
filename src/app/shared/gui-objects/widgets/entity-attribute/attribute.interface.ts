@@ -37,5 +37,5 @@ export interface IAttributeVersion {
 
 export interface IAttributeVersionForm {
   value: number | string;
-  fromDateTime: string;
+  changeDateTime: string;
 }
