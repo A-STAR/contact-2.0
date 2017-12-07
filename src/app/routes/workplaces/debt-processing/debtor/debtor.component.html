@@ -37,8 +37,8 @@
   <app-tab [title]="'debtor.documentsTab.title'" [closable]="false">
     <app-document-grid
       *ngIf="personId$ | async"
+      [entityId]="debtId$ | async"
       [entityType]="19"
-      [personId]="personId$ | async"
     ></app-document-grid>
   </app-tab>
 
