@@ -2,11 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
   OnInit,
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -22,12 +22,8 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
 
 import { GridComponent } from '../../../../../../shared/components/grid/grid.component';
 
-import { makeKey } from '../../../../../../core/utils';
 import { DialogFunctions } from '../../../../../../core/dialog';
-import { ActivatedRoute } from '@angular/router';
-import { combineLatestAnd } from 'app/core/utils/helpers';
-
-const labelKey = makeKey('widgets.attribute.grid');
+import { combineLatestAnd } from '../../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-attribute-version',

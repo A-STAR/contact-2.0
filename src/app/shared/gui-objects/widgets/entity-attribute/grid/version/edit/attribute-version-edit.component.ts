@@ -23,7 +23,8 @@ const labelKey = makeKey('widgets.attribute.grid');
 
 @Component({
   selector: 'app-attribute-version-edit',
-  templateUrl: './attribute-version-edit.component.html'
+  templateUrl: './attribute-version-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeVersionEditComponent implements OnInit {
   @Input() selectedVersion: IAttributeVersion;
