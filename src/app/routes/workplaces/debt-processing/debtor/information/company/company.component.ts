@@ -80,7 +80,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
       width: 3,
     }];
 
-    return this.attributeIds.map((id, i) => ({
+    const additionalAttrs = this.attributeIds.map((id, i) => ({
       label: `person.stringValue${i + 1}`,
       controlName: `stringValue${i + 1}`,
       type: 'text',
@@ -88,6 +88,8 @@ export class CompanyComponent implements OnInit, OnDestroy {
       display: displayedStringValues.includes(id) && attributes[id].isUsed,
       required: attributes[id].isMandatory,
     }) as IDynamicFormControl);
+
+    return (stageControl as  IDynamicFormControl[]).concat(additionalAttrs);
   }
 
   private get stringValuesConstantsName(): string {
