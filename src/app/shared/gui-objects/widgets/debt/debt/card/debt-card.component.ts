@@ -330,7 +330,23 @@ export class DebtCardComponent {
           width: 3
         }
         : null,
+        {
+          label: 'widgets.debt.grid.account',
+          controlName: 'account',
+          type: 'text',
+          disabled: !debtEditPerm,
+          width: 2
+        },
       // Row 6
+      {
+        label: 'widgets.debt.grid.stageCode',
+        controlName: 'stageCode',
+        type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE,
+        disabled: !debtEditPerm,
+        width: 3,
+      },
+      // Row 7
       {
         label: 'widgets.debt.grid.comment',
         controlName: 'comment',

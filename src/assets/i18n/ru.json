@@ -1608,8 +1608,10 @@
         "terminate": "Завершить работу с долгом"
       },
       "grid": {
+        "account": "Лицевой счет",
         "id": "ID долга",
         "portfolioId": "Портфель",
+        "stageCode": "Стадия",
         "bankId": "Банк",
         "creditTypeCode": "Тип продукта",
         "creditName": "Название продукта",

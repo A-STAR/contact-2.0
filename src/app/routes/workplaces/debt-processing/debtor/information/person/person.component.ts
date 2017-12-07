@@ -40,7 +40,6 @@ export class PersonComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.attributeIds);
     this.personSubscription = Observable.combineLatest(
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
       this.userPermissionsService.has('PERSON_COMMENT_EDIT'),

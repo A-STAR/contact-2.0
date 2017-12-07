@@ -1608,8 +1608,10 @@
         "terminate": "Terminate Work"
       },
       "grid": {
+        "account": "Account",
         "id": "ID",
         "portfolioId": "Portfolio",
+        "stageCode": "Stage",
         "bankId": "Bank",
         "creditTypeCode": "Credit type",
         "creditName": "Credit name",
