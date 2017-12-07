@@ -148,8 +148,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       ...formData,
       ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
       ...(name ? { name: this.isEditing ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
-      ...(template ? { [template.name]: template.value } : {}),
-      ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),
+      ...(template ? { [template.name]: template.value || null } : {}),
+      ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value || null } : {}),
       ...(isEmpty(attributes) ? {} : { attributes }),
       ...(this.isEditing ? {} : { parentId: this.selectedId }),
     };
