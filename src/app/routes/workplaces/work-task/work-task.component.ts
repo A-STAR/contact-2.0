@@ -23,17 +23,17 @@ export class WorkTaskComponent {
   selectedTabIndex = 0;
 
   grids: IGridDef[] = [
-    { rowIdKey: 'id', key: 'workTask.NewDebt', title: label('newDebt.title'), isInitialized: true },
-    { key: 'workTask.ProblemDebt', title: label('problemDebt.title'), isInitialized: false },
-    { key: 'workTask.SearchInformation', title: label('searchInformation.title'), isInitialized: false },
-    { key: 'workTask.DebtToContractor', title: label('debtToContractor.title'), isInitialized: false },
-    { rowIdKey: 'id', key: 'workTask.PrepareVisits', title: label('prepareVisits.title'), isInitialized: false }
+    { rowIdKey: 'id', key: 'workTask.NewDebt', title: label('newDebt.title'), isInitialised: true },
+    { key: 'workTask.ProblemDebt', title: label('problemDebt.title'), isInitialised: false },
+    { key: 'workTask.SearchInformation', title: label('searchInformation.title'), isInitialised: false },
+    { key: 'workTask.DebtToContractor', title: label('debtToContractor.title'), isInitialised: false },
+    { rowIdKey: 'id', key: 'workTask.PrepareVisits', title: label('prepareVisits.title'), isInitialised: false }
   ];
 
   constructor(private cdRef: ChangeDetectorRef) { }
 
   onTabSelect(tabIndex: number): void {
-    this.grids[tabIndex].isInitialized = true;
+    this.grids[tabIndex].isInitialised = true;
     this.selectedTabIndex = tabIndex;
     this.cdRef.markForCheck();
   }

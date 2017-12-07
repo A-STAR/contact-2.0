@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { makeKey } from '../../../core/utils';
 
-const labelKey = makeKey('modules.debtsProcessing');
+const label = makeKey('modules.debtsProcessing');
 
 @Component({
   selector: 'app-debt-processing',
@@ -13,8 +13,12 @@ export class DebtProcessingComponent {
   static COMPONENT_NAME = 'DebtProcessingComponent';
 
   grids = [
-    { key: 'debtsprocessingall', title: labelKey('all.title') },
-    { key: 'debtsprocessingcallback', title: labelKey('callBack.title') },
-    { key: 'debtsprocessingcurrentjob', title: labelKey('currentJob.title') },
+    { key: 'debtsprocessingall', title: label('all.title'), isInitialised: true },
+    { key: 'debtsprocessingcallback', title: label('callBack.title'), isInitialised: false },
+    { key: 'debtsprocessingcurrentjob', title: label('currentJob.title'), isInitialised: false },
   ];
+
+  onTabSelect(tabIndex: number): void {
+    this.grids[tabIndex].isInitialised = true;
+  }
 }
