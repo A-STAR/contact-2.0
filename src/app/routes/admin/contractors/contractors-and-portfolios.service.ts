@@ -207,6 +207,7 @@ export class ContractorsAndPortfoliosService {
     .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
+
   returnOutsourcePortfolio(
     contractorId: number,
     portfolioId: number,
