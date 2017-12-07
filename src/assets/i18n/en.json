@@ -43,6 +43,7 @@
         "PORTFOLIO_ATTRIBUTES": "Portfolio attributes",
         "CONTRACTOR_ATTRIBUTES": "Contractor attributes",
         "CONTRACTOR": "Contractor",
+        "ATTRIBUTES": "Attributes",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
         "CONTRACTOR_MANAGER": "Contractor Manager",
         "DEPARTMENTS": "Departments",
@@ -769,6 +770,7 @@
     "responsibleFullName": "Manager",
     "reward": "Remuneration",
     "shortInfo": "Short info",
+    "stageCode": "Stage",
     "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",
@@ -935,7 +937,6 @@
     "birthPlace": "Place of birth",
     "familyStatusCode": "Marital status",
     "educationCode": "Education",
-    "stageCode": "Stage",
     "stringValue1": "String attribute 1",
     "stringValue2": "String attribute 2",
     "stringValue3": "String attribute 3",

@@ -106,14 +106,6 @@ export class PersonComponent implements OnInit, OnDestroy {
         disabled: !canEdit,
         width: 3,
       },
-      {
-        label: 'person.stageCode',
-        controlName: 'stageCode',
-        type: 'selectwrapper',
-        dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE,
-        disabled: !canEdit,
-        width: 3,
-      },
       ...this.attributeIds.map((id, i) => ({
         label: `person.stringValue${i + 1}`,
         controlName: `stringValue${i + 1}`,

@@ -770,6 +770,7 @@
     "responsibleFullName": "Ответственный",
     "reward": "Размер вознаграждения",
     "shortInfo": "Краткая иформация",
+    "stageCode": "Стадия",
     "utc": "Местное время должника",
     "identityDocs": {
       "title": "Удостоверения личности",
@@ -936,7 +937,6 @@
     "birthPlace": "Место рождения",
     "familyStatusCode": "Семейное положение",
     "educationCode": "Образование",
-    "stageCode": "Стадия",
     "stringValue1": "Строковый атрибут 1",
     "stringValue2": "Строковый атрибут 2",
     "stringValue3": "Строковый атрибут 3",

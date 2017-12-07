@@ -71,16 +71,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
 
   protected getControls(stringValues: IUserConstant, canEdit: boolean, attributes: IEntityAttributes): IDynamicFormControl[] {
     const displayedStringValues = stringValues.valueS.split(',').map(Number);
-    const  stageControl = [{
-      label: 'person.stageCode',
-      controlName: 'stageCode',
-      type: 'selectwrapper',
-      dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE,
-      disabled: !canEdit,
-      width: 3,
-    }];
-
-    const additionalAttrs = this.attributeIds.map((id, i) => ({
+    return this.attributeIds.map((id, i) => ({
       label: `person.stringValue${i + 1}`,
       controlName: `stringValue${i + 1}`,
       type: 'text',
@@ -88,8 +79,6 @@ export class CompanyComponent implements OnInit, OnDestroy {
       display: displayedStringValues.includes(id) && attributes[id].isUsed,
       required: attributes[id].isMandatory,
     }) as IDynamicFormControl);
-
-    return (stageControl as  IDynamicFormControl[]).concat(additionalAttrs);
   }
 
   private get stringValuesConstantsName(): string {
