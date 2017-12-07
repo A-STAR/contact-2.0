@@ -138,6 +138,9 @@
   },
   "modules": {
     "callCenter": {
+      "main": {
+        "title": "Сampaign selection"
+      },
       "grid": {
         "name": "Name",
         "comment": "Description"
@@ -2202,8 +2205,8 @@
       "delete": "Delete",
       "download": "Download",
       "edit": "Edit",
-      "exportToExcel": "Export to Excel",
-      "excel": "Export to Excel",
+      "exportToExcel": "Export",
+      "excel": "Export",
       "move": "Move",
       "next": "Next",
       "ok": "OK",

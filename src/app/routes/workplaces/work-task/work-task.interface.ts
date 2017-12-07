@@ -40,7 +40,7 @@ export interface IWorkTaskEntry {
 }
 
 export interface IGridDef {
-  isInitialized: boolean;
+  isInitialised: boolean;
   key: string;
   rowIdKey?: string;
   title: string;
