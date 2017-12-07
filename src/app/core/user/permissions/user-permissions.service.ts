@@ -15,7 +15,7 @@ export class UserPermissionsService implements OnDestroy {
   static USER_PERMISSIONS_FETCH         = 'USER_PERMISSIONS_FETCH';
   static USER_PERMISSIONS_FETCH_SUCCESS = 'USER_PERMISSIONS_FETCH_SUCCESS';
 
-  private isInitialized = false;
+  private isInitialised = false;
   private permissions: IUserPermissions;
   private permissionsSub: Subscription;
 
@@ -116,13 +116,13 @@ export class UserPermissionsService implements OnDestroy {
   }
 
   reset(): void {
-    this.isInitialized = false;
+    this.isInitialised = false;
     this.permissions = null;
   }
 
   private getPermissions(): Observable<IUserPermissions> {
-    if (!this.permissions && !this.isInitialized) {
-      this.isInitialized = true;
+    if (!this.permissions && !this.isInitialised) {
+      this.isInitialised = true;
       this.refresh();
     }
 

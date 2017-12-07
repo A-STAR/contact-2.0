@@ -31,7 +31,7 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
   rows: any[] = [];
   value: IDialogMultiSelectValue[];
 
-  private isInitialized = false;
+  private isInitialised = false;
 
   get columnsFromTranslationKey(): string {
     return this.dialogMultiSelectWrapperService.getColumnsFromTranslationKey(this.filterType);
@@ -75,8 +75,8 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
   }
 
   onShowDialog(): void {
-    if (!this.isInitialized) {
-      this.isInitialized = true;
+    if (!this.isInitialised) {
+      this.isInitialised = true;
       this.fetch(this.filterParams).subscribe(rows => {
         this.rows = rows;
         this.cdRef.markForCheck();
