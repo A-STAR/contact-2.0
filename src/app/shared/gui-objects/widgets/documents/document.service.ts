@@ -8,6 +8,15 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 @Injectable()
 export class DocumentService {
+  // TODO(d.maltsev): merge entity attributes service and entity translations service
+  // and move entities there
+  static ENTITY_CONTRACTOR = 13;
+  static ENTITY_PORTFOLIO = 15;
+  static ENTITY_PERSON = 18;
+  static ENTITY_DEBT = 19;
+  static ENTITY_PLEDGOR = 39;
+  static ENTITY_GUARANTOR = 38;
+
   static MESSAGE_DOCUMENT_SAVED = 'MESSAGE_DOCUMENT_SAVED';
   private static BASE_URL = '/entityTypes/{entityType}/entities/{entityId}/fileattachments';
 
@@ -19,14 +28,16 @@ export class DocumentService {
   ) {}
 
   fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<Array<IDocument>> {
+    const url = this.getFetchUrl(entityType);
     return this.dataService
-      .readAll(DocumentService.BASE_URL, { entityType, entityId }, { params: { callCenter } })
+      .readAll(url, { entityId }, { params: { callCenter } })
       .catch(this.notificationsService.error('errors.default.read').entity('entities.documents.gen.plural').dispatchCallback());
   }
 
   fetch(entityType: number, entityId: number, documentId: number, callCenter: boolean): Observable<IDocument> {
+    const url = this.getFetchUrl(entityType);
     return this.dataService
-      .read(`${DocumentService.BASE_URL}/{documentId}`, { entityType, entityId, documentId }, { params: { callCenter } })
+      .read(`${url}/{documentId}`, { entityId, documentId }, { params: { callCenter } })
       .catch(this.notificationsService.error('errors.default.read').entity(this.errSingular).dispatchCallback());
   }
 
@@ -55,5 +66,21 @@ export class DocumentService {
     return this.dataService
       .delete(`${DocumentService.BASE_URL}/{documentId}`, data, { params: { callCenter } })
       .catch(this.notificationsService.error('errors.default.delete').entity(this.errSingular).dispatchCallback());
+  }
+
+  private getFetchUrl(entityType: number): string {
+    switch (entityType) {
+      case DocumentService.ENTITY_CONTRACTOR:
+      case DocumentService.ENTITY_PORTFOLIO:
+      case DocumentService.ENTITY_PERSON:
+        return `/entityTypes/${entityType}/entities/{entityId}/fileattachments`;
+      case DocumentService.ENTITY_DEBT:
+        return '/debts/{entityId}/fileattachments';
+      case DocumentService.ENTITY_GUARANTOR:
+        return '/guarantors/{entityId}/fileattachments';
+      case DocumentService.ENTITY_PLEDGOR:
+        return '/pledgors/{entityId}/fileattachments';
+    }
+    throw new Error(`No fetch URL for provided entity type (${entityType})`);
   }
 }
