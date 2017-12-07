@@ -16,6 +16,6 @@ export class OpenDebtCardService {
   getFirstDebtsByUserId(personsId: number): Observable<any> {
     return this.dataService.read(this.url, { personsId } )
       .map(res => res && res.id)
-      .catch(this.notificationsService.deleteError().entity('entities.sms.debts.plural').dispatchCallback());
+      .catch(this.notificationsService.deleteError().entity('entities.debts.gen.plural').dispatchCallback());
    }
 }
