@@ -18,7 +18,6 @@ import { DynamicFormComponent } from '../../../../../components/form/dynamic-for
 
 import { getFormControlConfig, getRawValue, getValue } from '../../../../../../core/utils/value';
 import { makeKey } from '../../../../../../core/utils';
-import * as moment from 'moment';
 
 const labelKey = makeKey('widgets.attribute.grid');
 
