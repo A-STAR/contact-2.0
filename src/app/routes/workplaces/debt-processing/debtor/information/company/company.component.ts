@@ -18,7 +18,6 @@ import { IUserConstant } from '../../../../../../core/user/constants/user-consta
 import { DebtorService } from '../../debtor.service';
 import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { UserConstantsService } from '../../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
