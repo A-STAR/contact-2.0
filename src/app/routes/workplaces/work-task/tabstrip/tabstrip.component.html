@@ -1,0 +1,8 @@
+<ul class="sleek-tabstrip">
+  <li *ngFor="let tab of tabs; let i = index" (click)="selectTab($event, tab)" [class.active]="tab.active" [class.disabled]="tab.disabled">
+    <a>{{ tab.title | translate }}</a>
+    <div class="selection"></div>
+  </li>
+</ul>
+
+<ng-content></ng-content>

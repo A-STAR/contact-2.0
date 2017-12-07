@@ -14,6 +14,8 @@ import { IMassInfoResponse } from '../../../core/data/data.interface';
 
 @Injectable()
 export class PaymentsUploadService {
+  format = 1;
+
   private guid: number;
 
   private columns = [

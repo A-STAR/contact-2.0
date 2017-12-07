@@ -23,6 +23,7 @@ import { ActionGridComponent } from '../../../../shared/components/action-grid/a
 })
 export class GridComponent {
   @Input() gridKey: string;
+  @Input() rowIdKey: string;
 
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IWorkTaskEntry>;
 
