@@ -19,6 +19,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
 import { getRawValue, getDictCodeForValue } from '../../../../../core/utils/value';
 
 import { makeKey } from '../../../../../core/utils';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const labelKey = makeKey('widgets.attribute.grid');
 
@@ -88,6 +89,16 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
       ])
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_VERSION,
+      action: () => this.onVersionClick(),
+      enabled: combineLatestAnd([
+        this.entityTypeId$.flatMap(
+          entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
+        ),
+        this.selectedAttribute$.map(attribute => attribute && !!attribute.version)
+      ])
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.entityTypeId && this.entityId && this.fetch(),
     },
@@ -102,6 +113,8 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     private cdRef: ChangeDetectorRef,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
     @Inject('entityTypeId$') private entityTypeId$: Observable<number>,
     @Inject('entityId$') private entityId$: Observable<number>,
   ) {
@@ -168,6 +181,11 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         this.setDialog(null);
         this.cdRef.markForCheck();
       });
+  }
+
+  onVersionClick(): void {
+    this.router.navigate(['./versions', this.selectedAttribute$, this.entityTypeId, this.entityId],
+    { relativeTo: this.activatedRoute });
   }
 
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
