@@ -1627,6 +1627,7 @@
         "statusCode": "Status",
         "creditStartDate": "Credit start date",
         "creditEndDate": "Credit end date",
+        "debtDate": "Debt date",
         "regionCode": "Region",
         "branchCode": "Branch",
         "currencyId": "Currency",

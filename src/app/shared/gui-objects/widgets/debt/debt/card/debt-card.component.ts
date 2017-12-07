@@ -346,6 +346,13 @@ export class DebtCardComponent {
         disabled: !debtEditPerm,
         width: 3,
       },
+      {
+        label: 'widgets.debt.grid.debtDate',
+        controlName: 'debtDate',
+        type: 'datepicker',
+        disabled: !debtEditPerm,
+        width: 3
+      },
       // Row 7
       {
         label: 'widgets.debt.grid.comment',
