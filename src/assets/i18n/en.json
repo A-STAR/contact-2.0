@@ -7,6 +7,10 @@
       "title": "License",
       "info": "Your license number is"
     },
+    "noDebts": {
+      "userId": "User Id",
+      "title": "No debts"
+    },
     "account": {
       "title": "Account",
       "logout": "Logout",
@@ -2310,7 +2314,8 @@
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
         "statusChange": "Change status",
-        "visitAdd": "Make necessary"
+        "visitAdd": "Make necessary",
+        "openUserById": "Open debtor card"
       }
     },
     "filter": {
