@@ -19,6 +19,7 @@ import { AttributeService } from '../../attribute.service';
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
+import { ValueConverterService } from './../../../../../../core/converter/value-converter.service';
 
 import { GridComponent } from '../../../../../../shared/components/grid/grid.component';
 
@@ -46,10 +47,11 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
 
   columns: Array<IGridColumn> = [
     { prop: 'code', minWidth: 150 },
-    { prop: 'value', minWidth: 150 },
+    { prop: 'value', minWidth: 150,
+      renderer: (version: IAttributeVersion) => this.valueConverterService.deserialize(version) },
     { prop: 'typeCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_ATTRIBUTE_TREE_TYPE },
-    { prop: 'fromDateTime', minWidth: 150 },
-    { prop: 'toDateTime', minWidth: 150 },
+    { prop: 'fromDateTime', minWidth: 150, renderer: 'dateTimeRenderer' },
+    { prop: 'toDateTime', minWidth: 150, renderer: 'dateTimeRenderer' },
     { prop: 'userFullName', minWidth: 100 },
   ];
 
@@ -59,6 +61,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
     private gridService: GridService,
     private attributeService: AttributeService,
     private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService
   ) {
     super();
   }
