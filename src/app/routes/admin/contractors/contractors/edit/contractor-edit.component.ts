@@ -15,6 +15,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
+import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-contractor-edit',
@@ -27,6 +28,7 @@ export class ContractorEditComponent implements OnInit {
 
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
+  canViewAttributes: boolean;
 
   private contractorId = (<any>this.route.params).value.contractorId;
 
@@ -37,16 +39,20 @@ export class ContractorEditComponent implements OnInit {
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
-  ) {}
+    private userPermissionsService: UserPermissionsService
+  ) { }
 
   ngOnInit(): void {
     combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
-      this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : of(null)
+      this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : of(null),
+      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
     )
     .pipe(first())
-    .subscribe(([ contractorTypeOptions, userOptions, contractor ]) => {
+    // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
+    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes]) => {
+      this.canViewAttributes = true;
       const label = makeKey('contractors.grid');
       this.controls = [
         { label: label('name'), controlName: 'name', type: 'text', required: true },
@@ -84,5 +90,9 @@ export class ContractorEditComponent implements OnInit {
 
   onManagersClick(): void {
     this.router.navigate([`/admin/contractors/${this.contractorId}/managers`]);
+  }
+
+  onAttributesClick(): void {
+    this.router.navigate([`/admin/contractors/${this.contractorId}/attributes`]);
   }
 }

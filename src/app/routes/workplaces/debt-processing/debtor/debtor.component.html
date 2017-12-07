@@ -37,7 +37,8 @@
   <app-tab [title]="'debtor.documentsTab.title'" [closable]="false">
     <app-document-grid
       *ngIf="(personId$ | async) && tabs[4].isInitialised"
-      [personId]="personId$ | async"
+      [entityId]="debtId$ | async"
+      [entityType]="19"
     ></app-document-grid>
   </app-tab>
 

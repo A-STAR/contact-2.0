@@ -1,10 +1,18 @@
-<div>
-  <button class="btn btn-default" (click)="onBack()">
-    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
-  </button>
-  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit()">
-    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-  </button>
+<div class="row">
+  <div class="col-md-6">
+    <button class="btn btn-default" (click)="onBack()">
+      <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+    </button>
+    <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+    </button>
+  </div>
+
+  <div class="col-md-6 text-right">
+    <button class="btn btn-default" (click)="onAttributesClick()" [disabled]="!canViewAttributes">
+      <i class="icon-people"></i> {{ 'contractors.buttons.attributes' | translate }}
+    </button>
+  </div>
 </div>
 
 <br>

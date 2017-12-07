@@ -38,7 +38,10 @@
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Reference",
-        "PORTFOLIOS": "Portfolios",
+        "PORTFOLIOS_CONTRACTORS": "Portfolios and contractors",
+        "PORTFOLIO_EDIT": "Portfolio",
+        "PORTFOLIO_ATTRIBUTES": "Portfolio attributes",
+        "CONTRACTOR_ATTRIBUTES": "Contractor attributes",
         "CONTRACTOR": "Contractor",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
         "CONTRACTOR_MANAGER": "Contractor Manager",
@@ -1053,6 +1056,7 @@
       "accessDenied": "Access to contractors list denied"
     },
     "buttons": {
+      "attributes": "Attributes",
       "managers": "Managers"
     }
   },
@@ -1299,6 +1303,9 @@
         "delete": {
           "title": "Delete attribute",
           "confirmMessage": "Are you sure you want to delete attribute {{ name }}?"
+        },
+        "version": {
+          "title": "Attribute version edit"
         }
       },
       "grid": {
@@ -1307,6 +1314,8 @@
         "value": "Value",
         "userFullName": "Operator",
         "changeDateTime": "Change date/time",
+        "fromDateTime": "Date start",
+        "toDateTime": "Date end",
         "comment": "Comments",
         "typeCode": "Data Type",
         "dictNameCode": "Dictionary",
@@ -2212,6 +2221,7 @@
       "undo": "Undo",
       "upload": "Upload",
       "visit": "Visit",
+      "version": "Version history",
       "start": "Start",
       "stop": "Stop"
     },
