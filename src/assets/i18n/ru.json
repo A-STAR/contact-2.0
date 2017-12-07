@@ -39,6 +39,8 @@
         "CONSTANTS": "Константы",
         "DICTIONARIES": "Справочники",
         "PORTFOLIOS": "Клиенты и портфели",
+        "PORTFOLIO": "Портфель",
+        "ATTRIBUTES": "Атрибуты",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
         "CONTRACTOR_MANAGER": "Менеджер контрагента",
@@ -1051,6 +1053,7 @@
       "accessDenied": "Доступ к списку контрагентов ограничен"
     },
     "buttons": {
+      "attributes": "Атрибуты",
       "managers": "Менеджеры"
     }
   },
@@ -1297,6 +1300,9 @@
         "delete": {
           "title": "Удалить атрибут",
           "confirmMessage": "Вы действительно хотите удалить атрибут {{ name }}?"
+        },
+        "version": {
+          "title": "Редактирование версии"
         }
       },
       "grid": {
@@ -1305,6 +1311,8 @@
         "value": "Значение",
         "userFullName": "Оператор",
         "changeDateTime": "Дата/время изменения",
+        "fromDateTime": "Дата начала",
+        "toDateTime": "Дата окончания",
         "comment": "Комментарий",
         "typeCode": "Тип данных",
         "dictNameCode": "Словарь",
@@ -2212,6 +2220,7 @@
       "undo": "Отменить",
       "upload": "Загрузить",
       "visit": "Выезд",
+      "version": "История версий",
       "start": "Запустить",
       "stop": "Остановить"
     },
