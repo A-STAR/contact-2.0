@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { OpenDebtCardService } from './debt-card-open.service';
 
-import { DialogActionModule } from '../../../components/dialog-action/dialog-action.module';
+import { InfoDialogModule } from '../../../components/dialog/info/info-dialog.module';
 import { DebtCardOpenComponent } from './debt-card-open.component';
 
 
 @NgModule({
   imports: [
     CommonModule,
-    DialogActionModule,
+    InfoDialogModule,
+    TranslateModule,
   ],
   exports: [
     DebtCardOpenComponent,

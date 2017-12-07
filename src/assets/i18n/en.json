@@ -7,6 +7,10 @@
       "title": "License",
       "info": "Your license number is"
     },
+    "noDebts": {
+      "userId": "User Id",
+      "title": "No debts"
+    },
     "account": {
       "title": "Account",
       "logout": "Logout",
