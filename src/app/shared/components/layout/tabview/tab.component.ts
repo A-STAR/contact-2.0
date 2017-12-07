@@ -8,7 +8,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class TabViewTabComponent {
   @Input() title: string;
   @Input() active = false;
-  @Input() closable = true;
+  @Input() closable = false;
   @Input() disabled = false;
 
   @Output() onClose = new EventEmitter<number>();

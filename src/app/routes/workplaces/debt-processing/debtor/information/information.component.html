@@ -7,4 +7,8 @@
   </ng-container>
 </div>
 
-<app-container [node]="node"></app-container>
+<app-tabview (select)="onTabSelect($event)" [noMargin]="true">
+  <app-tabview-tab *ngFor="let tab of tabs" [title]="tab.title">
+    <app-container *ngIf="tab.isInitialised" [node]="tab"></app-container>
+  </app-tabview-tab>
+</app-tabview>

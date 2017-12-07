@@ -9,6 +9,11 @@ export class DebtsComponent {
   debtId: number;
   debtStatusCode: number;
 
+  tabs = [
+    { isInitialised: true },
+    { isInitialised: true },
+  ];
+
   constructor(
     private cdRef: ChangeDetectorRef,
   ) {}
@@ -17,5 +22,9 @@ export class DebtsComponent {
     this.debtId = debt.id;
     this.debtStatusCode = debt.statusCode;
     this.cdRef.markForCheck();
+  }
+
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
   }
 }

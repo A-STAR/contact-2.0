@@ -125,7 +125,7 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
       request = (grid.grid as MetadataGridComponent<any>).grid.buildRequest(params, filters);
       // grid.grid.deselectAll();
     } else {
-      console.log('wrong component using');
+      // console.log('wrong component using');
     }
     const body = { columns, ...request };
     this.downloader.download(body);
