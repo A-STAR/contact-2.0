@@ -46,6 +46,21 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   person: Partial<IPerson & IDebt>;
   controls: IDynamicFormItem[];
   dialog: 'registerContact' = null;
+  // nice, isn't it?
+  tabs = [
+    { isInitialised: true },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+  ];
 
   private personSubscription: Subscription;
 
@@ -123,6 +138,10 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
     this.setDialog();
     this.debtorService.navigateToRegistration({ personId: this.person.id, personRole: 1, contactType, contactId });
+  }
+
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
   }
 
   private getControls(canEdit: boolean): IDynamicFormItem[] {

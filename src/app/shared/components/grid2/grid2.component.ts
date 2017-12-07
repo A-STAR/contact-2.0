@@ -576,14 +576,26 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     switch (column.dataType) {
       case 2:
       case 7:
-        return { cellEditorFramework: DatePickerComponent };
+        return {
+          cellEditorFramework: DatePickerComponent,
+        };
       case 4:
         // TODO(d.maltsev): boolean
         return null;
       case 6:
-        return { cellEditor: 'select', cellEditorParams: { values: [ 'Foo', 'Bar', 'Baz' ] } };
+        return {
+          // TODO(d.maltsev):
+          // This doesn't work with key-value pairs
+          // Use `richSelect` when this is fixed: https://github.com/ag-grid/ag-grid/issues/2033
+          cellEditor: 'select',
+          cellEditorParams: {
+            values: column.filterValues.map(value => value.name)
+          },
+        };
       default:
-        return { cellEditor: 'text' };
+        return {
+          cellEditor: 'text',
+        };
     }
   }
 

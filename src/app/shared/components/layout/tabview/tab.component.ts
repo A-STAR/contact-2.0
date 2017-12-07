@@ -1,11 +1,11 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-sleek-tab',
+  selector: 'app-tabview-tab',
   templateUrl: './tab.component.html',
   styleUrls: ['./tab.component.scss'],
 })
-export class SleekTabComponent {
+export class TabViewTabComponent {
   @Input() title: string;
   @Input() active = false;
   @Input() closable = true;

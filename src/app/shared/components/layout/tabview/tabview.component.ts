@@ -10,17 +10,17 @@ import {
   QueryList,
 } from '@angular/core';
 
-import { SleekTabComponent } from './tab.component';
+import { TabViewTabComponent } from './tab.component';
 
 @Component({
-  selector: 'app-sleek-tabstrip',
-  templateUrl: 'tabstrip.component.html',
-  styleUrls: ['./tabstrip.component.scss'],
+  selector: 'app-tabview',
+  templateUrl: 'tabview.component.html',
+  styleUrls: ['./tabview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class SleekTabstripComponent implements AfterContentInit {
-  @ContentChildren(SleekTabComponent) tabs: QueryList<SleekTabComponent>;
+export class TabViewComponent implements AfterContentInit {
+  @ContentChildren(TabViewTabComponent) tabs: QueryList<TabViewTabComponent>;
 
   @Output() select = new EventEmitter<number>();
 
@@ -38,16 +38,23 @@ export class SleekTabstripComponent implements AfterContentInit {
     }
   }
 
-  selectTab(event: MouseEvent, tab: SleekTabComponent): void {
+  selectTab(event: MouseEvent, tab: TabViewTabComponent): void {
     if (tab.disabled) {
       return;
     }
+
+    const tabIndex = this.getTabIndex(tab);
+    const activeIndex = this.tabs.toArray().findIndex(el => el.active);
+
     // deactivate all tabs
     this.tabs.toArray().forEach(el => el.active = false);
-    // activate the tab the user has clicked on
+
+    // activate the tab the user has clicked on only if the selection is different
     tab.active = true;
-    const tabIndex = this.getTabIndex(tab);
-    this.select.emit(tabIndex);
+    if (activeIndex !== tabIndex) {
+      this.select.emit(tabIndex);
+    }
+
     if (!event) {
       return;
     }
@@ -74,7 +81,6 @@ export class SleekTabstripComponent implements AfterContentInit {
     // Get the center of the element
     const x = event.pageX - posX - buttonWidth / 2;
     const y = event.pageY - posY - buttonHeight / 2;
-    console.log(event.pageY, posY, buttonHeight);
     $(this.el.nativeElement)
       .find('.ripple')
       .css({
@@ -86,7 +92,7 @@ export class SleekTabstripComponent implements AfterContentInit {
       .addClass('rippleEffect');
   }
 
-  private getTabIndex(tab: SleekTabComponent): number {
+  private getTabIndex(tab: TabViewTabComponent): number {
     return this.tabs.toArray().findIndex(el => el === tab);
   }
 }

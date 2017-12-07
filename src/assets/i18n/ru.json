@@ -139,6 +139,9 @@
   },
   "modules": {
     "callCenter": {
+      "main": {
+        "title": "Выбор кампании"
+      },
       "grid": {
         "name": "Название",
         "comment": "Описание"
@@ -2207,8 +2210,8 @@
       "delete": "Удалить",
       "download": "Скачать",
       "edit": "Редактировать",
-      "exportToExcel": "Экспорт в Excel",
-      "excel": "Экспорт в Excel",
+      "exportToExcel": "Выгрузка",
+      "excel": "Выгрузка",
       "move": "Переместить",
       "next": "Далее",
       "ok": "OK",
