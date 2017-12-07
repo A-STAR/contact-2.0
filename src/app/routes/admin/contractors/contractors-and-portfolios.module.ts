@@ -44,11 +44,7 @@ const routes: Routes = [
           },
         ]
       },
-      {
-        path: 'attributes', children: [
-          { path: '', component: ContractorAttributesComponent }
-        ]
-      }
+      { path: 'attributes', component: ContractorAttributesComponent }
     ],
   },
 ];
