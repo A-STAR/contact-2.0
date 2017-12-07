@@ -928,6 +928,7 @@
     "birthPlace": "Место рождения",
     "familyStatusCode": "Семейное положение",
     "educationCode": "Образование",
+    "stageCode": "Стадия",
     "stringValue1": "Строковый атрибут 1",
     "stringValue2": "Строковый атрибут 2",
     "stringValue3": "Строковый атрибут 3",

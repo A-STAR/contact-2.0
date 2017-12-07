@@ -28,7 +28,7 @@ export class PersonComponent implements OnInit, OnDestroy {
   controls: IDynamicFormItem[];
 
   // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=108101644#id-Списокатрибутовсущностей-person
-  private attributeIds = range(363, 372);
+  private attributeIds = range(363, 372).concat(395);
   private personSubscription: Subscription;
 
   constructor(
@@ -40,6 +40,7 @@ export class PersonComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.attributeIds);
     this.personSubscription = Observable.combineLatest(
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
       this.userPermissionsService.has('PERSON_COMMENT_EDIT'),
@@ -114,6 +115,14 @@ export class PersonComponent implements OnInit, OnDestroy {
         display: displayedStringValues.includes(id) && attributes[id].isUsed,
         required: attributes[id].isMandatory,
       }) as IDynamicFormItem),
+      {
+        label: 'person.stageCode',
+        controlName: 'stageCode',
+        type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE,
+        disabled: !canEdit,
+        width: 3,
+      },
       {
         label: 'person.comment',
         controlName: 'comment',

@@ -928,6 +928,7 @@
     "birthPlace": "Place of birth",
     "familyStatusCode": "Marital status",
     "educationCode": "Education",
+    "stageCode": "Stage",
     "stringValue1": "String attribute 1",
     "stringValue2": "String attribute 2",
     "stringValue3": "String attribute 3",
