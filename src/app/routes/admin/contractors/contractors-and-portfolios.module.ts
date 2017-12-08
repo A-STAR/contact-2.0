@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ContractorsModule } from './contractors/contractors.module';
 import { PortfoliosModule } from './portfolios/portfolios.module';
 import { SharedModule } from '../../../shared/shared.module';
+import { ContractorsAndPortfoliosVersionModule } from './version/contractors-and-portfolios-version.module';
 
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 
@@ -14,8 +15,7 @@ import { ContractorManagerEditComponent } from './contractors/managers/edit/mana
 import { PortfolioEditComponent } from './portfolios/edit/portfolio-edit.component';
 import { ContractorAttributesComponent } from './contractors/edit/attributes/contractor-attributes.component';
 import { PortfolioAttributesComponent } from './portfolios/edit/attributes/portfolio-attributes.component';
-// tslint:disable-next-line
-import { AttributeVersionComponent } from '../../../shared/gui-objects/widgets/entity-attribute/grid/version/attribute-version.component';
+import { ContractorsAndPortfoliosVersionComponent } from './version/contractors-and-portfolios-version.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: ContractorsAndPortfoliosComponent },
@@ -41,7 +41,7 @@ const routes: Routes = [
                 path: 'attributes', children: [
                   { path: '', component: PortfolioAttributesComponent },
                   {
-                    path: 'versions', component: AttributeVersionComponent
+                    path: 'versions', component: ContractorsAndPortfoliosVersionComponent
                   }
                 ]
               }
@@ -52,7 +52,7 @@ const routes: Routes = [
       {
         path: 'attributes', component: ContractorAttributesComponent, children: [
           {
-            path: 'versions', component: AttributeVersionComponent
+            path: 'versions', component: ContractorsAndPortfoliosVersionComponent
           }
         ]
       }
@@ -64,6 +64,7 @@ const routes: Routes = [
   imports: [
     ContractorsModule,
     PortfoliosModule,
+    ContractorsAndPortfoliosVersionModule,
     RouterModule.forChild(routes),
     SharedModule,
   ],
@@ -71,7 +72,7 @@ const routes: Routes = [
     RouterModule,
   ],
   declarations: [
-    ContractorsAndPortfoliosComponent,
+    ContractorsAndPortfoliosComponent
   ],
   providers: [
     ContractorsAndPortfoliosService

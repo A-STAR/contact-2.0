@@ -9,7 +9,6 @@ import { AttributeVersionModule } from './version/attribute-version.module';
 import { AttributeGridComponent } from './attribute-grid.component';
 import { AttributeVersionComponent } from './version/attribute-version.component';
 
-import { Routes, RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -21,6 +20,7 @@ import { Routes, RouterModule } from '@angular/router';
   ],
   exports: [
     AttributeGridComponent,
+    AttributeVersionComponent
   ],
   declarations: [
     AttributeGridComponent,

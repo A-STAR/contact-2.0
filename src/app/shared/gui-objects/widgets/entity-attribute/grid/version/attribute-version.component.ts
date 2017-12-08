@@ -7,7 +7,6 @@ import {
   ViewChild,
   Input
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -35,11 +34,9 @@ import { combineLatestAnd } from '../../../../../../core/utils/helpers';
 })
 export class AttributeVersionComponent extends DialogFunctions implements OnInit, OnDestroy {
 
-  static COMPONENT_NAME = 'AttributeVersionComponent';
-
-  selectedAttribute: IAttribute;
-  entityId: number;
-  entityTypeId: number;
+  @Input() selectedAttribute: IAttribute;
+  @Input() entityId: number;
+  @Input() entityTypeId: number;
 
   @ViewChild(GridComponent) grid: GridComponent;
 
@@ -87,7 +84,6 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
     private gridService: GridService,
     private attributeService: AttributeService,
     private userPermissionsService: UserPermissionsService,
@@ -108,13 +104,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
       this.cdRef.markForCheck();
     });
 
-    this.entitySubscription = this.route.params
-      .switchMap(params => {
-        this.selectedAttribute = params.selectedAttribute;
-        this.entityId = params.entityId;
-        this.entityTypeId = params.entityTypeId;
-        return this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId);
-      })
+    this.entitySubscription = this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
       .subscribe(canView => {
 
         if (canView && this.entityTypeId && this.selectedAttribute && this.selectedAttribute.userId) {

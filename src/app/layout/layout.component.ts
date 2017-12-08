@@ -13,7 +13,6 @@ import { ContentTabService } from '../shared/components/content-tabstrip/tab/con
 export class LayoutComponent {
   titles = {
     ActionsLogComponent: 'ACTIONS_LOG',
-    AttributeVersionComponent: 'ATTRIBUTE_VERSION',
     CallCenterComponent: 'CALL_CENTER',
     CampaignComponent: 'CALL_CENTER',
     CampaignsComponent: 'CAMPAIGNS',
@@ -22,6 +21,7 @@ export class LayoutComponent {
     ContactRegistrationComponent: 'CONTACT_REGISTRATION',
     ContactPropertiesComponent: 'CONTACT_TREES',
     ContractorsAndPortfoliosComponent: 'PORTFOLIOS_CONTRACTORS',
+    ContractorsAndPortfoliosVersionComponent: 'ATTRIBUTE_VERSION',
     ContractorAttributesComponent: 'CONTRACTOR_ATTRIBUTES',
     ContractorEditComponent: 'CONTRACTOR',
     ContractorManagersComponent: 'CONTRACTOR_MANAGERS',
