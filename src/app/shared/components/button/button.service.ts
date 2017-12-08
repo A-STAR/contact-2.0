@@ -33,6 +33,7 @@ export class ButtonService {
     unblock:          { icon: 'fa fa-unlock',           label: 'default.buttons.unblock'          },
     undo:             { icon: 'fa fa-undo',             label: 'default.buttons.undo'             },
     upload:           { icon: 'fa fa-cloud-upload',     label: 'default.buttons.upload'           },
+    version:          { icon: 'fa fa-code-fork',        label: 'default.buttons.version'          },
     visit:            { icon: 'fa fa-bus',              label: 'default.buttons.visit'            },
   };
 

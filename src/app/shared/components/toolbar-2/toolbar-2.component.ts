@@ -41,6 +41,7 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_UNBLOCK]: 'unblock',
     [ToolbarItemTypeEnum.BUTTON_UNDO]: 'undo',
     [ToolbarItemTypeEnum.BUTTON_UPLOAD]: 'upload',
+    [ToolbarItemTypeEnum.BUTTON_VERSION]: 'version',
     [ToolbarItemTypeEnum.BUTTON_VISIT]: 'visit',
   };
 

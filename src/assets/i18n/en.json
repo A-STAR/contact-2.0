@@ -7,6 +7,10 @@
       "title": "License",
       "info": "Your license number is"
     },
+    "noDebts": {
+      "userId": "User Id",
+      "title": "No debts"
+    },
     "account": {
       "title": "Account",
       "logout": "Logout",
@@ -34,8 +38,12 @@
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Reference",
-        "PORTFOLIOS": "Portfolios",
+        "PORTFOLIOS_CONTRACTORS": "Portfolios and contractors",
+        "PORTFOLIO_EDIT": "Portfolio",
+        "PORTFOLIO_ATTRIBUTES": "Portfolio attributes",
+        "CONTRACTOR_ATTRIBUTES": "Contractor attributes",
         "CONTRACTOR": "Contractor",
+        "ATTRIBUTES": "Attributes",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
         "CONTRACTOR_MANAGER": "Contractor Manager",
         "DEPARTMENTS": "Departments",
@@ -132,6 +140,9 @@
   },
   "modules": {
     "callCenter": {
+      "main": {
+        "title": "Сampaign selection"
+      },
       "grid": {
         "name": "Name",
         "comment": "Description"
@@ -763,6 +774,7 @@
     "responsibleFullName": "Manager",
     "reward": "Remuneration",
     "shortInfo": "Short info",
+    "stageCode": "Stage",
     "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",
@@ -1047,6 +1059,7 @@
       "accessDenied": "Access to contractors list denied"
     },
     "buttons": {
+      "attributes": "Attributes",
       "managers": "Managers"
     }
   },
@@ -1293,6 +1306,9 @@
         "delete": {
           "title": "Delete attribute",
           "confirmMessage": "Are you sure you want to delete attribute {{ name }}?"
+        },
+        "version": {
+          "title": "Attribute version edit"
         }
       },
       "grid": {
@@ -1301,6 +1317,8 @@
         "value": "Value",
         "userFullName": "Operator",
         "changeDateTime": "Change date/time",
+        "fromDateTime": "Date start",
+        "toDateTime": "Date end",
         "comment": "Comments",
         "typeCode": "Data Type",
         "dictNameCode": "Dictionary",
@@ -1604,8 +1622,10 @@
         "terminate": "Terminate Work"
       },
       "grid": {
+        "account": "Account",
         "id": "ID",
         "portfolioId": "Portfolio",
+        "stageCode": "Stage",
         "bankId": "Bank",
         "creditTypeCode": "Credit type",
         "creditName": "Credit name",
@@ -1613,6 +1633,7 @@
         "statusCode": "Status",
         "creditStartDate": "Credit start date",
         "creditEndDate": "Credit end date",
+        "debtDate": "Debt date",
         "regionCode": "Region",
         "branchCode": "Branch",
         "currencyId": "Currency",
@@ -2190,8 +2211,8 @@
       "delete": "Delete",
       "download": "Download",
       "edit": "Edit",
-      "exportToExcel": "Export to Excel",
-      "excel": "Export to Excel",
+      "exportToExcel": "Export",
+      "excel": "Export",
       "move": "Move",
       "next": "Next",
       "ok": "OK",
@@ -2206,6 +2227,7 @@
       "undo": "Undo",
       "upload": "Upload",
       "visit": "Visit",
+      "version": "Version history",
       "start": "Start",
       "stop": "Stop"
     },
@@ -2310,7 +2332,8 @@
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
         "statusChange": "Change status",
-        "visitAdd": "Make necessary"
+        "visitAdd": "Make necessary",
+        "openUserById": "Open debtor card"
       }
     },
     "filter": {

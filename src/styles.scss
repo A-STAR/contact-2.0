@@ -4,11 +4,10 @@
 @import './app/shared/styles/bootstrap.scss';
 
 //== Application
-@import './app/core/preloader/preloader.scss';
 @import './app/shared/styles/app.scss';
 @import '~primeng/resources/primeng.min.css';
-@import './app/shared/styles/primeng/theme/omega.scss';
-@import './app/shared/styles/swimlane/theme/material/theme.scss';
+@import './app/shared/styles/primeng/omega.scss';
+@import './app/shared/styles/swimlane/material.scss';
 
 //== Vendor
 @import '../node_modules/angular2-toaster/toaster';

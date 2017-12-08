@@ -3,10 +3,12 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
 import { IPerson } from '../../debtor.interface';
 import { IUserConstant } from '../../../../../../core/user/constants/user-constants.interface';
 
 import { DebtorService } from '../../debtor.service';
+import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { UserConstantsService } from '../../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
@@ -25,11 +27,14 @@ export class PersonComponent implements OnInit, OnDestroy {
 
   controls: IDynamicFormItem[];
 
+  // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=108101644#id-Списокатрибутовсущностей-person
+  private attributeIds = range(363, 372).concat(395);
   private personSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtorService: DebtorService,
+    private entityAttributesService: EntityAttributesService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -39,9 +44,10 @@ export class PersonComponent implements OnInit, OnDestroy {
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
       this.userPermissionsService.has('PERSON_COMMENT_EDIT'),
       this.userConstantsService.get('Person.Individual.AdditionalAttribute.List'),
+      this.entityAttributesService.getAttributes(this.attributeIds),
     )
-    .subscribe(([ canEdit, canEditComment, stringValues ]) => {
-      this.controls = this.getControls(canEdit, canEditComment, stringValues);
+    .subscribe(([ canEdit, canEditComment, stringValues, attributes ]) => {
+      this.controls = this.getControls(canEdit, canEditComment, stringValues, attributes);
       this.cdRef.markForCheck();
     });
   }
@@ -54,7 +60,12 @@ export class PersonComponent implements OnInit, OnDestroy {
     return this.debtorService.debtor$;
   }
 
-  protected getControls(canEdit: boolean, canEditComment: boolean, stringValues: IUserConstant): IDynamicFormItem[] {
+  protected getControls(
+    canEdit: boolean,
+    canEditComment: boolean,
+    stringValues: IUserConstant,
+    attributes: IEntityAttributes,
+  ): IDynamicFormItem[] {
     const displayedStringValues = stringValues.valueS.split(',').map(Number);
     return [
       {
@@ -95,12 +106,13 @@ export class PersonComponent implements OnInit, OnDestroy {
         disabled: !canEdit,
         width: 3,
       },
-      ...range(1, 10).map(i => ({
-        label: `person.stringValue${i}`,
-        controlName: `stringValue${i}`,
+      ...this.attributeIds.map((id, i) => ({
+        label: `person.stringValue${i + 1}`,
+        controlName: `stringValue${i + 1}`,
         type: 'text',
         width: 3,
-        display: displayedStringValues.includes(i),
+        display: displayedStringValues.includes(id) && attributes[id].isUsed,
+        required: attributes[id].isMandatory,
       }) as IDynamicFormItem),
       {
         label: 'person.comment',

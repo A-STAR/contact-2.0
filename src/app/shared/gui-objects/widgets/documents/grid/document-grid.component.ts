@@ -13,6 +13,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
+import { first } from 'rxjs/operators';
 
 import { IDocument } from '../document.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -34,9 +35,11 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
+  @Input() action: 'edit' | 'download' = 'edit';
   @Input() callCenter = false;
+  @Input() entityType: number;
   @Input() hideToolbar = false;
-  @Input() personId: number;
+  @Input() entityId: number;
 
   @ViewChild('downloader') downloader: DownloaderComponent;
 
@@ -138,7 +141,16 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(document: IDocument): void {
-    this.onEdit(document.id);
+    this.selectedDocumentId$.next(document.id);
+    switch (this.action) {
+      case 'edit':
+        this.onEdit(document.id);
+        break;
+      case 'download':
+        this.cdRef.detectChanges();
+        this.onDownload();
+        break;
+    }
   }
 
   onSelect(document: IDocument): void {
@@ -150,7 +162,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   onRemoveDialogSubmit(): void {
-    this.documentService.delete(18, this.personId, this.selectedDocumentId$.value, this.callCenter)
+    this.selectedDocument$
+      .pipe(first())
+      .flatMap(document => {
+        return this.documentService.delete(document.entityTypeCode, this.entityId, document.id, this.callCenter);
+      })
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -199,7 +215,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.documentService.fetchAll(18, this.personId, this.callCenter)
+    this.documentService.fetchAll(this.entityType, this.entityId, this.callCenter)
       .subscribe(documents => {
         this.documents = documents;
         this.selectedDocumentId$.next(null);

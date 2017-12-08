@@ -11,6 +11,7 @@ import { PromiseResolveModule } from '../../gui-objects/widgets/promise-resolve/
 import { PaymentOperatorModule } from '../../gui-objects/widgets/payment-operator/payment-operator.module';
 import { VisitAddModule } from '../../gui-objects/widgets/visit-add/visit-add.module';
 import { SmsDeleteModule } from '../../gui-objects/widgets/sms-delete/sms-delete.module';
+import { OpenDebtCardModule } from '../../gui-objects/widgets/debt-card-open/debt-card-open.module';
 
 import { ActionGridComponent } from './action-grid.component';
 
@@ -22,6 +23,7 @@ import { ActionGridComponent } from './action-grid.component';
     EntityGroupModule,
     GridModule,
     MetadataGridModule,
+    OpenDebtCardModule,
     PaymentConfirmModule,
     PaymentOperatorModule,
     PromiseResolveModule,

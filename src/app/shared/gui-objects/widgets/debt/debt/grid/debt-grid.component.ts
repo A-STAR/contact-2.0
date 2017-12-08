@@ -96,9 +96,11 @@ export class DebtGridComponent {
   columns: Array<IGridColumn> = [
     { prop: 'id' },
     { prop: 'creditTypeCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
+    { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
     { prop: 'creditName' },
     { prop: 'contract' },
-    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS },
+    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE },
+    { prop: 'account'},
     { prop: 'creditStartDate', renderer: 'dateRenderer' },
     { prop: 'currencyId', lookupKey: 'currencies' },
     { prop: 'debtAmount', renderer: 'numberRenderer' },

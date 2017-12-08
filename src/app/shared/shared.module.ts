@@ -58,13 +58,13 @@ import { RadioGroupModule } from './components/form/radio-group/radio-group.modu
 import { RichTextEditorModule } from './components/form/rich-text-editor/rich-text-editor.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
 import { TabstripModule } from './components/tabstrip/tabstrip.module';
+import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TimeModule } from './components/form/time/time.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
 import { ValueInputModule } from './components/form/value/value.module';
 
-import { IconsService } from './icons/icons.service';
 import { QBuilderService } from './components/qbuilder/qbuilder.service';
 
 import { NumericInputComponent } from './components/form/numeric-input/numeric-input.component';
@@ -117,6 +117,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     RichTextEditorModule,
     SpinnerModule,
     TabstripModule,
+    TabViewModule,
     ToasterModule,
     ToolbarModule,
     Toolbar2Module,
@@ -126,7 +127,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
   ],
   providers: [
     ColorsService,
-    IconsService,
     QBuilderService
   ],
   declarations: [
@@ -200,6 +200,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     RouterOutlet2Directive,
     SpinnerModule,
     TabstripModule,
+    TabViewModule,
     ToolbarModule,
     Toolbar2Module,
     TreeModule,

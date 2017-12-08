@@ -5,6 +5,7 @@ import { SelectModule } from '../form/select/select.module';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { ToolbarComponent } from './toolbar.component';
+import { ToolbarService } from './toolbar.service';
 
 @NgModule({
   imports: [
@@ -17,6 +18,9 @@ import { ToolbarComponent } from './toolbar.component';
   ],
   declarations: [
     ToolbarComponent,
+  ],
+  providers: [
+    ToolbarService,
   ]
 })
 export class ToolbarModule { }

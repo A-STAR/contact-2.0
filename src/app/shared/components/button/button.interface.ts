@@ -35,6 +35,7 @@ export type IButtonType =
   'unblock' |
   'undo' |
   'upload' |
+  'version' |
   'visit';
 
 export type IButtonStylesConfig = {

@@ -6,10 +6,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
-
+import { AuthService } from './auth.service';
+import { ContentTabService } from '../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthEffects {
@@ -68,9 +68,18 @@ export class AuthEffects {
     });
 
   @Effect()
+    retrieveToken$ = this.actions
+      .ofType(AuthService.AUTH_RETRIEVE_TOKEN)
+      .switchMap((action: UnsafeAction) => {
+        const { token } = action.payload;
+        this.authService.initTokenTimer(token);
+        return [];
+      });
+
+  @Effect()
   createSession$ = this.actions
     .ofType(AuthService.AUTH_CREATE_SESSION)
-    .do((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { redirectAfterLogin, token } = action.payload;
       this.authService.saveToken(token);
       this.authService.saveLanguage(token);
@@ -78,27 +87,24 @@ export class AuthEffects {
       if (redirectAfterLogin !== false) {
         this.authService.redirectAfterLogin();
       }
-    })
-    .switchMap(() => []);
+      return [];
+    });
 
   @Effect()
   destroySession$ = this.actions
     .ofType(AuthService.AUTH_DESTROY_SESSION)
-    .do((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       this.authService.removeToken();
       this.authService.clearTokenTimer();
       if (!action.payload || action.payload.redirectToLogin !== false) {
         this.authService.redirectToLogin(action.payload ? action.payload.url : null);
       }
-    })
-    .switchMap(() => [
-      {
-        type: AuthService.AUTH_GLOBAL_RESET
-      }
-    ]);
+      return [{ type: AuthService.AUTH_GLOBAL_RESET }];
+    });
 
   constructor(
     private actions: Actions,
+    private tabService: ContentTabService,
     private authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationsService,
@@ -119,6 +125,8 @@ export class AuthEffects {
   }
 
   private logout(): Observable<void> {
+    this.tabService.saveState();
+    this.tabService.tabs = [];
     return this.dataService.get('/auth/logout', {});
   }
 

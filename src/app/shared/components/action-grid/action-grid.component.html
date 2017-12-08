@@ -1,3 +1,10 @@
+<app-open-debt-card
+  *ngIf="isDialog('openUserById')"
+  [userId]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+  >
+</app-open-debt-card>
+
 <app-visit-add-dialog
   *ngIf="isDialog('addVisit')"
   [visitParams]="getConfiguredParams('addVisit')"

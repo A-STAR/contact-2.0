@@ -1,0 +1,64 @@
+<app-dialog-action
+  *ngIf="isDialog('errorLogPrompt')"
+  titleTranslationKey="modules.paymentsUpload.dialogs.error.title"
+  actionTranslationKey="modules.paymentsUpload.dialogs.error.message"
+  actionMessage="default.buttons.ok"
+  actionMode="primary"
+  (action)="onErrorLogSubmit()"
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
+
+<app-dialog-action
+  *ngIf="isDialog('cancel')"
+  titleTranslationKey="modules.paymentsUpload.dialogs.cancel.title"
+  actionTranslationKey="modules.paymentsUpload.dialogs.cancel.message"
+  actionMessage="default.buttons.ok"
+  actionMode="danger"
+  (action)="onCancelSubmit()"
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
+
+<div class="mb">
+  <div class="row">
+    <div class="col-md-9">
+      <app-button label="Открыть файл" [disabled]="hasFile" (click)="onFileOpenClick()"></app-button>
+      <app-button label="Сохранить в БД" [disabled]="!hasFile || hasErrors" (click)="onSaveClick()"></app-button>
+      <app-button label="Отмена" [disabled]="!hasFile" (click)="onCancelClick()"></app-button>
+    </div>
+    <div class="col-md-3">
+      <app-select-wrapper
+        [dictCode]="62"
+        [disabled]="hasFile"
+        [ngModel]="format"
+        [nullable]="false"
+        (ngModelChange)="onFormatChange($event)"
+      ></app-select-wrapper>
+    </div>
+  </div>
+</div>
+
+<div hidden>
+  <input #fileInput type="file" accept=".xls,.xlsx" (change)="onFileChange()">
+</div>
+
+<ng-container *ngIf="columns">
+  <div class="mb">
+    <app-button label="Следующая проблемная ячейка" (click)="onNextProblematicCellClick()"></app-button>
+    <app-button label="Следующая критичная ячейка" (click)="onNextCriticalCellClick()"></app-button>
+  </div>
+  <app-grid2
+    [actions]="actions"
+    [columns]="columns"
+    [ngClass]="'payments-upload'"
+    [persistenceKey]="'payments-upload'"
+    [rowIdKey]="rowIdKey"
+    [rows]="rows"
+    [rowCount]="rowCount"
+    (action)="onAction($event)"
+    (onFilter)="onRequest()"
+    (onPage)="onRequest()"
+    (onPageSize)="onRequest()"
+    (onSort)="onRequest()"
+    (cellValueChange)="onCellValueChange($event)"
+  ></app-grid2>
+</ng-container>

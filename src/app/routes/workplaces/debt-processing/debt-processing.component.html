@@ -1,5 +1,8 @@
-<app-tabstrip [disableScrollbar]="true" [inverse]="true">
-  <app-tab *ngFor="let grid of grids" [title]="grid.title" [closable]="false">
-    <app-debt-processing-grid [gridKey]="grid.key"></app-debt-processing-grid>
-  </app-tab>
-</app-tabstrip>
+<app-tabview (select)="onTabSelect($event)">
+  <app-tabview-tab *ngFor="let grid of grids" [title]="grid.title" [closable]="false">
+    <app-debt-processing-grid
+      *ngIf="grid.isInitialised"
+      [gridKey]="grid.key"
+    ></app-debt-processing-grid>
+  </app-tabview-tab>
+</app-tabview>
