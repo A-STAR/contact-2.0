@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Inject, Component, OnInit, 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 import { IAttribute } from '../attribute.interface';
@@ -115,7 +115,6 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     private cdRef: ChangeDetectorRef,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
-    private activatedRoute: ActivatedRoute,
     private router: Router,
     @Inject('entityTypeId$') private entityTypeId$: Observable<number>,
     @Inject('entityId$') private entityId$: Observable<number>,
@@ -186,7 +185,12 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   onVersionClick(): void {
-    this.router.navigate([ `${this.router.url}/versions` ]);
+    this.router.navigate([`${this.router.url}/versions`]);
+    this.attributeService.versionParams$.next({
+      selectedAttribute: this.selectedAttribute$.value,
+      entityId: this.entityId,
+      entityTypeId: this.entityTypeId
+    });
   }
 
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
