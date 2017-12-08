@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn, IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
 
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DebtorGridService } from './debtor-grid.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { IncomingCallService } from '../incoming-call.service';
@@ -86,6 +87,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtorCardService: DebtorCardService,
     private debtorGridService: DebtorGridService,
     private gridService: GridService,
     private incomingCallService: IncomingCallService,
@@ -117,7 +119,8 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(debtor: any): void {
-    this.router.navigate([ `/workplaces/debt-processing/${debtor.debtorId}/${debtor.debtId}/` ]).then(() => {
+    this.debtorCardService.navigate({ debtId: debtor.debtId }).then(() => {
+      // TODO(d.maltsev): navigation params???
       const nextUrl = this.getUrlByDebtor(debtor);
       if (nextUrl) {
         this.router.navigate([ nextUrl ]);

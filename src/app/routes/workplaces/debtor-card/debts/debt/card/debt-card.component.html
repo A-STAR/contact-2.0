@@ -1,0 +1,24 @@
+<div class="pb-lg">
+  <button class="btn btn-default" (click)="onBack()">
+    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+  </button>
+  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
+    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+  </button>
+</div>
+
+<div class="pb-lg">
+  <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
+</div>
+
+<app-accordion *ngIf="displayDebtData">
+  <app-accordion-item title="widgets.debt.component.title">
+    <app-debt-component-grid [debtId]="debtId"></app-debt-component-grid>
+  </app-accordion-item>
+  <app-accordion-item *ngIf="canViewPortfolioLog$ | async" title="widgets.debt.portfolioLog.title">
+    <app-portfolio-log-grid></app-portfolio-log-grid>
+  </app-accordion-item>
+  <app-accordion-item *ngIf="canViewComponentLog$ | async" title="widgets.debt.componentLog.title">
+    <app-component-log-grid></app-component-log-grid>
+  </app-accordion-item>
+</app-accordion>

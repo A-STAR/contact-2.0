@@ -6,7 +6,6 @@ import { ICampaignsState } from '../../routes/utilities/campaigns/campaigns.inte
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
 import { IContractorsAndPortfoliosState } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDebtorCardState } from '../app-modules/debtor-card/debtor-card.interface';
-import { IDebtorsState } from '../../routes/workplaces/debtors/debtors.interface';
 import { IDictionariesState } from '../../routes/admin/dictionaries/dictionaries.interface';
 import { IEntityAttributesState } from '../entity/attributes/entity-attributes.interface';
 import { IGuiObjectsState } from '../gui-objects/gui-objects.interface';
@@ -28,7 +27,6 @@ export interface IAppState {
   readonly constants: IConstantsState;
   readonly contractorsAndPortfolios: IContractorsAndPortfoliosState;
   readonly debtorCard: IDebtorCardState;
-  readonly debtors: IDebtorsState;
   readonly dictionaries: IDictionariesState;
   readonly entityAttributes: IEntityAttributesState;
   readonly guiObjects: IGuiObjectsState;

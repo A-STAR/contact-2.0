@@ -13,12 +13,12 @@ export function reducer(state: IDebtorCardState = defaultState, action: IDebtorC
         ...state,
         person: action.payload.person,
       };
-    case IActionType.FETCH_PERSON_DEBTS_SUCCESS:
+    case IActionType.FETCH_DEBTS_SUCCESS:
       return {
         ...state,
         debts: action.payload.debts,
       };
-    case IActionType.SELECT_PERSON_DEBT:
+    case IActionType.SELECT_DEBT:
       return {
         ...state,
         selectedDebtId: action.payload.debtId,

@@ -1,13 +1,18 @@
 import { IDebt, IPerson } from '../app-modules.interface';
 
+export interface INavigationParams {
+  debtId: number;
+  personId: number;
+}
+
 export enum IActionType {
-  INIT_BY_DEBT_ID            = 'DEBTOR_CARD_INIT_BY_DEBT_ID',
-  INIT_BY_PERSON_ID          = 'DEBTOR_CARD_INIT_BY_PERSON_ID',
-  FETCH_PERSON               = 'DEBTOR_CARD_FETCH_PERSON',
-  FETCH_PERSON_SUCCESS       = 'DEBTOR_CARD_FETCH_PERSON_SUCCESS',
-  FETCH_PERSON_DEBTS         = 'DEBTOR_CARD_FETCH_DEBTS',
-  FETCH_PERSON_DEBTS_SUCCESS = 'DEBTOR_CARD_FETCH_DEBTS_SUCCESS',
-  SELECT_PERSON_DEBT         = 'DEBTOR_CARD_SELECT_PERSON_DEBT',
+  INIT_BY_DEBT_ID      = 'DEBTOR_CARD_INIT_BY_DEBT_ID',
+  INIT_BY_PERSON_ID    = 'DEBTOR_CARD_INIT_BY_PERSON_ID',
+  FETCH_PERSON         = 'DEBTOR_CARD_FETCH_PERSON',
+  FETCH_PERSON_SUCCESS = 'DEBTOR_CARD_FETCH_PERSON_SUCCESS',
+  FETCH_DEBTS          = 'DEBTOR_CARD_FETCH_DEBTS',
+  FETCH_DEBTS_SUCCESS  = 'DEBTOR_CARD_FETCH_DEBTS_SUCCESS',
+  SELECT_DEBT          = 'DEBTOR_CARD_SELECT_DEBT',
 }
 
 export interface IInitByDebtIdAction {
@@ -31,8 +36,8 @@ export interface IFetchPersonAction {
   };
 }
 
-export interface IFetchPersonDebtsAction {
-  type: IActionType.FETCH_PERSON_DEBTS;
+export interface IFetchDebtsAction {
+  type: IActionType.FETCH_DEBTS;
   payload: {
     personId: number;
   };
@@ -45,15 +50,15 @@ export interface IFetchPersonSuccessAction {
   };
 }
 
-export interface IFetchPersonDebtsSuccessAction {
-  type: IActionType.FETCH_PERSON_DEBTS_SUCCESS;
+export interface IFetchDebtsSuccessAction {
+  type: IActionType.FETCH_DEBTS_SUCCESS;
   payload: {
     debts: IDebt[];
   };
 }
 
 export interface ISelectPersonDebtAction {
-  type: IActionType.SELECT_PERSON_DEBT;
+  type: IActionType.SELECT_DEBT;
   payload: {
     debtId: number;
   };
@@ -61,8 +66,8 @@ export interface ISelectPersonDebtAction {
 
 export type IDebtorCardAction =
   IFetchPersonAction |
-  IFetchPersonDebtsAction |
-  IFetchPersonDebtsSuccessAction |
+  IFetchDebtsAction |
+  IFetchDebtsSuccessAction |
   IFetchPersonSuccessAction |
   IInitByDebtIdAction |
   IInitByPersonIdAction |

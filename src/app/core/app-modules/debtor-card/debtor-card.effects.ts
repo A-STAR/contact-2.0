@@ -7,8 +7,8 @@ import {
   IActionType,
   IDebtorCardAction,
   IFetchPersonAction,
-  IFetchPersonDebtsAction,
-  IFetchPersonDebtsSuccessAction,
+  IFetchDebtsAction,
+  IFetchDebtsSuccessAction,
   IFetchPersonSuccessAction,
   IInitByDebtIdAction,
   IInitByPersonIdAction,
@@ -45,11 +45,11 @@ export class DebtorCardEffects {
     });
 
   @Effect()
-  fetchPersonDebts$ = this.actions
-    .ofType(IActionType.FETCH_PERSON_DEBTS)
-    .mergeMap((action: IFetchPersonDebtsAction) => {
-      return this.fetchPersonDebts(action.payload.personId)
-        .map(person => this.createFetchPersonDebtsSuccessAction(person))
+  fetchDebts$ = this.actions
+    .ofType(IActionType.FETCH_DEBTS)
+    .mergeMap((action: IFetchDebtsAction) => {
+      return this.fetchDebts(action.payload.personId)
+        .map(person => this.createFetchDebtsSuccessAction(person))
         .catch(this.notificationService.fetchError().entity('entities.debt.gen.plural').callback());
     });
 
@@ -66,19 +66,19 @@ export class DebtorCardEffects {
         payload: { personId },
       },
       {
-        type: IActionType.FETCH_PERSON_DEBTS,
+        type: IActionType.FETCH_DEBTS,
         payload: { personId },
       },
       {
-        type: IActionType.SELECT_PERSON_DEBT,
+        type: IActionType.SELECT_DEBT,
         payload: { debtId: selectedDebtId }
       },
     ];
   }
 
-  private createFetchPersonDebtsSuccessAction(debts: IDebt[]): IFetchPersonDebtsSuccessAction {
+  private createFetchDebtsSuccessAction(debts: IDebt[]): IFetchDebtsSuccessAction {
     return {
-      type: IActionType.FETCH_PERSON_DEBTS_SUCCESS,
+      type: IActionType.FETCH_DEBTS_SUCCESS,
       payload: { debts },
     };
   }
@@ -98,7 +98,7 @@ export class DebtorCardEffects {
     return this.dataService.read('/persons/{personId}', { personId });
   }
 
-  private fetchPersonDebts(personId: number): Observable<IDebt[]> {
+  private fetchDebts(personId: number): Observable<IDebt[]> {
     return this.dataService.readAll('/persons/{personId}/debts', { personId });
   }
 }
