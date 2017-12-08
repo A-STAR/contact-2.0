@@ -107,9 +107,9 @@ export class DataUploadComponent extends DialogFunctions {
     this.dataUploadService
       .editCell(payload)
       .subscribe(response => {
-        const row = response.rows[0];
-        this.rows[row.id] = row;
-        this.cdRef.markForCheck();
+        // const row = response.rows[0];
+        // this.rows[row.id] = row;
+        // this.cdRef.markForCheck();
       });
   }
 

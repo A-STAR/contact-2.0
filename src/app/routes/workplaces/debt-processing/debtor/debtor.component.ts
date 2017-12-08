@@ -123,11 +123,12 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       ...this.information.form.serializedUpdates,
     };
 
-    this.debtorService.update(value).subscribe(() => {
-      this.form.form.markAsPristine();
-      this.information.form.form.markAsPristine();
-      this.cdRef.markForCheck();
-    });
+    this.debtorService.update(value)
+      .subscribe(() => {
+        this.form.form.markAsPristine();
+        this.information.form.form.markAsPristine();
+        this.cdRef.markForCheck();
+      });
   }
 
   onRegisterContactClick(): void {
@@ -149,14 +150,19 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       type: 'selectwrapper',
       dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE
     };
+    const stageCodeOptions = {
+      type: 'selectwrapper',
+      dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE
+    };
     return [
       {
         children: [
           { width: 1, label: 'debtor.id', controlName: 'id', type: 'number', disabled: true },
-          { width: 3, label: 'debtor.lastName', controlName: 'lastName', type: 'text', disabled: !canEdit, required: true },
+          { width: 2, label: 'debtor.lastName', controlName: 'lastName', type: 'text', disabled: !canEdit, required: true },
           { width: 2, label: 'debtor.firstName', controlName: 'firstName', type: 'text', disabled: !canEdit },
           { width: 2, label: 'debtor.middleName', controlName: 'middleName', type: 'text', disabled: !canEdit },
-          { width: 2, label: 'debtor.type', controlName: 'typeCode', ...debtorTypeOptions, disabled: true },
+          { width: 1, label: 'debtor.type', controlName: 'typeCode', ...debtorTypeOptions, disabled: true },
+          { width: 2, label: 'debtor.stageCode', controlName: 'stageCode', ...stageCodeOptions, disabled: !canEdit },
           { width: 2, label: 'debtor.responsibleFullName', controlName: 'responsibleFullName', type: 'text', disabled: true },
           { width: 12, label: 'debtor.shortInfo', controlName: 'shortInfo', type: 'textarea', disabled: true },
         ]

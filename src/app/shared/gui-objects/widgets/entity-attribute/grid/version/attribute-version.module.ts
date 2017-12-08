@@ -12,7 +12,7 @@ import { GridModule } from '../../../../../components/grid/grid.module';
 import { AttributeVersionComponent } from './attribute-version.component';
 
 const routes: Routes = [
-  { path: 'versions', component: AttributeVersionComponent, },
+  { path: 'versions', component: AttributeVersionComponent },
 ];
 
 @NgModule({
