@@ -1,7 +1,9 @@
 import { IDebtorCardAction, IDebtorCardState } from './debtor-card.interface';
 
 export const defaultState: IDebtorCardState = {
-  debts: null
+  debts: null,
+  person: null,
+  selectedDebtId: null,
 };
 
 export function reducer(state: IDebtorCardState = defaultState, action: IDebtorCardAction): IDebtorCardState {
