@@ -36,9 +36,6 @@ import { DialogFunctions } from '../../../core/dialog';
   selector: 'app-debtor',
   templateUrl: './debtor.component.html',
   styleUrls: ['./debtor.component.scss'],
-  providers: [
-    DebtorService,
-  ]
 })
 export class DebtorComponent extends DialogFunctions implements OnInit, OnDestroy {
   static COMPONENT_NAME = 'DebtorComponent';

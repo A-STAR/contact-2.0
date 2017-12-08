@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { INode } from '../../../../shared/gui-objects/container/container.interface';
 
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+
 import { AttributeGridComponent } from '../../../../shared/gui-objects/widgets/entity-attribute/grid/attribute-grid.component';
 
 @Component({
@@ -21,11 +23,14 @@ export class DebtorAttributesComponent {
         component: AttributeGridComponent,
         inject: {
           entityTypeId$: Observable.of(DebtorAttributesComponent.ENTITY_TYPE_DEBT),
-          entityId$: Observable.of((<any>this.route.params).value.debtId)
+          entityId$: this.debtorCardService.selectedDebtId$,
         }
       }
     ]
   };
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private debtorCardService: DebtorCardService,
+  ) {}
 }

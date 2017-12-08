@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+
+import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-debtor-information-phone-grid',
@@ -7,18 +9,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class PhoneGridComponent {
   constructor(
-    private route: ActivatedRoute,
+    private debtorCardService: DebtorCardService,
   ) {}
 
-  get debtId(): number {
-    return this.routeParams.debtId;
+  get debtId$(): Observable<number> {
+    return this.debtorCardService.selectedDebtId$;
   }
 
-  get personId(): number {
-    return this.routeParams.contactId || this.routeParams.personId;
-  }
-
-  private get routeParams(): any {
-    return (this.route.params as any).value;
+  get personId$(): Observable<number> {
+    return this.debtorCardService.personId$;
   }
 }

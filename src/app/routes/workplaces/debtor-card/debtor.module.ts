@@ -26,6 +26,8 @@ import { DebtsModule } from './debts/debts.module';
 import { InformationModule } from './information/information.module';
 import { RegisterContactModule } from './register-contact/register-contact.module';
 
+import { DebtorService } from './debtor.service';
+
 import { DebtorAddressComponent } from './address/address.component';
 import { DebtorComponent } from './debtor.component';
 import { DebtorContactLogTabComponent } from './contact-log-tab/contact-log-tab.component';
@@ -196,5 +198,8 @@ const routes: Routes = [
   exports: [
     RouterModule,
   ],
+  providers: [
+    DebtorService,
+  ]
 })
 export class DebtorCardModule { }

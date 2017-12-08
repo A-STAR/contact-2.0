@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 
 @Component({
   selector: 'app-contact-log-tab',
@@ -12,6 +15,7 @@ export class DebtorContactLogTabComponent {
   private routeParams = (this.route.params as BehaviorSubject<any>).value;
 
   constructor(
+    private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
   ) {}
 
@@ -19,8 +23,8 @@ export class DebtorContactLogTabComponent {
     return this.routeParams.contactLogId;
   }
 
-  get debtId(): number {
-    return this.routeParams.debtId;
+  get debtId$(): Observable<number> {
+    return this.debtorCardService.selectedDebtId$;
   }
 
   get contactLogType(): number {

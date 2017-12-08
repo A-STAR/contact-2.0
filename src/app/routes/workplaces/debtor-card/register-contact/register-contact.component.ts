@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DebtService } from '../../../../core/debt/debt.service';
 
 import { AddressGridComponent } from './address/address.component';
@@ -23,6 +24,7 @@ export class RegisterContactComponent {
   @ViewChild(PhoneGridComponent) phoneTab: PhoneGridComponent;
 
   constructor(
+    private debtorCardService: DebtorCardService,
     private debtService: DebtService,
     private route: ActivatedRoute,
   ) {}
@@ -31,16 +33,8 @@ export class RegisterContactComponent {
     return 18;
   }
 
-  get entityId(): number {
-    return this.routeParams.personId;
-  }
-
-  get debtId(): number {
-    return this.routeParams.debtId;
-  }
-
-  get routeParams(): any {
-    return (this.route.params as BehaviorSubject<any>).value;
+  get entityId$(): Observable<number> {
+    return this.debtorCardService.personId$;
   }
 
   get canRegisterPhones$(): Observable<boolean> {

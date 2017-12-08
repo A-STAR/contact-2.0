@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { DebtModule } from './debt/debt.module';
+
 import { DebtsComponent } from './debts.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    DebtModule,
     SharedModule,
   ],
   exports: [

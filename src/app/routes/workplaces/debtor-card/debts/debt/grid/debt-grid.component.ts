@@ -9,6 +9,7 @@ import { IGridColumn } from '../../../../../../shared/components/grid/grid.inter
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DebtService } from '../debt.service';
+import { DebtorCardService } from '../../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
@@ -89,7 +90,7 @@ export class DebtGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch()
+      action: () => {} // this.fetch()
     },
   ];
 
@@ -111,9 +112,7 @@ export class DebtGridComponent {
     { prop: 'debtReasonCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON },
   ];
 
-  debts: Array<IDebt> = [];
-
-  private personId = (this.route.params as any).value.personId || null;
+  // debts: Array<IDebt> = [];
 
   dialog$ = new BehaviorSubject<number>(null);
   debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
@@ -121,6 +120,7 @@ export class DebtGridComponent {
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
+    private debtorCardService: DebtorCardService,
     private gridService: GridService,
     private route: ActivatedRoute,
     private router: Router,
@@ -134,7 +134,11 @@ export class DebtGridComponent {
         this.cdRef.markForCheck();
       });
 
-    this.fetch();
+    // this.fetch();
+  }
+
+  get debts$(): Observable<any> {
+    return this.debtorCardService.debts$;
   }
 
   onDoubleClick(debt: IDebt): void {
@@ -153,11 +157,11 @@ export class DebtGridComponent {
   }
 
   onChangeStatusDialogSubmit(): void {
-    this.fetch();
+    // this.fetch();
   }
 
   onCloseDialogSubmit(): void {
-    this.fetch();
+    // this.fetch();
   }
 
   private onAdd(): void {
@@ -165,7 +169,7 @@ export class DebtGridComponent {
   }
 
   private onEdit(debtId: number): void {
-    this.router.navigate([ `/workplaces/debt-processing/${this.personId}/${debtId}/debt` ]);
+    // this.router.navigate([ `/workplaces/debt-processing/${this.personId}/${debtId}/debt` ]);
   }
 
   private onChangeStatus(): void {
@@ -197,13 +201,5 @@ export class DebtGridComponent {
         bag.notEmptyOneOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
       ))
       .distinctUntilChanged();
-  }
-
-  private fetch(): void {
-    this.debtService.fetchAll(this.personId).subscribe(debts => {
-      this.onSelect({ id: null } as IDebt);
-      this.debts = debts;
-      this.cdRef.markForCheck();
-    });
   }
 }

@@ -13,6 +13,7 @@ import { IUserPermission, IUserPermissions } from '../../../../../../core/user/p
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../debt.service';
+import { DebtorCardService } from '../../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -28,18 +29,15 @@ import { DynamicFormComponent } from '../../../../../../shared/components/form/d
 export class DebtCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private id = (this.route.params as any).value.personId || null;
-  debtId = (this.route.params as any).value.debtId || null;
-
   private contractorOptions: Array<IOption> = [];
 
   controls: Array<IDynamicFormItem> = null;
-  debt: IDebt;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private debtService: DebtService,
+    private debtorCardService: DebtorCardService,
     private entityAttributesService: EntityAttributesService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
@@ -47,15 +45,8 @@ export class DebtCardComponent {
     private userPermissionsService: UserPermissionsService,
   ) {
     Observable.combineLatest(
-      this.lookupService.contractorOptions,
-      this.debtId ? this.debtService.fetch(this.id, this.debtId) : Observable.of(null),
       this.lookupService.portfolios,
-      this.lookupService.currencyOptions,
       this.userDictionariesService.getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
-        UserDictionariesService.DICTIONARY_BRANCHES,
-        UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
-        UserDictionariesService.DICTIONARY_REGIONS,
         UserDictionariesService.DICTIONARY_DEBT_LIST_1,
         UserDictionariesService.DICTIONARY_DEBT_LIST_2,
         UserDictionariesService.DICTIONARY_DEBT_LIST_3,
@@ -74,38 +65,46 @@ export class DebtCardComponent {
     )
     .pipe(first())
     .subscribe(([
-      contractorOptions, debt, portfolios, currencyOptions, dictionaries, attributes,
+      portfolios,
+      dictionaries,
+      attributes,
       debtEditPerm,
       debtPortfolioEditPerm,
       debtComponentAmountEditPerm,
       dictPermissions,
     ]) => {
-      this.contractorOptions = contractorOptions;
       this.controls = this.initControls(
-        contractorOptions, portfolios, currencyOptions, dictionaries, attributes,
-        debtEditPerm,
-        debtPortfolioEditPerm,
-        debtComponentAmountEditPerm,
-        dictPermissions,
+        portfolios,
+        dictionaries as any,
+        attributes as any,
+        debtEditPerm as any,
+        debtPortfolioEditPerm as any,
+        debtComponentAmountEditPerm as any,
+        dictPermissions as any,
       );
-      this.debt = debt;
       this.cdRef.markForCheck();
     });
   }
 
   onSubmit(): void {
-    const action = this.debtId
-      ? this.debtService.update(this.id, this.debtId, this.form.serializedUpdates)
-      : this.debtService.create(this.id, this.form.serializedUpdates);
-    action.subscribe(() => this.onBack());
+    Observable.combineLatest(
+      this.debtorCardService.personId$,
+      this.debtorCardService.selectedDebtId$,
+    )
+    .flatMap(([ personId, debtId ]) => {
+      return debtId
+        ? this.debtService.update(personId, debtId, this.form.serializedUpdates)
+        : this.debtService.create(personId, this.form.serializedUpdates);
+    })
+    .subscribe(() => this.onBack());
   }
 
   onBack(): void {
     this.contentTabService.back();
   }
 
-  get displayDebtData(): boolean {
-    return !!this.debtId;
+  get displayDebtData(): Observable<boolean> {
+    return this.debtorCardService.selectedDebt$.map(Boolean);
   }
 
   get canSubmit(): boolean {
@@ -132,9 +131,7 @@ export class DebtCardComponent {
   }
 
   private initControls(
-    contractorOptions: Array<IOption>,
     portfolios: Array<ILookupPortfolio>,
-    currencyOptions: Array<IOption>,
     dictionaries: IOptionSet,
     attributes: IEntityAttributes,
     debtEditPerm: boolean,
@@ -171,8 +168,8 @@ export class DebtCardComponent {
       {
         label: 'widgets.debt.grid.bankId',
         controlName: 'bankId',
-        type: 'select',
-        options: contractorOptions,
+        type: 'selectwrapper',
+        lookupKey: 'contractors',
         disabled: true,
         width: 5
       },
@@ -187,8 +184,8 @@ export class DebtCardComponent {
       {
         label: 'widgets.debt.grid.creditTypeCode',
         controlName: 'creditTypeCode',
-        type: 'select',
-        options: dictionaries[UserDictionariesService.DICTIONARY_PRODUCT_TYPE],
+        type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
         disabled: !debtEditPerm,
         width: 4
       },
@@ -217,16 +214,16 @@ export class DebtCardComponent {
       {
         label: 'widgets.debt.grid.regionCode',
         controlName: 'regionCode',
-        type: 'select',
-        options: dictionaries[UserDictionariesService.DICTIONARY_REGIONS],
+        type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_REGIONS,
         disabled: !debtEditPerm,
         width: 3
       },
       {
         label: 'widgets.debt.grid.branchCode',
         controlName: 'branchCode',
-        type: 'select',
-        options: dictionaries[UserDictionariesService.DICTIONARY_BRANCHES],
+        type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_BRANCHES,
         disabled: !debtEditPerm,
         width: 3
       },
@@ -235,7 +232,7 @@ export class DebtCardComponent {
         label: 'widgets.debt.grid.debtReasonCode',
         controlName: 'debtReasonCode',
         type: 'select',
-        options: dictionaries[UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON],
+        dictCode: UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
         disabled: !debtEditPerm,
         width: 2
       },
@@ -256,8 +253,8 @@ export class DebtCardComponent {
       {
         label: 'widgets.debt.grid.currencyId',
         controlName: 'currencyId',
-        type: 'select',
-        options: currencyOptions,
+        type: 'selectwrapper',
+        lookupKey: 'currencies',
         disabled: !debtEditPerm,
         required: true,
         width: 2

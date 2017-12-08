@@ -12,6 +12,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators/first';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/startWith';
 
@@ -19,6 +20,7 @@ import { IDebt } from '../../../debt.interface';
 import { IDynamicFormControl } from '../../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUserConstant } from '../../../../../../../../core/user/constants/user-constants.interface';
 
+import { DebtorCardService } from '../../../../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DebtService } from '../../../debt.service';
 import { UserConstantsService } from '../../../../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -44,15 +46,13 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
     { controlName: 'comment', type: 'textarea' }
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.statusChange.${control.controlName}` }) as IDynamicFormControl);
 
-  private personId = (this.route.params as any).value.personId || null;
-
   private formDataSubscription: Subscription;
   private statusCodeSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtorCardService: DebtorCardService,
     private debtService: DebtService,
-    private route: ActivatedRoute,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -133,10 +133,14 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
       ...rest,
       statusCode: customStatusCode || statusCode,
     };
-    this.debtService.changeStatus(this.personId, this.debt.id, value, false).subscribe(() => {
-      this.submit.emit();
-      this.close.emit();
-    });
+    this.debtorCardService.personId$
+      .pipe(first())
+      .subscribe(personId => {
+        this.debtService.changeStatus(personId, this.debt.id, value, false).subscribe(() => {
+          this.submit.emit();
+          this.close.emit();
+        });
+      });
   }
 
   onClose(): void {

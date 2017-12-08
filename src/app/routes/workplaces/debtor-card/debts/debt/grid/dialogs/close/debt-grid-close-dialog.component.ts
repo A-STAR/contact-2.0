@@ -16,6 +16,7 @@ import { IDebt } from '../../../debt.interface';
 import { IDynamicFormControl } from '../../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUserConstant } from '../../../../../../../../core/user/constants/user-constants.interface';
 
+import { DebtorCardService } from '../../../../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DebtService } from '../../../debt.service';
 import { UserConstantsService } from '../../../../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -23,6 +24,7 @@ import { UserDictionariesService } from '../../../../../../../../core/user/dicti
 import { DynamicFormComponent } from '../../../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { toOption } from '../../../../../../../../core/utils';
+import { first } from 'rxjs/operators/first';
 
 @Component({
   selector: 'app-debt-grid-close-dialog',
@@ -41,12 +43,12 @@ export class DebtGridCloseDialogComponent implements AfterViewInit {
     { controlName: 'comment', type: 'textarea' }
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.closeDebt.${control.controlName}` }) as IDynamicFormControl);
 
-  private personId = (this.route.params as any).value.personId || null;
   private formDataSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
+    private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
@@ -76,10 +78,14 @@ export class DebtGridCloseDialogComponent implements AfterViewInit {
       ...this.form.serializedUpdates,
       statusCode: this.statusCode
     };
-    this.debtService.changeStatus(this.personId, this.debt.id, data, false).subscribe(() => {
-      this.submit.emit();
-      this.close.emit();
-    });
+    this.debtorCardService.personId$
+      .pipe(first())
+      .subscribe(personId => {
+        this.debtService.changeStatus(personId, this.debt.id, data, false).subscribe(() => {
+          this.submit.emit();
+          this.close.emit();
+        });
+      });
   }
 
   onClose(): void {
