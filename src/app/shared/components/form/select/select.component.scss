@@ -76,6 +76,8 @@
   font-weight: normal;
   > .ui-select-match > .form-control {
     padding-right: 24px;
+    white-space: nowrap;
+    overflow-x: hidden;
   }
 }
 
