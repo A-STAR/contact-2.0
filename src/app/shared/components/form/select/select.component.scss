@@ -77,7 +77,12 @@
   > .ui-select-match > .form-control {
     padding-right: 24px;
     white-space: nowrap;
-    overflow-x: hidden;
+  }
+  &[disabled] {
+    > .ui.select-match > .form-control {
+      white-space: nowrap;
+      overflow-x: hidden;
+    }
   }
 }
 
