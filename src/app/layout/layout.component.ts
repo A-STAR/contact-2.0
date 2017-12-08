@@ -21,6 +21,7 @@ export class LayoutComponent {
     ContactRegistrationComponent: 'CONTACT_REGISTRATION',
     ContactPropertiesComponent: 'CONTACT_TREES',
     ContractorsAndPortfoliosComponent: 'PORTFOLIOS_CONTRACTORS',
+    ContractorsAndPortfoliosVersionComponent: 'ATTRIBUTE_VERSION',
     ContractorAttributesComponent: 'CONTRACTOR_ATTRIBUTES',
     ContractorEditComponent: 'CONTRACTOR',
     ContractorManagersComponent: 'CONTRACTOR_MANAGERS',

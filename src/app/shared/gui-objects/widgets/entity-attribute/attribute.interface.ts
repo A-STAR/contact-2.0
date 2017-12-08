@@ -39,3 +39,9 @@ export interface IAttributeVersionForm {
   value: number | string;
   changeDateTime: string;
 }
+
+export interface IAttributeVersionParams {
+  selectedAttribute: IAttribute;
+  entityId: number;
+  entityTypeId: number;
+}
