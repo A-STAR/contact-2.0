@@ -18,6 +18,7 @@ import { IUserConstant } from '../../../../../../core/user/constants/user-consta
 import { DebtorService } from '../../debtor.service';
 import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { UserConstantsService } from '../../../../../../core/user/constants/user-constants.service';
+import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -36,7 +37,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
   controls: IDynamicFormControl[];
 
   // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=108101644#id-Списокатрибутовсущностей-person
-  private attributeIds = range(363, 372);
+  private attributeIds = range(363, 372).concat(395);
   private personSubscription: Subscription;
 
   constructor(
@@ -44,15 +45,17 @@ export class CompanyComponent implements OnInit, OnDestroy {
     private debtorService: DebtorService,
     private entityAttributesService: EntityAttributesService,
     private userConstantsService: UserConstantsService,
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
     this.personSubscription = Observable.combineLatest(
       this.userConstantsService.get(this.stringValuesConstantsName),
+      this.userPermissionsService.has('PERSON_INFO_EDIT'),
       this.entityAttributesService.getAttributes(this.attributeIds),
     )
-    .subscribe(([ stringValues, attributes ]) => {
-      this.controls = this.getControls(stringValues, attributes);
+    .subscribe(([ stringValues, canEdit, attributes ]) => {
+      this.controls = this.getControls(stringValues, canEdit, attributes);
       this.cdRef.markForCheck();
     });
   }
@@ -65,7 +68,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
     return this.debtorService.debtor$;
   }
 
-  protected getControls(stringValues: IUserConstant, attributes: IEntityAttributes): IDynamicFormControl[] {
+  protected getControls(stringValues: IUserConstant, canEdit: boolean, attributes: IEntityAttributes): IDynamicFormControl[] {
     const displayedStringValues = stringValues.valueS.split(',').map(Number);
     return this.attributeIds.map((id, i) => ({
       label: `person.stringValue${i + 1}`,

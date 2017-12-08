@@ -9,6 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { GridOptions } from 'ag-grid/main';
+import { first } from 'rxjs/operators';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import {
@@ -63,6 +64,7 @@ export class MetadataGridComponent<T> implements OnInit {
 
   ngOnInit(): void {
     this.gridService.getMetadata(this.metadataKey, {})
+      .pipe(first())
       .subscribe(({ actions, columns }) => {
         this._actions = actions;
         this._columns = [ ...columns ];

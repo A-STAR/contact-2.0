@@ -44,6 +44,7 @@
         "PORTFOLIO_ATTRIBUTES": "Portfolio attributes",
         "CONTRACTOR_ATTRIBUTES": "Contractor attributes",
         "CONTRACTOR": "Contractor",
+        "ATTRIBUTES": "Attributes",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
         "CONTRACTOR_MANAGER": "Contractor Manager",
         "DEPARTMENTS": "Departments",
@@ -773,6 +774,7 @@
     "responsibleFullName": "Manager",
     "reward": "Remuneration",
     "shortInfo": "Short info",
+    "stageCode": "Stage",
     "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",
@@ -1620,8 +1622,10 @@
         "terminate": "Terminate Work"
       },
       "grid": {
+        "account": "Account",
         "id": "ID",
         "portfolioId": "Portfolio",
+        "stageCode": "Stage",
         "bankId": "Bank",
         "creditTypeCode": "Credit type",
         "creditName": "Credit name",
@@ -1629,6 +1633,7 @@
         "statusCode": "Status",
         "creditStartDate": "Credit start date",
         "creditEndDate": "Credit end date",
+        "debtDate": "Debt date",
         "regionCode": "Region",
         "branchCode": "Branch",
         "currencyId": "Currency",

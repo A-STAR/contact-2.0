@@ -5,6 +5,7 @@ import {
   ContentChildren,
   ElementRef,
   EventEmitter,
+  Input,
   Output,
   Renderer2,
   QueryList,
@@ -21,6 +22,8 @@ import { TabViewTabComponent } from './tab.component';
 
 export class TabViewComponent implements AfterContentInit {
   @ContentChildren(TabViewTabComponent) tabs: QueryList<TabViewTabComponent>;
+
+  @Input() noMargin = false;
 
   @Output() select = new EventEmitter<number>();
 
