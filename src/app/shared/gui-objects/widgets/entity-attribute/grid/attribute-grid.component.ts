@@ -186,10 +186,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   onVersionClick(): void {
-    this.router.navigate(['versions',
-    this.selectedAttribute$.value, this.entityTypeId, this.entityId],
-    { relativeTo: this.activatedRoute }
-  );
+    this.router.navigate([ `${this.router.url}/versions` ]);
   }
 
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;

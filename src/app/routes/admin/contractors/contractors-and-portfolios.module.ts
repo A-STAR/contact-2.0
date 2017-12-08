@@ -34,26 +34,13 @@ const routes: Routes = [
         path: 'portfolios', children: [
           { path: '', pathMatch: 'full', redirectTo: 'create' },
           { path: 'create', component: PortfolioEditComponent },
-          {
-            path: ':portfolioId', children: [
-              { path: '', pathMatch: 'full', component: PortfolioEditComponent },
-              {
-                path: 'attributes', children: [
-                  { path: '', component: PortfolioAttributesComponent },
-                  {
-                    path: 'versions', component: ContractorsAndPortfoliosVersionComponent
-                  }
-                ]
-              }
-            ]
-          },
+          { path: ':portfolioId', component: PortfolioEditComponent },
         ]
       },
       {
-        path: 'attributes', component: ContractorAttributesComponent, children: [
-          {
-            path: 'versions', component: ContractorsAndPortfoliosVersionComponent
-          }
+        path: 'attributes', children: [
+          { path: '', component: ContractorAttributesComponent },
+          { path: 'versions', component: ContractorsAndPortfoliosVersionComponent },
         ]
       }
     ],
