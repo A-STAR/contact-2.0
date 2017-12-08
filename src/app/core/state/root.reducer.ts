@@ -2,8 +2,10 @@ import { IAppState } from './state.interface';
 
 import * as actionsLog from '../../routes/admin/actions-log/actions-log.reducer';
 import * as auth from '../auth/auth.reducer';
-import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
+import * as campaigns from '../../routes/utilities/campaigns/campaigns.reducer';
 import * as constants from '../../routes/admin/constants/constants.reducer';
+import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
+import * as debtorCard from '../app-modules/debtor-card/debtor-card.reducer';
 import * as debtors from '../../routes/workplaces/debtors/debtors.reducer';
 import * as dictionaries from '../../routes/admin/dictionaries/dictionaries.reducer';
 import * as entityAttributes from '../entity/attributes/entity-attributes.reducer';
@@ -13,13 +15,12 @@ import * as metadata from '../metadata/metadata.reducer';
 import * as notifications from '../notifications/notifications.reducer';
 import * as organizations from '../../routes/admin/organizations/organizations.reducer';
 import * as permissions from '../../routes/admin/roles/permissions.reducer';
-import * as users from '../../routes/admin/users/users.reducer';
 import * as userAttributeTypes from '../user/attribute-types/user-attribute-types.reducer';
 import * as userConstants from '../user/constants/user-constants.reducer';
 import * as userDictionaries from '../user/dictionaries/user-dictionaries.reducer';
 import * as userPermissions from '../user/permissions/user-permissions.reducer';
 import * as userTemplates from '../user/templates/user-templates.reducer';
-import * as campaigns from '../../routes/utilities/campaigns/campaigns.reducer';
+import * as users from '../../routes/admin/users/users.reducer';
 
 export const reducers = {
   actionsLog: actionsLog.reducer,
@@ -27,6 +28,7 @@ export const reducers = {
   campaigns: campaigns.reducer,
   contractorsAndPortfolios: contractorsAndPortfolios.reducer,
   constants: constants.reducer,
+  debtorCard: debtorCard.reducer,
   debtors: debtors.reducer,
   dictionaries: dictionaries.reducer,
   entityAttributes: entityAttributes.reducer,
@@ -49,6 +51,7 @@ export const initialState: Partial<IAppState> = {
   campaigns: campaigns.defaultState,
   contractorsAndPortfolios: contractorsAndPortfolios.defaultState,
   constants: constants.defaultState,
+  debtorCard: debtorCard.defaultState,
   debtors: debtors.defaultState,
   dictionaries: dictionaries.defaultState,
   entityAttributes: entityAttributes.defaultState,
