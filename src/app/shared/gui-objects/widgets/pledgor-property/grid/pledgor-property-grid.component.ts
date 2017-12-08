@@ -41,7 +41,7 @@ export class PledgorPropertyGridComponent extends DialogFunctions implements OnI
   ];
 
   dialog: string;
-  gridStyles = { height: '500px' };
+  gridStyles = { height: '350px' };
   propertyList: Array<IPledgorProperty> = [];
 
   private personId;

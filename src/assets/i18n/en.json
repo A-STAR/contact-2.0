@@ -67,6 +67,7 @@
         "DEBTOR_CONTACTS": "Debtor contacts",
         "DEBTOR_DEBT": "Debtor's debt",
         "DEBTOR_DEBT_COMPONENT": "Debt components",
+        "DEBTOR_DEBT_CONTACTS": "Debtor contact",
         "DEBTOR_DOCUMENT": "Document",
         "DEBTOR_EMAIL": "Debtor's email",
         "DEBTOR_EMPLOYMENT": "Employment record",
@@ -873,7 +874,7 @@
       }
     },
     "contactsTab": {
-      "title": "Contact",
+      "title": "Contact persons",
       "remove": {
         "title": "Delete the contact",
         "confirmMessage": "Do you really want to delete the contact {{ fullName }} ?"

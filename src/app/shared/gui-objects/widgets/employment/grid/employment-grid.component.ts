@@ -75,7 +75,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
 
-  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '600px' };
+  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '500px' };
 
   constructor(
     private cdRef: ChangeDetectorRef,
