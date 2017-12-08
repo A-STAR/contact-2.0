@@ -773,6 +773,7 @@
     "responsibleFullName": "Ответственный",
     "reward": "Размер вознаграждения",
     "shortInfo": "Краткая иформация",
+    "stageCode": "Стадия",
     "utc": "Местное время должника",
     "identityDocs": {
       "title": "Удостоверения личности",
@@ -1620,8 +1621,10 @@
         "terminate": "Завершить работу с долгом"
       },
       "grid": {
+        "account": "Лицевой счет",
         "id": "ID долга",
         "portfolioId": "Портфель",
+        "stageCode": "Стадия",
         "bankId": "Банк",
         "creditTypeCode": "Тип продукта",
         "creditName": "Название продукта",
@@ -1629,6 +1632,7 @@
         "statusCode": "Статус",
         "creditStartDate": "Дата выдачи",
         "creditEndDate": "Дата окончания кредитного срока",
+        "debtDate": "Дата расчета остатка",
         "regionCode": "Регион",
         "branchCode": "Филиал",
         "currencyId": "Валюта",

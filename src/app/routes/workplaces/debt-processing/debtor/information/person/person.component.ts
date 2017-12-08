@@ -28,7 +28,7 @@ export class PersonComponent implements OnInit, OnDestroy {
   controls: IDynamicFormItem[];
 
   // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=108101644#id-Списокатрибутовсущностей-person
-  private attributeIds = range(363, 372);
+  private attributeIds = range(363, 372).concat(395);
   private personSubscription: Subscription;
 
   constructor(

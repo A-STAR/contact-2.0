@@ -149,6 +149,10 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       type: 'selectwrapper',
       dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE
     };
+    const stageCodeOptions = {
+      type: 'selectwrapper',
+      dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE
+    };
     return [
       {
         children: [
@@ -158,6 +162,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
           { width: 2, label: 'debtor.middleName', controlName: 'middleName', type: 'text', disabled: !canEdit },
           { width: 2, label: 'debtor.type', controlName: 'typeCode', ...debtorTypeOptions, disabled: true },
           { width: 2, label: 'debtor.responsibleFullName', controlName: 'responsibleFullName', type: 'text', disabled: true },
+          { width: 2, label: 'debtor.stageCode', controlName: 'stageCode', ...stageCodeOptions, disabled: !canEdit },
           { width: 12, label: 'debtor.shortInfo', controlName: 'shortInfo', type: 'textarea', disabled: true },
         ]
       }
