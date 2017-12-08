@@ -38,6 +38,7 @@
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
         "DICTIONARIES": "Справочники",
+        "ATTRIBUTE_VERSION": "Версии атрибута",
         "PORTFOLIOS_CONTRACTORS": "Клиенты и портфели",
         "PORTFOLIO_EDIT": "Портфель",
         "PORTFOLIO_ATTRIBUTES": "Атрибуты портфеля",
