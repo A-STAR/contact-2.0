@@ -4,14 +4,11 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
 
 import { PersistenceService } from '../persistence/persistence.service';
-
-import { invert } from '../utils';
 
 @Injectable()
 export class AuthService implements CanActivate {
@@ -43,11 +40,9 @@ export class AuthService implements CanActivate {
     private translateService: TranslateService,
     private zone: NgZone,
   ) {
-    this.token$
-      .pipe(first())
-      .map(token => this.isTokenValid(token) || this.isRetrievedTokenValid())
-      .map(invert)
-      .subscribe(() => this.redirectToLogin());
+    if (!this.isRetrievedTokenValid()) {
+      this.redirectToLogin();
+    }
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
