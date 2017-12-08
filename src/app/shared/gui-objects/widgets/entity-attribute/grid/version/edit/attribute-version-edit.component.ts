@@ -45,7 +45,7 @@ export class AttributeVersionEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.selectedVersion.dictNameCode) {
+    if (this.selectedVersion && this.selectedVersion.dictNameCode) {
       this.userDictionariesService.getDictionaryAsOptions(this.selectedVersion.dictNameCode)
         .subscribe(options => this.onInit(options));
     } else {
@@ -61,6 +61,7 @@ export class AttributeVersionEditComponent implements OnInit {
     const { value, ...rest } = this.form.serializedUpdates;
     const data = {
       ...rest,
+      changeDateTime: this.form.serializedUpdates.changeDateTime || this.selectedVersion.fromDateTime,
       ...getValue(this.selectedVersion.typeCode, value)
     };
     this.submit.emit(data);
@@ -73,7 +74,7 @@ export class AttributeVersionEditComponent implements OnInit {
   private onInit(options: IOption[] = null): void {
     this.controls = this.buildControls(this.selectedVersion, options);
     this.formData = {
-      fromDateTime: this.selectedVersion.fromDateTime || this.selectedVersion.changeDateTime,
+      changeDateTime: this.selectedVersion.changeDateTime || this.selectedVersion.fromDateTime,
       value: getRawValue(this.selectedVersion)
     };
     this.cdRef.markForCheck();
@@ -88,9 +89,14 @@ export class AttributeVersionEditComponent implements OnInit {
         ...(options ? { options } : {}),
       },
       {
-        label: labelKey('fromDateTime'),
-        controlName: 'fromDateTime',
+        label: labelKey('changeDateTime'),
+        controlName: 'changeDateTime',
         type: 'datepicker',
+      },
+      {
+        label: labelKey('comment'),
+        controlName: 'comment',
+        type: 'textarea',
       },
     ] as IDynamicFormControl[];
   }
