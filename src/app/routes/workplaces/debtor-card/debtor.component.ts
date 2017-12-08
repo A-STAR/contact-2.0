@@ -30,8 +30,6 @@ import { DynamicFormComponent } from '../../../shared/components/form/dynamic-fo
 
 import { DialogFunctions } from '../../../core/dialog';
 
-import { invert } from '../../../core/utils';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
