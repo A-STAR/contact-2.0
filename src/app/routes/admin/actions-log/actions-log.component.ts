@@ -35,6 +35,12 @@ import { MetadataGridComponent } from '../../../shared/components/metadata-grid/
 export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
   static COMPONENT_NAME = 'ActionsLogComponent';
 
+  @Output() onSelect = new EventEmitter<IAGridSelected>();
+
+  @ViewChild('downloader') downloader: DownloaderComponent;
+  @ViewChild('filter') filter: ActionsLogFilterComponent;
+  @ViewChild(ActionGridComponent) grid: ActionGridComponent<any>;
+
   // filter
   actionTypesRows: Observable<IUserTerm[]>;
   employeesRows: Observable<IEmployee[]>;
@@ -44,11 +50,6 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
   actions = 'contactLogContact';
 
   query$ = new BehaviorSubject<IQuery>(null);
-  @Output() onSelect = new EventEmitter<IAGridSelected>();
-
-  @ViewChild('downloader') downloader: DownloaderComponent;
-  @ViewChild('filter') filter: ActionsLogFilterComponent;
-  @ViewChild(ActionGridComponent) grid: ActionGridComponent<any>;
 
   rows: IActionLog[] = [];
   rowCount = 0;
@@ -92,7 +93,7 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
             .pipe(first())
             .subscribe();
           // load data
-          if ((this.grid && this.grid.grid && this.grid.grid as MetadataGridComponent<any>).gridOptions) {
+          if ((this.grid && this.grid.grid && this.grid.grid as any).gridOptions) {
             this.onRequest();
           }
         }
@@ -105,7 +106,7 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
 
   onRequest(): void {
     const filters = this.getCombinedFilters();
-    const params = ((this.grid as ActionGridComponent<any>).grid as MetadataGridComponent<any>).grid.getRequestParams();
+    const params = ((this.grid as any).grid as any).grid.getRequestParams();
 
     this.actionsLogService.fetch(filters, params)
       .subscribe((response: IAGridResponse<IActionLog>) => {
@@ -117,18 +118,16 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
 
   doExport(): void {
     const filters = this.getCombinedFilters();
-    const params = ((this.grid as ActionGridComponent<any>).grid as MetadataGridComponent<any>).grid.getRequestParams();
-    const grid = (this.grid as ActionGridComponent<any>);
-    let columns: any, request: any;
+    const grid = (this.grid as any);
+    const params = (grid.grid as any).grid.getRequestParams();
+
     if (grid.grid) {
-      columns = (grid.grid as MetadataGridComponent<any>).grid.getExportableColumns();
-      request = (grid.grid as MetadataGridComponent<any>).grid.buildRequest(params, filters);
-      // grid.grid.deselectAll();
-    } else {
-      // console.log('wrong component using');
+      const columns = (grid.grid as any).grid.getExportableColumns();
+      const request = (grid.grid as any).grid.buildRequest(params, filters);
+      const body = { columns, ...request };
+      this.downloader.download(body);
     }
-    const body = { columns, ...request };
-    this.downloader.download(body);
+
   }
 
   openQueryBuilder(): void {
@@ -141,7 +140,6 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
   closeQueryBuilder(): void {
     this.query$.next(null);
   }
-
 
   private getCombinedFilters(): FilterObject {
     const filters = this.filter.getFilters();
