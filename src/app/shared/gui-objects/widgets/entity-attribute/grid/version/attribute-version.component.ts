@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute, IAttributeVersion } from '../../attribute.interface';
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '../../attribute.service';
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
@@ -39,6 +40,31 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   selectedAttribute: IAttribute;
   entityId: number;
   entityTypeId: number;
+
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      action: () => this.setDialog('add'),
+      enabled: combineLatestAnd([
+        this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
+        Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== 1)
+      ])
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      action: () => this.setDialog('edit'),
+      enabled: combineLatestAnd([
+        this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
+        Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== 1)
+      ])
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.entityTypeId && this.entityId && this.selectedAttribute
+        && this.fetch().subscribe(versions => this.onVersionsFetch(versions)),
+    },
+  ];
+
 
   dialog: string;
 
@@ -88,7 +114,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
       .subscribe(canView => {
 
         if (canView && this.entityTypeId && this.selectedAttribute.userId) {
-          this.fetch();
+          this.fetch().subscribe(versions => this.onVersionsFetch(versions));
         } else {
           this.rows = [];
           this.cdRef.markForCheck();
@@ -97,6 +123,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   }
 
   ngOnDestroy(): void {
+    this.grid.clearSelection();
     this.entitySubscription.unsubscribe();
   }
 
@@ -111,11 +138,20 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
       });
   }
 
-  private fetch(): void {
-    this.attributeService.fetchAllVersions(this.entityTypeId, this.entityId, this.selectedAttribute.code).subscribe(versions => {
-      this.rows = versions;
-      this.cdRef.markForCheck();
-    });
+  onEditDialogSubmit(version: IAttributeVersion): void {
+    this.attributeService.update(this.entityTypeId, this.entityId, this.selectedAttribute.code, version)
+      .switchMap(() => this.fetch())
+      .subscribe(versions => this.onVersionsFetch(versions));
+  }
+
+  private fetch(): Observable<IAttributeVersion[]> {
+    return this.attributeService.fetchAllVersions(this.entityTypeId, this.entityId, this.selectedAttribute.code);
+  }
+
+  private onVersionsFetch(versions: IAttributeVersion[]): void {
+    this.rows = versions;
+    this.grid.clearSelection();
+    this.cdRef.markForCheck();
   }
 
   private get canEdit$(): Observable<boolean> {

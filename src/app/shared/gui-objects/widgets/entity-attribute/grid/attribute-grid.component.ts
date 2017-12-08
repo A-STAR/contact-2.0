@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Inject, Component, OnInit, 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 import { IAttribute } from '../attribute.interface';
@@ -19,7 +20,6 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
 import { getRawValue, getDictCodeForValue } from '../../../../../core/utils/value';
 
 import { makeKey } from '../../../../../core/utils';
-import { ActivatedRoute, Router } from '@angular/router';
 
 const labelKey = makeKey('widgets.attribute.grid');
 
@@ -42,7 +42,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     },
     {
       label: labelKey('name'),
-      prop: 'name',
+      prop: 'name'
     },
     {
       label: labelKey('value'),
@@ -85,7 +85,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         this.entityTypeId$.flatMap(
           entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId)
         ),
-        this.selectedAttribute$.map(attribute => attribute && !attribute.disabledValue)
+        this.selectedAttribute$.map(attribute => attribute && attribute.disabledValue !== 1)
       ])
     },
     {
@@ -95,7 +95,9 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         this.entityTypeId$.flatMap(
           entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
         ),
-        this.selectedAttribute$.map(attribute => attribute && !!attribute.version)
+        // TODO:(i.lobanov) there is no version prop now on BE, uncomment when done
+        this.selectedAttribute$.map(attribute => !!attribute && attribute.disabledValue !== 1)
+        // this.selectedAttribute$.map(attribute => attribute && !!attribute.version && attribute.disabledValue !== 1)
       ])
     },
     {
@@ -184,7 +186,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   onVersionClick(): void {
-    this.router.navigate(['./versions', this.selectedAttribute$, this.entityTypeId, this.entityId],
+    this.router.navigate(['versions', this.selectedAttribute$.value, this.entityTypeId, this.entityId],
     { relativeTo: this.activatedRoute });
   }
 
