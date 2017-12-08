@@ -4,7 +4,8 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild
+  ViewChild,
+  Input
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
@@ -34,12 +35,15 @@ import { combineLatestAnd } from '../../../../../../core/utils/helpers';
 })
 export class AttributeVersionComponent extends DialogFunctions implements OnInit, OnDestroy {
 
-  @ViewChild(GridComponent) grid: GridComponent;
+  static COMPONENT_NAME = 'AttributeVersionComponent';
 
-  selectedVersion$ = new BehaviorSubject<IAttributeVersion>(null);
   selectedAttribute: IAttribute;
   entityId: number;
   entityTypeId: number;
+
+  @ViewChild(GridComponent) grid: GridComponent;
+
+  selectedVersion$ = new BehaviorSubject<IAttributeVersion>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -113,7 +117,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
       })
       .subscribe(canView => {
 
-        if (canView && this.entityTypeId && this.selectedAttribute.userId) {
+        if (canView && this.entityTypeId && this.selectedAttribute && this.selectedAttribute.userId) {
           this.fetch().subscribe(versions => this.onVersionsFetch(versions));
         } else {
           this.rows = [];

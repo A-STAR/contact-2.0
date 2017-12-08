@@ -7,6 +7,9 @@ import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.modul
 import { AttributeVersionModule } from './version/attribute-version.module';
 
 import { AttributeGridComponent } from './attribute-grid.component';
+import { AttributeVersionComponent } from './version/attribute-version.component';
+
+import { Routes, RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -14,7 +17,7 @@ import { AttributeGridComponent } from './attribute-grid.component';
     AttributeVersionModule,
     CommonModule,
     GridTreeWrapperModule,
-    Toolbar2Module,
+    Toolbar2Module
   ],
   exports: [
     AttributeGridComponent,

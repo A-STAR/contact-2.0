@@ -14,6 +14,8 @@ import { ContractorManagerEditComponent } from './contractors/managers/edit/mana
 import { PortfolioEditComponent } from './portfolios/edit/portfolio-edit.component';
 import { ContractorAttributesComponent } from './contractors/edit/attributes/contractor-attributes.component';
 import { PortfolioAttributesComponent } from './portfolios/edit/attributes/portfolio-attributes.component';
+// tslint:disable-next-line
+import { AttributeVersionComponent } from '../../../shared/gui-objects/widgets/entity-attribute/grid/version/attribute-version.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: ContractorsAndPortfoliosComponent },
@@ -37,14 +39,23 @@ const routes: Routes = [
               { path: '', pathMatch: 'full', component: PortfolioEditComponent },
               {
                 path: 'attributes', children: [
-                  { path: '', component: PortfolioAttributesComponent }
+                  { path: '', component: PortfolioAttributesComponent },
+                  {
+                    path: 'versions', component: AttributeVersionComponent
+                  }
                 ]
               }
             ]
           },
         ]
       },
-      { path: 'attributes', component: ContractorAttributesComponent }
+      {
+        path: 'attributes', component: ContractorAttributesComponent, children: [
+          {
+            path: 'versions', component: AttributeVersionComponent
+          }
+        ]
+      }
     ],
   },
 ];
