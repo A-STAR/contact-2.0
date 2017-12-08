@@ -1,12 +1,13 @@
 import { IDebt, IPerson } from '../app-modules.interface';
 
 export enum IActionType {
-  INIT_BY_DEBT_ID             = 'DEBTOR_CARD_INIT_BY_DEBT_ID',
-  INIT_BY_PERSON_ID           = 'DEBTOR_CARD_INIT_BY_PERSON_ID',
-  FETCH_PERSON                = 'DEBTOR_CARD_FETCH_PERSON',
-  FETCH_PERSON_SUCCESS        = 'DEBTOR_CARD_FETCH_PERSON_SUCCESS',
-  FETCH_PERSON_DEBTS          = 'DEBTOR_CARD_FETCH_DEBTS',
-  FETCH_PERSON_DEBTS_SUCCESS  = 'DEBTOR_CARD_FETCH_DEBTS_SUCCESS',
+  INIT_BY_DEBT_ID            = 'DEBTOR_CARD_INIT_BY_DEBT_ID',
+  INIT_BY_PERSON_ID          = 'DEBTOR_CARD_INIT_BY_PERSON_ID',
+  FETCH_PERSON               = 'DEBTOR_CARD_FETCH_PERSON',
+  FETCH_PERSON_SUCCESS       = 'DEBTOR_CARD_FETCH_PERSON_SUCCESS',
+  FETCH_PERSON_DEBTS         = 'DEBTOR_CARD_FETCH_DEBTS',
+  FETCH_PERSON_DEBTS_SUCCESS = 'DEBTOR_CARD_FETCH_DEBTS_SUCCESS',
+  SELECT_PERSON_DEBT         = 'DEBTOR_CARD_SELECT_PERSON_DEBT',
 }
 
 export interface IInitByDebtIdAction {
@@ -51,13 +52,21 @@ export interface IFetchPersonDebtsSuccessAction {
   };
 }
 
+export interface ISelectPersonDebtAction {
+  type: IActionType.SELECT_PERSON_DEBT;
+  payload: {
+    debtId: number;
+  };
+}
+
 export type IDebtorCardAction =
   IFetchPersonAction |
   IFetchPersonDebtsAction |
   IFetchPersonDebtsSuccessAction |
   IFetchPersonSuccessAction |
   IInitByDebtIdAction |
-  IInitByPersonIdAction;
+  IInitByPersonIdAction |
+  ISelectPersonDebtAction;
 
 export interface IDebtorCardState {
   person: IPerson;

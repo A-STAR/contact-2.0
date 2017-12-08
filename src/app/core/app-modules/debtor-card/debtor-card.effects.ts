@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 
 import {
   IActionType,
-  IDebtorCardAction,
   IFetchPersonAction,
   IFetchPersonDebtsAction,
   IFetchPersonDebtsSuccessAction,
@@ -24,8 +23,9 @@ export class DebtorCardEffects {
   initByDebtId$ = this.actions
     .ofType(IActionType.INIT_BY_DEBT_ID)
     .mergeMap((action: IInitByDebtIdAction) => {
-      return this.fetchDebt(action.payload.debtId)
-        .map(debt => this.createFetchActions(debt.personId))
+      const { debtId } = action.payload;
+      return this.fetchDebt(debtId)
+        .mergeMap(debt => this.createFetchActions(debt.personId, debtId))
         .catch(this.notificationService.fetchError().entity('entities.debt.gen.plural').callback());
     });
 
@@ -58,7 +58,7 @@ export class DebtorCardEffects {
     private notificationService: NotificationsService,
   ) {}
 
-  private createFetchActions(personId: number): [ IFetchPersonAction, IFetchPersonDebtsAction ] {
+  private createFetchActions(personId: number, selectedDebtId: number = null): IDebtorCardAction[] {
     return [
       {
         type: IActionType.FETCH_PERSON,
@@ -67,6 +67,10 @@ export class DebtorCardEffects {
       {
         type: IActionType.FETCH_PERSON_DEBTS,
         payload: { personId },
+      },
+      {
+        type: IActionType.SELECT_PERSON_DEBT,
+        payload: { debtId: selectedDebtId }
       },
     ];
   }

@@ -15,6 +15,7 @@ import { IDynamicFormItem } from '../../../../shared/components/form/dynamic-for
 import { IPerson } from './debtor.interface';
 import { IDebt } from '../debt-processing.interface';
 
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DebtorService } from './debtor.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -66,6 +67,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtorCardService: DebtorCardService,
     private debtorService: DebtorService,
     private translate: TranslateService,
     private userPermissionsService: UserPermissionsService,
@@ -91,6 +93,11 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       this.controls = this.getControls(canEdit);
       this.cdRef.markForCheck();
     });
+
+    // TODO(d.maltsev):
+    // ?debtId={debtId} => initByDebtId(debtId)
+    // ?personId={personId} => initByPersonId(personId)
+    this.debtorCardService.initByDebtId(1);
   }
 
   ngOnDestroy(): void {
