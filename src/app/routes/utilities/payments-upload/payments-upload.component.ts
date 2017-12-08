@@ -115,9 +115,9 @@ export class PaymentsUploadComponent extends DialogFunctions {
     this.paymentsUploadService
       .editCell(payload)
       .subscribe(response => {
-        const row = response.rows[0];
-        this.rows[row.id] = row;
-        this.cdRef.markForCheck();
+        // const row = response.rows[0];
+        // this.rows[row.id] = row;
+        // this.cdRef.markForCheck();
       });
   }
 
