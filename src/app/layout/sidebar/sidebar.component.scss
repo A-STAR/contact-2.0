@@ -1,7 +1,28 @@
 .sidebar-nav {
-  padding-bottom: 0;
+  padding-bottom: 40px;
 }
-.sidebar-nav__menu {
-  min-height: calc(100% - 50px);
-  padding-bottom: 0;
+.aside-inner {
+  padding-top: 0 !important;
+  position: relative;
+  :after {
+    content: "";
+    background: rgba(0, 0, 0, 0.15);
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 1px;
+    -webkit-transform: translateZ(0px)
+  }
 }
+
+.nav:before,
+.nav:after {
+  content: none;
+}
+
+.sidebar:after {
+  content: none;
+}
+

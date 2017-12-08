@@ -31,7 +31,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.menuSubscription = this.menuService
       .selectedMenuItem
       .subscribe(menuItem => {
-        this.menuItems = menuItem.children;
+        this.menuItems = menuItem.children || [menuItem];
         if (menuItem.link === '/home') {
           this.router.navigate(['home']);
         }
