@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 import {
   IActionType,
+  IDebtorCardAction,
   IFetchPersonAction,
   IFetchPersonDebtsAction,
   IFetchPersonDebtsSuccessAction,
