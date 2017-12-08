@@ -47,6 +47,7 @@ export class AuthService implements CanActivate {
       .pipe(first())
       .map(token => this.isTokenValid(token) || this.isRetrievedTokenValid())
       .map(invert)
+      .filter(Boolean)
       .subscribe(() => this.redirectToLogin());
   }
 
