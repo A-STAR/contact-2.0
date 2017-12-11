@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
 import { IGuaranteeContract } from './guarantee.interface';
-import { UnsafeAction } from '../../../../core/state/state.interface';
+import { SafeAction } from '../../../../core/state/state.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -72,6 +72,6 @@ export class GuaranteeService {
 
   getPayload<T>(type: string): Observable<T> {
     return this.actions.ofType(type)
-      .map(action => (action as UnsafeAction).payload);
+      .map((action: SafeAction<T>) => action.payload);
   }
 }

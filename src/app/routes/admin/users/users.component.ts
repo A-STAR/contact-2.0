@@ -2,16 +2,16 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
 
 import { IGridColumn } from '../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IUser, IUsersState } from './users.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { MessageBusService } from '../../../core/message-bus/message-bus.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
+
+import { combineLatestAnd } from '../../../core/utils/helpers';
 
 @Component({
   selector: 'app-users',
@@ -51,10 +51,10 @@ export class UsersComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
         this.usersService.state.map(state => !!state.selectedUserId)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -71,7 +71,7 @@ export class UsersComponent implements OnDestroy {
 
   emptyMessage$: Observable<string>;
 
-  private busSubscription: Subscription;
+  private actionSubscription: Subscription;
   private hasViewPermission$: Observable<boolean>;
   private selectedUserSubscription: Subscription;
   private filterUserSubscription: Subscription;
@@ -80,7 +80,6 @@ export class UsersComponent implements OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
@@ -112,12 +111,13 @@ export class UsersComponent implements OnDestroy {
 
     this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'users.errors.view');
 
-    this.busSubscription = this.messageBusService
-      .select(UsersService.USER_SAVED)
+    this.actionSubscription = this.usersService
+      .getAction(UsersService.USER_SAVED)
       .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
+    this.actionSubscription.unsubscribe();
     this.selectedUserSubscription.unsubscribe();
     this.filterUserSubscription.unsubscribe();
     this.viewPermissionSubscription.unsubscribe();
@@ -160,7 +160,7 @@ export class UsersComponent implements OnDestroy {
 
   onSelect(user: IUser): void {
     if (user) {
-      this.usersService.select(user.id);
+      this.usersService.select(String(user.id));
     }
   }
 
