@@ -16,7 +16,7 @@ export class DebtorPaymentComponent {
     private route: ActivatedRoute,
   ) {}
 
-  get debtId(): Observable<number> {
+  get debtId$(): Observable<number> {
     return this.debtorCardService.selectedDebtId$;
   }
 
