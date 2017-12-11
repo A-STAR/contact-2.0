@@ -7,7 +7,7 @@ export const defaultState: IContractorsAndPortfoliosState = {
   selectedContractorId: null,
   selectedManagerId: null,
   selectedPortfolio: null,
-  portfolios: null
+  isPortfolioUpdate: false
 };
 
 export function reducer(
