@@ -1,4 +1,4 @@
-<div class="aside-inner">
+<div class="aside-inner sidebar-aside">
   <nav class="sidebar sidebar-nav" sidebar-anyclick-close="" [class.show-scrollbar]="settings.layout.asideScrollbar">
       <ul class="nav sidebar-nav__menu">
         <li *ngFor='let item of menuItems' [ngClass]="{'nav-heading': item.heading}" [routerLinkActive]="['active']">
@@ -15,5 +15,5 @@
       </ul>
     </nav>
     <app-sidebar-toggle></app-sidebar-toggle>
-    <div class="sidebar__divider"></div>
+    <div class="sidebar-aside__divider"></div>
 </div>

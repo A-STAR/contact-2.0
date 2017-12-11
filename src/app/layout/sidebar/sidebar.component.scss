@@ -3,10 +3,11 @@
 }
 .aside-inner {
   padding-top: 0 !important;
+  padding-bottom: 40px;
   position: relative;
 }
 
-.sidebar__divider {
+.sidebar-aside__divider {
   content: "";
   background: rgba(0, 0, 0, 0.15);
   position: absolute;
@@ -16,17 +17,5 @@
   right: 0;
   width: 1px;
   -webkit-transform: translateZ(0px);
-}
-
-.nav:before,
-.nav:after {
-  content: none;
-  display: none;
-}
-
-.sidebar:after,
-.sidebar:before {
-  content: none;
-  display: none;
 }
 
