@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-debtor-information-phone-grid',

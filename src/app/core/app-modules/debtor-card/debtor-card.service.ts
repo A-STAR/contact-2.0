@@ -65,6 +65,20 @@ export class DebtorCardService {
       .distinctUntilChanged();
   }
 
+  get hasDebts$(): Observable<boolean> {
+    return this.store
+      .select(state => state.debtorCard.debts)
+      .map(Boolean)
+      .distinctUntilChanged();
+  }
+
+  get hasPerson$(): Observable<boolean> {
+    return this.store
+      .select(state => state.debtorCard.person)
+      .map(Boolean)
+      .distinctUntilChanged();
+  }
+
   openByDebtId(debtId: number): void {
     this.initByDebtId(debtId);
     this.navigate(debtId);

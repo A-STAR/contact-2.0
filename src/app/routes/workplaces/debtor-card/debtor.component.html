@@ -19,7 +19,7 @@
 
 <app-tabstrip [scrollerEnabled]="true" [inverse]="true" (select)="onTabSelect($event)">
   <app-tab [title]="'debtor.information.title'">
-    <app-debtor-information #information *ngIf="tabs[0].isInitialised" ></app-debtor-information>
+    <app-debtor-information #information *ngIf="tabs[0].isInitialised"></app-debtor-information>
   </app-tab>
 
   <app-tab [title]="'debtor.debtsTab.title'" [closable]="false">
