@@ -4,14 +4,14 @@ import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import * as moment from 'moment';
 
-import { IDebt } from '../../../../shared/gui-objects/widgets/debt/debt/debt.interface';
+import { IDebt } from '../../../../core/debt/debt.interface';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPromise, IPromiseFormData } from './promise.interface';
 import { IPromiseLimit } from '../../../../shared/gui-objects/widgets/promise/promise.interface';
 
 import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../contact-registration.service';
-import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
+import { DebtService } from '../../../../core/debt/debt.service';
 import { PromiseService } from '../../../../shared/gui-objects/widgets/promise/promise.service';
 import { PromiseService as ContactPromiseService } from './promise.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';

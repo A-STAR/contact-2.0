@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDebt } from '../debt.interface';
+import { IDebt } from '../../../../../../core/debt/debt.interface';
 import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
 import { ILookupPortfolio } from '../../../../../../core/lookup/lookup.interface';
@@ -12,7 +12,7 @@ import { IOption, IOptionSet } from '../../../../../../core/converter/value-conv
 import { IUserPermission, IUserPermissions } from '../../../../../../core/user/permissions/user-permissions.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { DebtService } from '../debt.service';
+import { DebtService } from '../../../../../../core/debt/debt.service';
 import { DebtorCardService } from '../../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';

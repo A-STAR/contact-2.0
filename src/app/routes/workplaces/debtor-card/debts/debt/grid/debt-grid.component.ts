@@ -4,11 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
-import { IDebt } from '../debt.interface';
+import { IDebt } from '../../../../../../core/debt/debt.interface';
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { DebtService } from '../debt.service';
+import { DebtService } from '../../../../../../core/debt/debt.service';
 import { DebtorCardService } from '../../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';

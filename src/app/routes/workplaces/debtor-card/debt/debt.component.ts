@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { INode } from '../../../../shared/gui-objects/container/container.interface';
 
-import { DebtCardComponent } from '../../../../shared/gui-objects/widgets/debt/debt/card/debt-card.component';
+import { DebtCardComponent } from '../debts/debt/card/debt-card.component';
 
 @Component({
   selector: 'app-debtor-address',

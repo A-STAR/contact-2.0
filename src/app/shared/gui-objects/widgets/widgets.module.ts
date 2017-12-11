@@ -9,7 +9,6 @@ import { ContactLogTabModule } from './contact-log-tab/contact-log.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
-// import { DebtModule } from './debt/debt.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DocumentModule } from './documents/document.module';
 import { EmailModule } from './email/email.module';
@@ -40,7 +39,6 @@ import { PaymentOperatorModule } from './payment-operator/payment-operator.modul
     ContactModule,
     ContactPropertyModule,
     DebtorActionLogModule,
-    // DebtModule,
     DebtResponsibleModule,
     DocumentModule,
     EmailModule,
@@ -70,7 +68,6 @@ import { PaymentOperatorModule } from './payment-operator/payment-operator.modul
     ContactModule,
     ContactPropertyModule,
     DebtorActionLogModule,
-    // DebtModule,
     DebtResponsibleModule,
     DocumentModule,
     EmailModule,

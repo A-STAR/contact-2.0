@@ -12,12 +12,12 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDebt } from '../../../debt.interface';
+import { IDebt } from '../../../../../../../../core/debt/debt.interface';
 import { IDynamicFormControl } from '../../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUserConstant } from '../../../../../../../../core/user/constants/user-constants.interface';
 
 import { DebtorCardService } from '../../../../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { DebtService } from '../../../debt.service';
+import { DebtService } from '../../../../../../../../core/debt/debt.service';
 import { UserConstantsService } from '../../../../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../../../../core/user/dictionaries/user-dictionaries.service';
 
