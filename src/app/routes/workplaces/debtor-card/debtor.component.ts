@@ -11,7 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { TranslateService } from '@ngx-translate/core';
 
 import { IDynamicFormItem } from '../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { INavigationParams } from '../../../core/app-modules/debtor-card/debtor-card.interface';
@@ -23,7 +22,6 @@ import { DebtorCardService } from '../../../core/app-modules/debtor-card/debtor-
 import { DebtorService } from './debtor.service';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { DebtorInformationComponent } from './information/information.component';
 import { DynamicFormComponent } from '../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -70,9 +68,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     private debtorCardService: DebtorCardService,
     private debtorService: DebtorService,
     private route: ActivatedRoute,
-    private translate: TranslateService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
   ) {
     super();
   }
@@ -102,7 +98,8 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       responsibleFullName: debt.responsibleFullName,
       utc: debt.utc,
       shortInfo: debt.shortInfo,
-    }));
+    }))
+    .distinctUntilChanged();
   }
 
   get debtId$(): Observable<number> {
