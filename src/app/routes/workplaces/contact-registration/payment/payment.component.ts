@@ -3,12 +3,12 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import * as moment from 'moment';
 
-import { IDebt } from '../../../../shared/gui-objects/widgets/debt/debt/debt.interface';
+import { IDebt } from '../../../../core/debt/debt.interface';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../contact-registration.service';
-import { DebtService } from '../../../../shared/gui-objects/widgets/debt/debt/debt.service';
+import { DebtService } from '../../../../core/debt/debt.service';
 import { PaymentService } from './payment.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';

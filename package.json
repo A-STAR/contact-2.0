@@ -10,7 +10,8 @@
     "start:ext": "ng serve --host 0.0.0.0 --port 9000 --aot --disable-host-check",
     "build": "ng build",
     "build:check": "ng build --aot",
-    "test": "ng test",
+    "test": "ng test --browsers Chrome --auto-watch",
+    "test:prod": "ng test --browsers ChromeHeadless --single-run",
     "lint": "ng lint --type-check",
     "e2e": "ng e2e",
     "ng-update": "npm up @angular/animations @angular/common @angular/compiler @angular/compiler-cli @angular/core @angular/forms @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/cli",
@@ -69,9 +70,11 @@
     "zone.js": "^0.8.18"
   },
   "devDependencies": {
+    "@types/faker": "^4.1.2",
     "@types/jasmine": "^2.8.2",
     "@types/node": "^8.0.57",
     "@types/ramda": "^0.25.8",
+    "faker": "^4.1.0",
     "jasmine-core": "^2.8.0",
     "jasmine-spec-reporter": "^4.2.1",
     "karma": "^1.7.1",

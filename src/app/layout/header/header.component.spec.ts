@@ -13,7 +13,7 @@ import { PersistenceService } from '../../core/persistence/persistence.service';
 
 import { HeaderComponent } from './header.component';
 
-describe('Component: Header', () => {
+xdescribe('Component: Header', () => {
   const mockRouter = {
     navigate: jasmine.createSpy('navigate')
   };

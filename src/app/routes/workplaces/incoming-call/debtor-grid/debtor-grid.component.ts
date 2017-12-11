@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn, IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
 
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DebtorGridService } from './debtor-grid.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { IncomingCallService } from '../incoming-call.service';
@@ -86,10 +86,10 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtorCardService: DebtorCardService,
     private debtorGridService: DebtorGridService,
     private gridService: GridService,
     private incomingCallService: IncomingCallService,
-    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -117,12 +117,16 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(debtor: any): void {
-    this.router.navigate([ `/workplaces/debt-processing/${debtor.debtorId}/${debtor.debtId}/` ]).then(() => {
-      const nextUrl = this.getUrlByDebtor(debtor);
-      if (nextUrl) {
-        this.router.navigate([ nextUrl ]);
-      }
-    });
+    this.debtorCardService.openByDebtId(debtor.debtId);
+
+    // TODO(d.maltsev):
+    // .then(() => {
+    //   // TODO(d.maltsev): navigation params???
+    //   const nextUrl = this.getUrlByDebtor(debtor);
+    //   if (nextUrl) {
+    //     this.router.navigate([ nextUrl ]);
+    //   }
+    // });
   }
 
   onAction($event: string): void {
@@ -130,17 +134,17 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     // log(`Action was fired for ${$event}`);
   }
 
-  private getUrlByDebtor(debtor: any): string {
-    const { debtorId, debtId, contractId, personId } = debtor;
-    switch (debtor.personRole) {
-      case 2:
-        return `/workplaces/debt-processing/${debtorId}/${debtId}/guarantee/${contractId}/guarantor/${personId}`;
-      case 3:
-        // TODO(d.maltsev): return correct url when the module is finished
-        // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=133529625#id-Входящийзвонок-Открытиекарточки
-        return null;
-      case 4:
-        return `/workplaces/debt-processing/${debtorId}/${debtId}/contact/${personId}`;
-    }
-  }
+  // private getUrlByDebtor(debtor: any): string {
+  //   const { debtorId, debtId, contractId, personId } = debtor;
+  //   switch (debtor.personRole) {
+  //     case 2:
+  //       return `/workplaces/debt-processing/${debtorId}/${debtId}/guarantee/${contractId}/guarantor/${personId}`;
+  //     case 3:
+  //       // TODO(d.maltsev): return correct url when the module is finished
+  //       // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=133529625#id-Входящийзвонок-Открытиекарточки
+  //       return null;
+  //     case 4:
+  //       return `/workplaces/debt-processing/${debtorId}/${debtId}/contact/${personId}`;
+  //   }
+  // }
 }

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
@@ -23,6 +23,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactGridComponent implements OnInit, OnDestroy {
+  @Input() personId: number;
 
   private selectedContact$ = new BehaviorSubject<IContact>(null);
 
@@ -69,7 +70,6 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   contacts: Array<IContact> = [];
 
   private dialog: string;
-  private personId = (this.route.params as any).value.personId || null;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
@@ -80,7 +80,6 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) { }

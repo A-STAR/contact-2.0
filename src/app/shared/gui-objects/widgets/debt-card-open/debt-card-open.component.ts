@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { ICloseAction } from '../../../components/action-grid/action-grid.interface';
 
-import { DialogFunctions } from '../../../../core/dialog';
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { OpenDebtCardService } from './debt-card-open.service';
+
+import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
   selector: 'app-open-debt-card',
@@ -17,10 +18,10 @@ export class DebtCardOpenComponent extends DialogFunctions implements OnInit {
 
   dialog = null;
 
-   constructor(
-    private router: Router,
-    private openDebtCardService: OpenDebtCardService,
+  constructor(
     private cdRef: ChangeDetectorRef,
+    private debtorCardService: DebtorCardService,
+    private openDebtCardService: OpenDebtCardService,
   ) {
     super();
   }
@@ -33,9 +34,9 @@ export class DebtCardOpenComponent extends DialogFunctions implements OnInit {
         this.cdRef.markForCheck();
         return;
       }
-        this.close.emit();
-        this.router.navigate([ `/workplaces/debt-processing/${this.userId[0]}/${debtId}` ]);
-      });
+      this.close.emit();
+      this.debtorCardService.openByDebtId(debtId);
+    });
    }
 
    onClose(): void {

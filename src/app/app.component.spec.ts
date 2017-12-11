@@ -8,7 +8,7 @@ import { SettingsService } from './core/settings/settings.service';
 
 import { AppComponent } from './app.component';
 
-describe('AppComponent', () => {
+xdescribe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [

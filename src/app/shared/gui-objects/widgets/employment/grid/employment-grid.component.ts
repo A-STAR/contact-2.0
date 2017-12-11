@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
@@ -23,6 +23,9 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmploymentGridComponent implements OnInit, OnDestroy {
+  // TODO(d.maltsev): always pass personId as input
+  private routeParams = (<any>this.route.params).value;
+  @Input() personId = this.routeParams.contactId || this.routeParams.personId || null;
 
   private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
 
@@ -69,8 +72,6 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   employments: Array<IEmployment> = [];
 
   private dialog: string;
-  private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.contactId || this.routeParams.personId || null;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
