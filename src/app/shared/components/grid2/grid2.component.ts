@@ -287,8 +287,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onSelectionChanged(): void {
     const selected = this.selected.map(row => row[this.rowIdKey]);
-    console.log('original', this.selected);
-    console.log('ours', selected);
     this.refreshRowCount();
     this.onSelect.emit(selected);
   }
