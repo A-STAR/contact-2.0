@@ -1,1 +1,4 @@
-<app-container [node]="node"></app-container>
+<app-contact-card
+  [contactId]="contactId$ | async"
+  [personId]="personId$ | async"
+></app-contact-card>

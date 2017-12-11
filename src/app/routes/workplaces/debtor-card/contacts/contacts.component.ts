@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
-import { INode } from '../../../../shared/gui-objects/container/container.interface';
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 
-import { ContactCardComponent } from '../../../../shared/gui-objects/widgets/contact/card/contact-card.component';
+interface AddressCardRouteParams {
+  contactId: number;
+}
 
 @Component({
   selector: 'app-debtor-contacts',
@@ -11,9 +15,20 @@ import { ContactCardComponent } from '../../../../shared/gui-objects/widgets/con
 export class DebtorContactsComponent {
   static COMPONENT_NAME = 'DebtorContactsComponent';
 
-  get node(): INode {
-    return {
-      component: ContactCardComponent
-    };
+  constructor(
+    private debtorCardService: DebtorCardService,
+    private route: ActivatedRoute,
+  ) {}
+
+  get contactId$(): Observable<number> {
+    return this.routeParams$.map(params => params.contactId);
+  }
+
+  get personId$(): Observable<number> {
+    return this.debtorCardService.personId$;
+  }
+
+  get routeParams$(): Observable<AddressCardRouteParams> {
+    return this.route.params as Observable<AddressCardRouteParams>;
   }
 }

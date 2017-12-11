@@ -16,7 +16,7 @@
   [data]="data"
 ></app-dynamic-form>
 
-<app-tabstrip [scrollerEnabled]="true" [inverse]="true" (select)="onTabSelect($event)">
+<app-tabstrip *ngIf="personId$ | async" [scrollerEnabled]="true" [inverse]="true" (select)="onTabSelect($event)">
   <app-tab [title]="'debtor.information.title'">
     <app-debtor-information *ngIf="tabs[0].isInitialised"></app-debtor-information>
   </app-tab>
@@ -38,7 +38,7 @@
 
   <app-tab [title]="'debtor.documentsTab.title'" [closable]="false">
     <app-document-grid
-      *ngIf="(personId$ | async) && tabs[4].isInitialised"
+      *ngIf="tabs[4].isInitialised"
       [entityId]="debtId$ | async"
       [entityType]="19"
     ></app-document-grid>
@@ -86,7 +86,7 @@
 
   <app-tab [title]="'debtor.contactLogTab.title'" [closable]="false">
     <app-contact-log-tab-grid
-      *ngIf="(personId$ | async) && tabs[11].isInitialised"
+      *ngIf="tabs[11].isInitialised"
       [debtId]="debtId$ | async"
       [personId]="personId$ | async"
     ></app-contact-log-tab-grid>
