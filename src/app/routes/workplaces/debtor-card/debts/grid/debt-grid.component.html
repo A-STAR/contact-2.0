@@ -28,6 +28,7 @@
   [columns]="columns"
   [footerHeight]="false"
   [rows]="debts$ | async"
+  [selection]="selection$ | async"
   [styles]="{ height: '230px' }"
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)">

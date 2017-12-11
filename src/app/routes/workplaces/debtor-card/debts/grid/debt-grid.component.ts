@@ -107,8 +107,6 @@ export class DebtGridComponent {
     { prop: 'debtReasonCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON },
   ];
 
-  // debts: Array<IDebt> = [];
-
   dialog$ = new BehaviorSubject<number>(null);
   debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
 
@@ -133,6 +131,10 @@ export class DebtGridComponent {
 
   get selectedDebt$(): Observable<IDebt> {
     return this.debtorCardService.selectedDebt$ as Observable<any>;
+  }
+
+  get selection$(): Observable<IDebt[]> {
+    return this.debtorCardService.selectedDebt$.map(debt => [ debt ]) as Observable<any>;
   }
 
   onDoubleClick(debt: IDebt): void {
@@ -163,9 +165,7 @@ export class DebtGridComponent {
   private onEdit(): void {
     this.selectedDebt$
       .pipe(first())
-      .subscribe(debt => {
-        // this.router.navigate([ `/workplaces/debt-processing/${this.personId}/${debtId}/debt` ]);
-      });
+      .subscribe(debt => this.router.navigate([ `${this.router.url}/debt` ]));
   }
 
   private onChangeStatus(): void {

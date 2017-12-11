@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
+import { IDebt } from '../../../../core/app-modules/app-modules.interface';
 import { IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '../../../../core/entity/attributes/entity-attributes.interface';
 import { ILookupPortfolio } from '../../../../core/lookup/lookup.interface';
@@ -24,10 +26,11 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
   templateUrl: './debt.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DebtComponent {
+export class DebtComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
+  debt: IDebt;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -36,9 +39,12 @@ export class DebtComponent {
     private debtorCardService: DebtorCardService,
     private entityAttributesService: EntityAttributesService,
     private lookupService: LookupService,
+    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     Observable.combineLatest(
       this.lookupService.portfolios,
       this.userDictionariesService.getDictionariesAsOptions([
@@ -77,6 +83,11 @@ export class DebtComponent {
         debtComponentAmountEditPerm as any,
         dictPermissions as any,
       );
+      this.cdRef.markForCheck();
+    });
+
+    this.debtService.fetch(null, this.debtId).subscribe(debt => {
+      this.debt = debt as any;
       this.cdRef.markForCheck();
     });
   }
@@ -353,5 +364,13 @@ export class DebtComponent {
         disabled: !debtEditPerm,
       }
     ].filter(c => c !== null) as Array<IDynamicFormItem>;
+  }
+
+  private get debtId(): number {
+    return this.routeParams.debtId;
+  }
+
+  private get routeParams(): any {
+    return (this.route.params as any).value;
   }
 }
