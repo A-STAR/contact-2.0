@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Inject, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Inject, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -13,6 +13,8 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolba
 import { AttributeService } from '../attribute.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
+
+import { GridTreeWrapperComponent } from '../../../../../shared/components/gridtree-wrapper/gridtree-wrapper.component';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
@@ -29,6 +31,7 @@ const labelKey = makeKey('widgets.attribute.grid');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+  @ViewChild(GridTreeWrapperComponent) grid: GridTreeWrapperComponent<IAttribute>;
 
   private _entityTypeId: number;
   private _entityId: number;
@@ -212,9 +215,15 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     });
   }
 
+  private removeSelection(): void {
+    this.grid.gridTree.gridTreeService.removeSelection();
+    this.selectedAttribute$.next(null);
+  }
+
   private fetch(): void {
     this.attributeService.fetchAll(this.entityTypeId, this.entityId).subscribe(attributes => {
       this.rows = this.convertToGridTreeRow(attributes);
+      this.removeSelection();
       this.cdRef.markForCheck();
     });
   }

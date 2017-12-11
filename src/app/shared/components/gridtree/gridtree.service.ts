@@ -50,6 +50,10 @@ export class GridTreeService<T> {
     this._draggedRow = null;
   }
 
+  removeSelection(): void {
+    this.onSelect(null);
+  }
+
   addRowTo(
     rows: Array<IGridTreeRow<T>>,
     row: IGridTreeRow<T>,
