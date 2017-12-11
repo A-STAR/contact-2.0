@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/combineLatest';
@@ -23,14 +22,11 @@ import { oneOfGroupRequired } from '../../../../../core/validators';
   templateUrl: './address-card.component.html'
 })
 export class AddressCardComponent implements OnInit {
+  @Input() addressId: number;
   @Input() callCenter = false;
+  @Input() entityId: number;
 
   @ViewChild('form') form: DynamicForm2Component;
-
-  private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
-  private contactId = this.routeParams.contactId || null;
-  private addressId = this.routeParams.addressId || null;
 
   address$ = new BehaviorSubject<IAddress>(null);
   group$: Observable<IDynamicFormGroup>;
@@ -39,17 +35,13 @@ export class AddressCardComponent implements OnInit {
     private addressService: AddressService,
     private contentTabService: ContentTabService,
     private messageBusService: MessageBusService,
-    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-  ) {
-    // NOTE: on deper routes we should take the contactId
-    this.personId = this.contactId || this.personId;
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this.addressId) {
-      this.addressService.fetch(18, this.personId, this.addressId, this.callCenter)
+      this.addressService.fetch(18, this.entityId, this.addressId, this.callCenter)
         .subscribe(address => this.address$.next(address));
     }
 
@@ -68,8 +60,8 @@ export class AddressCardComponent implements OnInit {
 
   onSubmit(): void {
     const action = this.addressId
-      ? this.addressService.update(18, this.personId, this.addressId, this.callCenter, this.form.value)
-      : this.addressService.create(18, this.personId, this.callCenter, this.form.value);
+      ? this.addressService.update(18, this.entityId, this.addressId, this.callCenter, this.form.value)
+      : this.addressService.create(18, this.entityId, this.callCenter, this.form.value);
 
     action.subscribe(() => {
       this.messageBusService.dispatch(AddressService.MESSAGE_ADDRESS_SAVED);

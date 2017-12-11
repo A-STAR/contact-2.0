@@ -16,7 +16,7 @@ import * as moment from 'moment';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPromise, IPromiseLimit } from '../promise.interface';
-import { IDebt } from '../../debt/debt/debt.interface';
+import { IDebt } from '../../../../../core/debt/debt.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PromiseService } from '../promise.service';
