@@ -34,7 +34,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);
 
   dialog: string;
-  gridStyles = this.contactId ? { height: '230px' } : { height: '200px' };
+  gridStyles = this.contactId ? { height: '230px' } : { height: '500px' };
   toolbarClass = this.contactId ? 'bh' : 'bordered';
   busSubscription: Subscription;
   canViewSubscription: Subscription;

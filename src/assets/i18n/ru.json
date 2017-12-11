@@ -38,6 +38,7 @@
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
         "DICTIONARIES": "Справочники",
+        "ATTRIBUTE_VERSION": "Версии атрибута",
         "PORTFOLIOS_CONTRACTORS": "Клиенты и портфели",
         "PORTFOLIO_EDIT": "Портфель",
         "PORTFOLIO_ATTRIBUTES": "Атрибуты портфеля",
@@ -66,6 +67,7 @@
         "DEBTOR_CONTACTS": "Контактные лица должника",
         "DEBTOR_DEBT": "Долг должника",
         "DEBTOR_DEBT_COMPONENT": "Компоненты долга",
+        "DEBTOR_DEBT_CONTACTS": "Карточка контактного лица",
         "DEBTOR_DOCUMENT": "Документ",
         "DEBTOR_EMAIL": "Email должника",
         "DEBTOR_EMPLOYMENT": "История трудоустройства",
@@ -872,7 +874,7 @@
       }
     },
     "contactsTab": {
-      "title": "Контакты",
+      "title": "Контактные лица",
       "remove": {
         "title": "Удалить контактное лицо",
         "confirmMessage": "Вы действительно хотите удалить контактное лицо {{ fullName }} ?"
