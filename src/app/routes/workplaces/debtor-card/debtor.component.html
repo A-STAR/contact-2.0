@@ -67,7 +67,9 @@
 
   <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">
     <ng-container *ngIf="tabs[8].isInitialised">
-      <app-property-grid></app-property-grid>
+      <app-property-grid
+        [personId]="personId$ | async"
+      ></app-property-grid>
       <app-hdivider></app-hdivider>
       <app-debtor-property-attributes></app-debtor-property-attributes>
     </ng-container>
