@@ -125,7 +125,7 @@ export class PortfolioEditComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.navigate('/admin/contractors');
+    this.router.navigate(['/admin/contractors']);
   }
 
   onAttributesClick(): void {
