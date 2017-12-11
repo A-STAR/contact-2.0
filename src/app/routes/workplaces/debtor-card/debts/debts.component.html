@@ -3,7 +3,6 @@
 <app-hdivider></app-hdivider>
 
 <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
-
   <app-tabview-tab [title]="'debtor.paymentsTab.title'">
     <app-payment-grid
       *ngIf="tabs[0].isInitialised"
@@ -18,5 +17,4 @@
       [debtStatusCode]="debtStatusCode"
     ></app-promise-grid>
   </app-tabview-tab>
-
 </app-tabview>

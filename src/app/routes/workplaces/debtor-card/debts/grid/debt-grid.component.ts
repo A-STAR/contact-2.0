@@ -4,16 +4,16 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
-import { IDebt } from '../../../../../../core/debt/debt.interface';
-import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IDebt } from '../../../../../core/debt/debt.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { DebtorCardService } from '../../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { GridService } from '../../../../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
+import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
+import { GridService } from '../../../../../shared/components/grid/grid.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '../../../../../../core/utils/helpers';
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-debt-grid',

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
-import { IDebt } from '../../../../../../../../core/debt/debt.interface';
-import { IDynamicFormControl } from '../../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDebt } from '../../../../../../../core/debt/debt.interface';
+import { IDynamicFormControl } from '../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtService } from '../../../../../../../../core/debt/debt.service';
+import { DebtService } from '../../../../../../../core/debt/debt.service';
 
-import { DynamicFormComponent } from '../../../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '../../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-debt-grid-call-dialog',

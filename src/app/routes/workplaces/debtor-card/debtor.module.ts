@@ -5,11 +5,11 @@ import { ContactLogTabModule } from './contact-log-tab/contact-log-tab.module';
 import { GridModule } from '../../../shared/components/grid/grid.module';
 import { SharedModule } from '../../../shared/shared.module';
 
+import { DebtModule } from './debt/debt.module';
 import { DebtorAddressModule } from './address/address.module';
 import { DebtorAttributesModule } from './attributes/attributes.module';
 import { DebtorContactsModule } from './contacts/contacts.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
-import { DebtorDebtModule } from './debt/debt.module';
 import { DebtorDocumentModule } from './document/document.module';
 import { DebtorEmailModule } from './email/email.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
@@ -28,11 +28,11 @@ import { RegisterContactModule } from './register-contact/register-contact.modul
 
 import { DebtorService } from './debtor.service';
 
+import { DebtComponent } from './debt/debt.component';
 import { DebtorAddressComponent } from './address/address.component';
 import { DebtorComponent } from './debtor.component';
 import { DebtorContactLogTabComponent } from './contact-log-tab/contact-log-tab.component';
 import { DebtorContactsComponent } from './contacts/contacts.component';
-import { DebtorDebtComponent } from './debt/debt.component';
 import { DebtorDebtComponentComponent } from './debt-component/debt-component.component';
 import { DebtorDocumentComponent } from './document/document.component';
 import { DebtorEmailComponent } from './email/email.component';
@@ -181,8 +181,8 @@ const routes: Routes = [
       {
         path: 'debt',
         children: [
-          { path: '', component: DebtorDebtComponent },
-          { path: 'create', component: DebtorDebtComponent },
+          { path: '', component: DebtComponent },
+          { path: 'create', component: DebtComponent },
           {
             path: 'debt-component',
             children: [
@@ -216,11 +216,11 @@ const routes: Routes = [
 @NgModule({
   imports: [
     ContactLogTabModule,
+    DebtModule,
     DebtorAddressModule,
     DebtorAttributesModule,
     DebtorContactsModule,
     DebtorDebtComponentModule,
-    DebtorDebtModule,
     DebtorDocumentModule,
     DebtorEmailModule,
     DebtorEmploymentModule,

@@ -3,18 +3,15 @@ import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { DebtModule } from './debt/debt.module';
+import { DebtGridModule } from './grid/debt-grid.module';
 
 import { DebtsComponent } from './debts.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    DebtModule,
+    DebtGridModule,
     SharedModule,
-  ],
-  exports: [
-    DebtsComponent,
   ],
   declarations: [
     DebtsComponent,

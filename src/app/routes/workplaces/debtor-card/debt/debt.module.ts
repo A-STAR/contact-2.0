@@ -1,19 +1,33 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { SharedModule } from '../../../../shared/shared.module';
+import { AccordionModule } from '../../../../shared/components/accordion/accordion.module';
+import { DebtComponentModule } from '../../../../shared/gui-objects/widgets/debt/component/debt-component.module';
+import { ComponentLogModule } from '../../../../shared/gui-objects/widgets/debt/component-log/component-log.module';
+import { PortfolioLogModule } from '../../../../shared/gui-objects/widgets/debt/portfolio-log/portfolio-log.module';
+import { DynamicFormModule } from '../../../../shared/components/form/dynamic-form/dynamic-form.module';
+import { GridModule } from '../../../../shared/components/grid/grid.module';
 
-import { DebtorDebtComponent } from './debt.component';
+import { DebtComponent } from './debt.component';
 
 @NgModule({
   imports: [
-    SharedModule,
+    AccordionModule,
+    CommonModule,
+    ComponentLogModule,
+    PortfolioLogModule,
+    DebtComponentModule,
+    DynamicFormModule,
+    GridModule,
+    TranslateModule,
   ],
   exports: [
-    DebtorDebtComponent
+    DebtComponent,
+    DebtComponentModule,
   ],
   declarations: [
-    DebtorDebtComponent
+    DebtComponent,
   ],
-  providers: [],
 })
-export class DebtorDebtModule { }
+export class DebtModule { }
