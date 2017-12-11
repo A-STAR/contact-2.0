@@ -48,6 +48,6 @@ export class GridComponent {
   }
 
   onDblClick(debt: IDebt): void {
-    this.debtorCardService.navigate({ debtId: debt.debtId });
+    this.debtorCardService.openByDebtId(debt.debtId);
   }
 }

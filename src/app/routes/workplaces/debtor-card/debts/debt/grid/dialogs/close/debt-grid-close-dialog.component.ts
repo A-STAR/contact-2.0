@@ -9,6 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDebt } from '../../../../../../../../core/debt/debt.interface';
 import { IDynamicFormControl } from '../../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';

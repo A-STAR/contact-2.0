@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../state/state.interface';
 import { IActionType, INavigationParams } from './debtor-card.interface';
 import { IDebt, IPerson } from '../app-modules.interface';
 
-import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class DebtorCardService {
   constructor(
-    private contentTabService: ContentTabService,
-    private router: Router,
     private store: Store<IAppState>,
   ) {}
 
@@ -63,16 +59,16 @@ export class DebtorCardService {
   }
 
   /**
-   * Initializes debtor card by debtId:
+   * Opens debtor card by debtId:
    * 1. fetches debt by `debtId` (`GET /debts/{debtId}`)
    * 2. fetches person by `debt.personId` (`GET /persons/{personsId}`)
    * 3. fetches other person debts by `debt.personId` (`GET /persons/{personsId}/debts`)
    *
    * @param debtId
    */
-  initByDebtId(debtId: number): void {
+  openByDebtId(debtId: number): void {
     this.store.dispatch({
-      type: IActionType.INIT_BY_DEBT_ID,
+      type: IActionType.OPEN_BY_DEBT_ID,
       payload: { debtId },
     });
   }
@@ -84,18 +80,10 @@ export class DebtorCardService {
    *
    * @param personId
    */
-  initByPersonId(personId: number): void {
+  initialize(personId: number): void {
     this.store.dispatch({
-      type: IActionType.INIT_BY_PERSON_ID,
+      type: IActionType.INITIALIZE,
       payload: { personId },
     });
-  }
-
-  /**
-   * Navigates to debtor card by `debtId` or `personId`
-   */
-  navigate(queryParams: Partial<INavigationParams>): Promise<boolean> {
-    this.contentTabService.removeTabByPath(`\/workplaces\/debt-processing\/(.+)`);
-    return this.router.navigate([ '/workplaces/debt-processing' ], { queryParams });
   }
 }

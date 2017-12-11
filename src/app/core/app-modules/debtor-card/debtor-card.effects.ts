@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, Effect } from '@ngrx/effects';
 
 import { Observable } from 'rxjs/Observable';
+
+import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 
 import {
   IActionType,
@@ -21,19 +24,20 @@ import { NotificationsService } from '../../notifications/notifications.service'
 @Injectable()
 export class DebtorCardEffects {
   @Effect()
-  initByDebtId$ = this.actions
-    .ofType(IActionType.INIT_BY_DEBT_ID)
+  openByDebtId$ = this.actions
+    .ofType(IActionType.OPEN_BY_DEBT_ID)
     .mergeMap((action: IInitByDebtIdAction) => {
       const { debtId } = action.payload;
       return this.fetchDebt(debtId)
+        .do(debt => this.navigate(debt.personId))
         .mergeMap(debt => this.createFetchActions(debt.personId, debtId))
         .catch(this.notificationService.fetchError().entity('entities.debt.gen.plural').callback());
     });
 
   @Effect()
-  initByPersonId$ = this.actions
-    .ofType(IActionType.INIT_BY_PERSON_ID)
-    .map((action: IInitByPersonIdAction) => this.createFetchActions(action.payload.personId));
+  initialize$ = this.actions
+    .ofType(IActionType.INITIALIZE)
+    .mergeMap((action: IInitByPersonIdAction) => this.createFetchActions(action.payload.personId));
 
   @Effect()
   fetchPerson$ = this.actions
@@ -55,8 +59,10 @@ export class DebtorCardEffects {
 
   constructor(
     private actions: Actions,
+    private contentTabService: ContentTabService,
     private dataService: DataService,
     private notificationService: NotificationsService,
+    private router: Router,
   ) {}
 
   private createFetchActions(personId: number, selectedDebtId: number = null): IDebtorCardAction[] {
@@ -100,5 +106,10 @@ export class DebtorCardEffects {
 
   private fetchDebts(personId: number): Observable<IDebt[]> {
     return this.dataService.readAll('/persons/{personId}/debts', { personId });
+  }
+
+  private navigate(personId: number): Promise<boolean> {
+    this.contentTabService.removeTabByPath(`\/workplaces\/debtor-card\/(.+)`);
+    return this.router.navigate([ '/workplaces/debtor-card' ]);
   }
 }

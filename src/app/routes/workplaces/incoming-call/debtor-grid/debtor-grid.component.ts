@@ -119,13 +119,16 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(debtor: any): void {
-    this.debtorCardService.navigate({ debtId: debtor.debtId }).then(() => {
-      // TODO(d.maltsev): navigation params???
-      const nextUrl = this.getUrlByDebtor(debtor);
-      if (nextUrl) {
-        this.router.navigate([ nextUrl ]);
-      }
-    });
+    this.debtorCardService.openByDebtId(debtor.debtId);
+
+    // TODO(d.maltsev):
+    // .then(() => {
+    //   // TODO(d.maltsev): navigation params???
+    //   const nextUrl = this.getUrlByDebtor(debtor);
+    //   if (nextUrl) {
+    //     this.router.navigate([ nextUrl ]);
+    //   }
+    // });
   }
 
   onAction($event: string): void {

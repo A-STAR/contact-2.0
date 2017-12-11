@@ -29,6 +29,7 @@ import { DebtorInformationComponent } from './information/information.component'
 import { DynamicFormComponent } from '../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { DialogFunctions } from '../../../core/dialog';
+import { first } from 'rxjs/operators/first';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -95,16 +96,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       this.cdRef.markForCheck();
     });
 
-    // TODO(d.maltsev):
-    // ?debtId={debtId} => initByDebtId(debtId)
-    // ?personId={personId} => initByPersonId(personId)
-    if (this.debtId) {
-      this.debtorCardService.initByDebtId(this.debtId);
-    } else if (this.personId) {
-      this.debtorCardService.initByPersonId(this.personId);
-    } else {
-      throw new Error('Could not get neither debtId nor personId');
-    }
+    this.debtorCardService.initialize(this.personId);
   }
 
   ngOnDestroy(): void {
@@ -151,14 +143,19 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   }
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
-    this.setDialog();
-    this.debtService.navigateToRegistration({
-      contactId,
-      contactType,
-      debtId: this.debtId,
-      personId: this.person.id,
-      personRole: 1,
-    });
+    this.debtId$
+      .filter(Boolean)
+      .pipe(first())
+      .subscribe(debtId => {
+        this.setDialog();
+        this.debtService.navigateToRegistration({
+          contactId,
+          contactType,
+          debtId,
+          personId: this.person.id,
+          personRole: 1,
+        });
+      });
   }
 
   onTabSelect(tabIndex: number): void {
@@ -190,15 +187,11 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     ] as IDynamicFormItem[];
   }
 
-  private get debtId(): number {
-    return this.routeParams.debtId;
-  }
-
   private get personId(): number {
     return this.routeParams.personId;
   }
 
   private get routeParams(): INavigationParams {
-    return (this.route.queryParams as BehaviorSubject<INavigationParams>).value;
+    return (this.route.params as BehaviorSubject<INavigationParams>).value;
   }
 }

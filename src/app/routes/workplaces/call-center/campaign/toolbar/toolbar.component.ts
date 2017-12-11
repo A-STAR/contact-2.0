@@ -71,7 +71,7 @@ export class ToolbarComponent extends DialogFunctions {
   private openDebtorCard(): void {
     this.campaignService.campaignDebt$
       .pipe(first())
-      .subscribe(debt => this.debtorCardService.navigate({ debtId: debt.debtId }));
+      .subscribe(debt => this.debtorCardService.openByDebtId(debt.debtId));
   }
 
   private registerSpecial(): void {

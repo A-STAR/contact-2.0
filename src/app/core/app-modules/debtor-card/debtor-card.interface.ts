@@ -1,13 +1,12 @@
 import { IDebt, IPerson } from '../app-modules.interface';
 
 export interface INavigationParams {
-  debtId: number;
   personId: number;
 }
 
 export enum IActionType {
-  INIT_BY_DEBT_ID      = 'DEBTOR_CARD_INIT_BY_DEBT_ID',
-  INIT_BY_PERSON_ID    = 'DEBTOR_CARD_INIT_BY_PERSON_ID',
+  OPEN_BY_DEBT_ID      = 'DEBTOR_CARD_INIT_BY_DEBT_ID',
+  INITIALIZE    = 'DEBTOR_CARD_INIT_BY_PERSON_ID',
   FETCH_PERSON         = 'DEBTOR_CARD_FETCH_PERSON',
   FETCH_PERSON_SUCCESS = 'DEBTOR_CARD_FETCH_PERSON_SUCCESS',
   FETCH_DEBTS          = 'DEBTOR_CARD_FETCH_DEBTS',
@@ -16,14 +15,14 @@ export enum IActionType {
 }
 
 export interface IInitByDebtIdAction {
-  type: IActionType.INIT_BY_DEBT_ID;
+  type: IActionType.OPEN_BY_DEBT_ID;
   payload: {
     debtId: number;
   };
 }
 
 export interface IInitByPersonIdAction {
-  type: IActionType.INIT_BY_PERSON_ID;
+  type: IActionType.INITIALIZE;
   payload: {
     personId: number;
   };

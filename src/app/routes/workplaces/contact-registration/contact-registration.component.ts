@@ -86,6 +86,6 @@ export class ContactRegistrationComponent {
   onSubmit(): void {
     this.contactRegistrationService
       .confirm(this.debtId)
-      .subscribe(() => this.debtorCardService.navigate({ debtId: this.debtId }));
+      .subscribe(() => this.debtorCardService.openByDebtId(this.debtId));
   }
 }
