@@ -3,14 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUser, IUserEditPermissions } from '../users.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 
 import { LookupService } from '../../../../core/lookup/lookup.service';
-import { MessageBusService } from '../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UsersService } from '../users.service';
@@ -35,14 +34,12 @@ export class UserEditComponent extends DialogFunctions {
   dialog: string = null;
   formData: any;
 
-  private userId = Number((this.route.params as any).value.id);
+  private userId = this.route.snapshot.paramMap.get('userId');
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private cdRef: ChangeDetectorRef,
     private lookupService: LookupService,
-    private messageBusService: MessageBusService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
@@ -59,7 +56,7 @@ export class UserEditComponent extends DialogFunctions {
       this.userConstantsService.get('UserPhoto.MaxSize'),
       this.lookupService.languageOptions,
       this.lookupService.roleOptions,
-      this.userId ? this.usersService.fetchOne(this.userId) : Observable.of(null),
+      this.userId ? this.usersService.fetchOne(this.userId) : of(null),
     )
     .pipe(first())
     .subscribe(([
@@ -101,8 +98,9 @@ export class UserEditComponent extends DialogFunctions {
     const operation = this.userId
       ? this.usersService.update(user, image, this.userId)
       : this.usersService.create(user, image);
+
     operation.subscribe(() => {
-      this.messageBusService.dispatch(UsersService.USER_SAVED);
+      this.usersService.dispatchAction(UsersService.USER_SAVED);
       this.onClose();
     });
   }
