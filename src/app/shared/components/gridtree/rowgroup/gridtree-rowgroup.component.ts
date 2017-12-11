@@ -9,6 +9,7 @@ import {
   OnInit
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+import { startWith } from 'rxjs/operators';
 
 import { IGridTreeColumn, IGridTreeRow, IUniqueIdGetter } from '../gridtree.interface';
 
@@ -52,7 +53,7 @@ export class GridTreeRowGroupComponent<T> implements OnInit, OnDestroy {
       });
 
     this._selectSubscription = this.gridTreeService.select
-      .startWith(this.gridTreeService.selectedRow)
+      .pipe(startWith(this.gridTreeService.selectedRow))
       .subscribe((row: IGridTreeRow<T>) => {
         this._isSelected = row && this.idGetter(row) === this.idGetter(this.row);
         this.cdRef.markForCheck();
