@@ -41,10 +41,9 @@ import { first } from 'rxjs/operators/first';
 export class DebtorComponent extends DialogFunctions implements OnInit, OnDestroy {
   static COMPONENT_NAME = 'DebtorComponent';
 
-  @ViewChild('form') form: DynamicFormComponent;
-  @ViewChild('information') information: DebtorInformationComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  @ViewChild(DebtorInformationComponent) information: DebtorInformationComponent;
 
-  person: Partial<IPerson & IDebt>;
   controls: IDynamicFormItem[];
   dialog: 'registerContact' = null;
   // nice, isn't it?
@@ -79,28 +78,31 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   }
 
   ngOnInit(): void {
-    this.personSubscription = Observable.combineLatest(
-      this.userPermissionsService.has('PERSON_INFO_EDIT'),
-      this.debtorCardService.person$,
-      this.debtorCardService.selectedDebt$,
-    )
-    .subscribe(([ canEdit, person, debt ]) => {
-      this.person = {
-        ...person,
-        birthDate: this.valueConverterService.fromISO(person.birthDate as string),
-        responsibleFullName: debt.responsibleFullName || this.translate.instant('default.NA'),
-        utc: debt.utc,
-        shortInfo: debt.shortInfo,
-      };
-      this.controls = this.getControls(canEdit);
-      this.cdRef.markForCheck();
-    });
+    this.personSubscription = this.userPermissionsService.has('PERSON_INFO_EDIT')
+      .pipe(first())
+      .subscribe(canEdit => {
+        this.controls = this.buildControls(canEdit);
+        this.cdRef.markForCheck();
+      });
 
     this.debtorCardService.initByDebtId(this.debtId);
   }
 
   ngOnDestroy(): void {
     this.personSubscription.unsubscribe();
+  }
+
+  get data$(): Observable<Partial<IDebt & IPerson>> {
+    return Observable.combineLatest(
+      this.debtorCardService.person$,
+      this.debtorCardService.selectedDebt$,
+    )
+    .map(([person, debt]) => ({
+      ...person,
+      responsibleFullName: debt.responsibleFullName,
+      utc: debt.utc,
+      shortInfo: debt.shortInfo,
+    }));
   }
 
   get debtId$(): Observable<number> {
@@ -129,7 +131,9 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       ...this.information.form.serializedUpdates,
     };
 
-    this.debtorService.update(this.person.id, value)
+    this.personId$
+      .flatMap(personId => this.debtorService.update(personId, value))
+      .pipe(first())
       .subscribe(() => {
         this.form.form.markAsPristine();
         this.information.form.form.markAsPristine();
@@ -143,21 +147,25 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   }
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
-    this.setDialog();
-    this.debtService.navigateToRegistration({
-      contactId,
-      contactType,
-      debtId: this.debtId,
-      personId: this.person.id,
-      personRole: 1,
-    });
+    this.personId$
+      .pipe(first())
+      .subscribe(personId => {
+        this.setDialog();
+        this.debtService.navigateToRegistration({
+          contactId,
+          contactType,
+          debtId: this.debtId,
+          personId,
+          personRole: 1,
+        });
+      });
   }
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
   }
 
-  private getControls(canEdit: boolean): IDynamicFormItem[] {
+  private buildControls(canEdit: boolean): IDynamicFormItem[] {
     const debtorTypeOptions = {
       type: 'selectwrapper',
       dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE
