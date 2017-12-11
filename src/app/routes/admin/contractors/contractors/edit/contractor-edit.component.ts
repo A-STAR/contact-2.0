@@ -8,7 +8,6 @@ import { IContractor } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -35,7 +34,6 @@ export class ContractorEditComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
@@ -85,7 +83,7 @@ export class ContractorEditComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 1);
+    this.router.navigate(['/admin/contractors']);
   }
 
   onManagersClick(): void {
