@@ -170,9 +170,11 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       }
     });
 
-    this.portfoliosUpdateSub = this.store.select(state => state.contractorsAndPortfolios.portfolios)
+    this.portfoliosUpdateSub = this.store.select(state => state.contractorsAndPortfolios.isPortfolioUpdate)
       .filter(Boolean)
-      .subscribe(portfolios => this.onPortfoliosFetch(portfolios));
+      .subscribe(() => {
+        this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios));
+      });
 
   }
 
@@ -215,6 +217,10 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   get canReturn$(): Observable<boolean> {
     return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_RETURN');
+  }
+
+  get selectedPortfolio$(): Observable<IPortfolio> {
+    return this.contractorsAndPortfoliosService.selectedPortfolio$;
   }
 
   canForm(portfolio: IPortfolio): boolean {
@@ -327,6 +333,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   private onPortfoliosFetch(portfolios: IPortfolio[]): void {
     this.selection = [];
+    this.contractorsAndPortfoliosService.selectPortfolio(null);
     this.portfolios = portfolios;
     this.cdRef.markForCheck();
   }

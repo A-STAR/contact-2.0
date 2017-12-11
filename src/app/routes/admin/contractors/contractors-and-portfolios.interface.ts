@@ -55,5 +55,5 @@ export interface IContractorsAndPortfoliosState {
   selectedContractorId: number;
   selectedPortfolio: IPortfolio;
   selectedManagerId: number;
-  portfolios: IPortfolio[];
+  isPortfolioUpdate: boolean;
 }
