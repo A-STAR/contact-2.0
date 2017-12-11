@@ -7,7 +7,6 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import { AuthService } from './auth.service';
-import { ContentTabService } from '../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
@@ -104,7 +103,6 @@ export class AuthEffects {
 
   constructor(
     private actions: Actions,
-    private tabService: ContentTabService,
     private authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationsService,
@@ -125,8 +123,6 @@ export class AuthEffects {
   }
 
   private logout(): Observable<void> {
-    this.tabService.saveState();
-    this.tabService.tabs = [];
     return this.dataService.get('/auth/logout', {});
   }
 

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
@@ -7,7 +7,6 @@ import 'rxjs/add/observable/combineLatest';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IEmployment } from '../employment.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { EmploymentService } from '../employment.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
@@ -32,10 +31,10 @@ export class EmploymentCardComponent {
   employment: IEmployment;
 
   constructor(
-    private contentTabService: ContentTabService,
     private employmentService: EmploymentService,
     private lookupService: LookupService,
     private messageBusService: MessageBusService,
+    private router: Router,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -73,7 +72,7 @@ export class EmploymentCardComponent {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onSubmit(): void {

@@ -7,12 +7,9 @@ import { IAppState } from '../../state/state.interface';
 import { IActionType } from './debtor-card.interface';
 import { IDebt, IPerson } from '../app-modules.interface';
 
-import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
-
 @Injectable()
 export class DebtorCardService {
   constructor(
-    private contentTabService: ContentTabService,
     private router: Router,
     private store: Store<IAppState>,
   ) {}
@@ -99,7 +96,6 @@ export class DebtorCardService {
   }
 
   private navigate(debtId: number): Promise<boolean> {
-    this.contentTabService.removeTabByPath(`\/workplaces\/debtor-card\/(.+)`);
     return this.router.navigate([ `/workplaces/debtor-card/${debtId}` ] );
   }
 }

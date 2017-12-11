@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
+import { first, flatMap, map } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDebt } from '../../../../core/app-modules/app-modules.interface';
@@ -11,7 +11,6 @@ import { ILookupPortfolio } from '../../../../core/lookup/lookup.interface';
 import { IOption, IOptionSet } from '../../../../core/converter/value-converter.interface';
 import { IUserPermission, IUserPermissions } from '../../../../core/user/permissions/user-permissions.interface';
 
-import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../../../core/debt/debt.service';
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { EntityAttributesService } from '../../../../core/entity/attributes/entity-attributes.service';
@@ -34,12 +33,12 @@ export class DebtComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private debtService: DebtService,
     private debtorCardService: DebtorCardService,
     private entityAttributesService: EntityAttributesService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -97,20 +96,22 @@ export class DebtComponent implements OnInit {
       this.debtorCardService.personId$,
       this.debtorCardService.selectedDebtId$,
     )
-    .flatMap(([ personId, debtId ]) => {
-      return debtId
-        ? this.debtService.update(personId, debtId, this.form.serializedUpdates)
-        : this.debtService.create(personId, this.form.serializedUpdates);
-    })
+    .pipe(
+      flatMap(([personId, debtId]) => {
+        return debtId
+          ? this.debtService.update(personId, debtId, this.form.serializedUpdates)
+          : this.debtService.create(personId, this.form.serializedUpdates);
+      })
+    )
     .subscribe(() => this.onBack());
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   get displayDebtData(): Observable<boolean> {
-    return this.debtorCardService.selectedDebt$.map(Boolean);
+    return this.debtorCardService.selectedDebt$.pipe(map(Boolean));
   }
 
   get canSubmit(): boolean {

@@ -1,4 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
@@ -7,7 +8,6 @@ import { IContact } from '../contact.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactService } from '../contact.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -62,11 +62,12 @@ export class ContactCardComponent {
   };
 
   constructor(
-    private contentTabService: ContentTabService,
     private contactService: ContactService,
     private messageBusService: MessageBusService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {
     Observable.combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
@@ -114,7 +115,7 @@ export class ContactCardComponent {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onSubmit(): void {

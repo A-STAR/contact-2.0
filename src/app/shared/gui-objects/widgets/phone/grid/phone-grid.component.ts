@@ -21,7 +21,6 @@ import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../../../../core/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
@@ -146,7 +145,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private debtService: DebtService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
@@ -275,7 +273,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.selectedPhoneId$
       .pipe(first())
       .subscribe(phoneId => {
-        this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         const url = `/workplaces/contact-registration/${this._debtId$.value}/${this.contactType}/${phoneId}`;
         this.router.navigate([ url ], { queryParams: {
           campaignId: this.campaignId,

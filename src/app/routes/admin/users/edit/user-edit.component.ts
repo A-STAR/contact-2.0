@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -9,7 +9,6 @@ import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/compon
 import { IUser, IUserEditPermissions } from '../users.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 
-import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
@@ -36,12 +35,12 @@ export class UserEditComponent extends DialogFunctions {
   dialog: string = null;
   formData: any;
 
-  private userId = Number((this.activatedRoute.params as any).value.id);
+  private userId = Number((this.route.params as any).value.id);
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
+    private router: Router,
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private userConstantsService: UserConstantsService,
@@ -109,7 +108,7 @@ export class UserEditComponent extends DialogFunctions {
   }
 
   onClose(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   private getFormControls(

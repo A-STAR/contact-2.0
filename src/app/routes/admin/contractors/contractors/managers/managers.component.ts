@@ -8,7 +8,6 @@ import { IContractorManager } from '../../contractors-and-portfolios.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -73,7 +72,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
     { prop: 'comment', minWidth: 100, maxWidth: 250 },
   ];
 
-  private contractorId = (<any>this.activatedRoute.params).value.contractorId;
+  private contractorId = (<any>this.route.params).value.contractorId;
   private canViewSubscription: Subscription;
   private managersSubscription: Subscription;
 
@@ -81,13 +80,12 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
   selection: IContractorManager[];
 
   constructor(
-    private activatedRoute: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private router: Router,
+    private route: ActivatedRoute,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -154,7 +152,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 1);
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onRemoveSubmit(): void {

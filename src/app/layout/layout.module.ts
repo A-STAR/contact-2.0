@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 
 import { InfoDialogModule } from '../shared/components/dialog/info/info-dialog.module';
-import { ContentTabstripModule } from '../shared/components/content-tabstrip/content-tabstrip.module';
 import { SharedModule } from '../shared/shared.module';
 
 import { LayoutComponent } from './layout.component';
@@ -14,7 +13,6 @@ import { HeaderMenuComponent } from './header/header-menu/header-menu.component'
 
 @NgModule({
   imports: [
-    ContentTabstripModule,
     InfoDialogModule,
     SharedModule,
   ],

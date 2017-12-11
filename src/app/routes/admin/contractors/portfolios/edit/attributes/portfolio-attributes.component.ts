@@ -4,8 +4,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { INode } from '../../../../../../shared/gui-objects/container/container.interface';
 
-import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-
 import {
   AttributeGridComponent
 } from '../../../../../../shared/gui-objects/widgets/entity-attribute/grid/attribute-grid.component';
@@ -36,15 +34,14 @@ export class PortfolioAttributesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
-    private contentTabService: ContentTabService) { }
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
 
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 1);
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
 

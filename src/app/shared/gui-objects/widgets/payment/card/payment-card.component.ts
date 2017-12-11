@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
@@ -7,7 +7,6 @@ import 'rxjs/add/observable/combineLatest';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPayment } from '../payment.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PaymentService } from '../payment.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
@@ -37,11 +36,11 @@ export class PaymentCardComponent {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private paymentService: PaymentService,
     private router: Router,
+    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -113,7 +112,7 @@ export class PaymentCardComponent {
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 4);
+    this.router.navigate([new Array(4 + 1).join('../')], { relativeTo: this.route });
   }
 
   onSubmit(): void {
