@@ -13,7 +13,7 @@ import { SettingsService } from '../../core/settings/settings.service';
 
 import { SidebarComponent } from './sidebar.component';
 
-describe('Component: Sidebar', () => {
+xdescribe('Component: Sidebar', () => {
   const mockRouter = {
     navigate: jasmine.createSpy('navigate')
   };

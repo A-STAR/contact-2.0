@@ -1,5 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
@@ -29,11 +28,10 @@ const labelKey = makeKey('widgets.contact.grid');
   templateUrl: './contact-card.component.html'
 })
 export class ContactCardComponent {
-  @ViewChild('form') form: DynamicFormComponent;
+  @Input() contactId: number;
+  @Input() personId: number;
 
-  private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
-  contactId = this.routeParams.contactId || null;
+  @ViewChild('form') form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = null;
   contact: IContact;
@@ -67,7 +65,6 @@ export class ContactCardComponent {
     private contentTabService: ContentTabService,
     private contactService: ContactService,
     private messageBusService: MessageBusService,
-    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {

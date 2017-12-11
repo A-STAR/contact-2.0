@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IPayment } from './payment.interface';
-import { IDebt } from '../debt/debt/debt.interface';
+import { IDebt } from '../../../../core/debt/debt.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';

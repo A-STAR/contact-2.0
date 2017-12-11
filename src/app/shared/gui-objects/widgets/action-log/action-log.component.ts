@@ -1,9 +1,15 @@
 import {
-  AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, Component,
-  OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+  AfterViewInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  Input,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 
 import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
@@ -32,10 +38,11 @@ const labelKey = makeKey('widgets.actionLog.form');
 export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
   static COMPONENT_NAME = 'DebtorActionLogComponent';
 
+  @Input() personId: number;
+
   @ViewChild(MetadataGridComponent) grid: MetadataGridComponent<any>;
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  private personId = (this.route.params as any).value.personId || null;
   private canViewSub: Subscription;
   private constantSub: Subscription;
 
@@ -62,7 +69,6 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
   constructor(
     private actionLogService: ActionLogService,
     private cdRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
     private notifications: NotificationsService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,

@@ -9,7 +9,7 @@ import { createTranslateLoader } from '../../app.module';
 import { AuthService } from '../auth/auth.service';
 import { GuiObjectsService } from './gui-objects.service';
 
-describe('Service: Menu', () => {
+xdescribe('Service: Menu', () => {
   const mockRouter = {
     navigate: jasmine.createSpy('navigate')
   };

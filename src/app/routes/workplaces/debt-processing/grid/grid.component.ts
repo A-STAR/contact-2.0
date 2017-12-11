@@ -6,12 +6,11 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { IDebt } from '../debt-processing.interface';
 import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
 
-import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DebtProcessingService } from '../debt-processing.service';
 
 import { ActionGridComponent } from '../../../../shared/components/action-grid/action-grid.component';
@@ -33,9 +32,8 @@ export class GridComponent {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
+    private debtorCardService: DebtorCardService,
     private debtProcessingService: DebtProcessingService,
-    private router: Router,
   ) {}
 
   onRequest(): void {
@@ -50,8 +48,6 @@ export class GridComponent {
   }
 
   onDblClick(debt: IDebt): void {
-    const { personId, debtId } = debt;
-    this.contentTabService.removeTabByPath(`${this.router.url}\/[0-9]+$`);
-    this.router.navigate([ `${this.router.url}/${personId}/${debtId}` ]);
+    this.debtorCardService.openByDebtId(debt.debtId);
   }
 }
