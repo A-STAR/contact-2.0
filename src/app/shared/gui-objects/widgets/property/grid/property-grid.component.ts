@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -23,6 +23,7 @@ import { DialogFunctions } from '../../../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+  @Input() personId: number;
 
   private selectedProperty$ = new BehaviorSubject<IProperty>(null);
 
@@ -62,8 +63,6 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
 
   private _propertyList: Array<IProperty> = [];
 
-  private personId = (this.route.params as any).value.personId || null;
-
   private busSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
 
@@ -73,7 +72,6 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
     private router: Router,
   ) {
     super();
