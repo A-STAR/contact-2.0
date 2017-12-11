@@ -9,7 +9,6 @@ import { IAppState } from '../../../../../core/state/state.interface';
 import { IPortfolio } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
@@ -42,7 +41,6 @@ export class PortfolioEditComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
-    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private store: Store<IAppState>,
     private userDictionariesService: UserDictionariesService,
