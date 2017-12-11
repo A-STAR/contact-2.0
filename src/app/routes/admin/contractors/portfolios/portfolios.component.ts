@@ -2,9 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
 import { IContractor, IPortfolio, PortfolioAction } from '../contractors-and-portfolios.interface';
@@ -134,6 +136,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   selection: IPortfolio[];
 
   private contractorSubscription: Subscription;
+  private portfoliosUpdateSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -141,6 +144,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private router: Router,
+    private store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService,
     private translateService: TranslateService
   ) {
@@ -168,10 +172,20 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
         this.notificationsService.error('errors.default.read.403').entity('entities.portfolios.gen.plural').dispatch();
       }
     });
+
+    this.portfoliosUpdateSub = this.store.select(state => state.contractorsAndPortfolios.portfolios)
+      .filter(Boolean)
+      .subscribe(portfolios => this.onPortfoliosFetch(portfolios));
+
   }
 
   ngOnDestroy(): void {
-    this.contractorSubscription.unsubscribe();
+    if (this.contractorSubscription) {
+      this.contractorSubscription.unsubscribe();
+    }
+    if (this.portfoliosUpdateSub) {
+      this.portfoliosUpdateSub.unsubscribe();
+    }
   }
 
   get canView$(): Observable<boolean> {
@@ -317,6 +331,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   private onPortfoliosFetch(portfolios: IPortfolio[]): void {
     this.selection = [];
     this.portfolios = portfolios;
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
   }
 }

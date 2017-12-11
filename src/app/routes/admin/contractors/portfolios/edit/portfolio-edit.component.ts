@@ -3,7 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../../../core/state/state.interface';
 import { IPortfolio } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -42,6 +44,7 @@ export class PortfolioEditComponent implements OnInit {
     private router: Router,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
+    private store: Store<IAppState>,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
@@ -111,8 +114,12 @@ export class PortfolioEditComponent implements OnInit {
       ? this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio)
       : this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, portfolio));
 
-      action.switchMap(result => this.contractorsAndPortfoliosService.readPortfolios(this.contractorId))
-      .subscribe(() => {
+    action.switchMap(result => this.contractorsAndPortfoliosService.readPortfolios(this.contractorId))
+      .subscribe(portfolios => {
+        this.store.dispatch({
+          type: ContractorsAndPortfoliosService.PORTFOLIOS_UPDATE,
+          payload: { portfolios }
+        });
         this.onBack();
       });
   }

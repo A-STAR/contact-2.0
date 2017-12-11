@@ -7,6 +7,7 @@ export const defaultState: IContractorsAndPortfoliosState = {
   selectedContractorId: null,
   selectedManagerId: null,
   selectedPortfolio: null,
+  portfolios: null
 };
 
 export function reducer(
@@ -25,6 +26,11 @@ export function reducer(
         ...action.payload
       };
     case ContractorsAndPortfoliosService.MANAGER_SELECT:
+      return {
+        ...state,
+        ...action.payload
+      };
+    case ContractorsAndPortfoliosService.PORTFOLIOS_UPDATE:
       return {
         ...state,
         ...action.payload

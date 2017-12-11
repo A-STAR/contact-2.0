@@ -31,7 +31,7 @@ export class ContractorsAndPortfoliosService {
   static MANAGER_DELETE                         = 'MANAGER_DELETE';
 
   static PORTFOLIO_FETCH                        = 'PORTFOLIO_FETCH';
-  static PORTFOLIOS_FETCH                       = 'PORTFOLIOS_FETCH';
+  static PORTFOLIOS_UPDATE                      = 'PORTFOLIOS_UPDATE';
   static PORTFOLIOS_CLEAR                       = 'PORTFOLIOS_CLEAR';
   static PORTFOLIO_SELECT                       = 'PORTFOLIO_SELECT';
   static PORTFOLIO_CREATE                       = 'PORTFOLIO_CREATE';
