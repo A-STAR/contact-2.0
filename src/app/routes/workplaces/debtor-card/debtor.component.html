@@ -22,11 +22,9 @@
     <app-debtor-information #information *ngIf="tabs[0].isInitialised" ></app-debtor-information>
   </app-tab>
 
-  <!--
   <app-tab [title]="'debtor.debtsTab.title'" [closable]="false">
     <app-debtor-debts *ngIf="tabs[1].isInitialised"></app-debtor-debts>
   </app-tab>
-  -->
 
   <app-tab [title]="'debtor.guarantorsTab.title'" [closable]="false">
     <app-guarantee-grid *ngIf="tabs[2].isInitialised"></app-guarantee-grid>

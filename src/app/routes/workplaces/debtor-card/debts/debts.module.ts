@@ -16,5 +16,8 @@ import { DebtsComponent } from './debts.component';
   declarations: [
     DebtsComponent,
   ],
+  exports: [
+    DebtsComponent,
+  ]
 })
 export class DebtsModule { }

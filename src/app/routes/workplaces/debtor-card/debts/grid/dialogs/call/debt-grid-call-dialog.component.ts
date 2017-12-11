@@ -28,6 +28,7 @@ export class DebtGridCallDialogComponent {
   onSubmit(): void {
     this.debtService.setNextCallDate(this.debt.id, this.form.serializedUpdates).subscribe(() => {
       this.submit.emit();
+      // TODO(d.maltsev): close in container if there are no errors
       this.close.emit();
     });
   }
