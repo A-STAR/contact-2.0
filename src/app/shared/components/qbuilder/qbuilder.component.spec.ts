@@ -13,7 +13,7 @@ import { QBuilderComponent } from './qbuilder.component';
 
 import { NumericInputComponent } from '../form/numeric-input/numeric-input.component';
 
-describe('QbuilderComponent', () => {
+xdescribe('QbuilderComponent', () => {
   let component: QBuilderComponent;
   let fixture: ComponentFixture<QBuilderComponent>;
 
