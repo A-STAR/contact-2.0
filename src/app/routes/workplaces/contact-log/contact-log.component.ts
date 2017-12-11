@@ -18,6 +18,7 @@ export class ContactLogComponent {
     { key: ContactsGridKeys.PROMISE, title: label('promise.title'), rowIdKey: 'promiseId', isInitialised: true },
     { key: ContactsGridKeys.CONTACT, title: label('contact.title'), rowIdKey: 'contactId', isInitialised: false },
     { key: ContactsGridKeys.SMS, title: label('sms.title'), rowIdKey: 'smsId', isInitialised: false },
+    { key: ContactsGridKeys.EMAIL, title: label('email.title'), rowIdKey: 'emailId', isInitialised: false },
   ];
 
   onTabSelect(tabIndex: number): void {
