@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { CampaignService } from '../campaign.service';
+import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DebtService } from '../../../../../core/debt/debt.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -53,6 +54,7 @@ export class ToolbarComponent extends DialogFunctions {
 
   constructor(
     private campaignService: CampaignService,
+    private debtorCardService: DebtorCardService,
     private debtService: DebtService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -69,7 +71,7 @@ export class ToolbarComponent extends DialogFunctions {
   private openDebtorCard(): void {
     this.campaignService.campaignDebt$
       .pipe(first())
-      .subscribe(debt => this.debtService.navigateToDebtorCard(debt.debtId, debt.personId));
+      .subscribe(debt => this.debtorCardService.openByDebtId(debt.debtId));
   }
 
   private registerSpecial(): void {

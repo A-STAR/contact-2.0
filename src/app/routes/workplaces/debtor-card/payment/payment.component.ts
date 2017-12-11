@@ -1,0 +1,30 @@
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+
+@Component({
+  selector: 'app-debtor-payment',
+  templateUrl: './payment.component.html'
+})
+export class DebtorPaymentComponent {
+  static COMPONENT_NAME = 'DebtorPaymentComponent';
+
+  constructor(
+    private debtorCardService: DebtorCardService,
+    private route: ActivatedRoute,
+  ) {}
+
+  get debtId$(): Observable<number> {
+    return this.debtorCardService.selectedDebtId$;
+  }
+
+  get paymentId(): number {
+    return this.routeParams.paymentId;
+  }
+
+  private get routeParams(): any {
+    return (this.route.params as any).value;
+  }
+}

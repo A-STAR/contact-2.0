@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/timer';
 
 import { ContactRegistrationService } from './contact-registration.service';
-import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
+import { DebtorCardService } from '../../../core/app-modules/debtor-card/debtor-card.service';
 
 import { combineLatestOr } from '../../../core/utils/helpers';
 
@@ -31,7 +31,7 @@ export class ContactRegistrationComponent {
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,
-    private contentTabService: ContentTabService,
+    private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
   ) {}
 
@@ -84,8 +84,8 @@ export class ContactRegistrationComponent {
   }
 
   onSubmit(): void {
-    this.contactRegistrationService.confirm(this.debtId).subscribe(() => {
-      this.contentTabService.navigate(`/workplaces/debt-processing/${this.personId}/${this.debtId}`);
-    });
+    this.contactRegistrationService
+      .confirm(this.debtId)
+      .subscribe(() => this.debtorCardService.openByDebtId(this.debtId));
   }
 }

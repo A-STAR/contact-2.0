@@ -9,13 +9,13 @@ import 'rxjs/add/observable/of';
 
 import { IAddress } from '../address.interface';
 import { IAddressMarkData } from './mark/mark.interface';
-import { IDebt } from '../../debt/debt/debt.interface';
+import { IDebt } from '../../../../../core/debt/debt.interface';
 import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
 import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
-import { DebtService } from '../../debt/debt/debt.service';
+import { DebtService } from '../../../../../core/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';

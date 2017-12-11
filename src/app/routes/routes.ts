@@ -34,11 +34,11 @@ export const routes: Route[] = [
       {
         path: 'workplaces',
         children: [
-          // { path: 'debts', loadChildren: './workplaces/debtors/debtors.module#DebtorsModule' },
           { path: 'debt-processing', loadChildren: './workplaces/debt-processing/debt-processing.module#DebtProcessingModule' },
+          { path: 'debtor-card', loadChildren: './workplaces/debtor-card/debtor.module#DebtorCardModule' },
           {
             path: 'contact-registration',
-            loadChildren: './workplaces/contact-registration/contact-registration.module#ContactRegistrationModule'
+            loadChildren: './workplaces/contact-registration/contact-registration.module#ContactRegistrationModule',
           },
           { path: 'incoming-call', loadChildren: './workplaces/incoming-call/incoming-call.module#IncomingCallModule' },
           { path: 'call-center', loadChildren: './workplaces/call-center/call-center.module#CallCenterModule' },
