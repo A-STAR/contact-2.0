@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
@@ -26,7 +24,6 @@ export class RegisterContactComponent {
   constructor(
     private debtorCardService: DebtorCardService,
     private debtService: DebtService,
-    private route: ActivatedRoute,
   ) {}
 
   get entityType(): number {

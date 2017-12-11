@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { INode } from '../../../../shared/gui-objects/container/container.interface';
@@ -30,7 +29,6 @@ export class DebtorAttributesComponent {
   };
 
   constructor(
-    private route: ActivatedRoute,
     private debtorCardService: DebtorCardService,
   ) {}
 }

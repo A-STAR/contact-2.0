@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
-import { IDebt } from '../../../../../../core/debt/debt.interface';
 import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
 import { ILookupPortfolio } from '../../../../../../core/lookup/lookup.interface';
@@ -29,8 +27,6 @@ import { DynamicFormComponent } from '../../../../../../shared/components/form/d
 export class DebtCardComponent {
   @ViewChild('form') form: DynamicFormComponent;
 
-  private contractorOptions: Array<IOption> = [];
-
   controls: Array<IDynamicFormItem> = null;
 
   constructor(
@@ -40,7 +36,6 @@ export class DebtCardComponent {
     private debtorCardService: DebtorCardService,
     private entityAttributesService: EntityAttributesService,
     private lookupService: LookupService,
-    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
