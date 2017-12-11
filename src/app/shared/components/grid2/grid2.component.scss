@@ -5,8 +5,8 @@
  * 1) https://www.ag-grid.com/javascript-grid-themes/material-theme.php
  * 2) https://github.com/ag-grid/ag-grid-material/blob/master/custom-sizing/styles.scss
  */
-$ag-icons-path: '~ag-grid/src/styles/icons/';
-$ag-mat-icons-path: '~ag-grid/src/styles/material-icons/';
+$ag-icons-path: '../../../../../node_modules/ag-grid/src/styles/icons/';
+$ag-mat-icons-path: '../../../../../node_modules/ag-grid/src/styles/material-icons/';
 
 $font-family: 'Roboto Condensed', sans-serif;
 

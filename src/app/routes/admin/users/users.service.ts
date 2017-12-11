@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/filter';
@@ -16,15 +17,14 @@ export class UsersService {
   static USER_SAVED           = 'USER_SAVED';
 
   constructor(
+    private actions: Actions,
     private dataService: DataService,
     private store: Store<IAppState>,
     private notificationsService: NotificationsService,
   ) {}
 
   get state(): Observable<IUsersState> {
-    return this.store
-      .select(state => state.users)
-      .filter(Boolean);
+    return this.store.select(state => state.users);
   }
 
   fetch(): Observable<Array<IUser>> {
@@ -33,24 +33,24 @@ export class UsersService {
       .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.plural').dispatchCallback());
   }
 
-  fetchOne(id: number): Observable<IUser> {
+  fetchOne(id: string): Observable<IUser> {
     return this.dataService.read('/users/{id}', { id })
       .catch(this.notificationsService.error('errors.default.read').entity('entities.users.gen.singular').dispatchCallback());
   }
 
   create(user: IUser, photo: File | false): Observable<any> {
     return this.createUser(user).concatMap(
-      () => !photo && photo !== false ? Observable.of(null) : this.updatePhoto(user.id, photo)
+      () => !photo && photo !== false ? Observable.of(null) : this.updatePhoto(String(user.id), photo)
     );
   }
 
-  update(user: IUser, photo: File | false, userId: number): Observable<any> {
+  update(user: IUser, photo: File | false, userId: string): Observable<any> {
     return this.updateUser(userId, user).concatMap(
       () => !photo && photo !== false ? Observable.of(null) : this.updatePhoto(userId, photo)
     );
   }
 
-  select(userId: number): void {
+  select(userId: string): void {
     this.dispatchAction(UsersService.USER_SELECT, { userId });
   }
 
@@ -59,12 +59,12 @@ export class UsersService {
       .catch(this.notificationsService.error('errors.default.create').entity('entities.users.gen.singular').dispatchCallback());
   }
 
-  updateUser(userId: number, user: IUser): Observable<any> {
+  updateUser(userId: string, user: IUser): Observable<any> {
     return this.dataService.update('/users/{userId}', { userId }, user)
       .catch(this.notificationsService.error('errors.default.update').entity('entities.users.gen.singular').dispatchCallback());
   }
 
-  createPhoto(userId: number, photo: File): Observable<any> {
+  createPhoto(userId: string, photo: File): Observable<any> {
     return this.dataService.createMultipart('/users/{userId}/photo', { userId }, null, photo)
       .catch(this.notificationsService
         .error('errors.default.upload')
@@ -73,7 +73,7 @@ export class UsersService {
       );
   }
 
-  deletePhoto(userId: number): Observable<any> {
+  deletePhoto(userId: string): Observable<any> {
     return this.dataService.delete('/users/{userId}/photo', { userId })
       .catch(this.notificationsService
         .error('errors.default.delete')
@@ -86,11 +86,15 @@ export class UsersService {
     this.dispatchAction(UsersService.USER_TOGGLE_INACTIVE);
   }
 
-  private dispatchAction(type: string, payload: object = {}): void {
+  dispatchAction(type: string, payload: object = {}): void {
     return this.store.dispatch({ type, payload });
   }
 
-  private updatePhoto(userId: number, photo: File | false): Observable<any> {
+  getAction(action: string): Actions<any> {
+    return this.actions.ofType(action);
+  }
+
+  private updatePhoto(userId: string, photo: File | false): Observable<any> {
     return photo === false ? this.deletePhoto(userId) : this.createPhoto(userId, photo);
   }
 }
