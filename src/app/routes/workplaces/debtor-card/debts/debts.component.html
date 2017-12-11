@@ -1,4 +1,4 @@
-<app-debt-grid (select)="onDebtSelect($event)"></app-debt-grid>
+<app-debt-grid></app-debt-grid>
 
 <app-hdivider></app-hdivider>
 
@@ -6,15 +6,15 @@
   <app-tabview-tab [title]="'debtor.paymentsTab.title'">
     <app-payment-grid
       *ngIf="tabs[0].isInitialised"
-      [debtId]="debtId"
+      [debtId]="debtId$ | async"
     ></app-payment-grid>
   </app-tabview-tab>
 
   <app-tabview-tab [title]="'debtor.promisesTab.title'">
     <app-promise-grid
       *ngIf="tabs[1].isInitialised"
-      [debtId]="debtId"
-      [debtStatusCode]="debtStatusCode"
+      [debtId]="debtId$ | async"
+      [debtStatusCode]="debtStatusCode$ | async"
     ></app-promise-grid>
   </app-tabview-tab>
 </app-tabview>

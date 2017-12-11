@@ -86,4 +86,11 @@ export class DebtorCardService {
       payload: { personId },
     });
   }
+
+  selectDebt(debtId: number): void {
+    this.store.dispatch({
+      type: IActionType.SELECT_DEBT,
+      payload: { debtId },
+    });
+  }
 }

@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-debtor-debts',
@@ -6,22 +9,21 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtsComponent {
-  debtId: number;
-  debtStatusCode: number;
-
   tabs = [
     { isInitialised: true },
     { isInitialised: true },
   ];
 
   constructor(
-    private cdRef: ChangeDetectorRef,
+    private debtorCardService: DebtorCardService,
   ) {}
 
-  onDebtSelect(debt: any): void {
-    this.debtId = debt.id;
-    this.debtStatusCode = debt.statusCode;
-    this.cdRef.markForCheck();
+  get debtId$(): Observable<number> {
+    return this.debtorCardService.selectedDebtId$;
+  }
+
+  get debtStatusCode$(): Observable<number> {
+    return this.debtorCardService.selectedDebt$.map(debt => debt && debt.statusCode);
   }
 
   onTabSelect(tabIndex: number): void {

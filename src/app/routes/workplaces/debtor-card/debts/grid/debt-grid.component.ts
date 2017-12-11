@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
 import { IDebt } from '../../../../../core/debt/debt.interface';
@@ -21,10 +21,6 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtGridComponent {
-  @Output() select = new EventEmitter<IDebt>();
-
-  selectedDebt$ = new BehaviorSubject<IDebt>(null);
-
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -34,7 +30,7 @@ export class DebtGridComponent {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: combineLatestAnd([ this.canEdit$, this.selectedDebt$.map(debt => debt && !!debt.id) ]),
-      action: () => this.onEdit(this.selectedDebt$.value.id)
+      action: () => this.onEdit()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
@@ -123,30 +119,29 @@ export class DebtGridComponent {
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
-
     this.gridService.setAllRenderers(this.columns)
       .pipe(first())
       .subscribe(columns => {
-        this.columns = [...columns];
+        this.columns = [ ...columns ];
         this.cdRef.markForCheck();
       });
-
-    // this.fetch();
   }
 
   get debts$(): Observable<any> {
     return this.debtorCardService.debts$;
   }
 
+  get selectedDebt$(): Observable<IDebt> {
+    return this.debtorCardService.selectedDebt$ as Observable<any>;
+  }
+
   onDoubleClick(debt: IDebt): void {
-    this.selectedDebt$.next(debt);
-    this.select.emit(debt);
-    this.onEdit(debt.id);
+    this.debtorCardService.selectDebt(debt.id);
+    this.onEdit();
   }
 
   onSelect(debt: IDebt): void {
-    this.selectedDebt$.next(debt);
-    this.select.emit(debt);
+    this.debtorCardService.selectDebt(debt.id);
   }
 
   onDialogClose(): void {
@@ -165,8 +160,12 @@ export class DebtGridComponent {
     this.router.navigate([ `${this.router.url}/debt/create` ]);
   }
 
-  private onEdit(debtId: number): void {
-    // this.router.navigate([ `/workplaces/debt-processing/${this.personId}/${debtId}/debt` ]);
+  private onEdit(): void {
+    this.selectedDebt$
+      .pipe(first())
+      .subscribe(debt => {
+        // this.router.navigate([ `/workplaces/debt-processing/${this.personId}/${debtId}/debt` ]);
+      });
   }
 
   private onChangeStatus(): void {
