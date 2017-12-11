@@ -10,10 +10,10 @@
 </div>
 
 <app-dynamic-form
-  *ngIf="controls && (data$ | async)"
+  *ngIf="controls"
   [ngClass]="'app-debtor-container'"
   [controls]="controls"
-  [data]="data$ | async"
+  [data]="data"
 ></app-dynamic-form>
 
 <app-tabstrip [scrollerEnabled]="true" [inverse]="true" (select)="onTabSelect($event)">

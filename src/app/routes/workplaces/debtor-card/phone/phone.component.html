@@ -1,1 +1,4 @@
-<app-container [node]="node"></app-container>
+<app-phone-card
+  [entityId]="entityId$ | async"
+  [phoneId]="phoneId$ | async"
+></app-phone-card>

@@ -43,6 +43,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   @ViewChild(DebtorInformationComponent) information: DebtorInformationComponent;
 
   controls: IDynamicFormItem[];
+  data: Partial<IDebt & IPerson>;
   dialog: 'registerContact' = null;
   // nice, isn't it?
   tabs = [
@@ -74,24 +75,16 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   }
 
   ngOnInit(): void {
-    this.personSubscription = this.userPermissionsService.has('PERSON_INFO_EDIT')
+    this.userPermissionsService.has('PERSON_INFO_EDIT')
       .pipe(first())
       .subscribe(canEdit => {
         this.controls = this.buildControls(canEdit);
         this.cdRef.markForCheck();
       });
 
-    this.debtorCardService.initByDebtId(this.debtId);
-  }
-
-  ngOnDestroy(): void {
-    this.personSubscription.unsubscribe();
-  }
-
-  get data$(): Observable<Partial<IDebt & IPerson>> {
-    return Observable.combineLatest(
-      this.debtorCardService.person$,
-      this.debtorCardService.selectedDebt$,
+    this.personSubscription = Observable.combineLatest(
+      this.debtorCardService.person$.filter(Boolean),
+      this.debtorCardService.selectedDebt$.filter(Boolean),
     )
     .map(([person, debt]) => ({
       ...person,
@@ -99,7 +92,17 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       utc: debt.utc,
       shortInfo: debt.shortInfo,
     }))
-    .distinctUntilChanged();
+    .distinctUntilChanged()
+    .subscribe(data => {
+      this.data = data;
+      this.cdRef.markForCheck();
+    });
+
+    this.debtorCardService.initByDebtId(this.debtId);
+  }
+
+  ngOnDestroy(): void {
+    this.personSubscription.unsubscribe();
   }
 
   get debtId$(): Observable<number> {
