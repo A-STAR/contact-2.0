@@ -37,6 +37,7 @@ export class UserEditComponent extends DialogFunctions {
   private userId = this.route.snapshot.paramMap.get('userId');
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private lookupService: LookupService,
