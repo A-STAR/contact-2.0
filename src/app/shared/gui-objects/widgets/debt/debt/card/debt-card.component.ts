@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDebt } from '../debt.interface';
@@ -71,7 +72,7 @@ export class DebtCardComponent {
         'DEBT_DICT4_EDIT_LIST'
       ]),
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([
       contractorOptions, debt, portfolios, currencyOptions, dictionaries, attributes,
       debtEditPerm,
@@ -329,7 +330,30 @@ export class DebtCardComponent {
           width: 3
         }
         : null,
+        {
+          label: 'widgets.debt.grid.account',
+          controlName: 'account',
+          type: 'text',
+          disabled: !debtEditPerm,
+          width: 2
+        },
       // Row 6
+      {
+        label: 'widgets.debt.grid.stageCode',
+        controlName: 'stageCode',
+        type: 'selectwrapper',
+        dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE,
+        disabled: !debtEditPerm,
+        width: 3,
+      },
+      {
+        label: 'widgets.debt.grid.debtDate',
+        controlName: 'debtDate',
+        type: 'datepicker',
+        disabled: !debtEditPerm,
+        width: 3
+      },
+      // Row 7
       {
         label: 'widgets.debt.grid.comment',
         controlName: 'comment',

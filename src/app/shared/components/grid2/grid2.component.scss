@@ -1,5 +1,28 @@
 @import "../../styles/app/variables.scss";
 
+/**
+ * Styles configuarion:
+ * 1) https://www.ag-grid.com/javascript-grid-themes/material-theme.php
+ * 2) https://github.com/ag-grid/ag-grid-material/blob/master/custom-sizing/styles.scss
+ */
+$ag-icons-path: '~ag-grid/src/styles/icons/';
+$ag-mat-icons-path: '~ag-grid/src/styles/material-icons/';
+
+$font-family: 'Roboto Condensed', sans-serif;
+
+$grid-size: 6px !default;
+
+$icon-size: 14px !default;
+
+$header-height: 42px !default;
+$row-height: 36px;
+
+$cell-horizontal-padding: 15px;
+
+@import '~ag-grid/src/styles/ag-grid.scss';
+@import '~ag-grid/src/styles/ag-theme-material.scss';
+
+/*
 app-grid2 {
   line-height: 0;
 }
@@ -27,9 +50,6 @@ app-grid2 {
     height: 12px;
     opacity: 1;
     width: 12px;
-    &:before {
-      content: "...";
-    }
   }
 
   .header-item-wrapper {
@@ -90,3 +110,4 @@ app-grid2 {
 .ag-dnd-ghost {
   z-index: $zindex-app-grid2-dnd-ghost;
 }
+*/

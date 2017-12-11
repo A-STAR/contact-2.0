@@ -1,8 +1,6 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { INode } from '../../../../../shared/gui-objects/container/container.interface';
-
 import { DebtorService } from '../debtor.service';
 
 import { AddressGridComponent } from './address-grid/address-grid.component';
@@ -21,15 +19,16 @@ export class DebtorInformationComponent {
   @ViewChild(CompanyComponent) companyComponent: CompanyComponent;
   @ViewChild(PersonComponent) personComponent: PersonComponent;
 
-  // TODO(d.maltsev) get rid of this. Use widgets in html instead.
-  node: INode = {
-    container: 'tabs',
-    children: [
-      { component: AddressGridComponent, title: 'debtor.information.address.title' },
-      { component: PhoneGridComponent, title: 'debtor.information.phone.title' },
-      { component: EmailGridComponent, title: 'debtor.information.email.title', inject: { personRole: 1 } },
-    ]
-  };
+  tabs = [
+    { component: AddressGridComponent, title: 'debtor.information.address.title', isInitialised: true },
+    { component: PhoneGridComponent, title: 'debtor.information.phone.title', isInitialised: false },
+    {
+      component: EmailGridComponent,
+      title: 'debtor.information.email.title',
+      inject: { personRole: 1 },
+      isInitialised: false
+    },
+  ];
 
   constructor(
     private debtorService: DebtorService,
@@ -50,5 +49,9 @@ export class DebtorInformationComponent {
 
   get isCompany$(): Observable<boolean> {
     return this.debtorService.isCompany$;
+  }
+
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
   }
 }

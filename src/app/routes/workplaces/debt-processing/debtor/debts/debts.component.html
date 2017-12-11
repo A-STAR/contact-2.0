@@ -2,16 +2,21 @@
 
 <app-hdivider></app-hdivider>
 
-<app-tabstrip [scrollerEnabled]="false" [inverse]="true">
-  <app-tab [title]="'debtor.paymentsTab.title'" [closable]="false">
+<app-tabview (select)="onTabSelect($event)" [noMargin]="true">
+
+  <app-tabview-tab [title]="'debtor.paymentsTab.title'">
     <app-payment-grid
+      *ngIf="tabs[0].isInitialised"
       [debtId]="debtId"
     ></app-payment-grid>
-  </app-tab>
-  <app-tab [title]="'debtor.promisesTab.title'" [closable]="false">
+  </app-tabview-tab>
+
+  <app-tabview-tab [title]="'debtor.promisesTab.title'">
     <app-promise-grid
+      *ngIf="tabs[1].isInitialised"
       [debtId]="debtId"
       [debtStatusCode]="debtStatusCode"
     ></app-promise-grid>
-  </app-tab>
-</app-tabstrip>
+  </app-tabview-tab>
+
+</app-tabview>

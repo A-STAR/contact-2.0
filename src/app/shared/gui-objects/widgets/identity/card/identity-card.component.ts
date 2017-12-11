@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -48,7 +49,7 @@ export class IdentityCardComponent {
         : this.userPermissionsService.has('IDENTITY_DOCUMENT_ADD'),
       this.identityId ? this.identityService.fetch(this.personId, this.identityId) : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ options, canEdit, identity ]) => {
       this.controls = ([
         { label: 'debtor.identityDocs.grid.docTypeCode', controlName: 'docTypeCode', type: 'select', options, required: true, },

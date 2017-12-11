@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
 import { ResultDialogModule } from '../../../../../components/dialog/result/result-dialog.module';
@@ -14,7 +13,6 @@ import { PromiseRemoveDialogComponent } from './promise-remove-dialog.component'
     DialogModule,
     DialogActionModule,
     ResultDialogModule,
-    TranslateModule,
   ],
   exports: [
     PromiseRemoveDialogComponent,

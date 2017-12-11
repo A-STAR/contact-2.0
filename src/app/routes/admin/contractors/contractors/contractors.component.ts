@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
+import { Actions } from '@ngrx/effects';
 
 import { IContractor } from '../contractors-and-portfolios.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
@@ -14,16 +15,15 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
-import { MessageBusService } from '../../../../core/message-bus/message-bus.service';
 import { DialogFunctions } from '../../../../core/dialog';
+import { combineLatestAnd } from '../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-contractors',
   templateUrl: './contractors.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractorsComponent extends DialogFunctions implements OnDestroy {
-  lastManagerLessContractorId$ = new BehaviorSubject<number>(null);
+export class ContractorsComponent extends DialogFunctions implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -34,20 +34,18 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedContractorId$
-      ).map(([hasPermissions, selectedContractor]) => hasPermissions && !!selectedContractor)
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('delete'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedContractorId$,
-        this.lastManagerLessContractorId$
-      ).map(([hasPermissions, selectedContractorId, lastManagerLessContractorId]) =>
-              hasPermissions && selectedContractorId && (selectedContractorId === lastManagerLessContractorId))
+        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -61,26 +59,24 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     { prop: 'name', minWidth: 120, maxWidth: 200 },
     { prop: 'fullName', minWidth: 120, maxWidth: 200 },
     { prop: 'smsName', minWidth: 120, maxWidth: 200 },
-    { prop: 'responsibleName', minWidth: 100, maxWidth: 150 },
+    { prop: 'responsibleFullName', minWidth: 100, maxWidth: 150 },
     { prop: 'typeCode', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE },
     { prop: 'phone', minWidth: 100, maxWidth: 150 },
     { prop: 'address', minWidth: 100, maxWidth: 250 },
     { prop: 'comment', minWidth: 100 },
   ];
 
+  contractors: IContractor[] = [];
   dialog: string;
-  selectedContractor: IContractor[] = [];
-  selection: IContractor[] ;
-  private _contractors: IContractor[];
+  selection: IContractor[] = [];
 
+  private actionsSub: Subscription;
   private canViewSubscription: Subscription;
   private contractorsSubscription: Subscription;
-  // private viewSubFromChildDelete: Subscription;
-  private viewSubFromChildCreate: Subscription;
 
   constructor(
+    private actions$: Actions,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private messageBusService: MessageBusService,
     private gridService: GridService,
     private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -88,10 +84,13 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
-    this.gridService.setDictionaryRenderers(this.columns)
-      .take(1)
+  }
+
+  ngOnInit(): void {
+    this.gridService.setAllRenderers(this.columns)
+      .pipe(first())
       .subscribe(columns => {
-        this.columns = this.gridService.setRenderers(columns);
+        this.columns = [...columns];
       });
 
     this.canViewSubscription = this.canView$.subscribe(canView => {
@@ -103,52 +102,23 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
       }
     });
 
-    this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractorId$.subscribe(contractorId => {
-      this.selectedContractor = this.contractors && this.contractors.find((contractor) => contractor.id === contractorId)
-        ? [this.contractors.find((contractor) => contractor.id === contractorId)]
-        : [];
+    this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractorId$
+      .subscribe(contractorId => {
+        const found = this.contractors.find(contractor => contractor.id === contractorId);
+        this.selection = found ? [found] : [];
+      });
+
+    this.actionsSub = this.actions$.subscribe(action => {
+      if (action.type === ContractorsAndPortfoliosService.CONTRACTOR_CREATE) {
+        this.fetchContractors();
+      }
     });
-
-    this.viewSubFromChildCreate = this.messageBusService
-      .select(ContractorsAndPortfoliosService.CONTRACTOR_FETCH)
-      .subscribe(() => this.fetchContractors());
-
-    this.viewSubFromChildCreate = this.messageBusService
-      .select(ContractorsAndPortfoliosService.EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED)
-      .subscribe(managerLessContractorId  => this.lastManagerLessContractorId$.next(managerLessContractorId as number));
-  }
-
-  set contractors(newContractors: IContractor[]) {
-    this._contractors = newContractors;
-    if (this.selectedContractor) {
-      this.onSelect(this.selectedContractor[0]);
-      this.contractorsAndPortfoliosService.state
-          .map(state => state.selectedContractorId)
-          .take(1)
-          .subscribe(contractorId => {
-            this.selectedContractor = this.contractors && this.contractors.find((contractor) => contractor.id === contractorId)
-              ? [this.contractors.find((contractor) => contractor.id === contractorId)]
-              : [];
-          });
-          this.cdRef.markForCheck();
-    }
-  }
-
-  get contractors(): IContractor[] {
-    return this._contractors;
   }
 
   ngOnDestroy(): void {
-    this.lastManagerLessContractorId$.unsubscribe();
+    this.actionsSub.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    // this.viewSubFromChildDelete.unsubscribe();
-    this.viewSubFromChildCreate.unsubscribe();
     this.contractorsSubscription.unsubscribe();
-    this.clearContractors();
-  }
-
-  clearContractors(): void {
-    this.contractorsAndPortfoliosService.selectContractor(null);
   }
 
   get canView$(): Observable<boolean> {
@@ -172,15 +142,15 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
   }
 
   onEdit(): void {
-    this.router.navigate([ `/admin/contractors/${this.selectedContractor[0].id}` ]);
+    this.router.navigate([ `/admin/contractors/${this.selection[0].id}` ]);
   }
 
   onSelect(contractor: IContractor): void {
     this.contractorsAndPortfoliosService.selectContractor(contractor && contractor.id || null);
   }
 
-  onRemoveSubmit(): void {
-    this.contractorsAndPortfoliosService.deleteContractor(this.selectedContractor[0].id)
+  onRemove(): void {
+    this.contractorsAndPortfoliosService.deleteContractor(this.selection[0].id)
       .subscribe(() => {
         this.setDialog();
         this.fetchContractors();
@@ -189,8 +159,23 @@ export class ContractorsComponent extends DialogFunctions implements OnDestroy {
 
   private fetchContractors(): void {
     this.contractorsAndPortfoliosService.readAllContractors()
-      .subscribe((contractors: IContractor[]) => {
+      .subscribe(contractors => {
         this.contractors = contractors;
+        if (this.selection.length) {
+          // this.onSelect(this.selectedContractor);
+          this.contractorsAndPortfoliosService.state
+            .map(state => state.selectedContractorId)
+            .pipe(first())
+            .subscribe(contractorId => {
+              const found = this.contractors.find(contractor => contractor.id === contractorId);
+              this.selection = found ? [found] : [];
+            });
+        }
+        this.cdRef.markForCheck();
       });
+  }
+
+  private clearContractors(): void {
+    this.contractorsAndPortfoliosService.selectContractor(null);
   }
 }

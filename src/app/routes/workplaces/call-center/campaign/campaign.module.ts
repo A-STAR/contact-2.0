@@ -3,9 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AddressModule } from './address/address.module';
 import { AddressesModule } from './addresses/addresses.module';
+import { ContactModule } from './contact/contact.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { DebtComponentsModule } from './debt-components/debt-components.module';
-import { DocumentModule } from './document/document.module';
 import { DocumentsModule } from './documents/documents.module';
 import { OverviewModule } from './overview/overview.module';
 import { PaymentModule } from './payment/payment.module';
@@ -19,7 +19,7 @@ import { ToolbarModule } from './toolbar/toolbar.module';
 
 import { AddressComponent } from './address/address.component';
 import { CampaignComponent } from './campaign.component';
-import { DocumentComponent } from './document/document.component';
+import { ContactComponent } from './contact/contact.component';
 import { PaymentComponent } from './payment/payment.component';
 import { PhoneComponent } from './phone/phone.component';
 import { PromiseComponent } from './promise/promise.component';
@@ -28,28 +28,24 @@ const routes: Routes = [
   { path: '', component: CampaignComponent },
   { path: 'phone', children: [
     { path: '', redirectTo: 'create', pathMatch: 'full' },
-    { path: 'create', component: PhoneComponent },
-    { path: ':phoneId', component: PhoneComponent },
+    { path: ':personId/create', component: PhoneComponent },
+    { path: ':personId/:phoneId', component: PhoneComponent },
   ]},
   { path: 'address', children: [
     { path: '', redirectTo: 'create', pathMatch: 'full' },
-    { path: 'create', component: AddressComponent },
-    { path: ':addressId', component: AddressComponent },
+    { path: ':personId/create', component: AddressComponent },
+    { path: ':personId/:addressId', component: AddressComponent },
   ]},
-  { path: 'document', children: [
-    { path: '', redirectTo: 'create', pathMatch: 'full' },
-    { path: 'create', component: DocumentComponent },
-    { path: ':documentId', component: DocumentComponent },
+  { path: 'contactLog', children: [
+    { path: ':debtId/:contactId/contactLogType/:contactType', component: ContactComponent },
   ]},
   { path: 'promise', children: [
     { path: '', redirectTo: '', pathMatch: 'full' },
-    { path: 'create', component: PromiseComponent },
-    { path: ':promiseId', component: PromiseComponent },
+    { path: ':debtId/:promiseId', component: PromiseComponent },
   ]},
   { path: 'payment', children: [
     { path: '', redirectTo: '', pathMatch: 'full' },
-    { path: 'create', component: PaymentComponent },
-    { path: ':paymentId', component: PaymentComponent },
+    { path: ':debtId/:paymentId', component: PaymentComponent },
   ]},
 ];
 
@@ -57,9 +53,9 @@ const routes: Routes = [
   imports: [
     AddressModule,
     AddressesModule,
+    ContactModule,
     ContactsModule,
     DebtComponentsModule,
-    DocumentModule,
     DocumentsModule,
     OverviewModule,
     PaymentModule,

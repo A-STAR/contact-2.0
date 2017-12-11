@@ -34,6 +34,7 @@
 <app-grid
   *ngIf="canDisplayGrid"
   columnTranslationKey="debtor.information.email"
+  [contextMenuOptions]="contextMenuOptions"
   selectionType="single"
   [styles]="{height: '230px'}"
   [columns]="columns"

@@ -1,7 +1,14 @@
 <app-address-grid
   *ngIf="debtExists$ | async"
+  action="edit"
+  [campaignId]="campaignId"
   [debtId]="debtId$ | async"
+  [debtorId]="personId$ | async"
   [callCenter]="true"
+  [ignoreViewPermissions]="true"
+  [ignoreVisitAddPermissions]="true"
+  [ignoreVisitViewPermissions]="true"
+  [ignoreDebtRegContactTypeListPermissions]="true"
   [personId]="personId$ | async"
   [personRole]="1"
 ></app-address-grid>

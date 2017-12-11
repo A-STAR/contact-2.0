@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { IAddressMarkData, IDebt } from './mark.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -30,6 +31,7 @@ const labelKey = makeKey('widgets.address.dialogs.mark.form');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressGridMarkComponent implements OnInit {
+  @Input() callCenter: boolean;
   @Input() debtorId: number;
   @Input() personId: number;
   @Input() personRole: number;
@@ -65,13 +67,13 @@ export class AddressGridMarkComponent implements OnInit {
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [ ...columns ];
         this.cdRef.markForCheck();
       });
 
-    this.markService.fetchDebtsForPerson(this.personId, this.personRole, this.debtorId)
+    this.markService.fetchDebtsForPerson(this.personId, this.personRole, this.debtorId, this.callCenter)
       .subscribe(debts => {
         this.debts = debts;
         if (debts.length === 1) {

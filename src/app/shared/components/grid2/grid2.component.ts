@@ -16,8 +16,17 @@ import { Subject } from 'rxjs/Subject';
 import * as R from 'ramda';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  ColDef, Column, ColumnRowGroupChangedEvent, GetContextMenuItemsParams,
-  GridOptions, ICellRendererParams, MenuItemDef, PostProcessPopupParams, RowNode
+  CellValueChangedEvent,
+  ColDef,
+  Column,
+  ColumnRowGroupChangedEvent,
+  GetContextMenuItemsParams,
+  GridCellDef,
+  GridOptions,
+  ICellRendererParams,
+  MenuItemDef,
+  PostProcessPopupParams,
+  RowNode,
 } from 'ag-grid/main';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
@@ -33,21 +42,18 @@ import {
   IAGridRequest, IAGridSorter } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { PersistenceService } from '../../../core/persistence/persistence.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
+import { DatePickerComponent } from './editors/datepicker/datepicker.component';
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
+
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { UserPermissions } from '../../../core/user/permissions/user-permissions';
-
-
-interface ITranslations {
-  translations: { [index: string]: string };
-}
+// import { GridCell } from 'ag-grid/dist/lib/entities/gridCell';
 
 @Component({
   selector: 'app-grid2',
@@ -56,8 +62,6 @@ interface ITranslations {
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: [
     './grid2.component.scss',
-    './grid2.component.ag-base.scss',
-    './grid2.component.theme.scss',
   ],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy {
@@ -73,11 +77,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static SELECTED_ROWS      = 'AGRID_SELECTED_ROWS';
   static DESTROY_STATE      = 'AGRID_DESTROY_STATE';
 
+  @Input() actions: IMetadataAction[] = [];
+  @Input() columns: IAGridColumn[];
   @Input() columnIds: string[];
   @Input() disableFilters = false;
   @Input() fetchUrl: string;
   @Input() groupColumnMinWidth = 120;
-  @Input() headerHeight = 25;
+  @Input() headerHeight = 42;
   @Input() metadataKey: string;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() pagination = true;
@@ -85,7 +91,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() persistenceKey: string;
   @Input() remoteSorting = true;
   @Input() rowCount = 0;
-  @Input() rowHeight = 25;
+  @Input() rowHeight = 36;
   @Input() rowIdKey = 'id';
   @Input() rows: any[] = [];
   @Input() rowSelection = 'multiple';
@@ -100,23 +106,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onDblClick = new EventEmitter<any>();
   @Output() onFilter = new EventEmitter<FilterObject>();
   @Output() onPage = new EventEmitter<number>();
-  @Output() onInit = new EventEmitter<void>();
   @Output() onPageSize = new EventEmitter<number>();
   @Output() onSort = new EventEmitter< IAGridSortModel[]>();
   @Output() onSelect = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IAGridAction>();
+  @Output() cellValueChange = new EventEmitter<CellValueChangedEvent>();
 
-  columns: IAGridColumn[];
   columnDefs: ColDef[];
   gridOptions: GridOptions = {};
   page: number = this.startPage;
   paginationPanel: IToolbarAction[] = [];
   initCallbacks: Function[] = [];
-  actions: IMetadataAction[] = [];
 
   private gridSettings: IAGridSettings;
   private initialized = false;
-  private langSubscription: EventEmitter<any>;
   private saveChangesDebounce = new Subject<void>();
   private saveChangesDebounceSub: Subscription;
   private userPermissionsBag: UserPermissions;
@@ -126,7 +129,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private notificationService: NotificationsService,
     private persistenceService: PersistenceService,
     private translate: TranslateService,
@@ -143,43 +145,25 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return this.gridOptions.api ? this.gridOptions.api.getSelectedRows() : [];
   }
 
+  deselectAll(): void {
+    this.gridOptions.api.deselectAll();
+  }
+
   ngOnInit(): void {
     this.viewportDatasource = new ViewPortDatasource(this);
     if (!this.persistenceKey) {
       console.warn('Please provide the [persistenceKey] or the grid will not be able to save its settings');
     }
-    if (!this.metadataKey) {
-      throw new Error(`Can't initialise since no [metadataKey] key provided.`);
-    }
 
     this.userPermissionsSub = this.userPermissionsService.bag()
       .subscribe(bag => this.userPermissionsBag = bag);
 
-    this.gridService
-      .getActions(this.metadataKey)
-      .take(1)
-      .subscribe(actions => {
-        this.actions = actions;
-      });
-
-    this.gridService
-      .getColumnMeta(this.metadataKey, {})
-      .take(1)
-      .subscribe(columns => {
-        const { colDefs } = this.restoreGridSettings();
-
-        this.columns = columns.slice();
-        this.columnDefs = this.setColumnDefs(colDefs);
-        this.setGridOptions();
-        this.setPagination();
-
-        this.initialized = true;
-        this.cdRef.markForCheck();
-        this.onInit.emit();
-      });
-
-    this.langSubscription = this.translate.onLangChange
-      .subscribe((translations: ITranslations) => this.refreshTranslations(translations.translations));
+    const { colDefs } = this.restoreGridSettings();
+    this.columnDefs = this.setColumnDefs(colDefs);
+    this.setGridOptions();
+    this.setPagination();
+    this.initialized = true;
+    this.cdRef.markForCheck();
 
     this.saveChangesDebounceSub = this.saveChangesDebounce
       .debounceTime(2000)
@@ -211,9 +195,48 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveGridSettings();
-    this.langSubscription.unsubscribe();
     this.saveChangesDebounceSub.unsubscribe();
     this.userPermissionsSub.unsubscribe();
+  }
+
+  focusNextCell(callback: (cell: GridCellDef) => boolean): GridCellDef {
+    const { api, columnApi } = this.gridOptions;
+    const columns = columnApi.getAllGridColumns();
+    const nRows = api.getModel().getRowCount();
+    if (!columns || !columns[0] || nRows === 0) {
+      return;
+    }
+
+    let nextCell: GridCellDef = api.getFocusedCell();
+    if (!nextCell) {
+      api.setFocusedCell(0, columns[0]);
+    }
+
+    while (true) {
+      if (nextCell) {
+        const nextColumn = columnApi.getDisplayedColAfter(nextCell.column);
+        nextCell = {
+          column: nextColumn || columns[0],
+          floating: nextCell.floating,
+          rowIndex: nextColumn ? nextCell.rowIndex : nextCell.rowIndex + 1,
+        };
+      } else {
+        nextCell = api.getFocusedCell();
+      }
+
+      if (!nextCell.column || nextCell.rowIndex >= nRows) {
+        api.clearFocusedCell();
+        return;
+      }
+
+      if (callback(nextCell)) {
+        break;
+      }
+    }
+
+    if (nextCell) {
+      api.setFocusedCell(nextCell.rowIndex, nextCell.column);
+    }
   }
 
   onPageChange(action: IToolbarAction): void {
@@ -240,6 +263,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.page = this.getPageCount();
         this.onPage.emit(this.page);
         break;
+      case ToolbarActionTypeEnum.REFRESH:
+        this.onPage.emit(this.page);
+        break;
     }
   }
 
@@ -263,6 +289,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     const selected = this.selected.map(row => row[this.rowIdKey]);
     this.refreshRowCount();
     this.onSelect.emit(selected);
+  }
+
+  onCellValueChanged(event: CellValueChangedEvent): void {
+    this.cellValueChange.emit(event);
   }
 
   rowDoubleClicked(row: RowNode): void {
@@ -398,8 +428,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private getNumberFilter(model: any): any {
-    // NOTE: `filter` here means `filterFrom`
-    const { filter, filterTo, type } = model;
+    // NOTE: `filter` in ag-grid means `filterFrom`
+    const { filter: filterFrom, filterTo, type } = model;
     const operators = {
       lessThan: '<',
       greaterThan: '>',
@@ -414,9 +444,9 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       values: [],
     };
     if (type === 'inRange') {
-      result.values = [filter, filterTo];
+      result.values = [filterFrom, filterTo];
     } else {
-      result.values = [filter];
+      result.values = [filterFrom];
     }
     return result;
   }
@@ -427,19 +457,20 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
 
     this.paginationPanel = [
-      { control: ToolbarControlEnum.LABEL, text: '0 выбрано / 0 всего' },
-      { type: ToolbarActionTypeEnum.GO_FIRST, disabled: true },
-      { type: ToolbarActionTypeEnum.GO_BACKWARD, disabled: true },
-      { control: ToolbarControlEnum.LABEL, text: '0 / 0' },
-      { type: ToolbarActionTypeEnum.GO_FORWARD, disabled: true },
-      { type: ToolbarActionTypeEnum.GO_LAST, disabled: true },
+      { control: ToolbarControlEnum.LABEL,  text: '0 выбрано / 0 всего' },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_FIRST, disabled: true },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_BACKWARD, disabled: true },
+      { control: ToolbarControlEnum.LABEL,  text: '0 / 0' },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_FORWARD, disabled: true },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.GO_LAST, disabled: true },
       {
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
         control: ToolbarControlEnum.SELECT,
         disabled: true,
-        styles: { width: '100px' },
+        styles: { width: '60px' },
         value: this.pageSizes.map(pageSize => ({ value: pageSize })),
-      }
+      },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: false },
     ];
   }
 
@@ -491,18 +522,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           // pageSize selector
           btn.disabled = !canPaginate;
           return btn;
+        case 7:
+          // refreshBtn
+          // btn.disabled = !pageCount;
+          return btn;
         default:
           return btn;
       }
     });
-  }
-
-  private refreshTranslations(translations: { [index: string]: any }): void {
-    this.refreshRowCount();
-    this.translateOptionsMessages();
-    // this.gridOptions.autoGroupColumnDef.headerName = this.translate.instant('default.grid.groupColumn');
-
-    this.cdRef.markForCheck();
   }
 
   private translateOptionsMessages(): any {
@@ -517,10 +544,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.gridOptions.api.clearRangeSelection();
     this.gridOptions.api.clearFocusedCell();
   }
-
-  // private getRendererByName(field: string): Function {
-  //   return this.columns.find(column => column.colId === field).renderer;
-  // }
 
   private getPageCount(): number {
     return Math.ceil(this.rowCount / this.pageSize);
@@ -549,12 +572,45 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     return {};
   }
 
+  private getCellEditor(column: IAGridColumn): Partial<ColDef> {
+    switch (column.dataType) {
+      case 2:
+      case 7:
+        return {
+          cellEditorFramework: DatePickerComponent,
+        };
+      case 4:
+        // TODO(d.maltsev): boolean
+        return null;
+      case 6:
+        return {
+          // TODO(d.maltsev):
+          // This doesn't work with key-value pairs
+          // Use `richSelect` when this is fixed: https://github.com/ag-grid/ag-grid/issues/2033
+          cellEditor: 'select',
+          cellEditorParams: {
+            values: column.filterValues.map(value => value.name)
+          },
+        };
+      default:
+        return {
+          cellEditor: 'text',
+        };
+    }
+  }
+
   private setColumnDefs(savedColDefs: ColDef[]): ColDef[] {
     const mapColumns = (column: IAGridColumn, originalIndex: number) => {
       // need indices to sort the columns
       let index;
       const colDef: ColDef = {
+        valueGetter: column.valueGetter,
+        valueSetter: column.valueSetter,
+        ...(column.editable ? this.getCellEditor(column) : {}),
+        cellRenderer: column.cellRenderer,
+        cellStyle: column.cellStyle,
         colId: column.colId,
+        editable: column.editable,
         field: column.colId,
         filter: this.getCustomFilter(column),
         filterParams: this.getCustomFilterParams(column),
@@ -585,8 +641,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           break;
       }
       if (column.$$valueGetter) {
-        colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
-        colDef.valueGetter = colDef.cellRenderer;
+        colDef.valueFormatter = (params: ICellRendererParams) => column.$$valueGetter(params.value);
+        // TODO(d.maltsev): check that filters have not been broken
+        // colDef.cellRenderer = (params: ICellRendererParams) => column.$$valueGetter(params.data);
+        // colDef.valueGetter = colDef.cellRenderer;
       }
 
       return { column: colDef, index, originalIndex };
@@ -635,27 +693,25 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         },
         headerComponentParams: {
           headerHeight: this.headerHeight,
-          enableMenu: false,
+          enableMenu: true,
         },
-        // icons: {
-        //   sortAscending: '<i class="fa fa-sort-amount-asc"/>',
-        //   sortDescending: '<i class="fa fa-sort-amount-desc"/>'
-        // },
         /* to set the menu tabs for a column */
         // menuTabs: ['filterMenuTab', 'generalMenuTab', 'columnsMenuTab'],
         menuTabs: ['filterMenuTab', 'columnsMenuTab'],
-        suppressMenu: true,
+        // suppressMenu: true,
       },
       enableColResize: true,
       enableRangeSelection: true,
       enableServerSideFilter: true,
       enableServerSideSorting: true,
-      floatingFilter: !this.disableFilters,
+      // floatingFilter: !this.disableFilters,
+      floatingFilter: false,
       getContextMenuItems: this.getContextMenuItems.bind(this),
       getMainMenuItems: (params) => {
         // hide the tool menu
         return params.defaultItems.slice(0, params.defaultItems.length - 1);
       },
+      getRowNodeId: row => row[this.rowIdKey],
       headerHeight: this.headerHeight,
       // NOTE: There is a huge translation under `localeText` pulled from *.json
       localeText: {},
@@ -668,18 +724,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       rowGroupPanelShow: this.showDndGroupPanel ? 'always' : '',
       rowHeight: this.rowHeight,
       rowModelType: 'viewport',
-      viewportDatasource: this.viewportDatasource,
-      getRowNodeId: row => row[this.rowIdKey],
       rowSelection: this.rowSelection,
       showToolPanel: false,
-      suppressMenuHide: true,
+      suppressMenuHide: false,
       suppressPaginationPanel: true,
-      // suppressRowHoverClass: true,
       suppressScrollOnNewData: true,
       toolPanelSuppressRowGroups: true,
       toolPanelSuppressValues: true,
       toolPanelSuppressPivots: true,
       toolPanelSuppressPivotMode: true,
+      viewportDatasource: this.viewportDatasource,
       viewportRowModelPageSize: this.pageSize,
       viewportRowModelBufferSize: 0,
       isExternalFilterPresent: () => !this.disableFilters,
@@ -701,12 +755,22 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private createMetadataMenuItem(metadataAction: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
     return {
       name: this.translate.instant(`default.grid.actions.${metadataAction.action}`),
-      action: () => this.action.emit({ metadataAction, params }),
+      action: () =>  this.action.emit({ metadataAction, params }),
       disabled: !this.isContextMenuItemEnabled(metadataAction.action),
     };
   }
 
   private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
+    // TODO(m.bobryshev): remove once the BE returns this action
+    // const visitAdd = {
+    //   action: 'visitAdd',
+    //   addOptions: null,
+    //   params: ['debtId', 'personId', 'regionCode']
+    // };
+
+    // const found = this.actions.find(action => action.action === 'visitAdd');
+    // this.actions = found ? this.actions : this.actions.concat(visitAdd);
+
     return this.actions.map(action => this.createMetadataMenuItem(action, params));
   }
 
@@ -721,7 +785,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //   disabled: true,
       //   tooltip: 'Just to test what the tooltip can show'
       // },
-      'separator',
+      // 'separator',
       ...this.getMetadataMenuItems(params),
       // {
       //   name: 'Person',
@@ -756,6 +820,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   // TODO(d.maltsev): this looks a bit messy.
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'visitAdd':
+        return  this.selected.length > 0; // TODO mock (m.bobryshev) this.userPermissionsBag.has('VISIT_ADD') &&
+      case 'deleteSMS':
+        return this.userPermissionsBag.notEmpty('SMS_DELETE_STATUS_LIST') && this.selected.length > 0;
       case 'debtClearResponsible':
         return this.userPermissionsBag.has('DEBT_RESPONSIBLE_CLEAR') && this.selected.length > 0;
       case 'debtSetResponsible':
@@ -764,11 +832,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         // TODO(d.maltsev, i.kibisov): pass entityTypeId
         return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
       case 'showContactHistory':
-        return this.userPermissionsBag.has('CONTACT_LOG_VIEW');
+        return this.userPermissionsBag.has('CONTACT_LOG_VIEW') && this.selected.length > 0;
       case 'paymentsConfirm':
-        return this.userPermissionsBag.has('PAYMENT_CONFIRM');
+        return this.userPermissionsBag.has('PAYMENT_CONFIRM') && this.selected.length > 0;
       case 'paymentsCancel':
-        return this.userPermissionsBag.has('PAYMENT_CANCEL');
+        return this.userPermissionsBag.has('PAYMENT_CANCEL') && this.selected.length > 0;
       case 'confirmPromise':
         return this.userPermissionsBag.has('PROMISE_CONFIRM') && this.selected.length > 0;
       case 'deletePromise':

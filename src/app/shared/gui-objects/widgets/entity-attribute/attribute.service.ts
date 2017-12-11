@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IAttribute } from './attribute.interface';
+import { IAttribute, IAttributeVersion, IAttributeVersionParams } from './attribute.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class AttributeService {
@@ -17,6 +18,8 @@ export class AttributeService {
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
+
+  versionParams$ = new BehaviorSubject<IAttributeVersionParams>(null);
 
   fetchAll(entityType: number, entityId: number): Observable<IAttribute[]> {
     return this.dataService
@@ -34,5 +37,17 @@ export class AttributeService {
     return this.dataService
       .update(`${this.baseUrl}Code/{attributeCode}`, { entityType, entityId, attributeCode }, attribute)
       .catch(this.notificationsService.updateError().entity(`${this.errorMessage}.singular`).dispatchCallback());
+  }
+
+  fetchAllVersions(entityType: number, entityId: number, attributeCode: number): Observable<IAttributeVersion[]> {
+    return this.dataService
+      .read(`${this.baseUrl}Code/{attributeCode}/versions`, { entityType, entityId, attributeCode })
+      .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
+  }
+
+  fetchVersion(entityType: number, entityId: number, attributeCode: number, versionsId: number): Observable<IAttributeVersion> {
+    return this.dataService
+    .read(`${this.baseUrl}Code/{attributeCode}/versions/{versionsId}`, { entityType, entityId, attributeCode, versionsId })
+    .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 }

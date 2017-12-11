@@ -1,4 +1,5 @@
 import { Input, Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -32,7 +33,7 @@ export class EmployeeEditComponent implements OnInit {
     };
 
     this.userPermissionsService.has('ORGANIZATION_EDIT')
-      .take(1)
+      .pipe(first())
       .subscribe(permission => {
         this.setControls(this.canEdit = permission);
       });

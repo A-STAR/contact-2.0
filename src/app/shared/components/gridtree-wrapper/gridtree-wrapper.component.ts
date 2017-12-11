@@ -6,6 +6,7 @@ import { IOption } from '../../../core/converter/value-converter.interface';
 
 import { GridTreeWrapperService } from './gridtree-wrapper.service';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-gridtree-wrapper',
@@ -76,7 +77,7 @@ export class GridTreeWrapperComponent<T> {
       .reduce((acc, dictCode) => acc.includes(dictCode) ? acc : [ ...acc, dictCode ], []);
 
     this.userDictionariesService.getDictionariesAsOptions(dictCodes)
-      .take(1)
+      .pipe(first())
       .subscribe(dictionaries => {
         this._dictionaries = dictionaries;
         this.updateColumnsForGrid();

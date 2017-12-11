@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import * as moment from 'moment';
 
@@ -89,7 +90,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
 
   onNextClick(): void {
     this.canAddInsufficientAmount$
-      .take(1)
+      .pipe(first())
       .subscribe(canAddInsufficientAmount => {
         if (this.data.amount < this.minDebtAmount) {
           this.setDialog(canAddInsufficientAmount ? 'confirm' : 'info');

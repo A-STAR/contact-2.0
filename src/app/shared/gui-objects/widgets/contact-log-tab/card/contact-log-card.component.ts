@@ -1,11 +1,10 @@
-import {  ViewChild } from '@angular/core';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IContactLog } from '../contact-log.interface';
-import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
@@ -26,12 +25,13 @@ const label = makeKey('widgets.contactLog.card');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactLogTabCardComponent implements OnInit {
-  @ViewChild('form') form: DynamicFormComponent;
+  @Input() callCenter = false;
+  @Input() contactId: number;
+  @Input() debtId: number;
+  @Input() disabled = false;
+  @Input() contactLogType: number;
 
-  private routeParams = (<any>this.route.params).value;
-  private contactId = this.routeParams.contactLogId;
-  private debtId = this.routeParams.debtId;
-  private contactLogType = this.routeParams.contactLogType;
+  @ViewChild('form') form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   contactLog: IContactLog;
@@ -41,7 +41,6 @@ export class ContactLogTabCardComponent implements OnInit {
     private contactLogService: ContactLogService,
     private cdRef: ChangeDetectorRef,
     private messageBusService: MessageBusService,
-    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -50,7 +49,9 @@ export class ContactLogTabCardComponent implements OnInit {
     Observable.combineLatest(
       this.userPermissionsService.has('CONTACT_COMMENT_EDIT'),
       Observable.of(this.contactLogType),
-      this.contactId ? this.contactLogService.fetch(this.debtId, this.contactId, this.contactLogType) : Observable.of(null),
+      this.contactId
+        ? this.contactLogService.fetch(this.debtId, this.contactId, this.contactLogType, this.callCenter)
+        : Observable.of(null),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTACT_TYPE),
       Number(this.contactLogType) === 4 ?
         this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
@@ -59,7 +60,7 @@ export class ContactLogTabCardComponent implements OnInit {
          this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_STATUS)
         : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ canEditComment, contactLogType, contactLog, contactTypeOpts, roleOpts, smsStatusOpts ]) => {
       this.controls = this
         .initControls(
@@ -98,23 +99,17 @@ export class ContactLogTabCardComponent implements OnInit {
     smsStatusOpts: IOption[],
     canEditComment: boolean,
     contactLog: IContactLog
-  ): Array<IDynamicFormItem> {
+  ): IDynamicFormItem[] {
     if (Number(contactLogType) !== 4) {
       let contactNumber, promiseAmount;
       const baseControls = [
-        { label: label('contract'), controlName: 'contract',
-          type: 'text',  width: 6, disabled: true },
-        { label: label('contactDateTime'), controlName: 'contactDateTime',
-          type: 'datepicker', width: 6, disabled: true },
-        { label: label('contactType'), controlName: 'contactType', type: 'select',
-          width: 6, options: contactTypeOptions, disabled: true },
-        { label: label('userFullName'), controlName: 'userFullName', type: 'text',
-          width: 6, disabled: true },
-        { label: label('resultName'), controlName: 'resultName', type: 'text',
-          width: 6, disabled: true },
-        { label: label('contactData'), controlName: 'contactData',
-          type: 'text', width: 6, disabled: true },
-      ];
+        { controlName: 'contract', type: 'text',  width: 6, disabled: true },
+        { controlName: 'contactDateTime', type: 'datepicker', width: 6, disabled: true },
+        { controlName: 'contactType', type: 'select', width: 6, options: contactTypeOptions, disabled: true },
+        { controlName: 'userFullName', type: 'text', width: 6, disabled: true },
+        { controlName: 'resultName', type: 'text', width: 6, disabled: true },
+        { controlName: 'contactData', type: 'text', width: 6, disabled: true },
+      ].map(item => ({ ...item, label: label(item.controlName) } as IDynamicFormControl));
 
       if (contactLog.promiseDate) {
         contactNumber = {
@@ -132,31 +127,22 @@ export class ContactLogTabCardComponent implements OnInit {
 
       const comment = {
         label: label('comment'), controlName: 'comment',
-        type: 'textarea', width: 12, disabled: !canEditComment
+        type: 'textarea', width: 12, disabled: !canEditComment || this.disabled
       };
 
        return [...baseControls, promiseAmount, comment].filter(Boolean) as IDynamicFormItem[];
     }
 
     return [
-      { label: label('contract'), controlName: 'contract',
-        type: 'number',  width: 6, disabled: true },
-      { label: label('userFullName'), controlName: 'userFullName', type: 'text',
-        width: 6,  disabled: true },
-      { label: label('sentDateTime'), controlName: 'sentDateTime',
-        type: 'datepicker', width: 6, disabled: true },
-      { label: label('startDateTime'), controlName: 'startDateTime',
-        type: 'datepicker', width: 6, disabled: true },
-      { label: label('fullName'), controlName: 'fullName', type: 'text',
-        width: 6, disabled: true },
-      { label: label('contactPhone'), controlName: 'contactPhone',
-        type: 'text', width: 6, disabled: true },
-      { label: label('personRole'), controlName: 'personRole', options: roleOpts,
-        width: 6, disabled: true, type: 'select'},
-      { label: label('status'), controlName: 'status', options: smsStatusOpts,
-        width: 6, disabled: true, type: 'select'},
-      { label: label('text'), controlName: 'text',
-        type: 'textarea', width: 12, disabled: true },
+      { label: label('contract'), controlName: 'contract', type: 'number',  width: 6, disabled: true },
+      { label: label('userFullName'), controlName: 'userFullName', type: 'text', width: 6,  disabled: true },
+      { label: label('sentDateTime'), controlName: 'sentDateTime', type: 'datepicker', width: 6, disabled: true },
+      { label: label('startDateTime'), controlName: 'startDateTime', type: 'datepicker', width: 6, disabled: true },
+      { label: label('fullName'), controlName: 'fullName', type: 'text', width: 6, disabled: true },
+      { label: label('contactPhone'), controlName: 'contactPhone', type: 'text', width: 6, disabled: true },
+      { label: label('personRole'), controlName: 'personRole', options: roleOpts, width: 6, disabled: true, type: 'select'},
+      { label: label('status'), controlName: 'status', options: smsStatusOpts, width: 6, disabled: true, type: 'select'},
+      { label: label('text'), controlName: 'text', type: 'textarea', width: 12, disabled: true },
     ];
   }
 }

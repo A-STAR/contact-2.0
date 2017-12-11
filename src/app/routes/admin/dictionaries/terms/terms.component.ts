@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
@@ -88,7 +89,7 @@ export class TermsComponent implements OnInit, OnDestroy {
       .map(columns => {
         this.columns = [ ...columns ];
       })
-      .take(1)
+      .pipe(first())
       .subscribe();
 
     this.dictionariesServiceSubscription = this.dictionariesService.state.subscribe(state => {
@@ -181,7 +182,7 @@ export class TermsComponent implements OnInit, OnDestroy {
 
   onEdit(term: ITerm): void {
     this.userPermissionsService.has('DICT_TERM_EDIT')
-      .take(1)
+      .pipe(first())
       .subscribe(hasPermission => {
         if (hasPermission) {
           this.dictionariesService.selectTerm(term);

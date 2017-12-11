@@ -1,7 +1,16 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import * as moment from 'moment';
 
@@ -25,21 +34,20 @@ import { minStrict } from '../../../../../core/validators';
   templateUrl: './promise-card.component.html'
 })
 export class PromiseCardComponent implements AfterViewInit, OnDestroy {
+  @Input() callCenter = false;
+  @Input() readOnly = false;
+  @Input() debtId: number;
+  @Input() promiseId: number;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  private routeParams = (<any>this.route.params).value;
   private canAddInsufficientAmount: boolean;
-  private debtId = this.routeParams.debtId;
   private debt: IDebt;
-  private promiseId = this.routeParams.promiseId;
   private promiseLimit: IPromiseLimit;
   private minAmountPercentFormula: number;
   private minAmountPercentPermission: boolean;
   private canAddInsufficientAmountSub: Subscription;
   private receiveDateTimeSub: Subscription;
-
-  private queryParams = (<any>this.route.queryParams).value;
-  private callCenter = this.queryParams.callCenter;
 
   controls: IDynamicFormControl[] = [
     {
@@ -65,7 +73,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       required: true,
     },
     { label: 'widgets.promise.grid.comment', controlName: 'comment', type: 'textarea' },
-  ];
+  ].map(item => ({ ...item, disabled: this.readOnly } as IDynamicFormControl));
 
   dialog: string;
   promise: IPromise;
@@ -75,7 +83,6 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     private contentTabService: ContentTabService,
     private messageBusService: MessageBusService,
     private promiseService: PromiseService,
-    private route: ActivatedRoute,
     private router: Router,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -96,7 +103,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       this.userConstantsService.get('Promise.MinAmountPercent.Formula'),
       this.userPermissionsService.has('PROMISE_MIN_AMOUNT_PERCENT'),
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([
       canAdd, promiseLimit, debt, promise, minAmountPercentFormula, minAmountPercentPermission
     ]) => {

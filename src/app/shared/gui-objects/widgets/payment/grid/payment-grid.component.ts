@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -25,6 +26,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
 })
 export class PaymentGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
+  @Input() hideToolbar = false;
   @Input('debtId') set debtId(debtId: number) {
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();
@@ -80,20 +82,20 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     }
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: IGridColumn[] = [
     { prop: 'amount', minWidth: 110, width: 110, maxWidth: 130, renderer: 'numberRenderer' },
-    { prop: 'paymentDateTime', minWidth: 120, maxWidth: 130, renderer: 'dateTimeRenderer' },
+    { prop: 'paymentDateTime', minWidth: 130, maxWidth: 150, renderer: 'dateTimeRenderer' },
     { prop: 'currencyName', minWidth: 90, maxWidth: 110 },
-    { prop: 'amountMainCurrency', minWidth: 130, maxWidth: 130, renderer: 'numberRenderer' },
-    { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130, renderer: 'dateTimeRenderer' },
-    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PAYMENT_STATUS },
-    { prop: 'purposeCode', dictCode: UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE },
-    { prop: 'comment' },
-    { prop: 'userFullName' },
-    { prop: 'reqUserFullName' },
-    { prop: 'payerName' },
+    { prop: 'amountMainCurrency', minWidth: 120, maxWidth: 150, renderer: 'numberRenderer' },
+    { prop: 'receiveDateTime', minWidth: 130, maxWidth: 150, renderer: 'dateTimeRenderer' },
+    { prop: 'statusCode', minWidth: 120, maxWidth: 130, dictCode: UserDictionariesService.DICTIONARY_PAYMENT_STATUS },
+    { prop: 'purposeCode', minWidth: 120, maxWidth: 130, dictCode: UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE },
+    { prop: 'comment', minWidth: 100 },
+    { prop: 'userFullName', minWidth: 150 },
+    { prop: 'reqUserFullName', minWidth: 150 },
+    { prop: 'payerName', minWidth: 120 },
     { prop: 'receiptNumber', minWidth: 110, maxWidth: 130 },
-    { prop: 'commission', minWidth: 110, maxWidth: 130, renderer: 'numberRenderer' },
+    { prop: 'commission', minWidth: 100, renderer: 'numberRenderer' },
     // TODO(atymchuk): the currency should appear in the promiseAmount column header
     // { prop: 'currencyId', hidden: true, lookupKey: 'currencies', },
   ];
@@ -122,7 +124,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     this.filter = this.filter.bind(this);
 
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();
@@ -233,20 +235,17 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
 
   private onEdit(payment: IPayment = null): void {
     const { id } = payment || this.selectedPayment$.value;
-    this.router.navigate([ this.callCenter ? `payment/${id}` : `debt/payment/${id}` ], {
-      queryParams: { callCenter: Number(this.callCenter) },
-      relativeTo: this.route,
-    });
+    const url = this.callCenter
+      ? `${this.router.url}/payment/${this.debtId}/${id}`
+      : `${this.router.url}/debt/payment/${id}`;
+    this.router.navigate([ url ]);
   }
 
   private onAdd(): void {
     if (!this.debtId) {
       return;
     }
-    this.router.navigate([ this.callCenter ? 'payment/create' : 'debt/payment/create' ], {
-      queryParams: { callCenter: Number(this.callCenter) },
-      relativeTo: this.route,
-    });
+    this.router.navigate([ `${this.router.url}/debt/payment/create` ]);
   }
 
   private fetch(): void {
@@ -266,5 +265,4 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     this.selectedPayment$.next(null);
     this.cdRef.markForCheck();
   }
-
 }

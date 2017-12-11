@@ -1,55 +1,58 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionsSubject } from '@ngrx/store';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 
 import { IContractor } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
+import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 
 import { makeKey } from '../../../../../core/utils';
+import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-contractor-edit',
   templateUrl: './contractor-edit.component.html'
 })
-export class ContractorEditComponent {
+export class ContractorEditComponent implements OnInit {
   static COMPONENT_NAME = 'ContractorEditComponent';
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
+  canViewAttributes: boolean;
 
-  private closeDialogSubscription: Subscription;
-  private contractorId = Number((this.route.params as any).value.id);
+  private contractorId = (<any>this.route.params).value.contractorId;
 
   constructor(
-    private actions: ActionsSubject,
     private route: ActivatedRoute,
     private router: Router,
-    private messageBusService: MessageBusService,
     private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
-  ) {
+    private userPermissionsService: UserPermissionsService
+  ) { }
+
+  ngOnInit(): void {
     combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
-      this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : of(null)
+      this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : of(null),
+      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
     )
-    .take(1)
-    .subscribe(([ contractorTypeOptions, userOptions, contractor ]) => {
+    .pipe(first())
+    // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
+    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes]) => {
+      this.canViewAttributes = true;
       const label = makeKey('contractors.grid');
       this.controls = [
         { label: label('name'), controlName: 'name', type: 'text', required: true },
@@ -71,14 +74,14 @@ export class ContractorEditComponent {
 
   onSubmit(): void {
     const contractor = this.form.serializedUpdates;
-    this.closeDialogSubscription = ((this.contractorId)
+    const action = this.contractorId
       ? this.contractorsAndPortfoliosService.updateContractor(this.contractorId, contractor)
-      : this.contractorsAndPortfoliosService.createContractor(contractor))
-          .subscribe(() => {
-            this.messageBusService.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_FETCH);
-            this.actions.next({ type: ContractorsAndPortfoliosService.CONTRACTOR_FETCH });
-            this.onBack();
-          });
+      : this.contractorsAndPortfoliosService.createContractor(contractor);
+
+    action.subscribe(() => {
+      this.contractorsAndPortfoliosService.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_CREATE);
+      this.onBack();
+    });
   }
 
   onBack(): void {
@@ -87,5 +90,9 @@ export class ContractorEditComponent {
 
   onManagersClick(): void {
     this.router.navigate([`/admin/contractors/${this.contractorId}/managers`]);
+  }
+
+  onAttributesClick(): void {
+    this.router.navigate([`/admin/contractors/${this.contractorId}/attributes`]);
   }
 }

@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 
 import { IContactLog } from '../contact-log.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -21,24 +22,28 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactLogTabGridComponent implements OnInit, OnDestroy {
+  @Input() callCenter = false;
+  @Input() debtId: number;
+  @Input() hideToolbar = false;
+  @Input() personId: number;
 
   selected: IContactLog[];
   selectedChanged$ = new BehaviorSubject<boolean>(false);
 
-  columns: Array<IGridColumn> = [
-    { prop: 'debtId', width: 50 },
-    { prop: 'contactId', width: 70 },
-    { prop: 'creditName', width: 80 },
-    { prop: 'fullName', maxWidth: 200},
-    { prop: 'personRole', width: 90, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-    { prop: 'contactDateTime', maxWidth: 150, renderer: 'dateRenderer' },
-    { prop: 'contactType', maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
-    { prop: 'userFullName', maxWidth: 200 },
-    { prop: 'resultName', maxWidth: 200},
-    { prop: 'promiseDate', width: 70 },
+  columns: IGridColumn[] = [
+    { prop: 'debtId', minWidth: 70, maxWidth: 100 },
+    { prop: 'contactId', minWidth: 70, maxWidth: 100 },
+    { prop: 'creditName', minWidth: 100, maxWidth: 150 },
+    { prop: 'fullName', minWidth: 150, maxWidth: 200 },
+    { prop: 'personRole', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
+    { prop: 'contactDateTime', minWidth: 100, maxWidth: 150, renderer: 'dateRenderer' },
+    { prop: 'contactType', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
+    { prop: 'userFullName', minWidth: 150, maxWidth: 200 },
+    { prop: 'resultName', minWidth: 150, maxWidth: 200 },
+    { prop: 'promiseDate', minWidth: 100 },
   ];
 
-  toolbarItems: Array<IToolbarItem> = [
+  toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selected[0]),
@@ -55,9 +60,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  private _contactLogList: Array<IContactLog> = [];
-
-  personId = (<any>this.route.params).value.personId || null;
+  private _contactLogList: IContactLog[] = [];
 
   private viewPermissionSubscription: Subscription;
   private viewCommentUpdate: Subscription;
@@ -69,13 +72,12 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
-    private route: ActivatedRoute,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();
@@ -93,7 +95,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     this.viewCommentUpdate = this.messageBusService.select(ContactLogService.COMMENT_CONTACT_LOG_SAVED)
       .flatMap(currentContactLogId => Observable.combineLatest(
           Observable.of(currentContactLogId),
-          this.contactLogService.fetchAll(this.personId))
+          this.contactLogService.fetchAll(this.personId, this.callCenter)),
       )
       .subscribe(([currentContactLogId, contactLogList]) => {
         this.contactLogList = contactLogList;
@@ -118,7 +120,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
-  get contactLogList(): Array<IContactLog> {
+  get contactLogList(): IContactLog[] {
     return this._contactLogList;
   }
 
@@ -136,14 +138,15 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   }
 
   onEdit(contactLog: IContactLog): void {
-    console.log(contactLog);
     const { contactId, contactType } = contactLog;
-    this.router.navigate([ `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`]);
+    const url = this.callCenter
+      ? `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`
+      : `${this.router.url}/contactLog/${this.debtId}/${contactId}/contactLogType/${contactType}`;
+    this.router.navigate([ url ]);
   }
 
-
   private fetch(): void {
-    this.contactLogService.fetchAll(this.personId)
+    this.contactLogService.fetchAll(this.personId, this.callCenter)
       .subscribe(contactLogList => {
         this.contactLogList = contactLogList;
         this.selectedChanged$.next(this.hasSelection);

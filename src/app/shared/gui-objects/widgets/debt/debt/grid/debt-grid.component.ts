@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Ou
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
 
 import { IDebt } from '../debt.interface';
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
@@ -95,9 +96,11 @@ export class DebtGridComponent {
   columns: Array<IGridColumn> = [
     { prop: 'id' },
     { prop: 'creditTypeCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
+    { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
     { prop: 'creditName' },
     { prop: 'contract' },
-    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS },
+    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE },
+    { prop: 'account'},
     { prop: 'creditStartDate', renderer: 'dateRenderer' },
     { prop: 'currencyId', lookupKey: 'currencies' },
     { prop: 'debtAmount', renderer: 'numberRenderer' },
@@ -125,7 +128,7 @@ export class DebtGridComponent {
   ) {
 
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();

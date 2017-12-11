@@ -7,6 +7,10 @@
       "title": "License",
       "info": "Your license number is"
     },
+    "noDebts": {
+      "userId": "User Id",
+      "title": "No debts"
+    },
     "account": {
       "title": "Account",
       "logout": "Logout",
@@ -34,8 +38,13 @@
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Reference",
-        "PORTFOLIOS": "Portfolios",
+        "ATTRIBUTE_VERSION": "Attribute's versions",
+        "PORTFOLIOS_CONTRACTORS": "Portfolios and contractors",
+        "PORTFOLIO_EDIT": "Portfolio",
+        "PORTFOLIO_ATTRIBUTES": "Portfolio attributes",
+        "CONTRACTOR_ATTRIBUTES": "Contractor attributes",
         "CONTRACTOR": "Contractor",
+        "ATTRIBUTES": "Attributes",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
         "CONTRACTOR_MANAGER": "Contractor Manager",
         "DEPARTMENTS": "Departments",
@@ -58,6 +67,7 @@
         "DEBTOR_CONTACTS": "Debtor contacts",
         "DEBTOR_DEBT": "Debtor's debt",
         "DEBTOR_DEBT_COMPONENT": "Debt components",
+        "DEBTOR_DEBT_CONTACTS": "Debtor contact",
         "DEBTOR_DOCUMENT": "Document",
         "DEBTOR_EMAIL": "Debtor's email",
         "DEBTOR_EMPLOYMENT": "Employment record",
@@ -72,6 +82,7 @@
         "TASKS": "Tasks",
         "DEBTS": "Debts Processing",
         "CONTACT_LOG": "Contact Log",
+        "WORK_TASK": "Work Tasks",
         "CALL_CENTER": "Call Center",
         "PAYMENTS": "Payments",
         "COURTS_2": "Courts",
@@ -130,9 +141,15 @@
   },
   "modules": {
     "callCenter": {
+      "main": {
+        "title": "Сampaign selection"
+      },
       "grid": {
         "name": "Name",
         "comment": "Description"
+      },
+      "messages": {
+        "noActiveDebts": "No active debts in campaign"
       },
       "overview": {
         "info": {
@@ -157,7 +174,7 @@
           "currencyName": "Currency",
           "debtAmount": "Debt Amount",
           "debtComment": "Comments",
-          "debtId": "Debt Id",
+          "debtId": "Debt ID",
           "debtReasonCode": "Debt Reason",
           "dict1Code": "Dictionary Attribute 1",
           "dict2Code": "Dictionary Attribute 2",
@@ -191,7 +208,7 @@
           "contract": "Contract",
           "currencyName": "Currency",
           "debtAmount": "Debt Amount",
-          "debtId": "Debt Id",
+          "debtId": "Debt ID",
           "dpd": "DPD",
           "personFullName": "Full Name",
           "statusCode": "Status"
@@ -221,7 +238,7 @@
         "userId": {
           "grid": {
             "fullName": "Operator",
-            "id": "Id",
+            "id": "ID",
             "organization": "Department",
             "position": "Position"
           }
@@ -232,6 +249,18 @@
       },
       "sms": {
         "title": "SMS"
+      }
+    },
+    "dataUpload": {
+      "dialogs": {
+        "cancel": {
+          "message": "Are you sure you want to cancel?",
+          "title": "Cancel"
+        },
+        "error": {
+          "message": "Download error log?",
+          "title": "Could not save to DB"
+        }
       }
     },
     "payments": {
@@ -252,11 +281,43 @@
         "userId": {
           "grid": {
             "fullName": "Operator",
-            "id": "Id",
+            "id": "ID",
             "organization": "Department",
             "position": "Position"
           }
         }
+      }
+    },
+    "workTask": {
+      "filters": {
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "portfolioId": "Portfolio",
+          "regionCode": "Region",
+          "userId": "Operator",
+          "addressTypeCode": "Тип адреса",
+          "visitStatusCode": "Статус выезда",
+          "visitPurposeCode": "Цель выезда"
+        }
+      },
+      "newDebt": {
+        "title": "New Debts"
+      },
+      "problemDebt": {
+        "title": "Problem Debts"
+      },
+      "searchInformation": {
+        "title": "Search Information"
+      },
+      "debtToContractor": {
+        "title": "Debt to contractor"
+      },
+      "prepareVisits": {
+        "title": "Prepare Visits"
       }
     },
     "contactRegistration": {
@@ -356,7 +417,7 @@
     "incomingCall": {
       "filter": {
         "form": {
-          "debtId": "Debt Id",
+          "debtId": "Debt ID",
           "fullName": "Full Name/Company Name",
           "contract": "Contract",
           "phoneNumber": "Phone Number",
@@ -378,12 +439,12 @@
           "creditTypeCode": "Credit Type",
           "currencyName": "Currency",
           "debtAmount": "Debt Amount",
-          "debtId": "Debt Id",
-          "debtorId": "Debtor Id",
+          "debtId": "Debt ID",
+          "debtorId": "Debtor ID",
           "docNumber": "Document #",
           "fullName": "Full Name/Company Name",
           "outPortfolioName": "Outgoing Portfolio Name",
-          "personId": "Person Id",
+          "personId": "Person ID",
           "personRole": "Person Role",
           "portfolioName": "Portfolio",
           "regionCode": "Region",
@@ -414,7 +475,7 @@
   "constants": {
     "title": "Constants",
     "edit": {
-      "id": "Id",
+      "id": "ID",
       "title": "Constant",
       "name": "Name",
       "typeCode": "Type",
@@ -422,7 +483,7 @@
       "dsc": "Comments"
     },
     "grid": {
-      "id": "Id",
+      "id": "ID",
       "name": "Name",
       "value": "Value",
       "dsc": "Comments"
@@ -439,7 +500,7 @@
         "placeholder": "Select operator(s)",
         "inactive": "Show inactive",
         "grid": {
-          "id": "Id",
+          "id": "ID",
           "position": "Position",
           "fullName": "Full name",
           "organization": "Department"
@@ -455,7 +516,7 @@
       }
     },
     "grid": {
-      "id": "Id",
+      "id": "ID",
       "fullName": "Full name",
       "position": "Position",
       "createDateTime": "Date",
@@ -507,7 +568,7 @@
       "title": "New user"
     },
     "grid": {
-      "id": "Id",
+      "id": "ID",
       "login": "Login",
       "lastName": "Family name",
       "firstName": "Name",
@@ -646,7 +707,7 @@
         "confirmMessage": "Do you really want to delete the role {{ name }}?"
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "name": "Name",
         "comment": "Comments"
       },
@@ -687,7 +748,7 @@
         "confirmMessage": "Do you really want to delete the permission {{ name }}?"
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "name": "Name",
         "value": "Value",
         "dsc": "Description",
@@ -706,7 +767,7 @@
   },
   "debtor": {
     "title": "Debtor",
-    "id": "Id",
+    "id": "ID",
     "firstName": "Name",
     "lastName": "Family name",
     "middleName": "Middle name",
@@ -714,6 +775,7 @@
     "responsibleFullName": "Manager",
     "reward": "Remuneration",
     "shortInfo": "Short info",
+    "stageCode": "Stage",
     "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",
@@ -732,7 +794,7 @@
         "confirmMessage": "This debtor already has an identity doc attribute set to \"Main\". Do you really want to set this identity document as main?"
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "docTypeCode": "Type",
         "docNumber": "No",
         "issueDate": "Issue date",
@@ -812,7 +874,7 @@
       }
     },
     "contactsTab": {
-      "title": "Contact",
+      "title": "Contact persons",
       "remove": {
         "title": "Delete the contact",
         "confirmMessage": "Do you really want to delete the contact {{ fullName }} ?"
@@ -894,7 +956,7 @@
   },
   "debtors": {
     "grid": {
-      "id": "Id",
+      "id": "ID",
       "fullName": "Full name",
       "debtId": "Debt id",
       "type": "Debtor type",
@@ -983,12 +1045,12 @@
       "confirmMessage": "Are you sure you want to delete contractor {{ name }}?"
     },
     "grid": {
-      "id": "Id",
+      "id": "ID",
       "name": "Short name",
       "fullName": "Full name",
       "smsName": "Name fot SMS",
       "responsibleId": "Manager",
-      "responsibleName": "Manager",
+      "responsibleFullName": "Manager",
       "typeCode": "Type",
       "phone": "Phone",
       "address": "Address",
@@ -998,12 +1060,13 @@
       "accessDenied": "Access to contractors list denied"
     },
     "buttons": {
+      "attributes": "Attributes",
       "managers": "Managers"
     }
   },
   "portfolios": {
     "grid": {
-      "id": "Id",
+      "id": "ID",
       "name": "Name",
       "directionCode": "Direction",
       "stageCode": "Stage",
@@ -1019,6 +1082,23 @@
     },
     "move": {
       "title": "move portfolio {{ name }}"
+    },
+    "outsourcing": {
+      "form": {
+        "menu": "Form outsourcing portfolio"
+      },
+      "send": {
+        "menu": {
+          "title": "Send portfolio for outsourcing",
+          "outsourcing": "Outsourcing",
+          "cession": "Cession"
+        },
+        "title": "Send portfolio"
+      },
+      "return": {
+        "menu": "Return outsourcing portfolio",
+        "title": "Return portfolio"
+      }
     }
   },
   "utilities": {
@@ -1181,8 +1261,8 @@
         "visits": {
           "title": "Visits Log",
           "grid": {
-            "id": "Id",
-            "debtId": "Debt Id",
+            "id": "ID",
+            "debtId": "Debt ID",
             "contract": "Contract #",
             "statusCode": "Status",
             "purposeCode": "Purpose",
@@ -1204,7 +1284,7 @@
         "mark": {
           "title": "Mark for Visit",
           "grid": {
-            "id": "Id",
+            "id": "ID",
             "contract": "Contract #",
             "statusCode": "Status",
             "debtAmount": "Debt Amount",
@@ -1227,6 +1307,9 @@
         "delete": {
           "title": "Delete attribute",
           "confirmMessage": "Are you sure you want to delete attribute {{ name }}?"
+        },
+        "version": {
+          "title": "Attribute version edit"
         }
       },
       "grid": {
@@ -1235,6 +1318,8 @@
         "value": "Value",
         "userFullName": "Operator",
         "changeDateTime": "Change date/time",
+        "fromDateTime": "Date start",
+        "toDateTime": "Date end",
         "comment": "Comments",
         "typeCode": "Data Type",
         "dictNameCode": "Dictionary",
@@ -1358,7 +1443,7 @@
         "notFound": "Could not find the guarantor. Please try to change the search criteria."
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "firstName": "First name",
         "middleName": "Middle name",
         "lastName": "Last name / Company",
@@ -1385,7 +1470,7 @@
     "guaranteeContract": {
       "title": "Guarantee contract",
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "contractNumber": "Contract No",
         "fullName": "Full name",
         "typeCode": "Type",
@@ -1425,7 +1510,7 @@
         }
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "name": "Name",
         "text": "Text",
         "isSingleSending": "Send Once",
@@ -1443,7 +1528,7 @@
         }
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "name": "Name"
       }
     },
@@ -1530,18 +1615,6 @@
         "message": "Do you really want to delete the marked promises?"
       }
     },
-    "paymentOperatorConfirm": {
-      "dialog": {
-        "title": "Confirmation of changes",
-        "message": "Do you really want to confirm operator change for the selected payments?"
-      }
-    },
-    "paymentOperatorReject": {
-      "dialog": {
-        "title": "Rejection of changes",
-        "message": "Do you really want to reject operator change for the selected payments?"
-      }
-    },
     "debt": {
       "toolbar": {
         "call": "Call Back",
@@ -1550,8 +1623,10 @@
         "terminate": "Terminate Work"
       },
       "grid": {
-        "id": "Id",
+        "account": "Account",
+        "id": "ID",
         "portfolioId": "Portfolio",
+        "stageCode": "Stage",
         "bankId": "Bank",
         "creditTypeCode": "Credit type",
         "creditName": "Credit name",
@@ -1559,6 +1634,7 @@
         "statusCode": "Status",
         "creditStartDate": "Credit start date",
         "creditEndDate": "Credit end date",
+        "debtDate": "Debt date",
         "regionCode": "Region",
         "branchCode": "Branch",
         "currencyId": "Currency",
@@ -1641,7 +1717,7 @@
         "comment": "Comment"
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "name": "Name",
         "typeCode": "Property Type",
         "isConfirmed": "Is confirmed",
@@ -1671,7 +1747,7 @@
         "startDateTime": "Planned sending date"
       },
       "grid": {
-        "contactId": "Contact Id",
+        "contactId": "Contact ID",
         "contactDateTime": "Contact date",
         "contactType": "Contact type",
         "contract": "Contact No",
@@ -1690,7 +1766,7 @@
         "title": "Select operator"
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "fullName": "Full name",
         "debtCnt": "Active debt count",
         "organization": "Department",
@@ -1702,7 +1778,7 @@
         "title": "Select group"
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "name": "Name",
         "comment": "Comment"
       }
@@ -1733,7 +1809,7 @@
         "notFound": "Could not find the pledgor. Please try to change the search criteria."
       },
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "firstName": "First name",
         "middleName": "Middle name",
         "lastName": "Last name / Company",
@@ -1760,7 +1836,7 @@
     "pledgeContract": {
       "title": "Contract information",
       "grid": {
-        "id": "Id",
+        "id": "ID",
         "contractNumber": "Contract No",
         "fullName": "Full name",
         "typeCode": "Type",
@@ -1813,6 +1889,9 @@
     "actionsLog": {
       "gen": { "singular": "actions log entry", "plural": "action log" }
     },
+    "workTask": {
+      "gen": { "singular": "task", "plural": "tasks" }
+    },
     "constants": {
       "gen": { "singular": "constant", "plural": "constants" }
     },
@@ -1860,6 +1939,9 @@
     },
     "debts": {
       "gen": { "singular": "debt", "plural": "debts" }
+    },
+    "massOps": {
+      "addVisit": "add visit"
     },
     "metadata": {
       "gen": { "plural": "metadata" }
@@ -1939,13 +2021,34 @@
     }
   },
   "massOperations": {
+    "visitAdd": {
+      "title": "Setting a visit note, {{ count }} addresses",
+      "purposeCode": "Purpose of visit",
+      "comment": "Comment"
+    },
     "paymentsConfirm": {
-      "ConfirmInquery": "Are you sure to confirm selected {{ count }} payments?",
+      "message": "Are you sure to confirm selected {{ count }} payments?",
       "title": "Payments confirmation"
     },
     "paymentsCancel": {
-      "cancelInquery": "Are you sure to cancel selected {{ count }} payments?",
+      "message": "Are you sure to cancel selected {{ count }} payments?",
       "title": "Cancel payments"
+    },
+    "paymentOperatorConfirm": {
+      "dialog": {
+        "title": "Confirmation of changes",
+        "message": "Do you really want to confirm operator change for the selected payments?"
+      }
+    },
+    "paymentOperatorReject": {
+      "dialog": {
+        "title": "Rejection of changes",
+        "message": "Do you really want to reject operator change for the selected payments?"
+      }
+    },
+    "smsDelete": {
+      "message": "Are you sure to delete {{ count }} sms?",
+      "title": "Delete SMS"
     }
   },
   "errors": {
@@ -1954,14 +2057,14 @@
       "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
       "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
-      "contactPersonNotFound": "Не найдено контактное лицо по Id",
+      "contactPersonNotFound": "Не найдено контактное лицо по ID",
       "constantNotFound": "Запрашиваемая константа не найдена",
       "createUserInvalidInputData": "Некоторые данные пользователя не удовлетворяют заданным ограничениям",
       "currencyNotFound": "Не найдена валюта по id",
       "currencyRateNotFound": "Currency rate not found for this date",
       "dateMustBeGreaterThanAnother": "Дата {{ $1 }} должна быть больше даты {{ $2 }}",
-      "debtComponentAmountNotFound": "Не найден объект DebtComponentAmount (таблица debt_component_amount) по Id",
-      "debtPromiseNotFound": "Не найдено обещание по Id",
+      "debtComponentAmountNotFound": "Не найден объект DebtComponentAmount (таблица debt_component_amount) по ID",
+      "debtPromiseNotFound": "Не найдено обещание по ID",
       "dictTermAlreadyExists": "Словарный термин уже существует",
       "dictionaryAlreadyExists": "Словарь термин уже существует",
       "dictionaryNotFound": "Словарь не найден",
@@ -2022,7 +2125,7 @@
       "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",
       "phoneNotFound": "Не найден телефон по id",
       "roleCodeEmpty": "Во входной модели для обновления oraganization_user_link не указан ID роли",
-      "tempalteNotFound": "Не найден шаблон по Id",
+      "tempalteNotFound": "Не найден шаблон по ID",
       "thereAreUsersInTheRole": "Невозможно удалить роль {{ $1 }}, в которой есть пользователи",
       "tokenInvalid": "Неверный токен сессии",
       "unknownDataType": "Неизвестный тип данных {{ $1 }} (нет в словаре №1)",
@@ -2049,6 +2152,7 @@
         "403": "You don't have permissions to move {{ entity }}",
         "*": "Could not move {{ entity }}"
       },
+      "massOp": "An error occurred while completing the {{ entity }} operation",
       "update": {
         "403": "You don't have permissions to update {{ entity }}",
         "*": "Could not update {{ entity }}"
@@ -2108,8 +2212,8 @@
       "delete": "Delete",
       "download": "Download",
       "edit": "Edit",
-      "exportToExcel": "Export to Excel",
-      "excel": "Export to Excel",
+      "exportToExcel": "Export",
+      "excel": "Export",
       "move": "Move",
       "next": "Next",
       "ok": "OK",
@@ -2124,6 +2228,7 @@
       "undo": "Undo",
       "upload": "Upload",
       "visit": "Visit",
+      "version": "Version history",
       "start": "Start",
       "stop": "Stop"
     },
@@ -2137,7 +2242,7 @@
           "contractorName": "Contractor",
           "directionCode": "Direction",
           "endWorkDate": "End Date",
-          "id": "Id",
+          "id": "ID",
           "name": "Name",
           "signDate": "Signed On",
           "stageCode": "Stage",
@@ -2149,11 +2254,26 @@
       "users": {
         "grid": {
           "fullName": "Name",
-          "id": "Id",
+          "id": "ID",
           "organization": "Organization",
           "position": "Position"
         },
         "title": "Select Users"
+      },
+      "fields": {
+        "branchCode": "Branch",
+        "dictValue1": "Dictionary Value 1",
+        "dictValue2": "Dictionary Value 2",
+        "dictValue3": "Dictionary Value 3",
+        "dictValue4": "Dictionary Value 4",
+        "outPortfolioId": "Registry",
+        "portfolioId": "Portfolio",
+        "paymentDateTime": "Payment date",
+        "regionCode": "Region",
+        "userId": "Operator",
+        "addressTypeCode": "Address",
+        "visitPurposeCode": "Visit purpose",
+        "visitStatusCode": "Visit status"
       }
     },
     "grid": {
@@ -2193,21 +2313,28 @@
         "filterOoo": "filter..."
       },
       "actions": {
+        "addVisit": "Add a visit",
+        "cancelVisit": "Cancel a visit",
         "confirmPaymentsOperator": "Confirm change operator",
         "confirmPromise": "Confirm promises",
         "debtChangeAttribute": "Change debt attributes",
         "debtClearResponsible": "Clear debt responsible",
         "debtNextCallDate": "Set next call date",
         "debtSetResponsible": "Set debt responsible",
+        "delete": "Удалить",
         "deletePromise": "Delete promises",
+        "deleteSMS": "Delete SMS",
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
         "paymentsCancel": "Payments cancel",
         "paymentsConfirm": "Payments confirm",
+        "prepareVisit": "Prepare a visit",
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
-        "statusChange": "Change status"
+        "statusChange": "Change status",
+        "visitAdd": "Make necessary",
+        "openUserById": "Open debtor card"
       }
     },
     "filter": {
@@ -2255,7 +2382,8 @@
     "dialog": {
       "result": {
         "title": "Operation result",
-        "message": "Operation was successful for {{successCount}} of {{count}} records"
+        "message": "Operation was successful for {{successCount}} of {{count}} records",
+        "messageUnsuccessful": "Unseccessful operation for {{total}} records"
       }
     },
     "NA": "N/A"

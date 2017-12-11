@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IConstant, IConstantsState } from './constants.interface';
@@ -34,7 +35,7 @@ export class ConstantsService {
   update(constant: Partial<IConstant>): Observable<any> {
     return this.state
       .map(state => state.currentConstant)
-      .take(1)
+      .pipe(first())
       .flatMap(currentConstant => {
         const { id } = currentConstant;
         return this.dataService.update(`${this.baseUrl}/{id}`, { id }, constant)

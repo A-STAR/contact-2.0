@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -26,6 +27,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
 })
 export class PromiseGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
+  @Input() hideToolbar = false;
   @Input('debtId') set debtId(debtId: number) {
     this.debtId$.next(debtId);
     this.cdRef.markForCheck();
@@ -72,13 +74,13 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: IGridColumn[] = [
     { prop: 'promiseDate', minWidth: 110, maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'promiseAmount', minWidth: 130, maxWidth: 130, renderer: 'numberRenderer' },
-    { prop: 'receiveDateTime', minWidth: 120, maxWidth: 130, renderer: 'dateTimeRenderer' },
-    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PROMISE_STATUS },
-    { prop: 'comment' },
-    { prop: 'fullName' },
+    { prop: 'promiseAmount', minWidth: 120, maxWidth: 130, renderer: 'numberRenderer' },
+    { prop: 'receiveDateTime', minWidth: 130, maxWidth: 150, renderer: 'dateTimeRenderer' },
+    { prop: 'statusCode', minWidth: 120, dictCode: UserDictionariesService.DICTIONARY_PROMISE_STATUS },
+    { prop: 'comment', minWidth: 100 },
+    { prop: 'fullName', minWidth: 120 },
     // TODO(atymchuk): the currency should appear in the promiseAmount column header
     // { prop: 'currencyId', hidden: true, lookupKey: 'currencies', },
   ];
@@ -105,7 +107,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
   ) {
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();
@@ -142,10 +144,13 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(promise: IPromise): void {
-    const { id: promiseId } = this.selectedPromise$.value;
+    const { id: promiseId } = promise || this.selectedPromise$.value;
     const { debtId } = this;
     if (!debtId) { return; }
-    this.router.navigate([ `${this.router.url}/debt/promise/${promiseId}` ]);
+    const url = this.callCenter
+      ? `${this.router.url}/promise/${this.debtId}/${promiseId}`
+      : `${this.router.url}/debt/promise/${promiseId}`;
+    this.router.navigate([ url ]);
   }
 
   onRemove(): void {
@@ -219,10 +224,8 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     if (!this.debtId) {
       return;
     }
-    this.router.navigate([ this.callCenter ? 'promise/create' : 'debt/promise/create' ], {
-      queryParams: { callCenter: Number(this.callCenter) },
-      relativeTo: this.route,
-    });
+    const url = `${this.router.url}/debt/promise/create`;
+    this.router.navigate([ url ]);
   }
 
   private fetch(): void {

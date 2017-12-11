@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 import { IVisit } from './visits.interface';
@@ -14,6 +15,7 @@ import { VisitService } from './visits.service';
 })
 export class AddressGridVisitsComponent implements OnInit {
   @Input() addressId: number;
+  @Input() callCenter: boolean;
   @Input() personId: number;
 
   @Output() cancel = new EventEmitter<void>();
@@ -45,13 +47,13 @@ export class AddressGridVisitsComponent implements OnInit {
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [ ...columns ];
         this.cdRef.markForCheck();
       });
 
-    this.visitService.fetchAll(this.personId, this.addressId).subscribe(visits => {
+    this.visitService.fetchAll(this.personId, this.addressId, this.callCenter).subscribe(visits => {
       this.visits = visits;
       this.cdRef.markForCheck();
     });

@@ -49,7 +49,7 @@
       (click)="onMatchClick($event)"
     >
       <span *ngIf="active.length" [innerHTML]="toDisplayValue(active[0])"></span>
-      <i class="caret app-select-caret"></i>
+      <i *ngIf="!disabled" class="caret app-select-caret"></i>
     </span>
   </div>
   <input

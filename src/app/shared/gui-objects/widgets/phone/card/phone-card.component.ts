@@ -1,6 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -19,22 +20,24 @@ const labelKey = makeKey('widgets.phone.card');
 
 @Component({
   selector: 'app-phone-card',
-  templateUrl: './phone-card.component.html'
+  templateUrl: './phone-card.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneCardComponent {
+export class PhoneCardComponent implements OnInit {
+  @Input() callCenter = false;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private routeParams = (<any>this.route.params).value;
-  private queryParams = (<any>this.route.queryParams).value;
   private personId = this.routeParams.personId || null;
   private contactId = this.routeParams.contactId || null;
   private phoneId = this.routeParams.phoneId || null;
-  private callCenter = this.queryParams.callCenter;
 
-  controls: Array<IDynamicFormItem> = null;
+  controls: IDynamicFormItem[] = null;
   phone: IPhone;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private messageBusService: MessageBusService,
     private phoneService: PhoneService,
@@ -44,14 +47,16 @@ export class PhoneCardComponent {
   ) {
     // NOTE: on deper routes we should take the contactId
     this.personId = this.contactId || this.personId;
+  }
 
+  ngOnInit(): void {
     Observable.combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
       this.phoneId ? this.userPermissionsService.has('PHONE_EDIT') : Observable.of(true),
       this.phoneId ? this.userPermissionsService.has('PHONE_COMMENT_EDIT') : Observable.of(true),
       this.phoneId ? this.phoneService.fetch(18, this.personId, this.phoneId, this.callCenter) : Observable.of(null)
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ options, canEdit, canEditComment, phone ]) => {
       this.controls = [
         { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
@@ -61,6 +66,7 @@ export class PhoneCardComponent {
         { label: labelKey('comment'), controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
       ];
       this.phone = phone;
+      this.cdRef.markForCheck();
     });
   }
 

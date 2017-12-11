@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, Action } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
   IContractor, IContractorsAndPortfoliosState,
-  IContractorManager, IPortfolio, IPortfolioMoveRequest,
-  INumberMap
+  IContractorManager, IPortfolio, IPortfolioMoveRequest, IPortfolioOutsourceRequest,
 } from './contractors-and-portfolios.interface';
 
 import { DataService } from '../../../core/data/data.service';
@@ -37,13 +38,12 @@ export class ContractorsAndPortfoliosService {
   static PORTFOLIO_UPDATE                       = 'PORTFOLIO_UPDATE';
   static PORTFOLIO_MOVE                         = 'PORTFOLIO_MOVE';
   static PORTFOLIO_DELETE                       = 'PORTFOLIO_DELETE';
-  static PORTFOLIO_DELETE_SUCCESS               = 'PORTFOLIO_DELETE_SUCCESS';
-  static EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED = 'EMPTY_MANAGERS_FOR_CONTRACTOR_DETECTED';
 
   constructor(
-    private store: Store<IAppState>,
+    private actions$: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    private store: Store<IAppState>,
   ) {}
 
   get selectedContractorId$(): Observable<number> {
@@ -52,37 +52,40 @@ export class ContractorsAndPortfoliosService {
       .distinctUntilChanged();
   }
 
-  get selectedManagerId$(): Observable<any> {
+  get selectedPortfolio$(): Observable<IPortfolio> {
     return this.state
-      .map(state => {
-        this.managerMapping = state.mapContractorToSelectedManager;
-        return state.mapContractorToSelectedManager;
-      })
+      .map(state => state.selectedPortfolio)
       .distinctUntilChanged();
   }
 
-  managerMapping: INumberMap;
+  get selectedManagerId$(): Observable<number> {
+    return this.state
+      .map(state => state.selectedManagerId)
+      .distinctUntilChanged();
+  }
 
   readAllContractors(): Observable<IContractor[]> {
-    return this.dataService.readAll('/contractors')
+    return <Observable<IContractor[]>>this.dataService.readAll('/contractors')
       .catch(
         this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
-      ) as Observable<IContractor[]>;
+      );
   }
+
   readAllContractorsExeptCurrent(currentContractorId: number): Observable<IContractor[]> {
-    return this.dataService.readAll('/contractors')
-      .map(contractors => contractors ? contractors.filter(contractor => contractor.id !== currentContractorId) : null )
+    return <Observable<IContractor[]>>this.readAllContractors()
+      .map(contractors => contractors.filter(contractor => contractor.id !== currentContractorId))
       .catch(
         this.notificationsService.fetchError().entity('entities.contractors.gen.plural').callback()
-      ) as Observable<IContractor[]>;
+      );
   }
+
   readContractor(contractorId: number): Observable<IContractor> {
     return this.dataService.read('/contractors/{contractorId}', { contractorId })
       .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
   }
 
   selectContractor(contractorId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { contractorId });
+    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { selectedContractorId: contractorId });
   }
 
   createContractor(contractor: IContractor): Observable<void> {
@@ -97,7 +100,7 @@ export class ContractorsAndPortfoliosService {
 
   deleteContractor(contractorId: Number): Observable<any> {
     return this.dataService.delete('/contractors/{contractorId}', { contractorId })
-            .take(1)
+            .pipe(first())
             .catch(this.notificationsService.deleteError().entity('entities.contractors.gen.singular').callback());
   }
 
@@ -108,9 +111,7 @@ export class ContractorsAndPortfoliosService {
 
   selectManager(contractorId: number, managerId: number): void {
     this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, {
-      mapContractorToSelectedManager: {
-        [contractorId]: managerId
-      }
+       selectedManagerId: managerId
     });
   }
 
@@ -141,7 +142,6 @@ export class ContractorsAndPortfoliosService {
 
   readPortfolio(contractorId: number, portfolioId: number): Observable<any> {
     return this.dataService.read('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId })
-      // TODO create and use matching key in dictionary
       .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
   }
 
@@ -171,37 +171,69 @@ export class ContractorsAndPortfoliosService {
       .catch(this.notificationsService.error('errors.default.move').entity('entities.portfolios.gen.singular').callback());
   }
 
-  get mapContractorToSelectedPortfolio$(): Observable<any> {
-    return this.state
-      .map(state => {
-        this.portfolioMapping = state.mapContractorToSelectedPortfolio;
-        return state.mapContractorToSelectedPortfolio;
-      })
-      .distinctUntilChanged();
-  }
-
-  portfolioMapping: INumberMap;
-
   deletePortfolio(contractorId: number, portfolioId: number): Observable<any> {
     return this.dataService
       .delete('/contractors/{contractorId}/portfolios/{portfolioId}', { contractorId, portfolioId })
       .catch(this.notificationsService.deleteError().entity('entities.portfolios.entity.singular').callback());
   }
 
-  selectPortfolio(contractorId: number, portfolioId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.PORTFOLIO_SELECT, {
-        mapContractorToSelectedPortfolio: {
-        [contractorId]: portfolioId
-      }
-    });
+  formOutsourcePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio): Observable<any> {
+    return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/form', {
+      contractorId, portfolioId
+    }, portfolio)
+    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+  }
+
+  sendOutsourcePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
+    return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
+      contractorId, portfolioId
+    }, { ...portfolio, debtStatusCode: 14 })
+    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+  }
+
+  sendCessionPortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
+    return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
+      contractorId, portfolioId
+    }, { ...portfolio, debtStatusCode: 17 })
+    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+  }
+
+
+  returnOutsourcePortfolio(
+    contractorId: number,
+    portfolioId: number,
+    portfolio: IPortfolio | IPortfolioOutsourceRequest): Observable<any> {
+    return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/return', {
+      contractorId, portfolioId
+    }, portfolio)
+    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+  }
+
+  selectPortfolio(portfolio: IPortfolio): void {
+    this.dispatch(
+      ContractorsAndPortfoliosService.PORTFOLIO_SELECT,
+      { selectedPortfolio: portfolio }
+    );
   }
 
   get state(): Observable<IContractorsAndPortfoliosState> {
-    return this.store.select(state => state.contractorsAndPortfolios)
-      .filter(Boolean);
+    return this.store.select(state => state.contractorsAndPortfolios);
   }
 
-  private dispatch(type: string, payload?: any): void {
+  dispatch(type: string, payload?: any): void {
     this.store.dispatch({ type, payload });
+  }
+
+  getAction(action: string): Observable<Action> {
+    return this.actions$.ofType(action);
   }
 }

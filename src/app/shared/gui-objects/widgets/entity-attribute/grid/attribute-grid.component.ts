@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Inject, Component, OnInit, 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Router } from '@angular/router';
+import { first } from 'rxjs/operators';
 
 import { IAttribute } from '../attribute.interface';
 import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
@@ -40,7 +42,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     },
     {
       label: labelKey('name'),
-      prop: 'name',
+      prop: 'name'
     },
     {
       label: labelKey('value'),
@@ -83,7 +85,19 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         this.entityTypeId$.flatMap(
           entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId)
         ),
-        this.selectedAttribute$.map(attribute => attribute && !attribute.disabledValue)
+        this.selectedAttribute$.map(attribute => attribute && attribute.disabledValue !== 1)
+      ])
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_VERSION,
+      action: () => this.onVersionClick(),
+      enabled: combineLatestAnd([
+        this.entityTypeId$.flatMap(
+          entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
+        ),
+        // TODO:(i.lobanov) there is no version prop now on BE, uncomment when done
+        this.selectedAttribute$.map(attribute => !!attribute && attribute.disabledValue !== 1)
+        // this.selectedAttribute$.map(attribute => attribute && !!attribute.version && attribute.disabledValue !== 1)
       ])
     },
     {
@@ -101,6 +115,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     private cdRef: ChangeDetectorRef,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
+    private router: Router,
     @Inject('entityTypeId$') private entityTypeId$: Observable<number>,
     @Inject('entityId$') private entityId$: Observable<number>,
   ) {
@@ -148,7 +163,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   onRowDblClick(attribute: IAttribute): void {
     this.selectedAttribute$.next(attribute);
     this.canEdit$
-      .take(1)
+      .pipe(first())
       .filter(Boolean)
       .subscribe(() => {
         this.setDialog('edit');
@@ -167,6 +182,15 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         this.setDialog(null);
         this.cdRef.markForCheck();
       });
+  }
+
+  onVersionClick(): void {
+    this.router.navigate([`${this.router.url}/versions`]);
+    this.attributeService.versionParams$.next({
+      selectedAttribute: this.selectedAttribute$.value,
+      entityId: this.entityId,
+      entityTypeId: this.entityTypeId
+    });
   }
 
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;

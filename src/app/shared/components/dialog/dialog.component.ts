@@ -21,7 +21,7 @@ export class DialogComponent implements OnDestroy, OnInit {
 
   onClose(): void {
     this.display = false;
-    this.close.emit(null);
+    this.close.emit();
   }
 
   ngOnInit(): void {

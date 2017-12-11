@@ -3,7 +3,10 @@ export interface IContractor {
   name: string;
   fullName: string;
   smsName: string;
-  responsibleName: string;
+  responsibleFirstName?: string;
+  responsibleLastName?: string;
+  responsibleMiddleName?: string;
+  responsibleFullName?: string;
   typeCode: number;
   phone: string;
   address: string;
@@ -22,8 +25,14 @@ export interface IPortfolio {
   comment: string;
 }
 
+export type PortfolioAction = 'sendOutsource' | 'sendCession' | 'returnOutsource';
+
 export interface IPortfolioMoveRequest {
   newContractorId: number;
+}
+
+export interface IPortfolioOutsourceRequest {
+  debtStatusCode: number;
 }
 
 export interface IContractorManager {
@@ -42,10 +51,8 @@ export interface IContractorManager {
   comment: string;
 }
 
-export interface INumberMap { [n: number]: number; }
-
 export interface IContractorsAndPortfoliosState {
   selectedContractorId: number;
-  mapContractorToSelectedManager?: INumberMap;
-  mapContractorToSelectedPortfolio?: INumberMap;
+  selectedPortfolio: IPortfolio;
+  selectedManagerId: number;
 }

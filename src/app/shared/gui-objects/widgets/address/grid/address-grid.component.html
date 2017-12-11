@@ -32,7 +32,8 @@
 <app-address-grid-visits
   *ngIf="isDialog('visits')"
   [addressId]="selectedAddressId$ | async"
-  [personId]="personId"
+  [callCenter]="callCenter"
+  [personId]="personId$ | async"
   (cancel)="onCloseDialog()">
 </app-address-grid-visits>
 
@@ -48,8 +49,9 @@
 
 <app-address-grid-mark
   *ngIf="isDialog('mark')"
+  [callCenter]="callCenter"
   [debtorId]="debtorId"
-  [personId]="personId"
+  [personId]="personId$ | async"
   [personRole]="personRole"
   (submit)="onMarkDialogSubmit($event)"
   (cancel)="onCloseDialog()">
@@ -60,8 +62,7 @@
 <app-grid
   *ngIf="canDisplayGrid"
   columnTranslationKey="debtor.information.address"
-  contextFieldName="fullAddress"
-  [contextMenuEnabled]="true"
+  [contextMenuOptions]="contextMenuOptions"
   selectionType="single"
   [styles]="{height: '230px'}"
   [columns]="columns"

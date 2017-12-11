@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 export const combineLatestAnd = (observables: Array<Observable<boolean>>): Observable<boolean> => {
   return Observable.combineLatest.apply(null, observables).map(res => res.reduce((acc, i) => acc && i), true);
@@ -9,5 +10,5 @@ export const combineLatestOr = (observables: Array<Observable<boolean>>): Observ
 };
 
 export const doOnceIf = (observable: Observable<boolean>, callback: Function): void => {
-  observable.take(1).filter(Boolean).subscribe(() => callback());
+  observable.pipe(first()).filter(Boolean).subscribe(() => callback());
 };

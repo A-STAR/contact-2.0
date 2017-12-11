@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IConstant } from './constants.interface';
@@ -16,8 +17,10 @@ import { UserConstantsService } from '../../../core/user/constants/user-constant
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
-import { DialogFunctions } from '../../../core/dialog';
 import { GridComponent } from '../../../shared/components/grid/grid.component';
+
+import { combineLatestAnd } from '../../../core/utils/helpers';
+import { DialogFunctions } from '../../../core/dialog';
 
 @Component({
   selector: 'app-constants',
@@ -35,10 +38,10 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.setDialog('editConstant'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('CONST_VALUE_EDIT'),
         this.constantsService.state.map(state => !!state.currentConstant)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+    ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -105,7 +108,7 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
         return this.constantsService.state
           .map(state => state.currentConstant);
       })
-      .take(1)
+      .pipe(first())
       .subscribe(currentConstant => {
         if (currentConstant) {
           const found = this.rows.find(row => row.id === currentConstant.id);
@@ -142,7 +145,7 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
   onDblClick(): void {
     const permission = 'CONST_VALUE_EDIT';
     this.userPermissionsService.has(permission)
-      .take(1)
+      .pipe(first())
       .subscribe(hasPermission => {
         if (hasPermission) {
           this.setDialog('editConstant');

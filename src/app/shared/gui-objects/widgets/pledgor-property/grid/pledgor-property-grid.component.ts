@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IPledgorProperty } from '../../pledgor-property/pledgor-property.interface';
@@ -40,7 +41,7 @@ export class PledgorPropertyGridComponent extends DialogFunctions implements OnI
   ];
 
   dialog: string;
-  gridStyles = { height: '500px' };
+  gridStyles = { height: '350px' };
   propertyList: Array<IPledgorProperty> = [];
 
   private personId;
@@ -58,7 +59,7 @@ export class PledgorPropertyGridComponent extends DialogFunctions implements OnI
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-    .take(1)
+    .pipe(first())
     .subscribe(columns => {
       this.columns = [...columns];
       this.cdRef.markForCheck();

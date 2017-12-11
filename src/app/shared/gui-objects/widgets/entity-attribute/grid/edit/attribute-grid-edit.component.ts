@@ -61,7 +61,8 @@ export class AttributeGridEditComponent implements OnInit {
     const { value, ...rest } = this.form.serializedUpdates;
     const data = {
       ...rest,
-      ...getValue(this.selectedAttribute.typeCode, value)
+      code: this.selectedAttribute.code,
+      ...getValue(this.selectedAttribute.typeCode, value || this.formData.value)
     };
     this.submit.emit(data);
   }

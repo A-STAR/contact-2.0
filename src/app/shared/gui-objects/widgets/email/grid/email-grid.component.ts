@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/of';
 
 import { IEmail } from '../email.interface';
-import { IGridColumn, IRenderer } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IRenderer, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { EmailService } from '../email.service';
@@ -58,6 +58,18 @@ export class EmailGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: this.canView$,
       action: () => this.fetch()
+    },
+  ];
+
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      fieldActions: [
+        'copyField',
+        'copyRow'
+      ],
+      translationKey: 'default.grid.localeText',
+      prop: 'email',
+      enabled: Observable.of(true)
     },
   ];
 

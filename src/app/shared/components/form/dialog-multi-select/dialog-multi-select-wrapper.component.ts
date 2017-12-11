@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { IDialogMultiSelectValue, IDialogMultiSelectFilterType } from './dialog-multi-select.interface';
 import { IGridColumn } from '../../grid/grid.interface';
@@ -29,6 +30,8 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
   isDisabled = false;
   rows: any[] = [];
   value: IDialogMultiSelectValue[];
+
+  private isInitialised = false;
 
   get columnsFromTranslationKey(): string {
     return this.dialogMultiSelectWrapperService.getColumnsFromTranslationKey(this.filterType);
@@ -64,16 +67,21 @@ export class DialogMultiSelectWrapperComponent implements ControlValueAccessor, 
     const columnsFrom = this.dialogMultiSelectWrapperService.getColumnsFrom(this.filterType);
     const columnsTo = this.dialogMultiSelectWrapperService.getColumnsTo(this.filterType);
     this.gridService.setDictionaryRenderers([ ...columnsFrom, ...columnsTo ])
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columnsFrom = this.gridService.setRenderers(columnsFrom);
         this.columnsTo = this.gridService.setRenderers(columnsTo);
       });
+  }
 
-    this.fetch(this.filterParams).subscribe(rows => {
-      this.rows = rows;
-      this.cdRef.markForCheck();
-    });
+  onShowDialog(): void {
+    if (!this.isInitialised) {
+      this.isInitialised = true;
+      this.fetch(this.filterParams).subscribe(rows => {
+        this.rows = rows;
+        this.cdRef.markForCheck();
+      });
+    }
   }
 
   writeValue(value: IDialogMultiSelectValue[]): void {

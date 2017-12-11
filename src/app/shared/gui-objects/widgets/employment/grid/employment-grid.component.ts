@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
 
 import { IEmployment } from '../employment.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -74,7 +75,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
 
-  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '600px' };
+  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '500px' };
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -87,7 +88,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
   ) {
     this.gridService.setAllRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();

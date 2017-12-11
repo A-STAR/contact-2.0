@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { throttleTime } from 'rxjs/operators/throttleTime';
 
 import { IAppState } from '../state/state.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
@@ -36,8 +37,10 @@ export class NotificationsService implements OnDestroy {
     private store: Store<IAppState>,
     private translateService: TranslateService,
   ) {
-    // TODO(d.maltsev): can we optimize this?
-    this.notificationsStateSubscription = this.state.subscribe(state => {
+    this.notificationsStateSubscription = this.state
+      // NOTE: this is to prevent multiple events from writing to the storage too often
+      .pipe(throttleTime(500))
+      .subscribe(state => {
       this.persistenceService.set(NotificationsService.STORAGE_KEY, state);
     });
   }
@@ -47,8 +50,7 @@ export class NotificationsService implements OnDestroy {
   }
 
   get state(): Observable<INotificationsState> {
-    return this.store.select(state => state.notifications)
-      .filter(Boolean);
+    return this.store.select(state => state.notifications);
   }
 
   get length(): Observable<number> {

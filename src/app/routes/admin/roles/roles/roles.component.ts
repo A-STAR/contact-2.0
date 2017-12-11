@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IPermissionsDialogEnum } from '../permissions.interface';
@@ -113,7 +114,7 @@ export class RolesComponent implements OnDestroy {
 
   onEdit(): void {
     this.userPermissionsService.has('ROLE_EDIT')
-      .take(1)
+      .pipe(first())
       .subscribe(hasEditPermission => {
         if (hasEditPermission) {
           this.permissionsService.permissionDialog(IPermissionsDialogEnum.ROLE_EDIT);

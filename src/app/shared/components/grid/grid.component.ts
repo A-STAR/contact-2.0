@@ -16,12 +16,14 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/debounceTime';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
+import { IContextMenuItem } from './grid.interface';
 import { IMessages, TSelectionType, IGridColumn } from './grid.interface';
 
 import { SettingsService } from '../../../core/settings/settings.service';
@@ -45,16 +47,17 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() selection: Array<any> = [];
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
-  @Input() contextMenuEnabled = false;
-  @Input() contextFieldName: string;
+  @Input() contextMenuOptions: IContextMenuItem[] = [];
+  @Output() action = new EventEmitter<any>();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
 
+  contextFieldName: string;
   clickDebouncer: Subject<{ type: string; row: any}>;
   columnDefs: IGridColumn[];
   // Context Menu
   ctxColumn: any;
-  ctxFieldNameTranslation = { field: this.contextFieldName };
+  ctxFieldNameTranslation: { field: string };
   ctxRow: any;
   ctxEvent: MouseEvent;
   ctxOutsideListener: Function;
@@ -97,10 +100,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
           this.onDblClick.emit(row);
         }
       });
-
-    this.ctxFieldNameTranslation = {
-      field: this.contextFieldName ? this.translate.instant(this.contextFieldName) : this.contextFieldName
-    };
   }
 
   @Input() rowClass = () => undefined;
@@ -120,6 +119,15 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     const translationKeys = [gridMessagesKey];
     this.columnDefs = [].concat(this.columns);
 
+    const ctxMenuFieldAction = this.contextMenuOptions.find(option => !!option.fieldActions);
+
+    this.contextFieldName = ctxMenuFieldAction && ctxMenuFieldAction.prop;
+
+    this.ctxFieldNameTranslation = {
+      field: this.contextFieldName ? this.translate.instant(this.contextFieldName) : this.contextFieldName
+    };
+
+
     if (this.columnTranslationKey) {
       translationKeys.push(this.columnTranslationKey);
     }
@@ -129,7 +137,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
 
     this.subscription = Observable.merge(
-      this.translate.get(translationKeys).take(1),
+      this.translate.get(translationKeys).pipe(first()),
       this.translate.onLangChange
         .map(data => data.translations)
         .map(translations => translationKeys.reduce((acc, key) => {
@@ -142,7 +150,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
         this.messages = { ...translations[gridMessagesKey] };
         if (this.columnTranslationKey) {
           this.translateColumns(translations[this.columnTranslationKey].grid);
-          if (this.contextMenuEnabled && this.contextFieldName) {
+          if (this.contextMenuOptions.length) {
             this.ctxFieldNameTranslation = {
               field: translations[this.columnTranslationKey].grid[this.contextFieldName] || this.contextFieldName
             };
@@ -162,11 +170,10 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     if (emptyMessage) {
       if (emptyMessage.currentValue) {
         this.messages.emptyMessage = this.translate.instant(emptyMessage.currentValue);
-
       } else {
         const gridMessagesKey = 'grid.messages';
         this.translate.get([gridMessagesKey])
-          .take(1)
+          .pipe(first())
           .subscribe(translations => this.messages = { ...translations[gridMessagesKey] });
       }
     }
@@ -183,7 +190,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   ngAfterViewInit(): void {
-    if (this.contextMenuEnabled) {
+    if (this.contextMenuOptions.length) {
       this.ctxOutsideListener = this.renderer.listen('document', 'click', this.onDocumentClick);
     }
     // Define a possible height of the datatable
@@ -243,7 +250,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     ctxEvent.event.preventDefault();
     ctxEvent.event.stopPropagation();
 
-    if (!this.contextMenuEnabled || !this.hasSingleSelection) {
+    if (!this.contextMenuOptions.length || !this.hasSingleSelection) {
       return;
     }
 
@@ -254,7 +261,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       this.ctxColumn = undefined;
       this.showCtxMenu();
       const { x, y } = this.ctxEvent;
-      this.ctxStyles = { left: x + 'px', top: y + 'px' };
+      // position ctx menu relative to datatable
+      this.ctxStyles = this.computeCtxMenuStyles(x, y);
+      this.cdRef.detectChanges();
     } else {
       // Should you need to hook to the column header click, uncomment the next line
       // this.ctxColumn = ctxEvent.content;
@@ -262,34 +271,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     }
   }
 
-  onCtxMenuClick(event: MouseEvent, prop: string): void {
-    const data = prop ? this.ctxRow[prop] : this.ctxRow;
-    const copyAsPlaintext = (content) => {
-      const copyFrom = document.createElement('textarea');
-      copyFrom.textContent = content;
-      const body = document.querySelector('body');
-      body.appendChild(copyFrom);
-      copyFrom.select();
-
-      document.execCommand('copy');
-      body.removeChild(copyFrom);
-    };
-
-    const formattedData = prop
-      ? data
-      : this.columns
-          .filter(column => data[column.prop] !== null)
-          .map(column => {
-            return column.type === 'boolean'
-              ? Boolean(data[column.prop])
-              : column.$$valueGetter && column.dictCode
-                ? column.$$valueGetter(data, column.prop)
-                : data[column.prop];
-          })
-          .join('\t');
-
-    copyAsPlaintext(formattedData);
+  onAction(action: IContextMenuItem): void {
     this.hideCtxMenu();
+    this.action.emit(action);
   }
 
   clearSelection(): void {
@@ -309,6 +293,16 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   private hideCtxMenu(): void {
     this.ctxShowMenu = false;
     this.cdRef.markForCheck();
+  }
+
+  private computeCtxMenuStyles(eventX: number, eventY: number): { left: string, top: string } {
+    const dataTableClientRect = this.dataTableRef.nativeElement.getBoundingClientRect();
+    // compute datatable position relative to window
+    const dataTablePosition = {
+      top: dataTableClientRect.top + this.dataTableRef.nativeElement.clientTop,
+      left: dataTableClientRect.left + this.dataTableRef.nativeElement.clientLeft
+    };
+    return { left: (eventX - dataTablePosition.left) + 'px', top: (eventY - dataTablePosition.top) + 'px' };
   }
 
   private translateColumns(columnTranslations: object): void {

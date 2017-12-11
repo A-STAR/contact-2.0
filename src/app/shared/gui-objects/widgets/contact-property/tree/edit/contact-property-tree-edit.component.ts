@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { EntityTranslationsService } from '../../../../../../core/entity/translations/entity-translations.service';
@@ -88,7 +89,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         ? this.entityTranslationsService.readContactTreeNodeTranslations(this.selectedId)
         : Observable.of([]),
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ dictionaries, attributes, templates, attributeTypes, languages, data, nameTranslations ]) => {
       this.controls = this.buildControls(dictionaries, templates, attributes, languages);
       this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
@@ -147,8 +148,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       ...formData,
       ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
       ...(name ? { name: this.isEditing ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
-      ...(template ? { [template.name]: template.value } : {}),
-      ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),
+      ...(template ? { [template.name]: template.value || null } : {}),
+      ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value || null } : {}),
       ...(isEmpty(attributes) ? {} : { attributes }),
       ...(this.isEditing ? {} : { parentId: this.selectedId }),
     };

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { ICampaignDebt } from '../campaign.interface';
 import { IDynamicFormGroup, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -29,7 +30,7 @@ export class OverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.entityAttributesService.getDictValueAttributes()
-      .take(1)
+      .pipe(first())
       .subscribe(attributes => {
         this.controls = this.buildControls(attributes);
         this.cdRef.markForCheck();

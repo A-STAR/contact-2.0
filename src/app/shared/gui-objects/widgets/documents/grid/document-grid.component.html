@@ -1,4 +1,8 @@
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2
+  *ngIf="!hideToolbar"
+  class="bh"
+  [items]="toolbarItems"
+></app-toolbar-2>
 
 <app-dialog-action
   *ngIf="isDialog('delete')"
@@ -14,7 +18,7 @@
 <app-grid
   columnTranslationKey="widgets.document"
   selectionType="single"
-  [styles]="{ height: '600px' }"
+  [styles]="{ height: '500px' }"
   [columns]="columns"
   [rows]="documents"
   (onDblClick)="onDoubleClick($event)"

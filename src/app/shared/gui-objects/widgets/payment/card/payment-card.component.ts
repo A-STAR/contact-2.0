@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -23,14 +24,12 @@ import { minStrict } from '../../../../../core/validators';
   templateUrl: './payment-card.component.html'
 })
 export class PaymentCardComponent {
+  @Input() callCenter = false;
+  @Input() readOnly = false;
+  @Input() debtId: number;
+  @Input() paymentId: number;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
-  private routeParams = (<any>this.route.params).value;
-  private debtId = this.routeParams.debtId;
-  private paymentId = this.routeParams.paymentId;
-
-  private queryParams = (<any>this.route.queryParams).value;
-  private callCenter = this.queryParams.callCenter;
 
   controls: IDynamicFormControl[] = null;
   dialog: string;
@@ -42,7 +41,6 @@ export class PaymentCardComponent {
     private lookupService: LookupService,
     private messageBusService: MessageBusService,
     private paymentService: PaymentService,
-    private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -60,7 +58,7 @@ export class PaymentCardComponent {
         ? this.paymentService.fetch(this.debtId, this.paymentId, this.callCenter)
         : Observable.of(null),
     )
-    .take(1)
+    .pipe(first())
     .subscribe(([ purposeOptions, currencyOptions, userOptions, canAdd, canEdit, canEditUser, canConfirm, payment ]) => {
       this.payment = payment ? payment : { receiveDateTime: new Date(), paymentDateTime: new Date() };
       const controls: IDynamicFormControl[] = [
@@ -93,14 +91,14 @@ export class PaymentCardComponent {
           label: 'widgets.payment.grid.isConfirmed', controlName: 'isConfirmed', disabled: !canConfirm,
           type: 'checkbox', required: true, width: 12
         },
-      ];
+      ].map(item => ({ ...item, disabled: this.readOnly } as IDynamicFormControl));
 
       this.controls =  this.payment.isCanceled
         ? controls.map(control => ({ ...control, disabled: true }))
         : !canConfirm && !this.paymentId
-        ? controls.filter(control => control.controlName !== 'isConfirmed')
-            .map(control => canAdd ? control : { ...control, disabled: true })
-        : controls.map(control => canAdd ? control : { ...control, disabled: true });
+          ? controls.filter(control => control.controlName !== 'isConfirmed')
+              .map(control => canAdd ? control : { ...control, disabled: true })
+          : controls.map(control => canAdd ? control : { ...control, disabled: true });
 
       this.cdRef.markForCheck();
     });

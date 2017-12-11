@@ -8,6 +8,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -93,7 +94,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
 
   fetchParticipants(): Observable<IParticipant[]> {
     return this.campaignsService.fetchParticipants()
-    .take(1);
+    .pipe(first());
   }
 
   onSelectParticipant(selection: any): void {

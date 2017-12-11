@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
 
 import { DebtorGridService } from './debtor-grid.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
@@ -41,6 +42,46 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   debtors: any[];
 
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      fieldActions: [
+        'copyField',
+        'copyRow'
+      ],
+      translationKey: 'default.grid.localeText',
+      prop: 'fullName',
+      enabled: Observable.of(true)
+    },
+    {
+      action: 'showContactHistory',
+      label: 'default.grid.actions.showContactHistory',
+      enabled: Observable.of(true),
+      params: [ 'personId' ],
+    },
+    {
+      action: 'debtSetResponsible',
+      label: 'default.grid.actions.debtSetResponsible',
+      enabled: Observable.of(true),
+      params: [ 'debtId' ]
+    },
+    {
+      action: 'debtClearResponsible',
+      label: 'default.grid.actions.debtClearResponsible',
+      enabled: Observable.of(true),
+      params: [ 'debtId' ]
+    },
+    {
+      action: 'objectAddToGroup',
+      label: 'default.grid.actions.objectAddToGroup',
+      enabled: Observable.of(true),
+      params: [ 'debtId' ],
+      // TODO(d.maltsev, i.kibisov): currently using injection instead of this
+      addOptions: [
+        { name: 'entityTypeId', value: [ 19 ] }
+      ]
+    },
+  ];
+
   private searchParamsSubscription: Subscription;
 
   constructor(
@@ -53,7 +94,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.gridService.setDictionaryRenderers(this.columns)
-      .take(1)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = this.gridService.setRenderers(columns);
       });
@@ -82,6 +123,11 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
         this.router.navigate([ nextUrl ]);
       }
     });
+  }
+
+  onAction($event: string): void {
+    // uncomment to test action for context menu
+    // log(`Action was fired for ${$event}`);
   }
 
   private getUrlByDebtor(debtor: any): string {

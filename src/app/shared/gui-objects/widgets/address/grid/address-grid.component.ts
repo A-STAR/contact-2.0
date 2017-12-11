@@ -3,13 +3,14 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/observable/of';
 
 import { IAddress } from '../address.interface';
 import { IAddressMarkData } from './mark/mark.interface';
 import { IDebt } from '../../debt/debt/debt.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
@@ -30,22 +31,28 @@ import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/hel
 })
 export class AddressGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit';
+  @Input() callCenter = false;
+  @Input() campaignId: number;
   @Input('debtId')
   set debtId(debtId: number) {
-    this.debtId$.next(debtId);
+    this._debtId$.next(debtId);
     this.cdRef.markForCheck();
   }
-  @Input() callCenter = false;
+  @Input() debtorId: number;
+  @Input() ignoreDebtRegContactTypeListPermissions = false;
+  @Input() ignoreViewPermissions = false;
+  @Input() ignoreVisitAddPermissions = false;
+  @Input() ignoreVisitViewPermissions = false;
   @Input() entityType = 18;
   @Input('personId')
   set personId(personId: number) {
-    this.personId$.next(personId);
+    this._personId$.next(personId);
     this.cdRef.markForCheck();
   }
   @Input() personRole: number;
 
-  private debtId$ = new BehaviorSubject<number>(null);
-  private personId$ = new BehaviorSubject<number>(null);
+  private _debtId$ = new BehaviorSubject<number>(null);
+  private _personId$ = new BehaviorSubject<number>(null);
 
   private _selectedAddressId$ = new BehaviorSubject<number>(null);
 
@@ -103,6 +110,18 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
   ];
 
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      fieldActions: [
+        'copyField',
+        'copyRow'
+      ],
+      translationKey: 'default.grid.localeText',
+      prop: 'fullAddress',
+      enabled: Observable.of(true)
+    }
+  ];
+
   columns: Array<IGridColumn> = [];
 
   private _addresses: Array<IAddress> = [];
@@ -139,7 +158,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.debtSubscription = this.debtId$
+    this.debtSubscription = this._debtId$
       .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : Observable.of(null))
       .subscribe(debt => {
         this.debt = debt;
@@ -150,7 +169,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         this.gridService.setDictionaryRenderers(this._columns),
         this.canViewBlock$,
       )
-      .take(1)
+      .pipe(first())
       .subscribe(([ columns, canViewBlock ]) => {
         const filteredColumns = columns.filter(column => {
           return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
@@ -164,7 +183,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       .subscribe(() => this.fetch());
 
     this.canViewSubscription = Observable
-      .combineLatest(this.canView$, this.personId$)
+      .combineLatest(this.canView$, this._personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
           this.notificationsService.error('errors.default.read.403').entity('entities.addresses.gen.plural').dispatch();
@@ -180,6 +199,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
+  }
+
+  get personId$(): Observable<number> {
+    return this._personId$;
   }
 
   get canDisplayGrid(): boolean {
@@ -199,7 +222,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onMarkClick(): void {
-    this.addressService.check(this.personId$.value, this._selectedAddressId$.value)
+    this.addressService.check(this._personId$.value, this._selectedAddressId$.value)
       .subscribe(result => this.setDialog(result ? 'markConfirm' : 'mark'));
   }
 
@@ -208,7 +231,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onMarkDialogSubmit(data: IAddressMarkData): void {
-    this.addressService.markForVisit(this.personId$.value, this._selectedAddressId$.value, data)
+    this.addressService.markForVisit(this._personId$.value, this._selectedAddressId$.value, data, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -226,17 +249,17 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.addressService.block(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.callCenter, code)
+    this.addressService.block(this.entityType, this._personId$.value, this._selectedAddressId$.value, this.callCenter, code)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.addressService.unblock(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.callCenter)
+    this.addressService.unblock(this.entityType, this._personId$.value, this._selectedAddressId$.value, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(this.entityType, this.personId$.value, this._selectedAddressId$.value, this.callCenter)
+    this.addressService.delete(this.entityType, this._personId$.value, this._selectedAddressId$.value, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -250,13 +273,17 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   registerContact(): void {
     this.selectedAddressId$
-      .take(1)
+      .pipe(first())
       .subscribe(addressId => {
         this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         // Contact type 'Visit' = 3
         // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
-        const url = `/workplaces/contact-registration/${this.debtId$.value}/3/${addressId}`;
-        this.router.navigate([ url ], { queryParams: { personId: this.personId$.value, personRole: this.personRole } });
+        const url = `/workplaces/contact-registration/${this._debtId$.value}/3/${addressId}`;
+        this.router.navigate([ url ], { queryParams: {
+          campaignId: this.campaignId,
+          personId: this._personId$.value,
+          personRole: this.personRole,
+        } });
       });
   }
 
@@ -269,7 +296,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_VIEW');
+    return this.userPermissionsService.has('ADDRESS_VIEW')
+      .map(hasPermission => hasPermission || this.ignoreViewPermissions);
   }
 
   get canViewBlock$(): Observable<boolean> {
@@ -310,14 +338,16 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   get canViewVisitLog$(): Observable<boolean> {
     return combineLatestAnd([
-      this.userPermissionsService.has('ADDRESS_VISIT_VIEW'),
+      this.userPermissionsService.has('ADDRESS_VISIT_VIEW')
+        .map(hasPermission => hasPermission || this.ignoreVisitViewPermissions),
       this.selectedAddress$.map(Boolean),
     ]);
   }
 
   get canMarkVisit$(): Observable<boolean> {
     return combineLatestAnd([
-      this.userPermissionsService.has('ADDRESS_VISIT_ADD'),
+      this.userPermissionsService.has('ADDRESS_VISIT_ADD')
+        .map(hasPermission => hasPermission || this.ignoreVisitAddPermissions),
       this.selectedAddress$.map(address => address && address.statusCode !== 3 && !address.isInactive),
     ]);
   }
@@ -326,7 +356,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     // TODO(d.maltsev): use debtor service
     return combineLatestAnd([
       this.selectedAddress$.map(address => address && !address.isInactive),
-      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3),
+      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3)
+        .map(hasPermission => hasPermission || this.ignoreDebtRegContactTypeListPermissions),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }
@@ -336,13 +367,17 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/address/create` ]);
+    const url = this.callCenter
+      ? `${this.router.url}/address/${this._personId$.value}/create`
+      : `${this.router.url}/address/create`;
+    this.router.navigate([ url ]);
   }
 
   private onEdit(addressId: number): void {
-    this.router.navigate([ `${this.router.url}/address/${addressId}` ], {
-      queryParams: this.callCenter ? { callCenter: 1 } : {}
-    });
+    const url = this.callCenter
+      ? `${this.router.url}/address/${this._personId$.value}/${addressId}`
+      : `${this.router.url}/address/${addressId}`;
+    this.router.navigate([ url ]);
   }
 
   private onSubmitSuccess(): void {
@@ -351,7 +386,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.addressService.fetchAll(this.entityType, this.personId$.value, this.callCenter)
+    this.addressService.fetchAll(this.entityType, this._personId$.value, this.callCenter)
       .subscribe(addresses => {
         this._addresses = addresses;
         this.cdRef.markForCheck();

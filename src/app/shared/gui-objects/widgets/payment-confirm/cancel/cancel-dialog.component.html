@@ -1,0 +1,8 @@
+<app-dialog-action
+  titleTranslationKey="massOperations.paymentsCancel.title"
+  actionTranslationKey="massOperations.paymentsCancel.message"
+  actionMessage="default.buttons.ok"
+  [messageParams]="paymentsCounter"
+  (action)="onCancelPayments()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>

@@ -1,14 +1,16 @@
 import {
   AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
-  Component, OnDestroy, ViewChild, ViewEncapsulation
+  Component, OnDestroy, ViewChild, ViewEncapsulation, EventEmitter, Output
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IEmployee, IActionLog } from './actions-log.interface';
+import { IContextMenuItem } from '../../../shared/components/grid/grid.interface';
 
-import { IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
+import { IAGridResponse, IAGridSelected } from '../../../shared/components/grid2/grid2.interface';
 import { IUserTerm } from '../../../core/user/dictionaries/user-dictionaries.interface';
 import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
@@ -20,7 +22,8 @@ import { UserPermissionsService } from '../../../core/user/permissions/user-perm
 
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 import { DownloaderComponent } from '../../../shared/components/downloader/downloader.component';
-import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
+import { ActionGridComponent } from '../../../shared/components/action-grid/action-grid.component';
+import { MetadataGridComponent } from '../../../shared/components/metadata-grid/metadata-grid.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,8 +32,14 @@ import { Grid2Component } from '../../../shared/components/grid2/grid2.component
   styleUrls: ['./actions-log.component.scss'],
   templateUrl: './actions-log.component.html',
 })
-export class ActionsLogComponent implements AfterViewInit, OnDestroy {
+export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
   static COMPONENT_NAME = 'ActionsLogComponent';
+
+  @Output() onSelect = new EventEmitter<IAGridSelected>();
+
+  @ViewChild('downloader') downloader: DownloaderComponent;
+  @ViewChild('filter') filter: ActionsLogFilterComponent;
+  @ViewChild(ActionGridComponent) grid: ActionGridComponent<any>;
 
   // filter
   actionTypesRows: Observable<IUserTerm[]>;
@@ -38,15 +47,22 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
   // grid
   hasViewPermission$: Observable<boolean>;
   permissionSub: Subscription;
+  actions = 'contactLogContact';
 
   query$ = new BehaviorSubject<IQuery>(null);
 
-  @ViewChild('downloader') downloader: DownloaderComponent;
-  @ViewChild('filter') filter: ActionsLogFilterComponent;
-  @ViewChild(Grid2Component) grid: Grid2Component;
-
   rows: IActionLog[] = [];
   rowCount = 0;
+  rowIdKey = 'id';
+
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      action: 'openUserById',
+      label: 'default.grid.actions.openUserById',
+      enabled: Observable.of(true),
+      params: [ 'userId' ],
+    }
+  ];
 
   constructor(
     private actionsLogService: ActionsLogService,
@@ -74,10 +90,10 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
           this.notificationsService.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
         } else {
           this.actionsLogService.getEmployeesAndActionTypes()
-            .take(1)
+            .pipe(first())
             .subscribe();
           // load data
-          if (this.grid.gridOptions.api) {
+          if ((this.grid && this.grid.grid && this.grid.grid as any).gridOptions) {
             this.onRequest();
           }
         }
@@ -90,7 +106,8 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
 
   onRequest(): void {
     const filters = this.getCombinedFilters();
-    const params = this.grid.getRequestParams();
+    const params = ((this.grid as any).grid as any).grid.getRequestParams();
+
     this.actionsLogService.fetch(filters, params)
       .subscribe((response: IAGridResponse<IActionLog>) => {
         this.rows = [...response.data];
@@ -101,12 +118,16 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
 
   doExport(): void {
     const filters = this.getCombinedFilters();
-    const params = this.grid.getRequestParams();
-    const request = this.grid.buildRequest(params, filters);
-    const columns = this.grid.getExportableColumns();
-    const body = { columns, ...request };
+    const grid = (this.grid as any);
+    const params = (grid.grid as any).grid.getRequestParams();
 
-    this.downloader.download(body);
+    if (grid.grid) {
+      const columns = (grid.grid as any).grid.getExportableColumns();
+      const request = (grid.grid as any).grid.buildRequest(params, filters);
+      const body = { columns, ...request };
+      this.downloader.download(body);
+    }
+
   }
 
   openQueryBuilder(): void {
@@ -122,7 +143,6 @@ export class ActionsLogComponent implements AfterViewInit, OnDestroy {
 
   private getCombinedFilters(): FilterObject {
     const filters = this.filter.getFilters();
-    return filters.addFilter(this.grid.getFilters());
+    return filters.addFilter((this.grid.grid as MetadataGridComponent<any>).getFilters());
   }
-
 }

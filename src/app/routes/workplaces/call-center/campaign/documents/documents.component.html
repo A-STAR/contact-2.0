@@ -1,5 +1,8 @@
 <app-document-grid
   *ngIf="debtExists$ | async"
+  action="download"
   [callCenter]="true"
-  [personId]="personId$ | async"
+  [entityId]="debtId$ | async"
+  [entityType]="19"
+  [hideToolbar]="true"
 ></app-document-grid>

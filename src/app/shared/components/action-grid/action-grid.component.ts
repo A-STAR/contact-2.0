@@ -9,12 +9,12 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import { IActionGridDialogData } from './action-grid.interface';
+import { IActionGridDialogData, ICloseAction } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected } from '../grid2/grid2.interface';
-import { IGridColumn } from '../grid/grid.interface';
+import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 
 import { GridComponent } from '../../components/grid/grid.component';
-import { Grid2Component } from '../../components/grid2/grid2.component';
+import { MetadataGridComponent } from '../../components/metadata-grid/metadata-grid.component';
 
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
@@ -35,14 +35,15 @@ export class ActionGridComponent<T> extends DialogFunctions {
   @Input() ngClass: string;
   @Input() rows: T[] = [];
   @Input() rowCount: number;
+  @Input() contextMenuOptions: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
-
+  @Input() showFilter: boolean;
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IActionGridDialogData>();
 
-  @ViewChild('grid') grid: GridComponent | Grid2Component;
+  @ViewChild('grid') grid: GridComponent | MetadataGridComponent<T>;
 
   dialog: string;
   dialogData: IActionGridDialogData;
@@ -54,15 +55,40 @@ export class ActionGridComponent<T> extends DialogFunctions {
   }
 
   get selection(): T[] {
-    return this.grid.selected as any[];
+    return this.grid.selected as T[];
   }
 
   get isUsingAGGrid(): boolean {
     return !!this.metadataKey;
   }
 
+  getAddOptions(name: string): (number|string)[] {
+    // TODO(d.maltsev): not optimized; better to convert to key: value object on initialization
+    return this.dialogData.addOptions.find(option => option.name === name).value;
+  }
+
   getSelectionParam(key: number): any[] {
     return this.dialogData.selection[key];
+  }
+
+  getConfiguredParams(paramName: string): any[] {
+    if (!(this.grid as MetadataGridComponent<T>).grid.actions) {
+      // NOTE: this function is not available on grid1
+      return;
+    }
+
+    const idNames = (this.grid as  MetadataGridComponent<T>).grid.actions
+      .filter(a => a.action === paramName)[0].params;
+
+    const { selection } = this.dialogData;
+    const container = Array(selection[0].length).fill({});
+
+    return idNames.reduce((acc, idName, idNum) => {
+      selection[idNum].forEach((current, ind) => {
+        acc[ind][idName] = current;
+      });
+      return acc;
+    }, container);
   }
 
   getDialogParam(key: number): number | string {
@@ -70,13 +96,13 @@ export class ActionGridComponent<T> extends DialogFunctions {
   }
 
   getFilters(): FilterObject {
-    return this.grid instanceof Grid2Component
+    return this.grid instanceof MetadataGridComponent
       ? this.grid.getFilters()
       : null;
   }
 
   getRequestParams(): IAGridRequestParams {
-    return this.grid instanceof Grid2Component
+    return this.grid instanceof MetadataGridComponent
       ? this.grid.getRequestParams()
       : null;
   }
@@ -85,7 +111,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
     const { metadataAction, params } = gridAction;
     this.dialog = metadataAction.action;
     this.dialogData = {
-      action: gridAction,
+      addOptions: metadataAction.addOptions,
       params: metadataAction.params.reduce((acc, param, i) => ({
         ...acc,
         [i]: params.node.data[param]
@@ -96,6 +122,36 @@ export class ActionGridComponent<T> extends DialogFunctions {
       }), {}),
     };
     this.cdRef.markForCheck();
+  }
+
+  onSimpleGridAction(metadataAction: any): void {
+    this.dialog = metadataAction.action;
+    this.dialogData = {
+      addOptions: metadataAction.addOptions,
+      params: metadataAction.params.reduce((acc, param, i) => ({
+        ...acc,
+        [i]: this.selection[0][param]
+      }), {}),
+      selection: metadataAction.params.reduce((acc, param, i) => ({
+        ...acc,
+        [i]: this.selection.map(item => item[param])
+      }), {}),
+    };
+    this.cdRef.markForCheck();
+  }
+
+  onCloseAction(action: ICloseAction = {}): void {
+    if (action.refresh) {
+      this.onRequest();
+    }
+    if (action.deselectAll) {
+      if (this.isUsingAGGrid) {
+        (<MetadataGridComponent<T>>this.grid).grid.deselectAll();
+      } else {
+        (this.grid as GridComponent).clearSelection();
+      }
+    }
+    this.onCloseDialog();
   }
 
   onRequest(): void {

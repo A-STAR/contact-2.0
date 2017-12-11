@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
+// import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class PersistenceService {
   static LAYOUT_KEY = 'state/layout';
+
+  // constructor(@Inject(forwardRef(() => NotificationsService)) private notifications: NotificationsService) {}
 
   get(key: string): any {
     try {
@@ -29,8 +32,9 @@ export class PersistenceService {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      // TODO(d.maltsev): show notification?
-      console.error(error);
+      // TODO(a.tymchuk): figure out a way to log a notification
+      // this.notifications.error(error).noAlert().dispatch();
+      console.warn(error);
     }
   }
 

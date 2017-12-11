@@ -7,6 +7,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -39,7 +40,7 @@ export class StatusDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.userConstantsService.get('Debt.StatusReason.MandatoryList')
-      .take(1)
+      .pipe(first())
       .map(constant => constant.valueS)
       .subscribe(constant => {
         const isReasonRequired = constant === 'ALL' || constant.split(',').map(Number).includes(9);

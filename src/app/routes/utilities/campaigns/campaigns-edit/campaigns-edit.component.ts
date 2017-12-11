@@ -9,6 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { ICampaign } from '../campaigns.interface';
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -48,7 +49,7 @@ export class CampaignsEditComponent implements OnInit {
       this.lookupService.lookupAsOptions('languages'),
       (this.editedEntity ? this.campaignsService.readCampaignNameTranslations(this.editedEntity.id) : Observable.of([]))
     )
-      .take(1)
+      .pipe(first())
       .subscribe(([groupNames, languages, translations]) => {
         this.campaignGroups = groupNames;
         if (this.editedEntity) {
