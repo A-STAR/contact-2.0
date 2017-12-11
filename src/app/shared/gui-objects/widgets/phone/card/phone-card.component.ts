@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
@@ -38,7 +37,6 @@ export class PhoneCardComponent implements OnInit {
     private contentTabService: ContentTabService,
     private messageBusService: MessageBusService,
     private phoneService: PhoneService,
-    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
