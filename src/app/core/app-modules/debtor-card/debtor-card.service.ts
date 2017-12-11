@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../state/state.interface';
-import { IActionType, INavigationParams } from './debtor-card.interface';
+import { IActionType } from './debtor-card.interface';
 import { IDebt, IPerson } from '../app-modules.interface';
 
 import { Observable } from 'rxjs/Observable';

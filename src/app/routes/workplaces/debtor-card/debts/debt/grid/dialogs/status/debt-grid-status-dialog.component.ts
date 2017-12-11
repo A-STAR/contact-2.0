@@ -9,7 +9,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators/first';

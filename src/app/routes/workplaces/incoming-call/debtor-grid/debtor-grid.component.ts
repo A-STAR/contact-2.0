@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
@@ -91,7 +90,6 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     private debtorGridService: DebtorGridService,
     private gridService: GridService,
     private incomingCallService: IncomingCallService,
-    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -136,17 +134,17 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     // log(`Action was fired for ${$event}`);
   }
 
-  private getUrlByDebtor(debtor: any): string {
-    const { debtorId, debtId, contractId, personId } = debtor;
-    switch (debtor.personRole) {
-      case 2:
-        return `/workplaces/debt-processing/${debtorId}/${debtId}/guarantee/${contractId}/guarantor/${personId}`;
-      case 3:
-        // TODO(d.maltsev): return correct url when the module is finished
-        // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=133529625#id-Входящийзвонок-Открытиекарточки
-        return null;
-      case 4:
-        return `/workplaces/debt-processing/${debtorId}/${debtId}/contact/${personId}`;
-    }
-  }
+  // private getUrlByDebtor(debtor: any): string {
+  //   const { debtorId, debtId, contractId, personId } = debtor;
+  //   switch (debtor.personRole) {
+  //     case 2:
+  //       return `/workplaces/debt-processing/${debtorId}/${debtId}/guarantee/${contractId}/guarantor/${personId}`;
+  //     case 3:
+  //       // TODO(d.maltsev): return correct url when the module is finished
+  //       // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=133529625#id-Входящийзвонок-Открытиекарточки
+  //       return null;
+  //     case 4:
+  //       return `/workplaces/debt-processing/${debtorId}/${debtId}/contact/${personId}`;
+  //   }
+  // }
 }
