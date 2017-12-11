@@ -47,7 +47,7 @@ import { DebtorPropertyComponent } from './property/property.component';
 
 const routes: Routes = [
   {
-    path: ':personId',
+    path: ':debtId',
     children: [
       {
         path: '', component: DebtorComponent,

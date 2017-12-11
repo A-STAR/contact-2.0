@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Actions, Effect } from '@ngrx/effects';
 
 import { Observable } from 'rxjs/Observable';
 
-import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
-
 import {
   IActionType,
   IDebtorCardAction,
-  IFetchPersonAction,
   IFetchDebtsAction,
   IFetchDebtsSuccessAction,
+  IFetchPersonAction,
   IFetchPersonSuccessAction,
   IInitByDebtIdAction,
   IInitByPersonIdAction,
+  ISelectDebtAction,
 } from './debtor-card.interface';
 import { IDebt, IPerson } from '../app-modules.interface';
 
@@ -24,20 +22,27 @@ import { NotificationsService } from '../../notifications/notifications.service'
 @Injectable()
 export class DebtorCardEffects {
   @Effect()
-  openByDebtId$ = this.actions
-    .ofType(IActionType.OPEN_BY_DEBT_ID)
+  initByDebtId$ = this.actions
+    .ofType(IActionType.INIT_BY_DEBT_ID)
     .mergeMap((action: IInitByDebtIdAction) => {
       const { debtId } = action.payload;
       return this.fetchDebt(debtId)
-        .do(debt => this.navigate(debt.personId))
-        .mergeMap(debt => this.createFetchActions(debt.personId, debtId))
-        .catch(this.notificationService.fetchError().entity('entities.debt.gen.plural').callback());
+        .mergeMap(debt => [
+          this.createFetchPersonAction(debt.personId),
+          this.createFetchDebtsAction(debt.personId, debt.id),
+        ]);
     });
 
   @Effect()
-  initialize$ = this.actions
-    .ofType(IActionType.INITIALIZE)
-    .mergeMap((action: IInitByPersonIdAction) => this.createFetchActions(action.payload.personId));
+  initByPersonId$ = this.actions
+    .ofType(IActionType.INIT_BY_PERSON_ID)
+    .mergeMap((action: IInitByPersonIdAction) => {
+      const { personId } = action.payload;
+      return [
+        this.createFetchPersonAction(personId),
+        this.createFetchDebtsAction(personId),
+      ];
+    });
 
   @Effect()
   fetchPerson$ = this.actions
@@ -52,34 +57,40 @@ export class DebtorCardEffects {
   fetchDebts$ = this.actions
     .ofType(IActionType.FETCH_DEBTS)
     .mergeMap((action: IFetchDebtsAction) => {
-      return this.fetchDebts(action.payload.personId)
-        .map(person => this.createFetchDebtsSuccessAction(person))
+      const { personId, selectedDebtId } = action.payload;
+      return this.fetchDebts(personId)
+        .mergeMap(debts => [
+          this.createFetchDebtsSuccessAction(debts),
+          this.createSelectDebtAction(selectedDebtId || (debts && debts[0].id)),
+        ])
         .catch(this.notificationService.fetchError().entity('entities.debt.gen.plural').callback());
     });
 
   constructor(
     private actions: Actions,
-    private contentTabService: ContentTabService,
     private dataService: DataService,
     private notificationService: NotificationsService,
-    private router: Router,
   ) {}
 
-  private createFetchActions(personId: number, selectedDebtId: number = null): IDebtorCardAction[] {
-    return [
-      {
-        type: IActionType.FETCH_PERSON,
-        payload: { personId },
-      },
-      {
-        type: IActionType.FETCH_DEBTS,
-        payload: { personId },
-      },
-      {
-        type: IActionType.SELECT_DEBT,
-        payload: { debtId: selectedDebtId }
-      },
-    ];
+  private createFetchDebtsAction(personId: number, selectedDebtId: number = null): IFetchDebtsAction {
+    return {
+      type: IActionType.FETCH_DEBTS,
+      payload: { personId, selectedDebtId },
+    };
+  }
+
+  private createFetchPersonAction(personId: number): IFetchPersonAction {
+    return {
+      type: IActionType.FETCH_PERSON,
+      payload: { personId },
+    };
+  }
+
+  private createSelectDebtAction(debtId: number): ISelectDebtAction {
+    return {
+      type: IActionType.SELECT_DEBT,
+      payload: { debtId },
+    };
   }
 
   private createFetchDebtsSuccessAction(debts: IDebt[]): IFetchDebtsSuccessAction {
@@ -106,10 +117,5 @@ export class DebtorCardEffects {
 
   private fetchDebts(personId: number): Observable<IDebt[]> {
     return this.dataService.readAll('/persons/{personId}/debts', { personId });
-  }
-
-  private navigate(personId: number): Promise<boolean> {
-    this.contentTabService.removeTabByPath(`\/workplaces\/debtor-card\/(.+)`);
-    return this.router.navigate([ '/workplaces/debtor-card' ]);
   }
 }

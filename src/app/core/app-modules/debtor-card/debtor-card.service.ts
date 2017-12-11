@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../state/state.interface';
 import { IActionType } from './debtor-card.interface';
 import { IDebt, IPerson } from '../app-modules.interface';
 
-import { Observable } from 'rxjs/Observable';
+import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 
 @Injectable()
 export class DebtorCardService {
   constructor(
+    private contentTabService: ContentTabService,
+    private router: Router,
     private store: Store<IAppState>,
   ) {}
 
@@ -33,8 +37,11 @@ export class DebtorCardService {
 
   get selectedDebt$(): Observable<IDebt> {
     return this.store
-      // TODO(d.maltsev): get selected debt instead of first
-      .select(state => state.debtorCard.debts && state.debtorCard.debts[0])
+      .select(state => state.debtorCard)
+      .map(slice => {
+        const { debts, selectedDebtId } = slice;
+        return (debts || []).find(debt => debt.id === selectedDebtId);
+      })
       .distinctUntilChanged();
   }
 
@@ -58,32 +65,15 @@ export class DebtorCardService {
       .distinctUntilChanged();
   }
 
-  /**
-   * Opens debtor card by debtId:
-   * 1. fetches debt by `debtId` (`GET /debts/{debtId}`)
-   * 2. fetches person by `debt.personId` (`GET /persons/{personsId}`)
-   * 3. fetches other person debts by `debt.personId` (`GET /persons/{personsId}/debts`)
-   *
-   * @param debtId
-   */
   openByDebtId(debtId: number): void {
-    this.store.dispatch({
-      type: IActionType.OPEN_BY_DEBT_ID,
-      payload: { debtId },
-    });
+    this.initByDebtId(debtId);
+    this.navigate(debtId);
   }
 
-  /**
-   * Initializes debtor card by personId:
-   * 1. fetches debts by `personId` (`GET /persons/{personsId}/debts`)
-   * 2. fetches person by `personId` (`GET /persons/{personsId}`)
-   *
-   * @param personId
-   */
-  initialize(personId: number): void {
+  initByDebtId(debtId: number): void {
     this.store.dispatch({
-      type: IActionType.INITIALIZE,
-      payload: { personId },
+      type: IActionType.INIT_BY_DEBT_ID,
+      payload: { debtId },
     });
   }
 
@@ -92,5 +82,10 @@ export class DebtorCardService {
       type: IActionType.SELECT_DEBT,
       payload: { debtId },
     });
+  }
+
+  private navigate(debtId: number): Promise<boolean> {
+    this.contentTabService.removeTabByPath(`\/workplaces\/debtor-card\/(.+)`);
+    return this.router.navigate([ `/workplaces/debtor-card/${debtId}` ] );
   }
 }

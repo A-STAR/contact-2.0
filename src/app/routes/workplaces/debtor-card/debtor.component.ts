@@ -96,7 +96,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       this.cdRef.markForCheck();
     });
 
-    this.debtorCardService.initialize(this.personId);
+    this.debtorCardService.initByDebtId(this.debtId);
   }
 
   ngOnDestroy(): void {
@@ -129,7 +129,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       ...this.information.form.serializedUpdates,
     };
 
-    this.debtorService.update(this.personId, value)
+    this.debtorService.update(this.person.id, value)
       .subscribe(() => {
         this.form.form.markAsPristine();
         this.information.form.form.markAsPristine();
@@ -143,19 +143,14 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   }
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
-    this.debtId$
-      .filter(Boolean)
-      .pipe(first())
-      .subscribe(debtId => {
-        this.setDialog();
-        this.debtService.navigateToRegistration({
-          contactId,
-          contactType,
-          debtId,
-          personId: this.person.id,
-          personRole: 1,
-        });
-      });
+    this.setDialog();
+    this.debtService.navigateToRegistration({
+      contactId,
+      contactType,
+      debtId: this.debtId,
+      personId: this.person.id,
+      personRole: 1,
+    });
   }
 
   onTabSelect(tabIndex: number): void {
@@ -187,8 +182,8 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     ] as IDynamicFormItem[];
   }
 
-  private get personId(): number {
-    return this.routeParams.personId;
+  private get debtId(): number {
+    return this.routeParams.debtId;
   }
 
   private get routeParams(): INavigationParams {
