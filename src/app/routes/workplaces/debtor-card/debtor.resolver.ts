@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators/first';
+import { takeUntil } from 'rxjs/operators/takeUntil';
 
 import { DebtorCardService } from '../../../core/app-modules/debtor-card/debtor-card.service';
 
@@ -14,8 +15,8 @@ export class DebtorCardResolver implements Resolve<boolean> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const debtId = route.paramMap.get('debtId');
     this.debtorCardService.initByDebtId(Number(debtId));
-    return this.debtorCardService.isInitialized$
+    return this.debtorCardService.hasLoaded$
       .filter(Boolean)
-      .pipe(first());
+      .pipe(first(), takeUntil(this.debtorCardService.hasFailed$.filter(Boolean)));
   }
 }

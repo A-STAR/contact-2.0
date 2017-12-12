@@ -79,10 +79,17 @@ export class DebtorCardService {
       .distinctUntilChanged();
   }
 
-  get isInitialized$(): Observable<boolean> {
+  get hasLoaded$(): Observable<boolean> {
     return this.store
       .select(state => state.debtorCard)
-      .map(slice => slice.person.status === IDataStatus.LOADED && slice.debts.status === IDataStatus.LOADED)
+      .map(slice => slice.debts.status === IDataStatus.LOADED && slice.person.status === IDataStatus.LOADED)
+      .distinctUntilChanged();
+  }
+
+  get hasFailed$(): Observable<boolean> {
+    return this.store
+      .select(state => state.debtorCard)
+      .map(slice => slice.debts.status === IDataStatus.FAILED || slice.person.status === IDataStatus.FAILED)
       .distinctUntilChanged();
   }
 
