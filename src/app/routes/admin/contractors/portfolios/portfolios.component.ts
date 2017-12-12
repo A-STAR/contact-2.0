@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
+import { first, combineLatest } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
@@ -34,7 +34,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onAdd(),
       enabled: combineLatestAnd([
         this.canAdd$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
       ])
     },
     {
@@ -42,8 +42,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
       ])
     },
     {
@@ -51,8 +51,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onMove(),
       enabled: combineLatestAnd([
         this.canMove$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
       ])
     },
     {
@@ -60,8 +60,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.setDialog('delete'),
       enabled: combineLatestAnd([
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
       ])
     },
     {
@@ -77,8 +77,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onForm(),
       enabled: combineLatestAnd([
         this.canForm$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canForm(o)),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canForm(o)),
       ])
     },
     {
@@ -91,14 +91,14 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
           action: () => this.onAction('sendOutsource'),
           enabled: combineLatestAnd([
             this.canSend$,
-            this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canSend(o)),
+            this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
           ]),
         }, {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.cession'),
           action: () => this.onAction('sendCession'),
           enabled: combineLatestAnd([
             this.canSend$,
-            this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canSend(o)),
+            this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
           ]),
         }
       ]
@@ -108,8 +108,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onAction('returnOutsource'),
       enabled: combineLatestAnd([
         this.canReturn$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canReturn(o)),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canReturn(o))
       ])
     }
   ];
@@ -158,24 +158,26 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
     this.contractorSubscription = Observable.combineLatest(
       this.canView$,
-      this.contractorsAndPortfoliosService.selectedContractorId$.filter(Boolean)
-    )
-    .subscribe(([canView, contractorId]) => {
-      if (canView) {
-        this.selectedContractorId = contractorId;
-        this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios));
-      } else {
-        this.clearPortfolios();
-        this.notificationsService.error('errors.default.read.403').entity('entities.portfolios.gen.plural').dispatch();
-      }
-    });
-
-    this.portfoliosUpdateSub = this.store.select(state => state.contractorsAndPortfolios.isPortfolioUpdate)
+      this.store.select(state => state.contractorsAndPortfolios.selectedContractor)
       .filter(Boolean)
-      .subscribe(() => {
-        this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios));
+    )
+      .subscribe(([canView, contractor]) => {
+        if (canView) {
+          this.selectedContractor = contractor;
+          this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios));
+        } else {
+          this.clearPortfolios();
+          this.notificationsService.error('errors.default.read.403').entity('entities.portfolios.gen.plural').dispatch();
+        }
       });
 
+    this.portfoliosUpdateSub =
+      Observable.combineLatest(
+        this.contractorsAndPortfoliosService.getAction(IActionType.PORTFOLIO_CREATE),
+        this.contractorsAndPortfoliosService.getAction(IActionType.PORTFOLIO_SAVE)
+      )
+        .switchMap(() => this.fetchAll())
+        .subscribe(portfolios => this.onPortfoliosFetch(portfolios));
   }
 
   ngOnDestroy(): void {
@@ -217,10 +219,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   get canReturn$(): Observable<boolean> {
     return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_RETURN');
-  }
-
-  get selectedPortfolio$(): Observable<IPortfolio> {
-    return this.contractorsAndPortfoliosService.selectedPortfolio$;
   }
 
   canForm(portfolio: IPortfolio): boolean {

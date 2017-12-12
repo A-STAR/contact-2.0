@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router} from '@angular/router';
-
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IContractorManager } from '../../contractors-and-portfolios.interface';
+import { IAppState } from '../../../../../core/state/state.interface';
+import { IContractorManager, IActionType } from '../../contractors-and-portfolios.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -39,7 +40,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedManagerId$.map(o => !!o)
+        this.store.select(state => state.contractorsAndPortfolios.selectedManager).map(o => !!o)
       ])
     },
     {
@@ -47,7 +48,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
       action: () => this.setDialog('delete'),
       enabled: combineLatestAnd([
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedManagerId$.map(o => !!o)
+        this.store.select(state => state.contractorsAndPortfolios.selectedManager).map(o => !!o)
       ])
     },
     {
@@ -88,6 +89,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private router: Router,
+    private store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -108,7 +110,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
       }
     });
 
-    this.managersSubscription = this.contractorsAndPortfoliosService.getAction(ContractorsAndPortfoliosService.MANAGERS_FETCH)
+    this.managersSubscription = this.contractorsAndPortfoliosService.getAction(IActionType.MANAGERS_FETCH)
       .subscribe(action => {
         this.fetchAll();
       });

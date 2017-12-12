@@ -17,6 +17,8 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 
 import { DialogFunctions } from '../../../../core/dialog';
 import { combineLatestAnd } from '../../../../core/utils/helpers';
+import { IAppState } from 'app/core/state/state.interface';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-contractors',
@@ -36,7 +38,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o)
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o)
       ])
     },
     {
@@ -44,7 +46,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
       action: () => this.setDialog('delete'),
       enabled: combineLatestAnd([
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
       ])
     },
     {
@@ -76,6 +78,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
 
   constructor(
     private actions$: Actions,
+    private store: Store<IAppState>,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
     private cdRef: ChangeDetectorRef,
@@ -102,14 +105,15 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
       }
     });
 
-    this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractorId$
-      .subscribe(contractorId => {
-        const found = this.contractors.find(contractor => contractor.id === contractorId);
-        this.selection = found ? [found] : [];
-      });
+    this.contractorsSubscription =
+      this.store.select(state => state.contractorsAndPortfolios.selectedContractor)
+        .subscribe(selectedContractor => {
+          const found = this.contractors.find(contractor => contractor === selectedContractor);
+          this.selection = found ? [found] : [];
+        });
 
     this.actionsSub = this.actions$.subscribe(action => {
-      if (action.type === ContractorsAndPortfoliosService.CONTRACTOR_CREATE) {
+      if (action.type === IActionType.CONTRACTOR_CREATE) {
         this.fetchContractors();
       }
     });
@@ -146,7 +150,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
   }
 
   onSelect(contractor: IContractor): void {
-    this.contractorsAndPortfoliosService.selectContractor(contractor && contractor.id || null);
+    this.contractorsAndPortfoliosService.selectContractor(contractor);
   }
 
   onRemove(): void {
@@ -159,18 +163,9 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
 
   private fetchContractors(): void {
     this.contractorsAndPortfoliosService.readAllContractors()
+      .pipe(first())
       .subscribe(contractors => {
         this.contractors = contractors;
-        if (this.selection.length) {
-          // this.onSelect(this.selectedContractor);
-          this.contractorsAndPortfoliosService.state
-            .map(state => state.selectedContractorId)
-            .pipe(first())
-            .subscribe(contractorId => {
-              const found = this.contractors.find(contractor => contractor.id === contractorId);
-              this.selection = found ? [found] : [];
-            });
-        }
         this.cdRef.markForCheck();
       });
   }
