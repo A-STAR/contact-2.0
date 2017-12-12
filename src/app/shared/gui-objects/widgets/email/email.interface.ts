@@ -8,3 +8,10 @@ export interface IEmail {
   inactiveDateTime: Date | string;
   comment: string;
 }
+
+export interface IEmailSchedule {
+  templateId?: number;
+  senderCode: number;
+  startDateTime: Date;
+  text?: string;
+}

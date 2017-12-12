@@ -8,7 +8,7 @@ import { first } from 'rxjs/operators/first';
 
 import { IDebt } from '../../../../../core/app-modules/app-modules.interface';
 import { IEmail } from '../email.interface';
-import { IGridColumn, IRenderer, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { EmailService } from '../email.service';
@@ -117,7 +117,6 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     private notificationsService: NotificationsService,
     private router: Router,
     private userConstantsService: UserConstantsService,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();

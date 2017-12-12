@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IEmail } from './email.interface';
+import { IEmail, IEmailSchedule } from './email.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { INamedValue } from '../../../../core/converter/value-converter.interface';
 
 @Injectable()
 export class EmailService {
@@ -53,5 +54,26 @@ export class EmailService {
     return this.dataService
       .delete(`${this.baseUrl}/{emailId}`, { entityType, entityId, emailId })
       .catch(this.notificationsService.deleteError().entity(this.singularErr).dispatchCallback());
+  }
+
+  scheduleSMS(debtId: number, schedule: IEmailSchedule): Observable<void> {
+    return this.dataService
+      .create('/debts/{debtId}/sms', { debtId }, schedule)
+      .catch(this.notificationsService.createError().entity('entities.sms.gen.singular').dispatchCallback());
+  }
+
+  fetchSMSTemplates(typeCode: number, recipientTypeCode: number, isSingleSending: boolean): Observable<INamedValue[]> {
+    const url = '/lookup/templates/typeCode/{typeCode}/recipientsTypeCode/{recipientTypeCode}?isSingleSending={isSingleSending}';
+    return this.dataService
+      .readAll(url, { typeCode, recipientTypeCode, isSingleSending: Number(isSingleSending) })
+      .catch(this.notificationsService.fetchError().entity('entities.messageTemplate.gen.plural').dispatchCallback());
+  }
+
+  fetchMessageTemplateText(debtId: number, personId: number, personRole: number, templateId: number): Observable<string> {
+    const url = '/debts/{debtId}/persons/{personId}/personRoles/{personRole}/templates/{templateId}';
+    return this.dataService
+      .read(url, { debtId, personId, personRole, templateId })
+      .catch(this.notificationsService.fetchError().entity('entities.messageTemplate.gen.plural').dispatchCallback())
+      .map(response => response.text);
   }
 }
