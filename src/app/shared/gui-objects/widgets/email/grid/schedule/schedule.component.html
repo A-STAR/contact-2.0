@@ -3,8 +3,8 @@
     <h3>{{ 'widgets.email.dialogs.schedule.title' | translate }}</h3>
   </div>
   <div>
-    <app-tabstrip [disableScrollbar]="true" [inverse]="true" (select)="onTabSelect($event)">
-      <app-tab [title]="'widgets.email.dialogs.schedule.text'" [closable]="false" [disabled]="isTextTabDisabled$ | async">
+    <app-tabview (select)="onTabSelect($event)">
+      <app-tabview-tab [title]="'widgets.email.dialogs.schedule.text'" [closable]="false" [disabled]="true">
         <div class="mt-lg">
           <app-email-grid-schedule-form
             #formText
@@ -15,8 +15,8 @@
             [useTemplate]="false">
           </app-email-grid-schedule-form>
         </div>
-      </app-tab>
-      <app-tab [title]="'widgets.email.dialogs.schedule.template'" [closable]="false">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'widgets.email.dialogs.schedule.template'" [closable]="false">
         <div class="mt-lg">
           <app-email-grid-schedule-form
             #formTemplate
@@ -27,8 +27,8 @@
             [useTemplate]="true">
           </app-email-grid-schedule-form>
         </div>
-      </app-tab>
-    </app-tabstrip>
+      </app-tabview-tab>
+    </app-tabview>
   </div>
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
