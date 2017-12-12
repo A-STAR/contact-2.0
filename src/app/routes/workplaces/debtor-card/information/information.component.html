@@ -7,14 +7,6 @@
   </ng-container>
 </div>
 
-<!--
-<app-tabview (select)="onTabSelect($event)" [noMargin]="true">
-  <app-tabview-tab *ngFor="let tab of tabs" [title]="tab.title">
-    <app-container *ngIf="tab.isInitialised" [node]="tab"></app-container>
-  </app-tabview-tab>
-</app-tabview>
--->
-
 <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
   <app-tabview-tab [title]="tabs[0].title">
     <app-address-grid
