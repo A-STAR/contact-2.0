@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDebt } from '../../../../../core/debt/debt.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -20,7 +21,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
   templateUrl: './debt-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DebtGridComponent {
+export class DebtGridComponent implements OnInit, OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -85,17 +86,17 @@ export class DebtGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => {} // this.fetch()
+      action: () => this.fetch()
     },
   ];
 
   columns: Array<IGridColumn> = [
     { prop: 'id' },
     { prop: 'creditTypeCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
-    { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
+    { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE },
     { prop: 'creditName' },
     { prop: 'contract' },
-    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE },
+    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS },
     { prop: 'account'},
     { prop: 'creditStartDate', renderer: 'dateRenderer' },
     { prop: 'currencyId', lookupKey: 'currencies' },
@@ -110,19 +111,31 @@ export class DebtGridComponent {
   dialog$ = new BehaviorSubject<number>(null);
   debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
 
+  private debtUpdateSub: Subscription;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private gridService: GridService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
       .pipe(first())
       .subscribe(columns => {
         this.columns = [ ...columns ];
         this.cdRef.markForCheck();
       });
+
+    this.debtUpdateSub = this.debtorCardService
+      .getAction('DEBTOR_DEBT_UPDATED')
+      .subscribe(_ => this.fetch());
+  }
+
+  ngOnDestroy(): void {
+    this.debtUpdateSub.unsubscribe();
   }
 
   get debts$(): Observable<any> {
@@ -151,11 +164,11 @@ export class DebtGridComponent {
   }
 
   onChangeStatusDialogSubmit(): void {
-    // this.fetch();
+    this.fetch();
   }
 
   onCloseDialogSubmit(): void {
-    // this.fetch();
+    this.fetch();
   }
 
   private onAdd(): void {
@@ -166,6 +179,10 @@ export class DebtGridComponent {
     this.selectedDebt$
       .pipe(first())
       .subscribe(debt => this.router.navigate([ `${this.router.url}/debt` ]));
+  }
+
+  private fetch(): void {
+    this.debtorCardService.refreshDebts();
   }
 
   private onChangeStatus(): void {

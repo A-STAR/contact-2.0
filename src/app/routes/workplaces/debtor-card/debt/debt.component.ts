@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChil
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDebt } from '../../../../core/app-modules/app-modules.interface';
 import { IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -21,16 +20,27 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
+import { makeKey } from '../../../../core/utils';
+
+const label = makeKey('widgets.debt');
+
 @Component({
   selector: 'app-debt-card',
   templateUrl: './debt.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtComponent implements OnInit {
+  static COMPONENT_NAME = 'DebtorDebtComponent';
+
   @ViewChild('form') form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   debt: IDebt;
+  tabs = [
+    { title: label('component.title'), isInitialised: true },
+    { title: label('portfolioLog.title'), isInitialised: false },
+    { title: label('componentLog.title'), isInitialised: false }
+  ];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -76,20 +86,25 @@ export class DebtComponent implements OnInit {
     ]) => {
       this.controls = this.initControls(
         portfolios,
-        dictionaries as any,
-        attributes as any,
-        debtEditPerm as any,
-        debtPortfolioEditPerm as any,
-        debtComponentAmountEditPerm as any,
-        dictPermissions as any,
+        <any>dictionaries,
+        <any>attributes,
+        <any>debtEditPerm,
+        <any>debtPortfolioEditPerm,
+        <any>debtComponentAmountEditPerm,
+        <any>dictPermissions,
       );
       this.cdRef.markForCheck();
     });
 
-    this.debtService.fetch(null, this.debtId).subscribe(debt => {
-      this.debt = debt as any;
-      this.cdRef.markForCheck();
-    });
+    if (!this.isRoute('create')) {
+      this.debtorCardService.selectedDebtId$
+        .flatMap(debtId => this.debtService.fetch(null, debtId))
+        .pipe(first())
+        .subscribe(debt => {
+          this.debt = <any>debt;
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
   onSubmit(): void {
@@ -98,19 +113,19 @@ export class DebtComponent implements OnInit {
       this.debtorCardService.selectedDebtId$,
     )
     .flatMap(([ personId, debtId ]) => {
-      return debtId
+      return debtId && !this.isRoute('create')
         ? this.debtService.update(personId, debtId, this.form.serializedUpdates)
         : this.debtService.create(personId, this.form.serializedUpdates);
     })
-    .subscribe(() => this.onBack());
+    .pipe(first())
+    .subscribe(_ => {
+      this.debtorCardService.dispatchAction('DEBTOR_DEBT_UPDATED');
+      this.onBack();
+    });
   }
 
   onBack(): void {
     this.contentTabService.back();
-  }
-
-  get displayDebtData(): Observable<boolean> {
-    return this.debtorCardService.selectedDebt$.map(Boolean);
   }
 
   get canSubmit(): boolean {
@@ -123,6 +138,10 @@ export class DebtComponent implements OnInit {
 
   get canViewPortfolioLog$(): Observable<boolean> {
     return this.userPermissionsService.has('PORTFOLIO_LOG_VIEW');
+  }
+
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
   }
 
   private filterOptions(options: Array<IOption>, permission: IUserPermission): Array<IOption> {
@@ -152,7 +171,7 @@ export class DebtComponent implements OnInit {
         controlName: 'id',
         type: 'text',
         disabled: true,
-        width: 2
+        width: 3
       },
       {
         label: 'widgets.debt.grid.portfolioId',
@@ -169,7 +188,7 @@ export class DebtComponent implements OnInit {
         gridOnSelect: (row: ILookupPortfolio) => this.form.form.patchValue({ bankId: row && row.contractorId }),
         disabled: !debtPortfolioEditPerm,
         required: true,
-        width: 5
+        width: 3
       },
       {
         label: 'widgets.debt.grid.bankId',
@@ -177,7 +196,14 @@ export class DebtComponent implements OnInit {
         type: 'selectwrapper',
         lookupKey: 'contractors',
         disabled: true,
-        width: 5
+        width: 3
+      },
+      {
+        label: 'widgets.debt.grid.contract',
+        controlName: 'contract',
+        type: 'text',
+        disabled: !debtEditPerm,
+        width: 3
       },
       // Row 2
       {
@@ -185,7 +211,7 @@ export class DebtComponent implements OnInit {
         controlName: 'creditName',
         type: 'text',
         disabled: !debtEditPerm,
-        width: 4
+        width: 3
       },
       {
         label: 'widgets.debt.grid.creditTypeCode',
@@ -193,14 +219,7 @@ export class DebtComponent implements OnInit {
         type: 'selectwrapper',
         dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
         disabled: !debtEditPerm,
-        width: 4
-      },
-      {
-        label: 'widgets.debt.grid.contract',
-        controlName: 'contract',
-        type: 'text',
-        disabled: !debtEditPerm,
-        width: 4
+        width: 3
       },
       // Row 3
       {
@@ -333,13 +352,6 @@ export class DebtComponent implements OnInit {
           width: 3
         }
         : null,
-        {
-          label: 'widgets.debt.grid.account',
-          controlName: 'account',
-          type: 'text',
-          disabled: !debtEditPerm,
-          width: 2
-        },
       // Row 6
       {
         label: 'widgets.debt.grid.stageCode',
@@ -356,6 +368,13 @@ export class DebtComponent implements OnInit {
         disabled: !debtEditPerm,
         width: 3
       },
+      {
+        label: 'widgets.debt.grid.account',
+        controlName: 'account',
+        type: 'text',
+        disabled: !debtEditPerm,
+        width: 3
+      },
       // Row 7
       {
         label: 'widgets.debt.grid.comment',
@@ -366,11 +385,7 @@ export class DebtComponent implements OnInit {
     ].filter(c => c !== null) as Array<IDynamicFormItem>;
   }
 
-  private get debtId(): number {
-    return this.routeParams.debtId;
-  }
-
-  private get routeParams(): any {
-    return (this.route.params as any).value;
+  private isRoute(segment: string): boolean {
+    return this.route.snapshot.url.join('/').indexOf(segment) !== -1;
   }
 }

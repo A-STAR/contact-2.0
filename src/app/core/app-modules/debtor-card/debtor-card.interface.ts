@@ -9,6 +9,7 @@ export enum IActionType {
   FETCH_DEBTS          = 'DEBTOR_CARD_FETCH_DEBTS',
   FETCH_DEBTS_SUCCESS  = 'DEBTOR_CARD_FETCH_DEBTS_SUCCESS',
   FETCH_DEBTS_FAILURE  = 'DEBTOR_CARD_FETCH_DEBTS_FAILURE',
+  REFRESH_DEBTS        = 'DEBTOR_CARD_REFRESH_DEBTS',
   SELECT_DEBT          = 'DEBTOR_CARD_SELECT_DEBT',
 }
 
@@ -96,5 +97,14 @@ export interface IDebtorCardState {
     data: IPerson;
     status: IDataStatus;
   };
+  selectedDebtId: number;
+}
+
+// TODO(d.maltsev): refactor for the sake of a flat structure
+export interface IDebtorCardState2 {
+  debts: IDebt[];
+  debtsStatus: IDataStatus;
+  person: IPerson;
+  personStatus: IDataStatus;
   selectedDebtId: number;
 }
