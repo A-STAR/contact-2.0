@@ -13,6 +13,7 @@ import { IUserConstant } from '../../../../../../../core/user/constants/user-con
 import { PhoneService } from '../../../phone.service';
 import { UserConstantsService } from '../../../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserTemplatesService } from '../../../../../../../core/user/templates/user-templates.service';
 
 import { DynamicFormComponent } from '../../../../../../components/form/dynamic-form/dynamic-form.component';
 
@@ -49,6 +50,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
     private phoneService: PhoneService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
+    private userTemplatesService: UserTemplatesService,
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +59,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
       this.userConstantsService.get('SMS.Sender.Use'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_SENDER),
       this.useTemplate ?
-        this.phoneService.fetchSMSTemplates(2, 1, true) :
+        this.userTemplatesService.getTemplates(2, 1, true) :
         Observable.of(null)
     )
     .pipe(first())
@@ -137,7 +139,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
 
   private fetchTemplateText(): void {
     const { templateId } = this.form.serializedUpdates;
-    this.phoneService.fetchMessageTemplateText(this.debtId, this.personId, this.personRole, templateId)
+    this.userTemplatesService.fetchMessageTemplateText(this.debtId, this.personId, this.personRole, templateId, false)
       .subscribe(text => {
         this.data = {
           ...this.form.value,
