@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -22,6 +22,10 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailGridComponent implements OnInit, OnDestroy {
+  @Input() entityId: number;
+  @Input() entityType = 18;
+  @Input() personRole = 1;
+
   private selectedEmailId$ = new BehaviorSubject<number>(null);
 
   toolbarItems: Array<IToolbarItem> = [
@@ -98,15 +102,12 @@ export class EmailGridComponent implements OnInit, OnDestroy {
 
   private _dialog = null;
 
-  private id = (this.route.params as any).value.personId || null;
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private emailService: EmailService,
     private gridService: GridService,
     private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -185,15 +186,21 @@ export class EmailGridComponent implements OnInit, OnDestroy {
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.emailService.block(18, this.id, this.selectedEmailId$.value, code).subscribe(() => this.onSubmitSuccess());
+    this.emailService
+      .block(this.entityType, this.entityId, this.selectedEmailId$.value, code)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.emailService.unblock(18, this.id, this.selectedEmailId$.value).subscribe(() => this.onSubmitSuccess());
+    this.emailService
+      .unblock(this.entityType, this.entityId, this.selectedEmailId$.value)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.emailService.delete(18, this.id, this.selectedEmailId$.value).subscribe(() => this.onSubmitSuccess());
+    this.emailService
+      .delete(this.entityType, this.entityId, this.selectedEmailId$.value)
+      .subscribe(() => this.onSubmitSuccess());
   }
 
   onDialogClose(): void {
@@ -247,8 +254,7 @@ export class EmailGridComponent implements OnInit, OnDestroy {
 
   private fetch(): void {
     // TODO(d.maltsev): persist selection
-    // TODO(d.maltsev): pass entity type
-    this.emailService.fetchAll(18, this.id)
+    this.emailService.fetchAll(this.entityType, this.entityId)
       .subscribe(emails => {
         this._emails = emails;
         this.cdRef.markForCheck();
