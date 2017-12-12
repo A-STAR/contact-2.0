@@ -4,7 +4,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 
-import { IContractor } from '../../contractors-and-portfolios.interface';
+import { IContractor, IActionType } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
@@ -77,7 +77,7 @@ export class ContractorEditComponent implements OnInit {
       : this.contractorsAndPortfoliosService.createContractor(contractor);
 
     action.subscribe(() => {
-      this.contractorsAndPortfoliosService.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_CREATE);
+      this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_CREATE);
       this.onBack();
     });
   }

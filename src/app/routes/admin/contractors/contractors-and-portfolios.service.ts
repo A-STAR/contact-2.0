@@ -7,7 +7,7 @@ import { first } from 'rxjs/operators';
 import { IAppState } from '../../../core/state/state.interface';
 import {
   IContractor, IContractorsAndPortfoliosState,
-  IContractorManager, IPortfolio, IPortfolioMoveRequest, IPortfolioOutsourceRequest,
+  IContractorManager, IPortfolio, IPortfolioMoveRequest, IPortfolioOutsourceRequest, IActionType, IContractorAndPorfolioAction,
 } from './contractors-and-portfolios.interface';
 
 import { DataService } from '../../../core/data/data.service';
@@ -15,29 +15,6 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 
 @Injectable()
 export class ContractorsAndPortfoliosService {
-  static CONTRACTORS_FETCH                      = 'CONTRACTORS_FETCH';
-  static CONTRACTOR_FETCH                       = 'CONTRACTOR_FETCH';
-  static CONTRACTOR_SELECT                      = 'CONTRACTOR_SELECT';
-  static CONTRACTOR_CREATE                      = 'CONTRACTOR_CREATE';
-  static CONTRACTOR_UPDATE                      = 'CONTRACTOR_UPDATE';
-  static CONTRACTOR_DELETE                      = 'CONTRACTOR_DELETE';
-
-  static MANAGERS_FETCH                         = 'MANAGERS_FETCH';
-  static MANAGER_FETCH                          = 'MANAGER_FETCH';
-  static MANAGERS_CLEAR                         = 'MANAGERS_CLEAR';
-  static MANAGER_SELECT                         = 'MANAGER_SELECT';
-  static MANAGER_CREATE                         = 'MANAGER_CREATE';
-  static MANAGER_UPDATE                         = 'MANAGER_UPDATE';
-  static MANAGER_DELETE                         = 'MANAGER_DELETE';
-
-  static PORTFOLIO_FETCH                        = 'PORTFOLIO_FETCH';
-  static PORTFOLIOS_UPDATE                      = 'PORTFOLIOS_UPDATE';
-  static PORTFOLIOS_CLEAR                       = 'PORTFOLIOS_CLEAR';
-  static PORTFOLIO_SELECT                       = 'PORTFOLIO_SELECT';
-  static PORTFOLIO_CREATE                       = 'PORTFOLIO_CREATE';
-  static PORTFOLIO_UPDATE                       = 'PORTFOLIO_UPDATE';
-  static PORTFOLIO_MOVE                         = 'PORTFOLIO_MOVE';
-  static PORTFOLIO_DELETE                       = 'PORTFOLIO_DELETE';
 
   constructor(
     private actions$: Actions,
@@ -45,24 +22,6 @@ export class ContractorsAndPortfoliosService {
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
   ) {}
-
-  get selectedContractorId$(): Observable<number> {
-    return this.state
-      .map(state => state.selectedContractorId)
-      .distinctUntilChanged();
-  }
-
-  get selectedPortfolio$(): Observable<IPortfolio> {
-    return this.state
-      .map(state => state.selectedPortfolio)
-      .distinctUntilChanged();
-  }
-
-  get selectedManagerId$(): Observable<number> {
-    return this.state
-      .map(state => state.selectedManagerId)
-      .distinctUntilChanged();
-  }
 
   readAllContractors(): Observable<IContractor[]> {
     return <Observable<IContractor[]>>this.dataService.readAll('/contractors')
@@ -84,8 +43,8 @@ export class ContractorsAndPortfoliosService {
       .catch(this.notificationsService.fetchError().entity('entities.contractors.gen.singular').callback());
   }
 
-  selectContractor(contractorId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_SELECT, { selectedContractorId: contractorId });
+  selectContractor(contractor: IContractor): void {
+    this.dispatch(IActionType.CONTRACTOR_SELECT, { selectedContractor: contractor });
   }
 
   createContractor(contractor: IContractor): Observable<void> {
@@ -110,7 +69,7 @@ export class ContractorsAndPortfoliosService {
   }
 
   selectManager(contractorId: number, managerId: number): void {
-    this.dispatch(ContractorsAndPortfoliosService.MANAGER_SELECT, {
+    this.dispatch(IActionType.MANAGER_SELECT, {
        selectedManagerId: managerId
     });
   }
@@ -194,7 +153,7 @@ export class ContractorsAndPortfoliosService {
     return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
       contractorId, portfolioId
     }, { ...portfolio, debtStatusCode: 14 })
-    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+      .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
   sendCessionPortfolio(
@@ -204,7 +163,7 @@ export class ContractorsAndPortfoliosService {
     return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/send', {
       contractorId, portfolioId
     }, { ...portfolio, debtStatusCode: 17 })
-    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+      .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
 
@@ -215,12 +174,12 @@ export class ContractorsAndPortfoliosService {
     return this.dataService.update('/contractors/{contractorId}/portfolios/{portfolioId}/outsourcing/return', {
       contractorId, portfolioId
     }, portfolio)
-    .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
+      .catch(this.notificationsService.updateError().entity('entities.portfolios.gen.singular').callback());
   }
 
-  selectPortfolio(portfolio: IPortfolio): void {
+  selectPortfolio(portfolio?: IPortfolio): void {
     this.dispatch(
-      ContractorsAndPortfoliosService.PORTFOLIO_SELECT,
+      IActionType.PORTFOLIO_SELECT,
       { selectedPortfolio: portfolio }
     );
   }
@@ -229,11 +188,11 @@ export class ContractorsAndPortfoliosService {
     return this.store.select(state => state.contractorsAndPortfolios);
   }
 
-  dispatch(type: string, payload?: any): void {
+  dispatch(type: IActionType, payload?: any): void {
     this.store.dispatch({ type, payload });
   }
 
-  getAction(action: string): Observable<Action> {
+  getAction(action: IActionType): Observable<IContractorAndPorfolioAction> {
     return this.actions$.ofType(action);
   }
 }

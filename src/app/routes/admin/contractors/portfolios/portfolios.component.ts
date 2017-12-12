@@ -129,7 +129,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   dialog: string;
   portfolios: IPortfolio[];
   selectedContractor: IContractor;
-  selectedContractorId: number;
   selection: IPortfolio[];
 
   private contractorSubscription: Subscription;
@@ -243,7 +242,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onMove(): void {
-    this.contractorsAndPortfoliosService.readContractor(this.selectedContractorId)
+    this.contractorsAndPortfoliosService.readContractor(this.selectedContractor.id)
       .subscribe(contractor => {
         this.selectedContractor = contractor;
         this.setDialog('move');
@@ -261,7 +260,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onRemoveSubmit(): void {
-    this.contractorsAndPortfoliosService.deletePortfolio(this.selectedContractorId, this.selection[0].id)
+    this.contractorsAndPortfoliosService.deletePortfolio(this.selectedContractor.id, this.selection[0].id)
     .switchMap(() => this.fetchAll())
     .subscribe(portfolios => {
       this.setDialog();
@@ -271,7 +270,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   onForm(): void {
     this.contractorsAndPortfoliosService
-      .formOutsourcePortfolio(this.selectedContractorId, this.selection[0].id, this.selection[0])
+      .formOutsourcePortfolio(this.selectedContractor.id, this.selection[0].id, this.selection[0])
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => {
         this.setDialog();
@@ -281,7 +280,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   onMoveSubmit(contractor: IContractor): void {
     this.contractorsAndPortfoliosService
-      .movePortfolio(this.selectedContractorId, this.selection[0].id, { newContractorId: contractor.id } )
+      .movePortfolio(this.selectedContractor.id, this.selection[0].id, { newContractorId: contractor.id } )
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => {
         this.setDialog();
@@ -290,7 +289,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onSendOutsourceSubmit(portfolio: IPortfolio): void {
-    this.contractorsAndPortfoliosService.sendOutsourcePortfolio(this.selectedContractorId,
+    this.contractorsAndPortfoliosService.sendOutsourcePortfolio(this.selectedContractor.id,
       this.selection[0].id, portfolio)
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => {
@@ -300,7 +299,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onSendCessionSubmit(portfolio: IPortfolio): void {
-    this.contractorsAndPortfoliosService.sendCessionPortfolio(this.selectedContractorId,
+    this.contractorsAndPortfoliosService.sendCessionPortfolio(this.selectedContractor.id,
       this.selection[0].id, portfolio)
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => {
@@ -309,7 +308,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       });
   }
   onReturnOutsourceSubmit(portfolio: IPortfolio): void {
-    this.contractorsAndPortfoliosService.returnOutsourcePortfolio(this.selectedContractorId,
+    this.contractorsAndPortfoliosService.returnOutsourcePortfolio(this.selectedContractor.id,
       this.selection[0].id, portfolio)
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => {
@@ -319,7 +318,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   private fetchAll(): Observable<IPortfolio[]> {
-    return this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractorId);
+    return this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractor.id);
   }
 
   private clearPortfolios(): void {
