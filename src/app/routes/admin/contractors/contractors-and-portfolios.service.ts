@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
@@ -68,9 +69,9 @@ export class ContractorsAndPortfoliosService {
       .catch(this.notificationsService.fetchError().entity('entities.managers.gen.plural').callback());
   }
 
-  selectManager(contractorId: number, managerId: number): void {
+  selectManager(manager?: IContractorManager): void {
     this.dispatch(IActionType.MANAGER_SELECT, {
-       selectedManagerId: managerId
+       selectedManager: manager
     });
   }
 
@@ -182,6 +183,34 @@ export class ContractorsAndPortfoliosService {
       IActionType.PORTFOLIO_SELECT,
       { selectedPortfolio: portfolio }
     );
+  }
+
+  initContractorUpdate(route: ActivatedRoute): Observable<IContractorAndPorfolioAction> {
+    return Observable.merge(
+      this.getAction(IActionType.CONTRACTOR_CREATE),
+      this.getAction(IActionType.CONTRACTOR_EDIT),
+      route.params
+    )
+    .switchMap((action: any) => action.contractorId ?
+      this.readContractor(action.contractorId)
+        .map(result => ({
+          payload: { selectedContractor: result }
+        }))
+      : Observable.of(action));
+  }
+
+  initPortfolioUpdate(route: ActivatedRoute): Observable<IContractorAndPorfolioAction> {
+    return Observable.merge(
+      this.getAction(IActionType.PORTFOLIO_CREATE),
+      this.getAction(IActionType.PORTFOLIO_EDIT),
+      route.params
+    )
+    .switchMap((action: any) => action.contractorId ?
+      this.readPortfolio(action.contractorId, action.portfolioId)
+      .map(result => ({
+        payload: { selectedPortfolio: result }
+      }))
+      : Observable.of(action));
   }
 
   get state(): Observable<IContractorsAndPortfoliosState> {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -44,6 +44,7 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
     private router: Router,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userDictionariesService: UserDictionariesService,
@@ -54,24 +55,19 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    const selectedParams$ = Observable.merge(
-      this.contractorsAndPortfoliosService.getAction(IActionType.PORTFOLIO_CREATE),
-      this.contractorsAndPortfoliosService.getAction(IActionType.PORTFOLIO_EDIT)
-    );
-
     this.portfolioChangeSub = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
-      selectedParams$,
+      this.contractorsAndPortfoliosService.initPortfolioUpdate(this.route),
       this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
     )
       // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
       .subscribe(([directionOptions, stageOptions, statusOptions, action, canViewAttributes]) => {
         this.canViewAttributes = true;
 
-        const editedPortfolio = (action as IPortfolioEditAction).payload.selectedPortfolio;
-        this.contractorId = (action as IPortfolioCreateAction).payload.selectedContractor.id;
+        const editedPortfolio = action.payload && (action as IPortfolioEditAction).payload.selectedPortfolio;
+        this.contractorId = action.payload && (action as IPortfolioCreateAction).payload.selectedContractor.id;
         this.portfolioId = editedPortfolio && editedPortfolio.id;
 
         this.formData = editedPortfolio
