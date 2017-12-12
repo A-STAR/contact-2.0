@@ -9,6 +9,8 @@ import { IDebt, IPerson } from '../app-modules.interface';
 
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 
+import { isEmpty } from '../../../core/utils';
+
 @Injectable()
 export class DebtorCardService {
   constructor(
@@ -76,6 +78,13 @@ export class DebtorCardService {
     return this.store
       .select(state => state.debtorCard.person)
       .map(Boolean)
+      .distinctUntilChanged();
+  }
+
+  get isInitialized$(): Observable<boolean> {
+    return this.store
+      .select(state => state.debtorCard)
+      .map(slice => slice.person && !isEmpty(slice.debts))
       .distinctUntilChanged();
   }
 

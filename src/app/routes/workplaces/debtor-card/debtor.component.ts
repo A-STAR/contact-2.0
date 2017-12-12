@@ -97,8 +97,6 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       this.data = data;
       this.cdRef.markForCheck();
     });
-
-    this.debtorCardService.initByDebtId(this.debtId);
   }
 
   ngOnDestroy(): void {
@@ -147,14 +145,15 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   }
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
-    this.personId$
+    Observable
+      .combineLatest(this.personId$, this.debtId$)
       .pipe(first())
-      .subscribe(personId => {
+      .subscribe(([ personId, debtId ]) => {
         this.setDialog();
         this.debtService.navigateToRegistration({
           contactId,
           contactType,
-          debtId: this.debtId,
+          debtId,
           personId,
           personRole: 1,
         });
@@ -188,13 +187,5 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
         ]
       }
     ] as IDynamicFormItem[];
-  }
-
-  private get debtId(): number {
-    return this.routeParams.debtId;
-  }
-
-  private get routeParams(): INavigationParams {
-    return (this.route.params as BehaviorSubject<INavigationParams>).value;
   }
 }
