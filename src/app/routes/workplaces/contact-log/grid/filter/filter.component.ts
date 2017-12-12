@@ -153,6 +153,7 @@ export class FilterComponent implements OnInit {
     switch (this.gridKey) {
       case ContactsGridKeys.CONTACT:
       case ContactsGridKeys.SMS:
+      case ContactsGridKeys.EMAIL:
         return 'createDateTime';
       case ContactsGridKeys.PROMISE:
         return 'receiveDateTime';
@@ -167,6 +168,8 @@ export class FilterComponent implements OnInit {
         return metadata.contactLogPromise;
       case ContactsGridKeys.SMS:
         return metadata.contactLogSMS;
+      case ContactsGridKeys.EMAIL:
+        return metadata.contactLogEmail;
     }
   }
 }
