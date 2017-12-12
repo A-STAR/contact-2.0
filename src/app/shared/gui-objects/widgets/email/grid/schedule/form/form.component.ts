@@ -10,7 +10,6 @@ import { INamedValue, IOption } from '../../../../../../../core/converter/value-
 import { IEmailSchedule } from '../../../email.interface';
 import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
 
-import { EmailService } from '../../../email.service';
 import { UserConstantsService } from '../../../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserTemplatesService } from '../../../../../../../core/user/templates/user-templates.service';
@@ -47,7 +46,6 @@ export class FormComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private emailService: EmailService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userTemplatesService: UserTemplatesService,

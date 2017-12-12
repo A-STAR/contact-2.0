@@ -10,7 +10,6 @@ import { INamedValue, IOption } from '../../../../../../../core/converter/value-
 import { ISMSSchedule } from '../../../phone.interface';
 import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
 
-import { PhoneService } from '../../../phone.service';
 import { UserConstantsService } from '../../../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserTemplatesService } from '../../../../../../../core/user/templates/user-templates.service';
@@ -47,7 +46,6 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private phoneService: PhoneService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userTemplatesService: UserTemplatesService,
