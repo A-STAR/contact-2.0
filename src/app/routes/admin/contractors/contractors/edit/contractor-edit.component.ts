@@ -1,28 +1,23 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { of } from 'rxjs/observable/of';
-import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
 import {
   IActionType,
   IContractor,
-  IContractorEditAction,
-  IContractorAndPorfolioAction
+  IContractorEditAction
 } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
-import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import {  } from '@angular/core/src/change_detection/change_detector_ref';
 
 @Component({
   selector: 'app-contractor-edit',
