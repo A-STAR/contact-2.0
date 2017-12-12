@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -7,7 +7,8 @@ import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debt
 
 @Component({
   selector: 'app-contact-log-tab',
-  templateUrl: './contact-log-tab.component.html'
+  templateUrl: './contact-log-tab.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtorContactLogTabComponent {
   static COMPONENT_NAME = 'DebtorContactLogTabComponent';

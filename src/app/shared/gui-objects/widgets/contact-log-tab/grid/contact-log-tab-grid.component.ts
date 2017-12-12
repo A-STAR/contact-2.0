@@ -140,8 +140,8 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   onEdit(contactLog: IContactLog): void {
     const { contactId, contactType } = contactLog;
     const url = this.callCenter
-      ? `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`
-      : `${this.router.url}/contactLog/${this.debtId}/${contactId}/contactLogType/${contactType}`;
+      ? `/workplaces/debtor-card/${this.debtId}/contactLog/${contactId}/contactLogType/${contactType}`
+      : `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`;
     this.router.navigate([ url ]);
   }
 
