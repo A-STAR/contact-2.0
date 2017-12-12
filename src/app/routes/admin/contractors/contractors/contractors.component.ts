@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 import { Actions } from '@ngrx/effects';
 
-import { IContractor } from '../contractors-and-portfolios.interface';
+import { IContractor, IActionType } from '../contractors-and-portfolios.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -143,10 +143,14 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
 
   onAdd(): void {
     this.router.navigate([ `/admin/contractors/create` ]);
+    this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_CREATE);
   }
 
   onEdit(): void {
     this.router.navigate([ `/admin/contractors/${this.selection[0].id}` ]);
+    this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_EDIT, {
+      selectedContractorId: this.selection[0].id
+  });
   }
 
   onSelect(contractor: IContractor): void {

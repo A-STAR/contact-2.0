@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { IAppState } from '../../../../core/state/state.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
-import { IContractor, IPortfolio, PortfolioAction } from '../contractors-and-portfolios.interface';
+import { IContractor, IPortfolio, PortfolioAction, IActionType } from '../contractors-and-portfolios.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
@@ -234,11 +234,16 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onAdd(): void {
-    this.router.navigate([`/admin/contractors/${this.selectedContractorId}/portfolios/create`]);
+    this.router.navigate([`/admin/contractors/${this.selectedContractor.id}/portfolios/create`]);
+    this.contractorsAndPortfoliosService.dispatch(IActionType.PORTFOLIO_CREATE);
   }
 
   onEdit(): void {
-    this.router.navigate([`/admin/contractors/${this.selectedContractorId}/portfolios/${this.selection[0].id}`]);
+    this.router.navigate([`/admin/contractors/${this.selectedContractor.id}/portfolios/${this.selection[0].id}`]);
+    this.contractorsAndPortfoliosService.dispatch(IActionType.PORTFOLIO_EDIT, {
+        selectedContractor: this.selectedContractor,
+        selectedPortfolio: this.selection[0]
+    });
   }
 
   onMove(): void {
