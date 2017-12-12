@@ -38,7 +38,8 @@ export class FormComponent implements OnInit, OnDestroy {
   controls: IDynamicFormControl[];
   data: IEmailSchedule = {
     senderCode: null,
-    startDateTime: new Date()
+    startDateTime: new Date(),
+    subject: null,
   };
 
   private _formSubscription: Subscription;
@@ -53,11 +54,11 @@ export class FormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._formSubscription = Observable.combineLatest(
-      this.userConstantsService.get('SMS.Sender.Default'),
-      this.userConstantsService.get('SMS.Sender.Use'),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_SENDER),
+      this.userConstantsService.get('Email.Sender.Default'),
+      this.userConstantsService.get('Email.Sender.Use'),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_SENDER),
       this.useTemplate ?
-        this.userTemplatesService.getTemplates(2, 1, true) :
+        this.userTemplatesService.getTemplates(3, this.personRole, true) :
         Observable.of(null)
     )
     .pipe(first())
@@ -88,7 +89,7 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   private initControls(useSender: IUserConstant, senderOptions: IOption[], templates: INamedValue[]): void {
-    const smsControl = this.useTemplate
+    const emailControl = this.useTemplate
       ? [
           {
             label: labelKey('templateId'),
@@ -113,7 +114,7 @@ export class FormComponent implements OnInit, OnDestroy {
       : [];
 
     this.controls = [
-      ...smsControl,
+      ...emailControl,
       ...useSenderControl,
       {
         label: labelKey('startDateTime'),
@@ -122,6 +123,12 @@ export class FormComponent implements OnInit, OnDestroy {
         displayTime: true,
         minDate: new Date(),
         validators: [ minDate(moment().subtract(3, 'd').toDate()) ],
+        required: true
+      },
+      {
+        label: labelKey('subject'),
+        controlName: 'subject',
+        type: 'text',
         required: true
       },
       {

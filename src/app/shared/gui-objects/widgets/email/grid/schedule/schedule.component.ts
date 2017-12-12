@@ -38,7 +38,7 @@ export class ScheduleComponent {
   }
 
   get isTextTabDisabled$(): Observable<boolean> {
-    return this.userPermissionsService.has('SMS_TEXT_SINGLE_FORM').map(permission => !permission);
+    return this.userPermissionsService.has('EMAIL_TEXT_SINGLE_FORM').map(permission => !permission);
   }
 
   onSubmit(): void {

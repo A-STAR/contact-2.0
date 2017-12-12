@@ -7,7 +7,7 @@ import 'rxjs/add/observable/of';
 import { first } from 'rxjs/operators/first';
 
 import { IDebt } from '../../../../../core/app-modules/app-modules.interface';
-import { IEmail } from '../email.interface';
+import { IEmail, IEmailSchedule } from '../email.interface';
 import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -29,6 +29,7 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+  @Input() campaignId: number;
   @Input('debt')
   set debt(debt: IDebt) {
     this.debt$.next(debt);
@@ -192,6 +193,18 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     this.emailService
       .unblock(this.entityType, this.entityId, this.selectedEmailId$.value)
       .subscribe(() => this.onSubmitSuccess());
+  }
+
+  onScheduleDialogSubmit(schedule: IEmailSchedule): void {
+    const data = {
+      ...schedule,
+      // Here '!=' instead of '!==' is correct because `campaignId` can equal 0
+      ...(this.campaignId != null ? { campaignId: this.campaignId } : {}),
+      personId: this.entityId,
+      personRole: this.personRole,
+      emailId: this.selectedEmailId$.value
+    };
+    this.emailService.scheduleEmail(this.debt$.value.id, data).subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {

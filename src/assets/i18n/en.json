@@ -1439,9 +1439,10 @@
           "text": "Text",
           "template": "Template",
           "form": {
-            "templateId": "Email",
             "senderCode": "Sender",
             "startDateTime": "Send Date/Time",
+            "subject": "Subject",
+            "templateId": "Email",
             "text": "Message Text"
           }
         }

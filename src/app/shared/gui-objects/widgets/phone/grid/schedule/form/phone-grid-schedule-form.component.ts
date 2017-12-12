@@ -57,7 +57,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
       this.userConstantsService.get('SMS.Sender.Use'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_SENDER),
       this.useTemplate ?
-        this.userTemplatesService.getTemplates(2, 1, true) :
+        this.userTemplatesService.getTemplates(2, this.personRole, true) :
         Observable.of(null)
     )
     .pipe(first())

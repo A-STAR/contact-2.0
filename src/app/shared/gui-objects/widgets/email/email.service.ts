@@ -57,7 +57,7 @@ export class EmailService {
 
   scheduleEmail(debtId: number, schedule: IEmailSchedule): Observable<void> {
     return this.dataService
-      .create('/debts/{debtId}/sms', { debtId }, schedule)
-      .catch(this.notificationsService.createError().entity('entities.sms.gen.singular').dispatchCallback());
+      .create('/debts/{debtId}/email', { debtId }, schedule)
+      .catch(this.notificationsService.createError().entity('entities.email.gen.singular').dispatchCallback());
   }
 }

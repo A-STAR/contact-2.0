@@ -1439,9 +1439,10 @@
           "text": "Текст",
           "template": "Сценарий",
           "form": {
-            "templateId": "Email",
             "senderCode": "Отправитель",
             "startDateTime": "Дата и время отправки",
+            "subject": "Тема",
+            "templateId": "Email",
             "text": "Текст сообщения"
           }
         }
