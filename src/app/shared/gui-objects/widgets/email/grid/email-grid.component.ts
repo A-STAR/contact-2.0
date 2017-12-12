@@ -162,6 +162,10 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     return this.columns.length > 0;
   }
 
+  get debtId$(): Observable<number> {
+    return this.debt$.map(debt => debt.id);
+  }
+
   get blockDialogDictionaryId(): number {
     return UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING;
   }
