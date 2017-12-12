@@ -7,13 +7,10 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem } from '../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { INavigationParams } from '../../../core/app-modules/debtor-card/debtor-card.interface';
 import { IPerson } from './debtor.interface';
 import { IDebt } from '../debt-processing/debt-processing.interface';
 
@@ -68,7 +65,6 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     private debtService: DebtService,
     private debtorCardService: DebtorCardService,
     private debtorService: DebtorService,
-    private route: ActivatedRoute,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();

@@ -1,9 +1,5 @@
 import { IDebt, IPerson } from '../app-modules.interface';
 
-export interface INavigationParams {
-  debtId: number;
-}
-
 export enum IActionType {
   INIT_BY_DEBT_ID      = 'DEBTOR_CARD_INIT_BY_DEBT_ID',
   INIT_BY_PERSON_ID    = 'DEBTOR_CARD_INIT_BY_PERSON_ID',
