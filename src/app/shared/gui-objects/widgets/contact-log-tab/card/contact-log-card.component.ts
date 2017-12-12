@@ -25,6 +25,9 @@ const label = makeKey('widgets.contactLog.card');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactLogTabCardComponent implements OnInit {
+  static CONTACT_TYPE_EMAIL = 6;
+  static CONTACT_TYPE_SMS = 4;
+
   @Input() callCenter = false;
   @Input() contactId: number;
   @Input() debtId: number;
@@ -92,47 +95,44 @@ export class ContactLogTabCardComponent implements OnInit {
     this.contentTabService.back();
   }
 
-  private initControls(
+  private createDefaultControls(
     contactTypeOptions: IOption[],
-    contactLogType: number,
-    roleOpts: IOption[],
-    smsStatusOpts: IOption[],
-    canEditComment: boolean,
-    contactLog: IContactLog
+    contactLog: IContactLog,
+    canEditComment: boolean
   ): IDynamicFormItem[] {
-    if (Number(contactLogType) !== 4) {
-      let contactNumber, promiseAmount;
-      const baseControls = [
-        { controlName: 'contract', type: 'text',  width: 6, disabled: true },
-        { controlName: 'contactDateTime', type: 'datepicker', width: 6, disabled: true },
-        { controlName: 'contactType', type: 'select', width: 6, options: contactTypeOptions, disabled: true },
-        { controlName: 'userFullName', type: 'text', width: 6, disabled: true },
-        { controlName: 'resultName', type: 'text', width: 6, disabled: true },
-        { controlName: 'contactData', type: 'text', width: 6, disabled: true },
-      ].map(item => ({ ...item, label: label(item.controlName) } as IDynamicFormControl));
+    let contactNumber, promiseAmount;
+    const baseControls = [
+      { controlName: 'contract', type: 'text',  width: 6, disabled: true },
+      { controlName: 'contactDateTime', type: 'datepicker', width: 6, disabled: true },
+      { controlName: 'contactType', type: 'select', width: 6, options: contactTypeOptions, disabled: true },
+      { controlName: 'userFullName', type: 'text', width: 6, disabled: true },
+      { controlName: 'resultName', type: 'text', width: 6, disabled: true },
+      { controlName: 'contactData', type: 'text', width: 6, disabled: true },
+    ].map(item => ({ ...item, label: label(item.controlName) } as IDynamicFormControl));
 
-      if (contactLog.promiseDate) {
-        contactNumber = {
-          label: label('contactNumber'), controlName: 'contactNumber',
-          type: 'text', width: 6, disabled: true
-        };
-      }
-
-      if (contactLog.promiseAmount) {
-        promiseAmount = {
-          label: label('promiseAmount'), controlName: 'promiseAmount',
-          type: 'text', width: 6, disabled: true
-        };
-      }
-
-      const comment = {
-        label: label('comment'), controlName: 'comment',
-        type: 'textarea', width: 12, disabled: !canEditComment || this.disabled
+    if (contactLog.promiseDate) {
+      contactNumber = {
+        label: label('contactNumber'), controlName: 'contactNumber',
+        type: 'text', width: 6, disabled: true
       };
-
-       return [...baseControls, promiseAmount, comment].filter(Boolean) as IDynamicFormItem[];
     }
 
+    if (contactLog.promiseAmount) {
+      promiseAmount = {
+        label: label('promiseAmount'), controlName: 'promiseAmount',
+        type: 'text', width: 6, disabled: true
+      };
+    }
+
+    const comment = {
+      label: label('comment'), controlName: 'comment',
+      type: 'textarea', width: 12, disabled: !canEditComment || this.disabled
+    };
+
+    return [...baseControls, promiseAmount, comment].filter(Boolean) as IDynamicFormItem[];
+  }
+
+  private createSMSControls(roleOpts: IOption[], statusOpts: IOption[]): IDynamicFormItem[] {
     return [
       { label: label('contract'), controlName: 'contract', type: 'number',  width: 6, disabled: true },
       { label: label('userFullName'), controlName: 'userFullName', type: 'text', width: 6,  disabled: true },
@@ -141,9 +141,39 @@ export class ContactLogTabCardComponent implements OnInit {
       { label: label('fullName'), controlName: 'fullName', type: 'text', width: 6, disabled: true },
       { label: label('contactPhone'), controlName: 'contactPhone', type: 'text', width: 6, disabled: true },
       { label: label('personRole'), controlName: 'personRole', options: roleOpts, width: 6, disabled: true, type: 'select'},
-      { label: label('status'), controlName: 'status', options: smsStatusOpts, width: 6, disabled: true, type: 'select'},
+      { label: label('status'), controlName: 'status', options: statusOpts, width: 6, disabled: true, type: 'select'},
       { label: label('text'), controlName: 'text', type: 'textarea', width: 12, disabled: true },
     ];
+  }
+
+  private createEmailControls(roleOpts: IOption[], statusOpts: IOption[]): IDynamicFormItem[] {
+    return [
+      { label: label('contract'), controlName: 'contract', type: 'number',  width: 6, disabled: true },
+      { label: label('userFullName'), controlName: 'userFullName', type: 'text', width: 6,  disabled: true },
+      { label: label('sentDateTime'), controlName: 'sentDateTime', type: 'datepicker', width: 6, disabled: true },
+      { label: label('startDateTime'), controlName: 'startDateTime', type: 'datepicker', width: 6, disabled: true },
+      { label: label('fullName'), controlName: 'fullName', type: 'text', width: 6, disabled: true },
+      { label: label('contactEmail'), controlName: 'contactEmail', type: 'text', width: 6, disabled: true },
+      { label: label('personRole'), controlName: 'personRole', options: roleOpts, width: 6, disabled: true, type: 'select'},
+      { label: label('status'), controlName: 'status', options: statusOpts, width: 6, disabled: true, type: 'select'},
+      { label: label('text'), controlName: 'text', type: 'textarea', width: 12, disabled: true },
+    ];
+  }
+
+  private initControls(
+    contactTypeOptions: IOption[],
+    contactLogType: number,
+    roleOpts: IOption[],
+    statusOpts: IOption[],
+    canEditComment: boolean,
+    contactLog: IContactLog
+  ): IDynamicFormItem[] {
+
+    switch (Number(contactLogType)) {
+      case ContactLogTabCardComponent.CONTACT_TYPE_SMS: return this.createSMSControls(roleOpts, statusOpts);
+      case ContactLogTabCardComponent.CONTACT_TYPE_EMAIL: return this.createEmailControls(roleOpts, statusOpts);
+      default: return this.createDefaultControls(contactTypeOptions, contactLog, canEditComment);
+    }
   }
 }
 
