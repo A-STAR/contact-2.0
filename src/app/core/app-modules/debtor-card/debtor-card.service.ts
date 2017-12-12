@@ -9,8 +9,6 @@ import { IDebt, IPerson } from '../app-modules.interface';
 
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 
-import { isEmpty } from '../../../core/utils';
-
 @Injectable()
 export class DebtorCardService {
   constructor(
