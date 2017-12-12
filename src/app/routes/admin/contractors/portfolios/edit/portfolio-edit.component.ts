@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, merge } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
-import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IAppState } from '../../../../../core/state/state.interface';
-import { IPortfolio, IActionType, IPortfolioCreateAction, IPortfolioEditAction } from '../../contractors-and-portfolios.interface';
+import {
+  IActionType,
+  IPortfolio,
+  IPortfolioCreateAction,
+  IPortfolioEditAction
+} from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
@@ -18,7 +20,6 @@ import { ValueConverterService } from '../../../../../core/converter/value-conve
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
-import { Observable } from 'rxjs/Observable';
 
 const label = makeKey('portfolios.grid');
 
@@ -43,10 +44,8 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
     private router: Router,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private store: Store<IAppState>,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,

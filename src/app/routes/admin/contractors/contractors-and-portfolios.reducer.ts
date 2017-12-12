@@ -1,9 +1,8 @@
 import {
   IActionType,
   IContractorsAndPortfoliosState,
-  IContractorAndPorfolioAction,  } from './contractors-and-portfolios.interface';
-
-import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
+  IContractorAndPorfolioAction
+} from './contractors-and-portfolios.interface';
 
 export const defaultState: IContractorsAndPortfoliosState = {
   selectedContractor: null,
