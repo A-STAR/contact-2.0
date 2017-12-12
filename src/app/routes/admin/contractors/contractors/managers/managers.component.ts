@@ -122,7 +122,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
   }
 
   clearManagers (): void {
-    this.contractorsAndPortfoliosService.selectManager(this.contractorId, null);
+    this.contractorsAndPortfoliosService.selectManager(null);
     this.managers = [];
   }
 
@@ -152,7 +152,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
 
   onSelect(manager: IContractorManager): void {
     this.selection = [manager];
-    this.contractorsAndPortfoliosService.selectManager(this.contractorId, manager.id);
+    this.contractorsAndPortfoliosService.selectManager(manager);
   }
 
   onBack(): void {
@@ -175,7 +175,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
     this.contractorsAndPortfoliosService.readManagersForContractor(this.contractorId)
       .subscribe(managers => {
         this.selection = [];
-        this.contractorsAndPortfoliosService.selectManager(this.contractorId, null);
+        this.contractorsAndPortfoliosService.selectManager(null);
         this.managers = managers;
         this.cdRef.detectChanges();
       });
