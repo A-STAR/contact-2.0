@@ -26,6 +26,7 @@ import { DebtsModule } from './debts/debts.module';
 import { InformationModule } from './information/information.module';
 import { RegisterContactModule } from './register-contact/register-contact.module';
 
+import { DebtorCardResolver } from './debtor.resolver';
 import { DebtorService } from './debtor.service';
 
 import { DebtComponent } from './debt/debt.component';
@@ -48,6 +49,9 @@ import { DebtorPropertyComponent } from './property/property.component';
 const routes: Routes = [
   {
     path: ':debtId',
+    resolve: {
+      isLoaded: DebtorCardResolver,
+    },
     children: [
       {
         path: '', component: DebtorComponent,
@@ -247,6 +251,7 @@ const routes: Routes = [
     RouterModule,
   ],
   providers: [
+    DebtorCardResolver,
     DebtorService,
   ]
 })

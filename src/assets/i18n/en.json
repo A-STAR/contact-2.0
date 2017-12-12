@@ -249,6 +249,9 @@
       },
       "sms": {
         "title": "SMS"
+      },
+      "email": {
+        "title": "Email"
       }
     },
     "dataUpload": {

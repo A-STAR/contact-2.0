@@ -7,13 +7,10 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem } from '../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { INavigationParams } from '../../../core/app-modules/debtor-card/debtor-card.interface';
 import { IPerson } from './debtor.interface';
 import { IDebt } from '../debt-processing/debt-processing.interface';
 
@@ -68,7 +65,6 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     private debtService: DebtService,
     private debtorCardService: DebtorCardService,
     private debtorService: DebtorService,
-    private route: ActivatedRoute,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -97,8 +93,6 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       this.data = data;
       this.cdRef.markForCheck();
     });
-
-    this.debtorCardService.initByDebtId(this.debtId);
   }
 
   ngOnDestroy(): void {
@@ -147,14 +141,15 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   }
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
-    this.personId$
+    Observable
+      .combineLatest(this.personId$, this.debtId$)
       .pipe(first())
-      .subscribe(personId => {
+      .subscribe(([ personId, debtId ]) => {
         this.setDialog();
         this.debtService.navigateToRegistration({
           contactId,
           contactType,
-          debtId: this.debtId,
+          debtId,
           personId,
           personRole: 1,
         });
@@ -188,13 +183,5 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
         ]
       }
     ] as IDynamicFormItem[];
-  }
-
-  private get debtId(): number {
-    return this.routeParams.debtId;
-  }
-
-  private get routeParams(): INavigationParams {
-    return (this.route.params as BehaviorSubject<INavigationParams>).value;
   }
 }

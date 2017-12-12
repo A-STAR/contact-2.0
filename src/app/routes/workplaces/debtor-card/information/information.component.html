@@ -8,7 +8,31 @@
 </div>
 
 <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
-  <app-tabview-tab *ngFor="let tab of tabs" [title]="tab.title">
-    <app-container *ngIf="tab.isInitialised" [node]="tab"></app-container>
+  <app-tabview-tab [title]="tabs[0].title">
+    <app-address-grid
+      *ngIf="tabs[0].isInitialised"
+      action="edit"
+      [debtId]="debtId$ | async"
+      [debtorId]="personId$ | async"
+      [personId]="personId$ | async"
+      [personRole]="1"
+    ></app-address-grid>
+  </app-tabview-tab>
+  <app-tabview-tab [title]="tabs[1].title">
+    <app-phone-grid
+      *ngIf="tabs[1].isInitialised"
+      action="edit"
+      [contactType]="1"
+      [debtId]="debtId$ | async"
+      [personId]="personId$ | async"
+      [personRole]="1"
+    ></app-phone-grid>
+  </app-tabview-tab>
+  <app-tabview-tab [title]="tabs[2].title">
+    <app-email-grid
+      *ngIf="tabs[2].isInitialised"
+      [entityId]="personId$ | async"
+      [personRole]="1"
+    ></app-email-grid>
   </app-tabview-tab>
 </app-tabview>
