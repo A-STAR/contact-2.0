@@ -14,14 +14,16 @@ import { GridService } from '../../../../../shared/components/grid/grid.service'
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
+
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { DialogFunctions } from '../../../../../core/dialog';
 
 @Component({
   selector: 'app-debt-grid',
   templateUrl: './debt-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DebtGridComponent implements OnInit, OnDestroy {
+export class DebtGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -35,6 +37,7 @@ export class DebtGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
+      label: 'widgets.debt.toolbar.changeStatus',
       enabled: combineLatestAnd([
         this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
         this.userPermissionsService.bag().map(bag => (
@@ -108,8 +111,8 @@ export class DebtGridComponent implements OnInit, OnDestroy {
     { prop: 'debtReasonCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON },
   ];
 
-  dialog$ = new BehaviorSubject<number>(null);
   debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
+  dialog: string;
 
   private debtUpdateSub: Subscription;
 
@@ -119,7 +122,9 @@ export class DebtGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
@@ -160,7 +165,7 @@ export class DebtGridComponent implements OnInit, OnDestroy {
   }
 
   onDialogClose(): void {
-    this.dialog$.next(null);
+    this.setDialog();
   }
 
   onChangeStatusDialogSubmit(): void {
@@ -186,16 +191,16 @@ export class DebtGridComponent implements OnInit, OnDestroy {
   }
 
   private onChangeStatus(): void {
-    this.dialog$.next(1);
+    this.setDialog('changeStatus');
   }
 
   private onClose(status: number): void {
-    this.dialog$.next(2);
+    this.setDialog('closeDebt');
     this.debtCloseDialogStatus$.next(status);
   }
 
   private onNextCall(): void {
-    this.dialog$.next(3);
+    this.setDialog('nextCall');
   }
 
   get canAdd$(): Observable<boolean> {
