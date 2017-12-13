@@ -71,7 +71,10 @@ export class MessageTemplateGridEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.submit.emit(this.form.serializedUpdates);
+    this.submit.emit({
+      ...(this.templateId ? {} : { typeCode: this.typeCode, recipientTypeCode: 0 }),
+      ...this.form.serializedUpdates,
+    });
   }
 
   onCancel(): void {
