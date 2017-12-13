@@ -1632,10 +1632,11 @@
     },
     "debt": {
       "toolbar": {
-        "call": "Call Back",
-        "forRepayment": "For Repayment",
-        "withdrawn": "Withdrawn by Client",
-        "terminate": "Terminate Work"
+        "call": "Next call",
+        "changeStatus": "Change status",
+        "forRepayment": "For repayment",
+        "withdrawn": "Withdrawn by client",
+        "terminate": "Close debt"
       },
       "grid": {
         "account": "Account",
