@@ -146,7 +146,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
       campaignId: this.campaignId,
     })
     .subscribe(guid => {
-      const { autoComment, autoCommentId } = this.form.serializedValue;
+      const { autoComment, autoCommentId } = this;
       this.contactRegistrationService.guid = guid;
       this.contactRegistrationService.autoComment$.next({ autoComment, autoCommentId });
       this.accordionService.next();
@@ -156,13 +156,15 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onAutoCommentIdChange(option: IOption[]): void {
     const templateId = Number(option[0].value);
-    this.outcomeService
-      .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
-      .catch(() => Observable.of(null))
-      .subscribe(autoComment => {
-        this.autoComment = autoComment;
-        this.cdRef.markForCheck();
-      });
+    if (templateId) {
+      this.outcomeService
+        .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
+        .catch(() => Observable.of(null))
+        .subscribe(autoComment => {
+          this.autoComment = autoComment;
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
   private buildPayload(contactTypeCode: number, contactId: number): object {

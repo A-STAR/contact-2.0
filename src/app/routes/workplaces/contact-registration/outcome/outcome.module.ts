@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 
-import { SharedModule } from '../../../../shared/shared.module';
 import { SelectModule } from '../../../../shared/components/form/select/select.module';
+import { SharedModule } from '../../../../shared/shared.module';
 
 import { OutcomeService } from './outcome.service';
 
