@@ -4,28 +4,28 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
 import { DynamicFormModule } from '../../../../../components/form/dynamic-form/dynamic-form.module';
-import { PhoneGridScheduleFormModule } from './form/phone-grid-schedule-form.module';
+import { FormModule } from './form/form.module';
 import { TabViewModule } from '../../../../../components/layout/tabview/tabview.module';
 
-import { PhoneGridScheduleComponent } from './phone-grid-schedule.component';
+import { ScheduleComponent } from './schedule.component';
 
 @NgModule({
   imports: [
     CommonModule,
     DialogModule,
     DynamicFormModule,
-    PhoneGridScheduleFormModule,
+    FormModule,
     TabViewModule,
     TranslateModule,
   ],
   exports: [
-    PhoneGridScheduleComponent,
+    ScheduleComponent,
   ],
   declarations: [
-    PhoneGridScheduleComponent,
+    ScheduleComponent,
   ],
   entryComponents: [
-    PhoneGridScheduleComponent,
+    ScheduleComponent,
   ]
 })
-export class PhoneGridScheduleModule { }
+export class ScheduleModule { }

@@ -1436,6 +1436,18 @@
         "delete": {
           "title": "Delete email",
           "confirmMessage": "Are you sure you want to delete email {{ email }}?"
+        },
+        "schedule": {
+          "title": "Schedule Email",
+          "text": "Text",
+          "template": "Template",
+          "form": {
+            "senderCode": "Sender",
+            "startDateTime": "Send Date/Time",
+            "subject": "Subject",
+            "templateId": "Email",
+            "text": "Message Text"
+          }
         }
       }
     },
@@ -1623,10 +1635,11 @@
     },
     "debt": {
       "toolbar": {
-        "call": "Call Back",
-        "forRepayment": "For Repayment",
-        "withdrawn": "Withdrawn by Client",
-        "terminate": "Terminate Work"
+        "call": "Next call",
+        "changeStatus": "Change status",
+        "forRepayment": "For repayment",
+        "withdrawn": "Withdrawn by client",
+        "terminate": "Close debt"
       },
       "grid": {
         "account": "Account",

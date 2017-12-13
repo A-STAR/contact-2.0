@@ -1436,6 +1436,18 @@
         "delete": {
           "title": "Удалить email",
           "confirmMessage": "Вы действительно хотите удалить email {{ email }}?"
+        },
+        "schedule": {
+          "title": "Сформировать email",
+          "text": "Текст",
+          "template": "Сценарий",
+          "form": {
+            "senderCode": "Отправитель",
+            "startDateTime": "Дата и время отправки",
+            "subject": "Тема",
+            "templateId": "Email",
+            "text": "Текст сообщения"
+          }
         }
       }
     },
@@ -1624,6 +1636,7 @@
     "debt": {
       "toolbar": {
         "call": "Необходимо перезвонить",
+        "changeStatus": "Смена статуса",
         "forRepayment": "К возврату клиентом",
         "withdrawn": "Отозван клиентом",
         "terminate": "Завершить работу с долгом"

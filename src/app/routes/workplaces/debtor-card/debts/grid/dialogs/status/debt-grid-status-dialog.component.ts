@@ -89,7 +89,7 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
         {
           label: 'widgets.debt.dialogs.statusChange.statusCustom',
           value: 0,
-          disabled: !bag.containsCustom('DEBT_STATUS_EDIT_LIST'),
+          disabled: !bag.containsCustom('DEBT_STATUS_EDIT_LIST') && !bag.containsALL('DEBT_STATUS_EDIT_LIST'),
         },
       ];
 
@@ -126,6 +126,10 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
     this.statusCodeSubscription.unsubscribe();
   }
 
+  get canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
   onSubmit(): void {
     const { customStatusCode, statusCode, ...rest } = this.form.serializedUpdates;
     const value = {
@@ -133,12 +137,13 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
       statusCode: customStatusCode || statusCode,
     };
     this.debtorCardService.personId$
+      .switchMap(personId => {
+        return this.debtService.changeStatus(personId, this.debt.id, value, false);
+      })
       .pipe(first())
-      .subscribe(personId => {
-        this.debtService.changeStatus(personId, this.debt.id, value, false).subscribe(() => {
-          this.submit.emit();
-          this.close.emit();
-        });
+      .subscribe(_ => {
+        this.submit.emit();
+        this.close.emit();
       });
   }
 
