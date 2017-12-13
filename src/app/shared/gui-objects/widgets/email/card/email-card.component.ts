@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -33,7 +32,6 @@ export class EmailCardComponent implements OnInit {
   constructor(
     private contentTabService: ContentTabService,
     private emailService: EmailService,
-    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
