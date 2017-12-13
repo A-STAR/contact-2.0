@@ -181,17 +181,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       this.refreshPagination();
       this.clearRangeSelections();
       this.viewportDatasource.params.setRowData(this.rows);
+      this.viewportDatasource.params.setRowCount(this.rows.length);
     }
     if (rowCount) {
-      const currentRowCount = rowCount.currentValue;
-      const maxAvailablePage = Math.ceil(currentRowCount / this.pageSize);
-      if (this.page > maxAvailablePage) {
-        this.page = maxAvailablePage || 1;
+      if (this.page > this.getPageCount()) {
+        this.page = this.getPageCount() || 1;
         this.onPage.emit(this.page);
       } else {
-        this.viewportDatasource.params.setRowCount(currentRowCount);
         this.refreshRowCount();
-        if (currentRowCount) {
+        if (this.rowCount) {
           this.gridOptions.api.hideOverlay();
         } else {
           this.gridOptions.api.showNoRowsOverlay();
