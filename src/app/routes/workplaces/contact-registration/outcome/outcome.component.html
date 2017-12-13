@@ -22,7 +22,13 @@
 </div>
 
 <div class="mb">
-  <app-dynamic-form #form [controls]="controls" [data]="data"></app-dynamic-form>
+  <label>{{ 'modules.contactRegistration.outcome.comment' | translate }}</label>
+  <textarea
+    class="form-control"
+    rows="3"
+    [(ngModel)]="comment"
+    [disabled]="!(hasComment$ | async)"
+  ></textarea>
 </div>
 
 <div class="mb">

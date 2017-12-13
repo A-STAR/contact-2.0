@@ -6,7 +6,6 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  ViewChild
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -22,8 +21,6 @@ import { AccordionService } from '../../../../shared/components/accordion/accord
 import { ContactRegistrationService } from '../contact-registration.service';
 import { OutcomeService } from './outcome.service';
 import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
-
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { isEmpty, makeKey, valuesToOptions, invert } from '../../../../core/utils';
 
@@ -43,20 +40,16 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() personId: number;
   @Input() personRole: number;
 
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
-  controls: IDynamicFormControl[] = [
-    { label: labelKey('comment'), controlName: 'comment', type: 'textarea', rows: 3, disabled: true },
-  ];
-  data = {};
   nodes: ITreeNode[];
 
   autoCommentId: number;
   autoCommentOptions: IOption[];
   autoComment: string;
+  comment: string;
   template: string;
 
   private autoCommentIdSubscription: Subscription;
+  private commentSubscription: Subscription;
   private selectedNodeSubscription: Subscription;
 
   constructor(
@@ -83,6 +76,13 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
+    this.commentSubscription = this.hasComment$
+      .filter(invert)
+      .subscribe(() => {
+        this.comment = null;
+        this.cdRef.markForCheck();
+      });
+
     this.fetchNodes();
   }
 
@@ -104,6 +104,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.autoCommentIdSubscription.unsubscribe();
+    this.commentSubscription.unsubscribe();
     this.selectedNodeSubscription.unsubscribe();
   }
 
@@ -113,6 +114,10 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get hasAutoComment$(): Observable<boolean> {
     return this.selectedNode$.map(node => node && node.data.autoCommentIds && isEmpty(node.children));
+  }
+
+  get hasComment$(): Observable<boolean> {
+    return this.selectedNode$.map(node => node && [2, 3].includes(node.data.commentMode) && isEmpty(node.children));
   }
 
   get canSubmit$(): Observable<boolean> {
@@ -125,14 +130,8 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onNodeSelect(event: { node: ITreeNode }): void {
     const { node } = event;
-
     this.selectedNode$.next(node);
-
-    if ([2, 3].includes(node.data.commentMode) && isEmpty(node.children)) {
-      this.enableField('comment');
-    } else {
-      this.disableField('comment');
-    }
+    this.cdRef.markForCheck();
   }
 
   onNextClick(): void {
@@ -146,9 +145,9 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
       campaignId: this.campaignId,
     })
     .subscribe(guid => {
-      const { autoComment, autoCommentId } = this;
+      const { autoComment, autoCommentId, comment } = this;
       this.contactRegistrationService.guid = guid;
-      this.contactRegistrationService.autoComment$.next({ autoComment, autoCommentId });
+      this.contactRegistrationService.autoComment$.next({ autoComment, autoCommentId, comment });
       this.accordionService.next();
       this.cdRef.markForCheck();
     });
@@ -180,31 +179,10 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return {};
   }
 
-  private enableField(key: string): void {
-    this.getControl(key).disabled = false;
-  }
-
-  private disableField(key: string): void {
-    this.getControl(key).disabled = true;
-    this.updateData(key, null);
-  }
-
-  private updateData(key: string, value: any): void {
-    this.data = {
-      ...this.form.serializedValue,
-      [key]: value,
-    };
-    this.cdRef.markForCheck();
-  }
-
   private fetchNodes(): void {
     this.outcomeService.fetchContactTree(this.debtId, this.contactTypeCode).subscribe(nodes => {
       this.nodes = nodes;
       this.cdRef.markForCheck();
     });
-  }
-
-  private getControl(name: string): IDynamicFormControl {
-    return this.controls.find(control => control.controlName === name);
   }
 }

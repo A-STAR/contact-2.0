@@ -69,9 +69,13 @@ export class MiscComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.autoCommentIdSubscription = this.contactRegistrationService.autoComment$
       .filter(Boolean)
-      .subscribe(({ autoComment, autoCommentId }) => {
+      .subscribe(({ autoComment, autoCommentId, comment }) => {
         this.autoComment = autoComment;
         this.autoCommentId = autoCommentId;
+        if (comment) {
+          this.data = { ...this.data, comment };
+          this.form.getControl('comment').markAsDirty();
+        }
         this.cdRef.markForCheck();
       });
 
@@ -128,7 +132,7 @@ export class MiscComponent implements OnInit, OnDestroy {
     const { guid } = this.contactRegistrationService;
     const data = {
       ...this.form.serializedUpdates,
-      autoCommentId: this.autoCommentId,
+      autoCommentId: this.autoCommentId[0].value,
     };
     this.miscService.create(this.debtId, guid, data)
       .subscribe(() => {
