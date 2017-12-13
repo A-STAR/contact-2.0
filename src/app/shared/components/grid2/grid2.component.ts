@@ -256,7 +256,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.onPage.emit(--this.page);
         break;
       case ToolbarActionTypeEnum.GO_FORWARD:
-        if ((this.page + 1) >= this.getPageCount()) {
+        if (this.page === this.getPageCount()) {
           this.notificationService.info(`No more data can be loaded`).noAlert().dispatch();
           return;
         }
