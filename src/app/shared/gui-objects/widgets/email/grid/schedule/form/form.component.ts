@@ -7,7 +7,7 @@ import * as moment from 'moment';
 
 import { IDynamicFormControl } from '../../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { INamedValue, IOption } from '../../../../../../../core/converter/value-converter.interface';
-import { ISMSSchedule } from '../../../phone.interface';
+import { IEmailSchedule } from '../../../email.interface';
 import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
 
 import { UserConstantsService } from '../../../../../../../core/user/constants/user-constants.service';
@@ -19,26 +19,27 @@ import { DynamicFormComponent } from '../../../../../../components/form/dynamic-
 import { makeKey, valuesToOptions } from '../../../../../../../core/utils';
 import { minDate } from '../../../../../../../core/validators';
 
-const labelKey = makeKey('widgets.phone.dialogs.schedule.form');
+const labelKey = makeKey('widgets.email.dialogs.schedule.form');
 
 @Component({
-  selector: 'app-phone-grid-schedule-form',
-  templateUrl: './phone-grid-schedule-form.component.html',
+  selector: 'app-email-grid-schedule-form',
+  templateUrl: './form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
+export class FormComponent implements OnInit, OnDestroy {
   @Input() debtId: number;
+  @Input() emailId: number;
   @Input() personId: number;
   @Input() personRole: number;
-  @Input() phoneId: number;
   @Input() useTemplate: boolean;
 
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   controls: IDynamicFormControl[];
-  data: ISMSSchedule = {
+  data: IEmailSchedule = {
     senderCode: null,
-    startDateTime: new Date()
+    startDateTime: new Date(),
+    subject: null,
   };
 
   private _formSubscription: Subscription;
@@ -53,11 +54,11 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._formSubscription = Observable.combineLatest(
-      this.userConstantsService.get('SMS.Sender.Default'),
-      this.userConstantsService.get('SMS.Sender.Use'),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_SENDER),
+      this.userConstantsService.get('Email.Sender.Default'),
+      this.userConstantsService.get('Email.Sender.Use'),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_SENDER),
       this.useTemplate ?
-        this.userTemplatesService.getTemplates(2, this.personRole, true) :
+        this.userTemplatesService.getTemplates(3, this.personRole, true) :
         Observable.of(null)
     )
     .pipe(first())
@@ -88,7 +89,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
   }
 
   private initControls(useSender: IUserConstant, senderOptions: IOption[], templates: INamedValue[]): void {
-    const smsControl = this.useTemplate
+    const emailControl = this.useTemplate
       ? [
           {
             label: labelKey('templateId'),
@@ -113,7 +114,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
       : [];
 
     this.controls = [
-      ...smsControl,
+      ...emailControl,
       ...useSenderControl,
       {
         label: labelKey('startDateTime'),
@@ -122,6 +123,12 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
         displayTime: true,
         minDate: new Date(),
         validators: [ minDate(moment().subtract(3, 'd').toDate()) ],
+        required: true
+      },
+      {
+        label: labelKey('subject'),
+        controlName: 'subject',
+        type: 'text',
         required: true
       },
       {

@@ -76,6 +76,8 @@ export class UserDictionariesService {
   static DICTIONARY_CALL_CAMPAIGN_STATUS          = 58;
   static DICTIONARY_CALL_CAMPAIGN_TYPE            = 59;
   static DICTIONARY_DEBTOR_STAGE_CODE             = 61;
+  static DICTIONARY_EMAIL_FORMAT                  = 63;
+  static DICTIONARY_EMAIL_SENDER                  = 64;
   static DICTIONARY_EMAIL_STATUS                  = 65;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
