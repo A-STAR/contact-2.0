@@ -13,7 +13,6 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/publishReplay';
 
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
@@ -22,9 +21,7 @@ import { ContactRegistrationService } from '../contact-registration.service';
 import { OutcomeService } from './outcome.service';
 import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
 
-import { isEmpty, makeKey, valuesToOptions, invert } from '../../../../core/utils';
-
-const labelKey = makeKey('modules.contactRegistration.outcome');
+import { isEmpty, valuesToOptions, invert } from '../../../../core/utils';
 
 @Component({
   selector: 'app-contact-registration-outcome',
