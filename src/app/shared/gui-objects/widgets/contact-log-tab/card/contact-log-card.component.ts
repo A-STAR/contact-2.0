@@ -56,21 +56,17 @@ export class ContactLogTabCardComponent implements OnInit {
         ? this.contactLogService.fetch(this.debtId, this.contactId, this.contactLogType, this.callCenter)
         : Observable.of(null),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTACT_TYPE),
-      this.contactLogType === 4 ?
-        this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
-        : Observable.of(null),
-      this.contactLogType === 4 ?
-         this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_STATUS)
-        : Observable.of(null)
+      this.personRole,
+      this.statusOptions
     )
     .pipe(first())
-    .subscribe(([ canEditComment, contactLogType, contactLog, contactTypeOpts, roleOpts, smsStatusOpts ]) => {
+    .subscribe(([ canEditComment, contactLogType, contactLog, contactTypeOpts, roleOpts, statusOpts ]) => {
       this.controls = this
         .initControls(
           contactTypeOpts,
           contactLogType,
           roleOpts,
-          smsStatusOpts,
+          statusOpts,
           canEditComment,
           contactLog,
         );
@@ -156,8 +152,30 @@ export class ContactLogTabCardComponent implements OnInit {
       { label: label('contactEmail'), controlName: 'contactEmail', type: 'text', width: 6, disabled: true },
       { label: label('personRole'), controlName: 'personRole', options: roleOpts, width: 6, disabled: true, type: 'select'},
       { label: label('status'), controlName: 'status', options: statusOpts, width: 6, disabled: true, type: 'select'},
-      { label: label('text'), controlName: 'text', type: 'richtexteditor', width: 12, disabled: true, toolbar: this.contactLog.formatCode === 1 },
+      { label: label('text'), controlName: 'text', type: 'richtexteditor',
+        width: 12, disabled: true, toolbar: this.contactLog.formatCode === 1 },
     ];
+  }
+
+  private get statusOptions(): Observable<IOption[]> {
+    switch (this.contactLogType) {
+      case ContactLogTabCardComponent.CONTACT_TYPE_SMS:
+        return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_STATUS);
+      case ContactLogTabCardComponent.CONTACT_TYPE_EMAIL:
+        return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_STATUS);
+      default:
+        return Observable.of(null);
+    }
+  }
+
+  private get personRole(): Observable<IOption[]> {
+    switch (this.contactLogType) {
+      case ContactLogTabCardComponent.CONTACT_TYPE_SMS:
+      case ContactLogTabCardComponent.CONTACT_TYPE_EMAIL:
+        return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE);
+      default:
+        return Observable.of(null);
+    }
   }
 
   private initControls(
@@ -170,9 +188,12 @@ export class ContactLogTabCardComponent implements OnInit {
   ): IDynamicFormItem[] {
 
     switch (contactLogType) {
-      case ContactLogTabCardComponent.CONTACT_TYPE_SMS: return this.createSMSControls(roleOpts, statusOpts);
-      case ContactLogTabCardComponent.CONTACT_TYPE_EMAIL: return this.createEmailControls(roleOpts, statusOpts);
-      default: return this.createDefaultControls(contactTypeOptions, contactLog, canEditComment);
+      case ContactLogTabCardComponent.CONTACT_TYPE_SMS:
+        return this.createSMSControls(roleOpts, statusOpts);
+      case ContactLogTabCardComponent.CONTACT_TYPE_EMAIL:
+        return this.createEmailControls(roleOpts, statusOpts);
+      default:
+        return this.createDefaultControls(contactTypeOptions, contactLog, canEditComment);
     }
   }
 }
