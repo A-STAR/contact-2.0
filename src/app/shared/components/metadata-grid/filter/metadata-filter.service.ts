@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { IMetadataFilter, IMetadataFilterOption } from 'app/core/metadata/metadata.interface';
+import { IMetadataFilter, IMetadataFilterOption } from '../../../../core/metadata/metadata.interface';
 import { IFilterControl } from './metadata-filter.interface';
 
-import { FilterOperatorType } from 'app/shared/components/grid2/filter/grid-filter';
+import { FilterOperatorType } from '../../../../shared/components/grid2/filter/grid-filter';
 import { TControlTypes } from '../../form/dynamic-form/dynamic-form.interface';
 
 @Injectable()

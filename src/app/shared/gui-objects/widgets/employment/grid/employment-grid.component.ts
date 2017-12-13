@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
-import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IEmployment } from '../employment.interface';
@@ -23,8 +22,8 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 })
 export class EmploymentGridComponent implements OnInit, OnDestroy {
   // TODO(d.maltsev): always pass personId as input
-  private routeParams = (<any>this.route.params).value;
-  @Input() personId = this.routeParams.contactId || this.routeParams.personId || null;
+  private routeParams = this.route.snapshot.paramMap;
+  @Input() personId = +this.routeParams.get('contactId') || +this.routeParams.get('personId') || null;
 
   private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
 
@@ -75,7 +74,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   private onSaveSubscription: Subscription;
   private canViewSubscription: Subscription;
 
-  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '500px' };
+  gridStyles = this.routeParams.get('contactId') ? { height: '230px' } : { height: '500px' };
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -85,18 +84,17 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
       .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();
       });
-  }
 
-  ngOnInit(): void {
     this.canViewSubscription = this.canView$
-      .filter(canView => canView !== undefined)
       .subscribe(hasPermission => {
         if (hasPermission) {
           this.fetch();

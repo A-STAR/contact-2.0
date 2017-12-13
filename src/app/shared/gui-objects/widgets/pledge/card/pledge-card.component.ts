@@ -159,7 +159,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
         );
 
     action.subscribe(() => {
-      this.pledgeService.setPayload(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
+      this.pledgeService.dispatchAction(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
       this.onBack();
     });
   }

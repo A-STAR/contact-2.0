@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
+import { first } from 'rxjs/operators';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
@@ -13,12 +14,11 @@ import {
   IEmployeeSelectState,
   IOrganizationSelectState,
 } from './organizations.interface';
-
 import { ITreeNode } from '../../../shared/components/flowtree/treenode/treenode.interface';
-import { DataService } from 'app/core/data/data.service';
+
+import { DataService } from '../../../core/data/data.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { OrganizationsTreeService } from 'app/routes/admin/organizations/organizations-tree/organizations-tree.service';
-import { NotificationsService } from 'app/core/notifications/notifications.service';
-import { first } from 'rxjs/operators';
 
 @Injectable()
 export class OrganizationsService {
@@ -27,11 +27,12 @@ export class OrganizationsService {
 
   public baseUrl = '/organizations';
 
-  constructor(private store: Store<IAppState>,
+  constructor(
+    private store: Store<IAppState>,
     private dataService: DataService,
     private treeService: OrganizationsTreeService,
-    private notificationsService: NotificationsService) {
-  }
+    private notificationsService: NotificationsService,
+  ) {}
 
   get state(): Observable<IOrganizationsState> {
     return this.store

@@ -4,7 +4,7 @@
   labelTranslationKey="widgets.email.dialogs.block.inactiveReasonCode"
   [dictionaryId]="blockDialogDictionaryId"
   (action)="onBlockDialogSubmit($event)"
-  (close)="onDialogClose()"
+  (close)="onCloseDialog()"
 ></app-block-dialog>
 
 <app-dialog-action
@@ -15,7 +15,7 @@
   actionMode="success"
   [messageParams]="selectedEmail$ | async"
   (action)="onUnblockDialogSubmit()"
-  (cancel)="onDialogClose()"
+  (cancel)="onCloseDialog()"
 ></app-dialog-action>
 
 <app-email-grid-schedule
@@ -25,7 +25,7 @@
   [personRole]="personRole"
   [emailId]="selectedEmailId$ | async"
   (submit)="onScheduleDialogSubmit($event)"
-  (cancel)="onDialogClose()"
+  (cancel)="onCloseDialog()"
 ></app-email-grid-schedule>
 
 <app-dialog-action
@@ -36,7 +36,7 @@
   actionMode="danger"
   [messageParams]="selectedEmail$ | async"
   (action)="onRemoveDialogSubmit()"
-  (cancel)="onDialogClose()"
+  (cancel)="onCloseDialog()"
 ></app-dialog-action>
 
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>

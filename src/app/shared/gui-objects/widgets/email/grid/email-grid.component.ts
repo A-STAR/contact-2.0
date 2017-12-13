@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/of';
-import { first } from 'rxjs/operators/first';
+import { of } from 'rxjs/observable/of';
+import { first } from 'rxjs/operators';
 
 import { IDebt } from '../../../../../core/app-modules/app-modules.interface';
 import { IEmail, IEmailSchedule } from '../email.interface';
@@ -87,14 +87,13 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
       ],
       translationKey: 'default.grid.localeText',
       prop: 'email',
-      enabled: Observable.of(true)
+      enabled: of(true)
     },
   ];
 
   columns: Array<IGridColumn> = [];
 
   private _emails: Array<any> = [];
-
   private canViewSubscription: Subscription;
   private onSaveSubscription: Subscription;
 
@@ -119,9 +118,12 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
+
+  ngOnInit(): void {
 
     Observable.combineLatest(
-      this.gridService.setDictionaryRenderers(this._columns),
+      this.gridService.setAllRenderers(this._columns),
       this.canViewBlock$,
     )
     .pipe(first())
@@ -129,16 +131,13 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
       const filteredColumns = columns.filter(column => {
         return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
       });
-      this.columns = this.gridService.setRenderers(filteredColumns);
+      this.columns = [...filteredColumns];
       this.cdRef.markForCheck();
     });
 
     this.onSaveSubscription = this.emailService.onSave$.subscribe(() => this.fetch());
-  }
 
-  ngOnInit(): void {
     this.canViewSubscription = this.canView$
-      .filter(canView => canView !== undefined)
       .subscribe(hasPermission => {
         if (hasPermission) {
           this.fetch();
@@ -213,10 +212,6 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
       .subscribe(() => this.onSubmitSuccess());
   }
 
-  onDialogClose(): void {
-    this.setDialog(null);
-  }
-
   get selectedEmail$(): Observable<IEmail> {
     return this.selectedEmailId$.map(id => this._emails.find(email => email.id === id));
   }
@@ -260,7 +255,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
         ? this.userPermissionsService
             .contains('EMAIL_SINGLE_ADDRESS_TYPE_LIST', email.typeCode)
             .map(hasPermission => hasPermission || this.ignorePermissions)
-        : Observable.of(false)
+        : of(false)
       ),
       this.selectedEmail$.map(email => email && !email.isInactive),
     ]);

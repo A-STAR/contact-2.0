@@ -144,7 +144,7 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
         : this.guaranteeService.update(this.debtId, this.contractId, data);
 
     action.subscribe(() => {
-      this.guaranteeService.setPayload(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
+      this.guaranteeService.dispatchAction(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
       this.onBack();
     });
   }
