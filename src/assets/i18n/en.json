@@ -11,6 +11,9 @@
       "userId": "User Id",
       "title": "No debts"
     },
+    "noPerson": {
+      "title": "Отсутствует должник"
+    },
     "account": {
       "title": "Account",
       "logout": "Logout",

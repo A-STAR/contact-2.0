@@ -3,6 +3,13 @@
   titleTranslationKey="header.noDebts.title"
   (close)="onClose()"
 >
-  <section class="pv-xl">{{ 'header.noDebts.userId' | translate }}: <em>{{userId[0]}}</em>.</section>
+  <section class="pv-xl">{{ 'header.noDebts.userId' | translate }}: <em>{{personId[0]}}</em>.</section>
+</app-info-dialog>
+
+<app-info-dialog
+  *ngIf="isDialog('noPerson')"
+  titleTranslationKey="header.noPerson.title"
+  (close)="onClose()"
+>
 </app-info-dialog>
 

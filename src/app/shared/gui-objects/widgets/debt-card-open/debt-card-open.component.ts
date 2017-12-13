@@ -13,7 +13,7 @@ import { DialogFunctions } from '../../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtCardOpenComponent extends DialogFunctions implements OnInit {
-  @Input() userId: number[];
+  @Input() personId: number[];
   @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;
@@ -27,20 +27,26 @@ export class DebtCardOpenComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    this.openDebtCardService.getFirstDebtsByUserId(this.userId[0])
-    .subscribe( debtId => {
-      if (!debtId) {
-        this.setDialog('noDebts');
-        this.cdRef.markForCheck();
-        return;
-      }
-      this.close.emit();
-      this.debtorCardService.openByDebtId(debtId);
-    });
-   }
+    if (!this.personId[0]) {
+      this.setDialog('noPerson');
+      this.cdRef.markForCheck();
+      return;
+    }
 
-   onClose(): void {
-     this.setDialog();
-     this.close.emit();
-   }
+    this.openDebtCardService.getFirstDebtsByUserId(this.personId[0])
+      .subscribe( debtId => {
+        if (!debtId) {
+          this.setDialog('noDebts');
+          this.cdRef.markForCheck();
+          return;
+        }
+        this.close.emit();
+        this.debtorCardService.openByDebtId(debtId);
+      });
+  }
+
+  onClose(): void {
+    this.setDialog();
+    this.close.emit();
+  }
 }
