@@ -14,7 +14,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 import { EmailService } from '../email.service';
 import { DebtService } from '../../../../../core/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -97,7 +96,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   private _emails: Array<any> = [];
 
   private canViewSubscription: Subscription;
-  private busSubscription: Subscription;
+  private onSaveSubscription: Subscription;
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_EMAIL_TYPE },
@@ -114,7 +113,6 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     private emailService: EmailService,
     private debtService: DebtService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private router: Router,
     private userConstantsService: UserConstantsService,
@@ -135,9 +133,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
       this.cdRef.markForCheck();
     });
 
-    this.busSubscription = this.messageBusService
-      .select(EmailService.MESSAGE_EMAIL_SAVED)
-      .subscribe(() => this.fetch());
+    this.onSaveSubscription = this.emailService.onSave$.subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {
@@ -155,7 +151,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
-    this.busSubscription.unsubscribe();
+    this.onSaveSubscription.unsubscribe();
   }
 
   get canDisplayGrid(): boolean {

@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IEmail, IEmailSchedule } from './email.interface';
 
 import { DataService } from '../../../../core/data/data.service';
@@ -8,13 +11,16 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 @Injectable()
 export class EmailService {
-  static MESSAGE_EMAIL_SAVED = 'MESSAGE_EMAIL_SAVED';
+  static EMAIL_SAVE_SUCCESS = 'EMAIL_SAVE_SUCCESS';
+
   baseUrl = '/entityTypes/{entityType}/entities/{entityId}/emails';
   singularErr = 'entities.emails.gen.singular';
 
   constructor(
+    private actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    private store: Store<IAppState>,
   ) {}
 
   fetchAll(entityType: number, entityId: number): Observable<Array<IEmail>> {
@@ -59,5 +65,13 @@ export class EmailService {
     return this.dataService
       .create('/debts/{debtId}/email', { debtId }, schedule)
       .catch(this.notificationsService.createError().entity('entities.email.gen.singular').dispatchCallback());
+  }
+
+  dispatchSaveAction(): void {
+    this.store.dispatch({ type: EmailService.EMAIL_SAVE_SUCCESS });
+  }
+
+  get onSave$(): Observable<any> {
+    return this.actions.ofType(EmailService.EMAIL_SAVE_SUCCESS);
   }
 }
