@@ -284,6 +284,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     // log('new page size', newSize);
     this.pageSize = newSize || this.pageSize;
     this.onPageSize.emit(this.pageSize);
+
+    // TODO(d.maltsev): merge onPage and onPageSize outputs into one to prevent multiple requests
   }
 
   dragStarted(): void {
