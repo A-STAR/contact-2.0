@@ -276,6 +276,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
     const newSize = payload.value[0].value;
+    const lastPage = Math.ceil(this.rowCount / newSize);
+    if (this.page > lastPage) {
+      this.page = lastPage;
+      this.onPage.emit(this.page);
+    }
     // log('new page size', newSize);
     this.pageSize = newSize || this.pageSize;
     this.onPageSize.emit(this.pageSize);
