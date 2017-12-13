@@ -156,7 +156,7 @@ export class ContactLogTabCardComponent implements OnInit {
       { label: label('contactEmail'), controlName: 'contactEmail', type: 'text', width: 6, disabled: true },
       { label: label('personRole'), controlName: 'personRole', options: roleOpts, width: 6, disabled: true, type: 'select'},
       { label: label('status'), controlName: 'status', options: statusOpts, width: 6, disabled: true, type: 'select'},
-      { label: label('text'), controlName: 'text', type: 'textarea', width: 12, disabled: true },
+      { label: label('text'), controlName: 'text', type: 'richtexteditor', width: 12, disabled: true, toolbar: this.contactLog.formatCode === 1 },
     ];
   }
 
