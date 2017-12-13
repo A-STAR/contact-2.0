@@ -56,10 +56,10 @@ export class ContactLogTabCardComponent implements OnInit {
         ? this.contactLogService.fetch(this.debtId, this.contactId, this.contactLogType, this.callCenter)
         : Observable.of(null),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTACT_TYPE),
-      Number(this.contactLogType) === 4 ?
+      this.contactLogType === 4 ?
         this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
         : Observable.of(null),
-      Number(this.contactLogType) === 4 ?
+      this.contactLogType === 4 ?
          this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_STATUS)
         : Observable.of(null)
     )
@@ -169,7 +169,7 @@ export class ContactLogTabCardComponent implements OnInit {
     contactLog: IContactLog
   ): IDynamicFormItem[] {
 
-    switch (Number(contactLogType)) {
+    switch (contactLogType) {
       case ContactLogTabCardComponent.CONTACT_TYPE_SMS: return this.createSMSControls(roleOpts, statusOpts);
       case ContactLogTabCardComponent.CONTACT_TYPE_EMAIL: return this.createEmailControls(roleOpts, statusOpts);
       default: return this.createDefaultControls(contactTypeOptions, contactLog, canEditComment);
