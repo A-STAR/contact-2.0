@@ -181,14 +181,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       this.refreshPagination();
       this.clearRangeSelections();
       this.viewportDatasource.params.setRowData(this.rows);
+      this.viewportDatasource.params.setRowCount(this.rows.length);
     }
     if (rowCount) {
-      this.viewportDatasource.params.setRowCount(rowCount.currentValue);
-      this.refreshRowCount();
-      if (rowCount.currentValue) {
-        this.gridOptions.api.hideOverlay();
+      if (this.page > this.getPageCount()) {
+        this.page = this.getPageCount() || 1;
+        this.onPage.emit(this.page);
       } else {
-        this.gridOptions.api.showNoRowsOverlay();
+        this.refreshRowCount();
+        if (this.rowCount) {
+          this.gridOptions.api.hideOverlay();
+        } else {
+          this.gridOptions.api.showNoRowsOverlay();
+        }
       }
     }
   }
@@ -249,7 +254,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.onPage.emit(--this.page);
         break;
       case ToolbarActionTypeEnum.GO_FORWARD:
-        if ((this.page + 1) >= this.getPageCount()) {
+        if (this.page === this.getPageCount()) {
           this.notificationService.info(`No more data can be loaded`).noAlert().dispatch();
           return;
         }
@@ -271,9 +276,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
     const newSize = payload.value[0].value;
+    const lastPage = Math.ceil(this.rowCount / newSize);
+    if (this.page > lastPage) {
+      this.page = lastPage;
+      this.onPage.emit(this.page);
+    }
     // log('new page size', newSize);
     this.pageSize = newSize || this.pageSize;
     this.onPageSize.emit(this.pageSize);
+
+    // TODO(d.maltsev): merge onPage and onPageSize outputs into one to prevent multiple requests
   }
 
   dragStarted(): void {
