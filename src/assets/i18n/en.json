@@ -1750,6 +1750,7 @@
         "contactData": "Contact phone/address",
         "contactDateTime": "Contact date",
         "contactPhone": "Contact phone",
+        "contactEmail": "Contact email",
         "contactType": "Contact type",
         "userFullName": "Operator",
         "promiseDate": "Promise date",
