@@ -4,6 +4,7 @@ import { ICloseAction } from '../../../components/action-grid/action-grid.interf
 
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { OpenDebtCardService } from './debt-card-open.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 import { DialogFunctions } from '../../../../core/dialog';
 
@@ -22,21 +23,22 @@ export class DebtCardOpenComponent extends DialogFunctions implements OnInit {
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private openDebtCardService: OpenDebtCardService,
+    private notificationsService: NotificationsService,
   ) {
     super();
   }
 
   ngOnInit(): void {
     if (!this.personId[0]) {
-      this.setDialog('noPerson');
-      this.cdRef.markForCheck();
+      this.notificationsService.warning('header.noPerson.title').dispatch();
+      this.close.emit();
       return;
     }
 
     this.openDebtCardService.getFirstDebtsByUserId(this.personId[0])
       .subscribe( debtId => {
         if (!debtId) {
-          this.setDialog('noDebts');
+          this.notificationsService.warning('header.noDebt.title').dispatch();
           this.cdRef.markForCheck();
           return;
         }
