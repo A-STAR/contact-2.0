@@ -15,6 +15,7 @@ import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/publishReplay';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
@@ -24,7 +25,7 @@ import { UserTemplatesService } from '../../../../core/user/templates/user-templ
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-import { isEmpty, makeKey, valuesToOptions } from '../../../../core/utils';
+import { isEmpty, makeKey, valuesToOptions, invert } from '../../../../core/utils';
 
 const labelKey = makeKey('modules.contactRegistration.outcome');
 
@@ -45,12 +46,14 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = [
-    { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'select', options: [], disabled: true },
-    { label: labelKey('autoComment'), controlName: 'autoComment', type: 'textarea', rows: 3, disabled: true },
     { label: labelKey('comment'), controlName: 'comment', type: 'textarea', rows: 3, disabled: true },
   ];
   data = {};
   nodes: ITreeNode[];
+
+  autoCommentId: number;
+  autoCommentOptions: IOption[];
+  autoComment: string;
   template: string;
 
   private autoCommentIdSubscription: Subscription;
@@ -68,24 +71,22 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.userTemplatesService.getTemplates(4, 0)
       .map(valuesToOptions)
       .subscribe(autoCommentOptions => {
-        this.getControl('autoCommentId').options = autoCommentOptions;
+        this.autoCommentOptions = autoCommentOptions;
         this.cdRef.markForCheck();
       });
+
+    this.autoCommentIdSubscription = this.hasAutoComment$
+      .filter(invert)
+      .subscribe(() => {
+        this.autoCommentId = null;
+        this.autoComment = null;
+        this.cdRef.markForCheck();
+      });
+
     this.fetchNodes();
   }
 
   ngAfterViewInit(): void {
-    this.autoCommentIdSubscription = this.form.onCtrlValueChange('autoCommentId')
-      .map(value => Array.isArray(value) ? value[0].value : value)
-      .filter(Boolean)
-      .distinctUntilChanged()
-      .flatMap(templateId => {
-        return this.outcomeService
-          .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
-          .catch(() => Observable.of(null));
-      })
-      .subscribe(autoComment => this.updateData('autoComment', autoComment));
-
     this.selectedNodeSubscription = this.selectedNode$
       .distinctUntilChanged()
       .flatMap(selectedNode => {
@@ -110,6 +111,10 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return [1, 2].includes(this.contactTypeCode);
   }
 
+  get hasAutoComment$(): Observable<boolean> {
+    return this.selectedNode$.map(node => node && node.data.autoCommentIds && isEmpty(node.children));
+  }
+
   get canSubmit$(): Observable<boolean> {
     return this.selectedNode$.map(node => node && isEmpty(node.children));
   }
@@ -127,14 +132,6 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.enableField('comment');
     } else {
       this.disableField('comment');
-    }
-
-    if (node.data.autoCommentIds && isEmpty(node.children)) {
-      this.enableField('autoCommentId');
-      this.enableField('autoComment');
-    } else {
-      this.disableField('autoCommentId');
-      this.disableField('autoComment');
     }
   }
 
@@ -155,6 +152,17 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.accordionService.next();
       this.cdRef.markForCheck();
     });
+  }
+
+  onAutoCommentIdChange(option: IOption[]): void {
+    const templateId = Number(option[0].value);
+    this.outcomeService
+      .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
+      .catch(() => Observable.of(null))
+      .subscribe(autoComment => {
+        this.autoComment = autoComment;
+        this.cdRef.markForCheck();
+      });
   }
 
   private buildPayload(contactTypeCode: number, contactId: number): object {
