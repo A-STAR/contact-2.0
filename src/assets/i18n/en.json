@@ -1433,6 +1433,18 @@
         "delete": {
           "title": "Delete email",
           "confirmMessage": "Are you sure you want to delete email {{ email }}?"
+        },
+        "schedule": {
+          "title": "Schedule Email",
+          "text": "Text",
+          "template": "Template",
+          "form": {
+            "senderCode": "Sender",
+            "startDateTime": "Send Date/Time",
+            "subject": "Subject",
+            "templateId": "Email",
+            "text": "Message Text"
+          }
         }
       }
     },

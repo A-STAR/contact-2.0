@@ -1433,6 +1433,18 @@
         "delete": {
           "title": "Удалить email",
           "confirmMessage": "Вы действительно хотите удалить email {{ email }}?"
+        },
+        "schedule": {
+          "title": "Сформировать email",
+          "text": "Текст",
+          "template": "Сценарий",
+          "form": {
+            "senderCode": "Отправитель",
+            "startDateTime": "Дата и время отправки",
+            "subject": "Тема",
+            "templateId": "Email",
+            "text": "Текст сообщения"
+          }
         }
       }
     },

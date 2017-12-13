@@ -1,6 +1,8 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { IDebt } from '../../../../core/app-modules/app-modules.interface';
+
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 
 import { CompanyComponent } from './company/company.component';
@@ -25,6 +27,10 @@ export class DebtorInformationComponent {
   constructor(
     private debtorCardService: DebtorCardService,
   ) {}
+
+  get debt$(): Observable<IDebt> {
+    return this.debtorCardService.selectedDebt$;
+  }
 
   get debtId$(): Observable<number> {
     return this.debtorCardService.selectedDebtId$;
