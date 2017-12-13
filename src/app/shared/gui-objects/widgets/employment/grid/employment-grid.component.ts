@@ -12,7 +12,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { EmploymentService } from '../employment.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -73,7 +72,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
 
   private dialog: string;
 
-  private busSubscription: Subscription;
+  private onSaveSubscription: Subscription;
   private canViewSubscription: Subscription;
 
   gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '500px' };
@@ -82,7 +81,6 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -108,14 +106,14 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.busSubscription = this.messageBusService
-      .select(EmploymentService.MESSAGE_EMPLOYMENT_SAVED)
+    this.onSaveSubscription = this.employmentService
+      .getAction(EmploymentService.MESSAGE_EMPLOYMENT_SAVED)
       .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
     this.selectedEmployment$.complete();
-    this.busSubscription.unsubscribe();
+    this.onSaveSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
   }
 
