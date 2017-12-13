@@ -22,7 +22,7 @@ import { UserTemplatesService } from '../../../../core/user/templates/user-templ
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey, valuesToOptions } from '../../../../core/utils';
-import { IOption } from 'app/core/converter/value-converter.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
 
 const labelKey = makeKey('modules.contactRegistration.misc');
 

@@ -1,20 +1,25 @@
 import { Actions } from '@ngrx/effects';
-import { Subject } from 'rxjs/Subject';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
+import { Subject } from 'rxjs/Subject';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IPledgeContract, IPledgeContractInformation, IContractInformation,
-  IContractProperty, IContractPledgor } from './pledge.interface';
-import { UnsafeAction } from '../../../../core/state/state.interface';
+import {
+  IPledgeContract,
+  IPledgeContractInformation,
+  IContractInformation,
+  IContractProperty,
+  IContractPledgor,
+} from './pledge.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Injectable()
-export class PledgeService {
+export class PledgeService extends AbstractActionService {
   static MESSAGE_PLEDGE_CONTRACT_SAVED = 'MESSAGE_PLEDGE_CONTRACT_SAVED';
   static MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED = 'MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED';
 
@@ -24,12 +29,14 @@ export class PledgeService {
   private contracts$ = new Subject<IPledgeContract[]>();
 
   constructor(
-    private actions: Actions,
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
-    private store: Store<IAppState>,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('PLEDGE_VIEW');
@@ -125,14 +132,5 @@ export class PledgeService {
         `${this.baseUrl}/{contractId}/pledgor/{pledgorId}/property/{propertyId}`,
         { debtId, contractId, pledgorId, propertyId }
       ).catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
-  }
-
-  setPayload(type: string, payload?: any): void {
-    this.store.dispatch({ type, payload });
-  }
-
-  getPayload<T>(type: string): Observable<T> {
-    return this.actions.ofType(type)
-      .map(action => (action as UnsafeAction).payload);
   }
 }

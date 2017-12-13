@@ -12,11 +12,11 @@ import {
 import { IPortfolio } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ValueConverterService } from 'app/core/converter/value-converter.service';
+import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from 'app/core/utils';
+import { makeKey } from '../../../../../core/utils';
 
 const label = makeKey('portfolios.grid');
 
