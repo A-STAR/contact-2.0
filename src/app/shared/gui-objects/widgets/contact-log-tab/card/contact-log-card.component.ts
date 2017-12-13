@@ -25,9 +25,6 @@ const label = makeKey('widgets.contactLog.card');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactLogTabCardComponent implements OnInit {
-  static CONTACT_TYPE_EMAIL = 6;
-  static CONTACT_TYPE_SMS = 4;
-
   @Input() callCenter = false;
   @Input() contactId: number;
   @Input() debtId: number;
@@ -61,6 +58,7 @@ export class ContactLogTabCardComponent implements OnInit {
     )
     .pipe(first())
     .subscribe(([ canEditComment, contactLogType, contactLog, contactTypeOpts, roleOpts, statusOpts ]) => {
+      this.contactLog = contactLog;
       this.controls = this
         .initControls(
           contactTypeOpts,
@@ -70,7 +68,6 @@ export class ContactLogTabCardComponent implements OnInit {
           canEditComment,
           contactLog,
         );
-      this.contactLog = contactLog;
       this.cdRef.markForCheck();
     });
   }
@@ -159,9 +156,9 @@ export class ContactLogTabCardComponent implements OnInit {
 
   private get statusOptions(): Observable<IOption[]> {
     switch (this.contactLogType) {
-      case ContactLogTabCardComponent.CONTACT_TYPE_SMS:
+      case ContactLogService.CONTACT_TYPE_SMS:
         return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_STATUS);
-      case ContactLogTabCardComponent.CONTACT_TYPE_EMAIL:
+      case ContactLogService.CONTACT_TYPE_EMAIL:
         return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_STATUS);
       default:
         return Observable.of(null);
@@ -170,8 +167,8 @@ export class ContactLogTabCardComponent implements OnInit {
 
   private get personRole(): Observable<IOption[]> {
     switch (this.contactLogType) {
-      case ContactLogTabCardComponent.CONTACT_TYPE_SMS:
-      case ContactLogTabCardComponent.CONTACT_TYPE_EMAIL:
+      case ContactLogService.CONTACT_TYPE_SMS:
+      case ContactLogService.CONTACT_TYPE_EMAIL:
         return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE);
       default:
         return Observable.of(null);
@@ -188,9 +185,9 @@ export class ContactLogTabCardComponent implements OnInit {
   ): IDynamicFormItem[] {
 
     switch (contactLogType) {
-      case ContactLogTabCardComponent.CONTACT_TYPE_SMS:
+      case ContactLogService.CONTACT_TYPE_SMS:
         return this.createSMSControls(roleOpts, statusOpts);
-      case ContactLogTabCardComponent.CONTACT_TYPE_EMAIL:
+      case ContactLogService.CONTACT_TYPE_EMAIL:
         return this.createEmailControls(roleOpts, statusOpts);
       default:
         return this.createDefaultControls(contactTypeOptions, contactLog, canEditComment);
