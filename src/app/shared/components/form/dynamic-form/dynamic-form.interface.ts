@@ -7,7 +7,6 @@ import { ILookupKey } from '../../../../core/lookup/lookup.interface';
 import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
 import { ISelectionAction } from '../select/select.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
-import { RichTextEditorComponent } from '../rich-text-editor/rich-text-editor.component';
 
 export interface IValidationMessages {
   [key: string]: string;

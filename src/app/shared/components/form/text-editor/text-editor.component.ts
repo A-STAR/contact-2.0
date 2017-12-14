@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -43,18 +42,15 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     [ 'misc', [ 'codeview' ] ]
   ];
 
-  constructor(
-    private cdRef: ChangeDetectorRef,
-  ) {}
-
   ngOnInit(): void {
     this.element.on('summernote.init', () => this.init.emit(this));
     this.element.on('summernote.blur', () => this.propagateTouch());
-    this.element.on('summernote.change', (_, contents) => {
+    this.element.on('summernote.change', () => {
       const code = this.summernote('code');
       const value = this.richTextMode ? code : jQuery(code).text();
       this.propagateChange(value);
     });
+
     this.summernote({
       height: this.height,
       shortcuts: false,
