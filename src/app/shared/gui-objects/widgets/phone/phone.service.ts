@@ -1,21 +1,29 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IPhone, ISMSSchedule } from './phone.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class PhoneService {
+export class PhoneService extends AbstractActionService {
   static MESSAGE_PHONE_SAVED = 'MESSAGE_PHONE_SAVED';
   baseUrl = '/entityTypes/{entityType}/entities/{entityId}/phones';
   singular = 'entities.phones.gen.singular';
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<IPhone[]> {
     return this.dataService

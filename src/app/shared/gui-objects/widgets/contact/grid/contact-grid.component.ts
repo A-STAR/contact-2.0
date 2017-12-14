@@ -12,7 +12,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { ContactService } from '../contact.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -78,7 +77,6 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private contactService: ContactService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
@@ -103,8 +101,8 @@ export class ContactGridComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.busSubscription = this.messageBusService
-      .select(ContactService.MESSAGE_CONTACT_SAVED)
+    this.busSubscription = this.contactService
+      .getAction(ContactService.MESSAGE_CONTACT_SAVED)
       .subscribe(() => this.fetch());
   }
 
