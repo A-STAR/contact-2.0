@@ -15,7 +15,8 @@ export class VisitAddService {
 
   private baseUrl = '/mass/visits';
 
-  createVisit(ids: number[][], actionData: IMarkForVisitRequest): Observable<any> {
+  createVisit(visitParams: IVisitParams[], actionData: IMarkForVisitRequest): Observable<any> {
+    const ids = visitParams.map(item => [ item.addressId, item.debtId, item.visitPersonRole ]);
     return this.dataService.create(this.baseUrl, {}, { idData: { ids }, actionData })
       .do(res => {
         if (res.success) {

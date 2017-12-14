@@ -48,10 +48,9 @@ export class VisitAddDialogComponent {
   }
 
   onSubmit(): void {
-    const ids = this.visitParams.map(item => [ item.addressId, item.debtId, item.visitPersonRole ]);
     const actionData = this.form.serializedUpdates;
     this.visitAddService
-      .createVisit(ids, actionData)
+      .createVisit(this.visitParams, actionData)
       .subscribe(() => this.onCancel());
   }
 
