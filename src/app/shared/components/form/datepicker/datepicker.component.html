@@ -11,11 +11,10 @@
       (change)="onValueChange($event)"
     />
 
-    <span class="input-group-btn">
+    <span class="input-group-btn" *ngIf="!isDisabled">
       <button
         #trigger
         type="button"
-        [disabled]="isDisabled"
         [ngClass]="buttonClass"
         (click)="toggleCalendar()"
       >
