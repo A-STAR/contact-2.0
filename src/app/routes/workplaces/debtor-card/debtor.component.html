@@ -52,7 +52,10 @@
   </app-tab>
 
   <app-tab [title]="'debtor.identityDocs.title'" [closable]="false" [disabled]="isCompany$ | async">
-    <app-identity-grid *ngIf="tabs[6].isInitialised"></app-identity-grid>
+    <app-identity-grid
+      *ngIf="tabs[6].isInitialised"
+      [personId]="personId$ | async"
+    ></app-identity-grid>
   </app-tab>
 
   <app-tab [title]="'debtor.pledgorsTab.title'" [closable]="false">
@@ -70,7 +73,9 @@
       <app-property-grid
         [personId]="personId$ | async"
       ></app-property-grid>
+
       <app-hdivider></app-hdivider>
+
       <app-debtor-property-attributes></app-debtor-property-attributes>
     </ng-container>
   </app-tab>

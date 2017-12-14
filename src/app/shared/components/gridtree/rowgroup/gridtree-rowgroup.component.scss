@@ -2,9 +2,9 @@
 
 :host {
   display: block;
+  overflow: visible;
   position: relative;
   user-select: none;
-  overflow: visible;
 }
 
 .content {
@@ -24,6 +24,13 @@
     }
     &.is-selected {
       background-color: $app-gridtree-selection-color;
+    }
+    .cell {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+      width: 100%;
     }
   }
 }

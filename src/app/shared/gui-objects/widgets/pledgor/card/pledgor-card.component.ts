@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPledgor } from '../pledgor.interface';
@@ -150,7 +149,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
     form.enable();
     form.patchValue({ typeCode: this.currentTypeCode });
     form.get('typeCode').markAsDirty();
-    this.pledgeService.setPayload(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, {});
+    this.pledgeService.dispatchAction(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, {});
     this.cdRef.markForCheck();
   }
 
@@ -165,7 +164,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
     form.patchValue(pledgor);
     form.get('typeCode').markAsDirty();
     form.disable();
-    this.pledgeService.setPayload(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, pledgor);
+    this.pledgeService.dispatchAction(PledgorService.MESSAGE_PLEDGOR_SELECTION_CHANGED, pledgor);
     this.cdRef.markForCheck();
   }
 

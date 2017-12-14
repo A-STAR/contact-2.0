@@ -11,8 +11,6 @@ import {
 } from './user-dictionaries.interface';
 import { SafeAction } from '../../../core/state/state.interface';
 
-// import { DataService } from 'app/core/data/data.service';
-
 @Injectable()
 export class UserDictionariesService {
   static DICTIONARY_VARIABLE_TYPE                 =  1;
