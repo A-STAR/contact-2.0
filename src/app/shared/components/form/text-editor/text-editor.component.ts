@@ -95,9 +95,10 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   private onChange(): void {
-    const value = this.richTextMode
+    const text = this.elRef.nativeElement.querySelector('.note-editable').innerText.trim();
+    const value = this.richTextMode && text !== ''
       ? this.summernote('code')
-      : this.elRef.nativeElement.querySelector('.note-editable').innerText;
+      : text;
     this.propagateChange(value);
     this.summernote('saveRange');
   }
