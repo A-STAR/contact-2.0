@@ -5,7 +5,6 @@ import { IVisitParams } from './visit-add.interface';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { VisitAddService } from './visit-add.service';
 
 import { makeKey } from '../../../../core/utils';
