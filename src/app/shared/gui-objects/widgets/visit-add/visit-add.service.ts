@@ -15,8 +15,8 @@ export class VisitAddService {
 
   private baseUrl = '/mass/visits';
 
-  createVisit(idData: number[][], actionData: IMarkForVisitRequest): Observable<any> {
-    return this.dataService.create(this.baseUrl, {}, { idData, actionData })
+  createVisit(ids: number[][], actionData: IMarkForVisitRequest): Observable<any> {
+    return this.dataService.create(this.baseUrl, {}, { idData: { ids }, actionData })
       // TODO(m.bobryshev): remove catch once the API is ready
       // .catch(() => Observable.of({ success: true, massInfo: { total: 2, processed: 1 }}))
       .do(res => {
