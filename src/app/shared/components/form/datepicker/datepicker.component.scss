@@ -5,3 +5,7 @@
   padding: 1px 0;
   z-index: $zindex-app-datepicker;
 }
+
+.datepicker > .input-group {
+  width: 100%;
+}
