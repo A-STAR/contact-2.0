@@ -1,24 +1,32 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IEntityGroup } from '../entity-group/entity-group.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Injectable()
-export class EntityGroupService {
+export class EntityGroupService extends AbstractActionService {
   static MESSAGE_ENTITY_GROUP_SELECTED = 'MESSAGE_ENTITY_GROUP_SELECTED';
   static ACTION_ENTITY_GROUP_ADD = 'objectAddToGroup';
 
   private url = '/filters/groups?entityTypeIds={entityTypeId}&isManual={isManual}';
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   getCanAdd$(entityTypeId: number): Observable<boolean> {
     return this.userPermissionsService.contains('ADD_TO_GROUP_ENTITY_LIST', entityTypeId);
