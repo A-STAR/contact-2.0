@@ -102,7 +102,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
         label: labelKey('text'),
         controlName: 'text',
         required: true,
-        type: 'richtexteditor',
+        type: 'texteditor',
         onInit: control => this.control = control,
         toolbar: this.requiresRichTextEditor(this.typeCode),
         disabled: !canEdit,

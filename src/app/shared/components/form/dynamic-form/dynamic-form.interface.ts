@@ -110,6 +110,7 @@ export type TControlTypes =
   | 'singleselectwrapper'
   | 'text'
   | 'textarea'
+  | 'texteditor'
 ;
 
 export interface IValue {
