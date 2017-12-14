@@ -31,8 +31,9 @@ export class EntityGroupService {
   }
 
   addToGroup(entityTypeId: number, groupId: number, debts: number[]): Observable<any> {
+    const ids = debts.map(debtId => [ debtId ]);
     return this.dataService
-      .create(`/mass/entityType/{entityTypeId}/groups/{groupId}/add`, { entityTypeId, groupId }, { idData: { ids: debts } })
+      .create(`/mass/entityType/{entityTypeId}/groups/{groupId}/add`, { entityTypeId, groupId }, { idData: { ids } })
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
