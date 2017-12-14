@@ -43,13 +43,10 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   ];
 
   ngOnInit(): void {
-    this.element.on('summernote.init', () => this.init.emit(this));
-    this.element.on('summernote.blur', () => this.propagateTouch());
-    this.element.on('summernote.change', () => {
-      const code = this.summernote('code');
-      const value = this.richTextMode ? code : jQuery(code).text();
-      this.propagateChange(value);
-    });
+    this.element.on('summernote.init', () => this.onInit());
+    this.element.on('summernote.focus', () => this.onFocus());
+    this.element.on('summernote.blur', () => this.onBlur());
+    this.element.on('summernote.change', () => this.onChange());
 
     this.summernote({
       height: this.height,
@@ -82,7 +79,28 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   insertText(text: string): void {
+    this.summernote('focus');
+    this.summernote('restoreRange');
     this.summernote('insertText', text);
+  }
+
+  private onInit(): void {
+    this.init.emit(this);
+  }
+
+  private onBlur(): void {
+    this.summernote('saveRange');
+  }
+
+  private onFocus(): void {
+    this.propagateTouch();
+  }
+
+  private onChange(): void {
+    const code = this.summernote('code');
+    // const value = this.richTextMode ? code : jQuery(code).text();
+    const value = code;
+    this.propagateChange(value);
   }
 
   private get summernote(): any {
