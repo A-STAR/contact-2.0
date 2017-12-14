@@ -16,7 +16,7 @@
 <app-grid
   columnTranslationKey="widgets.debt.component"
   selectionType="single"
-  [styles]="{ height: '250px' }"
+  [styles]="{ height: callCenter ? '300px': '250px' }"
   [columns]="columns"
   [rows]="components"
   (onSelect)="onSelect($event)"
