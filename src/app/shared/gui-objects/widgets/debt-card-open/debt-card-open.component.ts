@@ -4,6 +4,7 @@ import { ICloseAction } from '../../../components/action-grid/action-grid.interf
 
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { OpenDebtCardService } from './debt-card-open.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 import { DialogFunctions } from '../../../../core/dialog';
 
@@ -13,7 +14,7 @@ import { DialogFunctions } from '../../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtCardOpenComponent extends DialogFunctions implements OnInit {
-  @Input() userId: number[];
+  @Input() personId: number[];
   @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;
@@ -22,25 +23,32 @@ export class DebtCardOpenComponent extends DialogFunctions implements OnInit {
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private openDebtCardService: OpenDebtCardService,
+    private notificationsService: NotificationsService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.openDebtCardService.getFirstDebtsByUserId(this.userId[0])
-    .subscribe( debtId => {
-      if (!debtId) {
-        this.setDialog('noDebts');
-        this.cdRef.markForCheck();
-        return;
-      }
+    if (!this.personId[0]) {
+      this.notificationsService.warning('header.noPerson.title').dispatch();
       this.close.emit();
-      this.debtorCardService.openByDebtId(debtId);
-    });
-   }
+      return;
+    }
 
-   onClose(): void {
-     this.setDialog();
-     this.close.emit();
-   }
+    this.openDebtCardService.getFirstDebtsByUserId(this.personId[0])
+      .subscribe( debtId => {
+        if (!debtId) {
+          this.notificationsService.warning('header.noDebt.title').dispatch();
+          this.cdRef.markForCheck();
+          return;
+        }
+        this.close.emit();
+        this.debtorCardService.openByDebtId(debtId);
+      });
+  }
+
+  onClose(): void {
+    this.setDialog();
+    this.close.emit();
+  }
 }

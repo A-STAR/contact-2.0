@@ -60,7 +60,7 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
       action: 'openUserById',
       label: 'default.grid.actions.openUserById',
       enabled: Observable.of(true),
-      params: [ 'userId' ],
+      params: [ 'personId' ],
     }
   ];
 
