@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, forwardRef, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  forwardRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -13,7 +22,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextEditorComponent implements ControlValueAccessor, OnInit {
+export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @ViewChild('editor') editor: ElementRef;
 
   private isDisabled = false;
@@ -25,6 +34,10 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit {
 
   ngOnInit(): void {
     jQuery(this.editor.nativeElement).summernote();
+  }
+
+  ngOnDestroy(): void {
+    jQuery(this.editor.nativeElement).summernote('destroy');
   }
 
   writeValue(value: string): void {
