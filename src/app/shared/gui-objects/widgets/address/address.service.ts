@@ -1,23 +1,31 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IAddress } from './address.interface';
 import { IAddressMarkData } from './grid/mark/mark.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class AddressService {
+export class AddressService extends AbstractActionService {
   static MESSAGE_ADDRESS_SAVED = 'MESSAGE_ADDRESS_SAVED';
 
   private baseUrl = '/entityTypes/{entityType}/entities/{entityId}/addresses';
   private entity = 'entities.addresses.gen';
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<Array<IAddress>> {
     return this.dataService

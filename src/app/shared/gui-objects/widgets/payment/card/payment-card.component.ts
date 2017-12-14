@@ -10,7 +10,6 @@ import { IPayment } from '../payment.interface';
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PaymentService } from '../payment.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -39,7 +38,6 @@ export class PaymentCardComponent {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private lookupService: LookupService,
-    private messageBusService: MessageBusService,
     private paymentService: PaymentService,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -123,7 +121,7 @@ export class PaymentCardComponent {
       : this.paymentService.create(this.debtId, data, this.callCenter);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PaymentService.MESSAGE_PAYMENT_SAVED);
+      this.paymentService.dispatchAction(PaymentService.MESSAGE_PAYMENT_SAVED);
       this.onBack();
     });
   }

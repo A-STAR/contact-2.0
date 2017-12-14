@@ -12,7 +12,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { PaymentService } from '../payment.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -114,7 +113,6 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private paymentService: PaymentService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -144,8 +142,8 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.busSubscription = this.messageBusService
-      .select(PaymentService.MESSAGE_PAYMENT_SAVED)
+    this.busSubscription = this.paymentService
+      .getAction(PaymentService.MESSAGE_PAYMENT_SAVED)
       .subscribe(() => this.fetch());
   }
 

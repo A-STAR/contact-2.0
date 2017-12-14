@@ -7,7 +7,6 @@ import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynam
 import { IPhone } from '../phone.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PhoneService } from '../phone.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -35,7 +34,6 @@ export class PhoneCardComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
-    private messageBusService: MessageBusService,
     private phoneService: PhoneService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -68,7 +66,7 @@ export class PhoneCardComponent implements OnInit {
       : this.phoneService.create(18, this.entityId, this.callCenter, this.form.serializedUpdates);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PhoneService.MESSAGE_PHONE_SAVED);
+      this.phoneService.dispatchAction(PhoneService.MESSAGE_PHONE_SAVED);
       this.onBack();
     });
   }

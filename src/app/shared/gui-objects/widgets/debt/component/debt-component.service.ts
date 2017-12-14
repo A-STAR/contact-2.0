@@ -1,13 +1,17 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../../../core/state/state.interface';
 import { IDebtComponent } from './debt-component.interface';
 
+import { AbstractActionService } from '../../../../../core/state/action.service';
 import { DataService } from '../../../../../core/data/data.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class DebtComponentService {
+export class DebtComponentService extends AbstractActionService {
   static MESSAGE_DEBT_COMPONENT_SAVED = 'MESSAGE_DEBT_COMPONENT_SAVED';
 
   private errPlural = 'entities.debtComponents.gen.plural';
@@ -16,9 +20,13 @@ export class DebtComponentService {
   private url = '/debts/{debtId}/components';
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   fetchAll(debtId: number, callCenter: boolean): Observable<Array<IDebtComponent>> {
     return this.dataService

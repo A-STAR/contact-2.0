@@ -20,7 +20,6 @@ import { IDebt } from '../../../../../core/debt/debt.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PromiseService } from '../promise.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -81,7 +80,6 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
-    private messageBusService: MessageBusService,
     private promiseService: PromiseService,
     private router: Router,
     private userConstantsService: UserConstantsService,
@@ -216,7 +214,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       : this.promiseService.create(this.debtId, data, this.callCenter);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PromiseService.MESSAGE_PROMISE_SAVED);
+      this.promiseService.dispatchAction(PromiseService.MESSAGE_PROMISE_SAVED);
       this.setDialog();
       this.onBack();
     });
