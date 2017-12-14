@@ -14,7 +14,6 @@ import { GridService } from '../../../../../shared/components/grid/grid.service'
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
 import { DialogFunctions } from '../../../../../core/dialog';
 

@@ -27,7 +27,7 @@ export class DebtorEmploymentComponent {
   }
 
   /**
-   * On some routes, this can be either a personId or a contactId
+   * Depending on the route, this can be either a personId or a contactId
    */
   get personId$(): Observable<number> {
     return Observable

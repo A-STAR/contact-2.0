@@ -15,7 +15,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
-import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-contractor-edit',
