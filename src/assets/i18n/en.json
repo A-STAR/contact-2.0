@@ -1750,6 +1750,7 @@
         "contactData": "Contact phone/address",
         "contactDateTime": "Contact date",
         "contactPhone": "Contact phone",
+        "contactEmail": "Contact email",
         "contactType": "Contact type",
         "userFullName": "Operator",
         "promiseDate": "Promise date",
@@ -2065,6 +2066,10 @@
     "smsDelete": {
       "message": "Are you sure to delete {{ count }} sms?",
       "title": "Delete SMS"
+    },
+    "debtResponsibleClear": {
+      "title": "Clear responsible",
+      "message": "Do you really want to clear responsible operators for the selected debts?"
     }
   },
   "errors": {
@@ -2399,7 +2404,7 @@
     "dialog": {
       "result": {
         "title": "Operation result",
-        "message": "Operation was successful for {{successCount}} of {{count}} records",
+        "message": "Operation was successful for {{processed}} of {{total}} records",
         "messageUnsuccessful": "Unseccessful operation for {{total}} records"
       }
     },

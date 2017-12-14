@@ -1,6 +1,8 @@
-<app-result-dialog
-  *ngIf="isDialog('clearResult')"
-  [count]="count"
-  [successCount]="successCount"
-  (close)="onClose()">
-</app-result-dialog>
+<app-dialog-action
+  actionTranslationKey="massOperations.debtResponsibleClear.message"
+  actionMessage="default.yesNo.Yes"
+  titleTranslationKey="massOperations.debtResponsibleClear.title"
+  (action)="onConfirm()"
+  (cancel)="onCloseDialog()"
+>
+</app-dialog-action>

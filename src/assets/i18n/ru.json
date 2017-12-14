@@ -1750,6 +1750,7 @@
         "contactData": "Контактный телефон/адрес",
         "contactDateTime": "Дата контакта",
         "contactPhone": "Контактный телефон",
+        "contactEmail": "Контактный email",
         "contactType": "Тип контакта",
         "userFullName": "Оператор",
         "resultName": "Результат",
@@ -2065,6 +2066,10 @@
     "smsDelete": {
       "message": "Вы действительно хотите удалить отмеченные {{ count }} SMS?",
       "title": "Удаление SMS"
+    },
+    "debtResponsibleClear": {
+      "title": "Снятие ответственного",
+      "message": "Вы действительно хотите снять ответственных операторов для выбранных долгов?"
     }
   },
   "errors": {
