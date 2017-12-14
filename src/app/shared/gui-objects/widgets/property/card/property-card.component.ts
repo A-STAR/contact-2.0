@@ -10,7 +10,6 @@ import { IOption } from '../../../../../core/converter/value-converter.interface
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PropertyService } from '../property.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
@@ -37,7 +36,6 @@ export class PropertyCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private propertyService: PropertyService,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
   ) {}
@@ -66,7 +64,7 @@ export class PropertyCardComponent implements OnInit {
       : this.propertyService.create(this.personId, this.form.serializedUpdates);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PropertyService.MESSAGE_PROPERTY_SAVED);
+      this.propertyService.dispatchAction(PropertyService.MESSAGE_PROPERTY_SAVED);
       this.onBack();
     });
   }

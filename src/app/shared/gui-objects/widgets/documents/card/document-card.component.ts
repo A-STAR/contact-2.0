@@ -9,7 +9,6 @@ import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynam
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DocumentService } from '../document.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -39,7 +38,6 @@ export class DocumentCardComponent {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private documentService: DocumentService,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
@@ -77,7 +75,7 @@ export class DocumentCardComponent {
       : this.documentService.create(this.entityTypeCode, this.id, document, file, this.callCenter);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(DocumentService.MESSAGE_DOCUMENT_SAVED);
+      this.documentService.dispatchAction(DocumentService.MESSAGE_DOCUMENT_SAVED);
       this.onBack();
     });
   }
