@@ -28,14 +28,16 @@ export class DebtResponsibleService {
   }
 
   setResponsible(debts: number[], operator: IOperator): Observable<IOperationResult> {
+    const ids = debts.map(debtId => [ debtId ]);
     return this.dataService
-      .create('/mass/debts/setResponsible', {}, { idData: { ids: debts }, actionData: { userId: operator.id } })
+      .create('/mass/debts/setResponsible', {}, { idData: { ids }, actionData: { userId: operator.id } })
       .catch(this.notificationsService.error('errors.default.add').entity('entities.operator.gen.singular').dispatchCallback());
   }
 
   clearResponsible(debts: number[]): Observable<IOperationResult> {
+    const ids = debts.map(debtId => [ debtId ]);
     return this.dataService
-      .create('/mass/debts/clearResponsible', {}, { idData: { ids: debts } })
+      .create('/mass/debts/clearResponsible', {}, { idData: { ids } })
       .catch(this.notificationsService.deleteError().entity('entities.operator.gen.singular').dispatchCallback());
   }
 
