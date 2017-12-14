@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 
 import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IOperationResult } from '../../debt-responsible.interface';
@@ -7,10 +7,10 @@ import { DebtResponsibleService } from '../../debt-responsible.service';
 
 @Component({
   selector: 'app-debt-responsible-clear',
-  template: '',
+  templateUrl: './debt-responsible-clear.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DebtResponsibleClearComponent implements OnInit {
+export class DebtResponsibleClearComponent {
 
   @Input() debts: number[];
   @Output() close = new EventEmitter<ICloseAction>();
@@ -19,7 +19,7 @@ export class DebtResponsibleClearComponent implements OnInit {
     private debtResponsibleService: DebtResponsibleService
   ) { }
 
-  ngOnInit(): void {
+  onConfirm(): void {
     this.debtResponsibleService.clearResponsible(this.debts)
       .subscribe(result => this.onOperationResult(result));
   }
@@ -29,7 +29,7 @@ export class DebtResponsibleClearComponent implements OnInit {
     this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
   }
 
-  onClose(): void {
+  onCloseDialog(): void {
     this.close.emit();
   }
 }
