@@ -1,15 +1,18 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
-
+import { IAppState } from '../../../../core/state/state.interface';
 import { IContactLog } from './contact-log.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 
 @Injectable()
-export class ContactLogService {
+export class ContactLogService extends AbstractActionService {
   static COMMENT_CONTACT_LOG_SAVED = 'COMMENT_CONTACT_LOG_SAVED';
 
   private baseUrl = '/persons/{personId}/contacts';
@@ -17,9 +20,13 @@ export class ContactLogService {
   private extUrlSmsMessage = '/debts/{debtId}/sms/{contactsLogId}';
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   fetchAll(personId: number, callCenter: boolean): Observable<Array<IContactLog>> {
     return this.dataService.create(this.baseUrl, { personId }, {}, { params: { callCenter } })

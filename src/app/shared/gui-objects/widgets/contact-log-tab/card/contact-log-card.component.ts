@@ -9,7 +9,6 @@ import { IOption } from '../../../../../core/converter/value-converter.interface
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactLogService } from '../contact-log.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -40,7 +39,6 @@ export class ContactLogTabCardComponent implements OnInit {
     private contentTabService: ContentTabService,
     private contactLogService: ContactLogService,
     private cdRef: ChangeDetectorRef,
-    private messageBusService: MessageBusService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -83,7 +81,7 @@ export class ContactLogTabCardComponent implements OnInit {
   onSubmit(): void {
     this.contactLogService.update(this.debtId, this.contactId, this.form.value.comment)
       .subscribe(() => {
-        this.messageBusService.dispatch(ContactLogService.COMMENT_CONTACT_LOG_SAVED, null, this.contactId );
+        this.contactLogService.dispatchAction(ContactLogService.COMMENT_CONTACT_LOG_SAVED, this.contactId );
         this.onBack();
       });
   }
