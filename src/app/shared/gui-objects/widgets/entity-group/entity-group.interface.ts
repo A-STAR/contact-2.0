@@ -3,3 +3,10 @@ export interface IEntityGroup {
   name: string;
   comment?: string;
 }
+
+export type GridActionType = 'select' | 'dblclick';
+
+export interface IGridAction {
+  type: GridActionType;
+  payload: IEntityGroup;
+}
