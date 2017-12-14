@@ -250,7 +250,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     ctxEvent.event.preventDefault();
     ctxEvent.event.stopPropagation();
 
-    if (!this.contextMenuOptions.length || !this.hasSingleSelection) {
+    if (!this.contextMenuOptions.length || !this._selected.length) {
       return;
     }
 
