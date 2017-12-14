@@ -50,7 +50,6 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
 
     this.summernote({
       height: this.height,
-      shortcuts: false,
       toolbar: this.richTextMode ? this.defaultToolbar : null,
     });
   }
