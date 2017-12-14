@@ -103,7 +103,7 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
       });
 
     this.selectedProperty$.subscribe(property =>
-      this.messageBusService.dispatch(PropertyService.MESSAGE_PROPERTY_SELECTED, null, property)
+      this.propertyService.dispatchAction(PropertyService.MESSAGE_PROPERTY_SELECTED, property)
     );
   }
 

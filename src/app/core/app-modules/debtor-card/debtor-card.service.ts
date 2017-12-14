@@ -1,38 +1,40 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../state/state.interface';
 import { IActionType, IDataStatus } from './debtor-card.interface';
 import { IDebt, IPerson } from '../app-modules.interface';
 
+import { AbstractActionService } from '../../state/action.service';
 import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 
 @Injectable()
-export class DebtorCardService {
+export class DebtorCardService extends AbstractActionService {
   constructor(
+    protected actions: Actions,
     private contentTabService: ContentTabService,
     private router: Router,
-    private store: Store<IAppState>,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   get personId$(): Observable<number> {
     return this.store
-      .select(state => state.debtorCard.person.data && state.debtorCard.person.data.id)
-      .distinctUntilChanged();
+      .select(state => state.debtorCard.person.data && state.debtorCard.person.data.id);
   }
 
   get person$(): Observable<IPerson> {
     return this.store
-      .select(state => state.debtorCard.person.data)
-      .distinctUntilChanged();
+      .select(state => state.debtorCard.person.data);
   }
 
   get selectedDebtId$(): Observable<number> {
     return this.store
-      .select(state => state.debtorCard.selectedDebtId)
-      .distinctUntilChanged();
+      .select(state => state.debtorCard.selectedDebtId);
   }
 
   get selectedDebt$(): Observable<IDebt> {
@@ -47,8 +49,7 @@ export class DebtorCardService {
 
   get debts$(): Observable<IDebt[]> {
     return this.store
-      .select(state => state.debtorCard.debts.data)
-      .distinctUntilChanged();
+      .select(state => state.debtorCard.debts.data);
   }
 
   get isCompany$(): Observable<boolean> {
@@ -67,14 +68,12 @@ export class DebtorCardService {
 
   get hasDebts$(): Observable<boolean> {
     return this.store
-      .select(state => state.debtorCard.debts.status === IDataStatus.LOADED)
-      .distinctUntilChanged();
+      .select(state => state.debtorCard.debts.status === IDataStatus.LOADED);
   }
 
   get hasPerson$(): Observable<boolean> {
     return this.store
-      .select(state => state.debtorCard.person.status === IDataStatus.LOADED)
-      .distinctUntilChanged();
+      .select(state => state.debtorCard.person.status === IDataStatus.LOADED);
   }
 
   get hasLoaded$(): Observable<boolean> {
@@ -108,5 +107,9 @@ export class DebtorCardService {
       type: IActionType.SELECT_DEBT,
       payload: { debtId },
     });
+  }
+
+  refreshDebts(): void {
+    this.store.dispatch({ type: IActionType.REFRESH_DEBTS });
   }
 }

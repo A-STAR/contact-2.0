@@ -13,7 +13,8 @@ export class SmsDeleteService {
 
   private url = '/mass/sms/delete';
 
-  smsDelete(ids: number[]): Observable<any> {
+  smsDelete(smsIds: number[]): Observable<any> {
+    const ids = smsIds.map(id => [ id ]);
     return this.dataService.update(this.url, {}, { idData: { ids } } )
       .do(res => {
         if (!res.success) {

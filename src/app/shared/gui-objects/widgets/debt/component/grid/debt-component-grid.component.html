@@ -10,13 +10,13 @@
     (cancel)="onCloseDialog()">
   </app-dialog-action>
 
-  <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+  <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 </ng-container>
 
 <app-grid
   columnTranslationKey="widgets.debt.component"
   selectionType="single"
-  [styles]="{ height: '200px' }"
+  [styles]="{ height: '250px' }"
   [columns]="columns"
   [rows]="components"
   (onSelect)="onSelect($event)"

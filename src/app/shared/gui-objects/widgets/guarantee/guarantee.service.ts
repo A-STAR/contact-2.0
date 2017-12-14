@@ -6,13 +6,13 @@ import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
 import { IGuaranteeContract } from './guarantee.interface';
-import { SafeAction } from '../../../../core/state/state.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class GuaranteeService {
+export class GuaranteeService extends AbstractActionService {
   static MESSAGE_GUARANTOR_SAVED = 'MESSAGE_GUARANTOR_SAVED';
   static MESSAGE_GUARANTEE_CONTRACT_SAVED = 'MESSAGE_GUARANTEE_CONTRACT_SAVED';
 
@@ -22,11 +22,13 @@ export class GuaranteeService {
   private contracts$ = new Subject<IGuaranteeContract[]>();
 
   constructor(
-    private actions: Actions,
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-    private store: Store<IAppState>,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   fetchAll(debtId: number): Observable<IGuaranteeContract[]> {
     return this.dataService
@@ -66,12 +68,4 @@ export class GuaranteeService {
       .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
 
-  setPayload(type: string, payload?: any): void {
-    this.store.dispatch({ type, payload });
-  }
-
-  getPayload<T>(type: string): Observable<T> {
-    return this.actions.ofType(type)
-      .map((action: SafeAction<T>) => action.payload);
-  }
 }

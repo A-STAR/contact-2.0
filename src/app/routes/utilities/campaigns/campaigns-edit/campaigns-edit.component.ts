@@ -17,7 +17,7 @@ import { IEntityTranslation } from '../../../../core/entity/translations/entity-
 import { INamedValue, IOption } from '../../../../core/converter/value-converter.interface';
 
 import { CampaignsService } from '../campaigns.service';
-import { LookupService } from 'app/core/lookup/lookup.service';
+import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 

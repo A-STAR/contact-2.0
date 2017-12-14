@@ -1,33 +1,43 @@
 <app-block-dialog
-  *ngIf="dialog === 1"
+  *ngIf="isDialog('block')"
   titleTranslationKey="widgets.email.dialogs.block.title"
   labelTranslationKey="widgets.email.dialogs.block.inactiveReasonCode"
   [dictionaryId]="blockDialogDictionaryId"
   (action)="onBlockDialogSubmit($event)"
-  (close)="onDialogClose()">
-</app-block-dialog>
+  (close)="onCloseDialog()"
+></app-block-dialog>
 
 <app-dialog-action
-  *ngIf="dialog === 2"
+  *ngIf="isDialog('unblock')"
   titleTranslationKey="widgets.email.dialogs.unblock.title"
   actionTranslationKey="widgets.email.dialogs.unblock.confirmMessage"
   actionMessage="default.yesNo.Yes"
   actionMode="success"
   [messageParams]="selectedEmail$ | async"
   (action)="onUnblockDialogSubmit()"
-  (cancel)="onDialogClose()">
-</app-dialog-action>
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
+
+<app-email-grid-schedule
+  *ngIf="isDialog('schedule')"
+  [debtId]="debtId$ | async"
+  [personId]="entityId"
+  [personRole]="personRole"
+  [emailId]="selectedEmailId$ | async"
+  (submit)="onScheduleDialogSubmit($event)"
+  (cancel)="onCloseDialog()"
+></app-email-grid-schedule>
 
 <app-dialog-action
-  *ngIf="dialog === 3"
+  *ngIf="isDialog('delete')"
   titleTranslationKey="widgets.email.dialogs.delete.title"
   actionTranslationKey="widgets.email.dialogs.delete.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
   [messageParams]="selectedEmail$ | async"
   (action)="onRemoveDialogSubmit()"
-  (cancel)="onDialogClose()">
-</app-dialog-action>
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
 
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 

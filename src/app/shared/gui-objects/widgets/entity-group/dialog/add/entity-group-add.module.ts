@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
-import { ResultDialogModule } from '../../../../../components/dialog/result/result-dialog.module';
 import { EntityGroupDialogModule } from '../../../entity-group/dialog/entity-group-dialog.module';
 
 import { EntityGroupAddComponent } from './entity-group-add.component';
@@ -12,7 +11,6 @@ import { EntityGroupAddComponent } from './entity-group-add.component';
   imports: [
     CommonModule,
     DialogModule,
-    ResultDialogModule,
     EntityGroupDialogModule,
     TranslateModule,
   ],

@@ -30,19 +30,23 @@ export class UserPermissions {
   }
 
   contains(name: string, value: number): boolean {
-    return this.stringValueContainsAll(name) || this.stringValueContainsNumber(name, value);
+    return this.containsALL(name) || this.stringValueContainsNumber(name, value);
   }
 
   containsOneOf(name: string, values: Array<number>): boolean {
-    return this.stringValueContainsAll(name) || values.reduce((acc, v) => acc || this.stringValueContainsNumber(name, v), false);
+    return this.containsALL(name) || values.reduce((acc, v) => acc || this.stringValueContainsNumber(name, v), false);
   }
 
   containsAllOf(name: string, values: Array<number>): boolean {
-    return this.stringValueContainsAll(name) || values.reduce((acc, v) => acc && this.stringValueContainsNumber(name, v), true);
+    return this.containsALL(name) || values.reduce((acc, v) => acc && this.stringValueContainsNumber(name, v), true);
   }
 
   containsCustom(name: string): boolean {
     return this.stringValueContainsAnyCustomNumber(name);
+  }
+
+  containsALL(name: string): boolean {
+    return this.getStringValue(name) === 'ALL';
   }
 
   private getBooleanValue(name: string): boolean {
@@ -55,10 +59,6 @@ export class UserPermissions {
 
   private getStringValueAsArray(name: string): Array<number> {
     return this.getStringValue(name).split(',').map(Number);
-  }
-
-  private stringValueContainsAll(name: string): boolean {
-    return this.getStringValue(name) === 'ALL';
   }
 
   private stringValueContainsNumber(name: string, value: number): boolean {

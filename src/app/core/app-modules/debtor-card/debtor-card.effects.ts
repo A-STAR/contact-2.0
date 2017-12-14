@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Store, Action } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
-
 import { Observable } from 'rxjs/Observable';
 
 import {
   IActionType,
+  IDebtorCardState,
   IFetchDebtsAction,
   IFetchDebtsSuccessAction,
   IFetchPersonAction,
@@ -14,6 +15,7 @@ import {
   ISelectDebtAction,
 } from './debtor-card.interface';
 import { IDebt, IPerson } from '../app-modules.interface';
+import { IAppState } from '../../state/state.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -65,10 +67,27 @@ export class DebtorCardEffects {
         .catch(this.notificationService.fetchError().entity('entities.debt.gen.plural').callback());
     });
 
+  @Effect()
+  refreshDebts$ = this.actions
+    .ofType(IActionType.REFRESH_DEBTS)
+    .withLatestFrom(this.store.select(state => state.debtorCard))
+    .switchMap(state => {
+      const [_, cardState]: [Action, IDebtorCardState] = state;
+      return [
+        { type: IActionType.FETCH_DEBTS,
+          payload: {
+            personId: cardState.person.data.id,
+            selectedDebtId: cardState.selectedDebtId
+          }
+        } as IFetchDebtsAction
+      ];
+    });
+
   constructor(
     private actions: Actions,
     private dataService: DataService,
     private notificationService: NotificationsService,
+    private store: Store<IAppState>,
   ) {}
 
   private createFetchDebtsAction(personId: number, selectedDebtId: number = null): IFetchDebtsAction {

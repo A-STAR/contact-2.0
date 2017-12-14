@@ -31,6 +31,7 @@
   <app-tabview-tab [title]="tabs[2].title">
     <app-email-grid
       *ngIf="tabs[2].isInitialised"
+      [debt]="debt$ | async"
       [entityId]="personId$ | async"
       [personRole]="1"
     ></app-email-grid>

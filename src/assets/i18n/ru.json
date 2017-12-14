@@ -1433,6 +1433,18 @@
         "delete": {
           "title": "Удалить email",
           "confirmMessage": "Вы действительно хотите удалить email {{ email }}?"
+        },
+        "schedule": {
+          "title": "Сформировать email",
+          "text": "Текст",
+          "template": "Сценарий",
+          "form": {
+            "senderCode": "Отправитель",
+            "startDateTime": "Дата и время отправки",
+            "subject": "Тема",
+            "templateId": "Email",
+            "text": "Текст сообщения"
+          }
         }
       }
     },
@@ -1621,6 +1633,7 @@
     "debt": {
       "toolbar": {
         "call": "Необходимо перезвонить",
+        "changeStatus": "Смена статуса",
         "forRepayment": "К возврату клиентом",
         "withdrawn": "Отозван клиентом",
         "terminate": "Завершить работу с долгом"
@@ -1737,6 +1750,7 @@
         "contactData": "Контактный телефон/адрес",
         "contactDateTime": "Дата контакта",
         "contactPhone": "Контактный телефон",
+        "contactEmail": "Контактный email",
         "contactType": "Тип контакта",
         "userFullName": "Оператор",
         "resultName": "Результат",
@@ -2052,6 +2066,10 @@
     "smsDelete": {
       "message": "Вы действительно хотите удалить отмеченные {{ count }} SMS?",
       "title": "Удаление SMS"
+    },
+    "debtResponsibleClear": {
+      "title": "Снятие ответственного",
+      "message": "Вы действительно хотите снять ответственных операторов для выбранных долгов?"
     }
   },
   "errors": {
@@ -2059,6 +2077,7 @@
       "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
       "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "campaignDebtIsNotProcessed": "Не удалось перейти к следующему долгу. Текущий долг не обработан",
       "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
       "contactPersonNotFound": "Не найдено контактное лицо по ID",
       "constantNotFound": "Запрашиваемая константа не найдена",

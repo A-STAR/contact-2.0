@@ -4,7 +4,6 @@ import { IEntityGroup } from '../entity-group.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 import { EntityGroupService } from '../entity-group.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 
 import { GridComponent } from '../../../../components/grid/grid.component';
 
@@ -28,7 +27,6 @@ export class EntityGroupGridComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private entityGroupService: EntityGroupService,
-    private messageBusService: MessageBusService,
     @Inject('entityTypeId') private entityTypeId: number,
     @Inject('manualGroup') private manualGroup: boolean,
   ) { }
@@ -38,11 +36,15 @@ export class EntityGroupGridComponent implements OnInit {
   }
 
   onSelect(group: IEntityGroup): void {
-    this.messageBusService.dispatch(EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, 'select', group);
+    this.entityGroupService.dispatchAction(
+      EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, { type: 'select', payload: group }
+    );
   }
 
   onDblClick(group: IEntityGroup): void {
-    this.messageBusService.dispatch(EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, 'dblclick', group);
+    this.entityGroupService.dispatchAction(
+      EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, { type: 'dblclick', payload: group }
+    );
   }
 
   private fetch(): void {

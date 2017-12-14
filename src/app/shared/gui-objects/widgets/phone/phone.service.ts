@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IPhone, ISMSSchedule } from './phone.interface';
-import { INamedValue } from '../../../../core/converter/value-converter.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -66,21 +65,6 @@ export class PhoneService {
     return this.dataService
       .create('/debts/{debtId}/sms', { debtId }, schedule)
       .catch(this.notificationsService.createError().entity('entities.sms.gen.singular').dispatchCallback());
-  }
-
-  fetchSMSTemplates(typeCode: number, recipientTypeCode: number, isSingleSending: boolean): Observable<INamedValue[]> {
-    const url = '/lookup/templates/typeCode/{typeCode}/recipientsTypeCode/{recipientTypeCode}?isSingleSending={isSingleSending}';
-    return this.dataService
-      .readAll(url, { typeCode, recipientTypeCode, isSingleSending: Number(isSingleSending) })
-      .catch(this.notificationsService.fetchError().entity('entities.messageTemplate.gen.plural').dispatchCallback());
-  }
-
-  fetchMessageTemplateText(debtId: number, personId: number, personRole: number, templateId: number): Observable<string> {
-    const url = '/debts/{debtId}/persons/{personId}/personRoles/{personRole}/templates/{templateId}';
-    return this.dataService
-      .read(url, { debtId, personId, personRole, templateId })
-      .catch(this.notificationsService.fetchError().entity('entities.messageTemplate.gen.plural').dispatchCallback())
-      .map(response => response.text);
   }
 
   delete(entityType: number, entityId: number, phoneId: number, callCenter: boolean): Observable<void> {

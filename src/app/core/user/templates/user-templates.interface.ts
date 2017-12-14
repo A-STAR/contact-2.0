@@ -1,5 +1,6 @@
 export interface IUserTemplate {
   id: number;
+  isSingleSending: boolean;
   name: string;
 }
 

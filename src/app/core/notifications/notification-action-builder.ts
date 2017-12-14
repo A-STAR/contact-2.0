@@ -1,5 +1,6 @@
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 
@@ -98,26 +99,22 @@ export class NotificationActionBuilder {
 
     if (message.response) {
       const { response } = message;
-      // const { status } = message.response;
-      const status = '';
+      const status = response instanceof HttpErrorResponse ? response.status : null;
+      const responseBody = response instanceof HttpErrorResponse ? response.error : response;
 
-      if (response && response.message) {
-        const { code, payload } = response.message;
-
+      if (responseBody && responseBody.message) {
+        const { code, payload } = responseBody.message;
         const payloadParams = payload
           ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {})
           : {};
-
         const translatedMessageKey = `errors.server.${code}`;
         const translatedMessage = this.translateService.instant(translatedMessageKey, payloadParams);
         if (translatedMessage !== translatedMessageKey) {
           return translatedMessage;
         }
-
-      } else if (response && response.massInfo) {
-        const { massInfo } = response;
+      } else if (responseBody && responseBody.massInfo) {
+        const { massInfo } = responseBody;
         const payloadParams = massInfo || {};
-
         const translatedMessageKey = message.params.entity;
         const translatedMessage = this.translateService.instant(translatedMessageKey, payloadParams);
         if (translatedMessage !== translatedMessageKey) {
