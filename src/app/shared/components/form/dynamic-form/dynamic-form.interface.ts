@@ -73,8 +73,9 @@ export interface IDynamicFormControl {
   // options for radio group
   radioOptions?: Array<IRadioGroupOption>;
   // options for rich text editor
-  onInit?: (control: RichTextEditorComponent) => void;
+  onInit?: Function;
   toolbar?: boolean;
+  richTextMode?: boolean;
   // options for segmented input
   segmentedInputOptions?: ISegmentedInputOption[];
   // min & max value for number input
