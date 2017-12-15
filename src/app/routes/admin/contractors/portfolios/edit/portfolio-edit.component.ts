@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
 
-import { IPortfolio } from '../../contractors-and-portfolios.interface';
+import {
+  IActionType,
+  IPortfolio,
+  IPortfolioCreateAction,
+  IPortfolioEditAction
+} from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -24,7 +27,7 @@ const label = makeKey('portfolios.grid');
   templateUrl: './portfolio-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PortfolioEditComponent implements OnInit {
+export class PortfolioEditComponent implements OnInit, OnDestroy {
   static COMPONENT_NAME = 'PortfolioEditComponent';
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -35,12 +38,13 @@ export class PortfolioEditComponent implements OnInit {
 
   private contractorId: number;
   private portfolioId: number;
+  private selectedEntitiesSub: Subscription;
+  private portfolioChangeSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
-    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -49,29 +53,28 @@ export class PortfolioEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const routeParams = (<any>this.route.params).value;
-    this.contractorId = routeParams.contractorId;
-    this.portfolioId = routeParams.portfolioId;
 
-    combineLatest(
+    this.portfolioChangeSub = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
-      this.contractorId && this.portfolioId
-        ? this.contractorsAndPortfoliosService.readPortfolio(this.contractorId, this.portfolioId)
-        : of(null),
+      this.contractorsAndPortfoliosService.initPortfolioUpdate(this.route),
       this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
     )
-      .pipe(first())
       // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-      .subscribe(([directionOptions, stageOptions, statusOptions, portfolio, canViewAttributes]) => {
+      .subscribe(([directionOptions, stageOptions, statusOptions, action, canViewAttributes]) => {
         this.canViewAttributes = true;
-        this.formData = portfolio
+
+        const editedPortfolio = action.payload && (action as IPortfolioEditAction).payload.selectedPortfolio;
+        this.contractorId = action.payload && (action as IPortfolioCreateAction).payload.selectedContractor.id;
+        this.portfolioId = editedPortfolio && editedPortfolio.id;
+
+        this.formData = editedPortfolio
           ? {
-            ...portfolio,
-            signDate: this.valueConverterService.fromISO(portfolio.signDate),
-            startWorkDate: this.valueConverterService.fromISO(portfolio.startWorkDate),
-            endWorkDate: this.valueConverterService.fromISO(portfolio.endWorkDate),
+            ...editedPortfolio,
+            signDate: this.valueConverterService.fromISO(editedPortfolio.signDate as string),
+            startWorkDate: this.valueConverterService.fromISO(editedPortfolio.startWorkDate as string),
+            endWorkDate: this.valueConverterService.fromISO(editedPortfolio.endWorkDate as string),
           }
           : null;
 
@@ -79,7 +82,7 @@ export class PortfolioEditComponent implements OnInit {
           { label: label('name'), controlName: 'name', type: 'text', required: true },
           {
             label: label('directionCode'), controlName: 'directionCode', type: 'select', required: true,
-            disabled: !!portfolio, options: directionOptions
+            disabled: !!editedPortfolio, options: directionOptions
           },
           {
             label: label('stageCode'), controlName: 'stageCode', type: 'select',
@@ -88,7 +91,7 @@ export class PortfolioEditComponent implements OnInit {
           },
           {
             label: label('statusCode'), controlName: 'statusCode', type: 'select', required: true,
-            disabled: portfolio && portfolio.directionCode === 2, options: statusOptions
+            disabled: editedPortfolio && editedPortfolio.directionCode === 2, options: statusOptions
           },
           { label: label('signDate'), controlName: 'signDate', type: 'datepicker' },
           { label: label('startWorkDate'), controlName: 'startWorkDate', type: 'datepicker' },
@@ -97,6 +100,15 @@ export class PortfolioEditComponent implements OnInit {
         ];
         this.cdRef.markForCheck();
       });
+  }
+
+  ngOnDestroy(): void {
+    if (this.selectedEntitiesSub) {
+      this.selectedEntitiesSub.unsubscribe();
+    }
+    if (this.portfolioChangeSub) {
+      this.portfolioChangeSub.unsubscribe();
+    }
   }
 
   canSubmit(): boolean {
@@ -111,14 +123,17 @@ export class PortfolioEditComponent implements OnInit {
       ? this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio)
       : this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, portfolio));
 
-      action.switchMap(result => this.contractorsAndPortfoliosService.readPortfolios(this.contractorId))
-      .subscribe(() => {
-        this.onBack();
+      action.subscribe(result => {
+        if (result) {
+          this.contractorsAndPortfoliosService
+            .dispatch(IActionType.PORTFOLIO_SAVE);
+          this.onBack();
+        }
       });
   }
 
   onBack(): void {
-    this.contentTabService.navigate('/admin/contractors');
+    this.router.navigate(['/admin/contractors']);
   }
 
   onAttributesClick(): void {

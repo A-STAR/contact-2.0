@@ -44,6 +44,7 @@ import { GridTreeModule } from './components/gridtree/gridtree.module';
 import { GridTreeWrapperModule } from './components/gridtree-wrapper/gridtree-wrapper.module';
 import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
+import { HtmlTextareaModule } from './components/form/html-textarea/html-textarea.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { ListModule } from './components/list/list.module';
@@ -104,6 +105,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridTreeWrapperModule,
     GuiObjectsModule,
     HDividerModule,
+    HtmlTextareaModule,
     ImageUploadModule,
     InfoDialogModule,
     ListModule,
@@ -185,6 +187,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridTreeWrapperModule,
     GuiObjectsModule,
     HDividerModule,
+    HtmlTextareaModule,
     ImageUploadModule,
     InfoDialogModule,
     ListModule,

@@ -26,7 +26,6 @@ import { isEmpty, valuesToOptions, invert } from '../../../../core/utils';
 @Component({
   selector: 'app-contact-registration-outcome',
   templateUrl: './outcome.component.html',
-  styleUrls: [ './outcome.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {

@@ -418,6 +418,21 @@
       },
       "currentJob": {
         "title": "Текущая работа"
+      },
+      "visits": {
+        "title": "Выезды"
+      },
+      "promisePay": {
+        "title": "Обещают заплатить"
+      },
+      "partPay": {
+        "title": "Частично оплатившие"
+      },
+      "problem": {
+        "title": "Проблемные"
+      },
+      "returned": {
+        "title": "Возвращенные"
       }
     },
     "incomingCall": {

@@ -8,6 +8,7 @@ import { DatePickerModule } from '../datepicker/datepicker.module';
 import { DialogMultiSelectModule } from '../dialog-multi-select/dialog-multi-select.module';
 import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { FileUploadModule } from '../file-upload/file-upload.module';
+import { HtmlTextareaModule } from '../html-textarea/html-textarea.module';
 import { ImageUploadModule } from '../image-upload/image-upload.module';
 import { MultiTextModule } from '../multi-text/multi-text.module';
 import { PasswordModule } from '../password/password.module';
@@ -30,6 +31,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     DialogMultiSelectModule,
     DropdownInputModule,
     FileUploadModule,
+    HtmlTextareaModule,
     ImageUploadModule,
     MultiTextModule,
     PasswordModule,
