@@ -1144,7 +1144,7 @@
         "isSingleSending": "Единичная рассылка",
         "recipientTypeCode": "Получатель",
         "subject": "Тема",
-        "format": "Формат"
+        "formatCode": "Формат"
       }
     },
     "campaigns": {

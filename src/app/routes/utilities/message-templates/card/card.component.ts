@@ -123,7 +123,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
         type: 'text',
       },
       {
-        controlName: 'format',
+        controlName: 'formatCode',
         dictCode: UserDictionariesService.DICTIONARY_EMAIL_FORMAT,
         display: isEmail,
         required: true,
