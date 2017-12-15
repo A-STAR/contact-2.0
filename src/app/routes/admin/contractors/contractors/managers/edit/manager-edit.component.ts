@@ -4,7 +4,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IContractorManager } from '../../../contractors-and-portfolios.interface';
+import { IContractorManager, IActionType } from '../../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
@@ -80,7 +80,7 @@ export class ContractorManagerEditComponent implements OnInit {
       : this.contractorsAndPortfoliosService.createManager(this.contractorId, manager);
 
     action.subscribe(() => {
-      this.contractorsAndPortfoliosService.dispatch(ContractorsAndPortfoliosService.MANAGERS_FETCH);
+      this.contractorsAndPortfoliosService.dispatch(IActionType.MANAGER_SAVE);
       this.onBack();
     });
   }
