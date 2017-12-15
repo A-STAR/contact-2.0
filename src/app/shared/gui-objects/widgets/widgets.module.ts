@@ -19,7 +19,6 @@ import { EntityGroupModule } from './entity-group/entity-group.module';
 import { GuaranteeModule } from './guarantee/guarantee.module';
 import { GuarantorModule } from './guarantor/guarantor.module';
 import { IdentityModule } from './identity/identity.module';
-import { MessageTemplateModule } from './message-template/message-template.module';
 import { ObjectModule } from './object/object.module';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
@@ -53,7 +52,6 @@ import { PropertyModule } from './property/property.module';
     GuaranteeModule,
     GuarantorModule,
     IdentityModule,
-    MessageTemplateModule,
     ObjectModule,
     PaymentModule,
     PaymentOperatorModule,
@@ -85,7 +83,6 @@ import { PropertyModule } from './property/property.module';
     GuaranteeModule,
     GuarantorModule,
     IdentityModule,
-    MessageTemplateModule,
     ObjectModule,
     PaymentModule,
     PaymentOperatorModule,

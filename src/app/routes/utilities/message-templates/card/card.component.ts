@@ -10,23 +10,23 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IMessageTemplate } from '../../message-template.interface';
+import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IMessageTemplate } from '../message-templates.interface';
 
-import { MessageTemplateService } from '../../message-template.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
+import { MessageTemplatesService } from '../message-templates.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
-import { TextEditorComponent } from '../../../../../components/form/text-editor/text-editor.component';
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { TextEditorComponent } from '../../../../shared/components/form/text-editor/text-editor.component';
 
-import { makeKey } from '../../../../../../core/utils';
+import { makeKey } from '../../../../core/utils';
 
 const labelKey = makeKey('widgets.messageTemplate.grid');
 
 @Component({
   selector: 'app-message-template-grid-edit',
-  templateUrl: './message-template-grid-edit.component.html',
+  templateUrl: './card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageTemplateGridEditComponent implements OnInit {
@@ -47,7 +47,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private messageTemplateService: MessageTemplateService,
+    private messageTemplatesService: MessageTemplatesService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -55,7 +55,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
   ngOnInit(): void {
     this.canEdit$.subscribe(canEdit => this.initControls(canEdit));
     if (this.templateId) {
-      this.messageTemplateService.fetch(this.templateId).subscribe(template => {
+      this.messageTemplatesService.fetch(this.templateId).subscribe(template => {
         this.template = template;
         this.cdRef.markForCheck();
       });
@@ -109,7 +109,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
       },
     ] as IDynamicFormControl[];
 
-    if (this.typeCode === MessageTemplateService.TYPE_SMS) {
+    if (this.typeCode === MessageTemplatesService.TYPE_SMS) {
       this.controls = [
         ...this.controls,
         {
@@ -139,7 +139,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
   }
 
   private requiresRichTextEditor(typeCode: number): boolean {
-    return typeCode === MessageTemplateService.TYPE_AUTO_COMMENT || typeCode === MessageTemplateService.TYPE_PHONE_CALL;
+    return typeCode === MessageTemplatesService.TYPE_AUTO_COMMENT || typeCode === MessageTemplatesService.TYPE_PHONE_CALL;
   }
 
   private getControl(controlName: string): IDynamicFormControl {
@@ -147,7 +147,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
   }
 
   private fetchVariables(recipientTypeCode: number): void {
-    this.messageTemplateService.fetchVariables(this.typeCode, recipientTypeCode).subscribe(data => {
+    this.messageTemplatesService.fetchVariables(this.typeCode, recipientTypeCode).subscribe(data => {
       this.variables = data;
       this.cdRef.markForCheck();
     });
