@@ -113,7 +113,7 @@ export class MetadataFilterComponent implements OnInit {
     const columnMetadata = this.columnsMetadata.find(column => column.name === key);
     switch (columnMetadata.dataType) {
       case TYPE_CODES.DATETIME:
-        return this.valueConverterService.dateStringToISO(value);
+        return this.valueConverterService.makeRangeFromLocalDate(value);
       default:
         return value;
     }
