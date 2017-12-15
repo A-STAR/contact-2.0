@@ -29,7 +29,6 @@ const labelKey = makeKey('modules.contactRegistration.misc');
 @Component({
   selector: 'app-contact-registration-misc',
   templateUrl: './misc.component.html',
-  styleUrls: [ './misc.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MiscComponent implements OnInit, OnDestroy {
