@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPledgeContract } from '../pledge.interface';
@@ -113,7 +112,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   onFormInit(): void {
     if (this.isAddingPledgor || !this.canEdit) {
       this.form.form.disable();
-      this.cdRef.detectChanges();
+      this.cdRef.markForCheck();
     }
   }
 
