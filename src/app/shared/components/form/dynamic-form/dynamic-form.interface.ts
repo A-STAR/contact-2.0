@@ -75,6 +75,7 @@ export interface IDynamicFormControl {
   onInit?: Function;
   toolbar?: boolean;
   richTextMode?: boolean;
+  codeMode?: boolean;
   // options for segmented input
   segmentedInputOptions?: ISegmentedInputOption[];
   // min & max value for number input

@@ -15,8 +15,8 @@
 
 <app-dialog-action
   *ngIf="isDialog('delete')"
-  titleTranslationKey="widgets.messageTemplate.dialogs.delete.title"
-  actionTranslationKey="widgets.messageTemplate.dialogs.delete.confirmMessage"
+  titleTranslationKey="utilities.messageTemplates.dialogs.delete.title"
+  actionTranslationKey="utilities.messageTemplates.dialogs.delete.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
   [messageParams]="selectedTemplate$ | async"
@@ -30,7 +30,7 @@
 </app-toolbar-2>
 
 <app-grid
-  columnTranslationKey="widgets.messageTemplate"
+  columnTranslationKey="utilities.messageTemplates"
   selectionType="single"
   [columns]="columns"
   [rows]="templates"

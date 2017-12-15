@@ -3,6 +3,7 @@ export interface IMessageTemplate {
   name: string;
   text: string;
   typeCode: number;
-  isSingleSending: number;
-  recipientTypeCode: number;
+  isSingleSending?: number;
+  recipientTypeCode?: number;
+  formatCode?: number;
 }

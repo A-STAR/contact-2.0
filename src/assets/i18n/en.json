@@ -1115,11 +1115,36 @@
       "sms": {
         "title": "SMS"
       },
+      "email": {
+        "title": "Email"
+      },
       "custom": {
         "title": "Custom"
       },
       "autoComment": {
         "title": "Auto Comment"
+      },
+      "dialogs": {
+        "add": {
+          "title": "Create Template"
+        },
+        "edit": {
+          "title": "Edit Template",
+          "variables": "Variables"
+        },
+        "delete": {
+          "title": "Delete Template",
+          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Name",
+        "text": "Text",
+        "isSingleSending": "Send Once",
+        "recipientTypeCode": "Recipient",
+        "subject": "Тема",
+        "formatCode": "Формат"
       }
     },
     "campaigns": {
@@ -1511,28 +1536,6 @@
         "income": "Income",
         "currencyId": "Currency",
         "comment": "Comment"
-      }
-    },
-    "messageTemplate": {
-      "dialogs": {
-        "add": {
-          "title": "Create Template"
-        },
-        "edit": {
-          "title": "Edit Template",
-          "variables": "Variables"
-        },
-        "delete": {
-          "title": "Delete Template",
-          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
-        }
-      },
-      "grid": {
-        "id": "ID",
-        "name": "Name",
-        "text": "Text",
-        "isSingleSending": "Send Once",
-        "recipientTypeCode": "Recipient"
       }
     },
     "object": {
