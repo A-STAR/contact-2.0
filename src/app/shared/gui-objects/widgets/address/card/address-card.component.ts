@@ -9,7 +9,6 @@ import { IOption } from '../../../../../core/converter/value-converter.interface
 
 import { AddressService } from '../address.service';
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -34,7 +33,6 @@ export class AddressCardComponent implements OnInit {
   constructor(
     private addressService: AddressService,
     private contentTabService: ContentTabService,
-    private messageBusService: MessageBusService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -64,7 +62,7 @@ export class AddressCardComponent implements OnInit {
       : this.addressService.create(18, this.entityId, this.callCenter, this.form.value);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(AddressService.MESSAGE_ADDRESS_SAVED);
+      this.addressService.dispatchAction(AddressService.MESSAGE_ADDRESS_SAVED);
       this.onBack();
     });
   }

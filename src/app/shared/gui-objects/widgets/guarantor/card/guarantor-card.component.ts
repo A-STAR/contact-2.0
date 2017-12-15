@@ -110,17 +110,20 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
           title: 'widgets.guarantor.title',
           collapsible: true,
           children: [
+            { label: label('lastName'), controlName: 'lastName', type: 'text', required: true, width: 6 },
             {
               label: label('typeCode'), controlName: 'typeCode', type: 'select',
-              options: typeOpts, required: true, markAsDirty: true
+              options: typeOpts, required: true, markAsDirty: true, width: 6
             },
-            { label: label('lastName'), controlName: 'lastName', type: 'text', required: true },
-            { label: label('firstName'), controlName: 'firstName', type: 'text' },
-            { label: label('middleName'), controlName: 'middleName', type: 'text' },
-            { label: label('birthDate'), controlName: 'birthDate', type: 'datepicker' },
-            { label: label('birthPlace'), controlName: 'birthPlace',  type: 'text' },
-            { label: label('genderCode'), controlName: 'genderCode', type: 'select', options: genderOpts },
-            { label: label('familyStatusCode'), controlName: 'familyStatusCode', type: 'select', options: familyStatusOpts },
+            { label: label('firstName'), controlName: 'firstName', type: 'text', width: 6 },
+            { label: label('middleName'), controlName: 'middleName', type: 'text', width: 6 },
+            { label: label('birthDate'), controlName: 'birthDate', type: 'datepicker', width: 6 },
+            { label: label('birthPlace'), controlName: 'birthPlace',  type: 'text', width: 6 },
+            { label: label('genderCode'), controlName: 'genderCode', type: 'select', options: genderOpts, width: 6 },
+            {
+              label: label('familyStatusCode'), controlName: 'familyStatusCode', type: 'select',
+              options: familyStatusOpts, width: 6
+            },
             { label: label('educationCode'), controlName: 'educationCode', type: 'select', options: familyStatusOpts },
             { label: label('comment'), controlName: 'comment', type: 'textarea' },
           ].concat(allAdditionalControls as any[])

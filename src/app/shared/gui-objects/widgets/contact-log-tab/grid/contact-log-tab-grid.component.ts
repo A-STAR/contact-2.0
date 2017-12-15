@@ -11,7 +11,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { ContactLogService } from '../contact-log.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -69,7 +68,6 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private contactLogService: ContactLogService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
     private router: Router,
@@ -92,7 +90,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.viewCommentUpdate = this.messageBusService.select(ContactLogService.COMMENT_CONTACT_LOG_SAVED)
+    this.viewCommentUpdate = this.contactLogService.getPayload(ContactLogService.COMMENT_CONTACT_LOG_SAVED)
       .flatMap(currentContactLogId => Observable.combineLatest(
           Observable.of(currentContactLogId),
           this.contactLogService.fetchAll(this.personId, this.callCenter)),

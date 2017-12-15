@@ -57,7 +57,10 @@
   (cancel)="onCloseDialog()">
 </app-address-grid-mark>
 
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2
+  [ngClass]="!callCenter ? 'bh' : 'bordered'"
+  [items]="toolbarItems"
+></app-toolbar-2>
 
 <app-grid
   *ngIf="canDisplayGrid"

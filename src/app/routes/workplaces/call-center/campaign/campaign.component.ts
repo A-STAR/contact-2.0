@@ -14,6 +14,15 @@ import { CampaignService } from './campaign.service';
 export class CampaignComponent implements OnInit {
   static COMPONENT_NAME = 'CampaignComponent';
 
+  tabs = [
+    { isInitialised: true },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+    { isInitialised: false },
+  ];
+
   constructor(
     private campaignService: CampaignService,
   ) {}
@@ -24,5 +33,13 @@ export class CampaignComponent implements OnInit {
 
   get hasDebt$(): Observable<boolean> {
     return this.campaignService.campaignDebt$.map(Boolean);
+  }
+
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
+  }
+
+  shouldDisplayTab(tabIndex: number): boolean {
+    return this.tabs[tabIndex].isInitialised;
   }
 }

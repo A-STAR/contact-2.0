@@ -9,7 +9,6 @@ import { INode } from '../../../../../shared/gui-objects/container/container.int
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactService } from '../contact.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -64,7 +63,6 @@ export class ContactCardComponent {
   constructor(
     private contentTabService: ContentTabService,
     private contactService: ContactService,
-    private messageBusService: MessageBusService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -124,7 +122,7 @@ export class ContactCardComponent {
       : this.contactService.create(this.personId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(ContactService.MESSAGE_CONTACT_SAVED);
+      this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);
       this.onBack();
     });
   }
