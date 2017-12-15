@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 import { IPortfolioLogEntry } from '../portfolio-log.interface';
 import { IGridColumn, IRenderer } from '../../../../../components/grid/grid.interface';
@@ -15,7 +15,9 @@ const label = makeKey('widgets.debt');
   templateUrl: './portfolio-log-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PortfolioLogGridComponent {
+export class PortfolioLogGridComponent implements OnInit {
+  @Input() debtId: number;
+
   columns: Array<IGridColumn> = [
     { prop: 'portfolioName', minWidth: 150, maxWidth: 250 },
     { prop: 'fromDate', minWidth: 150, maxWidth: 250 },
@@ -39,10 +41,11 @@ export class PortfolioLogGridComponent {
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private portfolioLogService: PortfolioLogService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    // TODO(a.tymchuk): remove the STUB!
-    this.portfolioLogService.read(1).subscribe(entries => {
+    this.portfolioLogService.read(this.debtId).subscribe(entries => {
       this._entries = entries;
       this.cdRef.markForCheck();
     });
