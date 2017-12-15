@@ -139,6 +139,8 @@ export class PaymentsFilterComponent implements OnInit, OnDestroy {
     switch (control.controlName) {
       case 'userId':
         return 'IN';
+      case 'paymentDateTime':
+        return 'BETWEEN';
       default:
         return '==';
     }
@@ -147,7 +149,9 @@ export class PaymentsFilterComponent implements OnInit, OnDestroy {
   private transformFilterValue(key: string, value: any): any {
     switch (key) {
       case 'paymentDateTime':
-        return this.paymentDateTimeFormat === TYPE_CODES.DATETIME ? this.valueConverterService.dateStringToISO(value) : value;
+        return this.paymentDateTimeFormat === TYPE_CODES.DATETIME
+        ? this.valueConverterService.makeRangeFromLocalDate(this.valueConverterService.dateStringToISO(value))
+        : value;
       default:
         return value;
     }

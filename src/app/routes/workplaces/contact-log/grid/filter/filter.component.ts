@@ -135,6 +135,9 @@ export class FilterComponent implements OnInit {
       case 'outPortfolioId':
       case 'userId':
         return 'IN';
+      case 'createDateTime':
+      case 'receiveDateTime':
+        return 'BETWEEN';
       default:
         return '==';
     }
@@ -143,7 +146,9 @@ export class FilterComponent implements OnInit {
   private transformFilterValue(key: string, value: any): any {
     switch (key) {
       case this.getDateControlName():
-        return this.dateTimeFormat === TYPE_CODES.DATETIME ? this.valueConverterService.dateStringToISO(value) : value;
+        return this.dateTimeFormat === TYPE_CODES.DATETIME
+          ? this.valueConverterService.makeRangeFromLocalDate(this.valueConverterService.dateStringToISO(value))
+          : value;
       default:
         return value;
     }
