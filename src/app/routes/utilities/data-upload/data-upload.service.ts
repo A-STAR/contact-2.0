@@ -14,6 +14,8 @@ import { IMassInfoResponse } from '../../../core/data/data.interface';
 
 @Injectable()
 export class DataUploadService {
+  format = 1;
+
   private guid: number;
 
   private columns = [
@@ -40,7 +42,7 @@ export class DataUploadService {
       cells: [
         { id: 1, value: '2', statusCode: 0, errorMsg: null },
         { id: 2, value: 'Петров Петр Петрович', statusCode: 2, errorMsg: null },
-        { id: 3, value: '2017-02-01T12:30:00', statusCode: 1, errorMsg: null },
+        { id: 3, value: '2017-02-01T12:30:00', statusCode: 0, errorMsg: null },
         { id: 4, value: 'Долг за квартиру', statusCode: 3, errorMsg: null },
         { id: 5, value: 1, statusCode: 0, errorMsg: null },
       ]

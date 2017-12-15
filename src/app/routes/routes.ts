@@ -66,10 +66,6 @@ export const routes: Route[] = [
             path: 'message-templates',
             loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',
           },
-          {
-            path: 'upload-templates',
-            loadChildren: './utilities/payments-upload/payments-upload.module#PaymentsUploadModule',
-          },
         ]
       },
     ]
