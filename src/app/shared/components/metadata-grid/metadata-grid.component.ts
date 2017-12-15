@@ -40,7 +40,6 @@ export class MetadataGridComponent<T> implements OnInit {
   @Input() rowIdKey: string;
   @Input() rows: T[] = [];
   @Input() rowCount: number;
-  @Input() showFilter = true;
 
   @Output() action = new EventEmitter<IAGridAction>();
   @Output() onDblClick = new EventEmitter<T>();
