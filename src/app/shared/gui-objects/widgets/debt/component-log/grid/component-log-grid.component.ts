@@ -43,6 +43,7 @@ export class ComponentLogGridComponent {
         this.cdRef.markForCheck();
       });
 
+    // TODO(d.maltsev): remove the STUB!
     this.componentLogService.readAll(1).subscribe(entries => {
       this.entries = entries;
       this.cdRef.markForCheck();

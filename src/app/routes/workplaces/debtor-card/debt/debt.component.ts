@@ -107,6 +107,10 @@ export class DebtComponent implements OnInit {
     }
   }
 
+  get debtId$(): Observable<number> {
+    return this.debtorCardService.selectedDebtId$;
+  }
+
   onSubmit(): void {
     Observable.combineLatest(
       this.debtorCardService.personId$,
