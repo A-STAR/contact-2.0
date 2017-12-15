@@ -9,12 +9,12 @@ export class MessageTemplatesComponent {
   static COMPONENT_NAME = 'MessageTemplatesComponent';
 
   tabs = [
-    { isInitialised: true,  title: 'utilities.messageTemplates.phoneCall.title', typeCode: 1 },
-    { isInitialised: false, title: 'utilities.messageTemplates.sms.title', typeCode: 2 },
-    { isInitialised: false, title: 'utilities.messageTemplates.email.title', typeCode: 3 },
-    { isInitialised: false, title: 'utilities.messageTemplates.autoComment.title', typeCode: 4 },
-    { isInitialised: false, title: 'utilities.messageTemplates.custom.title', typeCode: 5 },
-  ];
+    { isInitialised: true,  title: 'phoneCall', typeCode: 1 },
+    { isInitialised: false, title: 'sms', typeCode: 2 },
+    { isInitialised: false, title: 'email', typeCode: 3 },
+    { isInitialised: false, title: 'autoComment', typeCode: 4 },
+    { isInitialised: false, title: 'custom', typeCode: 5 },
+  ].map(tab => ({ ...tab, title: `utilities.messageTemplates.${tab.title}.title` }));
 
   shouldDisplayTab(tabIndex: number): boolean {
     return this.tabs[tabIndex].isInitialised;
