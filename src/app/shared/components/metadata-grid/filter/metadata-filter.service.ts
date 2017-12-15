@@ -23,9 +23,12 @@ export class MetadataFilterService {
     return param && param[index];
   }
 
-  getFilterControlType(operator: FilterOperatorType): TControlTypes {
+  getFilterControlType(filterType: string, operator: FilterOperatorType): TControlTypes {
     switch (operator) {
-      case 'IN': return 'dialogmultiselectwrapper';
+      case 'IN':
+        return 'dialogmultiselectwrapper';
+      case 'BETWEEN':
+        return filterType === 'dates' ? 'datepicker' : 'selectwrapper';
       default: return 'selectwrapper';
     }
   }
@@ -34,7 +37,7 @@ export class MetadataFilterService {
     return metadata.map(filterMetadata => (<IFilterControl>{
       label: `default.filters.fields.${filterMetadata.column}`,
       controlName: filterMetadata.column,
-      type: this.getFilterControlType(this.getMetadataValue(filterMetadata, 'operator', 0) as FilterOperatorType),
+      type: this.getFilterControlType(filterMetadata.type, this.getMetadataValue(filterMetadata, 'operator', 0) as FilterOperatorType),
       filterType: filterMetadata.type,
       filterParams: { directionCodes: this.getMetadataParam(filterMetadata, 'direction') },
       dictCode: this.getMetadataValue(filterMetadata, 'dictCode', 0) as number,

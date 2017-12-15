@@ -13,7 +13,6 @@ import { IContactLogEntry } from '../contact-log.interface';
 import { ContactLogService } from '../contact-log.service';
 
 import { ActionGridComponent } from '../../../../shared/components/action-grid/action-grid.component';
-import { FilterComponent } from './filter/filter.component';
 
 @Component({
   selector: 'app-workplaces-contact-log-grid',
@@ -26,7 +25,6 @@ export class GridComponent {
   @Input() gridKey: string;
   @Input() rowIdKey: string;
 
-  @ViewChild(FilterComponent) filter: FilterComponent;
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IContactLogEntry>;
 
   rows: IContactLogEntry[] = [];
@@ -39,7 +37,6 @@ export class GridComponent {
 
   onRequest(): void {
     const filters = this.grid.getFilters();
-    filters.addFilter(this.filter.filters);
     const params = this.grid.getRequestParams();
     this.contactLogService.fetch(this.gridKey, filters, params)
       .subscribe((response: IAGridResponse<IContactLogEntry>) => {
