@@ -418,6 +418,21 @@
       },
       "currentJob": {
         "title": "Current Job"
+      },
+      "visits": {
+        "title": "Visits"
+      },
+      "promisePay": {
+        "title": "Promise pay"
+      },
+      "partPay": {
+        "title": "Part pay"
+      },
+      "problem": {
+        "title": "Problem Debts"
+      },
+      "returned": {
+        "title": "Returned"
       }
     },
     "incomingCall": {
