@@ -1,0 +1,17 @@
+@import '../../../styles/app/variables.scss';
+
+:host ::ng-deep .note-editor {
+  background-image: none;
+  border: 1px solid $gray;
+  margin: 0;
+  padding: 0;
+
+  .note-btn {
+    font-size: $font-size-small;
+  }
+
+  .note-statusbar {
+    background-color: #fff;
+    border-radius: 0;
+  }
+}

@@ -18,7 +18,7 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
-import { RichTextEditorComponent } from '../../../../../components/form/rich-text-editor/rich-text-editor.component';
+import { TextEditorComponent } from '../../../../../components/form/text-editor/text-editor.component';
 
 import { makeKey } from '../../../../../../core/utils';
 
@@ -43,7 +43,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
 
   variables = [];
 
-  private control: RichTextEditorComponent;
+  private editor: TextEditorComponent;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -82,7 +82,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
   }
 
   onInsert(variable: any): void {
-    this.control.insert(variable.name);
+    this.editor.insertText(variable.name);
   }
 
   getId = variable => variable.id;
@@ -102,9 +102,9 @@ export class MessageTemplateGridEditComponent implements OnInit {
         label: labelKey('text'),
         controlName: 'text',
         required: true,
-        type: 'richtexteditor',
-        onInit: control => this.control = control,
-        toolbar: this.requiresRichTextEditor(this.typeCode),
+        type: 'texteditor',
+        onInit: editor => this.editor = editor,
+        richTextMode: this.requiresRichTextEditor(this.typeCode),
         disabled: !canEdit,
       },
     ] as IDynamicFormControl[];
