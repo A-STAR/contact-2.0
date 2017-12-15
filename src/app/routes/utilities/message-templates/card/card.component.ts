@@ -62,7 +62,6 @@ export class MessageTemplateGridEditComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private messageTemplatesService: MessageTemplatesService,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
@@ -106,7 +105,7 @@ export class MessageTemplateGridEditComponent implements OnInit {
   getName = variable => variable.userName;
 
   private initControls(canEdit: boolean): void {
-    const { TYPE_EMAIL, TYPE_SMS, TYPE_AUTO_COMMENT, TYPE_PHONE_CALL, TYPE_CUSTOM } = MessageTemplatesService;
+    const { TYPE_EMAIL, TYPE_SMS, TYPE_AUTO_COMMENT, TYPE_PHONE_CALL } = MessageTemplatesService;
     const displayRecipient = [ TYPE_EMAIL, TYPE_SMS ].includes(this.typeCode);
     const richTextMode = [ TYPE_AUTO_COMMENT, TYPE_PHONE_CALL, TYPE_EMAIL ].includes(this.typeCode);
     const isEmail = this.typeCode === TYPE_EMAIL;
