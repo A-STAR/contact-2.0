@@ -59,6 +59,7 @@ import { RichTextEditorModule } from './components/form/rich-text-editor/rich-te
 import { SpinnerModule } from './components/spinner/spinner.module';
 import { TabstripModule } from './components/tabstrip/tabstrip.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
+import { TextEditorModule } from './components/form/text-editor/text-editor.module';
 import { TimeModule } from './components/form/time/time.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
@@ -118,6 +119,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     SpinnerModule,
     TabstripModule,
     TabViewModule,
+    TextEditorModule,
     ToasterModule,
     ToolbarModule,
     Toolbar2Module,
@@ -201,6 +203,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     SpinnerModule,
     TabstripModule,
     TabViewModule,
+    TextEditorModule,
     ToolbarModule,
     Toolbar2Module,
     TreeModule,
