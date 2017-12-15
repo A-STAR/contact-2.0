@@ -159,6 +159,15 @@ export class MessageTemplateGridEditComponent implements OnInit {
     } else {
       this.fetchVariables(0);
     }
+
+    if (isEmail) {
+      this.template = {
+        ...this.template,
+        formatCode: 1,
+      };
+    }
+
+    this.cdRef.markForCheck();
   }
 
   private fetchVariables(recipientTypeCode: number): void {
