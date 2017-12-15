@@ -23,7 +23,7 @@ import { TextEditorComponent } from '../../../../shared/components/form/text-edi
 
 import { makeKey } from '../../../../core/utils';
 
-const labelKey = makeKey('widgets.messageTemplate.grid');
+const labelKey = makeKey('utilities.messageTemplates.grid');
 
 @Component({
   selector: 'app-message-template-grid-edit',
@@ -48,6 +48,9 @@ export class MessageTemplateGridEditComponent implements OnInit {
    * | Sending Once |      | +   | +     |             |        |
    * | Subject      |      |     | +     |             |        |
    * | Format       |      |     | +     |             |        |
+   *
+   * R - rich text mode
+   * C - code editor mode
    */
   controls: IDynamicFormControl[];
   template: IMessageTemplate;
@@ -105,7 +108,8 @@ export class MessageTemplateGridEditComponent implements OnInit {
   private initControls(canEdit: boolean): void {
     const { TYPE_EMAIL, TYPE_SMS, TYPE_AUTO_COMMENT, TYPE_PHONE_CALL, TYPE_CUSTOM } = MessageTemplatesService;
     const displayRecipient = [ TYPE_EMAIL, TYPE_SMS ].includes(this.typeCode);
-    const richTextMode = [ TYPE_AUTO_COMMENT, TYPE_PHONE_CALL ].includes(this.typeCode);
+    const richTextMode = [ TYPE_AUTO_COMMENT, TYPE_PHONE_CALL, TYPE_EMAIL ].includes(this.typeCode);
+    const isEmail = this.typeCode === TYPE_EMAIL;
 
     this.controls = [
       {
@@ -114,9 +118,23 @@ export class MessageTemplateGridEditComponent implements OnInit {
         type: 'text',
       },
       {
+        controlName: 'subject',
+        display: isEmail,
+        required: true,
+        type: 'text',
+      },
+      {
+        controlName: 'format',
+        dictCode: UserDictionariesService.DICTIONARY_EMAIL_FORMAT,
+        display: isEmail,
+        required: true,
+        type: 'selectwrapper',
+      },
+      {
         controlName: 'text',
         onInit: editor => this.editor = editor,
         required: true,
+        codeMode: isEmail,
         richTextMode,
         type: 'texteditor',
       },

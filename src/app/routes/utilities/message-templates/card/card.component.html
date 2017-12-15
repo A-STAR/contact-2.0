@@ -1,11 +1,11 @@
 <app-dialog (close)="onCancel()">
   <div dialog-header>
-    <h3>{{ 'widgets.messageTemplate.dialogs.edit.title' | translate }}</h3>
+    <h3>{{ 'utilities.messageTemplates.dialogs.edit.title' | translate }}</h3>
   </div>
   <div>
     <app-dynamic-form [controls]="controls" [data]="template"></app-dynamic-form>
     <ng-container *ngIf="canEdit$ | async">
-      <label class="mt">{{ 'widgets.messageTemplate.dialogs.edit.variables' | translate }}</label>
+      <label class="mt">{{ 'utilities.messageTemplates.dialogs.edit.variables' | translate }}</label>
       <app-single-list
         [items]="variables"
         [getId]="getId"

@@ -1115,11 +1115,36 @@
       "sms": {
         "title": "SMS-сообщения"
       },
+      "email": {
+        "title": "Email"
+      },
       "custom": {
         "title": "Специальное"
       },
       "autoComment": {
         "title": "Автоматический комментарий"
+      },
+      "dialogs": {
+        "add": {
+          "title": "Новый шаблон"
+        },
+        "edit": {
+          "title": "Редактирование шаблона",
+          "variables": "Переменные"
+        },
+        "delete": {
+          "title": "Удаление шаблона",
+          "confirmMessage": "Вы действительно хотите удалить шаблон {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Название",
+        "text": "Текст",
+        "isSingleSending": "Единичная рассылка",
+        "recipientTypeCode": "Получатель",
+        "subject": "Тема",
+        "format": "Формат"
       }
     },
     "campaigns": {
@@ -1511,28 +1536,6 @@
         "income": "Доход",
         "currencyId": "Валюта",
         "comment": "Комментарий"
-      }
-    },
-    "messageTemplate": {
-      "dialogs": {
-        "add": {
-          "title": "Новый шаблон"
-        },
-        "edit": {
-          "title": "Редактирование шаблона",
-          "variables": "Переменные"
-        },
-        "delete": {
-          "title": "Удаление шаблона",
-          "confirmMessage": "Вы действительно хотите удалить шаблон {{ name }}?"
-        }
-      },
-      "grid": {
-        "id": "ID",
-        "name": "Название",
-        "text": "Текст",
-        "isSingleSending": "Единичная рассылка",
-        "recipientTypeCode": "Получатель"
       }
     },
     "object": {
