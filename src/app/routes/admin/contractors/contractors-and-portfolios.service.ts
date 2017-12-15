@@ -1,4 +1,3 @@
-import { ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
@@ -14,9 +13,7 @@ import {
   IPortfolioMoveRequest,
   IPortfolioOutsourceRequest,
   IActionType,
-  IContractorAndPorfolioAction,
-  IPortfolioDetailsArgs,
-  IContractorDetailsArgs,
+  IContractorAndPorfolioAction
 } from './contractors-and-portfolios.interface';
 
 import { DataService } from '../../../core/data/data.service';
