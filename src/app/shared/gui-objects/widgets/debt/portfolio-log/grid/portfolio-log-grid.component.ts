@@ -45,7 +45,7 @@ export class PortfolioLogGridComponent implements OnInit {
 
   ngOnInit(): void {
     this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-    this.portfolioLogService.read(this.debtId).subscribe(entries => {
+    this.portfolioLogService.readAll(this.debtId).subscribe(entries => {
       this._entries = entries;
       this.cdRef.markForCheck();
     });
