@@ -150,8 +150,8 @@ export class PaymentsFilterComponent implements OnInit, OnDestroy {
     switch (key) {
       case 'paymentDateTime':
         return this.paymentDateTimeFormat === TYPE_CODES.DATETIME
-        ? this.valueConverterService.makeRangeFromLocalDate(this.valueConverterService.dateStringToISO(value))
-        : value;
+          ? this.valueConverterService.makeRangeFromLocalDate(value)
+          : value;
       default:
         return value;
     }

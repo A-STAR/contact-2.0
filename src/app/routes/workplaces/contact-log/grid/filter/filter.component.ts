@@ -147,7 +147,7 @@ export class FilterComponent implements OnInit {
     switch (key) {
       case this.getDateControlName():
         return this.dateTimeFormat === TYPE_CODES.DATETIME
-          ? this.valueConverterService.makeRangeFromLocalDate(this.valueConverterService.dateStringToISO(value))
+          ? this.valueConverterService.makeRangeFromLocalDate(value)
           : value;
       default:
         return value;
