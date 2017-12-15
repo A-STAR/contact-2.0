@@ -44,6 +44,7 @@ import { GridTreeModule } from './components/gridtree/gridtree.module';
 import { GridTreeWrapperModule } from './components/gridtree-wrapper/gridtree-wrapper.module';
 import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
+import { HtmlTextareaModule } from './components/form/html-textarea/html-textarea.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { ListModule } from './components/list/list.module';
@@ -59,6 +60,7 @@ import { RichTextEditorModule } from './components/form/rich-text-editor/rich-te
 import { SpinnerModule } from './components/spinner/spinner.module';
 import { TabstripModule } from './components/tabstrip/tabstrip.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
+import { TextEditorModule } from './components/form/text-editor/text-editor.module';
 import { TimeModule } from './components/form/time/time.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
@@ -103,6 +105,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridTreeWrapperModule,
     GuiObjectsModule,
     HDividerModule,
+    HtmlTextareaModule,
     ImageUploadModule,
     InfoDialogModule,
     ListModule,
@@ -118,6 +121,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     SpinnerModule,
     TabstripModule,
     TabViewModule,
+    TextEditorModule,
     ToasterModule,
     ToolbarModule,
     Toolbar2Module,
@@ -183,6 +187,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridTreeWrapperModule,
     GuiObjectsModule,
     HDividerModule,
+    HtmlTextareaModule,
     ImageUploadModule,
     InfoDialogModule,
     ListModule,
@@ -201,6 +206,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     SpinnerModule,
     TabstripModule,
     TabViewModule,
+    TextEditorModule,
     ToolbarModule,
     Toolbar2Module,
     TreeModule,

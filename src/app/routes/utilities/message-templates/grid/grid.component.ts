@@ -3,22 +3,22 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IMessageTemplate } from '../message-template.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IMessageTemplate } from '../message-templates.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { GridService } from '../../../../components/grid/grid.service';
-import { MessageTemplateService } from '../message-template.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { GridService } from '../../../../shared/components/grid/grid.service';
+import { MessageTemplatesService } from '../message-templates.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
+import { DialogFunctions } from '../../../../core/dialog';
 
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { combineLatestAnd } from '../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-message-template-grid',
-  templateUrl: './message-template-grid.component.html',
+  templateUrl: './grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageTemplateGridComponent extends DialogFunctions implements OnInit {
@@ -67,7 +67,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
-    private messageTemplateService: MessageTemplateService,
+    private messageTemplatesService: MessageTemplatesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -111,19 +111,19 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   }
 
   onAddDialogSubmit(template: IMessageTemplate): void {
-    this.messageTemplateService.create(template).subscribe(() => this.onSubmitSuccess());
+    this.messageTemplatesService.create(template).subscribe(() => this.onSubmitSuccess());
   }
 
   onEditDialogSubmit(template: IMessageTemplate): void {
-    this.messageTemplateService.update(this.selectedTemplateId$.value, template).subscribe(() => this.onSubmitSuccess());
+    this.messageTemplatesService.update(this.selectedTemplateId$.value, template).subscribe(() => this.onSubmitSuccess());
   }
 
   onDeleteDialogSubmit(): void {
-    this.messageTemplateService.delete(this.selectedTemplateId$.value).subscribe(() => this.onSubmitSuccess());
+    this.messageTemplatesService.delete(this.selectedTemplateId$.value).subscribe(() => this.onSubmitSuccess());
   }
 
   private initColumns(): void {
-    if (this.typeCode === MessageTemplateService.TYPE_SMS) {
+    if (this.typeCode === MessageTemplatesService.TYPE_SMS) {
       this.columns = [
         ...this.columns,
         { prop: 'isSingleSending', maxWidth: 150, renderer: 'checkboxRenderer' },
@@ -143,7 +143,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   }
 
   private fetch(): void {
-    this.messageTemplateService.fetchAll(this.typeCode).subscribe(templates => {
+    this.messageTemplatesService.fetchAll(this.typeCode).subscribe(templates => {
       this.templates = templates;
       if (!templates.find(template => template.id === this.selectedTemplateId$.value)) {
         this.selectedTemplateId$.next(null);

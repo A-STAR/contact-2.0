@@ -25,12 +25,14 @@
       <app-tabview-tab [title]="tabs[1].title">
         <app-portfolio-log-grid
           *ngIf="tabs[1].isInitialised && (canViewPortfolioLog$ | async)"
+          [debtId]="debtId$ | async"
         ></app-portfolio-log-grid>
       </app-tabview-tab>
 
       <app-tabview-tab [title]="tabs[2].title">
         <app-component-log-grid
           *ngIf="tabs[2].isInitialised && (canViewComponentLog$ | async)"
+          [debtId]="debtId$ | async"
         ></app-component-log-grid>
       </app-tabview-tab>
 

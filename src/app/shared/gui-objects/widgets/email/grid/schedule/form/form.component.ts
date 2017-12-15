@@ -134,10 +134,9 @@ export class FormComponent implements OnInit, OnDestroy {
       {
         label: labelKey('text'),
         controlName: 'text',
-        type: 'textarea',
+        type: this.useTemplate ? 'htmltextarea' : 'textarea',
         rows: 5,
-        disabled: this.useTemplate,
-        required: true
+        required: !this.useTemplate
       },
     ] as IDynamicFormControl[];
   }
