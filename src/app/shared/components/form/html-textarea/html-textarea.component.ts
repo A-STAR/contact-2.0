@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-html-textarea',
@@ -19,7 +20,10 @@ export class HtmlTextareaComponent implements ControlValueAccessor {
 
   private _value: string;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private sanitizer: DomSanitizer,
+  ) {}
 
   get ngStyle(): Partial<CSSStyleDeclaration> {
     return {
@@ -32,7 +36,7 @@ export class HtmlTextareaComponent implements ControlValueAccessor {
   }
 
   writeValue(value: string): void {
-    this._value = value;
+    this._value = this.sanitizer.bypassSecurityTrustHtml(value) as string;
     this.cdRef.markForCheck();
   }
 
