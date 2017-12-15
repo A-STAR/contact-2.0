@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
@@ -71,6 +70,14 @@ export class DataUploadComponent extends DialogFunctions {
     // return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
   }
 
+  get format(): number {
+    return this.dataUploadService.format;
+  }
+
+  onFormatChange(format: number): void {
+    this.dataUploadService.format = format;
+  }
+
   onRequest(): void {
     if (this.isFirstRequest) {
       this.isFirstRequest = false;
@@ -123,7 +130,6 @@ export class DataUploadComponent extends DialogFunctions {
     this.dataUploadService
       .openFile(file)
       .flatMap(response => this.getColumnsFromResponse(response).map(columns => ({ response, columns })))
-      .pipe(first())
       .subscribe(({ response, columns }) => {
         this.columns = [ ...columns ];
         // The following line makes grid2 set `initialized = true` internally
