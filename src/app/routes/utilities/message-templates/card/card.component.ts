@@ -71,7 +71,14 @@ export class MessageTemplateGridEditComponent implements OnInit {
       .subscribe(canEdit => this.initControls(canEdit));
     if (this.templateId) {
       this.messageTemplatesService.fetch(this.templateId).subscribe(template => {
-        this.template = template;
+        if (this.typeCode === MessageTemplatesService.TYPE_EMAIL) {
+          this.template = {
+            ...template,
+            formatCode: template.formatCode || 1,
+          };
+        } else {
+          this.template = template;
+        }
         this.cdRef.markForCheck();
       });
     }
@@ -158,13 +165,6 @@ export class MessageTemplateGridEditComponent implements OnInit {
         .subscribe(value => this.fetchVariables(this.form.serializedUpdates.recipientTypeCode || value));
     } else {
       this.fetchVariables(0);
-    }
-
-    if (isEmail) {
-      this.template = {
-        ...this.template,
-        formatCode: 1,
-      };
     }
 
     this.cdRef.markForCheck();
