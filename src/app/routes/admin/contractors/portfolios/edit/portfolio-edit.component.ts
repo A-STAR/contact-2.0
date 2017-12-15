@@ -5,12 +5,11 @@ import { Subscription } from 'rxjs/Subscription';
 
 import {
   IActionType,
-  IPortfolio,
-  IPortfolioCreateAction,
-  IPortfolioEditAction
+  IPortfolio
 } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
+import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -19,6 +18,7 @@ import { ValueConverterService } from '../../../../../core/converter/value-conve
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
+import { Observable } from 'rxjs/Observable';
 
 const label = makeKey('portfolios.grid');
 
@@ -45,6 +45,7 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
+    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -54,19 +55,27 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    const contractorId = parseInt(this.route.snapshot.paramMap.get('contractorId'), 10);
+    const portfolioId = parseInt(this.route.snapshot.paramMap.get('portfolioId'), 10);
+    const getPortfolio$ = portfolioId ? this.contractorsAndPortfoliosService
+      .readPortfolio(contractorId, portfolioId).map(result => ({
+        portfolio: result,
+        contractorId
+      })) : Observable.of({ contractorId });
+
     this.portfolioChangeSub = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
-      this.contractorsAndPortfoliosService.initPortfolioUpdate(this.route),
+      getPortfolio$,
       this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
     )
       // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
       .subscribe(([directionOptions, stageOptions, statusOptions, action, canViewAttributes]) => {
         this.canViewAttributes = true;
 
-        const editedPortfolio = action.payload && (action as IPortfolioEditAction).payload.selectedPortfolio;
-        this.contractorId = action.payload && (action as IPortfolioCreateAction).payload.selectedContractor.id;
+        const editedPortfolio = (action as any).portfolio;
+        this.contractorId = action.contractorId;
         this.portfolioId = editedPortfolio && editedPortfolio.id;
 
         this.formData = editedPortfolio
@@ -133,7 +142,11 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.router.navigate(['/admin/contractors']);
+    this.router.navigate(['/admin/contractors']).then((isSuccess: boolean) => {
+      if (isSuccess) {
+        this.contentTabService.removeTabByPath(/\/admin\/contractors\/(\d+)\/portfolios\/(.+)/);
+      }
+    });
   }
 
   onAttributesClick(): void {

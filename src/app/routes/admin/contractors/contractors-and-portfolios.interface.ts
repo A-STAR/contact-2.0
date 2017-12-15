@@ -84,34 +84,6 @@ export interface IContractorSelectAction {
   };
 }
 
-export interface IContractorEditAction {
-  type: IActionType.CONTRACTOR_EDIT;
-  payload: {
-    selectedContractor: IContractor;
-    selectedPortfolio: IPortfolio;
-  };
-}
-
-export interface IPortfolioCreateAction {
-  type: IActionType.PORTFOLIO_CREATE;
-  payload: {
-    selectedContractor: IContractor;
-  };
-}
-
-export interface IPortfolioEditAction {
-  type: IActionType.PORTFOLIO_EDIT;
-  payload: {
-    selectedContractor: IContractor;
-    selectedPortfolio: IPortfolio;
-  };
-}
-
-export interface IContractorCreateAction {
-  type: IActionType.CONTRACTOR_CREATE;
-  payload: {};
-}
-
 export interface IContractorSaveAction {
   type: IActionType.CONTRACTOR_SAVE;
   payload: {};
@@ -156,16 +128,12 @@ export interface IManagerSelectAction {
 
 export type IContractorAndPorfolioAction =
   IContractorSelectAction |
-  IContractorCreateAction |
-  IContractorEditAction |
   IContractorSaveAction |
   IManagersFetchAction |
   IManagerSaveAction |
   IManagerSelectAction |
   IManagerEditAction |
-  IPortfolioCreateAction |
   IPortfolioSaveAction |
-  IPortfolioEditAction |
   IPortfolioSelectAction;
 
 export interface IContractorsAndPortfoliosState {
