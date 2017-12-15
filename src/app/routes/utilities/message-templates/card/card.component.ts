@@ -9,6 +9,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators/first';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IMessageTemplate } from '../message-templates.interface';
@@ -38,6 +39,16 @@ export class MessageTemplateGridEditComponent implements OnInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  /**
+   * | Control      | Call | SMS | Email | Autocomment | Custom |
+   * | -------------|:----:|:---:|:-----:|:-----------:|:------:|
+   * | Name         | +    | +   | +     | +           | +      |
+   * | Text         | R    | +   | R, C  | R           | +      |
+   * | Recipient    |      | +   | +     |             |        |
+   * | Sending Once |      | +   | +     |             |        |
+   * | Subject      |      |     | +     |             |        |
+   * | Format       |      |     | +     |             |        |
+   */
   controls: IDynamicFormControl[];
   template: IMessageTemplate;
 
@@ -53,7 +64,9 @@ export class MessageTemplateGridEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.canEdit$.subscribe(canEdit => this.initControls(canEdit));
+    this.canEdit$
+      .pipe(first())
+      .subscribe(canEdit => this.initControls(canEdit));
     if (this.templateId) {
       this.messageTemplatesService.fetch(this.templateId).subscribe(template => {
         this.template = template;
@@ -90,60 +103,45 @@ export class MessageTemplateGridEditComponent implements OnInit {
   getName = variable => variable.userName;
 
   private initControls(canEdit: boolean): void {
+    const { TYPE_EMAIL, TYPE_SMS, TYPE_AUTO_COMMENT, TYPE_PHONE_CALL, TYPE_CUSTOM } = MessageTemplatesService;
+    const displayRecipient = [ TYPE_EMAIL, TYPE_SMS ].includes(this.typeCode);
+    const richTextMode = [ TYPE_AUTO_COMMENT, TYPE_PHONE_CALL ].includes(this.typeCode);
+
     this.controls = [
       {
-        label: labelKey('name'),
         controlName: 'name',
-        type: 'text',
         required: true,
-        disabled: !canEdit,
+        type: 'text',
       },
       {
-        label: labelKey('text'),
         controlName: 'text',
-        required: true,
-        type: 'texteditor',
         onInit: editor => this.editor = editor,
-        richTextMode: this.requiresRichTextEditor(this.typeCode),
-        disabled: !canEdit,
+        required: true,
+        richTextMode,
+        type: 'texteditor',
       },
-    ] as IDynamicFormControl[];
+      {
+        controlName: 'recipientTypeCode',
+        dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE,
+        display: displayRecipient,
+        type: 'selectwrapper',
+      },
+      {
+        controlName: 'isSingleSending',
+        display: displayRecipient,
+        type: 'checkbox',
+      },
+    ].map(control => ({ ...control, disabled: !canEdit, label: labelKey(control.controlName) })) as IDynamicFormControl[];
 
-    if (this.typeCode === MessageTemplatesService.TYPE_SMS) {
-      this.controls = [
-        ...this.controls,
-        {
-          label: labelKey('recipientTypeCode'),
-          controlName: 'recipientTypeCode',
-          type: 'select',
-          options: [],
-          disabled: !canEdit
-        },
-        {
-          label: labelKey('isSingleSending'),
-          controlName: 'isSingleSending',
-          type: 'checkbox',
-          disabled: !canEdit
-        },
-      ];
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE)
-        .subscribe(options => this.getControl('recipientTypeCode').options = options);
-
+    if (displayRecipient) {
+      // Detecting changes, otherwise `this.form` will be undefined in `onCtrlValueChange`
       this.cdRef.detectChanges();
-      this.form.onCtrlValueChange('recipientTypeCode').subscribe(value => {
-        this.fetchVariables(this.form.serializedUpdates.recipientTypeCode || value);
-      });
+      this.form
+        .onCtrlValueChange('recipientTypeCode')
+        .subscribe(value => this.fetchVariables(this.form.serializedUpdates.recipientTypeCode || value));
     } else {
       this.fetchVariables(0);
     }
-  }
-
-  private requiresRichTextEditor(typeCode: number): boolean {
-    return typeCode === MessageTemplatesService.TYPE_AUTO_COMMENT || typeCode === MessageTemplatesService.TYPE_PHONE_CALL;
-  }
-
-  private getControl(controlName: string): IDynamicFormControl {
-    return this.controls.find(control => control.controlName === controlName);
   }
 
   private fetchVariables(recipientTypeCode: number): void {
