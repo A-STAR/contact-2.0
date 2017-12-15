@@ -26,21 +26,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDestroy {
+  @Input() codeMode = false;
   @Input() height = 240;
   @Input() richTextMode = true;
 
   @Output() init = new EventEmitter<TextEditorComponent>();
 
   @ViewChild('editor') editor: ElementRef;
-
-  private defaultToolbar = [
-    [ 'style', [ 'bold', 'italic', 'underline' ] ],
-    [ 'font', [ 'strikethrough', 'superscript', 'subscript' ] ],
-    [ 'color', [ 'color' ] ],
-    [ 'para', [ 'ul', 'ol' ] ],
-    [ 'insert', [ 'table' ] ],
-    [ 'misc', [ 'codeview' ] ]
-  ];
 
   constructor(
     private elRef: ElementRef,
@@ -53,7 +45,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
 
     this.summernote({
       height: this.height,
-      toolbar: this.richTextMode ? this.defaultToolbar : null,
+      toolbar: this.richTextMode ? this.initToolbar() : null,
     });
   }
 
@@ -84,6 +76,22 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     this.summernote('focus');
     this.summernote('restoreRange');
     this.summernote('insertText', text);
+  }
+
+  private initToolbar(): any {
+    const toolbar = [
+      [ 'style', [ 'bold', 'italic', 'underline' ] ],
+      [ 'font', [ 'strikethrough', 'superscript', 'subscript' ] ],
+      [ 'color', [ 'color' ] ],
+      [ 'para', [ 'ul', 'ol' ] ],
+      [ 'insert', [ 'table' ] ],
+    ];
+
+    if (this.codeMode) {
+      toolbar.push([ 'misc', [ 'codeview' ] ]);
+    }
+
+    return toolbar;
   }
 
   private onInit(): void {

@@ -322,6 +322,7 @@
       [disabled]="control.disabled"
       [formControlName]="control.controlName"
       [richTextMode]="control.richTextMode"
+      [codeMode]="control.codeMode"
       (init)="control.onInit ? control.onInit($event) : null"
     ></app-text-editor>
   </ng-container>
