@@ -77,7 +77,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
     )
     .pipe(first())
     .subscribe(([ contracts, typeOptions, canEdit, pledgeContract ]) => {
-      this.initControls(canEdit, typeOptions);
+      this.controls = this.getControls(canEdit, typeOptions);
       this.contract = pledgeContract;
       this.canEdit = canEdit;
     });
@@ -164,8 +164,8 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private initControls(canEdit: boolean, typeOptions: IOption[]): void {
-    this.controls = [
+  private getControls(canEdit: boolean, typeOptions: IOption[]): IDynamicFormGroup[] {
+    const controls = [
       {
         title: 'widgets.pledgeContract.title', collapsible: true,
         children: [
@@ -186,7 +186,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
       }
     ];
 
-    this.controls = this.controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
+    return controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
   }
 
   private getFormData(): Partial<IPledgeContract> {
