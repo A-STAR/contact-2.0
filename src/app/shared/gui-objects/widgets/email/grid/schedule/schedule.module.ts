@@ -3,29 +3,29 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
-import { DropdownInputModule } from '../../../../../components/form/dropdown/dropdown-input.module';
 import { DynamicFormModule } from '../../../../../components/form/dynamic-form/dynamic-form.module';
-import { ListModule } from '../../../../../components/list/list.module';
+import { FormModule } from './form/form.module';
+import { TabViewModule } from '../../../../../components/layout/tabview/tabview.module';
 
-import { MessageTemplateGridEditComponent } from './message-template-grid-edit.component';
+import { ScheduleComponent } from './schedule.component';
 
 @NgModule({
   imports: [
     CommonModule,
     DialogModule,
-    DropdownInputModule,
     DynamicFormModule,
-    ListModule,
+    FormModule,
+    TabViewModule,
     TranslateModule,
   ],
   exports: [
-    MessageTemplateGridEditComponent,
+    ScheduleComponent,
   ],
   declarations: [
-    MessageTemplateGridEditComponent,
+    ScheduleComponent,
   ],
   entryComponents: [
-    MessageTemplateGridEditComponent,
+    ScheduleComponent,
   ]
 })
-export class MessageTemplateGridEditModule { }
+export class ScheduleModule { }

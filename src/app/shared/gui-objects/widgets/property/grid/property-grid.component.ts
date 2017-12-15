@@ -11,7 +11,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { PropertyService } from '../property.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -70,7 +69,6 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
     private cdRef: ChangeDetectorRef,
     private propertyService: PropertyService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private router: Router,
   ) {
@@ -95,15 +93,15 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
         }
       });
 
-    this.busSubscription = this.messageBusService
-      .select(PropertyService.MESSAGE_PROPERTY_SAVED)
+    this.busSubscription = this.propertyService
+      .getAction(PropertyService.MESSAGE_PROPERTY_SAVED)
       .subscribe(() => {
         this.fetch();
         this.selectedProperty$.next(this.selectedProperty);
       });
 
     this.selectedProperty$.subscribe(property =>
-      this.messageBusService.dispatch(PropertyService.MESSAGE_PROPERTY_SELECTED, null, property)
+      this.propertyService.dispatchAction(PropertyService.MESSAGE_PROPERTY_SELECTED, property)
     );
   }
 

@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuaranteeContract, IGuarantor } from '../guarantee.interface';
@@ -90,12 +89,12 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
           title: 'widgets.guaranteeContract.title', collapsible: true,
           children: [
             { label: label('personId'), controlName: 'personId',  type: 'number', required: true, display: false },
-            { label: label('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true },
-            { label: label('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', },
-            { label: label('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', },
+            { label: label('contractNumber'), controlName: 'contractNumber',  type: 'text', required: true, width: 6 },
+            { label: label('contractStartDate'), controlName: 'contractStartDate', type: 'datepicker', width: 6 },
+            { label: label('contractEndDate'), controlName: 'contractEndDate', type: 'datepicker', width: 6 },
             {
               label: label('contractTypeCode'), controlName: 'contractTypeCode',
-              type: 'select', options: respTypeOpts, required: true
+              type: 'select', options: respTypeOpts, required: true, width: 6
             },
             { label: label('comment'), controlName: 'comment', type: 'textarea', },
           ]
@@ -144,7 +143,7 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
         : this.guaranteeService.update(this.debtId, this.contractId, data);
 
     action.subscribe(() => {
-      this.guaranteeService.setPayload(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
+      this.guaranteeService.dispatchAction(GuaranteeService.MESSAGE_GUARANTEE_CONTRACT_SAVED);
       this.onBack();
     });
   }

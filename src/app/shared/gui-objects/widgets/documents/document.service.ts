@@ -1,13 +1,17 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IDocument } from './document.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class DocumentService {
+export class DocumentService extends AbstractActionService {
   // TODO(d.maltsev): merge entity attributes service and entity translations service
   // and move entities there
   static ENTITY_CONTRACTOR = 13;
@@ -23,9 +27,13 @@ export class DocumentService {
   private errSingular = 'entities.documents.gen.singular';
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   fetchAll(entityType: number, entityId: number, callCenter: boolean): Observable<Array<IDocument>> {
     const url = this.getFetchUrl(entityType);

@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPledgeContract } from '../pledge.interface';
@@ -77,7 +76,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
     )
     .pipe(first())
     .subscribe(([ contracts, typeOptions, canEdit, pledgeContract ]) => {
-      this.initControls(canEdit, typeOptions);
+      this.controls = this.getControls(canEdit, typeOptions);
       this.contract = pledgeContract;
       this.canEdit = canEdit;
     });
@@ -113,7 +112,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   onFormInit(): void {
     if (this.isAddingPledgor || !this.canEdit) {
       this.form.form.disable();
-      this.cdRef.detectChanges();
+      this.cdRef.markForCheck();
     }
   }
 
@@ -159,13 +158,13 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
         );
 
     action.subscribe(() => {
-      this.pledgeService.setPayload(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
+      this.pledgeService.dispatchAction(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
       this.onBack();
     });
   }
 
-  private initControls(canEdit: boolean, typeOptions: IOption[]): void {
-    this.controls = [
+  private getControls(canEdit: boolean, typeOptions: IOption[]): IDynamicFormGroup[] {
+    const controls = [
       {
         title: 'widgets.pledgeContract.title', collapsible: true,
         children: [
@@ -186,7 +185,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
       }
     ];
 
-    this.controls = this.controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
+    return controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
   }
 
   private getFormData(): Partial<IPledgeContract> {

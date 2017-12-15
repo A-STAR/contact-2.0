@@ -51,6 +51,7 @@ export class CallCenterComponent {
 
   onSubmit(): void {
     if (!isEmpty(this.selection)) {
+      // TODO(d.maltsev): check using resolver if the campaign is active before redirecting
       this.callCenterService.navigateToCampaign(this.selection[0]);
     }
   }

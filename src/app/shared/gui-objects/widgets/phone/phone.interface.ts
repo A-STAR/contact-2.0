@@ -1,21 +1,21 @@
 // See: http://confluence.luxbase.int:8090/display/WEB20/Phones
 export interface IPhone {
+  comment: string;
   id: number;
+  inactiveDateTime: Date | string;
+  inactiveReasonCode: number;
+  isInactive: boolean | number;
   phone: string;
   phoneInternational: string;
-  typeCode: number;
   statusCode: number;
-  isInactive: boolean | number;
-  inactiveReasonCode: number;
-  inactiveDateTime: Date | string;
-  stopAutoSms: number;
   stopAutoInfo: number;
-  comment: string;
+  stopAutoSms: number;
+  typeCode: number;
 }
 
 export interface ISMSSchedule {
-  templateId?: number;
   senderCode: number;
   startDateTime: Date;
+  templateId?: number;
   text?: string;
 }

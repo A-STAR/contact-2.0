@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '../../../../../components/dialog/dialog.module';
 import { DynamicFormModule } from '../../../../../components/form/dynamic-form/dynamic-form.module';
 import { PhoneGridScheduleFormModule } from './form/phone-grid-schedule-form.module';
-import { TabstripModule } from '../../../../../components/tabstrip/tabstrip.module';
+import { TabViewModule } from '../../../../../components/layout/tabview/tabview.module';
 
 import { PhoneGridScheduleComponent } from './phone-grid-schedule.component';
 
@@ -15,7 +15,7 @@ import { PhoneGridScheduleComponent } from './phone-grid-schedule.component';
     DialogModule,
     DynamicFormModule,
     PhoneGridScheduleFormModule,
-    TabstripModule,
+    TabViewModule,
     TranslateModule,
   ],
   exports: [

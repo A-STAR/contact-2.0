@@ -11,6 +11,9 @@
       "userId": "User Id",
       "title": "No debts"
     },
+    "noPerson": {
+      "title": "Отсутствует должник"
+    },
     "account": {
       "title": "Account",
       "logout": "Logout",
@@ -1112,11 +1115,36 @@
       "sms": {
         "title": "SMS"
       },
+      "email": {
+        "title": "Email"
+      },
       "custom": {
         "title": "Custom"
       },
       "autoComment": {
         "title": "Auto Comment"
+      },
+      "dialogs": {
+        "add": {
+          "title": "Create Template"
+        },
+        "edit": {
+          "title": "Edit Template",
+          "variables": "Variables"
+        },
+        "delete": {
+          "title": "Delete Template",
+          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Name",
+        "text": "Text",
+        "isSingleSending": "Send Once",
+        "recipientTypeCode": "Recipient",
+        "subject": "Тема",
+        "formatCode": "Формат"
       }
     },
     "campaigns": {
@@ -1433,6 +1461,18 @@
         "delete": {
           "title": "Delete email",
           "confirmMessage": "Are you sure you want to delete email {{ email }}?"
+        },
+        "schedule": {
+          "title": "Schedule Email",
+          "text": "Text",
+          "template": "Template",
+          "form": {
+            "senderCode": "Sender",
+            "startDateTime": "Send Date/Time",
+            "subject": "Subject",
+            "templateId": "Email",
+            "text": "Message Text"
+          }
         }
       }
     },
@@ -1496,28 +1536,6 @@
         "income": "Income",
         "currencyId": "Currency",
         "comment": "Comment"
-      }
-    },
-    "messageTemplate": {
-      "dialogs": {
-        "add": {
-          "title": "Create Template"
-        },
-        "edit": {
-          "title": "Edit Template",
-          "variables": "Variables"
-        },
-        "delete": {
-          "title": "Delete Template",
-          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
-        }
-      },
-      "grid": {
-        "id": "ID",
-        "name": "Name",
-        "text": "Text",
-        "isSingleSending": "Send Once",
-        "recipientTypeCode": "Recipient"
       }
     },
     "object": {
@@ -1620,10 +1638,11 @@
     },
     "debt": {
       "toolbar": {
-        "call": "Call Back",
-        "forRepayment": "For Repayment",
-        "withdrawn": "Withdrawn by Client",
-        "terminate": "Terminate Work"
+        "call": "Next call",
+        "changeStatus": "Change status",
+        "forRepayment": "For repayment",
+        "withdrawn": "Withdrawn by client",
+        "terminate": "Close debt"
       },
       "grid": {
         "account": "Account",
@@ -1737,6 +1756,7 @@
         "contactData": "Contact phone/address",
         "contactDateTime": "Contact date",
         "contactPhone": "Contact phone",
+        "contactEmail": "Contact email",
         "contactType": "Contact type",
         "userFullName": "Operator",
         "promiseDate": "Promise date",
@@ -2052,6 +2072,10 @@
     "smsDelete": {
       "message": "Are you sure to delete {{ count }} sms?",
       "title": "Delete SMS"
+    },
+    "debtResponsibleClear": {
+      "title": "Clear responsible",
+      "message": "Do you really want to clear responsible operators for the selected debts?"
     }
   },
   "errors": {
@@ -2059,6 +2083,8 @@
       "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
       "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "campaignDebtIsNotProcessed": "Could not go to next debt. Current debt is not processed.",
+      "campaignIsFinished": "This campaign has already been closed",
       "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
       "contactPersonNotFound": "Не найдено контактное лицо по ID",
       "constantNotFound": "Запрашиваемая константа не найдена",
@@ -2385,7 +2411,7 @@
     "dialog": {
       "result": {
         "title": "Operation result",
-        "message": "Operation was successful for {{successCount}} of {{count}} records",
+        "message": "Operation was successful for {{processed}} of {{total}} records",
         "messageUnsuccessful": "Unseccessful operation for {{total}} records"
       }
     },

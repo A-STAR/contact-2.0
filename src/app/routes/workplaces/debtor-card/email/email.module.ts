@@ -14,6 +14,5 @@ import { DebtorEmailComponent } from './email.component';
   declarations: [
     DebtorEmailComponent
   ],
-  providers: [],
 })
 export class DebtorEmailModule { }

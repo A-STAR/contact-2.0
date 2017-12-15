@@ -12,7 +12,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../components/too
 import { DebtComponentService } from '../debt-component.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
-import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
@@ -87,7 +86,6 @@ export class DebtComponentGridComponent implements OnDestroy {
     private debtComponentService: DebtComponentService,
     private gridService: GridService,
     private lookupService: LookupService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
@@ -118,8 +116,8 @@ export class DebtComponentGridComponent implements OnDestroy {
       }
     });
 
-    this.busSubscription = this.messageBusService
-      .select(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED)
+    this.busSubscription = this.debtComponentService
+      .getAction(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED)
       .subscribe(() => this.fetch());
   }
 

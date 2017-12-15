@@ -1,6 +1,6 @@
 {
   "name": "contact2",
-  "version": "0.1.15",
+  "version": "0.2.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -64,6 +64,7 @@
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.5.2",
     "simple-line-icons": "^2.4.1",
+    "summernote": "^0.8.8",
     "text-mask-addons": "^3.6.0",
     "weather-icons": "github:erikflowers/weather-icons",
     "web-animations-js": "^2.3.1",

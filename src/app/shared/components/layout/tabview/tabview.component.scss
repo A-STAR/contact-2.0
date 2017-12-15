@@ -1,3 +1,5 @@
+@import '../../../styles/app/variables.scss';
+
 ul {
   font-size: 0;
   position: relative;
@@ -5,7 +7,7 @@ ul {
   width: 100%;
   margin: 0 0 10px 0;
   user-select: none;
-  border-bottom: 1px solid #c5c5c5;
+  border-bottom: 1px solid $gray-light;
   &.no-margin {
     margin-bottom: 0;
   }
@@ -30,8 +32,15 @@ li {
       background-color: #1a8ada;
     }
   }
+  &.disabled {
+    cursor: default;
+    a {
+      color: $navbar-default-link-disabled-color;
+      cursor: default;
+    }
+  }
   a {
-    color: #222222;
+    color: $text-color;
     text-decoration: none;
   }
   .selection {

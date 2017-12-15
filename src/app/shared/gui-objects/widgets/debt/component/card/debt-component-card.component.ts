@@ -10,7 +10,6 @@ import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dy
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtComponentService } from '../debt-component.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
-import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
@@ -32,7 +31,6 @@ export class DebtComponentCardComponent {
     private contentTabService: ContentTabService,
     private debtComponentService: DebtComponentService,
     private lookupService: LookupService,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
   ) {
@@ -76,7 +74,7 @@ export class DebtComponentCardComponent {
       : this.debtComponentService.create(this.debtId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED);
+      this.debtComponentService.dispatchAction(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED);
       this.onBack();
     });
   }

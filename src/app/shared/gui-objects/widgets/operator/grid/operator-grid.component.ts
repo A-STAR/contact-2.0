@@ -4,7 +4,6 @@ import { IOperator } from '../../operator/operator.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 import { OperatorService } from '../operator.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 
 import { GridComponent } from '../../../../components/grid/grid.component';
 
@@ -30,7 +29,6 @@ export class OperatorGridComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private operatorService: OperatorService,
-    private messageBusService: MessageBusService,
   ) { }
 
   ngOnInit(): void {
@@ -38,11 +36,11 @@ export class OperatorGridComponent implements OnInit {
   }
 
   onSelect(operator: IOperator): void {
-    this.messageBusService.dispatch(OperatorService.MESSAGE_OPERATOR_SELECTED, 'select', operator);
+    this.operatorService.dispatchAction(OperatorService.MESSAGE_OPERATOR_SELECTED, { type: 'select', payload: operator });
   }
 
   onDblClick(operator: IOperator): void {
-    this.messageBusService.dispatch(OperatorService.MESSAGE_OPERATOR_SELECTED, 'dblclick', operator);
+    this.operatorService.dispatchAction(OperatorService.MESSAGE_OPERATOR_SELECTED, { type: 'dblclick', payload: operator });
   }
 
   private fetch(searchParams: object = {}): void {

@@ -12,7 +12,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { PromiseService } from '../promise.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -99,7 +98,6 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private promiseService: PromiseService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -127,8 +125,8 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.busSubscription = this.messageBusService
-      .select(PromiseService.MESSAGE_PROMISE_SAVED)
+    this.busSubscription = this.promiseService
+      .getAction(PromiseService.MESSAGE_PROMISE_SAVED)
       .subscribe(() => this.fetch());
   }
 

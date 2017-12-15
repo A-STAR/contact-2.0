@@ -1,12 +1,12 @@
 <app-debt-grid-status-dialog
-  *ngIf="(dialog$ | async) === 1"
+  *ngIf="isDialog('changeStatus')"
   [debt]="selectedDebt$ | async"
   (submit)="onChangeStatusDialogSubmit()"
   (close)="onDialogClose()">
 </app-debt-grid-status-dialog>
 
 <app-debt-grid-close-dialog
-  *ngIf="(dialog$ | async) === 2"
+  *ngIf="isDialog('closeDebt')"
   [debt]="selectedDebt$ | async"
   [statusCode]="debtCloseDialogStatus$ | async"
   (submit)="onCloseDialogSubmit()"
@@ -14,9 +14,9 @@
 </app-debt-grid-close-dialog>
 
 <app-debt-grid-call-dialog
-  *ngIf="(dialog$ | async) === 3"
+  *ngIf="isDialog('nextCall')"
   [debt]="selectedDebt$ | async"
-  (submit)="onCallDialogSubmit()"
+  (submit)="onCloseDialogSubmit()"
   (close)="onDialogClose()">
 </app-debt-grid-call-dialog>
 

@@ -27,8 +27,7 @@ export class OutcomeService {
     const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/scenarios';
     return this.dataService
       .read(url, { debtId, contactType, treeResultId })
-      .map(response => response.text)
-      .catch(this.notificationsService.fetchError().entity('entities.scenarios.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.scenarios.gen.singular').dispatchCallback());
   }
 
   fetchAutoComment(debtId: number, personId: number, personRole: number, templateId: number): Observable<string> {

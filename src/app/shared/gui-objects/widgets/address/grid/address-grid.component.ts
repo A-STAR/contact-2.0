@@ -17,7 +17,6 @@ import { AddressService } from '../address.service';
 import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../../../../core/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -151,7 +150,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private contentTabService: ContentTabService,
     private debtService: DebtService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
@@ -178,8 +176,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    this.busSubscription = this.messageBusService
-      .select(AddressService.MESSAGE_ADDRESS_SAVED)
+    this.busSubscription = this.addressService
+      .getAction(AddressService.MESSAGE_ADDRESS_SAVED)
       .subscribe(() => this.fetch());
 
     this.canViewSubscription = Observable

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IMessageTemplate } from './message-template.interface';
+import { IMessageTemplate } from './message-templates.interface';
 
-import { DataService } from '../../../../core/data/data.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { DataService } from '../../../core/data/data.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Injectable()
-export class MessageTemplateService {
+export class MessageTemplatesService {
   static TYPE_PHONE_CALL = 1;
   static TYPE_SMS = 2;
   static TYPE_EMAIL = 3;
