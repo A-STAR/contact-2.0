@@ -96,6 +96,7 @@ export type TControlTypes =
   | 'file'
   | 'gridselect'
   | 'hidden'
+  | 'htmltextarea'
   | 'image'
   | 'multiselect'
   | 'multiselectwrapper'

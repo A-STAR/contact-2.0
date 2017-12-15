@@ -11,8 +11,7 @@
 
 <div class="mb">
   <label>{{ 'modules.contactRegistration.misc.autoComment' | translate }}</label>
-  <!-- Angular sanitizes innerHTML behind the scenes -->
-  <div class="form-control template" [innerHtml]="autoComment"></div>
+  <app-html-textarea [ngModel]="autoComment"></app-html-textarea>
 </div>
 
 <div class="mb">

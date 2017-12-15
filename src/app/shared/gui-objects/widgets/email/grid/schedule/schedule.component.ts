@@ -42,10 +42,13 @@ export class ScheduleComponent {
   }
 
   onSubmit(): void {
-    const value = this.tabIndex === 0
-      ? this.getFormValue(this.formText)
-      : this.getFormValue(this.formTemplate);
-    this.submit.emit(value);
+    if (this.tabIndex === 0) {
+      const value = this.getFormValue(this.formText);
+      this.submit.emit(value);
+    } else {
+      const { text, ...value } = this.getFormValue(this.formTemplate);
+      this.submit.emit(value);
+    }
   }
 
   onCancel(): void {
