@@ -257,19 +257,6 @@
     },
     "payments": {
       "filters": {
-        "form": {
-          "branchCode": "Филиал",
-          "dictValue1": "Словарный атрибут 1",
-          "dictValue2": "Словарный атрибут 2",
-          "dictValue3": "Словарный атрибут 3",
-          "dictValue4": "Словарный атрибут 4",
-          "outPortfolioId": "Реестр КА",
-          "portfolioId": "Портфели",
-          "paymentDateTime": "Дата оплаты",
-          "regionCode": "Регион",
-          "userId": "Оператор",
-          "searchBtn": "Искать"
-        },
         "userId": {
           "grid": {
             "fullName": "Оператор",

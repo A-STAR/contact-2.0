@@ -1,9 +1,3 @@
-<div class="mv">
-  <app-workplaces-payments-grid-filter
-    (search)="onRequest()"
-  ></app-workplaces-payments-grid-filter>
-</div>
-
 <app-action-grid
   [metadataKey]="'payments'"
   [persistenceKey]="'payments'"
@@ -11,6 +5,7 @@
   [ngClass]="'payments-grid'"
   [rows]="rows"
   [rowCount]="rowCount"
+  [showFilter]="true"
   (request)="onRequest()"
   (dblClick)="onDblClick($event)"
 ></app-action-grid>
