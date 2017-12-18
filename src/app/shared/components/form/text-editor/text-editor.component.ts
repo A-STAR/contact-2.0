@@ -28,11 +28,24 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() codeMode = false;
   @Input() height = 240;
-  @Input() richTextMode = true;
+  @Input() set richTextMode(richTextMode: boolean) {
+    this._richTextMode = richTextMode;
+    this.destroyEditor();
+    this.initEditor();
+
+    if (!richTextMode) {
+      const text = this.elRef.nativeElement.querySelector('.note-editable').innerText.trim();
+      this.summernote('reset');
+      this.summernote('code', text);
+      this.propagateChange(text);
+    }
+  }
 
   @Output() init = new EventEmitter<TextEditorComponent>();
 
   @ViewChild('editor') editor: ElementRef;
+
+  private _richTextMode = true;
 
   constructor(
     private elRef: ElementRef,
@@ -42,15 +55,11 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     this.element.on('summernote.init', () => this.onInit());
     this.element.on('summernote.focus', () => this.onFocus());
     this.element.on('summernote.change', () => this.onChange());
-
-    this.summernote({
-      height: this.height,
-      toolbar: this.richTextMode ? this.initToolbar() : null,
-    });
+    this.initEditor();
   }
 
   ngOnDestroy(): void {
-    this.summernote('destroy');
+    this.destroyEditor();
   }
 
   writeValue(value: string): void {
@@ -76,6 +85,17 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     this.summernote('focus');
     this.summernote('restoreRange');
     this.summernote('insertText', text);
+  }
+
+  private initEditor(): void {
+    this.summernote({
+      height: this.height,
+      toolbar: this._richTextMode ? this.initToolbar() : null,
+    });
+  }
+
+  private destroyEditor(): void {
+    this.summernote('destroy');
   }
 
   private initToolbar(): any {
@@ -104,7 +124,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
 
   private onChange(): void {
     const text = this.elRef.nativeElement.querySelector('.note-editable').innerText.trim();
-    const value = this.richTextMode && text !== ''
+    const value = this._richTextMode && text !== ''
       ? this.summernote('code')
       : text;
     this.propagateChange(value);
