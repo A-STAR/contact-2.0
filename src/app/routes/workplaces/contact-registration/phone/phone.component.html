@@ -2,4 +2,11 @@
   <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
 </div>
 
+<div class="mb">
+  <app-contact-registration-contact-grid
+    [personId]="personId"
+    [debtId]="debtId"
+  ></app-contact-registration-contact-grid>
+</div>
+
 <app-button type="next" [disabled]="!canSubmit" (click)="onNextClick()"></app-button>

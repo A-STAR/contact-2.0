@@ -345,6 +345,20 @@
           }
         }
       },
+      "contactGrid": {
+        "card": {
+          "firstName": "First name",
+          "lastName": "Last name",
+          "middleName": "Middle name",
+          "linkTypeCode": "Тип связи",
+          "title": "Add Contact"
+        },
+        "grid": {
+          "linkTypeCode": "Тип связи",
+          "personFullName": "Full Name",
+          "personRole": "Role"
+        }
+      },
       "outcome": {
         "title": "Contact Outcome",
         "template": "Scenario",

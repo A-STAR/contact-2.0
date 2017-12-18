@@ -10,13 +10,26 @@ import { isEmpty } from '../../../core/utils';
 
 @Injectable()
 export class ContactRegistrationService {
-  guid: string;
   selectedNode$ = new BehaviorSubject<ITreeNode>(null);
   autoComment$ = new BehaviorSubject<{ autoComment: string, autoCommentId: number, comment: string }>(null);
+
+  private _guid$ = new BehaviorSubject<string>(null);
 
   constructor(
     private dataService: DataService,
   ) {}
+
+  get guid(): string {
+    return this._guid$.value;
+  }
+
+  get guid$(): Observable<string> {
+    return this._guid$;
+  }
+
+  set guid(guid: string) {
+    this._guid$.next(guid);
+  }
 
   get isInvalid$(): Observable<boolean> {
     return this.selectedNode$.map(node => !this.isNodeValid(node));

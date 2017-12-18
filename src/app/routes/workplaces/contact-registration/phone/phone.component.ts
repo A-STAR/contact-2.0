@@ -19,6 +19,8 @@ const labelKey = makeKey('modules.contactRegistration.phone');
 })
 export class PhoneComponent {
   @Input() debtId: number;
+  @Input() personId: number;
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls = [

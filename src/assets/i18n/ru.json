@@ -345,6 +345,20 @@
           }
         }
       },
+      "contactGrid": {
+        "card": {
+          "firstName": "Имя",
+          "lastName": "Фамилия",
+          "middleName": "Отчество",
+          "linkTypeCode": "Тип связи",
+          "title": "Добавить контактное лицо"
+        },
+        "grid": {
+          "linkTypeCode": "Тип связи",
+          "personFullName": "ФИО",
+          "personRole": "Роль"
+        }
+      },
       "outcome": {
         "title": "Выбор исхода",
         "template": "Сценарий разговора",

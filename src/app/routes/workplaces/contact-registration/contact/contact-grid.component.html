@@ -1,0 +1,19 @@
+<app-contact-registration-contact-card
+  *ngIf="isDialog('add')"
+  (submit)="onSubmit($event)"
+  (cancel)="onCloseDialog()"
+></app-contact-registration-contact-card>
+
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems"
+></app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="modules.contactRegistration.contactGrid"
+  selectionType="single"
+  [columns]="columns"
+  [rows]="rows"
+  [styles]="{ height: '240px' }"
+  (onSelect)="onSelect($event)"
+></app-grid>

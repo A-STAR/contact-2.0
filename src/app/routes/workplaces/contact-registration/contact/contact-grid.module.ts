@@ -1,13 +1,17 @@
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { ContactGridService } from './contact-grid.service';
+
 import { ContactCardComponent } from './card/contact-card.component';
-import { ContactGridComponent } from './grid/contact-grid.component';
+import { ContactGridComponent } from './contact-grid.component';
 
 @NgModule({
   imports: [
     SharedModule,
+    TranslateModule,
   ],
   exports: [
     ContactCardComponent,
@@ -17,5 +21,8 @@ import { ContactGridComponent } from './grid/contact-grid.component';
     ContactCardComponent,
     ContactGridComponent,
   ],
+  providers: [
+    ContactGridService,
+  ]
 })
 export class ContactModule {}
