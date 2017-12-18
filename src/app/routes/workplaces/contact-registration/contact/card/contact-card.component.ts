@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import { IContactPerson } from '../contact-grid.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -17,9 +17,6 @@ const labelKey = makeKey('modules.contactRegistration.contactGrid.card');
   templateUrl: 'contact-card.component.html'
 })
 export class ContactCardComponent implements AfterViewInit {
-  @Output() submit = new EventEmitter<IContactPerson>();
-  @Output() cancel = new EventEmitter<void>();
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls = [
@@ -42,13 +39,5 @@ export class ContactCardComponent implements AfterViewInit {
 
   get isDisabled(): boolean {
     return !this.form.canSubmit;
-  }
-
-  onSubmit(): void {
-    this.submit.emit(this.form.serializedUpdates);
-  }
-
-  onClose(): void {
-    this.cancel.emit();
   }
 }

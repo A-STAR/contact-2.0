@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { filter, first, mergeMap } from 'rxjs/operators';
 
-import { IContactPerson } from './contact-grid.interface';
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IContactPerson } from '../contact-grid.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContactGridService } from './contact-grid.service';
-import { ContactRegistrationService } from '../contact-registration.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { ContactGridService } from '../contact-grid.service';
+import { ContactRegistrationService } from '../../contact-registration.service';
+import { GridService } from '../../../../../shared/components/grid/grid.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { DialogFunctions } from '../../../../core/dialog';
+import { DialogFunctions } from '../../../../../core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

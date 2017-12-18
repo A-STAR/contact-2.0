@@ -3,10 +3,23 @@
 </div>
 
 <div class="mb">
-  <app-contact-registration-contact-grid
-    [personId]="personId"
-    [debtId]="debtId"
-  ></app-contact-registration-contact-grid>
+  <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+    <app-tabview-tab [title]="tabs[0].title" [closable]="false">
+      <app-contact-registration-contact-grid
+        *ngIf="tabs[0].isInitialised"
+        [personId]="personId"
+        [debtId]="debtId"
+      ></app-contact-registration-contact-grid>
+    </app-tabview-tab>
+    <app-tabview-tab [title]="tabs[1].title" [closable]="false">
+      123
+    </app-tabview-tab>
+    <app-tabview-tab [title]="tabs[2].title" [closable]="false">
+      <app-contact-registration-contact-card
+        *ngIf="tabs[2].isInitialised"
+      ></app-contact-registration-contact-card>
+    </app-tabview-tab>
+  </app-tabview>
 </div>
 
 <app-button type="next" [disabled]="!canSubmit" (click)="onNextClick()"></app-button>
