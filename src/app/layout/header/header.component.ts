@@ -23,7 +23,6 @@ export class HeaderComponent implements OnInit {
   isNavSearchVisible: boolean;
 
   isLicenseVisible = false;
-
   filters$: Observable<IFilters>;
   hasNotifications$: Observable<boolean>;
   notificationsCount$: Observable<number>;
@@ -32,14 +31,13 @@ export class HeaderComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private notificationsService: NotificationsService,
-    public settings: SettingsService,
+    private settings: SettingsService,
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
   ) {
     this.filters$ = this.notificationsService.filters;
-    this.hasNotifications$ = this.notificationsService.length.map(length => length > 0);
-    this.notificationsCount$ = this.notificationsService.length;
-    this.notifications$ = this.notificationsService.notifications;
+    this.hasNotifications$ = this.notificationsService.count.map(count => count > 0);
+    this.notificationsCount$ = this.notificationsService.count;
   }
 
   ngOnInit(): void {
@@ -64,17 +62,13 @@ export class HeaderComponent implements OnInit {
     return this.isNavSearchVisible;
   }
 
-  toggleOffsidebar(): void {
-    this.settings.layout.offsidebarOpen = !this.settings.layout.offsidebarOpen;
-  }
-
   toggleCollapsedSidebar(): void {
     this.settings.layout.isCollapsed = !this.settings.layout.isCollapsed;
     this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
   }
 
-  toggleAside(): void {
-    this.settings.layout.asideToggled = !this.settings.layout.asideToggled;
+  toggleMenu(): void {
+    this.settings.layout.menuToggled = !this.settings.layout.menuToggled;
     this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
   }
 

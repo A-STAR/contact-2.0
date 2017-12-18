@@ -16,7 +16,7 @@
         <a class="hidden-xs" trigger-resize="" (click)="toggleCollapsedSidebar()" *ngIf="!isCollapsedText()">
           <i class="fa fa-navicon"></i>
         </a>
-        <a class="visible-xs sidebar-toggle" (click)="toggleAside()">
+        <a class="visible-xs sidebar-toggle" (click)="toggleMenu()">
           <i class="fa fa-navicon"></i>
         </a>
       </li>
@@ -48,19 +48,9 @@
               {{ notificationsCount$ | async }}
             </div>
           </a>
-          <app-notifications
-            [filters]="filters$ | async"
-            [notifications]="notifications$ | async"
-            (onClose)="notificationsDropdown.close()"
-          >
+          <app-notifications (close)="notificationsDropdown.close()">
           </app-notifications>
         </app-dropdown>
-      </li>
-
-      <li *ngIf="false">
-        <a (click)="toggleOffsidebar()">
-          <i class="icon-notebook"></i>
-        </a>
       </li>
 
       <li>
