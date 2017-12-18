@@ -24,6 +24,6 @@ export class GroupService {
 
   fetchAll(): Observable<Array<IGroup>> {
     return this.dataService.readAll(`${this.baseUrl}`)
-      .catch(this.notificationsService.fetchError().entity('entities.groups.gen.plural').dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity('entities.entityGroup.gen.plural').dispatchCallback());
   }
 }
