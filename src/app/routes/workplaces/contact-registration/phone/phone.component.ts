@@ -9,6 +9,7 @@ import { PhoneService } from './phone.service';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../core/utils';
+import { ContactGridComponent } from '../contact/contact-grid.component';
 
 const labelKey = makeKey('modules.contactRegistration.phone');
 
@@ -22,10 +23,11 @@ export class PhoneComponent {
   @Input() personId: number;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  @ViewChild(ContactGridComponent) grid: ContactGridComponent;
 
   controls = [
-    { controlName: 'typeCode', type: 'selectwrapper', dictCode: 17 },
-    { controlName: 'phone', type: 'text' },
+    { controlName: 'typeCode', type: 'selectwrapper', dictCode: 17, required: true },
+    { controlName: 'phone', type: 'text', required: true },
     { controlName: 'stopAutoSms', type: 'checkbox' },
     { controlName: 'stopAutoInfo', type: 'checkbox' },
     { controlName: 'comment', type: 'textarea' },
@@ -41,12 +43,16 @@ export class PhoneComponent {
   ) {}
 
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+    return this.form && this.form.canSubmit && this.grid && !!this.grid.selectedPerson;
   }
 
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
-    const data = this.form.serializedUpdates;
+    const { id, personId, personFullName, personRole, ...person } = this.grid.selectedPerson;
+    const data = {
+      ...this.form.serializedUpdates,
+      person: personId ? { personId } : person,
+    };
     this.phoneService.create(this.debtId, guid, data)
       .subscribe(() => {
         this.accordionService.next();

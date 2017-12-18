@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { filter, first, mergeMap } from 'rxjs/operators';
 
-import { IContactPerson, IContactPersonFormData } from './contact-grid.interface';
+import { IContactPerson } from './contact-grid.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -26,10 +26,6 @@ export class ContactGridComponent extends DialogFunctions implements OnInit {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.onAdd(),
     },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch(),
-    },
   ];
 
   columns: IGridColumn[] = [
@@ -41,6 +37,8 @@ export class ContactGridComponent extends DialogFunctions implements OnInit {
   rows: IContactPerson[] = [];
 
   dialog: 'add';
+
+  selectedPerson: IContactPerson;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -67,12 +65,20 @@ export class ContactGridComponent extends DialogFunctions implements OnInit {
   }
 
   onSelect(value: IContactPerson): void {
-    console.log(value);
+    this.selectedPerson = value;
+    this.cdRef.markForCheck();
   }
 
-  onSubmit(event: IContactPersonFormData): void {
-    this.fetch();
+  onSubmit(person: IContactPerson): void {
+    this.rows.push({
+      ...person,
+      personFullName: [ person.lastName, person.firstName, person.middleName ].filter(Boolean).join(' '),
+      // Role = 4 (contact person)
+      // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516
+      personRole: 4,
+    });
     this.setDialog();
+    this.cdRef.markForCheck();
   }
 
   private onAdd(): void {
