@@ -1894,6 +1894,18 @@
       "toolbar": {
         "add": "Add pledgor"
       }
+    },
+    "groups": {
+      "grid": {
+        "id": "ID",
+        "entityTypeCode": "Type",
+        "name": "Name",
+        "comment": "Comment",
+        "isManual": "Is manual",
+        "isPreCleaned": "Is pre-cleaned",
+        "userFullName": "Operator",
+        "formDateTime": "Form date"
+      }
     }
   },
   "entities": {
