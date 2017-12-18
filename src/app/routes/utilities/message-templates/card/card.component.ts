@@ -4,11 +4,13 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators/first';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -30,7 +32,7 @@ const labelKey = makeKey('utilities.messageTemplates.grid');
   templateUrl: './card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MessageTemplateGridEditComponent implements OnInit {
+export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
   @Input() templateId: number;
   @Input() typeCode: number;
 
@@ -59,6 +61,9 @@ export class MessageTemplateGridEditComponent implements OnInit {
 
   private editor: TextEditorComponent;
 
+  private formatCodeSubscription: Subscription;
+  private recipientTypeCodeSubscription: Subscription;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private messageTemplatesService: MessageTemplatesService,
@@ -81,6 +86,15 @@ export class MessageTemplateGridEditComponent implements OnInit {
         }
         this.cdRef.markForCheck();
       });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.formatCodeSubscription) {
+      this.formatCodeSubscription.unsubscribe();
+    }
+    if (this.recipientTypeCodeSubscription) {
+      this.recipientTypeCodeSubscription.unsubscribe();
     }
   }
 
@@ -157,10 +171,20 @@ export class MessageTemplateGridEditComponent implements OnInit {
       },
     ].map(control => ({ ...control, disabled: !canEdit, label: labelKey(control.controlName) })) as IDynamicFormControl[];
 
+    // Detecting changes, otherwise `this.form` will be undefined in `onCtrlValueChange`
+    this.cdRef.detectChanges();
+
+    if (isEmail) {
+      this.formatCodeSubscription = this.form
+        .onCtrlValueChange('formatCode')
+        .subscribe(value => {
+          const formatCode = Array.isArray(value) ? value[0].value : value;
+          this.controls.find(control => control.controlName === 'text').richTextMode = formatCode === 1;
+        });
+    }
+
     if (displayRecipient) {
-      // Detecting changes, otherwise `this.form` will be undefined in `onCtrlValueChange`
-      this.cdRef.detectChanges();
-      this.form
+      this.recipientTypeCodeSubscription = this.form
         .onCtrlValueChange('recipientTypeCode')
         .subscribe(value => this.fetchVariables(this.form.serializedUpdates.recipientTypeCode || value));
     } else {
