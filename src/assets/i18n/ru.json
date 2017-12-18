@@ -351,6 +351,7 @@
           "lastName": "Фамилия",
           "middleName": "Отчество",
           "linkTypeCode": "Тип связи",
+          "personTypeCode": "Тип персоны",
           "title": "Добавить контактное лицо"
         },
         "grid": {

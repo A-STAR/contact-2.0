@@ -350,11 +350,12 @@
           "firstName": "First name",
           "lastName": "Last name",
           "middleName": "Middle name",
-          "linkTypeCode": "Тип связи",
+          "linkTypeCode": "Relationship",
+          "personTypeCode": "Person Type",
           "title": "Add Contact"
         },
         "grid": {
-          "linkTypeCode": "Тип связи",
+          "linkTypeCode": "Relationship",
           "personFullName": "Full Name",
           "personRole": "Role"
         }
