@@ -1,12 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-
-import { IAttribute, IAttributeVersionParams } from '../../../../shared/gui-objects/widgets/entity-attribute/attribute.interface';
-
-import { AttributeService } from '../../../../shared/gui-objects/widgets/entity-attribute/attribute.service';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
-import { ActivatedRoute } from '@angular/router';
-import { ParamMap } from '@angular/router/src/shared';
 
 @Component({
   selector: 'app-contractors-and-portfolios-version',
@@ -24,7 +18,7 @@ export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestr
 
   private paramsSub: Subscription;
 
-  constructor(private attributeService: AttributeService, private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
 

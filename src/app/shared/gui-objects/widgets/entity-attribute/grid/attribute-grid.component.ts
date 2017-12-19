@@ -1,9 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Inject, Component, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute } from '../attribute.interface';
 import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';

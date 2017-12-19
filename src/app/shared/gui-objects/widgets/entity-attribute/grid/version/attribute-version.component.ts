@@ -10,7 +10,6 @@ import {
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute, IAttributeVersion } from '../../attribute.interface';
@@ -19,7 +18,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/comp
 
 import { AttributeService } from '../../attribute.service';
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
-import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from './../../../../../../core/converter/value-converter.service';
@@ -69,11 +67,8 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private gridService: GridService,
     private attributeService: AttributeService,
-    private route: ActivatedRoute,
-    private router: Router,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService
   ) {

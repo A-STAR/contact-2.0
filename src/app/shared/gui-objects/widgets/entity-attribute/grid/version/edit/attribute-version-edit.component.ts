@@ -11,14 +11,11 @@ import {
 
 import { IAttribute, IAttributeVersion, IAttributeVersionForm } from '../../../attribute.interface';
 import { IDynamicFormControl } from '../../../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '../../../../../../../core/converter/value-converter.interface';
 
-import { UserDictionariesService } from '../../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { DynamicFormComponent } from '../../../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { getFormControlConfig, getRawValue, getValue } from '../../../../../../../core/utils/value';
 import { makeKey } from '../../../../../../../core/utils';
-import { first } from 'rxjs/operators';
 
 const labelKey = makeKey('widgets.attribute.grid');
 
@@ -41,8 +38,7 @@ export class AttributeVersionEditComponent implements OnInit {
   formData: IAttributeVersionForm;
 
   constructor(
-    private cdRef: ChangeDetectorRef,
-    private userDictionariesService: UserDictionariesService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
