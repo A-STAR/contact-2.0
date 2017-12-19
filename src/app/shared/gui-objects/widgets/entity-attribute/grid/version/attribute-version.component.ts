@@ -25,7 +25,7 @@ import { ValueConverterService } from './../../../../../../core/converter/value-
 import { GridComponent } from '../../../../../../shared/components/grid/grid.component';
 
 import { DialogFunctions } from '../../../../../../core/dialog';
-import { combineLatestAnd } from 'app/core/utils/helpers';
+import { combineLatestAnd } from '../../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-attribute-version',
