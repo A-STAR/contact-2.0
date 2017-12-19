@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
 
 import { ContactSelectCardComponent } from './card/contact-select-card.component';
 import { ContactSelectGridComponent } from './grid/contact-select-grid.component';
@@ -17,13 +17,11 @@ export class ContactSelectComponent implements AfterViewInit {
   @ViewChild(ContactSelectGridComponent) selectGrid: ContactSelectGridComponent;
   @ViewChild(ContactSelectSearchComponent) selectSearch: ContactSelectSearchComponent;
 
-  tabs = [
-    { isInitialised: true, title: 'selectFromDebt' },
-    { isInitialised: false, title: 'selectFromAll' },
-    { isInitialised: false, title: 'add' },
-  ].map(tab => ({ ...tab, title: `modules.contactRegistration.contactGrid.tabs.${tab.title}.title` }));
-
   private personSelectComponent: ContactSelectCardComponent | ContactSelectGridComponent | ContactSelectSearchComponent;
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+  ) {}
 
   get isValid(): any {
     return this.personSelectComponent && this.personSelectComponent.isValid;
@@ -49,6 +47,6 @@ export class ContactSelectComponent implements AfterViewInit {
         this.personSelectComponent = this.selectCard;
         break;
     }
-    this.tabs[tabIndex].isInitialised = true;
+    this.cdRef.markForCheck();
   }
 }

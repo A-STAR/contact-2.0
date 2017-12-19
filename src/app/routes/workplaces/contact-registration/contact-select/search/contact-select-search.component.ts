@@ -1,14 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { IAGridResponse } from 'app/shared/components/grid2/grid2.interface';
+import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { ContactSelectService } from '../contact-select.service';
+import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { DynamicFormComponent } from 'app/shared/components/form/dynamic-form/dynamic-form.component';
 import { Grid2Component } from '../../../../../shared/components/grid2/grid2.component';
 
-import { isEmpty } from '../../../../../core/utils';
+import { isEmpty, makeKey } from '../../../../../core/utils';
+
+const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,7 +22,12 @@ import { isEmpty } from '../../../../../core/utils';
   templateUrl: 'contact-select-search.component.html',
 })
 export class ContactSelectSearchComponent {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(Grid2Component) grid: Grid2Component;
+
+  controls = [
+    { controlName: 'linkTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
+  ].map(control => ({ ...control, label: labelKey(control.controlName) } as IDynamicFormControl));
 
   columns$ = this.gridService.getColumns([
     { dataType: 1, name: 'id' },
@@ -34,8 +43,6 @@ export class ContactSelectSearchComponent {
   rowCount = 0;
   rowIdKey = 'id';
 
-  linkTypeCode: number;
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactSelectService: ContactSelectService,
@@ -47,7 +54,7 @@ export class ContactSelectSearchComponent {
   }
 
   get person(): any {
-    return this.grid && this.grid.selected && this.grid.selected[0];
+    return this.grid && this.grid.selected && { ...this.grid.selected[0], ...this.form.serializedValue };
   }
 
   onSelect(): void {

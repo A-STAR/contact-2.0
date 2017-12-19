@@ -1,11 +1,8 @@
-<div class="mv">
-  <label>
-    <span class="form-label">
-      Тип связи
-      <b class="text-danger">*</b>
-    </span>
-  </label>
-  <app-select-wrapper [(ngModel)]="linkTypeCode" [dictCode]="32"></app-select-wrapper>
+<div class="mb">
+  <app-dynamic-form
+    [controls]="controls"
+    [data]="{}"
+  ></app-dynamic-form>
 </div>
 
 <app-grid2

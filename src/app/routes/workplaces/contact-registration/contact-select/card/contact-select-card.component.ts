@@ -22,7 +22,12 @@ export class ContactSelectCardComponent implements AfterViewInit {
     { controlName: 'lastName', type: 'text', required: true },
     { controlName: 'firstName', type: 'text' },
     { controlName: 'middleName', type: 'text' },
-    { controlName: 'personTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
+    {
+      controlName: 'personTypeCode',
+      type: 'selectwrapper',
+      dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
+      required: true,
+    },
     { controlName: 'linkTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
   ].map(control => ({ ...control, label: labelKey(control.controlName) } as IDynamicFormControl));
 
