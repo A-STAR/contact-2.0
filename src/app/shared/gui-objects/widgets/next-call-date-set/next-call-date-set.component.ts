@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component,
-  EventEmitter, Output, Input, Inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component,
+  EventEmitter, Output, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { ICloseAction } from '../../../components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynamic-form.interface';
@@ -16,6 +16,7 @@ const labelKey = makeKey('widgets.nextCallDateSet.dialog');
   templateUrl: './next-call-date-set.component.html',
   styleUrls: ['./next-call-date-set.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class NextCallDateSetDialogComponent  {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -23,7 +24,6 @@ export class NextCallDateSetDialogComponent  {
   @Output() close = new EventEmitter<ICloseAction>();
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private nextCallDateSetService: NextCallDateSetService,
   ) {}
 
@@ -42,8 +42,6 @@ export class NextCallDateSetDialogComponent  {
     this.nextCallDateSetService.setNextCall(this.debts, data.nextCallDate)
       .subscribe((result) => this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed }));
   }
-
-
 
   onClose(): void {
     this.close.emit();

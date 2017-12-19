@@ -3,9 +3,8 @@
     text-align: center;
     position: relative;
     overflow: hidden;
-    .form-inner {
-      position: absolute;
-      width: 100%;
-      left: 15%;
+
+    app-input-datepicker .dropdown {
+      left: 0 !important;
     }
 }
