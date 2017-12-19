@@ -1,4 +1,6 @@
 <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+
+  <!-- Select from persons linked to debt -->
   <app-tabview-tab [title]="tabs[0].title" [closable]="false">
     <app-contact-registration-contact-select-grid
       *ngIf="tabs[0].isInitialised"
@@ -6,9 +8,15 @@
       [debtId]="debtId"
     ></app-contact-registration-contact-select-grid>
   </app-tabview-tab>
+
+  <!-- Select from all persons -->
   <app-tabview-tab [title]="tabs[1].title" [closable]="false">
-    123
+      <app-contact-registration-contact-select-search
+        *ngIf="tabs[1].isInitialised"
+      ></app-contact-registration-contact-select-search>
   </app-tabview-tab>
+
+  <!-- Add manually -->
   <app-tabview-tab [title]="tabs[2].title" [closable]="false">
     <app-contact-registration-contact-select-card
       *ngIf="tabs[2].isInitialised"
