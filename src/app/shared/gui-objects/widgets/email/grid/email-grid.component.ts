@@ -63,7 +63,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.setDialog('unblock')
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_SMS,
+      type: ToolbarItemTypeEnum.BUTTON_EMAIL,
       enabled: this.canSchedule$,
       action: () => this.setDialog('schedule')
     },
