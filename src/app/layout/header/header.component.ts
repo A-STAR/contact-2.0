@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -17,13 +17,11 @@ import { DropdownComponent } from '../../shared/components/dropdown/dropdown.com
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   @ViewChild('accountDropdown') accountDropdown: DropdownComponent;
 
-  isNavSearchVisible: boolean;
-
+  isNavSearchVisible = false;
   isLicenseVisible = false;
-
   filters$: Observable<IFilters>;
   hasNotifications$: Observable<boolean>;
   notificationsCount$: Observable<number>;
@@ -32,40 +30,31 @@ export class HeaderComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private notificationsService: NotificationsService,
-    public settings: SettingsService,
+    private settings: SettingsService,
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
   ) {
     this.filters$ = this.notificationsService.filters;
-    this.hasNotifications$ = this.notificationsService.length.map(length => length > 0);
-    this.notificationsCount$ = this.notificationsService.length;
-    this.notifications$ = this.notificationsService.notifications;
+    this.hasNotifications$ = this.notificationsService.count.map(count => count > 0);
+    this.notificationsCount$ = this.notificationsService.count;
   }
 
-  ngOnInit(): void {
+  toggleUserSettings(event: MouseEvent): void {
+    event.preventDefault();
+  }
+
+  openNavSearch(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isNavSearchVisible = true;
+  }
+
+  closeNavSearch(): void {
     this.isNavSearchVisible = false;
   }
 
-  toggleUserSettings(event: UIEvent): void {
-    event.preventDefault();
-  }
-
-  openNavSearch(event: UIEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.setNavSearchVisible(true);
-  }
-
-  setNavSearchVisible(stat: boolean): void {
-    this.isNavSearchVisible = stat;
-  }
-
-  getNavSearchVisible(): boolean {
+  get navSearchVisible(): boolean {
     return this.isNavSearchVisible;
-  }
-
-  toggleOffsidebar(): void {
-    this.settings.layout.offsidebarOpen = !this.settings.layout.offsidebarOpen;
   }
 
   toggleCollapsedSidebar(): void {
@@ -73,8 +62,8 @@ export class HeaderComponent implements OnInit {
     this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
   }
 
-  toggleAside(): void {
-    this.settings.layout.asideToggled = !this.settings.layout.asideToggled;
+  toggleMenu(): void {
+    this.settings.layout.menuToggled = !this.settings.layout.menuToggled;
     this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
   }
 

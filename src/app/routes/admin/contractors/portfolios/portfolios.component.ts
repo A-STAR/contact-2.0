@@ -174,10 +174,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       });
 
     this.portfoliosUpdateSub =
-      Observable.combineLatest(
-        this.contractorsAndPortfoliosService.getAction(IActionType.PORTFOLIO_CREATE),
         this.contractorsAndPortfoliosService.getAction(IActionType.PORTFOLIO_SAVE)
-      )
         .switchMap(() => this.fetchAll())
         .subscribe(portfolios => this.onPortfoliosFetch(portfolios));
   }
@@ -238,15 +235,10 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   onAdd(): void {
     this.router.navigate([`/admin/contractors/${this.selectedContractor.id}/portfolios/create`]);
-    this.contractorsAndPortfoliosService.dispatch(IActionType.PORTFOLIO_CREATE);
   }
 
   onEdit(): void {
     this.router.navigate([`/admin/contractors/${this.selectedContractor.id}/portfolios/${this.grid.selected[0].id}`]);
-    this.contractorsAndPortfoliosService.dispatch(IActionType.PORTFOLIO_EDIT, {
-        selectedContractor: this.selectedContractor,
-        selectedPortfolio: this.grid.selected[0]
-    });
   }
 
   onMove(): void {

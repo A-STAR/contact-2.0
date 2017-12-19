@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { IAttributeVersion, IAttributeVersionForm } from '../../../attribute.interface';
+import { IAttribute, IAttributeVersion, IAttributeVersionForm } from '../../../attribute.interface';
 import { IDynamicFormControl } from '../../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../../../core/converter/value-converter.interface';
 
@@ -28,7 +28,7 @@ const labelKey = makeKey('widgets.attribute.grid');
 })
 export class AttributeVersionEditComponent implements OnInit {
   @Input() selectedVersion: IAttributeVersion;
-  @Input() selectedAttributeId: number;
+  @Input() selectedAttribute: IAttribute;
   @Input() entityTypeId: number;
 
   @Output() submit = new EventEmitter<Partial<IAttributeVersionForm>>();
@@ -62,7 +62,7 @@ export class AttributeVersionEditComponent implements OnInit {
     const data = {
       ...rest,
       changeDateTime: this.form.serializedUpdates.changeDateTime || this.selectedVersion.fromDateTime,
-      ...getValue(this.selectedVersion.typeCode, value)
+      ...getValue(this.selectedAttribute.typeCode, value)
     };
     this.submit.emit(data);
   }
@@ -72,10 +72,15 @@ export class AttributeVersionEditComponent implements OnInit {
   }
 
   private onInit(options: IOption[] = null): void {
-    this.controls = this.buildControls(this.selectedVersion, options);
+    const data = options ? this.selectedVersion : {
+      ...this.selectedAttribute,
+      fromDateTime: this.selectedAttribute.changeDateTime
+    };
+    this.controls = this.buildControls(data, options);
     this.formData = {
-      changeDateTime: this.selectedVersion.changeDateTime || this.selectedVersion.fromDateTime,
-      value: getRawValue(this.selectedVersion)
+      changeDateTime: options ? (this.selectedVersion.changeDateTime || this.selectedVersion.fromDateTime)
+        : this.selectedAttribute.changeDateTime,
+      value: getRawValue(options ? this.selectedVersion : this.selectedAttribute)
     };
     this.cdRef.markForCheck();
   }
