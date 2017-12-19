@@ -6,7 +6,7 @@ import { AccordionService } from '../../../../shared/components/accordion/accord
 import { ContactRegistrationService } from '../contact-registration.service';
 import { PhoneService } from './phone.service';
 
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { ContactSelectComponent } from '../contact-select/contact-select.component';
 
 import { makeKey } from '../../../../core/utils';
 
@@ -21,7 +21,7 @@ export class PhoneComponent {
   @Input() debtId: number;
   @Input() personId: number;
 
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  @ViewChild(ContactSelectComponent) select: ContactSelectComponent;
 
   controls = [
     { controlName: 'typeCode', type: 'selectwrapper', dictCode: 17, required: true },
@@ -41,20 +41,22 @@ export class PhoneComponent {
   ) {}
 
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+    return this.select.isValid;
   }
 
   onNextClick(): void {
-    const { guid } = this.contactRegistrationService;
-    // const { id, personId, personFullName, personRole, ...person } = this.grid.selectedPerson;
-    const data = {
-      ...this.form.serializedUpdates,
-      // person: personId ? { personId } : person,
-    };
-    this.phoneService.create(this.debtId, guid, data)
-      .subscribe(() => {
-        this.accordionService.next();
-        this.cdRef.markForCheck();
-      });
+    console.log(this.select.person);
+
+    // const { guid } = this.contactRegistrationService;
+    // // const { id, personId, personFullName, personRole, ...person } = this.grid.selectedPerson;
+    // const data = {
+    //   ...this.form.serializedUpdates,
+    //   // person: personId ? { personId } : person,
+    // };
+    // this.phoneService.create(this.debtId, guid, data)
+    //   .subscribe(() => {
+    //     this.accordionService.next();
+    //     this.cdRef.markForCheck();
+    //   });
   }
 }

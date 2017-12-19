@@ -30,13 +30,15 @@ export class ContactSelectCardComponent implements AfterViewInit {
     personTypeCode: 1,
   };
 
-  constructor() {}
+  get isValid(): boolean {
+    return this.form.canSubmit;
+  }
+
+  get person(): any {
+    return this.form.serializedValue;
+  }
 
   ngAfterViewInit(): void {
     this.form.getControl('personTypeCode').markAsDirty();
-  }
-
-  get isDisabled(): boolean {
-    return !this.form.canSubmit;
   }
 }

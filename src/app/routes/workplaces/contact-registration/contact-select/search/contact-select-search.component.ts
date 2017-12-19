@@ -8,6 +8,8 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 
 import { Grid2Component } from '../../../../../shared/components/grid2/grid2.component';
 
+import { isEmpty } from '../../../../../core/utils';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -37,6 +39,18 @@ export class ContactSelectSearchComponent {
     private contactSelectService: ContactSelectService,
     private gridService: GridService,
   ) {}
+
+  get isValid(): boolean {
+    return !isEmpty(this.grid && this.grid.selected);
+  }
+
+  get person(): any {
+    return this.grid && this.grid.selected && this.grid.selected[0];
+  }
+
+  onSelect(): void {
+    this.cdRef.markForCheck();
+  }
 
   onRequest(): void {
     const filters = this.grid.getFilters();

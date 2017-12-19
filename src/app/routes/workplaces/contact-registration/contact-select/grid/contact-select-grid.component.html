@@ -6,4 +6,7 @@
   [rowIdKey]="rowIdKey"
   [rows]="rows"
   [rowCount]="rowCount"
+  (onSelect)="onSelect()"
 ></app-grid2>
+
+grid: {{ isValid | json }}

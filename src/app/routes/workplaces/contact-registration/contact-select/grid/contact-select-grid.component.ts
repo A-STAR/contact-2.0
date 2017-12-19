@@ -1,13 +1,24 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { filter, first, mergeMap } from 'rxjs/operators';
 
 import { IContactSelectPerson } from '../contact-select.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 import { ContactSelectService } from '../contact-select.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+
+import { Grid2Component } from '../../../../../shared/components/grid2/grid2.component';
+
+import { isEmpty } from '../../../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,6 +31,8 @@ export class ContactSelectGridComponent implements OnInit {
   @Input() debtId: number;
   @Input() personId: number;
 
+  @ViewChild(Grid2Component) grid: Grid2Component;
+
   columns$ = this.gridService.getColumns([
     { dataType: 1, name: 'personFullName' },
     { dataType: 6, name: 'personRole', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
@@ -29,8 +42,6 @@ export class ContactSelectGridComponent implements OnInit {
   rows: IContactSelectPerson[] = [];
   rowCount = 0;
   rowIdKey = 'id';
-
-  selectedPerson: IContactSelectPerson;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -43,12 +54,19 @@ export class ContactSelectGridComponent implements OnInit {
     return this.contactRegistrationService.guid;
   }
 
+  get isValid(): boolean {
+    return !isEmpty(this.grid && this.grid.selected);
+  }
+
+  get person(): any {
+    return this.grid && this.grid.selected && this.grid.selected[0];
+  }
+
   ngOnInit(): void {
     this.fetch();
   }
 
-  onSelect(value: IContactSelectPerson): void {
-    this.selectedPerson = value;
+  onSelect(): void {
     this.cdRef.markForCheck();
   }
 

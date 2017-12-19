@@ -11,9 +11,9 @@
 
   <!-- Select from all persons -->
   <app-tabview-tab [title]="tabs[1].title" [closable]="false">
-      <app-contact-registration-contact-select-search
-        *ngIf="tabs[1].isInitialised"
-      ></app-contact-registration-contact-select-search>
+    <app-contact-registration-contact-select-search
+      *ngIf="tabs[1].isInitialised"
+    ></app-contact-registration-contact-select-search>
   </app-tabview-tab>
 
   <!-- Add manually -->
@@ -23,3 +23,5 @@
     ></app-contact-registration-contact-select-card>
   </app-tabview-tab>
 </app-tabview>
+
+container: {{ isValid | json }}
