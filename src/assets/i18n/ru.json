@@ -1923,6 +1923,11 @@
         "userFullName": "Оператор",
         "formDateTime": "Дата переформирования",
         "sql": "SQL"
+      },
+      "toolbar": {
+        "action": {
+          "forCurrentUser": "Группы текущего пользователя"
+        }
       }
     }
   },

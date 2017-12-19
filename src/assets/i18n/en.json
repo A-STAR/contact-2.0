@@ -1923,6 +1923,11 @@
         "userFullName": "Operator",
         "formDateTime": "Form date",
         "sql": "SQL"
+      },
+      "toolbar": {
+        "action": {
+          "forCurrentUser": "Current user groups"
+        }
       }
     }
   },

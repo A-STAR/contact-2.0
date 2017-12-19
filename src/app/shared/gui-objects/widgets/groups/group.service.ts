@@ -64,8 +64,8 @@ export class GroupService extends AbstractActionService {
     );
   }
 
-  fetchAll(): Observable<Array<IGroup>> {
-    return this.dataService.readAll(`${this.baseUrl}`)
+  fetchAll(forCurrentUser: boolean): Observable<Array<IGroup>> {
+    return this.dataService.readAll(`${this.baseUrl}?forCurrentUser=${forCurrentUser ? 1 : 0}`)
       .catch(this.notificationsService.fetchError().entity('entities.group.gen.plural').dispatchCallback());
   }
 

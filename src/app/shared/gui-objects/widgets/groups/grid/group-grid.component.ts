@@ -25,6 +25,8 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
   private selectedGroup$ = new BehaviorSubject<IGroup>(null);
 
+  private forCurrentUser = false;
+
   columns: Array<IGridColumn> = [
     { prop: 'id' },
     { prop: 'entityTypeCode', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE },
@@ -62,6 +64,12 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetch(),
       enabled: this.groupService.canView$
+    },
+    {
+      type: ToolbarItemTypeEnum.CHECKBOX,
+      action: () => this.toggleForCurrentUser(),
+      label: 'widgets.groups.toolbar.action.forCurrentUser',
+      state: this.forCurrentUser
     }
   ];
 
@@ -126,6 +134,11 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     return selectedGroup ? [ selectedGroup ] : [];
   }
 
+  toggleForCurrentUser(): void {
+    this.forCurrentUser = !this.forCurrentUser;
+    this.fetch();
+  }
+
   onSelect(group: IGroup): void {
     this.selectedGroup$.next(group);
   }
@@ -149,7 +162,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private fetch(): void {
-    this.groupService.fetchAll().subscribe(groups => {
+    this.groupService.fetchAll(this.forCurrentUser).subscribe(groups => {
       this._groups = groups;
       this.cdRef.markForCheck();
     });
