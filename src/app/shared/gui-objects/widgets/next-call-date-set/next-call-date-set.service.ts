@@ -22,7 +22,6 @@ export class  NextCallDateSetService {
   setNextCall(debts: number[], nextCallDateTime: string): Observable<any> {
     const ids = debts.map(id => [ id ]);
     return this.dataService.update(this.url, {}, { idData: { ids }, actionData: { nextCallDateTime }} )
-      // dictionary
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
@@ -30,7 +29,7 @@ export class  NextCallDateSetService {
           this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
         }
       })
-      .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.updateError().entity('entities.nextCallDate.gen.plural').dispatchCallback());
   }
 
 }

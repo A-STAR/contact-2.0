@@ -5,12 +5,11 @@ import { ICloseAction } from '../../../components/action-grid/action-grid.interf
 import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynamic-form.interface';
 import { DynamicFormComponent } from '../../../components/form/dynamic-form/dynamic-form.component';
 import * as moment from 'moment';
-// import { IEntityGroup } from '../../../entity-group/entity-group.interface';
 
 import { NextCallDateSetService } from './next-call-date-set.service';
 import { makeKey } from '../../../../core/utils';
 
-const labelKey = makeKey('widgets.actionLog.form');
+const labelKey = makeKey('widgets.nextCallDateSet.dialog');
 
 @Component({
   selector: 'app-next-call-date-set',
@@ -20,7 +19,6 @@ const labelKey = makeKey('widgets.actionLog.form');
 export class NextCallDateSetDialogComponent  {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Input() debts: number[];
-
   @Output() close = new EventEmitter<ICloseAction>();
 
   constructor(
@@ -29,7 +27,7 @@ export class NextCallDateSetDialogComponent  {
   ) {}
 
   controls: IDynamicFormControl[] = [
-    { label: labelKey('startDate'), controlName: 'nextCallDate', type: 'datepicker',
+    { label: labelKey('nextCallDate'), controlName: 'nextCallDate', type: 'datepicker',
       displayTime: true, minDate:  moment().toDate(), width: 5 }
   ];
 
@@ -40,9 +38,8 @@ export class NextCallDateSetDialogComponent  {
   onSubmit(): void {
     const typeCode = this.form.getControl('nextCallDate').value;
     const data = Object.assign({}, this.form.serializedUpdates, { typeCode });
-    this.close.emit();
     this.nextCallDateSetService.setNextCall(this.debts, data.nextCallDate)
-      .subscribe(() => ({}));
+      .subscribe((result) => this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed }));
   }
 
 
