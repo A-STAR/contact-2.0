@@ -18,6 +18,7 @@ import { DynamicFormComponent } from '../../../../../../components/form/dynamic-
 
 import { getFormControlConfig, getRawValue, getValue } from '../../../../../../../core/utils/value';
 import { makeKey } from '../../../../../../../core/utils';
+import { first } from 'rxjs/operators';
 
 const labelKey = makeKey('widgets.attribute.grid');
 
@@ -45,12 +46,7 @@ export class AttributeVersionEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.selectedVersion && this.selectedVersion.dictNameCode) {
-      this.userDictionariesService.getDictionaryAsOptions(this.selectedVersion.dictNameCode)
-        .subscribe(options => this.onInit(options));
-    } else {
-      this.onInit();
-    }
+    this.onInit(this.selectedVersion && !!this.selectedAttribute);
   }
 
   get canSubmit(): boolean {
@@ -58,9 +54,10 @@ export class AttributeVersionEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const { value, ...rest } = this.form.serializedUpdates;
+    const value = this.form.serializedValue.value;
     const data = {
-      ...rest,
+      ...this.form.serializedUpdates,
+      value,
       changeDateTime: this.form.serializedUpdates.changeDateTime || this.selectedVersion.fromDateTime,
       ...getValue(this.selectedAttribute.typeCode, value)
     };
@@ -71,27 +68,27 @@ export class AttributeVersionEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private onInit(options: IOption[] = null): void {
-    const data = options ? this.selectedVersion : {
-      ...this.selectedAttribute,
-      fromDateTime: this.selectedAttribute.changeDateTime
-    };
-    this.controls = this.buildControls(data, options);
+  private onInit(isEdit: boolean = false): void {
+    this.controls = this.buildControls(this.selectedAttribute);
     this.formData = {
-      changeDateTime: options ? (this.selectedVersion.changeDateTime || this.selectedVersion.fromDateTime)
+      changeDateTime: isEdit ? (this.selectedVersion.changeDateTime || this.selectedVersion.fromDateTime)
         : this.selectedAttribute.changeDateTime,
-      value: getRawValue(options ? this.selectedVersion : this.selectedAttribute)
+      value: getRawValue(isEdit ?
+        {
+          ...this.selectedVersion,
+          typeCode: this.selectedAttribute.typeCode,
+        }
+        : this.selectedAttribute)
     };
     this.cdRef.markForCheck();
   }
 
-  private buildControls(version: IAttributeVersion, options: IOption[]): IDynamicFormControl[] {
+  private buildControls(attr: IAttribute): IDynamicFormControl[] {
     return [
       {
         label: labelKey('value'),
         controlName: 'value',
-        ...getFormControlConfig(version),
-        ...(options ? { options } : {}),
+        ...getFormControlConfig(attr)
       },
       {
         label: labelKey('changeDateTime'),
