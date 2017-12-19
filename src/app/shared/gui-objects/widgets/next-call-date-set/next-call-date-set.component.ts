@@ -1,20 +1,20 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component,
   EventEmitter, Output, Input, Inject, ViewChild } from '@angular/core';
 
-import { ICloseAction } from '../../../../components/action-grid/action-grid.interface';
-import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { ICloseAction } from '../../../components/action-grid/action-grid.interface';
+import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynamic-form.interface';
+import { DynamicFormComponent } from '../../../components/form/dynamic-form/dynamic-form.component';
 import * as moment from 'moment';
 // import { IEntityGroup } from '../../../entity-group/entity-group.interface';
 
-import { NextCallDateSetService } from '../next-call-date-set.service';
-import { makeKey } from '../../../../../core/utils';
+import { NextCallDateSetService } from './next-call-date-set.service';
+import { makeKey } from '../../../../core/utils';
 
 const labelKey = makeKey('widgets.actionLog.form');
 
 @Component({
   selector: 'app-next-call-date-set',
-  templateUrl: './next-call-date-set.dialog.component.html',
+  templateUrl: './next-call-date-set.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NextCallDateSetDialogComponent  {
