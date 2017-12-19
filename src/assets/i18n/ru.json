@@ -2186,7 +2186,7 @@
       "invalidPortfolioStatusCode": "Некорректный статус портфеля",
       "languageNotFound": "Не найдена запись в language для языка, с которым выполняется действие",
       "ldapGroupIsInvalid": "Пустое значение в параметре доменной группы при поиске пользователей группы",
-      "login.invalidCredentials": "Invalid login or password",
+      "login.invalidCredentials": "Неверный логин или пароль",
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
       "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
       "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",

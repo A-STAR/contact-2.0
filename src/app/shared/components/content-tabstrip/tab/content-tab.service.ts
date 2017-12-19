@@ -118,11 +118,11 @@ export class ContentTabService {
       });
   }
 
-  findTabIndexByPath(path: string): number {
+  findTabIndexByPath(path: string | RegExp): number {
     return this._tabs.findIndex(tab => tab.path.match(path) !== null);
   }
 
-  removeTabByPath(path: string): void {
+  removeTabByPath(path: string | RegExp): void {
     const tabIndex = this.findTabIndexByPath(path);
     if (tabIndex !== null) {
       this.removeTab(tabIndex);

@@ -41,7 +41,7 @@ export class AttributeService {
 
   fetchAllVersions(entityType: number, entityId: number, attributeCode: number): Observable<IAttributeVersion[]> {
     return this.dataService
-      .read(`${this.baseUrl}Code/{attributeCode}/versions`, { entityType, entityId, attributeCode })
+      .readAll(`${this.baseUrl}Code/{attributeCode}/versions`, { entityType, entityId, attributeCode })
       .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
   }
 
