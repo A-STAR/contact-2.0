@@ -43,8 +43,7 @@ export class SettingsService {
       isCollapsedText: false,
       useFullLayout: false,
       hiddenFooter: false,
-      offsidebarOpen: false,
-      asideToggled: false,
+      menuToggled: false,
       viewAnimation: 'ng-fadeInUp'
     };
 
