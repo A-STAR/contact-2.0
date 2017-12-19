@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { filter, first, mergeMap } from 'rxjs/operators';
 
-import { IContactPerson } from '../contact-grid.interface';
+import { IContactSelectPerson } from '../contact-select.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContactGridService } from '../contact-grid.service';
+import { ContactSelectService } from '../contact-select.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -14,10 +14,10 @@ import { DialogFunctions } from '../../../../../core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-contact-registration-contact-grid',
-  templateUrl: 'contact-grid.component.html'
+  selector: 'app-contact-registration-contact-select-grid',
+  templateUrl: 'contact-select-grid.component.html'
 })
-export class ContactGridComponent extends DialogFunctions implements OnInit {
+export class ContactSelectGridComponent extends DialogFunctions implements OnInit {
   @Input() debtId: number;
   @Input() personId: number;
 
@@ -34,16 +34,16 @@ export class ContactGridComponent extends DialogFunctions implements OnInit {
     { prop: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
   ];
 
-  rows: IContactPerson[] = [];
+  rows: IContactSelectPerson[] = [];
 
   dialog: 'add';
 
-  selectedPerson: IContactPerson;
+  selectedPerson: IContactSelectPerson;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contactGridService: ContactGridService,
     private contactRegistrationService: ContactRegistrationService,
+    private contactSelectService: ContactSelectService,
     private gridService: GridService,
   ) {
     super();
@@ -64,12 +64,12 @@ export class ContactGridComponent extends DialogFunctions implements OnInit {
     this.fetch();
   }
 
-  onSelect(value: IContactPerson): void {
+  onSelect(value: IContactSelectPerson): void {
     this.selectedPerson = value;
     this.cdRef.markForCheck();
   }
 
-  onSubmit(person: IContactPerson): void {
+  onSubmit(person: IContactSelectPerson): void {
     this.rows.push({
       ...person,
       personFullName: [ person.lastName, person.firstName, person.middleName ].filter(Boolean).join(' '),
@@ -90,7 +90,7 @@ export class ContactGridComponent extends DialogFunctions implements OnInit {
       .pipe(
         filter(Boolean),
         first(),
-        mergeMap(guid => this.contactGridService.fetchAll(guid, this.debtId, this.personId))
+        mergeMap(guid => this.contactSelectService.fetchAll(guid, this.debtId, this.personId))
       )
       .subscribe(contacts => {
         this.rows = contacts;

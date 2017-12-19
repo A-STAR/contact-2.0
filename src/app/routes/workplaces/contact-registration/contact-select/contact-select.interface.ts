@@ -1,4 +1,4 @@
-export interface IContactPerson {
+export interface IContactSelectPerson {
   firstName: string;
   id: number;
   lastName: string;

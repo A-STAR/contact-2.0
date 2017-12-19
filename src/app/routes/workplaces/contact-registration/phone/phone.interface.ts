@@ -1,4 +1,4 @@
-import { IContactPerson } from '../contact/contact-grid.interface';
+import { IContactSelectPerson } from '../contact-select/contact-select.interface';
 
 export interface IPhone {
   typeCode: number;
@@ -6,5 +6,5 @@ export interface IPhone {
   stopAutoSms: number;
   stopAutoInfo: number;
   comment: string;
-  person: Partial<IContactPerson>;
+  person: Partial<IContactSelectPerson>;
 }

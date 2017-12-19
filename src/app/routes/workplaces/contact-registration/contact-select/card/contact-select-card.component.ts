@@ -1,6 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
-import { IContactPerson } from '../contact-grid.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { UserDictionariesService } from 'app/core/user/dictionaries/user-dictionaries.service';
@@ -9,14 +8,14 @@ import { DynamicFormComponent } from 'app/shared/components/form/dynamic-form/dy
 
 import { makeKey } from '../../../../../core/utils';
 
-const labelKey = makeKey('modules.contactRegistration.contactGrid.card');
+const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-contact-registration-contact-card',
-  templateUrl: 'contact-card.component.html'
+  selector: 'app-contact-registration-contact-select-card',
+  templateUrl: 'contact-select-card.component.html'
 })
-export class ContactCardComponent implements AfterViewInit {
+export class ContactSelectCardComponent implements AfterViewInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls = [

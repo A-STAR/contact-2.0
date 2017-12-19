@@ -9,7 +9,6 @@ import { PhoneService } from './phone.service';
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../core/utils';
-import { ContactGridComponent } from '../contact/grid/contact-grid.component';
 
 const labelKey = makeKey('modules.contactRegistration.phone');
 
@@ -23,7 +22,6 @@ export class PhoneComponent {
   @Input() personId: number;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-  @ViewChild(ContactGridComponent) grid: ContactGridComponent;
 
   controls = [
     { controlName: 'typeCode', type: 'selectwrapper', dictCode: 17, required: true },
@@ -35,12 +33,6 @@ export class PhoneComponent {
 
   data = {};
 
-  tabs = [
-    { isInitialised: true, title: 'Tab 1' },
-    { isInitialised: false, title: 'Tab 2' },
-    { isInitialised: false, title: 'Tab 3' },
-  ];
-
   constructor(
     private accordionService: AccordionService,
     private cdRef: ChangeDetectorRef,
@@ -49,19 +41,15 @@ export class PhoneComponent {
   ) {}
 
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit && this.grid && !!this.grid.selectedPerson;
-  }
-
-  onTabSelect(tabIndex: number): void {
-    this.tabs[tabIndex].isInitialised = true;
+    return this.form && this.form.canSubmit;
   }
 
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
-    const { id, personId, personFullName, personRole, ...person } = this.grid.selectedPerson;
+    // const { id, personId, personFullName, personRole, ...person } = this.grid.selectedPerson;
     const data = {
       ...this.form.serializedUpdates,
-      person: personId ? { personId } : person,
+      // person: personId ? { personId } : person,
     };
     this.phoneService.create(this.debtId, guid, data)
       .subscribe(() => {

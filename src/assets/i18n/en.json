@@ -346,18 +346,28 @@
         }
       },
       "contactGrid": {
-        "card": {
-          "firstName": "First name",
-          "lastName": "Last name",
-          "middleName": "Middle name",
-          "linkTypeCode": "Relationship",
-          "personTypeCode": "Person Type",
-          "title": "Add Contact"
-        },
-        "grid": {
-          "linkTypeCode": "Relationship",
-          "personFullName": "Full Name",
-          "personRole": "Role"
+        "tabs": {
+          "selectFromDebt": {
+            "title": "Select From Linked",
+            "grid": {
+              "linkTypeCode": "Тип связи",
+              "personFullName": "ФИО",
+              "personRole": "Роль"
+            }
+          },
+          "selectFromAll": {
+            "title": "Select From All"
+          },
+          "add": {
+            "title": "Add Manually",
+            "form": {
+              "firstName": "Имя",
+              "lastName": "Фамилия",
+              "middleName": "Отчество",
+              "linkTypeCode": "Тип связи",
+              "personTypeCode": "Тип персоны"
+            }
+          }
         }
       },
       "outcome": {
