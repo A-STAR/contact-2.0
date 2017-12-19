@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -17,11 +17,10 @@ import { DropdownComponent } from '../../shared/components/dropdown/dropdown.com
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   @ViewChild('accountDropdown') accountDropdown: DropdownComponent;
 
-  isNavSearchVisible: boolean;
-
+  isNavSearchVisible = false;
   isLicenseVisible = false;
   filters$: Observable<IFilters>;
   hasNotifications$: Observable<boolean>;
@@ -40,25 +39,21 @@ export class HeaderComponent implements OnInit {
     this.notificationsCount$ = this.notificationsService.count;
   }
 
-  ngOnInit(): void {
+  toggleUserSettings(event: MouseEvent): void {
+    event.preventDefault();
+  }
+
+  openNavSearch(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isNavSearchVisible = true;
+  }
+
+  closeNavSearch(): void {
     this.isNavSearchVisible = false;
   }
 
-  toggleUserSettings(event: UIEvent): void {
-    event.preventDefault();
-  }
-
-  openNavSearch(event: UIEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.setNavSearchVisible(true);
-  }
-
-  setNavSearchVisible(stat: boolean): void {
-    this.isNavSearchVisible = stat;
-  }
-
-  getNavSearchVisible(): boolean {
+  get navSearchVisible(): boolean {
     return this.isNavSearchVisible;
   }
 

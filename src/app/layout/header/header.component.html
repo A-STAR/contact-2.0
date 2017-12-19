@@ -82,7 +82,7 @@
     </ul>
   </div>
 
-  <app-navsearch [visible]="getNavSearchVisible()" (onclose)="setNavSearchVisible(false)"></app-navsearch>
+  <app-navsearch *ngIf="navSearchVisible" (close)="closeNavSearch()"></app-navsearch>
 </nav>
 
 <app-info-dialog

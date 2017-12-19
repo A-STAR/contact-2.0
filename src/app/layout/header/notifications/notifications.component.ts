@@ -4,11 +4,9 @@ import {
   Component,
   EventEmitter,
   HostListener,
-  Input,
   Output,
   OnDestroy
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 
