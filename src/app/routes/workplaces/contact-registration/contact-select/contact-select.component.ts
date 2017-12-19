@@ -3,6 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, I
 import { ContactSelectCardComponent } from './card/contact-select-card.component';
 import { ContactSelectGridComponent } from './grid/contact-select-grid.component';
 import { ContactSelectSearchComponent } from './search/contact-select-search.component';
+import { IContactPersonRequest, INewContactPerson } from './contact-select.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,11 +24,11 @@ export class ContactSelectComponent implements AfterViewInit {
     private cdRef: ChangeDetectorRef,
   ) {}
 
-  get isValid(): any {
+  get isValid(): boolean {
     return this.personSelectComponent && this.personSelectComponent.isValid;
   }
 
-  get person(): any {
+  get person(): IContactPersonRequest | INewContactPerson {
     return this.personSelectComponent && this.personSelectComponent.person;
   }
 

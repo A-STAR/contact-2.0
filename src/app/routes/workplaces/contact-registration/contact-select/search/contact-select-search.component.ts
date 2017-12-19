@@ -7,7 +7,9 @@ import { ContactSelectService } from '../contact-select.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from 'app/shared/components/form/dynamic-form/dynamic-form.component';
+import { IContactPerson } from '../contact-select.interface';
+
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { Grid2Component } from '../../../../../shared/components/grid2/grid2.component';
 
 import { isEmpty, makeKey } from '../../../../../core/utils';
@@ -39,7 +41,7 @@ export class ContactSelectSearchComponent {
     { dataType: 6, name: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
   ].map(column => ({ ...column, label: column.name })), {});
 
-  rows: any[] = [];
+  rows: IContactPerson[] = [];
   rowCount = 0;
   rowIdKey = 'id';
 
@@ -53,8 +55,11 @@ export class ContactSelectSearchComponent {
     return !isEmpty(this.grid && this.grid.selected);
   }
 
-  get person(): any {
-    return this.grid && this.grid.selected && { ...this.form.serializedValue, personId: this.grid.selected[0]['id'] };
+  get person(): IContactPerson {
+    return {
+      ...this.form.serializedValue,
+      personId: this.selectedPerson.id,
+    };
   }
 
   onSelect(): void {
@@ -66,10 +71,14 @@ export class ContactSelectSearchComponent {
     const params = this.grid.getRequestParams();
     this.contactSelectService
       .fetchAllPersons(filters, params)
-      .subscribe((response: IAGridResponse<any>) => {
+      .subscribe((response: IAGridResponse<IContactPerson>) => {
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
         this.cdRef.markForCheck();
       });
+  }
+
+  private get selectedPerson(): IContactPerson {
+    return this.grid && this.grid.selected && this.grid.selected[0] as any;
   }
 }

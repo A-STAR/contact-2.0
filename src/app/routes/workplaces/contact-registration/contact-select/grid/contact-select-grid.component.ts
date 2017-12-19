@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { filter, first, mergeMap } from 'rxjs/operators';
 
-import { IContactSelectPerson } from '../contact-select.interface';
+import { ILinkedContactPerson } from '../contact-select.interface';
 
 import { ContactSelectService } from '../contact-select.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
@@ -39,7 +39,7 @@ export class ContactSelectGridComponent implements OnInit {
     { dataType: 6, name: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
   ].map(column => ({ ...column, label: column.name })), {});
 
-  rows: IContactSelectPerson[] = [];
+  rows: ILinkedContactPerson[] = [];
   rowCount = 0;
   rowIdKey = 'id';
 
@@ -59,7 +59,7 @@ export class ContactSelectGridComponent implements OnInit {
   }
 
   get person(): any {
-    return this.grid && this.grid.selected && { personId: this.grid.selected[0]['personId'] };
+    return { personId: this.selectedPerson.personId };
   }
 
   ngOnInit(): void {
@@ -68,6 +68,10 @@ export class ContactSelectGridComponent implements OnInit {
 
   onSelect(): void {
     this.cdRef.markForCheck();
+  }
+
+  private get selectedPerson(): ILinkedContactPerson {
+    return this.grid && this.grid.selected && this.grid.selected[0] as any;
   }
 
   private fetch(): void {
