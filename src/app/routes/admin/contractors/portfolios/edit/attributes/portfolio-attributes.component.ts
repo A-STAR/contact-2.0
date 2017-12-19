@@ -2,13 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { INode } from '../../../../../../shared/gui-objects/container/container.interface';
-
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-
-import {
-  AttributeGridComponent
-} from '../../../../../../shared/gui-objects/widgets/entity-attribute/grid/attribute-grid.component';
 
 @Component({
   selector: 'app-portfolio-attributes',
@@ -20,28 +14,18 @@ export class PortfolioAttributesComponent implements OnInit {
 
   static COMPONENT_NAME = 'PortfolioAttributesComponent';
   static ENTITY_TYPE_PORTFOLIO = 15;
-
-  node: INode = {
-    container: 'flat',
-    children: [
-      {
-        component: AttributeGridComponent,
-        inject: {
-          entityTypeId$: Observable.of(PortfolioAttributesComponent.ENTITY_TYPE_PORTFOLIO),
-          entityId$: Observable.of((<any>this.route.params).value.portfolioId)
-        }
-      }
-    ]
-  };
+  entityTypeId$: Observable<number>;
+  entityId$: Observable<number>;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private contentTabService: ContentTabService) { }
 
-  ngOnInit(): void {
-
-  }
+    ngOnInit(): void {
+      this.entityTypeId$ = Observable.of(PortfolioAttributesComponent.ENTITY_TYPE_PORTFOLIO);
+      this.entityId$ = this.route.paramMap.map(params => parseInt(params.get('portfolioId'), 10));
+    }
 
   onBack(): void {
     this.contentTabService.gotoParent(this.router, 1);

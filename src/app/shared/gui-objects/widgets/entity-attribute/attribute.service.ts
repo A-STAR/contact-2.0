@@ -19,8 +19,6 @@ export class AttributeService {
     private notificationsService: NotificationsService,
   ) {}
 
-  versionParams$ = new BehaviorSubject<IAttributeVersionParams>(null);
-
   fetchAll(entityType: number, entityId: number): Observable<IAttribute[]> {
     return this.dataService
       .readAll(this.baseUrl, { entityType, entityId })
