@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { filter, first, mergeMap } from 'rxjs/operators';
 
 import { IContactSelectPerson } from '../contact-select.interface';
@@ -11,20 +11,24 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-contact-registration-contact-select-grid',
+  styleUrls: [ 'contact-select-grid.component.scss' ],
   templateUrl: 'contact-select-grid.component.html'
 })
 export class ContactSelectGridComponent implements OnInit {
   @Input() debtId: number;
   @Input() personId: number;
 
-  columns: IGridColumn[] = [
-    { prop: 'personFullName' },
-    { prop: 'personRole', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-    { prop: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
-  ];
+  columns$ = this.gridService.getColumns([
+    { dataType: 1, name: 'personFullName' },
+    { dataType: 6, name: 'personRole', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
+    { dataType: 6, name: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
+  ].map(column => ({ ...column, label: column.name })), {});
 
   rows: IContactSelectPerson[] = [];
+  rowCount = 0;
+  rowIdKey = 'id';
 
   selectedPerson: IContactSelectPerson;
 
@@ -40,13 +44,6 @@ export class ContactSelectGridComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gridService.setDictionaryRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [ ...columns ];
-        this.cdRef.markForCheck();
-      });
-
     this.fetch();
   }
 
@@ -64,6 +61,7 @@ export class ContactSelectGridComponent implements OnInit {
       )
       .subscribe(contacts => {
         this.rows = contacts;
+        this.rowCount = contacts.length;
         this.cdRef.markForCheck();
       });
   }

@@ -25,7 +25,7 @@ export class ContactSelectSearchComponent {
     { dataType: 1, name: 'middleName' },
     { dataType: 1, name: 'birthDate' },
     { dataType: 1, name: 'passportNumber' },
-    // { dataType: 6, name: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
+    { dataType: 6, name: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
   ].map(column => ({ ...column, label: column.name })), {});
 
   rows: any[] = [];

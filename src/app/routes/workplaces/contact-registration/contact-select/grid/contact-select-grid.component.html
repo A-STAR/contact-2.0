@@ -1,8 +1,9 @@
-<app-grid
-  columnTranslationKey="modules.contactRegistration.contactGrid.tabs.selectFromDebt"
-  selectionType="single"
-  [columns]="columns"
+<app-grid2
+  *ngIf="columns$ | async"
+  [columns]="columns$ | async"
+  [ngClass]="'person-add-grid'"
+  [persistenceKey]="'person-add-grid'"
+  [rowIdKey]="rowIdKey"
   [rows]="rows"
-  [styles]="{ height: '240px' }"
-  (onSelect)="onSelect($event)"
-></app-grid>
+  [rowCount]="rowCount"
+></app-grid2>
