@@ -5,6 +5,8 @@ import { IAttribute, IAttributeVersionParams } from '../../../../shared/gui-obje
 
 import { AttributeService } from '../../../../shared/gui-objects/widgets/entity-attribute/attribute.service';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { ActivatedRoute } from '@angular/router';
+import { ParamMap } from '@angular/router/src/shared';
 
 @Component({
   selector: 'app-contractors-and-portfolios-version',
@@ -13,23 +15,30 @@ import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 })
 export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestroy {
   static COMPONENT_NAME = 'ContractorsAndPortfoliosVersionComponent';
+  static ENTITY_TYPE_CONTRACTOR = 13;
+  static ENTITY_TYPE_PORTFOLIO = 15;
 
-  selectedAttribute: IAttribute;
+  attributeId: number;
   entityId: number;
   entityTypeId: number;
 
   private paramsSub: Subscription;
 
-  constructor(private attributeService: AttributeService) { }
+  constructor(private attributeService: AttributeService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
 
-    this.paramsSub = this.attributeService.versionParams$
-      .subscribe((params: IAttributeVersionParams) => {
+    this.paramsSub = this.route.paramMap
+      .subscribe((params: ParamMap) => {
         if (params) {
-          this.selectedAttribute = params.selectedAttribute;
-          this.entityId = params.entityId;
-          this.entityTypeId = params.entityTypeId;
+          this.attributeId = parseInt(params.get('attributeId'), 10);
+
+          if ((this.entityId = parseInt(params.get('portfolioId'), 10))) {
+            this.entityTypeId = ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_PORTFOLIO;
+          } else {
+            this.entityId = parseInt(params.get('contractorId'), 10);
+            this.entityTypeId = ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_CONTRACTOR;
+          }
         }
       });
   }

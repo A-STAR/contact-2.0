@@ -2,17 +2,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Input,
   OnInit,
   OnDestroy,
   ViewChild,
-  Input,
-  OnChanges,
-  SimpleChanges
 } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute, IAttributeVersion } from '../../attribute.interface';
@@ -36,16 +34,15 @@ import { combineLatestAnd } from 'app/core/utils/helpers';
   templateUrl: './attribute-version.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttributeVersionComponent extends DialogFunctions implements OnInit, OnDestroy, OnChanges {
+export class AttributeVersionComponent extends DialogFunctions implements OnInit, OnDestroy {
 
-  @Input() selectedAttribute: IAttribute;
+  @Input() attributeId: number;
   @Input() entityId: number;
   @Input() entityTypeId: number;
 
   @ViewChild(GridComponent) grid: GridComponent;
 
   selectedVersion$ = new BehaviorSubject<IAttributeVersion>(null);
-  attributeChanges$ =  new BehaviorSubject<IAttribute>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -71,6 +68,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
         && this.fetch().subscribe(versions => this.onVersionsFetch(versions)),
     },
   ];
+  selectedAttribute: IAttribute;
 
 
   dialog: string;
@@ -98,6 +96,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
     private contentTabService: ContentTabService,
     private gridService: GridService,
     private attributeService: AttributeService,
+    private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService
@@ -111,21 +110,22 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
 
   ngOnInit(): void {
 
-    if (!this.entityTypeId) {
-      this.contentTabService.gotoParent(this.router, 1);
-    }
-
-    this.gridService.setAllRenderers(this.columns)
-    .pipe(first())
-    .subscribe(columns => {
-      this.columns = [...columns];
-      this.cdRef.markForCheck();
-    });
-
     this.entitySubscription = this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
       .switchMap(canView => canView && this.entityTypeId
-        && this.selectedAttribute && this.selectedAttribute.userId ? this.fetch() : Observable.of([]))
-      .subscribe(versions => this.onVersionsFetch(versions));
+        && this.attributeId ? this.fetchAll() : Observable.of([]))
+      .subscribe(versions => {
+
+        this.onVersionsFetch(versions);
+
+        this.toolbarItems = this.getToolbarItems();
+
+        this.gridService.setAllRenderers(this.columns)
+          .pipe(first())
+          .subscribe(columns => {
+            this.columns = [...columns];
+            this.cdRef.markForCheck();
+          });
+      });
   }
 
   ngOnDestroy(): void {
@@ -144,20 +144,25 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
       });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes && changes.selectedAttribute) {
-      this.attributeChanges$.next(changes.selectedAttribute.currentValue);
-    }
-  }
-
   onEditDialogSubmit(version: IAttributeVersion): void {
     this.attributeService.update(this.entityTypeId, this.entityId, this.selectedAttribute.code, version)
       .switchMap(() => this.fetch())
       .subscribe(versions => this.onVersionsFetch(versions));
   }
 
+  private fetchAll(): Observable<IAttributeVersion[]> {
+    return this.fetchAttribute().switchMap(attr => {
+      this.selectedAttribute = attr;
+      return this.fetch();
+    });
+  }
+
   private fetch(): Observable<IAttributeVersion[]> {
-    return this.attributeService.fetchAllVersions(this.entityTypeId, this.entityId, this.selectedAttribute.code);
+    return this.attributeService.fetchAllVersions(this.entityTypeId, this.entityId, this.attributeId);
+  }
+
+  private fetchAttribute(): Observable<IAttribute> {
+    return this.attributeService.fetch(this.entityTypeId, this.entityId, this.attributeId);
   }
 
   private onVersionsFetch(versions: IAttributeVersion[]): void {
@@ -170,7 +175,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   private get canEdit$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-      this.attributeChanges$.map(attr => attr && attr.disabledValue !== -1)
+      Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
     ]);
   }
 

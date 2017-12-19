@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Inject, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Inject, Component, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -33,9 +33,11 @@ const labelKey = makeKey('widgets.attribute.grid');
 export class AttributeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(GridTreeWrapperComponent) grid: GridTreeWrapperComponent<IAttribute>;
 
+  @Input() entityTypeId$: Observable<number>;
+  @Input() entityId$: Observable<number>;
+
   private _entityTypeId: number;
   private _entityId: number;
-
   private entitySubscription: Subscription;
 
   private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
@@ -118,9 +120,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     private cdRef: ChangeDetectorRef,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
-    private router: Router,
-    @Inject('entityTypeId$') private entityTypeId$: Observable<number>,
-    @Inject('entityId$') private entityId$: Observable<number>,
+    private router: Router
   ) {
     super();
   }
@@ -188,12 +188,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   onVersionClick(): void {
-    this.router.navigate([`${this.router.url}/versions`]);
-    this.attributeService.versionParams$.next({
-      selectedAttribute: this.selectedAttribute$.value,
-      entityId: this.entityId,
-      entityTypeId: this.entityTypeId
-    });
+    this.router.navigate([`${this.router.url}/${this.selectedAttribute$.value.code}/versions`]);
   }
 
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
