@@ -59,7 +59,7 @@ export class ContactSelectGridComponent implements OnInit {
   }
 
   get person(): any {
-    return this.grid && this.grid.selected && this.grid.selected[0];
+    return this.grid && this.grid.selected && { personId: this.grid.selected[0]['personId'] };
   }
 
   ngOnInit(): void {

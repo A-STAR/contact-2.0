@@ -54,7 +54,7 @@ export class ContactSelectSearchComponent {
   }
 
   get person(): any {
-    return this.grid && this.grid.selected && { ...this.grid.selected[0], ...this.form.serializedValue };
+    return this.grid && this.grid.selected && { ...this.form.serializedValue, personId: this.grid.selected[0]['id'] };
   }
 
   onSelect(): void {
