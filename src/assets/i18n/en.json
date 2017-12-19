@@ -1766,7 +1766,7 @@
         "title": "Contact history"
       },
       "card": {
-        "fullName": "Debtor",
+        "fullName": "Full name",
         "contract": "Contract",
         "contactData": "Contact phone/address",
         "contactDateTime": "Contact date",
@@ -2056,6 +2056,9 @@
     },
     "pledgors": {
       "gen": { "singular": "pledgor", "plural": "pledgors" }
+    },
+    "contactLog": {
+      "gen": { "singular": "contact", "plural": "contacts" }
     }
   },
   "massOperations": {

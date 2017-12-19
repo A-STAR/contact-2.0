@@ -74,6 +74,11 @@ export class ContactLogTabCardComponent implements OnInit {
     return this.form && this.form.canSubmit;
   }
 
+  get editable(): boolean {
+    return !this.disabled && this.contactLogType !== ContactLogService.CONTACT_TYPE_SMS
+      && this.contactLogType !== ContactLogService.CONTACT_TYPE_EMAIL;
+  }
+
   onSubmit(): void {
     this.contactLogService.update(this.debtId, this.contactId, this.form.value.comment)
       .subscribe(() => {
