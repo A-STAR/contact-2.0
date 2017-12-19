@@ -5,11 +5,11 @@ import { Subscription } from 'rxjs/Subscription';
 
 import {
   IActionType,
-  IContractor,
-  IContractorEditAction
+  IContractor
 } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
+import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -18,6 +18,8 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
+import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contractor-edit',
@@ -38,6 +40,7 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
@@ -47,18 +50,21 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    const contractorId = parseInt(this.route.snapshot.paramMap.get('contractorId'), 10);
+    const getContractor$ = contractorId ? this.contractorsAndPortfoliosService.readContractor(contractorId) : Observable.of(null);
+
     this.editedContractorSub = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
-      this.contractorsAndPortfoliosService.initContractorUpdate(this.route),
+      getContractor$,
       this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
     )
+    .pipe(first())
     // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-    .subscribe(([ contractorTypeOptions, userOptions, action, canViewAttributes ]) => {
+    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes ]) => {
       this.canViewAttributes = true;
 
-      const editedContractor = action.payload && (action as IContractorEditAction).payload.selectedContractor;
-      this.contractorId = editedContractor && editedContractor.id;
+      this.contractorId = contractor && contractor.id;
 
       const label = makeKey('contractors.grid');
       this.controls = [
@@ -71,7 +77,7 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
         { label: label('address'), controlName: 'address', type: 'text' },
         { label: label('comment'), controlName: 'comment', type: 'textarea' },
       ];
-      this.formData = editedContractor;
+      this.formData = contractor;
       this.cdRef.markForCheck();
     });
   }
@@ -99,7 +105,11 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.router.navigate(['/admin/contractors']);
+    this.router.navigate(['/admin/contractors']).then((isSuccess: boolean) => {
+      if (isSuccess) {
+        this.contentTabService.removeTabByPath(/\/admin\/contractors\/(.+)/);
+      }
+    });
   }
 
   onManagersClick(): void {

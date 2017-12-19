@@ -1,4 +1,3 @@
-import { ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
@@ -7,8 +6,14 @@ import { first } from 'rxjs/operators';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
-  IContractor, IContractorsAndPortfoliosState,
-  IContractorManager, IPortfolio, IPortfolioMoveRequest, IPortfolioOutsourceRequest, IActionType, IContractorAndPorfolioAction,
+  IContractor,
+  IContractorsAndPortfoliosState,
+  IContractorManager,
+  IPortfolio,
+  IPortfolioMoveRequest,
+  IPortfolioOutsourceRequest,
+  IActionType,
+  IContractorAndPorfolioAction
 } from './contractors-and-portfolios.interface';
 
 import { DataService } from '../../../core/data/data.service';
@@ -183,34 +188,6 @@ export class ContractorsAndPortfoliosService {
       IActionType.PORTFOLIO_SELECT,
       { selectedPortfolio: portfolio }
     );
-  }
-
-  initContractorUpdate(route: ActivatedRoute): Observable<IContractorAndPorfolioAction> {
-    return Observable.merge(
-      this.getAction(IActionType.CONTRACTOR_CREATE),
-      this.getAction(IActionType.CONTRACTOR_EDIT),
-      route.params
-    )
-    .switchMap((action: any) => action.contractorId ?
-      this.readContractor(action.contractorId)
-        .map(result => ({
-          payload: { selectedContractor: result }
-        }))
-      : Observable.of(action));
-  }
-
-  initPortfolioUpdate(route: ActivatedRoute): Observable<IContractorAndPorfolioAction> {
-    return Observable.merge(
-      this.getAction(IActionType.PORTFOLIO_CREATE),
-      this.getAction(IActionType.PORTFOLIO_EDIT),
-      route.params
-    )
-    .switchMap((action: any) => action.contractorId ?
-      this.readPortfolio(action.contractorId, action.portfolioId)
-      .map(result => ({
-        payload: { selectedPortfolio: result }
-      }))
-      : Observable.of(action));
   }
 
   get state(): Observable<IContractorsAndPortfoliosState> {

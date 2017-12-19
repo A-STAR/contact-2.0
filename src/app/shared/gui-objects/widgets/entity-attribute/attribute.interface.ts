@@ -26,8 +26,8 @@ export interface IAttributeVersion {
   userFullName: string;
   typeCode: number;
   changeDateTime?: string;
-  fromDateTime: string;
-  toDateTime: string;
+  fromDateTime?: string;
+  toDateTime?: string;
   dictNameCode: number;
   valueN: number;
   valueB: number;
