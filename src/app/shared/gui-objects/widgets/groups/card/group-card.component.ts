@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import 'rxjs/add/observable/combineLatest';
@@ -22,6 +22,9 @@ const label = makeKey('widgets.groups.card');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GroupCardComponent implements OnInit {
+
+  @Input() groupId: number;
+
   @ViewChild('form') form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
@@ -35,9 +38,9 @@ export class GroupCardComponent implements OnInit {
 
   ngOnInit(): void {
     Observable.combineLatest(
-      this.groupService.canAdd$,
+      this.groupId ? this.groupService.canEdit$ : this.groupService.canAdd$,
       this.groupService.canConditionEdit$,
-      Observable.of(this.getFormData()),
+      this.groupId ? this.groupService.fetch(this.groupId) : Observable.of(this.getFormData()),
       this.groupService.groupEntityTypeOptions$
     )
     .pipe(first())
@@ -53,7 +56,11 @@ export class GroupCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.groupService.create(this.form.serializedUpdates).subscribe(() => {
+    const action = this.groupId
+      ? this.groupService.update(this.groupId, this.form.serializedValue)
+      : this.groupService.create(this.form.serializedUpdates);
+
+    action.subscribe(() => {
       this.groupService.dispatchAction(GroupService.MESSAGE_GROUP_SAVED);
       this.onBack();
     });
@@ -68,11 +75,14 @@ export class GroupCardComponent implements OnInit {
       { label: label('name'), controlName: 'name', type: 'text', disabled: !canEdit, required: true },
       {
         label: label('entityTypeCode'), controlName: 'entityTypeCode', type: 'select',
-        options: entityTypeOptions, required: true, disabled: !canEdit, markAsDirty: true
+        options: entityTypeOptions, required: true, disabled: !canEdit, markAsDirty: !this.groupId
       },
       { label: label('comment'), controlName: 'comment', type: 'textarea', disabled: !canEdit },
-      { label: label('isManual'), controlName: 'isManual', type: 'checkbox', disabled: !canEdit, markAsDirty: true },
-      { label: label('isPreCleaned'), controlName: 'isPreCleaned', type: 'checkbox', disabled: !canEdit, markAsDirty: true },
+      { label: label('isManual'), controlName: 'isManual', type: 'checkbox', disabled: !canEdit, markAsDirty: !this.groupId },
+      {
+        label: label('isPreCleaned'), controlName: 'isPreCleaned', type: 'checkbox',
+        disabled: !canEdit, markAsDirty: !this.groupId
+      },
     ];
 
     if (canConditionEdit) {

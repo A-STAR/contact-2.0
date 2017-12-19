@@ -9,7 +9,8 @@ import { GroupCardComponent } from './card/card.component';
 
 const routes: Routes = [
   { path: '', component: GroupsComponent },
-  { path: 'create', component: GroupCardComponent }
+  { path: 'create', component: GroupCardComponent },
+  { path: ':groupId', component: GroupCardComponent }
 ];
 
 @NgModule({

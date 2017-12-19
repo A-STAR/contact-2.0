@@ -4,7 +4,10 @@
   columnTranslationKey="widgets.groups"
   selectionType="single"
   [columns]="columns"
+  [selection]="selection"
   [footerHeight]="false"
   [rows]="groups"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onEdit($event)"
 >
 </app-grid>

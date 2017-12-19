@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
 import { IGroup } from '../group.interface';
@@ -19,6 +21,8 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 })
 export class GroupGridComponent implements OnInit, OnDestroy {
 
+  private selectedGroup$ = new BehaviorSubject<IGroup>(null);
+
   columns: Array<IGridColumn> = [
     { prop: 'id' },
     { prop: 'entityTypeCode', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE },
@@ -35,7 +39,15 @@ export class GroupGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.groupService.canAdd$,
       action: () => this.onAdd()
-    }
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      action: () => this.onEdit(this.selectedGroup$.value),
+      enabled: Observable.combineLatest(
+        this.groupService.canEdit$,
+        this.selectedGroup$
+      ).map(([canEdit, selectedGroup]) => !!canEdit && !!selectedGroup)
+    },
   ];
 
   private _groups: Array<IGroup> = [];
@@ -73,6 +85,7 @@ export class GroupGridComponent implements OnInit, OnDestroy {
       .getAction(GroupService.MESSAGE_GROUP_SAVED)
       .subscribe(() => {
         this.fetch();
+        this.selectedGroup$.next(this.selectedGroup);
       });
   }
 
@@ -82,6 +95,24 @@ export class GroupGridComponent implements OnInit, OnDestroy {
 
   get groups(): Array<IGroup> {
     return this._groups;
+  }
+
+  get selectedGroup(): IGroup {
+    return (this._groups || [])
+      .find(group => this.selectedGroup$.value && group.id === this.selectedGroup$.value.id);
+  }
+
+  get selection(): Array<IGroup> {
+    const selectedGroup = this.selectedGroup;
+    return selectedGroup ? [ selectedGroup ] : [];
+  }
+
+  onSelect(group: IGroup): void {
+    this.selectedGroup$.next(group);
+  }
+
+  onEdit(group: IGroup): void {
+    this.router.navigate([ `${this.router.url}/${group.id}` ]);
   }
 
   private onAdd(): void {
