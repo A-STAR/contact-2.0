@@ -14,12 +14,14 @@ import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { DialogFunctions } from '../../../../../core/dialog';
+
 @Component({
   selector: 'app-group-grid',
   templateUrl: './group-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GroupGridComponent implements OnInit, OnDestroy {
+export class GroupGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 
   private selectedGroup$ = new BehaviorSubject<IGroup>(null);
 
@@ -48,7 +50,17 @@ export class GroupGridComponent implements OnInit, OnDestroy {
         this.selectedGroup$
       ).map(([canEdit, selectedGroup]) => !!canEdit && !!selectedGroup)
     },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      action: () => this.setDialog('removeGroup'),
+      enabled: Observable.combineLatest(
+        this.groupService.canDelete$,
+        this.selectedGroup$
+      ).map(([canDelete, selectedGroup]) => !!canDelete && !!selectedGroup),
+    },
   ];
+
+  dialog: string;
 
   private _groups: Array<IGroup> = [];
 
@@ -61,7 +73,9 @@ export class GroupGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private router: Router,
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
@@ -113,6 +127,16 @@ export class GroupGridComponent implements OnInit, OnDestroy {
 
   onEdit(group: IGroup): void {
     this.router.navigate([ `${this.router.url}/${group.id}` ]);
+  }
+
+  onRemove(): void {
+    const { id: groupId } = this.selectedGroup;
+    this.groupService.delete(groupId)
+      .subscribe(() => {
+        this.setDialog(null);
+        this.selectedGroup$.next(null);
+        this.fetch();
+      });
   }
 
   private onAdd(): void {

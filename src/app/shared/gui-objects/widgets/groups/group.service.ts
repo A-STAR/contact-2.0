@@ -45,6 +45,10 @@ export class GroupService extends AbstractActionService {
     return this.userPermissionsService.has('GROUP_EDIT');
   }
 
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('GROUP_DELETE');
+  }
+
   get canConditionEdit$(): Observable<boolean> {
     return this.userPermissionsService.has('GROUP_CONDITION_EDIT');
   }
@@ -78,5 +82,10 @@ export class GroupService extends AbstractActionService {
   update(groupId: number, group: IGroup): Observable<any> {
     return this.dataService.update(`${this.baseUrl}/{groupId}`, { groupId }, group)
       .catch(this.notificationsService.updateError().entity('entities.group.gen.singular').dispatchCallback());
+  }
+
+  delete(groupId: number): Observable<any> {
+    return this.dataService.delete(`${this.baseUrl}/{groupId}`, { groupId })
+      .catch(this.notificationsService.deleteError().entity('entities.group.gen.singular').dispatchCallback());
   }
 }

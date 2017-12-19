@@ -955,6 +955,13 @@
     },
     "contactLogTab": {
       "title": "Contact log"
+    },
+    "groupTab": {
+      "title": "Groups",
+      "remove": {
+        "title": "Delete the group",
+        "confirmMessage": "Do you really want to delete this group?"
+      }
     }
   },
   "person": {
