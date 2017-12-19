@@ -43,33 +43,9 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   @ViewChild(GridComponent) grid: GridComponent;
 
   selectedVersion$ = new BehaviorSubject<IAttributeVersion>(null);
-
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.setDialog('add'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-        this.attributeChanges$.map(attr => attr && attr.disabledValue !== -1),
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.setDialog('edit'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-        this.attributeChanges$.map(attr => attr && attr.disabledValue !== -1),
-        this.selectedVersion$.map(version => !!version)
-      ]),
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.entityTypeId && this.entityId && this.selectedAttribute
-        && this.fetch().subscribe(versions => this.onVersionsFetch(versions)),
-    },
-  ];
   selectedAttribute: IAttribute;
 
+  toolbarItems: Array<IToolbarItem>;
 
   dialog: string;
 
@@ -177,6 +153,33 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
       this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
       Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
     ]);
+  }
+
+  private getToolbarItems(): IToolbarItem[] {
+    return [
+      {
+        type: ToolbarItemTypeEnum.BUTTON_ADD,
+        action: () => this.setDialog('add'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
+          Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
+        ])
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
+          Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
+          this.selectedVersion$.map(version => !!version)
+        ]),
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.entityTypeId && this.entityId && this.selectedAttribute
+          && this.fetch().subscribe(versions => this.onVersionsFetch(versions)),
+      },
+    ];
   }
 
 }

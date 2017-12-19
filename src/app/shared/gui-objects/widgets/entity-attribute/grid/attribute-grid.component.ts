@@ -82,34 +82,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
 
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.setDialog('edit'),
-      enabled: combineLatestAnd([
-        this.entityTypeId$.flatMap(
-          entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId)
-        ),
-        this.selectedAttribute$.map(attribute => attribute && attribute.disabledValue !== 1)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_VERSION,
-      action: () => this.onVersionClick(),
-      enabled: combineLatestAnd([
-        this.entityTypeId$.flatMap(
-          entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
-        ),
-        // TODO:(i.lobanov) there is no version prop now on BE, uncomment when done
-        this.selectedAttribute$.map(attribute => !!attribute && attribute.disabledValue !== 1)
-        // this.selectedAttribute$.map(attribute => attribute && !!attribute.version && attribute.disabledValue !== 1)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.entityTypeId && this.entityId && this.fetch(),
-    },
-  ];
+  toolbarItems: IToolbarItem[];
 
   dialog: 'edit';
 
@@ -126,6 +99,9 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   ngOnInit(): void {
+
+    this.toolbarItems = this.getToolbarItems();
+
     this.entitySubscription = Observable.combineLatest(this.entityTypeId$, this.entityId$)
       .flatMap(([ entityTypeId, entityId ]) =>
         this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', entityTypeId)
@@ -208,6 +184,37 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         ? { data: rest, children: this.convertToGridTreeRow(children), isExpanded: true }
         : { data: rest };
     });
+  }
+
+  private getToolbarItems(): IToolbarItem[] {
+    return [
+      {
+        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: combineLatestAnd([
+          this.entityTypeId$.flatMap(
+            entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId)
+          ),
+          this.selectedAttribute$.map(attribute => attribute && attribute.disabledValue !== 1)
+        ])
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_VERSION,
+        action: () => this.onVersionClick(),
+        enabled: combineLatestAnd([
+          this.entityTypeId$.flatMap(
+            entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
+          ),
+          // TODO:(i.lobanov) there is no version prop now on BE, uncomment when done
+          this.selectedAttribute$.map(attribute => !!attribute && attribute.disabledValue !== 1)
+          // this.selectedAttribute$.map(attribute => attribute && !!attribute.version && attribute.disabledValue !== 1)
+        ])
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.entityTypeId && this.entityId && this.fetch(),
+      },
+    ];
   }
 
   private removeSelection(): void {
