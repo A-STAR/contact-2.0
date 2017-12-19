@@ -3,10 +3,12 @@
     <h3>{{ 'widgets.entityGroup.dialog.title' | translate }}</h3>
   </div>
 
-  <!-- <app-entity-group-grid></app-entity-group-grid> -->
- <p>hellow module</p>
+  <div class="form-wrapper">
+    <app-dynamic-form [controls]="controls" >></app-dynamic-form>
+  </div>
+
   <div dialog-footer>
-    <button class="btn btn-success" [disabled]="!hasSelection" (click)="onSelect()">
+    <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
       <i class="fa fa-check"></i> {{ 'default.buttons.select' | translate }}
     </button>
     <button class="btn btn-default" (click)="onClose()">
