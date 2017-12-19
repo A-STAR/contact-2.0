@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IGroup } from '../group.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { GroupService } from '../group.service';
 import { GridService } from '../../../../components/grid/grid.service';
@@ -25,18 +27,28 @@ export class GroupGridComponent implements OnInit, OnDestroy {
     { prop: 'isManual', renderer: 'checkboxRenderer' },
     { prop: 'isPreCleaned', renderer: 'checkboxRenderer' },
     { prop: 'userFullName' },
-    { prop: 'formDateTime' }
+    { prop: 'formDateTime' },
+  ];
+
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      enabled: this.groupService.canAdd$,
+      action: () => this.onAdd()
+    }
   ];
 
   private _groups: Array<IGroup> = [];
 
   private viewPermissionSubscription: Subscription;
+  private actionSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private groupService: GroupService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -56,6 +68,12 @@ export class GroupGridComponent implements OnInit, OnDestroy {
           this.notificationsService.error('errors.default.read.403').entity('entities.groups.gen.plural').dispatch();
         }
       });
+
+    this.actionSubscription = this.groupService
+      .getAction(GroupService.MESSAGE_GROUP_SAVED)
+      .subscribe(() => {
+        this.fetch();
+      });
   }
 
   ngOnDestroy(): void {
@@ -64,6 +82,10 @@ export class GroupGridComponent implements OnInit, OnDestroy {
 
   get groups(): Array<IGroup> {
     return this._groups;
+  }
+
+  private onAdd(): void {
+    this.router.navigate([ `${this.router.url}/create` ]);
   }
 
   private fetch(): void {

@@ -1905,6 +1905,16 @@
         "isPreCleaned": "Очищать предыдущие данные",
         "userFullName": "Оператор",
         "formDateTime": "Дата переформирования"
+      },
+      "card": {
+        "entityTypeCode": "Тип",
+        "name": "Название",
+        "comment": "Комментарий",
+        "isManual": "Ручное наполнение",
+        "isPreCleaned": "Очищать предыдущие данные",
+        "userFullName": "Оператор",
+        "formDateTime": "Дата переформирования",
+        "sql": "SQL"
       }
     }
   },

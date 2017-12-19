@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { GridModule } from '../../../../components/grid/grid.module';
+import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
 
 import { GroupGridComponent } from './group-grid.component';
 
@@ -9,6 +10,7 @@ import { GroupGridComponent } from './group-grid.component';
   imports: [
     CommonModule,
     GridModule,
+    Toolbar2Module,
   ],
   exports: [
     GroupGridComponent,

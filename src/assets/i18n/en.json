@@ -1905,6 +1905,16 @@
         "isPreCleaned": "Is pre-cleaned",
         "userFullName": "Operator",
         "formDateTime": "Form date"
+      },
+      "card": {
+        "entityTypeCode": "Type",
+        "name": "Name",
+        "comment": "Comment",
+        "isManual": "Is manual",
+        "isPreCleaned": "Is pre-cleaned",
+        "userFullName": "Operator",
+        "formDateTime": "Form date",
+        "sql": "SQL"
       }
     }
   },
