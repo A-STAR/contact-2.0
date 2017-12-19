@@ -34,6 +34,8 @@ export class ContactSelectSearchComponent {
   rowCount = 0;
   rowIdKey = 'id';
 
+  linkTypeCode: number;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactSelectService: ContactSelectService,
