@@ -3,11 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-group-tab',
-  templateUrl: './card.component.html',
+  templateUrl: './edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GroupCardComponent {
-  static COMPONENT_NAME = 'GroupCardComponent';
+export class GroupEditComponent {
+  static COMPONENT_NAME = 'GroupEditComponent';
 
   constructor(
     private route: ActivatedRoute,

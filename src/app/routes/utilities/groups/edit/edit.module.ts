@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { GroupCardComponent } from './card.component';
+import { GroupEditComponent } from './edit.component';
 
 @NgModule({
   imports: [
     SharedModule,
   ],
   exports: [
-    GroupCardComponent
+    GroupEditComponent
   ],
   declarations: [
-    GroupCardComponent
+    GroupEditComponent
   ],
 })
-export class GroupCardModule {}
+export class GroupEditModule {}

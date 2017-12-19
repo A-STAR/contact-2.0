@@ -58,6 +58,11 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
         this.selectedGroup$
       ).map(([canDelete, selectedGroup]) => !!canDelete && !!selectedGroup),
     },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.fetch(),
+      enabled: this.groupService.canView$
+    }
   ];
 
   dialog: string;
