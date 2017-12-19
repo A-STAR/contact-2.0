@@ -27,7 +27,6 @@ import { GridTreeWrapperComponent } from '../../../../../shared/components/gridt
 import { DialogFunctions } from '../../../../../core/dialog';
 
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
-import { getRawValue, getDictCodeForValue } from '../../../../../core/utils/value';
 
 import { makeKey } from '../../../../../core/utils';
 
@@ -59,19 +58,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     },
     {
       label: labelKey('value'),
-      valueGetter: (_, data) => getRawValue(data),
-      // TODO(d.maltsev): predefined formatting options e.g. 'date', 'datetime', etc.
-      valueFormatter: (value, data) => {
-        switch (data.typeCode) {
-          case 2:
-            return this.valueConverterService.ISOToLocalDate(value as string) || '';
-          case 7:
-            return this.valueConverterService.ISOToLocalDateTime(value as string) || '';
-          default:
-            return value as string;
-        }
-      },
-      dictCode: data => getDictCodeForValue(data),
+      valueGetter: (_, data) => this.valueConverterService.deserialize(data).value,
     },
     {
       label: labelKey('userFullName'),
