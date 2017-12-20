@@ -50,7 +50,7 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    const contractorId = parseInt(this.route.snapshot.paramMap.get('contractorId'), 10);
+    const contractorId = Number(this.route.snapshot.paramMap.get('contractorId'));
     const getContractor$ = contractorId ? this.contractorsAndPortfoliosService.readContractor(contractorId) : Observable.of(null);
 
     this.editedContractorSub = combineLatest(

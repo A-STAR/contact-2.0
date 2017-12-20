@@ -24,7 +24,7 @@ export class ContractorAttributesComponent implements OnInit {
 
   ngOnInit(): void {
     this.entityTypeId$ = Observable.of(ContractorAttributesComponent.ENTITY_TYPE_CONTRACTOR);
-    this.entityId$ = this.route.paramMap.map(params => parseInt(params.get('contractorId'), 10));
+    this.entityId$ = this.route.paramMap.map(params => Number(params.get('contractorId')));
   }
 
   onBack(): void {

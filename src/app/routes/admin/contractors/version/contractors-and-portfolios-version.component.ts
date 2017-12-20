@@ -30,12 +30,12 @@ export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestr
     this.paramsSub = this.route.paramMap
       .subscribe((params: ParamMap) => {
         if (params) {
-          this.attributeId = parseInt(params.get('attributeId'), 10);
+          this.attributeId = Number(params.get('attributeId'));
 
-          if ((this.entityId = parseInt(params.get('portfolioId'), 10))) {
+          if ((this.entityId = Number(params.get('portfolioId')))) {
             this.entityTypeId = ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_PORTFOLIO;
           } else {
-            this.entityId = parseInt(params.get('contractorId'), 10);
+            this.entityId = Number(params.get('contractorId'));
             this.entityTypeId = ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_CONTRACTOR;
           }
         }

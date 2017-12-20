@@ -24,7 +24,7 @@ export class PortfolioAttributesComponent implements OnInit {
 
     ngOnInit(): void {
       this.entityTypeId$ = Observable.of(PortfolioAttributesComponent.ENTITY_TYPE_PORTFOLIO);
-      this.entityId$ = this.route.paramMap.map(params => parseInt(params.get('portfolioId'), 10));
+      this.entityId$ = this.route.paramMap.map(params => Number(params.get('portfolioId')));
     }
 
   onBack(): void {
