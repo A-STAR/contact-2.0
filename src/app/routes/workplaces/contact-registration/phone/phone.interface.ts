@@ -1,4 +1,4 @@
-import { IContactPersonRequest, INewContactPerson } from '../contact-select/contact-select.interface';
+import { IContactPayload } from '../contact-select/contact-select.interface';
 
 export interface IPhone {
   typeCode: number;
@@ -6,5 +6,5 @@ export interface IPhone {
   stopAutoSms: number;
   stopAutoInfo: number;
   comment: string;
-  person: IContactPersonRequest | INewContactPerson;
+  person: IContactPayload;
 }

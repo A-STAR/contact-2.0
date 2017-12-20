@@ -39,3 +39,5 @@ export interface IContactPersonRequest {
   personId: number;
   linkTypeCode?: number;
 }
+
+export type IContactPayload = IContactPersonRequest | INewContactPerson;
