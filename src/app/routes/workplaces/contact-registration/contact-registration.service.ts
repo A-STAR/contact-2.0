@@ -59,6 +59,10 @@ export class ContactRegistrationService {
     return this.selectedNode$.map(node => this.isNodeValid(node) && Number(node.data.addPhone) === 1);
   }
 
+  get canChangeContact$(): Observable<boolean> {
+    return this.selectedNode$.map(node => this.isNodeValid(node) && Number(node.data.changeContactPerson) === 1);
+  }
+
   get canAddDebtReason$(): Observable<boolean> {
     return this.selectedNode$.map(node => this.isNodeValid(node) && [2, 3].includes(node.data.debtReasonMode));
   }
