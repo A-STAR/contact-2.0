@@ -1,10 +1,14 @@
 .form-wrapper {
-    min-height: 32em !important;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
+    min-height: 30.5em;
 
     app-input-datepicker .dropdown {
-      left: 0 !important;
+      left: 0;
+      box-shadow: none !important;
     }
+    .col-xs-5 {
+      width: 18.5em !important;
+    }
+}
+.dialog {
+  width: 20.5em !important;
 }
