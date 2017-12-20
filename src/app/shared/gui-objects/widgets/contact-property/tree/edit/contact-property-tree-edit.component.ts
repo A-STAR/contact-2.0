@@ -9,12 +9,11 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
+import { Validators } from '@angular/forms';
 
 import { EntityTranslationsService } from '../../../../../../core/entity/translations/entity-translations.service';
 import { IContactTreeAttribute } from '../../contact-property.interface';
