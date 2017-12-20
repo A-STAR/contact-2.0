@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -50,7 +49,6 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   private _richTextMode = true;
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private elRef: ElementRef,
   ) {}
 
