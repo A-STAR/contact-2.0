@@ -12,7 +12,6 @@ import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interf
 import { PaymentsService } from '../payments.service';
 
 import { ActionGridComponent } from '../../../../shared/components/action-grid/action-grid.component';
-import { PaymentsFilterComponent } from './payments-filter/payments-filter.component';
 
 @Component({
   selector: 'app-workplaces-payments-grid',
@@ -23,7 +22,6 @@ import { PaymentsFilterComponent } from './payments-filter/payments-filter.compo
 })
 export class PaymentsGridComponent {
 
-  @ViewChild(PaymentsFilterComponent) filter: PaymentsFilterComponent;
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IPayment>;
 
   rows: IPayment[] = [];
@@ -36,7 +34,6 @@ export class PaymentsGridComponent {
 
   onRequest(): void {
     const filters = this.grid.getFilters();
-    filters.addFilter(this.filter.filters);
     const params = this.grid.getRequestParams();
     this.paymentsService.fetch(filters, params)
       .subscribe((response: IAGridResponse<IPayment>) => {

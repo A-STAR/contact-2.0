@@ -9,6 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
@@ -56,6 +57,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   attributeTypes: ITreeNode[] = [];
 
   private _formSubscription: Subscription;
+  private statusReasonModeSubscription: Subscription;
+
   private _attributeTypesChanged = false;
 
   constructor(
@@ -106,6 +109,23 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
           ? { name: 'templateFormula', value: data && data.templateFormula }
           : { name: 'templateId', value: data && data.templateId },
       };
+      this.cdRef.detectChanges();
+      this.statusReasonModeSubscription = this.form
+        .onCtrlValueChange('statusReasonMode')
+        .subscribe((options: IOption[]) => {
+          // TODO(d.maltsev): this is horrible. Do something about it.
+          const value = Number(options[0].value);
+          const ctrl = this.form.getControl('debtStatusCode');
+          if ([2, 3].includes(value)) {
+            this.form.getControlDef('debtStatusCode').required = true;
+            ctrl.setValidators([ Validators.required ]);
+          } else {
+            this.form.getControlDef('debtStatusCode').required = false;
+            ctrl.clearValidators();
+          }
+          ctrl.updateValueAndValidity();
+          this.cdRef.markForCheck();
+        });
       this.cdRef.markForCheck();
     });
   }
@@ -131,6 +151,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._formSubscription.unsubscribe();
+    this.statusReasonModeSubscription.unsubscribe();
   }
 
   get canSubmit(): boolean {
@@ -235,6 +256,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
               { label: labelKey('promiseMode'), controlName: 'promiseMode', ...promiseOptions },
               { label: labelKey('paymentMode'), controlName: 'paymentMode', ...promiseOptions },
               { label: labelKey('callReasonMode'), controlName: 'callReasonMode', ...modeOptions },
+              // TODO(d.maltsev):  required if statusReasonMode equals 2 or 3
+              // See: http://confluence.luxbase.int:8080/browse/WEB20-419
               { label: labelKey('debtStatusCode'), controlName: 'debtStatusCode', type: 'select', options: debtStatusOptions },
               { label: labelKey('statusReasonMode'), controlName: 'statusReasonMode', ...modeOptions },
               { label: labelKey('debtReasonMode'), controlName: 'debtReasonMode', ...modeOptions },
@@ -259,6 +282,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
               { label: labelKey('changeResponsible'), controlName: 'changeResponsible', type: 'checkbox' },
               { label: labelKey('contactInvisible'), controlName: 'contactInvisible', type: 'checkbox' },
               { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'checkbox' },
+              { label: labelKey('changeContactPerson'), controlName: 'changeContactPerson', type: 'checkbox' },
             ]
           }
         ]

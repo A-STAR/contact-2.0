@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AttachmentModule } from './attachment/attachment.module';
 import { AttributesModule } from './attributes/attributes.module';
+import { ContactSelectModule } from './contact-select/contact-select.module';
 import { MiscModule } from './misc/misc.module';
 import { OutcomeModule } from './outcome/outcome.module';
 import { PaymentModule } from './payment/payment.module';
@@ -20,6 +21,7 @@ const routes: Routes = [
   imports: [
     AttachmentModule,
     AttributesModule,
+    ContactSelectModule,
     MiscModule,
     OutcomeModule,
     PaymentModule,

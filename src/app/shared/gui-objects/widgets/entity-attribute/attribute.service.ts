@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IAttribute, IAttributeVersion, IAttributeVersionParams } from './attribute.interface';
+import { IAttribute, IAttributeVersion } from './attribute.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class AttributeService {
@@ -18,8 +17,6 @@ export class AttributeService {
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
-
-  versionParams$ = new BehaviorSubject<IAttributeVersionParams>(null);
 
   fetchAll(entityType: number, entityId: number): Observable<IAttribute[]> {
     return this.dataService

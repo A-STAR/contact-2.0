@@ -30,6 +30,7 @@ import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
 import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { PropertyModule } from './property/property.module';
+import { GroupModule } from './groups/group.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
@@ -64,6 +65,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PromiseModule,
     PromiseResolveModule,
     PropertyModule,
+    GroupModule,
     VisitPrepareModule,
   ],
   exports: [
@@ -96,6 +98,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PromiseModule,
     PromiseResolveModule,
     PropertyModule,
+    GroupModule,
     VisitPrepareModule,
   ]
 })
