@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IVisitOperator } from './visit-prepare.interface';
+import { IVisit, IVisitOperator, IOperationResult } from './visit-prepare.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
@@ -16,6 +16,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 export class VisitPrepareService extends AbstractActionService {
 
   private operatorUrl = '/users/forVisit';
+  private visitUrl = '/mass/visits';
 
   constructor(
     protected actions: Actions,
@@ -29,5 +30,20 @@ export class VisitPrepareService extends AbstractActionService {
   fetchOperators(): Observable<Array<IVisitOperator>> {
     return this.dataService.readAll(this.operatorUrl)
       .catch(this.notificationsService.fetchError().entity('entities.operator.gen.plural').dispatchCallback());
+  }
+
+  prepare(visits: number[], visit: IVisit): Observable<IOperationResult> {
+    const ids = visits.map(visitId => [ visitId ]);
+    return this.dataService
+      .create(`${this.visitUrl}/prepare`, {}, { idData: { ids }, actionData: visit })
+      .catch(this.notificationsService.deleteError().entity('entities.operator.gen.singular').dispatchCallback());
+  }
+
+  showOperationNotification(result: IOperationResult): void {
+    if (!result.success) {
+      this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(result).dispatch();
+    } else {
+      this.notificationsService.info().entity('default.dialog.result.message').response(result).dispatch();
+    }
   }
 }
