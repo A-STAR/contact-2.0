@@ -12,7 +12,7 @@ import { IContactPerson } from '../contact-select.interface';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { Grid2Component } from '../../../../../shared/components/grid2/grid2.component';
 
-import { isEmpty, makeKey, range, addGridLabel } from '../../../../../core/utils';
+import { isEmpty, makeKey, range, addLabelForEntity } from '../../../../../core/utils';
 
 const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form');
 
@@ -35,22 +35,12 @@ export class ContactSelectSearchComponent {
     { dataType: 3, name: 'lastName' },
     { dataType: 3, name: 'firstName' },
     { dataType: 3, name: 'middleName' },
-    {
-      dataType: 6,
-      dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
-      label: 'common.type',
-      name: 'typeCode',
-    },
+    { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, name: 'typeCode' },
     { dataType: 2, name: 'birthDate' },
-    {
-      dataType: 6,
-      dictCode: UserDictionariesService.DICTIONARY_GENDER,
-      label: 'common.gender',
-      name: 'genderCode',
-    },
+    { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_GENDER, name: 'genderCode' },
     { dataType: 3, name: 'passportNumber' },
-    ...range(1, 10).map(i => ({ dataType: 3, name: `stringValue${i}`, label: `custom.stringValue${i}` })),
-  ].map(addGridLabel('common')), {});
+    ...range(1, 10).map(i => ({ dataType: 3, name: `stringValue${i}` })),
+  ].map(addLabelForEntity('person')), {});
 
   rows: IContactPerson[] = [];
   rowCount = 0;

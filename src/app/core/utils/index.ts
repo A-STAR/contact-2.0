@@ -17,7 +17,7 @@ const addLabel = (key: string, prop: string) => {
   });
 };
 export const addFormLabel = (key: string) => addLabel(key, 'controlName');
-export const addGridLabel = (key: string) => addLabel(key, 'name');
+export const addLabelForEntity = (entity: string) => addLabel(`common.entities.${entity}.fields`, 'name');
 
 export const toLabeledValues = item => ({ label: item.name, value: item.code });
 
