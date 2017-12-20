@@ -16,6 +16,7 @@ import { ICloseAction } from '../../../../../shared/components/action-grid/actio
 import { IDebtStatusDictionaries } from '../debt-status.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOperationResult } from '../../debt-responsible/debt-responsible.interface';
+import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
 
 import { DebtResponsibleService } from '../../debt-responsible/debt-responsible.service';
@@ -126,7 +127,7 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
     this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
   }
 
-  private buildControls(statusOptions: any, reasonOptions: any): IDynamicFormControl[] {
+  private buildControls(statusOptions: IOption[], reasonOptions: IOption[]): IDynamicFormControl[] {
     return [
       {
         label: label('dialog.statusCode'),
@@ -140,6 +141,11 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
         controlName: 'reasonCode',
         type: 'select',
         options: reasonOptions
+      },
+      {
+        label: label('dialog.comment'),
+        controlName: 'comment',
+        type: 'textarea'
       },
     ];
   }
