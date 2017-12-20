@@ -343,7 +343,7 @@
         "percentage": "Remainder Percentage"
       },
       "phone": {
-        "title": "New Debtor Phone Number",
+        "title": "Add Phone",
         "typeCode": "Type",
         "phone": "Phone Number",
         "stopAutoSms": "Disable Auto SMS",
@@ -1414,12 +1414,13 @@
         "dictValue3": "Dictionary Attribute 3",
         "dictValue4": "Dictionary Attribute 4",
         "isInvalidContact": "Invalid Phone Number/Address",
-        "addPhone": "New Debtor's Phone Number Input",
+        "addPhone": "Adding Phone",
         "isRefusal": "Payment Refusal Flag",
         "isSuccess": "Successful Outcome",
         "changeResponsible": "Changing Operator",
         "contactInvisible": "Don't Display in Contacts",
-        "fileAttachMode": "Files Attachment"
+        "fileAttachMode": "Files Attachment",
+        "changeContactPerson": "Change Contact Person"
       }
     },
     "document": {
