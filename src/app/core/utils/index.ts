@@ -9,8 +9,6 @@ export const propOr = (prop: string, orValue: any) => obj => Object.hasOwnProper
 
 export const makeKey = (prefix: string) => (fieldName: string) => `${prefix}.${fieldName}`;
 
-export const addFormLabel = (key: string) => addLabel(key, 'controlName');
-export const addGridLabel = (key: string) => addLabel(key, 'name');
 const addLabel = (key: string, prop: string) => {
   const labelKey = makeKey(key);
   return item => ({
@@ -18,6 +16,8 @@ const addLabel = (key: string, prop: string) => {
     label: item.label || labelKey(item[prop])
   });
 };
+export const addFormLabel = (key: string) => addLabel(key, 'controlName');
+export const addGridLabel = (key: string) => addLabel(key, 'name');
 
 export const toLabeledValues = item => ({ label: item.name, value: item.code });
 
