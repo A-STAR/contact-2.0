@@ -35,7 +35,7 @@
 ></app-contact-log-dialog>
 
 <app-debt-status
-  *ngIf="isDialog('debtStatusChange')"
+  *ngIf="isDialog('debtChangeStatus')"
   [debts]="getSelectionParam(0)"
   (close)="onCloseDialog()"
 ></app-debt-status>

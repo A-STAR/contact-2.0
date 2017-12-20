@@ -18,7 +18,7 @@ export class DebtStatusService {
   change(debts: number[], data: IDebtStatusChangeParams): Observable<IOperationResult> {
     const ids = debts.map(debtId => [ debtId ]);
     return this.dataService
-      .update('mass/debts/statuschange', {}, { idData: { ids }, actionData: data })
+      .update('/mass/debts/statuschange', {}, { idData: { ids }, actionData: data })
       .catch(this.notificationsService.error('errors.default.update')
         .entity('entities.operator.gen.singular').dispatchCallback());
   }

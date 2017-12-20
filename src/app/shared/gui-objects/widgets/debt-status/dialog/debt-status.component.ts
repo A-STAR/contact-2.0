@@ -42,10 +42,10 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter<ICloseAction>();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  count: number;
   dicts: IDebtStatusDictionaries = null;
 
   controls: Array<IDynamicFormControl> = null;
+  formData: any;
   private statusCodeSub: Subscription;
   private dictsSub: Subscription;
 
@@ -58,7 +58,6 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.count = this.debts.length;
 
     this.dictsSub = Observable.combineLatest(
       this.userDictionariesService.getDictionaries([
@@ -75,9 +74,12 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
 
       this.controls = this.buildControls(statusCodeOptions, reasonCodeOptions);
 
+      // Detecting changes, otherwise `this.form` will be undefined in `onCtrlValueChange`
+      this.cdRef.detectChanges();
+
       this.statusCodeSub = this.form.onCtrlValueChange('statusCode')
         .distinctUntilChanged()
-        .subscribe((statusCode) => {
+        .subscribe((statusCode: [{ value: number }]) => {
           // reset current reasonCode value
           this.form.form.patchValue({
             reasonCode: null
@@ -85,17 +87,14 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
           const reasonCodeControl = this.getControl('reasonCode');
 
           // filter reasonCode's options with respect to statusCode's value
-          reasonCodeControl.options = this.dicts[UserDictionariesService.DICTIONARY_DEBT_STATUS]
-            .filter(term => term.parentCode === statusCode)
+          reasonCodeControl.options = this.dicts[UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE]
+            .filter(term => term.parentCode === statusCode[0].value)
             .map(toLabeledValues);
 
           // set required flag
-          reasonCodeControl.required = this.isReasonCodeRequired(this.dicts.constant, statusCode);
-
-          this.cdRef.markForCheck();
+          reasonCodeControl.required = this.isReasonCodeRequired(this.dicts.constant, statusCode[0].value);
         });
 
-      this.cdRef.markForCheck();
     });
   }
 
@@ -109,7 +108,7 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
   }
 
   get canSubmit(): boolean {
-    return !(this.form && this.form.canSubmit);
+    return this.form && this.form.canSubmit;
   }
 
   submit(): void {
@@ -157,5 +156,4 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
   private isReasonCodeRequired(reasonCodeRequired: IUserConstant, code: number): boolean {
     return reasonCodeRequired.valueS === 'ALL' || reasonCodeRequired.valueS.split(',').map(Number).includes(code);
   }
-
 }
