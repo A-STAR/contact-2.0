@@ -59,6 +59,7 @@
         "MESSAGE_SCENARIOS": "Message Scenarios",
         "CONTACT_REGISTRATION": "Contact Registration",
         "GROUPS": "Groups",
+        "GROUP_EDIT": "Group",
         "CAMPAIGNS": "Campaigns",
         "SCHEDULE": "Schedule",
         "FORMULAS": "Formulas",
@@ -928,6 +929,13 @@
     },
     "contactLogTab": {
       "title": "Contact log"
+    },
+    "groupTab": {
+      "title": "Groups",
+      "remove": {
+        "title": "Delete the group",
+        "confirmMessage": "Do you really want to delete this group?"
+      }
     }
   },
   "person": {
@@ -1866,6 +1874,33 @@
       },
       "toolbar": {
         "add": "Add pledgor"
+      }
+    },
+    "groups": {
+      "grid": {
+        "id": "ID",
+        "entityTypeCode": "Type",
+        "name": "Name",
+        "comment": "Comment",
+        "isManual": "Is manual",
+        "isPreCleaned": "Is pre-cleaned",
+        "userFullName": "Operator",
+        "formDateTime": "Form date"
+      },
+      "card": {
+        "entityTypeCode": "Type",
+        "name": "Name",
+        "comment": "Comment",
+        "isManual": "Is manual",
+        "isPreCleaned": "Is pre-cleaned",
+        "userFullName": "Operator",
+        "formDateTime": "Form date",
+        "sql": "SQL"
+      },
+      "toolbar": {
+        "action": {
+          "forCurrentUser": "Current user groups"
+        }
       }
     }
   },

@@ -55,6 +55,10 @@ export const routes: Route[] = [
             loadChildren: './utilities/campaigns/campaigns.module#CampaignsModule',
           },
           {
+            path: 'groups',
+            loadChildren: './utilities/groups/groups.module#GroupsModule',
+          },
+          {
             path: 'contact-properties',
             loadChildren: './utilities/contact-properties/contact-properties.module#ContactPropertiesModule',
           },

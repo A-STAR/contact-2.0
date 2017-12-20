@@ -59,6 +59,7 @@
         "CONTACT_REGISTRATION": "Регистрация контакта",
         "MESSAGE_SCENARIOS": "Сценарии сообщений",
         "GROUPS": "Группы",
+        "GROUP_EDIT": "Группа",
         "CAMPAIGNS": "Кампании обзвона",
         "SCHEDULE": "Расписание",
         "FORMULAS": "Формулы",
@@ -928,6 +929,13 @@
     },
     "contactLogTab": {
       "title": "История контактов"
+    },
+    "groupTab": {
+      "title": "Группы",
+      "remove": {
+        "title": "Удалить группу",
+        "confirmMessage": "Вы действительно хотите удалить выбранную группу?"
+      }
     }
   },
   "person": {
@@ -1866,6 +1874,33 @@
       },
       "toolbar": {
         "add": "Добавить залогодателя"
+      }
+    },
+    "groups": {
+      "grid": {
+        "id": "ID",
+        "entityTypeCode": "Тип",
+        "name": "Название",
+        "comment": "Комментарий",
+        "isManual": "Ручное наполнение",
+        "isPreCleaned": "Очищать предыдущие данные",
+        "userFullName": "Оператор",
+        "formDateTime": "Дата переформирования"
+      },
+      "card": {
+        "entityTypeCode": "Тип",
+        "name": "Название",
+        "comment": "Комментарий",
+        "isManual": "Ручное наполнение",
+        "isPreCleaned": "Очищать предыдущие данные",
+        "userFullName": "Оператор",
+        "formDateTime": "Дата переформирования",
+        "sql": "SQL"
+      },
+      "toolbar": {
+        "action": {
+          "forCurrentUser": "Группы текущего пользователя"
+        }
       }
     }
   },
