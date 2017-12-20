@@ -1,5 +1,4 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';

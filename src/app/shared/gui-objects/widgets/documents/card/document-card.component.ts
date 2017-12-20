@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
