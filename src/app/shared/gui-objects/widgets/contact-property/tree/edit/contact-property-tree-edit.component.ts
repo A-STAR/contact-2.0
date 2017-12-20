@@ -9,6 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
@@ -56,6 +57,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   attributeTypes: ITreeNode[] = [];
 
   private _formSubscription: Subscription;
+  private statusReasonModeSubscription: Subscription;
+
   private _attributeTypesChanged = false;
 
   constructor(
@@ -106,6 +109,23 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
           ? { name: 'templateFormula', value: data && data.templateFormula }
           : { name: 'templateId', value: data && data.templateId },
       };
+      this.cdRef.detectChanges();
+      this.statusReasonModeSubscription = this.form
+        .onCtrlValueChange('statusReasonMode')
+        .subscribe((options: IOption[]) => {
+          // TODO(d.maltsev): this is horrible. Do something about it.
+          const value = Number(options[0].value);
+          const ctrl = this.form.getControl('debtStatusCode');
+          if ([2, 3].includes(value)) {
+            this.form.getControlDef('debtStatusCode').required = true;
+            ctrl.setValidators([ Validators.required ]);
+          } else {
+            this.form.getControlDef('debtStatusCode').required = false;
+            ctrl.clearValidators();
+          }
+          ctrl.updateValueAndValidity();
+          this.cdRef.markForCheck();
+        });
       this.cdRef.markForCheck();
     });
   }
@@ -131,6 +151,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._formSubscription.unsubscribe();
+    this.statusReasonModeSubscription.unsubscribe();
   }
 
   get canSubmit(): boolean {
