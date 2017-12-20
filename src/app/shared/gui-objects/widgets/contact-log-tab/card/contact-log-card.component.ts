@@ -137,7 +137,7 @@ export class ContactLogTabCardComponent implements OnInit {
       { label: label('fullName'), controlName: 'fullName', type: 'text', width: 6, disabled: true },
       { label: label('contactPhone'), controlName: 'contactPhone', type: 'text', width: 6, disabled: true },
       { label: label('personRole'), controlName: 'personRole', options: roleOpts, width: 6, disabled: true, type: 'select'},
-      { label: label('status'), controlName: 'status', options: statusOpts, width: 6, disabled: true, type: 'select'},
+      { label: label('status'), controlName: 'statusCode', options: statusOpts, width: 6, disabled: true, type: 'select'},
       { label: label('text'), controlName: 'text', type: 'textarea', width: 12, disabled: true },
     ];
   }
@@ -151,7 +151,8 @@ export class ContactLogTabCardComponent implements OnInit {
       { label: label('fullName'), controlName: 'fullName', type: 'text', width: 6, disabled: true },
       { label: label('contactEmail'), controlName: 'contactEmail', type: 'text', width: 6, disabled: true },
       { label: label('personRole'), controlName: 'personRole', options: roleOpts, width: 6, disabled: true, type: 'select'},
-      { label: label('status'), controlName: 'status', options: statusOpts, width: 6, disabled: true, type: 'select'},
+      { label: label('status'), controlName: 'statusCode', options: statusOpts, width: 6, disabled: true, type: 'select'},
+      { label: label('subject'), controlName: 'subject', disabled: true, type: 'text'},
       { label: label('text'), controlName: 'text', type: 'richtexteditor',
         width: 12, disabled: true, toolbar: this.contactLog.formatCode === 1 },
     ];
