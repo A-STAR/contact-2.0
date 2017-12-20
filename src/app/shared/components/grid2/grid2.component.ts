@@ -98,6 +98,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
+  @Input() translateColumnLabels = false;
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -627,7 +628,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         field: column.colId,
         filter: this.getCustomFilter(column),
         filterParams: this.getCustomFilterParams(column),
-        headerName: column.label,
+        headerName: this.translateColumnLabels ? this.translate.instant(column.label) : column.label,
         hide: !!column.hidden,
         maxWidth: column.maxWidth,
         minWidth: column.minWidth,

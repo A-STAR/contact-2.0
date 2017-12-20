@@ -33,10 +33,24 @@ export class ContactSelectGridComponent implements OnInit {
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   columns$ = this.gridService.getColumns([
-    { dataType: 3, name: 'personFullName' },
-    { dataType: 6, name: 'personRole', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-    { dataType: 6, name: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
-  ].map(column => ({ ...column, label: column.name })), {});
+    {
+      dataType: 3,
+      label: 'common.fullName',
+      name: 'personFullName',
+    },
+    {
+      dataType: 6,
+      dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE,
+      label: 'common.role',
+      name: 'personRole',
+    },
+    {
+      dataType: 6,
+      dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
+      label: 'common.relationship',
+      name: 'linkTypeCode',
+    },
+  ], {});
 
   rows: ILinkedContactPerson[] = [];
   rowCount = 0;
