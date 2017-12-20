@@ -59,7 +59,7 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.count = this.debts.length;
 
-    Observable.combineLatest(
+    this.dictsSub = Observable.combineLatest(
       this.userDictionariesService.getDictionaries([
         UserDictionariesService.DICTIONARY_DEBT_STATUS,
         UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE,
