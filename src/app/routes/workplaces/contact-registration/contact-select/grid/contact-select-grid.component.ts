@@ -24,7 +24,6 @@ import { isEmpty } from '../../../../../core/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   selector: 'app-contact-registration-contact-select-grid',
-  styleUrls: [ 'contact-select-grid.component.scss' ],
   templateUrl: 'contact-select-grid.component.html'
 })
 export class ContactSelectGridComponent implements OnInit {

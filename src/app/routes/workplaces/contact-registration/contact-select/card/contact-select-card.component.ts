@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -15,7 +15,7 @@ const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form'
   selector: 'app-contact-registration-contact-select-card',
   templateUrl: 'contact-select-card.component.html'
 })
-export class ContactSelectCardComponent implements AfterViewInit {
+export class ContactSelectCardComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls = [
@@ -24,9 +24,10 @@ export class ContactSelectCardComponent implements AfterViewInit {
     { controlName: 'middleName', type: 'text' },
     {
       controlName: 'personTypeCode',
-      type: 'selectwrapper',
       dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
+      markAsDirty: true,
       required: true,
+      type: 'selectwrapper',
     },
     { controlName: 'linkTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
   ].map(control => ({ ...control, label: labelKey(control.controlName) } as IDynamicFormControl));
@@ -41,9 +42,5 @@ export class ContactSelectCardComponent implements AfterViewInit {
 
   get person(): any {
     return this.form.serializedValue;
-  }
-
-  ngAfterViewInit(): void {
-    this.form.getControl('personTypeCode').markAsDirty();
   }
 }

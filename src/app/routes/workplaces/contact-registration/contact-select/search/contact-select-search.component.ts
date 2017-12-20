@@ -20,7 +20,6 @@ const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form'
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   selector: 'app-contact-registration-contact-select-search',
-  styleUrls: [ 'contact-select-search.component.scss' ],
   templateUrl: 'contact-select-search.component.html',
 })
 export class ContactSelectSearchComponent {
