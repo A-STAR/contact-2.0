@@ -30,6 +30,7 @@ import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
 import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { PropertyModule } from './property/property.module';
+import { GroupModule } from './groups/group.module';
 
 @NgModule({
   imports: [
@@ -63,6 +64,7 @@ import { PropertyModule } from './property/property.module';
     PromiseModule,
     PromiseResolveModule,
     PropertyModule,
+    GroupModule,
   ],
   exports: [
     AddressModule,
@@ -94,6 +96,7 @@ import { PropertyModule } from './property/property.module';
     PromiseModule,
     PromiseResolveModule,
     PropertyModule,
+    GroupModule,
   ]
 })
 export class WidgetsModule { }

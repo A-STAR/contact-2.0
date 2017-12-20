@@ -1,20 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { GridComponent } from './grid.component';
+import { GroupEditComponent } from './edit.component';
 
 @NgModule({
   imports: [
-    CommonModule,
     SharedModule,
   ],
   exports: [
-    GridComponent,
+    GroupEditComponent
   ],
   declarations: [
-    GridComponent,
+    GroupEditComponent
   ],
 })
-export class GridModule { }
+export class GroupEditModule {}

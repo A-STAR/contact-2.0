@@ -235,6 +235,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
               { label: labelKey('promiseMode'), controlName: 'promiseMode', ...promiseOptions },
               { label: labelKey('paymentMode'), controlName: 'paymentMode', ...promiseOptions },
               { label: labelKey('callReasonMode'), controlName: 'callReasonMode', ...modeOptions },
+              // TODO(d.maltsev):  required if statusReasonMode equals 2 or 3
+              // See: http://confluence.luxbase.int:8080/browse/WEB20-419
               { label: labelKey('debtStatusCode'), controlName: 'debtStatusCode', type: 'select', options: debtStatusOptions },
               { label: labelKey('statusReasonMode'), controlName: 'statusReasonMode', ...modeOptions },
               { label: labelKey('debtReasonMode'), controlName: 'debtReasonMode', ...modeOptions },
@@ -259,6 +261,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
               { label: labelKey('changeResponsible'), controlName: 'changeResponsible', type: 'checkbox' },
               { label: labelKey('contactInvisible'), controlName: 'contactInvisible', type: 'checkbox' },
               { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'checkbox' },
+              { label: labelKey('changeContactPerson'), controlName: 'changeContactPerson', type: 'checkbox' },
             ]
           }
         ]

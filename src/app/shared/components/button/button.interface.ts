@@ -20,6 +20,7 @@ export type IButtonType =
   'delete' |
   'download' |
   'edit' |
+  'email' |
   'exportToExcel' |
   'move' |
   'next' |
