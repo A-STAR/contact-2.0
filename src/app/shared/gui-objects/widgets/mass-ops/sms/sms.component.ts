@@ -6,5 +6,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   templateUrl: 'sms.component.html'
 })
 export class SmsComponent {
+  controls = [];
 
+  onSubmit(): void {
+
+  }
+
+  onClose(): void {
+
+  }
 }

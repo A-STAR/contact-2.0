@@ -6,5 +6,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   templateUrl: 'email.component.html'
 })
 export class EmailComponent {
+  controls = [];
 
+  onSubmit(): void {
+
+  }
+
+  onClose(): void {
+
+  }
 }
