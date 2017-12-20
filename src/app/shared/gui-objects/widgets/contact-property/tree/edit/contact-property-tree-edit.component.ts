@@ -12,8 +12,9 @@ import {
 import { Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { EntityTranslationsService } from '../../../../../../core/entity/translations/entity-translations.service';
 import { IContactTreeAttribute } from '../../contact-property.interface';
@@ -73,7 +74,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this._formSubscription = Observable.combineLatest(
+    this._formSubscription = combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_DEBT_STATUS,
         UserDictionariesService.DICTIONARY_DEBT_LIST_1,
@@ -87,10 +88,10 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       this.lookupService.lookupAsOptions('languages'),
       this.isEditing
         ? this.contactPropertyService.fetch(this.contactType, this.treeType, this.selectedId)
-        : Observable.of(null),
+        : of(null),
       this.isEditing
         ? this.entityTranslationsService.readContactTreeNodeTranslations(this.selectedId)
-        : Observable.of([]),
+        : of([]),
     )
     .pipe(first())
     .subscribe(([ dictionaries, attributes, templates, attributeTypes, languages, data, nameTranslations ]) => {

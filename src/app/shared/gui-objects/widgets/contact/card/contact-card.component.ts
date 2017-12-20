@@ -1,7 +1,8 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IContact } from '../contact.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -66,7 +67,7 @@ export class ContactCardComponent {
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_GENDER,
         UserDictionariesService.DICTIONARY_FAMILY_STATUS,
@@ -76,7 +77,7 @@ export class ContactCardComponent {
       this.contactId
         ? this.userPermissionsService.has('CONTACT_PERSON_EDIT')
         : this.userPermissionsService.has('CONTACT_PERSON_ADD'),
-      this.contactId ? this.contactService.fetch(this.personId, this.contactId) : Observable.of(null)
+      this.contactId ? this.contactService.fetch(this.personId, this.contactId) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, canEdit, contact ]) => {

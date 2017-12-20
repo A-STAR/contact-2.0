@@ -1,8 +1,9 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IProperty } from '../property.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -41,9 +42,9 @@ export class PropertyCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.propertyId ? this.propertyService.canEdit$ : this.propertyService.canAdd$,
-      this.propertyId ? this.propertyService.fetch(this.personId, this.propertyId) : Observable.of(this.getFormData()),
+      this.propertyId ? this.propertyService.fetch(this.personId, this.propertyId) : of(this.getFormData()),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
     )
     .pipe(first())

@@ -3,9 +3,7 @@ import { HttpResponse } from '@angular/common/http';
 import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/do';
+
 import { AuthService } from './auth.service';
 import { ContentTabService } from '../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DataService } from '../data/data.service';

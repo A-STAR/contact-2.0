@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/operator/combineLatest';
 
 import { IAttribute } from '../attribute.interface';
 import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';

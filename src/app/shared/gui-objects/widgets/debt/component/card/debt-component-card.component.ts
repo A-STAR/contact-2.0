@@ -2,7 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IDebtComponent } from '../debt-component.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -34,10 +35,10 @@ export class DebtComponentCardComponent {
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
   ) {
-    Observable.combineLatest(
+    combineLatest(
       this.lookupService.currencyOptions,
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DEBT_COMPONENTS),
-      this.debtComponentId ? this.debtComponentService.fetch(this.debtId, this.debtComponentId) : Observable.of(null)
+      this.debtComponentId ? this.debtComponentService.fetch(this.debtId, this.debtComponentId) : of(null)
     )
     .pipe(first())
     .subscribe(([ currencyOptions, debtComponentTypeOptions, debtComponent ]) => {

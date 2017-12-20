@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 import * as moment from 'moment';
 
 import { IDebt } from '../../../../core/debt/debt.interface';
@@ -55,7 +55,7 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.contactRegistrationService.selectedNode$,
       this.debtService.fetch(null, this.debtId),
       this.promiseService.getPromiseLimit(this.debtId, false),

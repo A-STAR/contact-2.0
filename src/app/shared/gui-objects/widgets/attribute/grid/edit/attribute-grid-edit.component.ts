@@ -11,7 +11,8 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IAttribute } from '../../attribute.interface';
 import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -63,12 +64,12 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this._formSubscription = Observable.combineLatest(
+    this._formSubscription = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_VARIABLE_TYPE),
       this.lookupService.lookupAsOptions('dictionaries'),
       this.lookupService.lookupAsOptions('languages'),
-      this.attributeId ? this.attributeService.fetch(this.treeType, this.treeSubtype, this.attributeId) : Observable.of(null),
-      this.attributeId ? this.entityTranslationsService.readAttributeNameTranslations(this.attributeId) : Observable.of(null),
+      this.attributeId ? this.attributeService.fetch(this.treeType, this.treeSubtype, this.attributeId) : of(null),
+      this.attributeId ? this.entityTranslationsService.readAttributeNameTranslations(this.attributeId) : of(null),
     ).subscribe(([ types, dictionaries, languages, attribute, translations ]) => {
       this.cdRef.detectChanges();
       if (this.attributeId) {
