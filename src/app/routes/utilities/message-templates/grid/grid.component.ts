@@ -123,7 +123,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   }
 
   private initColumns(): void {
-    if (this.typeCode === MessageTemplatesService.TYPE_SMS) {
+    if ([ MessageTemplatesService.TYPE_EMAIL, MessageTemplatesService.TYPE_SMS ].includes(this.typeCode)) {
       this.columns = [
         ...this.columns,
         { prop: 'isSingleSending', maxWidth: 150, renderer: 'checkboxRenderer' },
