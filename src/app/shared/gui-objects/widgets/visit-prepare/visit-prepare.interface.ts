@@ -4,3 +4,10 @@ export interface IVisit {
   planUserId: number;
   comment: string;
 }
+
+export interface IVisitOperator {
+  id?: number;
+  fullName?: string;
+  organization?: string;
+  position?: string;
+}
