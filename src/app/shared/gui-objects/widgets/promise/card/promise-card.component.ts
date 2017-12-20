@@ -10,8 +10,9 @@ import {
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 import * as moment from 'moment';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -91,13 +92,13 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userPermissionsService.has('PROMISE_ADD'),
       this.promiseService.getPromiseLimit(this.debtId, this.callCenter),
       this.promiseService.fetchDebt(this.debtId, this.callCenter),
       this.promiseId
         ? this.promiseService.fetch(this.debtId, this.promiseId, this.callCenter)
-        : Observable.of(null),
+        : of(null),
       this.userConstantsService.get('Promise.MinAmountPercent.Formula'),
       this.userPermissionsService.has('PROMISE_MIN_AMOUNT_PERCENT'),
     )

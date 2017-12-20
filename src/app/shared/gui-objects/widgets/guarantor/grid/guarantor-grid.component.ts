@@ -3,7 +3,6 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGuarantor } from '../../guarantee/guarantee.interface';

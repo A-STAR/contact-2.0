@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IAddress } from '../address.interface';
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form-2/dynamic-form-2.interface';
@@ -43,10 +44,10 @@ export class AddressCardComponent implements OnInit {
         .subscribe(address => this.address$.next(address));
     }
 
-    this.group$ = Observable.combineLatest(
+    this.group$ = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
-      this.addressId ? this.userPermissionsService.has('ADDRESS_EDIT') : Observable.of(true),
-      this.addressId ? this.userPermissionsService.has('ADDRESS_COMMENT_EDIT') : Observable.of(true),
+      this.addressId ? this.userPermissionsService.has('ADDRESS_EDIT') : of(true),
+      this.addressId ? this.userPermissionsService.has('ADDRESS_COMMENT_EDIT') : of(true),
       this.address$,
     )
     .map(([ options, canEdit, canEditComment, address ]) => {

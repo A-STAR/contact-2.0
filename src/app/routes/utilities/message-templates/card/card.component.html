@@ -1,6 +1,8 @@
 <app-dialog (close)="onCancel()">
   <div dialog-header>
-    <h3>{{ 'utilities.messageTemplates.dialogs.edit.title' | translate }}</h3>
+    <h3>
+      {{ title | translate }}
+    </h3>
   </div>
   <div>
     <app-dynamic-form [controls]="controls" [data]="template"></app-dynamic-form>

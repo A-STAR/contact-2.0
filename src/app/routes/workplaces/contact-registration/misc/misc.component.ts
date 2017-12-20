@@ -8,8 +8,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -78,7 +78,7 @@ export class MiscComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    this.outcomeSubscription = Observable.combineLatest(
+    this.outcomeSubscription = combineLatest(
       this.contactRegistrationService.canAddCallReason$,
       this.contactRegistrationService.canAddComment$,
       this.contactRegistrationService.canAddDebtReason$,

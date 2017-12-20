@@ -1,11 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/distinctUntilKeyChanged';
-import 'rxjs/add/operator/merge';
 import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { distinctUntilKeyChanged } from 'rxjs/operators';
 
 import { IPermissionRole } from '../permissions.interface';
 import {
@@ -35,7 +34,7 @@ export class PermissionsTreeComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_SAVE,
       action: () => this.onSaveChanges(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('GUI_TREE_EDIT'),
         this.changes
       ).map(([rights, changes]) => rights && changes)
@@ -52,7 +51,7 @@ export class PermissionsTreeComponent implements OnDestroy {
     private userPermissionsService: UserPermissionsService
   ) {
     this.permissionsServiceSub = this.permissionsService.permissions
-      .distinctUntilKeyChanged('currentRole')
+      .pipe(distinctUntilKeyChanged('currentRole'))
       .subscribe(permissions => {
         this.currentRole = permissions.currentRole;
         this.refreshTree();

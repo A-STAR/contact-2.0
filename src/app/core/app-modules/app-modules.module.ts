@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+// import { CommonModule } from '@angular/common';
 import { EffectsModule } from '@ngrx/effects';
 
 import { DebtorCardEffects } from './debtor-card/debtor-card.effects';
@@ -7,7 +7,7 @@ import { DebtorCardService } from './debtor-card/debtor-card.service';
 
 @NgModule({
   imports: [
-    CommonModule,
+    // CommonModule,
     EffectsModule.forFeature([
       DebtorCardEffects,
     ]),

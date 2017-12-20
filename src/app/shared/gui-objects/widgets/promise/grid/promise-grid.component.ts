@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { first, map, distinctUntilChanged } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -113,7 +113,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.canViewSubscription = Observable.combineLatest(this.canView$, this.debtId$)
+    this.canViewSubscription = combineLatest(this.canView$, this.debtId$)
       .subscribe(([ hasPermission, debtId ]) => {
         if (!hasPermission) {
           this.notificationsService.error('errors.default.read.403').entity('entities.promises.gen.plural').dispatch();
@@ -192,18 +192,20 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   }
 
   get canAdd$(): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.userPermissionsService.has('PROMISE_ADD'),
       this.userConstantsService.get('Promise.SeveralActive.Use'),
       this.debtStatusCode$,
       this.hasActivePromise$,
     )
-    .map(([canAdd, severalActiveValue, debtStatusCode, hasActivePromise ]) => {
-      const severalActiveUse = Boolean(severalActiveValue.valueB);
-      return canAdd && this.debtId && ![6, 7, 8, 17].includes(debtStatusCode) &&
-       (severalActiveUse || (!severalActiveUse && !hasActivePromise));
-    })
-    .distinctUntilChanged();
+    .pipe(
+      map(([canAdd, severalActiveValue, debtStatusCode, hasActivePromise ]) => {
+        const severalActiveUse = Boolean(severalActiveValue.valueB);
+        return canAdd && this.debtId && ![6, 7, 8, 17].includes(debtStatusCode) &&
+         (severalActiveUse || (!severalActiveUse && !hasActivePromise));
+      }),
+      distinctUntilChanged()
+    );
   }
 
   get canRefresh$(): Observable<boolean> {

@@ -10,8 +10,6 @@ import {
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/publishReplay';
 
 import { IOption } from '../../../../core/converter/value-converter.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';

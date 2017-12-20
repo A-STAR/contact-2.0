@@ -12,7 +12,6 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators/first';
-import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/startWith';
 
 import { IDebt } from '../../../../../../../core/debt/debt.interface';

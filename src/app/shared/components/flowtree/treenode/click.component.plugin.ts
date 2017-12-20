@@ -1,5 +1,4 @@
 import { EventEmitter, OnDestroy } from '@angular/core';
-import 'rxjs/add/operator/debounceTime';
 
 import { IClickableComponent, IClickableComponentPlugin } from '../tree.interface';
 
