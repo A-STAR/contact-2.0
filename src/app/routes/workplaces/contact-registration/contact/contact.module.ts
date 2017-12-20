@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { ContactSelectModule } from '../contact-select/contact-select.module';
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { PhoneService } from './phone.service';
+import { ContactService } from './contact.service';
 
-import { PhoneComponent } from './phone.component';
+import { ContactComponent } from './contact.component';
 
 @NgModule({
   imports: [
@@ -13,13 +13,13 @@ import { PhoneComponent } from './phone.component';
     SharedModule,
   ],
   exports: [
-    PhoneComponent,
+    ContactComponent,
   ],
   declarations: [
-    PhoneComponent,
+    ContactComponent,
   ],
   providers: [
-    PhoneService,
+    ContactService,
   ]
 })
-export class PhoneModule {}
+export class ContactModule {}
