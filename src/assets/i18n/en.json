@@ -2103,6 +2103,14 @@
     "debtResponsibleClear": {
       "title": "Clear responsible",
       "message": "Do you really want to clear responsible operators for the selected debts?"
+    },
+    "debtStatus": {
+      "dialog": {
+        "title": "Change status for {{ count }} debts",
+        "statusCode": "Select Status",
+        "reasonCode": "Select Reason",
+        "comment": "Commentary"
+      }
     }
   },
   "errors": {
