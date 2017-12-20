@@ -55,8 +55,8 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    const contractorId = parseInt(this.route.snapshot.paramMap.get('contractorId'), 10);
-    const portfolioId = parseInt(this.route.snapshot.paramMap.get('portfolioId'), 10);
+    const contractorId = Number(this.route.snapshot.paramMap.get('contractorId'));
+    const portfolioId = Number(this.route.snapshot.paramMap.get('portfolioId'));
     const getPortfolio$ = portfolioId ? this.contractorsAndPortfoliosService
       .readPortfolio(contractorId, portfolioId).map(result => ({
         portfolio: result,

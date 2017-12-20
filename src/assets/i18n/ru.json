@@ -59,6 +59,7 @@
         "CONTACT_REGISTRATION": "Регистрация контакта",
         "MESSAGE_SCENARIOS": "Сценарии сообщений",
         "GROUPS": "Группы",
+        "GROUP_EDIT": "Группа",
         "CAMPAIGNS": "Кампании обзвона",
         "SCHEDULE": "Расписание",
         "FORMULAS": "Формулы",
@@ -224,20 +225,6 @@
         "title": "Контакты"
       },
       "filters": {
-        "form": {
-          "branchCode": "Филиал",
-          "dictValue1": "Словарный атрибут 1",
-          "dictValue2": "Словарный атрибут 2",
-          "dictValue3": "Словарный атрибут 3",
-          "dictValue4": "Словарный атрибут 4",
-          "outPortfolioId": "Реестр КА",
-          "portfolioId": "Портфели",
-          "receiveDateTime": "Получен",
-          "createDateTime": "Создан",
-          "regionCode": "Регион",
-          "userId": "Оператор",
-          "searchBtn": "Искать"
-        },
         "userId": {
           "grid": {
             "fullName": "Оператор",
@@ -271,19 +258,6 @@
     },
     "payments": {
       "filters": {
-        "form": {
-          "branchCode": "Филиал",
-          "dictValue1": "Словарный атрибут 1",
-          "dictValue2": "Словарный атрибут 2",
-          "dictValue3": "Словарный атрибут 3",
-          "dictValue4": "Словарный атрибут 4",
-          "outPortfolioId": "Реестр КА",
-          "portfolioId": "Портфели",
-          "paymentDateTime": "Дата оплаты",
-          "regionCode": "Регион",
-          "userId": "Оператор",
-          "searchBtn": "Искать"
-        },
         "userId": {
           "grid": {
             "fullName": "Оператор",
@@ -345,6 +319,31 @@
           }
         }
       },
+      "contactGrid": {
+        "tabs": {
+          "selectFromDebt": {
+            "title": "Выбрать из привязанных к долгу",
+            "grid": {
+              "linkTypeCode": "Тип связи",
+              "personFullName": "ФИО",
+              "personRole": "Роль"
+            }
+          },
+          "selectFromAll": {
+            "title": "Выбрать из всех"
+          },
+          "add": {
+            "title": "Добавить вручную",
+            "form": {
+              "firstName": "Имя",
+              "lastName": "Фамилия",
+              "middleName": "Отчество",
+              "linkTypeCode": "Тип связи",
+              "personTypeCode": "Тип персоны"
+            }
+          }
+        }
+      },
       "outcome": {
         "title": "Выбор исхода",
         "template": "Сценарий разговора",
@@ -369,7 +368,7 @@
         "percentage": "Процент от остатка"
       },
       "phone": {
-        "title": "Ввод нового номера должника",
+        "title": "Добавление нового телефона",
         "typeCode": "Тип",
         "phone": "Номер телефона",
         "stopAutoSms": "Не отправлять автоматические SMS",
@@ -955,6 +954,13 @@
     },
     "contactLogTab": {
       "title": "История контактов"
+    },
+    "groupTab": {
+      "title": "Группы",
+      "remove": {
+        "title": "Удалить группу",
+        "confirmMessage": "Вы действительно хотите удалить выбранную группу?"
+      }
     }
   },
   "person": {
@@ -1433,12 +1439,13 @@
         "dictValue3": "Словарный атрибут 3",
         "dictValue4": "Словарный атрибут 4",
         "isInvalidContact": "Неверный номер/адрес",
-        "addPhone": "Ввод нового номера должника",
+        "addPhone": "Добавление нового телефона",
         "isRefusal": "Признак отказа от оплаты",
         "isSuccess": "Считать результат успешным",
         "changeResponsible": "Перераспределение на оператора",
         "contactInvisible": "Не отображать в списке контактов",
-        "fileAttachMode": "Прикрепление файлов"
+        "fileAttachMode": "Прикрепление файлов",
+        "changeContactPerson": "Изменение контактного лица"
       }
     },
     "document": {
@@ -1772,7 +1779,7 @@
         "title": "История контактов"
       },
       "card": {
-        "fullName": "Должник",
+        "fullName": "ФИО",
         "contract": "Договор",
         "contactData": "Контактный телефон/адрес",
         "contactDateTime": "Дата контакта",
@@ -1899,6 +1906,33 @@
       },
       "toolbar": {
         "add": "Добавить залогодателя"
+      }
+    },
+    "groups": {
+      "grid": {
+        "id": "ID",
+        "entityTypeCode": "Тип",
+        "name": "Название",
+        "comment": "Комментарий",
+        "isManual": "Ручное наполнение",
+        "isPreCleaned": "Очищать предыдущие данные",
+        "userFullName": "Оператор",
+        "formDateTime": "Дата переформирования"
+      },
+      "card": {
+        "entityTypeCode": "Тип",
+        "name": "Название",
+        "comment": "Комментарий",
+        "isManual": "Ручное наполнение",
+        "isPreCleaned": "Очищать предыдущие данные",
+        "userFullName": "Оператор",
+        "formDateTime": "Дата переформирования",
+        "sql": "SQL"
+      },
+      "toolbar": {
+        "action": {
+          "forCurrentUser": "Группы текущего пользователя"
+        }
       }
     }
   },
@@ -2065,6 +2099,9 @@
     },
     "pledgors": {
       "gen": { "singular": "залогодателя", "plural": "залогодателей" }
+    },
+    "contactLog": {
+      "gen": { "singular": "контактов", "plural": "контактов" }
     }
   },
   "massOperations": {
@@ -2327,7 +2364,9 @@
         "userId": "Оператор",
         "addressTypeCode": "Тип адреса",
         "visitPurposeCode": "Цель выезда",
-        "visitStatusCode": "Статус выезда"
+        "visitStatusCode": "Статус выезда",
+        "receiveDateTime": "Получен",
+        "createDateTime": "Создан"
       }
     },
     "grid": {

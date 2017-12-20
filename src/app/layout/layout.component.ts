@@ -48,6 +48,8 @@ export class LayoutComponent {
     DebtorsComponent: 'DEBT_LIST',
     DebtProcessingComponent: 'DEBTS',
     DictionariesComponent: 'DICTIONARIES',
+    GroupsComponent: 'GROUPS',
+    GroupEditComponent: 'GROUP_EDIT',
     HelpComponent: 'HELP',
     IncomingCallComponent: 'INCOMING_CALL',
     MessageTemplatesComponent: 'MESSAGE_SCENARIOS',

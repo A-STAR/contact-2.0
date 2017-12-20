@@ -59,6 +59,7 @@
         "MESSAGE_SCENARIOS": "Message Scenarios",
         "CONTACT_REGISTRATION": "Contact Registration",
         "GROUPS": "Groups",
+        "GROUP_EDIT": "Group",
         "CAMPAIGNS": "Campaigns",
         "SCHEDULE": "Schedule",
         "FORMULAS": "Formulas",
@@ -224,20 +225,6 @@
         "title": "Contacts"
       },
       "filters": {
-        "form": {
-          "branchCode": "Branch",
-          "dictValue1": "Dictionary Value 1",
-          "dictValue2": "Dictionary Value 2",
-          "dictValue3": "Dictionary Value 3",
-          "dictValue4": "Dictionary Value 4",
-          "outPortfolioId": "Registry",
-          "portfolioId": "Portfolio",
-          "receiveDateTime": "Received",
-          "createDateTime": "Created",
-          "regionCode": "Region",
-          "userId": "Operator",
-          "searchBtn": "Search"
-        },
         "userId": {
           "grid": {
             "fullName": "Operator",
@@ -271,19 +258,6 @@
     },
     "payments": {
       "filters":{
-        "form": {
-          "branchCode": "Branch",
-          "dictValue1": "Dictionary Value 1",
-          "dictValue2": "Dictionary Value 2",
-          "dictValue3": "Dictionary Value 3",
-          "dictValue4": "Dictionary Value 4",
-          "outPortfolioId": "Registry",
-          "portfolioId": "Portfolio",
-          "paymentDateTime": "Payment date",
-          "regionCode": "Region",
-          "userId": "Operator",
-          "searchBtn": "Search"
-        },
         "userId": {
           "grid": {
             "fullName": "Operator",
@@ -345,6 +319,31 @@
           }
         }
       },
+      "contactGrid": {
+        "tabs": {
+          "selectFromDebt": {
+            "title": "Select From Linked",
+            "grid": {
+              "linkTypeCode": "Тип связи",
+              "personFullName": "ФИО",
+              "personRole": "Роль"
+            }
+          },
+          "selectFromAll": {
+            "title": "Select From All"
+          },
+          "add": {
+            "title": "Add Manually",
+            "form": {
+              "firstName": "Имя",
+              "lastName": "Фамилия",
+              "middleName": "Отчество",
+              "linkTypeCode": "Тип связи",
+              "personTypeCode": "Тип персоны"
+            }
+          }
+        }
+      },
       "outcome": {
         "title": "Contact Outcome",
         "template": "Scenario",
@@ -369,7 +368,7 @@
         "percentage": "Remainder Percentage"
       },
       "phone": {
-        "title": "New Debtor Phone Number",
+        "title": "Add Phone",
         "typeCode": "Type",
         "phone": "Phone Number",
         "stopAutoSms": "Disable Auto SMS",
@@ -955,6 +954,13 @@
     },
     "contactLogTab": {
       "title": "Contact log"
+    },
+    "groupTab": {
+      "title": "Groups",
+      "remove": {
+        "title": "Delete the group",
+        "confirmMessage": "Do you really want to delete this group?"
+      }
     }
   },
   "person": {
@@ -1433,12 +1439,13 @@
         "dictValue3": "Dictionary Attribute 3",
         "dictValue4": "Dictionary Attribute 4",
         "isInvalidContact": "Invalid Phone Number/Address",
-        "addPhone": "New Debtor's Phone Number Input",
+        "addPhone": "Adding Phone",
         "isRefusal": "Payment Refusal Flag",
         "isSuccess": "Successful Outcome",
         "changeResponsible": "Changing Operator",
         "contactInvisible": "Don't Display in Contacts",
-        "fileAttachMode": "Files Attachment"
+        "fileAttachMode": "Files Attachment",
+        "changeContactPerson": "Change Contact Person"
       }
     },
     "document": {
@@ -1772,7 +1779,7 @@
         "title": "Contact history"
       },
       "card": {
-        "fullName": "Debtor",
+        "fullName": "Full name",
         "contract": "Contract",
         "contactData": "Contact phone/address",
         "contactDateTime": "Contact date",
@@ -1899,6 +1906,33 @@
       },
       "toolbar": {
         "add": "Add pledgor"
+      }
+    },
+    "groups": {
+      "grid": {
+        "id": "ID",
+        "entityTypeCode": "Type",
+        "name": "Name",
+        "comment": "Comment",
+        "isManual": "Is manual",
+        "isPreCleaned": "Is pre-cleaned",
+        "userFullName": "Operator",
+        "formDateTime": "Form date"
+      },
+      "card": {
+        "entityTypeCode": "Type",
+        "name": "Name",
+        "comment": "Comment",
+        "isManual": "Is manual",
+        "isPreCleaned": "Is pre-cleaned",
+        "userFullName": "Operator",
+        "formDateTime": "Form date",
+        "sql": "SQL"
+      },
+      "toolbar": {
+        "action": {
+          "forCurrentUser": "Current user groups"
+        }
       }
     }
   },
@@ -2065,6 +2099,9 @@
     },
     "pledgors": {
       "gen": { "singular": "pledgor", "plural": "pledgors" }
+    },
+    "contactLog": {
+      "gen": { "singular": "contact", "plural": "contacts" }
     }
   },
   "massOperations": {
@@ -2327,7 +2364,9 @@
         "userId": "Operator",
         "addressTypeCode": "Address",
         "visitPurposeCode": "Visit purpose",
-        "visitStatusCode": "Visit status"
+        "visitStatusCode": "Visit status",
+        "receiveDateTime": "Received",
+        "createDateTime": "Created"
       }
     },
     "grid": {
