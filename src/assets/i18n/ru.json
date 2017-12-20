@@ -1739,7 +1739,7 @@
         "title": "История контактов"
       },
       "card": {
-        "fullName": "Должник",
+        "fullName": "ФИО",
         "contract": "Договор",
         "contactData": "Контактный телефон/адрес",
         "contactDateTime": "Дата контакта",
@@ -2029,6 +2029,9 @@
     },
     "pledgors": {
       "gen": { "singular": "залогодателя", "plural": "залогодателей" }
+    },
+    "contactLog": {
+      "gen": { "singular": "контактов", "plural": "контактов" }
     }
   },
   "massOperations": {
