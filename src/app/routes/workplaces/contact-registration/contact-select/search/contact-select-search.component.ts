@@ -39,7 +39,7 @@ export class ContactSelectSearchComponent {
     { dataType: 2, name: 'birthDate' },
     { dataType: 6, name: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
     { dataType: 3, name: 'passportNumber' },
-    ...range(1, 10).map(i => ({ dataType: 1, name: `stringValue${1}` })),
+    ...range(1, 10).map(i => ({ dataType: 3, name: `stringValue${i}` })),
   ].map(column => ({ ...column, label: column.name })), {});
 
   rows: IContactPerson[] = [];
