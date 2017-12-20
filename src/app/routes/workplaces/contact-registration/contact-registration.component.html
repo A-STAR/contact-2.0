@@ -41,7 +41,19 @@
   >
     <app-contact-registration-phone
       [debtId]="debtId"
+      [personId]="personId"
     ></app-contact-registration-phone>
+  </app-accordion-item>
+
+  <app-accordion-item
+    *ngIf="canChangeContact$ | async"
+    [clickable]="false"
+    [title]="'modules.contactRegistration.contact.title'"
+  >
+    <app-contact-registration-contact
+      [debtId]="debtId"
+      [personId]="personId"
+    ></app-contact-registration-contact>
   </app-accordion-item>
 
   <app-accordion-item

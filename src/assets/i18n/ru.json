@@ -59,6 +59,7 @@
         "CONTACT_REGISTRATION": "Регистрация контакта",
         "MESSAGE_SCENARIOS": "Сценарии сообщений",
         "GROUPS": "Группы",
+        "GROUP_EDIT": "Группа",
         "CAMPAIGNS": "Кампании обзвона",
         "SCHEDULE": "Расписание",
         "FORMULAS": "Формулы",
@@ -318,6 +319,31 @@
           }
         }
       },
+      "contactGrid": {
+        "tabs": {
+          "selectFromDebt": {
+            "title": "Выбрать из привязанных к долгу",
+            "grid": {
+              "linkTypeCode": "Тип связи",
+              "personFullName": "ФИО",
+              "personRole": "Роль"
+            }
+          },
+          "selectFromAll": {
+            "title": "Выбрать из всех"
+          },
+          "add": {
+            "title": "Добавить вручную",
+            "form": {
+              "firstName": "Имя",
+              "lastName": "Фамилия",
+              "middleName": "Отчество",
+              "linkTypeCode": "Тип связи",
+              "personTypeCode": "Тип персоны"
+            }
+          }
+        }
+      },
       "outcome": {
         "title": "Выбор исхода",
         "template": "Сценарий разговора",
@@ -342,7 +368,7 @@
         "percentage": "Процент от остатка"
       },
       "phone": {
-        "title": "Ввод нового номера должника",
+        "title": "Добавление нового телефона",
         "typeCode": "Тип",
         "phone": "Номер телефона",
         "stopAutoSms": "Не отправлять автоматические SMS",
@@ -928,6 +954,13 @@
     },
     "contactLogTab": {
       "title": "История контактов"
+    },
+    "groupTab": {
+      "title": "Группы",
+      "remove": {
+        "title": "Удалить группу",
+        "confirmMessage": "Вы действительно хотите удалить выбранную группу?"
+      }
     }
   },
   "person": {
@@ -1406,12 +1439,13 @@
         "dictValue3": "Словарный атрибут 3",
         "dictValue4": "Словарный атрибут 4",
         "isInvalidContact": "Неверный номер/адрес",
-        "addPhone": "Ввод нового номера должника",
+        "addPhone": "Добавление нового телефона",
         "isRefusal": "Признак отказа от оплаты",
         "isSuccess": "Считать результат успешным",
         "changeResponsible": "Перераспределение на оператора",
         "contactInvisible": "Не отображать в списке контактов",
-        "fileAttachMode": "Прикрепление файлов"
+        "fileAttachMode": "Прикрепление файлов",
+        "changeContactPerson": "Изменение контактного лица"
       }
     },
     "document": {
@@ -1755,7 +1789,8 @@
         "sentDateTime": "Дата отправки",
         "status": "Статус",
         "text": "Текст сообщения",
-        "startDateTime": "Планируемая дата отправки"
+        "startDateTime": "Планируемая дата отправки",
+        "subject": "Тема"
       },
       "grid": {
         "contactId": "ID контакта",
@@ -1866,6 +1901,33 @@
       },
       "toolbar": {
         "add": "Добавить залогодателя"
+      }
+    },
+    "groups": {
+      "grid": {
+        "id": "ID",
+        "entityTypeCode": "Тип",
+        "name": "Название",
+        "comment": "Комментарий",
+        "isManual": "Ручное наполнение",
+        "isPreCleaned": "Очищать предыдущие данные",
+        "userFullName": "Оператор",
+        "formDateTime": "Дата переформирования"
+      },
+      "card": {
+        "entityTypeCode": "Тип",
+        "name": "Название",
+        "comment": "Комментарий",
+        "isManual": "Ручное наполнение",
+        "isPreCleaned": "Очищать предыдущие данные",
+        "userFullName": "Оператор",
+        "formDateTime": "Дата переформирования",
+        "sql": "SQL"
+      },
+      "toolbar": {
+        "action": {
+          "forCurrentUser": "Группы текущего пользователя"
+        }
       }
     }
   },

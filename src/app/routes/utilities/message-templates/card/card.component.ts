@@ -98,8 +98,13 @@ export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  get title(): string {
+    const mode = this.templateId ? 'edit' : 'add';
+    return `utilities.messageTemplates.dialogs.${mode}.title`;
+  }
+
   get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('TEMPLATE_EDIT');
+    return this.userPermissionsService.has(this.templateId ? 'TEMPLATE_EDIT' : 'TEMPLATE_ADD');
   }
 
   get canSubmit(): boolean {
