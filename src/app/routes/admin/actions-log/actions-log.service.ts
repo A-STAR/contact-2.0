@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/zip';
-import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IUserTerm } from '../../../core/user/dictionaries/user-dictionaries.interface';
 import { IActionLog, IEmployee } from './actions-log.interface';

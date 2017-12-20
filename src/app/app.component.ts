@@ -3,8 +3,9 @@ import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToasterConfig } from 'angular2-toaster';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { debounceTime } from 'rxjs/operators/debounceTime';
+import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 
 import { AuthService } from './core/auth/auth.service';
 import { DataService } from './core/data/data.service';
@@ -60,12 +61,14 @@ export class AppComponent {
     this.translateService.setDefaultLang(language);
     this.translateService.use(language).subscribe();
 
-    this._isLoading$ = Observable.combineLatest(
+    this._isLoading$ = combineLatest(
       this.dataService.isLoading$,
       this.router.events,
       (isLoading, event) => isLoading || !(event instanceof NavigationEnd)
     )
-    .distinctUntilChanged()
-    .pipe(debounceTime(AppComponent.LOADER_DEBOUNCE_INTERVAL));
+    .pipe(
+      distinctUntilChanged(),
+      debounceTime(AppComponent.LOADER_DEBOUNCE_INTERVAL)
+    );
   }
 }

@@ -19,6 +19,23 @@ import { IAppState } from '../../state/state.interface';
 
 import { DataService } from '../../data/data.service';
 import { NotificationsService } from '../../notifications/notifications.service';
+/**
+ * NOTE: this is a quick patch that places the operators
+ * in the Observable prototype that persist across the app
+ * TODO(a.tymchuk): import the lettable operators and pipe them
+ * wherever applicable accross the whole codebase
+ */
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/concatMap';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/withLatestFrom';
 
 @Injectable()
 export class DebtorCardEffects {

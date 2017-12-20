@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
 
 import { IUserPermission } from './user-permissions.interface';
 import { UnsafeAction } from '../../../core/state/state.interface';

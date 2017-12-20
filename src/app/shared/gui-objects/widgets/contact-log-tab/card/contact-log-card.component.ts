@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IContactLog } from '../contact-log.interface';
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -44,12 +45,12 @@ export class ContactLogTabCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userPermissionsService.has('CONTACT_COMMENT_EDIT'),
-      Observable.of(this.contactLogType),
+      of(this.contactLogType),
       this.contactId
         ? this.contactLogService.fetch(this.debtId, this.contactId, this.contactLogType, this.callCenter)
-        : Observable.of(null),
+        : of(null),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTACT_TYPE),
       this.personRole,
       this.statusOptions
@@ -164,7 +165,7 @@ export class ContactLogTabCardComponent implements OnInit {
       case ContactLogService.CONTACT_TYPE_EMAIL:
         return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_STATUS);
       default:
-        return Observable.of(null);
+        return of(null);
     }
   }
 
@@ -174,7 +175,7 @@ export class ContactLogTabCardComponent implements OnInit {
       case ContactLogService.CONTACT_TYPE_EMAIL:
         return this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE);
       default:
-        return Observable.of(null);
+        return of(null);
     }
   }
 

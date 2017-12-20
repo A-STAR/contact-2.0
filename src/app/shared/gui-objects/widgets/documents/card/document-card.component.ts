@@ -2,7 +2,8 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, ViewChild
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IDocument } from '../document.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -42,12 +43,12 @@ export class DocumentCardComponent {
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
   ) {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DOCUMENT_TYPE),
       this.userConstantsService.get('FileAttachment.MaxSize'),
       this.documentId
         ? this.documentService.fetch(this.entityTypeCode, this.id, this.documentId, this.callCenter)
-        : Observable.of(null)
+        : of(null)
     )
     .pipe(first())
     .subscribe(([ options, maxSize, document ]) => {
@@ -68,7 +69,7 @@ export class DocumentCardComponent {
     });
   }
 
-  public onSubmit(): void {
+  onSubmit(): void {
     const { file, ...document } = this.form.serializedUpdates;
     const action = this.documentId
       ? this.documentService.update(this.entityTypeCode, this.id, this.documentId, document, file, this.callCenter)
@@ -80,11 +81,11 @@ export class DocumentCardComponent {
     });
   }
 
-  public onBack(): void {
+  onBack(): void {
     this.contentTabService.back();
   }
 
-  public get canSubmit(): boolean {
+  get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 }
