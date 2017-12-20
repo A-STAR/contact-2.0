@@ -2414,6 +2414,7 @@
         "debtClearResponsible": "Снять ответственного по долгу",
         "debtNextCallDate": "Установить дату следующего звонка",
         "debtSetResponsible": "Установить ответственного по долгу",
+        "debtChangeStatus": "Изменить статус долга",
         "delete": "Удалить",
         "deletePromise": "Удалить обещания",
         "deleteSMS": "Удалить SMS",
