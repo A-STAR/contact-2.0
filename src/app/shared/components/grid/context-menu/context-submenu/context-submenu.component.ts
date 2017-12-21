@@ -12,7 +12,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IContextMenuItem } from '../../grid.interface';
-import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'app-context-submenu',

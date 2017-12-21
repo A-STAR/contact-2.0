@@ -11,7 +11,6 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IContextMenuItem, IGridColumn } from '../grid.interface';
-import {  } from '@angular/core/src/change_detection/change_detector_ref';
 
 @Component({
   selector: 'app-context-menu',
@@ -39,6 +38,7 @@ export class ContextMenuComponent implements OnInit {
     if (this.options && this.options.length) {
       this.simpleActions = this.prepareSimpleActions(this.options);
       this.actions = this.prepareActions(this.options);
+      this.cdRef.markForCheck();
     }
   }
 
