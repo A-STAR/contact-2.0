@@ -1,42 +1,57 @@
-import { Component, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
-
-import { IFilters, INotification } from '../../core/notifications/notifications.interface';
+import { Subscription } from 'rxjs/Subscription';
 
 import { AuthService } from '../../core/auth/auth.service';
+import { PersistenceService } from '../../core/persistence/persistence.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SettingsService } from '../../core/settings/settings.service';
-import { PersistenceService } from '../../core/persistence/persistence.service';
 
 import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
+import { first } from 'rxjs/operators';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('accountDropdown') accountDropdown: DropdownComponent;
 
   isNavSearchVisible = false;
   isLicenseVisible = false;
-  filters$: Observable<IFilters>;
-  hasNotifications$: Observable<boolean>;
-  notificationsCount$: Observable<number>;
-  notifications$: Observable<Array<INotification>>;
+  notificationsCount: number;
+  hasNotifications: boolean;
+  notificationsCountSub: Subscription;
 
   constructor(
     private authService: AuthService,
+    private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private settings: SettingsService,
     private persistenceService: PersistenceService,
+    private settings: SettingsService,
     private translateService: TranslateService,
-  ) {
-    this.filters$ = this.notificationsService.filters;
-    this.hasNotifications$ = this.notificationsService.count.map(count => count > 0);
-    this.notificationsCount$ = this.notificationsService.count;
+  ) {}
+
+  ngOnInit(): void {
+    this.notificationsCountSub = this.notificationsService.count
+      .subscribe(count => {
+        this.notificationsCount = count;
+        this.hasNotifications = count > 0;
+        this.cdRef.detectChanges();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.notificationsCountSub.unsubscribe();
   }
 
   toggleUserSettings(event: MouseEvent): void {
@@ -47,23 +62,23 @@ export class HeaderComponent {
     event.preventDefault();
     event.stopPropagation();
     this.isNavSearchVisible = true;
+    this.cdRef.markForCheck();
   }
 
   closeNavSearch(): void {
     this.isNavSearchVisible = false;
-  }
-
-  get navSearchVisible(): boolean {
-    return this.isNavSearchVisible;
+    this.cdRef.markForCheck();
   }
 
   toggleCollapsedSidebar(): void {
     this.settings.layout.isCollapsed = !this.settings.layout.isCollapsed;
+    this.cdRef.markForCheck();
     this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
   }
 
   toggleMenu(): void {
     this.settings.layout.menuToggled = !this.settings.layout.menuToggled;
+    this.cdRef.markForCheck();
     this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
   }
 
@@ -73,10 +88,12 @@ export class HeaderComponent {
 
   showLicenseInfo(): void {
     this.isLicenseVisible = true;
+    this.cdRef.markForCheck();
   }
 
   closeLicenseInfo(): void {
     this.isLicenseVisible = false;
+    this.cdRef.markForCheck();
   }
 
   toggleLanguage(): void {

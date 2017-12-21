@@ -1,9 +1,9 @@
-import { IUserPermissions } from './user-permissions.interface';
+import { IValueBag } from './value-bag.interface';
 
-export class UserPermissions {
-  static CUSTOM_PERMISSION_THRESHOLD = 20000;
+export class ValueBag {
+  static CUSTOM_VALUE_THRESHOLD = 20000;
 
-  constructor(private permissions: IUserPermissions) {}
+  constructor(private bag: IValueBag) {}
 
   has(name: string): boolean {
     return this.getBooleanValue(name);
@@ -50,11 +50,11 @@ export class UserPermissions {
   }
 
   private getBooleanValue(name: string): boolean {
-    return this.permissions[name] && this.permissions[name].valueB;
+    return this.bag[name] && this.bag[name].valueB;
   }
 
   private getStringValue(name: string): string {
-    return this.permissions[name] && this.permissions[name].valueS || '';
+    return this.bag[name] && this.bag[name].valueS || '';
   }
 
   private getStringValueAsArray(name: string): Array<number> {
@@ -66,7 +66,6 @@ export class UserPermissions {
   }
 
   private stringValueContainsAnyCustomNumber(name: string): boolean {
-    return this.getStringValueAsArray(name).reduce((acc, value) =>
-      acc || value > UserPermissions.CUSTOM_PERMISSION_THRESHOLD, false);
+    return this.getStringValueAsArray(name).reduce((acc, value) => acc || value > ValueBag.CUSTOM_VALUE_THRESHOLD, false);
   }
 }

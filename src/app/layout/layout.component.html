@@ -1,14 +1,14 @@
 <div class="wrapper app-content">
-    <!-- top navbar-->
-    <app-header class="topnavbar-wrapper"></app-header>
-    <!-- sidebar-->
-    <app-sidebar class="aside"></app-sidebar>
-    <!-- Main section-->
-    <section>
-        <!-- Page content-->
-        <div class="content-wrapper">
-          <app-router-outlet (activate)="activate($event)" (deactivate)="deactivate($event)"></app-router-outlet>
-          <app-content-tabstrip [tabs]="tabs"></app-content-tabstrip>
-        </div>
-    </section>
+  <!-- top navbar-->
+  <app-header class="topnavbar-wrapper"></app-header>
+  <!-- sidebar menu -->
+  <app-sidebar class="aside"></app-sidebar>
+  <!-- Main section-->
+  <section>
+    <!-- Page content-->
+    <div class="content-wrapper">
+      <app-router-outlet (activate)="activate($event)" (deactivate)="deactivate($event)"></app-router-outlet>
+      <app-content-tabstrip [tabs]="tabs"></app-content-tabstrip>
+    </div>
+  </section>
 </div>
