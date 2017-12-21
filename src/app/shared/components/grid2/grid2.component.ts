@@ -834,6 +834,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   // TODO(d.maltsev): this looks a bit messy.
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'debtNextCallDate':
+        return this.userPermissionsBag.has('DEBT_NEXT_CALL_DATE_SET') && this.selected.length > 0;
       case 'visitAdd':
         return  this.selected.length > 0; // TODO mock (m.bobryshev) this.userPermissionsBag.has('VISIT_ADD') &&
       case 'deleteSMS':
