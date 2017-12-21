@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPayment } from '../payment.interface';
@@ -44,7 +45,7 @@ export class PaymentCardComponent {
     private userPermissionsService: UserPermissionsService,
   ) {
 
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE),
       this.lookupService.lookupAsOptions('currencies'),
       this.lookupService.lookupAsOptions('users'),
@@ -54,7 +55,7 @@ export class PaymentCardComponent {
       this.canConfirm$,
       this.paymentId
         ? this.paymentService.fetch(this.debtId, this.paymentId, this.callCenter)
-        : Observable.of(null),
+        : of(null),
     )
     .pipe(first())
     .subscribe(([ purposeOptions, currencyOptions, userOptions, canAdd, canEdit, canEditUser, canConfirm, payment ]) => {

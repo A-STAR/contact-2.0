@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IPermissionsDialogEnum } from '../permissions.interface';
 import { IPermissionRole } from '../permissions.interface';
@@ -31,7 +31,7 @@ export class RolesComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_COPY,
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_COPY),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('ROLE_COPY'),
         this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
@@ -39,7 +39,7 @@ export class RolesComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_EDIT),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('ROLE_EDIT'),
         this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
@@ -47,7 +47,7 @@ export class RolesComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_DELETE),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('ROLE_DELETE'),
         this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)

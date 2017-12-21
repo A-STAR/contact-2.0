@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import * as moment from 'moment';
 
@@ -53,13 +53,13 @@ export class FormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this._formSubscription = Observable.combineLatest(
+    this._formSubscription = combineLatest(
       this.userConstantsService.get('Email.Sender.Default'),
       this.userConstantsService.get('Email.Sender.Use'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_SENDER),
       this.useTemplate ?
         this.userTemplatesService.getTemplates(3, this.personRole, true) :
-        Observable.of(null)
+        of(null)
     )
     .pipe(first())
     .subscribe(([ defaultSender, useSender, senderOptions, templates ]) => {

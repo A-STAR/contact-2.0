@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import * as moment from 'moment';
 
 import { IDebt } from '../../../../core/debt/debt.interface';
@@ -40,7 +39,7 @@ export class PaymentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.contactRegistrationService.selectedNode$,
       this.debtService.fetch(null, this.debtId)
     )

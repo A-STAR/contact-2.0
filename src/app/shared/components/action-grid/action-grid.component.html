@@ -91,6 +91,17 @@
   [personRoles]="getAddOptions('personRole')"
   (close)="onCloseDialog()"
 ></app-mass-sms>
+<app-visit-prepare-dialog
+  *ngIf="isDialog('prepareVisit')"
+  [visits]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-visit-prepare-dialog>
+
+<app-visit-cancel-dialog
+  *ngIf="isDialog('cancelVisit')"
+  [visits]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-visit-cancel-dialog>
 
 <app-metadata-grid
   #grid

@@ -3,8 +3,9 @@ import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnDes
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuarantor, IGuaranteeContract } from '../../guarantee/guarantee.interface';
@@ -80,7 +81,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.contract$,
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
@@ -91,7 +92,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
         contract => this.userPermissionsService.has(contract && contract.id ? 'GUARANTEE_EDIT' : 'GUARANTEE_ADD')
       ),
       this.contract$.flatMap(
-        contract => contract && contract.id ? this.guarantorService.fetch(contract.personId) : Observable.of(null)
+        contract => contract && contract.id ? this.guarantorService.fetch(contract.personId) : of(null)
       )
     )
     .pipe(first())
@@ -152,7 +153,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
       .flatMap((typeCode: number) => {
         this.currentTypeCode = typeCode;
         const attrConstant = this.guarantorService.getAttributeConstant(typeCode);
-        return Observable.combineLatest(Observable.of(typeCode), this.userContantsService.get(attrConstant));
+        return combineLatest(of(typeCode), this.userContantsService.get(attrConstant));
       })
       .subscribe(([ typeCode, attributeList ]) => {
         const additionalControlNames = this.makeControlsFromAttributeList(<string>attributeList.valueS)

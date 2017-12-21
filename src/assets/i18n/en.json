@@ -322,12 +322,7 @@
       "contactGrid": {
         "tabs": {
           "selectFromDebt": {
-            "title": "Select From Linked",
-            "grid": {
-              "linkTypeCode": "Тип связи",
-              "personFullName": "ФИО",
-              "personRole": "Роль"
-            }
+            "title": "Select From Linked"
           },
           "selectFromAll": {
             "title": "Select From All"
@@ -1950,6 +1945,23 @@
           "forCurrentUser": "Current user groups"
         }
       }
+    },
+    "visit": {
+      "grid": {
+        "id": "ID",
+        "fullName": "Full name",
+        "organization": "Department",
+        "position": "Position"
+      },
+      "card": {
+        "purposeCode": "Purpose",
+        "planVisitDateTime": "Planned On",
+        "comment": "Comment",
+        "operator": "Operators"
+      },
+      "dialog": {
+        "title": "Visit prepare"
+      }
     }
   },
   "entities": {
@@ -2115,6 +2127,9 @@
     },
     "contactLog": {
       "gen": { "singular": "contact", "plural": "contacts" }
+    },
+    "visit": {
+      "gen": { "singular": "visit", "plural": "visits" }
     }
   },
   "massOperations": {
@@ -2150,6 +2165,10 @@
     "debtResponsibleClear": {
       "title": "Clear responsible",
       "message": "Do you really want to clear responsible operators for the selected debts?"
+    },
+    "visit": {
+      "title": "Cancel visits",
+      "message": "Do you really want to cancel the marked departures?"
     }
   },
   "errors": {
@@ -2495,5 +2514,42 @@
       }
     },
     "NA": "N/A"
+  },
+  "common": {
+    "entities": {
+      "contactPerson": {
+        "name": "Contact Person",
+        "fields": {
+          "id": "Id",
+          "personId": "Person Id",
+          "personRole": "Person Role",
+          "personFullName": "Person Full Name",
+          "linkTypeCode": "Relationship Type (For Third Parties)"
+        }
+      },
+      "person": {
+        "name": "Person",
+        "fields": {
+          "id": "Id",
+          "lastName": "Last Name",
+          "firstName": "First Name",
+          "middleName": "Middle Name",
+          "typeCode": "Debtor Type",
+          "birthDate": "Date of Birth",
+          "genderCode": "Gender",
+          "passportNumber": "Passport Number",
+          "stringValue1": "String Attribute 1",
+          "stringValue2": "String Attribute 2",
+          "stringValue3": "String Attribute 3",
+          "stringValue4": "String Attribute 4",
+          "stringValue5": "String Attribute 5",
+          "stringValue6": "String Attribute 6",
+          "stringValue7": "String Attribute 7",
+          "stringValue8": "String Attribute 8",
+          "stringValue9": "String Attribute 9",
+          "stringValue10": "String Attribute 10"
+        }
+      }
+    }
   }
 }

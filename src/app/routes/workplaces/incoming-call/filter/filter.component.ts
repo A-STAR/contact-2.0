@@ -7,7 +7,7 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-import { addLabel } from '../../../../core/utils';
+import { addFormLabel } from '../../../../core/utils';
 
 @Component({
   selector: 'app-incoming-call-filter',
@@ -28,7 +28,7 @@ export class FilterComponent {
     { controlName: 'birthDate', type: 'datepicker' },
     { controlName: 'personRoleCodes', type: 'multiselectwrapper', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
     { controlName: 'isClosedDebt', type: 'checkbox' },
-  ].map(addLabel('modules.incomingCall.filter.form'));
+  ].map(addFormLabel('modules.incomingCall.filter.form'));
 
   constructor(
     private cdRef: ChangeDetectorRef,

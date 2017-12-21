@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, OnDestroy, Output, ViewChild
 } from '@angular/core';
-import 'rxjs/add/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
