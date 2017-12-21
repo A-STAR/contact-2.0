@@ -49,17 +49,15 @@ export interface IContextMenuItem {
   action?: string | ((action: any) => any);
   prop?: string;
   label?: string;
-  fieldActions?: string[];
-  fieldAction?: string;
+  simpleActionsNames?: string[];
+  simpleActionName?: string;
   translationKey?: string;
   icon?: HTMLElement | string;
   cssClasses?: string[];
   params?: string[];
   submenu?: IContextMenuItem[];
   addOptions?: { name: string; value: Array<number|string> }[];
-  // these are internal variables
-  fieldActionItems?: IContextMenuItem[];
-  actionItems?: IContextMenuItem[];
-  hideActionSubmenu?: boolean;
-  hideFieldActionSubmenu?: boolean;
+  // these are internal collections
+  actions?: IContextMenuItem[];
+  simpleActions?: IContextMenuItem[];
 }
