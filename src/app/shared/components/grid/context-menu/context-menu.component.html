@@ -3,54 +3,30 @@
     tabindex="-1">
   <ul class="ngx-datatable-context-menu context-menu__body">
     <li
-      *ngFor="let item of actionItems"
+      *ngFor="let item of actions"
       class="context-menu__item"
       (click)="onAction(item)"
       [ngClass]="{'disabled': isDisabled(item) | async }"
     >
-      <span *ngIf="(item.actionItems || item.fieldActionItems) && (item.enabled | async)" class="arrow right"></span>
       {{ item.label | translate }}
       <app-context-submenu
         [parent]="item"
-        [items]="item.actionItems"
         (action)="onAction($event)"
-        *ngIf="!item.hideActionSubmenu"
-        (isHidden)="onHide($event)"
-      >
-      </app-context-submenu>
-      <app-context-submenu
-        [parent]="item"
-        [items]="item.fieldActionItems"
-        (action)="onCtxMenuClick($event)"
-        [isFieldActionType]="true"
-        *ngIf="!item.hideFieldActionSubmenu"
-        (isHidden)="onHide($event)"
+        (simpleAction)="onSimpleAction($event)"
       >
       </app-context-submenu>
     </li>
     <li
-      *ngFor="let item of fieldActionItems"
+      *ngFor="let item of simpleActions"
       class="context-menu__item"
-      (click)="onCtxMenuClick($event, item)"
+      (click)="onSimpleAction($event, item)"
       [ngClass]="{'disabled': isDisabled(item) | async }"
     >
       {{ item.label }}
-      <span *ngIf="(item.actionItems || item.fieldActionItems) && (item.enabled | async)" class="arrow right"></span>
       <app-context-submenu
         [parent]="item"
-        [items]="item.actionItems"
         (action)="onAction($event)"
-        *ngIf="!item.hideActionSubmenu"
-        (isHidden)="onHide($event)"
-      >
-      </app-context-submenu>
-      <app-context-submenu
-        [parent]="item"
-        [items]="item.fieldActionItems"
-        (action)="onCtxMenuClick($event)"
-        [isFieldActionType]="true"
-        *ngIf="!item.hideFieldActionSubmenu"
-        (isHidden)="onHide($event)"
+        (simpleAction)="onSimpleAction($event)"
       >
       </app-context-submenu>
     </li>

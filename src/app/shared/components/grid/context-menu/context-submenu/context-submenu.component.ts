@@ -9,9 +9,10 @@ import {
   Output,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IContextMenuItem } from '../../grid.interface';
-import { Subscription } from 'rxjs/Subscription';
+import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'app-context-submenu',
@@ -19,11 +20,13 @@ import { Subscription } from 'rxjs/Subscription';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContextSubmenuComponent implements OnInit, OnDestroy {
-  @Input() items: IContextMenuItem[];
   @Input() parent: IContextMenuItem;
-  @Input() isFieldActionType: boolean;
   @Output() action = new EventEmitter<any>();
-  @Output() isHidden = new EventEmitter<any>();
+  @Output() simpleAction = new EventEmitter<any>();
+
+  isSubmenuShown: boolean;
+  isActionsShown: boolean;
+  isSimpleActionsShown: boolean;
 
   private parentEnabledSub: Subscription;
 
@@ -32,33 +35,58 @@ export class ContextSubmenuComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.parentEnabledSub = this.parent.enabled
-      .subscribe(isParentEnabled => {
-        const subItems = this.isFieldActionType ? this.parent.fieldActionItems : this.parent.actionItems;
-        const isItemsPresent = subItems && !!subItems.length;
-        if (!(isItemsPresent && isParentEnabled)) {
-          this.hide();
-        }
+
+    this.parentEnabledSub = Observable.combineLatest(
+      this.parent.enabled,
+      this.isActionsDisabled(this.concatAllItems(this.parent.actions, this.parent.simpleActions))
+    )
+      .subscribe(([isParentEnabled, isActionsDisabled]) => {
+
+        this.isSubmenuShown = isParentEnabled && !isActionsDisabled && (this.hasItems(this.parent.actions)
+          || this.hasItems(this.parent.simpleActions));
+
+        this.isActionsShown = isParentEnabled && this.hasItems(this.parent.actions);
+
+        this.isSimpleActionsShown = isParentEnabled && this.hasItems(this.parent.simpleActions);
+
+        this.cdRef.markForCheck();
       });
   }
 
   ngOnDestroy(): void {
-    this.cdRef.detach();
     if (this.parentEnabledSub) {
       this.parentEnabledSub.unsubscribe();
     }
   }
 
-  hide(): void {
-    this.isHidden.emit({ item: this.parent, isFieldActionType: this.isFieldActionType });
+  onAction(item: IContextMenuItem): void {
+    this.action.emit(item);
   }
 
-  onAction(item: IContextMenuItem): void {
-    this.action.emit(this.isFieldActionType ? this.parent : item);
+  onSimpleAction(): void {
+    this.simpleAction.emit(this.parent);
   }
 
   isDisabled(item: IContextMenuItem): Observable<boolean> {
     return item.enabled ? item.enabled.map(enabled => !enabled) : Observable.of(false);
+  }
+
+  private isActionsDisabled(items: IContextMenuItem[]): Observable<boolean>  {
+    return Observable.combineLatest(items.map(item => item.enabled))
+      .map(results => !results.some(Boolean));
+  }
+
+  private concatAllItems(...items: IContextMenuItem[][]): IContextMenuItem[] {
+    return items.reduce((acc, i) => {
+      if (this.hasItems(i)) {
+        acc = acc.concat(i);
+      }
+      return acc;
+    }, []);
+  }
+
+  private hasItems(items: IContextMenuItem[]): boolean {
+    return !!(items && items.length);
   }
 
 }

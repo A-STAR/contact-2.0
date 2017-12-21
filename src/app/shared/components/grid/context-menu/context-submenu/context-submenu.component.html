@@ -1,15 +1,22 @@
 
-<ul class="context-menu__submenu">
-  <li class="context-menu__item"
-  *ngFor="let child of parent.actionItems"
-  (click)="onAction(child)"
-  [ngClass]="{'disabled': (isFieldActionType ? isDisabled(parent) : isDisabled(child)) | async }"
-  >
-    <ng-container *ngIf="isFieldActionType; else translateText">
-      {{ child.label }}
-    </ng-container>
-    <ng-template #translateText>
-      {{ child.label | translate }}
-    </ng-template>
-  </li>
-</ul>
+<span *ngIf="isSubmenuShown" class="arrow right"></span>
+<ng-container *ngIf="isSubmenuShown">
+  <ul class="context-menu__submenu" *ngIf="isActionsShown">
+    <li class="context-menu__item"
+    *ngFor="let item of parent.actions"
+    (click)="onAction(item)"
+    [ngClass]="{'disabled': isDisabled(item) | async }"
+    >
+      {{ item.label | translate }}
+    </li>
+  </ul>
+  <ul class="context-menu__submenu" *ngIf="isSimpleActionsShown">
+    <li class="context-menu__item"
+    *ngFor="let item of parent.simpleActions"
+    (click)="onSimpleAction()"
+    [ngClass]="{'disabled': isDisabled(parent) | async }"
+    >
+      {{ item.label }}
+    </li>
+  </ul>
+</ng-container>
