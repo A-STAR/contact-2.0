@@ -1555,6 +1555,27 @@
         "comment": "Comment"
       }
     },
+    "mass": {
+      "email": {
+        "form": {
+          "emailTypes": "Email Type",
+          "senderCode": "Sender",
+          "startDateTime": "Start Date",
+          "subject": "Subject",
+          "templateId": "Template"
+        },
+        "title": "Launch Parameters"
+      },
+      "sms": {
+        "form": {
+          "phoneTypes": "Phone Type",
+          "senderCode": "Sender",
+          "startDateTime": "Start Date",
+          "templateId": "Template"
+        },
+        "title": "Launch Parameters"
+      }
+    },
     "object": {
       "dialogs": {
         "add": {
@@ -2437,6 +2458,7 @@
         "delete": "Удалить",
         "deletePromise": "Delete promises",
         "deleteSMS": "Delete SMS",
+        "emailCreate": "Mass Emails",
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
@@ -2445,6 +2467,7 @@
         "prepareVisit": "Prepare a visit",
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
+        "smsCreate": "Mass SMS",
         "statusChange": "Change status",
         "visitAdd": "Make necessary",
         "openUserById": "Open debtor card"

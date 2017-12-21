@@ -19,6 +19,7 @@ import { EntityGroupModule } from './entity-group/entity-group.module';
 import { GuaranteeModule } from './guarantee/guarantee.module';
 import { GuarantorModule } from './guarantor/guarantor.module';
 import { IdentityModule } from './identity/identity.module';
+import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { ObjectModule } from './object/object.module';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
@@ -54,6 +55,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     GuaranteeModule,
     GuarantorModule,
     IdentityModule,
+    MassOpsModule,
     ObjectModule,
     PaymentModule,
     PaymentOperatorModule,
@@ -87,6 +89,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     GuaranteeModule,
     GuarantorModule,
     IdentityModule,
+    MassOpsModule,
     ObjectModule,
     PaymentModule,
     PaymentOperatorModule,

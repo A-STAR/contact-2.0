@@ -6,7 +6,7 @@ import { max, maxStrict } from './max';
 import { maxDate } from './maxDate';
 import { maxFileSize } from './maxFileSize';
 import { min, minStrict } from './min';
-import { minDate } from './minDate';
+import { minDate, minDateThreeDaysAgo } from './minDate';
 import { oneOfGroupRequired } from './oneOfGroupRequired';
 import { password } from './password';
 
@@ -14,14 +14,15 @@ export {
   hasDigits,
   hasLowerCaseChars,
   hasUpperCaseChars,
+  isDate,
   max,
-  maxStrict,
   maxDate,
   maxFileSize,
+  maxStrict,
   min,
-  minStrict,
   minDate,
+  minDateThreeDaysAgo,
+  minStrict,
   oneOfGroupRequired,
   password,
-  isDate,
 };
