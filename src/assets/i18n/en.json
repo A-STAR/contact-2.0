@@ -1928,6 +1928,23 @@
           "forCurrentUser": "Current user groups"
         }
       }
+    },
+    "visit": {
+      "grid": {
+        "id": "ID",
+        "fullName": "Full name",
+        "organization": "Department",
+        "position": "Position"
+      },
+      "card": {
+        "purposeCode": "Purpose",
+        "planVisitDateTime": "Planned On",
+        "comment": "Comment",
+        "operator": "Operators"
+      },
+      "dialog": {
+        "title": "Visit prepare"
+      }
     }
   },
   "entities": {
@@ -2093,6 +2110,9 @@
     },
     "contactLog": {
       "gen": { "singular": "contact", "plural": "contacts" }
+    },
+    "visit": {
+      "gen": { "singular": "visit", "plural": "visits" }
     }
   },
   "massOperations": {

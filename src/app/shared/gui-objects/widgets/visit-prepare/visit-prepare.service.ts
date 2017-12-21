@@ -14,6 +14,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 
 @Injectable()
 export class VisitPrepareService extends AbstractActionService {
+  static MESSAGE_OPERATOR_SELECTED = 'MESSAGE_OPERATOR_SELECTED';
 
   private operatorUrl = '/users/forVisit';
   private visitUrl = '/mass/visits';
@@ -35,8 +36,8 @@ export class VisitPrepareService extends AbstractActionService {
   prepare(visits: number[], visit: IVisit): Observable<IOperationResult> {
     const ids = visits.map(visitId => [ visitId ]);
     return this.dataService
-      .create(`${this.visitUrl}/prepare`, {}, { idData: { ids }, actionData: visit })
-      .catch(this.notificationsService.deleteError().entity('entities.operator.gen.singular').dispatchCallback());
+      .update(`${this.visitUrl}/prepare`, {}, { idData: { ids }, actionData: visit })
+      .catch(this.notificationsService.createError().entity('entities.visit.gen.singular').dispatchCallback());
   }
 
   showOperationNotification(result: IOperationResult): void {

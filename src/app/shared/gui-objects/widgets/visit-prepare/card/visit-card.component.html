@@ -1,3 +1,8 @@
 <div class="pb-lg">
   <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="visit"></app-dynamic-form>
 </div>
+
+<div>
+  <label class="mt">{{ 'widgets.visit.card.operator' | translate }} <b class="text-danger">*</b></label>
+  <app-visit-operator-grid></app-visit-operator-grid>
+</div>

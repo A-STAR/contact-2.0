@@ -41,6 +41,10 @@ export class VisitOperatorGridComponent implements OnInit {
     });
 
     this.fetch();
+
+    this.selectedOperator$.subscribe(operator =>
+      this.visitPrepareService.dispatchAction(VisitPrepareService.MESSAGE_OPERATOR_SELECTED, operator)
+    );
   }
 
   get operators(): Array<IVisitOperator> {

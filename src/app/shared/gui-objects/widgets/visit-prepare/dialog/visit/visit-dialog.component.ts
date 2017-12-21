@@ -21,7 +21,7 @@ export class VisitDialogComponent {
   }
 
   onCreate(): void {
-    this.create.emit(this.visitCard.form.serializedValue);
+    this.create.emit(this.visitCard.form.serializedUpdates);
   }
 
   onClose(): void {
