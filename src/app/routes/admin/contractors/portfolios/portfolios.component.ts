@@ -86,7 +86,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     },
     {
       label: this.translateService.instant('portfolios.outsourcing.send.menu.title'),
-      enabled: this.canSendOutsourceAndCession(),
+      enabled: this.canSend$,
       submenu: [
         {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.outsourcing'),
@@ -221,28 +221,13 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     return this.store.select(state => state.contractorsAndPortfolios.selectedContractor);
   }
 
-  canSendOutsourceAndCession(): Observable<boolean> {
-    // return combineLatestAnd([
-    //   this.canSendOutsource(),
-    //   this.canSendCession()
-    // ]);
-    return Observable.of(true);
-  }
-
   canSendOutsource(): Observable<boolean> {
-    // return combineLatestAnd([
-    //   this.canSend$,
-    //   this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
-    // ]);
-    return Observable.of(true);
-  }
-
-  canSendCession(): Observable<boolean> {
     return combineLatestAnd([
       this.canSend$,
       this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
     ]);
   }
+
   canForm(portfolio: IPortfolio): boolean {
     return portfolio &&
       portfolio.directionCode === 2 && portfolio.statusCode === 4;
