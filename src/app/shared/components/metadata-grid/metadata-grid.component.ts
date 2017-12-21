@@ -9,7 +9,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { GridOptions } from 'ag-grid/main';
-import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
@@ -41,7 +40,6 @@ export class MetadataGridComponent<T> implements OnInit {
   @Input() rowIdKey: string;
   @Input() rows: T[] = [];
   @Input() rowCount: number;
-  @Input() showFilter = false;
 
   @Output() action = new EventEmitter<IAGridAction>();
   @Output() onDblClick = new EventEmitter<T>();
@@ -64,16 +62,14 @@ export class MetadataGridComponent<T> implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
-      this.gridService.getActions(this.metadataKey).pipe(first()),
-      this.gridService.getColumnsFromMetadata(this.metadataKey, {}).pipe(first()),
-    )
-    .subscribe(([ actions, columns ]) => {
-      this._actions = actions;
-      this._columns = [ ...columns ];
-      this._initialized = true;
-      this.cdRef.markForCheck();
-    });
+    this.gridService.getMetadata(this.metadataKey, {})
+      .pipe(first())
+      .subscribe(({ actions, columns }) => {
+        this._actions = actions;
+        this._columns = [ ...columns ];
+        this._initialized = true;
+        this.cdRef.markForCheck();
+      });
   }
 
   get selected(): T[] {

@@ -14,8 +14,9 @@ export class PromiseResolveService {
   ) {}
 
   confirm(promiseIds: number[]): Observable<any> {
+    const ids = promiseIds.map(id => [ id ]);
     return this.dataService
-      .update(`${this.url}/confirm`, {}, { idData: { ids: promiseIds } })
+      .update(`${this.url}/confirm`, {}, { idData: { ids } })
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
@@ -27,8 +28,9 @@ export class PromiseResolveService {
   }
 
   remove(promiseIds: number[]): Observable<any> {
+    const ids = promiseIds.map(id => [ id ]);
     return this.dataService
-      .update(`${this.url}/delete`, {}, { idData: { ids: promiseIds } })
+      .update(`${this.url}/delete`, {}, { idData: { ids } })
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();

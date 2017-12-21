@@ -1,8 +1,11 @@
 import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+
+import { AppModulesModule } from './app-modules/app-modules.module';
 import { DebtModule } from './debt/debt.module';
 import { UserModule } from './user/user.module';
+
 import { ActionsLogService } from './actions-log/actions-log.service';
 import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
 import { DataService } from './data/data.service';
@@ -12,19 +15,20 @@ import { ErrorHandlerService } from './error/error-handler.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { LookupService } from './lookup/lookup.service';
-import { MessageBusService } from './message-bus/message-bus.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { PersistenceService } from './persistence/persistence.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
-import { throwIfAlreadyLoaded } from './module-import-guard';
 import { ValueConverterService } from './converter/value-converter.service';
+
+import { throwIfAlreadyLoaded } from './module-import-guard';
 
 import { environment } from '../../environments/environment';
 
 @NgModule({
   imports: [
+    AppModulesModule,
     DebtModule,
     UserModule,
   ],
@@ -38,7 +42,6 @@ import { environment } from '../../environments/environment';
     LookupService,
     GridFiltersService,
     GuiObjectsService,
-    MessageBusService,
     MetadataService,
     NotificationsService,
     PersistenceService,

@@ -17,7 +17,7 @@ export class DocumentsComponent {
     return this.campaignService.campaignDebt$.map(Boolean);
   }
 
-  get personId$(): Observable<number> {
-    return this.campaignService.campaignDebt$.map(debt => debt.personId);
+  get debtId$(): Observable<number> {
+    return this.campaignService.campaignDebt$.map(debt => debt.debtId);
   }
 }

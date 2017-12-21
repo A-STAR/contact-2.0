@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { BlockDialogModule } from '../../../../components/dialog/block/block-dialog.module';
 import { DialogActionModule } from '../../../../components/dialog-action/dialog-action.module';
 import { GridModule } from '../../../../components/grid/grid.module';
+import { ScheduleModule } from './schedule/schedule.module';
 import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
 
 import { EmailGridComponent } from './email-grid.component';
@@ -14,6 +15,7 @@ import { EmailGridComponent } from './email-grid.component';
     CommonModule,
     DialogActionModule,
     GridModule,
+    ScheduleModule,
     Toolbar2Module,
   ],
   exports: [

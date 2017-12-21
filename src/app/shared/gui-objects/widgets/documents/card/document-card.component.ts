@@ -1,15 +1,14 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IDocument } from '../document.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DocumentService } from '../document.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -39,17 +38,16 @@ export class DocumentCardComponent {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private documentService: DocumentService,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
   ) {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DOCUMENT_TYPE),
       this.userConstantsService.get('FileAttachment.MaxSize'),
       this.documentId
         ? this.documentService.fetch(this.entityTypeCode, this.id, this.documentId, this.callCenter)
-        : Observable.of(null)
+        : of(null)
     )
     .pipe(first())
     .subscribe(([ options, maxSize, document ]) => {
@@ -70,23 +68,23 @@ export class DocumentCardComponent {
     });
   }
 
-  public onSubmit(): void {
+  onSubmit(): void {
     const { file, ...document } = this.form.serializedUpdates;
     const action = this.documentId
       ? this.documentService.update(this.entityTypeCode, this.id, this.documentId, document, file, this.callCenter)
       : this.documentService.create(this.entityTypeCode, this.id, document, file, this.callCenter);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(DocumentService.MESSAGE_DOCUMENT_SAVED);
+      this.documentService.dispatchAction(DocumentService.MESSAGE_DOCUMENT_SAVED);
       this.onBack();
     });
   }
 
-  public onBack(): void {
+  onBack(): void {
     this.contentTabService.back();
   }
 
-  public get canSubmit(): boolean {
+  get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 }

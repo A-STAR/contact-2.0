@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { IMetadataFilter, IMetadataFilterOption } from 'app/core/metadata/metadata.interface';
+import { IMetadataFilter, IMetadataFilterOption } from '../../../../core/metadata/metadata.interface';
 import { IFilterControl } from './metadata-filter.interface';
 
-import { FilterOperatorType } from 'app/shared/components/grid2/filter/grid-filter';
+import { FilterOperatorType } from '../../../../shared/components/grid2/filter/grid-filter';
 import { TControlTypes } from '../../form/dynamic-form/dynamic-form.interface';
 
 @Injectable()
@@ -23,9 +23,12 @@ export class MetadataFilterService {
     return param && param[index];
   }
 
-  getFilterControlType(operator: FilterOperatorType): TControlTypes {
+  getFilterControlType(filterType: string, operator: FilterOperatorType): TControlTypes {
     switch (operator) {
-      case 'IN': return 'dialogmultiselectwrapper';
+      case 'IN':
+        return 'dialogmultiselectwrapper';
+      case 'BETWEEN':
+        return filterType === 'dates' ? 'datepicker' : 'selectwrapper';
       default: return 'selectwrapper';
     }
   }
@@ -34,7 +37,10 @@ export class MetadataFilterService {
     return metadata.map(filterMetadata => (<IFilterControl>{
       label: `default.filters.fields.${filterMetadata.column}`,
       controlName: filterMetadata.column,
-      type: this.getFilterControlType(this.getMetadataValue(filterMetadata, 'operator', 0) as FilterOperatorType),
+      type: this.getFilterControlType(
+        filterMetadata.type,
+        this.getMetadataValue(filterMetadata, 'operator', 0) as FilterOperatorType
+      ),
       filterType: filterMetadata.type,
       filterParams: { directionCodes: this.getMetadataParam(filterMetadata, 'direction') },
       dictCode: this.getMetadataValue(filterMetadata, 'dictCode', 0) as number,

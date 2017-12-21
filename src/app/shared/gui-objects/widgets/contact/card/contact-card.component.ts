@@ -1,8 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Component, Input, ViewChild } from '@angular/core';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IContact } from '../contact.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -10,7 +9,6 @@ import { INode } from '../../../../../shared/gui-objects/container/container.int
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactService } from '../contact.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -29,11 +27,10 @@ const labelKey = makeKey('widgets.contact.grid');
   templateUrl: './contact-card.component.html'
 })
 export class ContactCardComponent {
-  @ViewChild('form') form: DynamicFormComponent;
+  @Input() contactId: number;
+  @Input() personId: number;
 
-  private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
-  contactId = this.routeParams.contactId || null;
+  @ViewChild('form') form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = null;
   contact: IContact;
@@ -66,12 +63,10 @@ export class ContactCardComponent {
   constructor(
     private contentTabService: ContentTabService,
     private contactService: ContactService,
-    private messageBusService: MessageBusService,
-    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_GENDER,
         UserDictionariesService.DICTIONARY_FAMILY_STATUS,
@@ -81,7 +76,7 @@ export class ContactCardComponent {
       this.contactId
         ? this.userPermissionsService.has('CONTACT_PERSON_EDIT')
         : this.userPermissionsService.has('CONTACT_PERSON_ADD'),
-      this.contactId ? this.contactService.fetch(this.personId, this.contactId) : Observable.of(null)
+      this.contactId ? this.contactService.fetch(this.personId, this.contactId) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, canEdit, contact ]) => {
@@ -127,7 +122,7 @@ export class ContactCardComponent {
       : this.contactService.create(this.personId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(ContactService.MESSAGE_CONTACT_SAVED);
+      this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);
       this.onBack();
     });
   }

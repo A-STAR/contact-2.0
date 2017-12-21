@@ -1,14 +1,10 @@
-//  TODO mock (m.bobryshev), sh.b. debtId, addressesId, personRole
-export interface IVisitParam {
+export interface IVisitParams {
+  addressId: number;
   debtId: number;
-  personId: number;
-  regionCode: number;
+  visitPersonRole: number;
 }
 
-export interface IVisitsBundle {
-  // TODO make type exact (m.bobryshev)
-  actionData: {
-    purposeCode: number;
-    comment: string;
-  };
+export interface IMarkForVisitRequest {
+  comment: string;
+  purposeCode: number;
 }

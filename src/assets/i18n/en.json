@@ -7,6 +7,13 @@
       "title": "License",
       "info": "Your license number is"
     },
+    "noDebts": {
+      "userId": "User Id",
+      "title": "No debts"
+    },
+    "noPerson": {
+      "title": "Отсутствует должник"
+    },
     "account": {
       "title": "Account",
       "logout": "Logout",
@@ -34,8 +41,13 @@
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
         "DICTIONARIES": "Reference",
-        "PORTFOLIOS": "Portfolios",
+        "ATTRIBUTE_VERSION": "Attribute's versions",
+        "PORTFOLIOS_CONTRACTORS": "Portfolios and contractors",
+        "PORTFOLIO_EDIT": "Portfolio",
+        "PORTFOLIO_ATTRIBUTES": "Portfolio attributes",
+        "CONTRACTOR_ATTRIBUTES": "Contractor attributes",
         "CONTRACTOR": "Contractor",
+        "ATTRIBUTES": "Attributes",
         "CONTRACTOR_MANAGERS": "Contractor Managers",
         "CONTRACTOR_MANAGER": "Contractor Manager",
         "DEPARTMENTS": "Departments",
@@ -47,6 +59,7 @@
         "MESSAGE_SCENARIOS": "Message Scenarios",
         "CONTACT_REGISTRATION": "Contact Registration",
         "GROUPS": "Groups",
+        "GROUP_EDIT": "Group",
         "CAMPAIGNS": "Campaigns",
         "SCHEDULE": "Schedule",
         "FORMULAS": "Formulas",
@@ -58,6 +71,7 @@
         "DEBTOR_CONTACTS": "Debtor contacts",
         "DEBTOR_DEBT": "Debtor's debt",
         "DEBTOR_DEBT_COMPONENT": "Debt components",
+        "DEBTOR_DEBT_CONTACTS": "Debtor contact",
         "DEBTOR_DOCUMENT": "Document",
         "DEBTOR_EMAIL": "Debtor's email",
         "DEBTOR_EMPLOYMENT": "Employment record",
@@ -131,6 +145,9 @@
   },
   "modules": {
     "callCenter": {
+      "main": {
+        "title": "Сampaign selection"
+      },
       "grid": {
         "name": "Name",
         "comment": "Description"
@@ -208,20 +225,6 @@
         "title": "Contacts"
       },
       "filters": {
-        "form": {
-          "branchCode": "Branch",
-          "dictValue1": "Dictionary Value 1",
-          "dictValue2": "Dictionary Value 2",
-          "dictValue3": "Dictionary Value 3",
-          "dictValue4": "Dictionary Value 4",
-          "outPortfolioId": "Registry",
-          "portfolioId": "Portfolio",
-          "receiveDateTime": "Received",
-          "createDateTime": "Created",
-          "regionCode": "Region",
-          "userId": "Operator",
-          "searchBtn": "Search"
-        },
         "userId": {
           "grid": {
             "fullName": "Operator",
@@ -236,6 +239,9 @@
       },
       "sms": {
         "title": "SMS"
+      },
+      "email": {
+        "title": "Email"
       }
     },
     "dataUpload": {
@@ -252,19 +258,6 @@
     },
     "payments": {
       "filters":{
-        "form": {
-          "branchCode": "Branch",
-          "dictValue1": "Dictionary Value 1",
-          "dictValue2": "Dictionary Value 2",
-          "dictValue3": "Dictionary Value 3",
-          "dictValue4": "Dictionary Value 4",
-          "outPortfolioId": "Registry",
-          "portfolioId": "Portfolio",
-          "paymentDateTime": "Payment date",
-          "regionCode": "Region",
-          "userId": "Operator",
-          "searchBtn": "Search"
-        },
         "userId": {
           "grid": {
             "fullName": "Operator",
@@ -326,6 +319,26 @@
           }
         }
       },
+      "contactGrid": {
+        "tabs": {
+          "selectFromDebt": {
+            "title": "Select From Linked"
+          },
+          "selectFromAll": {
+            "title": "Select From All"
+          },
+          "add": {
+            "title": "Add Manually",
+            "form": {
+              "firstName": "Имя",
+              "lastName": "Фамилия",
+              "middleName": "Отчество",
+              "linkTypeCode": "Тип связи",
+              "personTypeCode": "Тип персоны"
+            }
+          }
+        }
+      },
       "outcome": {
         "title": "Contact Outcome",
         "template": "Scenario",
@@ -350,7 +363,7 @@
         "percentage": "Remainder Percentage"
       },
       "phone": {
-        "title": "New Debtor Phone Number",
+        "title": "Add Phone",
         "typeCode": "Type",
         "phone": "Phone Number",
         "stopAutoSms": "Disable Auto SMS",
@@ -399,6 +412,21 @@
       },
       "currentJob": {
         "title": "Current Job"
+      },
+      "visits": {
+        "title": "Visits"
+      },
+      "promisePay": {
+        "title": "Promise pay"
+      },
+      "partPay": {
+        "title": "Part pay"
+      },
+      "problem": {
+        "title": "Problem Debts"
+      },
+      "returned": {
+        "title": "Returned"
       }
     },
     "incomingCall": {
@@ -762,6 +790,7 @@
     "responsibleFullName": "Manager",
     "reward": "Remuneration",
     "shortInfo": "Short info",
+    "stageCode": "Stage",
     "utc": "Debtor's local time",
     "identityDocs": {
       "title": "Identity documents",
@@ -860,7 +889,7 @@
       }
     },
     "contactsTab": {
-      "title": "Contact",
+      "title": "Contact persons",
       "remove": {
         "title": "Delete the contact",
         "confirmMessage": "Do you really want to delete the contact {{ fullName }} ?"
@@ -920,6 +949,13 @@
     },
     "contactLogTab": {
       "title": "Contact log"
+    },
+    "groupTab": {
+      "title": "Groups",
+      "remove": {
+        "title": "Delete the group",
+        "confirmMessage": "Do you really want to delete this group?"
+      }
     }
   },
   "person": {
@@ -1046,6 +1082,7 @@
       "accessDenied": "Access to contractors list denied"
     },
     "buttons": {
+      "attributes": "Attributes",
       "managers": "Managers"
     }
   },
@@ -1094,11 +1131,36 @@
       "sms": {
         "title": "SMS"
       },
+      "email": {
+        "title": "Email"
+      },
       "custom": {
         "title": "Custom"
       },
       "autoComment": {
         "title": "Auto Comment"
+      },
+      "dialogs": {
+        "add": {
+          "title": "Create Template"
+        },
+        "edit": {
+          "title": "Edit Template",
+          "variables": "Variables"
+        },
+        "delete": {
+          "title": "Delete Template",
+          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Name",
+        "text": "Text",
+        "isSingleSending": "Send Once",
+        "recipientTypeCode": "Recipient",
+        "subject": "Тема",
+        "formatCode": "Формат"
       }
     },
     "campaigns": {
@@ -1292,6 +1354,9 @@
         "delete": {
           "title": "Delete attribute",
           "confirmMessage": "Are you sure you want to delete attribute {{ name }}?"
+        },
+        "version": {
+          "title": "Attribute version edit"
         }
       },
       "grid": {
@@ -1300,6 +1365,8 @@
         "value": "Value",
         "userFullName": "Operator",
         "changeDateTime": "Change date/time",
+        "fromDateTime": "Date start",
+        "toDateTime": "Date end",
         "comment": "Comments",
         "typeCode": "Data Type",
         "dictNameCode": "Dictionary",
@@ -1367,12 +1434,13 @@
         "dictValue3": "Dictionary Attribute 3",
         "dictValue4": "Dictionary Attribute 4",
         "isInvalidContact": "Invalid Phone Number/Address",
-        "addPhone": "New Debtor's Phone Number Input",
+        "addPhone": "Adding Phone",
         "isRefusal": "Payment Refusal Flag",
         "isSuccess": "Successful Outcome",
         "changeResponsible": "Changing Operator",
         "contactInvisible": "Don't Display in Contacts",
-        "fileAttachMode": "Files Attachment"
+        "fileAttachMode": "Files Attachment",
+        "changeContactPerson": "Change Contact Person"
       }
     },
     "document": {
@@ -1410,6 +1478,18 @@
         "delete": {
           "title": "Delete email",
           "confirmMessage": "Are you sure you want to delete email {{ email }}?"
+        },
+        "schedule": {
+          "title": "Schedule Email",
+          "text": "Text",
+          "template": "Template",
+          "form": {
+            "senderCode": "Sender",
+            "startDateTime": "Send Date/Time",
+            "subject": "Subject",
+            "templateId": "Email",
+            "text": "Message Text"
+          }
         }
       }
     },
@@ -1473,28 +1553,6 @@
         "income": "Income",
         "currencyId": "Currency",
         "comment": "Comment"
-      }
-    },
-    "messageTemplate": {
-      "dialogs": {
-        "add": {
-          "title": "Create Template"
-        },
-        "edit": {
-          "title": "Edit Template",
-          "variables": "Variables"
-        },
-        "delete": {
-          "title": "Delete Template",
-          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
-        }
-      },
-      "grid": {
-        "id": "ID",
-        "name": "Name",
-        "text": "Text",
-        "isSingleSending": "Send Once",
-        "recipientTypeCode": "Recipient"
       }
     },
     "object": {
@@ -1597,14 +1655,17 @@
     },
     "debt": {
       "toolbar": {
-        "call": "Call Back",
-        "forRepayment": "For Repayment",
-        "withdrawn": "Withdrawn by Client",
-        "terminate": "Terminate Work"
+        "call": "Next call",
+        "changeStatus": "Change status",
+        "forRepayment": "For repayment",
+        "withdrawn": "Withdrawn by client",
+        "terminate": "Close debt"
       },
       "grid": {
+        "account": "Account",
         "id": "ID",
         "portfolioId": "Portfolio",
+        "stageCode": "Stage",
         "bankId": "Bank",
         "creditTypeCode": "Credit type",
         "creditName": "Credit name",
@@ -1612,6 +1673,7 @@
         "statusCode": "Status",
         "creditStartDate": "Credit start date",
         "creditEndDate": "Credit end date",
+        "debtDate": "Debt date",
         "regionCode": "Region",
         "branchCode": "Branch",
         "currencyId": "Currency",
@@ -1706,11 +1768,12 @@
         "title": "Contact history"
       },
       "card": {
-        "fullName": "Debtor",
+        "fullName": "Full name",
         "contract": "Contract",
         "contactData": "Contact phone/address",
         "contactDateTime": "Contact date",
         "contactPhone": "Contact phone",
+        "contactEmail": "Contact email",
         "contactType": "Contact type",
         "userFullName": "Operator",
         "promiseDate": "Promise date",
@@ -1721,7 +1784,8 @@
         "sentDateTime": "Sent on",
         "status": "Status",
         "text": "Message text",
-        "startDateTime": "Planned sending date"
+        "startDateTime": "Planned sending date",
+        "subject": "Subject"
       },
       "grid": {
         "contactId": "Contact ID",
@@ -1832,6 +1896,50 @@
       },
       "toolbar": {
         "add": "Add pledgor"
+      }
+    },
+    "groups": {
+      "grid": {
+        "id": "ID",
+        "entityTypeCode": "Type",
+        "name": "Name",
+        "comment": "Comment",
+        "isManual": "Is manual",
+        "isPreCleaned": "Is pre-cleaned",
+        "userFullName": "Operator",
+        "formDateTime": "Form date"
+      },
+      "card": {
+        "entityTypeCode": "Type",
+        "name": "Name",
+        "comment": "Comment",
+        "isManual": "Is manual",
+        "isPreCleaned": "Is pre-cleaned",
+        "userFullName": "Operator",
+        "formDateTime": "Form date",
+        "sql": "SQL"
+      },
+      "toolbar": {
+        "action": {
+          "forCurrentUser": "Current user groups"
+        }
+      }
+    },
+    "visit": {
+      "grid": {
+        "id": "ID",
+        "fullName": "Full name",
+        "organization": "Department",
+        "position": "Position"
+      },
+      "card": {
+        "purposeCode": "Purpose",
+        "planVisitDateTime": "Planned On",
+        "comment": "Comment",
+        "operator": "Operators"
+      },
+      "dialog": {
+        "title": "Visit prepare"
       }
     }
   },
@@ -1995,6 +2103,12 @@
     },
     "pledgors": {
       "gen": { "singular": "pledgor", "plural": "pledgors" }
+    },
+    "contactLog": {
+      "gen": { "singular": "contact", "plural": "contacts" }
+    },
+    "visit": {
+      "gen": { "singular": "visit", "plural": "visits" }
     }
   },
   "massOperations": {
@@ -2026,6 +2140,14 @@
     "smsDelete": {
       "message": "Are you sure to delete {{ count }} sms?",
       "title": "Delete SMS"
+    },
+    "debtResponsibleClear": {
+      "title": "Clear responsible",
+      "message": "Do you really want to clear responsible operators for the selected debts?"
+    },
+    "visit": {
+      "title": "Cancel visits",
+      "message": "Do you really want to cancel the marked departures?"
     }
   },
   "errors": {
@@ -2033,6 +2155,8 @@
       "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
       "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "campaignDebtIsNotProcessed": "Could not go to next debt. Current debt is not processed.",
+      "campaignIsFinished": "This campaign has already been closed",
       "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
       "contactPersonNotFound": "Не найдено контактное лицо по ID",
       "constantNotFound": "Запрашиваемая константа не найдена",
@@ -2189,8 +2313,9 @@
       "delete": "Delete",
       "download": "Download",
       "edit": "Edit",
-      "exportToExcel": "Export to Excel",
-      "excel": "Export to Excel",
+      "email": "Email",
+      "exportToExcel": "Export",
+      "excel": "Export",
       "move": "Move",
       "next": "Next",
       "ok": "OK",
@@ -2205,6 +2330,7 @@
       "undo": "Undo",
       "upload": "Upload",
       "visit": "Visit",
+      "version": "Version history",
       "start": "Start",
       "stop": "Stop"
     },
@@ -2249,7 +2375,9 @@
         "userId": "Operator",
         "addressTypeCode": "Address",
         "visitPurposeCode": "Visit purpose",
-        "visitStatusCode": "Visit status"
+        "visitStatusCode": "Visit status",
+        "receiveDateTime": "Received",
+        "createDateTime": "Created"
       }
     },
     "grid": {
@@ -2309,7 +2437,8 @@
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
         "statusChange": "Change status",
-        "visitAdd": "Make necessary"
+        "visitAdd": "Make necessary",
+        "openUserById": "Open debtor card"
       }
     },
     "filter": {
@@ -2357,10 +2486,47 @@
     "dialog": {
       "result": {
         "title": "Operation result",
-        "message": "Operation was successful for {{successCount}} of {{count}} records",
+        "message": "Operation was successful for {{processed}} of {{total}} records",
         "messageUnsuccessful": "Unseccessful operation for {{total}} records"
       }
     },
     "NA": "N/A"
+  },
+  "common": {
+    "entities": {
+      "contactPerson": {
+        "name": "Contact Person",
+        "fields": {
+          "id": "Id",
+          "personId": "Person Id",
+          "personRole": "Person Role",
+          "personFullName": "Person Full Name",
+          "linkTypeCode": "Relationship Type (For Third Parties)"
+        }
+      },
+      "person": {
+        "name": "Person",
+        "fields": {
+          "id": "Id",
+          "lastName": "Last Name",
+          "firstName": "First Name",
+          "middleName": "Middle Name",
+          "typeCode": "Debtor Type",
+          "birthDate": "Date of Birth",
+          "genderCode": "Gender",
+          "passportNumber": "Passport Number",
+          "stringValue1": "String Attribute 1",
+          "stringValue2": "String Attribute 2",
+          "stringValue3": "String Attribute 3",
+          "stringValue4": "String Attribute 4",
+          "stringValue5": "String Attribute 5",
+          "stringValue6": "String Attribute 6",
+          "stringValue7": "String Attribute 7",
+          "stringValue8": "String Attribute 8",
+          "stringValue9": "String Attribute 9",
+          "stringValue10": "String Attribute 10"
+        }
+      }
+    }
   }
 }

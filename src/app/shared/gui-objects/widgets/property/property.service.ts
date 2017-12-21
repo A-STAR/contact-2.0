@@ -1,13 +1,18 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IProperty } from './property.interface';
+
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Injectable()
-export class PropertyService {
+export class PropertyService extends AbstractActionService {
   static MESSAGE_PROPERTY_SAVED = 'MESSAGE_PROPERTY_SAVED';
   static MESSAGE_PROPERTY_SELECTED = 'MESSAGE_PROPERTY_SELECTED';
 
@@ -16,10 +21,14 @@ export class PropertyService {
   private entitySingular = 'entities.property.gen.singular';
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    protected store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService,
-  ) {}
+  ) {
+    super();
+  }
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('PROPERTY_VIEW');

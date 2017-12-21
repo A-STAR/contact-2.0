@@ -1,8 +1,8 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IProperty } from '../property.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -10,7 +10,6 @@ import { IOption } from '../../../../../core/converter/value-converter.interface
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PropertyService } from '../property.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
@@ -37,15 +36,14 @@ export class PropertyCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private propertyService: PropertyService,
-    private messageBusService: MessageBusService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.propertyId ? this.propertyService.canEdit$ : this.propertyService.canAdd$,
-      this.propertyId ? this.propertyService.fetch(this.personId, this.propertyId) : Observable.of(this.getFormData()),
+      this.propertyId ? this.propertyService.fetch(this.personId, this.propertyId) : of(this.getFormData()),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
     )
     .pipe(first())
@@ -66,7 +64,7 @@ export class PropertyCardComponent implements OnInit {
       : this.propertyService.create(this.personId, this.form.serializedUpdates);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PropertyService.MESSAGE_PROPERTY_SAVED);
+      this.propertyService.dispatchAction(PropertyService.MESSAGE_PROPERTY_SAVED);
       this.onBack();
     });
   }

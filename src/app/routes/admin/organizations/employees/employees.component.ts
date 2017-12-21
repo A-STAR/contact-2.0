@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/catch';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import {
@@ -15,7 +14,7 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
-import { DialogFunctions } from 'app/core/dialog';
+import { DialogFunctions } from '../../../../core/dialog';
 import { combineLatestAnd } from '../../../../core/utils/helpers';
 import { first } from 'rxjs/operators';
 

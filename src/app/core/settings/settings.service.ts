@@ -7,8 +7,9 @@ import { propOr } from '../utils';
 @Injectable()
 export class SettingsService {
 
-  public app: any;
-  public layout: any;
+  app: any;
+  layout: any;
+
   private user: any;
 
   constructor(private persistenceService: PersistenceService) {
@@ -43,8 +44,7 @@ export class SettingsService {
       isCollapsedText: false,
       useFullLayout: false,
       hiddenFooter: false,
-      offsidebarOpen: false,
-      asideToggled: false,
+      menuToggled: false,
       viewAnimation: 'ng-fadeInUp'
     };
 

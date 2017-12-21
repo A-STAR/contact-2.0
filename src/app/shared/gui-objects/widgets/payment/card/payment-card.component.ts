@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPayment } from '../payment.interface';
@@ -10,7 +11,6 @@ import { IPayment } from '../payment.interface';
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PaymentService } from '../payment.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -39,14 +39,13 @@ export class PaymentCardComponent {
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private lookupService: LookupService,
-    private messageBusService: MessageBusService,
     private paymentService: PaymentService,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
 
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE),
       this.lookupService.lookupAsOptions('currencies'),
       this.lookupService.lookupAsOptions('users'),
@@ -56,7 +55,7 @@ export class PaymentCardComponent {
       this.canConfirm$,
       this.paymentId
         ? this.paymentService.fetch(this.debtId, this.paymentId, this.callCenter)
-        : Observable.of(null),
+        : of(null),
     )
     .pipe(first())
     .subscribe(([ purposeOptions, currencyOptions, userOptions, canAdd, canEdit, canEditUser, canConfirm, payment ]) => {
@@ -123,7 +122,7 @@ export class PaymentCardComponent {
       : this.paymentService.create(this.debtId, data, this.callCenter);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PaymentService.MESSAGE_PAYMENT_SAVED);
+      this.paymentService.dispatchAction(PaymentService.MESSAGE_PAYMENT_SAVED);
       this.onBack();
     });
   }

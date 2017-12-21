@@ -8,13 +8,14 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IToolbarItem, ToolbarItemTypeEnum } from 'app/shared/components/toolbar-2/toolbar-2.interface';
-import { ITreeNode, ITreeNodeInfo } from 'app/shared/components/flowtree/treenode/treenode.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from '../organizations.service';
-import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
-import { DialogFunctions } from 'app/core/dialog';
-import { combineLatestAnd } from 'app/core/utils/helpers';
+import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+
+import { DialogFunctions } from '../../../../core/dialog';
+import { combineLatestAnd } from '../../../../core/utils/helpers';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

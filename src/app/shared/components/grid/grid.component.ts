@@ -19,7 +19,6 @@ import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/debounceTime';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -250,7 +249,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     ctxEvent.event.preventDefault();
     ctxEvent.event.stopPropagation();
 
-    if (!this.contextMenuOptions.length || !this.hasSingleSelection) {
+    if (!this.contextMenuOptions.length || !this._selected.length) {
       return;
     }
 

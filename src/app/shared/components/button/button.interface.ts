@@ -20,6 +20,7 @@ export type IButtonType =
   'delete' |
   'download' |
   'edit' |
+  'email' |
   'exportToExcel' |
   'move' |
   'next' |
@@ -35,6 +36,7 @@ export type IButtonType =
   'unblock' |
   'undo' |
   'upload' |
+  'version' |
   'visit';
 
 export type IButtonStylesConfig = {

@@ -7,6 +7,13 @@
       "title": "Лицензия",
       "info": "Номер Вашей лицензии"
     },
+    "noDebts": {
+      "userId": "Ид пользователя",
+      "title": "Долги отсутствуют"
+    },
+    "noPerson": {
+      "title": "Нет должника"
+    },
     "account": {
       "title": "Аккаунт",
       "logout": "Выйти",
@@ -34,7 +41,12 @@
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
         "DICTIONARIES": "Справочники",
-        "PORTFOLIOS": "Клиенты и портфели",
+        "ATTRIBUTE_VERSION": "Версии атрибута",
+        "PORTFOLIOS_CONTRACTORS": "Клиенты и портфели",
+        "PORTFOLIO_EDIT": "Портфель",
+        "PORTFOLIO_ATTRIBUTES": "Атрибуты портфеля",
+        "CONTRACTOR_ATTRIBUTES": "Атрибуты контрагента",
+        "ATTRIBUTES": "Атрибуты",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
         "CONTRACTOR_MANAGER": "Менеджер контрагента",
@@ -47,6 +59,7 @@
         "CONTACT_REGISTRATION": "Регистрация контакта",
         "MESSAGE_SCENARIOS": "Сценарии сообщений",
         "GROUPS": "Группы",
+        "GROUP_EDIT": "Группа",
         "CAMPAIGNS": "Кампании обзвона",
         "SCHEDULE": "Расписание",
         "FORMULAS": "Формулы",
@@ -58,6 +71,7 @@
         "DEBTOR_CONTACTS": "Контактные лица должника",
         "DEBTOR_DEBT": "Долг должника",
         "DEBTOR_DEBT_COMPONENT": "Компоненты долга",
+        "DEBTOR_DEBT_CONTACTS": "Карточка контактного лица",
         "DEBTOR_DOCUMENT": "Документ",
         "DEBTOR_EMAIL": "Email должника",
         "DEBTOR_EMPLOYMENT": "История трудоустройства",
@@ -131,6 +145,9 @@
   },
   "modules": {
     "callCenter": {
+      "main": {
+        "title": "Выбор кампании"
+      },
       "grid": {
         "name": "Название",
         "comment": "Описание"
@@ -208,20 +225,6 @@
         "title": "Контакты"
       },
       "filters": {
-        "form": {
-          "branchCode": "Филиал",
-          "dictValue1": "Словарный атрибут 1",
-          "dictValue2": "Словарный атрибут 2",
-          "dictValue3": "Словарный атрибут 3",
-          "dictValue4": "Словарный атрибут 4",
-          "outPortfolioId": "Реестр КА",
-          "portfolioId": "Портфели",
-          "receiveDateTime": "Получен",
-          "createDateTime": "Создан",
-          "regionCode": "Регион",
-          "userId": "Оператор",
-          "searchBtn": "Искать"
-        },
         "userId": {
           "grid": {
             "fullName": "Оператор",
@@ -236,6 +239,9 @@
       },
       "sms": {
         "title": "СМС"
+      },
+      "email": {
+        "title": "Email"
       }
     },
     "dataUpload": {
@@ -252,19 +258,6 @@
     },
     "payments": {
       "filters": {
-        "form": {
-          "branchCode": "Филиал",
-          "dictValue1": "Словарный атрибут 1",
-          "dictValue2": "Словарный атрибут 2",
-          "dictValue3": "Словарный атрибут 3",
-          "dictValue4": "Словарный атрибут 4",
-          "outPortfolioId": "Реестр КА",
-          "portfolioId": "Портфели",
-          "paymentDateTime": "Дата оплаты",
-          "regionCode": "Регион",
-          "userId": "Оператор",
-          "searchBtn": "Искать"
-        },
         "userId": {
           "grid": {
             "fullName": "Оператор",
@@ -326,6 +319,26 @@
           }
         }
       },
+      "contactGrid": {
+        "tabs": {
+          "selectFromDebt": {
+            "title": "Выбрать из привязанных к долгу"
+          },
+          "selectFromAll": {
+            "title": "Выбрать из всех"
+          },
+          "add": {
+            "title": "Добавить вручную",
+            "form": {
+              "firstName": "Имя",
+              "lastName": "Фамилия",
+              "middleName": "Отчество",
+              "linkTypeCode": "Тип связи",
+              "personTypeCode": "Тип персоны"
+            }
+          }
+        }
+      },
       "outcome": {
         "title": "Выбор исхода",
         "template": "Сценарий разговора",
@@ -350,7 +363,7 @@
         "percentage": "Процент от остатка"
       },
       "phone": {
-        "title": "Ввод нового номера должника",
+        "title": "Добавление нового телефона",
         "typeCode": "Тип",
         "phone": "Номер телефона",
         "stopAutoSms": "Не отправлять автоматические SMS",
@@ -399,6 +412,21 @@
       },
       "currentJob": {
         "title": "Текущая работа"
+      },
+      "visits": {
+        "title": "Выезды"
+      },
+      "promisePay": {
+        "title": "Обещают заплатить"
+      },
+      "partPay": {
+        "title": "Частично оплатившие"
+      },
+      "problem": {
+        "title": "Проблемные"
+      },
+      "returned": {
+        "title": "Возвращенные"
       }
     },
     "incomingCall": {
@@ -762,6 +790,7 @@
     "responsibleFullName": "Ответственный",
     "reward": "Размер вознаграждения",
     "shortInfo": "Краткая иформация",
+    "stageCode": "Стадия",
     "utc": "Местное время должника",
     "identityDocs": {
       "title": "Удостоверения личности",
@@ -860,7 +889,7 @@
       }
     },
     "contactsTab": {
-      "title": "Контакты",
+      "title": "Контактные лица",
       "remove": {
         "title": "Удалить контактное лицо",
         "confirmMessage": "Вы действительно хотите удалить контактное лицо {{ fullName }} ?"
@@ -920,6 +949,13 @@
     },
     "contactLogTab": {
       "title": "История контактов"
+    },
+    "groupTab": {
+      "title": "Группы",
+      "remove": {
+        "title": "Удалить группу",
+        "confirmMessage": "Вы действительно хотите удалить выбранную группу?"
+      }
     }
   },
   "person": {
@@ -1046,6 +1082,7 @@
       "accessDenied": "Доступ к списку контрагентов ограничен"
     },
     "buttons": {
+      "attributes": "Атрибуты",
       "managers": "Менеджеры"
     }
   },
@@ -1094,11 +1131,36 @@
       "sms": {
         "title": "SMS-сообщения"
       },
+      "email": {
+        "title": "Email"
+      },
       "custom": {
         "title": "Специальное"
       },
       "autoComment": {
         "title": "Автоматический комментарий"
+      },
+      "dialogs": {
+        "add": {
+          "title": "Новый шаблон"
+        },
+        "edit": {
+          "title": "Редактирование шаблона",
+          "variables": "Переменные"
+        },
+        "delete": {
+          "title": "Удаление шаблона",
+          "confirmMessage": "Вы действительно хотите удалить шаблон {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Название",
+        "text": "Текст",
+        "isSingleSending": "Единичная рассылка",
+        "recipientTypeCode": "Получатель",
+        "subject": "Тема",
+        "formatCode": "Формат"
       }
     },
     "campaigns": {
@@ -1292,6 +1354,9 @@
         "delete": {
           "title": "Удалить атрибут",
           "confirmMessage": "Вы действительно хотите удалить атрибут {{ name }}?"
+        },
+        "version": {
+          "title": "Редактирование версии"
         }
       },
       "grid": {
@@ -1300,6 +1365,8 @@
         "value": "Значение",
         "userFullName": "Оператор",
         "changeDateTime": "Дата/время изменения",
+        "fromDateTime": "Дата начала",
+        "toDateTime": "Дата окончания",
         "comment": "Комментарий",
         "typeCode": "Тип данных",
         "dictNameCode": "Словарь",
@@ -1367,12 +1434,13 @@
         "dictValue3": "Словарный атрибут 3",
         "dictValue4": "Словарный атрибут 4",
         "isInvalidContact": "Неверный номер/адрес",
-        "addPhone": "Ввод нового номера должника",
+        "addPhone": "Добавление нового телефона",
         "isRefusal": "Признак отказа от оплаты",
         "isSuccess": "Считать результат успешным",
         "changeResponsible": "Перераспределение на оператора",
         "contactInvisible": "Не отображать в списке контактов",
-        "fileAttachMode": "Прикрепление файлов"
+        "fileAttachMode": "Прикрепление файлов",
+        "changeContactPerson": "Изменение контактного лица"
       }
     },
     "document": {
@@ -1410,6 +1478,18 @@
         "delete": {
           "title": "Удалить email",
           "confirmMessage": "Вы действительно хотите удалить email {{ email }}?"
+        },
+        "schedule": {
+          "title": "Сформировать email",
+          "text": "Текст",
+          "template": "Сценарий",
+          "form": {
+            "senderCode": "Отправитель",
+            "startDateTime": "Дата и время отправки",
+            "subject": "Тема",
+            "templateId": "Email",
+            "text": "Текст сообщения"
+          }
         }
       }
     },
@@ -1473,28 +1553,6 @@
         "income": "Доход",
         "currencyId": "Валюта",
         "comment": "Комментарий"
-      }
-    },
-    "messageTemplate": {
-      "dialogs": {
-        "add": {
-          "title": "Новый шаблон"
-        },
-        "edit": {
-          "title": "Редактирование шаблона",
-          "variables": "Переменные"
-        },
-        "delete": {
-          "title": "Удаление шаблона",
-          "confirmMessage": "Вы действительно хотите удалить шаблон {{ name }}?"
-        }
-      },
-      "grid": {
-        "id": "ID",
-        "name": "Название",
-        "text": "Текст",
-        "isSingleSending": "Единичная рассылка",
-        "recipientTypeCode": "Получатель"
       }
     },
     "object": {
@@ -1598,13 +1656,16 @@
     "debt": {
       "toolbar": {
         "call": "Необходимо перезвонить",
+        "changeStatus": "Смена статуса",
         "forRepayment": "К возврату клиентом",
         "withdrawn": "Отозван клиентом",
         "terminate": "Завершить работу с долгом"
       },
       "grid": {
+        "account": "Лицевой счет",
         "id": "ID долга",
         "portfolioId": "Портфель",
+        "stageCode": "Стадия",
         "bankId": "Банк",
         "creditTypeCode": "Тип продукта",
         "creditName": "Название продукта",
@@ -1612,6 +1673,7 @@
         "statusCode": "Статус",
         "creditStartDate": "Дата выдачи",
         "creditEndDate": "Дата окончания кредитного срока",
+        "debtDate": "Дата расчета остатка",
         "regionCode": "Регион",
         "branchCode": "Филиал",
         "currencyId": "Валюта",
@@ -1706,11 +1768,12 @@
         "title": "История контактов"
       },
       "card": {
-        "fullName": "Должник",
+        "fullName": "ФИО",
         "contract": "Договор",
         "contactData": "Контактный телефон/адрес",
         "contactDateTime": "Дата контакта",
         "contactPhone": "Контактный телефон",
+        "contactEmail": "Контактный email",
         "contactType": "Тип контакта",
         "userFullName": "Оператор",
         "resultName": "Результат",
@@ -1721,7 +1784,8 @@
         "sentDateTime": "Дата отправки",
         "status": "Статус",
         "text": "Текст сообщения",
-        "startDateTime": "Планируемая дата отправки"
+        "startDateTime": "Планируемая дата отправки",
+        "subject": "Тема"
       },
       "grid": {
         "contactId": "ID контакта",
@@ -1832,6 +1896,50 @@
       },
       "toolbar": {
         "add": "Добавить залогодателя"
+      }
+    },
+    "groups": {
+      "grid": {
+        "id": "ID",
+        "entityTypeCode": "Тип",
+        "name": "Название",
+        "comment": "Комментарий",
+        "isManual": "Ручное наполнение",
+        "isPreCleaned": "Очищать предыдущие данные",
+        "userFullName": "Оператор",
+        "formDateTime": "Дата переформирования"
+      },
+      "card": {
+        "entityTypeCode": "Тип",
+        "name": "Название",
+        "comment": "Комментарий",
+        "isManual": "Ручное наполнение",
+        "isPreCleaned": "Очищать предыдущие данные",
+        "userFullName": "Оператор",
+        "formDateTime": "Дата переформирования",
+        "sql": "SQL"
+      },
+      "toolbar": {
+        "action": {
+          "forCurrentUser": "Группы текущего пользователя"
+        }
+      }
+    },
+    "visit": {
+      "grid": {
+        "id": "ID",
+        "fullName": "ФИО",
+        "organization": "Подразделение",
+        "position": "Должность"
+      },
+      "card": {
+        "purposeCode": "Цель выезда",
+        "planVisitDateTime": "Плановая дата выезда",
+        "comment": "Комментарий",
+        "operator": "Сотрудники"
+      },
+      "dialog": {
+        "title": "Подготовка выезда"
       }
     }
   },
@@ -1995,6 +2103,12 @@
     },
     "pledgors": {
       "gen": { "singular": "залогодателя", "plural": "залогодателей" }
+    },
+    "contactLog": {
+      "gen": { "singular": "контактов", "plural": "контактов" }
+    },
+    "visit": {
+      "gen": { "singular": "выезда", "plural": "выездов" }
     }
   },
   "massOperations": {
@@ -2012,16 +2126,28 @@
       "title": "Отмена платежей"
     },
     "paymentOperatorConfirm": {
-      "title": "Подтверждение изменений",
-      "message": "Вы действительно хотите подтвердить изменение оператора для выбранных платежей?"
+      "dialog": {
+        "title": "Подтверждение изменений",
+        "message": "Вы действительно хотите подтвердить изменение оператора для выбранных платежей?"
+      }
     },
     "paymentOperatorReject": {
-      "title": "Отмена изменений",
-      "message": "Вы действительно хотите отклонить изменение оператора для выбранных платежей?"
+      "dialog": {
+        "title": "Отмена изменений",
+        "message": "Вы действительно хотите отклонить изменение оператора для выбранных платежей?"
+      }
     },
     "smsDelete": {
       "message": "Вы действительно хотите удалить отмеченные {{ count }} SMS?",
       "title": "Удаление SMS"
+    },
+    "debtResponsibleClear": {
+      "title": "Снятие ответственного",
+      "message": "Вы действительно хотите снять ответственных операторов для выбранных долгов?"
+    },
+    "visit": {
+      "title": "Отмена выездов",
+      "message": "Вы действительно хотите отменить отмеченные выезды?"
     }
   },
   "errors": {
@@ -2029,6 +2155,8 @@
       "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
       "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "campaignDebtIsNotProcessed": "Не удалось перейти к следующему долгу. Текущий долг не обработан",
+      "campaignIsFinished": "Эта кампания уже закрыта",
       "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
       "contactPersonNotFound": "Не найдено контактное лицо по ID",
       "constantNotFound": "Запрашиваемая константа не найдена",
@@ -2080,7 +2208,7 @@
       "invalidPortfolioStatusCode": "Некорректный статус портфеля",
       "languageNotFound": "Не найдена запись в language для языка, с которым выполняется действие",
       "ldapGroupIsInvalid": "Пустое значение в параметре доменной группы при поиске пользователей группы",
-      "login.invalidCredentials": "Invalid login or password",
+      "login.invalidCredentials": "Неверный логин или пароль",
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
       "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
       "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
@@ -2185,8 +2313,9 @@
       "delete": "Удалить",
       "download": "Скачать",
       "edit": "Редактировать",
-      "exportToExcel": "Экспорт в Excel",
-      "excel": "Экспорт в Excel",
+      "email": "Email",
+      "exportToExcel": "Выгрузка",
+      "excel": "Выгрузка",
       "move": "Переместить",
       "next": "Далее",
       "ok": "OK",
@@ -2201,6 +2330,7 @@
       "undo": "Отменить",
       "upload": "Загрузить",
       "visit": "Выезд",
+      "version": "История версий",
       "start": "Запустить",
       "stop": "Остановить"
     },
@@ -2245,7 +2375,9 @@
         "userId": "Оператор",
         "addressTypeCode": "Тип адреса",
         "visitPurposeCode": "Цель выезда",
-        "visitStatusCode": "Статус выезда"
+        "visitStatusCode": "Статус выезда",
+        "receiveDateTime": "Получен",
+        "createDateTime": "Создан"
       }
     },
     "grid": {
@@ -2305,7 +2437,8 @@
         "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
         "statusChange": "Изменить статус",
-        "visitAdd": "Отметить необходимость"
+        "visitAdd": "Отметить необходимость",
+        "openUserById": "Открыть карточку должника"
       }
     },
     "filter": {
@@ -2358,5 +2491,42 @@
       }
     },
     "NA": "Не установлен"
+  },
+  "common": {
+    "entities": {
+      "contactPerson": {
+        "name": "Контактное лицо",
+        "fields": {
+          "id": "Ид",
+          "personId": "Ид персоны",
+          "personRole": "Роль персоны",
+          "personFullName": "ФИО персоны",
+          "linkTypeCode": "Тип связи (для третьих лиц)"
+        }
+      },
+      "person": {
+        "name": "Персона",
+        "fields": {
+          "id": "Ид",
+          "lastName": "Фамилия",
+          "firstName": "Имя",
+          "middleName": "Отчество",
+          "typeCode": "Тип должника",
+          "birthDate": "Дата рождения",
+          "genderCode": "Пол",
+          "passportNumber": "Серия и номер паспорта",
+          "stringValue1": "Строковый атрибут 1",
+          "stringValue2": "Строковый атрибут 2",
+          "stringValue3": "Строковый атрибут 3",
+          "stringValue4": "Строковый атрибут 4",
+          "stringValue5": "Строковый атрибут 5",
+          "stringValue6": "Строковый атрибут 6",
+          "stringValue7": "Строковый атрибут 7",
+          "stringValue8": "Строковый атрибут 8",
+          "stringValue9": "Строковый атрибут 9",
+          "stringValue10": "Строковый атрибут 10"
+        }
+      }
+    }
   }
 }

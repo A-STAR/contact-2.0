@@ -98,6 +98,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
+  @Input() translateColumnLabels = false;
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -181,14 +182,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       this.refreshPagination();
       this.clearRangeSelections();
       this.viewportDatasource.params.setRowData(this.rows);
+      this.viewportDatasource.params.setRowCount(this.rows.length);
     }
     if (rowCount) {
-      this.viewportDatasource.params.setRowCount(rowCount.currentValue);
-      this.refreshRowCount();
-      if (rowCount.currentValue) {
-        this.gridOptions.api.hideOverlay();
+      if (this.page > this.getPageCount()) {
+        this.page = this.getPageCount() || 1;
+        this.onPage.emit(this.page);
       } else {
-        this.gridOptions.api.showNoRowsOverlay();
+        this.refreshRowCount();
+        if (this.rowCount) {
+          this.gridOptions.api.hideOverlay();
+        } else {
+          this.gridOptions.api.showNoRowsOverlay();
+        }
       }
     }
   }
@@ -249,7 +255,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.onPage.emit(--this.page);
         break;
       case ToolbarActionTypeEnum.GO_FORWARD:
-        if ((this.page + 1) >= this.getPageCount()) {
+        if (this.page === this.getPageCount()) {
           this.notificationService.info(`No more data can be loaded`).noAlert().dispatch();
           return;
         }
@@ -271,9 +277,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
     const newSize = payload.value[0].value;
+    const lastPage = Math.ceil(this.rowCount / newSize);
+    if (this.page > lastPage) {
+      this.page = lastPage;
+      this.onPage.emit(this.page);
+    }
     // log('new page size', newSize);
     this.pageSize = newSize || this.pageSize;
+
+    this.gridOptions.api.paginationSetPageSize(this.pageSize);
+
     this.onPageSize.emit(this.pageSize);
+
+    // TODO(d.maltsev): merge onPage and onPageSize outputs into one to prevent multiple requests
   }
 
   dragStarted(): void {
@@ -328,8 +344,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
             filter.operator = 'IN';
             const column = this.columns.find(col => col.colId === key);
             if (column && column.filterValues && Array.isArray(model)) {
-              // log(column.filterValues);
-              // log('model', model);
               filter.values = model.map(value => column.filterValues.find(val => val.name === value))
                 .map(val => val.code);
             } else {
@@ -470,7 +484,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         styles: { width: '60px' },
         value: this.pageSizes.map(pageSize => ({ value: pageSize })),
       },
-      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: true },
+      { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: false },
     ];
   }
 
@@ -524,7 +538,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           return btn;
         case 7:
           // refreshBtn
-          btn.disabled = !pageCount;
+          // btn.disabled = !pageCount;
           return btn;
         default:
           return btn;
@@ -576,14 +590,26 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     switch (column.dataType) {
       case 2:
       case 7:
-        return { cellEditorFramework: DatePickerComponent };
+        return {
+          cellEditorFramework: DatePickerComponent,
+        };
       case 4:
         // TODO(d.maltsev): boolean
         return null;
       case 6:
-        return { cellEditor: 'select', cellEditorParams: { values: [ 'Foo', 'Bar', 'Baz' ] } };
+        return {
+          // TODO(d.maltsev):
+          // This doesn't work with key-value pairs
+          // Use `richSelect` when this is fixed: https://github.com/ag-grid/ag-grid/issues/2033
+          cellEditor: 'select',
+          cellEditorParams: {
+            values: column.filterValues.map(value => value.name)
+          },
+        };
       default:
-        return { cellEditor: 'text' };
+        return {
+          cellEditor: 'text',
+        };
     }
   }
 
@@ -602,7 +628,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         field: column.colId,
         filter: this.getCustomFilter(column),
         filterParams: this.getCustomFilterParams(column),
-        headerName: column.label,
+        headerName: this.translateColumnLabels ? this.translate.instant(column.label) : column.label,
         hide: !!column.hidden,
         maxWidth: column.maxWidth,
         minWidth: column.minWidth,
@@ -832,6 +858,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       case 'confirmPaymentsOperator':
       case 'rejectPaymentsOperator':
         return this.userPermissionsBag.has('PAYMENTS_OPERATOR_CHANGE') && this.selected.length > 0;
+      case 'prepareVisit':
+        return this.userPermissionsBag.has('VISIT_PREPARE') && this.selected.length > 0;
+      case 'cancelVisit':
+        return this.userPermissionsBag.has('VISIT_CANCEL') && this.selected.length > 0;
       default:
         return true;
     }

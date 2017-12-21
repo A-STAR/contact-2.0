@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
@@ -78,7 +78,7 @@ export class DictComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.dictionariesService.fetchDictionaries();
 
-    Observable.combineLatest(
+    combineLatest(
         this.areDictionariesFetched,
         this.dictionariesService.state,
         this.gridService.setDictionaryRenderers(this.columns)

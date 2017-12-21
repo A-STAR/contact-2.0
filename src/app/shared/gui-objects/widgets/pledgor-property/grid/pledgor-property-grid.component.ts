@@ -2,10 +2,9 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
   Input, OnInit, OnDestroy, Output, ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IPledgorProperty } from '../../pledgor-property/pledgor-property.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -41,7 +40,7 @@ export class PledgorPropertyGridComponent extends DialogFunctions implements OnI
   ];
 
   dialog: string;
-  gridStyles = { height: '500px' };
+  gridStyles = { height: '350px' };
   propertyList: Array<IPledgorProperty> = [];
 
   private personId;
@@ -65,7 +64,7 @@ export class PledgorPropertyGridComponent extends DialogFunctions implements OnI
       this.cdRef.markForCheck();
     });
 
-    this.canViewSubscription = Observable.combineLatest(
+    this.canViewSubscription = combineLatest(
       this.pledgeService.canView$
     ).subscribe(([ hasPermission ]) => {
       this.personId = this.searchParams.personId;

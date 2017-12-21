@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnDestroy, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { first } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
 
 import { IGridColumn } from '../../../../components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
@@ -11,12 +11,13 @@ import { IIdentityDoc } from '../identity.interface';
 
 import { GridService } from '../../../../components/grid/grid.service';
 import { IdentityService } from '../identity.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { GridComponent } from '../../../../components/grid/grid.component';
+
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 import { DialogFunctions } from '../../../../../core/dialog';
 
 @Component({
@@ -27,16 +28,15 @@ import { DialogFunctions } from '../../../../../core/dialog';
 export class IdentityGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;
 
-  private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
-  private contactId = this.routeParams.contactId || null;
+  private routeParams = this.route.snapshot.paramMap;
+  @Input() personId = +this.routeParams.get('contactId') || +this.routeParams.get('personId') || null;
 
   private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);
 
   dialog: string;
-  gridStyles = this.contactId ? { height: '230px' } : { height: '200px' };
-  toolbarClass = this.contactId ? 'bh' : 'bordered';
-  busSubscription: Subscription;
+  gridStyles = this.routeParams.get('contactId') ? { height: '230px' } : { height: '500px' };
+  toolbarClass = !this.routeParams.get('contactId') ? 'bh' : 'bordered';
+  onSaveSubscription: Subscription;
   canViewSubscription: Subscription;
 
   identityDoc: IIdentityDoc;
@@ -60,14 +60,12 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      enabled: Observable.combineLatest(this.canEdit$, this.selectedRows$)
-        .map(([canEdit, selected]) => canEdit && !!selected.length),
+      enabled: combineLatestAnd([this.canEdit$, this.selectedRows$.map(s => !!s.length)]),
       action: () => this.onEdit(this.identityDoc.id)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: Observable.combineLatest(this.canDelete$, this.selectedRows$)
-        .map(([canDelete, selected]) => canDelete && !!selected.length),
+      enabled: combineLatestAnd([this.canDelete$, this.selectedRows$.map(s => !!s.length)]),
       action: () => this.setDialog('removeIdentity')
     },
     {
@@ -81,33 +79,30 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private identityService: IdentityService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
-    // NOTE: on deper routes we should take the contactId
-    this.personId = this.contactId || this.personId;
-
     this.onSubmitSuccess = this.onSubmitSuccess.bind(this);
-
-    this.gridService.setDictionaryRenderers(this.columns)
-      .subscribe(columns => {
-        this.columns = this.gridService.setRenderers(columns);
-        this.cdRef.markForCheck();
-      });
-
-    this.busSubscription = this.messageBusService
-      .select(IdentityService.MESSAGE_IDENTITY_SAVED)
-      .subscribe(() => this.fetch());
   }
 
   ngOnInit(): void {
+    this.gridService.setAllRenderers(this.columns)
+      .pipe(first())
+      .subscribe(columns => {
+        this.columns = [...columns];
+        this.cdRef.markForCheck();
+      });
+
+    this.onSaveSubscription = this.identityService
+      .getAction(IdentityService.DEBTOR_IDENTITY_SAVED)
+      .subscribe(() => this.fetch());
+
     this.canViewSubscription = this.canView$
-      .subscribe(hasPermission => {
-        if (hasPermission) {
+      .subscribe(canView => {
+        if (canView) {
           this.fetch();
         } else {
           this.notificationsService.error('errors.default.read.403').entity('entities.identityDocs.gen.plural').dispatch();
@@ -119,7 +114,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   ngOnDestroy(): void {
     this.selectedRows$.complete();
     this.canViewSubscription.unsubscribe();
-    this.busSubscription.unsubscribe();
+    this.onSaveSubscription.unsubscribe();
   }
 
   fetch(): void {

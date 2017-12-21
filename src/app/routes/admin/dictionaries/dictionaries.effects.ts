@@ -3,8 +3,6 @@ import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/withLatestFrom';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { DictionariesDialogActionEnum, IDictionary, ITerm } from './dictionaries.interface';

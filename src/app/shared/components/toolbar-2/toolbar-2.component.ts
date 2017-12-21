@@ -29,6 +29,7 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_DELETE]: 'delete',
     [ToolbarItemTypeEnum.BUTTON_DOWNLOAD]: 'download',
     [ToolbarItemTypeEnum.BUTTON_EDIT]: 'edit',
+    [ToolbarItemTypeEnum.BUTTON_EMAIL]: 'email',
     [ToolbarItemTypeEnum.BUTTON_MOVE]: 'move',
     [ToolbarItemTypeEnum.BUTTON_NEXT]: 'next',
     [ToolbarItemTypeEnum.BUTTON_OK]: 'ok',
@@ -41,6 +42,7 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_UNBLOCK]: 'unblock',
     [ToolbarItemTypeEnum.BUTTON_UNDO]: 'undo',
     [ToolbarItemTypeEnum.BUTTON_UPLOAD]: 'upload',
+    [ToolbarItemTypeEnum.BUTTON_VERSION]: 'version',
     [ToolbarItemTypeEnum.BUTTON_VISIT]: 'visit',
   };
 

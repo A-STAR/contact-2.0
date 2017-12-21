@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
-import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IEmployment } from '../employment.interface';
@@ -12,7 +11,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { EmploymentService } from '../employment.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -23,6 +21,9 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmploymentGridComponent implements OnInit, OnDestroy {
+  // TODO(d.maltsev): always pass personId as input
+  private routeParams = this.route.snapshot.paramMap;
+  @Input() personId = +this.routeParams.get('contactId') || +this.routeParams.get('personId') || null;
 
   private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
 
@@ -69,35 +70,31 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   employments: Array<IEmployment> = [];
 
   private dialog: string;
-  private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.contactId || this.routeParams.personId || null;
 
-  private busSubscription: Subscription;
+  private onSaveSubscription: Subscription;
   private canViewSubscription: Subscription;
 
-  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '600px' };
+  gridStyles = this.routeParams.get('contactId') ? { height: '230px' } : { height: '500px' };
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
       .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
         this.cdRef.markForCheck();
       });
-  }
 
-  ngOnInit(): void {
     this.canViewSubscription = this.canView$
-      .filter(canView => canView !== undefined)
       .subscribe(hasPermission => {
         if (hasPermission) {
           this.fetch();
@@ -107,14 +104,14 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.busSubscription = this.messageBusService
-      .select(EmploymentService.MESSAGE_EMPLOYMENT_SAVED)
+    this.onSaveSubscription = this.employmentService
+      .getAction(EmploymentService.MESSAGE_EMPLOYMENT_SAVED)
       .subscribe(() => this.fetch());
   }
 
   ngOnDestroy(): void {
     this.selectedEmployment$.complete();
-    this.busSubscription.unsubscribe();
+    this.onSaveSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
   }
 

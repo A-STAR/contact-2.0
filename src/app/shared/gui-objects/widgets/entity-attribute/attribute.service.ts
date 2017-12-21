@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IAttribute } from './attribute.interface';
+import { IAttribute, IAttributeVersion } from './attribute.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -34,5 +34,17 @@ export class AttributeService {
     return this.dataService
       .update(`${this.baseUrl}Code/{attributeCode}`, { entityType, entityId, attributeCode }, attribute)
       .catch(this.notificationsService.updateError().entity(`${this.errorMessage}.singular`).dispatchCallback());
+  }
+
+  fetchAllVersions(entityType: number, entityId: number, attributeCode: number): Observable<IAttributeVersion[]> {
+    return this.dataService
+      .readAll(`${this.baseUrl}Code/{attributeCode}/versions`, { entityType, entityId, attributeCode })
+      .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
+  }
+
+  fetchVersion(entityType: number, entityId: number, attributeCode: number, versionsId: number): Observable<IAttributeVersion> {
+    return this.dataService
+    .read(`${this.baseUrl}Code/{attributeCode}/versions/{versionsId}`, { entityType, entityId, attributeCode, versionsId })
+    .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.singular`).dispatchCallback());
   }
 }

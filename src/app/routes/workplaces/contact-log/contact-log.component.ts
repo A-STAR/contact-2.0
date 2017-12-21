@@ -4,7 +4,7 @@ import { ContactsGridKeys } from './contact-log.interface';
 
 import { makeKey } from '../../../core/utils';
 
-const labelKey = makeKey('modules.contactLog');
+const label = makeKey('modules.contactLog');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,8 +15,13 @@ export class ContactLogComponent {
   static COMPONENT_NAME = 'ContactLogComponent';
 
   grids = [
-    { key: ContactsGridKeys.PROMISE, title: labelKey('promise.title'), rowIdKey: 'promiseId' },
-    { key: ContactsGridKeys.CONTACT, title: labelKey('contact.title'), rowIdKey: 'contactId' },
-    { key: ContactsGridKeys.SMS, title: labelKey('sms.title'), rowIdKey: 'smsId' },
+    { key: ContactsGridKeys.PROMISE, title: label('promise.title'), rowIdKey: 'promiseId', isInitialised: true },
+    { key: ContactsGridKeys.CONTACT, title: label('contact.title'), rowIdKey: 'contactId', isInitialised: false },
+    { key: ContactsGridKeys.SMS, title: label('sms.title'), rowIdKey: 'smsId', isInitialised: false },
+    { key: ContactsGridKeys.EMAIL, title: label('email.title'), rowIdKey: 'emailId', isInitialised: false },
   ];
+
+  onTabSelect(tabIndex: number): void {
+    this.grids[tabIndex].isInitialised = true;
+  }
 }

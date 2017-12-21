@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/mergeMap';
 
-import { IMetadata } from './metadata.interface';
+import { IMetadataResponse } from './metadata.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
 
 import { DataService } from '../data/data.service';
@@ -36,7 +35,7 @@ export class MetadataEffects {
     private notificationService: NotificationsService
   ) {}
 
-  private read(key: string): Observable<IMetadata[]> {
+  private read(key: string): Observable<IMetadataResponse[]> {
     return this.dataService.read(`/list?name=${key}`);
   }
 }

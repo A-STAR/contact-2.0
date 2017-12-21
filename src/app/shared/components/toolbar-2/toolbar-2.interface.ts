@@ -12,6 +12,7 @@ export enum ToolbarItemTypeEnum {
   BUTTON_DELETE,
   BUTTON_DOWNLOAD,
   BUTTON_EDIT,
+  BUTTON_EMAIL,
   BUTTON_MOVE,
   BUTTON_NEXT,
   BUTTON_OK,
@@ -24,6 +25,7 @@ export enum ToolbarItemTypeEnum {
   BUTTON_UNBLOCK,
   BUTTON_UNDO,
   BUTTON_UPLOAD,
+  BUTTON_VERSION,
   BUTTON_VISIT,
   CHECKBOX,
 }

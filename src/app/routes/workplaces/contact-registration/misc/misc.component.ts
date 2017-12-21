@@ -8,8 +8,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -22,6 +22,7 @@ import { UserTemplatesService } from '../../../../core/user/templates/user-templ
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey, valuesToOptions } from '../../../../core/utils';
+import { IOption } from '../../../../core/converter/value-converter.interface';
 
 const labelKey = makeKey('modules.contactRegistration.misc');
 
@@ -39,8 +40,6 @@ export class MiscComponent implements OnInit, OnDestroy {
 
   controls = [
     { controlName: 'nextCallDateTime', type: 'datepicker', displayTime: true },
-    { controlName: 'autoCommentId', type: 'select', options: [], onChange: v => this.onSelectAutoCommentId(v) },
-    { controlName: 'autoComment', type: 'textarea', disabled: true },
     { controlName: 'callReasonCode', type: 'selectwrapper', dictCode: 49 },
     { controlName: 'debtReasonCode', type: 'selectwrapper', dictCode: 11 },
     { controlName: 'refusalReasonCode', type: 'selectwrapper', dictCode: 19, parentCode: 3 },
@@ -49,6 +48,10 @@ export class MiscComponent implements OnInit, OnDestroy {
   ].map(item => ({ ...item, label: labelKey(item.controlName) })) as IDynamicFormControl[];
 
   data = {};
+
+  autoCommentId: number;
+  autoCommentOptions: IOption[];
+  autoComment: string;
 
   private autoCommentIdSubscription: Subscription;
   private outcomeSubscription: Subscription;
@@ -65,10 +68,17 @@ export class MiscComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.autoCommentIdSubscription = this.contactRegistrationService.autoComment$
       .filter(Boolean)
-      .subscribe(autoComment => this.data = autoComment);
+      .subscribe(({ autoComment, autoCommentId, comment }) => {
+        this.autoComment = autoComment;
+        this.autoCommentId = autoCommentId;
+        if (comment) {
+          this.data = { ...this.data, comment };
+          this.form.getControl('comment').markAsDirty();
+        }
+        this.cdRef.markForCheck();
+      });
 
-    this.outcomeSubscription = Observable.combineLatest(
-      this.contactRegistrationService.canAddAutoComment$,
+    this.outcomeSubscription = combineLatest(
       this.contactRegistrationService.canAddCallReason$,
       this.contactRegistrationService.canAddComment$,
       this.contactRegistrationService.canAddDebtReason$,
@@ -78,7 +88,6 @@ export class MiscComponent implements OnInit, OnDestroy {
       this.contactRegistrationService.selectedNode$,
     )
     .subscribe(([
-      canAddAutoComment,
       canAddCallReason,
       canAddComment,
       canAddDebtReason,
@@ -88,8 +97,6 @@ export class MiscComponent implements OnInit, OnDestroy {
       node,
     ]) => {
       const { nextCallMode, commentMode, debtReasonMode, callReasonMode, statusReasonMode, debtStatusCode } = (node as any).data;
-      this.toggleControl('autoCommentId', canAddAutoComment);
-      this.toggleControl('autoComment', canAddAutoComment);
       this.toggleControl('callReasonCode', canAddCallReason, callReasonMode === 3);
       this.toggleControl('comment', canAddComment, commentMode === 3);
       this.toggleControl('debtReasonCode', canAddDebtReason, debtReasonMode === 3);
@@ -102,7 +109,7 @@ export class MiscComponent implements OnInit, OnDestroy {
     this.userTemplatesService.getTemplates(4, 0)
       .map(valuesToOptions)
       .subscribe(autoCommentOptions => {
-        this.getControl('autoCommentId').options = autoCommentOptions;
+        this.autoCommentOptions = autoCommentOptions;
         this.cdRef.markForCheck();
       });
   }
@@ -112,13 +119,20 @@ export class MiscComponent implements OnInit, OnDestroy {
     this.outcomeSubscription.unsubscribe();
   }
 
+  get canAddAutoComment$(): Observable<boolean> {
+    return this.contactRegistrationService.canAddAutoComment$;
+  }
+
   get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 
   onNextClick(): void {
     const { guid } = this.contactRegistrationService;
-    const { autoComment, ...data } = this.form.serializedUpdates;
+    const data = {
+      ...this.form.serializedUpdates,
+      autoCommentId: this.autoCommentId[0].value,
+    };
     this.miscService.create(this.debtId, guid, data)
       .subscribe(() => {
         this.accordionService.next();
@@ -126,16 +140,14 @@ export class MiscComponent implements OnInit, OnDestroy {
       });
   }
 
-  private onSelectAutoCommentId(v: any): void {
-    const templateId = Array.isArray(v) ? v[0].value : v;
+  onAutoCommentIdChange(option: IOption[]): void {
+    const templateId = Number(option[0].value);
     if (templateId) {
       this.outcomeService
         .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
+        .catch(() => Observable.of(null))
         .subscribe(autoComment => {
-          this.data = {
-            ...this.form.serializedValue,
-            autoComment
-          };
+          this.autoComment = autoComment;
           this.cdRef.markForCheck();
         });
     }

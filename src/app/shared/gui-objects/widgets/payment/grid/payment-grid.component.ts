@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
-import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IPayment } from '../payment.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -12,7 +12,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { PaymentService } from '../payment.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -114,7 +113,6 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private paymentService: PaymentService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private router: Router,
@@ -132,7 +130,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.canViewSubscription = Observable.combineLatest(this.canView$, this.debtId$)
+    this.canViewSubscription = combineLatest(this.canView$, this.debtId$)
       .subscribe(([ hasPermission, debtId ]) => {
         if (!hasPermission) {
           this.notificationsService.error('errors.default.read.403').entity('entities.payments.gen.plural').dispatch();
@@ -144,8 +142,8 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.busSubscription = this.messageBusService
-      .select(PaymentService.MESSAGE_PAYMENT_SAVED)
+    this.busSubscription = this.paymentService
+      .getAction(PaymentService.MESSAGE_PAYMENT_SAVED)
       .subscribe(() => this.fetch());
   }
 

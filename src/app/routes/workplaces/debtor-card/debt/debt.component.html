@@ -1,0 +1,41 @@
+<div class="pb-lg">
+  <button class="btn btn-default" (click)="onBack()">
+    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+  </button>
+  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
+    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+  </button>
+</div>
+
+<div class="pb-lg">
+  <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
+</div>
+
+<ng-container *ngIf="!!debt">
+
+  <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
+
+      <app-tabview-tab [title]="tabs[0].title">
+        <app-debt-component-grid
+          *ngIf="tabs[0].isInitialised"
+          [debtId]="debtId$ | async"
+        ></app-debt-component-grid>
+      </app-tabview-tab>
+
+      <app-tabview-tab [title]="tabs[1].title">
+        <app-portfolio-log-grid
+          *ngIf="tabs[1].isInitialised && (canViewPortfolioLog$ | async)"
+          [debtId]="debtId$ | async"
+        ></app-portfolio-log-grid>
+      </app-tabview-tab>
+
+      <app-tabview-tab [title]="tabs[2].title">
+        <app-component-log-grid
+          *ngIf="tabs[2].isInitialised && (canViewComponentLog$ | async)"
+          [debtId]="debtId$ | async"
+        ></app-component-log-grid>
+      </app-tabview-tab>
+
+    </app-tabview>
+
+</ng-container>

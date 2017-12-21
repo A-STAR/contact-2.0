@@ -9,10 +9,11 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
+import { Validators } from '@angular/forms';
 
 import { EntityTranslationsService } from '../../../../../../core/entity/translations/entity-translations.service';
 import { IContactTreeAttribute } from '../../contact-property.interface';
@@ -56,6 +57,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   attributeTypes: ITreeNode[] = [];
 
   private _formSubscription: Subscription;
+  private statusReasonModeSubscription: Subscription;
+
   private _attributeTypesChanged = false;
 
   constructor(
@@ -70,7 +73,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this._formSubscription = Observable.combineLatest(
+    this._formSubscription = combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_DEBT_STATUS,
         UserDictionariesService.DICTIONARY_DEBT_LIST_1,
@@ -84,10 +87,10 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       this.lookupService.lookupAsOptions('languages'),
       this.isEditing
         ? this.contactPropertyService.fetch(this.contactType, this.treeType, this.selectedId)
-        : Observable.of(null),
+        : of(null),
       this.isEditing
         ? this.entityTranslationsService.readContactTreeNodeTranslations(this.selectedId)
-        : Observable.of([]),
+        : of([]),
     )
     .pipe(first())
     .subscribe(([ dictionaries, attributes, templates, attributeTypes, languages, data, nameTranslations ]) => {
@@ -106,6 +109,23 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
           ? { name: 'templateFormula', value: data && data.templateFormula }
           : { name: 'templateId', value: data && data.templateId },
       };
+      this.cdRef.detectChanges();
+      this.statusReasonModeSubscription = this.form
+        .onCtrlValueChange('statusReasonMode')
+        .subscribe((options: IOption[]) => {
+          // TODO(d.maltsev): this is horrible. Do something about it.
+          const value = Number(options[0].value);
+          const ctrl = this.form.getControl('debtStatusCode');
+          if ([2, 3].includes(value)) {
+            this.form.getControlDef('debtStatusCode').required = true;
+            ctrl.setValidators([ Validators.required ]);
+          } else {
+            this.form.getControlDef('debtStatusCode').required = false;
+            ctrl.clearValidators();
+          }
+          ctrl.updateValueAndValidity();
+          this.cdRef.markForCheck();
+        });
       this.cdRef.markForCheck();
     });
   }
@@ -131,6 +151,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._formSubscription.unsubscribe();
+    this.statusReasonModeSubscription.unsubscribe();
   }
 
   get canSubmit(): boolean {
@@ -148,8 +169,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       ...formData,
       ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
       ...(name ? { name: this.isEditing ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
-      ...(template ? { [template.name]: template.value } : {}),
-      ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value } : {}),
+      ...(template ? { [template.name]: template.value || null } : {}),
+      ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value || null } : {}),
       ...(isEmpty(attributes) ? {} : { attributes }),
       ...(this.isEditing ? {} : { parentId: this.selectedId }),
     };
@@ -235,6 +256,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
               { label: labelKey('promiseMode'), controlName: 'promiseMode', ...promiseOptions },
               { label: labelKey('paymentMode'), controlName: 'paymentMode', ...promiseOptions },
               { label: labelKey('callReasonMode'), controlName: 'callReasonMode', ...modeOptions },
+              // TODO(d.maltsev):  required if statusReasonMode equals 2 or 3
+              // See: http://confluence.luxbase.int:8080/browse/WEB20-419
               { label: labelKey('debtStatusCode'), controlName: 'debtStatusCode', type: 'select', options: debtStatusOptions },
               { label: labelKey('statusReasonMode'), controlName: 'statusReasonMode', ...modeOptions },
               { label: labelKey('debtReasonMode'), controlName: 'debtReasonMode', ...modeOptions },
@@ -259,6 +282,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
               { label: labelKey('changeResponsible'), controlName: 'changeResponsible', type: 'checkbox' },
               { label: labelKey('contactInvisible'), controlName: 'contactInvisible', type: 'checkbox' },
               { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'checkbox' },
+              { label: labelKey('changeContactPerson'), controlName: 'changeContactPerson', type: 'checkbox' },
             ]
           }
         ]

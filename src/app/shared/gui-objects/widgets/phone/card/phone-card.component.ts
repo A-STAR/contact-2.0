@@ -1,20 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPhone } from '../phone.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { PhoneService } from '../phone.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 import { makeKey } from '../../../../../core/utils';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 const labelKey = makeKey('widgets.phone.card');
 
@@ -25,13 +23,10 @@ const labelKey = makeKey('widgets.phone.card');
 })
 export class PhoneCardComponent implements OnInit {
   @Input() callCenter = false;
+  @Input() entityId: number;
+  @Input() phoneId: number;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
-  private routeParams = (<any>this.route.params).value;
-  private personId = this.routeParams.personId || null;
-  private contactId = this.routeParams.contactId || null;
-  private phoneId = this.routeParams.phoneId || null;
 
   controls: IDynamicFormItem[] = null;
   phone: IPhone;
@@ -39,22 +34,17 @@ export class PhoneCardComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
-    private messageBusService: MessageBusService,
     private phoneService: PhoneService,
-    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-  ) {
-    // NOTE: on deper routes we should take the contactId
-    this.personId = this.contactId || this.personId;
-  }
+  ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
-      this.phoneId ? this.userPermissionsService.has('PHONE_EDIT') : Observable.of(true),
-      this.phoneId ? this.userPermissionsService.has('PHONE_COMMENT_EDIT') : Observable.of(true),
-      this.phoneId ? this.phoneService.fetch(18, this.personId, this.phoneId, this.callCenter) : Observable.of(null)
+      this.phoneId ? this.userPermissionsService.has('PHONE_EDIT') : of(true),
+      this.phoneId ? this.userPermissionsService.has('PHONE_COMMENT_EDIT') : of(true),
+      this.phoneId ? this.phoneService.fetch(18, this.entityId, this.phoneId, this.callCenter) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, canEdit, canEditComment, phone ]) => {
@@ -72,11 +62,11 @@ export class PhoneCardComponent implements OnInit {
 
   onSubmit(): void {
     const action = this.phoneId
-      ? this.phoneService.update(18, this.personId, this.phoneId, this.callCenter, this.form.serializedUpdates)
-      : this.phoneService.create(18, this.personId, this.callCenter, this.form.serializedUpdates);
+      ? this.phoneService.update(18, this.entityId, this.phoneId, this.callCenter, this.form.serializedUpdates)
+      : this.phoneService.create(18, this.entityId, this.callCenter, this.form.serializedUpdates);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PhoneService.MESSAGE_PHONE_SAVED);
+      this.phoneService.dispatchAction(PhoneService.MESSAGE_PHONE_SAVED);
       this.onBack();
     });
   }

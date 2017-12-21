@@ -53,7 +53,7 @@ export class NotificationsService implements OnDestroy {
     return this.store.select(state => state.notifications);
   }
 
-  get length(): Observable<number> {
+  get count(): Observable<number> {
     return this.state
       .map(state => state.notifications.length)
       .distinctUntilChanged();

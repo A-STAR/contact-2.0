@@ -1,14 +1,18 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IPayment } from './payment.interface';
-import { IDebt } from '../debt/debt/debt.interface';
+import { IDebt } from '../../../../core/debt/debt.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class PaymentService {
+export class PaymentService extends AbstractActionService {
   static MESSAGE_PAYMENT_SAVED = 'MESSAGE_PAYMENT_SAVED';
   static MESSAGE_DEBT_SELECTED = 'MESSAGE_DEBT_SELECTED';
 
@@ -16,9 +20,13 @@ export class PaymentService {
   private extUrl = `${this.baseUrl}/{paymentId}`;
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   fetchAll(debtId: number, displayCanceled: boolean, callCenter: boolean): Observable<IPayment[]> {
     const url = !displayCanceled ? `${this.baseUrl}?isCanceled=0` : this.baseUrl;

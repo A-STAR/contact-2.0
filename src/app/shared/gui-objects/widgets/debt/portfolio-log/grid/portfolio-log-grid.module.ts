@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { GridModule } from '../../../../../components/grid/grid.module';
-import { TabstripModule } from '../../../../../components/tabstrip/tabstrip.module';
+import { TabViewModule } from '../../../../../../shared/components/layout/tabview/tabview.module';
 
 import { PortfolioLogGridComponent } from './portfolio-log-grid.component';
 
@@ -10,7 +10,7 @@ import { PortfolioLogGridComponent } from './portfolio-log-grid.component';
   imports: [
     CommonModule,
     GridModule,
-    TabstripModule,
+    TabViewModule,
   ],
   exports: [
     PortfolioLogGridComponent,

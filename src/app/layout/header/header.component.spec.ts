@@ -6,14 +6,14 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { createTranslateLoader } from '../../app.module';
 
-import { SettingsService } from '../../core/settings/settings.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { PersistenceService } from '../../core/persistence/persistence.service';
+import { SettingsService } from '../../core/settings/settings.service';
 
 import { HeaderComponent } from './header.component';
 
-describe('Component: Header', () => {
+xdescribe('Component: Header', () => {
   const mockRouter = {
     navigate: jasmine.createSpy('navigate')
   };

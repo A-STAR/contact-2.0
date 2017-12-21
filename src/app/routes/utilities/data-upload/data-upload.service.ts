@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/do';
+import { of } from 'rxjs/observable/of';
 
 import {
   ICellPayload,
@@ -14,6 +13,8 @@ import { IMassInfoResponse } from '../../../core/data/data.interface';
 
 @Injectable()
 export class DataUploadService {
+  format = 1;
+
   private guid: number;
 
   private columns = [
@@ -59,8 +60,7 @@ export class DataUploadService {
 
   openFile(file: File): Observable<IOpenFileResponse> {
     // POST /load/debtSetOperator
-    return Observable
-      .of({
+    return of({
         columns: this.columns,
         guid: 0,
         rows: this.rows,
@@ -71,14 +71,14 @@ export class DataUploadService {
   fetch(params: IAGridRequestParams): Observable<IDataResponse> {
     // POST /load/debtSetOperator/guid/{tempDataGuid}
     // const request = this.gridService.buildRequest(params, {});
-    return Observable.of({
+    return of({
       rows: this.rows,
     });
   }
 
   editCell(cell: ICellPayload): Observable<IDataResponse> {
     // PUT /load/debtSetOperator/guid/{tempDataGuid}
-    return Observable.of({
+    return of({
       rows: this.rows
         .filter(r => r.id === cell.rowId)
         .map(r => ({
@@ -91,12 +91,12 @@ export class DataUploadService {
   deleteRow(rowId: number): Observable<void> {
     // DELETE /load/debtSetOperator/guid/{tempDataGuid}/row/{rowIds}
     this.rows = this.rows.filter(row => row.id !== rowId);
-    return Observable.of(null);
+    return of(null);
   }
 
   save(): Observable<IMassInfoResponse> {
     // POST /load/debtSetOperator/guid/{tempDataGuid}/save
-    return Observable.of({
+    return of({
       success: true,
       massInfo: {
         processed: 1,
@@ -107,11 +107,11 @@ export class DataUploadService {
 
   getErrors(): Observable<IErrorsResponse> {
     // GET /load/debtSetOperator/guid/{tempDataGuid}/error
-    return Observable.of(null);
+    return of(null);
   }
 
   cancel(): Observable<void> {
     // DELETE /load/debtSetOperator/guid/{tempDataGuid}
-    return Observable.of(null);
+    return of(null);
   }
 }

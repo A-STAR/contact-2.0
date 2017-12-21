@@ -1,11 +1,13 @@
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { Actions } from '@ngrx/effects';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
-import { first } from 'rxjs/operators';
-import { Actions } from '@ngrx/effects';
 
-import { IContractor } from '../contractors-and-portfolios.interface';
+import { IAppState } from 'app/core/state/state.interface';
+import { IContractor, IActionType } from '../contractors-and-portfolios.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -14,6 +16,8 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
 
 import { DialogFunctions } from '../../../../core/dialog';
 import { combineLatestAnd } from '../../../../core/utils/helpers';
@@ -24,6 +28,8 @@ import { combineLatestAnd } from '../../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorsComponent extends DialogFunctions implements OnInit, OnDestroy {
+
+  @ViewChild(GridComponent) grid: GridComponent;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -36,7 +42,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o)
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o)
       ])
     },
     {
@@ -44,7 +50,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
       action: () => this.setDialog('delete'),
       enabled: combineLatestAnd([
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
       ])
     },
     {
@@ -68,7 +74,6 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
 
   contractors: IContractor[] = [];
   dialog: string;
-  selection: IContractor[] = [];
 
   private actionsSub: Subscription;
   private canViewSubscription: Subscription;
@@ -76,6 +81,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
 
   constructor(
     private actions$: Actions,
+    private store: Store<IAppState>,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
     private cdRef: ChangeDetectorRef,
@@ -97,19 +103,13 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
       if (canView) {
         this.fetchContractors();
       } else {
-        this.clearContractors();
+        this.clearSelection();
         this.notificationsService.error('errors.default.read.403').entity('entities.contractors.gen.plural').dispatch();
       }
     });
 
-    this.contractorsSubscription = this.contractorsAndPortfoliosService.selectedContractorId$
-      .subscribe(contractorId => {
-        const found = this.contractors.find(contractor => contractor.id === contractorId);
-        this.selection = found ? [found] : [];
-      });
-
     this.actionsSub = this.actions$.subscribe(action => {
-      if (action.type === ContractorsAndPortfoliosService.CONTRACTOR_CREATE) {
+      if (action.type === IActionType.CONTRACTOR_SAVE) {
         this.fetchContractors();
       }
     });
@@ -139,18 +139,22 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
 
   onAdd(): void {
     this.router.navigate([ `/admin/contractors/create` ]);
+    this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_CREATE);
   }
 
   onEdit(): void {
-    this.router.navigate([ `/admin/contractors/${this.selection[0].id}` ]);
+    this.router.navigate([ `/admin/contractors/${this.grid.selected[0].id}` ]);
+    this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_EDIT, {
+      selectedContractor: this.grid.selected[0]
+  });
   }
 
   onSelect(contractor: IContractor): void {
-    this.contractorsAndPortfoliosService.selectContractor(contractor && contractor.id || null);
+    this.contractorsAndPortfoliosService.selectContractor(contractor);
   }
 
   onRemove(): void {
-    this.contractorsAndPortfoliosService.deleteContractor(this.selection[0].id)
+    this.contractorsAndPortfoliosService.deleteContractor(this.grid.selected[0].id)
       .subscribe(() => {
         this.setDialog();
         this.fetchContractors();
@@ -159,23 +163,15 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
 
   private fetchContractors(): void {
     this.contractorsAndPortfoliosService.readAllContractors()
+      .pipe(first())
       .subscribe(contractors => {
         this.contractors = contractors;
-        if (this.selection.length) {
-          // this.onSelect(this.selectedContractor);
-          this.contractorsAndPortfoliosService.state
-            .map(state => state.selectedContractorId)
-            .pipe(first())
-            .subscribe(contractorId => {
-              const found = this.contractors.find(contractor => contractor.id === contractorId);
-              this.selection = found ? [found] : [];
-            });
-        }
+        this.clearSelection();
         this.cdRef.markForCheck();
       });
   }
 
-  private clearContractors(): void {
+  private clearSelection(): void {
     this.contractorsAndPortfoliosService.selectContractor(null);
   }
 }

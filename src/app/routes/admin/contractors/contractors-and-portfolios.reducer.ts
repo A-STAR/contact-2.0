@@ -1,33 +1,41 @@
-import { IContractorsAndPortfoliosState } from './contractors-and-portfolios.interface';
-import { SafeAction } from '../../../core/state/state.interface';
-
-import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
+import {
+  IActionType,
+  IContractorsAndPortfoliosState,
+  IContractorAndPorfolioAction
+} from './contractors-and-portfolios.interface';
 
 export const defaultState: IContractorsAndPortfoliosState = {
-  selectedContractorId: null,
-  selectedManagerId: null,
-  selectedPortfolio: null,
+  selectedContractor: null,
+  selectedManager: null,
+  selectedPortfolio: null
 };
 
 export function reducer(
   state: IContractorsAndPortfoliosState = defaultState,
-  action: SafeAction<IContractorsAndPortfoliosState>
+  action: IContractorAndPorfolioAction
 ): IContractorsAndPortfoliosState {
   switch (action.type) {
-    case ContractorsAndPortfoliosService.CONTRACTOR_SELECT:
+    case IActionType.CONTRACTOR_SELECT:
       return {
         ...state,
-        ...action.payload
+        selectedContractor: action.payload.selectedContractor
       };
-    case ContractorsAndPortfoliosService.PORTFOLIO_SELECT:
+    case IActionType.MANAGERS_FETCH:
+    case IActionType.CONTRACTOR_SAVE:
+    case IActionType.PORTFOLIO_SAVE:
+    case IActionType.MANAGER_SAVE:
       return {
-        ...state,
-        ...action.payload
+        ...state
       };
-    case ContractorsAndPortfoliosService.MANAGER_SELECT:
+    case IActionType.PORTFOLIO_SELECT:
       return {
         ...state,
-        ...action.payload
+        selectedPortfolio: action.payload.selectedPortfolio
+      };
+    case IActionType.MANAGER_SELECT:
+      return {
+        ...state,
+        selectedManager: action.payload.selectedManager
       };
     default:
       return state;

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IAppState } from '../../state/state.interface';
 import { IUserTemplate, IUserTemplates, TemplateStatusEnum } from './user-templates.interface';
 import { UnsafeAction } from '../../../core/state/state.interface';
+
+import { DataService } from '../../data/data.service';
+import { NotificationsService } from '../../notifications/notifications.service';
 
 @Injectable()
 export class UserTemplatesService {
@@ -16,7 +17,11 @@ export class UserTemplatesService {
 
   private templates: IUserTemplates;
 
-  constructor(private store: Store<IAppState>) {
+  constructor(
+    private dataService: DataService,
+    private notificationsService: NotificationsService,
+    private store: Store<IAppState>,
+  ) {
     this.templates$.subscribe(templates => this.templates = templates);
   }
 
@@ -35,7 +40,7 @@ export class UserTemplatesService {
     this.store.dispatch(action);
   }
 
-  getTemplates(typeCode: number, recipientTypeCode: number): Observable<IUserTemplate[]> {
+  getTemplates(typeCode: number, recipientTypeCode: number, isSingleSending: boolean = false): Observable<IUserTemplate[]> {
     const key = `${typeCode}/${recipientTypeCode}`;
     const status = this.templates && this.templates[key] && this.templates[key].status;
     if (status !== TemplateStatusEnum.PENDING && status !== TemplateStatusEnum.LOADED) {
@@ -44,8 +49,22 @@ export class UserTemplatesService {
     return this.templates$
       .map(state => state[key])
       .filter(slice => slice && slice.status === TemplateStatusEnum.LOADED)
-      .map(slice => slice.templates)
+      .map(slice => slice.templates.filter(template => !isSingleSending || template.isSingleSending))
       .distinctUntilChanged();
+  }
+
+  fetchMessageTemplateText(
+    debtId: number,
+    personId: number,
+    personRole: number,
+    templateId: number,
+    callCenter: boolean,
+  ): Observable<string> {
+    const url = '/debts/{debtId}/persons/{personId}/personRoles/{personRole}/templates/{templateId}';
+    return this.dataService
+      .read(url, { debtId, personId, personRole, templateId }, { params: { callCenter }})
+      .catch(this.notificationsService.fetchError().entity('entities.messageTemplate.gen.plural').dispatchCallback())
+      .map(response => response.text);
   }
 
   private get templates$(): Observable<IUserTemplates> {

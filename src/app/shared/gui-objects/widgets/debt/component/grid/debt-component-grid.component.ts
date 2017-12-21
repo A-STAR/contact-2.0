@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDebtComponent, IDebtDialog } from '../debt-component.interface';
 import { IGridColumn, IRenderer } from '../../../../../components/grid/grid.interface';
@@ -12,7 +12,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../components/too
 import { DebtComponentService } from '../debt-component.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
-import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
@@ -60,7 +59,7 @@ export class DebtComponentGridComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selectedDebtComponentId$.value),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.canEditDebtComponent$,
         this.selectedDebtComponentId$
       ).map(([ hasPermissions, hasSelectedEntity ]) => hasPermissions && !!hasSelectedEntity)
@@ -68,7 +67,7 @@ export class DebtComponentGridComponent implements OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.dialog$.next('delete'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.canEditDebtComponent$,
         this.selectedDebtComponentId$
       ).map(([ hasPermissions, hasSelectedEntity ]) => hasPermissions && !!hasSelectedEntity)
@@ -87,13 +86,12 @@ export class DebtComponentGridComponent implements OnDestroy {
     private debtComponentService: DebtComponentService,
     private gridService: GridService,
     private lookupService: LookupService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.gridSubscription = Observable.combineLatest(
+    this.gridSubscription = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DEBT_COMPONENTS),
       this.lookupService.currencyOptions,
     ).subscribe(([ productTypeOptions, currencyOptions ]) => {
@@ -103,7 +101,7 @@ export class DebtComponentGridComponent implements OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.fetchSubscription = Observable.combineLatest(
+    this.fetchSubscription = combineLatest(
       this.canViewDebtComponent$,
       this.debtId$,
     )
@@ -118,8 +116,8 @@ export class DebtComponentGridComponent implements OnDestroy {
       }
     });
 
-    this.busSubscription = this.messageBusService
-      .select(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED)
+    this.busSubscription = this.debtComponentService
+      .getAction(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED)
       .subscribe(() => this.fetch());
   }
 

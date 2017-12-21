@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
@@ -72,7 +72,7 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userConstantsService.get('ContactTree.ContactType.List'),
       this.userDictionariesService
         .getDictionariesAsOptions([

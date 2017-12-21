@@ -1,14 +1,18 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IPromise, IPromiseLimit } from './promise.interface';
-import { IDebt } from '../debt/debt/debt.interface';
+import { IDebt } from '../../../../core/debt/debt.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class PromiseService {
+export class PromiseService extends AbstractActionService {
   static MESSAGE_PROMISE_SAVED = 'MESSAGE_PROMISE_SAVED';
   static MESSAGE_DEBT_SELECTED = 'MESSAGE_DEBT_SELECTED';
 
@@ -16,9 +20,13 @@ export class PromiseService {
   private extUrl = `${this.baseUrl}/{promiseId}`;
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   fetchAll(debtId: number, callCenter: boolean): Observable<IPromise[]> {
     return this.dataService

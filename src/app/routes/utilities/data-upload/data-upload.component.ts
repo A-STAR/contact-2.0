@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse, ICell, ICellPayload, IDataResponse /*, IRow */ } from './data-upload.interface';
+import { IOpenFileResponse, ICell, ICellPayload, IDataResponse } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -70,6 +70,14 @@ export class DataUploadComponent extends DialogFunctions {
     // return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
   }
 
+  get format(): number {
+    return this.dataUploadService.format;
+  }
+
+  onFormatChange(format: number): void {
+    this.dataUploadService.format = format;
+  }
+
   onRequest(): void {
     if (this.isFirstRequest) {
       this.isFirstRequest = false;
@@ -107,9 +115,9 @@ export class DataUploadComponent extends DialogFunctions {
     this.dataUploadService
       .editCell(payload)
       .subscribe(response => {
-        const row = response.rows[0];
-        this.rows[row.id] = row;
-        this.cdRef.markForCheck();
+        // const row = response.rows[0];
+        // this.rows[row.id] = row;
+        // this.cdRef.markForCheck();
       });
   }
 
@@ -185,7 +193,7 @@ export class DataUploadComponent extends DialogFunctions {
     this.grid.focusNextCell(cell => {
       const { rowIndex } = cell;
       const colId = cell.column.getColId();
-      return this.rows[rowIndex].cells[colId].statusCode;
+      return this.rows[rowIndex].cells[colId].statusCode === 1;
     });
   }
 
@@ -243,12 +251,12 @@ export class DataUploadComponent extends DialogFunctions {
 
   private getCellColorByStatusCode(code: number): string {
     switch (code) {
-      case 1: return '#eff';
-      case 2: return '#fef';
-      case 3: return '#ffe';
-      case 4: return '#fee';
-      case 5: return '#efe';
-      case 6: return '#eef';
+      case 1: return '#fdd';
+      case 2: return '#efe';
+      case 3: return '#eef';
+      case 4: return '#eff';
+      case 5: return '#fef';
+      case 6: return '#ffe';
       default: return null;
     }
   }
