@@ -857,6 +857,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       case 'confirmPaymentsOperator':
       case 'rejectPaymentsOperator':
         return this.userPermissionsBag.has('PAYMENTS_OPERATOR_CHANGE') && this.selected.length > 0;
+      case 'prepareVisit':
+        return this.userPermissionsBag.has('VISIT_PREPARE') && this.selected.length > 0;
+      case 'cancelVisit':
+        return this.userPermissionsBag.has('VISIT_CANCEL') && this.selected.length > 0;
       default:
         return true;
     }

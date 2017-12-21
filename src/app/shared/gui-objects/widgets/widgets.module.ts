@@ -31,6 +31,7 @@ import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { PropertyModule } from './property/property.module';
 import { GroupModule } from './groups/group.module';
+import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
   imports: [
@@ -65,6 +66,7 @@ import { GroupModule } from './groups/group.module';
     PromiseResolveModule,
     PropertyModule,
     GroupModule,
+    VisitPrepareModule,
   ],
   exports: [
     AddressModule,
@@ -97,6 +99,7 @@ import { GroupModule } from './groups/group.module';
     PromiseResolveModule,
     PropertyModule,
     GroupModule,
+    VisitPrepareModule,
   ]
 })
 export class WidgetsModule { }

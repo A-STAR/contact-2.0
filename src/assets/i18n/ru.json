@@ -1929,6 +1929,23 @@
           "forCurrentUser": "Группы текущего пользователя"
         }
       }
+    },
+    "visit": {
+      "grid": {
+        "id": "ID",
+        "fullName": "ФИО",
+        "organization": "Подразделение",
+        "position": "Должность"
+      },
+      "card": {
+        "purposeCode": "Цель выезда",
+        "planVisitDateTime": "Плановая дата выезда",
+        "comment": "Комментарий",
+        "operator": "Сотрудники"
+      },
+      "dialog": {
+        "title": "Подготовка выезда"
+      }
     }
   },
   "entities": {
@@ -2094,6 +2111,9 @@
     },
     "contactLog": {
       "gen": { "singular": "контактов", "plural": "контактов" }
+    },
+    "visit": {
+      "gen": { "singular": "выезда", "plural": "выездов" }
     }
   },
   "massOperations": {
@@ -2129,6 +2149,10 @@
     "debtResponsibleClear": {
       "title": "Снятие ответственного",
       "message": "Вы действительно хотите снять ответственных операторов для выбранных долгов?"
+    },
+    "visit": {
+      "title": "Отмена выездов",
+      "message": "Вы действительно хотите отменить отмеченные выезды?"
     }
   },
   "errors": {
