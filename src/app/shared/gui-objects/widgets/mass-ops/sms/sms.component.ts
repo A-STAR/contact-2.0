@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -6,13 +6,19 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   templateUrl: 'sms.component.html'
 })
 export class SmsComponent {
+  @Input() debtIds: number[];
+  @Input() personIds: number[];
+  @Input() personRoles: number[];
+
+  @Output() close = new EventEmitter<void>();
+
   controls = [];
 
   onSubmit(): void {
-
+    this.close.emit();
   }
 
   onClose(): void {
-
+    this.close.emit();
   }
 }
