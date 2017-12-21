@@ -23,7 +23,7 @@ import { UserPermissionsService } from 'app/core/user/permissions/user-permissio
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { minDateThreeDaysAgo } from '../../../../../core/validators';
-import { toOption } from '../../../../../core/utils';
+import { addLabel, toOption } from '../../../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,7 +96,6 @@ export class SmsComponent implements OnInit {
       {
         controlName: 'startDateTime',
         displayTime: true,
-        label: 'startDateTime',
         markAsDirty: true,
         minDate: new Date(),
         required: true,
@@ -105,13 +104,11 @@ export class SmsComponent implements OnInit {
       },
       {
         controlName: 'phoneTypes',
-        label: 'phoneTypes',
         options: phoneOptions,
         type: 'multiselect',
       },
       {
         controlName: 'templateId',
-        label: 'templateId',
         options: templateOptions,
         required: true,
         type: 'select',
@@ -120,11 +117,11 @@ export class SmsComponent implements OnInit {
         controlName: 'senderCode',
         dictCode: UserDictionariesService.DICTIONARY_SMS_SENDER,
         display: useSender,
-        label: 'senderCode',
         markAsDirty: useSender,
         required: useSender,
         type: 'selectwrapper',
       },
-    ];
+    ]
+    .map(addLabel('widgets.mass.sms.form'));
   }
 }

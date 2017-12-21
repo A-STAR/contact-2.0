@@ -1560,6 +1560,27 @@
         "comment": "Комментарий"
       }
     },
+    "mass": {
+      "email": {
+        "form": {
+          "emailTypes": "Тип Email-адреса",
+          "senderCode": "Отправитель",
+          "startDateTime": "Дата отправки",
+          "subject": "Тема",
+          "templateId": "Сценарий"
+        },
+        "title": "Параметры запуска"
+      },
+      "sms": {
+        "form": {
+          "phoneTypes": "Тип телефона",
+          "senderCode": "Отправитель",
+          "startDateTime": "Дата отправки",
+          "templateId": "Сценарий"
+        },
+        "title": "Параметры запуска"
+      }
+    },
     "object": {
       "dialogs": {
         "add": {
@@ -2409,6 +2430,7 @@
         "delete": "Удалить",
         "deletePromise": "Удалить обещания",
         "deleteSMS": "Удалить SMS",
+        "emailCreate": "Массовое формирование Email",
         "objectAddToGroup": "Добавить в группу",
         "objectChangeColor": "Изменить цвет",
         "openDebtCard": "Открыть карточку долга",
@@ -2417,6 +2439,7 @@
         "prepareVisit": "Подготовить выезд",
         "rejectPaymentsOperator": "Отклонить изменение оператора",
         "showContactHistory": "История контактов",
+        "smsCreate": "Массовое формирование SMS",
         "statusChange": "Изменить статус",
         "visitAdd": "Отметить необходимость",
         "openUserById": "Открыть карточку должника"
