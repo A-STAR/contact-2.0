@@ -37,10 +37,12 @@ export class GroupCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const group$ = this.groupId ? this.groupService.fetch(this.groupId) : Observable.of(this.getFormData());
+
     Observable.combineLatest(
-      this.groupId ? this.groupService.canEdit$ : this.groupService.canAdd$,
+      group$.flatMap(group => this.groupId ? this.groupService.canEdit$(group as IGroup) : this.groupService.canAdd$),
       this.groupService.canConditionEdit$,
-      this.groupId ? this.groupService.fetch(this.groupId) : Observable.of(this.getFormData()),
+      group$,
       this.groupService.groupEntityTypeOptions$
     )
     .pipe(first())

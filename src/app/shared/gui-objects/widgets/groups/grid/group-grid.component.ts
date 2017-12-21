@@ -47,18 +47,20 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selectedGroup$.value),
-      enabled: Observable.combineLatest(
-        this.groupService.canEdit$,
-        this.selectedGroup$
-      ).map(([canEdit, selectedGroup]) => !!canEdit && !!selectedGroup)
+      enabled: this.selectedGroup$.flatMap(
+        selectedGroup => selectedGroup
+          ? this.groupService.canEdit$(selectedGroup).map(canEdit => !!canEdit && !!selectedGroup)
+          : Observable.of(false)
+      ),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('removeGroup'),
-      enabled: Observable.combineLatest(
-        this.groupService.canDelete$,
-        this.selectedGroup$
-      ).map(([canDelete, selectedGroup]) => !!canDelete && !!selectedGroup),
+      enabled: this.selectedGroup$.flatMap(
+        selectedGroup => selectedGroup
+          ? this.groupService.canDelete$(selectedGroup).map(canDelete => !!canDelete && !!selectedGroup)
+          : Observable.of(false)
+      ),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,

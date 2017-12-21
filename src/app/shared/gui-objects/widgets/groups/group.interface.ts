@@ -8,4 +8,5 @@ export interface IGroup {
   userFullName?: string;
   formDateTime?: string;
   sql?: string;
+  userId?: number;
 }

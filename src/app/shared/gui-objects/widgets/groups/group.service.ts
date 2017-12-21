@@ -9,6 +9,7 @@ import { IGroup } from './group.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
+import { AuthService } from 'app/core/auth/auth.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserConstantsService } from 'app/core/user/constants/user-constants.service';
@@ -23,6 +24,7 @@ export class GroupService extends AbstractActionService {
 
   constructor(
     protected actions: Actions,
+    private authService: AuthService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     protected store: Store<IAppState>,
@@ -41,14 +43,6 @@ export class GroupService extends AbstractActionService {
     return this.userPermissionsService.has('GROUP_ADD');
   }
 
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.has('GROUP_EDIT');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('GROUP_DELETE');
-  }
-
   get canConditionEdit$(): Observable<boolean> {
     return this.userPermissionsService.has('GROUP_CONDITION_EDIT');
   }
@@ -62,6 +56,24 @@ export class GroupService extends AbstractActionService {
         ? options
         : options.filter(option => groupEntityTypeCodes.split(',').map(Number).includes(<number>option.value))
     );
+  }
+
+  canEdit$(group: IGroup): Observable<boolean> {
+    return Observable.combineLatest(
+      this.userPermissionsService.has('GROUP_EDIT'),
+      this.userPermissionsService.has('GROUP_WORK_ALL'),
+      this.authService.currentUser$
+    )
+    .map(([ canEdit, canWorkAll, user ]) => canEdit && (user.userId === group.userId || canWorkAll));
+  }
+
+  canDelete$(group: IGroup): Observable<boolean> {
+    return Observable.combineLatest(
+      this.userPermissionsService.has('GROUP_DELETE'),
+      this.userPermissionsService.has('GROUP_WORK_ALL'),
+      this.authService.currentUser$
+    )
+    .map(([ canEdit, canWorkAll, user ]) => canEdit && (user.userId === group.userId || canWorkAll));
   }
 
   fetchAll(forCurrentUser: boolean): Observable<Array<IGroup>> {
