@@ -42,7 +42,7 @@ export class ValueBag {
   }
 
   containsCustom(name: string): boolean {
-    return this.stringValueContainsAnyCustomNumber(name);
+    return this.getStringValueAsArray(name).reduce((acc, value) => acc || value > ValueBag.CUSTOM_VALUE_THRESHOLD, false);
   }
 
   containsALL(name: string): boolean {
@@ -57,15 +57,11 @@ export class ValueBag {
     return this.bag[name] && this.bag[name].valueS || '';
   }
 
-  private getStringValueAsArray(name: string): Array<number> {
-    return this.getStringValue(name).split(',').map(Number);
-  }
-
   private stringValueContainsNumber(name: string, value: number): boolean {
     return this.getStringValueAsArray(name).includes(value);
   }
 
-  private stringValueContainsAnyCustomNumber(name: string): boolean {
-    return this.getStringValueAsArray(name).reduce((acc, value) => acc || value > ValueBag.CUSTOM_VALUE_THRESHOLD, false);
+  private getStringValueAsArray(name: string): Array<number> {
+    return this.getStringValue(name).split(',').map(Number);
   }
 }
