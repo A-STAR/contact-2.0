@@ -9,10 +9,10 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { first } from 'rxjs/operators/first';
-import 'rxjs/add/operator/startWith';
 
 import { IDebt } from '../../../../../../../core/debt/debt.interface';
 import { IDynamicFormControl } from '../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -57,7 +57,7 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
-    this.formDataSubscription = Observable.combineLatest(
+    this.formDataSubscription = combineLatest(
       this.userDictionariesService.getDictionaries([
         UserDictionariesService.DICTIONARY_DEBT_STATUS,
         UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE,
@@ -67,7 +67,9 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
       this.form.onCtrlValueChange('statusCode').startWith(null),
       this.form.onCtrlValueChange('customStatusCode').startWith(null),
     )
-    .distinctUntilChanged()
+    .pipe(
+      distinctUntilChanged()
+    )
     .subscribe(([ dictionaries, bag, reasonCodeRequired, statusCode, customStatusCode ]) => {
       this.getControl('statusCode').radioOptions = [
         {
@@ -142,7 +144,7 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
       .pipe(first())
       .subscribe(_ => {
         this.submit.emit();
-        this.close.emit();
+        this.onClose();
       });
   }
 

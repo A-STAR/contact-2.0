@@ -1,6 +1,7 @@
 import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -44,7 +45,9 @@ export class DebtorCardService extends AbstractActionService {
         const { debts, selectedDebtId } = slice;
         return (debts.data || []).find(debt => debt.id === selectedDebtId);
       })
-      .distinctUntilChanged();
+      .pipe(
+        distinctUntilChanged()
+      );
   }
 
   get debts$(): Observable<IDebt[]> {
@@ -56,14 +59,18 @@ export class DebtorCardService extends AbstractActionService {
     return this.store
       .select(state => state.debtorCard.person.data && state.debtorCard.person.data.typeCode)
       .map(typeCode => [2, 3].includes(typeCode))
-      .distinctUntilChanged();
+      .pipe(
+        distinctUntilChanged()
+      );
   }
 
   get isPerson$(): Observable<boolean> {
     return this.store
       .select(state => state.debtorCard.person.data && state.debtorCard.person.data.typeCode)
       .map(typeCode => typeCode === 1)
-      .distinctUntilChanged();
+      .pipe(
+        distinctUntilChanged()
+      );
   }
 
   get hasDebts$(): Observable<boolean> {
@@ -80,14 +87,18 @@ export class DebtorCardService extends AbstractActionService {
     return this.store
       .select(state => state.debtorCard)
       .map(slice => slice.debts.status === IDataStatus.LOADED && slice.person.status === IDataStatus.LOADED)
-      .distinctUntilChanged();
+      .pipe(
+        distinctUntilChanged()
+      );
   }
 
   get hasFailed$(): Observable<boolean> {
     return this.store
       .select(state => state.debtorCard)
       .map(slice => slice.debts.status === IDataStatus.FAILED || slice.person.status === IDataStatus.FAILED)
-      .distinctUntilChanged();
+      .pipe(
+        distinctUntilChanged()
+      );
   }
 
   openByDebtId(debtId: number): Promise<boolean> {
