@@ -57,7 +57,9 @@ export interface IContextMenuItem {
   params?: string[];
   submenu?: IContextMenuItem[];
   addOptions?: { name: string; value: Array<number|string> }[];
-  // these are two internal collections
+  // these are internal variables
   fieldActionItems?: IContextMenuItem[];
   actionItems?: IContextMenuItem[];
+  hideActionSubmenu?: boolean;
+  hideFieldActionSubmenu?: boolean;
 }

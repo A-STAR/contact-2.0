@@ -1,0 +1,15 @@
+
+<ul class="context-menu__submenu">
+  <li class="context-menu__item"
+  *ngFor="let child of parent.actionItems"
+  (click)="onAction(child)"
+  [ngClass]="{'disabled': (isFieldActionType ? isDisabled(parent) : isDisabled(child)) | async }"
+  >
+    <ng-container *ngIf="isFieldActionType; else translateText">
+      {{ child.label }}
+    </ng-container>
+    <ng-template #translateText>
+      {{ child.label | translate }}
+    </ng-template>
+  </li>
+</ul>

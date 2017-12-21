@@ -86,23 +86,16 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     },
     {
       label: this.translateService.instant('portfolios.outsourcing.send.menu.title'),
-      // we check for availability in children menu items
-      enabled: Observable.of(true),
+      enabled: this.canSendOutsourceAndCession(),
       submenu: [
         {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.outsourcing'),
           action: () => this.onAction('sendOutsource'),
-          enabled: combineLatestAnd([
-            this.canSend$,
-            this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
-          ]),
+          enabled: this.canSendOutsource(),
         }, {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.cession'),
           action: () => this.onAction('sendCession'),
-          enabled: combineLatestAnd([
-            this.canSend$,
-            this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
-          ]),
+          enabled: this.canSendOutsource(),
         }
       ]
     },

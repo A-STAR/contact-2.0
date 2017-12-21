@@ -1,6 +1,7 @@
 import {
-  Component,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
   EventEmitter,
   Input,
   OnInit,
@@ -10,6 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IContextMenuItem, IGridColumn } from '../grid.interface';
+import {  } from '@angular/core/src/change_detection/change_detector_ref';
 
 @Component({
   selector: 'app-context-menu',
@@ -29,7 +31,9 @@ export class ContextMenuComponent implements OnInit {
   actionItems: IContextMenuItem[];
   fieldActionItems: IContextMenuItem[];
 
-  constructor(private translationService: TranslateService) { }
+  constructor(
+    private translationService: TranslateService,
+    private cdRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     if (this.options && this.options.length) {
@@ -80,6 +84,11 @@ export class ContextMenuComponent implements OnInit {
     if (this.action) {
       this.action.emit(item);
     }
+  }
+
+  onHide($event: { item: IContextMenuItem, isFieldActionType: boolean }): void {
+    $event.item[$event.isFieldActionType ? 'hideFieldActionSubmenu' : 'hideActionSubmenu'] = true;
+    this.cdRef.detectChanges();
   }
 
   private prepareActionItems(config: IContextMenuItem[]): IContextMenuItem[] {
