@@ -134,9 +134,14 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
 
   private onVersionsFetch(versions: IAttributeVersion[]): void {
     this.rows = this.processVersions(versions);
-    this.grid.clearSelection();
     this.setDialog(null);
+    this.clearSelection();
     this.cdRef.markForCheck();
+  }
+
+  private clearSelection(): void {
+    this.grid.clearSelection();
+    this.selectedVersion$.next(null);
   }
 
   private get canEdit$(): Observable<boolean> {
@@ -148,14 +153,6 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
 
   private getToolbarItems(): IToolbarItem[] {
     return [
-      {
-        type: ToolbarItemTypeEnum.BUTTON_ADD,
-        action: () => this.setDialog('add'),
-        enabled: combineLatestAnd([
-          this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-          Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
-        ])
-      },
       {
         type: ToolbarItemTypeEnum.BUTTON_EDIT,
         action: () => this.setDialog('edit'),

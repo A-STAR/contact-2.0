@@ -7,14 +7,6 @@
   (cancel)="onCloseDialog()">
 </app-attribute-version-edit>
 
-<app-attribute-version-edit
-  *ngIf="isDialog('add')"
-  [selectedAttribute]="selectedAttribute"
-  [entityTypeId]="entityTypeId"
-  (submit)="onCreateDialogSubmit($event)"
-  (cancel)="onCloseDialog()">
-</app-attribute-version-edit>
-
 <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
