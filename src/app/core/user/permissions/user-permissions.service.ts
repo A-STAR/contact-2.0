@@ -1,29 +1,21 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/operators';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserPermissions } from './user-permissions.interface';
+import { IUserPermission, IUserPermissions } from './user-permissions.interface';
 
 import { ValueBag } from '../../value-bag/value-bag';
 
 @Injectable()
-export class UserPermissionsService implements OnDestroy {
+export class UserPermissionsService {
   static USER_PERMISSIONS_FETCH         = 'USER_PERMISSIONS_FETCH';
   static USER_PERMISSIONS_FETCH_SUCCESS = 'USER_PERMISSIONS_FETCH_SUCCESS';
 
-  private isInitialised = false;
-  private permissions: IUserPermissions;
-  private permissionsSub: Subscription;
+  private isFetching = false;
 
-  constructor(private store: Store<IAppState>) {
-    this.permissionsSub = this.permissions$.subscribe(permissions => this.permissions = permissions);
-  }
-
-  ngOnDestroy(): void {
-    this.permissionsSub.unsubscribe();
-  }
+  constructor(private store: Store<IAppState>) {}
 
   createRefreshAction(): Action {
     return {
@@ -32,20 +24,23 @@ export class UserPermissionsService implements OnDestroy {
   }
 
   refresh(): void {
+    this.isFetching = true;
     const action = this.createRefreshAction();
     this.store.dispatch(action);
   }
 
   bag(): Observable<ValueBag> {
-    return this.getPermissions()
-      .map(permissions => new ValueBag(permissions))
-      .distinctUntilChanged();
+    return this.permissions$.pipe(
+      map(permissions => new ValueBag(permissions)),
+      distinctUntilChanged(),
+    );
   }
 
   check(callback: (permissions: ValueBag) => boolean): Observable<boolean> {
-    return this.bag()
-      .map(bag => callback(bag))
-      .distinctUntilChanged();
+    return this.bag().pipe(
+      map(bag => callback(bag)),
+      distinctUntilChanged(),
+    );
   }
   /**
    * Returns true if the permission exists and is set to `true`
@@ -108,30 +103,25 @@ export class UserPermissionsService implements OnDestroy {
    * @deprecated
    */
   get(permissionNames: Array<string>): Observable<IUserPermissions> {
-    return this.getPermissions()
-      .map(permissions => permissionNames.reduce((acc, name) => ({ ...acc, [name]: permissions[name] }), {}))
-      .distinctUntilChanged();
-  }
-
-  reset(): void {
-    this.isInitialised = false;
-    this.permissions = null;
-  }
-
-  private getPermissions(): Observable<IUserPermissions> {
-    if (!this.permissions && !this.isInitialised) {
-      this.isInitialised = true;
-      this.refresh();
-    }
-
-    return this.permissions$
-      .filter(Boolean)
-      .distinctUntilChanged();
+    return this.permissions$.pipe(
+      map(permissions => permissionNames.reduce((acc, name) => ({ ...acc, [name]: permissions[name] }), {})),
+      distinctUntilChanged(),
+    );
   }
 
   private get permissions$(): Observable<IUserPermissions> {
-    return this.store.select(state => state.userPermissions)
-      .filter(Boolean)
-      .map(state => state.permissions);
+    return this.store
+      .select(state => state.userPermissions.permissions)
+      .pipe(
+        tap(permissions => {
+          if (permissions) {
+            this.isFetching = false;
+          } else {
+            this.refresh();
+          }
+        }),
+        filter(Boolean),
+        distinctUntilChanged(),
+      );
   }
 }
