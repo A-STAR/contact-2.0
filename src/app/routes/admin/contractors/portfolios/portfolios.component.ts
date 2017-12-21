@@ -220,6 +220,36 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_RETURN');
   }
 
+  get selectedPortfolio$(): Observable<IPortfolio> {
+    return this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio);
+  }
+
+  get selectedContractor$(): Observable<IContractor> {
+    return this.store.select(state => state.contractorsAndPortfolios.selectedContractor);
+  }
+
+  canSendOutsourceAndCession(): Observable<boolean> {
+    // return combineLatestAnd([
+    //   this.canSendOutsource(),
+    //   this.canSendCession()
+    // ]);
+    return Observable.of(true);
+  }
+
+  canSendOutsource(): Observable<boolean> {
+    // return combineLatestAnd([
+    //   this.canSend$,
+    //   this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
+    // ]);
+    return Observable.of(true);
+  }
+
+  canSendCession(): Observable<boolean> {
+    return combineLatestAnd([
+      this.canSend$,
+      this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
+    ]);
+  }
   canForm(portfolio: IPortfolio): boolean {
     return portfolio &&
       portfolio.directionCode === 2 && portfolio.statusCode === 4;
