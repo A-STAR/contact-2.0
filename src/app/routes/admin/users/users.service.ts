@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/concatMap';
-import 'rxjs/add/operator/filter';
 
 import { DataService } from '../../../core/data/data.service';
 import { IAppState } from '../../../core/state/state.interface';

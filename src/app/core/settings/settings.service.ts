@@ -7,8 +7,9 @@ import { propOr } from '../utils';
 @Injectable()
 export class SettingsService {
 
-  public app: any;
-  public layout: any;
+  app: any;
+  layout: any;
+
   private user: any;
 
   constructor(private persistenceService: PersistenceService) {

@@ -59,6 +59,10 @@ export class ContactRegistrationComponent {
     return this.contactRegistrationService.canAddPhone$;
   }
 
+  get canChangeContact$(): Observable<boolean> {
+    return this.contactRegistrationService.canChangeContact$;
+  }
+
   get canAddFile$(): Observable<boolean> {
     return this.contactRegistrationService.canAddFile$;
   }

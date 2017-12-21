@@ -11,8 +11,6 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/of';
 import { first } from 'rxjs/operators';
 
 import { IDocument } from '../document.interface';

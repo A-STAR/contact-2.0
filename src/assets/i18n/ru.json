@@ -1789,7 +1789,8 @@
         "sentDateTime": "Дата отправки",
         "status": "Статус",
         "text": "Текст сообщения",
-        "startDateTime": "Планируемая дата отправки"
+        "startDateTime": "Планируемая дата отправки",
+        "subject": "Тема"
       },
       "grid": {
         "contactId": "ID контакта",

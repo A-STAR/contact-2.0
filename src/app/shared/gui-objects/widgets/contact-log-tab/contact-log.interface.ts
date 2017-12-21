@@ -18,7 +18,7 @@ export interface IContactLog {
   resultName?: string;
   sentDateTime?: Date | string;
   startDateTime?: Date | string;
-  status?: string;
+  statusCode?: number;
   text?: string;
   userFullName?: string;
   userId?: number;

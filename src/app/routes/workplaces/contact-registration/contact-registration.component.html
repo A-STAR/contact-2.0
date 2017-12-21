@@ -46,6 +46,17 @@
   </app-accordion-item>
 
   <app-accordion-item
+    *ngIf="canChangeContact$ | async"
+    [clickable]="false"
+    [title]="'modules.contactRegistration.contact.title'"
+  >
+    <app-contact-registration-contact
+      [debtId]="debtId"
+      [personId]="personId"
+    ></app-contact-registration-contact>
+  </app-accordion-item>
+
+  <app-accordion-item
     *ngIf="canAddFile$ | async"
     [clickable]="false"
     [title]="'modules.contactRegistration.attachment.title'"

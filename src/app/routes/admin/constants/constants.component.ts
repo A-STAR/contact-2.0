@@ -4,7 +4,6 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IConstant } from './constants.interface';
 import { IGridColumn } from '../../../shared/components/grid/grid.interface';

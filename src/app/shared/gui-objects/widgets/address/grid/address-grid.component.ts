@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs/observable/of';
 
 import { IAddress } from '../address.interface';
 import { IAddressMarkData } from './mark/mark.interface';
@@ -117,7 +117,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       ],
       translationKey: 'default.grid.localeText',
       prop: 'fullAddress',
-      enabled: Observable.of(true)
+      enabled: of(true)
     }
   ];
 
@@ -157,13 +157,13 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.debtSubscription = this._debtId$
-      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : Observable.of(null))
+      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : of(null))
       .subscribe(debt => {
         this.debt = debt;
         this.cdRef.markForCheck();
       });
 
-      Observable.combineLatest(
+      combineLatest(
         this.gridService.setDictionaryRenderers(this._columns),
         this.canViewBlock$,
       )
@@ -180,8 +180,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       .getAction(AddressService.MESSAGE_ADDRESS_SAVED)
       .subscribe(() => this.fetch());
 
-    this.canViewSubscription = Observable
-      .combineLatest(this.canView$, this._personId$)
+    this.canViewSubscription = combineLatest(this.canView$, this._personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
           this.notificationsService.error('errors.default.read.403').entity('entities.addresses.gen.plural').dispatch();

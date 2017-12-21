@@ -45,6 +45,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
 
   @ViewChild('editor') editor: ElementRef;
 
+  private isDisabled = false;
   private _richTextMode = true;
 
   constructor(
@@ -78,6 +79,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
     this.summernote(isDisabled ? 'disable' : 'enable');
   }
 
@@ -92,6 +94,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
       height: this.height,
       toolbar: this._richTextMode ? this.initToolbar() : null,
     });
+    this.summernote(this.isDisabled ? 'disable' : 'enable');
   }
 
   private destroyEditor(): void {
