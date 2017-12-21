@@ -62,6 +62,6 @@ export class ValueBag {
   }
 
   private getStringValueAsArray(name: string): Array<number> {
-    return this.getStringValue(name).split(',').map(Number);
+    return this.getStringValue(name).split(/,\s*/).map(Number);
   }
 }
