@@ -57,17 +57,17 @@ export class EmailComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest(
-      this.userTemplatesService.getTemplates(2, this.personRoles[0]),
-      this.userDictionaryService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
-      this.userConstantsService.get('SMS.Sender.Default'),
-      this.userConstantsService.get('SMS.Sender.Use'),
+      this.userTemplatesService.getTemplates(3, this.personRoles[0]),
+      this.userDictionaryService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
+      this.userConstantsService.get('Email.Sender.Default'),
+      this.userConstantsService.get('Email.Sender.Use'),
     )
     .pipe(first())
-    .subscribe(([ templates, phoneOptions, defaultSender, useSender ]) => {
-      const filteredPhoneOptions = phoneOptions
-        .filter(option => this.userPermissionsService.contains('SMS_MASS_PHONE_TYPE_LIST', Number(option.value)));
+    .subscribe(([ templates, emailOptions, defaultSender, useSender ]) => {
+      const filteredEmailOptions = emailOptions
+        .filter(option => this.userPermissionsService.contains('EMAIL_MASS_EMAIL_TYPE_LIST', Number(option.value)));
 
-      this.controls = this.buildControls(filteredPhoneOptions, templates.map(toOption('id', 'name')), Boolean(useSender.valueB));
+      this.controls = this.buildControls(filteredEmailOptions, templates.map(toOption('id', 'name')), Boolean(useSender.valueB));
 
       if (defaultSender.valueN) {
         this.data.senderCode = defaultSender.valueN;
@@ -85,7 +85,7 @@ export class EmailComponent implements OnInit {
     this.close.emit();
   }
 
-  private buildControls(phoneOptions: IOption[], templateOptions: IOption[], useSender: boolean): IDynamicFormControl[] {
+  private buildControls(emailOptions: IOption[], templateOptions: IOption[], useSender: boolean): IDynamicFormControl[] {
     return [
       {
         controlName: 'startDateTime',
@@ -96,9 +96,9 @@ export class EmailComponent implements OnInit {
         type: 'datepicker',
       },
       {
-        controlName: 'phoneTypes',
-        label: 'phoneTypes',
-        options: phoneOptions,
+        controlName: 'emailTypes',
+        label: 'emailTypes',
+        options: emailOptions,
         type: 'multiselect',
       },
       {
@@ -110,7 +110,7 @@ export class EmailComponent implements OnInit {
       },
       {
         controlName: 'senderCode',
-        dictCode: UserDictionariesService.DICTIONARY_SMS_SENDER,
+        dictCode: UserDictionariesService.DICTIONARY_EMAIL_SENDER,
         display: useSender,
         label: 'senderCode',
         markAsDirty: true,
