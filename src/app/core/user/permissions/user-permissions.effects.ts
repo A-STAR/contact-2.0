@@ -33,7 +33,6 @@ export class UserPermissionsEffects {
     private actions: Actions,
     private dataService: DataService,
     private notificationService: NotificationsService,
-    private userPermissionsService: UserPermissionsService,
   ) {}
 
   private read(): Observable<IUserPermission[]> {

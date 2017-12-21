@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserPermission, IUserPermissions } from './user-permissions.interface';
+import { IUserPermissions } from './user-permissions.interface';
 
 import { ValueBag } from '../../value-bag/value-bag';
 
