@@ -22,6 +22,7 @@ import { UserPermissionsService } from 'app/core/user/permissions/user-permissio
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
+import { minDateThreeDaysAgo } from '../../../../../core/validators';
 import { toOption } from '../../../../../core/utils';
 
 @Component({
@@ -97,8 +98,10 @@ export class SmsComponent implements OnInit {
         displayTime: true,
         label: 'startDateTime',
         markAsDirty: true,
+        minDate: new Date(),
         required: true,
         type: 'datepicker',
+        validators: [ minDateThreeDaysAgo() ],
       },
       {
         controlName: 'phoneTypes',
