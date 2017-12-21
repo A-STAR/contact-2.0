@@ -2149,6 +2149,10 @@
     "debtResponsibleClear": {
       "title": "Clear responsible",
       "message": "Do you really want to clear responsible operators for the selected debts?"
+    },
+    "visit": {
+      "title": "Cancel visits",
+      "message": "Do you really want to cancel the marked departures?"
     }
   },
   "errors": {

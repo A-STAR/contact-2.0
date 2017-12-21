@@ -40,6 +40,13 @@ export class VisitPrepareService extends AbstractActionService {
       .catch(this.notificationsService.createError().entity('entities.visit.gen.singular').dispatchCallback());
   }
 
+  cancel(visits: number[]): Observable<IOperationResult> {
+    const ids = visits.map(visitId => [ visitId ]);
+    return this.dataService
+      .update(`${this.visitUrl}/cancel`, {}, { idData: { ids }, actionData: {} })
+      .catch(this.notificationsService.deleteError().entity('entities.visit.gen.singular').dispatchCallback());
+  }
+
   showOperationNotification(result: IOperationResult): void {
     if (!result.success) {
       this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(result).dispatch();

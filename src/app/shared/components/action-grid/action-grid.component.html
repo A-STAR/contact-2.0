@@ -82,6 +82,12 @@
   (close)="onCloseAction($event)"
 ></app-visit-prepare-dialog>
 
+<app-visit-cancel-dialog
+  *ngIf="isDialog('cancelVisit')"
+  [visits]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-visit-cancel-dialog>
+
 <app-metadata-grid
   #grid
   *ngIf="isUsingAGGrid; else simpleGrid"
