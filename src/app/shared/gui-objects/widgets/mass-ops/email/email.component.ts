@@ -14,6 +14,7 @@ import { first } from 'rxjs/operators/first';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
+import { EmailService } from './email.service';
 import { UserConstantsService } from 'app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from 'app/core/user/dictionaries/user-dictionaries.service';
 import { UserTemplatesService } from 'app/core/user/templates/user-templates.service';
@@ -45,6 +46,7 @@ export class EmailComponent implements OnInit {
 
   constructor (
     private cdRef: ChangeDetectorRef,
+    private emailService: EmailService,
     private userConstantsService: UserConstantsService,
     private userDictionaryService: UserDictionariesService,
     private userTemplatesService: UserTemplatesService,
@@ -78,7 +80,10 @@ export class EmailComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.close.emit();
+    const email = this.form.serializedUpdates;
+    this.emailService
+      .schedule(this.debtIds, this.personIds, this.personRoles, email)
+      .subscribe(() => this.close.emit());
   }
 
   onClose(): void {
@@ -102,6 +107,11 @@ export class EmailComponent implements OnInit {
         type: 'multiselect',
       },
       {
+        controlName: 'subject',
+        label: 'subject',
+        type: 'text',
+      },
+      {
         controlName: 'templateId',
         label: 'templateId',
         options: templateOptions,
@@ -113,7 +123,7 @@ export class EmailComponent implements OnInit {
         dictCode: UserDictionariesService.DICTIONARY_EMAIL_SENDER,
         display: useSender,
         label: 'senderCode',
-        markAsDirty: true,
+        markAsDirty: useSender,
         required: useSender,
         type: 'selectwrapper',
       },
