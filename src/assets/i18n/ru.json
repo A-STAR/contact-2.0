@@ -322,12 +322,7 @@
       "contactGrid": {
         "tabs": {
           "selectFromDebt": {
-            "title": "Выбрать из привязанных к долгу",
-            "grid": {
-              "linkTypeCode": "Тип связи",
-              "personFullName": "ФИО",
-              "personRole": "Роль"
-            }
+            "title": "Выбрать из привязанных к долгу"
           },
           "selectFromAll": {
             "title": "Выбрать из всех"
@@ -1929,6 +1924,23 @@
           "forCurrentUser": "Группы текущего пользователя"
         }
       }
+    },
+    "visit": {
+      "grid": {
+        "id": "ID",
+        "fullName": "ФИО",
+        "organization": "Подразделение",
+        "position": "Должность"
+      },
+      "card": {
+        "purposeCode": "Цель выезда",
+        "planVisitDateTime": "Плановая дата выезда",
+        "comment": "Комментарий",
+        "operator": "Сотрудники"
+      },
+      "dialog": {
+        "title": "Подготовка выезда"
+      }
     }
   },
   "entities": {
@@ -2094,6 +2106,9 @@
     },
     "contactLog": {
       "gen": { "singular": "контактов", "plural": "контактов" }
+    },
+    "visit": {
+      "gen": { "singular": "выезда", "plural": "выездов" }
     }
   },
   "massOperations": {
@@ -2137,6 +2152,10 @@
         "reasonCode": "Выберите причину",
         "comment": "Комментарий"
       }
+    },
+    "visit": {
+      "title": "Отмена выездов",
+      "message": "Вы действительно хотите отменить отмеченные выезды?"
     }
   },
   "errors": {
@@ -2481,5 +2500,42 @@
       }
     },
     "NA": "Не установлен"
+  },
+  "common": {
+    "entities": {
+      "contactPerson": {
+        "name": "Контактное лицо",
+        "fields": {
+          "id": "Ид",
+          "personId": "Ид персоны",
+          "personRole": "Роль персоны",
+          "personFullName": "ФИО персоны",
+          "linkTypeCode": "Тип связи (для третьих лиц)"
+        }
+      },
+      "person": {
+        "name": "Персона",
+        "fields": {
+          "id": "Ид",
+          "lastName": "Фамилия",
+          "firstName": "Имя",
+          "middleName": "Отчество",
+          "typeCode": "Тип должника",
+          "birthDate": "Дата рождения",
+          "genderCode": "Пол",
+          "passportNumber": "Серия и номер паспорта",
+          "stringValue1": "Строковый атрибут 1",
+          "stringValue2": "Строковый атрибут 2",
+          "stringValue3": "Строковый атрибут 3",
+          "stringValue4": "Строковый атрибут 4",
+          "stringValue5": "Строковый атрибут 5",
+          "stringValue6": "Строковый атрибут 6",
+          "stringValue7": "Строковый атрибут 7",
+          "stringValue8": "Строковый атрибут 8",
+          "stringValue9": "Строковый атрибут 9",
+          "stringValue10": "Строковый атрибут 10"
+        }
+      }
+    }
   }
 }

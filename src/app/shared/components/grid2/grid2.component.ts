@@ -98,6 +98,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
+  @Input() translateColumnLabels = false;
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -627,7 +628,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         field: column.colId,
         filter: this.getCustomFilter(column),
         filterParams: this.getCustomFilterParams(column),
-        headerName: column.label,
+        headerName: this.translateColumnLabels ? this.translate.instant(column.label) : column.label,
         hide: !!column.hidden,
         maxWidth: column.maxWidth,
         minWidth: column.minWidth,
@@ -857,6 +858,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       case 'confirmPaymentsOperator':
       case 'rejectPaymentsOperator':
         return this.userPermissionsBag.has('PAYMENTS_OPERATOR_CHANGE') && this.selected.length > 0;
+      case 'prepareVisit':
+        return this.userPermissionsBag.has('VISIT_PREPARE') && this.selected.length > 0;
+      case 'cancelVisit':
+        return this.userPermissionsBag.has('VISIT_CANCEL') && this.selected.length > 0;
       default:
         return true;
     }

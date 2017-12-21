@@ -18,7 +18,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 
 import { Grid2Component } from '../../../../../shared/components/grid2/grid2.component';
 
-import { isEmpty } from '../../../../../core/utils';
+import { isEmpty, addLabelForEntity } from '../../../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,9 +34,9 @@ export class ContactSelectGridComponent implements OnInit {
 
   columns$ = this.gridService.getColumns([
     { dataType: 3, name: 'personFullName' },
-    { dataType: 6, name: 'personRole', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-    { dataType: 6, name: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
-  ].map(column => ({ ...column, label: column.name })), {});
+    { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE, name: 'personRole' },
+    { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE, name: 'linkTypeCode' },
+  ].map(addLabelForEntity('contactPerson')), {});
 
   rows: ILinkedContactPerson[] = [];
   rowCount = 0;
