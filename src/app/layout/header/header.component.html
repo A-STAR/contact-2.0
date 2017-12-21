@@ -40,12 +40,12 @@
           class="menu-item"
           position="right"
           [displayArrow]="true"
-          [enabled]="hasNotifications$ | async"
+          [enabled]="hasNotifications"
         >
           <a trigger title="Messages">
             <i class="icon-bell"></i>
-            <div *ngIf="hasNotifications$ | async" class="label label-danger">
-              {{ notificationsCount$ | async }}
+            <div *ngIf="hasNotifications" class="label label-danger">
+              {{ notificationsCount }}
             </div>
           </a>
           <app-notifications (close)="notificationsDropdown.close()">
@@ -82,7 +82,7 @@
     </ul>
   </div>
 
-  <app-navsearch *ngIf="navSearchVisible" (close)="closeNavSearch()"></app-navsearch>
+  <app-navsearch *ngIf="isNavSearchVisible" (close)="closeNavSearch()"></app-navsearch>
 </nav>
 
 <app-info-dialog

@@ -52,7 +52,7 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
-import { UserPermissions } from '../../../core/user/permissions/user-permissions';
+import { ValueBag } from '../../../core/value-bag/value-bag';
 // import { GridCell } from 'ag-grid/dist/lib/entities/gridCell';
 
 @Component({
@@ -98,6 +98,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
+  @Input() translateColumnLabels = false;
 
   @Output() onDragStarted = new EventEmitter<null>();
   @Output() onDragStopped = new EventEmitter<null>();
@@ -122,7 +123,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private initialized = false;
   private saveChangesDebounce = new Subject<void>();
   private saveChangesDebounceSub: Subscription;
-  private userPermissionsBag: UserPermissions;
+  private userPermissionsBag: ValueBag;
   private userPermissionsSub: Subscription;
 
   private viewportDatasource: ViewPortDatasource;
@@ -627,7 +628,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         field: column.colId,
         filter: this.getCustomFilter(column),
         filterParams: this.getCustomFilterParams(column),
-        headerName: column.label,
+        headerName: this.translateColumnLabels ? this.translate.instant(column.label) : column.label,
         hide: !!column.hidden,
         maxWidth: column.maxWidth,
         minWidth: column.minWidth,
@@ -833,6 +834,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   // TODO(d.maltsev): this looks a bit messy.
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'debtNextCallDate':
+        return this.userPermissionsBag.has('DEBT_NEXT_CALL_DATE_SET') && this.selected.length > 0;
       case 'visitAdd':
         return  this.selected.length > 0; // TODO mock (m.bobryshev) this.userPermissionsBag.has('VISIT_ADD') &&
       case 'deleteSMS':
@@ -857,6 +860,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       case 'confirmPaymentsOperator':
       case 'rejectPaymentsOperator':
         return this.userPermissionsBag.has('PAYMENTS_OPERATOR_CHANGE') && this.selected.length > 0;
+      case 'prepareVisit':
+        return this.userPermissionsBag.has('VISIT_PREPARE') && this.selected.length > 0;
+      case 'cancelVisit':
+        return this.userPermissionsBag.has('VISIT_CANCEL') && this.selected.length > 0;
       default:
         return true;
     }

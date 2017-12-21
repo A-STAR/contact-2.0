@@ -19,6 +19,7 @@ import { EntityGroupModule } from './entity-group/entity-group.module';
 import { GuaranteeModule } from './guarantee/guarantee.module';
 import { GuarantorModule } from './guarantor/guarantor.module';
 import { IdentityModule } from './identity/identity.module';
+import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.module';
 import { ObjectModule } from './object/object.module';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
@@ -31,6 +32,7 @@ import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { PropertyModule } from './property/property.module';
 import { GroupModule } from './groups/group.module';
+import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
   imports: [
@@ -53,6 +55,7 @@ import { GroupModule } from './groups/group.module';
     GuaranteeModule,
     GuarantorModule,
     IdentityModule,
+    NextCallDateSetModule,
     ObjectModule,
     PaymentModule,
     PaymentOperatorModule,
@@ -65,6 +68,7 @@ import { GroupModule } from './groups/group.module';
     PromiseResolveModule,
     PropertyModule,
     GroupModule,
+    VisitPrepareModule,
   ],
   exports: [
     AddressModule,
@@ -85,6 +89,7 @@ import { GroupModule } from './groups/group.module';
     GuaranteeModule,
     GuarantorModule,
     IdentityModule,
+    NextCallDateSetModule,
     ObjectModule,
     PaymentModule,
     PaymentOperatorModule,
@@ -97,6 +102,7 @@ import { GroupModule } from './groups/group.module';
     PromiseResolveModule,
     PropertyModule,
     GroupModule,
+    VisitPrepareModule,
   ]
 })
 export class WidgetsModule { }
