@@ -3,7 +3,7 @@
     <h3>{{ 'widgets.massOps.sms.dialog.title' | translate }}</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls" [data]="{}"></app-dynamic-form>
+  <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
 
   <div dialog-footer>
     <app-button color="primary" type="ok" [disabled]="isFormDisabled" (click)="onSubmit()"></app-button>
