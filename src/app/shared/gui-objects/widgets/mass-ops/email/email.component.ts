@@ -23,7 +23,7 @@ import { UserPermissionsService } from 'app/core/user/permissions/user-permissio
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { minDateThreeDaysAgo } from '../../../../../core/validators';
-import { addLabel, toOption } from '../../../../../core/utils';
+import { addFormLabel, toOption } from '../../../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -126,6 +126,6 @@ export class EmailComponent implements OnInit {
         type: 'selectwrapper',
       },
     ]
-    .map(addLabel('widgets.mass.email.form'));
+    .map(addFormLabel('widgets.mass.email.form'));
   }
 }

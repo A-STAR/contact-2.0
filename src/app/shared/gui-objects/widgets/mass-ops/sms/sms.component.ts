@@ -23,7 +23,7 @@ import { UserPermissionsService } from 'app/core/user/permissions/user-permissio
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { minDateThreeDaysAgo } from '../../../../../core/validators';
-import { addLabel, toOption } from '../../../../../core/utils';
+import { addFormLabel, toOption } from '../../../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -122,6 +122,6 @@ export class SmsComponent implements OnInit {
         type: 'selectwrapper',
       },
     ]
-    .map(addLabel('widgets.mass.sms.form'));
+    .map(addFormLabel('widgets.mass.sms.form'));
   }
 }
