@@ -831,6 +831,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   // TODO(d.maltsev): this looks a bit messy.
+  // TODO(d.maltsev): action grid should take care of this!
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
       case 'visitAdd':
@@ -857,6 +858,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       case 'confirmPaymentsOperator':
       case 'rejectPaymentsOperator':
         return this.userPermissionsBag.has('PAYMENTS_OPERATOR_CHANGE') && this.selected.length > 0;
+      // TODO(d.maltsev)
+      case 'emailCreate':
+        return true;
+      case 'smsCreate':
+        return true;
       default:
         return true;
     }
