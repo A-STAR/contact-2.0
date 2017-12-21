@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IAppState } from '../../state/state.interface';
 import { IUserPermissions } from './user-permissions.interface';
 
-import { UserPermissions } from './user-permissions';
+import { ValueBag } from '../../value-bag/value-bag';
 
 @Injectable()
 export class UserPermissionsService implements OnDestroy {
@@ -36,13 +36,13 @@ export class UserPermissionsService implements OnDestroy {
     this.store.dispatch(action);
   }
 
-  bag(): Observable<UserPermissions> {
+  bag(): Observable<ValueBag> {
     return this.getPermissions()
-      .map(permissions => new UserPermissions(permissions))
+      .map(permissions => new ValueBag(permissions))
       .distinctUntilChanged();
   }
 
-  check(callback: (permissions: UserPermissions) => boolean): Observable<boolean> {
+  check(callback: (permissions: ValueBag) => boolean): Observable<boolean> {
     return this.bag()
       .map(bag => callback(bag))
       .distinctUntilChanged();

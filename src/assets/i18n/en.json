@@ -1576,6 +1576,12 @@
         "title": "Launch Parameters"
       }
     },
+    "nextCallDateSet": {
+      "dialog": {
+        "title":"Date setting",
+        "nextCallDate":"Next call date"
+      }
+    },
     "object": {
       "dialogs": {
         "add": {
@@ -2012,6 +2018,9 @@
     },
     "managers": {
       "gen": { "singular": "manager", "plural": "managers" }
+    },
+    "nextCallDate": {
+      "gen": { "singular": "next call date", "plural": "next call date"}
     },
     "portfolios": {
       "gen": { "singular": "portfolio", "plural": "portfolios" }

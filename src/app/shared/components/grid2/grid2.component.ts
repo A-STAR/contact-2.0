@@ -52,7 +52,7 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
-import { UserPermissions } from '../../../core/user/permissions/user-permissions';
+import { ValueBag } from '../../../core/value-bag/value-bag';
 // import { GridCell } from 'ag-grid/dist/lib/entities/gridCell';
 
 @Component({
@@ -123,7 +123,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private initialized = false;
   private saveChangesDebounce = new Subject<void>();
   private saveChangesDebounceSub: Subscription;
-  private userPermissionsBag: UserPermissions;
+  private userPermissionsBag: ValueBag;
   private userPermissionsSub: Subscription;
 
   private viewportDatasource: ViewPortDatasource;
@@ -835,6 +835,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   // TODO(d.maltsev): action grid should take care of this!
   private isContextMenuItemEnabled(action: string): boolean {
     switch (action) {
+      case 'debtNextCallDate':
+        return this.userPermissionsBag.has('DEBT_NEXT_CALL_DATE_SET') && this.selected.length > 0;
       case 'visitAdd':
         return  this.selected.length > 0; // TODO mock (m.bobryshev) this.userPermissionsBag.has('VISIT_ADD') &&
       case 'deleteSMS':
