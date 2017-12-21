@@ -1555,6 +1555,12 @@
         "comment": "Комментарий"
       }
     },
+    "nextCallDateSet": {
+      "dialog": {
+        "title":"Установка даты",
+        "nextCallDate":"Дата следующего звонка"
+      }
+    },
     "object": {
       "dialogs": {
         "add": {
@@ -1991,6 +1997,9 @@
     },
     "managers": {
       "gen": { "singular": "менеджера", "plural": "списка менеджеров" }
+    },
+    "nextCallDate": {
+      "gen": { "singular": "даты следующего звонка", "plural": "дат следующих звонков"}
     },
     "portfolios": {
       "gen": { "singular": "портфеля", "plural": "списка портфелей" }
