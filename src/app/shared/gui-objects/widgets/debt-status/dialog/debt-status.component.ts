@@ -90,9 +90,12 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
           reasonCodeControl.options = this.dicts[UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE]
             .filter(term => term.parentCode === statusCode[0].value)
             .map(toLabeledValues);
+          // disable control if no options available
+          reasonCodeControl.disabled = !reasonCodeControl.options.length;
 
           // set required flag
-          reasonCodeControl.required = this.isReasonCodeRequired(this.dicts.constant, statusCode[0].value);
+          reasonCodeControl.required = reasonCodeControl.disabled ? false
+            : this.isReasonCodeRequired(this.dicts.constant, statusCode[0].value);
         });
 
     });
