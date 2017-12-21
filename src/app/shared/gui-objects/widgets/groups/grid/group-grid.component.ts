@@ -28,8 +28,8 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   private forCurrentUser = false;
 
   columns: Array<IGridColumn> = [
-    { prop: 'id' },
-    { prop: 'entityTypeCode', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE },
+    { prop: 'id', width: 50 },
+    { prop: 'entityTypeCode', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE, width: 50 },
     { prop: 'name' },
     { prop: 'comment' },
     { prop: 'isManual', renderer: 'checkboxRenderer' },
