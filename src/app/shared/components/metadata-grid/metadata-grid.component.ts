@@ -9,7 +9,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { GridOptions } from 'ag-grid/main';
-import { first } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { distinctUntilChanged, filter, first, map, tap, withLatestFrom } from 'rxjs/operators';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import {
@@ -21,6 +24,8 @@ import {
 } from '../grid2/grid2.interface';
 
 import { GridService } from '../grid/grid.service';
+import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 import { Grid2Component } from '../grid2/grid2.component';
 import { MetadataFilterComponent } from '../metadata-grid/filter/metadata-filter.component';
@@ -52,26 +57,64 @@ export class MetadataGridComponent<T> implements OnInit {
   @ViewChild(Grid2Component) grid: Grid2Component;
   @ViewChild(MetadataFilterComponent) filter: MetadataFilterComponent;
 
-  private _actions: IMetadataAction[];
   private _columns: IAGridColumn[];
   private _initialized = false;
+
+  private actions$ = new BehaviorSubject<any[]>(null);
+
+  private actionsWithPermissions$ = combineLatest(
+    this.actions$.pipe(filter(Boolean)),
+    this.userConstantsService.bag(),
+    this.userPermissionsService.bag(),
+  )
+  .pipe(
+    map(([ actions, constants, permissions ]) => {
+      return [
+        ...actions,
+        {
+          action: 'smsCreate',
+          params: [ 'debtId', 'personId' ],
+          addOptions: [
+            {
+              name: 'personRole',
+              value: [ 1 ],
+            },
+          ],
+          enabled: action => {
+            const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
+            return constants.has('SMS.Use') && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+          },
+        },
+        {
+          action: 'emailCreate',
+          params: [ 'debtId', 'personId' ],
+          addOptions: [
+            {
+              name: 'personRole',
+              value: [ 1 ],
+            },
+          ],
+          enabled: action => {
+            const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
+            return constants.has('Email.Use') && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+          },
+        },
+      ];
+    }),
+  );
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private userConstantsService: UserConstantsService,
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
     this.gridService.getMetadata(this.metadataKey, {})
       .pipe(first())
       .subscribe(({ actions, columns }) => {
-        // TODO(d.maltsev): remove stub
-        // this._actions = actions;
-        this._actions = [
-          ...actions,
-          { action: 'smsCreate', params: [ 'debtId', 'personId' ], addOptions: [ { name: 'personRole', value: [ 1 ] } ] },
-          { action: 'emailCreate', params: [ 'debtId', 'personId' ], addOptions: [ { name: 'personRole', value: [ 1 ] } ] },
-        ];
+        this.actions$.next(actions);
         this._columns = [ ...columns ];
         this._initialized = true;
         this.cdRef.markForCheck();
@@ -82,12 +125,12 @@ export class MetadataGridComponent<T> implements OnInit {
     return this.grid && this.grid.selected || [] as any[];
   }
 
-  get gridOptions(): GridOptions {
-    return this.grid && this.grid.gridOptions;
+  get gridActions$(): Observable<any[]> {
+    return this.actionsWithPermissions$;
   }
 
-  get actions(): IMetadataAction[] {
-    return this._actions || [];
+  get gridOptions(): GridOptions {
+    return this.grid && this.grid.gridOptions;
   }
 
   get columns(): IAGridColumn[] {
