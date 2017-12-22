@@ -1,18 +1,21 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IGroup } from '../group.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { ILookupLanguage } from 'app/core/lookup/lookup.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GroupService } from '../group.service';
+import { LookupService } from '../../../../../core/lookup/lookup.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
+import { IEntityTranslation } from 'app/core/entity/translations/entity-translations.interface';
 
 const label = makeKey('widgets.groups.card');
 
@@ -30,23 +33,36 @@ export class GroupCardComponent implements OnInit {
   controls: Array<IDynamicFormItem> = null;
   group: Partial<IGroup>;
 
+  private languages: ILookupLanguage[];
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
     private groupService: GroupService,
+    private lookupService: LookupService,
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
-      this.groupId ? this.groupService.canEdit$ : this.groupService.canAdd$,
+    const group$ = this.groupId ? this.groupService.fetch(this.groupId) : Observable.of(this.getFormData());
+    combineLatest(
+      group$.flatMap(group => this.groupId ? this.groupService.canEdit$(group as IGroup) : this.groupService.canAdd$),
       this.groupService.canConditionEdit$,
-      this.groupId ? this.groupService.fetch(this.groupId) : Observable.of(this.getFormData()),
-      this.groupService.groupEntityTypeOptions$
+      group$,
+      this.groupService.groupEntityTypeOptions$,
+      this.groupId ? this.lookupService.languages : Observable.of(null),
+      this.groupId ? this.groupService.readGroupNameTranslations(this.groupId) : Observable.of(null)
     )
     .pipe(first())
-    .subscribe(([ canEdit, canConditionEdit, group, respTypeOpts ]) => {
-      this.controls = this.initControls(canEdit, canConditionEdit, respTypeOpts);
+    .subscribe(([ canEdit, canConditionEdit, group, respTypeOpts, languages, translations ]) => {
       this.group = group;
+      this.group.multiName = translations;
+      this.languages = languages;
+
+      const languageOpts = languages.map(userLanguage =>
+        ({ label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain, selected: userLanguage.isMain })
+      );
+      this.controls = this.initControls(canEdit, canConditionEdit, respTypeOpts, languageOpts);
+
       this.cdRef.markForCheck();
     });
   }
@@ -57,7 +73,7 @@ export class GroupCardComponent implements OnInit {
 
   onSubmit(): void {
     const action = this.groupId
-      ? this.groupService.update(this.groupId, this.form.serializedValue)
+      ? this.groupService.update(this.groupId, this.serializeTranslatedGroup(this.form.serializedValue))
       : this.groupService.create(this.form.serializedUpdates);
 
     action.subscribe(() => {
@@ -70,9 +86,28 @@ export class GroupCardComponent implements OnInit {
     this.contentTabService.back();
   }
 
-  private initControls(canEdit: boolean, canConditionEdit: boolean, entityTypeOptions: IOption[]): Array<IDynamicFormItem> {
+  private serializeTranslatedGroup(group: IGroup): IGroup {
+    const isMultiNameChanged = group.multiName && Object.keys(group.multiName).length;
+    const result = {
+      ...group,
+      id: this.groupId,
+      name: isMultiNameChanged ? this.createNameTranslations(group.multiName) : group.name,
+    } as IGroup;
+    delete result.multiName;
+    return result;
+  }
+
+  private initControls(canEdit: boolean, canConditionEdit: boolean,
+    entityTypeOptions: IOption[], languageOptions: IOption[]): Array<IDynamicFormItem> {
     const controls = [
-      { label: label('name'), controlName: 'name', type: 'text', disabled: !canEdit, required: true },
+      {
+        label: label('name'),
+        controlName: this.groupId ? 'multiName' : 'name',
+        type: this.groupId ? 'multitext' : 'text',
+        options: languageOptions,
+        required: true,
+        disabled: !canEdit
+      },
       {
         label: label('entityTypeCode'), controlName: 'entityTypeCode', type: 'select',
         options: entityTypeOptions, required: true, disabled: !canEdit, markAsDirty: !this.groupId
@@ -90,6 +125,13 @@ export class GroupCardComponent implements OnInit {
     }
 
     return controls as IDynamicFormItem[];
+  }
+
+  private createNameTranslations(selection: { [key: number]: string }[]): IEntityTranslation[] {
+    return this.languages.map(language => ({
+      languageId: language.id,
+      value: selection[language.id]
+    } as IEntityTranslation));
   }
 
   private getFormData(): Partial<IGroup> {
