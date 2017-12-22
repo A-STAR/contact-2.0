@@ -50,7 +50,7 @@ export class UserConstantsService {
         tap(constants => {
           if (constants) {
             this.isFetching = false;
-          } else {
+          } else if (!this.isFetching) {
             this.refresh();
           }
         }),

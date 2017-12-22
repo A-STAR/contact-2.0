@@ -40,6 +40,12 @@
   (close)="closeDialog()"
 ></app-contact-log-dialog>
 
+<app-debt-status
+  *ngIf="isDialog('debtChangeStatus')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-debt-status>
+
 <app-debt-responsible-set
   *ngIf="isDialog('debtSetResponsible')"
   [debts]="getSelectionParam(0)"

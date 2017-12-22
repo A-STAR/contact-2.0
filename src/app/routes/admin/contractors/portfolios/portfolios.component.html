@@ -11,7 +11,7 @@
 
 <app-portfolio-move
   *ngIf="isDialog('move')"
-  [contractor]="selectedContractor"
+  [contractor]="selectedContractor$ | async"
   [portfolio]="selectedPortfolio$ | async"
   (onSubmit)="onMoveSubmit($event)"
   (onCancel)="onCloseDialog()">

@@ -116,7 +116,7 @@ export class UserPermissionsService {
         tap(permissions => {
           if (permissions) {
             this.isFetching = false;
-          } else {
+          } else if (!this.isFetching) {
             this.refresh();
           }
         }),
