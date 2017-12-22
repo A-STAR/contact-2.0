@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { ContentTabService } from 'app/shared/components/content-tabstrip/tab/content-tab.service';
+import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 
 @Component({
   selector: 'app-contractors-and-portfolios-version',

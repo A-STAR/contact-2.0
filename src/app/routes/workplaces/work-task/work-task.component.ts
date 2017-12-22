@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from
 
 import { IGridDef, IWorkTaskEntry } from './work-task.interface';
 
-import { ActionGridComponent } from 'app/shared/components/action-grid/action-grid.component';
+import { ActionGridComponent } from '../../../shared/components/action-grid/action-grid.component';
 
 import { makeKey } from '../../../core/utils';
 

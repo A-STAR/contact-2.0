@@ -1,1 +1,9 @@
-<app-container [node]="node"></app-container>
+<app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+  <app-tabview-tab *ngFor="let tab of tabs" [title]="tab.title">
+    <app-entity-attribute-grid
+      *ngIf="tab.isInitialised"
+      [entityId$]="entityId$"
+      [entityTypeId$]="entityTypeId$"
+    ></app-entity-attribute-grid>
+  </app-tabview-tab>
+</app-tabview>

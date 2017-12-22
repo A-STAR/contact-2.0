@@ -15,10 +15,10 @@ import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dy
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { EmailService } from './email.service';
-import { UserConstantsService } from 'app/core/user/constants/user-constants.service';
-import { UserDictionariesService } from 'app/core/user/dictionaries/user-dictionaries.service';
-import { UserTemplatesService } from 'app/core/user/templates/user-templates.service';
-import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
+import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserTemplatesService } from '../../../../../core/user/templates/user-templates.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
