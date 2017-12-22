@@ -17,7 +17,8 @@ import {
   ILookupRole,
   ILookupUser,
   ILookupKey,
-  LookupStatusEnum
+  LookupStatusEnum,
+  ILookupTimeZone
 } from './lookup.interface';
 import { IOption } from '../converter/value-converter.interface';
 
@@ -76,6 +77,10 @@ export class LookupService {
   get roles(): Observable<Array<ILookupRole>> {
     return this.getSlice('roles');
   }
+  // note, that this key is in singular form, because route is GET lookup/timeZone
+  get timezone(): Observable<Array<ILookupTimeZone>> {
+    return this.getSlice('timezone');
+  }
 
   get users(): Observable<Array<ILookupUser>> {
     return this.getSlice('users');
@@ -108,6 +113,12 @@ export class LookupService {
   get roleOptions(): Observable<Array<IOption>> {
     return this.getSlice('roles')
       .map(roles => this.valueConverterService.valuesToOptions(roles))
+      .distinctUntilChanged();
+  }
+  // note, that this key is in singular form, because route is GET lookup/timeZone
+  get timeZoneOptions(): Observable<Array<IOption>> {
+    return this.getSlice('timezone')
+      .map(timezone => this.valueConverterService.valuesToOptions(timezone))
       .distinctUntilChanged();
   }
 
