@@ -39,7 +39,7 @@ export class DataUploadComponent extends DialogFunctions {
   @ViewChild('fileInput') fileInput: ElementRef;
 
   actions: IMetadataAction[] = [
-    { action: 'delete', params: [], addOptions: [] },
+    { action: 'delete', params: [], addOptions: [], enabled: selection => !isEmpty(selection) },
   ];
 
   columns: IAGridColumn[];
