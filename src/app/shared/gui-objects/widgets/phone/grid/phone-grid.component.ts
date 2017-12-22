@@ -111,7 +111,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   contextMenuOptions: IContextMenuItem[] = [
     {
-      fieldActions: [
+      simpleActionsNames: [
         'copyField',
         'copyRow'
       ],
