@@ -1,6 +1,7 @@
 import {
-  Component,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
   EventEmitter,
   Input,
   OnInit,
@@ -26,20 +27,23 @@ export class ContextMenuComponent implements OnInit {
 
   @Output() action = new EventEmitter<IContextMenuItem>();
 
-  actionItems: IContextMenuItem[];
-  fieldActionItems: IContextMenuItem[];
+  actions: IContextMenuItem[];
+  simpleActions: IContextMenuItem[];
 
-  constructor(private translationService: TranslateService) { }
+  constructor(
+    private translationService: TranslateService,
+    private cdRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     if (this.options && this.options.length) {
-      this.fieldActionItems = this.prepareFieldActionItems(this.options);
-      this.actionItems = this.prepareActionItems(this.options);
+      this.simpleActions = this.prepareSimpleActions(this.options);
+      this.actions = this.prepareActions(this.options);
+      this.cdRef.markForCheck();
     }
   }
 
-  onCtxMenuClick(event: MouseEvent, item: IContextMenuItem): void {
-    const isCopyField = item.fieldAction === 'copyField';
+  onSimpleAction(event: MouseEvent, item: IContextMenuItem): void {
+    const isCopyField = item.simpleActionName === 'copyField';
     const data = isCopyField ? this.tableRow[item.prop] : this.tableRow;
 
     const copyAsPlaintext = (content) => {
@@ -82,28 +86,28 @@ export class ContextMenuComponent implements OnInit {
     }
   }
 
-  private prepareActionItems(config: IContextMenuItem[]): IContextMenuItem[] {
-    return config.filter(option => !option.fieldActions).map(option => {
+  private prepareActions(config: IContextMenuItem[]): IContextMenuItem[] {
+    return config.filter(option => !option.simpleActionsNames).map(option => {
       if (option.submenu && option.submenu.length) {
-        option.actionItems = this.prepareActionItems(option.submenu);
-        option.fieldActionItems = this.prepareFieldActionItems(option.submenu);
+        option.actions = this.prepareActions(option.submenu);
+        option.simpleActions = this.prepareSimpleActions(option.submenu);
       }
       return option;
     });
   }
 
-  private prepareFieldActionItems(config: IContextMenuItem[]): IContextMenuItem[] {
+  private prepareSimpleActions(config: IContextMenuItem[]): IContextMenuItem[] {
     return config
-      .filter(option => option.fieldActions && option.fieldActions.length)
+      .filter(option => option.simpleActionsNames && option.simpleActionsNames.length)
       .reduce((acc, option) => {
-        option.fieldActions.forEach(name => {
+        option.simpleActionsNames.forEach(name => {
           if (option.submenu && option.submenu.length) {
-            option.actionItems = this.prepareActionItems(option.submenu);
-            option.fieldActionItems = this.prepareFieldActionItems(option.submenu);
+            option.actions = this.prepareActions(option.submenu);
+            option.simpleActions = this.prepareSimpleActions(option.submenu);
           }
           acc.push({
             ...option,
-            fieldAction: name,
+            simpleActionName: name,
             label: this.translationService.instant(option.translationKey + '.' + name, this.fieldNameTranslation)
               || option.label
           });

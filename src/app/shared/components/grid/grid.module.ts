@@ -7,6 +7,7 @@ import { ToolbarModule } from '../toolbar/toolbar.module';
 import { GridComponent } from './grid.component';
 import { GridService } from './grid.service';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
+import { ContextSubmenuComponent } from './context-menu/context-submenu/context-submenu.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,8 @@ import { ContextMenuComponent } from './context-menu/context-menu.component';
   ],
   declarations: [
     ContextMenuComponent,
-    GridComponent
+    GridComponent,
+    ContextSubmenuComponent
   ],
   providers: [
     GridService,

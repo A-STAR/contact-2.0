@@ -44,7 +44,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   contextMenuOptions: IContextMenuItem[] = [
     {
-      fieldActions: [
+      simpleActionsNames: [
         'copyField',
         'copyRow'
       ],

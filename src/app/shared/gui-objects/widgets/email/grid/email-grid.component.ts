@@ -81,7 +81,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
 
   contextMenuOptions: IContextMenuItem[] = [
     {
-      fieldActions: [
+      simpleActionsNames: [
         'copyField',
         'copyRow'
       ],

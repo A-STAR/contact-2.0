@@ -118,7 +118,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     const translationKeys = [gridMessagesKey];
     this.columnDefs = [].concat(this.columns);
 
-    const ctxMenuFieldAction = this.contextMenuOptions.find(option => !!option.fieldActions);
+    const ctxMenuFieldAction = this.contextMenuOptions.find(option => !!option.simpleActionsNames);
 
     this.contextFieldName = ctxMenuFieldAction && ctxMenuFieldAction.prop;
 
