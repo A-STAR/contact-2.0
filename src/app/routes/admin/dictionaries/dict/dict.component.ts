@@ -76,8 +76,6 @@ export class DictComponent implements OnDestroy, OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dictionariesService.fetchDictionaries();
-
     combineLatest(
         this.areDictionariesFetched,
         this.dictionariesService.state,
