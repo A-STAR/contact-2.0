@@ -40,6 +40,8 @@
         "USER_EDIT": "Карточка пользователя",
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
+        "CURRENCIES":"Валюты",
+        "CURRENCY_CARD":"Карточка валюты",
         "DICTIONARIES": "Справочники",
         "ATTRIBUTE_VERSION": "Версии атрибута",
         "PORTFOLIOS_CONTRACTORS": "Клиенты и портфели",

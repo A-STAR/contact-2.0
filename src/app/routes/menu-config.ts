@@ -67,6 +67,12 @@ export const menuConfig: IMenuConfig = {
     link: '/utilities/upload-templates',
     icon: 'icon-docs'
   },
+  currencies: {
+    text: 'sidebar.nav.menu.CURRENCIES',
+    link: '/utilities/currencies',
+    // todo find icon
+    icon: 'icon-docs'
+  },
   dataLoad: {
     text: 'sidebar.nav.menu.DATA_UPLOAD',
     link: '/utilities/data-upload',

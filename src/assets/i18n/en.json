@@ -40,6 +40,8 @@
         "USER_EDIT": "User card",
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
+        "CURRENCIES":"Currencies",
+        "CURRENCY_CARD":"Currency card",
         "DICTIONARIES": "Reference",
         "ATTRIBUTE_VERSION": "Attribute's versions",
         "PORTFOLIOS_CONTRACTORS": "Portfolios and contractors",
