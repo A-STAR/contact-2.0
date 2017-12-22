@@ -86,7 +86,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     },
     {
       label: this.translateService.instant('portfolios.outsourcing.send.menu.title'),
-      enabled: this.canSend$,
+      enabled: this.canSendOutsource(),
       submenu: [
         {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.outsourcing'),
