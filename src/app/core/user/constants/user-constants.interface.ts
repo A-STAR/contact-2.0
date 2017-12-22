@@ -7,6 +7,10 @@ export interface IUserConstant {
   valueS: string;
 }
 
+export interface IUserConstants {
+  [key: string]: IUserConstant;
+}
+
 export interface IUserConstantsState {
-  constants: Array<IUserConstant>;
+  constants: IUserConstants;
 }

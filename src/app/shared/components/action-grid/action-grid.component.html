@@ -40,6 +40,12 @@
   (close)="closeDialog()"
 ></app-contact-log-dialog>
 
+<app-debt-status
+  *ngIf="isDialog('debtChangeStatus')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-debt-status>
+
 <app-debt-responsible-set
   *ngIf="isDialog('debtSetResponsible')"
   [debts]="getSelectionParam(0)"
@@ -82,6 +88,21 @@
   (close)="onCloseAction($event)"
 ></app-payment-operator-reject-dialog>
 
+<app-mass-email
+  *ngIf="isDialog('emailCreate')"
+  [debtIds]="getSelectionParam(0)"
+  [personIds]="getSelectionParam(1)"
+  [personRoles]="getAddOptions('personRole')"
+  (close)="onCloseDialog()"
+></app-mass-email>
+
+<app-mass-sms
+  *ngIf="isDialog('smsCreate')"
+  [debtIds]="getSelectionParam(0)"
+  [personIds]="getSelectionParam(1)"
+  [personRoles]="getAddOptions('personRole')"
+  (close)="onCloseDialog()"
+></app-mass-sms>
 <app-visit-prepare-dialog
   *ngIf="isDialog('prepareVisit')"
   [visits]="getSelectionParam(0)"

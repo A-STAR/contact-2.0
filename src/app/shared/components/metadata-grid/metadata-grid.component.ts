@@ -65,7 +65,14 @@ export class MetadataGridComponent<T> implements OnInit {
     this.gridService.getMetadata(this.metadataKey, {})
       .pipe(first())
       .subscribe(({ actions, columns }) => {
-        this._actions = actions;
+        // TODO(d.maltsev && i.lobanov): remove stub
+        // this._actions = actions;
+        this._actions = [
+          ...actions,
+          { action: 'smsCreate', params: [ 'debtId', 'personId' ], addOptions: [ { name: 'personRole', value: [ 1 ] } ] },
+          { action: 'emailCreate', params: [ 'debtId', 'personId' ], addOptions: [ { name: 'personRole', value: [ 1 ] } ] },
+          { action: 'debtChangeStatus', params: ['debtId'], addOptions: [ { name: 'statusList', value: [6, 8, 11 ] } ] },
+        ];
         this._columns = [ ...columns ];
         this._initialized = true;
         this.cdRef.markForCheck();
