@@ -88,6 +88,14 @@
   (close)="onCloseAction($event)"
 ></app-payment-operator-reject-dialog>
 
+<app-mass-attr-dictionary
+  *ngIf="isDialog('attrDict')"
+  [debtIds]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+  [dictNameCode]=""
+>
+</app-mass-attr-dictionary>
+
 <app-mass-email
   *ngIf="isDialog('emailCreate')"
   [debtIds]="getSelectionParam(0)"
@@ -103,6 +111,7 @@
   [personRoles]="getAddOptions('personRole')"
   (close)="onCloseDialog()"
 ></app-mass-sms>
+
 <app-visit-prepare-dialog
   *ngIf="isDialog('prepareVisit')"
   [visits]="getSelectionParam(0)"
