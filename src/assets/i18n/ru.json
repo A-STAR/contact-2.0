@@ -2447,7 +2447,7 @@
         "showContactHistory": "История контактов",
         "statusChange": "Изменить статус",
         "visitAdd": "Отметить необходимость",
-        "openUserById": "Открыть карточку должника"
+        "openDebtCardByDebtor": "Открыть карточку должника"
       }
     },
     "filter": {

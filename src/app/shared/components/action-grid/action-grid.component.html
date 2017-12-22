@@ -5,7 +5,7 @@
 ></app-next-call-date-set>
 
 <app-open-debt-card
-  *ngIf="isDialog('openUserById')"
+  *ngIf="isDialog('openDebtCardByDebtor')"
   [personId]="getSelectionParam(0)"
   (close)="onCloseDialog()"
 ></app-open-debt-card>
