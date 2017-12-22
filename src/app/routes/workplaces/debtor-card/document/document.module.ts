@@ -14,6 +14,5 @@ import { DebtorDocumentComponent } from './document.component';
   declarations: [
     DebtorDocumentComponent
   ],
-  providers: [],
 })
 export class DebtorDocumentModule { }

@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 
-import { IAGridResponse } from 'app/shared/components/grid2/grid2.interface';
+import { IAGridResponse } from '../../../../../shared/components/grid2/grid2.interface';
+import { IContactPerson } from '../contact-select.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContactSelectService } from '../contact-select.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { IContactPerson } from '../contact-select.interface';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { Grid2Component } from '../../../../../shared/components/grid2/grid2.component';

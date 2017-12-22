@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { UserDictionariesService } from 'app/core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from 'app/shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
 

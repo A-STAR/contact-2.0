@@ -20,7 +20,7 @@ import { IMetadataColumn, IMetadataFilter } from '../../../../core/metadata/meta
 
 import { EntityAttributesService } from '../../../../core/entity/attributes/entity-attributes.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
-import { MetadataFilterService } from 'app/shared/components/metadata-grid/filter/metadata-filter.service';
+import { MetadataFilterService } from '../../../../shared/components/metadata-grid/filter/metadata-filter.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 

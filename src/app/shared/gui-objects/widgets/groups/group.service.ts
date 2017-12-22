@@ -5,18 +5,18 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/observable/combineLatest';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IEntityTranslation } from 'app/core/entity/translations/entity-translations.interface';
+import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IGroup } from './group.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
-import { AuthService } from 'app/core/auth/auth.service';
+import { AuthService } from '../../../../core/auth/auth.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { UserConstantsService } from 'app/core/user/constants/user-constants.service';
+import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { EntityTranslationsService } from 'app/core/entity/translations/entity-translations.service';
+import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 
 @Injectable()
 export class GroupService extends AbstractActionService {
