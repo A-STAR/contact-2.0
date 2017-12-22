@@ -34,6 +34,7 @@ import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { PropertyModule } from './property/property.module';
 import { GroupModule } from './groups/group.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
+import { CurrencyRatesModule } from './currency-rates/currency-rates.module';
 
 @NgModule({
   imports: [
@@ -71,6 +72,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PropertyModule,
     GroupModule,
     VisitPrepareModule,
+    CurrencyRatesModule,
   ],
   exports: [
     AddressModule,
@@ -106,6 +108,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PropertyModule,
     GroupModule,
     VisitPrepareModule,
+    CurrencyRatesModule,
   ]
 })
 export class WidgetsModule { }
