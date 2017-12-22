@@ -12,9 +12,9 @@ import { GridOptions } from 'ag-grid/main';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { distinctUntilChanged, filter, first, map, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
 
-import { IMetadataAction } from '../../../core/metadata/metadata.interface';
+// import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import {
   IAGridAction,
   IAGridColumn,
@@ -31,6 +31,7 @@ import { Grid2Component } from '../grid2/grid2.component';
 import { MetadataFilterComponent } from '../metadata-grid/filter/metadata-filter.component';
 
 import { FilterObject } from '../grid2/filter/grid-filter';
+import { ValueBag } from '../../../core/value-bag/value-bag';
 
 @Component({
   selector: 'app-metadata-grid',
@@ -69,7 +70,8 @@ export class MetadataGridComponent<T> implements OnInit {
   )
   .pipe(
     map(([ actions, constants, permissions ]) => {
-      return [
+      // TODO(d.maltsev): remove mock actions
+      const mockActions = [
         ...actions,
         {
           action: 'smsCreate',
@@ -79,11 +81,7 @@ export class MetadataGridComponent<T> implements OnInit {
               name: 'personRole',
               value: [ 1 ],
             },
-          ],
-          enabled: action => {
-            const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
-            return constants.has('SMS.Use') && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
-          },
+          ]
         },
         {
           action: 'emailCreate',
@@ -93,15 +91,13 @@ export class MetadataGridComponent<T> implements OnInit {
               name: 'personRole',
               value: [ 1 ],
             },
-          ],
-          enabled: action => {
-            const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
-            return constants.has('Email.Use') && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
-          },
+          ]
         },
       ];
-    }),
-  );
+      return mockActions.map(action => ({
+        ...action,
+      }));
+  }));
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -119,6 +115,10 @@ export class MetadataGridComponent<T> implements OnInit {
         this._initialized = true;
         this.cdRef.markForCheck();
       });
+  }
+
+  get hasSelection(): boolean {
+    return this.selected.length > 0;
   }
 
   get selected(): T[] {
@@ -179,5 +179,35 @@ export class MetadataGridComponent<T> implements OnInit {
 
   getRequestParams(): IAGridRequestParams {
     return this.grid.getRequestParams();
+  }
+
+  private buildPermissions(constants: ValueBag, permissions: ValueBag): any {
+    return {
+      cancelVisit: () => this.hasSelection && permissions.has('VISIT_CANCEL'),
+      confirmPaymentsOperator: () => this.hasSelection && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
+      confirmPromise: () => this.hasSelection && permissions.has('PROMISE_CONFIRM'),
+      debtClearResponsible: () => this.hasSelection && permissions.has('DEBT_RESPONSIBLE_CLEAR'),
+      debtNextCallDate: () => this.hasSelection && permissions.has('DEBT_NEXT_CALL_DATE_SET'),
+      debtSetResponsible: () => this.hasSelection && permissions.hasOneOf([ 'DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET' ]),
+      deletePromise: () => this.hasSelection && permissions.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]),
+      deleteSMS: () => this.hasSelection && permissions.notEmpty('SMS_DELETE_STATUS_LIST'),
+      emailCreate: action => {
+        const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
+        return constants.has('Email.Use') && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+      },
+      // TODO(d.maltsev, i.kibisov): pass entityTypeId
+      objectAddToGroup: () => this.hasSelection && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
+      paymentsCancel: () => this.hasSelection && permissions.has('PAYMENT_CANCEL'),
+      paymentsConfirm: () => this.hasSelection && permissions.has('PAYMENT_CONFIRM'),
+      prepareVisit: () => this.hasSelection && permissions.has('VISIT_PREPARE'),
+      rejectPaymentsOperator: () => this.hasSelection && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
+      showContactHistory: () => this.hasSelection && permissions.has('CONTACT_LOG_VIEW'),
+      smsCreate: action => {
+        const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
+        return constants.has('SMS.Use') && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+      },
+      // TODO(m.bobryshev): mock
+      visitAdd: () => this.hasSelection, // && permissions.has('VISIT_ADD'),
+    };
   }
 }
