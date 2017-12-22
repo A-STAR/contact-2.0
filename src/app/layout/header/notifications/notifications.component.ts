@@ -5,7 +5,8 @@ import {
   EventEmitter,
   HostListener,
   Output,
-  OnDestroy
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,7 +22,7 @@ import { ValueConverterService } from '../../../core/converter/value-converter.s
   styleUrls: ['./notifications.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationsComponent implements OnDestroy {
+export class NotificationsComponent implements OnInit, OnDestroy {
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   filterTypes: Array<NotificationTypeEnum> = [
@@ -43,24 +44,31 @@ export class NotificationsComponent implements OnDestroy {
     private notificationsService: NotificationsService,
     private translateService: TranslateService,
     private valueConverterService: ValueConverterService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.dateTimeFormat = this.translateService.instant('default.date.format.dateTime');
 
     this.notificationsSub = this.notificationsService.notifications
       .subscribe(notifications => {
         this.notifications = notifications;
-        this.cdRef.markForCheck();
+        this.cdRef.detectChanges();
       });
+
     this.filtersSub = this.notificationsService.filters
       .subscribe((filters: IFilters) => {
         this.filters = filters;
-        this.cdRef.markForCheck();
+        this.cdRef.detectChanges();
       });
   }
 
   ngOnDestroy(): void {
     this.notificationsSub.unsubscribe();
     this.filtersSub.unsubscribe();
+  }
+
+  hasFilters(): boolean {
+    return !!Object.keys(this.filters || {}).length;
   }
 
   @HostListener('click', ['$event'])

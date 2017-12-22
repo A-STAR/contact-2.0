@@ -1,0 +1,20 @@
+<app-dialog (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'widgets.nextCallDateSet.dialog.title' | translate }}</h3>
+  </div>
+
+  <div class="form-wrapper">
+    <div class="form-inner">
+        <app-dynamic-form class="form-inner" [controls]="controls" ></app-dynamic-form>
+    </div>
+  </div>
+
+  <div dialog-footer>
+    <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.select' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onClose()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

@@ -7,6 +7,7 @@ import { EntityGroupModule } from '../../gui-objects/widgets/entity-group/entity
 import { GridModule } from '../grid/grid.module';
 import { MassOpsModule } from '../../gui-objects/widgets/mass-ops/mass-ops.module';
 import { MetadataGridModule } from '../metadata-grid/metadata-grid.module';
+import { NextCallDateSetModule } from '../../gui-objects/widgets/next-call-date-set/next-call-date-set.module';
 import { PaymentConfirmModule } from '../../gui-objects/widgets/payment-confirm/payment-confirm.module';
 import { PromiseResolveModule } from '../../gui-objects/widgets/promise-resolve/promise-resolve.module';
 import { PaymentOperatorModule } from '../../gui-objects/widgets/payment-operator/payment-operator.module';
@@ -26,6 +27,7 @@ import { ActionGridComponent } from './action-grid.component';
     GridModule,
     MassOpsModule,
     MetadataGridModule,
+    NextCallDateSetModule,
     OpenDebtCardModule,
     PaymentConfirmModule,
     PaymentOperatorModule,

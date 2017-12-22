@@ -84,11 +84,13 @@ export class AttributeVersionEditComponent implements OnInit {
       {
         label: labelKey('value'),
         controlName: 'value',
+        required: true,
         ...getFormControlConfig(attr)
       },
       {
         label: labelKey('changeDateTime'),
         controlName: 'changeDateTime',
+        required: true,
         type: 'datepicker',
       },
       {
