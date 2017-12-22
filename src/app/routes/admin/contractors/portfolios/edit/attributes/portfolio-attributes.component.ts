@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 
@@ -20,16 +21,15 @@ export class PortfolioAttributesComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private contentTabService: ContentTabService) { }
+    private contentTabService: ContentTabService
+  ) { }
 
-    ngOnInit(): void {
-      this.entityTypeId$ = Observable.of(PortfolioAttributesComponent.ENTITY_TYPE_PORTFOLIO);
-      this.entityId$ = this.route.paramMap.map(params => Number(params.get('portfolioId')));
-    }
+  ngOnInit(): void {
+    this.entityTypeId$ = of(PortfolioAttributesComponent.ENTITY_TYPE_PORTFOLIO);
+    this.entityId$ = this.route.paramMap.map(params => Number(params.get('portfolioId')));
+  }
 
   onBack(): void {
     this.contentTabService.gotoParent(this.router, 1);
   }
-
-
 }
