@@ -94,8 +94,10 @@ export class MetadataGridComponent<T> implements OnInit {
           ]
         },
       ];
+      const actionPermissions = this.buildPermissions(mockActions, constants, permissions);
       return mockActions.map(action => ({
         ...action,
+        enabled: actionPermissions[action.action],
       }));
   }));
 
@@ -115,10 +117,6 @@ export class MetadataGridComponent<T> implements OnInit {
         this._initialized = true;
         this.cdRef.markForCheck();
       });
-  }
-
-  get hasSelection(): boolean {
-    return this.selected.length > 0;
   }
 
   get selected(): T[] {
@@ -181,33 +179,42 @@ export class MetadataGridComponent<T> implements OnInit {
     return this.grid.getRequestParams();
   }
 
-  private buildPermissions(constants: ValueBag, permissions: ValueBag): any {
+  private buildPermissions(actions: any, constants: ValueBag, permissions: ValueBag): any {
     return {
-      cancelVisit: () => this.hasSelection && permissions.has('VISIT_CANCEL'),
-      confirmPaymentsOperator: () => this.hasSelection && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
-      confirmPromise: () => this.hasSelection && permissions.has('PROMISE_CONFIRM'),
-      debtClearResponsible: () => this.hasSelection && permissions.has('DEBT_RESPONSIBLE_CLEAR'),
-      debtNextCallDate: () => this.hasSelection && permissions.has('DEBT_NEXT_CALL_DATE_SET'),
-      debtSetResponsible: () => this.hasSelection && permissions.hasOneOf([ 'DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET' ]),
-      deletePromise: () => this.hasSelection && permissions.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]),
-      deleteSMS: () => this.hasSelection && permissions.notEmpty('SMS_DELETE_STATUS_LIST'),
-      emailCreate: action => {
+      cancelVisit: selection => selection.length && permissions.has('VISIT_CANCEL'),
+      confirmPaymentsOperator: selection => selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
+      confirmPromise: selection => selection.length && permissions.has('PROMISE_CONFIRM'),
+      debtClearResponsible: selection => selection.length && permissions.has('DEBT_RESPONSIBLE_CLEAR'),
+      debtNextCallDate: selection => selection.length && permissions.has('DEBT_NEXT_CALL_DATE_SET'),
+      debtSetResponsible: selection => selection.length && permissions.hasOneOf([
+        'DEBT_RESPONSIBLE_SET',
+        'DEBT_RESPONSIBLE_RESET',
+      ]),
+      deletePromise: selection => selection.length && permissions.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]),
+      deleteSMS: selection => selection.length && permissions.notEmpty('SMS_DELETE_STATUS_LIST'),
+      emailCreate: selection => {
+        const action = actions.find(a => a.action === 'emailCreate');
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
-        return constants.has('Email.Use') && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+        return selection.length
+          && constants.has('Email.Use')
+          && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
       },
       // TODO(d.maltsev, i.kibisov): pass entityTypeId
-      objectAddToGroup: () => this.hasSelection && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
-      paymentsCancel: () => this.hasSelection && permissions.has('PAYMENT_CANCEL'),
-      paymentsConfirm: () => this.hasSelection && permissions.has('PAYMENT_CONFIRM'),
-      prepareVisit: () => this.hasSelection && permissions.has('VISIT_PREPARE'),
-      rejectPaymentsOperator: () => this.hasSelection && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
-      showContactHistory: () => this.hasSelection && permissions.has('CONTACT_LOG_VIEW'),
-      smsCreate: action => {
+      objectAddToGroup: selection => selection.length && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
+      paymentsCancel: selection => selection.length && permissions.has('PAYMENT_CANCEL'),
+      paymentsConfirm: selection => selection.length && permissions.has('PAYMENT_CONFIRM'),
+      prepareVisit: selection => selection.length && permissions.has('VISIT_PREPARE'),
+      rejectPaymentsOperator: selection => selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
+      showContactHistory: selection => selection.length && permissions.has('CONTACT_LOG_VIEW'),
+      smsCreate: selection => {
+        const action = actions.find(a => a.action === 'smsCreate');
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
-        return constants.has('SMS.Use') && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+        return selection.length
+          && constants.has('SMS.Use')
+          && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
       },
       // TODO(m.bobryshev): mock
-      visitAdd: () => this.hasSelection, // && permissions.has('VISIT_ADD'),
+      visitAdd: selection => selection.length, // && permissions.has('VISIT_ADD'),
     };
   }
 }
