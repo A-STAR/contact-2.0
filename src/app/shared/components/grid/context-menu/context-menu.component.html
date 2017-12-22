@@ -3,62 +3,32 @@
     tabindex="-1">
   <ul class="ngx-datatable-context-menu context-menu__body">
     <li
-      *ngFor="let item of actionItems"
+      *ngFor="let item of actions"
       class="context-menu__item"
       (click)="onAction(item)"
       [ngClass]="{'disabled': isDisabled(item) | async }"
     >
-      <span *ngIf="item.actionItems || item.fieldActionItems" class="arrow right"></span>
       {{ item.label | translate }}
-      <ul class="context-menu__submenu" *ngIf="item.actionItems && item.actionItems.length">
-          <li
-            class="context-menu__item"
-            *ngFor="let subItem of item.actionItems"
-            (click)="onAction(subItem)"
-            [ngClass]="{'disabled': isDisabled(subItem) | async }"
-          >
-            {{ subItem.label | translate }}
-          </li>
-        </ul>
-        <ul class="context-menu__submenu" *ngIf="item.fieldActionItems && item.fieldActionItems.length">
-          <li
-            class="context-menu__item"
-            *ngFor="let subItem of item.fieldActionItems"
-            (click)="onCtxMenuClick($event, item)"
-            [ngClass]="{'disabled': isDisabled(item) | async }"
-          >
-            {{ subItem.label }}
-          </li>
-        </ul>
+      <app-context-submenu
+        [parent]="item"
+        (action)="onAction($event)"
+        (simpleAction)="onSimpleAction($event)"
+      >
+      </app-context-submenu>
     </li>
     <li
-      *ngFor="let item of fieldActionItems"
+      *ngFor="let item of simpleActions"
       class="context-menu__item"
-      (click)="onCtxMenuClick($event, item)"
+      (click)="onSimpleAction($event, item)"
       [ngClass]="{'disabled': isDisabled(item) | async }"
     >
-      <span *ngIf="item.actionItems || item.fieldActionItems" class="arrow right"></span>
       {{ item.label }}
-      <ul class="context-menu__submenu" *ngIf="item.actionItems && item.actionItems.length">
-        <li
-          class="context-menu__item"
-          *ngFor="let subItem of item.actionItems"
-          (click)="onAction(subItem)"
-          [ngClass]="{'disabled': isDisabled(subItem) | async }"
-        >
-          {{ subItem.label | translate }}
-        </li>
-      </ul>
-      <ul class="context-menu__submenu" *ngIf="item.fieldActionItems && item.fieldActionItems.length">
-        <li
-          class="context-menu__item"
-          *ngFor="let subItem of item.fieldActionItems"
-          (click)="onCtxMenuClick($event, item)"
-          [ngClass]="{'disabled': isDisabled(item) | async }"
-        >
-          {{ subItem.label }}
-        </li>
-      </ul>
+      <app-context-submenu
+        [parent]="item"
+        (action)="onAction($event)"
+        (simpleAction)="onSimpleAction($event)"
+      >
+      </app-context-submenu>
     </li>
   </ul>
 </div>

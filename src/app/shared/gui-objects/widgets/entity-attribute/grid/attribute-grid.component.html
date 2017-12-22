@@ -2,7 +2,7 @@
   *ngIf="isDialog('edit')"
   [selectedAttribute]="selectedAttribute$ | async"
   [debtId]="debtId"
-  [entityTypeId]="entityTypeId"
+  [entityTypeId]="entityTypeId$ | async"
   (submit)="onEditDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-entity-attribute-grid-edit>

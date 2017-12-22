@@ -77,7 +77,6 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
 
   private actionsSub: Subscription;
   private canViewSubscription: Subscription;
-  private contractorsSubscription: Subscription;
 
   constructor(
     private actions$: Actions,
@@ -118,7 +117,6 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
   ngOnDestroy(): void {
     this.actionsSub.unsubscribe();
     this.canViewSubscription.unsubscribe();
-    this.contractorsSubscription.unsubscribe();
   }
 
   get canView$(): Observable<boolean> {

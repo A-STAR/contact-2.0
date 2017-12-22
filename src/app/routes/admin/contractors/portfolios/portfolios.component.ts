@@ -86,23 +86,16 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     },
     {
       label: this.translateService.instant('portfolios.outsourcing.send.menu.title'),
-      // we check for availability in children menu items
-      enabled: Observable.of(true),
+      enabled: this.canSendOutsource(),
       submenu: [
         {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.outsourcing'),
           action: () => this.onAction('sendOutsource'),
-          enabled: combineLatestAnd([
-            this.canSend$,
-            this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
-          ]),
+          enabled: this.canSendOutsource(),
         }, {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.cession'),
           action: () => this.onAction('sendCession'),
-          enabled: combineLatestAnd([
-            this.canSend$,
-            this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
-          ]),
+          enabled: this.canSendOutsource(),
         }
       ]
     },
@@ -218,6 +211,21 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   get canReturn$(): Observable<boolean> {
     return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_RETURN');
+  }
+
+  get selectedPortfolio$(): Observable<IPortfolio> {
+    return this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio);
+  }
+
+  get selectedContractor$(): Observable<IContractor> {
+    return this.store.select(state => state.contractorsAndPortfolios.selectedContractor);
+  }
+
+  canSendOutsource(): Observable<boolean> {
+    return combineLatestAnd([
+      this.canSend$,
+      this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
+    ]);
   }
 
   canForm(portfolio: IPortfolio): boolean {

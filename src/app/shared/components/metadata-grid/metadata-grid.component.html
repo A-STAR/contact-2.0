@@ -7,7 +7,7 @@
 
 <app-grid2
   *ngIf="initialized"
-  [actions]="actions"
+  [actions]="gridActions$ | async"
   [columns]="columns"
   [columnIds]="columnIds"
   [ngClass]="ngClass"

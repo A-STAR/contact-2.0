@@ -9,9 +9,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import { GridOptions } from 'ag-grid/main';
-import { first } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { filter, first, map } from 'rxjs/operators';
 
-import { IMetadataAction } from '../../../core/metadata/metadata.interface';
+// import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import {
   IAGridAction,
   IAGridColumn,
@@ -21,11 +24,14 @@ import {
 } from '../grid2/grid2.interface';
 
 import { GridService } from '../grid/grid.service';
+import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
+import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
 import { Grid2Component } from '../grid2/grid2.component';
 import { MetadataFilterComponent } from '../metadata-grid/filter/metadata-filter.component';
 
 import { FilterObject } from '../grid2/filter/grid-filter';
+import { ValueBag } from '../../../core/value-bag/value-bag';
 
 @Component({
   selector: 'app-metadata-grid',
@@ -52,20 +58,61 @@ export class MetadataGridComponent<T> implements OnInit {
   @ViewChild(Grid2Component) grid: Grid2Component;
   @ViewChild(MetadataFilterComponent) filter: MetadataFilterComponent;
 
-  private _actions: IMetadataAction[];
   private _columns: IAGridColumn[];
   private _initialized = false;
+
+  private actions$ = new BehaviorSubject<any[]>(null);
+
+  private actionsWithPermissions$ = combineLatest(
+    this.actions$.pipe(filter(Boolean)),
+    this.userConstantsService.bag(),
+    this.userPermissionsService.bag(),
+  )
+  .pipe(
+    map(([ actions, constants, permissions ]) => {
+      // TODO(d.maltsev): remove mock actions
+      const mockActions = [
+        ...actions,
+        {
+          action: 'smsCreate',
+          params: [ 'debtId', 'personId' ],
+          addOptions: [
+            {
+              name: 'personRole',
+              value: [ 1 ],
+            },
+          ]
+        },
+        {
+          action: 'emailCreate',
+          params: [ 'debtId', 'personId' ],
+          addOptions: [
+            {
+              name: 'personRole',
+              value: [ 1 ],
+            },
+          ]
+        },
+      ];
+      const actionPermissions = this.buildPermissions(mockActions, constants, permissions);
+      return mockActions.map(action => ({
+        ...action,
+        enabled: actionPermissions[action.action],
+      }));
+  }));
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
+    private userConstantsService: UserConstantsService,
+    private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
     this.gridService.getMetadata(this.metadataKey, {})
       .pipe(first())
       .subscribe(({ actions, columns }) => {
-        this._actions = actions;
+        this.actions$.next(actions);
         this._columns = [ ...columns ];
         this._initialized = true;
         this.cdRef.markForCheck();
@@ -76,12 +123,12 @@ export class MetadataGridComponent<T> implements OnInit {
     return this.grid && this.grid.selected || [] as any[];
   }
 
-  get gridOptions(): GridOptions {
-    return this.grid && this.grid.gridOptions;
+  get gridActions$(): Observable<any[]> {
+    return this.actionsWithPermissions$;
   }
 
-  get actions(): IMetadataAction[] {
-    return this._actions || [];
+  get gridOptions(): GridOptions {
+    return this.grid && this.grid.gridOptions;
   }
 
   get columns(): IAGridColumn[] {
@@ -130,5 +177,44 @@ export class MetadataGridComponent<T> implements OnInit {
 
   getRequestParams(): IAGridRequestParams {
     return this.grid.getRequestParams();
+  }
+
+  private buildPermissions(actions: any, constants: ValueBag, permissions: ValueBag): any {
+    return {
+      cancelVisit: selection => selection.length && permissions.has('VISIT_CANCEL'),
+      confirmPaymentsOperator: selection => selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
+      confirmPromise: selection => selection.length && permissions.has('PROMISE_CONFIRM'),
+      debtClearResponsible: selection => selection.length && permissions.has('DEBT_RESPONSIBLE_CLEAR'),
+      debtNextCallDate: selection => selection.length && permissions.has('DEBT_NEXT_CALL_DATE_SET'),
+      debtSetResponsible: selection => selection.length && permissions.hasOneOf([
+        'DEBT_RESPONSIBLE_SET',
+        'DEBT_RESPONSIBLE_RESET',
+      ]),
+      deletePromise: selection => selection.length && permissions.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]),
+      deleteSMS: selection => selection.length && permissions.notEmpty('SMS_DELETE_STATUS_LIST'),
+      emailCreate: selection => {
+        const action = actions.find(a => a.action === 'emailCreate');
+        const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
+        return selection.length
+          && constants.has('Email.Use')
+          && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+      },
+      // TODO(d.maltsev, i.kibisov): pass entityTypeId
+      objectAddToGroup: selection => selection.length && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
+      paymentsCancel: selection => selection.length && permissions.has('PAYMENT_CANCEL'),
+      paymentsConfirm: selection => selection.length && permissions.has('PAYMENT_CONFIRM'),
+      prepareVisit: selection => selection.length && permissions.has('VISIT_PREPARE'),
+      rejectPaymentsOperator: selection => selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
+      showContactHistory: selection => selection.length && permissions.has('CONTACT_LOG_VIEW'),
+      smsCreate: selection => {
+        const action = actions.find(a => a.action === 'smsCreate');
+        const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
+        return selection.length
+          && constants.has('SMS.Use')
+          && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+      },
+      // TODO(m.bobryshev): mock
+      visitAdd: selection => selection.length, // && permissions.has('VISIT_ADD'),
+    };
   }
 }

@@ -49,6 +49,14 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     return this.form.dirty && this.form.valid;
   }
 
+  get isValid(): boolean {
+    return this.form.valid;
+  }
+
+  get isDirty(): boolean {
+    return this.form.dirty;
+  }
+
   /**
    * Loop through all but disabled form controls and convert their values to an object
    *
