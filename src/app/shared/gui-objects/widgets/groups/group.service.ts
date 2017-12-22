@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import 'rxjs/add/observable/combineLatest';
 
 import { IAppState } from '../../../../core/state/state.interface';
+import { IEntityTranslation } from 'app/core/entity/translations/entity-translations.interface';
 import { IGroup } from './group.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 
@@ -15,10 +16,13 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { UserConstantsService } from 'app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { EntityTranslationsService } from 'app/core/entity/translations/entity-translations.service';
 
 @Injectable()
 export class GroupService extends AbstractActionService {
   static MESSAGE_GROUP_SAVED = 'MESSAGE_GROUP_SAVED';
+
+  static GROUP_NAME_ID = 396;
 
   private baseUrl = '/groups';
 
@@ -31,6 +35,7 @@ export class GroupService extends AbstractActionService {
     private userDictionariesService: UserDictionariesService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
+    private entityTranslationsService: EntityTranslationsService
   ) {
     super();
   }
@@ -99,5 +104,9 @@ export class GroupService extends AbstractActionService {
   delete(groupId: number): Observable<any> {
     return this.dataService.delete(`${this.baseUrl}/{groupId}`, { groupId })
       .catch(this.notificationsService.deleteError().entity('entities.group.gen.singular').dispatchCallback());
+  }
+
+  readGroupNameTranslations(groupId: number): Observable<IEntityTranslation[]> {
+    return this.entityTranslationsService.readTranslations(groupId, GroupService.GROUP_NAME_ID);
   }
 }
