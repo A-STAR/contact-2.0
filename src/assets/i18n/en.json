@@ -2175,6 +2175,14 @@
       "title": "Clear responsible",
       "message": "Do you really want to clear responsible operators for the selected debts?"
     },
+    "debtStatus": {
+      "dialog": {
+        "title": "Change status for {{ count }} debts",
+        "statusCode": "Select Status",
+        "reasonCode": "Select Reason",
+        "comment": "Commentary"
+      }
+    },
     "visit": {
       "title": "Cancel visits",
       "message": "Do you really want to cancel the marked departures?"
@@ -2455,6 +2463,7 @@
         "debtClearResponsible": "Clear debt responsible",
         "debtNextCallDate": "Set next call date",
         "debtSetResponsible": "Set debt responsible",
+        "debtChangeStatus": "Change debt status",
         "delete": "Удалить",
         "deletePromise": "Delete promises",
         "deleteSMS": "Delete SMS",
