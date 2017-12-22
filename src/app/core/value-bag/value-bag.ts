@@ -9,11 +9,11 @@ export class ValueBag {
     return this.getBooleanValue(name);
   }
 
-  hasOneOf(names: Array<string>): boolean {
+  hasOneOf(names: string[]): boolean {
     return names.reduce((acc, name) => acc || this.getBooleanValue(name), false);
   }
 
-  hasAllOf(names: Array<string>): boolean {
+  hasAllOf(names: string[]): boolean {
     return names.reduce((acc, name) => acc && this.getBooleanValue(name), true);
   }
 
@@ -21,11 +21,11 @@ export class ValueBag {
     return this.getStringValue(name) !== '';
   }
 
-  notEmptyOneOf(names: Array<string>): boolean {
+  notEmptyOneOf(names: string[]): boolean {
     return names.reduce((acc, name) => acc || this.getStringValue(name) !== '', false);
   }
 
-  notEmptyAllOf(names: Array<string>): boolean {
+  notEmptyAllOf(names: string[]): boolean {
     return names.reduce((acc, name) => acc && this.getStringValue(name) !== '', true);
   }
 
@@ -33,16 +33,16 @@ export class ValueBag {
     return this.containsALL(name) || this.stringValueContainsNumber(name, value);
   }
 
-  containsOneOf(name: string, values: Array<number>): boolean {
+  containsOneOf(name: string, values: number[]): boolean {
     return this.containsALL(name) || values.reduce((acc, v) => acc || this.stringValueContainsNumber(name, v), false);
   }
 
-  containsAllOf(name: string, values: Array<number>): boolean {
+  containsAllOf(name: string, values: number[]): boolean {
     return this.containsALL(name) || values.reduce((acc, v) => acc && this.stringValueContainsNumber(name, v), true);
   }
 
   containsCustom(name: string): boolean {
-    return this.stringValueContainsAnyCustomNumber(name);
+    return this.getStringValueAsArray(name).reduce((acc, value) => acc || value > ValueBag.CUSTOM_VALUE_THRESHOLD, false);
   }
 
   containsALL(name: string): boolean {
@@ -57,15 +57,11 @@ export class ValueBag {
     return this.bag[name] && this.bag[name].valueS || '';
   }
 
-  private getStringValueAsArray(name: string): Array<number> {
-    return this.getStringValue(name).split(',').map(Number);
-  }
-
   private stringValueContainsNumber(name: string, value: number): boolean {
     return this.getStringValueAsArray(name).includes(value);
   }
 
-  private stringValueContainsAnyCustomNumber(name: string): boolean {
-    return this.getStringValueAsArray(name).reduce((acc, value) => acc || value > ValueBag.CUSTOM_VALUE_THRESHOLD, false);
+  private getStringValueAsArray(name: string): number[] {
+    return this.getStringValue(name).split(/,\s*/).map(Number);
   }
 }
