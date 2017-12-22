@@ -766,14 +766,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
-  private createMetadataMenuItem(metadataAction: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
-    return {
-      name: this.translate.instant(`default.grid.actions.${metadataAction.action}`),
-      action: () =>  this.action.emit({ metadataAction, params }),
-      disabled: !this.isContextMenuItemEnabled(metadataAction.action),
-    };
-  }
-
   private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
     // TODO(m.bobryshev): remove once the BE returns this action
     // const visitAdd = {
@@ -785,7 +777,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     // const found = this.actions.find(action => action.action === 'visitAdd');
     // this.actions = found ? this.actions : this.actions.concat(visitAdd);
 
-    return this.actions.map(action => this.createMetadataMenuItem(action, params));
+    return this.actions.map(action => ({
+      name: this.translate.instant(`default.grid.actions.${action.action}`),
+      action: () => this.action.emit({ metadataAction: action, params }),
+      disabled: action.enabled
+        ? !action.enabled.call(null, this.selected)
+        : false,
+    }));
   }
 
   private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
@@ -829,50 +827,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         // shortcut: 'Alt+R'
       }
     ];
-  }
-
-  // TODO(d.maltsev): this looks a bit messy.
-  // TODO(d.maltsev): action grid should take care of this!
-  private isContextMenuItemEnabled(action: string): boolean {
-    switch (action) {
-      case 'debtNextCallDate':
-        return this.userPermissionsBag.has('DEBT_NEXT_CALL_DATE_SET') && this.selected.length > 0;
-      case 'visitAdd':
-        return  this.selected.length > 0; // TODO mock (m.bobryshev) this.userPermissionsBag.has('VISIT_ADD') &&
-      case 'deleteSMS':
-        return this.userPermissionsBag.notEmpty('SMS_DELETE_STATUS_LIST') && this.selected.length > 0;
-      case 'debtClearResponsible':
-        return this.userPermissionsBag.has('DEBT_RESPONSIBLE_CLEAR') && this.selected.length > 0;
-      case 'debtSetResponsible':
-        return this.userPermissionsBag.hasOneOf([ 'DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET' ]) && this.selected.length > 0;
-      case 'objectAddToGroup':
-        // TODO(d.maltsev, i.kibisov): pass entityTypeId
-        return this.userPermissionsBag.contains('ADD_TO_GROUP_ENTITY_LIST', 19) && this.selected.length > 0;
-      case 'showContactHistory':
-        return this.userPermissionsBag.has('CONTACT_LOG_VIEW') && this.selected.length > 0;
-      case 'paymentsConfirm':
-        return this.userPermissionsBag.has('PAYMENT_CONFIRM') && this.selected.length > 0;
-      case 'paymentsCancel':
-        return this.userPermissionsBag.has('PAYMENT_CANCEL') && this.selected.length > 0;
-      case 'confirmPromise':
-        return this.userPermissionsBag.has('PROMISE_CONFIRM') && this.selected.length > 0;
-      case 'deletePromise':
-        return this.userPermissionsBag.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]) && this.selected.length > 0;
-      case 'confirmPaymentsOperator':
-      case 'rejectPaymentsOperator':
-        return this.userPermissionsBag.has('PAYMENTS_OPERATOR_CHANGE') && this.selected.length > 0;
-      // TODO(d.maltsev)
-      case 'emailCreate':
-        return true;
-      case 'smsCreate':
-        return true;
-      case 'prepareVisit':
-        return this.userPermissionsBag.has('VISIT_PREPARE') && this.selected.length > 0;
-      case 'cancelVisit':
-        return this.userPermissionsBag.has('VISIT_CANCEL') && this.selected.length > 0;
-      default:
-        return true;
-    }
   }
 
   /**
