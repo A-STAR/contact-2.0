@@ -11,6 +11,7 @@ import { SmsModule } from './sms/sms.module';
     SmsModule,
   ],
   exports: [
+    AttributesModule,
     EmailModule,
     SmsModule,
   ],

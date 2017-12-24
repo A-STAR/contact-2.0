@@ -90,9 +90,8 @@
 
 <app-mass-attr-dictionary
   *ngIf="isDialog('attrDict')"
-  [debtIds]="getSelectionParam(0)"
+  [debts]="getSelectionParam(0)"
   (close)="onCloseDialog()"
-  [dictNameCode]=""
 >
 </app-mass-attr-dictionary>
 

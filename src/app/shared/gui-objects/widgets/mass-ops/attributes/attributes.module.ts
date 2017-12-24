@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '../../../../components/dialog/dialog.module';
-import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
 import { GridModule } from '../../../../components/grid/grid.module';
+
+import { AttributesService } from './attributes.service';
 
 import { DictionaryComponent } from './dictionary/dictionary.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
@@ -17,6 +18,8 @@ import { TimezoneComponent } from './timezone/timezone.component';
     GridModule,
     TranslateModule
   ],
-  declarations: [DictionaryComponent, PortfolioComponent, TimezoneComponent]
+  providers: [AttributesService],
+  declarations: [DictionaryComponent, PortfolioComponent, TimezoneComponent],
+  exports: [DictionaryComponent, PortfolioComponent, TimezoneComponent]
 })
 export class AttributesModule { }

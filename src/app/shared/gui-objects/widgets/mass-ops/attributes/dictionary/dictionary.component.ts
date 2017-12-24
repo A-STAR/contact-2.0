@@ -6,7 +6,6 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild
 } from '@angular/core';
 
 import { DictOperation } from '../attributes.interface';
