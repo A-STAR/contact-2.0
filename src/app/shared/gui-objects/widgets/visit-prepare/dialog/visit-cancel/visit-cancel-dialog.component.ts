@@ -21,7 +21,7 @@ export class VisitCancelDialogComponent {
 
   onConfirm(): void {
     this.visitPrepareService.cancel(this.visits)
-      .subscribe(result => this.onOperationResult(result));
+      .subscribe(result => this.onOperationResult(result), () => this.onCloseDialog());
   }
 
   onOperationResult(result: IOperationResult): void {

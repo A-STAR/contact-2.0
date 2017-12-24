@@ -3,10 +3,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from 'app/core/converter/value-converter.interface';
+import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { IVisit, IVisitOperator } from '../visit-prepare.interface';
 
-import { UserDictionariesService } from 'app/core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { VisitPrepareService } from '../visit-prepare.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';

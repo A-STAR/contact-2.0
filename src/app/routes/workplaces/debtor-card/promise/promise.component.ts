@@ -21,10 +21,7 @@ export class DebtorPromiseComponent {
   }
 
   get promiseId(): number {
-    return this.routeParams.promiseId;
+    return Number(this.route.snapshot.paramMap.get('promiseId'));
   }
 
-  private get routeParams(): any {
-    return (this.route.params as any).value;
-  }
 }
