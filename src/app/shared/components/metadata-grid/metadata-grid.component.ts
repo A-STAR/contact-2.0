@@ -93,6 +93,21 @@ export class MetadataGridComponent<T> implements OnInit {
             },
           ]
         },
+        {
+          action: 'debtChangeAttribute',
+          params: [ 'debtId', 'personId' ],
+          children: [
+            { action: 'changePortfolioAttr', params: ['portfolioId'] },
+            { action: 'changeRegionAttr', params: ['regionCode'] },
+            { action: 'changeDict1Attr', params: ['dict1Code'] },
+            { action: 'changeDict2Attr', params: ['dict2Code'] },
+            { action: 'changeDict3Attr', params: ['dict3Code'] },
+            { action: 'changeDict4Attr', params: ['dict4Code'] },
+            { action: 'changeCreditTypeAttr', params: ['creditTypeCode'] },
+            { action: 'changeBranchAttr', params: ['branchCode'] },
+            { action: 'changeTimezoneAttr', params: ['timeZoneId'] },
+          ]
+        },
       ];
       const actionPermissions = this.buildPermissions(mockActions, constants, permissions);
       return mockActions.map(action => ({
