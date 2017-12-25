@@ -16,6 +16,8 @@ import { AttributesService } from '../attributes.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { isInteger } from '../../../../../../core/utils';
+
 @Component({
   selector: 'app-mass-attr-dictionary',
   templateUrl: './dictionary.component.html',
@@ -24,7 +26,7 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
 })
 export class DictionaryComponent implements OnInit {
 
-  @Input() dictNameCode: number;
+  @Input() dictCode: [number];
   @Input() debts: number[];
   @Output() close = new EventEmitter<void>();
 
@@ -37,6 +39,8 @@ export class DictionaryComponent implements OnInit {
 
   selectedTerm: IUserTerm;
 
+  private dictCodeNumber: number;
+
   constructor(
     private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
@@ -46,16 +50,20 @@ export class DictionaryComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.dictCodeNumber = this.dictCode && this.dictCode[0];
+
     this.gridService.setAllRenderers(this.columns)
       .subscribe(columns => {
         this.columns = [...columns];
       });
 
-    this.userDictionariesService.getDictionary(this.dictNameCode)
-      .subscribe(terms => {
-        this.terms = terms;
-        this.cdRef.markForCheck();
-      });
+    if (isInteger(this.dictCodeNumber)) {
+      this.userDictionariesService.getDictionary(this.dictCodeNumber)
+        .subscribe(terms => {
+          this.terms = terms;
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
   get canSubmit(): boolean {
@@ -68,7 +76,7 @@ export class DictionaryComponent implements OnInit {
 
   submit(): void {
     this.attributesService
-      .change(this.debts, { [DictOperation[this.dictNameCode]]: this.selectedTerm.code })
+      .change(this.debts, { [DictOperation[this.dictCodeNumber]]: this.selectedTerm.code })
       .subscribe(() => this.close.emit());
   }
 

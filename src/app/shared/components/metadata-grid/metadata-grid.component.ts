@@ -100,14 +100,79 @@ export class MetadataGridComponent<T> implements OnInit {
           action: 'debtChangeAttribute',
           params: [ 'debtId', 'personId' ],
           children: [
-            { action: 'changePortfolioAttr', params: ['portfolioId'] },
-            { action: 'changeRegionAttr', params: ['regionCode'] },
-            { action: 'changeDict1Attr', params: ['dict1Code'] },
-            { action: 'changeDict2Attr', params: ['dict2Code'] },
-            { action: 'changeDict3Attr', params: ['dict3Code'] },
-            { action: 'changeDict4Attr', params: ['dict4Code'] },
-            { action: 'changeCreditTypeAttr', params: ['creditTypeCode'] },
-            { action: 'changeBranchAttr', params: ['branchCode'] },
+            {
+              action: 'changePortfolioAttr', params: ['portfolioId']
+            },
+            {
+              action: 'changeRegionAttr',
+              params: ['regionCode'],
+              addOptions: [
+                {
+                  name: 'dictCode',
+                  value: [26]
+                }
+              ]
+            },
+            {
+              action: 'changeDict1Attr',
+              params: ['dict1Code'],
+              addOptions: [
+                {
+                  name: 'dictCode',
+                  value: [34]
+                }
+              ]
+            },
+            {
+              action: 'changeDict2Attr',
+              params: ['dict2Code'],
+              addOptions: [
+                {
+                  name: 'dictCode',
+                  value: [35]
+                }
+              ]
+            },
+            {
+              action: 'changeDict3Attr',
+              params: ['dict3Code'],
+              addOptions: [
+                {
+                  name: 'dictCode',
+                  value: [36]
+                }
+              ]
+            },
+            {
+              action: 'changeDict4Attr',
+              params: ['dict4Code'],
+              addOptions: [
+                {
+                  name: 'dictCode',
+                  value: [37]
+                }
+              ]
+            },
+            {
+              action: 'changeCreditTypeAttr',
+              params: ['creditTypeCode'],
+              addOptions: [
+                {
+                  name: 'dictCode',
+                  value: [3]
+                }
+              ]
+            },
+            {
+              action: 'changeBranchAttr',
+              params: ['branchCode'],
+              addOptions: [
+                {
+                  name: 'dictCode',
+                  value: [6]
+                }
+              ]
+            },
             { action: 'changeTimezoneAttr', params: ['timeZoneId'] },
           ]
         },
