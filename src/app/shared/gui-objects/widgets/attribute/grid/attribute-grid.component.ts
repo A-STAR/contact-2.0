@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
@@ -23,9 +23,11 @@ import { combineLatestAnd } from '../../../../../core/utils/helpers';
 const labelKey = makeKey('widgets.attribute.grid');
 
 @Component({
-  selector: 'app-attribute-grid',
-  templateUrl: './attribute-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  selector: 'app-attribute-grid',
+  styleUrls: [ './attribute-grid.component.scss' ],
+  templateUrl: './attribute-grid.component.html',
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit {
   treeType: number = null;

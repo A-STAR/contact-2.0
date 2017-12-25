@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { first } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
 
-import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IDictionary, DictionariesDialogActionEnum, ITerm } from '../dictionaries.interface';
@@ -54,17 +53,18 @@ export class DictComponent implements OnDestroy, OnInit {
     }
   ];
 
-  columns: IGridColumn[] = [
-    { prop: 'code', minWidth: 50, maxWidth: 70 },
-    { prop: 'name', maxWidth: 300 },
-    { prop: 'parentCode', width: 200 },
-    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE },
-    { prop: 'termTypeCode', dictCode: UserDictionariesService.DICTIONARY_TERM_TYPES },
-  ];
+  columns: IGridColumn[];
 
   hasViewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
 
+  private _columns: IGridColumn[] = [
+    { prop: 'code', minWidth: 50, maxWidth: 70 },
+    { prop: 'name', maxWidth: 300 },
+    { prop: 'parentCode', width: 200, lookupKey: 'dictionaries' },
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE },
+    { prop: 'termTypeCode', dictCode: UserDictionariesService.DICTIONARY_TERM_TYPES },
+  ];
   private viewPermissionSubscription: Subscription;
 
   constructor(
@@ -76,22 +76,20 @@ export class DictComponent implements OnDestroy, OnInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest(
-        this.areDictionariesFetched,
-        this.dictionariesService.state,
-        this.gridService.setDictionaryRenderers(this.columns)
-      )
+
+    this.areDictionariesFetched
       .pipe(first())
-      .subscribe(([_, state, columns]) => {
-        const { dictionaries } = state;
-        const renderers: IRenderer = { parentCode: dictionaries.map(dict => ({ label: dict.name, value: dict.code }))};
-        this.columns = this.gridService.setRenderers(columns, renderers);
+      .switchMap(_ => this.gridService.setAllRenderers(this._columns))
+      .subscribe(columns => {
+        this.columns = [...columns];
         this.cdRef.markForCheck();
       });
 
     this.hasViewPermission$ = this.userPermissionsService.has('DICT_VIEW');
     this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
-      hasViewPermission ? this.dictionariesService.fetchDictionaries() : this.dictionariesService.clearDictionaries()
+      hasViewPermission
+        ? this.dictionariesService.fetchDictionaries()
+        : this.dictionariesService.clearDictionaries()
     );
 
     this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'dictionaries.errors.view');
@@ -115,8 +113,7 @@ export class DictComponent implements OnDestroy, OnInit {
 
   get areDictionariesFetched(): Observable<boolean> {
     return this.dictionariesService.state
-      .map(state => state.dictionaries)
-      .map(dictionaries => !!dictionaries.length)
+      .map(state => !!state.dictionaries.length)
       .filter(Boolean);
   }
 
