@@ -17,7 +17,6 @@ import { IGridColumn } from '../../../../../components/grid/grid.interface';
 import { IUserTerm } from '../../../../../../core/user/dictionaries/user-dictionaries.interface';
 
 import { AttributesService } from '../attributes.service';
-import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
