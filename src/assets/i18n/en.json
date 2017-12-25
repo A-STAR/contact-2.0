@@ -1576,7 +1576,12 @@
         "title": "Launch Parameters"
       },
       "changePortfolioAttr": {
-        "title": "Change portfolio attribute"
+        "title": "Change portfolio attribute",
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "contractor": "Bank"
+        }
       },
       "changeRegionAttr": {
         "title": "Change region attribute"

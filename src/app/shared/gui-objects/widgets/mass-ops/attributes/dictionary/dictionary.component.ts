@@ -8,6 +8,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { first } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -29,7 +30,6 @@ const labelKey = makeKey('widgets.mass');
 @Component({
   selector: 'app-mass-attr-dictionary',
   templateUrl: './dictionary.component.html',
-  styleUrls: ['./dictionary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DictionaryComponent implements OnInit, OnDestroy {
@@ -70,6 +70,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
     this.title = this.actionName ? labelKey(`${this.actionName}.title`) : labelKey(`changeDefaultAttr.title`);
 
     this.gridService.setAllRenderers(this.columns)
+      .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
       });

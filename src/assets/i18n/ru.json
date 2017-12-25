@@ -1576,7 +1576,12 @@
         "title": "Параметры запуска"
       },
       "changePortfolioAttr": {
-        "title": "Изменить атрибут портфеля"
+        "title": "Изменить атрибут портфеля",
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "contractor": "Банк"
+        }
       },
       "changeRegionAttr": {
         "title": "Изменить атрибут региона"
