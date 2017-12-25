@@ -101,12 +101,14 @@ export class MetadataGridComponent<T> implements OnInit {
           params: [ 'debtId', 'personId' ],
           children: [
             {
-              action: 'changePortfolioAttr', 
-              params: ['debtId', 'portfolioId']
+              action: 'changePortfolioAttr',
+              params: ['debtId', 'portfolioId'],
+              refresh: true
             },
             {
               action: 'changeRegionAttr',
               params: ['debtId', 'regionCode'],
+              refresh: true,
               addOptions: [
                 {
                   name: 'dictCode',
@@ -117,6 +119,7 @@ export class MetadataGridComponent<T> implements OnInit {
             {
               action: 'changeDict1Attr',
               params: ['debtId', 'dict1Code'],
+              refresh: true,
               addOptions: [
                 {
                   name: 'dictCode',
@@ -127,6 +130,7 @@ export class MetadataGridComponent<T> implements OnInit {
             {
               action: 'changeDict2Attr',
               params: ['debtId', 'dict2Code'],
+              refresh: true,
               addOptions: [
                 {
                   name: 'dictCode',
@@ -137,6 +141,7 @@ export class MetadataGridComponent<T> implements OnInit {
             {
               action: 'changeDict3Attr',
               params: ['debtId', 'dict3Code'],
+              refresh: true,
               addOptions: [
                 {
                   name: 'dictCode',
@@ -147,6 +152,7 @@ export class MetadataGridComponent<T> implements OnInit {
             {
               action: 'changeDict4Attr',
               params: ['debtId', 'dict4Code'],
+              refresh: true,
               addOptions: [
                 {
                   name: 'dictCode',
@@ -157,6 +163,7 @@ export class MetadataGridComponent<T> implements OnInit {
             {
               action: 'changeCreditTypeAttr',
               params: ['debtId', 'creditTypeCode'],
+              refresh: true,
               addOptions: [
                 {
                   name: 'dictCode',
@@ -167,6 +174,7 @@ export class MetadataGridComponent<T> implements OnInit {
             {
               action: 'changeBranchAttr',
               params: ['debtId', 'branchCode'],
+              refresh: true,
               addOptions: [
                 {
                   name: 'dictCode',

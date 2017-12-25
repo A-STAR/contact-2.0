@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 
 import { DictOperation } from '../attributes.interface';
+import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IGridColumn } from '../../../../../components/grid/grid.interface';
 import { IUserTerm } from '../../../../../../core/user/dictionaries/user-dictionaries.interface';
 
@@ -33,7 +34,7 @@ export class DictionaryComponent implements OnInit {
   @Input() debts: number[];
   @Input() attrIds: number[];
   @Input() actionName: string;
-  @Output() close = new EventEmitter<void>();
+  @Output() close = new EventEmitter<ICloseAction>();
 
   columns: IGridColumn[] = [
     { prop: 'code' },
@@ -92,7 +93,10 @@ export class DictionaryComponent implements OnInit {
   submit(): void {
     this.attributesService
       .change(this.debts, { [DictOperation[this.dictCodeNumber]]: this.selectedTerm.code })
-      .subscribe(() => this.close.emit());
+      .subscribe((res) => {
+        const refresh = res.massInfo && !!res.massInfo.processed;
+        this.close.emit({ refresh });
+      });
   }
 
   private selectTerm(): void {
