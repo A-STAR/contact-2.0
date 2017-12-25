@@ -1574,6 +1574,36 @@
           "templateId": "Template"
         },
         "title": "Launch Parameters"
+      },
+      "changePortfolioAttr": {
+        "title": "Change portfolio attribute"
+      },
+      "changeRegionAttr": {
+        "title": "Change region attribute"
+      },
+      "changeDict1Attr": {
+        "title": "Change dictionary attribute 1"
+      },
+      "changeDict2Attr": {
+        "title": "Change dictionary attribute 2"
+      },
+      "changeDict3Attr": {
+        "title": "Change dictionary attribute 3"
+      },
+      "changeDict4Attr": {
+        "title": "Change dictionary attribute 4"
+      },
+      "changeCreditTypeAttr": {
+        "title": "Change credit product type"
+      },
+      "changeBranchAttr": {
+        "title": "Change branch"
+      },
+      "changeTimezoneAttr": {
+        "title": "Change time zone"
+      },
+      "changeDefaultAttr": {
+        "title": "Change attribute"
       }
     },
     "nextCallDateSet": {

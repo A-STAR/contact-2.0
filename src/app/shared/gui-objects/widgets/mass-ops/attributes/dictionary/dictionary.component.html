@@ -1,11 +1,11 @@
 <app-dialog (close)="cancel()">
   <div dialog-header>
-    <h3>{{ title }}</h3>
+    <h3>{{ title | translate }}</h3>
   </div>
 
   <app-grid
     *ngIf="terms"
-    columnTranslationKey="'terms'"
+    columnTranslationKey="terms"
     selectionType="single"
     [styles]="{height: '200px'}"
     [columns]="columns"
