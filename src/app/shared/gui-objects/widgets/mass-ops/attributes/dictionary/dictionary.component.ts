@@ -36,7 +36,6 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
   @Input() dictCode: [number];
   @Input() debts: number[];
-  @Input() attrIds: number[];
   @Input() actionName: string;
   @Output() close = new EventEmitter<ICloseAction>();
 
@@ -50,7 +49,6 @@ export class DictionaryComponent implements OnInit, OnDestroy {
   title: string;
 
   selectedTerm: IUserTerm;
-  selection: IUserTerm[];
 
   private dictCodeNumber: number;
   private permissionsSub: Subscription;
@@ -89,7 +87,6 @@ export class DictionaryComponent implements OnInit, OnDestroy {
             terms = terms.filter(term => allowedDictCodes.includes(term.code));
           }
           this.terms = terms;
-          this.selectTerm();
           this.cdRef.markForCheck();
         });
     }
@@ -120,16 +117,5 @@ export class DictionaryComponent implements OnInit, OnDestroy {
         const refresh = res.massInfo && !!res.massInfo.processed;
         this.close.emit({ refresh });
       });
-  }
-
-  private selectTerm(): void {
-    const attrId = this.attrIds && this.attrIds.length && this.attrIds[0];
-    if (attrId) {
-      const found = this.terms.find(term => term.code === attrId);
-      this.selection = found ? [found] : [];
-    } else {
-      this.selection = [];
-    }
-    this.selectedTerm = this.selection && this.selection[0];
   }
 }
