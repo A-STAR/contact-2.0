@@ -94,6 +94,7 @@
   || isDialog('changeCreditTypeAttr') || isDialog('changeBranchAttr')"
   [actionName]="dialog"
   [debts]="getSelectionParam(0)"
+  [attrIds]="getSelectionParam(1)"
   [dictCode]="getAddOptions('dictCode')"
   (close)="onCloseDialog()"
 >
