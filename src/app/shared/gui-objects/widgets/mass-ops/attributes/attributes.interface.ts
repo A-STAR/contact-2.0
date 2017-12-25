@@ -21,3 +21,10 @@ export const DictOperation = {
   [UserDictionariesService.DICTIONARY_DEBT_LIST_3]: 'dict3Code',
   [UserDictionariesService.DICTIONARY_DEBT_LIST_4]: 'dict4Code',
 };
+
+export const DictOperationPerms = {
+  [UserDictionariesService.DICTIONARY_DEBT_LIST_1]: 'DEBT_DICT1_EDIT_LIST',
+  [UserDictionariesService.DICTIONARY_DEBT_LIST_2]: 'DEBT_DICT2_EDIT_LIST',
+  [UserDictionariesService.DICTIONARY_DEBT_LIST_3]: 'DEBT_DICT3_EDIT_LIST',
+  [UserDictionariesService.DICTIONARY_DEBT_LIST_4]: 'DEBT_DICT4_EDIT_LIST',
+};

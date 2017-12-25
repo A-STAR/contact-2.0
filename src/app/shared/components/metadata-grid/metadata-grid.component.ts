@@ -286,14 +286,13 @@ export class MetadataGridComponent<T> implements OnInit {
       cancelVisit: selection => selection.length && permissions.has('VISIT_CANCEL'),
       changePortfolioAttr: selection => selection.length && permissions.has('DEBT_PORTFOLIO_EDIT'),
       changeRegionAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
-      // TODO:(i.lobanov) make sure dictN perms are correct
-      changeDict1Attr: selection => selection.length && permissions.containsALL('DEBT_DICT1_EDIT_LIST') &&
+      changeDict1Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT1_EDIT_LIST') &&
         entityPerms[EntityAttributesService.DICT_VALUE_1].isUsed,
-      changeDict2Attr: selection => selection.length && permissions.containsALL('DEBT_DICT2_EDIT_LIST') &&
+      changeDict2Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT2_EDIT_LIST') &&
       entityPerms[EntityAttributesService.DICT_VALUE_2].isUsed,
-      changeDict3Attr: selection => selection.length && permissions.containsALL('DEBT_DICT3_EDIT_LIST') &&
+      changeDict3Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT3_EDIT_LIST') &&
       entityPerms[EntityAttributesService.DICT_VALUE_3].isUsed,
-      changeDict4Attr: selection => selection.length && permissions.containsALL('DEBT_DICT4_EDIT_LIST') &&
+      changeDict4Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT4_EDIT_LIST') &&
       entityPerms[EntityAttributesService.DICT_VALUE_4].isUsed,
       changeCreditTypeAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
       changeBranchAttr: selection => selection.length && permissions.has('DEBT_EDIT'),

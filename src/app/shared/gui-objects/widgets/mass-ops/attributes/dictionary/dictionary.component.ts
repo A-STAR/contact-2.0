@@ -7,6 +7,8 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { DictOperation } from '../attributes.interface';
 import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
@@ -14,10 +16,13 @@ import { IGridColumn } from '../../../../../components/grid/grid.interface';
 import { IUserTerm } from '../../../../../../core/user/dictionaries/user-dictionaries.interface';
 
 import { AttributesService } from '../attributes.service';
+import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
 import { GridService } from '../../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
 import { isInteger, makeKey } from '../../../../../../core/utils';
+import { ValueBag } from '../../../../../../core/value-bag/value-bag';
 
 const labelKey = makeKey('widgets.mass');
 
@@ -49,10 +54,12 @@ export class DictionaryComponent implements OnInit {
   selection: IUserTerm[];
 
   private dictCodeNumber: number;
+  private permissionsSub: Subscription;
 
   constructor(
     private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
+    private userPermissionsService: UserPermissionsService,
     private gridService: GridService,
     private userDictionariesService: UserDictionariesService,
   ) { }
@@ -69,8 +76,18 @@ export class DictionaryComponent implements OnInit {
       });
 
     if (isInteger(this.dictCodeNumber)) {
-      this.userDictionariesService.getDictionary(this.dictCodeNumber)
-        .subscribe(terms => {
+      Observable.zip(
+        this.userDictionariesService.getDictionary(this.dictCodeNumber),
+        this.attributesService.isDictCodeOperation(this.dictCodeNumber) ? this.userPermissionsService.bag() : Observable.of(null)
+      )
+        .subscribe(([terms, valueBag]) => {
+          if (valueBag && !valueBag.containsALL(this.attributesService.getDictCodePermName(this.dictCodeNumber))) {
+            const allowedDictCodes = (valueBag as ValueBag).getStringValueAsArray(
+              this.attributesService.getDictCodePermName(this.dictCodeNumber)
+            );
+            // filter out terms with allowed dict codes
+            terms = terms.filter(term => allowedDictCodes.includes(term.code));
+          }
           this.terms = terms;
           this.selectTerm();
           this.cdRef.markForCheck();
