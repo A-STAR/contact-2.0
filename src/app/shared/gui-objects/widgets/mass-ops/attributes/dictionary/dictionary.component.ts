@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -26,14 +27,13 @@ import { ValueBag } from '../../../../../../core/value-bag/value-bag';
 
 const labelKey = makeKey('widgets.mass');
 
-
 @Component({
   selector: 'app-mass-attr-dictionary',
   templateUrl: './dictionary.component.html',
   styleUrls: ['./dictionary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DictionaryComponent implements OnInit {
+export class DictionaryComponent implements OnInit, OnDestroy {
 
   @Input() dictCode: [number];
   @Input() debts: number[];
@@ -76,7 +76,7 @@ export class DictionaryComponent implements OnInit {
       });
 
     if (isInteger(this.dictCodeNumber)) {
-      Observable.zip(
+      this.permissionsSub = Observable.zip(
         this.userDictionariesService.getDictionary(this.dictCodeNumber),
         this.attributesService.isDictCodeOperation(this.dictCodeNumber) ? this.userPermissionsService.bag() : Observable.of(null)
       )
@@ -92,6 +92,12 @@ export class DictionaryComponent implements OnInit {
           this.selectTerm();
           this.cdRef.markForCheck();
         });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.permissionsSub) {
+      this.permissionsSub.unsubscribe();
     }
   }
 
