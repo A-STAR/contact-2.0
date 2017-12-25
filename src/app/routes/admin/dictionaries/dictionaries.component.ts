@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 
+import { makeKey } from '../../../core/utils';
+
+const label = makeKey('dictionaries.tabs');
+
 @Component({
   selector: 'app-dictionaries',
   templateUrl: './dictionaries.component.html',
@@ -7,4 +11,13 @@ import { Component } from '@angular/core';
 })
 export class DictionariesComponent {
   static COMPONENT_NAME = 'DictionariesComponent';
+
+  tabs = [
+    { title: label('dictionaries'), isInitialised: true },
+    { title: label('attributes'), isInitialised: false },
+  ];
+
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
+  }
 }

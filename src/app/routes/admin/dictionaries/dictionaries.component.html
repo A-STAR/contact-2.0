@@ -1,10 +1,13 @@
-<app-tabstrip [disableScrollbar]="true" [inverse]="true">
-  <app-tab [title]="'dictionaries.tabs.dictionaries'" [closable]="false">
+<app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+
+  <app-tabview-tab [title]="tabs[0].title">
     <app-dict></app-dict>
     <app-hdivider></app-hdivider>
     <app-terms></app-terms>
-  </app-tab>
-  <app-tab [title]="'dictionaries.tabs.attributes'" [closable]="false">
-    <app-attribute-grid></app-attribute-grid>
-  </app-tab>
-</app-tabstrip>
+  </app-tabview-tab>
+
+  <app-tabview-tab [title]="tabs[1].title">
+    <app-attribute-grid *ngIf="tabs[1].isInitialised"></app-attribute-grid>
+  </app-tabview-tab>
+
+</app-tabview>
