@@ -5,7 +5,7 @@ export type ILookupKey =
   'languages' |
   'portfolios' |
   'roles' |
-  'timezone' |
+  'timeZone' |
   'users';
 
 export interface ILookupBase {
@@ -62,6 +62,6 @@ export interface ILookupState {
   portfolios: ILookupSlice<ILookupPortfolio>;
   roles: ILookupSlice<ILookupRole>;
   // note, that this key is in singular form, because route is GET lookup/timeZone
-  timezone: ILookupSlice<ILookupTimeZone>;
+  timeZone: ILookupSlice<ILookupTimeZone>;
   users: ILookupSlice<ILookupUser>;
 }

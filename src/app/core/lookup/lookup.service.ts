@@ -79,7 +79,7 @@ export class LookupService {
   }
   // note, that this key is in singular form, because route is GET lookup/timeZone
   get timezone(): Observable<Array<ILookupTimeZone>> {
-    return this.getSlice('timezone');
+    return this.getSlice('timeZone');
   }
 
   get users(): Observable<Array<ILookupUser>> {
@@ -117,7 +117,7 @@ export class LookupService {
   }
   // note, that this key is in singular form, because route is GET lookup/timeZone
   get timeZoneOptions(): Observable<Array<IOption>> {
-    return this.getSlice('timezone')
+    return this.getSlice('timeZone')
       .map(timezone => this.valueConverterService.valuesToOptions(timezone))
       .distinctUntilChanged();
   }

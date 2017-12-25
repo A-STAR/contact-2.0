@@ -10,7 +10,7 @@ export const defaultState: ILookupState = {
   languages: null,
   portfolios: null,
   roles: null,
-  timezone: null,
+  timeZone: null,
   users: null,
 };
 
