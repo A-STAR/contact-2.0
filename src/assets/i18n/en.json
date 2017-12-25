@@ -1605,7 +1605,12 @@
         "title": "Change branch"
       },
       "changeTimezoneAttr": {
-        "title": "Change time zone"
+        "title": "Change time zone",
+        "grid": {
+          "code": "Code",
+          "name": "Name",
+          "utcOffset": "UTC Offset"
+        }
       },
       "changeDefaultAttr": {
         "title": "Change attribute"

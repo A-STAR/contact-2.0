@@ -1605,7 +1605,12 @@
         "title": "Изменить филиал"
       },
       "changeTimezoneAttr": {
-        "title": "Изменить часовой пояс"
+        "title": "Изменить часовой пояс",
+        "grid": {
+          "code": "Код",
+          "name": "Название",
+          "utcOffset": "Смещение"
+        }
       },
       "changeDefaultAttr": {
         "title": "Изменить атрибут"

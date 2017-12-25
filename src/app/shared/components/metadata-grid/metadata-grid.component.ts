@@ -182,7 +182,7 @@ export class MetadataGridComponent<T> implements OnInit {
                 }
               ]
             },
-            { action: 'changeTimezoneAttr', params: ['timeZoneId'] },
+            { action: 'changeTimezoneAttr', params: ['debtId'] },
           ]
         },
       ];

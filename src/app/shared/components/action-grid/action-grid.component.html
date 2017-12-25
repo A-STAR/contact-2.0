@@ -107,6 +107,12 @@
 >
 </app-mass-attr-portfolio>
 
+<app-mass-attr-timezone
+  *ngIf="isDialog('changeTimezoneAttr')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-mass-attr-timezone>
+
 <app-mass-email
   *ngIf="isDialog('emailCreate')"
   [debtIds]="getSelectionParam(0)"
