@@ -90,6 +90,12 @@ export const flatten = <T extends { children?: T[] }>(items: T[], key: keyof T =
   ], []);
 };
 
+export const isInteger = Number.isInteger || function (value: any): boolean {
+  return typeof value === 'number'
+    && Number.isFinite(value)
+    && !(value % 1);
+};
+
 export const invert = (a: boolean) => !a;
 
 export const isEmpty = (array: any[]): boolean => !array || array.length === 0;
@@ -125,3 +131,4 @@ export const range = (min: number, max: number): number[] => Array(max - min + 1
 export const isRoute = (route: ActivatedRoute, segment: string): boolean => {
   return route.snapshot.url.join('/').indexOf(segment) !== -1;
 };
+
