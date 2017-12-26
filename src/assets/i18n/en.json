@@ -301,6 +301,9 @@
       }
     },
     "contactRegistration": {
+      "contact": {
+        "title": "Change Contact Person"
+      },
       "dialogs": {
         "contactType": {
           "title": "Log Contact",
@@ -1575,6 +1578,46 @@
           "templateId": "Template"
         },
         "title": "Launch Parameters"
+      },
+      "changePortfolioAttr": {
+        "title": "Change portfolio attribute",
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "contractor": "Bank"
+        }
+      },
+      "changeRegionAttr": {
+        "title": "Change region attribute"
+      },
+      "changeDict1Attr": {
+        "title": "Change dictionary attribute 1"
+      },
+      "changeDict2Attr": {
+        "title": "Change dictionary attribute 2"
+      },
+      "changeDict3Attr": {
+        "title": "Change dictionary attribute 3"
+      },
+      "changeDict4Attr": {
+        "title": "Change dictionary attribute 4"
+      },
+      "changeCreditTypeAttr": {
+        "title": "Change credit product type"
+      },
+      "changeBranchAttr": {
+        "title": "Change branch"
+      },
+      "changeTimezoneAttr": {
+        "title": "Change time zone",
+        "grid": {
+          "code": "Code",
+          "name": "Name",
+          "utcOffset": "UTC Offset"
+        }
+      },
+      "changeDefaultAttr": {
+        "title": "Change attribute"
       }
     },
     "nextCallDateSet": {
@@ -2483,7 +2526,16 @@
         "smsCreate": "Mass SMS",
         "statusChange": "Change status",
         "visitAdd": "Make necessary",
-        "openUserById": "Open debtor card"
+        "openUserById": "Open debtor card",
+        "changePortfolioAttr": "Portfolio",
+        "changeRegionAttr": "Region",
+        "changeDict1Attr": "Dictionary Attribute 1",
+        "changeDict2Attr": "Dictionary Attribute 2",
+        "changeDict3Attr": "Dictionary Attribute 3",
+        "changeDict4Attr": "Dictionary Attribute 4",
+        "changeCreditTypeAttr": "Credit Product Type",
+        "changeBranchAttr": "Branch",
+        "changeTimezoneAttr": "Time zone"
       }
     },
     "filter": {

@@ -135,20 +135,6 @@ export class LookupService {
       .distinctUntilChanged();
   }
 
-  /**
-   * @deprecated
-   * Please use this.lookupAsOptions(lookupKey);
-   */
-  get portfolioOptions(): Observable<Array<IOption>> {
-    return this.getSlice('portfolios')
-      .map(portfolios => this.valueConverterService.valuesToOptions(portfolios))
-      .distinctUntilChanged();
-  }
-
-  /**
-   * @deprecated
-   * Please use this.lookupAsOptions(lookupKey);
-   */
   get roleOptions(): Observable<Array<IOption>> {
     return this.getSlice('roles')
       .map(roles => this.valueConverterService.valuesToOptions(roles))
