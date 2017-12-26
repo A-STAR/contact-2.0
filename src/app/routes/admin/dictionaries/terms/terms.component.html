@@ -1,22 +1,24 @@
 <app-term-edit
   *ngIf="isReadyForCreating | async"
+  [disableParentSelection]="disableParentSelection | async"
   [languages]="languages | async"
   [mode]="'create'"
   [terms]="dropdownTerms | async"
   [title]="'terms.create.title'"
-  (submit)="onCreateEntity($event)"
-  (cancel)="cancelAction()">
+  (submit)="onCreate($event)"
+  (cancel)="onCancel()">
 </app-term-edit>
 
 <app-term-edit
   *ngIf="isReadyForEditing | async"
+  [disableParentSelection]="disableParentSelection | async"
   [editedEntity]="selectedEntity | async"
   [languages]="languages | async"
   [mode]="'update'"
   [terms]="dropdownTerms | async"
   [title]="'terms.edit.title'"
-  (submit)="onUpdateEntity($event)"
-  (cancel)="cancelAction()">
+  (submit)="onUpdate($event)"
+  (cancel)="onCancel()">
 </app-term-edit>
 
 <app-dialog-action
@@ -26,8 +28,8 @@
   [actionTranslationKey]="'terms.remove.confirmMessage'"
   [messageParams]="selectedEntity | async"
   [titleTranslationKey]="'terms.remove.title'"
-  (action)="onRemoveSubmit()"
-  (cancel)="cancelAction()">
+  (action)="onRemove()"
+  (cancel)="onCancel()">
 </app-dialog-action>
 
 <app-toolbar-2

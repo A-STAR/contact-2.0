@@ -623,10 +623,10 @@
   },
   "dictionaries": {
     "access_denied": "Нет доступа к списку словарей. Обратитесь к администратору.",
-    "TITLE": "Словари",
     "edit": {
       "title": "Словарь: {{ code }}",
       "code": "Код словаря",
+      "language": "Язык",
       "name": "Название словаря",
       "type": "Тип словаря",
       "parent": "Родительский словарь",
@@ -675,7 +675,8 @@
     "edit": {
       "title": "Словарный термин: {{ code }}",
       "code": "Код термина",
-      "text": "Текст термина",
+      "language": "Язык",
+      "text": "Значение термина",
       "type": "Тип термина",
       "parent": "Термин родительского словаря",
       "closed": "Термин не используется",
@@ -2138,6 +2139,9 @@
     "contacts": {
       "gen": { "singular": "контактного лица", "plural": "котнактных лиц" }
     },
+    "documents": {
+      "gen": { "singular": "вложение", "plural": "вложений" }
+    },
     "identityDocs": {
       "gen": { "singular": "удостоверения личности", "plural": "списка удостоверений личности" }
     },
@@ -2292,7 +2296,7 @@
       "login.invalidCredentials": "Неверный логин или пароль",
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
       "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
-      "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
+      "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один заполненный атрибут",
       "promiseAmountMustBeGreaterThenPercentsDebtAmount": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
       "objectNotFound": "Объект не найден",
       "other.unknownError": "Произошла неизвестная ошибка",
@@ -2301,7 +2305,7 @@
       "organizationUserAlreadyExists": "Запрошенная к созданию по ID пользователя организация уже существует",
       "organizationUserLinkNotFound": "Не найдена организация, запрошенная по ID пользователя",
       "organizationUserLinksExistForOrganization": "Невозможно удалить организацию, на которую есть ссылки из таблицы organization_user_links",
-      "parentUnderChildAttempt": "В структуре предприятия обнаружены циклические связи родитель-подчиненные",
+      "parentUnderChildAttempt": "В структуре данных обнаружены циклические зависимости между родительским и дочерними элементами",
       "passwordDoesntMatchComplexity": "Пароль должен содержать минимум одну цифру, одну заглавную и одну строчную букву.",
       "passwordLengthMustBeGreaterThen": "Длина пароля должна быть не меньше {{ $1 }} символов",
       "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",
