@@ -69,7 +69,8 @@ export class ActionGridComponent<T> extends DialogFunctions {
       'changeDict3Attr',
       'changeDict4Attr',
       'changeCreditTypeAttr',
-      'changeBranchAttr'].includes(this.dialog);
+      'changeBranchAttr'
+    ].includes(this.dialog);
   }
 
   getAddOptions(name: string): (number|string)[] {
