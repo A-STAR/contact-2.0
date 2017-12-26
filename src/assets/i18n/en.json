@@ -1968,6 +1968,12 @@
       "dialog": {
         "title": "Visit prepare"
       }
+    },
+    "currencyRates": {
+      "grid": {
+        "fromDateTime": "Date",
+        "rate": "Rate"
+      }
     }
   },
   "entities": {
@@ -2139,6 +2145,9 @@
     },
     "visit": {
       "gen": { "singular": "visit", "plural": "visits" }
+    },
+    "currencyRates": {
+      "gen": { "singular": "rate", "plural": "rates" }
     }
   },
   "massOperations": {

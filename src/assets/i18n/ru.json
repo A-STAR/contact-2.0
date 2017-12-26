@@ -1968,6 +1968,12 @@
       "dialog": {
         "title": "Подготовка выезда"
       }
+    },
+    "currencyRates": {
+      "grid": {
+        "fromDateTime": "Дата",
+        "rate": "Курс"
+      }
     }
   },
   "entities": {
@@ -2139,6 +2145,9 @@
     },
     "visit": {
       "gen": { "singular": "выезда", "plural": "выездов" }
+    },
+    "currencyRates": {
+      "gen": { "singular": "курса", "plural": "курсов" }
     }
   },
   "massOperations": {
