@@ -17,8 +17,7 @@ import {
   ILookupRole,
   ILookupUser,
   ILookupKey,
-  LookupStatusEnum,
-  ILookupTimeZone
+  LookupStatusEnum
 } from './lookup.interface';
 import { IOption } from '../converter/value-converter.interface';
 
