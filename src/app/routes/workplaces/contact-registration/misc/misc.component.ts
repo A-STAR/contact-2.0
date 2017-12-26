@@ -131,7 +131,7 @@ export class MiscComponent implements OnInit, OnDestroy {
     const { guid } = this.contactRegistrationService;
     const data = {
       ...this.form.serializedUpdates,
-      autoCommentId: this.autoCommentId[0].value,
+      ...(this.autoCommentId && this.autoCommentId[0] ? { autoCommentId: this.autoCommentId[0].value } : {}),
     };
     this.miscService.create(this.debtId, guid, data)
       .subscribe(() => {

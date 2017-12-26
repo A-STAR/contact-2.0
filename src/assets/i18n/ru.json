@@ -301,6 +301,9 @@
       }
     },
     "contactRegistration": {
+      "contact": {
+        "title": "Изменение контактного лица"
+      },
       "dialogs": {
         "contactType": {
           "title": "Регистрация контакта",
