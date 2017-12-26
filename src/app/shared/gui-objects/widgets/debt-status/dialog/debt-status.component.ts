@@ -168,7 +168,7 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
    * Checks whether all required controls have any value.
    * This is for special case when control can be disabled but still must be checked for the required value
    */
-  private isRequiredValuesFilled(): boolean {
+  private hasRequiredValues(): boolean {
     return this.form.getFlatControls()
       .filter(control => control.required)
       .every(c => !!this.form.serializedValue[c.controlName]);
