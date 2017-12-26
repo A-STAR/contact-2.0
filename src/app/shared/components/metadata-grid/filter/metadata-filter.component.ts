@@ -106,7 +106,7 @@ export class MetadataFilterComponent implements OnInit {
 
   private getOperatorForControl(controlName: string): FilterOperatorType {
     const control = this.filterControls.find(c => c.controlName === controlName);
-    return control.operator || '==';
+    return (control && control.operator) || '==';
   }
 
   private transformFilterValue(key: string, value: any): any {
