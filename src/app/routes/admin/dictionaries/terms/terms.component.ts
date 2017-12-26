@@ -30,7 +30,7 @@ export class TermsComponent implements OnInit, OnDestroy {
       action: () => this.dictionariesService.setDialogAddTermAction(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('DICT_TERM_ADD'),
-        this.dictionariesService.isSelectedDictionaryExist
+        this.dictionariesService.hasSelectedDictionary
       ])
     },
     {
@@ -52,7 +52,7 @@ export class TermsComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.dictionariesService.fetchTerms(),
-      enabled: this.dictionariesService.isSelectedDictionaryExist
+      enabled: this.dictionariesService.hasSelectedDictionary
     }
   ];
 
@@ -64,15 +64,11 @@ export class TermsComponent implements OnInit, OnDestroy {
     { prop: 'isClosed', renderer: 'checkboxRenderer' },
   ];
 
-  rows = [];
-
   action: DictionariesDialogActionEnum = null;
-
-  masterEntity: IDictionary;
-
-  hasViewPermission$: Observable<boolean>;
-
   emptyMessage$: Observable<string>;
+  hasViewPermission$: Observable<boolean>;
+  masterEntity: IDictionary;
+  rows = [];
 
   private dictionariesServiceSubscription: Subscription;
   private viewPermissionsSubscription: Subscription;
@@ -92,21 +88,23 @@ export class TermsComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe();
 
-    this.dictionariesServiceSubscription = this.dictionariesService.state.subscribe(state => {
-      this.action = state.dialogAction;
-      this.rows = state.terms;
-      this.masterEntity = state.selectedDictionary;
-    });
+    this.dictionariesServiceSubscription = this.dictionariesService.state
+      .subscribe(state => {
+        this.action = state.dialogAction;
+        this.rows = state.terms;
+        this.masterEntity = state.selectedDictionary;
+      });
 
     this.hasViewPermission$ = this.userPermissionsService.has('DICT_TERM_VIEW');
 
-    this.viewPermissionsSubscription = this.hasViewPermission$.subscribe(hasViewPermission => {
-      if (!hasViewPermission) {
-        this.dictionariesService.clearTerms();
-      } else {
-        this.dictionariesService.fetchTerms();
-      }
-    });
+    this.viewPermissionsSubscription = this.hasViewPermission$
+      .subscribe(hasViewPermission => {
+        if (!hasViewPermission) {
+          this.dictionariesService.clearTerms();
+        } else {
+          this.dictionariesService.fetchTerms();
+        }
+      });
 
     this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'terms.errors.view');
   }
@@ -114,6 +112,11 @@ export class TermsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.dictionariesServiceSubscription.unsubscribe();
     this.viewPermissionsSubscription.unsubscribe();
+  }
+
+  get disableParentSelection(): Observable<boolean> {
+    return this.dictionariesService.selectedDictionary
+      .map(dict => !dict.parentCode);
   }
 
   get selectedEntity(): Observable<ITerm> {
@@ -172,11 +175,11 @@ export class TermsComponent implements OnInit, OnDestroy {
     return this.languages.map(languages => !!languages);
   }
 
-  onRemoveSubmit(): void {
+  onRemove(): void {
     this.dictionariesService.deleteTerm();
   }
 
-  cancelAction(): void {
+  onCancel(): void {
     this.dictionariesService.setTermDialogAction(null);
   }
 
@@ -191,7 +194,7 @@ export class TermsComponent implements OnInit, OnDestroy {
       });
   }
 
-  onUpdateEntity(data: ITerm): void {
+  onUpdate(data: ITerm): void {
     const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
 
     const deletedTranslations = nameTranslations
@@ -212,7 +215,7 @@ export class TermsComponent implements OnInit, OnDestroy {
     this.dictionariesService.updateTerm(data, deletedTranslations, updatedTranslations);
   }
 
-  onCreateEntity(data: ITerm): void {
+  onCreate(data: ITerm): void {
     this.dictionariesService.createTerm(data);
   }
 

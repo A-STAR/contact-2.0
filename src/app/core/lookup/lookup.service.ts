@@ -38,13 +38,13 @@ export class LookupService {
     this.state$.subscribe(state => this._state = state);
   }
 
-  lookup<T>(entity: ILookupKey): Observable<Array<T>> {
-    return this.getSlice(entity);
+  lookup<T>(key: ILookupKey): Observable<Array<T>> {
+    return this.getSlice<T>(key);
   }
 
-  lookupAsOptions(entity: ILookupKey): Observable<Array<IOption>> {
-    const result = this.getSlice(entity);
-    switch (entity) {
+  lookupAsOptions(key: ILookupKey): Observable<Array<IOption>> {
+    const result = this.getSlice(key);
+    switch (key) {
       case 'currencies':
         return result.map(currencies => currencies.map(toOption('id', 'code')));
       case 'dictionaries':
@@ -57,42 +57,78 @@ export class LookupService {
     }
   }
 
+  /**
+   * @deprecated
+   * Please use this.lookup<T>(lookupKey);
+   */
   get contractors(): Observable<Array<ILookupContractor>> {
     return this.getSlice('contractors');
   }
 
+  /**
+   * @deprecated
+   * Please use this.lookup<T>(lookupKey);
+   */
   get currencies(): Observable<Array<ILookupCurrency>> {
     return this.getSlice('currencies');
   }
 
+  /**
+   * @deprecated
+   * Please use this.lookup<T>(lookupKey);
+   */
   get languages(): Observable<Array<ILookupLanguage>> {
     return this.getSlice('languages');
   }
 
+  /**
+   * @deprecated
+   * Please use this.lookup<T>(lookupKey);
+   */
   get portfolios(): Observable<Array<ILookupPortfolio>> {
     return this.getSlice('portfolios');
   }
 
+  /**
+   * @deprecated
+   * Please use this.lookup<T>(lookupKey);
+   */
   get roles(): Observable<Array<ILookupRole>> {
     return this.getSlice('roles');
   }
 
+  /**
+   * @deprecated
+   * Please use this.lookup<T>(lookupKey);
+   */
   get users(): Observable<Array<ILookupUser>> {
     return this.getSlice('users');
   }
 
+  /**
+   * @deprecated
+   * Please use this.lookupAsOptions(lookupKey);
+   */
   get contractorOptions(): Observable<Array<IOption>> {
     return this.getSlice('contractors')
       .map(contractors => this.valueConverterService.valuesToOptions(contractors))
       .distinctUntilChanged();
   }
 
+  /**
+   * @deprecated
+   * Please use this.lookupAsOptions(lookupKey);
+   */
   get currencyOptions(): Observable<Array<IOption>> {
     return this.getSlice('currencies')
       .map(currencies => currencies.map(currency => ({ label: currency.code, value: currency.id })))
       .distinctUntilChanged();
   }
 
+  /**
+   * @deprecated
+   * Please use this.lookupAsOptions(lookupKey);
+   */
   get languageOptions(): Observable<Array<IOption>> {
     return this.getSlice('languages')
       .map(languages => this.valueConverterService.valuesToOptions(languages))
@@ -105,6 +141,10 @@ export class LookupService {
       .distinctUntilChanged();
   }
 
+  /**
+   * @deprecated
+   * Please use this.lookupAsOptions(lookupKey);
+   */
   get userOptions(): Observable<Array<IOption>> {
     return this.getSlice('users')
       .map(users =>
@@ -121,7 +161,7 @@ export class LookupService {
     this.store.dispatch(action);
   }
 
-  private getSlice(key: ILookupKey): Observable<Array<any>> {
+  private getSlice<T>(key: ILookupKey): Observable<Array<T|any>> {
     const status = this._state[key] && this._state[key].status;
     if (status !== LookupStatusEnum.PENDING && status !== LookupStatusEnum.LOADED) {
       this.refresh(key);
