@@ -96,7 +96,8 @@
         "REPORTS": "Reports",
         "ARBITRARY_REPORTS": "Ad-hoc Reports",
         "HELP": "Help",
-        "INCOMING_CALL": "Incoming Call"
+        "INCOMING_CALL": "Incoming Call",
+        "CURRENCY_RATE_EDIT": "Currency Rate"
       }
     },
     "messages": {
@@ -1971,6 +1972,10 @@
     },
     "currencyRates": {
       "grid": {
+        "fromDateTime": "Date",
+        "rate": "Rate"
+      },
+      "card": {
         "fromDateTime": "Date",
         "rate": "Rate"
       }

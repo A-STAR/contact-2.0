@@ -53,8 +53,8 @@ export class CurrencyRateCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const action = this.currencyId
-      ? this.currencyRatesService.update(this.currencyId, this.currencyRateId, this.form.serializedUpdates)
+    const action = this.currencyRateId
+      ? this.currencyRatesService.update(this.currencyId, this.form.serializedUpdates)
       : this.currencyRatesService.create(this.currencyId, this.form.serializedUpdates);
 
     action.subscribe(() => {
@@ -70,10 +70,10 @@ export class CurrencyRateCardComponent implements OnInit {
   private initControls(canEdit: boolean): Array<IDynamicFormItem> {
     return [
       {
-        label: label('fromDateTime'), controlName: 'fromDateTime', type: 'datepicker',
+        label: label('fromDateTime'), controlName: 'fromDateTime', type: 'datepicker', displayTime: true,
         required: true, disabled: !canEdit || !!this.currencyRateId
       },
-      { label: label('rate'), controlName: 'rate', type: 'text', disabled: !canEdit },
+      { label: label('rate'), controlName: 'rate', type: 'number', disabled: !canEdit },
     ];
   }
 }

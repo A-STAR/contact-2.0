@@ -54,12 +54,12 @@ export class CurrencyRatesService extends AbstractActionService {
   }
 
   create(currencyId: number, currencyRate: ICurrencyRate): Observable<ICurrencyRate> {
-    return this.dataService.create(`${this.baseUrl}/{currencyRateId}`, { currencyId }, currencyRate)
+    return this.dataService.update(this.baseUrl, { currencyId }, currencyRate)
       .catch(this.notificationsService.createError().entity('entities.currencyRates.gen.singular').dispatchCallback());
   }
 
-  update(currencyId: number, currencyRateId: number, currencyRate: ICurrencyRate): Observable<any> {
-    return this.dataService.update(`${this.baseUrl}/{currencyRateId}`, { currencyId, currencyRateId }, currencyRate)
+  update(currencyId: number, currencyRate: ICurrencyRate): Observable<any> {
+    return this.dataService.update(this.baseUrl, { currencyId }, currencyRate)
       .catch(this.notificationsService.updateError().entity('entities.currencyRates.gen.singular').dispatchCallback());
   }
 }

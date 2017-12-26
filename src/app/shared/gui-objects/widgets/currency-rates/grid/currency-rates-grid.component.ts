@@ -54,6 +54,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   private _currencyRates: Array<ICurrencyRate> = [];
 
   private viewPermissionSubscription: Subscription;
+  private currencyRateSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -80,10 +81,18 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
           this.notificationsService.error('errors.default.read.403').entity('entities.currencyRates.gen.plural').dispatch();
         }
       });
+
+    this.currencyRateSubscription = this.currencyRatesService
+      .getAction(CurrencyRatesService.MESSAGE_CURRENCY_RATE_SAVED)
+      .subscribe(() => {
+        this.fetch();
+        this.selectedCurrencyRate$.next(this.selectedCurrencyRate);
+      });
   }
 
   ngOnDestroy(): void {
     this.viewPermissionSubscription.unsubscribe();
+    this.currencyRateSubscription.unsubscribe();
   }
 
   get currencyRates(): Array<ICurrencyRate> {
@@ -105,11 +114,11 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   }
 
   onEdit(currencyRate: ICurrencyRate): void {
-    this.router.navigate([ `${this.router.url}/rates/${currencyRate.id}` ]);
+    this.router.navigate([ `${this.router.url}/${this.currencyId}/rates/${currencyRate.id}` ]);
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/rates/create` ]);
+    this.router.navigate([ `${this.router.url}/${this.currencyId}/rates/create` ]);
   }
 
   private fetch(): void {

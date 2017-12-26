@@ -26,6 +26,7 @@ export class LayoutComponent {
     ContractorEditComponent: 'CONTRACTOR',
     ContractorManagersComponent: 'CONTRACTOR_MANAGERS',
     ContractorManagerEditComponent: 'CONTRACTOR_MANAGER',
+    CurrencyRateEditComponent: 'CURRENCY_RATE_EDIT',
     DashboardComponent: 'HOME',
     DataUploadComponent: 'DATA_UPLOAD',
     DebtorComponent: 'DEBTOR_CARD',

@@ -96,7 +96,8 @@
         "REPORTS": "Отчеты",
         "ARBITRARY_REPORTS": "Произвольные отчеты",
         "HELP": "Помощь",
-        "INCOMING_CALL": "Входящий звонок"
+        "INCOMING_CALL": "Входящий звонок",
+        "CURRENCY_RATE_EDIT": "Валютный Курс"
       }
     },
     "messages": {
@@ -1971,6 +1972,10 @@
     },
     "currencyRates": {
       "grid": {
+        "fromDateTime": "Дата",
+        "rate": "Курс"
+      },
+      "card": {
         "fromDateTime": "Дата",
         "rate": "Курс"
       }
