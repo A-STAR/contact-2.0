@@ -73,31 +73,7 @@ export class MetadataGridComponent<T> implements OnInit {
   )
   .pipe(
     map(([ actions, constants, permissions, entityPermissions ]) => {
-      // TODO(d.maltsev): remove mock actions
-      const mockActions = [
-        ...actions,
-        {
-          action: 'smsCreate',
-          params: [ 'debtId', 'personId' ],
-          addOptions: [
-            {
-              name: 'personRole',
-              value: [ 1 ],
-            },
-          ]
-        },
-        {
-          action: 'emailCreate',
-          params: [ 'debtId', 'personId' ],
-          addOptions: [
-            {
-              name: 'personRole',
-              value: [ 1 ],
-            },
-          ]
-        }
-      ];
-      return this.addPermissions(mockActions, constants, permissions, entityPermissions);
+      return this.addPermissions(actions, constants, permissions, entityPermissions);
   }));
 
   constructor(
