@@ -39,7 +39,7 @@ export class LookupService {
     this.state$.subscribe(state => this._state = state);
   }
 
-  lookup(entity: ILookupKey): Observable<Array<any>> {
+  lookup<T>(entity: ILookupKey): Observable<Array<T>> {
     return this.getSlice(entity);
   }
 
@@ -77,10 +77,6 @@ export class LookupService {
   get roles(): Observable<Array<ILookupRole>> {
     return this.getSlice('roles');
   }
-  // note, that this key is in singular form, because route is GET lookup/timeZone
-  get timezone(): Observable<Array<ILookupTimeZone>> {
-    return this.getSlice('timeZone');
-  }
 
   get users(): Observable<Array<ILookupUser>> {
     return this.getSlice('users');
@@ -104,21 +100,9 @@ export class LookupService {
       .distinctUntilChanged();
   }
 
-  get portfolioOptions(): Observable<Array<IOption>> {
-    return this.getSlice('portfolios')
-      .map(portfolios => this.valueConverterService.valuesToOptions(portfolios))
-      .distinctUntilChanged();
-  }
-
   get roleOptions(): Observable<Array<IOption>> {
     return this.getSlice('roles')
       .map(roles => this.valueConverterService.valuesToOptions(roles))
-      .distinctUntilChanged();
-  }
-  // note, that this key is in singular form, because route is GET lookup/timeZone
-  get timeZoneOptions(): Observable<Array<IOption>> {
-    return this.getSlice('timeZone')
-      .map(timezone => this.valueConverterService.valuesToOptions(timezone))
       .distinctUntilChanged();
   }
 

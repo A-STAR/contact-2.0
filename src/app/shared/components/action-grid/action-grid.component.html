@@ -89,9 +89,7 @@
 ></app-payment-operator-reject-dialog>
 
 <app-mass-attr-dictionary
-  *ngIf="isDialog('changeRegionAttr')
-  || isDialog('changeDict1Attr') || isDialog('changeDict2Attr') || isDialog('changeDict3Attr') || isDialog('changeDict4Attr')
-  || isDialog('changeCreditTypeAttr') || isDialog('changeBranchAttr')"
+  *ngIf="isAttrChangeDictionaryDlg()"
   [actionName]="dialog"
   [debts]="getSelectionParam(0)"
   [dictCode]="getAddOptions('dictCode')"

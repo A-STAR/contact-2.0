@@ -43,11 +43,11 @@ export class AttributesService {
   }
 
   getPortfolios(): Observable<ILookupPortfolio[]> {
-    return this.lookupService.portfolios;
+    return this.lookupService.lookup<ILookupPortfolio>('portfolios');
   }
 
   getTimezones(): Observable<ILookupTimeZone[]> {
-    return this.lookupService.timezone;
+    return this.lookupService.lookup<ILookupTimeZone>('timeZone');
   }
 
   isDictCodeOperation(dictCode: number): boolean {
