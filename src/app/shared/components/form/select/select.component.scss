@@ -91,6 +91,15 @@
   cursor: not-allowed;
 }
 
+.ui-select-multiple[disabled] .app-select-match-item {
+  * {
+    cursor: pointer;
+  }
+  &.selected, &.selected * {
+    background-color: #99e5a9;
+  }
+}
+
 .ui-select-multiple .ui-select-choices {
   margin-top: 1px;
 }

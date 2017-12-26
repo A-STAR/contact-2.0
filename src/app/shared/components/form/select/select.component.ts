@@ -214,7 +214,8 @@ export class SelectComponent implements ControlValueAccessor {
     return this.closableSelectedItem
       && !!this._active.length
       && option
-      && option.canRemove !== false;
+      && option.canRemove !== false
+      && !this._disabled;
   }
 
   actionClick(action: ISelectionAction, $event: Event): void {
