@@ -28,6 +28,7 @@ import { isEmpty, addLabelForEntity } from '../../../../../core/utils';
 })
 export class ContactSelectGridComponent implements OnInit {
   @Input() debtId: number;
+  @Input() excludeCurrentPersonId: boolean;
   @Input() personId: number;
 
   @ViewChild(Grid2Component) grid: Grid2Component;
@@ -78,7 +79,9 @@ export class ContactSelectGridComponent implements OnInit {
       .pipe(
         filter(Boolean),
         first(),
-        mergeMap(guid => this.contactSelectService.fetchAll(guid, this.debtId, this.personId))
+        mergeMap(guid => {
+          return this.contactSelectService.fetchAll(guid, this.debtId, this.excludeCurrentPersonId ? this.personId : null);
+        }),
       )
       .subscribe(contacts => {
         this.rows = contacts;

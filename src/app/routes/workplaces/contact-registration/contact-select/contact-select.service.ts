@@ -19,8 +19,9 @@ export class ContactSelectService {
 
   fetchAll(guid: string, debtId: number, excludePersonId: number): Observable<any[]> {
     const url = '/regContact/debts/{debtId}/contactPersons';
+    const params = excludePersonId ? { excludePersonId } : {};
     return this.dataService
-      .readAll(url, { guid, debtId }, { params: { excludePersonId } })
+      .readAll(url, { guid, debtId }, { params })
       .catch(this.notificationsService.fetchError().entity('entities.persons.gen.plural').dispatchCallback());
   }
 

@@ -301,6 +301,9 @@
       }
     },
     "contactRegistration": {
+      "contact": {
+        "title": "Change Contact Person"
+      },
       "dialogs": {
         "contactType": {
           "title": "Log Contact",
