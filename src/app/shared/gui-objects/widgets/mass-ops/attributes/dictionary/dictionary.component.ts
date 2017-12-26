@@ -22,7 +22,7 @@ import { GridService } from '../../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
 
-import { isInteger, makeKey } from '../../../../../../core/utils';
+import { makeKey } from '../../../../../../core/utils';
 import { ValueBag } from '../../../../../../core/value-bag/value-bag';
 
 const labelKey = makeKey('widgets.mass');
@@ -73,7 +73,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
         this.columns = [...columns];
       });
 
-    if (isInteger(this.dictCodeNumber)) {
+    if (Number.isInteger(this.dictCodeNumber)) {
       this.permissionsSub = Observable.zip(
         this.userDictionariesService.getDictionary(this.dictCodeNumber),
         this.attributesService.isDictCodeOperation(this.dictCodeNumber) ? this.userPermissionsService.bag() : Observable.of(null)
@@ -83,7 +83,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
             const allowedDictCodes = (valueBag as ValueBag).getStringValueAsArray(
               this.attributesService.getDictCodePermName(this.dictCodeNumber)
             );
-            // filter out terms with allowed dict codes
+            // filter terms with allowed dict codes
             terms = terms.filter(term => allowedDictCodes.includes(term.code));
           }
           this.terms = terms;
