@@ -88,6 +88,28 @@
   (close)="onCloseAction($event)"
 ></app-payment-operator-reject-dialog>
 
+<app-mass-attr-dictionary
+  *ngIf="isAttrChangeDictionaryDlg()"
+  [actionName]="dialog"
+  [debts]="getSelectionParam(0)"
+  [dictCode]="getAddOptions('dictCode')"
+  (close)="onCloseAction($event)"
+>
+</app-mass-attr-dictionary>
+
+<app-mass-attr-portfolio
+  *ngIf="isDialog('changePortfolioAttr')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+>
+</app-mass-attr-portfolio>
+
+<app-mass-attr-timezone
+  *ngIf="isDialog('changeTimezoneAttr')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-mass-attr-timezone>
+
 <app-mass-email
   *ngIf="isDialog('emailCreate')"
   [debtIds]="getSelectionParam(0)"
@@ -103,6 +125,7 @@
   [personRoles]="getAddOptions('personRole')"
   (close)="onCloseDialog()"
 ></app-mass-sms>
+
 <app-visit-prepare-dialog
   *ngIf="isDialog('prepareVisit')"
   [visits]="getSelectionParam(0)"

@@ -3,8 +3,9 @@
   <!-- Select from persons linked to debt -->
   <app-tabview-tab [title]="'modules.contactRegistration.contactGrid.tabs.selectFromDebt.title'" [closable]="false">
     <app-contact-registration-contact-select-grid
-      [personId]="personId"
       [debtId]="debtId"
+      [excludeCurrentPersonId]="excludeCurrentPersonId"
+      [personId]="personId"
     ></app-contact-registration-contact-select-grid>
   </app-tabview-tab>
 

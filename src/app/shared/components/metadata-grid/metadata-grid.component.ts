@@ -22,7 +22,9 @@ import {
   IAGridSelected,
   IAGridSortModel,
 } from '../grid2/grid2.interface';
+import { IEntityAttributes } from '../../../core/entity/attributes/entity-attributes.interface';
 
+import { EntityAttributesService } from '../../../core/entity/attributes/entity-attributes.service';
 import { GridService } from '../grid/grid.service';
 import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
@@ -67,42 +69,16 @@ export class MetadataGridComponent<T> implements OnInit {
     this.actions$.pipe(filter(Boolean)),
     this.userConstantsService.bag(),
     this.userPermissionsService.bag(),
+    this.entityAttributesService.getDictValueAttributes()
   )
   .pipe(
-    map(([ actions, constants, permissions ]) => {
-      // TODO(d.maltsev): remove mock actions
-      const mockActions = [
-        ...actions,
-        {
-          action: 'smsCreate',
-          params: [ 'debtId', 'personId' ],
-          addOptions: [
-            {
-              name: 'personRole',
-              value: [ 1 ],
-            },
-          ]
-        },
-        {
-          action: 'emailCreate',
-          params: [ 'debtId', 'personId' ],
-          addOptions: [
-            {
-              name: 'personRole',
-              value: [ 1 ],
-            },
-          ]
-        },
-      ];
-      const actionPermissions = this.buildPermissions(mockActions, constants, permissions);
-      return mockActions.map(action => ({
-        ...action,
-        enabled: actionPermissions[action.action],
-      }));
+    map(([ actions, constants, permissions, entityPermissions ]) => {
+      return this.addPermissions(actions, constants, permissions, entityPermissions);
   }));
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private entityAttributesService: EntityAttributesService,
     private gridService: GridService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -179,9 +155,35 @@ export class MetadataGridComponent<T> implements OnInit {
     return this.grid.getRequestParams();
   }
 
-  private buildPermissions(actions: any, constants: ValueBag, permissions: ValueBag): any {
+  private addPermissions(mockActions: any[], constants: ValueBag, permissions: ValueBag, entityPerms: IEntityAttributes): any[] {
+    const actionPermissions = this.buildPermissions(mockActions, constants, permissions, entityPerms);
+    return this.attachPermissions(mockActions, actionPermissions);
+  }
+
+  private attachPermissions(mockActions: any[], actionPermissions: any): any[] {
+    return mockActions.map(action => ({
+      ...action,
+      enabled: actionPermissions[action.action],
+      children: action.children ? this.attachPermissions(action.children, actionPermissions) : undefined
+    }));
+  }
+
+  private buildPermissions(actions: any, constants: ValueBag, permissions: ValueBag, entityPerms: IEntityAttributes): any {
     return {
       cancelVisit: selection => selection.length && permissions.has('VISIT_CANCEL'),
+      changePortfolioAttr: selection => selection.length && permissions.has('DEBT_PORTFOLIO_EDIT'),
+      changeRegionAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
+      changeDict1Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT1_EDIT_LIST') &&
+        entityPerms[EntityAttributesService.DICT_VALUE_1].isUsed,
+      changeDict2Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT2_EDIT_LIST') &&
+      entityPerms[EntityAttributesService.DICT_VALUE_2].isUsed,
+      changeDict3Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT3_EDIT_LIST') &&
+      entityPerms[EntityAttributesService.DICT_VALUE_3].isUsed,
+      changeDict4Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT4_EDIT_LIST') &&
+      entityPerms[EntityAttributesService.DICT_VALUE_4].isUsed,
+      changeCreditTypeAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
+      changeBranchAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
+      changeTimezoneAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
       confirmPaymentsOperator: selection => selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
       confirmPromise: selection => selection.length && permissions.has('PROMISE_CONFIRM'),
       debtClearResponsible: selection => selection.length && permissions.has('DEBT_RESPONSIBLE_CLEAR'),
