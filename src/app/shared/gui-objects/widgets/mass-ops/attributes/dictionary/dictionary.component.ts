@@ -63,7 +63,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.dictCodeNumber = this.dictCode && this.dictCode[0];
+    this.dictCodeNumber = this.dictCode && this.dictCode.length && Number(this.dictCode[0]);
 
     this.title = this.actionName ? labelKey(`${this.actionName}.title`) : labelKey(`changeDefaultAttr.title`);
 
