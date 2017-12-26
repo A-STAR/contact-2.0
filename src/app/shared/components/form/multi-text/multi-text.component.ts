@@ -23,6 +23,9 @@ export class MultiTextComponent implements ControlValueAccessor, OnInit {
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
+  @Input()
+  controlDisabled = false;
+
   @Input('options')
   set options(options: IMultiTextOption[]) {
     this._options = options;
