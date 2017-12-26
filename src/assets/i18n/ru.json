@@ -301,6 +301,9 @@
       }
     },
     "contactRegistration": {
+      "contact": {
+        "title": "Изменение контактного лица"
+      },
       "dialogs": {
         "contactType": {
           "title": "Регистрация контакта",
@@ -1574,6 +1577,46 @@
           "templateId": "Сценарий"
         },
         "title": "Параметры запуска"
+      },
+      "changePortfolioAttr": {
+        "title": "Изменить атрибут портфеля",
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "contractor": "Банк"
+        }
+      },
+      "changeRegionAttr": {
+        "title": "Изменить атрибут региона"
+      },
+      "changeDict1Attr": {
+        "title": "Изменить словарный атрибут 1"
+      },
+      "changeDict2Attr": {
+        "title": "Изменить словарный атрибут 2"
+      },
+      "changeDict3Attr": {
+        "title": "Изменить словарный атрибут 3"
+      },
+      "changeDict4Attr": {
+        "title": "Изменить словарный атрибут 4"
+      },
+      "changeCreditTypeAttr": {
+        "title": "Изменить тип кредитного продукта"
+      },
+      "changeBranchAttr": {
+        "title": "Изменить филиал"
+      },
+      "changeTimezoneAttr": {
+        "title": "Изменить часовой пояс",
+        "grid": {
+          "code": "Код",
+          "name": "Название",
+          "utcOffset": "Смещение"
+        }
+      },
+      "changeDefaultAttr": {
+        "title": "Изменить атрибут"
       }
     },
     "nextCallDateSet": {
@@ -2479,7 +2522,16 @@
         "smsCreate": "Массовое формирование SMS",
         "statusChange": "Изменить статус",
         "visitAdd": "Отметить необходимость",
-        "openUserById": "Открыть карточку должника"
+        "openUserById": "Открыть карточку должника",
+        "changePortfolioAttr": "Портфель",
+        "changeRegionAttr": "Регион",
+        "changeDict1Attr": "Словарный атрибут 1",
+        "changeDict2Attr": "Словарный атрибут 2",
+        "changeDict3Attr": "Словарный атрибут 3",
+        "changeDict4Attr": "Словарный атрибут 4",
+        "changeCreditTypeAttr": "Тип кредитного продукта",
+        "changeBranchAttr": "Филиал",
+        "changeTimezoneAttr": "Часовой пояс"
       }
     },
     "filter": {

@@ -125,3 +125,4 @@ export const range = (min: number, max: number): number[] => Array(max - min + 1
 export const isRoute = (route: ActivatedRoute, segment: string): boolean => {
   return route.snapshot.url.join('/').indexOf(segment) !== -1;
 };
+
