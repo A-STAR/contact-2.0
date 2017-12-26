@@ -620,10 +620,10 @@
   },
   "dictionaries": {
     "access_denied": "You have no access to the dictionaries. Please contact the administrator.",
-    "TITLE": "Dictionaries",
     "edit": {
       "title": "Dictionary: {{ code }}",
       "code": "Code",
+      "language": "Language",
       "name": "Name",
       "type": "Type",
       "parent": "Parent dictionary",
@@ -672,7 +672,8 @@
     "edit": {
       "title": "Term: {{ code }}",
       "code": "Term code",
-      "text": "Term text",
+      "language": "Language",
+      "text": "Term value",
       "type": "Term type",
       "parent": "Parent dictionary term",
       "closed": "Unused term",
@@ -931,7 +932,7 @@
     "documentsTab": {
       "title": "Documents",
       "errors": {
-        "download": "Could not download document"
+        "download": "Could not download the document"
       }
     },
     "employmentRecordTab": {
@@ -2095,6 +2096,9 @@
     "contacts": {
       "gen": { "singular": "contact", "plural": "contacts" }
     },
+    "documents": {
+      "gen": { "singular": "attachment", "plural": "attachments" }
+    },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity documents" }
     },
@@ -2249,7 +2253,7 @@
       "login.invalidCredentials": "Invalid login or password",
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
       "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
-      "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
+      "modelMustNotBeEmpty": "The data model requires to pass at least one non-empty attribute",
       "promiseAmountMustBeGreaterThenPercentsDebtAmount": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
       "objectNotFound": "Объект не найден",
       "other.unknownError": "Произошла неизвестная ошибка",
@@ -2258,7 +2262,7 @@
       "organizationUserAlreadyExists": "Запрошенная к созданию по ID пользователя организация уже существует",
       "organizationUserLinkNotFound": "Не найдена организация, запрошенная по ID пользователя",
       "organizationUserLinksExistForOrganization": "Невозможно удалить организацию, на которую есть ссылки из таблицы organization_user_links",
-      "parentUnderChildAttempt": "В структуре предприятия обнаружены циклические связи родитель-подчиненные",
+      "parentUnderChildAttempt": "The data structure is invalid since it contains cyclic relationships",
       "passwordDoesntMatchComplexity": "Пароль должен содержать минимум одну цифру, одну заглавную и одну строчную букву.",
       "passwordLengthMustBeGreaterThen": "Длина пароля должна быть не меньше {{ $1 }} символов",
       "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",

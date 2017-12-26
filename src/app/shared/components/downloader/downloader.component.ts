@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input, Renderer2 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { empty } from 'rxjs/observable/empty';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-downloader',
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DownloaderComponent {
   @Input() entityTranslationKey: string;
@@ -33,7 +33,7 @@ export class DownloaderComponent {
       })
       .catch(error => {
         this.notificationsService.error('errors.default.download').entity(this.entityTranslationKey).response(error).dispatch();
-        return Observable.empty();
+        return empty();
       })
       .subscribe();
   }

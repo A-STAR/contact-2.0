@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/empty';
+import { empty } from 'rxjs/observable/empty';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { DictionariesDialogActionEnum, IDictionary, ITerm } from './dictionaries.interface';
@@ -29,7 +29,7 @@ export class DictionariesEffects {
             dictionaries
           }
         }))
-        .catch(this.notificationsService.error('errors.default.read').entity('entities.dictionaries.gen.plural').callback());
+        .catch(this.notificationsService.fetchError().entity('entities.dictionaries.gen.plural').callback());
     });
 
   @Effect()
@@ -51,14 +51,8 @@ export class DictionariesEffects {
           {
             type: DictionariesService.DICTIONARIES_FETCH
           },
-          {
-            type: DictionariesService.DICTIONARY_DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          },
         ])
-        .catch(this.notificationsService.error('errors.default.create').entity('entities.dictionaries.gen.singular').callback());
+        .catch(this.notificationsService.createError().entity('entities.dictionaries.gen.singular').callback());
     });
 
   @Effect()
@@ -74,15 +68,9 @@ export class DictionariesEffects {
           {
             type: DictionariesService.DICTIONARIES_FETCH
           },
-          {
-            type: DictionariesService.DICTIONARY_DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          },
           this.userDictionariesService.createRefreshAction(code)
         ])
-        .catch(this.notificationsService.error('errors.default.update').entity('entities.dictionaries.gen.singular').callback());
+        .catch(this.notificationsService.updateError().entity('entities.dictionaries.gen.singular').callback());
     });
 
   @Effect()
@@ -97,15 +85,9 @@ export class DictionariesEffects {
           {
             type: DictionariesService.DICTIONARIES_FETCH
           },
-          {
-            type: DictionariesService.DICTIONARY_DIALOG_ACTION,
-            payload: {
-              dialogAction: null
-            }
-          },
           this.userDictionariesService.createRefreshAction(code)
         ])
-        .catch(this.notificationsService.error('errors.default.delete').entity('entities.dictionaries.gen.singular').callback());
+        .catch(this.notificationsService.deleteError().entity('entities.dictionaries.gen.singular').callback());
     });
 
   @Effect()
@@ -121,20 +103,6 @@ export class DictionariesEffects {
           payload: action.payload.dictionary
         }
       ])
-    );
-
-  @Effect()
-  onDictionaryDialogAction$ = this.actions
-    .ofType(DictionariesService.DICTIONARY_DIALOG_ACTION)
-    .switchMap((action: UnsafeAction) => {
-        return [DictionariesDialogActionEnum.DICTIONARY_ADD, DictionariesDialogActionEnum.DICTIONARY_EDIT]
-          .includes(action.payload.dialogAction)
-          ? [{ type: DictionariesService.TERM_TYPES_FETCH }]
-              .concat(action.payload.dialogAction === DictionariesDialogActionEnum.DICTIONARY_EDIT
-                        ? [{ type: DictionariesService.TRANSLATIONS_FETCH }]
-                        : [])
-          : [{ type: DictionariesService.DICTIONARY_TRANSLATIONS_CLEAR }];
-      }
     );
 
   @Effect()
@@ -154,12 +122,11 @@ export class DictionariesEffects {
   fetchTermTypes$ = this.actions
     .ofType(DictionariesService.TERM_TYPES_FETCH)
     .switchMap(data => {
-      // NOTE: this is hardcoded, otherwise we would need to get this number from user-dictionaries.service
-      // TODO(a.tymchuk): see if there is a way to make it comme il faut
-      return this.readTerms(5)
+      // NOTE: this is hardcoded to always remain the same
+      return this.readTerms(UserDictionariesService.DICTIONARY_TERM_TYPES)
         .map((terms: any) => {
           return {
-            type: DictionariesService.TERMS_TYPES_FETCH_SUCCESS,
+            type: DictionariesService.TERM_TYPES_FETCH_SUCCESS,
             payload: terms
           };
         });
@@ -211,14 +178,14 @@ export class DictionariesEffects {
       const [_, store]: [UnsafeAction, IAppState] = data;
       return store.dictionaries.selectedDictionary
         ? this.readTerms(store.dictionaries.selectedDictionary.code)
-          .map((terms: any) => {
-            return {
-              type: DictionariesService.TERMS_FETCH_SUCCESS,
-              payload: terms
-            };
-          })
-          .catch(this.notificationsService.error('errors.default.read').entity('entities.terms.gen.plural').callback())
-        : Observable.empty();
+            .map((terms: any) => {
+              return {
+                type: DictionariesService.TERMS_FETCH_SUCCESS,
+                payload: terms
+              };
+            })
+            .catch(this.notificationsService.fetchError().entity('entities.terms.gen.plural').callback())
+        : empty();
     });
 
   @Effect()
@@ -237,13 +204,13 @@ export class DictionariesEffects {
       const [_, store]: [UnsafeAction, IAppState] = data;
       const code = store.dictionaries.selectedDictionary.parentCode || store.dictionaries.selectedDictionary.code;
       return this.readTerms(code as number)
-            .map((terms: any) => {
-              return {
-                type: DictionariesService.TERMS_PARENT_FETCH_SUCCESS,
-                payload: terms
-              };
-            })
-            .catch(this.notificationsService.error('errors.default.read').entity('entities.terms.gen.plural').callback());
+        .map((terms: any) => {
+          return {
+            type: DictionariesService.TERMS_PARENT_FETCH_SUCCESS,
+            payload: terms
+          };
+        })
+        .catch(this.notificationsService.fetchError().entity('entities.terms.gen.plural').callback());
     });
 
   @Effect()
@@ -266,7 +233,7 @@ export class DictionariesEffects {
           },
           this.userDictionariesService.createRefreshAction(code)
         ])
-        .catch(this.notificationsService.error('errors.default.create').entity('entities.terms.gen.singular').callback());
+        .catch(this.notificationsService.createError().entity('entities.terms.gen.singular').callback());
     });
 
   @Effect()
@@ -291,7 +258,7 @@ export class DictionariesEffects {
           },
           this.userDictionariesService.createRefreshAction(code)
         ])
-        .catch(this.notificationsService.error('errors.default.update').entity('entities.terms.gen.singular').callback());
+        .catch(this.notificationsService.updateError().entity('entities.terms.gen.singular').callback());
     });
 
   @Effect()
@@ -314,7 +281,7 @@ export class DictionariesEffects {
           },
           this.userDictionariesService.createRefreshAction(code)
         ])
-        .catch(this.notificationsService.error('errors.default.delete').entity('entities.terms.gen.singular').callback());
+        .catch(this.notificationsService.deleteError().entity('entities.terms.gen.singular').callback());
       });
 
   constructor(
