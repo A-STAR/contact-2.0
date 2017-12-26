@@ -38,7 +38,7 @@ export class LookupService {
     this.state$.subscribe(state => this._state = state);
   }
 
-  lookup(entity: ILookupKey): Observable<Array<any>> {
+  lookup<T>(entity: ILookupKey): Observable<Array<T>> {
     return this.getSlice(entity);
   }
 
@@ -96,12 +96,6 @@ export class LookupService {
   get languageOptions(): Observable<Array<IOption>> {
     return this.getSlice('languages')
       .map(languages => this.valueConverterService.valuesToOptions(languages))
-      .distinctUntilChanged();
-  }
-
-  get portfolioOptions(): Observable<Array<IOption>> {
-    return this.getSlice('portfolios')
-      .map(portfolios => this.valueConverterService.valuesToOptions(portfolios))
       .distinctUntilChanged();
   }
 
