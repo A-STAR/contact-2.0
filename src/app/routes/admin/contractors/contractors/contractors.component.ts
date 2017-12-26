@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IAppState } from 'app/core/state/state.interface';
+import { IAppState } from '../../../../core/state/state.interface';
 import { IContractor, IActionType } from '../contractors-and-portfolios.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';

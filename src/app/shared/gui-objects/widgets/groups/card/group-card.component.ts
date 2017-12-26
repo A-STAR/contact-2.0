@@ -1,12 +1,13 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { IGroup } from '../group.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IEntityTranslation } from '../../../../../core/entity/translations/entity-translations.interface';
+import { IGroup } from '../group.interface';
+import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
-import { ILookupLanguage } from 'app/core/lookup/lookup.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GroupService } from '../group.service';
@@ -15,7 +16,6 @@ import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
-import { IEntityTranslation } from 'app/core/entity/translations/entity-translations.interface';
 
 const label = makeKey('widgets.groups.card');
 
@@ -43,14 +43,14 @@ export class GroupCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const group$ = this.groupId ? this.groupService.fetch(this.groupId) : Observable.of(this.getFormData());
+    const group$ = this.groupId ? this.groupService.fetch(this.groupId) : of(this.getFormData());
     combineLatest(
       group$.flatMap(group => this.groupId ? this.groupService.canEdit$(group as IGroup) : this.groupService.canAdd$),
       this.groupService.canConditionEdit$,
       group$,
       this.groupService.groupEntityTypeOptions$,
-      this.groupId ? this.lookupService.languages : Observable.of(null),
-      this.groupId ? this.groupService.readGroupNameTranslations(this.groupId) : Observable.of(null)
+      this.groupId ? this.lookupService.languages : of(null),
+      this.groupId ? this.groupService.readGroupNameTranslations(this.groupId) : of(null)
     )
     .pipe(first())
     .subscribe(([ canEdit, canConditionEdit, group, respTypeOpts, languages, translations ]) => {

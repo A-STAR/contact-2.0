@@ -38,6 +38,7 @@
 </app-toolbar-2>
 
 <app-grid
+  *ngIf="columns"
   selectionType="single"
   [allowDblClick]="canEdit | async"
   [columns]="columns"

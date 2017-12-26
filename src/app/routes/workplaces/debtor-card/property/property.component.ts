@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
-import { INode } from '../../../../shared/gui-objects/container/container.interface';
-
-import { PropertyCardComponent } from '../../../../shared/gui-objects/widgets/property/card/property-card.component';
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 
 @Component({
   selector: 'app-debtor-property',
@@ -11,9 +11,16 @@ import { PropertyCardComponent } from '../../../../shared/gui-objects/widgets/pr
 export class DebtorPropertyComponent {
   static COMPONENT_NAME = 'DebtorPropertyComponent';
 
-  get node(): INode {
-    return {
-      component: PropertyCardComponent
-    };
+  constructor(
+    private debtorCardService: DebtorCardService,
+    private route: ActivatedRoute,
+  ) {}
+
+  get personId$(): Observable<number> {
+    return this.debtorCardService.personId$;
+  }
+
+  get propertyId(): number {
+    return Number(this.route.snapshot.paramMap.get('propertyId'));
   }
 }
