@@ -115,7 +115,7 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
    * even if required control is disabled
    */
   get canSubmit(): boolean {
-    return this.form && this.isRequiredValuesFilled();
+    return this.form && this.hasRequiredValues();
   }
 
   submit(): void {
