@@ -55,6 +55,10 @@ export const routes: Route[] = [
             loadChildren: './utilities/campaigns/campaigns.module#CampaignsModule',
           },
           {
+            path: 'currencies',
+            loadChildren: './utilities/currencies/currencies.module#CurrenciesModule',
+          },
+          {
             path: 'groups',
             loadChildren: './utilities/groups/groups.module#GroupsModule',
           },

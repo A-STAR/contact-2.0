@@ -40,6 +40,8 @@
         "USER_EDIT": "Карточка пользователя",
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
+        "CURRENCIES": "Список валют",
+        "CURRENCY_EDIT": "Валюта",
         "DICTIONARIES": "Справочники",
         "ATTRIBUTE_VERSION": "Версии атрибута",
         "PORTFOLIOS_CONTRACTORS": "Клиенты и портфели",
@@ -961,6 +963,13 @@
       "remove": {
         "title": "Удалить группу",
         "confirmMessage": "Вы действительно хотите удалить выбранную группу?"
+      }
+    },
+    "currenciesTab": {
+      "title": "Курсы валют",
+      "remove": {
+        "title": "Удалить валюту",
+        "confirmMessage": "Вы действительно хотите удалить выбранную валюту?"
       }
     }
   },
@@ -2015,6 +2024,22 @@
         "title": "Подготовка выезда"
       }
     },
+    "currencies": {
+      "grid": {
+        "id": "ИД",
+        "code": "Код",
+        "name": "Название",
+        "shortName": "Краткое наименование",
+        "isMain": "Основная валюта"
+      },
+      "card":  {
+        "id": "ИД",
+        "code": "Код",
+        "name": "Название",
+        "shortName": "Краткое наименование",
+        "isMain": "Основная валюта"
+      }
+    },
     "currencyRates": {
       "grid": {
         "fromDateTime": "Дата",
@@ -2198,6 +2223,9 @@
     },
     "visit": {
       "gen": { "singular": "выезда", "plural": "выездов" }
+    },
+    "currencies":{
+      "gen": { "singular": "валюты", "plural": "списка валют" }
     },
     "currencyRates": {
       "gen": { "singular": "курса", "plural": "курсов" }
