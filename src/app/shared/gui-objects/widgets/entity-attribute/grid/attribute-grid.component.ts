@@ -8,7 +8,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first, flatMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
@@ -24,13 +25,12 @@ import { ValueConverterService } from '../../../../../core/converter/value-conve
 
 import { GridTreeWrapperComponent } from '../../../../../shared/components/gridtree-wrapper/gridtree-wrapper.component';
 
-import { DialogFunctions } from '../../../../../core/dialog';
-
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
-
+import { DialogFunctions } from '../../../../../core/dialog';
 import { makeKey } from '../../../../../core/utils';
+import { of } from 'rxjs/observable/of';
 
-const labelKey = makeKey('widgets.attribute.grid');
+const label = makeKey('widgets.attribute.grid');
 
 @Component({
   selector: 'app-entity-attribute-grid',
@@ -43,34 +43,32 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   @Input() entityTypeId$: Observable<number>;
   @Input() entityId$: Observable<number>;
 
-  private _entityTypeId: number;
-  private _entityId: number;
   private entitySubscription: Subscription;
 
   private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
     {
-      label: labelKey('code'),
+      label: label('code'),
       prop: 'code',
     },
     {
-      label: labelKey('name'),
+      label: label('name'),
       prop: 'name'
     },
     {
-      label: labelKey('value'),
+      label: label('value'),
       valueGetter: (_, data) => this.valueConverterService.deserialize(data).value,
     },
     {
-      label: labelKey('userFullName'),
+      label: label('userFullName'),
       prop: 'userFullName',
     },
     {
-      label: labelKey('changeDateTime'),
+      label: label('changeDateTime'),
       prop: 'changeDateTime',
       valueFormatter: value => this.valueConverterService.ISOToLocalDateTime(value as string) || '',
     },
     {
-      label: labelKey('comment'),
+      label: label('comment'),
       prop: 'comment',
     },
   ];
@@ -86,9 +84,9 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
+    private router: Router,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
-    private router: Router
   ) {
     super();
   }
@@ -97,15 +95,14 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
 
     this.toolbarItems = this.getToolbarItems();
 
-    this.entitySubscription = Observable.combineLatest(this.entityTypeId$, this.entityId$)
-      .flatMap(([ entityTypeId, entityId ]) =>
-        this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', entityTypeId)
-          .map(canView => [entityTypeId, entityId, canView])
-      ).subscribe(([ entityTypeId, entityId, canView ]) => {
-        this._entityTypeId = entityTypeId as number;
-        this._entityId = entityId as number;
-
-        if (canView && this.entityTypeId && this.entityId) {
+    this.entitySubscription = combineLatest(this.entityTypeId$, this.entityId$)
+      .pipe(
+        flatMap(([ entityTypeId, entityId ]) =>
+          this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', entityTypeId)
+            .map(canView => [entityTypeId, entityId, canView])
+      ))
+      .subscribe(([ entityTypeId, entityId, canView ]) => {
+        if (canView && entityTypeId && entityId) {
           this.fetch();
         } else {
           this.rows = [];
@@ -118,15 +115,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     this.entitySubscription.unsubscribe();
   }
 
-  get entityTypeId(): number {
-    return this._entityTypeId;
-  }
-
-  get entityId(): number {
-    return this._entityId;
-  }
-
-  get columns(): Array<IGridTreeColumn<IAttribute>> {
+  get columns(): IGridTreeColumn<IAttribute>[] {
     return this._columns;
   }
 
@@ -150,10 +139,16 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   onEditDialogSubmit(attribute: Partial<IAttribute>): void {
-    this.attributeService.update(this.entityTypeId, this.entityId, this.selectedAttribute$.value.code, attribute)
+    this.setDialog();
+    combineLatest(this.entityTypeId$, this.entityId$)
+      .pipe(
+        flatMap(([entityTypeId, entityId]) =>
+          this.attributeService.update(entityTypeId, entityId, this.selectedAttribute$.value.code, attribute)
+        ),
+        first(),
+      )
       .subscribe(() => {
         this.fetch();
-        this.setDialog(null);
         this.cdRef.markForCheck();
       });
   }
@@ -165,10 +160,12 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
 
   private get canEdit$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-      this.selectedAttribute$.map(attribute => attribute && !attribute.disabledValue)
-    ]);
+    return  this.entityTypeId$.switchMap(entityTypeId =>
+      combineLatestAnd([
+        this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', entityTypeId),
+        this.selectedAttribute$.map(attribute => attribute && !attribute.disabledValue)
+      ])
+    );
   }
 
   private convertToGridTreeRow(attributes: IAttribute[]): IGridTreeRow<IAttribute>[] {
@@ -188,7 +185,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.entityTypeId$.flatMap(
-            entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId)
+            entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', entityTypeId)
           ),
           this.selectedAttribute$.map(attribute => attribute && attribute.disabledValue !== 1)
         ])
@@ -198,7 +195,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         action: () => this.onVersionClick(),
         enabled: combineLatestAnd([
           this.entityTypeId$.flatMap(
-            entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
+            entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', entityTypeId)
           ),
           // TODO:(i.lobanov) there is no version prop now on BE, uncomment when done
           this.selectedAttribute$.map(attribute => !!attribute && attribute.disabledValue !== 1)
@@ -207,7 +204,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
       },
       {
         type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-        action: () => this.entityTypeId && this.entityId && this.fetch(),
+        action: () => this.fetch(),
       },
     ];
   }
@@ -218,10 +215,22 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   private fetch(): void {
-    this.attributeService.fetchAll(this.entityTypeId, this.entityId).subscribe(attributes => {
-      this.rows = this.convertToGridTreeRow(attributes);
-      this.removeSelection();
-      this.cdRef.markForCheck();
-    });
+    combineLatest(this.entityTypeId$, this.entityId$)
+      .pipe(
+        flatMap(([ entityTypeId, entityId ]) => {
+          return entityId && entityTypeId
+            ? this.attributeService.fetchAll(entityTypeId, entityId)
+            : of(null);
+        }),
+        first(),
+      )
+      .subscribe(attributes => {
+        if (!attributes) {
+          return;
+        }
+        this.rows = this.convertToGridTreeRow(attributes);
+        this.removeSelection();
+        this.cdRef.markForCheck();
+      });
   }
 }

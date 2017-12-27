@@ -3,7 +3,10 @@
     <h3>{{ 'widgets.entityGroup.dialog.title' | translate }}</h3>
   </div>
   
-  <app-entity-group-grid></app-entity-group-grid>
+  <app-entity-group-grid
+    [entityTypeId]="entityTypeId"
+    [manualGroup]="manualGroup"
+  ></app-entity-group-grid>
   
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!hasSelection" (click)="onSelect()">

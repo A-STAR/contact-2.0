@@ -61,9 +61,28 @@ export class ActionGridComponent<T> extends DialogFunctions {
     return !!this.metadataKey;
   }
 
+  isAttrChangeDictionaryDlg(): boolean {
+    return [
+      'changeRegionAttr',
+      'changeDict1Attr',
+      'changeDict2Attr',
+      'changeDict3Attr',
+      'changeDict4Attr',
+      'changeCreditTypeAttr',
+      'changeBranchAttr'
+    ].includes(this.dialog);
+  }
+
   getAddOptions(name: string): (number|string)[] {
     // TODO(d.maltsev): not optimized; better to convert to key: value object on initialization
     return this.dialogData.addOptions.find(option => option.name === name).value;
+  }
+
+  getAddOption(name: string, index: number): number|string {
+    const options = this.getAddOptions(name);
+    if (options && options.length > index) {
+      return options[index];
+    }
   }
 
   getSelectionParam(key: number): any[] {

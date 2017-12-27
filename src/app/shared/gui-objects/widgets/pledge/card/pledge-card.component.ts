@@ -18,7 +18,9 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey, isRoute } from '../../../../../core/utils';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 const label = makeKey('widgets.pledgeContract.card');
 
@@ -66,13 +68,13 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.pledgeService.fetchAll(this.debtId),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       this.contract$.flatMap(
         contract => contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$
       ),
-      this.contract$.flatMap(contract => Observable.of(contract || this.getFormData()))
+      this.contract$.flatMap(contract => of(contract || this.getFormData()))
     )
     .pipe(first())
     .subscribe(([ contracts, typeOptions, canEdit, pledgeContract ]) => {
@@ -129,11 +131,11 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   get isAddingPledgor(): boolean {
-    return this.isRoute('pledgor/add');
+    return isRoute(this.route, 'pledgor/add');
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, this.isRoute('create') ? 2 : this.isAddingPledgor ? 4 : 5);
+    this.contentTabService.gotoParent(this.router, isRoute(this.route, 'create') ? 2 : this.isAddingPledgor ? 4 : 5);
   }
 
   onSubmit(): void {
@@ -143,7 +145,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
         this.contractId,
         this.pledgeService.createContractPledgor(this.form.getControl('personId').value, this.form.serializedUpdates),
       )
-      : this.isRoute('create')
+      : isRoute(this.route, 'create')
         ? this.pledgeService.create(
           this.debtId,
           this.pledgeService.createPledgeContractInformation(this.form.serializedUpdates)
@@ -192,9 +194,5 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
     return {
       typeCode: 1
     };
-  }
-
-  private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('/').indexOf(segment) !== -1;
   }
 }

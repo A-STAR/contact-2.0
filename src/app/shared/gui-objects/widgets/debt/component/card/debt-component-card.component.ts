@@ -19,7 +19,7 @@ import { DynamicFormComponent } from '../../../../../components/form/dynamic-for
   templateUrl: './debt-component-card.component.html'
 })
 export class DebtComponentCardComponent {
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private debtId = (this.route.params as any).value.debtId || null;
   private debtComponentId = (this.route.params as any).value.debtComponentId || null;

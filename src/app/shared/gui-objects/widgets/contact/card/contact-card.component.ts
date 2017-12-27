@@ -20,7 +20,7 @@ import { PhoneGridComponent } from './phone-grid/phone-grid.component';
 
 import { makeKey } from '../../../../../core/utils';
 
-const labelKey = makeKey('widgets.contact.grid');
+const label = makeKey('widgets.contact.grid');
 
 @Component({
   selector: 'app-contact-card',
@@ -85,22 +85,22 @@ export class ContactCardComponent {
       const educationOptions = options[UserDictionariesService.DICTIONARY_EDUCATION];
       const cTypeOptions = options[UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE];
       const controls: IDynamicFormControl[] = [
-        { label: labelKey('lastName'), controlName: 'lastName', type: 'text', width: 4, required: true },
-        { label: labelKey('firstName'), controlName: 'firstName', type: 'text', width: 4 },
-        { label: labelKey('middleName'), controlName: 'middleName', type: 'text', width: 4 },
-        { label: labelKey('birthDate'), controlName: 'birthDate',  type: 'datepicker', width: 4 },
-        { label: labelKey('genderCode'), controlName: 'genderCode', type: 'select', width: 4, options: genderOptions },
-        { label: labelKey('birthPlace'), controlName: 'birthPlace',  type: 'text', width: 4 },
+        { label: label('lastName'), controlName: 'lastName', type: 'text', width: 4, required: true },
+        { label: label('firstName'), controlName: 'firstName', type: 'text', width: 4 },
+        { label: label('middleName'), controlName: 'middleName', type: 'text', width: 4 },
+        { label: label('birthDate'), controlName: 'birthDate',  type: 'datepicker', width: 4 },
+        { label: label('genderCode'), controlName: 'genderCode', type: 'select', width: 4, options: genderOptions },
+        { label: label('birthPlace'), controlName: 'birthPlace',  type: 'text', width: 4 },
         {
-          label: labelKey('familyStatusCode'),
+          label: label('familyStatusCode'),
           controlName: 'familyStatusCode',
           type: 'select',
           width: 4,
           options: familyOptions
         },
-        { label: labelKey('educationCode'), controlName: 'educationCode',  type: 'select', width: 4, options: educationOptions },
-        { label: labelKey('linkTypeCode'), controlName: 'linkTypeCode',  type: 'select', width: 4, options: cTypeOptions },
-        { label: labelKey('comment'), controlName: 'comment', type: 'textarea', },
+        { label: label('educationCode'), controlName: 'educationCode',  type: 'select', width: 4, options: educationOptions },
+        { label: label('linkTypeCode'), controlName: 'linkTypeCode',  type: 'select', width: 4, options: cTypeOptions },
+        { label: label('comment'), controlName: 'comment', type: 'textarea', },
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true });
       this.contact = contact;

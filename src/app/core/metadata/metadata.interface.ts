@@ -7,8 +7,10 @@ export interface IMetadataActionOption {
 
 export interface IMetadataAction {
   action: string;
-  params: string[];
   addOptions: IMetadataActionOption[];
+  enabled: (selection: any[]) => boolean;
+  params: string[];
+  children?: IMetadataAction[];
 }
 
 export interface IMetadataColumn {

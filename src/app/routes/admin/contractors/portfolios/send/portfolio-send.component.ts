@@ -60,7 +60,7 @@ export class PortfolioSendComponent implements OnInit {
   }
 
   canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+    return this.form && this.form.isValid;
   }
 
   submit(): void {

@@ -31,9 +31,6 @@ export interface ITerm {
 }
 
 export enum DictionariesDialogActionEnum {
-  DICTIONARY_ADD,
-  DICTIONARY_EDIT,
-  DICTIONARY_REMOVE,
   TERM_ADD,
   TERM_EDIT,
   TERM_REMOVE,
