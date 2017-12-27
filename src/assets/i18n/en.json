@@ -962,6 +962,13 @@
         "title": "Delete the group",
         "confirmMessage": "Do you really want to delete this group?"
       }
+    },
+    "currenciesTab": {
+      "title": "Currencies",
+      "remove": {
+        "title": "Delete currency",
+        "confirmMessage": "Are you sure you want to delete currency?"
+      }
     }
   },
   "person": {
@@ -2014,6 +2021,22 @@
       "dialog": {
         "title": "Visit prepare"
       }
+    },
+    "currencies": {
+      "grid": {
+        "id": "ID",
+        "code": "Code",
+        "name": "Name",
+        "shortName": "Short name",
+        "isMain": "Is main"
+      },
+      "card": {
+        "id": "ID",
+        "code": "Code",
+        "name": "Name",
+        "shortName": "Short name",
+        "isMain": "Is main"
+      }
     }
   },
   "entities": {
@@ -2188,6 +2211,9 @@
     },
     "visit": {
       "gen": { "singular": "visit", "plural": "visits" }
+    },
+    "currencies":{
+      "gen": { "singular": "currency", "plural": "currencies" }
     }
   },
   "massOperations": {

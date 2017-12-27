@@ -1,12 +1,15 @@
-// todo
-export interface ICurrencies {
+export interface ICurrency {
   id?: number;
-  entityTypeCode: number;
-  name: string;
-  comment?: string;
-  isManual?: number;
-  isPreCleaned?: number;
-  userFullName?: string;
-  formDateTime?: string;
-  sql?: string;
+  code?: number;
+  multiName?: {
+    value: string;
+    languageId: number;
+  }[];
+  name?: string;
+  multiShortName?: {
+    value: string;
+    languageId: number;
+  }[];
+  shortName?: string;
+  isMain?: number;
 }

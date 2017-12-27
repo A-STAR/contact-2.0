@@ -5,14 +5,13 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
-import { ICurrencies } from '../currencies.interface';
+import { ICurrency } from '../currencies.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { CurrenciesService } from '../currencies.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
 
@@ -23,66 +22,55 @@ import { DialogFunctions } from '../../../../../core/dialog';
 })
 export class CurrenciesGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 
-  private selectedCurrencies$ = new BehaviorSubject<ICurrencies>(null);
-
-  private forCurrentUser = false;
+  private selectedCurrency$ = new BehaviorSubject<ICurrency>(null);
 
   columns: Array<IGridColumn> = [
-    { prop: 'id' },
-    { prop: 'entityTypeCode', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE },
+    { prop: 'id', width: 50 },
+    { prop: 'code' },
     { prop: 'name' },
-    { prop: 'comment' },
-    { prop: 'isManual', renderer: 'checkboxRenderer' },
-    { prop: 'isPreCleaned', renderer: 'checkboxRenderer' },
-    { prop: 'userFullName' },
-    { prop: 'formDateTime' },
+    { prop: 'shortName' },
+    { prop: 'isMain', renderer: 'checkboxRenderer' },
   ];
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.groupService.canAdd$,
+      enabled: this.currenciesService.canAdd$,
       action: () => this.onAdd()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedCurrencies$.value),
+      action: () => this.onEdit(this.selectedCurrency$.value),
       enabled: Observable.combineLatest(
-        this.groupService.canEdit$,
-        // this.selectedGroup$
-      ).map(([canEdit, selectedGroup]) => !!canEdit && !!selectedGroup)
+        this.currenciesService.canEdit$,
+        this.selectedCurrency$
+      ).map(([canEdit, selectedCurrency]) => !!canEdit && !!selectedCurrency)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('removeGroup'),
+      action: () => this.setDialog('removeCurrency'),
       enabled: Observable.combineLatest(
-        this.groupService.canDelete$,
-        // this.selectedGroup$
-      ).map(([canDelete, selectedGroup]) => !!canDelete && !!selectedGroup),
+        this.currenciesService.canDelete$,
+        this.selectedCurrency$
+      ).map(([canDelete, selectedCurrency]) => !!canDelete && !!selectedCurrency),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetch(),
-      enabled: this.groupService.canView$
-    },
-    {
-      type: ToolbarItemTypeEnum.CHECKBOX,
-      action: () => this.toggleForCurrentUser(),
-      label: 'widgets.groups.toolbar.action.forCurrentUser',
-      state: this.forCurrentUser
+      enabled: this.currenciesService.canView$
     }
   ];
 
   dialog: string;
 
-  private _groups: Array<ICurrencies> = [];
+  private _currencies: Array<ICurrency> = [];
 
   private viewPermissionSubscription: Subscription;
   private actionSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private groupService: CurrenciesService,
+    private currenciesService: CurrenciesService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private router: Router,
@@ -98,7 +86,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
       this.cdRef.markForCheck();
     });
 
-    this.viewPermissionSubscription = this.groupService.canView$
+    this.viewPermissionSubscription = this.currenciesService.canView$
       .subscribe(hasViewPermission => {
         if (hasViewPermission) {
           this.fetch();
@@ -108,11 +96,11 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
         }
       });
 
-    this.actionSubscription = this.groupService
-      .getAction(CurrenciesService.MESSAGE_GROUP_SAVED)
+    this.actionSubscription = this.currenciesService
+      .getAction(CurrenciesService.MESSAGE_CURRENCY_SAVED)
       .subscribe(() => {
         this.fetch();
-        this.selectedCurrencies$.next(this.selectedGroup);
+        this.selectedCurrency$.next(this.selectedCurrency);
       });
   }
 
@@ -120,39 +108,34 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
     this.viewPermissionSubscription.unsubscribe();
   }
 
-  get groups(): Array<ICurrencies> {
-    return this._groups;
+  get currencies(): Array<ICurrency> {
+    return this._currencies;
   }
 
-  get selectedGroup(): ICurrencies {
-    return (this._groups || [])
-      .find(group => this.selectedCurrencies$.value && group.id === this.selectedCurrencies$.value.id);
+  get selectedCurrency(): ICurrency {
+    return (this._currencies || [])
+      .find(currency => this.selectedCurrency$.value && currency.id === this.selectedCurrency$.value.id);
   }
 
-  get selection(): Array<ICurrencies> {
-    const selectedGroup = this.selectedGroup;
-    return selectedGroup ? [ selectedGroup ] : [];
+  get selection(): Array<ICurrency> {
+    const selectedCurrency = this.selectedCurrency;
+    return selectedCurrency ? [ selectedCurrency ] : [];
   }
 
-  toggleForCurrentUser(): void {
-    this.forCurrentUser = !this.forCurrentUser;
-    this.fetch();
+  onSelect(currency: ICurrency): void {
+    this.selectedCurrency$.next(currency);
   }
 
-  onSelect(group: ICurrencies): void {
-    this.selectedCurrencies$.next(group);
-  }
-
-  onEdit(group: ICurrencies): void {
-    this.router.navigate([ `${this.router.url}/${group.id}` ]);
+  onEdit(currency: ICurrency): void {
+    this.router.navigate([ `${this.router.url}/${currency.id}` ]);
   }
 
   onRemove(): void {
-    const { id: groupId } = this.selectedGroup;
-    this.groupService.delete(groupId)
+    const { id: currencyId } = this.selectedCurrency;
+    this.currenciesService.delete(currencyId)
       .subscribe(() => {
         this.setDialog(null);
-        // this.selectedGroup$.next(null);
+        this.selectedCurrency$.next(null);
         this.fetch();
       });
   }
@@ -162,14 +145,14 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
   }
 
   private fetch(): void {
-    this.groupService.fetchAll(this.forCurrentUser).subscribe(groups => {
-      this._groups = groups;
+    this.currenciesService.fetchAll().subscribe(currencies => {
+      this._currencies = currencies;
       this.cdRef.markForCheck();
     });
   }
 
   private clear(): void {
-    this._groups = [];
+    this._currencies = [];
     this.cdRef.markForCheck();
   }
 }

@@ -1,9 +1,9 @@
-<!-- <app-dialog-action
-  *ngIf="isDialog('removeGroup')"
+<app-dialog-action
+  *ngIf="isDialog('removeCurrency')"
   actionMode="danger"
-  actionTranslationKey="debtor.groupTab.remove.confirmMessage"
+  actionTranslationKey="debtor.currenciesTab.remove.confirmMessage"
   actionMessage="default.buttons.remove"
-  titleTranslationKey="debtor.groupTab.remove.title"
+  titleTranslationKey="debtor.currenciesTab.remove.title"
   (action)="onRemove()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
@@ -11,15 +11,13 @@
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
-  columnTranslationKey="widgets.groups"
+  columnTranslationKey="widgets.currencies"
   selectionType="single"
   [columns]="columns"
   [selection]="selection"
   [footerHeight]="false"
-  [rows]="groups"
+  [rows]="currencies"
   (onSelect)="onSelect($event)"
   (onDblClick)="onEdit($event)"
 >
-</app-grid> -->
-
-<p>grid component</p>
+</app-grid>
