@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input } from '@angular/core';
 
 import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IEntityGroup } from '../../../entity-group/entity-group.interface';
@@ -13,6 +13,8 @@ import { EntityGroupService } from '../../entity-group.service';
 export class EntityGroupAddComponent  {
 
   @Input() debts: number[];
+  @Input() entityTypeId: number;
+  @Input() manualGroup = true;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
@@ -20,8 +22,6 @@ export class EntityGroupAddComponent  {
     private cdRef: ChangeDetectorRef,
     private entityGroupService: EntityGroupService,
   ) {}
-
-  @Inject('entityypeId') private entityTypeId: number;
 
   onSelect(group: IEntityGroup): void {
     this.entityGroupService.addToGroup(this.entityTypeId, group.id, this.debts)

@@ -26,8 +26,6 @@ const routes: Routes = [
   ],
   providers: [
     DebtProcessingService,
-    { provide: 'entityTypeId', useValue: 19 },
-    { provide: 'manualGroup', useValue: true }
   ]
 })
 export class DebtProcessingModule {
