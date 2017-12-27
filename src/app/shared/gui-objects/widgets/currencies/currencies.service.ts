@@ -16,6 +16,7 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 @Injectable()
 export class CurrenciesService extends AbstractActionService {
   static MESSAGE_CURRENCY_SAVED = 'MESSAGE_CURRENCY_SAVED';
+  static MESSAGE_CURRENCY_SELECTED = 'MESSAGE_CURRENCY_SELECTED';
 
   static CURRENCY_NAME_ID = 396;
   static CURRENCY_SHORT_NAME_ID = 396;

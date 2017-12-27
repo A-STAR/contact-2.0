@@ -4,6 +4,7 @@ import { SharedModule } from '../../../../shared/shared.module';
 
 import { CurrencyRateEditComponent } from './rate.component';
 
+
 @NgModule({
   imports: [
     SharedModule,
@@ -15,4 +16,4 @@ import { CurrencyRateEditComponent } from './rate.component';
     CurrencyRateEditComponent
   ],
 })
-export class RateEditModule { }
+export class CurrencyRateEditModule { }

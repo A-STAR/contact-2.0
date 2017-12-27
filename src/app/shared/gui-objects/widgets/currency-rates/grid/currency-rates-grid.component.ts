@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { ICurrencyRate } from '../currency-rates.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -19,8 +20,10 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
-  @Input() currencyId: number;
 
+  @Input() currencyId$: Observable<number>;
+
+  private currencyId: number;
   private selectedCurrencyRate$ = new BehaviorSubject<ICurrencyRate>(null);
 
   columns: Array<IGridColumn> = [
@@ -72,15 +75,18 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.viewPermissionSubscription = this.currencyRatesService.canView$
-      .subscribe(hasViewPermission => {
-        if (hasViewPermission) {
-          this.fetch();
-        } else {
-          this.clear();
-          this.notificationsService.error('errors.default.read.403').entity('entities.currencyRates.gen.plural').dispatch();
-        }
-      });
+    this.viewPermissionSubscription = combineLatest(
+      this.currencyRatesService.canView$,
+      this.currencyId$
+    ).subscribe(([hasViewPermission, currencyId]) => {
+      this.currencyId = currencyId;
+      if (hasViewPermission) {
+        this.fetch();
+      } else {
+        this.clear();
+        this.notificationsService.error('errors.default.read.403').entity('entities.currencyRates.gen.plural').dispatch();
+      }
+    });
 
     this.currencyRateSubscription = this.currencyRatesService
       .getAction(CurrencyRatesService.MESSAGE_CURRENCY_RATE_SAVED)

@@ -964,13 +964,6 @@
         "title": "Delete the group",
         "confirmMessage": "Do you really want to delete this group?"
       }
-    },
-    "currenciesTab": {
-      "title": "Currencies",
-      "remove": {
-        "title": "Delete currency",
-        "confirmMessage": "Are you sure you want to delete currency?"
-      }
     }
   },
   "person": {
@@ -1254,6 +1247,16 @@
         "participants": "Participants",
         "statistics": "Statistics"
       }
+    },
+    "currenciesTab": {
+      "title": "Currencies",
+      "remove": {
+        "title": "Delete currency",
+        "confirmMessage": "Are you sure you want to delete currency?"
+      }
+    },
+    "currencyRatesTab": {
+      "title": "Rates"
     }
   },
   "notifications": {

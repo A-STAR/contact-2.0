@@ -964,13 +964,6 @@
         "title": "Удалить группу",
         "confirmMessage": "Вы действительно хотите удалить выбранную группу?"
       }
-    },
-    "currenciesTab": {
-      "title": "Курсы валют",
-      "remove": {
-        "title": "Удалить валюту",
-        "confirmMessage": "Вы действительно хотите удалить выбранную валюту?"
-      }
     }
   },
   "person": {
@@ -1254,6 +1247,16 @@
         "participants": "Участники",
         "statistics": "Статистика"
       }
+    },
+    "currenciesTab": {
+      "title": "Курсы валют",
+      "remove": {
+        "title": "Удалить валюту",
+        "confirmMessage": "Вы действительно хотите удалить выбранную валюту?"
+      }
+    },
+    "currencyRatesTab": {
+      "title": "Курсы"
     }
   },
   "notifications": {

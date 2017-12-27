@@ -102,6 +102,10 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
         this.fetch();
         this.selectedCurrency$.next(this.selectedCurrency);
       });
+
+    this.selectedCurrency$.subscribe(currency =>
+      this.currenciesService.dispatchAction(CurrenciesService.MESSAGE_CURRENCY_SELECTED, currency)
+    );
   }
 
   ngOnDestroy(): void {
