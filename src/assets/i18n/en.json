@@ -110,7 +110,7 @@
     }
   },
   "validation": {
-    "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
+    "defaultErrorMessage": "An unknown error has occurred",
     "datepicker": "Invalid date/time format",
     "fieldRequired": "This field is required",
     "fieldMin": "The value must be greater than {{ minValue }}",
@@ -123,7 +123,8 @@
     "oneOfGroupRequired": "At least one group field must not be empty"
   },
   "network": {
-    "CONNECTION_ERROR": "Connection error"
+    "connectionError": "Connection error",
+    "gotoHomePage": "Navigate to home page"
   },
   "grid": {
     "messages": {
