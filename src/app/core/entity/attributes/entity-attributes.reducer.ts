@@ -1,6 +1,6 @@
 import { UnsafeAction } from '../../../core/state/state.interface';
 
-import { IEntityAttributesState, EntityAttributesStatusEnum } from './entity-attributes.interface';
+import { IEntityAttributesState } from './entity-attributes.interface';
 
 import { EntityAttributesService } from './entity-attributes.service';
 
@@ -8,36 +8,21 @@ export const defaultState = {};
 
 export function reducer(state: IEntityAttributesState = defaultState, action: UnsafeAction): IEntityAttributesState {
   switch (action.type) {
-    case EntityAttributesService.ENTITY_ATTRIBUTE_FETCH: {
-      const { id } = action.payload;
-      return {
-        ...state,
-        [id]: {
-          ...state[id],
-          status: EntityAttributesStatusEnum.PENDING
-        }
-      };
-    }
+
     case EntityAttributesService.ENTITY_ATTRIBUTE_FETCH_SUCCESS: {
-      const { id, attribute } = action.payload;
+      const attributes = action.payload.reduce((acc, attribute) => {
+        acc[attribute.id] = attribute;
+        return acc;
+      }, {});
+
       return {
         ...state,
-        [id]: {
-          attribute,
-          status: EntityAttributesStatusEnum.LOADED
-        }
+        ...attributes,
       };
     }
-    case EntityAttributesService.ENTITY_ATTRIBUTE_FETCH_FAILURE: {
-      const { id } = action.payload;
-      return {
-        ...state,
-        [id]: {
-          ...state[id],
-          status: EntityAttributesStatusEnum.ERROR
-        }
-      };
-    }
+
+    case EntityAttributesService.ENTITY_ATTRIBUTE_FETCH:
+    case EntityAttributesService.ENTITY_ATTRIBUTE_FETCH_FAILURE:
     default:
       return state;
   }
