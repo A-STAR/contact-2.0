@@ -70,8 +70,7 @@ export const menuConfig: IMenuConfig = {
   currencies: {
     text: 'sidebar.nav.menu.CURRENCIES',
     link: '/utilities/currencies',
-    // todo find icon
-    icon: 'icon-docs'
+    icon: 'icon-wallet'
   },
   dataLoad: {
     text: 'sidebar.nav.menu.DATA_UPLOAD',

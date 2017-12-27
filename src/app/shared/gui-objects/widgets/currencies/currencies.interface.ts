@@ -1,6 +1,6 @@
 export interface ICurrency {
   id?: number;
-  code?: number;
+  code?: string;
   multiName?: {
     value: string;
     languageId: number;
