@@ -1,20 +1,22 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { ICurrencies } from '../currencies.interface';
+import { ICurrency } from '../currencies.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { CurrenciesService } from '../currencies.service';
+import { LookupService } from '../../../../../core/lookup/lookup.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
 
-const label = makeKey('widgets.groups.card');
+const label = makeKey('widgets.currencies.card');
 
 @Component({
   selector: 'app-currency-card',
@@ -28,25 +30,25 @@ export class CurrencyCardComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
-  group: Partial<ICurrencies>;
+  currency: Partial<ICurrency>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contentTabService: ContentTabService,
-    private groupService: CurrenciesService,
+    private currenciesService: CurrenciesService,
+    private lookupService: LookupService,
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
-      this.groupId ? this.groupService.canEdit$ : this.groupService.canAdd$,
-      this.groupService.canConditionEdit$,
-      this.groupId ? this.groupService.fetch(this.groupId) : Observable.of(this.getFormData()),
-      this.groupService.groupEntityTypeOptions$
+    combineLatest(
+      this.currencyId ? this.currenciesService.canEdit$ : this.currenciesService.canAdd$,
+      this.currencyId ? this.currenciesService.fetch(this.currencyId) : Observable.of({}),
+      this.currencyId ? this.lookupService.languages : of([]),
     )
     .pipe(first())
-    .subscribe(([ canEdit, canConditionEdit, group, respTypeOpts ]) => {
-      this.controls = this.initControls(canEdit, canConditionEdit, respTypeOpts);
-      this.group = group;
+    .subscribe(([ canEdit, currency, languages ]) => {
+      this.controls = this.initControls(canEdit, languages);
+      this.currency = currency;
       this.cdRef.markForCheck();
     });
   }
@@ -56,12 +58,12 @@ export class CurrencyCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const action = this.groupId
-      ? this.groupService.update(this.groupId, this.form.serializedValue)
-      : this.groupService.create(this.form.serializedUpdates);
+    const action = this.currencyId
+      ? this.currenciesService.update(this.currencyId, this.form.serializedValue)
+      : this.currenciesService.create(this.form.serializedUpdates);
 
     action.subscribe(() => {
-      // this.groupService.dispatchAction(GroupService.MESSAGE_GROUP_SAVED);
+      this.currenciesService.dispatchAction(CurrenciesService.MESSAGE_CURRENCY_SAVED);
       this.onBack();
     });
   }
@@ -70,31 +72,24 @@ export class CurrencyCardComponent implements OnInit {
     this.contentTabService.back();
   }
 
-  private initControls(canEdit: boolean, canConditionEdit: boolean, entityTypeOptions: IOption[]): Array<IDynamicFormItem> {
-    const controls = [
-      { label: label('name'), controlName: 'name', type: 'text', disabled: !canEdit, required: true },
+  private initControls(canEdit: boolean, languageOptions: IOption[]): Array<IDynamicFormItem> {
+    return [
+      { label: label('code'), controlName: 'code', type: 'text', required: true, disabled: !canEdit },
       {
-        label: label('entityTypeCode'), controlName: 'entityTypeCode', type: 'select',
-        options: entityTypeOptions, required: true, disabled: !canEdit, markAsDirty: !this.groupId
+        label: label('name'),
+        controlName: this.currencyId ? 'multiName' : 'name',
+        type: this.currencyId ? 'multitext' : 'text',
+        options: languageOptions,
+        disabled: !canEdit
       },
-      { label: label('comment'), controlName: 'comment', type: 'textarea', disabled: !canEdit },
-      { label: label('isManual'), controlName: 'isManual', type: 'checkbox', disabled: !canEdit, markAsDirty: !this.groupId },
       {
-        label: label('isPreCleaned'), controlName: 'isPreCleaned', type: 'checkbox',
-        disabled: !canEdit, markAsDirty: !this.groupId
+        label: label('shortName'),
+        controlName: this.currencyId ? 'multiShortName' : 'shortName',
+        type: this.currencyId ? 'multitext' : 'text',
+        options: languageOptions,
+        disabled: !canEdit
       },
+      { label: label('isMain'), controlName: 'isMain', type: 'checkbox', disabled: !canEdit },
     ];
-
-    if (canConditionEdit) {
-      controls.push({ label: label('sql'), controlName: 'sql', type: 'textarea', disabled: !canEdit });
-    }
-
-    return controls as IDynamicFormItem[];
-  }
-
-  private getFormData(): Partial<ICurrencies> {
-    return {
-      entityTypeCode: 19
-    };
   }
 }
