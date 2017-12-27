@@ -14,8 +14,5 @@ export enum EntityAttributesStatusEnum {
 }
 
 export interface IEntityAttributesState {
-  [key: number]: {
-    attribute: IEntityAttribute;
-    status: EntityAttributesStatusEnum;
-  };
+  [key: number]: IEntityAttribute;
 }

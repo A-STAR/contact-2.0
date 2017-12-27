@@ -75,7 +75,8 @@ export class ActionGridComponent<T> extends DialogFunctions {
 
   getAddOptions(name: string): (number|string)[] {
     // TODO(d.maltsev): not optimized; better to convert to key: value object on initialization
-    return this.dialogData.addOptions.find(option => option.name === name).value;
+    const found = this.dialogData.addOptions.find(option => option.name === name);
+    return found ? found.value : null;
   }
 
   getAddOption(name: string, index: number): number|string {
