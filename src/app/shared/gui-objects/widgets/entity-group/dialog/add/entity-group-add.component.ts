@@ -14,9 +14,10 @@ export class EntityGroupAddComponent  {
 
   @Input() debts: number[];
   @Input() entityTypeId: number;
-  @Input() manualGroup = true;
 
   @Output() close = new EventEmitter<ICloseAction>();
+
+  manualGroup = true;
 
   constructor(
     private cdRef: ChangeDetectorRef,
