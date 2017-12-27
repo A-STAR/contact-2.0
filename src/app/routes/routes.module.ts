@@ -13,9 +13,9 @@ import { routes } from './routes';
 @NgModule({
   imports: [
     EffectsModule.forFeature([PermissionsEffects]),
-    SharedModule,
-    RouterModule.forRoot(routes),
     PagesModule,
+    RouterModule.forRoot(routes),
+    SharedModule,
   ],
   providers: [
     PermissionsService,

@@ -15,15 +15,38 @@ import { EntityTranslationComponent } from '../../../../../shared/components/ent
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DictEditComponent extends EntityTranslationComponent<IDictionary> {
-
   @Input() languages: ILookupLanguage[];
   @Input() dictionaries: IDictionary[];
   @Input() dictionaryTermTypes: ITerm[];
 
+  /**
+   * @override
+   */
   toSubmittedValues(values: IDictionary): any {
     return this.dynamicForm.serializedUpdates;
   }
 
+  /**
+   * @override
+   */
+  filterControls(controls: IDynamicFormControl[]): IDynamicFormControl[] {
+    return controls.filter(control => {
+        return this.isEditMode()
+        ? this.nameControlName !== control.controlName
+        : ![this.translatedControlName, this.displayControlName].includes(control.controlName);
+    });
+  }
+
+  /**
+   * @override
+   */
+  protected isEditMode(): boolean {
+    return !!this.editedEntity;
+  }
+
+  /**
+   * @override
+   */
   protected getControls(): Array<IDynamicFormControl> {
     const controls: IDynamicFormControl[] = [
       {
@@ -33,7 +56,7 @@ export class DictEditComponent extends EntityTranslationComponent<IDictionary> {
         required: true
       },
       {
-        label: 'dictionaries.edit.name',
+        label: 'dictionaries.edit.language',
         controlName: this.translatedControlName,
         type: 'select',
         multiple: true,
@@ -44,13 +67,13 @@ export class DictEditComponent extends EntityTranslationComponent<IDictionary> {
         )
       },
       {
-        label: 'dictionaries.edit.name',
+        label: null,
         controlName: this.nameControlName,
         type: 'text',
         required: true
       },
       {
-        label: null,
+        label: 'dictionaries.edit.name',
         controlName: this.displayControlName,
         type: 'text',
         placeholder: 'dictionaries.placeholder.translatedName',

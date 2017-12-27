@@ -18,9 +18,6 @@ import { DebtorGridComponent } from './debtor-grid.component';
   ],
   providers: [
     DebtorGridService,
-    // TODO(d.maltsev, i.kibisov): get `entityTypeId` from grid metadata instead
-    { provide: 'entityTypeId', useValue: 19 },
-    { provide: 'manualGroup', useValue: true },
   ]
 })
 export class DebtorGridModule {}

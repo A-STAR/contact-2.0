@@ -5,6 +5,7 @@ export type ILookupKey =
   'languages' |
   'portfolios' |
   'roles' |
+  'timeZone' |
   'users';
 
 export interface ILookupBase {
@@ -37,6 +38,11 @@ export interface ILookupPortfolio extends ILookupBase {
   contractor: string;
 }
 
+export interface ILookupTimeZone extends ILookupBase {
+  code: string;
+  utcOffset: string;
+}
+
 export enum LookupStatusEnum {
   PENDING,
   LOADED,
@@ -55,5 +61,7 @@ export interface ILookupState {
   languages: ILookupSlice<ILookupLanguage>;
   portfolios: ILookupSlice<ILookupPortfolio>;
   roles: ILookupSlice<ILookupRole>;
+  // note, that this key is in singular form, because route is GET lookup/timeZone
+  timeZone: ILookupSlice<ILookupTimeZone>;
   users: ILookupSlice<ILookupUser>;
 }

@@ -766,7 +766,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
-  private getMetadataMenuItems(params: GetContextMenuItemsParams): MenuItemDef[] {
+  private getMetadataMenuItems(actions: IMetadataAction[], params: GetContextMenuItemsParams): MenuItemDef[] {
     // TODO(m.bobryshev): remove once the BE returns this action
     // const visitAdd = {
     //   action: 'visitAdd',
@@ -777,12 +777,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     // const found = this.actions.find(action => action.action === 'visitAdd');
     // this.actions = found ? this.actions : this.actions.concat(visitAdd);
 
-    return this.actions.map(action => ({
+    return actions.map(action => ({
       name: this.translate.instant(`default.grid.actions.${action.action}`),
       action: () => this.action.emit({ metadataAction: action, params }),
       disabled: action.enabled
         ? !action.enabled.call(null, this.selected)
         : false,
+      subMenu: action.children ? this.getMetadataMenuItems(action.children, params) : undefined
     }));
   }
 
@@ -798,7 +799,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //   tooltip: 'Just to test what the tooltip can show'
       // },
       // 'separator',
-      ...this.getMetadataMenuItems(params),
+      ...this.getMetadataMenuItems(this.actions, params),
       // {
       //   name: 'Person',
       //   subMenu: [

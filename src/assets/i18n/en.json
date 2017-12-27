@@ -111,7 +111,7 @@
     }
   },
   "validation": {
-    "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
+    "defaultErrorMessage": "An unknown error has occurred",
     "datepicker": "Invalid date/time format",
     "fieldRequired": "This field is required",
     "fieldMin": "The value must be greater than {{ minValue }}",
@@ -124,7 +124,8 @@
     "oneOfGroupRequired": "At least one group field must not be empty"
   },
   "network": {
-    "CONNECTION_ERROR": "Connection error"
+    "connectionError": "Connection error",
+    "gotoHomePage": "Navigate to home page"
   },
   "grid": {
     "messages": {
@@ -302,6 +303,9 @@
       }
     },
     "contactRegistration": {
+      "contact": {
+        "title": "Change Contact Person"
+      },
       "dialogs": {
         "contactType": {
           "title": "Log Contact",
@@ -621,10 +625,10 @@
   },
   "dictionaries": {
     "access_denied": "You have no access to the dictionaries. Please contact the administrator.",
-    "TITLE": "Dictionaries",
     "edit": {
       "title": "Dictionary: {{ code }}",
       "code": "Code",
+      "language": "Language",
       "name": "Name",
       "type": "Type",
       "parent": "Parent dictionary",
@@ -673,7 +677,8 @@
     "edit": {
       "title": "Term: {{ code }}",
       "code": "Term code",
-      "text": "Term text",
+      "language": "Language",
+      "text": "Term value",
       "type": "Term type",
       "parent": "Parent dictionary term",
       "closed": "Unused term",
@@ -932,7 +937,7 @@
     "documentsTab": {
       "title": "Documents",
       "errors": {
-        "download": "Could not download document"
+        "download": "Could not download the document"
       }
     },
     "employmentRecordTab": {
@@ -1575,6 +1580,46 @@
           "templateId": "Template"
         },
         "title": "Launch Parameters"
+      },
+      "changePortfolioAttr": {
+        "title": "Change portfolio attribute",
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "contractor": "Bank"
+        }
+      },
+      "changeRegionAttr": {
+        "title": "Change region attribute"
+      },
+      "changeDict1Attr": {
+        "title": "Change dictionary attribute 1"
+      },
+      "changeDict2Attr": {
+        "title": "Change dictionary attribute 2"
+      },
+      "changeDict3Attr": {
+        "title": "Change dictionary attribute 3"
+      },
+      "changeDict4Attr": {
+        "title": "Change dictionary attribute 4"
+      },
+      "changeCreditTypeAttr": {
+        "title": "Change credit product type"
+      },
+      "changeBranchAttr": {
+        "title": "Change branch"
+      },
+      "changeTimezoneAttr": {
+        "title": "Change time zone",
+        "grid": {
+          "code": "Code",
+          "name": "Name",
+          "utcOffset": "UTC Offset"
+        }
+      },
+      "changeDefaultAttr": {
+        "title": "Change attribute"
       }
     },
     "nextCallDateSet": {
@@ -2106,6 +2151,9 @@
     "contacts": {
       "gen": { "singular": "contact", "plural": "contacts" }
     },
+    "documents": {
+      "gen": { "singular": "attachment", "plural": "attachments" }
+    },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity documents" }
     },
@@ -2263,7 +2311,7 @@
       "login.invalidCredentials": "Invalid login or password",
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
       "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
-      "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
+      "modelMustNotBeEmpty": "The data model requires to pass at least one non-empty attribute",
       "promiseAmountMustBeGreaterThenPercentsDebtAmount": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
       "objectNotFound": "Объект не найден",
       "other.unknownError": "Произошла неизвестная ошибка",
@@ -2272,7 +2320,7 @@
       "organizationUserAlreadyExists": "Запрошенная к созданию по ID пользователя организация уже существует",
       "organizationUserLinkNotFound": "Не найдена организация, запрошенная по ID пользователя",
       "organizationUserLinksExistForOrganization": "Невозможно удалить организацию, на которую есть ссылки из таблицы organization_user_links",
-      "parentUnderChildAttempt": "В структуре предприятия обнаружены циклические связи родитель-подчиненные",
+      "parentUnderChildAttempt": "The data structure is invalid since it contains cyclic relationships",
       "passwordDoesntMatchComplexity": "Пароль должен содержать минимум одну цифру, одну заглавную и одну строчную букву.",
       "passwordLengthMustBeGreaterThen": "Длина пароля должна быть не меньше {{ $1 }} символов",
       "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",
@@ -2482,6 +2530,7 @@
         "deletePromise": "Delete promises",
         "deleteSMS": "Delete SMS",
         "emailCreate": "Mass Emails",
+        "loadDebtResponsible": "Load debt responsible",
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
@@ -2493,7 +2542,16 @@
         "smsCreate": "Mass SMS",
         "statusChange": "Change status",
         "visitAdd": "Make necessary",
-        "openUserById": "Open debtor card"
+        "openDebtCardByDebtor": "Open debtor card",
+        "changePortfolioAttr": "Portfolio",
+        "changeRegionAttr": "Region",
+        "changeDict1Attr": "Dictionary Attribute 1",
+        "changeDict2Attr": "Dictionary Attribute 2",
+        "changeDict3Attr": "Dictionary Attribute 3",
+        "changeDict4Attr": "Dictionary Attribute 4",
+        "changeCreditTypeAttr": "Credit Product Type",
+        "changeBranchAttr": "Branch",
+        "changeTimezoneAttr": "Time zone"
       }
     },
     "filter": {

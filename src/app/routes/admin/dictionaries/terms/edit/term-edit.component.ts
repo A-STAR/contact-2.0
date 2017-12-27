@@ -16,6 +16,7 @@ import { EntityTranslationComponent } from '../../../../../shared/components/ent
 })
 export class TermEditComponent extends EntityTranslationComponent<ITerm> {
 
+  @Input() disableParentSelection = false;
   @Input() languages: ILookupLanguage[];
   @Input() terms: ITerm[];
 
@@ -32,7 +33,7 @@ export class TermEditComponent extends EntityTranslationComponent<ITerm> {
         required: true
       },
       {
-        label: 'terms.edit.text',
+        label: 'terms.edit.language',
         controlName: this.translatedControlName,
         type: 'select',
         multiple: true,
@@ -43,13 +44,13 @@ export class TermEditComponent extends EntityTranslationComponent<ITerm> {
         )
       },
       {
-        label: 'terms.edit.text',
+        label: null,
         controlName: this.nameControlName,
         type: 'text',
         required: true
       },
       {
-        label: null,
+        label: 'terms.edit.text',
         controlName: this.displayControlName,
         type: 'text',
         placeholder: 'dictionaries.placeholder.translatedName',
@@ -69,6 +70,7 @@ export class TermEditComponent extends EntityTranslationComponent<ITerm> {
       {
         label: 'terms.edit.parent',
         controlName: 'parentCode',
+        disabled: this.disableParentSelection,
         type: 'select',
         options: this.terms.map(toLabeledValues),
         optionsActions: [
@@ -82,6 +84,7 @@ export class TermEditComponent extends EntityTranslationComponent<ITerm> {
       }
     ];
 
-    return this.filterControls(controls);
+    return this.filterControls(controls)
+      .filter(ctrl => !(ctrl.disabled && ctrl.controlName === 'parentCode'));
   }
 }

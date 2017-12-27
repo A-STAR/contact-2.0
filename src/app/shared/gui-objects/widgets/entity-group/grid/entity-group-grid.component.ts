@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, Input } from '@angular/core';
 
 import { IEntityGroup } from '../entity-group.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -15,6 +15,9 @@ import { GridComponent } from '../../../../components/grid/grid.component';
 export class EntityGroupGridComponent implements OnInit {
   @ViewChild(GridComponent) grid: GridComponent;
 
+  @Input() entityTypeId: number;
+  @Input() manualGroup: boolean;
+
   columns: Array<IGridColumn> = [
     { prop: 'id' },
     { prop: 'name' },
@@ -26,9 +29,7 @@ export class EntityGroupGridComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private entityGroupService: EntityGroupService,
-    @Inject('entityTypeId') private entityTypeId: number,
-    @Inject('manualGroup') private manualGroup: boolean,
+    private entityGroupService: EntityGroupService
   ) { }
 
   ngOnInit(): void {

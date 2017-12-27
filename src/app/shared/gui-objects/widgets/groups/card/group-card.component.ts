@@ -49,8 +49,8 @@ export class GroupCardComponent implements OnInit {
       this.groupService.canConditionEdit$,
       group$,
       this.groupService.groupEntityTypeOptions$,
-      this.groupId ? this.lookupService.languages : of(null),
-      this.groupId ? this.groupService.readGroupNameTranslations(this.groupId) : of(null)
+      this.groupId ? this.lookupService.languages : of([]),
+      this.groupId ? this.groupService.readGroupNameTranslations(this.groupId) : of([])
     )
     .pipe(first())
     .subscribe(([ canEdit, canConditionEdit, group, respTypeOpts, languages, translations ]) => {
