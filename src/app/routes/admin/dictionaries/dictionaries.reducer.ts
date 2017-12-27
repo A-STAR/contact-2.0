@@ -47,7 +47,7 @@ export function reducer(state: IDictionariesState = defaultState, action: Unsafe
         parentTerms: []
       };
     }
-    case DictionariesService.TERMS_TYPES_FETCH_SUCCESS: {
+    case DictionariesService.TERM_TYPES_FETCH_SUCCESS: {
       return {
         ...state,
         dictionaryTermTypes: action.payload
@@ -96,7 +96,6 @@ export function reducer(state: IDictionariesState = defaultState, action: Unsafe
           nameTranslations: null
         }
       };
-    case DictionariesService.DICTIONARY_DIALOG_ACTION:
     case DictionariesService.TERM_DIALOG_ACTION:
       return {
         ...state,

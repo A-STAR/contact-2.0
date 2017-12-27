@@ -90,12 +90,12 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
           reasonCodeControl.options = this.dicts[UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE]
             .filter(term => term.parentCode === statusCode[0].value)
             .map(toLabeledValues);
-          // disable control if no options available
+          // disable when options list is empty
           reasonCodeControl.disabled = !reasonCodeControl.options.length;
 
           // set required flag
-          reasonCodeControl.required = reasonCodeControl.disabled ? false
-            : this.isReasonCodeRequired(this.dicts.constant, statusCode[0].value);
+          reasonCodeControl.required = this.isReasonCodeRequired(this.dicts.constant, statusCode[0].value);
+
         });
 
     });
@@ -109,9 +109,13 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
       this.statusCodeSub.unsubscribe();
     }
   }
-
+  /**
+   * Custom submission check.
+   * We need to check that all required controls have value,
+   * even if required control is disabled
+   */
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+    return this.form && this.hasRequiredValues();
   }
 
   submit(): void {
@@ -142,6 +146,7 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
         label: label('dialog.reasonCode'),
         controlName: 'reasonCode',
         type: 'select',
+        required: this.isReasonCodeRequired(this.dicts.constant),
         options: reasonOptions
       },
       {
@@ -156,7 +161,16 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
     return this.controls.find(control => (control as IDynamicFormControl).controlName === controlName);
   }
 
-  private isReasonCodeRequired(reasonCodeRequired: IUserConstant, code: number): boolean {
+  private isReasonCodeRequired(reasonCodeRequired: IUserConstant, code?: number): boolean {
     return reasonCodeRequired.valueS === 'ALL' || reasonCodeRequired.valueS.split(',').map(Number).includes(code);
+  }
+  /**
+   * Checks whether all required controls have any value.
+   * This is for special case when control can be disabled but still must be checked for the required value
+   */
+  private hasRequiredValues(): boolean {
+    return this.form.getFlatControls()
+      .filter(control => control.required)
+      .every(c => !!this.form.serializedValue[c.controlName]);
   }
 }
