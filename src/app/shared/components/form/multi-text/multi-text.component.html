@@ -3,7 +3,14 @@
   [multiple]="true"
   [options]="options"
   [nullable]="false"
+  [controlDisabled]="controlDisabled"
   (onSelect)="onSelectedValueChange($event)">
 </app-select>
 
-<input class="form-control mt-sm" type="text" [ngModel]="displayValue" (ngModelChange)="onValueChange($event)">
+<input
+  class="form-control mt-sm"
+  type="text"
+  [ngModel]="displayValue"
+  [disabled]="controlDisabled"
+  (ngModelChange)="onValueChange($event)"
+>

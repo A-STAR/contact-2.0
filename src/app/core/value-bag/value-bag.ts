@@ -49,6 +49,10 @@ export class ValueBag {
     return this.getStringValue(name) === 'ALL';
   }
 
+  getStringValueAsArray(name: string): number[] {
+    return this.getStringValue(name).split(/,\s*/).map(Number);
+  }
+
   private getBooleanValue(name: string): boolean {
     return this.bag[name] && this.bag[name].valueB;
   }
@@ -61,7 +65,4 @@ export class ValueBag {
     return this.getStringValueAsArray(name).includes(value);
   }
 
-  private getStringValueAsArray(name: string): number[] {
-    return this.getStringValue(name).split(/,\s*/).map(Number);
-  }
 }

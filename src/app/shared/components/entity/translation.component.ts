@@ -1,21 +1,49 @@
-import { AfterViewInit, OnInit } from '@angular/core';
+import { AfterViewInit, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
 import { IDynamicFormControl, IDynamicFormItem, ISelectItemsPayload
 } from '../form/dynamic-form/dynamic-form.interface';
 
-import { EntityBaseComponent } from './base.component';
+import { DynamicFormComponent } from '../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-export class EntityTranslationComponent<T> extends EntityBaseComponent<T> implements AfterViewInit, OnInit {
+export class EntityTranslationComponent<T> implements AfterViewInit, OnInit {
+  @Input() mode: string;
+  @Input() title: string;
+  @Input() editedEntity: T;
+  @Output() submit: EventEmitter<T> = new EventEmitter<T>();
+  @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
+  @ViewChild(DynamicFormComponent) dynamicForm: DynamicFormComponent;
+
+  controls: Array<IDynamicFormItem>;
   displayControlName = 'translatedName';
   nameControlName = 'name';
   translatedControlName = 'nameTranslations';
 
   private _currentSelectedItem: ILabeledValue;
 
+  onSubmit(): void {
+    this.submit.emit(this.toSubmittedValues(this.dynamicForm.value));
+  }
+
+  toSubmittedValues(values: T): any {
+    return values;
+  }
+
+  onClose(): void {
+    this.close();
+  }
+
+  onCancel(): void {
+    this.close();
+  }
+
+  canSubmit(): boolean {
+    return this.dynamicForm && this.dynamicForm.canSubmit;
+  }
+
   ngOnInit(): void {
-    super.ngOnInit();
+    this.controls = this.getControls();
 
     if (this.isEditMode()) {
       const dynamicDisplayControl: IDynamicFormControl = this.flattenFormControls(this.controls)
@@ -73,6 +101,14 @@ export class EntityTranslationComponent<T> extends EntityBaseComponent<T> implem
 
   protected getControls(): Array<IDynamicFormItem> {
     return this.controls;
+  }
+
+  protected isEditMode(): boolean {
+    return 'update' === this.mode;
+  }
+
+  private close(): void {
+    this.cancel.emit();
   }
 
   // TODO: duplication; see app/shared/components/form/dynamic-form/dynamic-form.component.ts

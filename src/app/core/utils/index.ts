@@ -3,6 +3,7 @@
  * Description: exports small utility functions to be used across different components
  */
 
+import { ActivatedRoute } from '@angular/router';
 import { IOption, INamedValue } from '../converter/value-converter.interface';
 
 export const propOr = (prop: string, orValue: any) => obj => Object.hasOwnProperty.call(obj, prop) ? obj[prop] : orValue;
@@ -113,3 +114,15 @@ export const round = (value: number, precision: number) => {
 };
 
 export const range = (min: number, max: number): number[] => Array(max - min + 1).fill(null).map((_, i) => min + i);
+
+/**
+ * Allows to check is the current route matches the segment
+ * i.e. `isRoute('create')`
+ * @param route {ActivatedRoute}
+ * @param segment {string}
+ * @returns boolean
+ */
+export const isRoute = (route: ActivatedRoute, segment: string): boolean => {
+  return route.snapshot.url.join('/').indexOf(segment) !== -1;
+};
+

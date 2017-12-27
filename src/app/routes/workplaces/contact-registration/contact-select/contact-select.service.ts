@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IAGridRequestParams, IAGridResponse } from 'app/shared/components/grid2/grid2.interface';
+import { IAGridRequestParams, IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
-import { FilterObject } from 'app/shared/components/grid2/filter/grid-filter';
+import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
 
 @Injectable()
 export class ContactSelectService {
@@ -19,8 +19,9 @@ export class ContactSelectService {
 
   fetchAll(guid: string, debtId: number, excludePersonId: number): Observable<any[]> {
     const url = '/regContact/debts/{debtId}/contactPersons';
+    const params = excludePersonId ? { excludePersonId } : {};
     return this.dataService
-      .readAll(url, { guid, debtId }, { params: { excludePersonId } })
+      .readAll(url, { guid, debtId }, { params })
       .catch(this.notificationsService.fetchError().entity('entities.persons.gen.plural').dispatchCallback());
   }
 

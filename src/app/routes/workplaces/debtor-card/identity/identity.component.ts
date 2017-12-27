@@ -1,8 +1,10 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 
 interface IIdentityCardRouteParams {
   identityId: number;
@@ -29,10 +31,11 @@ export class DebtorIdentityComponent {
    * Depending on the route, this can be either a personId or a contactId
    */
   get personId$(): Observable<number> {
-    return Observable
-      .combineLatest(this.debtorCardService.personId$, this.routeParams$)
-      .map(([ personId, params ]) => params.contactId || personId)
-      .distinctUntilChanged();
+    return combineLatest(this.debtorCardService.personId$, this.routeParams$)
+      .pipe(
+        map(([ personId, params ]) => params.contactId || personId),
+        distinctUntilChanged(),
+      );
   }
 
   get routeParams$(): Observable<IIdentityCardRouteParams> {

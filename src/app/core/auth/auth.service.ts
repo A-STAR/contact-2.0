@@ -6,6 +6,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../state/state.interface';
+import { IUser } from './auth.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
 
 import { PersistenceService } from '../persistence/persistence.service';
@@ -43,6 +44,12 @@ export class AuthService implements CanActivate {
     if (!this.isRetrievedTokenValid()) {
       this.redirectToLogin();
     }
+  }
+
+  get currentUser$(): Observable<IUser> {
+    return this.token$
+      .map(token => this.jwtHelper.decodeToken(token))
+      .map(tokenInfo => ({ userId: tokenInfo.userId }));
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {

@@ -20,7 +20,7 @@ import { IMetadataColumn, IMetadataFilter } from '../../../../core/metadata/meta
 
 import { EntityAttributesService } from '../../../../core/entity/attributes/entity-attributes.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
-import { MetadataFilterService } from 'app/shared/components/metadata-grid/filter/metadata-filter.service';
+import { MetadataFilterService } from '../../../../shared/components/metadata-grid/filter/metadata-filter.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -106,7 +106,7 @@ export class MetadataFilterComponent implements OnInit {
 
   private getOperatorForControl(controlName: string): FilterOperatorType {
     const control = this.filterControls.find(c => c.controlName === controlName);
-    return control.operator || '==';
+    return (control && control.operator) || '==';
   }
 
   private transformFilterValue(key: string, value: any): any {
