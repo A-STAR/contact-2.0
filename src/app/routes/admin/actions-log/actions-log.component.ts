@@ -57,8 +57,8 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
 
   contextMenuOptions: IContextMenuItem[] = [
     {
-      action: 'openUserById',
-      label: 'default.grid.actions.openUserById',
+      action: 'openDebtCardByDebtor',
+      label: 'default.grid.actions.openDebtCardByDebtor',
       enabled: Observable.of(true),
       params: [ 'personId' ],
     }

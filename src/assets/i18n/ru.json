@@ -2528,7 +2528,7 @@
         "smsCreate": "Массовое формирование SMS",
         "statusChange": "Изменить статус",
         "visitAdd": "Отметить необходимость",
-        "openUserById": "Открыть карточку должника",
+        "openDebtCardByDebtor": "Открыть карточку должника",
         "changePortfolioAttr": "Портфель",
         "changeRegionAttr": "Регион",
         "changeDict1Attr": "Словарный атрибут 1",
