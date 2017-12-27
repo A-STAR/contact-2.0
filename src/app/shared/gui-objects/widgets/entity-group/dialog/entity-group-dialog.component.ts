@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
+  OnInit, Output, OnDestroy, Input
+} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IEntityGroup, IGridAction } from '../../entity-group/entity-group.interface';
@@ -11,6 +14,9 @@ import { EntityGroupService } from '../entity-group.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityGroupDialogComponent implements OnInit, OnDestroy {
+
+  @Input() entityTypeId: number;
+  @Input() manualGroup: boolean;
 
   @Output() close = new EventEmitter<null>();
   @Output() select = new EventEmitter<IEntityGroup>();

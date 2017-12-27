@@ -61,6 +61,7 @@
 <app-entity-group-add
   *ngIf="isDialog('objectAddToGroup')"
   [debts]="getSelectionParam(0)"
+  [entityTypeId]="getAddOption('entityTypeId', 0)"
   (close)="onCloseDialog()"
 ></app-entity-group-add>
 

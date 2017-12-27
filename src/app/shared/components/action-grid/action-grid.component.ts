@@ -78,6 +78,13 @@ export class ActionGridComponent<T> extends DialogFunctions {
     return this.dialogData.addOptions.find(option => option.name === name).value;
   }
 
+  getAddOption(name: string, index: number): number|string {
+    const options = this.getAddOptions(name);
+    if (options && options.length > index) {
+      return options[index];
+    }
+  }
+
   getSelectionParam(key: number): any[] {
     return this.dialogData.selection[key];
   }
