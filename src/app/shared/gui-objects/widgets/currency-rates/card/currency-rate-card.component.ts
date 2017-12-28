@@ -54,7 +54,7 @@ export class CurrencyRateCardComponent implements OnInit {
 
   onSubmit(): void {
     const action = this.currencyRateId
-      ? this.currencyRatesService.update(this.currencyId, this.form.serializedUpdates)
+      ? this.currencyRatesService.update(this.currencyId, this.serializeCurrencyRate(this.form.serializedUpdates))
       : this.currencyRatesService.create(this.currencyId, this.form.serializedUpdates);
 
     action.subscribe(() => {
@@ -65,6 +65,13 @@ export class CurrencyRateCardComponent implements OnInit {
 
   onBack(): void {
     this.contentTabService.back();
+  }
+
+  private serializeCurrencyRate(currencyRate: ICurrencyRate): ICurrencyRate {
+    return {
+      fromDateTime: this.currencyRate.fromDateTime,
+      ...currencyRate
+    };
   }
 
   private initControls(canEdit: boolean): Array<IDynamicFormItem> {

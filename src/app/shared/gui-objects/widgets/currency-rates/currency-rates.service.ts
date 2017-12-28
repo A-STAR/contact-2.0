@@ -40,17 +40,13 @@ export class CurrencyRatesService extends AbstractActionService {
   }
 
   fetchAll(currencyId: number): Observable<Array<ICurrencyRate>> {
-    // return this.dataService.readAll(this.baseUrl, { currencyId })
-      // .catch(this.notificationsService.fetchError().entity('entities.currencyRates.gen.plural').dispatchCallback());
-    return Observable.of([
-      { id: 1, fromDateTime: '2017-08-07T21:00:00Z', rate: 1.231 }
-    ]);
+    return this.dataService.readAll(this.baseUrl, { currencyId })
+      .catch(this.notificationsService.fetchError().entity('entities.currencyRates.gen.plural').dispatchCallback());
   }
 
   fetch(currencyId: number, currencyRateId: number): Observable<ICurrencyRate> {
-    // return this.dataService.read(`${this.baseUrl}/{currencyRateId}`, { currencyId, currencyRateId })
-      // .catch(this.notificationsService.fetchError().entity('entities.currencyRates.gen.singular').dispatchCallback());
-    return Observable.of({ id: 1, fromDateTime: '2017-08-07T21:00:00Z', rate: 1.231 });
+    return this.dataService.read(`${this.baseUrl}/{currencyRateId}`, { currencyId, currencyRateId })
+      .catch(this.notificationsService.fetchError().entity('entities.currencyRates.gen.singular').dispatchCallback());
   }
 
   create(currencyId: number, currencyRate: ICurrencyRate): Observable<ICurrencyRate> {
