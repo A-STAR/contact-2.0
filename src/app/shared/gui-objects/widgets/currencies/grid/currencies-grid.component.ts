@@ -79,11 +79,11 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-    .pipe(first())
-    .subscribe(columns => {
-      this.columns = [...columns];
-      this.cdRef.markForCheck();
-    });
+      .pipe(first())
+      .subscribe(columns => {
+        this.columns = [...columns];
+        this.cdRef.markForCheck();
+      });
 
     this.viewPermissionSubscription = this.currenciesService.canView$
       .subscribe(hasViewPermission => {
@@ -91,7 +91,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
           this.fetch();
         } else {
           this.clear();
-          this.notificationsService.error('errors.default.read.403').entity('entities.groups.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.groups.gen.plural').dispatch();
         }
       });
 

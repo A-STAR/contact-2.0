@@ -21,7 +21,7 @@ const label = makeKey('widgets.currencyRates.card');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CurrencyRateCardComponent implements OnInit {
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   @Input() currencyId: number;
   @Input() currencyRateId: number;

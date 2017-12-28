@@ -29,7 +29,7 @@ export class CurrencyCardComponent implements OnInit {
 
   @Input() currencyId: number;
 
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   currency: Partial<ICurrency>;
@@ -48,7 +48,7 @@ export class CurrencyCardComponent implements OnInit {
     combineLatest(
       this.currencyId ? this.currenciesService.canEdit$ : this.currenciesService.canAdd$,
       this.currencyId ? this.currenciesService.fetch(this.currencyId) : Observable.of({}),
-      this.currencyId ? this.lookupService.languages : of([]),
+      this.currencyId ? this.lookupService.lookup<ILookupLanguage>('languages') : of([]),
       this.currencyId ? this.currenciesService.readCurrencyNameTranslations(this.currencyId) : of([]),
       this.currencyId ? this.currenciesService.readCurrencyShortNameTranslations(this.currencyId) : of([]),
       this.currenciesService.getAll()
@@ -89,7 +89,7 @@ export class CurrencyCardComponent implements OnInit {
     this.contentTabService.back();
   }
 
-  private serializeTranslatedCurrency(currency: ICurrency): ICurrency {
+  private serializeTranslatedCurrency(currency: any): ICurrency {
     const isMultiNameChanged = currency.multiName && Object.keys(currency.multiName).length;
     const isMultiShortNameChanged = currency.multiShortName && Object.keys(currency.multiShortName).length;
     const result = {

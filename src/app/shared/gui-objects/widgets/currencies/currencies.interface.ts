@@ -1,15 +1,11 @@
+import { IEntityTranslation } from 'app/core/entity/translations/entity-translations.interface';
+
 export interface ICurrency {
   id?: number;
   code?: string;
-  multiName?: {
-    value: string;
-    languageId: number;
-  }[];
+  multiName?: IEntityTranslation[];
   name?: string;
-  multiShortName?: {
-    value: string;
-    languageId: number;
-  }[];
+  multiShortName?: IEntityTranslation[];
   shortName?: string;
   isMain?: number;
 }

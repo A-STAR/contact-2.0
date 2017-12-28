@@ -10,6 +10,7 @@ import { ContactLogTabModule } from './contact-log-tab/contact-log.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { CurrenciesModule } from './currencies/currencies.module';
+import { CurrencyRatesModule } from './currency-rates/currency-rates.module';
 import { DebtComponentModule } from './debt/component/debt-component.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
@@ -35,7 +36,6 @@ import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { PropertyModule } from './property/property.module';
 import { GroupModule } from './groups/group.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
-import { CurrencyRatesModule } from './currency-rates/currency-rates.module';
 
 @NgModule({
   imports: [
@@ -48,6 +48,7 @@ import { CurrencyRatesModule } from './currency-rates/currency-rates.module';
     ContactModule,
     ContactPropertyModule,
     CurrenciesModule,
+    CurrencyRatesModule,
     DebtComponentModule,
     DebtResponsibleModule,
     DebtorActionLogModule,
@@ -74,7 +75,6 @@ import { CurrencyRatesModule } from './currency-rates/currency-rates.module';
     PropertyModule,
     GroupModule,
     VisitPrepareModule,
-    CurrencyRatesModule,
   ],
   exports: [
     AddressModule,
@@ -85,6 +85,7 @@ import { CurrencyRatesModule } from './currency-rates/currency-rates.module';
     ContactModule,
     ContactPropertyModule,
     CurrenciesModule,
+    CurrencyRatesModule,
     DebtComponentModule,
     DebtResponsibleModule,
     DebtorActionLogModule,
@@ -111,7 +112,6 @@ import { CurrencyRatesModule } from './currency-rates/currency-rates.module';
     PropertyModule,
     GroupModule,
     VisitPrepareModule,
-    CurrencyRatesModule,
   ]
 })
 export class WidgetsModule { }

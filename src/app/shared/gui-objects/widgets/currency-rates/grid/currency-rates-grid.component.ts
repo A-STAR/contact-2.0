@@ -85,7 +85,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
       } else {
         this.clear();
         if (!hasViewPermission) {
-          this.notificationsService.error('errors.default.read.403').entity('entities.currencyRates.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.currencyRates.gen.plural').dispatch();
         }
       }
     });
