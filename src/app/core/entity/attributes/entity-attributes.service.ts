@@ -42,7 +42,7 @@ export class EntityAttributesService extends AbstractActionService {
   getAttributes(ids: number[]): Observable<IEntityAttributes> {
     const idsToFetch = ids.reduce((acc, id) => {
       const status = this.hash[id];
-      return !status || !this.statuses.includes(status)
+      return !this.statuses.includes(status)
         ? acc.concat(id)
         : acc;
     }, []);
