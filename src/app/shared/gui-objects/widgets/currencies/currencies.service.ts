@@ -1,6 +1,7 @@
 import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
@@ -22,6 +23,8 @@ export class CurrenciesService extends AbstractActionService {
   static CURRENCY_SHORT_NAME_ID = 163;
 
   private baseUrl = '/currencies';
+
+  private currencies: Array<ICurrency>;
 
   constructor(
     protected actions: Actions,
@@ -46,13 +49,20 @@ export class CurrenciesService extends AbstractActionService {
     return this.userPermissionsService.has('CURRENCY_EDIT');
   }
 
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('CURRENCY_DELETE');
+  canDelete$(currency: ICurrency): Observable<boolean> {
+    return this.userPermissionsService.has('CURRENCY_DELETE').map(canDelete => canDelete && currency && !currency.isMain);
   }
 
   fetchAll(): Observable<Array<ICurrency>> {
     return this.dataService.readAll(this.baseUrl)
       .catch(this.notificationsService.fetchError().entity('entities.currencies.gen.plural').dispatchCallback());
+  }
+
+  getAll(): Observable<Array<ICurrency>> {
+    if (!this.currencies) {
+      return this.fetchAll().do(currencies => this.currencies = currencies);
+    }
+    return of(this.currencies);
   }
 
   fetch(currencyId: number): Observable<ICurrency> {

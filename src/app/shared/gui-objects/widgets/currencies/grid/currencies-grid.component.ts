@@ -49,10 +49,9 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('removeCurrency'),
-      enabled: Observable.combineLatest(
-        this.currenciesService.canDelete$,
-        this.selectedCurrency$
-      ).map(([canDelete, selectedCurrency]) => !!canDelete && !!selectedCurrency),
+      enabled: this.selectedCurrency$.flatMap(
+        selectedCurrency => this.currenciesService.canDelete$(selectedCurrency),
+      ),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,

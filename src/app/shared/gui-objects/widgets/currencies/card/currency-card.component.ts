@@ -35,6 +35,7 @@ export class CurrencyCardComponent implements OnInit {
   currency: Partial<ICurrency>;
 
   private languages: ILookupLanguage[];
+  private currencies: Array<ICurrency>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -49,14 +50,16 @@ export class CurrencyCardComponent implements OnInit {
       this.currencyId ? this.currenciesService.fetch(this.currencyId) : Observable.of({}),
       this.currencyId ? this.lookupService.languages : of([]),
       this.currencyId ? this.currenciesService.readCurrencyNameTranslations(this.currencyId) : of([]),
-      this.currencyId ? this.currenciesService.readCurrencyShortNameTranslations(this.currencyId) : of([])
+      this.currencyId ? this.currenciesService.readCurrencyShortNameTranslations(this.currencyId) : of([]),
+      this.currenciesService.getAll()
     )
     .pipe(first())
-    .subscribe(([ canEdit, currency, languages, nameTranslations, shortNameTranslations ]) => {
+    .subscribe(([ canEdit, currency, languages, nameTranslations, shortNameTranslations, currencies ]) => {
       this.currency = currency;
       this.currency.multiName = nameTranslations;
       this.currency.multiShortName = shortNameTranslations;
       this.languages = languages;
+      this.currencies = currencies;
 
       const languageOpts = languages.map(userLanguage =>
         ({ label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain, selected: userLanguage.isMain })
@@ -124,7 +127,10 @@ export class CurrencyCardComponent implements OnInit {
         options: languageOptions,
         disabled: !canEdit
       },
-      { label: label('isMain'), controlName: 'isMain', type: 'checkbox', disabled: !canEdit },
+      {
+        label: label('isMain'), controlName: 'isMain', type: 'checkbox',
+        disabled: !canEdit || !!this.currencies.find(currency => !!currency.isMain)
+      },
     ];
   }
 }
