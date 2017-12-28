@@ -66,6 +66,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
 
   private viewPermissionSubscription: Subscription;
   private actionSubscription: Subscription;
+  private currencySubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -102,13 +103,15 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
         this.selectedCurrency$.next(this.selectedCurrency);
       });
 
-    this.selectedCurrency$.subscribe(currency =>
+    this.currencySubscription = this.selectedCurrency$.subscribe(currency =>
       this.currenciesService.dispatchAction(CurrenciesService.MESSAGE_CURRENCY_SELECTED, currency)
     );
   }
 
   ngOnDestroy(): void {
     this.viewPermissionSubscription.unsubscribe();
+    this.actionSubscription.unsubscribe();
+    this.currencySubscription.unsubscribe();
   }
 
   get currencies(): Array<ICurrency> {
