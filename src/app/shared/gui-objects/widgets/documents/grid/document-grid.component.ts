@@ -91,7 +91,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     { prop: 'fileName' },
     { prop: 'docTypeCode', dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE },
     { prop: 'docNumber' },
-    { prop: 'operatorName' },
+    { prop: 'fullName' },
     { prop: 'comment' }
   ];
 

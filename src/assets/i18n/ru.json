@@ -2141,7 +2141,7 @@
       "gen": { "singular": "контактного лица", "plural": "котнактных лиц" }
     },
     "documents": {
-      "gen": { "singular": "вложение", "plural": "вложений" }
+      "gen": { "singular": "вложения", "plural": "вложений" }
     },
     "identityDocs": {
       "gen": { "singular": "удостоверения личности", "plural": "списка удостоверений личности" }
