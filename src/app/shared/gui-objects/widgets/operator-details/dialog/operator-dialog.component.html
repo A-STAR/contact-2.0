@@ -1,0 +1,11 @@
+<app-dialog (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'widgets.operatorDetails.dialog.title' | translate }}</h3>
+  </div>
+
+  <app-operator-card [userId]="userId"></app-operator-card>
+
+  <div dialog-footer>
+    <app-button type="cancel" (click)="onClose()"></app-button>
+  </div>
+</app-dialog>

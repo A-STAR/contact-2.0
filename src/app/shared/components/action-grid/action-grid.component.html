@@ -139,6 +139,11 @@
   (close)="onCloseAction($event)"
 ></app-visit-cancel-dialog>
 
+<app-operator-details
+  *ngIf="isDialog('openUserDetail')"
+  [userId]="getDialogParam(0)"
+></app-operator-details>
+
 <app-metadata-grid
   #grid
   *ngIf="isUsingAGGrid; else simpleGrid"
