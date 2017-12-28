@@ -1,0 +1,13 @@
+<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="widgets.currencyRates"
+  selectionType="single"
+  [columns]="columns"
+  [selection]="selection"
+  [footerHeight]="false"
+  [rows]="currencyRates"
+  [styles]="{ height: '430px' }"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onEdit($event)">
+</app-grid>

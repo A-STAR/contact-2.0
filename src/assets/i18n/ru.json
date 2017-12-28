@@ -40,6 +40,8 @@
         "USER_EDIT": "Карточка пользователя",
         "ACTIONS_LOG": "Лог действий",
         "CONSTANTS": "Константы",
+        "CURRENCIES": "Список валют",
+        "CURRENCY_EDIT": "Валюта",
         "DICTIONARIES": "Справочники",
         "ATTRIBUTE_VERSION": "Версии атрибута",
         "PORTFOLIOS_CONTRACTORS": "Клиенты и портфели",
@@ -96,7 +98,8 @@
         "REPORTS": "Отчеты",
         "ARBITRARY_REPORTS": "Произвольные отчеты",
         "HELP": "Помощь",
-        "INCOMING_CALL": "Входящий звонок"
+        "INCOMING_CALL": "Входящий звонок",
+        "CURRENCY_RATE_EDIT": "Валютный Курс"
       }
     },
     "messages": {
@@ -1244,6 +1247,16 @@
         "participants": "Участники",
         "statistics": "Статистика"
       }
+    },
+    "currenciesTab": {
+      "title": "Курсы валют",
+      "remove": {
+        "title": "Удалить валюту",
+        "confirmMessage": "Вы действительно хотите удалить выбранную валюту?"
+      }
+    },
+    "currencyRatesTab": {
+      "title": "Курсы"
     }
   },
   "notifications": {
@@ -2013,6 +2026,32 @@
       "dialog": {
         "title": "Подготовка выезда"
       }
+    },
+    "currencies": {
+      "grid": {
+        "id": "ИД",
+        "code": "Код",
+        "name": "Название",
+        "shortName": "Краткое наименование",
+        "isMain": "Основная валюта"
+      },
+      "card":  {
+        "id": "ИД",
+        "code": "Код",
+        "name": "Название",
+        "shortName": "Краткое наименование",
+        "isMain": "Основная валюта"
+      }
+    },
+    "currencyRates": {
+      "grid": {
+        "fromDateTime": "Дата",
+        "rate": "Курс"
+      },
+      "card": {
+        "fromDateTime": "Дата",
+        "rate": "Курс"
+      }
     }
   },
   "entities": {
@@ -2187,6 +2226,12 @@
     },
     "visit": {
       "gen": { "singular": "выезда", "plural": "выездов" }
+    },
+    "currencies":{
+      "gen": { "singular": "валюты", "plural": "списка валют" }
+    },
+    "currencyRates": {
+      "gen": { "singular": "курса", "plural": "курсов" }
     }
   },
   "massOperations": {

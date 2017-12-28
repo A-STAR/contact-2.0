@@ -40,6 +40,8 @@
         "USER_EDIT": "User card",
         "ACTIONS_LOG": "Actions Log",
         "CONSTANTS": "Constants",
+        "CURRENCIES": "Currencies",
+        "CURRENCY_EDIT": "Currency",
         "DICTIONARIES": "Reference",
         "ATTRIBUTE_VERSION": "Attribute's versions",
         "PORTFOLIOS_CONTRACTORS": "Portfolios and contractors",
@@ -96,7 +98,8 @@
         "REPORTS": "Reports",
         "ARBITRARY_REPORTS": "Ad-hoc Reports",
         "HELP": "Help",
-        "INCOMING_CALL": "Incoming Call"
+        "INCOMING_CALL": "Incoming Call",
+        "CURRENCY_RATE_EDIT": "Currency Rate"
       }
     },
     "messages": {
@@ -1244,6 +1247,16 @@
         "participants": "Participants",
         "statistics": "Statistics"
       }
+    },
+    "currenciesTab": {
+      "title": "Currencies",
+      "remove": {
+        "title": "Delete currency",
+        "confirmMessage": "Are you sure you want to delete currency?"
+      }
+    },
+    "currencyRatesTab": {
+      "title": "Rates"
     }
   },
   "notifications": {
@@ -2013,6 +2026,32 @@
       "dialog": {
         "title": "Visit prepare"
       }
+    },
+    "currencies": {
+      "grid": {
+        "id": "ID",
+        "code": "Code",
+        "name": "Name",
+        "shortName": "Short name",
+        "isMain": "Is main"
+      },
+      "card": {
+        "id": "ID",
+        "code": "Code",
+        "name": "Name",
+        "shortName": "Short name",
+        "isMain": "Is main"
+      }
+    },
+    "currencyRates": {
+      "grid": {
+        "fromDateTime": "Date",
+        "rate": "Rate"
+      },
+      "card": {
+        "fromDateTime": "Date",
+        "rate": "Rate"
+      }
     }
   },
   "entities": {
@@ -2187,6 +2226,12 @@
     },
     "visit": {
       "gen": { "singular": "visit", "plural": "visits" }
+    },
+    "currencies":{
+      "gen": { "singular": "currency", "plural": "currencies" }
+    },
+    "currencyRates": {
+      "gen": { "singular": "rate", "plural": "rates" }
     }
   },
   "massOperations": {

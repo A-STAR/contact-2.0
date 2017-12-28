@@ -1,0 +1,8 @@
+<div class="pb-lg">
+  <app-button type="back" (click)="onBack()"></app-button>
+  <app-button color="primary" type="save" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+</div>
+  
+<div class="pb-lg">
+  <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="currency"></app-dynamic-form>
+</div>
