@@ -22,6 +22,9 @@ export class ContactLogComponent {
   ];
 
   onTabSelect(tabIndex: number): void {
-    this.grids[tabIndex].isInitialised = true;
+    // NOTE: sometimes the framework passes an MouseEvent here
+    if (Number.isInteger(tabIndex)) {
+      this.grids[tabIndex].isInitialised = true;
+    }
   }
 }

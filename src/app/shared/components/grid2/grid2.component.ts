@@ -537,8 +537,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           btn.disabled = !canPaginate;
           return btn;
         case 7:
-          // refreshBtn
-          // btn.disabled = !pageCount;
+          // NOTE: refreshBtn should always be enabled
           return btn;
         default:
           return btn;
@@ -565,13 +564,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private getCustomFilter(column: IAGridColumn): any {
     const filterMap = {
-      '1': 'number',
-      '3': 'text',
-      '6': 'set',
-      '7': 'date',
+      '1': 'agNumberColumnFilter',
+      '3': 'agTextColumnFilter',
+      '6': 'agSetColumnFilter',
+      '7': 'agDateColumnFilter',
       'default': GridTextFilter,
     };
-    return R.propOr('text', String(column.dataType))(filterMap);
+    return R.propOr('agTextColumnFilter', String(column.dataType))(filterMap);
   }
 
   private getCustomFilterParams(column: IAGridColumn): any {
@@ -805,10 +804,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //   subMenu: [
       //     {name: 'Niall', action: () => {log('Niall was pressed'); } },
       //     {name: 'Sean', action: () => {log('Sean was pressed'); } },
-      //     {name: 'John', action: () => {log('John was pressed'); } },
-      //     {name: 'Alberto', action: () => {log('Alberto was pressed'); } },
-      //     {name: 'Tony', action: () => {log('Tony was pressed'); } },
-      //     {name: 'Andrew', action: () => {log('Andrew was pressed'); } },
       //     {name: 'Lola', action: () => {log('Lola was pressed'); } },
       //   ]
       // },
