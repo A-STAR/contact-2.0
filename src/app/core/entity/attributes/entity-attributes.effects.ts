@@ -15,15 +15,15 @@ export class EntityAttributesEffects {
   fetchAttributes$ = this.actions
     .ofType(EntityAttributesService.ENTITY_ATTRIBUTE_FETCH)
     .mergeMap((action: UnsafeAction) => {
-      const { id } = action.payload;
-      return this.read(id)
-        .map(attribute => ({
+      const { ids } = action.payload;
+      return this.readAll(ids)
+        .map(attributes => ({
           type: EntityAttributesService.ENTITY_ATTRIBUTE_FETCH_SUCCESS,
-          payload: { id, attribute }
+          payload: attributes
         }))
         .catch(response => [
-          { type: EntityAttributesService.ENTITY_ATTRIBUTE_FETCH_FAILURE },
-          this.notificationService.error('errors.default.read')
+          { type: EntityAttributesService.ENTITY_ATTRIBUTE_FETCH_FAILURE, payload: ids },
+          this.notificationService.fetchError()
             .entity(`entities.attribute.gen.plural`).response(response).action(),
         ]);
     });
@@ -34,7 +34,7 @@ export class EntityAttributesEffects {
     private notificationService: NotificationsService,
   ) {}
 
-  private read(id: number): Observable<IEntityAttribute> {
-    return this.dataService.read('/entityAttributes/{id}', { id });
+  private readAll(ids: number[]): Observable<IEntityAttribute[]> {
+    return this.dataService.readAll('/entityAttributes?ids={ids}', { ids });
   }
 }
