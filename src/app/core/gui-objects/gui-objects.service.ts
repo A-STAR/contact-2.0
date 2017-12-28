@@ -13,6 +13,7 @@ export class GuiObjectsService {
   static GUI_OBJECTS_FETCH_SUCCESS = 'GUI_OBJECTS_FETCH_SUCCESS';
 
   private _guiObjects: Array<IGuiObject>;
+  private isFetching = false;
 
   constructor(private store: Store<IAppState>) {
     this.state$.subscribe(state => this._guiObjects = state.data);
@@ -37,6 +38,7 @@ export class GuiObjectsService {
   refreshGuiObjects(): void {
     const action = this.createRefreshGuiObjectsAction();
     this.store.dispatch(action);
+    this.isFetching = true;
   }
 
   private prepareGuiObject(guiObject: IGuiObject): IMenuItem {
@@ -56,7 +58,7 @@ export class GuiObjectsService {
   }
 
   private getGuiObjects(): Observable<Array<IGuiObject>> {
-    if (!this._guiObjects) {
+    if (!this._guiObjects && !this.isFetching) {
       this.refreshGuiObjects();
     }
     return this.state$.map(state => state.data).filter(Boolean).distinctUntilChanged();

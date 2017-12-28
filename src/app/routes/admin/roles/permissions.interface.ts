@@ -42,8 +42,7 @@ export interface IPermissionsState {
   dialog: IPermissionsDialogEnum;
   currentPermission: IPermissionModel;
   currentRole: IPermissionRole;
-  // TODO(d.maltsev): rename to 'permissions'
-  rawPermissions: IPermissionModel[];
+  permissions: IPermissionModel[];
   roles: Array<IPermissionRole>;
 }
 

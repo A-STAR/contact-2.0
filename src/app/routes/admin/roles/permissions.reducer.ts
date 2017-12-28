@@ -3,19 +3,17 @@ import * as R from 'ramda';
 import { IPermissionAction, IPermissionsState, IPermissionsDialogEnum } from './permissions.interface';
 import { PermissionsService } from './permissions.service';
 
-// TODO: separate service for persisting global state?
+// TODO(a.tymchuk): separate service for persisting global state?
 const savedState = localStorage.getItem(PermissionsService.STORAGE_KEY);
 
 export const defaultState: IPermissionsState = {
   dialog: IPermissionsDialogEnum.NONE,
   currentPermission: null,
   currentRole: null,
-  rawPermissions: null,
+  permissions: null,
   roles: []
 };
 
-// This should NOT be an arrow function in order to pass AoT compilation
-// See: https://github.com/ngrx/store/issues/190#issuecomment-252914335
 export function reducer(
   state: IPermissionsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: IPermissionAction
@@ -28,9 +26,7 @@ export function reducer(
       return {
         ...state,
         roles: action.payload,
-        // currentRole: null,
         currentRole: isThere ? cr : null,
-        // rawPermissions: [],
         // currentPermission: null
       };
     case PermissionsService.ROLE_SELECTED:
@@ -43,18 +39,18 @@ export function reducer(
         ...state,
         roles: [],
         currentRole: null,
-        rawPermissions: [],
+        permissions: [],
         currentPermission: null
       };
     case PermissionsService.PERMISSION_FETCH_SUCCESS:
       return {
         ...state,
-        rawPermissions: action.payload.permissions,
+        permissions: action.payload.permissions,
       };
     case PermissionsService.PERMISSION_CLEAR:
       return {
         ...state,
-        rawPermissions: [],
+        permissions: [],
         currentPermission: null
       };
 

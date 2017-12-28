@@ -41,7 +41,7 @@ export class NotificationsService implements OnDestroy {
       // NOTE: this is to prevent multiple events from writing to the storage too often
       .pipe(throttleTime(500))
       .subscribe(state => {
-      this.persistenceService.set(NotificationsService.STORAGE_KEY, state);
+        this.persistenceService.set(NotificationsService.STORAGE_KEY, state);
     });
   }
 

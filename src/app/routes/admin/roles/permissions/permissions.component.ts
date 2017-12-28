@@ -14,7 +14,7 @@ import { GridService } from '../../../../shared/components/grid/grid.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
-import { first } from 'rxjs/operators';
+import { first } from 'rxjs/operators/first';
 
 @Component({
   selector: 'app-permissions',
@@ -100,7 +100,7 @@ export class PermissionsComponent implements OnDestroy {
       );
 
     this.permissions$ = this.permissionsService.permissions
-      .map(state => state.rawPermissions)
+      .map(state => state.permissions)
       .distinctUntilChanged()
       .map(permissions => this.valueConverterService.deserializeSet(permissions));
 

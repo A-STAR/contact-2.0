@@ -4,6 +4,7 @@ import { ToasterService } from 'angular2-toaster';
 
 import { INotificationAction, NotificationTypeEnum } from './notifications.interface';
 
+import { AuthService } from '../auth/auth.service';
 import { NotificationsService } from './notifications.service';
 
 @Injectable()
@@ -15,6 +16,11 @@ export class NotificationsEffects {
     [NotificationTypeEnum.ERROR]: 'error',
     [NotificationTypeEnum.DEBUG]: 'error',
   };
+
+  @Effect()
+  init$ = this.actions
+    .ofType('@ngrx/store/init')
+    .do(action => console.log('action', action));
 
   @Effect({ dispatch: false })
   notificationPush$ = this.actions
@@ -28,6 +34,7 @@ export class NotificationsEffects {
 
   constructor(
     private actions: Actions,
+    private authService: AuthService,
     private toasterService: ToasterService,
   ) {}
 }

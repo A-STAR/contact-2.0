@@ -1,20 +1,58 @@
-import { Component } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { IPermissionRole } from '../../permissions.interface';
-
-import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
 
 @Component({
   selector: 'app-roles-edit',
-  templateUrl: './roles-edit.component.html'
+  templateUrl: './roles-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RolesEditComponent extends EntityBaseComponent<IPermissionRole> {
-  get title(): string {
-    return this.editedEntity ? 'roles.roles.edit.title' : 'roles.roles.create.title';
+export class RolesEditComponent implements OnInit {
+  @Input() mode: string;
+  @Input() role: IPermissionRole;
+
+  @Output() submit = new EventEmitter<IPermissionRole>();
+  @Output() cancel = new EventEmitter<void>();
+
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  controls: Array<IDynamicFormItem>;
+
+  constructor(private cdRef: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.controls = this.getControls();
   }
 
-  protected getControls(): Array<IDynamicFormControl> {
+  onSubmit(): void {
+    this.submit.emit(this.form.value);
+  }
+
+  onClose(): void {
+    this.cancel.emit();
+  }
+
+  canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
+  get title(): string {
+    return this.role ? 'roles.roles.edit.title' : 'roles.roles.create.title';
+  }
+
+  private getControls(): Array<IDynamicFormControl> {
     return [
       {
         label: 'roles.roles.edit.name',
@@ -26,12 +64,7 @@ export class RolesEditComponent extends EntityBaseComponent<IPermissionRole> {
         label: 'roles.roles.edit.comment',
         controlName: 'comment',
         type: 'textarea',
-        rows: 2
       }
     ];
-  }
-
-  get formData(): any {
-    return this.editedEntity;
   }
 }
