@@ -41,17 +41,6 @@ export class GuiObjectsEffects {
   ) {}
 
   private readGuiObjects(): Observable<IGuiObject[]> {
-    return this.dataService.readAll('/guiconfigurations')
-              // todo remove mock
-              .map(config => {
-                config[2].children.push({
-                    children: [],
-                    dsc: 'Валюты',
-                    id: 40,
-                    name: 'currencies',
-                    objType: 1
-                  });
-                return config;
-              });
+    return this.dataService.readAll('/guiconfigurations');
   }
 }

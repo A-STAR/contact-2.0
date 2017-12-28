@@ -67,7 +67,7 @@ export const menuConfig: IMenuConfig = {
     link: '/utilities/upload-templates',
     icon: 'icon-docs'
   },
-  currencies: {
+  currencyRates: {
     text: 'sidebar.nav.menu.CURRENCIES',
     link: '/utilities/currencies',
     icon: 'icon-wallet'
