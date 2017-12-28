@@ -80,11 +80,13 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
       this.currencyId$
     ).subscribe(([hasViewPermission, currencyId]) => {
       this.currencyId = currencyId;
-      if (hasViewPermission) {
+      if (hasViewPermission && currencyId) {
         this.fetch();
       } else {
         this.clear();
-        this.notificationsService.error('errors.default.read.403').entity('entities.currencyRates.gen.plural').dispatch();
+        if (!hasViewPermission) {
+          this.notificationsService.error('errors.default.read.403').entity('entities.currencyRates.gen.plural').dispatch();
+        }
       }
     });
 
