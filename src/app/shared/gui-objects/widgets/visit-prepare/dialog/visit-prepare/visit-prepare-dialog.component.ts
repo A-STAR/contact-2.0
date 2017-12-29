@@ -32,6 +32,8 @@ export class VisitPrepareDialogComponent extends DialogFunctions implements OnIn
     this.prepareVisits = this.visits.filter(visit => !!visit);
     if (this.prepareVisits.length < this.visits.length) {
       this.setDialog('visitPrepareConfirm');
+    } else {
+      this.setDialog('visitPrepare');
     }
   }
 
