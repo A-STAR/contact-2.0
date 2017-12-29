@@ -100,7 +100,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
       .filter(a => a.action === paramName)[0].params;
 
     const { selection } = this.dialogData;
-    const container = Array(selection[0].length).fill({});
+    const container = Array.from(Array(selection[0].length), () => ({}));
 
     return idNames.reduce((acc, idName, idNum) => {
       selection[idNum].forEach((current, ind) => {
