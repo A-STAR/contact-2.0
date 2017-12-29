@@ -40,19 +40,19 @@ export class ReuseStrategy implements RouteReuseStrategy {
   }
 
   store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle): void {
-    const url = this.getRouteUrl(route);
+    const url = this.getFullRouteUrl(route);
     const data = this.getRouteData(route);
     this.routeCache.set(url, { handle, data });
     this.addRedirectsRecursively(route);
   }
 
   shouldAttach(route: ActivatedRouteSnapshot): boolean {
-    const url = this.getRouteUrl(route);
+    const url = this.getFullRouteUrl(route);
     return this.routeCache.has(url);
   }
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
-    const url = this.getRouteUrl(route);
+    const url = this.getFullRouteUrl(route);
     return this.routeCache.get(url);
   }
 
@@ -106,14 +106,14 @@ export class ReuseStrategy implements RouteReuseStrategy {
     }
   }
 
-  private getRouteUrl(route: ActivatedRouteSnapshot): string {
-    return this.getRouteUrlRecursively(route).filter(Boolean).join('/');
+  private getFullRouteUrl(route: ActivatedRouteSnapshot): string {
+    return this.getFullRouteUrlPaths(route).filter(Boolean).join('/');
   }
 
-  private getRouteUrlRecursively(route: ActivatedRouteSnapshot): string[] {
+  private getFullRouteUrlPaths(route: ActivatedRouteSnapshot): string[] {
     const paths = this.getRouteUrlPaths(route);
     return route.parent
-      ? [ ...this.getRouteUrlRecursively(route.parent), ...paths ]
+      ? [ ...this.getFullRouteUrlPaths(route.parent), ...paths ]
       : paths;
   }
 
