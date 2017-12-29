@@ -12,11 +12,7 @@ import { ContactService } from '../contact.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { AddressGridComponent } from './address-grid/address-grid.component';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { EmploymentGridComponent } from '../../../../../shared/gui-objects/widgets/employment/grid/employment-grid.component';
-import { IdentityGridComponent } from '../../../../../shared/gui-objects/widgets/identity/grid/identity-grid.component';
-import { PhoneGridComponent } from './phone-grid/phone-grid.component';
 
 import { makeKey } from '../../../../../core/utils';
 
