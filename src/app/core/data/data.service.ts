@@ -180,7 +180,7 @@ export class DataService {
     return formData;
   }
 
-  private validateUrl(url: string = ''): Observable<any> {
+  private validateUrl(url: string = ''): Observable<string> {
     if (!url) {
       return Observable.throw('Error: no url passed to the DataService');
     }

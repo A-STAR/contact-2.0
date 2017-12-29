@@ -1,15 +1,15 @@
 <app-dialog (close)="onClose()">
   <div dialog-header>
-    <h3>{{ title | translate:editedEntity }}</h3>
+    <h3>{{ title | translate:role }}</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
+  <app-dynamic-form [controls]="controls" [data]="role"></app-dynamic-form>
 
   <div dialog-footer>
     <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit()">
       <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
     </button>
-    <button class="btn btn-default" (click)="onCancel()">
+    <button class="btn btn-default" (click)="onClose()">
       <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
     </button>
   </div>

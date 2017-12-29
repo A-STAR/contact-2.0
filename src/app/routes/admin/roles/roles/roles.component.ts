@@ -1,56 +1,63 @@
-import { Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
-import { IPermissionsDialogEnum } from '../permissions.interface';
 import { IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
+import { combineLatestAnd } from 'app/core/utils/helpers';
+import { DialogFunctions } from '../../../../core/dialog';
+
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-roles',
   templateUrl: './roles.component.html'
 })
-export class RolesComponent implements OnDestroy {
+export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy {
   editedEntity: IPermissionRole = null;
-
-  dialog: IPermissionsDialogEnum = null;
 
   roles$: Observable<Array<IPermissionRole>>;
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_ADD),
+      action: () => this.setDialog('add'),
       enabled: this.userPermissionsService.has('ROLE_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_COPY,
-      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_COPY),
-      enabled: combineLatest(
+      action: () => this.setDialog('copy'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('ROLE_COPY'),
-        this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.hasCurrentRole$,
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_EDIT),
-      enabled: combineLatest(
+      action: () => this.setDialog('edit'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('ROLE_EDIT'),
-        this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.hasCurrentRole$,
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.dialogAction(IPermissionsDialogEnum.ROLE_DELETE),
-      enabled: combineLatest(
+      action: () => this.setDialog('remove'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('ROLE_DELETE'),
-        this.permissionsService.permissions.map(permissions => !!permissions.currentRole)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+        this.hasCurrentRole$,
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -65,6 +72,8 @@ export class RolesComponent implements OnDestroy {
     { prop: 'comment', width: 200 },
   ];
 
+  dialog: 'add' | 'copy' | 'edit' | 'remove';
+
   hasRoleViewPermission$: Observable<boolean>;
 
   emptyMessage$: Observable<string>;
@@ -73,22 +82,34 @@ export class RolesComponent implements OnDestroy {
   private hasViewPermissionSubscription: Subscription;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
+    private notifications: NotificationsService,
     private permissionsService: PermissionsService,
     private userPermissionsService: UserPermissionsService,
   ) {
-    this.permissionsServiceSubscription = this.permissionsService.permissions.subscribe(state => {
-      this.dialog = state.dialog;
-      this.editedEntity = state.currentRole;
-    });
+    super();
+  }
+
+  ngOnInit(): void {
+    this.permissionsServiceSubscription = this.permissionsService.permissions
+      .subscribe(state => {
+        this.editedEntity = state.currentRole;
+        this.cdRef.markForCheck();
+      });
 
     this.roles$ = this.permissionsService.permissions.map(state => state.roles);
 
     this.hasRoleViewPermission$ = this.userPermissionsService.has('ROLE_VIEW');
-    this.hasViewPermissionSubscription = this.hasRoleViewPermission$.subscribe(hasViewPermission =>
-      hasViewPermission ? this.permissionsService.fetchRoles() : this.permissionsService.clearRoles()
-    );
 
-    this.emptyMessage$ = this.hasRoleViewPermission$.map(hasPermission => hasPermission ? null : 'roles.roles.errors.view');
+    this.hasViewPermissionSubscription = this.hasRoleViewPermission$
+      .subscribe(canView =>
+        canView
+          ? this.permissionsService.fetchRoles()
+          : this.permissionsService.clearRoles()
+      );
+
+    this.emptyMessage$ = this.hasRoleViewPermission$
+      .map(canView => canView ? null : 'roles.roles.errors.view');
   }
 
   ngOnDestroy(): void {
@@ -96,29 +117,20 @@ export class RolesComponent implements OnDestroy {
     this.hasViewPermissionSubscription.unsubscribe();
   }
 
-  get isRoleBeingCreated(): boolean {
-    return this.dialog === IPermissionsDialogEnum.ROLE_ADD;
+  get hasCurrentRole$(): Observable<boolean> {
+    return this.permissionsService.permissions.map(permissions => !!permissions.currentRole);
   }
 
-  get isRoleBeingEdited(): boolean {
-    return this.dialog === IPermissionsDialogEnum.ROLE_EDIT;
-  }
-
-  get isRoleBeingCopied(): boolean {
-    return this.dialog === IPermissionsDialogEnum.ROLE_COPY;
-  }
-
-  get isRoleBeingRemoved(): boolean {
-    return this.dialog === IPermissionsDialogEnum.ROLE_DELETE;
-  }
-
-  onEdit(): void {
+  onDblClick(): void {
     this.userPermissionsService.has('ROLE_EDIT')
       .pipe(first())
-      .subscribe(hasEditPermission => {
-        if (hasEditPermission) {
-          this.permissionsService.permissionDialog(IPermissionsDialogEnum.ROLE_EDIT);
+      .subscribe(canEdit => {
+        if (canEdit) {
+          this.setDialog('edit');
+        } else {
+          this.notifications.error('roles.roles.errors.edit').dispatch();
         }
+        this.cdRef.markForCheck();
       });
   }
 
@@ -128,28 +140,38 @@ export class RolesComponent implements OnDestroy {
     }
   }
 
-  onAddSubmit(data: any): void {
+  onAdd(data: any): void {
     this.permissionsService.createRole(data);
+    this.onSuccess(PermissionsService.ROLE_ADD_SUCCESS);
   }
 
-  onEditSubmit(data: any): void {
+  onEdit(data: any): void {
     this.permissionsService.updateRole(data);
+    this.onSuccess(PermissionsService.ROLE_UPDATE_SUCCESS);
   }
 
-  onCopySubmit(data: any): void {
+  onCopy(data: any): void {
     const { originalRoleId, ...role } = data;
     this.permissionsService.copyRole(originalRoleId[0].value, role);
+    this.onSuccess(PermissionsService.ROLE_COPY_SUCCESS);
   }
 
-  onRemoveSubmit(): void {
+  onRemove(): void {
     this.permissionsService.removeRole();
+    this.onSuccess(PermissionsService.ROLE_DELETE_SUCCESS);
   }
 
   cancelAction(): void {
-    this.permissionsService.permissionDialog(IPermissionsDialogEnum.NONE);
+    this.setDialog();
+    this.cdRef.markForCheck();
   }
 
-  private dialogAction(dialog: IPermissionsDialogEnum): void {
-    this.permissionsService.permissionDialog(dialog);
+  private onSuccess(type: string): void {
+    this.permissionsService.getAction(type)
+      .pipe(first())
+      .subscribe(_ => {
+        this.setDialog();
+        this.cdRef.markForCheck();
+      });
   }
 }

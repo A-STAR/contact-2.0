@@ -1,47 +1,71 @@
-import {
-  Component,
-  OnDestroy
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { ILabeledValue } from '../../../../../core/converter/value-converter.interface';
 import { IPermissionRole } from '../../permissions.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
-import { ILabeledValue } from '../../../../../core/converter/value-converter.interface';
 
-import { EntityBaseComponent } from '../../../../../shared/components/entity/base.component';
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { PermissionsService } from '../../permissions.service';
 
 @Component({
   selector: 'app-roles-copy',
   templateUrl: './roles-copy.component.html'
 })
-export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> implements OnDestroy {
+export class RolesCopyComponent implements OnInit, OnDestroy {
+  @Input() mode: string;
+  @Input() title: string;
+  @Input() role: IPermissionRole;
+
+  @Output() submit = new EventEmitter<IPermissionRole>();
+  @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
+
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  controls: Array<IDynamicFormItem>;
 
   private roles: ILabeledValue[];
   private rolesSubscription: Subscription;
 
-  constructor(permissionsService: PermissionsService) {
-    super();
-    this.rolesSubscription = permissionsService.roles.subscribe((rolesList: IPermissionRole[]) => {
-      this.roles = rolesList
-        .map(
-          (role: IPermissionRole) => ({label: role.name, value: role.id})
-        );
-    });
-  }
+  constructor(private permissionsService: PermissionsService) {}
 
-  get formData(): any {
-    return {
-      originalRoleId: [{ value: this.editedEntity.id, label: this.editedEntity.name }]
-    };
+  ngOnInit(): void {
+    this.rolesSubscription = this.permissionsService.roles
+      .subscribe((rolesList: IPermissionRole[]) => {
+        this.roles = rolesList.map(role => ({ label: role.name, value: role.id }));
+      });
+
+    this.controls = this.getControls();
   }
 
   ngOnDestroy(): void {
     this.rolesSubscription.unsubscribe();
   }
 
-  protected getControls(): Array<IDynamicFormControl> {
+  get formData(): any {
+    return {
+      originalRoleId: [{ value: this.role.id, label: this.role.name }]
+    };
+  }
+
+  onSubmit(): void {
+    this.submit.emit(this.form.value);
+  }
+
+  onClose(): void {
+    this.close();
+  }
+
+  canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
+  private close(): void {
+    this.cancel.emit();
+  }
+
+  private getControls(): Array<IDynamicFormControl> {
     return [
       {
         label: 'roles.roles.copy.originalRoleName',
@@ -67,5 +91,4 @@ export class RolesCopyComponent extends EntityBaseComponent<IPermissionRole> imp
       },
     ];
   }
-
 }

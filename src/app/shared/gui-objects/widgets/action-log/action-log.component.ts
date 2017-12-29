@@ -74,9 +74,9 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
   ) {
     this.constantSub = this.userConstantsService.get('Person.ActionLog.Days')
-    .subscribe(( actionLogDays ) => {
-      this.actionLogDays = actionLogDays && actionLogDays.valueN || 0;
-    });
+      .subscribe(actionLogDays => {
+        this.actionLogDays = actionLogDays && actionLogDays.valueN || 0;
+      });
     this.hasViewPermission$ = this.userPermissionsService.has('PERSON_ACTION_LOG_VIEW');
   }
 
@@ -86,7 +86,7 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
         if (!hasPermission) {
           this.rows = [];
           this.rowCount = 0;
-          this.notifications.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
+          this.notifications.permissionError().entity('entities.actionsLog.gen.plural').dispatch();
         } else {
           // load data
           if (this.grid && this.grid.gridOptions) {
