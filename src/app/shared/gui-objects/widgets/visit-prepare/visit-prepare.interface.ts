@@ -19,3 +19,8 @@ export interface IOperationResult {
     processed: number;
   };
 }
+
+export interface IConfirmOperation {
+  count: number;
+  total: number;
+}

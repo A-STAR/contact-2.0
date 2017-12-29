@@ -2633,6 +2633,10 @@
         "title": "Operation result",
         "message": "Operation was successful for {{processed}} of {{total}} records",
         "messageUnsuccessful": "Unseccessful operation for {{total}} records"
+      },
+      "confirm": {
+        "confirmTitle": "Operation confirm",
+        "confirmMessage": "For {{count}} from {{total}} records operation cannot be executed as there is no mandatory identifier. Continue?"
       }
     },
     "NA": "N/A"
