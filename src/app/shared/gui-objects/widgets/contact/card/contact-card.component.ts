@@ -102,6 +102,10 @@ export class ContactCardComponent {
     return this.routeParams.personId;
   }
 
+  get contactPersonId(): number {
+    return this.routeParams.contactId || this.routeParams.personId;
+  }
+
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
   }
