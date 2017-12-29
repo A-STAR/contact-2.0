@@ -55,7 +55,7 @@ export class OperatorCardComponent implements OnInit {
             width: 9
           },
           {
-            label: label('photo'), controlName: 'image', type: 'image', url: `/users/${this.userId}/photo`,
+            label: label('photo'), controlName: 'image', type: 'image', url: `/users/${1}/photo`,
             disabled: true, width: 3, height: 178
           }
         ],
