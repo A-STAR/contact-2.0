@@ -1,8 +1,10 @@
 import { DetachedRouteHandle } from '@angular/router';
 
-export interface IRouteCache {
-  [key: string]: {
-      handle: DetachedRouteHandle;
-      showTab: boolean;
-  };
+export interface IRouteConfigData {
+  reuse: boolean;
+}
+
+export interface ICachedRoute {
+  handle: DetachedRouteHandle;
+  data: IRouteConfigData;
 }
