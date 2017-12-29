@@ -1,0 +1,18 @@
+<app-select
+  [ngModel]="selection"
+  [multiple]="true"
+  [options]="options"
+  [nullable]="false"
+  [controlDisabled]="controlDisabled"
+  (onSelect)="onSelectedValueChange($event)">
+</app-select>
+
+<div class="input-wrapper">
+  <input
+    class="form-control mt-sm"
+    type="text"
+    [ngModel]="displayValue"
+    [disabled]="controlDisabled"
+    (ngModelChange)="onValueChange($event)"
+  >
+</div>

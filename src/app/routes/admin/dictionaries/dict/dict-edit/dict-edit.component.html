@@ -4,6 +4,7 @@
   </div>
 
   <app-dynamic-form
+    *ngIf="controls"
     [controls]="controls"
     [data]="editedEntity"
     (onSelect)="onSelectItems($event)">

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 
 import { IAppState } from '../../../core/state/state.interface';
+import { IEntityTranslation } from '../../../core/entity/translations/entity-translations.interface';
 import {
   DictionariesDialogActionEnum,
   IDictionary,
@@ -11,8 +12,12 @@ import {
   ITerm,
 } from './dictionaries.interface';
 
+import { EntityTranslationsService } from '../../../core/entity/translations/entity-translations.service';
+
 @Injectable()
 export class DictionariesService {
+  static DICTIONARY_ATTRIBUTE_ID = 3;
+
   static DICTIONARIES_FETCH         = 'DICTIONARIES_FETCH';
   static DICTIONARIES_FETCH_SUCCESS = 'DICTIONARIES_FETCH_SUCCESS';
   static DICTIONARIES_CLEAR         = 'DICTIONARIES_CLEAR';
@@ -41,6 +46,7 @@ export class DictionariesService {
   static TERM_DIALOG_ACTION         = 'TERM_DIALOG_ACTION';
 
   constructor(
+    private entityTranslationsService: EntityTranslationsService,
     private store: Store<IAppState>
   ) {}
 
@@ -203,6 +209,10 @@ export class DictionariesService {
         dialogAction
       }
     });
+  }
+
+  readCurrencyNameTranslations(currencyId: number): Observable<IEntityTranslation[]> {
+    return this.entityTranslationsService.readTranslations(currencyId, DictionariesService.DICTIONARY_ATTRIBUTE_ID);
   }
 
   setDialogAddTermAction(): void {

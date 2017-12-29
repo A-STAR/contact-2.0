@@ -98,6 +98,7 @@ export type TControlTypes =
   | 'hidden'
   | 'htmltextarea'
   | 'image'
+  | 'multilanguage'
   | 'multiselect'
   | 'multiselectwrapper'
   | 'multitext'
