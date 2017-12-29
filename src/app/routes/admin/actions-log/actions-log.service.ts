@@ -63,7 +63,7 @@ export class ActionsLogService {
     const request = this.gridService.buildRequest(params, filters);
 
     return this.dataService.create('/list?name=actions', {}, request)
-      .catch(this.notifications.error('errors.default.read').entity('entities.actionsLog.gen.plural').callback());
+      .catch(this.notifications.fetchError().entity('entities.actionsLog.gen.plural').callback());
   }
 
   destroy(): void {

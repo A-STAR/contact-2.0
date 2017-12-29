@@ -1,13 +1,12 @@
 import * as R from 'ramda';
 
-import { IPermissionAction, IPermissionsState, IPermissionsDialogEnum } from './permissions.interface';
+import { IPermissionAction, IPermissionsState } from './permissions.interface';
 import { PermissionsService } from './permissions.service';
 
 // TODO(a.tymchuk): separate service for persisting global state?
 const savedState = localStorage.getItem(PermissionsService.STORAGE_KEY);
 
 export const defaultState: IPermissionsState = {
-  dialog: IPermissionsDialogEnum.NONE,
   currentPermission: null,
   currentRole: null,
   permissions: null,
@@ -29,11 +28,13 @@ export function reducer(
         currentRole: isThere ? cr : null,
         // currentPermission: null
       };
+
     case PermissionsService.ROLE_SELECTED:
       return {
         ...state,
         currentRole: action.payload.role
       };
+
     case PermissionsService.ROLE_CLEAR:
       return {
         ...state,
@@ -42,11 +43,13 @@ export function reducer(
         permissions: [],
         currentPermission: null
       };
+
     case PermissionsService.PERMISSION_FETCH_SUCCESS:
       return {
         ...state,
         permissions: action.payload.permissions,
       };
+
     case PermissionsService.PERMISSION_CLEAR:
       return {
         ...state,
@@ -78,12 +81,6 @@ export function reducer(
         permissions: { ...permissions },
       };
     */
-
-    case PermissionsService.PERMISSION_DIALOG:
-      return {
-        ...state,
-        dialog: action.payload,
-      };
 
     case PermissionsService.PERMISSION_SELECTED:
       return {

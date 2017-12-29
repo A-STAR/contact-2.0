@@ -34,6 +34,7 @@ export class RolesEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.controls = this.getControls();
+    this.cdRef.markForCheck();
   }
 
   onSubmit(): void {

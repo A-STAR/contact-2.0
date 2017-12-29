@@ -735,7 +735,8 @@
         "comment": "Comments"
       },
       "errors": {
-        "view": "Access to roles list denied"
+        "edit": "Access to edit roles denied",
+        "view": "Access to view the roles denied"
       }
     },
     "permissions": {
@@ -778,13 +779,14 @@
         "comment": "Comments"
       },
       "messages": {
-        "no_view": "You do not have the rights '{{ permission }}' for viewing records",
-        "no_add": "You do not have the rights '{{ permission }}' for adding records",
-        "no_edit": "You do not have the rights '{{ permission }}' for editing records",
-        "no_delete": "You do not have the rights '{{ permission }}' for removing records"
+        "no_view": "You do not have the permission '{{ permission }}' for viewing records",
+        "no_add": "You do not have the permission '{{ permission }}' for adding records",
+        "no_edit": "You do not have the permission '{{ permission }}' for editing records",
+        "no_delete": "You do not have the permission '{{ permission }}' for removing records"
       },
       "errors": {
-        "view": "Access to permissions list denied"
+        "edit": "Access to edit permissions denied",
+        "view": "Access to view permissions denied"
       }
     }
   },

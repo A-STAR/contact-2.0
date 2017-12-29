@@ -27,19 +27,7 @@ export interface IRawPermission {
   valueS: string;
 }
 
-export enum IPermissionsDialogEnum {
-  NONE,
-  PERMISSION_ADD,
-  PERMISSION_EDIT,
-  PERMISSION_DELETE,
-  ROLE_ADD,
-  ROLE_EDIT,
-  ROLE_DELETE,
-  ROLE_COPY
-}
-
 export interface IPermissionsState {
-  dialog: IPermissionsDialogEnum;
   currentPermission: IPermissionModel;
   currentRole: IPermissionRole;
   permissions: IPermissionModel[];

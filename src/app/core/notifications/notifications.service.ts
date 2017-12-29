@@ -79,6 +79,10 @@ export class NotificationsService implements OnDestroy {
     return this.error(text);
   }
 
+  copyError(text: string = 'errors.default.copy'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
   updateError(text: string = 'errors.default.update'): NotificationActionBuilder {
     return this.error(text);
   }
