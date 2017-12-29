@@ -1901,6 +1901,22 @@
         "position": "Position"
       }
     },
+    "operatorDetails": {
+      "dialog": {
+        "title": "Operator infromation"
+      },
+      "card": {
+        "fullName": "Full name",
+        "organization": "Department",
+        "position": "Position",
+        "roleCode": "Role",
+        "email": "Email",
+        "mobPhone": "Mobile phone",
+        "workPhone": "Work phone",
+        "intPhone": "Extension",
+        "photo": "Photo"
+      }
+    },
     "entityGroup": {
       "dialog": {
         "title": "Select group"
@@ -2568,6 +2584,7 @@
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
+        "openUserDetail": "Open operator card",
         "paymentsCancel": "Payments cancel",
         "paymentsConfirm": "Payments confirm",
         "prepareVisit": "Prepare a visit",

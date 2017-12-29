@@ -1901,6 +1901,22 @@
         "position": "Должность"
       }
     },
+    "operatorDetails": {
+      "dialog": {
+        "title": "Информация об операторе"
+      },
+      "card": {
+        "fullName": "ФИО",
+        "organization": "Подразделение",
+        "position": "Должность",
+        "roleCode": "Роль",
+        "email": "Email",
+        "mobPhone": "Мобильный телефон",
+        "workPhone": "Рабочий телефон",
+        "intPhone": "Внутренний номер",
+        "photo": "Фото"
+      }
+    },
     "entityGroup": {
       "dialog": {
         "title": "Выбор группы"
@@ -2568,6 +2584,7 @@
         "objectAddToGroup": "Добавить в группу",
         "objectChangeColor": "Изменить цвет",
         "openDebtCard": "Открыть карточку долга",
+        "openUserDetail": "Открыть карточку оператора",
         "paymentsCancel": "Отменить платежи",
         "paymentsConfirm": "Подтвердить платежи",
         "prepareVisit": "Подготовить выезд",
