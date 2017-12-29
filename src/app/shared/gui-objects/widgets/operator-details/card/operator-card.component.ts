@@ -59,7 +59,6 @@ export class OperatorCardComponent implements OnInit {
             disabled: true, width: 3, height: 178
           }
         ],
-        title: label('personalData')
       },
       { label: label('roleCode'), controlName: 'roleCode', type: 'text', disabled: true },
       { label: label('email'), controlName: 'email', type: 'text', disabled: true },
