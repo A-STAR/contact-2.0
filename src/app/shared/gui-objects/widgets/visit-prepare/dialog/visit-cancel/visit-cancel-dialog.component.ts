@@ -1,26 +1,50 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
 import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
-import { IOperationResult } from '../../visit-prepare.interface';
+import { IOperationResult, IConfirmOperation } from '../../visit-prepare.interface';
 
 import { VisitPrepareService } from '../../visit-prepare.service';
+
+import { DialogFunctions } from 'app/core/dialog';
 
 @Component({
   selector: 'app-visit-cancel-dialog',
   templateUrl: './visit-cancel-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VisitCancelDialogComponent {
+export class VisitCancelDialogComponent extends DialogFunctions implements OnInit {
 
   @Input() visits: number[];
   @Output() close = new EventEmitter<ICloseAction>();
 
+  dialog = null;
+
+  private cancelVisits: number[];
+
   constructor(
     private visitPrepareService: VisitPrepareService
-  ) { }
+  ) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.cancelVisits = this.visits.filter(visit => !!visit);
+    if (this.cancelVisits.length < this.visits.length) {
+      this.setDialog('visitCancelConfirm');
+    } else {
+      this.setDialog('visitCancel');
+    }
+  }
+
+  get confirmOperation(): IConfirmOperation {
+    return {
+      count: this.visits.length - this.cancelVisits.length,
+      total: this.visits.length
+    };
+  }
 
   onConfirm(): void {
-    this.visitPrepareService.cancel(this.visits)
+    this.visitPrepareService.cancel(this.cancelVisits)
       .subscribe(result => this.onOperationResult(result), () => this.onCloseDialog());
   }
 

@@ -597,17 +597,14 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         return null;
       case 6:
         return {
-          // TODO(d.maltsev):
-          // This doesn't work with key-value pairs
-          // Use `richSelect` when this is fixed: https://github.com/ag-grid/ag-grid/issues/2033
-          cellEditor: 'select',
+          cellEditor: 'agRichSelect',
           cellEditorParams: {
-            values: column.filterValues.map(value => value.name)
+            values: column.filterValues.map(item => item.code)
           },
         };
       default:
         return {
-          cellEditor: 'text',
+          cellEditor: 'agTextCellEditor',
         };
     }
   }

@@ -735,7 +735,8 @@
         "comment": "Comments"
       },
       "errors": {
-        "view": "Access to roles list denied"
+        "edit": "Access to edit roles denied",
+        "view": "Access to view the roles denied"
       }
     },
     "permissions": {
@@ -778,13 +779,14 @@
         "comment": "Comments"
       },
       "messages": {
-        "no_view": "You do not have the rights '{{ permission }}' for viewing records",
-        "no_add": "You do not have the rights '{{ permission }}' for adding records",
-        "no_edit": "You do not have the rights '{{ permission }}' for editing records",
-        "no_delete": "You do not have the rights '{{ permission }}' for removing records"
+        "no_view": "You do not have the permission '{{ permission }}' for viewing records",
+        "no_add": "You do not have the permission '{{ permission }}' for adding records",
+        "no_edit": "You do not have the permission '{{ permission }}' for editing records",
+        "no_delete": "You do not have the permission '{{ permission }}' for removing records"
       },
       "errors": {
-        "view": "Access to permissions list denied"
+        "edit": "Access to edit permissions denied",
+        "view": "Access to view permissions denied"
       }
     }
   },
@@ -1899,6 +1901,22 @@
         "position": "Position"
       }
     },
+    "operatorDetails": {
+      "dialog": {
+        "title": "Operator infromation"
+      },
+      "card": {
+        "fullName": "Full name",
+        "organization": "Department",
+        "position": "Position",
+        "roleCode": "Role",
+        "email": "Email",
+        "mobPhone": "Mobile phone",
+        "workPhone": "Work phone",
+        "intPhone": "Extension",
+        "photo": "Photo"
+      }
+    },
     "entityGroup": {
       "dialog": {
         "title": "Select group"
@@ -2566,6 +2584,7 @@
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
+        "openUserDetail": "Open operator card",
         "paymentsCancel": "Payments cancel",
         "paymentsConfirm": "Payments confirm",
         "prepareVisit": "Prepare a visit",
@@ -2633,6 +2652,10 @@
         "title": "Operation result",
         "message": "Operation was successful for {{processed}} of {{total}} records",
         "messageUnsuccessful": "Unseccessful operation for {{total}} records"
+      },
+      "confirm": {
+        "confirmTitle": "Operation confirm",
+        "confirmMessage": "For {{count}} from {{total}} records operation cannot be executed as there is no mandatory identifier. Continue?"
       }
     },
     "NA": "N/A"

@@ -3,9 +3,7 @@ import { SafeAction } from '../../../core/state/state.interface';
 
 import { UserDictionariesService } from './user-dictionaries.service';
 
-export const defaultState: IUserDictionariesState = {
-  // {},
-};
+export const defaultState: IUserDictionariesState = {};
 
 export function reducer(
   state: IUserDictionariesState = defaultState,
@@ -16,11 +14,8 @@ export function reducer(
     case UserDictionariesService.USER_DICTIONARY_FETCH_SUCCESS:
       const { dictionaryId, terms } = action.payload;
       return {
-        // dictionaries: {
-          // ...state.dictionaries,
-          ...state,
-          [dictionaryId]: terms
-        // }
+        ...state,
+        [dictionaryId]: terms
       };
 
     default:

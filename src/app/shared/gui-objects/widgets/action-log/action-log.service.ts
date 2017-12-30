@@ -30,7 +30,7 @@ export class ActionLogService {
       // the url can be '/list?name=personActions' as well
       .create('/persons/{personId}/actions', { personId }, request)
       .catch(
-        this.notifications.error('errors.default.read')
+        this.notifications.fetchError()
           .entity('entities.actionsLog.gen.plural').dispatchCallback()
       );
   }
