@@ -158,13 +158,13 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
   toggleCalendar(isExpanded?: boolean): void {
     this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
-    // this.cdRef.detectChanges();
     if (this.isExpanded) {
       this.positionDropdown();
+      this.cdRef.detectChanges();
     } else {
       this.propagateTouch(true);
     }
-    this.cdRef.markForCheck();
+    // this.cdRef.markForCheck();
 
     if (this.dropdown.nativeElement.children[0] && !this.isExpanded) {
       this.removeWheelListener();

@@ -30,7 +30,7 @@ export interface ILookupDictionary extends ILookupBase {
 }
 
 export interface ILookupLanguage extends ILookupBase {
-  isMain: boolean;
+  isMain: number;
 }
 
 export interface ILookupPortfolio extends ILookupBase {

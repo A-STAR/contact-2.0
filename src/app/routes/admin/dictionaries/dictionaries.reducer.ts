@@ -58,7 +58,7 @@ export function reducer(state: IDictionariesState = defaultState, action: Unsafe
         ...state,
         selectedDictionary: {
           ...state.selectedDictionary,
-          nameTranslations: action.payload
+          name: action.payload
         }
       };
     case DictionariesService.TERM_TRANSLATIONS_FETCH_SUCCESS:
@@ -85,7 +85,7 @@ export function reducer(state: IDictionariesState = defaultState, action: Unsafe
         ...state,
         selectedDictionary: {
           ...state.selectedDictionary,
-          nameTranslations: null
+          name: null
         }
       };
     case DictionariesService.TERM_TRANSLATIONS_CLEAR:

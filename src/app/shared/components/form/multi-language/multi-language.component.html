@@ -1,15 +1,12 @@
-<app-select
-  [ngModel]="selection"
-  [multiple]="true"
-  [options]="options"
-  [nullable]="false"
-  [controlDisabled]="controlDisabled"
-  (onSelect)="onSelectedValueChange($event)">
-</app-select>
+<app-language-tabs
+  [langOptions]="options"
+  (languageChange)="onLanguageChange($event)"
+>
+</app-language-tabs>
 
 <div class="input-wrapper">
   <input
-    class="form-control mt-sm"
+    class="form-control"
     type="text"
     [ngModel]="displayValue"
     [disabled]="controlDisabled"

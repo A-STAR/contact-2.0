@@ -1,15 +1,9 @@
 export interface IMultiLanguageOption {
-  value: number;
+  active?: boolean;
   label: string;
-}
-
-export interface IMultiLanguageOptionSelection {
-  removed: boolean;
-  selected: boolean;
-  value: number;
-}
-
-export interface IMultiLanguageValue {
   languageId: number;
+  isMain?: boolean;
+  isRemoved?: boolean;
+  isUpdated?: boolean;
   value: string;
 }

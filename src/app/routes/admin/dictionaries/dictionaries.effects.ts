@@ -59,11 +59,11 @@ export class DictionariesEffects {
   updateDictionary$ = this.actions
     .ofType(DictionariesService.DICTIONARY_UPDATE)
     .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [action, store]: [UnsafeAction, IAppState] = data;
-      const { code } = store.dictionaries.selectedDictionary;
-      const { dictionary, updatedTranslations, deletedTranslations } = action.payload;
-      return this.updateDictionary(code, dictionary, deletedTranslations, updatedTranslations)
+    .switchMap(store => {
+      const [action, state]: [UnsafeAction, IAppState] = store;
+      const { code } = state.dictionaries.selectedDictionary;
+      const { dictionary } = action.payload;
+      return this.updateDictionary(code, dictionary)
         .mergeMap(() => [
           {
             type: DictionariesService.DICTIONARIES_FETCH
@@ -139,15 +139,10 @@ export class DictionariesEffects {
     .switchMap(data => {
       const [_, store]: [UnsafeAction, IAppState] = data;
       return this.entityTranslationsService.readDictNameTranslations(store.dictionaries.selectedDictionary.id)
-        .map((response: IEntityTranslation[]) => {
+        .map((translations: IEntityTranslation[]) => {
           return {
             type: DictionariesService.TRANSLATIONS_FETCH_SUCCESS,
-            payload: response.map((entityTranslation: IEntityTranslation) => {
-              return {
-                value: entityTranslation.languageId,
-                context: { translation: entityTranslation.value }
-              };
-            })
+            payload: translations
           };
         });
     });
@@ -301,20 +296,8 @@ export class DictionariesEffects {
     return this.dataService.create('/dictionaries', {}, dictionary);
   }
 
-  private updateDictionary(
-    code: number,
-    dictionary: IDictionary,
-    deletedTranslations: Array<number>,
-    updatedTranslations: Array<IEntityTranslation>,
-  ): Observable<any> {
-    const data = {
-      ...dictionary,
-      name: [
-        ...updatedTranslations.map(translation => ({ languageId: translation.languageId, value: translation.value })),
-        ...deletedTranslations.map(translation => ({ languageId: translation, value: null }))
-      ]
-    };
-    return this.dataService.update('/dictionaries/{code}', { code }, data);
+  private updateDictionary(code: number, dictionary: IDictionary): Observable<any> {
+    return this.dataService.update('/dictionaries/{code}', { code }, dictionary);
   }
 
   private deleteDictionary(code: number): Observable<any> {

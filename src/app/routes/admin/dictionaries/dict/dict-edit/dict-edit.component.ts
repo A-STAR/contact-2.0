@@ -1,19 +1,29 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  EventEmitter,
+  Output
+} from '@angular/core';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 
 import { IDictionary, ITerm } from '../../dictionaries.interface';
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IOption, ILabeledValue } from '../../../../../core/converter/value-converter.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 
+import { DictionariesService } from '../../dictionaries.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { toLabeledValues } from '../../../../../core/utils';
+import { makeKey, toLabeledValues, getTranslations } from '../../../../../core/utils';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
-
-import { makeKey } from '../../../../../core/utils';
 
 const label = makeKey('dictionaries.edit');
 
@@ -25,72 +35,75 @@ const label = makeKey('dictionaries.edit');
 export class DictEditComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  @Input() canEdit: boolean;
   @Input() dictionaries: IDictionary[];
   @Input() dictionaryTermTypes: ITerm[];
-  @Input() editedEntity: IDictionary;
-  @Input() editMode: boolean;
+  @Input() dictionary: IDictionary;
   @Input() languages: ILookupLanguage[];
+  @Input() title: string;
+
+  @Output() cancel = new EventEmitter<null>();
+  @Output() submit = new EventEmitter<null>();
 
   controls: Array<IDynamicFormItem> = null;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
+    private dictionariesService: DictionariesService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    this.userDictionariesService
-      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE)
-      .pipe(first())
-      .subscribe(dictTypeOptions => {
-        this.controls = this.getControls(dictTypeOptions);
-      });
+    combineLatest(
+      this.userDictionariesService
+        .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE),
+        this.dictionary
+          // ? this.dictionariesService.readDictTranslations(this.dictionary.id)
+          ? this.dictionariesService.selectedDictionary.map(dict => dict.name)
+          : of([]),
+    )
+    .pipe(first())
+    .subscribe(([dictTypeOptions, nameTranslations]) => {
+      const dictNameTranslations = getTranslations(this.languages, nameTranslations);
+
+      this.controls = this.getControls(dictTypeOptions, dictNameTranslations);
+      this.cdRef.markForCheck();
+    });
   }
 
   onSubmit(): any {
-    return this.form.serializedUpdates;
+    this.submit.emit(this.form.serializedUpdates);
   }
 
-  /**
-   * @override
-   */
-  // filterControls(controls: IDynamicFormControl[]): IDynamicFormControl[] {
-  //   return controls.filter(control => {
-  //       return this.isEditMode()
-  //       ? this.nameControlName !== control.controlName
-  //       : ![this.translatedControlName, this.displayControlName].includes(control.controlName);
-  //   });
-  // }
-
-  /**
-   * @override
-   */
-  protected isEditMode(): boolean {
-    return !!this.editedEntity;
+  get canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
   }
 
-  /**
-   * @override
-   */
-  protected getControls(dictTypeOptions: IOption[]): Array<IDynamicFormControl> {
-    // TODO(a.tymchuk): remove duplication across the codebase
-    const canEdit = this.editMode;
+  onClose(): void {
+    this.cancel.emit();
+  }
+
+  private getControls(
+    dictTypeOptions: IOption[],
+    nameTranslations: ILabeledValue[],
+  ): Array<IDynamicFormControl> {
+
+    const disabled = !this.canEdit;
     const controls: IDynamicFormControl[] = [
       {
         label: label('code'),
         controlName: 'code',
         type: 'number',
         required: true,
-        disabled: canEdit,
+        disabled,
       },
       {
         label: label('name'),
         controlName: 'name',
         type: 'multilanguage',
         required: true,
-        options: this.languages.map(language =>
-          ({ label: language.name, value: language.id, canRemove: !language.isMain })
-        ),
-        disabled: canEdit,
+        options: nameTranslations,
+        disabled,
       },
       {
         label: label('type'),
@@ -98,7 +111,7 @@ export class DictEditComponent implements OnInit {
         type: 'select',
         required: true,
         options: dictTypeOptions,
-        disabled: canEdit,
+        disabled,
       },
       {
         label: label('parent'),
@@ -108,7 +121,7 @@ export class DictEditComponent implements OnInit {
         optionsActions: [
           { text: 'select.title.dictList', type: SelectionActionTypeEnum.SORT }
         ],
-        disabled: canEdit,
+        disabled,
       },
       {
         label: label('termTypeCode'),
@@ -119,11 +132,10 @@ export class DictEditComponent implements OnInit {
         optionsActions: [
           { text: 'select.title.termTypesList', type: SelectionActionTypeEnum.SORT }
         ],
-        disabled: canEdit,
+        disabled,
       }
     ];
 
     return controls;
-    // return this.filterControls(controls);
   }
 }

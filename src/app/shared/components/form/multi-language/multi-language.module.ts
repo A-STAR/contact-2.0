@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectModule } from '../select/select.module';
 
 import { MultiLanguageComponent } from './multi-language.component';
+import { LanguageTabsComponent } from './language-tabs/language-tabs.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { MultiLanguageComponent } from './multi-language.component';
     MultiLanguageComponent,
   ],
   declarations: [
+    LanguageTabsComponent,
     MultiLanguageComponent,
   ],
 })

@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { IMultiLanguageOption, IMultiLanguageOptionSelection, IMultiLanguageValue } from './multi-language.interface';
+import { IMultiLanguageOption } from './multi-language.interface';
 
 @Component({
   selector: 'app-multilanguage-input',
@@ -15,22 +15,19 @@ import { IMultiLanguageOption, IMultiLanguageOptionSelection, IMultiLanguageValu
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MultiLanguageComponent implements ControlValueAccessor, OnInit {
+export class MultiLanguageComponent implements ControlValueAccessor {
   private _options: IMultiLanguageOption[] = [];
-  private _selection: number[] = [];
   private _selectedId: number;
-  private _values: IMultiLanguageValue[] = [];
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
-  @Input()
-  controlDisabled = false;
+  @Input() controlDisabled = false;
 
   @Input('options')
   set options(options: IMultiLanguageOption[]) {
-    this._options = options;
-    if (this._options.length > 0) {
-      this._selectedId = this._options[0].value;
+    this._options = options.map(option => ({ ...option, active: !!option.isMain }));
+    if (options.length > 0) {
+      this._selectedId = options.length ? 0 : null;
     }
     this.cdRef.markForCheck();
   }
@@ -39,19 +36,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit {
     return this._options;
   }
 
-  get selection(): any {
-    return this.options;
-  }
-
-  ngOnInit(): void {
-    this._selectedId = this.options.length > 0 ? this.options[0].value : null;
-    this.cdRef.markForCheck();
-  }
-
-  writeValue(values: IMultiLanguageValue[]): void {
-    console.log('values', values);
-    this._selection = (values || []).map(v => v.languageId);
-    this._values = values || [];
+  writeValue(values: IMultiLanguageOption[]): void {
     this.cdRef.markForCheck();
   }
 
@@ -63,32 +48,22 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit {
   }
 
   get displayValue(): string {
-    const item = (this._values || []).find(v => v.languageId === this._selectedId);
-    return item && item.value;
+    const item = (this.options || []).find((v, i) => i === this._selectedId);
+    return item && item.value || '';
   }
 
-  onSelectedValueChange(value: IMultiLanguageOptionSelection[]): void {
-    this._selection = value.filter(v => !v.removed).map(v => v.value);
-    this._selectedId = value.find(v => v.selected).value;
-    this.propagateChange(this._value);
+  onLanguageChange(option: IMultiLanguageOption): void {
+    this._selectedId = this.options.findIndex(v => v.languageId === option.languageId);
     this.cdRef.markForCheck();
   }
 
   onValueChange(value: string): void {
-    const item = (this._values || []).find(v => v.languageId === this._selectedId);
+    const item = (this.options || []).find((v, i) => i === this._selectedId);
     if (item) {
       item.value = value;
-    } else {
-      this._values.push({ languageId: this._selectedId, value });
+      item.isUpdated = true;
+      this.propagateChange(this.options);
     }
-    this.propagateChange(this._value);
-  }
-
-  private get _value(): any {
-    return this._selection.reduce((acc, v) => {
-      const item = (this._values || []).find(val => val.languageId === v);
-      return item ? { ...acc, [v]: item.value } : acc;
-    }, {});
   }
 
   private propagateChange: Function = () => {};

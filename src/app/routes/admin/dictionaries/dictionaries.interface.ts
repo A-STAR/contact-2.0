@@ -1,6 +1,7 @@
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
+import { IEntityTranslation } from '../../../core/entity/translations/entity-translations.interface';
 
-export type IDictionaryValue = number | Array<ILabeledValue>;
+export type IDictionaryValue = number | ILabeledValue[];
 
 export interface IDictionaryItem {
   code: number;
@@ -10,9 +11,7 @@ export interface IDictionaryItem {
 export interface IDictionary {
   id: number;
   code: number;
-  name: string;
-  translatedName: string;
-  nameTranslations: Array<ILabeledValue>;
+  name: IEntityTranslation[];
   parentCode: IDictionaryValue;
   typeCode: IDictionaryValue;
   termTypeCode: IDictionaryValue;
@@ -23,7 +22,7 @@ export interface ITerm {
   code: number;
   name: string;
   translatedName: string;
-  nameTranslations: Array<ILabeledValue>;
+  nameTranslations: ILabeledValue[];
   typeCode: IDictionaryValue;
   parentCode: IDictionaryValue;
   parentCodeName: string;
@@ -37,11 +36,11 @@ export enum DictionariesDialogActionEnum {
 }
 
 export interface IDictionariesState {
-  dictionaries: Array<IDictionary>;
+  dictionaries: IDictionary[];
   selectedDictionary: IDictionary;
   selectedTerm: ITerm;
-  terms: Array<ITerm>;
-  parentTerms: Array<ITerm>;
-  dictionaryTermTypes: Array<ITerm>;
+  terms: ITerm[];
+  parentTerms: ITerm[];
+  dictionaryTermTypes: ITerm[];
   dialogAction: DictionariesDialogActionEnum;
 }

@@ -1,9 +1,9 @@
 <app-dict-edit
   *ngIf="isDialog('create')"
+  [canEdit]="canEdit | async"
   [dictionaries]="dictionaries | async"
   [dictionaryTermTypes]="dictionaryTermTypes | async"
   [languages]="languages | async"
-  [editMode]="false"
   [title]="'dictionaries.create.title'"
   (submit)="onCreate($event)"
   (cancel)="onCancel()">
@@ -11,11 +11,11 @@
 
 <app-dict-edit
   *ngIf="isDialog('edit')"
+  [canEdit]="canEdit | async"
   [dictionaries]="dictionaries | async"
   [dictionaryTermTypes]="dictionaryTermTypes | async"
-  [editedEntity]="selectedDictionary | async"
+  [dictionary]="selectedDictionary | async"
   [languages]="languages | async"
-  [editMode]="true"
   [title]="'dictionaries.edit.title'"
   (submit)="onUpdate($event)"
   (cancel)="onCancel()">

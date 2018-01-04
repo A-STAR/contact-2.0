@@ -13,10 +13,10 @@ import {
 } from './dictionaries.interface';
 
 import { EntityTranslationsService } from '../../../core/entity/translations/entity-translations.service';
+import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 
 @Injectable()
 export class DictionariesService {
-  static DICTIONARY_ATTRIBUTE_ID = 3;
 
   static DICTIONARIES_FETCH         = 'DICTIONARIES_FETCH';
   static DICTIONARIES_FETCH_SUCCESS = 'DICTIONARIES_FETCH_SUCCESS';
@@ -73,7 +73,7 @@ export class DictionariesService {
   }
 
   get hasTranslations(): Observable<boolean> {
-    return this.selectedDictionary.map(selectedDictionary => selectedDictionary && !!selectedDictionary.nameTranslations);
+    return this.selectedDictionary.map(selectedDictionary => !!selectedDictionary && Array.isArray(selectedDictionary.name));
   }
 
   get isSelectedTermReady(): Observable<boolean> {
@@ -139,13 +139,11 @@ export class DictionariesService {
     });
   }
 
-  updateDictionary(dictionary: IDictionary, deletedTranslations: Array<number>, updatedTranslations: Array<any>): void {
+  updateDictionary(dictionary: IDictionary): void {
     this.store.dispatch({
       type: DictionariesService.DICTIONARY_UPDATE,
       payload: {
         dictionary,
-        deletedTranslations,
-        updatedTranslations
       }
     });
   }
@@ -211,8 +209,10 @@ export class DictionariesService {
     });
   }
 
-  readCurrencyNameTranslations(currencyId: number): Observable<IEntityTranslation[]> {
-    return this.entityTranslationsService.readTranslations(currencyId, DictionariesService.DICTIONARY_ATTRIBUTE_ID);
+  readDictTranslations(dictionaryId: number): Observable<IEntityTranslation[]> {
+    return this.entityTranslationsService.readTranslations(
+      dictionaryId, UserDictionariesService.DICTIONARY_PRODUCT_TYPE
+    );
   }
 
   setDialogAddTermAction(): void {

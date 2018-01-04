@@ -57,7 +57,7 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
   ];
 
   columns: IGridColumn[];
-  dialog: string;
+  dialog: 'create' | 'edit' | 'remove';
 
   hasViewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
@@ -83,9 +83,9 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
 
   ngOnInit(): void {
     this.dictionariesService.fetchTermTypes();
-    this.areDictionariesFetched
+    this.gridService.setAllRenderers(this._columns)
       .pipe(
-        switchMap(_ => this.gridService.setAllRenderers(this._columns)),
+        // switchMap(_ => ),
         first()
       )
       .subscribe(columns => {
@@ -100,7 +100,7 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
         : this.dictionariesService.clearDictionaries()
     );
 
-    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'dictionaries.errors.view');
+    this.emptyMessage$ = this.hasViewPermission$.map(canView => canView ? null : 'dictionaries.errors.view');
   }
 
   ngOnDestroy(): void {
@@ -117,12 +117,6 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
 
   get dictionaryTermTypes(): Observable<ITerm[]> {
     return this.dictionariesService.dictionaryTermTypes;
-  }
-
-  get areDictionariesFetched(): Observable<boolean> {
-    return this.dictionariesService.state
-      .map(state => !!state.dictionaries.length)
-      .filter(Boolean);
   }
 
   get hasDictionaryRelations(): Observable<boolean> {
@@ -157,30 +151,13 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     this.dictionariesService.clearTranslations();
   }
 
-  onUpdate(data: IDictionary): void {
-    const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
-
-    const deletedTranslations = nameTranslations
-      .filter(item => item.removed)
-      .map((item: ILabeledValue) => item.value);
-
-    const updatedTranslations: IEntityTranslation[] = nameTranslations
-      .filter(item => !item.removed)
-      .map((item: ILabeledValue) => ({
-        languageId: item.value,
-        value: item.context ? item.context.translation : null
-      }))
-      .filter((item: IEntityTranslation) => item.value !== null);
-
-    delete data.translatedName;
-    delete data.nameTranslations;
-
-    this.dictionariesService.updateDictionary(data, deletedTranslations, updatedTranslations);
+  onUpdate(dictionary: IDictionary): void {
+    this.dictionariesService.updateDictionary(dictionary);
     this.setDialog();
   }
 
-  onCreate(data: IDictionary): void {
-    this.dictionariesService.createDictionary(data);
+  onCreate(dictionary: IDictionary): void {
+    this.dictionariesService.createDictionary(dictionary);
     this.setDialog();
   }
 
