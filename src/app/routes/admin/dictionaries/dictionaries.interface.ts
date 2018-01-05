@@ -20,19 +20,11 @@ export interface IDictionary {
 export interface ITerm {
   id: number;
   code: number;
-  name: string;
-  translatedName: string;
-  nameTranslations: ILabeledValue[];
+  name: IEntityTranslation[];
   typeCode: IDictionaryValue;
   parentCode: IDictionaryValue;
   parentCodeName: string;
   isClosed: number;
-}
-
-export enum DictionariesDialogActionEnum {
-  TERM_ADD,
-  TERM_EDIT,
-  TERM_REMOVE,
 }
 
 export interface IDictionariesState {
@@ -42,5 +34,4 @@ export interface IDictionariesState {
   terms: ITerm[];
   parentTerms: ITerm[];
   dictionaryTermTypes: ITerm[];
-  dialogAction: DictionariesDialogActionEnum;
 }

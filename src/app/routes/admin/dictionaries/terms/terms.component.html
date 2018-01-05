@@ -1,40 +1,44 @@
 <app-term-edit
-  *ngIf="isReadyForCreating | async"
+  *ngIf="isDialog('create')"
+  [canEdit]="canEdit | async"
   [disableParentSelection]="disableParentSelection | async"
   [languages]="languages | async"
-  [mode]="'create'"
   [terms]="dropdownTerms | async"
   [title]="'terms.create.title'"
   (submit)="onCreate($event)"
-  (cancel)="onCancel()">
+  (cancel)="onCancel()"
+>
 </app-term-edit>
 
 <app-term-edit
-  *ngIf="isReadyForEditing | async"
+  *ngIf="isDialog('edit')"
+  [canEdit]="canEdit | async"
   [disableParentSelection]="disableParentSelection | async"
-  [editedEntity]="selectedEntity | async"
   [languages]="languages | async"
-  [mode]="'update'"
+  [term]="selectedTerm | async"
   [terms]="dropdownTerms | async"
   [title]="'terms.edit.title'"
   (submit)="onUpdate($event)"
-  (cancel)="onCancel()">
+  (cancel)="onCancel()"
+>
 </app-term-edit>
 
 <app-dialog-action
-  *ngIf="isEntityBeingRemoved | async"
+  *ngIf="isDialog('remove')"
   [actionMode]="'danger'"
   [actionMessage]="'default.buttons.remove'"
   [actionTranslationKey]="'terms.remove.confirmMessage'"
-  [messageParams]="selectedEntity | async"
+  [messageParams]="selectedTerm | async"
   [titleTranslationKey]="'terms.remove.title'"
   (action)="onRemove()"
-  (cancel)="onCancel()">
+  (cancel)="onCancel()"
+>
 </app-dialog-action>
 
 <app-toolbar-2
   class="bordered"
-  [items]="toolbarItems">
+  [items]="toolbarItems"
+>
 </app-toolbar-2>
 
 <app-grid
@@ -45,5 +49,6 @@
   [rows]="rows"
   [styles]="{height: '400px'}"
   (onDblClick)="onEdit($event)"
-  (onSelect)="onSelect($event)">
+  (onSelect)="onSelect($event)"
+>
 </app-grid>

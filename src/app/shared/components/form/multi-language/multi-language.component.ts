@@ -16,24 +16,24 @@ import { IMultiLanguageOption } from './multi-language.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MultiLanguageComponent implements ControlValueAccessor {
-  private _options: IMultiLanguageOption[] = [];
+  private _langOptions: IMultiLanguageOption[] = [];
   private _selectedId: number;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
   @Input() controlDisabled = false;
 
-  @Input('options')
-  set options(options: IMultiLanguageOption[]) {
-    this._options = options.map(option => ({ ...option, active: !!option.isMain }));
+  @Input('langOptions')
+  set langOptions(options: IMultiLanguageOption[]) {
+    this._langOptions = options.map(option => ({ ...option, active: !!option.isMain }));
     if (options.length > 0) {
       this._selectedId = options.length ? 0 : null;
     }
     this.cdRef.markForCheck();
   }
 
-  get options(): IMultiLanguageOption[] {
-    return this._options;
+  get langOptions(): IMultiLanguageOption[] {
+    return this._langOptions;
   }
 
   writeValue(values: IMultiLanguageOption[]): void {
@@ -47,22 +47,22 @@ export class MultiLanguageComponent implements ControlValueAccessor {
   registerOnTouched(fn: Function): void {
   }
 
-  get displayValue(): string {
-    const item = (this.options || []).find((v, i) => i === this._selectedId);
-    return item && item.value || '';
+  get model(): string {
+    const item = (this.langOptions || []).find((v, i) => i === this._selectedId);
+    return item && item.value || null;
   }
 
   onLanguageChange(option: IMultiLanguageOption): void {
-    this._selectedId = this.options.findIndex(v => v.languageId === option.languageId);
+    this._selectedId = this.langOptions.findIndex(v => v.languageId === option.languageId);
     this.cdRef.markForCheck();
   }
 
   onValueChange(value: string): void {
-    const item = (this.options || []).find((v, i) => i === this._selectedId);
+    const item = (this.langOptions || []).find((v, i) => i === this._selectedId);
     if (item) {
       item.value = value;
       item.isUpdated = true;
-      this.propagateChange(this.options);
+      this.propagateChange(this.langOptions);
     }
   }
 

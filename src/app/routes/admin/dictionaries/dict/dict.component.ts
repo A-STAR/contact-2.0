@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { first } from 'rxjs/operators/first';
 import { filter } from 'rxjs/operators/filter';
-import { switchMap } from 'rxjs/operators/switchMap';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
-import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
-import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IDictionary, ITerm } from '../dictionaries.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
@@ -31,12 +28,12 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.setDialog('create'),
+      action: () => this.create(),
       enabled: this.userPermissionsService.has('DICT_ADD')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(),
+      action: () => this.edit(),
       enabled: combineLatestAnd([
         this.canEdit,
         this.dictionariesService.hasSelectedDictionary
@@ -59,7 +56,7 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
   columns: IGridColumn[];
   dialog: 'create' | 'edit' | 'remove';
 
-  hasViewPermission$: Observable<boolean>;
+  viewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
 
   private _columns: IGridColumn[] = [
@@ -85,7 +82,6 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     this.dictionariesService.fetchTermTypes();
     this.gridService.setAllRenderers(this._columns)
       .pipe(
-        // switchMap(_ => ),
         first()
       )
       .subscribe(columns => {
@@ -93,14 +89,14 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
         this.cdRef.markForCheck();
       });
 
-    this.hasViewPermission$ = this.userPermissionsService.has('DICT_VIEW');
-    this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
-      hasViewPermission
+    this.viewPermission$ = this.userPermissionsService.has('DICT_VIEW');
+    this.viewPermissionSubscription = this.viewPermission$.subscribe(canView =>
+      canView
         ? this.dictionariesService.fetchDictionaries()
         : this.dictionariesService.clearDictionaries()
     );
 
-    this.emptyMessage$ = this.hasViewPermission$.map(canView => canView ? null : 'dictionaries.errors.view');
+    this.emptyMessage$ = this.viewPermission$.map(canView => canView ? null : 'dictionaries.errors.view');
   }
 
   ngOnDestroy(): void {
@@ -131,11 +127,11 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     return this.userPermissionsService.has('DICT_EDIT');
   }
 
-  onEdit(): void {
-    this.dictionariesService.fetchTranslations();
+  edit(): void {
+    this.dictionariesService.fetchDictTranslations();
     combineLatestAnd([
       this.hasDictionaryRelations,
-      this.dictionariesService.hasTranslations,
+      this.dictionariesService.hasDictTranslations,
     ])
     .pipe(
       filter(Boolean),
@@ -143,6 +139,19 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     )
     .subscribe(_ => {
       this.setDialog('edit');
+    });
+  }
+
+  create(): void {
+    combineLatestAnd([
+      this.hasDictionaryRelations,
+    ])
+    .pipe(
+      filter(Boolean),
+      first(),
+    )
+    .subscribe(_ => {
+      this.setDialog('create');
     });
   }
 

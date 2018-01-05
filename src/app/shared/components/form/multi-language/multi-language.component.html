@@ -1,5 +1,5 @@
 <app-language-tabs
-  [langOptions]="options"
+  [langOptions]="langOptions"
   (languageChange)="onLanguageChange($event)"
 >
 </app-language-tabs>
@@ -8,7 +8,7 @@
   <input
     class="form-control"
     type="text"
-    [ngModel]="displayValue"
+    [ngModel]="model"
     [disabled]="controlDisabled"
     (ngModelChange)="onValueChange($event)"
   >

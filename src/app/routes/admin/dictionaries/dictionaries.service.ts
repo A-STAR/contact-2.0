@@ -6,7 +6,6 @@ import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { IAppState } from '../../../core/state/state.interface';
 import { IEntityTranslation } from '../../../core/entity/translations/entity-translations.interface';
 import {
-  DictionariesDialogActionEnum,
   IDictionary,
   IDictionariesState,
   ITerm,
@@ -18,32 +17,31 @@ import { UserDictionariesService } from '../../../core/user/dictionaries/user-di
 @Injectable()
 export class DictionariesService {
 
-  static DICTIONARIES_FETCH         = 'DICTIONARIES_FETCH';
-  static DICTIONARIES_FETCH_SUCCESS = 'DICTIONARIES_FETCH_SUCCESS';
-  static DICTIONARIES_CLEAR         = 'DICTIONARIES_CLEAR';
-  static DICTIONARY_CREATE          = 'DICTIONARY_CREATE';
-  static DICTIONARY_UPDATE          = 'DICTIONARY_UPDATE';
-  static DICTIONARY_DELETE          = 'DICTIONARY_DELETE';
-  static DICTIONARY_SELECT          = 'DICTIONARY_SELECT';
-  static DICTIONARY_TRANSLATIONS_CLEAR = 'DICTIONARY_TRANSLATIONS_CLEAR';
-  static TRANSLATIONS_FETCH         = 'TRANSLATIONS_FETCH';
-  static TERM_TRANSLATIONS_FETCH    = 'TERM_TRANSLATIONS_FETCH';
-  static TERM_TRANSLATIONS_CLEAR    = 'TERM_TRANSLATIONS_CLEAR';
-  static TRANSLATIONS_FETCH_SUCCESS = 'TRANSLATIONS_FETCH_SUCCESS';
-  static TERM_TRANSLATIONS_FETCH_SUCCESS = 'TERM_TRANSLATIONS_FETCH_SUCCESS';
-  static TERMS_FETCH                = 'TERMS_FETCH';
-  static TERMS_FETCH_SUCCESS        = 'TERMS_FETCH_SUCCESS';
-  static TERMS_PARENT_FETCH         = 'TERMS_PARENT_FETCH';
-  static TERMS_PARENT_FETCH_SUCCESS = 'TERMS_PARENT_FETCH_SUCCESS';
-  static TERMS_PARENT_CLEAR         = 'TERMS_PARENT_CLEAR';
-  static TERM_TYPES_FETCH           = 'TERM_TYPES_FETCH';
-  static TERM_TYPES_FETCH_SUCCESS   = 'TERM_TYPES_FETCH_SUCCESS';
-  static TERMS_CLEAR                = 'TERMS_CLEAR';
-  static TERM_CREATE                = 'TERM_CREATE';
-  static TERM_UPDATE                = 'TERM_UPDATE';
-  static TERM_DELETE                = 'TERM_DELETE';
-  static TERM_SELECT                = 'TERM_SELECT';
-  static TERM_DIALOG_ACTION         = 'TERM_DIALOG_ACTION';
+  static DICTIONARIES_FETCH                     = 'DICTIONARIES_FETCH';
+  static DICTIONARIES_FETCH_SUCCESS             = 'DICTIONARIES_FETCH_SUCCESS';
+  static DICTIONARIES_CLEAR                     = 'DICTIONARIES_CLEAR';
+  static DICTIONARY_CREATE                      = 'DICTIONARY_CREATE';
+  static DICTIONARY_UPDATE                      = 'DICTIONARY_UPDATE';
+  static DICTIONARY_DELETE                      = 'DICTIONARY_DELETE';
+  static DICTIONARY_SELECT                      = 'DICTIONARY_SELECT';
+  static DICTIONARY_TRANSLATIONS_FETCH          = 'DICTIONARY_TRANSLATIONS_FETCH';
+  static DICTIONARY_TRANSLATIONS_FETCH_SUCCESS  = 'DICTIONARY_TRANSLATIONS_FETCH_SUCCESS';
+  static DICTIONARY_TRANSLATIONS_CLEAR          = 'DICTIONARY_TRANSLATIONS_CLEAR';
+  static TERM_TRANSLATIONS_FETCH                = 'TERM_TRANSLATIONS_FETCH';
+  static TERM_TRANSLATIONS_FETCH_SUCCESS        = 'TERM_TRANSLATIONS_FETCH_SUCCESS';
+  static TERM_TRANSLATIONS_CLEAR                = 'TERM_TRANSLATIONS_CLEAR';
+  static TERM_TYPES_FETCH                       = 'TERM_TYPES_FETCH';
+  static TERM_TYPES_FETCH_SUCCESS               = 'TERM_TYPES_FETCH_SUCCESS';
+  static TERM_CREATE                            = 'TERM_CREATE';
+  static TERM_UPDATE                            = 'TERM_UPDATE';
+  static TERM_DELETE                            = 'TERM_DELETE';
+  static TERM_SELECT                            = 'TERM_SELECT';
+  static TERMS_FETCH                            = 'TERMS_FETCH';
+  static TERMS_FETCH_SUCCESS                    = 'TERMS_FETCH_SUCCESS';
+  static TERMS_PARENT_FETCH                     = 'TERMS_PARENT_FETCH';
+  static TERMS_PARENT_FETCH_SUCCESS             = 'TERMS_PARENT_FETCH_SUCCESS';
+  static TERMS_PARENT_CLEAR                     = 'TERMS_PARENT_CLEAR';
+  static TERMS_CLEAR                            = 'TERMS_CLEAR';
 
   constructor(
     private entityTranslationsService: EntityTranslationsService,
@@ -68,21 +66,16 @@ export class DictionariesService {
     return this.selectedDictionary.map(selectedDictionary => !!selectedDictionary);
   }
 
-  get isSelectedTermExist(): Observable<boolean> {
-    return this.selectedTerm.map(selectedTerm => !!selectedTerm);
-  }
-
-  get hasTranslations(): Observable<boolean> {
+  get hasDictTranslations(): Observable<boolean> {
     return this.selectedDictionary.map(selectedDictionary => !!selectedDictionary && Array.isArray(selectedDictionary.name));
   }
 
-  get isSelectedTermReady(): Observable<boolean> {
-    return this.selectedTerm.map(selectedTerm => selectedTerm && !!selectedTerm.nameTranslations);
+  get hasSelectedTerm(): Observable<boolean> {
+    return this.selectedTerm.map(term => !!term);
   }
 
-  get dialogAction(): Observable<DictionariesDialogActionEnum> {
-    return this.state.map(dictionaries => dictionaries.dialogAction)
-      .pipe(distinctUntilChanged());
+  get hasTermTranslations(): Observable<boolean> {
+    return this.selectedTerm.map(term => !!term && Array.isArray(term.name));
   }
 
   get dictionaries(): Observable<IDictionary[]> {
@@ -105,6 +98,10 @@ export class DictionariesService {
       .pipe(distinctUntilChanged());
   }
 
+  fetchTermTranslations(): void {
+    this.store.dispatch({ type: DictionariesService.TERM_TRANSLATIONS_FETCH });
+  }
+
   get dictionaryTermTypes(): Observable<ITerm[]> {
     return this.state.map(dictionaries => dictionaries.dictionaryTermTypes)
       .pipe(distinctUntilChanged());
@@ -118,8 +115,8 @@ export class DictionariesService {
     this.store.dispatch({ type: DictionariesService.TERM_TYPES_FETCH });
   }
 
-  fetchTranslations(): void {
-    this.store.dispatch({ type: DictionariesService.TRANSLATIONS_FETCH });
+  fetchDictTranslations(): void {
+    this.store.dispatch({ type: DictionariesService.DICTIONARY_TRANSLATIONS_FETCH });
   }
 
   clearTranslations(): void {
@@ -174,13 +171,11 @@ export class DictionariesService {
     });
   }
 
-  updateTerm(term: ITerm, deletedTranslations: Array<number>, updatedTranslations: Array<any>): void {
+  updateTerm(term: ITerm): void {
     this.store.dispatch({
       type: DictionariesService.TERM_UPDATE,
       payload: {
         term,
-        deletedTranslations,
-        updatedTranslations
       }
     });
   }
@@ -200,30 +195,10 @@ export class DictionariesService {
     });
   }
 
-  setTermDialogAction(dialogAction: DictionariesDialogActionEnum): void {
-    return this.store.dispatch({
-      type: DictionariesService.TERM_DIALOG_ACTION,
-      payload: {
-        dialogAction
-      }
-    });
-  }
-
   readDictTranslations(dictionaryId: number): Observable<IEntityTranslation[]> {
     return this.entityTranslationsService.readTranslations(
       dictionaryId, UserDictionariesService.DICTIONARY_PRODUCT_TYPE
     );
   }
 
-  setDialogAddTermAction(): void {
-    this.setTermDialogAction(DictionariesDialogActionEnum.TERM_ADD);
-  }
-
-  setDialogEditTermAction(): void {
-    this.setTermDialogAction(DictionariesDialogActionEnum.TERM_EDIT);
-  }
-
-  setDialogRemoveTermAction(): void {
-    this.setTermDialogAction(DictionariesDialogActionEnum.TERM_REMOVE);
-  }
 }

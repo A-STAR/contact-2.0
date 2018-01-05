@@ -680,10 +680,10 @@
       "title": "Term: {{ code }}",
       "code": "Term code",
       "language": "Language",
-      "text": "Term value",
-      "type": "Term type",
-      "parent": "Parent dictionary term",
-      "closed": "Unused term",
+      "name": "Term value",
+      "typeCode": "Term type",
+      "parentCode": "Parent dictionary term",
+      "isClosed": "Unused term",
       "select": {
         "title": "Term type"
       }

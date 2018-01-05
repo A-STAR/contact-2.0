@@ -2,7 +2,7 @@ export interface IMultiLanguageOption {
   active?: boolean;
   label: string;
   languageId: number;
-  isMain?: boolean;
+  isMain?: number;
   isRemoved?: boolean;
   isUpdated?: boolean;
   value: string;

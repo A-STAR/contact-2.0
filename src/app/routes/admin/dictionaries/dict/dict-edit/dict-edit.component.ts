@@ -2,11 +2,11 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   ViewChild,
-  EventEmitter,
-  Output
 } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
@@ -15,7 +15,8 @@ import { first } from 'rxjs/operators';
 import { IDictionary, ITerm } from '../../dictionaries.interface';
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
-import { IOption, ILabeledValue } from '../../../../../core/converter/value-converter.interface';
+import { IMultiLanguageOption } from '../../../../../shared/components/form/multi-language/multi-language.interface';
+import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 
 import { DictionariesService } from '../../dictionaries.service';
@@ -57,10 +58,9 @@ export class DictEditComponent implements OnInit {
     combineLatest(
       this.userDictionariesService
         .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE),
-        this.dictionary
-          // ? this.dictionariesService.readDictTranslations(this.dictionary.id)
-          ? this.dictionariesService.selectedDictionary.map(dict => dict.name)
-          : of([]),
+      this.dictionary
+        ? this.dictionariesService.selectedDictionary.map(dict => dict.name)
+        : of([]),
     )
     .pipe(first())
     .subscribe(([dictTypeOptions, nameTranslations]) => {
@@ -85,7 +85,7 @@ export class DictEditComponent implements OnInit {
 
   private getControls(
     dictTypeOptions: IOption[],
-    nameTranslations: ILabeledValue[],
+    nameTranslations: IMultiLanguageOption[],
   ): Array<IDynamicFormControl> {
 
     const disabled = !this.canEdit;
@@ -100,9 +100,9 @@ export class DictEditComponent implements OnInit {
       {
         label: label('name'),
         controlName: 'name',
-        type: 'multilanguage',
+        type: this.dictionary ? 'multilanguage' : 'text',
         required: true,
-        options: nameTranslations,
+        langOptions: nameTranslations,
         disabled,
       },
       {
