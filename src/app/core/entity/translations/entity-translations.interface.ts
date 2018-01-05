@@ -10,3 +10,7 @@ export interface IEntityTranslation {
   value: string;
   isMain?: number;
 }
+
+export interface IEntitytTranslationValue extends IEntityTranslation {
+  label: string;
+}
