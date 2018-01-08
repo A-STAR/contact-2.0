@@ -69,6 +69,15 @@ export function reducer(state: IDictionariesState = defaultState, action: Unsafe
         }
       };
 
+    case DictionariesService.DICTIONARY_TRANSLATIONS_CLEAR:
+      return {
+        ...state,
+        selectedDictionary: {
+          ...state.selectedDictionary,
+          name: null
+        }
+      };
+
     case DictionariesService.TERM_TRANSLATIONS_FETCH_SUCCESS:
       return {
         ...state,
@@ -89,15 +98,6 @@ export function reducer(state: IDictionariesState = defaultState, action: Unsafe
         ...state,
         terms: [],
         selectedTerm: null
-      };
-
-    case DictionariesService.DICTIONARY_TRANSLATIONS_CLEAR:
-      return {
-        ...state,
-        selectedDictionary: {
-          ...state.selectedDictionary,
-          name: null
-        }
       };
 
     case DictionariesService.TERM_TRANSLATIONS_CLEAR:

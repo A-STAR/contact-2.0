@@ -49,7 +49,7 @@ export class SettingsService {
     };
 
     if (!$('.app-content') || !$('.topnavbar-wrapper')) {
-      throw Error('Could not find the content area or the navbar div');
+      throw new Error('Could not find the content area or the navbar div');
     }
   }
 

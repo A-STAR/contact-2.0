@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { publishReplay, refCount, finalize } from 'rxjs/operators';
+import { publishReplay, refCount, finalize, catchError, flatMap } from 'rxjs/operators';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { IQueryParam, IQueryParams } from './data.interface';
 
@@ -138,17 +139,25 @@ export class DataService {
     this.nRequests$.next(this.nRequests$.value + 1);
 
     return this.validateUrl(url)
-      .flatMap(rootUrl => {
-        const route = this.createRoute(url, routeParams);
-        const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
-
-        return this.http.request(method, `${rootUrl}${api}`, {
-          ...options,
-          params: this.prepareHttpParams(options.params),
-          headers
-        });
-      })
       .pipe(
+        flatMap(rootUrl => {
+          const route = this.createRoute(url, routeParams);
+          const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
+
+          return this.http.request(method, `${rootUrl}${api}`, {
+            ...options,
+            params: this.prepareHttpParams(options.params),
+            headers
+          });
+        }),
+        catchError(resp => {
+          if (401 === resp.status) {
+            // TODO(a.tymchuk): ask for the password again
+            console.log('authentication error', resp);
+          }
+          // rethrow the error up the chain
+          return ErrorObservable.create(resp);
+        }),
         finalize(() => {
           this.nRequests$.next(this.nRequests$.value - 1);
         })
@@ -182,7 +191,7 @@ export class DataService {
 
   private validateUrl(url: string = ''): Observable<string> {
     if (!url) {
-      return Observable.throw('Error: no url passed to the DataService');
+      return ErrorObservable.create('Error: no url passed to the DataService');
     }
     return this.rootUrl$;
   }
