@@ -18,7 +18,6 @@ import { CheckallDirective } from './directives/checkall/checkall.directive';
 import { VectormapDirective } from './directives/vectormap/vectormap.directive';
 import { NowDirective } from './directives/now/now.directive';
 import { ScrollableDirective } from './directives/scrollable/scrollable.directive';
-import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.directive';
 
 // App modules
 import { AccordionModule } from './components/accordion/accordion.module';
@@ -144,7 +143,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     NowDirective,
     ScrollableDirective,
     // app declarations
-    RouterOutlet2Directive,
     NumericInputComponent,
     QBuilderComponent
   ],
@@ -205,7 +203,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     QBuilder2Module,
     RadioGroupModule,
     RichTextEditorModule,
-    RouterOutlet2Directive,
     SpinnerModule,
     TabstripModule,
     TabViewModule,

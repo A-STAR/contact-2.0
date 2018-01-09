@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 import { InfoDialogModule } from '../shared/components/dialog/info/info-dialog.module';
-import { ContentTabstripModule } from '../shared/components/content-tabstrip/content-tabstrip.module';
 import { SharedModule } from '../shared/shared.module';
 
 import { LayoutComponent } from './layout.component';
@@ -12,8 +12,8 @@ import { NotificationsComponent } from './header/notifications/notifications.com
 
 @NgModule({
   imports: [
-    ContentTabstripModule,
     InfoDialogModule,
+    RouterModule,
     SharedModule,
   ],
   declarations: [

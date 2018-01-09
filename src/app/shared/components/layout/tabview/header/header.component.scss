@@ -28,6 +28,9 @@ li {
     a {
       color: black;
     }
+    .selection {
+      background-color: #1a8ada;
+    }
   }
   &.disabled {
     cursor: default;
@@ -39,5 +42,13 @@ li {
   a {
     color: $text-color;
     text-decoration: none;
+  }
+  .selection {
+    height: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: transparent;
   }
 }

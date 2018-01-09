@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ObjectModule } from './objects/objects.module';
-import { PermissionsModule } from './permissions/permissions.module';
-import { PermissionsTreeModule } from './permissions-tree/permissions-tree.module';
 import { RolesModule as RolesGridModule } from './roles/roles.module';
 import { SharedModule } from '../../../shared/shared.module';
 
@@ -13,6 +10,9 @@ const routes: Routes = [
   {
     path: '',
     component: RolesAndPermissionsComponent,
+    data: {
+      reuse: true
+    },
     children: [
       {
         path: '',
@@ -29,7 +29,7 @@ const routes: Routes = [
       },
       {
         path: 'objects',
-        loadChildren: './objects/objects.module#RoleObjectsModule',
+        loadChildren: './objects/objects.module#ObjectModule',
       }
     ],
   },
@@ -37,9 +37,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    ObjectModule,
-    PermissionsModule,
-    PermissionsTreeModule,
     RolesGridModule,
     RouterModule.forChild(routes),
     SharedModule,
@@ -51,5 +48,4 @@ const routes: Routes = [
     RolesAndPermissionsComponent,
   ]
 })
-export class RolesModule {
-}
+export class RolesModule {}

@@ -19,7 +19,7 @@ export const routes: Route[] = [
         children: [
           { path: '', redirectTo: '../home', pathMatch: 'full' },
           { path: 'constants', loadChildren: './admin/constants/constants.module#ConstantsModule' },
-          { path: 'roles-and-permissions', loadChildren: './admin/roles/roles.module#RolesModule' },
+          { path: 'roles', loadChildren: './admin/roles/roles.module#RolesModule' },
           { path: 'dictionaries', loadChildren: './admin/dictionaries/dictionaries.module#DictionariesModule' },
           { path: 'users', loadChildren: './admin/users/users.module#UsersModule' },
           { path: 'organizations', loadChildren: './admin/organizations/organizations.module#OrganizationsModule' },
