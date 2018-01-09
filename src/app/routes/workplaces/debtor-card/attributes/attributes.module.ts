@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
 
 import { DebtorAttributesComponent } from './attributes.component';
-import { DebtorAttributesVersionsComponent } from './versions/debtor-attributes-versions.component';
 
 @NgModule({
   imports: [
@@ -13,8 +12,7 @@ import { DebtorAttributesVersionsComponent } from './versions/debtor-attributes-
     DebtorAttributesComponent
   ],
   declarations: [
-    DebtorAttributesComponent,
-    DebtorAttributesVersionsComponent
+    DebtorAttributesComponent
   ],
   entryComponents: [
     DebtorAttributesComponent,

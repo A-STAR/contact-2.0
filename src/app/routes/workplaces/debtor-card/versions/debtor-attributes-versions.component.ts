@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
+import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 
 @Component({
   selector: 'app-debtor-attributes-versions',
@@ -11,7 +13,6 @@ import { ContentTabService } from '../../../../../shared/components/content-tabs
 })
 export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
   static COMPONENT_NAME = 'DebtorAttributesVersionsComponent';
-  static ENTITY_TYPE_DEBT = 19;
 
   attributeId: number;
   entityId: number;
@@ -22,19 +23,26 @@ export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private contentTabService: ContentTabService
+    private contentTabService: ContentTabService,
+    private debtorCardService: DebtorCardService,
   ) { }
 
   ngOnInit(): void {
 
-    this.paramsSub = this.route.paramMap
-      .subscribe((params: ParamMap) => {
+    this.paramsSub = combineLatest(
+      this.route.paramMap,
+      this.debtorCardService.entityId$,
+      this.debtorCardService.entityTypeId$
+    )
+      .subscribe(([params, entityId, entityTypeId]: [ParamMap, number, number]) => {
         if (params) {
           this.attributeId = Number(params.get('attributeId'));
-
-          if ((this.entityId = Number(params.get('debtId')))) {
-            this.entityTypeId = DebtorAttributesVersionsComponent.ENTITY_TYPE_DEBT;
-          }
+        }
+        if (entityId) {
+          this.entityId = entityId;
+        }
+        if (entityTypeId) {
+          this.entityTypeId = entityTypeId;
         }
       });
   }

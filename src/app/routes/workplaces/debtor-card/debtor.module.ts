@@ -8,6 +8,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { DebtModule } from './debt/debt.module';
 import { DebtorAddressModule } from './address/address.module';
 import { DebtorAttributesModule } from './attributes/attributes.module';
+import { DebtorAttributesVersionsModule } from './versions/debtor-attributes-versions.module';
 import { DebtorContactsModule } from './contacts/contacts.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
 import { DebtorDocumentModule } from './document/document.module';
@@ -31,7 +32,7 @@ import { DebtorService } from './debtor.service';
 
 import { DebtComponent } from './debt/debt.component';
 import { DebtorAddressComponent } from './address/address.component';
-import { DebtorAttributesVersionsComponent } from './attributes/versions/debtor-attributes-versions.component';
+import { DebtorAttributesVersionsComponent } from './versions/debtor-attributes-versions.component';
 import { DebtorComponent } from './debtor.component';
 import { DebtorContactLogTabComponent } from './contact-log-tab/contact-log-tab.component';
 import { DebtorContactsComponent } from './contacts/contacts.component';
@@ -227,6 +228,7 @@ const routes: Routes = [
     DebtModule,
     DebtorAddressModule,
     DebtorAttributesModule,
+    DebtorAttributesVersionsModule,
     DebtorContactsModule,
     DebtorDebtComponentModule,
     DebtorDocumentModule,
