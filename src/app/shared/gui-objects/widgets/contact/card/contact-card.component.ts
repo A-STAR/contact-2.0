@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
 import { IContact } from '../contact.interface';
@@ -40,10 +40,9 @@ export class ContactCardComponent {
   constructor(
     private contactService: ContactService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-    private router: Router,
-    private route: ActivatedRoute,
   ) {
     combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([

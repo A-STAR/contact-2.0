@@ -99,7 +99,6 @@ export class DebtorCardService extends AbstractActionService {
   }
 
   openByDebtId(debtId: number): Promise<boolean> {
-    this.contentTabService.removeTabByPath(`\/workplaces\/debtor-card\/(.+)`);
     return this.router.navigate([ `/workplaces/debtor-card/${debtId}` ] );
   }
 
@@ -117,8 +116,6 @@ export class DebtorCardService extends AbstractActionService {
     });
   }
 
-  private navigate(debtId: number): Promise<boolean> {
-    return this.router.navigate([ `/workplaces/debtor-card/${debtId}` ] );
   refreshDebts(): void {
     this.store.dispatch({ type: IActionType.REFRESH_DEBTS });
   }

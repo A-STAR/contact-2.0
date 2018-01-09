@@ -2,14 +2,14 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IAddress } from '../address.interface';
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form-2/dynamic-form-2.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { AddressService } from '../address.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -33,7 +33,6 @@ export class AddressCardComponent implements OnInit {
 
   constructor(
     private addressService: AddressService,
-    private messageBusService: MessageBusService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private router: Router,

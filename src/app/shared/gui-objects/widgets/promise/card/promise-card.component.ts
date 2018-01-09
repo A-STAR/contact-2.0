@@ -79,7 +79,6 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private messageBusService: MessageBusService,
     private promiseService: PromiseService,
     private router: Router,
     private route: ActivatedRoute,

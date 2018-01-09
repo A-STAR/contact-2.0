@@ -2,12 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { INode } from '../../../../../../shared/gui-objects/container/container.interface';
-
-import {
-  AttributeGridComponent
-} from '../../../../../../shared/gui-objects/widgets/entity-attribute/grid/attribute-grid.component';
-
 @Component({
   selector: 'app-contractor-attributes',
   templateUrl: './contractor-attributes.component.html',

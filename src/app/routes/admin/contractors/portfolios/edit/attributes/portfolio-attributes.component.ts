@@ -3,12 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { INode } from '../../../../../../shared/gui-objects/container/container.interface';
-
-import {
-  AttributeGridComponent
-} from '../../../../../../shared/gui-objects/widgets/entity-attribute/grid/attribute-grid.component';
-
 @Component({
   selector: 'app-portfolio-attributes',
   templateUrl: './portfolio-attributes.component.html',
