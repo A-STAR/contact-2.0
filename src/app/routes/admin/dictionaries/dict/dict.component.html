@@ -14,7 +14,7 @@
   [canEdit]="canEdit | async"
   [dictionaries]="dictionaries | async"
   [dictionaryTermTypes]="dictionaryTermTypes | async"
-  [dictionary]="selectedDictionary | async"
+  [dictionary]="dictionary"
   [languages]="languages | async"
   [title]="'dictionaries.edit.title'"
   (submit)="onUpdate($event)"

@@ -15,7 +15,7 @@
   [canEdit]="canEdit | async"
   [disableParentSelection]="disableParentSelection | async"
   [languages]="languages | async"
-  [term]="selectedTerm | async"
+  [term]="term"
   [terms]="dropdownTerms | async"
   [title]="'terms.edit.title'"
   (submit)="onUpdate($event)"
