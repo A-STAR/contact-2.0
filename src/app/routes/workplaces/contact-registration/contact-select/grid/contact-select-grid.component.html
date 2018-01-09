@@ -1,0 +1,12 @@
+<app-grid2
+  *ngIf="columns$ | async"
+  [columns]="columns$ | async"
+  [ngClass]="'person-add-grid'"
+  [persistenceKey]="'person-add-grid'"
+  [rowIdKey]="rowIdKey"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  [styles]="{ height: '320px' }"
+  [translateColumnLabels]="true"
+  (onSelect)="onSelect()"
+></app-grid2>

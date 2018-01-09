@@ -10,8 +10,9 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 import * as moment from 'moment';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
@@ -19,7 +20,6 @@ import { IPromise, IPromiseLimit } from '../promise.interface';
 import { IDebt } from '../../../../../core/debt/debt.interface';
 
 import { PromiseService } from '../promise.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -92,13 +92,13 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userPermissionsService.has('PROMISE_ADD'),
       this.promiseService.getPromiseLimit(this.debtId, this.callCenter),
       this.promiseService.fetchDebt(this.debtId, this.callCenter),
       this.promiseId
         ? this.promiseService.fetch(this.debtId, this.promiseId, this.callCenter)
-        : Observable.of(null),
+        : of(null),
       this.userConstantsService.get('Promise.MinAmountPercent.Formula'),
       this.userPermissionsService.has('PROMISE_MIN_AMOUNT_PERCENT'),
     )
@@ -215,7 +215,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       : this.promiseService.create(this.debtId, data, this.callCenter);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PromiseService.MESSAGE_PROMISE_SAVED);
+      this.promiseService.dispatchAction(PromiseService.MESSAGE_PROMISE_SAVED);
       this.setDialog();
       this.onBack();
     });

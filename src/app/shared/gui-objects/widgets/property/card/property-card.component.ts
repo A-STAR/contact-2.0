@@ -1,50 +1,56 @@
-import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
+import { first, map, distinctUntilChanged } from 'rxjs/operators';
 
 import { IProperty } from '../property.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
+import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { PropertyService } from '../property.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
+import { Observable } from 'rxjs/Observable';
+
+interface IPropertyCardRouteParams {
+  personId: number;
+  propertyId: number;
+}
 
 const label = makeKey('widgets.property.card');
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-property-card',
   templateUrl: './property-card.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertyCardComponent implements OnInit {
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  private personId = (this.route.params as any).value.personId || null;
-  private propertyId = (this.route.params as any).value.propertyId || null;
+  @Input() personId: number;
+  @Input() propertyId: number;
 
   controls: Array<IDynamicFormItem> = null;
   property: IProperty;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtorCardService: DebtorCardService,
     private propertyService: PropertyService,
-    private messageBusService: MessageBusService,
     private router: Router,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.propertyId ? this.propertyService.canEdit$ : this.propertyService.canAdd$,
-      this.propertyId ? this.propertyService.fetch(this.personId, this.propertyId) : Observable.of(this.getFormData()),
+      this.propertyId ? this.propertyService.fetch(this.personId, this.propertyId) : of(this.getFormData()),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
     )
     .pipe(first())
@@ -53,6 +59,22 @@ export class PropertyCardComponent implements OnInit {
       this.property = property;
       this.cdRef.markForCheck();
     });
+  }
+
+  get propertyId$(): Observable<number> {
+    return this.routeParams$.map(params => params.propertyId);
+  }
+
+  get personId$(): Observable<number> {
+    return combineLatest(this.debtorCardService.personId$, this.routeParams$)
+      .pipe(
+        map(([ personId, params ]) => params.personId || personId),
+        distinctUntilChanged(),
+      );
+  }
+
+  get routeParams$(): Observable<IPropertyCardRouteParams> {
+    return <Observable<IPropertyCardRouteParams>>this.route.params.distinctUntilChanged();
   }
 
   get canSubmit(): boolean {
@@ -65,7 +87,7 @@ export class PropertyCardComponent implements OnInit {
       : this.propertyService.create(this.personId, this.form.serializedUpdates);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PropertyService.MESSAGE_PROPERTY_SAVED);
+      this.propertyService.dispatchAction(PropertyService.MESSAGE_PROPERTY_SAVED);
       this.onBack();
     });
   }

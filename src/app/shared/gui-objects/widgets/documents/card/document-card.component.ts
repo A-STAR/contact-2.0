@@ -2,13 +2,14 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, ViewChild
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IDocument } from '../document.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
+import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DocumentService } from '../document.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -21,34 +22,38 @@ import { maxFileSize } from '../../../../../core/validators';
   templateUrl: './document-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocumentCardComponent {
+export class DocumentCardComponent implements OnInit {
   @Input() callCenter = false;
   @Input() readOnly = false;
 
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  private id = (this.route.params as any).value.personId || null;
-  private documentId = (this.route.params as any).value.documentId || null;
-  private entityTypeCode = (this.route.queryParams as any).value.entityType || 18;
+  private documentId = Number(this.route.snapshot.paramMap.get('documentId'));
+  private entityTypeCode = Number(this.route.snapshot.queryParamMap.get('entityType')) || 18;
 
   controls: Array<IDynamicFormItem> = null;
   document: IDocument;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtorCardService: DebtorCardService,
     private documentService: DocumentService,
-    private messageBusService: MessageBusService,
     private router: Router,
     private route: ActivatedRoute,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
-  ) {
-    Observable.combineLatest(
+  ) {}
+
+  ngOnInit(): void {
+    const document$ = this.documentId
+      ? this.debtorCardService.personId$
+          .switchMap(personId => this.documentService.fetch(this.entityTypeCode, personId, this.documentId, this.callCenter))
+      : of(null);
+
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DOCUMENT_TYPE),
       this.userConstantsService.get('FileAttachment.MaxSize'),
-      this.documentId
-        ? this.documentService.fetch(this.entityTypeCode, this.id, this.documentId, this.callCenter)
-        : Observable.of(null)
+      document$,
     )
     .pipe(first())
     .subscribe(([ options, maxSize, document ]) => {
@@ -69,14 +74,20 @@ export class DocumentCardComponent {
     });
   }
 
-  public onSubmit(): void {
+  onSubmit(): void {
     const { file, ...document } = this.form.serializedUpdates;
-    const action = this.documentId
-      ? this.documentService.update(this.entityTypeCode, this.id, this.documentId, document, file, this.callCenter)
-      : this.documentService.create(this.entityTypeCode, this.id, document, file, this.callCenter);
+    const action$ = this.documentId
+    ? this.debtorCardService.personId$
+        .switchMap(personId =>
+          this.documentService.update(this.entityTypeCode, personId, this.documentId, document, file, this.callCenter)
+        )
+    : this.debtorCardService.personId$
+        .switchMap(personId =>
+          this.documentService.create(this.entityTypeCode, personId, document, file, this.callCenter)
+        );
 
-    action.subscribe(() => {
-      this.messageBusService.dispatch(DocumentService.MESSAGE_DOCUMENT_SAVED);
+    action$.pipe(first()).subscribe(() => {
+      this.documentService.dispatchAction(DocumentService.MESSAGE_DOCUMENT_SAVED);
       this.onBack();
     });
   }
@@ -85,7 +96,7 @@ export class DocumentCardComponent {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
-  public get canSubmit(): boolean {
+  get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 }

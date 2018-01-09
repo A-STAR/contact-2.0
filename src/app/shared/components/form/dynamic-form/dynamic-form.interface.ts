@@ -4,10 +4,10 @@ import { IDialogMultiSelectFilterType } from '../dialog-multi-select/dialog-mult
 import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { ILookupKey } from '../../../../core/lookup/lookup.interface';
+import { IMultiLanguageOption } from '../../../../shared/components/form/multi-language/multi-language.interface';
+import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
 import { ISelectionAction } from '../select/select.interface';
-import { IRadioGroupOption } from '../radio-group/radio-group.interface';
-import { RichTextEditorComponent } from '../rich-text-editor/rich-text-editor.component';
 
 export interface IValidationMessages {
   [key: string]: string;
@@ -47,6 +47,8 @@ export interface IDynamicFormControl {
   options?: ILabeledValue[];
   optionsActions?: Array<ISelectionAction>;
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
+  // options for multilanguage
+  langOptions?: IMultiLanguageOption[];
   // options for select wrapper
   dictCode?: number;
   parentCode?: number;
@@ -73,8 +75,10 @@ export interface IDynamicFormControl {
   // options for radio group
   radioOptions?: Array<IRadioGroupOption>;
   // options for rich text editor
-  onInit?: (control: RichTextEditorComponent) => void;
+  onInit?: Function;
   toolbar?: boolean;
+  richTextMode?: boolean;
+  codeMode?: boolean;
   // options for segmented input
   segmentedInputOptions?: ISegmentedInputOption[];
   // min & max value for number input
@@ -95,7 +99,9 @@ export type TControlTypes =
   | 'file'
   | 'gridselect'
   | 'hidden'
+  | 'htmltextarea'
   | 'image'
+  | 'multilanguage'
   | 'multiselect'
   | 'multiselectwrapper'
   | 'multitext'
@@ -110,6 +116,7 @@ export type TControlTypes =
   | 'singleselectwrapper'
   | 'text'
   | 'textarea'
+  | 'texteditor'
 ;
 
 export interface IValue {

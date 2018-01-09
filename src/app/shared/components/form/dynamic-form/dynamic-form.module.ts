@@ -8,7 +8,9 @@ import { DatePickerModule } from '../datepicker/datepicker.module';
 import { DialogMultiSelectModule } from '../dialog-multi-select/dialog-multi-select.module';
 import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { FileUploadModule } from '../file-upload/file-upload.module';
+import { HtmlTextareaModule } from '../html-textarea/html-textarea.module';
 import { ImageUploadModule } from '../image-upload/image-upload.module';
+import { MultiLanguageModule } from '../multi-language/multi-language.module';
 import { MultiTextModule } from '../multi-text/multi-text.module';
 import { PasswordModule } from '../password/password.module';
 import { PopupInputModule } from '../popup-input/popup-input.module';
@@ -16,6 +18,7 @@ import { RadioGroupModule } from '../radio-group/radio-group.module';
 import { RichTextEditorModule } from '../rich-text-editor/rich-text-editor.module';
 import { SegmentedInputModule } from '../segmented-input/segmented-input.module';
 import { SelectModule } from '../select/select.module';
+import { TextEditorModule } from '../text-editor/text-editor.module';
 
 import { DynamicFormComponent } from './dynamic-form.component';
 import { DynamicFormGroupComponent } from './group/dynamic-form-group.component';
@@ -29,7 +32,9 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     DialogMultiSelectModule,
     DropdownInputModule,
     FileUploadModule,
+    HtmlTextareaModule,
     ImageUploadModule,
+    MultiLanguageModule,
     MultiTextModule,
     PasswordModule,
     PopupInputModule,
@@ -39,6 +44,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     TranslateModule,
     SegmentedInputModule,
     SelectModule,
+    TextEditorModule,
   ],
   exports: [
     DynamicFormComponent,

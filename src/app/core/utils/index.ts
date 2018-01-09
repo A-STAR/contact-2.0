@@ -3,19 +3,24 @@
  * Description: exports small utility functions to be used across different components
  */
 
+import { ActivatedRoute } from '@angular/router';
 import { IOption, INamedValue } from '../converter/value-converter.interface';
+import { ILookupLanguage } from '../lookup/lookup.interface';
+import { IEntityTranslation, IEntitytTranslationValue } from '../entity/translations/entity-translations.interface';
 
 export const propOr = (prop: string, orValue: any) => obj => Object.hasOwnProperty.call(obj, prop) ? obj[prop] : orValue;
 
 export const makeKey = (prefix: string) => (fieldName: string) => `${prefix}.${fieldName}`;
 
-export const addLabel = (key: string) => {
+const addLabel = (key: string, prop: string) => {
   const labelKey = makeKey(key);
-  return control => ({
-    ...control,
-    label: control.label || labelKey(control.controlName)
+  return item => ({
+    ...item,
+    label: item.label || labelKey(item[prop])
   });
 };
+export const addFormLabel = (key: string) => addLabel(key, 'controlName');
+export const addLabelForEntity = (entity: string) => addLabel(`common.entities.${entity}.fields`, 'name');
 
 export const toLabeledValues = item => ({ label: item.name, value: item.code });
 
@@ -111,3 +116,32 @@ export const round = (value: number, precision: number) => {
 };
 
 export const range = (min: number, max: number): number[] => Array(max - min + 1).fill(null).map((_, i) => min + i);
+
+/**
+ * Allows to check is the current route matches the segment
+ * i.e. `isRoute('create')`
+ * @param route {ActivatedRoute}
+ * @param segment {string}
+ * @returns boolean
+ */
+export const isRoute = (route: ActivatedRoute, segment: string): boolean => {
+  return route.snapshot.url.join('/').indexOf(segment) !== -1;
+};
+
+export function getTranslations(languages: ILookupLanguage[], translations: IEntityTranslation[]): IEntitytTranslationValue[] {
+
+  function findTranslation(entityTranslations: IEntityTranslation[], languageId: number): string {
+    const found = entityTranslations.find(t => t.languageId === languageId);
+    return found ? found.value : null;
+  }
+
+  return languages.map(language =>
+    ({
+      label: language.name,
+      languageId: language.id,
+      isMain: language.isMain,
+      value: findTranslation(translations, language.id)
+    })
+  );
+}
+

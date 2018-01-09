@@ -6,15 +6,12 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  ViewChild
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/publishReplay';
 
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
 import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
@@ -22,16 +19,11 @@ import { ContactRegistrationService } from '../contact-registration.service';
 import { OutcomeService } from './outcome.service';
 import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
 
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
-
-import { isEmpty, makeKey, valuesToOptions } from '../../../../core/utils';
-
-const labelKey = makeKey('modules.contactRegistration.outcome');
+import { isEmpty, valuesToOptions, invert } from '../../../../core/utils';
 
 @Component({
   selector: 'app-contact-registration-outcome',
   templateUrl: './outcome.component.html',
-  styleUrls: [ './outcome.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -42,18 +34,16 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() personId: number;
   @Input() personRole: number;
 
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
-  controls: IDynamicFormControl[] = [
-    { label: labelKey('autoCommentId'), controlName: 'autoCommentId', type: 'select', options: [], disabled: true },
-    { label: labelKey('autoComment'), controlName: 'autoComment', type: 'textarea', rows: 3, disabled: true },
-    { label: labelKey('comment'), controlName: 'comment', type: 'textarea', rows: 3, disabled: true },
-  ];
-  data = {};
   nodes: ITreeNode[];
+
+  autoCommentId: number;
+  autoCommentOptions: IOption[];
+  autoComment: string;
+  comment: string;
   template: string;
 
   private autoCommentIdSubscription: Subscription;
+  private commentSubscription: Subscription;
   private selectedNodeSubscription: Subscription;
 
   constructor(
@@ -68,24 +58,29 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.userTemplatesService.getTemplates(4, 0)
       .map(valuesToOptions)
       .subscribe(autoCommentOptions => {
-        this.getControl('autoCommentId').options = autoCommentOptions;
+        this.autoCommentOptions = autoCommentOptions;
         this.cdRef.markForCheck();
       });
+
+    this.autoCommentIdSubscription = this.hasAutoComment$
+      .filter(invert)
+      .subscribe(() => {
+        this.autoCommentId = null;
+        this.autoComment = null;
+        this.cdRef.markForCheck();
+      });
+
+    this.commentSubscription = this.hasComment$
+      .filter(invert)
+      .subscribe(() => {
+        this.comment = null;
+        this.cdRef.markForCheck();
+      });
+
     this.fetchNodes();
   }
 
   ngAfterViewInit(): void {
-    this.autoCommentIdSubscription = this.form.onCtrlValueChange('autoCommentId')
-      .map(value => Array.isArray(value) ? value[0].value : value)
-      .filter(Boolean)
-      .distinctUntilChanged()
-      .flatMap(templateId => {
-        return this.outcomeService
-          .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
-          .catch(() => Observable.of(null));
-      })
-      .subscribe(autoComment => this.updateData('autoComment', autoComment));
-
     this.selectedNodeSubscription = this.selectedNode$
       .distinctUntilChanged()
       .flatMap(selectedNode => {
@@ -103,11 +98,20 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.autoCommentIdSubscription.unsubscribe();
+    this.commentSubscription.unsubscribe();
     this.selectedNodeSubscription.unsubscribe();
   }
 
   get hasTemplate(): boolean {
     return [1, 2].includes(this.contactTypeCode);
+  }
+
+  get hasAutoComment$(): Observable<boolean> {
+    return this.selectedNode$.map(node => node && node.data.autoCommentIds && isEmpty(node.children));
+  }
+
+  get hasComment$(): Observable<boolean> {
+    return this.selectedNode$.map(node => node && [2, 3].includes(node.data.commentMode) && isEmpty(node.children));
   }
 
   get canSubmit$(): Observable<boolean> {
@@ -120,22 +124,8 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onNodeSelect(event: { node: ITreeNode }): void {
     const { node } = event;
-
     this.selectedNode$.next(node);
-
-    if ([2, 3].includes(node.data.commentMode) && isEmpty(node.children)) {
-      this.enableField('comment');
-    } else {
-      this.disableField('comment');
-    }
-
-    if (node.data.autoCommentIds && isEmpty(node.children)) {
-      this.enableField('autoCommentId');
-      this.enableField('autoComment');
-    } else {
-      this.disableField('autoCommentId');
-      this.disableField('autoComment');
-    }
+    this.cdRef.markForCheck();
   }
 
   onNextClick(): void {
@@ -149,12 +139,25 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
       campaignId: this.campaignId,
     })
     .subscribe(guid => {
-      const { autoComment, autoCommentId } = this.form.serializedValue;
+      const { autoComment, autoCommentId, comment } = this;
       this.contactRegistrationService.guid = guid;
-      this.contactRegistrationService.autoComment$.next({ autoComment, autoCommentId });
+      this.contactRegistrationService.autoComment$.next({ autoComment, autoCommentId, comment });
       this.accordionService.next();
       this.cdRef.markForCheck();
     });
+  }
+
+  onAutoCommentIdChange(option: IOption[]): void {
+    const templateId = Number(option[0].value);
+    if (templateId) {
+      this.outcomeService
+        .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
+        .catch(() => Observable.of(null))
+        .subscribe(autoComment => {
+          this.autoComment = autoComment;
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
   private buildPayload(contactTypeCode: number, contactId: number): object {
@@ -170,31 +173,10 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     return {};
   }
 
-  private enableField(key: string): void {
-    this.getControl(key).disabled = false;
-  }
-
-  private disableField(key: string): void {
-    this.getControl(key).disabled = true;
-    this.updateData(key, null);
-  }
-
-  private updateData(key: string, value: any): void {
-    this.data = {
-      ...this.form.serializedValue,
-      [key]: value,
-    };
-    this.cdRef.markForCheck();
-  }
-
   private fetchNodes(): void {
     this.outcomeService.fetchContactTree(this.debtId, this.contactTypeCode).subscribe(nodes => {
       this.nodes = nodes;
       this.cdRef.markForCheck();
     });
-  }
-
-  private getControl(name: string): IDynamicFormControl {
-    return this.controls.find(control => control.controlName === name);
   }
 }

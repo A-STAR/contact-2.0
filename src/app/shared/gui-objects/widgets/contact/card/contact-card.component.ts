@@ -2,26 +2,20 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IContact } from '../contact.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
 import { ContactService } from '../contact.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { AddressGridComponent } from './address-grid/address-grid.component';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { EmploymentGridComponent } from '../../../../../shared/gui-objects/widgets/employment/grid/employment-grid.component';
-import { IdentityGridComponent } from '../../../../../shared/gui-objects/widgets/identity/grid/identity-grid.component';
-import { PhoneGridComponent } from './phone-grid/phone-grid.component';
 
 import { makeKey } from '../../../../../core/utils';
 
-const labelKey = makeKey('widgets.contact.grid');
+const label = makeKey('widgets.contact.grid');
 
 @Component({
   selector: 'app-contact-card',
@@ -36,40 +30,22 @@ export class ContactCardComponent {
   controls: IDynamicFormControl[] = null;
   contact: IContact;
 
-  // TODO(d.maltsev) get rid of this. Use widgets in html instead.
-  node: INode = {
-    container: 'tabs',
-    children: [
-      {
-        component: PhoneGridComponent,
-        title: 'debtor.information.phone.title',
-      },
-      {
-        component: AddressGridComponent,
-        title: 'debtor.information.address.title'
-      },
-      {
-        component: IdentityGridComponent,
-        title: 'debtor.identityDocs.title',
-        inject: { personRole: 4 }
-      },
-      {
-        component: EmploymentGridComponent,
-        title: 'debtor.employmentRecordTab.title',
-        inject: { personRole: 4 }
-      },
-    ]
-  };
+  tabs = [
+    { title: 'debtor.information.phone.title', isInitialised: true },
+    { title: 'debtor.information.address.title', isInitialised: true },
+    { title: 'debtor.identityDocs.title', isInitialised: false },
+    { title: 'debtor.employmentRecordTab.title', isInitialised: false }
+  ];
 
   constructor(
     private contactService: ContactService,
-    private messageBusService: MessageBusService,
+    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private router: Router,
     private route: ActivatedRoute,
   ) {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_GENDER,
         UserDictionariesService.DICTIONARY_FAMILY_STATUS,
@@ -79,7 +55,7 @@ export class ContactCardComponent {
       this.contactId
         ? this.userPermissionsService.has('CONTACT_PERSON_EDIT')
         : this.userPermissionsService.has('CONTACT_PERSON_ADD'),
-      this.contactId ? this.contactService.fetch(this.personId, this.contactId) : Observable.of(null)
+      this.contactId ? this.contactService.fetch(this.personId, this.contactId) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, canEdit, contact ]) => {
@@ -88,22 +64,22 @@ export class ContactCardComponent {
       const educationOptions = options[UserDictionariesService.DICTIONARY_EDUCATION];
       const cTypeOptions = options[UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE];
       const controls: IDynamicFormControl[] = [
-        { label: labelKey('lastName'), controlName: 'lastName', type: 'text', width: 4, required: true },
-        { label: labelKey('firstName'), controlName: 'firstName', type: 'text', width: 4 },
-        { label: labelKey('middleName'), controlName: 'middleName', type: 'text', width: 4 },
-        { label: labelKey('birthDate'), controlName: 'birthDate',  type: 'datepicker', width: 4 },
-        { label: labelKey('genderCode'), controlName: 'genderCode', type: 'select', width: 4, options: genderOptions },
-        { label: labelKey('birthPlace'), controlName: 'birthPlace',  type: 'text', width: 4 },
+        { label: label('lastName'), controlName: 'lastName', type: 'text', width: 4, required: true },
+        { label: label('firstName'), controlName: 'firstName', type: 'text', width: 4 },
+        { label: label('middleName'), controlName: 'middleName', type: 'text', width: 4 },
+        { label: label('birthDate'), controlName: 'birthDate',  type: 'datepicker', width: 4 },
+        { label: label('genderCode'), controlName: 'genderCode', type: 'select', width: 4, options: genderOptions },
+        { label: label('birthPlace'), controlName: 'birthPlace',  type: 'text', width: 4 },
         {
-          label: labelKey('familyStatusCode'),
+          label: label('familyStatusCode'),
           controlName: 'familyStatusCode',
           type: 'select',
           width: 4,
           options: familyOptions
         },
-        { label: labelKey('educationCode'), controlName: 'educationCode',  type: 'select', width: 4, options: educationOptions },
-        { label: labelKey('linkTypeCode'), controlName: 'linkTypeCode',  type: 'select', width: 4, options: cTypeOptions },
-        { label: labelKey('comment'), controlName: 'comment', type: 'textarea', },
+        { label: label('educationCode'), controlName: 'educationCode',  type: 'select', width: 4, options: educationOptions },
+        { label: label('linkTypeCode'), controlName: 'linkTypeCode',  type: 'select', width: 4, options: cTypeOptions },
+        { label: label('comment'), controlName: 'comment', type: 'textarea', },
       ];
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true });
       this.contact = contact;
@@ -112,6 +88,22 @@ export class ContactCardComponent {
 
   get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
+  }
+
+  get debtId(): number {
+    return this.routeParams.debtId;
+  }
+
+  get debtorId(): number {
+    return this.routeParams.personId;
+  }
+
+  get contactPersonId(): number {
+    return this.routeParams.contactId || this.routeParams.personId;
+  }
+
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
   }
 
   onBack(): void {
@@ -125,8 +117,12 @@ export class ContactCardComponent {
       : this.contactService.create(this.personId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(ContactService.MESSAGE_CONTACT_SAVED);
+      this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);
       this.onBack();
     });
+  }
+
+  private get routeParams(): any {
+    return (this.route.params as any).value;
   }
 }

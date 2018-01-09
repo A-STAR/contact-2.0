@@ -5,6 +5,7 @@ export type ILookupKey =
   'languages' |
   'portfolios' |
   'roles' |
+  'timeZone' |
   'users';
 
 export interface ILookupBase {
@@ -29,12 +30,17 @@ export interface ILookupDictionary extends ILookupBase {
 }
 
 export interface ILookupLanguage extends ILookupBase {
-  isMain: boolean;
+  isMain: number;
 }
 
 export interface ILookupPortfolio extends ILookupBase {
   contractorId: number;
   contractor: string;
+}
+
+export interface ILookupTimeZone extends ILookupBase {
+  code: string;
+  utcOffset: string;
 }
 
 export enum LookupStatusEnum {
@@ -55,5 +61,7 @@ export interface ILookupState {
   languages: ILookupSlice<ILookupLanguage>;
   portfolios: ILookupSlice<ILookupPortfolio>;
   roles: ILookupSlice<ILookupRole>;
+  // NOTE: this key is in singular, because the API endpoint is GET lookup/timeZone
+  timeZone: ILookupSlice<ILookupTimeZone>;
   users: ILookupSlice<ILookupUser>;
 }

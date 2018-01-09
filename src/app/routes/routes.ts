@@ -55,6 +55,14 @@ export const routes: Route[] = [
             loadChildren: './utilities/campaigns/campaigns.module#CampaignsModule',
           },
           {
+            path: 'currencies',
+            loadChildren: './utilities/currencies/currencies.module#CurrenciesModule',
+          },
+          {
+            path: 'groups',
+            loadChildren: './utilities/groups/groups.module#GroupsModule',
+          },
+          {
             path: 'contact-properties',
             loadChildren: './utilities/contact-properties/contact-properties.module#ContactPropertiesModule',
           },
@@ -65,10 +73,6 @@ export const routes: Route[] = [
           {
             path: 'message-templates',
             loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',
-          },
-          {
-            path: 'upload-templates',
-            loadChildren: './utilities/payments-upload/payments-upload.module#PaymentsUploadModule',
           },
         ]
       },

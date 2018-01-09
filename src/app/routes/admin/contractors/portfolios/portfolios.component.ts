@@ -2,12 +2,14 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
-import { IContractor, IPortfolio, PortfolioAction } from '../contractors-and-portfolios.interface';
+import { IContractor, IPortfolio, PortfolioAction, IActionType } from '../contractors-and-portfolios.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
@@ -16,10 +18,9 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
-
 import { combineLatestAnd } from '../../../../core/utils/helpers';
 import { DialogFunctions } from '../../../../core/dialog';
+import { GridComponent } from '../../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-portfolios',
@@ -27,6 +28,7 @@ import { DialogFunctions } from '../../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDestroy {
+
   @ViewChild(GridComponent) grid: GridComponent;
 
   toolbarItems: Array<IToolbarItem> = [
@@ -35,7 +37,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onAdd(),
       enabled: combineLatestAnd([
         this.canAdd$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
       ])
     },
     {
@@ -43,8 +45,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.canEdit$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
       ])
     },
     {
@@ -52,8 +54,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onMove(),
       enabled: combineLatestAnd([
         this.canMove$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
       ])
     },
     {
@@ -61,8 +63,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.setDialog('delete'),
       enabled: combineLatestAnd([
         this.canDelete$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
       ])
     },
     {
@@ -78,29 +80,22 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onForm(),
       enabled: combineLatestAnd([
         this.canForm$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canForm(o)),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canForm(o)),
       ])
     },
     {
       label: this.translateService.instant('portfolios.outsourcing.send.menu.title'),
-      // we check for availability in children menu items
-      enabled: Observable.of(true),
+      enabled: this.canSendOutsource(),
       submenu: [
         {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.outsourcing'),
           action: () => this.onAction('sendOutsource'),
-          enabled: combineLatestAnd([
-            this.canSend$,
-            this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canSend(o)),
-          ]),
+          enabled: this.canSendOutsource(),
         }, {
           label: this.translateService.instant('portfolios.outsourcing.send.menu.cession'),
           action: () => this.onAction('sendCession'),
-          enabled: combineLatestAnd([
-            this.canSend$,
-            this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canSend(o)),
-          ]),
+          enabled: this.canSendOutsource(),
         }
       ]
     },
@@ -109,8 +104,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       action: () => this.onAction('returnOutsource'),
       enabled: combineLatestAnd([
         this.canReturn$,
-        this.contractorsAndPortfoliosService.selectedContractorId$.map(o => !!o),
-        this.contractorsAndPortfoliosService.selectedPortfolio$.map(o => this.canReturn(o)),
+        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canReturn(o))
       ])
     }
   ];
@@ -130,10 +125,9 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   dialog: string;
   portfolios: IPortfolio[];
   selectedContractor: IContractor;
-  selectedContractorId: number;
-  selection: IPortfolio[];
 
   private contractorSubscription: Subscription;
+  private portfoliosUpdateSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -141,6 +135,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private router: Router,
+    private store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService,
     private translateService: TranslateService
   ) {
@@ -157,21 +152,33 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
     this.contractorSubscription = Observable.combineLatest(
       this.canView$,
-      this.contractorsAndPortfoliosService.selectedContractorId$.filter(Boolean)
+      this.store.select(state => state.contractorsAndPortfolios.selectedContractor)
     )
-    .subscribe(([canView, contractorId]) => {
-      if (canView) {
-        this.selectedContractorId = contractorId;
-        this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios));
-      } else {
-        this.clearPortfolios();
-        this.notificationsService.error('errors.default.read.403').entity('entities.portfolios.gen.plural').dispatch();
-      }
-    });
+      .subscribe(([canView, contractor]) => {
+        if (canView && contractor) {
+          this.selectedContractor = contractor;
+          this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios));
+        } else {
+          if (!canView) {
+            this.notificationsService.error('errors.default.read.403').entity('entities.portfolios.gen.plural').dispatch();
+          }
+          this.clearPortfolios();
+        }
+      });
+
+    this.portfoliosUpdateSub =
+        this.contractorsAndPortfoliosService.getAction(IActionType.PORTFOLIO_SAVE)
+        .switchMap(() => this.fetchAll())
+        .subscribe(portfolios => this.onPortfoliosFetch(portfolios));
   }
 
   ngOnDestroy(): void {
-    this.contractorSubscription.unsubscribe();
+    if (this.contractorSubscription) {
+      this.contractorSubscription.unsubscribe();
+    }
+    if (this.portfoliosUpdateSub) {
+      this.portfoliosUpdateSub.unsubscribe();
+    }
   }
 
   get canView$(): Observable<boolean> {
@@ -206,6 +213,21 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     return this.userPermissionsService.has('PORTFOLIO_OUTSOURCING_RETURN');
   }
 
+  get selectedPortfolio$(): Observable<IPortfolio> {
+    return this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio);
+  }
+
+  get selectedContractor$(): Observable<IContractor> {
+    return this.store.select(state => state.contractorsAndPortfolios.selectedContractor);
+  }
+
+  canSendOutsource(): Observable<boolean> {
+    return combineLatestAnd([
+      this.canSend$,
+      this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => this.canSend(o)),
+    ]);
+  }
+
   canForm(portfolio: IPortfolio): boolean {
     return portfolio &&
       portfolio.directionCode === 2 && portfolio.statusCode === 4;
@@ -220,15 +242,15 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onAdd(): void {
-    this.router.navigate([`/admin/contractors/${this.selectedContractorId}/portfolios/create`]);
+    this.router.navigate([`/admin/contractors/${this.selectedContractor.id}/portfolios/create`]);
   }
 
   onEdit(): void {
-    this.router.navigate([`/admin/contractors/${this.selectedContractorId}/portfolios/${this.selection[0].id}`]);
+    this.router.navigate([`/admin/contractors/${this.selectedContractor.id}/portfolios/${this.grid.selected[0].id}`]);
   }
 
   onMove(): void {
-    this.contractorsAndPortfoliosService.readContractor(this.selectedContractorId)
+    this.contractorsAndPortfoliosService.readContractor(this.selectedContractor.id)
       .subscribe(contractor => {
         this.selectedContractor = contractor;
         this.setDialog('move');
@@ -241,12 +263,11 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onSelect(portfolio: IPortfolio): void {
-    this.selection = [portfolio];
     this.contractorsAndPortfoliosService.selectPortfolio(portfolio);
   }
 
   onRemoveSubmit(): void {
-    this.contractorsAndPortfoliosService.deletePortfolio(this.selectedContractorId, this.selection[0].id)
+    this.contractorsAndPortfoliosService.deletePortfolio(this.selectedContractor.id, this.grid.selected[0].id)
     .switchMap(() => this.fetchAll())
     .subscribe(portfolios => {
       this.setDialog();
@@ -256,7 +277,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   onForm(): void {
     this.contractorsAndPortfoliosService
-      .formOutsourcePortfolio(this.selectedContractorId, this.selection[0].id, this.selection[0])
+      .formOutsourcePortfolio(this.selectedContractor.id, this.grid.selected[0].id, this.grid.selected[0])
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => {
         this.setDialog();
@@ -266,7 +287,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
 
   onMoveSubmit(contractor: IContractor): void {
     this.contractorsAndPortfoliosService
-      .movePortfolio(this.selectedContractorId, this.selection[0].id, { newContractorId: contractor.id } )
+      .movePortfolio(this.selectedContractor.id, this.grid.selected[0].id, { newContractorId: contractor.id } )
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => {
         this.setDialog();
@@ -275,8 +296,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onSendOutsourceSubmit(portfolio: IPortfolio): void {
-    this.contractorsAndPortfoliosService.sendOutsourcePortfolio(this.selectedContractorId,
-      this.selection[0].id, portfolio)
+    this.contractorsAndPortfoliosService.sendOutsourcePortfolio(this.selectedContractor.id,
+      this.grid.selected[0].id, portfolio)
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => {
         this.setDialog();
@@ -285,8 +306,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onSendCessionSubmit(portfolio: IPortfolio): void {
-    this.contractorsAndPortfoliosService.sendCessionPortfolio(this.selectedContractorId,
-      this.selection[0].id, portfolio)
+    this.contractorsAndPortfoliosService.sendCessionPortfolio(this.selectedContractor.id,
+      this.grid.selected[0].id, portfolio)
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => {
         this.setDialog();
@@ -294,8 +315,8 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
       });
   }
   onReturnOutsourceSubmit(portfolio: IPortfolio): void {
-    this.contractorsAndPortfoliosService.returnOutsourcePortfolio(this.selectedContractorId,
-      this.selection[0].id, portfolio)
+    this.contractorsAndPortfoliosService.returnOutsourcePortfolio(this.selectedContractor.id,
+      this.grid.selected[0].id, portfolio)
       .switchMap(() => this.fetchAll())
       .subscribe(portfolios => {
         this.setDialog();
@@ -304,19 +325,20 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   private fetchAll(): Observable<IPortfolio[]> {
-    return this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractorId);
+    return this.contractorsAndPortfoliosService.readPortfolios(this.selectedContractor.id);
   }
 
   private clearPortfolios(): void {
-    this.selection = [];
+    this.grid.selected = [];
     this.portfolios = [];
     this.contractorsAndPortfoliosService.selectPortfolio(null);
     this.cdRef.markForCheck();
   }
 
   private onPortfoliosFetch(portfolios: IPortfolio[]): void {
-    this.selection = [];
+    this.grid.selected = [];
+    this.contractorsAndPortfoliosService.selectPortfolio(null);
     this.portfolios = portfolios;
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
   }
 }

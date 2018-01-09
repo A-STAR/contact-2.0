@@ -14,7 +14,6 @@ import { ErrorHandlerService } from './error/error-handler.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
 import { LookupService } from './lookup/lookup.service';
-import { MessageBusService } from './message-bus/message-bus.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { PersistenceService } from './persistence/persistence.service';
@@ -41,7 +40,6 @@ import { environment } from '../../environments/environment';
     LookupService,
     GridFiltersService,
     GuiObjectsService,
-    MessageBusService,
     MetadataService,
     NotificationsService,
     PersistenceService,

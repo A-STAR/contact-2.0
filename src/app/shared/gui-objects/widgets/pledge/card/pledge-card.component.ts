@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPledgeContract } from '../pledge.interface';
@@ -18,7 +17,9 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey, isRoute } from '../../../../../core/utils';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 const label = makeKey('widgets.pledgeContract.card');
 
@@ -65,17 +66,17 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.pledgeService.fetchAll(this.debtId),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       this.contract$.flatMap(
         contract => contract && contract.id ? this.pledgeService.canEdit$ : this.pledgeService.canAdd$
       ),
-      this.contract$.flatMap(contract => Observable.of(contract || this.getFormData()))
+      this.contract$.flatMap(contract => of(contract || this.getFormData()))
     )
     .pipe(first())
     .subscribe(([ contracts, typeOptions, canEdit, pledgeContract ]) => {
-      this.initControls(canEdit, typeOptions);
+      this.controls = this.getControls(canEdit, typeOptions);
       this.contract = pledgeContract;
       this.canEdit = canEdit;
     });
@@ -111,7 +112,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   onFormInit(): void {
     if (this.isAddingPledgor || !this.canEdit) {
       this.form.form.disable();
-      this.cdRef.detectChanges();
+      this.cdRef.markForCheck();
     }
   }
 
@@ -128,7 +129,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   get isAddingPledgor(): boolean {
-    return this.isRoute('pledgor/add');
+    return isRoute(this.route, 'pledgor/add');
   }
 
   onBack(): void {
@@ -143,7 +144,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
         this.contractId,
         this.pledgeService.createContractPledgor(this.form.getControl('personId').value, this.form.serializedUpdates),
       )
-      : this.isRoute('create')
+      : isRoute(this.route, 'create')
         ? this.pledgeService.create(
           this.debtId,
           this.pledgeService.createPledgeContractInformation(this.form.serializedUpdates)
@@ -158,13 +159,13 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
         );
 
     action.subscribe(() => {
-      this.pledgeService.setPayload(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
+      this.pledgeService.dispatchAction(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED);
       this.onBack();
     });
   }
 
-  private initControls(canEdit: boolean, typeOptions: IOption[]): void {
-    this.controls = [
+  private getControls(canEdit: boolean, typeOptions: IOption[]): IDynamicFormGroup[] {
+    const controls = [
       {
         title: 'widgets.pledgeContract.title', collapsible: true,
         children: [
@@ -185,16 +186,12 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
       }
     ];
 
-    this.controls = this.controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
+    return controls.map(control => canEdit ? control : { ...control, disabled: true }) as IDynamicFormGroup[];
   }
 
   private getFormData(): Partial<IPledgeContract> {
     return {
       typeCode: 1
     };
-  }
-
-  private isRoute(segment: string): boolean {
-    return this.route.snapshot.url.join('/').indexOf(segment) !== -1;
   }
 }

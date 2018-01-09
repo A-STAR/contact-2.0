@@ -11,14 +11,31 @@
   <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
 </div>
 
-<app-accordion *ngIf="displayDebtData">
-  <app-accordion-item title="widgets.debt.component.title">
-    <app-debt-component-grid [debtId]="debtId$ | async"></app-debt-component-grid>
-  </app-accordion-item>
-  <app-accordion-item *ngIf="canViewPortfolioLog$ | async" title="widgets.debt.portfolioLog.title">
-    <app-portfolio-log-grid></app-portfolio-log-grid>
-  </app-accordion-item>
-  <app-accordion-item *ngIf="canViewComponentLog$ | async" title="widgets.debt.componentLog.title">
-    <app-component-log-grid></app-component-log-grid>
-  </app-accordion-item>
-</app-accordion>
+<ng-container *ngIf="!!debt">
+
+  <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
+
+      <app-tabview-tab [title]="tabs[0].title">
+        <app-debt-component-grid
+          *ngIf="tabs[0].isInitialised"
+          [debtId]="debtId$ | async"
+        ></app-debt-component-grid>
+      </app-tabview-tab>
+
+      <app-tabview-tab [title]="tabs[1].title">
+        <app-portfolio-log-grid
+          *ngIf="tabs[1].isInitialised && (canViewPortfolioLog$ | async)"
+          [debtId]="debtId$ | async"
+        ></app-portfolio-log-grid>
+      </app-tabview-tab>
+
+      <app-tabview-tab [title]="tabs[2].title">
+        <app-component-log-grid
+          *ngIf="tabs[2].isInitialised && (canViewComponentLog$ | async)"
+          [debtId]="debtId$ | async"
+        ></app-component-log-grid>
+      </app-tabview-tab>
+
+    </app-tabview>
+
+</ng-container>

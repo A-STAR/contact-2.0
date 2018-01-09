@@ -2,26 +2,28 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/concatMap';
-import 'rxjs/add/operator/filter';
 
 import { DataService } from '../../../core/data/data.service';
 import { IAppState } from '../../../core/state/state.interface';
 import { IUser, IUsersState } from './users.interface';
+
+import { AbstractActionService } from '../../../core/state/action.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Injectable()
-export class UsersService {
+export class UsersService extends AbstractActionService {
   static USER_SELECT          = 'USER_SELECT';
   static USER_TOGGLE_INACTIVE = 'USER_TOGGLE_INACTIVE';
   static USER_SAVED           = 'USER_SAVED';
 
   constructor(
-    private actions: Actions,
+    protected actions: Actions,
     private dataService: DataService,
-    private store: Store<IAppState>,
     private notificationsService: NotificationsService,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   get state(): Observable<IUsersState> {
     return this.store.select(state => state.users);
@@ -84,14 +86,6 @@ export class UsersService {
 
   toggleInactiveFilter(): void {
     this.dispatchAction(UsersService.USER_TOGGLE_INACTIVE);
-  }
-
-  dispatchAction(type: string, payload: object = {}): void {
-    return this.store.dispatch({ type, payload });
-  }
-
-  getAction(action: string): Actions<any> {
-    return this.actions.ofType(action);
   }
 
   private updatePhoto(userId: string, photo: File | false): Observable<any> {

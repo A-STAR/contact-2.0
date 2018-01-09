@@ -1,0 +1,23 @@
+<app-dialog-action
+  *ngIf="isDialog('removeGroup')"
+  actionMode="danger"
+  actionTranslationKey="debtor.groupTab.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  titleTranslationKey="debtor.groupTab.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="widgets.groups"
+  selectionType="single"
+  [columns]="columns"
+  [selection]="selection"
+  [footerHeight]="false"
+  [rows]="groups"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onEdit($event)"
+>
+</app-grid>

@@ -9,11 +9,9 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { IAttributeVersion, IAttributeVersionForm } from '../../../attribute.interface';
+import { IAttribute, IAttributeVersion, IAttributeVersionForm } from '../../../attribute.interface';
 import { IDynamicFormControl } from '../../../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '../../../../../../../core/converter/value-converter.interface';
 
-import { UserDictionariesService } from '../../../../../../../core/user/dictionaries/user-dictionaries.service';
 import { DynamicFormComponent } from '../../../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { getFormControlConfig, getRawValue, getValue } from '../../../../../../../core/utils/value';
@@ -28,7 +26,7 @@ const labelKey = makeKey('widgets.attribute.grid');
 })
 export class AttributeVersionEditComponent implements OnInit {
   @Input() selectedVersion: IAttributeVersion;
-  @Input() selectedAttributeId: number;
+  @Input() selectedAttribute: IAttribute;
   @Input() entityTypeId: number;
 
   @Output() submit = new EventEmitter<Partial<IAttributeVersionForm>>();
@@ -40,17 +38,11 @@ export class AttributeVersionEditComponent implements OnInit {
   formData: IAttributeVersionForm;
 
   constructor(
-    private cdRef: ChangeDetectorRef,
-    private userDictionariesService: UserDictionariesService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    if (this.selectedVersion && this.selectedVersion.dictNameCode) {
-      this.userDictionariesService.getDictionaryAsOptions(this.selectedVersion.dictNameCode)
-        .subscribe(options => this.onInit(options));
-    } else {
-      this.onInit();
-    }
+    this.onInit(this.selectedVersion && !!this.selectedAttribute);
   }
 
   get canSubmit(): boolean {
@@ -58,11 +50,12 @@ export class AttributeVersionEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const { value, ...rest } = this.form.serializedUpdates;
+    const value = this.form.serializedValue.value;
     const data = {
-      ...rest,
+      ...this.form.serializedUpdates,
+      value,
       changeDateTime: this.form.serializedUpdates.changeDateTime || this.selectedVersion.fromDateTime,
-      ...getValue(this.selectedVersion.typeCode, value)
+      ...getValue(this.selectedAttribute.typeCode, value)
     };
     this.submit.emit(data);
   }
@@ -71,26 +64,33 @@ export class AttributeVersionEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private onInit(options: IOption[] = null): void {
-    this.controls = this.buildControls(this.selectedVersion, options);
+  private onInit(isEdit: boolean = false): void {
+    this.controls = this.buildControls(this.selectedAttribute);
     this.formData = {
-      changeDateTime: this.selectedVersion.changeDateTime || this.selectedVersion.fromDateTime,
-      value: getRawValue(this.selectedVersion)
+      changeDateTime: isEdit ? (this.selectedVersion.changeDateTime || this.selectedVersion.fromDateTime)
+        : this.selectedAttribute.changeDateTime,
+      value: getRawValue(isEdit ?
+        {
+          ...this.selectedVersion,
+          typeCode: this.selectedAttribute.typeCode,
+        }
+        : this.selectedAttribute)
     };
     this.cdRef.markForCheck();
   }
 
-  private buildControls(version: IAttributeVersion, options: IOption[]): IDynamicFormControl[] {
+  private buildControls(attr: IAttribute): IDynamicFormControl[] {
     return [
       {
         label: labelKey('value'),
         controlName: 'value',
-        ...getFormControlConfig(version),
-        ...(options ? { options } : {}),
+        required: true,
+        ...getFormControlConfig(attr)
       },
       {
         label: labelKey('changeDateTime'),
         controlName: 'changeDateTime',
+        required: true,
         type: 'datepicker',
       },
       {

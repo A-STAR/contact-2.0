@@ -1,27 +1,27 @@
 <app-add-permission
-  *ngIf="isDialog(1)"
+  *ngIf="isDialog('add')"
   [availablePermissions]="availablePermissions"
-  (add)="onAddPermissions($event)"
+  (add)="onAdd($event)"
   (cancel)="onCancel()"
 >
 </app-add-permission>
 
 <app-edit-permission
-  *ngIf="isDialog(2)"
+  *ngIf="isDialog('edit')"
   [record]="currentPermission"
-  (save)="onAfterEditPermission($event)"
+  (save)="onEdit($event)"
   (cancel)="onCancel()"
 >
 </app-edit-permission>
 
 <app-dialog-action
-  *ngIf="isDialog(3)"
+  *ngIf="isDialog('remove')"
   [actionMode]="'danger'"
   [actionMessage]="'default.buttons.remove'"
   [actionTranslationKey]="'roles.permissions.remove.confirmMessage'"
   [messageParams]="currentPermission"
   [titleTranslationKey]="'roles.permissions.remove.title'"
-  (action)="onRemovePermission()"
+  (action)="onRemove()"
   (cancel)="onCancel()"
 >
 </app-dialog-action>
@@ -38,6 +38,6 @@
   [rows]="permissions$ | async"
   [selectionType]="'single'"
   [styles]="{height: '400px'}"
-  (onDblClick)="onBeforeEditPermission()"
-  (onSelect)="onSelectPermissions($event)">
+  (onDblClick)="onDblClick()"
+  (onSelect)="onSelect($event)">
 </app-grid>

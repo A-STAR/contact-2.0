@@ -1,87 +1,130 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
+import { first } from 'rxjs/operators/first';
 
 import { ITerm } from '../../dictionaries.interface';
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
+import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
+import { IMultiLanguageOption } from '../../../../../shared/components/form/multi-language/multi-language.interface';
+import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 
-import { toLabeledValues } from '../../../../../core/utils';
+import { DictionariesService } from '../../dictionaries.service';
+import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { EntityTranslationComponent } from '../../../../../shared/components/entity/translation.component';
+import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+
+import { makeKey, toLabeledValues, getTranslations } from '../../../../../core/utils';
+
+const label = makeKey('terms.edit');
 
 @Component({
   selector: 'app-term-edit',
   templateUrl: './term-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TermEditComponent extends EntityTranslationComponent<ITerm> {
+export class TermEditComponent implements OnInit {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  @Input() canEdit = false;
+  @Input() disableParentSelection = false;
   @Input() languages: ILookupLanguage[];
+  @Input() term: ITerm;
   @Input() terms: ITerm[];
+  @Input() title: string;
 
-  toSubmittedValues(values: ITerm): any {
-    return this.dynamicForm.serializedUpdates;
+  @Output() submit = new EventEmitter<ITerm>();
+  @Output() cancel = new EventEmitter<null>();
+
+  controls: Array<IDynamicFormItem>;
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private dictionariesService: DictionariesService,
+    private userDictionariesService: UserDictionariesService,
+  ) {}
+
+  ngOnInit(): void {
+    combineLatest(
+      this.userDictionariesService
+        .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE),
+      this.term
+        ? this.dictionariesService.selectedTerm.map(term => term.name)
+        : of([]),
+    )
+    .pipe(first())
+    .subscribe(([dictTypeOptions, nameTranslations]) => {
+      const dictTermTranslations = getTranslations(this.languages, nameTranslations);
+      this.controls = this.getControls(dictTypeOptions, dictTermTranslations);
+      this.cdRef.markForCheck();
+    });
   }
 
-  protected getControls(): Array<IDynamicFormControl> {
-    const controls: IDynamicFormControl[] = [
+  onSubmit(values: ITerm): any {
+    return this.submit.emit(this.form.serializedUpdates);
+  }
+
+  get canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
+  onClose(): void {
+    this.cancel.emit();
+  }
+
+  private getControls(
+    dictTypeOptions: IOption[],
+    nameTranslations: IMultiLanguageOption[],
+  ): Array<IDynamicFormControl> {
+
+    const disabled = !this.canEdit;
+    const controls: Partial<IDynamicFormControl>[] = [
       {
-        label: 'terms.edit.code',
         controlName: 'code',
         type: 'number',
-        required: true
-      },
-      {
-        label: 'terms.edit.text',
-        controlName: this.translatedControlName,
-        type: 'select',
-        multiple: true,
         required: true,
-        placeholder: 'dictionaries.placeholder.select.translation',
-        options: this.languages.map(userLanguage =>
-          ({ label: userLanguage.name, value: userLanguage.id, canRemove: !userLanguage.isMain })
-        )
+        disabled,
       },
       {
-        label: 'terms.edit.text',
-        controlName: this.nameControlName,
-        type: 'text',
-        required: true
+        controlName: 'name',
+        type: this.term ? 'multilanguage' : 'text',
+        required: true,
+        langOptions: nameTranslations,
+        disabled,
       },
       {
-        label: null,
-        controlName: this.displayControlName,
-        type: 'text',
-        placeholder: 'dictionaries.placeholder.translatedName',
-        required: true
-      },
-      {
-        label: 'terms.edit.type',
         controlName: 'typeCode',
         type: 'select',
         required: true,
-        // TODO(a.tymchuk): use the form service function
-        options: [
-          { label: 'dictionaries.types.system', value: 1 },
-          { label: 'dictionaries.types.client', value: 2 },
-        ]
+        options: dictTypeOptions,
+        disabled,
       },
       {
-        label: 'terms.edit.parent',
         controlName: 'parentCode',
+        disabled: this.disableParentSelection || disabled,
         type: 'select',
         options: this.terms.map(toLabeledValues),
         optionsActions: [
           { text: 'terms.edit.select.title', type: SelectionActionTypeEnum.SORT }
-        ]
+        ],
       },
       {
-        label: 'terms.edit.closed',
         controlName: 'isClosed',
-        type: 'checkbox'
+        type: 'checkbox',
+        disabled,
       }
     ];
 
-    return this.filterControls(controls);
+    return controls.map(ctrl => ({ ...ctrl, label: label(ctrl.controlName) }) as IDynamicFormControl);
   }
 }

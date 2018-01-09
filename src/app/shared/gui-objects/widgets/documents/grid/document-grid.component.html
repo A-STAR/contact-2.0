@@ -18,7 +18,7 @@
 <app-grid
   columnTranslationKey="widgets.document"
   selectionType="single"
-  [styles]="{ height: '500px' }"
+  [styles]="{ height: callCenter? '300px' : '500px' }"
   [columns]="columns"
   [rows]="documents"
   (onDblClick)="onDoubleClick($event)"

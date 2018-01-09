@@ -1,17 +1,9 @@
 <app-attribute-version-edit
   *ngIf="isDialog('edit')"
   [selectedVersion]="selectedVersion$ | async"
-  [selectedAttributeId]="selectedAttributeId"
+  [selectedAttribute]="selectedAttribute"
   [entityTypeId]="entityTypeId"
   (submit)="onEditDialogSubmit($event)"
-  (cancel)="onCloseDialog()">
-</app-attribute-version-edit>
-
-<app-attribute-version-edit
-  *ngIf="isDialog('add')"
-  [selectedAttributeId]="selectedAttributeId"
-  [entityTypeId]="entityTypeId"
-  (submit)="onCreateDialogSubmit($event)"
   (cancel)="onCloseDialog()">
 </app-attribute-version-edit>
 

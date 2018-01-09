@@ -3,8 +3,9 @@ import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnDes
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuarantor, IGuaranteeContract } from '../../guarantee/guarantee.interface';
@@ -80,7 +81,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.contract$,
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
@@ -91,7 +92,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
         contract => this.userPermissionsService.has(contract && contract.id ? 'GUARANTEE_EDIT' : 'GUARANTEE_ADD')
       ),
       this.contract$.flatMap(
-        contract => contract && contract.id ? this.guarantorService.fetch(contract.personId) : Observable.of(null)
+        contract => contract && contract.id ? this.guarantorService.fetch(contract.personId) : of(null)
       )
     )
     .pipe(first())
@@ -110,17 +111,20 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
           title: 'widgets.guarantor.title',
           collapsible: true,
           children: [
+            { label: label('lastName'), controlName: 'lastName', type: 'text', required: true, width: 6 },
             {
               label: label('typeCode'), controlName: 'typeCode', type: 'select',
-              options: typeOpts, required: true, markAsDirty: true
+              options: typeOpts, required: true, markAsDirty: true, width: 6
             },
-            { label: label('lastName'), controlName: 'lastName', type: 'text', required: true },
-            { label: label('firstName'), controlName: 'firstName', type: 'text' },
-            { label: label('middleName'), controlName: 'middleName', type: 'text' },
-            { label: label('birthDate'), controlName: 'birthDate', type: 'datepicker' },
-            { label: label('birthPlace'), controlName: 'birthPlace',  type: 'text' },
-            { label: label('genderCode'), controlName: 'genderCode', type: 'select', options: genderOpts },
-            { label: label('familyStatusCode'), controlName: 'familyStatusCode', type: 'select', options: familyStatusOpts },
+            { label: label('firstName'), controlName: 'firstName', type: 'text', width: 6 },
+            { label: label('middleName'), controlName: 'middleName', type: 'text', width: 6 },
+            { label: label('birthDate'), controlName: 'birthDate', type: 'datepicker', width: 6 },
+            { label: label('birthPlace'), controlName: 'birthPlace',  type: 'text', width: 6 },
+            { label: label('genderCode'), controlName: 'genderCode', type: 'select', options: genderOpts, width: 6 },
+            {
+              label: label('familyStatusCode'), controlName: 'familyStatusCode', type: 'select',
+              options: familyStatusOpts, width: 6
+            },
             { label: label('educationCode'), controlName: 'educationCode', type: 'select', options: familyStatusOpts },
             { label: label('comment'), controlName: 'comment', type: 'textarea' },
           ].concat(allAdditionalControls as any[])
@@ -149,7 +153,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
       .flatMap((typeCode: number) => {
         this.currentTypeCode = typeCode;
         const attrConstant = this.guarantorService.getAttributeConstant(typeCode);
-        return Observable.combineLatest(Observable.of(typeCode), this.userContantsService.get(attrConstant));
+        return combineLatest(of(typeCode), this.userContantsService.get(attrConstant));
       })
       .subscribe(([ typeCode, attributeList ]) => {
         const additionalControlNames = this.makeControlsFromAttributeList(<string>attributeList.valueS)
@@ -182,7 +186,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
     form.enable();
     form.patchValue({ typeCode: this.currentTypeCode });
     form.get('typeCode').markAsDirty();
-    this.guaranteeService.setPayload(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, {});
+    this.guaranteeService.dispatchAction(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, {});
     this.cdRef.markForCheck();
   }
 
@@ -197,7 +201,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
     form.patchValue(guarantor);
     form.get('typeCode').markAsDirty();
     form.disable();
-    this.guaranteeService.setPayload(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, guarantor);
+    this.guaranteeService.dispatchAction(GuarantorService.MESSAGE_GUARANTOR_SELECTION_CHANGED, guarantor);
     this.cdRef.markForCheck();
   }
 

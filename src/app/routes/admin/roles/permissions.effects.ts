@@ -2,13 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
 
-import {
-  IPermissionsDialogEnum,
-  IPermissionRole,
-  IPermissionModel,
-} from './permissions.interface';
+import { IPermissionRole, IPermissionModel } from './permissions.interface';
 import { IAppState } from '../../../core/state/state.interface';
 import { UnsafeAction } from '../../../core/state/state.interface';
 
@@ -19,11 +14,6 @@ import { UserPermissionsService } from '../../../core/user/permissions/user-perm
 
 @Injectable()
 export class PermissionsEffects {
-
-  hideDialogAction = {
-    type: PermissionsService.PERMISSION_DIALOG,
-    payload: IPermissionsDialogEnum.NONE,
-  };
 
   rolesFetchAction = { type: PermissionsService.ROLE_FETCH };
 
@@ -38,7 +28,7 @@ export class PermissionsEffects {
           type: PermissionsService.ROLE_FETCH_SUCCESS,
           payload: roles
         }))
-        .catch(this.notifications.error('errors.default.read').entity('entities.roles.gen.plural').callback());
+        .catch(this.notifications.fetchError().entity('entities.roles.gen.plural').callback());
     });
 
   @Effect()
@@ -48,9 +38,9 @@ export class PermissionsEffects {
       return this.addRole(action.payload.role)
         .mergeMap(() => [
           this.rolesFetchAction,
-          this.hideDialogAction,
+          { type: PermissionsService.ROLE_ADD_SUCCESS },
         ])
-        .catch(this.notifications.error('errors.default.create').entity('entities.roles.gen.singular').callback());
+        .catch(this.notifications.createError().entity('entities.roles.gen.singular').callback());
     });
 
   @Effect()
@@ -60,9 +50,9 @@ export class PermissionsEffects {
       return this.copyRole(action.payload.originalRoleId, action.payload.role)
         .mergeMap(() => [
           this.rolesFetchAction,
-          this.hideDialogAction,
+          { type: PermissionsService.ROLE_COPY_SUCCESS },
         ])
-        .catch(this.notifications.error('errors.default.copy').entity('entities.roles.gen.singular').callback());
+        .catch(this.notifications.copyError().entity('entities.roles.gen.singular').callback());
     });
 
   @Effect()
@@ -74,10 +64,10 @@ export class PermissionsEffects {
       return this.updateRole(store.permissions.currentRole.id, action.payload.role)
         .mergeMap(() => [
           this.rolesFetchAction,
-          this.hideDialogAction,
           this.userPermissionsService.createRefreshAction(),
+          { type: PermissionsService.ROLE_UPDATE_SUCCESS },
         ])
-        .catch(this.notifications.error('errors.default.update').entity('entities.roles.gen.singular').callback());
+        .catch(this.notifications.updateError().entity('entities.roles.gen.singular').callback());
     });
 
   @Effect()
@@ -89,10 +79,10 @@ export class PermissionsEffects {
       return this.deleteRole(store.permissions.currentRole.id)
         .mergeMap(() => [
           this.rolesFetchAction,
-          this.hideDialogAction,
           this.userPermissionsService.createRefreshAction(),
+          { type: PermissionsService.ROLE_DELETE_SUCCESS },
         ])
-        .catch(this.notifications.error('errors.default.delete').entity('entities.roles.gen.singular').callback());
+        .catch(this.notifications.deleteError().entity('entities.roles.gen.singular').callback());
     });
 
   @Effect()
@@ -106,7 +96,7 @@ export class PermissionsEffects {
           type: PermissionsService.PERMISSION_FETCH_SUCCESS,
           payload: { permissions }
         }))
-        .catch(this.notifications.error('errors.default.read').entity('entities.permissions.gen.plural').callback());
+        .catch(this.notifications.fetchError().entity('entities.permissions.gen.plural').callback());
     });
 
   @Effect()
@@ -117,11 +107,11 @@ export class PermissionsEffects {
       const { role, permissionIds } = payload;
       return this.add(role, permissionIds)
         .mergeMap(() => [
-          this.hideDialogAction,
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
+          { type: PermissionsService.PERMISSION_ADD_SUCCESS },
         ])
-        .catch(this.notifications.error('errors.default.create').entity('entities.permissions.gen.singular').callback());
+        .catch(this.notifications.createError().entity('entities.permissions.gen.singular').callback());
     });
 
   @Effect()
@@ -132,11 +122,11 @@ export class PermissionsEffects {
       const { roleId, permission } = payload;
       return this.update(roleId, permission)
         .mergeMap(() => [
-          this.hideDialogAction,
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
+          { type: PermissionsService.PERMISSION_UPDATE_SUCCESS },
         ])
-        .catch(this.notifications.error('errors.default.update').entity('entities.permissions.gen.singular').callback());
+        .catch(this.notifications.updateError().entity('entities.permissions.gen.singular').callback());
     });
 
   @Effect()
@@ -147,11 +137,11 @@ export class PermissionsEffects {
       const { role, permissionId } = payload;
       return this.delete(role, permissionId)
         .mergeMap(() => [
-          this.hideDialogAction,
           this.rolePermissionFetchAction,
           this.userPermissionsService.createRefreshAction(),
+          { type: PermissionsService.PERMISSION_DELETE_SUCCESS },
         ])
-        .catch(this.notifications.error('errors.default.delete').entity('entities.permissions.gen.singular').callback());
+        .catch(this.notifications.deleteError().entity('entities.permissions.gen.singular').callback());
     });
 
   constructor(

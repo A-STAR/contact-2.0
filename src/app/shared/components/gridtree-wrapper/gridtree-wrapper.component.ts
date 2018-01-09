@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { IGridTreeColumn, IGridTreeRow, IUniqueIdGetter } from '../gridtree/gridtree.interface';
 import { IDataToValue, IGridWrapperTreeColumn } from './gridtree-wrapper.interface';
@@ -6,7 +7,8 @@ import { IOption } from '../../../core/converter/value-converter.interface';
 
 import { GridTreeWrapperService } from './gridtree-wrapper.service';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
-import { first } from 'rxjs/operators';
+
+import { GridTreeComponent } from '../gridtree/gridtree.component';
 
 @Component({
   selector: 'app-gridtree-wrapper',
@@ -19,6 +21,7 @@ export class GridTreeWrapperComponent<T> {
   @Output() select = new EventEmitter<IGridTreeRow<T>>();
   @Output() dblclick = new EventEmitter<IGridTreeRow<T>>();
   @Output() move = new EventEmitter<Array<IGridTreeRow<T>>>();
+  @ViewChild(GridTreeComponent) gridTree: GridTreeComponent<T>;
 
   private _dictionaries: { [key: number]: IOption[] };
   private _columns: IGridWrapperTreeColumn<T>[];

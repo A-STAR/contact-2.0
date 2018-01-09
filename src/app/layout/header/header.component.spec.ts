@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { TestBed, async, inject } from '@angular/core/testing';
 import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -6,10 +7,10 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { createTranslateLoader } from '../../app.module';
 
-import { SettingsService } from '../../core/settings/settings.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { NotificationsService } from '../../core/notifications/notifications.service';
 import { PersistenceService } from '../../core/persistence/persistence.service';
+import { SettingsService } from '../../core/settings/settings.service';
 
 import { HeaderComponent } from './header.component';
 
@@ -49,10 +50,10 @@ xdescribe('Component: Header', () => {
   });
 
   it('should create an instance', async(inject(
-    [SettingsService, AuthService, TranslateService, NotificationsService, PersistenceService],
-    (settingsService, authService, translateService, notificationsService, persistenceService) => {
+    [SettingsService, AuthService, ChangeDetectorRef, TranslateService, NotificationsService, PersistenceService],
+    (settingsService, authService, cdRef, translateService, notificationsService, persistenceService) => {
       const component = new HeaderComponent(
-        authService, notificationsService, settingsService, persistenceService, translateService
+        authService, cdRef, notificationsService, settingsService, persistenceService, translateService
       );
       expect(component).toBeTruthy();
   })));

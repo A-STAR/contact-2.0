@@ -8,8 +8,8 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ICampaign, IParticipant } from '../campaigns.interface';
@@ -51,7 +51,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () =>  this.setDialog('PARTICIPANT_ADD'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
         this.campaignsService.selectedCampaign
       ).map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
@@ -60,7 +60,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('PARTICIPANT_REMOVE'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
         this.campaignsService.selectedCampaign,
         this.campaignsService.selectedParticipant

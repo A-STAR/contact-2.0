@@ -1,0 +1,7 @@
+@import "../../../../shared/styles/app/variables.scss";
+
+.form-control {
+  background-color: $gray-lighter;
+  height: 100px;
+  overflow: auto;
+}

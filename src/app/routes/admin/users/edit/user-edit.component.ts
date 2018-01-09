@@ -55,8 +55,8 @@ export class UserEditComponent extends DialogFunctions {
       this.userConstantsService.get('UserPassword.MinLength'),
       this.userConstantsService.get('UserPassword.Complexity.Use'),
       this.userConstantsService.get('UserPhoto.MaxSize'),
-      this.lookupService.languageOptions,
-      this.lookupService.roleOptions,
+      this.lookupService.lookupAsOptions('languages'),
+      this.lookupService.lookupAsOptions('roles'),
       this.userId ? this.usersService.fetchOne(this.userId) : of(null),
     )
     .pipe(first())

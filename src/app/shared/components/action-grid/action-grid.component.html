@@ -1,43 +1,50 @@
-<app-open-debt-card
-  *ngIf="isDialog('openUserById')"
-  [userId]="getSelectionParam(0)"
+<app-next-call-date-set
+  *ngIf="isDialog('debtNextCallDate')"
+  [debts]="getSelectionParam(0)"
   (close)="onCloseDialog()"
-  >
-</app-open-debt-card>
+></app-next-call-date-set>
+
+<app-open-debt-card
+  *ngIf="isDialog('openDebtCardByDebtor')"
+  [personId]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-open-debt-card>
 
 <app-visit-add-dialog
   *ngIf="isDialog('addVisit')"
   [visitParams]="getConfiguredParams('addVisit')"
   (close)="onCloseDialog()"
->
-</app-visit-add-dialog>
+></app-visit-add-dialog>
 
 <app-sms-delete-dialog
   *ngIf="isDialog('deleteSMS')"
   [smsId]="getSelectionParam(0)"
   (close)="onCloseAction($event)"
->
-</app-sms-delete-dialog>
+></app-sms-delete-dialog>
 
 <app-payments-cancel-dialog
   *ngIf="isDialog('paymentsCancel')"
   [paymentsIds]="getSelectionParam(0)"
   (close)="onCloseAction($event)"
->
-</app-payments-cancel-dialog>
+></app-payments-cancel-dialog>
 
 <app-payments-confirm-dialog
   *ngIf="isDialog('paymentsConfirm')"
   [paymentsIds]="getSelectionParam(0)"
   (close)="onCloseAction($event)"
->
-</app-payments-confirm-dialog>
+></app-payments-confirm-dialog>
 
 <app-contact-log-dialog
   *ngIf="isDialog('showContactHistory')"
   [personId]="getDialogParam(0)"
   (close)="closeDialog()"
 ></app-contact-log-dialog>
+
+<app-debt-status
+  *ngIf="isDialog('debtChangeStatus')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-debt-status>
 
 <app-debt-responsible-set
   *ngIf="isDialog('debtSetResponsible')"
@@ -54,6 +61,7 @@
 <app-entity-group-add
   *ngIf="isDialog('objectAddToGroup')"
   [debts]="getSelectionParam(0)"
+  [entityTypeId]="getAddOption('entityTypeId', 0)"
   (close)="onCloseDialog()"
 ></app-entity-group-add>
 
@@ -81,6 +89,62 @@
   (close)="onCloseAction($event)"
 ></app-payment-operator-reject-dialog>
 
+<app-mass-attr-dictionary
+  *ngIf="isAttrChangeDictionaryDlg()"
+  [actionName]="dialog"
+  [debts]="getSelectionParam(0)"
+  [dictCode]="getAddOptions('dictCode')"
+  (close)="onCloseAction($event)"
+>
+</app-mass-attr-dictionary>
+
+<app-mass-attr-portfolio
+  *ngIf="isDialog('changePortfolioAttr')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+>
+</app-mass-attr-portfolio>
+
+<app-mass-attr-timezone
+  *ngIf="isDialog('changeTimezoneAttr')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-mass-attr-timezone>
+
+<app-mass-email
+  *ngIf="isDialog('emailCreate')"
+  [debtIds]="getSelectionParam(0)"
+  [personIds]="getSelectionParam(1)"
+  [personRoles]="getAddOptions('personRole')"
+  (close)="onCloseDialog()"
+></app-mass-email>
+
+<app-mass-sms
+  *ngIf="isDialog('smsCreate')"
+  [debtIds]="getSelectionParam(0)"
+  [personIds]="getSelectionParam(1)"
+  [personRoles]="getAddOptions('personRole')"
+  (close)="onCloseDialog()"
+></app-mass-sms>
+
+<app-visit-prepare-dialog
+  *ngIf="isDialog('prepareVisit')"
+  [visits]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-visit-prepare-dialog>
+
+<app-visit-cancel-dialog
+  *ngIf="isDialog('cancelVisit')"
+  [visits]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-visit-cancel-dialog>
+
+<app-operator-details
+  *ngIf="isDialog('openUserDetail')"
+  [userId]="getDialogParam(0)"
+  (close)="onCloseAction($event)"
+></app-operator-details>
+
 <app-metadata-grid
   #grid
   *ngIf="isUsingAGGrid; else simpleGrid"
@@ -91,7 +155,6 @@
   [rowIdKey]="rowIdKey"
   [rows]="rows"
   [rowCount]="rowCount"
-  [showFilter]="showFilter"
   (action)="onAction($event)"
   (onDblClick)="onDblClick($event)"
   (onFilter)="onRequest()"

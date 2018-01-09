@@ -67,6 +67,11 @@ export const menuConfig: IMenuConfig = {
     link: '/utilities/upload-templates',
     icon: 'icon-docs'
   },
+  currencyRates: {
+    text: 'sidebar.nav.menu.CURRENCIES',
+    link: '/utilities/currencies',
+    icon: 'icon-wallet'
+  },
   dataLoad: {
     text: 'sidebar.nav.menu.DATA_UPLOAD',
     link: '/utilities/data-upload',

@@ -1,4 +1,4 @@
-<div class="mv" *ngIf="showFilter">
+<div class="mv">
   <app-metadata-filter
     [metadataKey]="metadataKey"
     (filter)="onFilterHandler()"
@@ -7,7 +7,7 @@
 
 <app-grid2
   *ngIf="initialized"
-  [actions]="actions"
+  [actions]="gridActions$ | async"
   [columns]="columns"
   [columnIds]="columnIds"
   [ngClass]="ngClass"

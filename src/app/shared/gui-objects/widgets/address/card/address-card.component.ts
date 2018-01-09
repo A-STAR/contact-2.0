@@ -46,10 +46,10 @@ export class AddressCardComponent implements OnInit {
         .subscribe(address => this.address$.next(address));
     }
 
-    this.group$ = Observable.combineLatest(
+    this.group$ = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ADDRESS_TYPE),
-      this.addressId ? this.userPermissionsService.has('ADDRESS_EDIT') : Observable.of(true),
-      this.addressId ? this.userPermissionsService.has('ADDRESS_COMMENT_EDIT') : Observable.of(true),
+      this.addressId ? this.userPermissionsService.has('ADDRESS_EDIT') : of(true),
+      this.addressId ? this.userPermissionsService.has('ADDRESS_COMMENT_EDIT') : of(true),
       this.address$,
     )
     .map(([ options, canEdit, canEditComment, address ]) => {
@@ -65,7 +65,7 @@ export class AddressCardComponent implements OnInit {
       : this.addressService.create(18, this.entityId, this.callCenter, this.form.value);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(AddressService.MESSAGE_ADDRESS_SAVED);
+      this.addressService.dispatchAction(AddressService.MESSAGE_ADDRESS_SAVED);
       this.onBack();
     });
   }

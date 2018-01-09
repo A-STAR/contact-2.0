@@ -23,7 +23,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { DebtService } from '../../../../../core/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { PhoneService } from '../phone.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
@@ -111,7 +110,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   contextMenuOptions: IContextMenuItem[] = [
     {
-      fieldActions: [
+      simpleActionsNames: [
         'copyField',
         'copyRow'
       ],
@@ -147,7 +146,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
     private router: Router,
@@ -189,8 +187,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.busSubscription = this.messageBusService
-      .select(PhoneService.MESSAGE_PHONE_SAVED)
+    this.busSubscription = this.phoneService
+      .getAction(PhoneService.MESSAGE_PHONE_SAVED)
       .subscribe(() => this.fetch());
   }
 

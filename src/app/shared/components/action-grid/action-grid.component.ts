@@ -37,7 +37,6 @@ export class ActionGridComponent<T> extends DialogFunctions {
   @Input() rowCount: number;
   @Input() contextMenuOptions: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
-  @Input() showFilter: boolean;
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
@@ -62,9 +61,29 @@ export class ActionGridComponent<T> extends DialogFunctions {
     return !!this.metadataKey;
   }
 
+  isAttrChangeDictionaryDlg(): boolean {
+    return [
+      'changeRegionAttr',
+      'changeDict1Attr',
+      'changeDict2Attr',
+      'changeDict3Attr',
+      'changeDict4Attr',
+      'changeCreditTypeAttr',
+      'changeBranchAttr'
+    ].includes(this.dialog);
+  }
+
   getAddOptions(name: string): (number|string)[] {
     // TODO(d.maltsev): not optimized; better to convert to key: value object on initialization
-    return this.dialogData.addOptions.find(option => option.name === name).value;
+    const found = this.dialogData.addOptions.find(option => option.name === name);
+    return found ? found.value : null;
+  }
+
+  getAddOption(name: string, index: number): number|string {
+    const options = this.getAddOptions(name);
+    if (options && options.length > index) {
+      return options[index];
+    }
   }
 
   getSelectionParam(key: number): any[] {
@@ -81,7 +100,7 @@ export class ActionGridComponent<T> extends DialogFunctions {
       .filter(a => a.action === paramName)[0].params;
 
     const { selection } = this.dialogData;
-    const container = Array(selection[0].length).fill({});
+    const container = Array.from(Array(selection[0].length), () => ({}));
 
     return idNames.reduce((acc, idName, idNum) => {
       selection[idNum].forEach((current, ind) => {

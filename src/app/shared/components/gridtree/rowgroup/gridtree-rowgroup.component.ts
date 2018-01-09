@@ -92,7 +92,7 @@ export class GridTreeRowGroupComponent<T> implements OnInit, OnDestroy {
     const formattedValue = column.valueFormatter
       ? column.valueFormatter(value, this.row.data)
       : value;
-    return formattedValue === undefined ? null : String(formattedValue);
+    return formattedValue ? String(formattedValue) : formattedValue;
   }
 
   @HostListener('dragstart', ['$event'])

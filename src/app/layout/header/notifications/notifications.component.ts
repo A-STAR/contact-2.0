@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  HostListener,
+  Output,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IFilters, INotification, NotificationTypeEnum } from '../../../core/notifications/notifications.interface';
@@ -12,12 +22,8 @@ import { ValueConverterService } from '../../../core/converter/value-converter.s
   styleUrls: ['./notifications.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationsComponent {
-
-  @Input() notifications: Array<INotification>;
-  @Input() filters = <IFilters>null;
-
-  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+export class NotificationsComponent implements OnInit, OnDestroy {
+  @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   filterTypes: Array<NotificationTypeEnum> = [
     NotificationTypeEnum.INFO,
@@ -27,13 +33,42 @@ export class NotificationsComponent {
   ];
 
   dateTimeFormat: string;
+  filters: IFilters;
+  notifications: INotification[];
+
+  filtersSub: Subscription;
+  notificationsSub: Subscription;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private translateService: TranslateService,
     private valueConverterService: ValueConverterService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.dateTimeFormat = this.translateService.instant('default.date.format.dateTime');
+
+    this.notificationsSub = this.notificationsService.notifications
+      .subscribe(notifications => {
+        this.notifications = notifications;
+        this.cdRef.detectChanges();
+      });
+
+    this.filtersSub = this.notificationsService.filters
+      .subscribe((filters: IFilters) => {
+        this.filters = filters;
+        this.cdRef.detectChanges();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.notificationsSub.unsubscribe();
+    this.filtersSub.unsubscribe();
+  }
+
+  hasFilters(): boolean {
+    return !!Object.keys(this.filters || {}).length;
   }
 
   @HostListener('click', ['$event'])
@@ -67,20 +102,16 @@ export class NotificationsComponent {
     this.notificationsService.filter(type, (event.target as HTMLInputElement).checked);
   }
 
-  onDismissClick(index: number): void {
+  onDismiss(index: number): void {
     this.notificationsService.remove(index);
   }
 
-  onClearClick(): void {
+  onClear(): void {
     this.notificationsService.reset();
-    this.close();
+    this.onClose();
   }
 
-  onCloseClick(): void {
-    this.close();
-  }
-
-  private close(): void {
-    this.onClose.emit();
+  onClose(): void {
+    this.close.emit();
   }
 }

@@ -1,31 +1,31 @@
 <app-roles-edit
-  *ngIf="isRoleBeingCreated"
-  (submit)="onAddSubmit($event)"
+  *ngIf="isDialog('add')"
+  (submit)="onAdd($event)"
   (cancel)="cancelAction()">
 </app-roles-edit>
 
 <app-roles-edit
-  *ngIf="isRoleBeingEdited"
-  [editedEntity]="editedEntity"
-  (submit)="onEditSubmit($event)"
+  *ngIf="isDialog('edit')"
+  [role]="editedEntity"
+  (submit)="onEdit($event)"
   (cancel)="cancelAction()">
 </app-roles-edit>
 
 <app-roles-copy
-  *ngIf="isRoleBeingCopied"
-  [editedEntity]="editedEntity"
-  (submit)="onCopySubmit($event)"
+  *ngIf="isDialog('copy')"
+  [role]="editedEntity"
+  (submit)="onCopy($event)"
   (cancel)="cancelAction()">
 </app-roles-copy>
 
 <app-dialog-action
-  *ngIf="isRoleBeingRemoved"
+  *ngIf="isDialog('remove')"
   [titleTranslationKey]="'roles.roles.remove.title'"
   [actionTranslationKey]="'roles.roles.remove.confirmMessage'"
   [actionMessage]="'default.buttons.remove'"
   [messageParams]="editedEntity"
   [actionMode]="'danger'"
-  (action)="onRemoveSubmit()"
+  (action)="onRemove()"
   (cancel)="cancelAction()">
 </app-dialog-action>
 
@@ -41,6 +41,6 @@
   [rows]="roles$ | async"
   [selectionType]="'single'"
   [styles]="{height: '300px'}"
-  (onDblClick)="onEdit()"
+  (onDblClick)="onDblClick()"
   (onSelect)="onSelect($event)">
 </app-grid>

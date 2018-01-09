@@ -11,6 +11,9 @@
       "userId": "User Id",
       "title": "No debts"
     },
+    "noPerson": {
+      "title": "Отсутствует должник"
+    },
     "account": {
       "title": "Account",
       "logout": "Logout",
@@ -30,69 +33,73 @@
       "menu": {
         "HOME": "Home",
         "WORKFLOW": "Workflow",
-        "QUERY_BUILDER": "Query Builder",
+        "QUERY_BUILDER": "Query builder",
         "ADMIN_PANEL": "Administration",
-        "ROLES_AND_PERMISSIONS": "Roles and Permissions",
+        "ROLES_AND_PERMISSIONS": "Roles and permissions",
         "USERS": "Users",
         "USER_EDIT": "User card",
-        "ACTIONS_LOG": "Actions Log",
+        "ACTIONS_LOG": "Actions log",
         "CONSTANTS": "Constants",
-        "DICTIONARIES": "Reference",
-        "ATTRIBUTE_VERSION": "Attribute's versions",
+        "CURRENCIES": "Currencies",
+        "CURRENCY_EDIT": "Currency",
+        "DICTIONARIES": "Dictionaries",
+        "ATTRIBUTE_VERSION": "Attribute versions",
         "PORTFOLIOS_CONTRACTORS": "Portfolios and contractors",
         "PORTFOLIO_EDIT": "Portfolio",
         "PORTFOLIO_ATTRIBUTES": "Portfolio attributes",
         "CONTRACTOR_ATTRIBUTES": "Contractor attributes",
         "CONTRACTOR": "Contractor",
         "ATTRIBUTES": "Attributes",
-        "CONTRACTOR_MANAGERS": "Contractor Managers",
-        "CONTRACTOR_MANAGER": "Contractor Manager",
+        "CONTRACTOR_MANAGERS": "Contractor managers",
+        "CONTRACTOR_MANAGER": "Contractor manager",
         "DEPARTMENTS": "Departments",
         "UTILITIES": "Utilities",
-        "UPLOAD_TEMPLATES": "Upload Templates",
-        "DATA_UPLOAD": "Data Upload",
-        "ARBITRARY_VALUES": "Arbitrary Values",
-        "CONTACT_TREES": "Contact Trees",
-        "MESSAGE_SCENARIOS": "Message Scenarios",
-        "CONTACT_REGISTRATION": "Contact Registration",
+        "UPLOAD_TEMPLATES": "Upload templates",
+        "DATA_UPLOAD": "Data tpload",
+        "ARBITRARY_VALUES": "Arbitrary values",
+        "CONTACT_TREES": "Contact trees",
+        "MESSAGE_SCENARIOS": "Message scenarios",
+        "CONTACT_REGISTRATION": "Contact tegistration",
         "GROUPS": "Groups",
+        "GROUP_EDIT": "Group",
         "CAMPAIGNS": "Campaigns",
         "SCHEDULE": "Schedule",
         "FORMULAS": "Formulas",
         "COURTS": "Coutrs",
         "WORKPLACES": "Workplaces",
-        "DEBT_LIST": "Debt List",
+        "DEBT_LIST": "Debt list",
         "DEBTOR_CARD": "Debtor",
-        "DEBTOR_ADDRESS": "Debtor's address",
+        "DEBTOR_ADDRESS": "Debtor address",
         "DEBTOR_CONTACTS": "Debtor contacts",
         "DEBTOR_DEBT": "Debtor's debt",
         "DEBTOR_DEBT_COMPONENT": "Debt components",
         "DEBTOR_DEBT_CONTACTS": "Debtor contact",
         "DEBTOR_DOCUMENT": "Document",
-        "DEBTOR_EMAIL": "Debtor's email",
+        "DEBTOR_EMAIL": "Debtor email",
         "DEBTOR_EMPLOYMENT": "Employment record",
         "DEBTOR_GUARANTEE": "Guarantee contract",
         "DEBTOR_IDENTITY": "Identity document",
         "DEBTOR_PAYMENT": "Payment",
-        "DEBTOR_PHONE": "Debtor's phone",
+        "DEBTOR_PHONE": "Debtor phone",
         "DEBTOR_PROMISE": "Payment promise",
         "DEBTOR_PROPERTY": "Property card",
         "DEBTOR_CONTACT_LOG_COMPONENT": "Contact card",
         "DEBTOR_PLEDGE": "Pledge contract",
         "TASKS": "Tasks",
-        "DEBTS": "Debts Processing",
-        "CONTACT_LOG": "Contact Log",
-        "WORK_TASK": "Work Tasks",
-        "CALL_CENTER": "Call Center",
+        "DEBTS": "Debts processing",
+        "CONTACT_LOG": "Contact log",
+        "WORK_TASK": "Work tasks",
+        "CALL_CENTER": "Call center",
         "PAYMENTS": "Payments",
         "COURTS_2": "Courts",
-        "OUTGOING_INFORMATION": "Outgoing Information",
-        "SEARCH_GROUPS": "Search Groups",
+        "OUTGOING_INFORMATION": "Outgoing information",
+        "SEARCH_GROUPS": "Search groups",
         "MAIL": "Mail",
         "REPORTS": "Reports",
-        "ARBITRARY_REPORTS": "Ad-hoc Reports",
+        "ARBITRARY_REPORTS": "Ad-hoc reports",
         "HELP": "Help",
-        "INCOMING_CALL": "Incoming Call"
+        "INCOMING_CALL": "Incoming call",
+        "CURRENCY_RATE_EDIT": "Currency rate"
       },
       "hide": "Hide menu"
     },
@@ -107,7 +114,7 @@
     }
   },
   "validation": {
-    "DEFAULT_ERROR_MESSAGE": "An unknown error has occurred",
+    "defaultErrorMessage": "An unknown error has occurred",
     "datepicker": "Invalid date/time format",
     "fieldRequired": "This field is required",
     "fieldMin": "The value must be greater than {{ minValue }}",
@@ -120,7 +127,8 @@
     "oneOfGroupRequired": "At least one group field must not be empty"
   },
   "network": {
-    "CONNECTION_ERROR": "Connection error"
+    "connectionError": "Connection error",
+    "gotoHomePage": "Navigate to home page"
   },
   "grid": {
     "messages": {
@@ -222,20 +230,6 @@
         "title": "Contacts"
       },
       "filters": {
-        "form": {
-          "branchCode": "Branch",
-          "dictValue1": "Dictionary Value 1",
-          "dictValue2": "Dictionary Value 2",
-          "dictValue3": "Dictionary Value 3",
-          "dictValue4": "Dictionary Value 4",
-          "outPortfolioId": "Registry",
-          "portfolioId": "Portfolio",
-          "receiveDateTime": "Received",
-          "createDateTime": "Created",
-          "regionCode": "Region",
-          "userId": "Operator",
-          "searchBtn": "Search"
-        },
         "userId": {
           "grid": {
             "fullName": "Operator",
@@ -250,6 +244,9 @@
       },
       "sms": {
         "title": "SMS"
+      },
+      "email": {
+        "title": "Email"
       }
     },
     "dataUpload": {
@@ -266,19 +263,6 @@
     },
     "payments": {
       "filters":{
-        "form": {
-          "branchCode": "Branch",
-          "dictValue1": "Dictionary Value 1",
-          "dictValue2": "Dictionary Value 2",
-          "dictValue3": "Dictionary Value 3",
-          "dictValue4": "Dictionary Value 4",
-          "outPortfolioId": "Registry",
-          "portfolioId": "Portfolio",
-          "paymentDateTime": "Payment date",
-          "regionCode": "Region",
-          "userId": "Operator",
-          "searchBtn": "Search"
-        },
         "userId": {
           "grid": {
             "fullName": "Operator",
@@ -322,6 +306,9 @@
       }
     },
     "contactRegistration": {
+      "contact": {
+        "title": "Change Contact Person"
+      },
       "dialogs": {
         "contactType": {
           "title": "Log Contact",
@@ -337,6 +324,26 @@
             "title": "Miscellaneous",
             "buttonMisc": "Miscellaneous",
             "buttonOfficeVisit": "Office Visit"
+          }
+        }
+      },
+      "contactGrid": {
+        "tabs": {
+          "selectFromDebt": {
+            "title": "Select From Linked"
+          },
+          "selectFromAll": {
+            "title": "Select From All"
+          },
+          "add": {
+            "title": "Add Manually",
+            "form": {
+              "firstName": "Имя",
+              "lastName": "Фамилия",
+              "middleName": "Отчество",
+              "linkTypeCode": "Тип связи",
+              "personTypeCode": "Тип персоны"
+            }
           }
         }
       },
@@ -364,7 +371,7 @@
         "percentage": "Remainder Percentage"
       },
       "phone": {
-        "title": "New Debtor Phone Number",
+        "title": "Add Phone",
         "typeCode": "Type",
         "phone": "Phone Number",
         "stopAutoSms": "Disable Auto SMS",
@@ -413,6 +420,21 @@
       },
       "currentJob": {
         "title": "Current Job"
+      },
+      "visits": {
+        "title": "Visits"
+      },
+      "promisePay": {
+        "title": "Promise pay"
+      },
+      "partPay": {
+        "title": "Part pay"
+      },
+      "problem": {
+        "title": "Problem Debts"
+      },
+      "returned": {
+        "title": "Returned"
       }
     },
     "incomingCall": {
@@ -455,13 +477,13 @@
       },
       "debtorCard": {
         "form": {
-          "userFullName": "Ответственный",
-          "organization": "Подразделение",
-          "position": "Должность",
-          "mobPhone": "Мобильный телефон",
-          "workPhone": "Рабочий телефон",
-          "intPhone": "Внутренний номер",
-          "recommendation": "Рекомендация к действию"
+          "userFullName": "Responsible",
+          "organization": "Department",
+          "position": "Position",
+          "mobPhone": "Mobile phone",
+          "workPhone": "Office phone",
+          "intPhone": "Internal phone",
+          "recommendation": "Recommendation"
         }
       }
     }
@@ -601,15 +623,15 @@
       }
     },
     "errors": {
-      "view": "Access to users list denied"
+      "view": "Access to the user list denied"
     }
   },
   "dictionaries": {
-    "access_denied": "You have no access to the dictionaries. Please contact the administrator.",
-    "TITLE": "Dictionaries",
+    "access_denied": "You have no access to the dictionaries.",
     "edit": {
       "title": "Dictionary: {{ code }}",
       "code": "Code",
+      "language": "Language",
       "name": "Name",
       "type": "Type",
       "parent": "Parent dictionary",
@@ -658,10 +680,11 @@
     "edit": {
       "title": "Term: {{ code }}",
       "code": "Term code",
-      "text": "Term text",
-      "type": "Term type",
-      "parent": "Parent dictionary term",
-      "closed": "Unused term",
+      "language": "Language",
+      "name": "Term value",
+      "typeCode": "Term type",
+      "parentCode": "Parent dictionary term",
+      "isClosed": "Unused term",
       "select": {
         "title": "Term type"
       }
@@ -713,7 +736,8 @@
         "comment": "Comments"
       },
       "errors": {
-        "view": "Access to roles list denied"
+        "edit": "Access to edit roles denied",
+        "view": "Access to view the roles denied"
       }
     },
     "permissions": {
@@ -756,13 +780,14 @@
         "comment": "Comments"
       },
       "messages": {
-        "no_view": "You do not have the rights '{{ permission }}' for viewing records",
-        "no_add": "You do not have the rights '{{ permission }}' for adding records",
-        "no_edit": "You do not have the rights '{{ permission }}' for editing records",
-        "no_delete": "You do not have the rights '{{ permission }}' for removing records"
+        "no_view": "You do not have the permission '{{ permission }}' for viewing records",
+        "no_add": "You do not have the permission '{{ permission }}' for adding records",
+        "no_edit": "You do not have the permission '{{ permission }}' for editing records",
+        "no_delete": "You do not have the permission '{{ permission }}' for removing records"
       },
       "errors": {
-        "view": "Access to permissions list denied"
+        "edit": "Access to edit permissions denied",
+        "view": "Access to view permissions denied"
       }
     }
   },
@@ -917,7 +942,7 @@
     "documentsTab": {
       "title": "Documents",
       "errors": {
-        "download": "Could not download document"
+        "download": "Could not download the document"
       }
     },
     "employmentRecordTab": {
@@ -935,6 +960,13 @@
     },
     "contactLogTab": {
       "title": "Contact log"
+    },
+    "groupTab": {
+      "title": "Groups",
+      "remove": {
+        "title": "Delete the group",
+        "confirmMessage": "Do you really want to delete this group?"
+      }
     }
   },
   "person": {
@@ -1110,11 +1142,36 @@
       "sms": {
         "title": "SMS"
       },
+      "email": {
+        "title": "Email"
+      },
       "custom": {
         "title": "Custom"
       },
       "autoComment": {
         "title": "Auto Comment"
+      },
+      "dialogs": {
+        "add": {
+          "title": "Create Template"
+        },
+        "edit": {
+          "title": "Edit Template",
+          "variables": "Variables"
+        },
+        "delete": {
+          "title": "Delete Template",
+          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Name",
+        "text": "Text",
+        "isSingleSending": "Send Once",
+        "recipientTypeCode": "Recipient",
+        "subject": "Тема",
+        "formatCode": "Формат"
       }
     },
     "campaigns": {
@@ -1193,6 +1250,16 @@
         "participants": "Participants",
         "statistics": "Statistics"
       }
+    },
+    "currenciesTab": {
+      "title": "Currencies",
+      "remove": {
+        "title": "Delete currency",
+        "confirmMessage": "Are you sure you want to delete currency?"
+      }
+    },
+    "currencyRatesTab": {
+      "title": "Rates"
     }
   },
   "notifications": {
@@ -1388,12 +1455,13 @@
         "dictValue3": "Dictionary Attribute 3",
         "dictValue4": "Dictionary Attribute 4",
         "isInvalidContact": "Invalid Phone Number/Address",
-        "addPhone": "New Debtor's Phone Number Input",
+        "addPhone": "Adding Phone",
         "isRefusal": "Payment Refusal Flag",
         "isSuccess": "Successful Outcome",
         "changeResponsible": "Changing Operator",
         "contactInvisible": "Don't Display in Contacts",
-        "fileAttachMode": "Files Attachment"
+        "fileAttachMode": "Files Attachment",
+        "changeContactPerson": "Change Contact Person"
       }
     },
     "document": {
@@ -1431,6 +1499,18 @@
         "delete": {
           "title": "Delete email",
           "confirmMessage": "Are you sure you want to delete email {{ email }}?"
+        },
+        "schedule": {
+          "title": "Schedule Email",
+          "text": "Text",
+          "template": "Template",
+          "form": {
+            "senderCode": "Sender",
+            "startDateTime": "Send Date/Time",
+            "subject": "Subject",
+            "templateId": "Email",
+            "text": "Message Text"
+          }
         }
       }
     },
@@ -1496,26 +1576,71 @@
         "comment": "Comment"
       }
     },
-    "messageTemplate": {
-      "dialogs": {
-        "add": {
-          "title": "Create Template"
+    "mass": {
+      "email": {
+        "form": {
+          "emailTypes": "Email Type",
+          "senderCode": "Sender",
+          "startDateTime": "Start Date",
+          "subject": "Subject",
+          "templateId": "Template"
         },
-        "edit": {
-          "title": "Edit Template",
-          "variables": "Variables"
+        "title": "Launch Parameters"
+      },
+      "sms": {
+        "form": {
+          "phoneTypes": "Phone Type",
+          "senderCode": "Sender",
+          "startDateTime": "Start Date",
+          "templateId": "Template"
         },
-        "delete": {
-          "title": "Delete Template",
-          "confirmMessage": "Are you sure you want to delete template {{ name }}?"
+        "title": "Launch Parameters"
+      },
+      "changePortfolioAttr": {
+        "title": "Change portfolio attribute",
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "contractor": "Bank"
         }
       },
-      "grid": {
-        "id": "ID",
-        "name": "Name",
-        "text": "Text",
-        "isSingleSending": "Send Once",
-        "recipientTypeCode": "Recipient"
+      "changeRegionAttr": {
+        "title": "Change region attribute"
+      },
+      "changeDict1Attr": {
+        "title": "Change dictionary attribute 1"
+      },
+      "changeDict2Attr": {
+        "title": "Change dictionary attribute 2"
+      },
+      "changeDict3Attr": {
+        "title": "Change dictionary attribute 3"
+      },
+      "changeDict4Attr": {
+        "title": "Change dictionary attribute 4"
+      },
+      "changeCreditTypeAttr": {
+        "title": "Change credit product type"
+      },
+      "changeBranchAttr": {
+        "title": "Change branch"
+      },
+      "changeTimezoneAttr": {
+        "title": "Change time zone",
+        "grid": {
+          "code": "Code",
+          "name": "Name",
+          "utcOffset": "UTC Offset"
+        }
+      },
+      "changeDefaultAttr": {
+        "title": "Change attribute"
+      }
+    },
+    "nextCallDateSet": {
+      "dialog": {
+        "title":"Date setting",
+        "nextCallDate":"Next call date"
       }
     },
     "object": {
@@ -1618,10 +1743,11 @@
     },
     "debt": {
       "toolbar": {
-        "call": "Call Back",
-        "forRepayment": "For Repayment",
-        "withdrawn": "Withdrawn by Client",
-        "terminate": "Terminate Work"
+        "call": "Next call",
+        "changeStatus": "Change status",
+        "forRepayment": "For repayment",
+        "withdrawn": "Withdrawn by client",
+        "terminate": "Close debt"
       },
       "grid": {
         "account": "Account",
@@ -1730,11 +1856,12 @@
         "title": "Contact history"
       },
       "card": {
-        "fullName": "Debtor",
+        "fullName": "Full name",
         "contract": "Contract",
         "contactData": "Contact phone/address",
         "contactDateTime": "Contact date",
         "contactPhone": "Contact phone",
+        "contactEmail": "Contact email",
         "contactType": "Contact type",
         "userFullName": "Operator",
         "promiseDate": "Promise date",
@@ -1745,7 +1872,8 @@
         "sentDateTime": "Sent on",
         "status": "Status",
         "text": "Message text",
-        "startDateTime": "Planned sending date"
+        "startDateTime": "Planned sending date",
+        "subject": "Subject"
       },
       "grid": {
         "contactId": "Contact ID",
@@ -1772,6 +1900,22 @@
         "debtCnt": "Active debt count",
         "organization": "Department",
         "position": "Position"
+      }
+    },
+    "operatorDetails": {
+      "dialog": {
+        "title": "Operator infromation"
+      },
+      "card": {
+        "fullName": "Full name",
+        "organization": "Department",
+        "position": "Position",
+        "roleCode": "Role",
+        "email": "Email",
+        "mobPhone": "Mobile phone",
+        "workPhone": "Work phone",
+        "intPhone": "Extension",
+        "photo": "Photo"
       }
     },
     "entityGroup": {
@@ -1857,6 +2001,76 @@
       "toolbar": {
         "add": "Add pledgor"
       }
+    },
+    "groups": {
+      "grid": {
+        "id": "ID",
+        "entityTypeCode": "Type",
+        "name": "Name",
+        "comment": "Comment",
+        "isManual": "Is manual",
+        "isPreCleaned": "Is pre-cleaned",
+        "userFullName": "Operator",
+        "formDateTime": "Form date"
+      },
+      "card": {
+        "entityTypeCode": "Type",
+        "name": "Name",
+        "comment": "Comment",
+        "isManual": "Is manual",
+        "isPreCleaned": "Is pre-cleaned",
+        "userFullName": "Operator",
+        "formDateTime": "Form date",
+        "sql": "SQL"
+      },
+      "toolbar": {
+        "action": {
+          "forCurrentUser": "Current user groups"
+        }
+      }
+    },
+    "visit": {
+      "grid": {
+        "id": "ID",
+        "fullName": "Full name",
+        "organization": "Department",
+        "position": "Position"
+      },
+      "card": {
+        "purposeCode": "Purpose",
+        "planVisitDateTime": "Planned On",
+        "comment": "Comment",
+        "operator": "Operators"
+      },
+      "dialog": {
+        "title": "Visit prepare"
+      }
+    },
+    "currencies": {
+      "grid": {
+        "id": "ID",
+        "code": "Code",
+        "name": "Name",
+        "shortName": "Short name",
+        "isMain": "Is main"
+      },
+      "card": {
+        "id": "ID",
+        "code": "Code",
+        "name": "Name",
+        "shortName": "Short name",
+        "isMain": "Is main"
+      }
+    },
+    "currencyRates": {
+      "grid": {
+        "fromDateTime": "Date",
+        "rate": "Rate"
+      },
+      "card": {
+        "fromDateTime": "Date",
+        "rate": "Rate"
+      }
     }
   },
   "entities": {
@@ -1907,6 +2121,9 @@
     },
     "managers": {
       "gen": { "singular": "manager", "plural": "managers" }
+    },
+    "nextCallDate": {
+      "gen": { "singular": "next call date", "plural": "next call date"}
     },
     "portfolios": {
       "gen": { "singular": "portfolio", "plural": "portfolios" }
@@ -1981,6 +2198,9 @@
     "contacts": {
       "gen": { "singular": "contact", "plural": "contacts" }
     },
+    "documents": {
+      "gen": { "singular": "attachment", "plural": "attachments" }
+    },
     "identityDocs": {
       "gen": { "singular": "identity document", "plural": "identity documents" }
     },
@@ -2019,6 +2239,18 @@
     },
     "pledgors": {
       "gen": { "singular": "pledgor", "plural": "pledgors" }
+    },
+    "contactLog": {
+      "gen": { "singular": "contact", "plural": "contacts" }
+    },
+    "visit": {
+      "gen": { "singular": "visit", "plural": "visits" }
+    },
+    "currencies":{
+      "gen": { "singular": "currency", "plural": "currencies" }
+    },
+    "currencyRates": {
+      "gen": { "singular": "rate", "plural": "rates" }
     }
   },
   "massOperations": {
@@ -2050,6 +2282,22 @@
     "smsDelete": {
       "message": "Are you sure to delete {{ count }} sms?",
       "title": "Delete SMS"
+    },
+    "debtResponsibleClear": {
+      "title": "Clear responsible",
+      "message": "Do you really want to clear responsible operators for the selected debts?"
+    },
+    "debtStatus": {
+      "dialog": {
+        "title": "Change status for {{ count }} debts",
+        "statusCode": "Select Status",
+        "reasonCode": "Select Reason",
+        "comment": "Commentary"
+      }
+    },
+    "visit": {
+      "title": "Cancel visits",
+      "message": "Do you really want to cancel the marked departures?"
     }
   },
   "errors": {
@@ -2057,6 +2305,8 @@
       "activePromiseAlreadyExists": "Для долга уже существует активное невыполненное обещание, а добавление более одного активного обещания запрещено конфигурацией (Promise.SeveralActive.Use)",
       "addressComponentsMustNotBeEmpty": "Неверно заполнены поля для формирования полного адреса",
       "attachmentFileNotFoundOnServer": "Файл вложения не найден",
+      "campaignDebtIsNotProcessed": "Could not go to next debt. Current debt is not processed.",
+      "campaignIsFinished": "This campaign has already been closed",
       "componentTypeAlreadyExists": "Такой тип компонента долга уже существует",
       "contactPersonNotFound": "Не найдено контактное лицо по ID",
       "constantNotFound": "Запрашиваемая константа не найдена",
@@ -2111,8 +2361,8 @@
       "login.invalidCredentials": "Invalid login or password",
       "mainTranslationDelete": "Попытка удаления записи из translation_entity для которой установлен флаг is_main=1",
       "maxPromiseDaysExceeded": "Разница между текущей датой и датой обещания превысила разрешенную величину",
-      "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один атрибут не пустой и не null",
-      "promiseAmountMustBeGreaterThenPercentsDebtAmount": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
+      "modelMustNotBeEmpty": "The data model requires to pass at least one non-empty attribute",
+      "notAllowedFieldValue": "Data model error: field {{ $1 }} is not allowed",
       "objectNotFound": "Объект не найден",
       "other.unknownError": "Произошла неизвестная ошибка",
       "organizationIdNotFound": "Не найдена запрошенная по ID организация",
@@ -2120,11 +2370,12 @@
       "organizationUserAlreadyExists": "Запрошенная к созданию по ID пользователя организация уже существует",
       "organizationUserLinkNotFound": "Не найдена организация, запрошенная по ID пользователя",
       "organizationUserLinksExistForOrganization": "Невозможно удалить организацию, на которую есть ссылки из таблицы organization_user_links",
-      "parentUnderChildAttempt": "В структуре предприятия обнаружены циклические связи родитель-подчиненные",
+      "parentUnderChildAttempt": "The data structure is invalid since it contains cyclic relationships",
       "passwordDoesntMatchComplexity": "Пароль должен содержать минимум одну цифру, одну заглавную и одну строчную букву.",
       "passwordLengthMustBeGreaterThen": "Длина пароля должна быть не меньше {{ $1 }} символов",
       "permitRoleNotFound": "Не найдена запись в permit_role, запрошенная по ID роли и ID доступа",
       "phoneNotFound": "Не найден телефон по id",
+      "promiseAmountMustBeGreaterThenPercentsDebtAmount": "Сумма обещания должна быть больше {{ $1 }} процентов от суммы долга",
       "roleCodeEmpty": "Во входной модели для обновления oraganization_user_link не указан ID роли",
       "tempalteNotFound": "Не найден шаблон по ID",
       "thereAreUsersInTheRole": "Невозможно удалить роль {{ $1 }}, в которой есть пользователи",
@@ -2213,6 +2464,7 @@
       "delete": "Delete",
       "download": "Download",
       "edit": "Edit",
+      "email": "Email",
       "exportToExcel": "Export",
       "excel": "Export",
       "move": "Move",
@@ -2274,7 +2526,9 @@
         "userId": "Operator",
         "addressTypeCode": "Address",
         "visitPurposeCode": "Visit purpose",
-        "visitStatusCode": "Visit status"
+        "visitStatusCode": "Visit status",
+        "receiveDateTime": "Received",
+        "createDateTime": "Created"
       }
     },
     "grid": {
@@ -2322,20 +2576,34 @@
         "debtClearResponsible": "Clear debt responsible",
         "debtNextCallDate": "Set next call date",
         "debtSetResponsible": "Set debt responsible",
+        "debtChangeStatus": "Change debt status",
         "delete": "Удалить",
         "deletePromise": "Delete promises",
         "deleteSMS": "Delete SMS",
+        "emailCreate": "Mass Emails",
+        "loadDebtResponsible": "Load debt responsible",
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
+        "openUserDetail": "Open operator card",
         "paymentsCancel": "Payments cancel",
         "paymentsConfirm": "Payments confirm",
         "prepareVisit": "Prepare a visit",
         "rejectPaymentsOperator": "Reject change operator",
         "showContactHistory": "Contact Log",
+        "smsCreate": "Mass SMS",
         "statusChange": "Change status",
         "visitAdd": "Make necessary",
-        "openUserById": "Open debtor card"
+        "openDebtCardByDebtor": "Open debtor card",
+        "changePortfolioAttr": "Portfolio",
+        "changeRegionAttr": "Region",
+        "changeDict1Attr": "Dictionary Attribute 1",
+        "changeDict2Attr": "Dictionary Attribute 2",
+        "changeDict3Attr": "Dictionary Attribute 3",
+        "changeDict4Attr": "Dictionary Attribute 4",
+        "changeCreditTypeAttr": "Credit Product Type",
+        "changeBranchAttr": "Branch",
+        "changeTimezoneAttr": "Time zone"
       }
     },
     "filter": {
@@ -2383,10 +2651,51 @@
     "dialog": {
       "result": {
         "title": "Operation result",
-        "message": "Operation was successful for {{successCount}} of {{count}} records",
+        "message": "Operation was successful for {{processed}} of {{total}} records",
         "messageUnsuccessful": "Unseccessful operation for {{total}} records"
+      },
+      "confirm": {
+        "confirmTitle": "Operation confirm",
+        "confirmMessage": "For {{count}} from {{total}} records operation cannot be executed as there is no mandatory identifier. Continue?"
       }
     },
     "NA": "N/A"
+  },
+  "common": {
+    "entities": {
+      "contactPerson": {
+        "name": "Contact Person",
+        "fields": {
+          "id": "Id",
+          "personId": "Person Id",
+          "personRole": "Person Role",
+          "personFullName": "Person Full Name",
+          "linkTypeCode": "Relationship Type (For Third Parties)"
+        }
+      },
+      "person": {
+        "name": "Person",
+        "fields": {
+          "id": "Id",
+          "lastName": "Last Name",
+          "firstName": "First Name",
+          "middleName": "Middle Name",
+          "typeCode": "Debtor Type",
+          "birthDate": "Date of Birth",
+          "genderCode": "Gender",
+          "passportNumber": "Passport Number",
+          "stringValue1": "String Attribute 1",
+          "stringValue2": "String Attribute 2",
+          "stringValue3": "String Attribute 3",
+          "stringValue4": "String Attribute 4",
+          "stringValue5": "String Attribute 5",
+          "stringValue6": "String Attribute 6",
+          "stringValue7": "String Attribute 7",
+          "stringValue8": "String Attribute 8",
+          "stringValue9": "String Attribute 9",
+          "stringValue10": "String Attribute 10"
+        }
+      }
+    }
   }
 }

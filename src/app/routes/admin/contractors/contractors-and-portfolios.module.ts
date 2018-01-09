@@ -41,7 +41,7 @@ const routes: Routes = [
                 path: 'attributes', children: [
                   { path: '', component: PortfolioAttributesComponent },
                   {
-                    path: 'versions', component: ContractorsAndPortfoliosVersionComponent
+                    path: ':attributeId/versions', component: ContractorsAndPortfoliosVersionComponent
                   }
                 ]
               }
@@ -52,7 +52,7 @@ const routes: Routes = [
       {
         path: 'attributes', children: [
           { path: '', component: ContractorAttributesComponent },
-          { path: 'versions', component: ContractorsAndPortfoliosVersionComponent },
+          { path: ':attributeId/versions', component: ContractorsAndPortfoliosVersionComponent },
         ]
       }
     ],

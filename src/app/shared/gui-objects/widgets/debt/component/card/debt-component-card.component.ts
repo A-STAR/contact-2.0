@@ -2,14 +2,14 @@ import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IDebtComponent } from '../debt-component.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 
 import { DebtComponentService } from '../debt-component.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
-import { MessageBusService } from '../../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
@@ -19,7 +19,7 @@ import { DynamicFormComponent } from '../../../../../components/form/dynamic-for
   templateUrl: './debt-component-card.component.html'
 })
 export class DebtComponentCardComponent {
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private debtId = (this.route.params as any).value.debtId || null;
   private debtComponentId = (this.route.params as any).value.debtComponentId || null;
@@ -30,15 +30,14 @@ export class DebtComponentCardComponent {
   constructor(
     private debtComponentService: DebtComponentService,
     private lookupService: LookupService,
-    private messageBusService: MessageBusService,
     private router: Router,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
   ) {
-    Observable.combineLatest(
+    combineLatest(
       this.lookupService.currencyOptions,
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DEBT_COMPONENTS),
-      this.debtComponentId ? this.debtComponentService.fetch(this.debtId, this.debtComponentId) : Observable.of(null)
+      this.debtComponentId ? this.debtComponentService.fetch(this.debtId, this.debtComponentId) : of(null)
     )
     .pipe(first())
     .subscribe(([ currencyOptions, debtComponentTypeOptions, debtComponent ]) => {
@@ -75,7 +74,7 @@ export class DebtComponentCardComponent {
       : this.debtComponentService.create(this.debtId, data);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED);
+      this.debtComponentService.dispatchAction(DebtComponentService.MESSAGE_DEBT_COMPONENT_SAVED);
       this.onBack();
     });
   }

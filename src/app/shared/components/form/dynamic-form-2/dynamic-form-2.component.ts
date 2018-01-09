@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/distinctUntilChanged';
 
 import { IDynamicFormControl, IDynamicFormGroup } from './dynamic-form-2.interface';
 

@@ -17,6 +17,7 @@ export class ButtonService {
     copy:             { icon: 'fa fa-clone',            label: 'default.buttons.copy'             },
     delete:           { icon: 'fa fa-trash',            label: 'default.buttons.delete'           },
     download:         { icon: 'fa fa-cloud-download',   label: 'default.buttons.download'         },
+    email:            { icon: 'fa fa-envelope',         label: 'default.buttons.email'            },
     edit:             { icon: 'fa fa-pencil',           label: 'default.buttons.edit'             },
     exportToExcel:    { icon: 'fa fa-file-excel-o',     label: 'default.buttons.exportToExcel'    },
     move:             { icon: 'fa fa-share',            label: 'default.buttons.move'             },

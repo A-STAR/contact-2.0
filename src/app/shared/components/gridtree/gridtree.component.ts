@@ -41,7 +41,7 @@ export class GridTreeComponent<T> implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridTreeService: GridTreeService<T>,
+    public gridTreeService: GridTreeService<T>,
   ) {}
 
   ngOnInit(): void {

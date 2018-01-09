@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 import { IComponentLogEntry } from '../component-log.interface';
 import { IGridColumn, IRenderer } from '../../../../../components/grid/grid.interface';
@@ -12,7 +12,9 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
   templateUrl: './component-log-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComponentLogGridComponent {
+export class ComponentLogGridComponent implements OnInit {
+  @Input() debtId: number;
+
   columns: Array<IGridColumn> = [
     { prop: 'typeCode', minWidth: 150, maxWidth: 250 },
     { prop: 'amount', minWidth: 100, maxWidth: 250 },
@@ -34,7 +36,9 @@ export class ComponentLogGridComponent {
     private componentLogService: ComponentLogService,
     private gridService: GridService,
     private userDictionariesService: UserDictionariesService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.userDictionariesService
       .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DEBT_COMPONENTS)
       .subscribe(options => {
@@ -43,7 +47,7 @@ export class ComponentLogGridComponent {
         this.cdRef.markForCheck();
       });
 
-    this.componentLogService.readAll(1).subscribe(entries => {
+    this.componentLogService.readAll(this.debtId).subscribe(entries => {
       this.entries = entries;
       this.cdRef.markForCheck();
     });

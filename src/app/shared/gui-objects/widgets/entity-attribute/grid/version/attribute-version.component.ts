@@ -2,10 +2,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Input,
   OnInit,
   OnDestroy,
   ViewChild,
-  Input
 } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IAttribute, IAttributeVersion } from '../../attribute.interface';
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IValueEntity } from '../../../../../../core/converter/value-converter.interface';
 
 import { AttributeService } from '../../attribute.service';
 import { GridService } from '../../../../../../shared/components/grid/grid.service';
@@ -27,45 +28,23 @@ import { GridComponent } from '../../../../../../shared/components/grid/grid.com
 import { DialogFunctions } from '../../../../../../core/dialog';
 import { combineLatestAnd } from '../../../../../../core/utils/helpers';
 
+
 @Component({
   selector: 'app-attribute-version',
   templateUrl: './attribute-version.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeVersionComponent extends DialogFunctions implements OnInit, OnDestroy {
-
-  @Input() selectedAttribute: IAttribute;
+  @Input() attributeId: number;
   @Input() entityId: number;
   @Input() entityTypeId: number;
 
   @ViewChild(GridComponent) grid: GridComponent;
 
   selectedVersion$ = new BehaviorSubject<IAttributeVersion>(null);
+  selectedAttribute: IAttribute;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.setDialog('add'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-        Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== 1)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.setDialog('edit'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-        Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== 1)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.entityTypeId && this.entityId && this.selectedAttribute
-        && this.fetch().subscribe(versions => this.onVersionsFetch(versions)),
-    },
-  ];
-
+  toolbarItems: Array<IToolbarItem>;
 
   dialog: string;
 
@@ -73,13 +52,13 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   private entitySubscription: Subscription;
 
   columns: Array<IGridColumn> = [
-    { prop: 'code', minWidth: 150 },
-    { prop: 'value', minWidth: 150,
-      renderer: (version: IAttributeVersion) => this.valueConverterService.deserialize(version) },
-    { prop: 'typeCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_ATTRIBUTE_TREE_TYPE },
+    { prop: 'code', minWidth: 50 },
+    { prop: 'name', minWidth: 150 },
+    { prop: 'typeCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE },
+    { prop: 'value', minWidth: 150 },
     { prop: 'fromDateTime', minWidth: 150, renderer: 'dateTimeRenderer' },
     { prop: 'toDateTime', minWidth: 150, renderer: 'dateTimeRenderer' },
-    { prop: 'userFullName', minWidth: 100 },
+    { prop: 'userFullName', minWidth: 150 },
   ];
 
   constructor(
@@ -97,22 +76,22 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-    .pipe(first())
-    .subscribe(columns => {
-      this.columns = [...columns];
-      this.cdRef.markForCheck();
-    });
 
     this.entitySubscription = this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
-      .subscribe(canView => {
+      .switchMap(canView => canView && this.entityTypeId
+        && this.attributeId ? this.fetchAll() : Observable.of([]))
+      .subscribe(versions => {
 
-        if (canView && this.entityTypeId && this.selectedAttribute && this.selectedAttribute.userId) {
-          this.fetch().subscribe(versions => this.onVersionsFetch(versions));
-        } else {
-          this.rows = [];
-          this.cdRef.markForCheck();
-        }
+        this.onVersionsFetch(versions);
+
+        this.toolbarItems = this.getToolbarItems();
+
+        this.gridService.setAllRenderers(this.columns)
+          .pipe(first())
+          .subscribe(columns => {
+            this.columns = [...columns];
+            this.cdRef.markForCheck();
+          });
       });
   }
 
@@ -138,21 +117,70 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
       .subscribe(versions => this.onVersionsFetch(versions));
   }
 
+  private fetchAll(): Observable<IAttributeVersion[]> {
+    return this.fetchAttribute().switchMap(attr => {
+      this.selectedAttribute = attr;
+      return this.fetch();
+    });
+  }
+
   private fetch(): Observable<IAttributeVersion[]> {
-    return this.attributeService.fetchAllVersions(this.entityTypeId, this.entityId, this.selectedAttribute.code);
+    return this.attributeService.fetchAllVersions(this.entityTypeId, this.entityId, this.attributeId);
+  }
+
+  private fetchAttribute(): Observable<IAttribute> {
+    return this.attributeService.fetch(this.entityTypeId, this.entityId, this.attributeId);
   }
 
   private onVersionsFetch(versions: IAttributeVersion[]): void {
-    this.rows = versions;
-    this.grid.clearSelection();
+    this.rows = this.processVersions(versions);
+    this.setDialog(null);
+    this.clearSelection();
     this.cdRef.markForCheck();
+  }
+
+  private clearSelection(): void {
+    this.grid.clearSelection();
+    this.selectedVersion$.next(null);
   }
 
   private get canEdit$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-      Observable.of(!!this.selectedAttribute.version)
+      Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
     ]);
+  }
+
+  private getToolbarItems(): IToolbarItem[] {
+    return [
+      {
+        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
+          Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
+          this.selectedVersion$.map(version => !!version)
+        ]),
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.entityTypeId && this.entityId && this.selectedAttribute
+          && this.fetch().subscribe(versions => this.onVersionsFetch(versions)),
+      },
+    ];
+  }
+
+  private processVersions(versions: IAttributeVersion[]): IAttributeVersion[] {
+    return versions.map(version => ({
+      ...version,
+      ...this.valueConverterService.deserialize({
+        ...version,
+        typeCode: this.selectedAttribute.typeCode
+      } as IValueEntity) as IAttributeVersion,
+      typeCode: this.selectedAttribute.typeCode,
+      code: this.selectedAttribute.code,
+      name: this.selectedAttribute.name,
+    }));
   }
 
 }

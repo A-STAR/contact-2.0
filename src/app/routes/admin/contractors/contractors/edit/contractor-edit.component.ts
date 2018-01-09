@@ -1,26 +1,32 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { of } from 'rxjs/observable/of';
-import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
-import { IContractor } from '../../contractors-and-portfolios.interface';
+import {
+  IActionType,
+  IContractor
+} from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
+import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
-import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
+import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contractor-edit',
-  templateUrl: './contractor-edit.component.html'
+  templateUrl: './contractor-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractorEditComponent implements OnInit {
+export class ContractorEditComponent implements OnInit, OnDestroy {
   static COMPONENT_NAME = 'ContractorEditComponent';
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -28,8 +34,8 @@ export class ContractorEditComponent implements OnInit {
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
   canViewAttributes: boolean;
-
-  private contractorId = (<any>this.route.params).value.contractorId;
+  private editedContractorSub: Subscription;
+  private contractorId: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,20 +43,28 @@ export class ContractorEditComponent implements OnInit {
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService
+    private userPermissionsService: UserPermissionsService,
+    private cdRef: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    combineLatest(
+
+    const contractorId = Number(this.route.snapshot.paramMap.get('contractorId'));
+    const getContractor$ = contractorId ? this.contractorsAndPortfoliosService.readContractor(contractorId) : Observable.of(null);
+
+    this.editedContractorSub = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
-      this.contractorId ? this.contractorsAndPortfoliosService.readContractor(this.contractorId) : of(null),
+      getContractor$,
       this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
     )
     .pipe(first())
     // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes]) => {
+    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes ]) => {
       this.canViewAttributes = true;
+
+      this.contractorId = contractor && contractor.id;
+
       const label = makeKey('contractors.grid');
       this.controls = [
         { label: label('name'), controlName: 'name', type: 'text', required: true },
@@ -63,7 +77,14 @@ export class ContractorEditComponent implements OnInit {
         { label: label('comment'), controlName: 'comment', type: 'textarea' },
       ];
       this.formData = contractor;
+      this.cdRef.markForCheck();
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.editedContractorSub) {
+      this.editedContractorSub.unsubscribe();
+    }
   }
 
   canSubmit(): boolean {
@@ -77,7 +98,7 @@ export class ContractorEditComponent implements OnInit {
       : this.contractorsAndPortfoliosService.createContractor(contractor);
 
     action.subscribe(() => {
-      this.contractorsAndPortfoliosService.dispatch(ContractorsAndPortfoliosService.CONTRACTOR_CREATE);
+      this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_SAVE);
       this.onBack();
     });
   }

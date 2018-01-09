@@ -11,8 +11,6 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/of';
 import { first } from 'rxjs/operators';
 
 import { IDocument } from '../document.interface';
@@ -21,7 +19,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { DocumentService } from '../document.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -94,7 +91,7 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     { prop: 'fileName' },
     { prop: 'docTypeCode', dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE },
     { prop: 'docNumber' },
-    { prop: 'operatorName' },
+    { prop: 'fullName' },
     { prop: 'comment' }
   ];
 
@@ -107,7 +104,6 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     private documentService: DocumentService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -116,8 +112,8 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     this.gridSubscription = this.gridService.setDictionaryRenderers(this.columns)
       .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
 
-    this.busSubscription = this.messageBusService
-      .select(DocumentService.MESSAGE_DOCUMENT_SAVED)
+    this.busSubscription = this.documentService
+      .getAction(DocumentService.MESSAGE_DOCUMENT_SAVED)
       .subscribe(() => this.fetch());
 
     this.fetch();

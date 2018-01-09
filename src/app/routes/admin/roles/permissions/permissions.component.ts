@@ -1,28 +1,39 @@
-import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/zip';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators/first';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
-import { IPermissionsDialogEnum, IPermissionsState } from '../permissions.interface';
 import { IPermissionModel, IPermissionRole } from '../permissions.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { IValueEntity } from '../../../../core/converter/value-converter.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
-import { first } from 'rxjs/operators';
+
+import { combineLatestAnd } from '../../../../core/utils/helpers';
+import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
   selector: 'app-permissions',
   templateUrl: './permissions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PermissionsComponent implements OnDestroy {
+export class PermissionsComponent extends DialogFunctions implements OnInit, OnDestroy {
+
+  availablePermissions: IPermissionModel[];
+  canViewPermissions$: Observable<boolean>;
+  currentPermission: IPermissionModel;
+  permissions$: Observable<IValueEntity[]>;
+
+  emptyMessage$: Observable<string>;
+
+  dialog: 'add' | 'edit' | 'remove';
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 70, maxWidth: 100 },
@@ -37,89 +48,83 @@ export class PermissionsComponent implements OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.onBeforeAddPermissions(),
-      enabled: Observable.combineLatest(
+      action: () => this.onBeforeAdd(),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_ADD'),
         this.permissionsService.permissions.map(state => !!state.currentRole)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT),
-      enabled: Observable.combineLatest(
+      action: () => this.setDialog('edit'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_EDIT'),
         this.permissionsService.permissions.map(state => !!state.currentPermission)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.dialogAction(IPermissionsDialogEnum.PERMISSION_DELETE),
-      enabled: Observable.combineLatest(
+      action: () => this.setDialog('remove'),
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_DELETE'),
         this.permissionsService.permissions.map(state => !!state.currentPermission)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.permissionsService.fetchPermissions(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.userPermissionsService.has('PERMIT_VIEW'),
         this.permissionsService.permissions.map(state => !!state.currentRole)
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && hasSelectedEntity)
+      ])
     },
   ];
 
-  permissions$: Observable<IValueEntity[]>;
-
-  canViewPermissions$: Observable<boolean>;
-
-  emptyMessage$: Observable<string>;
-  availablePermissions: IPermissionModel[];
-
-  dialog: IPermissionsDialogEnum;
-
-  currentPermission: IPermissionModel;
   private currentRole: IPermissionRole;
   private permissionsSubscription: Subscription;
   private viewPermissionsSubscription: Subscription;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private dataService: DataService,
     private gridService: GridService,
+    private notifications: NotificationsService,
     private permissionsService: PermissionsService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService
   ) {
+    super();
+  }
+
+  ngOnInit(): void {
     this.columns = this.gridService.setRenderers(this.columns);
     this.permissionsSubscription = this.permissionsService.permissions
-      .subscribe(
-        (permissions: IPermissionsState) => {
-          this.currentRole = permissions.currentRole;
-          this.currentPermission = permissions.currentPermission;
-          this.dialog = permissions.dialog;
-        }
-      );
+      .subscribe(permissions => {
+        this.currentRole = permissions.currentRole;
+        this.currentPermission = permissions.currentPermission;
+        this.cdRef.markForCheck();
+      });
 
     this.permissions$ = this.permissionsService.permissions
-      .map(state => state.rawPermissions)
+      .map(state => state.permissions)
       .distinctUntilChanged()
       .map(permissions => this.valueConverterService.deserializeSet(permissions));
 
     this.canViewPermissions$ = this.userPermissionsService.has('PERMIT_VIEW');
 
-    this.viewPermissionsSubscription = Observable.combineLatest(
+    this.viewPermissionsSubscription = combineLatest(
       this.canViewPermissions$,
       this.permissionsService.permissions.map(permissions => permissions.currentRole).distinctUntilChanged()
     )
-    .subscribe(([ hasViewPermission, currentRole ]) => {
-      if (!hasViewPermission) {
+    .subscribe(([ canView, currentRole ]) => {
+      if (!canView) {
         this.permissionsService.clearPermissions();
       } else if (currentRole) {
         this.permissionsService.fetchPermissions();
       }
     });
 
-    this.emptyMessage$ = this.canViewPermissions$.map(hasPermission => hasPermission ? null : 'roles.permissions.errors.view');
+    this.emptyMessage$ = this.canViewPermissions$.map(canView => canView ? null : 'roles.permissions.errors.view');
   }
 
   ngOnDestroy(): void {
@@ -127,57 +132,68 @@ export class PermissionsComponent implements OnDestroy {
     this.viewPermissionsSubscription.unsubscribe();
   }
 
-  onBeforeAddPermissions(): void {
+  onBeforeAdd(): void {
     this.dataService
       .readAll('/roles/{id}/permits/notadded', { id: this.currentRole.id })
       .subscribe(permits => {
         this.availablePermissions = permits;
-        this.dialogAction(IPermissionsDialogEnum.PERMISSION_ADD);
+        this.setDialog('add');
+        this.cdRef.markForCheck();
       });
   }
 
-  onBeforeEditPermission(): void {
+  onDblClick(): void {
     this.userPermissionsService.has('PERMIT_EDIT')
       .pipe(first())
-      .subscribe(hasPermission => {
-        if (hasPermission && this.currentPermission) {
-          this.dialogAction(IPermissionsDialogEnum.PERMISSION_EDIT);
+      .subscribe(canEdit => {
+        if (canEdit) {
+          if (this.currentPermission) {
+            this.setDialog('edit');
+            this.cdRef.markForCheck();
+          }
+        } else {
+          this.notifications.error('roles.permissions.errors.edit').dispatch();
         }
       });
   }
 
-  onSelectPermissions(record: IPermissionModel): void {
+  onEdit(permission: IPermissionModel): void {
+    this.permissionsService.updatePermission(
+      this.currentRole.id,
+      this.valueConverterService.serialize(permission)
+    );
+    this.onSuccess(PermissionsService.PERMISSION_UPDATE_SUCCESS);
+  }
+
+  onSelect(record: IPermissionModel): void {
     if (record) {
       this.permissionsService.changeSelected(record);
     }
   }
 
-  onAfterEditPermission(permission: IPermissionModel): void {
-    this.permissionsService.updatePermission(
-      this.currentRole.id,
-      this.valueConverterService.serialize(permission)
-    );
+  onAdd(addedPermissions: IPermissionModel[]): void {
+    const permissionsIds: number[] = addedPermissions.map((rec: IPermissionModel) => rec.id);
+    this.permissionsService.addPermission(this.currentRole, permissionsIds);
+    this.onSuccess(PermissionsService.PERMISSION_ADD_SUCCESS);
+  }
+
+  onRemove(): void {
+    const permissionId: number = this.currentPermission.id;
+    this.permissionsService.removePermission(this.currentRole, permissionId);
+    this.onSuccess(PermissionsService.PERMISSION_DELETE_SUCCESS);
   }
 
   onCancel(): void {
-    this.dialogAction(IPermissionsDialogEnum.NONE);
+    this.setDialog();
+    this.cdRef.markForCheck();
   }
 
-  onAddPermissions(addedPermissions: IPermissionModel[]): void {
-    const permissionsIds: number[] = addedPermissions.map((rec: IPermissionModel) => rec.id);
-    this.permissionsService.addPermission(this.currentRole, permissionsIds);
-  }
-
-  onRemovePermission(): void {
-    const permissionId: number = this.currentPermission.id;
-    this.permissionsService.removePermission(this.currentRole, permissionId);
-  }
-
-  isDialog(dialog: IPermissionsDialogEnum): boolean {
-    return this.dialog === dialog;
-  }
-
-  private dialogAction(dialog: IPermissionsDialogEnum): void {
-    this.permissionsService.permissionDialog(dialog);
+  private onSuccess(type: string): void {
+    this.permissionsService.getAction(type)
+      .pipe(first())
+      .subscribe(_ => {
+        this.setDialog();
+        this.cdRef.markForCheck();
+      });
   }
 }

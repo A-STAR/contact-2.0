@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
+  OnInit, Output, OnDestroy, Input
+} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IEntityGroup } from '../../entity-group/entity-group.interface';
+import { IEntityGroup, IGridAction } from '../../entity-group/entity-group.interface';
 
 import { EntityGroupService } from '../entity-group.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 
 @Component({
   selector: 'app-entity-group-dialog',
@@ -12,6 +14,9 @@ import { MessageBusService } from '../../../../../core/message-bus/message-bus.s
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityGroupDialogComponent implements OnInit, OnDestroy {
+
+  @Input() entityTypeId: number;
+  @Input() manualGroup: boolean;
 
   @Output() close = new EventEmitter<null>();
   @Output() select = new EventEmitter<IEntityGroup>();
@@ -22,19 +27,23 @@ export class EntityGroupDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private messageBusService: MessageBusService,
+    private entityGroupService: EntityGroupService,
   ) { }
 
   ngOnInit(): void {
-    this.entityGroupSelectSub = this.messageBusService
-      .select<string, IEntityGroup>(EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, 'select')
+    this.entityGroupSelectSub = this.entityGroupService
+      .getPayload<IGridAction>(EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED)
+      .filter(action => action.type === 'select')
+      .map(action => action.payload)
       .subscribe(group => {
         this.selectedEntityGroup = group;
         this.cdRef.markForCheck();
       });
 
-    this.entityGroupClickSub = this.messageBusService
-      .select<string, IEntityGroup>(EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, 'dblclick')
+    this.entityGroupClickSub = this.entityGroupService
+      .getPayload<IGridAction>(EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED)
+      .filter(action => action.type === 'dblclick')
+      .map(action => action.payload)
       .subscribe(group => {
         this.selectedEntityGroup = group;
         this.select.emit(this.selectedEntityGroup);

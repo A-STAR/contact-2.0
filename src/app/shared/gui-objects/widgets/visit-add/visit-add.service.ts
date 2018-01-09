@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IVisitParam, IVisitsBundle } from './visit-add.interface';
+import { IVisitParams, IMarkForVisitRequest } from './visit-add.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
@@ -15,18 +15,14 @@ export class VisitAddService {
 
   private baseUrl = '/mass/visits';
 
-  createVisit(params: IVisitParam[], actionData: IVisitsBundle): Observable<any> {
-    return this.dataService.create(this.baseUrl, {}, { idData: { complexIdList: params }, actionData })
-    // TODO(m.bobryshev): remove catch once the API is ready
-    .catch(() => Observable.of({
-        success: true,
-        massInfo: { total: 2, processed: 1 }
-      }))
+  createVisit(visitParams: IVisitParams[], actionData: IMarkForVisitRequest): Observable<any> {
+    const ids = visitParams.map(item => [ item.addressId, item.debtId, item.visitPersonRole ]);
+    return this.dataService.create(this.baseUrl, {}, { idData: { ids }, actionData })
       .do(res => {
-        if (!res.success) {
-          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
-        } else {
+        if (res.success) {
           this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
+        } else {
+          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
         }
       })
       .catch(this.notificationsService.error('errors.default.massOp').entity('entities.massOps.addVisit').dispatchCallback());

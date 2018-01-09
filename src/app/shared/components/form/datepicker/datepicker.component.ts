@@ -56,7 +56,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   isExpanded = false;
   isValid = true;
   value: Date = null;
-  style = { top: '0', left: '0' };
+  style = { top: '-1px', right: '0px' };
 
   private subscription: Subscription;
   private wheelListener: Function;
@@ -88,20 +88,23 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (!this.dropdown.nativeElement.contains(event.target)
-      && !this.trigger.nativeElement.contains(event.target) && this.isExpanded
+    if (this.isExpanded && this.trigger
+      && !this.dropdown.nativeElement.contains(event.target)
+      && !this.trigger.nativeElement.contains(event.target)
     ) {
       this.toggleCalendar(false);
     }
   }
 
   ngOnInit(): void {
-    document.body.appendChild(this.dropdown.nativeElement);
+    // this.renderer.appendChild(document.body, this.dropdown.nativeElement);
+    // document.body.appendChild(this.dropdown.nativeElement);
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    document.body.removeChild(this.dropdown.nativeElement);
+    // document.body.removeChild(this.dropdown.nativeElement);
+    // this.renderer.removeChild(document.body, this.dropdown.nativeElement);
     this.removeWheelListener();
   }
 
@@ -155,13 +158,13 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
   toggleCalendar(isExpanded?: boolean): void {
     this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
-    this.cdRef.detectChanges();
     if (this.isExpanded) {
       this.positionDropdown();
+      this.cdRef.detectChanges();
     } else {
       this.propagateTouch(true);
     }
-    this.cdRef.markForCheck();
+    // this.cdRef.markForCheck();
 
     if (this.dropdown.nativeElement.children[0] && !this.isExpanded) {
       this.removeWheelListener();
@@ -201,13 +204,13 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
 
     // If the dropdown won't fit into the window below the input - place it above.
     const top = inputRect.bottom + contentRect.height > window.innerHeight
-      ? inputRect.top - contentRect.height
-      : inputRect.bottom;
-    const left = inputRect.left;
+      ? inputRect.top - contentRect.height - 1
+      : inputRect.bottom - 1;
+    const right = inputRect.right;
 
     this.style = {
       top: `${top}px`,
-      left: `${left}px`
+      right: `${right}px`
     };
 
     this.addWheelListener();

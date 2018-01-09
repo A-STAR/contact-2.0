@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserConstant } from './user-constants.interface';
+import { IUserConstant, IUserConstants } from './user-constants.interface';
+
+import { ValueBag } from '../../value-bag/value-bag';
 
 @Injectable()
 export class UserConstantsService {
   static USER_CONSTANTS_FETCH         = 'USER_CONSTANTS_FETCH';
   static USER_CONSTANTS_FETCH_SUCCESS = 'USER_CONSTANTS_FETCH_SUCCESS';
 
-  private constants: Array<IUserConstant>;
+  private isFetching = false;
 
-  constructor(private store: Store<IAppState>) {
-    this.constants$.subscribe(constants => this.constants = constants);
-  }
+  constructor(private store: Store<IAppState>) {}
 
   createRefreshAction(): Action {
     return {
@@ -25,24 +24,38 @@ export class UserConstantsService {
   }
 
   refresh(): void {
+    this.isFetching = true;
     const action = this.createRefreshAction();
     this.store.dispatch(action);
   }
 
-  get(constantName: string): Observable<IUserConstant> {
-    if (!this.constants) {
-      this.refresh();
-    }
-
-    return this.constants$
-      .filter(Boolean)
-      .map(constants => constants.find(constant => constant.name === constantName))
-      .distinctUntilChanged();
+  bag(): Observable<ValueBag> {
+    return this.constants$.pipe(
+      map(constants => new ValueBag(constants)),
+      distinctUntilChanged(),
+    );
   }
 
-  private get constants$(): Observable<Array<IUserConstant>> {
-    return this.store.select(state => state.userConstants)
-      .filter(Boolean)
-      .map(state => state.constants);
+  get(constantName: string): Observable<IUserConstant> {
+    return this.constants$.pipe(
+      map(constants => constants[constantName]),
+      distinctUntilChanged(),
+    );
+  }
+
+  private get constants$(): Observable<IUserConstants> {
+    return this.store
+      .select(state => state.userConstants.constants)
+      .pipe(
+        tap(constants => {
+          if (constants) {
+            this.isFetching = false;
+          } else if (!this.isFetching) {
+            this.refresh();
+          }
+        }),
+        filter(Boolean),
+        distinctUntilChanged(),
+      );
   }
 }

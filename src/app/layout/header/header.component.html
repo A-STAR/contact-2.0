@@ -31,27 +31,17 @@
           class="menu-item"
           position="right"
           [displayArrow]="true"
-          [enabled]="hasNotifications$ | async"
+          [enabled]="hasNotifications"
         >
           <a trigger title="Messages">
             <i class="icon-bell"></i>
-            <div *ngIf="hasNotifications$ | async" class="label label-danger">
-              {{ notificationsCount$ | async }}
+            <div *ngIf="hasNotifications" class="label label-danger">
+              {{ notificationsCount }}
             </div>
           </a>
-          <app-notifications
-            [filters]="filters$ | async"
-            [notifications]="notifications$ | async"
-            (onClose)="notificationsDropdown.close()"
-          >
+          <app-notifications (close)="notificationsDropdown.close()">
           </app-notifications>
         </app-dropdown>
-      </li>
-
-      <li *ngIf="false">
-        <a (click)="toggleOffsidebar()">
-          <i class="icon-notebook"></i>
-        </a>
       </li>
 
       <li>
@@ -83,7 +73,7 @@
     </ul>
   </div>
 
-  <app-navsearch [visible]="getNavSearchVisible()" (onclose)="setNavSearchVisible(false)"></app-navsearch>
+  <app-navsearch *ngIf="isNavSearchVisible" (close)="closeNavSearch()"></app-navsearch>
 </nav>
 
 <app-info-dialog

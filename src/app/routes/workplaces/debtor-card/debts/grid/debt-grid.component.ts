@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDebt } from '../../../../../core/debt/debt.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -14,13 +15,14 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { DialogFunctions } from '../../../../../core/dialog';
 
 @Component({
   selector: 'app-debt-grid',
   templateUrl: './debt-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DebtGridComponent {
+export class DebtGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -34,6 +36,7 @@ export class DebtGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
+      label: 'widgets.debt.toolbar.changeStatus',
       enabled: combineLatestAnd([
         this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
         this.userPermissionsService.bag().map(bag => (
@@ -85,17 +88,17 @@ export class DebtGridComponent {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => {} // this.fetch()
+      action: () => this.fetch()
     },
   ];
 
   columns: Array<IGridColumn> = [
     { prop: 'id' },
     { prop: 'creditTypeCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
-    { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE },
+    { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE },
     { prop: 'creditName' },
     { prop: 'contract' },
-    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE },
+    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS },
     { prop: 'account'},
     { prop: 'creditStartDate', renderer: 'dateRenderer' },
     { prop: 'currencyId', lookupKey: 'currencies' },
@@ -107,8 +110,10 @@ export class DebtGridComponent {
     { prop: 'debtReasonCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON },
   ];
 
-  dialog$ = new BehaviorSubject<number>(null);
   debtCloseDialogStatus$ = new BehaviorSubject<number>(null);
+  dialog: string;
+
+  private debtUpdateSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -117,12 +122,24 @@ export class DebtGridComponent {
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {
+    super();
+  }
+
+  ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
       .pipe(first())
       .subscribe(columns => {
         this.columns = [ ...columns ];
         this.cdRef.markForCheck();
       });
+
+    this.debtUpdateSub = this.debtorCardService
+      .getAction('DEBTOR_DEBT_UPDATED')
+      .subscribe(_ => this.fetch());
+  }
+
+  ngOnDestroy(): void {
+    this.debtUpdateSub.unsubscribe();
   }
 
   get debts$(): Observable<any> {
@@ -147,15 +164,15 @@ export class DebtGridComponent {
   }
 
   onDialogClose(): void {
-    this.dialog$.next(null);
+    this.setDialog();
   }
 
   onChangeStatusDialogSubmit(): void {
-    // this.fetch();
+    this.fetch();
   }
 
   onCloseDialogSubmit(): void {
-    // this.fetch();
+    this.fetch();
   }
 
   private onAdd(): void {
@@ -168,17 +185,21 @@ export class DebtGridComponent {
       .subscribe(debt => this.router.navigate([ `${this.router.url}/debt` ]));
   }
 
+  private fetch(): void {
+    this.debtorCardService.refreshDebts();
+  }
+
   private onChangeStatus(): void {
-    this.dialog$.next(1);
+    this.setDialog('changeStatus');
   }
 
   private onClose(status: number): void {
-    this.dialog$.next(2);
+    this.setDialog('closeDebt');
     this.debtCloseDialogStatus$.next(status);
   }
 
   private onNextCall(): void {
-    this.dialog$.next(3);
+    this.setDialog('nextCall');
   }
 
   get canAdd$(): Observable<boolean> {

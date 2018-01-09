@@ -1,12 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first, filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
-import { first } from 'rxjs/operators';
 
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
-import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
-import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
-import { IDictionary, ITerm, DictionariesDialogActionEnum } from '../dictionaries.interface';
+import { ITerm } from '../dictionaries.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
@@ -17,42 +15,44 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { combineLatestAnd } from '../../../../core/utils/helpers';
+import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-terms',
   templateUrl: './terms.component.html'
 })
-export class TermsComponent implements OnInit, OnDestroy {
+export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy {
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.dictionariesService.setDialogAddTermAction(),
+      action: () => this.create(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('DICT_TERM_ADD'),
-        this.dictionariesService.isSelectedDictionaryExist
+        this.dictionariesService.hasSelectedDictionary
       ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.dictionariesService.setDialogEditTermAction(),
+      action: () => this.edit(),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('DICT_TERM_EDIT'),
-        this.dictionariesService.isSelectedTermExist
+        this.dictionariesService.hasSelectedTerm
       ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.dictionariesService.setDialogRemoveTermAction(),
+      action: () => this.setDialog('remove'),
       enabled: combineLatestAnd([
         this.userPermissionsService.has('DICT_TERM_DELETE'),
-        this.dictionariesService.isSelectedTermExist
+        this.dictionariesService.hasSelectedTerm
       ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.dictionariesService.fetchTerms(),
-      enabled: this.dictionariesService.isSelectedDictionaryExist
+      enabled: this.dictionariesService.hasSelectedDictionary
     }
   ];
 
@@ -64,25 +64,24 @@ export class TermsComponent implements OnInit, OnDestroy {
     { prop: 'isClosed', renderer: 'checkboxRenderer' },
   ];
 
-  rows = [];
-
-  action: DictionariesDialogActionEnum = null;
-
-  masterEntity: IDictionary;
-
-  hasViewPermission$: Observable<boolean>;
-
   emptyMessage$: Observable<string>;
+  canView$: Observable<boolean>;
+  dialog: 'create' | 'edit' | 'remove';
+
+  rows = [];
 
   private dictionariesServiceSubscription: Subscription;
   private viewPermissionsSubscription: Subscription;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private dictionariesService: DictionariesService,
     private gridService: GridService,
     private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
@@ -92,23 +91,25 @@ export class TermsComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe();
 
-    this.dictionariesServiceSubscription = this.dictionariesService.state.subscribe(state => {
-      this.action = state.dialogAction;
-      this.rows = state.terms;
-      this.masterEntity = state.selectedDictionary;
-    });
+    this.dictionariesServiceSubscription = this.dictionariesService.state
+      .subscribe(state => {
+        this.rows = state.terms;
+        this.cdRef.markForCheck();
+      });
 
-    this.hasViewPermission$ = this.userPermissionsService.has('DICT_TERM_VIEW');
+    this.canView$ = this.userPermissionsService.has('DICT_TERM_VIEW');
 
-    this.viewPermissionsSubscription = this.hasViewPermission$.subscribe(hasViewPermission => {
-      if (!hasViewPermission) {
-        this.dictionariesService.clearTerms();
-      } else {
-        this.dictionariesService.fetchTerms();
-      }
-    });
+    this.viewPermissionsSubscription = this.canView$
+      .subscribe(canView => {
+        if (!canView) {
+          this.dictionariesService.clearTerms();
+        } else {
+          this.dictionariesService.fetchTerms();
+        }
+        this.cdRef.markForCheck();
+      });
 
-    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'terms.errors.view');
+    this.emptyMessage$ = this.canView$.map(canView => canView ? null : 'terms.errors.view');
   }
 
   ngOnDestroy(): void {
@@ -116,12 +117,21 @@ export class TermsComponent implements OnInit, OnDestroy {
     this.viewPermissionsSubscription.unsubscribe();
   }
 
-  get selectedEntity(): Observable<ITerm> {
+  get canEdit(): Observable<boolean> {
+    return this.userPermissionsService.has('DICT_TERM_EDIT');
+  }
+
+  get disableParentSelection(): Observable<boolean> {
+    return this.dictionariesService.selectedDictionary
+      .map(dict => !dict.parentCode);
+  }
+
+  get selectedTerm(): Observable<ITerm> {
     return this.dictionariesService.selectedTerm;
   }
 
   get languages(): Observable<ILookupLanguage[]> {
-    return this.lookupService.languages;
+    return this.lookupService.lookup<ILookupLanguage>('languages');
   }
 
   get terms(): Observable<ITerm[]> {
@@ -132,88 +142,63 @@ export class TermsComponent implements OnInit, OnDestroy {
     return this.dictionariesService.dropdownTerms;
   }
 
-  get isEntityBeingCreated(): Observable<boolean> {
-    return this.dictionariesService.dialogAction
-      .map(dialogAction => dialogAction === DictionariesDialogActionEnum.TERM_ADD);
-  }
-
-  get isEntityBeingEdited(): Observable<boolean> {
-    return this.dictionariesService.dialogAction
-      .map(dialogAction => dialogAction === DictionariesDialogActionEnum.TERM_EDIT);
-  }
-
-  get isEntityBeingRemoved(): Observable<boolean> {
-    return this.dictionariesService.dialogAction
-      .map(dialogAction => dialogAction === DictionariesDialogActionEnum.TERM_REMOVE);
-  }
-
-  get isReadyForCreating(): Observable<boolean> {
-    return combineLatestAnd([
-      this.isEntityBeingCreated,
-      this.isTermRelationsReady,
-      this.isDropdownTermsReady,
-    ]);
-  }
-
-  get isReadyForEditing(): Observable<boolean> {
-    return combineLatestAnd([
-      this.isEntityBeingEdited,
-      this.isTermRelationsReady,
-      this.dictionariesService.isSelectedTermReady,
-      this.isDropdownTermsReady,
-    ]);
-  }
-
-  get isDropdownTermsReady(): Observable<boolean> {
+  get hasDropdownTerms(): Observable<boolean> {
     return this.dropdownTerms.map(terms => !!terms);
   }
 
-  get isTermRelationsReady(): Observable<boolean> {
+  get hasLanguages(): Observable<boolean> {
     return this.languages.map(languages => !!languages);
   }
 
-  onRemoveSubmit(): void {
+  onRemove(): void {
     this.dictionariesService.deleteTerm();
+    this.setDialog();
   }
 
-  cancelAction(): void {
-    this.dictionariesService.setTermDialogAction(null);
+  onCancel(): void {
+    this.setDialog();
   }
 
-  onEdit(term: ITerm): void {
-    this.userPermissionsService.has('DICT_TERM_EDIT')
-      .pipe(first())
-      .subscribe(hasPermission => {
-        if (hasPermission) {
-          this.dictionariesService.selectTerm(term);
-          this.dictionariesService.setDialogEditTermAction();
-        }
-      });
+  edit(): void {
+    this.dictionariesService.fetchTermTranslations();
+    combineLatestAnd([
+      this.userPermissionsService.has('DICT_TERM_EDIT'),
+      this.dictionariesService.hasTermTranslations,
+      this.hasDropdownTerms,
+      this.hasLanguages,
+    ])
+    .pipe(
+      filter(Boolean),
+      first()
+    )
+    .subscribe(_ => {
+      this.setDialog('edit');
+    });
   }
 
-  onUpdateEntity(data: ITerm): void {
-    const nameTranslations: Array<ILabeledValue> = data.nameTranslations || [];
-
-    const deletedTranslations = nameTranslations
-      .filter(item => item.removed)
-      .map(item => item.value);
-
-    const updatedTranslations: IEntityTranslation[] = nameTranslations
-      .filter(item => !item.removed)
-      .map(item => ({
-        languageId: item.value,
-        value: item.context ? item.context.translation : null
-      }))
-      .filter((item: IEntityTranslation) => item.value !== null);
-
-    delete data.translatedName;
-    delete data.nameTranslations;
-
-    this.dictionariesService.updateTerm(data, deletedTranslations, updatedTranslations);
+  create(): void {
+    combineLatestAnd([
+      this.userPermissionsService.has('DICT_TERM_ADD'),
+      this.hasDropdownTerms,
+      this.hasLanguages,
+    ])
+    .pipe(
+      filter(Boolean),
+      first()
+    )
+    .subscribe(_ => {
+      this.setDialog('create');
+    });
   }
 
-  onCreateEntity(data: ITerm): void {
+  onUpdate(term: ITerm): void {
+    this.dictionariesService.updateTerm(term);
+    this.setDialog();
+  }
+
+  onCreate(data: ITerm): void {
     this.dictionariesService.createTerm(data);
+    this.setDialog();
   }
 
   onSelect(term: ITerm): void {

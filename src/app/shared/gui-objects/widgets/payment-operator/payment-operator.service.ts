@@ -14,8 +14,9 @@ export class PaymentOperatorService {
   ) {}
 
   confirm(paymentIds: number[]): Observable<any> {
+    const ids = paymentIds.map(id => [ id ]);
     return this.dataService
-      .update(`${this.url}/confirmOperator`, {}, { idData: { ids: paymentIds } })
+      .update(`${this.url}/confirmOperator`, {}, { idData: { ids } })
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
@@ -27,8 +28,9 @@ export class PaymentOperatorService {
   }
 
   reject(paymentIds: number[]): Observable<any> {
+    const ids = paymentIds.map(id => [ id ]);
     return this.dataService
-      .update(`${this.url}/cancelOperator`, {}, { idData: { ids: paymentIds } })
+      .update(`${this.url}/cancelOperator`, {}, { idData: { ids } })
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();

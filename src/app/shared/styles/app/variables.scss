@@ -20,7 +20,7 @@ $brand-primary:          #5d9cec;
 $brand-success:          #27c24c;
 $brand-info:             #23b7e5;
 $brand-warning:          #ff902b;
-$brand-danger:           #f05050;
+$brand-danger:           #fa8080;
 
 // New brand colors
 
@@ -309,7 +309,6 @@ $dropdown-caret-color:           #000;
 
 $zindex-navbar:               1000;
 $zindex-dropdown:             1000;
-$zindex-popover:              1060;
 $zindex-tooltip:              1070;
 $zindex-navbar-fixed:         1030;
 $zindex-modal-background:     1040;
@@ -317,6 +316,7 @@ $zindex-modal:                1050;
 $zindex-app-grid-contextmenu: 2000;
 $zindex-app-dialog:          10000;
 $zindex-app-datepicker:      10100;
+$zindex-popover:             10150;
 $zindex-app-validation:      10200;
 $zindex-app-grid2-dnd-ghost: 10300;
 $zindex-app-loader:          20000;
@@ -922,12 +922,13 @@ $app-dialog-close-color:        #aaa;
 $app-dialog-close-hover-color:  #333;
 
 
-// == App Widgtes
+// == App Widgets
 //
 //##
 $app-widget-border-color:       #e5e5e5;
 $app-widget-border-color-light: #f5f5f5;
 $app-widget-border-color-dark:  #d5d5d5;
+$app-widget-label-bg:           #ace4f5;
 
 
 //== App Grid Tree

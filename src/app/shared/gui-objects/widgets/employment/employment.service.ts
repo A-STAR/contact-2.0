@@ -1,22 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
 
+import { IAppState } from '../../../../core/state/state.interface';
 import { IEmployment } from './employment.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class EmploymentService {
+export class EmploymentService extends AbstractActionService {
   static MESSAGE_EMPLOYMENT_SAVED = 'MESSAGE_EMPLOYMENT_SAVED';
 
   private url = '/persons/{personId}/employments';
   private errSingular = 'entities.employment.gen.singular';
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-  ) {}
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   fetchAll(personId: number): Observable<IEmployment[]> {
     return this.dataService

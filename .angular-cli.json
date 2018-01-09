@@ -32,7 +32,9 @@
         "../node_modules/flot/jquery.flot.categories.js",
         "../node_modules/jquery.flot.spline/jquery.flot.spline.js",
         "../node_modules/easy-pie-chart/dist/easypiechart.js",
-        "../node_modules/jquery-sparkline/jquery.sparkline.js"
+        "../node_modules/jquery-sparkline/jquery.sparkline.js",
+        "../node_modules/bootstrap/dist/js/bootstrap.min.js",
+        "../node_modules/summernote/dist/summernote.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

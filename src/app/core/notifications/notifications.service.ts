@@ -41,7 +41,7 @@ export class NotificationsService implements OnDestroy {
       // NOTE: this is to prevent multiple events from writing to the storage too often
       .pipe(throttleTime(500))
       .subscribe(state => {
-      this.persistenceService.set(NotificationsService.STORAGE_KEY, state);
+        this.persistenceService.set(NotificationsService.STORAGE_KEY, state);
     });
   }
 
@@ -53,7 +53,7 @@ export class NotificationsService implements OnDestroy {
     return this.store.select(state => state.notifications);
   }
 
-  get length(): Observable<number> {
+  get count(): Observable<number> {
     return this.state
       .map(state => state.notifications.length)
       .distinctUntilChanged();
@@ -79,11 +79,19 @@ export class NotificationsService implements OnDestroy {
     return this.error(text);
   }
 
+  copyError(text: string = 'errors.default.copy'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
   updateError(text: string = 'errors.default.update'): NotificationActionBuilder {
     return this.error(text);
   }
 
   deleteError(text: string = 'errors.default.delete'): NotificationActionBuilder {
+    return this.error(text);
+  }
+
+  permissionError(text: string = 'errors.default.read.403'): NotificationActionBuilder {
     return this.error(text);
   }
 

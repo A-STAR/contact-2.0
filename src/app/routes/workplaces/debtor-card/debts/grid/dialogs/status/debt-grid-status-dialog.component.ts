@@ -9,11 +9,10 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { first } from 'rxjs/operators/first';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/startWith';
 
 import { IDebt } from '../../../../../../../core/debt/debt.interface';
 import { IDynamicFormControl } from '../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -58,7 +57,7 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
-    this.formDataSubscription = Observable.combineLatest(
+    this.formDataSubscription = combineLatest(
       this.userDictionariesService.getDictionaries([
         UserDictionariesService.DICTIONARY_DEBT_STATUS,
         UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE,
@@ -68,7 +67,9 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
       this.form.onCtrlValueChange('statusCode').startWith(null),
       this.form.onCtrlValueChange('customStatusCode').startWith(null),
     )
-    .distinctUntilChanged()
+    .pipe(
+      distinctUntilChanged()
+    )
     .subscribe(([ dictionaries, bag, reasonCodeRequired, statusCode, customStatusCode ]) => {
       this.getControl('statusCode').radioOptions = [
         {
@@ -89,7 +90,7 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
         {
           label: 'widgets.debt.dialogs.statusChange.statusCustom',
           value: 0,
-          disabled: !bag.containsCustom('DEBT_STATUS_EDIT_LIST'),
+          disabled: !bag.containsCustom('DEBT_STATUS_EDIT_LIST') && !bag.containsALL('DEBT_STATUS_EDIT_LIST'),
         },
       ];
 
@@ -126,6 +127,10 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
     this.statusCodeSubscription.unsubscribe();
   }
 
+  get canSubmit(): boolean {
+    return this.form && this.form.canSubmit;
+  }
+
   onSubmit(): void {
     const { customStatusCode, statusCode, ...rest } = this.form.serializedUpdates;
     const value = {
@@ -133,12 +138,13 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
       statusCode: customStatusCode || statusCode,
     };
     this.debtorCardService.personId$
+      .switchMap(personId => {
+        return this.debtService.changeStatus(personId, this.debt.id, value, false);
+      })
       .pipe(first())
-      .subscribe(personId => {
-        this.debtService.changeStatus(personId, this.debt.id, value, false).subscribe(() => {
-          this.submit.emit();
-          this.close.emit();
-        });
+      .subscribe(_ => {
+        this.submit.emit();
+        this.onClose();
       });
   }
 

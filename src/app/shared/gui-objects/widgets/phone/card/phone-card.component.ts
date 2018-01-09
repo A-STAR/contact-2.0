@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, V
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPhone } from '../phone.interface';
@@ -14,6 +13,8 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 import { makeKey } from '../../../../../core/utils';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 const labelKey = makeKey('widgets.phone.card');
 
@@ -43,11 +44,11 @@ export class PhoneCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
-      this.phoneId ? this.userPermissionsService.has('PHONE_EDIT') : Observable.of(true),
-      this.phoneId ? this.userPermissionsService.has('PHONE_COMMENT_EDIT') : Observable.of(true),
-      this.phoneId ? this.phoneService.fetch(18, this.entityId, this.phoneId, this.callCenter) : Observable.of(null)
+      this.phoneId ? this.userPermissionsService.has('PHONE_EDIT') : of(true),
+      this.phoneId ? this.userPermissionsService.has('PHONE_COMMENT_EDIT') : of(true),
+      this.phoneId ? this.phoneService.fetch(18, this.entityId, this.phoneId, this.callCenter) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, canEdit, canEditComment, phone ]) => {
@@ -69,7 +70,7 @@ export class PhoneCardComponent implements OnInit {
       : this.phoneService.create(18, this.entityId, this.callCenter, this.form.serializedUpdates);
 
     action.subscribe(() => {
-      this.messageBusService.dispatch(PhoneService.MESSAGE_PHONE_SAVED);
+      this.phoneService.dispatchAction(PhoneService.MESSAGE_PHONE_SAVED);
       this.onBack();
     });
   }

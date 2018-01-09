@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs/observable/of';
 
 import { IAddress } from '../address.interface';
 import { IAddressMarkData } from './mark/mark.interface';
@@ -16,7 +16,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 import { AddressService } from '../address.service';
 import { DebtService } from '../../../../../core/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -111,13 +110,13 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   contextMenuOptions: IContextMenuItem[] = [
     {
-      fieldActions: [
+      simpleActionsNames: [
         'copyField',
         'copyRow'
       ],
       translationKey: 'default.grid.localeText',
       prop: 'fullAddress',
-      enabled: Observable.of(true)
+      enabled: of(true)
     }
   ];
 
@@ -149,7 +148,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
     private gridService: GridService,
-    private messageBusService: MessageBusService,
     private notificationsService: NotificationsService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
@@ -157,13 +155,13 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.debtSubscription = this._debtId$
-      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : Observable.of(null))
+      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : of(null))
       .subscribe(debt => {
         this.debt = debt;
         this.cdRef.markForCheck();
       });
 
-      Observable.combineLatest(
+      combineLatest(
         this.gridService.setDictionaryRenderers(this._columns),
         this.canViewBlock$,
       )
@@ -176,12 +174,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    this.busSubscription = this.messageBusService
-      .select(AddressService.MESSAGE_ADDRESS_SAVED)
+    this.busSubscription = this.addressService
+      .getAction(AddressService.MESSAGE_ADDRESS_SAVED)
       .subscribe(() => this.fetch());
 
-    this.canViewSubscription = Observable
-      .combineLatest(this.canView$, this._personId$)
+    this.canViewSubscription = combineLatest(this.canView$, this._personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
           this.notificationsService.error('errors.default.read.403').entity('entities.addresses.gen.plural').dispatch();

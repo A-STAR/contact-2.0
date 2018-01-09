@@ -57,10 +57,10 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
 
   contextMenuOptions: IContextMenuItem[] = [
     {
-      action: 'openUserById',
-      label: 'default.grid.actions.openUserById',
+      action: 'openDebtCardByDebtor',
+      label: 'default.grid.actions.openDebtCardByDebtor',
       enabled: Observable.of(true),
-      params: [ 'userId' ],
+      params: [ 'personId' ],
     }
   ];
 
@@ -87,13 +87,13 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
         if (!hasPermission) {
           this.rows = [];
           this.rowCount = 0;
-          this.notificationsService.error('errors.default.read.403').entity('entities.actionsLog.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.actionsLog.gen.plural').dispatch();
         } else {
           this.actionsLogService.getEmployeesAndActionTypes()
             .pipe(first())
             .subscribe();
           // load data
-          if ((this.grid && this.grid.grid && this.grid.grid as any).gridOptions) {
+          if ((this.grid && this.grid.grid as any).gridOptions) {
             this.onRequest();
           }
         }
@@ -106,7 +106,7 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
 
   onRequest(): void {
     const filters = this.getCombinedFilters();
-    const params = ((this.grid as any).grid as any).grid.getRequestParams();
+    const params = (<any>this.grid.grid).grid.getRequestParams();
 
     this.actionsLogService.fetch(filters, params)
       .subscribe((response: IAGridResponse<IActionLog>) => {
@@ -118,16 +118,17 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
 
   doExport(): void {
     const filters = this.getCombinedFilters();
-    const grid = (this.grid as any);
-    const params = (grid.grid as any).grid.getRequestParams();
+    const grid = (<any>this.grid.grid);
+    const params = grid.grid.getRequestParams();
 
-    if (grid.grid) {
-      const columns = (grid.grid as any).grid.getExportableColumns();
-      const request = (grid.grid as any).grid.buildRequest(params, filters);
-      const body = { columns, ...request };
+    if (grid) {
+      const columns = grid.grid.getExportableColumns();
+      const request = grid.grid.buildRequest(params, filters);
+      // NOTE: we got to remove the paging from the request
+      const { paging, ...rest } = request;
+      const body = { columns, ...rest };
       this.downloader.download(body);
     }
-
   }
 
   openQueryBuilder(): void {

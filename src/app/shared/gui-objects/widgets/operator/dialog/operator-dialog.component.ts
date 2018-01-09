@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IOperator } from '../../operator/operator.interface';
+import { IOperator, IGridAction } from '../../operator/operator.interface';
 
 import { OperatorService } from '../operator.service';
-import { MessageBusService } from '../../../../../core/message-bus/message-bus.service';
 
 @Component({
   selector: 'app-operator-dialog',
@@ -22,18 +21,22 @@ export class OperatorDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private messageBusService: MessageBusService,
+    private operatorService: OperatorService
   ) { }
 
   ngOnInit(): void {
-    this.operatorSelectSub = this.messageBusService
-      .select<string, IOperator>(OperatorService.MESSAGE_OPERATOR_SELECTED, 'select')
+    this.operatorSelectSub = this.operatorService
+      .getPayload<IGridAction>(OperatorService.MESSAGE_OPERATOR_SELECTED)
+      .filter(action => action.type === 'select')
+      .map(action => action.payload)
       .subscribe(operator => {
         this.selectedOperator = operator;
         this.cdRef.markForCheck();
       });
-    this.operatorClickSub = this.messageBusService
-      .select<string, IOperator>(OperatorService.MESSAGE_OPERATOR_SELECTED, 'dblclick')
+    this.operatorClickSub = this.operatorService
+      .getPayload<IGridAction>(OperatorService.MESSAGE_OPERATOR_SELECTED)
+      .filter(action => action.type === 'dblclick')
+      .map(action => action.payload)
       .subscribe(operator => {
         this.selectedOperator = operator;
         this.select.emit(this.selectedOperator);
