@@ -10,7 +10,6 @@ import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { DictionariesService } from './dictionaries.service';
-import { EntityTranslationsService } from '../../../core/entity/translations/entity-translations.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 
