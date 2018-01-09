@@ -31,6 +31,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.menuSubscription = this.menuService
       .selectedMenuItem
       .subscribe(menuItem => {
+        console.log('menuItem:');
+        console.log(menuItem);
         this.menuItems = menuItem.children || [menuItem];
         if (menuItem.link === '/home') {
           // TODO(d.maltsev, i.lobanov): this always navigates to home page
@@ -38,10 +40,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
         }
         this.cdRef.markForCheck();
       });
+
     this.menuService.menuItems
       .pipe(first())
       .subscribe(menuItems => {
+        console.log('menuItems:');
+        console.log(menuItems);
         const selectedItem = this.menuService.findItemByLink(menuItems, this.router.url);
+        // console.log(selectedItem);
         if (selectedItem) {
           this.menuService.selectMenuItem(selectedItem);
         }
