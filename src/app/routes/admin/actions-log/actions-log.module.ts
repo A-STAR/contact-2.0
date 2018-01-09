@@ -10,7 +10,13 @@ import { ActionsLogService } from './actions-log.service';
 import { ActionsLogComponent } from './actions-log.component';
 
 const routes: Routes = [
-  { path: '', component: ActionsLogComponent, },
+  {
+    path: '',
+    component: ActionsLogComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

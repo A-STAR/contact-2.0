@@ -12,7 +12,13 @@ import { CampaignsComponent } from './campaigns.component';
 import { CampaignsEditComponent } from './campaigns-edit/campaigns-edit.component';
 
 const routes: Routes = [
-  { path: '', component: CampaignsComponent },
+  {
+    path: '',
+    component: CampaignsComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

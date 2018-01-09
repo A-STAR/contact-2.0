@@ -9,7 +9,13 @@ import { ContactLogService } from './contact-log.service';
 import { ContactLogComponent } from './contact-log.component';
 
 const routes: Routes = [
-  { path: '', component: ContactLogComponent },
+  {
+    path: '',
+    component: ContactLogComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

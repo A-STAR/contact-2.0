@@ -52,6 +52,9 @@ const routes: Routes = [
     resolve: {
       isLoaded: DebtorCardResolver,
     },
+    data: {
+      reuse: true,
+    },
     children: [
       {
         path: '', component: DebtorComponent,
