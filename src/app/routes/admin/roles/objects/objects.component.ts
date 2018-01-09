@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { distinctUntilKeyChanged, map } from 'rxjs/operators';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IObject } from './objects.interface';
@@ -30,17 +31,17 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.masterRoleId$.map(Boolean),
+      enabled: this.masterRoleId$.pipe(map(Boolean)),
       action: () => this.setDialog('add'),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: this.selectedObject$.map(Boolean),
+      enabled: this.selectedObject$.pipe(map(Boolean)),
       action: () => this.setDialog('delete'),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.selectedObject$.map(Boolean),
+      enabled: this.selectedObject$.pipe(map(Boolean)),
       action: () => this.fetch(),
     },
   ];
@@ -61,16 +62,17 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
     private actions: Actions,
     private cdRef: ChangeDetectorRef,
     private objectsService: ObjectsService,
+    private permissionsService: PermissionsService,
     private userDictionariesService: UserDictionariesService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this._masterRoleSubscription = this.actions
-      .ofType(PermissionsService.ROLE_SELECTED, PermissionsService.ROLE_FETCH_SUCCESS)
-      .subscribe((action: UnsafeAction) => {
-        const { role } = action.payload;
+    this._masterRoleSubscription = this.permissionsService.permissions
+      .pipe(distinctUntilKeyChanged('currentRole'))
+      .subscribe(permissions => {
+        const role = permissions.currentRole;
         this.masterRoleId$.next(role ? role.id : null);
         this.cdRef.markForCheck();
         this.fetch();

@@ -33,7 +33,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       .subscribe(menuItem => {
         this.menuItems = menuItem.children || [menuItem];
         if (menuItem.link === '/home') {
-          this.router.navigate(['home']);
+          // TODO(d.maltsev, i.lobanov): this always navigates to home page
+          // this.router.navigate(['home']);
         }
         this.cdRef.markForCheck();
       });
