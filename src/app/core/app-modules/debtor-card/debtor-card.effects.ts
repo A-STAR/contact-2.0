@@ -45,6 +45,9 @@ import 'rxjs/add/operator/withLatestFrom';
 
 @Injectable()
 export class DebtorCardEffects {
+
+  static ENTITY_TYPE_DEBT = 19;
+
   @Effect()
   initByDebtId$ = this.actions
     .ofType(IActionType.INIT_BY_DEBT_ID)
@@ -121,7 +124,7 @@ export class DebtorCardEffects {
   private createFetchDebtsAction(personId: number, selectedDebtId: number = null): IFetchDebtsAction {
     return {
       type: IActionType.FETCH_DEBTS,
-      payload: { personId, selectedDebtId },
+      payload: { personId, selectedDebtId, entityTypeId: selectedDebtId && DebtorCardEffects.ENTITY_TYPE_DEBT },
     };
   }
 
@@ -135,7 +138,7 @@ export class DebtorCardEffects {
   private createSelectDebtAction(debtId: number): ISelectDebtAction {
     return {
       type: IActionType.SELECT_DEBT,
-      payload: { debtId },
+      payload: { debtId, entityId: debtId, entityTypeId: debtId && DebtorCardEffects.ENTITY_TYPE_DEBT },
     };
   }
 

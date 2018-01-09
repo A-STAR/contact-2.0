@@ -10,6 +10,8 @@ export const defaultState: IDebtorCardState = {
     status: null,
   },
   selectedDebtId: null,
+  entityId: null,
+  entityTypeId: null
 };
 
 export function reducer(state: IDebtorCardState = defaultState, action: IDebtorCardAction): IDebtorCardState {
@@ -66,6 +68,14 @@ export function reducer(state: IDebtorCardState = defaultState, action: IDebtorC
       return {
         ...state,
         selectedDebtId: action.payload.debtId,
+        entityId: action.payload.debtId,
+        entityTypeId: action.payload.entityTypeId
+      };
+    case IActionType.SELECT_ENTITY:
+      return {
+        ...state,
+        entityId: action.payload.entityId,
+        entityTypeId: action.payload.entityTypeId
       };
     default:
       return state;

@@ -38,6 +38,16 @@ export class DebtorCardService extends AbstractActionService {
       .select(state => state.debtorCard.selectedDebtId);
   }
 
+  get entityTypeId$(): Observable<number> {
+    return this.store
+      .select(state => state.debtorCard.entityTypeId);
+  }
+
+  get entityId$(): Observable<number> {
+    return this.store
+      .select(state => state.debtorCard.entityId);
+  }
+
   get selectedDebt$(): Observable<IDebt> {
     return this.store
       .select(state => state.debtorCard)
