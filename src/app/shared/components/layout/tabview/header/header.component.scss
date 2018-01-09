@@ -1,47 +1,39 @@
 @import '../../../../styles/app/variables.scss';
 
 ul {
-  font-size: 0;
-  position: relative;
-  padding: 0;
-  width: 100%;
-  margin: 0 0 10px 0;
-  user-select: none;
   border-bottom: 1px solid $gray-light;
+  font-size: 0;
+  margin: 0 0 10px 0;
+  padding: 0;
+  position: relative;
+  user-select: none;
+  width: 100%;
   &.no-margin {
     margin-bottom: 0;
   }
 }
 
 li {
-  display: inline-block;
-  padding: 0 16px;
-  height: 40px;
   background: transparent;
-  font-size: 14px;
-  text-align: center;
-  line-height: 42px;
-  position: relative;
-  overflow: hidden;
+  color: $text-color;
   cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  height: 40px;
+  line-height: 42px;
+  overflow: hidden;
+  padding: 0 16px;
+  position: relative;
+  text-align: center;
   &.active {
-    a {
-      color: black;
-    }
+    color: black;
     .selection {
       background-color: #1a8ada;
     }
   }
   &.disabled {
+    color: $navbar-default-link-disabled-color;
     cursor: default;
-    a {
-      color: $navbar-default-link-disabled-color;
-      cursor: default;
-    }
-  }
-  a {
-    color: $text-color;
-    text-decoration: none;
   }
   .selection {
     height: 2px;

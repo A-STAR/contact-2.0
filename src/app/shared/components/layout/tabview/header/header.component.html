@@ -2,9 +2,10 @@
   <li
     *ngFor="let tab of tabs"
     routerLinkActive="active"
+    [routerLink]="tab.link"
     [class.disabled]="tab.disabled"
   >
-    <a [routerLink]="tab.link">{{ tab.title | translate }}</a>
+    {{ tab.title | translate }}
     <div class="selection"></div>
   </li>
 </ul>
