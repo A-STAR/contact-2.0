@@ -9,7 +9,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 @Injectable()
 export class ObjectService {
   private baseUrl = '/contractors/{contractorId}/objects';
-  private errorMessage = 'entities.object.gen';
+  private errorMessage = 'entities.object.gen.plural';
 
   constructor(
     private dataService: DataService,
@@ -34,24 +34,24 @@ export class ObjectService {
   fetchAll(contractorId: number, typeCode: number): Observable<IObject[]> {
     return this.dataService
       .readAll(`${this.baseUrl}?typeCodes={typeCode}`, { contractorId, typeCode })
-      .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity(this.errorMessage).dispatchCallback());
   }
 
   fetchNotAdded(contractorId: number, typeCode: number): Observable<IObject[]> {
     return this.dataService
       .readAll(`${this.baseUrl}/notadded?typeCodes={typeCode}`, { contractorId, typeCode })
-      .catch(this.notificationsService.fetchError().entity(`${this.errorMessage}.plural`).dispatchCallback());
+      .catch(this.notificationsService.fetchError().entity(this.errorMessage).dispatchCallback());
   }
 
-  create(contractorId: number, typeCode: number, ids: number[]): Observable<void> {
+  add(contractorId: number, typeCode: number, ids: number[]): Observable<void> {
     return this.dataService
       .update(this.baseUrl, { contractorId }, { typeCode, objects: ids.map(id => ({ id, value: true })) })
-      .catch(this.notificationsService.createError().entity(`${this.errorMessage}.singular`).dispatchCallback());
+      .catch(this.notificationsService.error('errors.default.add').entity(this.errorMessage).dispatchCallback());
   }
 
   delete(contractorId: number, typeCode: number, ids: number[]): Observable<void> {
     return this.dataService
       .update(this.baseUrl, { contractorId }, { typeCode, objects: ids.map(id => ({ id, value: false })) })
-      .catch(this.notificationsService.deleteError().entity(`${this.errorMessage}.singular`).dispatchCallback());
+      .catch(this.notificationsService.deleteError().entity(this.errorMessage).dispatchCallback());
   }
 }

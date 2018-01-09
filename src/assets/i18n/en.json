@@ -2072,6 +2072,21 @@
         "fromDateTime": "Date",
         "rate": "Rate"
       }
+    },
+    "contractorObject": {
+      "dialogs": {
+        "add": {
+          "title": "Create objects"
+        },
+        "delete": {
+          "title": "Delete objects",
+          "confirmMessage": "Are you sure you want to delete this objects?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Name"
+      }
     }
   },
   "entities": {

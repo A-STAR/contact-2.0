@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Input, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -11,7 +11,10 @@ import { ObjectService } from '../object.service';
 import { NotificationsService } from 'app/core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { GridComponent } from 'app/shared/components/grid/grid.component';
+
 import { DialogFunctions } from '../../../../../core/dialog';
+import { combineLatestAnd } from '../../../../../core/utils/helpers';
 
 @Component({
   selector: 'app-contractor-object-grid',
@@ -24,7 +27,9 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
 
   @Input() contractorId: number;
 
-  selectedObject$ = new BehaviorSubject<IObject>(null);
+  @ViewChild(GridComponent) grid: GridComponent;
+
+  selectedObjects$ = new BehaviorSubject<IObject[]>(null);
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -34,7 +39,10 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: this.objectService.canDelete$,
+      enabled: combineLatestAnd([
+        this.objectService.canDelete$,
+        this.selectedObjects$.map(objects => objects && !!objects.length)
+      ]),
       action: () => this.setDialog('delete'),
     },
     {
@@ -72,7 +80,7 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
           this.fetch();
         } else {
           this.clear();
-          this.notificationsService.permissionError().entity('entities.objects.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.object.gen.plural').dispatch();
         }
       });
 
@@ -94,26 +102,26 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
     this.fetch();
   }
 
-  onSelect(object: IObject): void {
-    this.selectedObject$.next(object);
+  onSelect(objects: IObject[]): void {
+    this.selectedObjects$.next(objects);
   }
 
   onAddDialogSubmit(ids: number[]): void {
     this.objectService
-      .create(this.contractorId, this.selectedTypeCode, ids)
+      .add(this.contractorId, this.selectedTypeCode, ids)
       .subscribe(() => this.onSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.objectService
-      .delete(this.contractorId, this.selectedTypeCode, [ this.selectedObject$.value.id ])
+    const ids = this.grid.selected.map(item => item.id);
+    this.objectService.delete(this.contractorId, this.selectedTypeCode, ids)
       .subscribe(() => this.onSuccess());
   }
 
   private fetch(): void {
     this.objectService.fetchAll(this.contractorId, this.selectedTypeCode).subscribe(objects => {
       this.rows = objects;
-      this.selectedObject$.next(null);
+      this.selectedObjects$.next(null);
       this.cdRef.markForCheck();
     });
   }

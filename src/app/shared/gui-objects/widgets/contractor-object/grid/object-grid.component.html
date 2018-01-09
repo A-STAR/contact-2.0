@@ -8,8 +8,8 @@
 
 <app-dialog-action
   *ngIf="isDialog('delete')"
-  titleTranslationKey="widgets.object.dialogs.delete.title"
-  actionTranslationKey="widgets.object.dialogs.delete.confirmMessage"
+  titleTranslationKey="widgets.contractorObject.dialogs.delete.title"
+  actionTranslationKey="widgets.contractorObject.dialogs.delete.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
   [messageParams]="selectedObject$ | async"
@@ -29,8 +29,8 @@
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
-  columnTranslationKey="widgets.object"
-  selectionType="single"
+  columnTranslationKey="widgets.contractorObject"
+  selectionType="multi"
   [columns]="columns"
   [rows]="rows"
   [styles]="{ height: '344px' }"

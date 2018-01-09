@@ -2072,6 +2072,21 @@
         "fromDateTime": "Дата",
         "rate": "Курс"
       }
+    },
+    "contractorObject": {
+      "dialogs": {
+        "add": {
+          "title": "Добавить объекты"
+        },
+        "delete": {
+          "title": "Удаление объектов",
+          "confirmMessage": "Вы действительно хотите удалить выделенные объекты?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Название"
+      }
     }
   },
   "entities": {
