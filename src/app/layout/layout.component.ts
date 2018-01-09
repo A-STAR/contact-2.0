@@ -23,6 +23,7 @@ export class LayoutComponent {
     ContractorsAndPortfoliosComponent: 'PORTFOLIOS_CONTRACTORS',
     ContractorsAndPortfoliosVersionComponent: 'ATTRIBUTE_VERSION',
     ContractorAttributesComponent: 'CONTRACTOR_ATTRIBUTES',
+    ContractorObjectsComponent: 'CONTRACTOR_OBJECTS',
     ContractorEditComponent: 'CONTRACTOR',
     ContractorManagersComponent: 'CONTRACTOR_MANAGERS',
     ContractorManagerEditComponent: 'CONTRACTOR_MANAGER',

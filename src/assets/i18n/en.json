@@ -48,6 +48,7 @@
         "PORTFOLIO_EDIT": "Portfolio",
         "PORTFOLIO_ATTRIBUTES": "Portfolio attributes",
         "CONTRACTOR_ATTRIBUTES": "Contractor attributes",
+        "CONTRACTOR_OBJECTS": "Contractor objects",
         "CONTRACTOR": "Contractor",
         "ATTRIBUTES": "Attributes",
         "CONTRACTOR_MANAGERS": "Contractor managers",
@@ -1093,7 +1094,8 @@
     },
     "buttons": {
       "attributes": "Attributes",
-      "managers": "Managers"
+      "managers": "Managers",
+      "objects": "Objects"
     }
   },
   "portfolios": {
@@ -2250,6 +2252,9 @@
     },
     "currencyRates": {
       "gen": { "singular": "rate", "plural": "rates" }
+    },
+    "object": {
+      "gen": { "singular": "object", "plural": "objects" }
     }
   },
   "massOperations": {

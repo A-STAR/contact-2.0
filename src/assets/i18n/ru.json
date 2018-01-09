@@ -48,6 +48,7 @@
         "PORTFOLIO_EDIT": "Портфель",
         "PORTFOLIO_ATTRIBUTES": "Атрибуты портфеля",
         "CONTRACTOR_ATTRIBUTES": "Атрибуты контрагента",
+        "CONTRACTOR_OBJECTS": "Объекты контрагента",
         "ATTRIBUTES": "Атрибуты",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
@@ -1093,7 +1094,8 @@
     },
     "buttons": {
       "attributes": "Атрибуты",
-      "managers": "Менеджеры"
+      "managers": "Менеджеры",
+      "objects": "Объекты"
     }
   },
   "portfolios": {
@@ -2250,6 +2252,9 @@
     },
     "currencyRates": {
       "gen": { "singular": "курса", "plural": "курсов" }
+    },
+    "object": {
+      "gen": { "singular": "объекта", "plural": "объектов" }
     }
   },
   "massOperations": {
