@@ -31,6 +31,7 @@ import { DebtorService } from './debtor.service';
 
 import { DebtComponent } from './debt/debt.component';
 import { DebtorAddressComponent } from './address/address.component';
+import { DebtorAttributesVersionsComponent } from './attributes/versions/debtor-attributes-versions.component';
 import { DebtorComponent } from './debtor.component';
 import { DebtorContactLogTabComponent } from './contact-log-tab/contact-log-tab.component';
 import { DebtorContactsComponent } from './contacts/contacts.component';
@@ -213,6 +214,9 @@ const routes: Routes = [
           }
         ]
       },
+      {
+        path: ':attributeId/versions', component: DebtorAttributesVersionsComponent
+      }
     ],
   },
 ];
