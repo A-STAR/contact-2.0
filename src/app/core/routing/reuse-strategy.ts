@@ -53,7 +53,9 @@ export class ReuseStrategy implements RouteReuseStrategy {
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
     const url = this.getFullRouteUrl(route);
-    return this.routeCache.get(url);
+    return this.routeCache.has(url)
+      ? this.routeCache.get(url).handle
+      : null;
   }
 
   /**
