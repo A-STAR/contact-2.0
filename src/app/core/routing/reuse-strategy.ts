@@ -35,7 +35,7 @@ export class ReuseStrategy implements RouteReuseStrategy {
    * This is for backwards compatibility, so that the existing routes wouldn't break the app.
    */
   shouldDetach(route: ActivatedRouteSnapshot): boolean {
-    return this.canReuse(route);
+    return this.shouldReuse(route);
   }
 
   store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle): void {
@@ -47,13 +47,13 @@ export class ReuseStrategy implements RouteReuseStrategy {
 
   shouldAttach(route: ActivatedRouteSnapshot): boolean {
     const url = this.getFullRouteUrl(route);
-    return this.canReuse(route) && this.routeCache.has(url);
+    return this.shouldReuse(route) && this.routeCache.has(url);
   }
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
     const url = this.getFullRouteUrl(route);
     const data = this.getRouteData(route);
-    return this.canReuse(route) && this.routeCache.has(url)
+    return this.shouldReuse(route) && this.routeCache.has(url)
       ? this.routeCache.get(url).handle
       : null;
   }
@@ -127,7 +127,7 @@ export class ReuseStrategy implements RouteReuseStrategy {
     return route.routeConfig && route.routeConfig.data as IRouteConfigData;
   }
 
-  private canReuse(route: ActivatedRouteSnapshot): boolean {
+  private shouldReuse(route: ActivatedRouteSnapshot): boolean {
     const data = this.getRouteData(route);
     return data && data.reuse;
   }
