@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -32,7 +32,6 @@ export class SidebarComponent {
   );
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private menuService: GuiObjectsService,
     private router: Router,
     public settings: SettingsService,
