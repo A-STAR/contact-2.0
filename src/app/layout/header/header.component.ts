@@ -70,16 +70,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
-  toggleCollapsedSidebar(): void {
-    this.settings.layout.isCollapsed = !this.settings.layout.isCollapsed;
-    this.cdRef.markForCheck();
-    this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
+  getNavSearchVisible(): boolean {
+    return this.isNavSearchVisible;
   }
 
-  toggleMenu(): void {
-    this.settings.layout.menuToggled = !this.settings.layout.menuToggled;
-    this.cdRef.markForCheck();
-    this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.settings.layout);
+  toggleOffsidebar(): void {
+    this.settings.layout.offsidebarOpen = !this.settings.layout.offsidebarOpen;
   }
 
   isCollapsedText(): void {

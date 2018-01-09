@@ -1,0 +1,18 @@
+.sidebar-toggle {
+  position: absolute;
+  display: table;
+  bottom: 0;
+  height: 40px;
+  width: 100%;
+  background-color: #f5f7fa;
+}
+.sidebar-toggle__vc {
+  display: table-cell;
+  vertical-align: middle;
+}
+.sidebar-toggle__item {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  text-decoration: none;
+}

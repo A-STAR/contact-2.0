@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first, map, distinctUntilChanged } from 'rxjs/operators';
@@ -8,7 +8,6 @@ import { IProperty } from '../property.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { PropertyService } from '../property.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -41,9 +40,9 @@ export class PropertyCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private debtorCardService: DebtorCardService,
     private propertyService: PropertyService,
+    private router: Router,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
   ) {}
@@ -94,7 +93,7 @@ export class PropertyCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   private initControls(canEdit: boolean, propertyTypeOptions: IOption[]): Array<IDynamicFormItem> {

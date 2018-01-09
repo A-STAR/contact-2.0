@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 
 import { ICampaign } from './call-center.interface';
-
-import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
 
 import { DataService } from '../../../core/data/data.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
@@ -14,9 +13,9 @@ export class CallCenterService {
   private _campaigns$ = new BehaviorSubject<ICampaign[]>(null);
 
   constructor(
-    private contentTabService: ContentTabService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    private router: Router,
   ) {
     this.fetchCampaigns().subscribe(campaigns => {
       this._campaigns$.next(campaigns);
@@ -31,7 +30,7 @@ export class CallCenterService {
   }
 
   navigateToCampaign(campaign: ICampaign): void {
-    this.contentTabService.navigate(`/workplaces/call-center/${campaign.id}`);
+    this.router.navigate([`/workplaces/call-center/${campaign.id}`]);
   }
 
   private fetchCampaigns(): Observable<ICampaign[]> {

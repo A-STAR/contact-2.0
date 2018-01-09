@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { EmailService } from '../email.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -30,8 +30,9 @@ export class EmailCardComponent implements OnInit {
   email: any;
 
   constructor(
-    private contentTabService: ContentTabService,
     private emailService: EmailService,
+    private router: Router,
+    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -66,7 +67,7 @@ export class EmailCardComponent implements OnInit {
   }
 
   public onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   public get canSubmit(): boolean {

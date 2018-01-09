@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, ViewChild, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
@@ -7,7 +7,6 @@ import { of } from 'rxjs/observable/of';
 import { IDocument } from '../document.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DocumentService } from '../document.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
@@ -36,9 +35,9 @@ export class DocumentCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private debtorCardService: DebtorCardService,
     private documentService: DocumentService,
+    private router: Router,
     private route: ActivatedRoute,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
@@ -92,8 +91,8 @@ export class DocumentCardComponent implements OnInit {
     });
   }
 
-  onBack(): void {
-    this.contentTabService.back();
+  public onBack(): void {
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   get canSubmit(): boolean {

@@ -1,13 +1,12 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { combineLatest } from 'rxjs/observable/combineLatest';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
 import { IContact } from '../contact.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactService } from '../contact.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -39,9 +38,9 @@ export class ContactCardComponent {
   ];
 
   constructor(
-    private contentTabService: ContentTabService,
     private contactService: ContactService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -107,7 +106,7 @@ export class ContactCardComponent {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onSubmit(): void {
