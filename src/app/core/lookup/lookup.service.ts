@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
-
 import { IAppState } from '../state/state.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
 
@@ -21,8 +20,6 @@ import {
 } from './lookup.interface';
 import { IOption } from '../converter/value-converter.interface';
 
-import { ValueConverterService } from '../converter/value-converter.service';
-
 @Injectable()
 export class LookupService {
   static LOOKUP_FETCH         = 'LOOKUP_FETCH';
@@ -33,7 +30,6 @@ export class LookupService {
 
   constructor(
     private store: Store<IAppState>,
-    private valueConverterService: ValueConverterService,
   ) {
     this.state$.subscribe(state => this._state = state);
   }
@@ -109,55 +105,14 @@ export class LookupService {
    * @deprecated
    * Please use this.lookupAsOptions(lookupKey);
    */
-  get contractorOptions(): Observable<Array<IOption>> {
-    return this.getSlice('contractors')
-      .map(contractors => this.valueConverterService.valuesToOptions(contractors))
-      .distinctUntilChanged();
-  }
-
-  /**
-   * @deprecated
-   * Please use this.lookupAsOptions(lookupKey);
-   */
   get currencyOptions(): Observable<Array<IOption>> {
     return this.getSlice('currencies')
       .map(currencies => currencies.map(currency => ({ label: currency.code, value: currency.id })))
       .distinctUntilChanged();
   }
 
-  /**
-   * @deprecated
-   * Please use this.lookupAsOptions(lookupKey);
-   */
-  get languageOptions(): Observable<Array<IOption>> {
-    return this.getSlice('languages')
-      .map(languages => this.valueConverterService.valuesToOptions(languages))
-      .distinctUntilChanged();
-  }
-
-  get roleOptions(): Observable<Array<IOption>> {
-    return this.getSlice('roles')
-      .map(roles => this.valueConverterService.valuesToOptions(roles))
-      .distinctUntilChanged();
-  }
-
-  /**
-   * @deprecated
-   * Please use this.lookupAsOptions(lookupKey);
-   */
-  get userOptions(): Observable<Array<IOption>> {
-    return this.getSlice('users')
-      .map(users =>
-        users.map((user: any) => ({ label: `${user.lastName} ${user.firstName} ${user.middleName}`, value: user.id })))
-      .distinctUntilChanged();
-  }
-
-  createRefreshAction(key: ILookupKey): UnsafeAction {
-    return { type: LookupService.LOOKUP_FETCH, payload: { key } };
-  }
-
-  refresh(key: ILookupKey): void {
-    const action = this.createRefreshAction(key);
+  private refresh(key: ILookupKey): void {
+    const action: UnsafeAction = { type: LookupService.LOOKUP_FETCH, payload: { key } };
     this.store.dispatch(action);
   }
 
@@ -174,7 +129,6 @@ export class LookupService {
   }
 
   private get state$(): Observable<ILookupState> {
-    return this.store.select(state => state.lookup)
-      .filter(Boolean);
+    return this.store.select(state => state.lookup);
   }
 }

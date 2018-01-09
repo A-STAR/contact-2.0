@@ -16,6 +16,7 @@ export const defaultState: ILookupState = {
 
 export function reducer(state: ILookupState = defaultState, action: UnsafeAction): ILookupState {
   switch (action.type) {
+
     case LookupService.LOOKUP_FETCH: {
       const { key } = action.payload;
       return {
@@ -25,6 +26,7 @@ export function reducer(state: ILookupState = defaultState, action: UnsafeAction
         }
       };
     }
+
     case LookupService.LOOKUP_FETCH_SUCCESS: {
       const { key, data } = action.payload;
       return {
@@ -35,6 +37,7 @@ export function reducer(state: ILookupState = defaultState, action: UnsafeAction
         }
       };
     }
+
     case LookupService.LOOKUP_FETCH_FAILURE: {
       const { key } = action.payload;
       return {
@@ -44,6 +47,7 @@ export function reducer(state: ILookupState = defaultState, action: UnsafeAction
         }
       };
     }
+
     default:
       return state;
   }

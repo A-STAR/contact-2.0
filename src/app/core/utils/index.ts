@@ -5,6 +5,8 @@
 
 import { ActivatedRoute } from '@angular/router';
 import { IOption, INamedValue } from '../converter/value-converter.interface';
+import { ILookupLanguage } from '../lookup/lookup.interface';
+import { IEntityTranslation, IEntitytTranslationValue } from '../entity/translations/entity-translations.interface';
 
 export const propOr = (prop: string, orValue: any) => obj => Object.hasOwnProperty.call(obj, prop) ? obj[prop] : orValue;
 
@@ -125,4 +127,21 @@ export const range = (min: number, max: number): number[] => Array(max - min + 1
 export const isRoute = (route: ActivatedRoute, segment: string): boolean => {
   return route.snapshot.url.join('/').indexOf(segment) !== -1;
 };
+
+export function getTranslations(languages: ILookupLanguage[], translations: IEntityTranslation[]): IEntitytTranslationValue[] {
+
+  function findTranslation(entityTranslations: IEntityTranslation[], languageId: number): string {
+    const found = entityTranslations.find(t => t.languageId === languageId);
+    return found ? found.value : null;
+  }
+
+  return languages.map(language =>
+    ({
+      label: language.name,
+      languageId: language.id,
+      isMain: language.isMain,
+      value: findTranslation(translations, language.id)
+    })
+  );
+}
 

@@ -30,7 +30,7 @@ export interface ILookupDictionary extends ILookupBase {
 }
 
 export interface ILookupLanguage extends ILookupBase {
-  isMain: boolean;
+  isMain: number;
 }
 
 export interface ILookupPortfolio extends ILookupBase {
@@ -61,7 +61,7 @@ export interface ILookupState {
   languages: ILookupSlice<ILookupLanguage>;
   portfolios: ILookupSlice<ILookupPortfolio>;
   roles: ILookupSlice<ILookupRole>;
-  // note, that this key is in singular form, because route is GET lookup/timeZone
+  // NOTE: this key is in singular, because the API endpoint is GET lookup/timeZone
   timeZone: ILookupSlice<ILookupTimeZone>;
   users: ILookupSlice<ILookupUser>;
 }

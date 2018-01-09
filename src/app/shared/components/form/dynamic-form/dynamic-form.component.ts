@@ -211,6 +211,13 @@ export class DynamicFormComponent implements OnInit, OnChanges {
           return value;
         }
         return control.multiple ? value.map(item => item.value) : value[0].value;
+      case 'multilanguage': {
+        // TODO(a.tymchuk): replace with proper type instead of ILabeledValue
+        const values = value
+          .filter((o: any) => o.isUpdated)
+          .map((o: any) => ({ languageId: o.languageId, value: o.value }));
+        return values.length ? values : undefined;
+      }
       case 'datepicker':
         return ['', null].includes(value)
           ? null

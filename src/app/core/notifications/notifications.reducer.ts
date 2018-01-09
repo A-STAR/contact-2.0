@@ -20,7 +20,6 @@ export function reducer(
   state: INotificationsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
   action: INotificationAction
 ): INotificationsState {
-  console.log('action', action.type);
   switch (action.type) {
     case 'NOTIFICATION_PUSH':
       return {

@@ -26,16 +26,15 @@ const label = makeKey('widgets.currencies.card');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CurrencyCardComponent implements OnInit {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   @Input() currencyId: number;
-
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   currency: Partial<ICurrency>;
 
   private languages: ILookupLanguage[];
-  private currencies: Array<ICurrency>;
+  private currencies: ICurrency[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
