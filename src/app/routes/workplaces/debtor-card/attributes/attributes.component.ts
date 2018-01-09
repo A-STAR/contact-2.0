@@ -12,7 +12,7 @@ export class DebtorAttributesComponent implements OnInit {
   static COMPONENT_NAME = 'DebtorAttributesComponent';
   static ENTITY_TYPE_DEBT = 19;
 
-  entityTypeId$: Observable<number>;
+  entityTypeId: number;
   entityId$: Observable<number>;
 
   constructor(
@@ -21,6 +21,6 @@ export class DebtorAttributesComponent implements OnInit {
 
   ngOnInit(): void {
     this.entityId$ = this.debtorCardService.selectedDebtId$;
-    this.entityTypeId$ = of(DebtorAttributesComponent.ENTITY_TYPE_DEBT);
+    this.entityTypeId = DebtorAttributesComponent.ENTITY_TYPE_DEBT;
   }
 }

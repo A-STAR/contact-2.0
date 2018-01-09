@@ -15,7 +15,7 @@ export class DebtorPledgeAttributesComponent implements OnInit {
   static ENTITY_TYPE_PROPERTY = 33;
 
   entityId$: Observable<number>;
-  entityTypeId$: Observable<number>;
+  entityTypeId: number;
 
   tabs = [
     { title: 'debtor.propertyTab.attributes.title', isInitialised: true },
@@ -24,7 +24,7 @@ export class DebtorPledgeAttributesComponent implements OnInit {
   constructor(private pledgeService: PledgeService) {}
 
   ngOnInit(): void {
-    this.entityTypeId$ = of(DebtorPledgeAttributesComponent.ENTITY_TYPE_PROPERTY);
+    this.entityTypeId = DebtorPledgeAttributesComponent.ENTITY_TYPE_PROPERTY;
     this.entityId$ = this.pledgeService
       .getPayload<IPledgeContract>(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED)
       .map(pledge => pledge ? pledge.propertyId : null);

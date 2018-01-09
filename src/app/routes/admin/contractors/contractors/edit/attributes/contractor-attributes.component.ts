@@ -14,7 +14,7 @@ export class ContractorAttributesComponent implements OnInit {
   static COMPONENT_NAME = 'ContractorAttributesComponent';
   static ENTITY_TYPE_CONTRACTOR = 13;
 
-  entityTypeId$: Observable<number>;
+  entityTypeId: number;
   entityId$: Observable<number>;
 
   constructor(
@@ -23,7 +23,7 @@ export class ContractorAttributesComponent implements OnInit {
     private contentTabService: ContentTabService) { }
 
   ngOnInit(): void {
-    this.entityTypeId$ = Observable.of(ContractorAttributesComponent.ENTITY_TYPE_CONTRACTOR);
+    this.entityTypeId = ContractorAttributesComponent.ENTITY_TYPE_CONTRACTOR;
     this.entityId$ = this.route.paramMap.map(params => Number(params.get('contractorId')));
   }
 
