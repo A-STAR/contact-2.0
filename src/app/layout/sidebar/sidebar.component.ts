@@ -1,61 +1,45 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { filter, map, startWith } from 'rxjs/operators';
+
+import { IMenuItem } from '../../core/gui-objects/gui-objects.interface';
 
 import { GuiObjectsService } from '../../core/gui-objects/gui-objects.service';
 import { SettingsService } from '../../core/settings/settings.service';
-import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss'],
+  styleUrls: [ './sidebar.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarComponent implements OnInit, OnDestroy {
-
-  menuItems: any = [];
-
-  private menuSubscription: Subscription;
+export class SidebarComponent {
+  private _menuItems$ = combineLatest(
+    this.menuService.menuItems,
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      startWith(null),
+    ),
+    items => items
+  ).pipe(
+    map(items => {
+      const url = '/' + this.router.url.split('/').filter(Boolean)[0];
+      const item = items.find(i => i.link === url);
+      return item && item.children || [ item ];
+    })
+  );
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private menuService: GuiObjectsService,
     private router: Router,
     public settings: SettingsService,
-  ) {
+  ) {}
 
-  }
-
-  ngOnInit(): void {
-    this.menuSubscription = this.menuService
-      .selectedMenuItem
-      .subscribe(menuItem => {
-        console.log('menuItem:');
-        console.log(menuItem);
-        this.menuItems = menuItem.children || [menuItem];
-        if (menuItem.link === '/home') {
-          // TODO(d.maltsev, i.lobanov): this always navigates to home page
-          // this.router.navigate(['home']);
-        }
-        this.cdRef.markForCheck();
-      });
-
-    this.menuService.menuItems
-      .pipe(first())
-      .subscribe(menuItems => {
-        console.log('menuItems:');
-        console.log(menuItems);
-        const selectedItem = this.menuService.findItemByLink(menuItems, this.router.url);
-        // console.log(selectedItem);
-        if (selectedItem) {
-          this.menuService.selectMenuItem(selectedItem);
-        }
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.menuSubscription.unsubscribe();
+  get menuItems$(): Observable<IMenuItem[]> {
+    return this._menuItems$;
   }
 
   // Close menu collapsing height
@@ -82,6 +66,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isSidebarCollapsedText(): boolean {
     return this.settings.layout.isCollapsedText;
   }
+
   isEnabledHover(): boolean {
     return this.settings.layout.asideHover;
   }

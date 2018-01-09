@@ -1,13 +1,16 @@
 <ul class="nav navbar-nav header-menu">
-  <li *ngFor='let item of menuItems' [ngClass]="{'nav-heading': item.heading}"
-      class="header-menu__item"
-      (click)="onMainItemClick(item)"
-    >
+  <li
+    *ngFor='let item of menuItems$ | async'
+    [ngClass]="{ 'nav-heading': item.heading }"
+    class="header-menu__item"
+  >
     <a
       *ngIf="item.text"
-      [ngClass]="{'header-menu__item--active': item.isActive}"
-      [title]="item.text | translate">
-        <span>{{ item.text | translate }}</span>
+      [routerLink]="item.link"
+      routerLinkActive="header-menu__item--active"
+      [title]="item.text | translate"
+    >
+      <span>{{ item.text | translate }}</span>
     </a>
   </li>
 </ul>
