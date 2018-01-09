@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
+import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 
 @Component({
   selector: 'app-debtor-attributes-versions',
@@ -10,9 +10,8 @@ import { ContentTabService } from '../../../../shared/components/content-tabstri
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
-static COMPONENT_NAME = 'DebtorAttributesVersionsComponent';
-  static ENTITY_TYPE_CONTRACTOR = 13;
-  static ENTITY_TYPE_PORTFOLIO = 15;
+  static COMPONENT_NAME = 'DebtorAttributesVersionsComponent';
+  static ENTITY_TYPE_DEBT = 19;
 
   attributeId: number;
   entityId: number;
@@ -33,11 +32,8 @@ static COMPONENT_NAME = 'DebtorAttributesVersionsComponent';
         if (params) {
           this.attributeId = Number(params.get('attributeId'));
 
-          if ((this.entityId = Number(params.get('portfolioId')))) {
-            this.entityTypeId = ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_PORTFOLIO;
-          } else {
-            this.entityId = Number(params.get('contractorId'));
-            this.entityTypeId = ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_CONTRACTOR;
+          if ((this.entityId = Number(params.get('debtId')))) {
+            this.entityTypeId = DebtorAttributesVersionsComponent.ENTITY_TYPE_DEBT;
           }
         }
       });
