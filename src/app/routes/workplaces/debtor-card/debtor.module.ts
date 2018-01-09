@@ -49,6 +49,7 @@ import { DebtorPropertyComponent } from './property/property.component';
 const routes: Routes = [
   {
     path: ':debtId',
+    component: DebtorComponent,
     resolve: {
       isLoaded: DebtorCardResolver,
     },
@@ -56,9 +57,6 @@ const routes: Routes = [
       reuse: true,
     },
     children: [
-      {
-        path: '', component: DebtorComponent,
-      },
       {
         path: 'guarantee',
         children: [
