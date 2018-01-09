@@ -8,7 +8,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators/first';
 
 import { ITerm } from '../../dictionaries.interface';
