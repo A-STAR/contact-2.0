@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 
+import { IActionType } from '../../../../core/app-modules/debtor-card/debtor-card.interface';
 import { IPledgeContract } from '../../../../shared/gui-objects/widgets/pledge/pledge.interface';
 
 import { PledgeService } from '../../../../shared/gui-objects/widgets/pledge/pledge.service';
+import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 
 @Component({
   selector: 'app-debtor-pledge-attributes',
@@ -21,13 +22,23 @@ export class DebtorPledgeAttributesComponent implements OnInit {
     { title: 'debtor.propertyTab.attributes.title', isInitialised: true },
   ];
 
-  constructor(private pledgeService: PledgeService) {}
+  constructor(
+    private pledgeService: PledgeService,
+    private debtorCardService: DebtorCardService
+  ) {}
 
   ngOnInit(): void {
     this.entityTypeId = DebtorPledgeAttributesComponent.ENTITY_TYPE_PROPERTY;
     this.entityId$ = this.pledgeService
       .getPayload<IPledgeContract>(PledgeService.MESSAGE_PLEDGE_CONTRACT_SELECTION_CHANGED)
-      .map(pledge => pledge ? pledge.propertyId : null);
+      .map(pledge => pledge ? pledge.propertyId : null)
+      .do(entityId => this.debtorCardService.dispatchAction(IActionType.SELECT_ENTITY,
+          {
+            entityId,
+            entityTypeId: DebtorPledgeAttributesComponent.ENTITY_TYPE_PROPERTY
+          }
+        )
+      );
   }
 
   onTabSelect(tabIndex: number): void {
