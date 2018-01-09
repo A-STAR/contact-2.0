@@ -6,7 +6,6 @@ import { empty } from 'rxjs/observable/empty';
 
 import { IAppState } from '../../../core/state/state.interface';
 import { IDictionary, ITerm } from './dictionaries.interface';
-import { IEntityTranslation } from '../../../core/entity/translations/entity-translations.interface';
 import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../../core/data/data.service';
@@ -120,37 +119,6 @@ export class DictionariesEffects {
     });
 
   @Effect()
-  fetchDictionaryTranslations$ = this.actions
-    .ofType(DictionariesService.DICTIONARY_TRANSLATIONS_FETCH)
-    .withLatestFrom(this.store)
-    .switchMap(store => {
-      const [_, state]: [UnsafeAction, IAppState] = store;
-      return this.entityTranslationsService.readDictNameTranslations(state.dictionaries.selectedDictionary.id)
-        .map((translations: IEntityTranslation[]) => {
-          return {
-            type: DictionariesService.DICTIONARY_TRANSLATIONS_FETCH_SUCCESS,
-            payload: translations
-          };
-        });
-    });
-
-  @Effect()
-  fetchTermTranslations$ = this.actions
-    .ofType(DictionariesService.TERM_TRANSLATIONS_FETCH)
-    .withLatestFrom(this.store)
-    .switchMap(store => {
-      const [_, state]: [UnsafeAction, IAppState] = store;
-      return this.entityTranslationsService.readTermNameTranslations(state.dictionaries.selectedTerm.id)
-        .map((translations: IEntityTranslation[]) => {
-          return {
-            type: DictionariesService.TERM_TRANSLATIONS_FETCH_SUCCESS,
-            payload: translations
-          };
-        })
-        .catch(this.notificationsService.fetchError().entity('entities.terms.gen.singular').callback());
-    });
-
-  @Effect()
   fetchTerms$ = this.actions
     .ofType(DictionariesService.TERMS_FETCH)
     .withLatestFrom(this.store)
@@ -249,7 +217,6 @@ export class DictionariesEffects {
   constructor(
     private actions: Actions,
     private dataService: DataService,
-    private entityTranslationsService: EntityTranslationsService,
     private notificationsService: NotificationsService,
     private store: Store<IAppState>,
     private userDictionariesService: UserDictionariesService,

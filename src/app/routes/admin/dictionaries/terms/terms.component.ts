@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { first, filter } from 'rxjs/operators';
+import { first, filter, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
@@ -72,6 +72,7 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
 
   private dictionariesServiceSubscription: Subscription;
   private viewPermissionsSubscription: Subscription;
+  private term: ITerm;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -160,19 +161,24 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
   }
 
   edit(): void {
-    this.dictionariesService.fetchTermTranslations();
     combineLatestAnd([
       this.userPermissionsService.has('DICT_TERM_EDIT'),
-      this.dictionariesService.hasTermTranslations,
       this.hasDropdownTerms,
       this.hasLanguages,
     ])
     .pipe(
       filter(Boolean),
+      switchMap(_ => this.dictionariesService.selectedTerm),
+      switchMap(term => {
+        this.term = { ...term };
+        return this.dictionariesService.fetchTermTranslations(term.id);
+      }),
       first()
     )
-    .subscribe(_ => {
+    .subscribe(translations => {
+      this.term.name = translations;
       this.setDialog('edit');
+      this.cdRef.markForCheck();
     });
   }
 

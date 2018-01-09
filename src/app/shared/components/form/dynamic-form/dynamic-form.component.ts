@@ -5,7 +5,7 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
@@ -22,6 +22,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   @Input() controls: Array<IDynamicFormItem>;
   @Input() data: IValue;
+
   @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
 
   form: FormGroup;
