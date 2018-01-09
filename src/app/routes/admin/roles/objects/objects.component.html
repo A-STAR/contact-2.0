@@ -17,7 +17,7 @@
   (cancel)="onCloseDialog()"
 ></app-dialog-action>
 
-<div class="panel m0 p ba">
+<div class="panel m0 p">
   <app-select
     [ngModel]="selectedTypeCode"
     [nullable]="false"
@@ -26,7 +26,10 @@
   </app-select>
 </div>
 
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems"
+></app-toolbar-2>
 
 <app-grid
   columnTranslationKey="widgets.object"
