@@ -10,7 +10,29 @@ import { SharedModule } from '../../../shared/shared.module';
 import { RolesAndPermissionsComponent } from './roles-and-permissions.component';
 
 const routes: Routes = [
-  { path: '', component: RolesAndPermissionsComponent },
+  {
+    path: '',
+    component: RolesAndPermissionsComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'permissions',
+      },
+      {
+        path: 'permissions',
+        loadChildren: './permissions/permissions.module#PermissionsModule',
+      },
+      {
+        path: 'access',
+        loadChildren: './permissions-tree/permissions-tree.module#PermissionsTreeModule',
+      },
+      {
+        path: 'objects',
+        loadChildren: './objects/objects.module#RoleObjectsModule',
+      }
+    ],
+  },
 ];
 
 @NgModule({

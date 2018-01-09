@@ -1,0 +1,9 @@
+<ul [ngClass]="{ 'no-margin': noMargin }">
+  <li
+    *ngFor="let tab of tabs"
+    routerLinkActive="active"
+    [class.disabled]="tab.disabled"
+  >
+    <a [routerLink]="tab.link">{{ tab.title | translate }}</a>
+  </li>
+</ul>

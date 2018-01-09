@@ -11,7 +11,7 @@ import {
   QueryList,
 } from '@angular/core';
 
-import { TabViewTabComponent } from './tab.component';
+import { TabViewTabComponent } from '../tab/tab.component';
 
 @Component({
   selector: 'app-tabview',
