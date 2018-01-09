@@ -133,7 +133,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    const relativeUrlCount = this.isRoute('create') ? 2 : this.isAddingPledgor ? 4 : 5;
+    const relativeUrlCount = isRoute(this.route, 'create') ? 2 : this.isAddingPledgor ? 4 : 5;
     this.router.navigate([new Array(relativeUrlCount + 1).join('../')], { relativeTo: this.route });
   }
 
