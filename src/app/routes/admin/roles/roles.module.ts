@@ -1,24 +1,26 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SharedModule } from '../../../shared/shared.module';
+import { ObjectModule } from './objects/objects.module';
 import { PermissionsModule } from './permissions/permissions.module';
-import { RolesModule as RolesGridModule } from './roles/roles.module';
 import { PermissionsTreeModule } from './permissions-tree/permissions-tree.module';
+import { RolesModule as RolesGridModule } from './roles/roles.module';
+import { SharedModule } from '../../../shared/shared.module';
 
 import { RolesAndPermissionsComponent } from './roles-and-permissions.component';
 
 const routes: Routes = [
-  {path: '', component: RolesAndPermissionsComponent},
+  { path: '', component: RolesAndPermissionsComponent },
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forChild(routes),
+    ObjectModule,
     PermissionsModule,
-    RolesGridModule,
-    SharedModule,
     PermissionsTreeModule,
+    RolesGridModule,
+    RouterModule.forChild(routes),
+    SharedModule,
   ],
   exports: [
     RouterModule,

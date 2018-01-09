@@ -3,24 +3,24 @@ import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IObject } from '../object.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { UnsafeAction } from '../../../../../core/state/state.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IObject } from './objects.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { UnsafeAction } from '../../../../core/state/state.interface';
 
-import { ObjectService } from '../object.service';
-import { PermissionsService } from '../../../../../routes/admin/roles/permissions.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { ObjectsService } from './objects.service';
+import { PermissionsService } from '../../../../routes/admin/roles/permissions.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
+import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
   selector: 'app-object-grid',
-  templateUrl: './object-grid.component.html',
+  templateUrl: './objects.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestroy {
   private _dictionarySubscription: Subscription;
   private _masterRoleSubscription: Subscription;
 
@@ -60,7 +60,7 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
   constructor(
     private actions: Actions,
     private cdRef: ChangeDetectorRef,
-    private objectService: ObjectService,
+    private objectsService: ObjectsService,
     private userDictionariesService: UserDictionariesService,
   ) {
     super();
@@ -99,20 +99,20 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onAddDialogSubmit(ids: number[]): void {
-    this.objectService
+    this.objectsService
       .create(this.masterRoleId$.value, this.selectedTypeCode, ids)
       .subscribe(() => this.onSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.objectService
+    this.objectsService
       .delete(this.masterRoleId$.value, this.selectedTypeCode, [ this.selectedObject$.value.id ])
       .subscribe(() => this.onSuccess());
   }
 
   private fetch(): void {
     if (this.masterRoleId$.value) {
-      this.objectService.fetchAll(this.masterRoleId$.value, this.selectedTypeCode).subscribe(objects => this.setRows(objects));
+      this.objectsService.fetchAll(this.masterRoleId$.value, this.selectedTypeCode).subscribe(objects => this.setRows(objects));
     } else {
       this.setRows([]);
     }

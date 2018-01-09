@@ -9,12 +9,12 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
-import { IObject } from '../../object.interface';
+import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IObject } from '../objects.interface';
 
-import { ObjectService } from '../../object.service';
+import { ObjectsService } from '../objects.service';
 
-import { GridComponent } from '../../../../../components/grid/grid.component';
+import { GridComponent } from '../../../../../shared/components/grid/grid.component';
 
 @Component({
   selector: 'app-object-grid-add',
@@ -41,11 +41,11 @@ export class ObjectGridEditComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private objectService: ObjectService,
+    private objectsService: ObjectsService,
   ) {}
 
   ngOnInit(): void {
-    this.objectService.fetchNotAdded(this.roleId, this.typeCode).subscribe(objects => {
+    this.objectsService.fetchNotAdded(this.roleId, this.typeCode).subscribe(objects => {
       this.rows = objects;
       this.cdRef.markForCheck();
     });
