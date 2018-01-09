@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { distinctUntilKeyChanged, map } from 'rxjs/operators';
@@ -8,7 +7,6 @@ import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IObject } from './objects.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { UnsafeAction } from '../../../../core/state/state.interface';
 
 import { ObjectsService } from './objects.service';
 import { PermissionsService } from '../../../../routes/admin/roles/permissions.service';
@@ -59,7 +57,6 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
   selectedTypeCode = 1;
 
   constructor(
-    private actions: Actions,
     private cdRef: ChangeDetectorRef,
     private objectsService: ObjectsService,
     private permissionsService: PermissionsService,

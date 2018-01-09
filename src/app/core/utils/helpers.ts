@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, first } from 'rxjs/operators';
 
 export const combineLatestAnd = (observables: Array<Observable<boolean>>): Observable<boolean> => {
   return combineLatest.apply(null, observables).map(res => res.reduce((acc, i) => acc && i), true);
