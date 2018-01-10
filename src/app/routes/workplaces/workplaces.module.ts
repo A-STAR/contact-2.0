@@ -21,11 +21,11 @@ const routes: Routes = [
         loadChildren: './debt-processing/debt-processing.module#DebtProcessingModule',
       },
       {
-        path: 'debtor-card',
+        path: 'debtor-card/:debtId',
         loadChildren: './debtor-card/debtor.module#DebtorCardModule',
       },
       {
-        path: 'contact-registration',
+        path: 'contact-registration/:debtId/:contactTypeCode/:contactId',
         loadChildren: './contact-registration/contact-registration.module#ContactRegistrationModule',
       },
       {
