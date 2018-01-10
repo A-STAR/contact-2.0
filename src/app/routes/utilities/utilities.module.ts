@@ -18,27 +18,27 @@ const routes: Routes = [
       },
       {
         path: 'campaigns',
-        loadChildren: './utilities/campaigns/campaigns.module#CampaignsModule',
+        loadChildren: './campaigns/campaigns.module#CampaignsModule',
       },
       {
         path: 'currencies',
-        loadChildren: './utilities/currencies/currencies.module#CurrenciesModule',
+        loadChildren: './currencies/currencies.module#CurrenciesModule',
       },
       {
         path: 'groups',
-        loadChildren: './utilities/groups/groups.module#GroupsModule',
+        loadChildren: './groups/groups.module#GroupsModule',
       },
       {
         path: 'contact-properties',
-        loadChildren: './utilities/contact-properties/contact-properties.module#ContactPropertiesModule',
+        loadChildren: './contact-properties/contact-properties.module#ContactPropertiesModule',
       },
       {
         path: 'data-upload',
-        loadChildren: './utilities/data-upload/data-upload.module#DataUploadModule',
+        loadChildren: './data-upload/data-upload.module#DataUploadModule',
       },
       {
         path: 'message-templates',
-        loadChildren: './utilities/message-templates/message-templates.module#MessageTemplatesModule',
+        loadChildren: './message-templates/message-templates.module#MessageTemplatesModule',
       },
       {
         path: '**',
