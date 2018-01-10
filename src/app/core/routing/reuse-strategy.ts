@@ -105,6 +105,9 @@ export class ReuseStrategy implements RouteReuseStrategy {
             /**
              * Currently Angular strips query strings when redirecting
              * See: https://github.com/angular/angular/issues/17934
+             *
+             * TODO(d.maltsev): replace all query params with optional params (mostly in contact registration)
+             * e.g., ?personId=1&personRole=2 -> ;personId=1;personRole=2
              */
             childConfigWithRedirect.redirectTo = routeFirstChildUrl
               + this.getRouteMatrixString(routeFirstChild)
