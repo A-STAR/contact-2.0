@@ -1,4 +1,3 @@
-import { ChangeDetectorRef } from '@angular/core';
 import { TestBed, async, inject } from '@angular/core/testing';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { Router } from '@angular/router';
@@ -43,9 +42,9 @@ xdescribe('Component: Sidebar', () => {
     }).compileComponents();
   });
 
-  it('should create an instance', async(inject([GuiObjectsService, SettingsService, Router, ChangeDetectorRef],
-    (cdRef, menuService, settingsService, router) => {
-      const component = new SidebarComponent(cdRef, menuService, settingsService, router);
+  it('should create an instance', async(inject([GuiObjectsService, SettingsService, Router],
+    (menuService, settingsService, router) => {
+      const component = new SidebarComponent(menuService, settingsService, router);
       expect(component).toBeTruthy();
     }))
   );

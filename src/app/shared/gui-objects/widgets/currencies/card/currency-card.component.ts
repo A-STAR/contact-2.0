@@ -1,4 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
+import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
@@ -10,7 +11,6 @@ import { IEntityTranslation } from '../../../../../core/entity/translations/enti
 import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { CurrenciesService } from '../currencies.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 
@@ -38,8 +38,8 @@ export class CurrencyCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private currenciesService: CurrenciesService,
+    private location: Location,
     private lookupService: LookupService,
   ) {}
 
@@ -85,7 +85,7 @@ export class CurrencyCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.location.back();
   }
 
   private serializeTranslatedCurrency(currency: any): ICurrency {

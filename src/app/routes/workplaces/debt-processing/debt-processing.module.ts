@@ -9,7 +9,13 @@ import { DebtProcessingService } from './debt-processing.service';
 import { DebtProcessingComponent } from './debt-processing.component';
 
 const routes: Routes = [
-  { path: '', component: DebtProcessingComponent },
+  {
+    path: '',
+    component: DebtProcessingComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

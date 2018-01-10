@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 
 @Component({
   selector: 'app-contractors-and-portfolios-version',
@@ -22,16 +21,13 @@ export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestr
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private contentTabService: ContentTabService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-
     this.paramsSub = this.route.paramMap
       .subscribe((params: ParamMap) => {
         if (params) {
           this.attributeId = Number(params.get('attributeId'));
-
           if ((this.entityId = Number(params.get('portfolioId')))) {
             this.entityTypeId = ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_PORTFOLIO;
           } else {
@@ -48,9 +44,7 @@ export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestr
     }
   }
 
-
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 2);
+    this.router.navigate([ '..', '..' ], { relativeTo: this.route });
   }
-
 }

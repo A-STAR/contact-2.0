@@ -6,7 +6,13 @@ import { SharedModule } from '../../shared/shared.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent },
+  {
+    path: '',
+    component: DashboardComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

@@ -2,14 +2,6 @@
 
 <app-hdivider></app-hdivider>
 
-<app-tabstrip [disableScrollbar]="true" [inverse]="true">
-  <app-tab [title]="'roles.permissions.tab.title'">
-    <app-permissions></app-permissions>
-  </app-tab>
-  <app-tab [title]="'roles.permissions.access.title'" [closable]="false">
-    <app-permissions-tree></app-permissions-tree>
-  </app-tab>
-  <app-tab [title]="'roles.permissions.objects.title'" [closable]="false">
-    <app-object-grid></app-object-grid>
-  </app-tab>
-</app-tabstrip>
+<app-tabview-header [noMargin]="true" [tabs]="tabs"></app-tabview-header>
+
+<router-outlet></router-outlet>

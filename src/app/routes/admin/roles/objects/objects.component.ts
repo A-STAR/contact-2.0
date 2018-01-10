@@ -1,26 +1,25 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Actions } from '@ngrx/effects';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { distinctUntilKeyChanged, map } from 'rxjs/operators';
 
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IObject } from '../object.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { UnsafeAction } from '../../../../../core/state/state.interface';
+import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IObject } from './objects.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { ObjectService } from '../object.service';
-import { PermissionsService } from '../../../../../routes/admin/roles/permissions.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { ObjectsService } from './objects.service';
+import { PermissionsService } from '../../../../routes/admin/roles/permissions.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
+import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
   selector: 'app-object-grid',
-  templateUrl: './object-grid.component.html',
+  templateUrl: './objects.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestroy {
   private _dictionarySubscription: Subscription;
   private _masterRoleSubscription: Subscription;
 
@@ -30,17 +29,17 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.masterRoleId$.map(Boolean),
+      enabled: this.masterRoleId$.pipe(map(Boolean)),
       action: () => this.setDialog('add'),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: this.selectedObject$.map(Boolean),
+      enabled: this.selectedObject$.pipe(map(Boolean)),
       action: () => this.setDialog('delete'),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.selectedObject$.map(Boolean),
+      enabled: this.selectedObject$.pipe(map(Boolean)),
       action: () => this.fetch(),
     },
   ];
@@ -58,19 +57,19 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
   selectedTypeCode = 1;
 
   constructor(
-    private actions: Actions,
     private cdRef: ChangeDetectorRef,
-    private objectService: ObjectService,
+    private objectsService: ObjectsService,
+    private permissionsService: PermissionsService,
     private userDictionariesService: UserDictionariesService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this._masterRoleSubscription = this.actions
-      .ofType(PermissionsService.ROLE_SELECTED, PermissionsService.ROLE_FETCH_SUCCESS)
-      .subscribe((action: UnsafeAction) => {
-        const { role } = action.payload;
+    this._masterRoleSubscription = this.permissionsService.permissions
+      .pipe(distinctUntilKeyChanged('currentRole'))
+      .subscribe(permissions => {
+        const role = permissions.currentRole;
         this.masterRoleId$.next(role ? role.id : null);
         this.cdRef.markForCheck();
         this.fetch();
@@ -99,20 +98,20 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onAddDialogSubmit(ids: number[]): void {
-    this.objectService
+    this.objectsService
       .create(this.masterRoleId$.value, this.selectedTypeCode, ids)
       .subscribe(() => this.onSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.objectService
+    this.objectsService
       .delete(this.masterRoleId$.value, this.selectedTypeCode, [ this.selectedObject$.value.id ])
       .subscribe(() => this.onSuccess());
   }
 
   private fetch(): void {
     if (this.masterRoleId$.value) {
-      this.objectService.fetchAll(this.masterRoleId$.value, this.selectedTypeCode).subscribe(objects => this.setRows(objects));
+      this.objectsService.fetchAll(this.masterRoleId$.value, this.selectedTypeCode).subscribe(objects => this.setRows(objects));
     } else {
       this.setRows([]);
     }

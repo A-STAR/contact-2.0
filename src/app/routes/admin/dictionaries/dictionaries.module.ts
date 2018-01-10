@@ -10,7 +10,13 @@ import { DictionariesService } from './dictionaries.service';
 import { DictionariesComponent } from './dictionaries.component';
 
 const routes: Routes = [
-  { path: '', component: DictionariesComponent }
+  {
+    path: '',
+    component: DictionariesComponent,
+    data: {
+      reuse: true,
+    },
+  }
 ];
 
 @NgModule({

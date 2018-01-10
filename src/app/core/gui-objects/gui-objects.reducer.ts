@@ -4,7 +4,8 @@ import { UnsafeAction } from '../../core/state/state.interface';
 import { GuiObjectsService } from './gui-objects.service';
 
 export const defaultState: IGuiObjectsState = {
-  data: null
+  data: null,
+  selectedObject: { id: 0, name: 'menuItemHome', children: [] }
 };
 
 export function reducer(state: IGuiObjectsState = defaultState, action: UnsafeAction): IGuiObjectsState {
@@ -17,6 +18,11 @@ export function reducer(state: IGuiObjectsState = defaultState, action: UnsafeAc
           ...action.payload
         ]
       };
+      case GuiObjectsService.GUI_OBJECTS_SELECTED:
+        return {
+          ...state,
+          selectedObject: { ...action.payload }
+        };
     default:
       return state;
   }

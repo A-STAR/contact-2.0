@@ -1,4 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
+import { Location } from '@angular/common';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -6,7 +7,6 @@ import { of } from 'rxjs/observable/of';
 import { ICurrencyRate } from '../currency-rates.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { CurrencyRatesService } from '../currency-rates.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
@@ -31,8 +31,8 @@ export class CurrencyRateCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private currencyRatesService: CurrencyRatesService,
+    private location: Location,
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +64,7 @@ export class CurrencyRateCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.location.back();
   }
 
   private serializeCurrencyRate(currencyRate: ICurrencyRate): ICurrencyRate {

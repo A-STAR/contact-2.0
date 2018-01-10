@@ -92,6 +92,10 @@ export const flatten = <T extends { children?: T[] }>(items: T[], key: keyof T =
   ], []);
 };
 
+export const flattenArray = (arr: any[]) => {
+  return arr.reduce((acc, child) => acc.concat(Array.isArray(child) ? flattenArray(child) : child), []);
+};
+
 export const invert = (a: boolean) => !a;
 
 export const isEmpty = (array: any[]): boolean => !array || array.length === 0;

@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAddress, IContactRegistrationParams, IPhone, IDebt, IDebtNextCall } from './debt.interface';
 
-import { ContentTabService } from '../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UserPermissionsService } from '../user/permissions/user-permissions.service';
@@ -23,7 +22,6 @@ export class DebtService {
   extUrl = `${this.baseUrl}/{debtId}`;
 
   constructor(
-    private contentTabService: ContentTabService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private router: Router,
@@ -77,15 +75,8 @@ export class DebtService {
     return debt && ![6, 7, 8, 17].includes(debt.statusCode);
   }
 
-  // navigateToDebtorCard(debtId: number, personId: number): void {
-  //   this.contentTabService.removeTabByPath(`\/workplaces\/debt-processing\/(.+)`);
-  //   const url = `/workplaces/debt-processing/${personId}/${debtId}`;
-  //   this.router.navigate([ url ]);
-  // }
-
   navigateToRegistration(params: Partial<IContactRegistrationParams>): void {
     const { debtId, contactType, contactId, ...queryParams } = params;
-    this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration\/(.+)`);
     const url = `/workplaces/contact-registration/${Number(debtId)}/${Number(contactType)}/${Number(contactId)}`;
     this.router.navigate([ url ], { queryParams });
   }

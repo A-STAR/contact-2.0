@@ -3,8 +3,8 @@
   [roleId]="masterRoleId$ | async"
   [typeCode]="selectedTypeCode"
   (submit)="onAddDialogSubmit($event)"
-  (cancel)="onCloseDialog()">
-</app-object-grid-add>
+  (cancel)="onCloseDialog()"
+></app-object-grid-add>
 
 <app-dialog-action
   *ngIf="isDialog('delete')"
@@ -14,10 +14,10 @@
   actionMode="danger"
   [messageParams]="selectedObject$ | async"
   (action)="onRemoveDialogSubmit()"
-  (cancel)="onCloseDialog()">
-</app-dialog-action>
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
 
-<div class="panel m0 p ba">
+<div class="panel m0 p">
   <app-select
     [ngModel]="selectedTypeCode"
     [nullable]="false"
@@ -26,7 +26,10 @@
   </app-select>
 </div>
 
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2
+  class="bordered"
+  [items]="toolbarItems"
+></app-toolbar-2>
 
 <app-grid
   columnTranslationKey="widgets.object"
@@ -34,5 +37,5 @@
   [columns]="columns"
   [rows]="rows"
   [styles]="{ height: '344px' }"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  (onSelect)="onSelect($event)"
+></app-grid>
