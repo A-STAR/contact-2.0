@@ -9,7 +9,13 @@ import { WorkTaskService } from './work-task.service';
 import { WorkTaskComponent } from './work-task.component';
 
 const routes: Routes = [
-  { path: '', component: WorkTaskComponent },
+  {
+    path: '',
+    component: WorkTaskComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

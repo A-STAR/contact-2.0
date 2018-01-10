@@ -3,6 +3,7 @@ import { first } from 'rxjs/operators/first';
 import { filter } from 'rxjs/operators/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { switchMap } from 'rxjs/operators';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IDictionary, ITerm } from '../dictionaries.interface';
@@ -59,6 +60,7 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
   viewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
 
+  private dictionary: IDictionary;
   private _columns: IGridColumn[] = [
     { prop: 'code', minWidth: 50, maxWidth: 70 },
     { prop: 'name', maxWidth: 300 },
@@ -116,7 +118,11 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
   }
 
   get hasDictionaryRelations(): Observable<boolean> {
-    return combineLatestAnd([this.languages.map(Boolean), this.dictionaryTermTypes.map(Boolean)]);
+    return combineLatestAnd([
+      this.languages.map(Boolean),
+      this.selectedDictionary.map(Boolean),
+      this.dictionaryTermTypes.map(Boolean)
+    ]);
   }
 
   get selectedDictionary(): Observable<IDictionary> {
@@ -128,36 +134,37 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
   }
 
   edit(): void {
-    this.dictionariesService.fetchDictTranslations();
-    combineLatestAnd([
-      this.hasDictionaryRelations,
-      this.dictionariesService.hasDictTranslations,
-    ])
-    .pipe(
-      filter(Boolean),
-      first(),
-    )
-    .subscribe(_ => {
-      this.setDialog('edit');
-    });
+    this.hasDictionaryRelations
+      .pipe(
+        filter(Boolean),
+        switchMap(_ => this.dictionariesService.selectedDictionary),
+        switchMap(dictionary => {
+          this.dictionary = { ...dictionary };
+          return this.dictionariesService.fetchDictTranslations(dictionary.id);
+        }),
+        first(),
+      )
+      .subscribe(translations => {
+        this.dictionary.name = translations;
+        this.setDialog('edit');
+        this.cdRef.markForCheck();
+      });
   }
 
   create(): void {
-    combineLatestAnd([
-      this.hasDictionaryRelations,
-    ])
-    .pipe(
-      filter(Boolean),
-      first(),
-    )
-    .subscribe(_ => {
-      this.setDialog('create');
-    });
+    this.hasDictionaryRelations
+      .pipe(
+        filter(Boolean),
+        first(),
+      )
+      .subscribe(_ => {
+        this.setDialog('create');
+        this.cdRef.markForCheck();
+      });
   }
 
   onCancel(): void {
     this.setDialog();
-    this.dictionariesService.clearTranslations();
   }
 
   onUpdate(dictionary: IDictionary): void {

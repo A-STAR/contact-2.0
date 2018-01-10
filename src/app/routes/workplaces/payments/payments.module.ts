@@ -9,7 +9,13 @@ import { PaymentsService } from './payments.service';
 import { PaymentsComponent } from './payments.component';
 
 const routes: Routes = [
-  { path: '', component: PaymentsComponent },
+  {
+    path: '',
+    component: PaymentsComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

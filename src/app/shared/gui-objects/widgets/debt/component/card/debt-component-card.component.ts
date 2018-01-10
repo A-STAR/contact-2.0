@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
@@ -7,7 +7,6 @@ import { of } from 'rxjs/observable/of';
 import { IDebtComponent } from '../debt-component.interface';
 import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtComponentService } from '../debt-component.service';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -28,9 +27,9 @@ export class DebtComponentCardComponent {
   debtComponent: IDebtComponent;
 
   constructor(
-    private contentTabService: ContentTabService,
     private debtComponentService: DebtComponentService,
     private lookupService: LookupService,
+    private router: Router,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
   ) {
@@ -80,7 +79,7 @@ export class DebtComponentCardComponent {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   get canSubmit(): boolean {

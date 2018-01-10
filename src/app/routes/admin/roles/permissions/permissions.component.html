@@ -3,16 +3,14 @@
   [availablePermissions]="availablePermissions"
   (add)="onAdd($event)"
   (cancel)="onCancel()"
->
-</app-add-permission>
+></app-add-permission>
 
 <app-edit-permission
   *ngIf="isDialog('edit')"
   [record]="currentPermission"
   (save)="onEdit($event)"
   (cancel)="onCancel()"
->
-</app-edit-permission>
+></app-edit-permission>
 
 <app-dialog-action
   *ngIf="isDialog('remove')"
@@ -23,13 +21,11 @@
   [titleTranslationKey]="'roles.permissions.remove.title'"
   (action)="onRemove()"
   (cancel)="onCancel()"
->
-</app-dialog-action>
+></app-dialog-action>
 
 <app-toolbar-2
-  class="bordered"
-  [items]="toolbarItems">
-</app-toolbar-2>
+  [items]="toolbarItems"
+></app-toolbar-2>
 
 <app-grid
   [columns]="columns"
@@ -39,5 +35,5 @@
   [selectionType]="'single'"
   [styles]="{height: '400px'}"
   (onDblClick)="onDblClick()"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  (onSelect)="onSelect($event)"
+></app-grid>

@@ -4,10 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { AppModulesModule } from './app-modules/app-modules.module';
 import { DebtModule } from './debt/debt.module';
+import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
 
 import { ActionsLogService } from './actions-log/actions-log.service';
-import { ContentTabService } from '../shared/components/content-tabstrip/tab/content-tab.service';
 import { DataService } from './data/data.service';
 import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
@@ -30,11 +30,11 @@ import { environment } from '../../environments/environment';
   imports: [
     AppModulesModule,
     DebtModule,
+    RoutingModule,
     UserModule,
   ],
   providers: [
     ActionsLogService,
-    ContentTabService,
     EntityAttributesService,
     EntityTranslationsService,
     DatePipe,

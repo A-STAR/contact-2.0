@@ -7,7 +7,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -19,7 +19,6 @@ import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dy
 import { IPromise, IPromiseLimit } from '../promise.interface';
 import { IDebt } from '../../../../../core/debt/debt.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PromiseService } from '../promise.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -80,9 +79,9 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private promiseService: PromiseService,
     private router: Router,
+    private route: ActivatedRoute,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -188,7 +187,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 4);
+    this.router.navigate([new Array(4 + 1).join('../')], { relativeTo: this.route });
   }
 
   onSubmit(): void {

@@ -1,0 +1,21 @@
+.sidebar-nav {
+  padding-bottom: 40px;
+}
+.aside-inner {
+  padding-top: 0 !important;
+  padding-bottom: 40px;
+  position: relative;
+}
+
+.sidebar-aside__divider {
+  content: "";
+  background: rgba(0, 0, 0, 0.15);
+  position: absolute;
+  display: block;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 1px;
+  -webkit-transform: translateZ(0px);
+}
+

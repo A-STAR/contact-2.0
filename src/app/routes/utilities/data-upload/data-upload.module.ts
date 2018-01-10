@@ -7,7 +7,13 @@ import { SelectModule } from '../../../shared/components/form/select/select.modu
 import { DataUploadComponent } from './data-upload.component';
 
 const routes: Routes = [
-  { path: '', component: DataUploadComponent },
+  {
+    path: '',
+    component: DataUploadComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

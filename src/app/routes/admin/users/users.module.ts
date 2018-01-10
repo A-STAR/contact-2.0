@@ -10,7 +10,13 @@ import { UsersComponent } from './users.component';
 import { UserEditComponent } from './edit/user-edit.component';
 
 const routes: Routes = [
-  { path: '', component: UsersComponent },
+  {
+    path: '',
+    component: UsersComponent,
+    data: {
+      reuse: true,
+    },
+  },
   { path: 'create', component: UserEditComponent },
   { path: ':userId', component: UserEditComponent },
 ];

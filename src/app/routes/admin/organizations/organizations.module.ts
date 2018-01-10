@@ -10,24 +10,30 @@ import { OrganizationsService } from './organizations.service';
 import { OrganizationsComponent } from './organizations.component';
 
 const routes: Routes = [
-    { path: '', component: OrganizationsComponent },
+  {
+    path: '',
+    component: OrganizationsComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({
-    imports: [
-      SharedModule,
-      RouterModule.forChild(routes),
-      OrganizationsTreeModule,
-      OrganizationsEmployeesModule
-    ],
-    exports: [
-      RouterModule,
-    ],
-    declarations: [
-      OrganizationsComponent,
-    ],
-    providers: [
-      OrganizationsService,
-    ]
+  imports: [
+    SharedModule,
+    RouterModule.forChild(routes),
+    OrganizationsTreeModule,
+    OrganizationsEmployeesModule
+  ],
+  exports: [
+    RouterModule,
+  ],
+  declarations: [
+    OrganizationsComponent,
+  ],
+  providers: [
+    OrganizationsService,
+  ],
 })
 export class OrganizationsModule { }

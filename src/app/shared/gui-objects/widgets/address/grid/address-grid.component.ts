@@ -14,7 +14,6 @@ import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
-import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../../../../core/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -147,7 +146,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private debtService: DebtService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -272,7 +270,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.selectedAddressId$
       .pipe(first())
       .subscribe(addressId => {
-        this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         // Contact type 'Visit' = 3
         // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
         const url = `/workplaces/contact-registration/${this._debtId$.value}/3/${addressId}`;
