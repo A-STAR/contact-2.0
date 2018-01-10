@@ -1,4 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
+import { Location } from '@angular/common';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -9,7 +10,6 @@ import { IGroup } from '../group.interface';
 import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GroupService } from '../group.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 
@@ -37,8 +37,8 @@ export class GroupCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private groupService: GroupService,
+    private location: Location,
     private lookupService: LookupService,
   ) {}
 
@@ -83,7 +83,7 @@ export class GroupCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.location.back();
   }
 
   private serializeTranslatedGroup(group: IGroup): IGroup {

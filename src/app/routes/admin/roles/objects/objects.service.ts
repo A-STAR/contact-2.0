@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IObject } from './object.interface';
+import { IObject } from './objects.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class ObjectService {
+export class ObjectsService {
   private baseUrl = '/roles/{roleId}/objects';
   private errorMessage = 'entities.object.gen';
 

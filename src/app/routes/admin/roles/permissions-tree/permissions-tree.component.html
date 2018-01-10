@@ -1,8 +1,7 @@
 <app-toolbar-2
-  class="bordered"
   [items]="toolbarActions"
-  (actionClick)="onSaveChanges()">
-</app-toolbar-2>
+  (actionClick)="onSaveChanges()"
+></app-toolbar-2>
 
 <ng-container *ngIf="hasViewPermission | async; else message">
   <app-tree
@@ -11,8 +10,8 @@
     [style]="{height: '100%', width: '100%', border: 'none'}"
     [value]="value"
     (selectionChange)="onSelectionChange($event)"
-    [selection]="selection">
-  </app-tree>
+    [selection]="selection"
+  ></app-tree>
   <div
     *ngIf="!value"
     class="message-container">

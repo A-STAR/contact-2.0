@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Router, ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
@@ -9,7 +10,6 @@ import { IDynamicFormGroup } from '../../../../components/form/dynamic-form-2/dy
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
 import { AddressService } from '../address.service';
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
@@ -33,9 +33,10 @@ export class AddressCardComponent implements OnInit {
 
   constructor(
     private addressService: AddressService,
-    private contentTabService: ContentTabService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -69,7 +70,7 @@ export class AddressCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   get canSubmit(): boolean {

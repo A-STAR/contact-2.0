@@ -18,8 +18,18 @@ import { PortfolioAttributesComponent } from './portfolios/edit/attributes/portf
 import { ContractorsAndPortfoliosVersionComponent } from './version/contractors-and-portfolios-version.component';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', component: ContractorsAndPortfoliosComponent },
-  { path: 'create', component: ContractorEditComponent },
+  {
+    path: '',
+    pathMatch: 'full',
+    component: ContractorsAndPortfoliosComponent,
+    data: {
+      reuse: true,
+    },
+  },
+  {
+    path: 'create',
+    component: ContractorEditComponent,
+  },
   {
     path: ':contractorId', children: [
       { path: '', pathMatch: 'full', component: ContractorEditComponent },

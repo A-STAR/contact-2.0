@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
-
 @Component({
   selector: 'app-contractor-attributes',
   templateUrl: './contractor-attributes.component.html',
@@ -19,8 +17,7 @@ export class ContractorAttributesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
-    private contentTabService: ContentTabService) { }
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.entityTypeId = ContractorAttributesComponent.ENTITY_TYPE_CONTRACTOR;
@@ -28,7 +25,7 @@ export class ContractorAttributesComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 1);
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
 }

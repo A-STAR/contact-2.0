@@ -100,7 +100,8 @@
         "HELP": "Help",
         "INCOMING_CALL": "Incoming call",
         "CURRENCY_RATE_EDIT": "Currency rate"
-      }
+      },
+      "hide": "Hide menu"
     },
     "messages": {
       "loadError": "Could not load menu"

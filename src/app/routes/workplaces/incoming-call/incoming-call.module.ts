@@ -10,7 +10,13 @@ import { SharedModule } from '../../../shared/shared.module';
 import { IncomingCallComponent } from './incoming-call.component';
 
 const routes: Routes = [
-  { path: '', component: IncomingCallComponent },
+  {
+    path: '',
+    component: IncomingCallComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

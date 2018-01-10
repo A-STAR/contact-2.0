@@ -10,7 +10,13 @@ import { ConstantsComponent } from './constants.component';
 import { ConstantEditComponent } from './constant-edit/constant-edit.component';
 
 const routes: Routes = [
-  { path: '', component: ConstantsComponent },
+  {
+    path: '',
+    component: ConstantsComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

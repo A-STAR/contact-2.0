@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 import { DatePipe } from '@angular/common';
 
 import { SharedModule } from '../../../../shared/shared.module';
@@ -6,12 +7,23 @@ import { PermissionsComponent } from './permissions.component';
 import { AddPermissionComponent } from './add/add.permission.component';
 import { EditPermissionComponent } from './edit/edit.permission.component';
 
+const routes: Routes = [
+  {
+    path: '',
+    component: PermissionsComponent,
+    data: {
+      reuse: true,
+    },
+  },
+];
+
 @NgModule({
   imports: [
+    RouterModule.forChild(routes),
     SharedModule,
   ],
   exports: [
-    PermissionsComponent,
+    RouterModule,
   ],
   declarations: [
     PermissionsComponent,
@@ -22,5 +34,4 @@ import { EditPermissionComponent } from './edit/edit.permission.component';
     DatePipe,
   ]
 })
-export class PermissionsModule {
-}
+export class PermissionsModule {}

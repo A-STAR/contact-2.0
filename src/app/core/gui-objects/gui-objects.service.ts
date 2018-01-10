@@ -11,11 +11,13 @@ import { menuConfig } from '../../routes/menu-config';
 export class GuiObjectsService {
   static GUI_OBJECTS_FETCH         = 'GUI_OBJECTS_FETCH';
   static GUI_OBJECTS_FETCH_SUCCESS = 'GUI_OBJECTS_FETCH_SUCCESS';
+  static GUI_OBJECTS_SELECTED = 'GUI_OBJECTS_SELECTED';
 
   private _guiObjects: Array<IGuiObject>;
   private isFetching = false;
 
   constructor(private store: Store<IAppState>) {
+    // is it really neccessary?
     this.state$.subscribe(state => this._guiObjects = state.data);
   }
 
@@ -23,6 +25,16 @@ export class GuiObjectsService {
     return this.getGuiObjects()
       .map(guiObjects => guiObjects.map(guiObject => this.prepareGuiObject(guiObject)))
       .distinctUntilChanged();
+  }
+
+  get selectedMenuItem(): Observable<IMenuItem> {
+    return this.state$
+      .map(state => state.selectedObject)
+      .filter(Boolean)
+      .map(guiObject => ({
+        ...menuConfig[guiObject.name],
+        ...guiObject
+      }));
   }
 
   get menuItemIds(): Observable<any> {
@@ -39,6 +51,19 @@ export class GuiObjectsService {
     const action = this.createRefreshGuiObjectsAction();
     this.store.dispatch(action);
     this.isFetching = true;
+  }
+
+  selectMenuItem(menuItem: IMenuItem): void {
+    this.store.dispatch({
+      type: GuiObjectsService.GUI_OBJECTS_SELECTED,
+      payload: menuItem
+    });
+  }
+
+  findItemByLink(menuItems: IMenuItem[], link: string): IMenuItem {
+    return menuItems.find(menuItem => {
+      return menuItem.link === link || (menuItem.children && !!this.findItemByLink(menuItem.children, link));
+    });
   }
 
   private prepareGuiObject(guiObject: IGuiObject): IMenuItem {
