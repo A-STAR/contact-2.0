@@ -55,7 +55,8 @@ export class DictEditComponent implements OnInit {
         .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE)
     .pipe(first())
     .subscribe(dictTypeOptions => {
-      const dictNameTranslations = getTranslations(this.languages, this.dictionary.name);
+      const translations = this.dictionary && this.dictionary.name || [];
+      const dictNameTranslations = getTranslations(this.languages, translations);
       this.controls = this.getControls(dictTypeOptions, dictNameTranslations);
       this.cdRef.markForCheck();
     });
