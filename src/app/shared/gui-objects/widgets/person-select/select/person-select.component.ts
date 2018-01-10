@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IPerson, PersonSelectorComponent } from '../person-select.interface';
+import { IPerson, PersonSelectorComponent, ISelectedPerson } from '../person-select.interface';
 
 import { PersonSelectGridComponent } from '../grid/person-select-grid.component';
 import { PersonSelectCardComponent } from '../card/person-select-card.component';
@@ -40,7 +40,7 @@ export class PersonSelectComponent implements AfterViewInit {
     return this.personSelectComponent && this.personSelectComponent.isValid;
   }
 
-  get selectedPerson(): Observable<IPerson> {
+  get selectedPerson(): Observable<ISelectedPerson> {
     return this.personSelectComponent && this.personSelectComponent.person;
   }
 

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
 import { IAGridResponse } from '../../../../../shared/components/grid2/grid2.interface';
-import { IPerson, PersonSelectorComponent, IPersonRequest } from '../person-select.interface';
+import { IPerson, PersonSelectorComponent, ISelectedPerson } from '../person-select.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { PersonSelectService } from '../person-select.service';
@@ -57,11 +57,11 @@ export class PersonSelectGridComponent implements PersonSelectorComponent {
     return !isEmpty(this.grid && this.grid.selected);
   }
 
-  get person(): Observable<IPerson> {
+  get person(): Observable<ISelectedPerson> {
     return of({
       ...this.form.serializedValue,
-      personId: this.selectedPerson.id,
-    } as IPersonRequest);
+      ...this.selectedPerson,
+    });
   }
 
   onSelect(): void {

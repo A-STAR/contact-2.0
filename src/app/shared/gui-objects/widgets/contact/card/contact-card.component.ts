@@ -29,7 +29,7 @@ export class ContactCardComponent implements OnInit {
   @Input() personId: number;
 
   @ViewChild(DynamicFormComponent) personForm: DynamicFormComponent;
-  @ViewChild(DynamicFormComponent) personSelect: PersonSelectComponent;
+  @ViewChild(PersonSelectComponent) personSelect: PersonSelectComponent;
 
   controls: IDynamicFormControl[] = null;
   contact: IContact;

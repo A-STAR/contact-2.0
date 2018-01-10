@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IPerson, PersonSelectorComponent, INewPerson } from '../person-select.interface';
+import { IPerson, PersonSelectorComponent, ISelectedPerson } from '../person-select.interface';
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { PersonSelectService } from '../person-select.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -27,18 +27,21 @@ export class PersonSelectCardComponent implements PersonSelectorComponent {
     { controlName: 'firstName', type: 'text' },
     { controlName: 'middleName', type: 'text' },
     {
-      controlName: 'personTypeCode',
+      controlName: 'typeCode',
+      label: labelKey('personTypeCode'),
       dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
       markAsDirty: true,
       required: true,
       type: 'selectwrapper',
     },
     { controlName: 'linkTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
-  ].map(control => ({ ...control, label: labelKey(control.controlName) } as IDynamicFormControl));
+  ].map(control => ({ label: labelKey(control.controlName), ...control } as IDynamicFormControl));
 
-  data: Partial<INewPerson> = {
-    personTypeCode: 1,
+  data: any = {
+    typeCode: 1,
   };
+
+  constructor(private personSelectService: PersonSelectService) { }
 
   get isValid(): boolean {
     return this.form.canSubmit;
@@ -48,7 +51,8 @@ export class PersonSelectCardComponent implements PersonSelectorComponent {
     this.data = person;
   }
 
-  get person(): Observable<IPerson> {
-    return of(this.value);
+  get person(): Observable<ISelectedPerson> {
+    return this.personSelectService.create(this.form.serializedUpdates)
+      .map(personId => ({ id: personId, ...this.form.serializedValue }));
   }
 }

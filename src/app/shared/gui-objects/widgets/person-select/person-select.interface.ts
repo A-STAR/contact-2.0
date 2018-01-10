@@ -21,20 +21,11 @@ export interface IPerson {
   typeCode: number;
 }
 
-export interface INewPerson extends IPerson {
-  lastName: string;
-  firstName: string;
-  middleName: string;
-  personTypeCode: number;
-  linkTypeCode: number;
-}
-
-export interface IPersonRequest extends IPerson {
-  personId: number;
+export interface ISelectedPerson extends IPerson {
   linkTypeCode?: number;
 }
 
 export abstract class PersonSelectorComponent {
   abstract get isValid(): boolean;
-  abstract get person(): Observable<IPerson>;
+  abstract get person(): Observable<ISelectedPerson>;
 }
