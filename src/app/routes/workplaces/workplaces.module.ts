@@ -37,6 +37,10 @@ const routes: Routes = [
         loadChildren: './call-center/call-center.module#CallCenterModule',
       },
       {
+        path: 'call-center/:campaignId',
+        loadChildren: './call-center/campaign/campaign.module#CampaignModule',
+      },
+      {
         path: 'contact-log',
         loadChildren: './contact-log/contact-log.module#ContactLogModule',
       },

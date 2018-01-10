@@ -13,10 +13,6 @@ const routes: Routes = [
       reuse: true,
     },
   },
-  {
-    path: ':campaignId',
-    loadChildren: './campaign/campaign.module#CampaignModule',
-  },
 ];
 
 @NgModule({
