@@ -47,6 +47,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
   @Input() contextMenuOptions: IContextMenuItem[] = [];
+  @Input() rowIdKey = 'id';
   @Output() action = new EventEmitter<any>();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
@@ -226,7 +227,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   onSelectRow(event: any): void {
     const { selected } = event;
     const rowSelected = this._selected[0];
-    if (!(rowSelected && selected[0] && rowSelected.id === selected[0].id)) {
+    if (!(rowSelected && selected[0] && rowSelected[this.rowIdKey] === selected[0][this.rowIdKey])) {
       const row = this.selectionType === 'single' ? selected[0] : selected;
       this.clickDebouncer.next({ type: 'select', row });
     }
