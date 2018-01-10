@@ -162,7 +162,6 @@ export class ReuseStrategy implements RouteReuseStrategy {
   }
 
   private getOptionalParams(route: ActivatedRouteSnapshot): any {
-    const { params } = route;
     const paths = route.pathFromRoot
       .map(r => r.routeConfig)
       .filter(Boolean)
