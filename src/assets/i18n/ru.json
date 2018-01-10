@@ -2439,8 +2439,7 @@
       "userNotFound": "Не найден пользователь, запрошенный по ID",
       "userNotFoundWithName": "Не найден пользователь с логином {{ $1 }}",
       "userRoleNotFound": "Не найдена роль пользователя",
-      "visitNotFound": "Visit not found by requested parameters",
-      "wrongCustomerId": "Не совпадают организация инициатора операции (запроса) и запрошенной сущности"
+      "visitNotFound": "Visit not found by requested parameters"
     },
     "default": {
       "read": {
