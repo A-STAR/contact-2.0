@@ -55,13 +55,14 @@ export class TermEditComponent implements OnInit {
     .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE)
     .pipe(first())
     .subscribe(dictTypeOptions => {
-      const dictTermTranslations = getTranslations(this.languages, this.term.name);
+      const translations = this.term && this.term.name || [];
+      const dictTermTranslations = getTranslations(this.languages, translations);
       this.controls = this.getControls(dictTypeOptions, dictTermTranslations);
       this.cdRef.markForCheck();
     });
   }
 
-  onSubmit(values: ITerm): any {
+  onSubmit(): any {
     return this.submit.emit(this.form.serializedUpdates);
   }
 
