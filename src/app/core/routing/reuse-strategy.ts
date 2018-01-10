@@ -4,7 +4,7 @@ import { HttpParams } from '@angular/common/http';
 
 import { ICachedRoute, IRouteConfigData } from './routing.interface';
 
-import { isEmpty } from '../utils';
+import { isEmpty, flattenArray } from '../utils';
 
 /**
  * See:
@@ -106,7 +106,9 @@ export class ReuseStrategy implements RouteReuseStrategy {
              * Currently Angular strips query strings when redirecting
              * See: https://github.com/angular/angular/issues/17934
              */
-            childConfigWithRedirect.redirectTo = routeFirstChildUrl + this.getRouteQueryString(route);
+            childConfigWithRedirect.redirectTo = routeFirstChildUrl
+              + this.getRouteMatrixString(routeFirstChild)
+              + this.getRouteQueryString(route);
           }
         }
       }
@@ -115,7 +117,9 @@ export class ReuseStrategy implements RouteReuseStrategy {
   }
 
   private getFullRouteUrl(route: ActivatedRouteSnapshot): string {
-    return this.getFullRouteUrlPaths(route).filter(Boolean).join('/') + this.getRouteQueryString(route);
+    return this.getFullRouteUrlPaths(route).filter(Boolean).join('/')
+      + this.getRouteMatrixString(route)
+      + this.getRouteQueryString(route);
   }
 
   private getFullRouteUrlPaths(route: ActivatedRouteSnapshot): string[] {
@@ -137,6 +141,14 @@ export class ReuseStrategy implements RouteReuseStrategy {
       : '';
   }
 
+  private getRouteMatrixString(route: ActivatedRouteSnapshot): string {
+    const params = new HttpParams({ fromObject: this.getOptionalParams(route) });
+    const matrixString = params.toString();
+    return matrixString
+      ? ';' + matrixString.replace('&', ';')
+      : '';
+  }
+
   private getRouteData(route: ActivatedRouteSnapshot): IRouteConfigData {
     return route.routeConfig && route.routeConfig.data as IRouteConfigData;
   }
@@ -144,5 +156,18 @@ export class ReuseStrategy implements RouteReuseStrategy {
   private shouldReuse(route: ActivatedRouteSnapshot): boolean {
     const data = this.getRouteData(route);
     return data && data.reuse;
+  }
+
+  private getOptionalParams(route: ActivatedRouteSnapshot): any {
+    const { params } = route;
+    const paths = route.pathFromRoot
+      .map(r => r.routeConfig)
+      .filter(Boolean)
+      .map(c => c.path.split('/'));
+    const mandatoryParamKeys = flattenArray(paths)
+      .filter(p => p.startsWith(':'))
+      .map(p => p.substr(1));
+    return Object.keys(route.params)
+      .reduce((acc, key) => mandatoryParamKeys.includes(key) ? acc : { ...acc, [key]: route.params[key] }, {});
   }
 }
