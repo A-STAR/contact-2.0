@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from '@angular/router';
+import { HttpParams } from '@angular/common/http';
 
 import { ICachedRoute, IRouteConfigData } from './routing.interface';
+
+import { isEmpty } from '../utils';
 
 /**
  * See:
@@ -108,7 +111,11 @@ export class ReuseStrategy implements RouteReuseStrategy {
   }
 
   private getFullRouteUrl(route: ActivatedRouteSnapshot): string {
-    return this.getFullRouteUrlPaths(route).filter(Boolean).join('/');
+    const params = new HttpParams({ fromObject: route.queryParams });
+    const url = this.getFullRouteUrlPaths(route).filter(Boolean).join('/');
+    return !isEmpty(params.keys()) && isEmpty(route.children)
+      ? url + '?' + params.toString()
+      : url;
   }
 
   private getFullRouteUrlPaths(route: ActivatedRouteSnapshot): string[] {
