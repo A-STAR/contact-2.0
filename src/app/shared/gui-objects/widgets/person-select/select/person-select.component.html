@@ -1,0 +1,12 @@
+<app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+  <app-tabview-tab [title]="'modules.contactRegistration.contactGrid.tabs.selectFromAll.title'" [closable]="false">
+    <div class="mt">
+      <app-person-select-grid></app-person-select-grid>
+    </div>
+  </app-tabview-tab>
+  <app-tabview-tab [title]="'modules.contactRegistration.contactGrid.tabs.add.title'" [closable]="false">
+    <div class="mt">
+      <app-person-select-card></app-person-select-card>
+    </div>
+  </app-tabview-tab>
+</app-tabview>

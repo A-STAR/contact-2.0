@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPerson, PersonSelectorComponent, INewPerson } from '../person-select.interface';
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -15,7 +18,8 @@ const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form'
   selector: 'app-person-select-card',
   templateUrl: './person-select-card.component.html'
 })
-export class PersonSelectCardComponent {
+export class PersonSelectCardComponent implements PersonSelectorComponent {
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls = [
@@ -32,7 +36,7 @@ export class PersonSelectCardComponent {
     { controlName: 'linkTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
   ].map(control => ({ ...control, label: labelKey(control.controlName) } as IDynamicFormControl));
 
-  data = {
+  data: Partial<INewPerson> = {
     personTypeCode: 1,
   };
 
@@ -40,7 +44,11 @@ export class PersonSelectCardComponent {
     return this.form.canSubmit;
   }
 
-  get person(): any {
-    return this.form.serializedValue;
+  set value(person: IPerson) {
+    this.data = person;
+  }
+
+  get person(): Observable<IPerson> {
+    return of(this.value);
   }
 }

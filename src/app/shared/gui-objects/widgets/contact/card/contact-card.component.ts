@@ -1,5 +1,6 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -13,6 +14,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { PersonSelectComponent } from 'app/shared/gui-objects/widgets/person-select/select/person-select.component';
 
 import { makeKey } from '../../../../../core/utils';
 
@@ -22,11 +24,12 @@ const label = makeKey('widgets.contact.grid');
   selector: 'app-contact-card',
   templateUrl: './contact-card.component.html'
 })
-export class ContactCardComponent {
+export class ContactCardComponent implements OnInit {
   @Input() contactId: number;
   @Input() personId: number;
 
-  @ViewChild('form') form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) personForm: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) personSelect: PersonSelectComponent;
 
   controls: IDynamicFormControl[] = null;
   contact: IContact;
@@ -44,7 +47,9 @@ export class ContactCardComponent {
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-  ) {
+  ) { }
+
+  ngOnInit(): void {
     combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_GENDER,
@@ -111,15 +116,26 @@ export class ContactCardComponent {
   }
 
   onSubmit(): void {
-    const data = this.form.serializedUpdates;
-    const action = this.contactId
-      ? this.contactService.update(this.personId, this.contactId, data)
-      : this.contactService.create(this.personId, data);
+    this.serializedUpdates.subscribe(data => {
+      const action = this.contactId
+        ? this.contactService.update(this.personId, this.contactId, data)
+        : this.contactService.create(this.personId, data);
 
-    action.subscribe(() => {
-      this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);
-      this.onBack();
+      action.subscribe(() => {
+        this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);
+        this.onBack();
+      });
     });
+  }
+
+  private get form(): DynamicFormComponent | PersonSelectComponent {
+    return this.personForm || this.personSelect;
+  }
+
+  private get serializedUpdates(): Observable<IContact> {
+    return this.personForm
+      ? of(this.personForm.serializedUpdates)
+      : this.personSelect.selectedPerson;
   }
 
   private get routeParams(): any {

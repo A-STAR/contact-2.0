@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import { IAGridResponse } from '../../../../../shared/components/grid2/grid2.interface';
-import { IPerson } from '../person-select.interface';
+import { IPerson, PersonSelectorComponent, IPersonRequest } from '../person-select.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { PersonSelectService } from '../person-select.service';
@@ -21,7 +23,7 @@ const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form'
   selector: 'app-person-select-grid',
   templateUrl: './person-select-grid.component.html',
 })
-export class PersonSelectGridComponent {
+export class PersonSelectGridComponent implements PersonSelectorComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(Grid2Component) grid: Grid2Component;
 
@@ -55,11 +57,11 @@ export class PersonSelectGridComponent {
     return !isEmpty(this.grid && this.grid.selected);
   }
 
-  get person(): IPerson {
-    return {
+  get person(): Observable<IPerson> {
+    return of({
       ...this.form.serializedValue,
       personId: this.selectedPerson.id,
-    };
+    } as IPersonRequest);
   }
 
   onSelect(): void {

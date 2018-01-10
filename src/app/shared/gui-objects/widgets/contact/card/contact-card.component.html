@@ -8,7 +8,8 @@
 </div>
 
 <div class="pb-lg">
-  <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="contact"></app-dynamic-form>
+  <app-dynamic-form *ngIf="controls && contactId" [controls]="controls" [data]="contact"></app-dynamic-form>
+  <app-person-select *ngIf="!contactId" [person]="contact"></app-person-select>
 </div>
 
 <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
