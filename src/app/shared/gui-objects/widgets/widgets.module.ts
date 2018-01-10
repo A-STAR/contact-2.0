@@ -27,6 +27,7 @@ import { ObjectModule } from './object/object.module';
 import { OperatorDetailsModule } from './operator-details/operator-details.module';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
+import { PersonSelectModule } from './person-select/person-select.module';
 import { PhoneModule } from './phone/phone.module';
 import { PledgeModule } from './pledge/pledge.module';
 import { PledgorModule } from './pledgor/pledgor.module';
@@ -67,6 +68,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     OperatorDetailsModule,
     PaymentModule,
     PaymentOperatorModule,
+    PersonSelectModule,
     PhoneModule,
     PledgeModule,
     PledgorModule,
@@ -105,6 +107,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     OperatorDetailsModule,
     PaymentModule,
     PaymentOperatorModule,
+    PersonSelectModule,
     PhoneModule,
     PledgeModule,
     PledgorModule,
