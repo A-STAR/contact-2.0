@@ -13,22 +13,10 @@ export class EmailService {
     private notificationsService: NotificationsService,
   ) {}
 
-  schedule(debtIds: number[], personIds: number[], personRoles: number[], email: IMassEmail): Observable<void> {
-    /**
-     * This allows for multiple `personRole`'s
-     *
-     * Example:
-     * ```
-     * debtIds = [ 1, 2, 3 ]
-     * personIds = [ 4, 5, 6 ]
-     * personRoles = [ 7, 8 ]
-     * idData = [ [ 1, 4, 7 ], [ 1, 4, 8 ], [ 2, 5, 7 ], [ 2, 5, 8 ], [ 3, 6, 7 ], [ 3, 6, 8 ] ]
-     * ```
-     */
-    const idData = personRoles
-      .reduce((acc, personRole) => [ ...acc, debtIds.map((debtId, i) => [ debtId, personIds[i], personRole ]) ], []);
+  schedule(debtIds: number[], personIds: number[], personRole: number, email: IMassEmail): Observable<void> {
+    const idData = debtIds.map((debtId, i) => [ debtId, personIds[i] ]);
     return this.dataService
-      .update('/mass/emails/form', {}, { ...email, idData })
+      .update('/mass/emails/form', {}, { ...email, idData, personRole })
       .pipe(
         tap(response => {
           if (response.success) {
