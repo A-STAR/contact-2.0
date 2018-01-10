@@ -61,7 +61,7 @@ export class TermEditComponent implements OnInit {
     });
   }
 
-  onSubmit(values: ITerm): any {
+  onSubmit(): any {
     return this.submit.emit(this.form.serializedUpdates);
   }
 
