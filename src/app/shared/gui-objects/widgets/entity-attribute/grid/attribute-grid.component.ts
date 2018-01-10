@@ -40,9 +40,20 @@ const label = makeKey('widgets.attribute.grid');
 export class AttributeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(GridTreeWrapperComponent) grid: GridTreeWrapperComponent<IAttribute>;
 
-  @Input() entityTypeId$: Observable<number>;
-  @Input() entityId$: Observable<number>;
+  @Input('entityTypeId') set entityTypeId(entityTypeId: number) {
+    this._entityTypeId = entityTypeId;
+    this.entityTypeId$.next(entityTypeId);
+  }
 
+  @Input('entityId') set entityId(entityId: number){
+    this._entityId = entityId;
+    this.entityId$.next(entityId);
+  }
+
+  private _entityTypeId: number;
+  private _entityId: number;
+  private entityTypeId$ = new BehaviorSubject<number>(null);
+  private entityId$ = new BehaviorSubject<number>(null);
   private entitySubscription: Subscription;
 
   private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
@@ -216,21 +227,22 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
 
   private fetch(): void {
     combineLatest(this.entityTypeId$, this.entityId$)
-      .pipe(
-        flatMap(([ entityTypeId, entityId ]) => {
-          return entityId && entityTypeId
-            ? this.attributeService.fetchAll(entityTypeId, entityId)
-            : of(null);
-        }),
-        first(),
-      )
-      .subscribe(attributes => {
-        if (!attributes) {
-          return;
-        }
-        this.rows = this.convertToGridTreeRow(attributes);
-        this.removeSelection();
-        this.cdRef.markForCheck();
-      });
+    .pipe(
+      flatMap(([ entityTypeId, entityId ]) => {
+        return entityId && entityTypeId
+          ? this.attributeService.fetchAll(entityTypeId, entityId)
+          : of(null);
+      }),
+      first(),
+    )
+    .subscribe(attributes => {
+      if (!attributes) {
+        return;
+      }
+      this.rows = this.convertToGridTreeRow(attributes);
+      this.removeSelection();
+      this.cdRef.markForCheck();
+    });
+
   }
 }

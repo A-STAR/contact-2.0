@@ -11,6 +11,7 @@ export enum IActionType {
   FETCH_DEBTS_FAILURE  = 'DEBTOR_CARD_FETCH_DEBTS_FAILURE',
   REFRESH_DEBTS        = 'DEBTOR_CARD_REFRESH_DEBTS',
   SELECT_DEBT          = 'DEBTOR_CARD_SELECT_DEBT',
+  SELECT_ENTITY        = 'DEBTOR_CARD_SELECT_ENTITY',
 }
 
 export interface IInitByDebtIdAction {
@@ -39,6 +40,7 @@ export interface IFetchDebtsAction {
   payload: {
     personId: number;
     selectedDebtId: number;
+    entityTypeId: number;
   };
 }
 
@@ -68,6 +70,16 @@ export interface ISelectDebtAction {
   type: IActionType.SELECT_DEBT;
   payload: {
     debtId: number;
+    entityId: number;
+    entityTypeId: number;
+  };
+}
+
+export interface ISelectEntity {
+  type: IActionType.SELECT_ENTITY;
+  payload: {
+    entityId: number;
+    entityTypeId: number;
   };
 }
 
@@ -80,7 +92,8 @@ export type IDebtorCardAction =
   IFetchPersonSuccessAction |
   IInitByDebtIdAction |
   IInitByPersonIdAction |
-  ISelectDebtAction;
+  ISelectDebtAction |
+  ISelectEntity;
 
 export enum IDataStatus {
   LOADING = 'LOADING',
@@ -98,6 +111,8 @@ export interface IDebtorCardState {
     status: IDataStatus;
   };
   selectedDebtId: number;
+  entityTypeId: number;
+  entityId: number;
 }
 
 // TODO(d.maltsev): refactor for the sake of a flat structure

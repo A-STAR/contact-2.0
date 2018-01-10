@@ -5,9 +5,8 @@
 </div>
 
 <br>
-
-<app-entity-attribute-grid
-  [entityId]="entityId$ | async"
+<app-attribute-version
+  [attributeId]="attributeId"
+  [entityId]="entityId"
   [entityTypeId]="entityTypeId"
->
-</app-entity-attribute-grid>
+></app-attribute-version>
