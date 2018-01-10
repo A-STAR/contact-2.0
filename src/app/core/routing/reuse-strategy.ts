@@ -94,15 +94,19 @@ export class ReuseStrategy implements RouteReuseStrategy {
     const config = route.routeConfig;
     if (config) {
       if (!config.loadChildren) {
-        const routeFirstChild = route.firstChild;
-        const routeFirstChildUrl = routeFirstChild
-          ? this.getRouteUrlPaths(routeFirstChild).join('/')
-          : '';
         const childConfigs = config.children;
         if (childConfigs) {
           const childConfigWithRedirect = childConfigs.find(c => c.path === '' && !!c.redirectTo);
           if (childConfigWithRedirect) {
-            childConfigWithRedirect.redirectTo = routeFirstChildUrl;
+            const routeFirstChild = route.firstChild;
+            const routeFirstChildUrl = routeFirstChild
+              ? this.getRouteUrlPaths(routeFirstChild).join('/')
+              : '';
+            /**
+             * Currently Angular strips query strings when redirecting
+             * See: https://github.com/angular/angular/issues/17934
+             */
+            childConfigWithRedirect.redirectTo = routeFirstChildUrl + this.getRouteQueryString(route);
           }
         }
       }
@@ -111,11 +115,7 @@ export class ReuseStrategy implements RouteReuseStrategy {
   }
 
   private getFullRouteUrl(route: ActivatedRouteSnapshot): string {
-    const params = new HttpParams({ fromObject: route.queryParams });
-    const url = this.getFullRouteUrlPaths(route).filter(Boolean).join('/');
-    return !isEmpty(params.keys()) && isEmpty(route.children)
-      ? url + '?' + params.toString()
-      : url;
+    return this.getFullRouteUrlPaths(route).filter(Boolean).join('/') + this.getRouteQueryString(route);
   }
 
   private getFullRouteUrlPaths(route: ActivatedRouteSnapshot): string[] {
@@ -127,6 +127,14 @@ export class ReuseStrategy implements RouteReuseStrategy {
 
   private getRouteUrlPaths(route: ActivatedRouteSnapshot): string[] {
     return route.url.map(urlSegment => urlSegment.path);
+  }
+
+  private getRouteQueryString(route: ActivatedRouteSnapshot): string {
+    const params = new HttpParams({ fromObject: route.queryParams });
+    const queryString = params.toString();
+    return queryString && isEmpty(route.children)
+      ? '?' + queryString
+      : '';
   }
 
   private getRouteData(route: ActivatedRouteSnapshot): IRouteConfigData {
