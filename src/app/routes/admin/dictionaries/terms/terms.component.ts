@@ -16,7 +16,6 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { combineLatestAnd } from '../../../../core/utils/helpers';
-import { getTranslations } from '../../../../core/utils';
 import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
@@ -133,9 +132,9 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     return this.dictionariesService.selectedTerm;
   }
 
-  get languages(): Observable<ILookupLanguage[]> {
-    return this.lookupService.lookup<ILookupLanguage>('languages');
-  }
+  // get languages(): Observable<ILookupLanguage[]> {
+  //   return this.lookupService.lookup<ILookupLanguage>('languages');
+  // }
 
   get terms(): Observable<ITerm[]> {
     return this.dictionariesService.terms;
@@ -148,10 +147,6 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
   get hasDropdownTerms(): Observable<boolean> {
     return this.dropdownTerms.map(terms => !!terms);
   }
-
-  // get hasLanguages(): Observable<boolean> {
-  //   return this.languages.map(languages => !!languages);
-  // }
 
   onRemove(): void {
     this.dictionariesService.deleteTerm();
@@ -166,20 +161,14 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     combineLatestAnd([
       this.userPermissionsService.has('DICT_TERM_EDIT'),
       this.hasDropdownTerms,
-      // this.hasLanguages,
     ])
     .pipe(
       filter(Boolean),
       switchMap(_ => this.dictionariesService.selectedTerm),
-      switchMap(term => {
-        this.term = { ...term };
-        // return this.dictionariesService.fetchTermTranslations(term.id);
-        return of(term);
-      }),
       first()
     )
-    .subscribe(translations => {
-      // this.term.name = translations;
+    .subscribe(term => {
+      this.term = { ...term };
       this.setDialog('edit');
       this.cdRef.markForCheck();
     });
@@ -189,7 +178,6 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     combineLatestAnd([
       this.userPermissionsService.has('DICT_TERM_ADD'),
       this.hasDropdownTerms,
-      // this.hasLanguages,
     ])
     .pipe(
       filter(Boolean),

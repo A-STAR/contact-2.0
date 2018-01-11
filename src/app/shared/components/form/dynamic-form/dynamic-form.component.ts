@@ -11,7 +11,7 @@ import {
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, switchMap, flatMap } from 'rxjs/operators';
+import { first, switchMap } from 'rxjs/operators';
 import * as R from 'ramda';
 
 import {
@@ -47,7 +47,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   form: FormGroup;
 
   private flatControls: Array<IDynamicFormControl>;
-  private label: (key: string) => string;
 
   constructor(
     private cdRef: ChangeDetectorRef,

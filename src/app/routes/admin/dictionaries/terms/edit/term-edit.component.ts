@@ -17,17 +17,13 @@ import {
   IDynamicFormConfig
 } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
-import { IMultiLanguageOption } from '../../../../../shared/components/form/multi-language/multi-language.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-import { toLabeledValues, getTranslations } from '../../../../../core/utils';
-
-// const label = makeKey('terms.edit');
+import { toLabeledValues } from '../../../../../core/utils';
 
 @Component({
   selector: 'app-term-edit',
@@ -39,7 +35,6 @@ export class TermEditComponent implements OnInit {
 
   @Input() canEdit = false;
   @Input() disableParentSelection = false;
-  // @Input() languages: ILookupLanguage[];
   @Input() term: ITerm;
   @Input() terms: ITerm[];
   @Input() title: string;
@@ -54,20 +49,11 @@ export class TermEditComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    // this.userDictionariesService
-    // .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE)
-    // .pipe(first())
-    // .subscribe(dictTypeOptions => {
-      // const translations = this.term && this.term.name || [];
-      // const dictTermTranslations = getTranslations(this.languages, translations);
-      // this.controls = this.getControls(dictTypeOptions, dictTermTranslations);
-      this.controls = this.getControls();
-      this.cdRef.markForCheck();
-    // });
+    this.controls = this.getControls();
+    this.cdRef.markForCheck();
   }
 
   onSubmit(): any {
@@ -82,10 +68,7 @@ export class TermEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private getControls(
-    // dictTypeOptions: IOption[],
-    // nameTranslations: IMultiLanguageOption[],
-  ): IDynamicFormControl[] {
+  private getControls(): IDynamicFormControl[] {
 
     const disabled = !this.canEdit;
     const controls: Partial<IDynamicFormControl>[] = [
@@ -99,7 +82,6 @@ export class TermEditComponent implements OnInit {
         controlName: 'name',
         type: this.term ? 'multilanguage' : 'text',
         required: true,
-        // langOptions: nameTranslations,
         langConfig: { entityAttributeId: 12, entityId: this.term.id },
         disabled,
       },
@@ -108,7 +90,6 @@ export class TermEditComponent implements OnInit {
         type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE,
         required: true,
-        // options: dictTypeOptions,
         label: 'terms.edit.typeCode',
         disabled,
       },
@@ -129,6 +110,5 @@ export class TermEditComponent implements OnInit {
     ];
 
     return controls as IDynamicFormControl[];
-    // return controls.map(ctrl => ({ ...ctrl, label: label(ctrl.controlName) }) as IDynamicFormControl);
   }
 }
