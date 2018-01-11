@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { ITab } from '../../../shared/components/layout/tabview/header/header.interface';
 
 @Component({
+  host: { class: 'full-height' },
   selector: 'app-roles-and-permissions',
-  styleUrls: [ './roles-and-permissions.component.scss' ],
   templateUrl: './roles-and-permissions.component.html'
 })
 export class RolesAndPermissionsComponent {

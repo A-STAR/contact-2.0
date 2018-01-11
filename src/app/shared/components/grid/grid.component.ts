@@ -29,9 +29,10 @@ import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-grid',
+  styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.scss'],
 })
 export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;

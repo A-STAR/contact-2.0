@@ -21,8 +21,8 @@ import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-permissions',
-  styleUrls: [ './permissions.component.scss' ],
   templateUrl: './permissions.component.html',
 })
 export class PermissionsComponent extends DialogFunctions implements OnInit, OnDestroy {
