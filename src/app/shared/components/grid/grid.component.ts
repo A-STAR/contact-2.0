@@ -15,7 +15,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 import { merge } from 'rxjs/observable/merge';
