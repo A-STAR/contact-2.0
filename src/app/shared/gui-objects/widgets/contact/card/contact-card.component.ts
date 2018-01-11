@@ -1,18 +1,20 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IContact } from '../contact.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { ISelectedPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactService } from '../contact.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { PersonSelectComponent } from 'app/shared/gui-objects/widgets/person-select/select/person-select.component';
+import { PersonSelectGridComponent } from 'app/shared/gui-objects/widgets/person-select/grid/person-select-grid.component';
 
 import { makeKey } from '../../../../../core/utils';
 
@@ -26,7 +28,7 @@ export class ContactCardComponent implements OnInit {
   @Input() contactId: number;
   @Input() personId: number;
 
-  @ViewChild(PersonSelectComponent) personSelect: PersonSelectComponent;
+  @ViewChild(PersonSelectGridComponent) personSelectGrid: PersonSelectGridComponent;
 
   controls: IDynamicFormControl[] = null;
   contact: IContact;
@@ -37,6 +39,8 @@ export class ContactCardComponent implements OnInit {
     { title: 'debtor.identityDocs.title', isInitialised: false },
     { title: 'debtor.employmentRecordTab.title', isInitialised: false }
   ];
+
+  private selectedContact$ = new BehaviorSubject<ISelectedPerson>(null);
 
   constructor(
     private contentTabService: ContentTabService,
@@ -89,7 +93,7 @@ export class ContactCardComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return this.personSelect && this.personSelect.canSubmit;
+    return !!this.selectedContact$.value;
   }
 
   get debtId(): number {
@@ -100,12 +104,20 @@ export class ContactCardComponent implements OnInit {
     return this.routeParams.personId;
   }
 
+  get selectedContactId(): number {
+    return this.selectedContact$.value && this.selectedContact$.value.id;
+  }
+
   get contactPersonId(): number {
-    return this.routeParams.contactId || this.routeParams.personId;
+    return this.routeParams.contactId || this.routeParams.personId || this.selectedContactId;
   }
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
+  }
+
+  onContactSelected(contact: ISelectedPerson): void {
+    this.selectedContact$.next(contact);
   }
 
   onBack(): void {
@@ -113,20 +125,22 @@ export class ContactCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.personSelect.getSelectedPerson().subscribe(data => {
-      const contactPerson = {
-        contactPersonId: data.id,
-        linkTypeCode: data.linkTypeCode
-      };
+    this.createContact();
+    this.onBack();
+  }
 
-      const action = this.contactId
-        ? this.contactService.update(this.personId, this.contactId, contactPerson)
-        : this.contactService.create(this.personId, contactPerson);
+  private createContact(): void {
+    const contactPerson = {
+      contactPersonId: this.selectedContact$.value.id,
+      linkTypeCode: this.selectedContact$.value.linkTypeCode
+    };
 
-      action.subscribe(() => {
-        this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);
-        this.onBack();
-      });
+    const action = this.contactId
+      ? this.contactService.update(this.personId, this.contactId, contactPerson)
+      : this.contactService.create(this.personId, contactPerson);
+
+    action.subscribe(() => {
+      this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);
     });
   }
 

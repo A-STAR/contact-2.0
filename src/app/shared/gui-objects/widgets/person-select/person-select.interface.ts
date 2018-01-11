@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs/Observable';
-
 export interface IPerson {
   birthDate?: string;
   firstName?: string;
@@ -26,9 +24,4 @@ export interface IPerson {
 
 export interface ISelectedPerson extends IPerson {
   linkTypeCode?: number;
-}
-
-export abstract class PersonSelectorComponent {
-  abstract get isValid(): boolean;
-  abstract getSelectedPerson(): Observable<ISelectedPerson>;
 }

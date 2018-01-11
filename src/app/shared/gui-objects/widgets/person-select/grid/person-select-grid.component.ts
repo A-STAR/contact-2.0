@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 
 import { IAGridResponse } from '../../../../../shared/components/grid2/grid2.interface';
-import { IPerson, PersonSelectorComponent, ISelectedPerson } from '../person-select.interface';
+import { IPerson, ISelectedPerson } from '../person-select.interface';
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from 'app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { PersonSelectService } from '../person-select.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
@@ -15,6 +15,7 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 import { Grid2Component } from '../../../../../shared/components/grid2/grid2.component';
 
 import { isEmpty, makeKey, range, addLabelForEntity } from '../../../../../core/utils';
+import { DialogFunctions } from 'app/core/dialog';
 
 const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form');
 
@@ -23,9 +24,25 @@ const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form'
   selector: 'app-person-select-grid',
   templateUrl: './person-select-grid.component.html',
 })
-export class PersonSelectGridComponent implements PersonSelectorComponent {
+export class PersonSelectGridComponent extends DialogFunctions {
+
+  @Output() select = new EventEmitter<ISelectedPerson>();
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(Grid2Component) grid: Grid2Component;
+
+  dialog;
+
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      action: () => this.setDialog('create')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      action: () => this.fetch()
+    }
+  ];
 
   controls = [
     { controlName: 'linkTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
@@ -49,38 +66,58 @@ export class PersonSelectGridComponent implements PersonSelectorComponent {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private personSearchService: PersonSelectService,
+    private personSelectService: PersonSelectService,
     private gridService: GridService,
-  ) {}
+  ) {
+    super();
+  }
 
   get isValid(): boolean {
     return !isEmpty(this.grid && this.grid.selected);
   }
 
-  getSelectedPerson(): Observable<ISelectedPerson> {
-    return of({
+  get selectedPerson(): ISelectedPerson {
+    return {
       ...this.form.serializedValue,
       ...this.gridSelectedPerson,
-    });
+    };
   }
 
   onSelect(): void {
-    this.cdRef.markForCheck();
+    this.select.emit(this.selectedPerson);
   }
 
   onRequest(): void {
-    const filters = this.grid.getFilters();
-    const params = this.grid.getRequestParams();
-    this.personSearchService
-      .fetchAll(filters, params)
-      .subscribe((response: IAGridResponse<IPerson>) => {
-        this.rows = [ ...response.data ];
-        this.rowCount = response.total;
-        this.cdRef.markForCheck();
-      });
+    this.fetch();
+  }
+
+  onPersonCreated(person: ISelectedPerson): void {
+    this.closeDialog();
+    this.fetch()
+      .map(rows => rows.findIndex(row => row.id === person.id))
+      .subscribe(rowIndex => this.selectPerson(rowIndex));
+  }
+
+  private selectPerson(index: number): void {
+    this.grid.gridOptions.api.selectIndex(index, false, false);
+    this.select.emit(this.selectedPerson);
   }
 
   private get gridSelectedPerson(): IPerson {
     return this.grid && this.grid.selected && this.grid.selected[0] as any;
+  }
+
+  private fetch(): Observable<IPerson[]> {
+    const filters = this.grid.getFilters();
+    const params = this.grid.getRequestParams();
+    const action = this.personSelectService.fetchAll(filters, params);
+
+    action.subscribe((response: IAGridResponse<IPerson>) => {
+      this.rows = [ ...response.data ];
+      this.rowCount = response.total;
+      this.cdRef.markForCheck();
+    });
+
+    return action.map(response => response.data);
   }
 }

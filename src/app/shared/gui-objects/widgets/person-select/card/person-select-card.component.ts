@@ -4,7 +4,7 @@ import { first } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUserConstant } from 'app/core/user/constants/user-constants.interface';
-import { IPerson, PersonSelectorComponent, ISelectedPerson } from '../person-select.interface';
+import { IPerson, ISelectedPerson } from '../person-select.interface';
 
 import { UserConstantsService } from 'app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -21,7 +21,7 @@ const labelKey = makeKey('common.entities.person.fields');
   selector: 'app-person-select-card',
   templateUrl: './person-select-card.component.html'
 })
-export class PersonSelectCardComponent implements OnInit, PersonSelectorComponent {
+export class PersonSelectCardComponent implements OnInit {
 
   @Input() person: IPerson;
 
@@ -92,10 +92,11 @@ export class PersonSelectCardComponent implements OnInit, PersonSelectorComponen
     return this.person || { typeCode: 1 };
   }
 
-  getSelectedPerson(): Observable<ISelectedPerson> {
+  submitPerson(): Observable<ISelectedPerson> {
     const action = this.person
       ? this.personSelectService.update(this.person.id, this.form.serializedUpdates)
       : this.personSelectService.create(this.form.serializedUpdates);
+
     return action.map(personId => ({
       id: this.person ? this.person.id : personId,
       ...this.form.serializedValue
