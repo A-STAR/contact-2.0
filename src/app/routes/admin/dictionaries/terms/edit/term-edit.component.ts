@@ -8,7 +8,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { first } from 'rxjs/operators/first';
 
 import { ITerm } from '../../dictionaries.interface';
 import {
@@ -16,7 +15,6 @@ import {
   IDynamicFormItem,
   IDynamicFormConfig
 } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';

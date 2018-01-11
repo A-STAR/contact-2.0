@@ -1,17 +1,14 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 import { first, filter, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 import { ITerm } from '../dictionaries.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DictionariesService } from '../dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
@@ -79,7 +76,6 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     private cdRef: ChangeDetectorRef,
     private dictionariesService: DictionariesService,
     private gridService: GridService,
-    private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -131,10 +127,6 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
   get selectedTerm(): Observable<ITerm> {
     return this.dictionariesService.selectedTerm;
   }
-
-  // get languages(): Observable<ILookupLanguage[]> {
-  //   return this.lookupService.lookup<ILookupLanguage>('languages');
-  // }
 
   get terms(): Observable<ITerm[]> {
     return this.dictionariesService.terms;
