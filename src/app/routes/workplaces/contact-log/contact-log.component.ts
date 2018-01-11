@@ -12,8 +12,6 @@ const label = makeKey('modules.contactLog');
   templateUrl: 'contact-log.component.html',
 })
 export class ContactLogComponent {
-  static COMPONENT_NAME = 'ContactLogComponent';
-
   grids = [
     { key: ContactsGridKeys.PROMISE, title: label('promise.title'), rowIdKey: 'promiseId', isInitialised: true },
     { key: ContactsGridKeys.CONTACT, title: label('contact.title'), rowIdKey: 'contactId', isInitialised: false },

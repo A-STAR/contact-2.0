@@ -13,7 +13,6 @@ import { PropertyService } from '../../../../shared/gui-objects/widgets/property
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtorPropertyAttributesComponent implements OnInit {
-  static COMPONENT_NAME = 'DebtorPropertyAttributesComponent';
   static ENTITY_TYPE_PROPERTY = 33;
 
   entityId$: Observable<number>;

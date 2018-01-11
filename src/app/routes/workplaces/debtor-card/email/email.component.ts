@@ -14,8 +14,6 @@ interface IEmailCardRouteParams {
   templateUrl: './email.component.html'
 })
 export class DebtorEmailComponent {
-  static COMPONENT_NAME = 'DebtorEmailComponent';
-
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,

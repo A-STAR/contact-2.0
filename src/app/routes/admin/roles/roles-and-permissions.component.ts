@@ -8,8 +8,6 @@ import { ITab } from '../../../shared/components/layout/tabview/header/header.in
   templateUrl: './roles-and-permissions.component.html'
 })
 export class RolesAndPermissionsComponent {
-  static COMPONENT_NAME = 'RolesAndPermissionsComponent';
-
   tabs: ITab[] = [
     {
       link: 'permissions',

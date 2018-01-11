@@ -11,8 +11,6 @@ import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debt
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'DebtorAttributesVersionsComponent';
-
   attributeId: number;
   entityId: number;
   entityTypeId: number;

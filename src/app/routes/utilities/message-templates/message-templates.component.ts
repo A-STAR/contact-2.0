@@ -6,8 +6,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageTemplatesComponent {
-  static COMPONENT_NAME = 'MessageTemplatesComponent';
-
   tabs = [
     { isInitialised: true,  title: 'phoneCall', typeCode: 1 },
     { isInitialised: false, title: 'sms', typeCode: 2 },

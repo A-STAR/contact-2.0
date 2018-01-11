@@ -7,8 +7,6 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrencyRateEditComponent {
-  static COMPONENT_NAME = 'CurrencyRateEditComponent';
-
   constructor(
     private route: ActivatedRoute,
   ) {}

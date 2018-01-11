@@ -19,8 +19,6 @@ import { combineLatestAnd } from '../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersComponent implements OnDestroy {
-  static COMPONENT_NAME = 'UsersComponent';
-
   private _users: Array<IUser> = [];
   private selectedUserId: number;
 

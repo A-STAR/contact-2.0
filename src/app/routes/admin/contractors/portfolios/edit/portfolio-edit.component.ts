@@ -27,8 +27,6 @@ const label = makeKey('portfolios.grid');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortfolioEditComponent implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'PortfolioEditComponent';
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
