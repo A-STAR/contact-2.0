@@ -15,9 +15,10 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-object-grid',
   templateUrl: './objects.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestroy {
   private _dictionarySubscription: Subscription;

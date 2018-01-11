@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AngularSplitModule } from 'angular-split';
 
 import { RolesModule as RolesGridModule } from './roles/roles.module';
 import { SharedModule } from '../../../shared/shared.module';
@@ -37,6 +38,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    AngularSplitModule,
     RolesGridModule,
     RouterModule.forChild(routes),
     SharedModule,

@@ -1,23 +1,26 @@
-<app-toolbar-2
-  [items]="toolbarActions"
-  (actionClick)="onSaveChanges()"
-></app-toolbar-2>
+<div class="flex vertical">
+  <app-toolbar-2
+    class="flex-item"
+    [items]="toolbarActions"
+    (actionClick)="onSaveChanges()"
+  ></app-toolbar-2>
 
-<ng-container *ngIf="hasViewPermission | async; else message">
-  <app-tree
-    *ngIf="value"
-    [selectionMode]="(hasEditPermission | async) ? 'checkbox' : ''"
-    [style]="{height: '100%', width: '100%', border: 'none'}"
-    [value]="value"
-    (selectionChange)="onSelectionChange($event)"
-    [selection]="selection"
-  ></app-tree>
-  <div
-    *ngIf="!value"
-    class="message-container">
-    {{ 'default.grid.empty' | translate }}
-  </div>
-</ng-container>
+  <ng-container *ngIf="hasViewPermission | async; else message">
+    <div *ngIf="value" class="flex-item grow">
+      <app-tree
+        [selection]="selection"
+        [selectionMode]="(hasEditPermission | async) ? 'checkbox' : ''"
+        [style]="{ height: '100%', width: '100%', border: 'none' }"
+        [value]="value"
+        (selectionChange)="onSelectionChange($event)"
+      ></app-tree>
+    </div>
+
+    <div *ngIf="!value" class="message-container">
+      {{ 'default.grid.empty' | translate }}
+    </div>
+  </ng-container>
+</div>
 
 <ng-template #message>
   <div class="message-container">
