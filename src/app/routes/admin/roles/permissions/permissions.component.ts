@@ -22,7 +22,7 @@ import { DialogFunctions } from '../../../../core/dialog';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-permissions',
-  styles: [ ':host { display: flex; flex-direction: column; height: 100%; }' ],
+  styleUrls: [ './permissions.component.scss' ],
   templateUrl: './permissions.component.html',
 })
 export class PermissionsComponent extends DialogFunctions implements OnInit, OnDestroy {

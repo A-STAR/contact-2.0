@@ -5,9 +5,9 @@
   </split-area>
   <!-- Permissions, Access, Objects tabs -->
   <split-area size="50">
-    <div style="display: flex; flex-direction: column; height: 100%;">
-      <app-tabview-header style="flex: 0 0;" [noMargin]="true" [tabs]="tabs"></app-tabview-header>
-      <div style="flex: 1 0; overflow: hidden;">
+    <div class="flex vertical">
+      <app-tabview-header class="flex-item" [noMargin]="true" [tabs]="tabs"></app-tabview-header>
+      <div class="flex-item grow">
         <router-outlet></router-outlet>
       </div>
     </div>

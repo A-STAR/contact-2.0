@@ -1,0 +1,18 @@
+.flex {
+  display: flex;
+  &.horizontal {
+    flex-direction: row;
+  }
+  &.vertical {
+    flex-direction: column;
+    height: 100%;
+  }
+}
+
+.flex-item {
+  flex: 0 0;
+  &.grow {
+    flex: 1 0;
+    overflow: hidden;
+  }
+}

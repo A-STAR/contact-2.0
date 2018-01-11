@@ -4,7 +4,7 @@ import { ITab } from '../../../shared/components/layout/tabview/header/header.in
 
 @Component({
   selector: 'app-roles-and-permissions',
-  styles: [ ':host { height: 100% }' ],
+  styleUrls: [ './roles-and-permissions.component.scss' ],
   templateUrl: './roles-and-permissions.component.html'
 })
 export class RolesAndPermissionsComponent {
