@@ -1,10 +1,14 @@
 @import "../../../shared/styles/app/variables.scss";
 
-.header-menu__item span {
-  display: inline-block;
-  font-size: $font-size-top-menu;
+.header-menu__item {
+  a {
+    color: $brand-white;
+    font-size: $font-size-top-menu;
+  }
 }
 
 .header-menu__item--active {
-  color: #117391 !important;
+  a {
+    color: #fff;
+  }
 }
