@@ -16,9 +16,9 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/merge';
+import { first } from 'rxjs/operators';
+import { merge } from 'rxjs/observable/merge';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
 import { SplitComponent } from 'angular-split';
@@ -27,7 +27,6 @@ import { IContextMenuItem } from './grid.interface';
 import { IMessages, TSelectionType, IGridColumn } from './grid.interface';
 
 import { SettingsService } from '../../../core/settings/settings.service';
-
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -81,6 +80,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   messages: IMessages = {};
   selected: Array<any> = [];
   subscription: Subscription;
+  resizeSubscription: Subscription;
 
   private _selected: any = [];
 
@@ -140,7 +140,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       translationKeys.push(this.emptyMessage);
     }
 
-    this.subscription = Observable.merge(
+    this.subscription = merge(
       this.translate.get(translationKeys).pipe(first()),
       this.translate.onLangChange
         .map(data => data.translations)
@@ -194,26 +194,17 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   ngAfterViewInit(): void {
-    console.log(this.dataTableRef.nativeElement);
-    console.log(this.split);
-
-    this.split.dragEnd.subscribe(() => {
-      const rect = this.elRef.nativeElement.getBoundingClientRect();
-      this.dataTableRef.nativeElement.style.height = `${rect.height}px`;
-      this.dataTable.recalculate();
-    });
-
     if (this.contextMenuOptions.length) {
       this.ctxOutsideListener = this.renderer.listen('document', 'click', this.onDocumentClick);
     }
 
     if (this.styles) {
       if (this.styles.height === 'auto') {
-        setTimeout(() => {
-          const rect = this.elRef.nativeElement.getBoundingClientRect();
-          this.dataTableRef.nativeElement.style.height = `${rect.height}px`;
-          this.dataTable.recalculate();
-        }, 0);
+        // TODO(d.maltsev): this is horrible, but nothing else seems to work
+        setTimeout(() => this.setFullHeight(), 0);
+        if (this.split) {
+          this.resizeSubscription = merge(this.split.dragEnd, this.split.dragProgress).subscribe(() => this.setFullHeight());
+        }
       }
     } else {
       // Define a possible height of the datatable
@@ -230,6 +221,9 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.debouncerSub.unsubscribe();
+    if (this.resizeSubscription) {
+      this.resizeSubscription.unsubscribe();
+    }
     if (this.ctxOutsideListener) {
       this.ctxOutsideListener();
     }
@@ -330,5 +324,13 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       col.name = columnTranslations[col.prop];
       return col;
     });
+  }
+
+  private setFullHeight(): void {
+    const rect = this.elRef.nativeElement.getBoundingClientRect();
+    this.dataTableRef.nativeElement.style.height = `${rect.height}px`;
+    // this.dataTable.recalculate();
+    // this.dataTable.recalculateDims();
+    this.cdRef.markForCheck();
   }
 }
