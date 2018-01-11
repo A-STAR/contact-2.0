@@ -1,6 +1,5 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -13,7 +12,6 @@ import { ContactService } from '../contact.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { PersonSelectComponent } from 'app/shared/gui-objects/widgets/person-select/select/person-select.component';
 
 import { makeKey } from '../../../../../core/utils';
@@ -28,7 +26,6 @@ export class ContactCardComponent implements OnInit {
   @Input() contactId: number;
   @Input() personId: number;
 
-  @ViewChild(DynamicFormComponent) personForm: DynamicFormComponent;
   @ViewChild(PersonSelectComponent) personSelect: PersonSelectComponent;
 
   controls: IDynamicFormControl[] = null;
@@ -92,7 +89,7 @@ export class ContactCardComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+    return this.personSelect && this.personSelect.canSubmit;
   }
 
   get debtId(): number {
@@ -116,7 +113,7 @@ export class ContactCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.serializedUpdates.subscribe(data => {
+    this.personSelect.getSelectedPerson().subscribe(data => {
       const action = this.contactId
         ? this.contactService.update(this.personId, this.contactId, data)
         : this.contactService.create(this.personId, data);
@@ -126,16 +123,6 @@ export class ContactCardComponent implements OnInit {
         this.onBack();
       });
     });
-  }
-
-  private get form(): DynamicFormComponent | PersonSelectComponent {
-    return this.personForm || this.personSelect;
-  }
-
-  private get serializedUpdates(): Observable<IContact> {
-    return this.personForm
-      ? of(this.personForm.serializedUpdates)
-      : this.personSelect.selectedPerson;
   }
 
   private get routeParams(): any {

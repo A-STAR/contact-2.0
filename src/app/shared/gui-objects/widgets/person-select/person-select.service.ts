@@ -31,4 +31,10 @@ export class PersonSelectService {
       .map(({ data }) => data[0].id)
       .catch(this.notificationsService.createError().entity('entities.persons.gen.singular').dispatchCallback());
   }
+
+  update(personId: number, person: IPerson): Observable<number> {
+    return this.dataService
+      .update('/persons/{personId}', { personId }, person)
+      .catch(this.notificationsService.updateError().entity('entities.persons.gen.singular').dispatchCallback());
+  }
 }

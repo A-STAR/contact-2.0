@@ -57,10 +57,10 @@ export class PersonSelectGridComponent implements PersonSelectorComponent {
     return !isEmpty(this.grid && this.grid.selected);
   }
 
-  get person(): Observable<ISelectedPerson> {
+  getSelectedPerson(): Observable<ISelectedPerson> {
     return of({
       ...this.form.serializedValue,
-      ...this.selectedPerson,
+      ...this.gridSelectedPerson,
     });
   }
 
@@ -80,7 +80,7 @@ export class PersonSelectGridComponent implements PersonSelectorComponent {
       });
   }
 
-  private get selectedPerson(): IPerson {
+  private get gridSelectedPerson(): IPerson {
     return this.grid && this.grid.selected && this.grid.selected[0] as any;
   }
 }

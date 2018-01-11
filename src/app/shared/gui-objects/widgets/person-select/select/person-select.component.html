@@ -1,4 +1,4 @@
-<app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+<app-tabview *ngIf="!person" [noMargin]="true" (select)="onTabSelect($event)">
   <app-tabview-tab [title]="'modules.contactRegistration.contactGrid.tabs.selectFromAll.title'" [closable]="false">
     <div class="mt">
       <app-person-select-grid></app-person-select-grid>
@@ -10,3 +10,5 @@
     </div>
   </app-tabview-tab>
 </app-tabview>
+
+<app-person-select-card *ngIf="person" [person]="person"></app-person-select-card>

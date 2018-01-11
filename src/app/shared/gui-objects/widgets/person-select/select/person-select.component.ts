@@ -16,21 +16,18 @@ import { PersonSelectCardComponent } from '../card/person-select-card.component'
 })
 export class PersonSelectComponent implements AfterViewInit {
 
-  @Input() set person(person: IPerson) {
-    this.personExists = !!person;
-    if (person) {
-      this.card.value = person;
-    }
-  }
+  @Input() person: IPerson;
 
   @ViewChild(PersonSelectGridComponent) grid: PersonSelectGridComponent;
   @ViewChild(PersonSelectCardComponent) card: PersonSelectCardComponent;
 
-  personExists = false;
-
   private personSelectComponent: PersonSelectorComponent;
 
   constructor(private cdRef: ChangeDetectorRef) { }
+
+  ngAfterViewInit(): void {
+    this.personSelectComponent = this.person ? this.card : this.grid;
+  }
 
   get personSelectComponents(): PersonSelectorComponent[] {
     return [ this.grid, this.card ];
@@ -40,12 +37,8 @@ export class PersonSelectComponent implements AfterViewInit {
     return this.personSelectComponent && this.personSelectComponent.isValid;
   }
 
-  get selectedPerson(): Observable<ISelectedPerson> {
-    return this.personSelectComponent && this.personSelectComponent.person;
-  }
-
-  ngAfterViewInit(): void {
-    this.personSelectComponent = this.personSelectComponents[0];
+  getSelectedPerson(): Observable<ISelectedPerson> {
+    return this.personSelectComponent && this.personSelectComponent.getSelectedPerson();
   }
 
   onTabSelect(tabIndex: number): void {
