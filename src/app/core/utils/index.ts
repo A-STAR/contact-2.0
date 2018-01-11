@@ -8,8 +8,6 @@ import { IOption, INamedValue } from '../converter/value-converter.interface';
 import { ILookupLanguage } from '../lookup/lookup.interface';
 import { IEntityTranslation, IEntitytTranslationValue } from '../entity/translations/entity-translations.interface';
 
-export const prop = (prop: string) => obj => Object.hasOwnProperty.call(obj, prop) ? obj[prop] : orValue;
-
 export const propOr = (prop: string, orValue: any) => obj => Object.hasOwnProperty.call(obj, prop) ? obj[prop] : orValue;
 
 export const makeKey = (prefix: string) => (fieldName: string) => `${prefix}.${fieldName}`;

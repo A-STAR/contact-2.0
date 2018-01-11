@@ -17,10 +17,10 @@ import * as R from 'ramda';
 import {
   IControls,
   IDynamicFormItem,
+  IDynamicFormConfig,
   IDynamicFormControl,
   ISelectItemsPayload,
   IValue,
-  IDynamicFormConfig
 } from './dynamic-form.interface';
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
@@ -113,7 +113,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       )
       .pipe(first())
       .subscribe(([ dictionaries, multiLanguageCtrlsWithOptions ]) => {
-        console.log('multilangCtrls with options', multiLanguageCtrlsWithOptions);
+        // console.log('multilangCtrls with options', multiLanguageCtrlsWithOptions);
 
         Object.keys(dictionaries).forEach(dictCode => {
           const options: IOption[] = dictionaries[dictCode];
@@ -140,13 +140,14 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         this.form = this.createForm(this.flatControls);
         this.populateForm();
         this.cdRef.markForCheck();
-        console.log('flatControls', this.flatControls);
+        // console.log('flatControls', this.flatControls);
       });
 
     } else {
       this.flatControls = this.flattenFormControls(this.controls);
       this.form = this.createForm(this.flatControls);
       this.populateForm();
+      this.cdRef.markForCheck();
     }
   }
 
