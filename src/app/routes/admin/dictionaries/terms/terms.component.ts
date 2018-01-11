@@ -15,6 +15,7 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 import { combineLatestAnd } from '../../../../core/utils/helpers';
+import { getTranslations } from '../../../../core/utils';
 import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
@@ -186,7 +187,7 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     combineLatestAnd([
       this.userPermissionsService.has('DICT_TERM_ADD'),
       this.hasDropdownTerms,
-      this.hasLanguages,
+      // this.hasLanguages,
     ])
     .pipe(
       filter(Boolean),

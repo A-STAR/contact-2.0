@@ -23,6 +23,11 @@ export interface IDynamicFormGroup {
   width?: number;
 }
 
+export interface IDynamicFormConfig {
+  suppressLabelCreation?: boolean;
+  labelKey?: string;
+}
+
 export interface IDynamicFormControl {
   display?: boolean;
   children?: IDynamicFormControl[];

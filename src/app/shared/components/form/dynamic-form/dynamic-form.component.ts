@@ -9,10 +9,25 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+// import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators';
+import * as R from 'ramda';
 
-import { IControls, IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload, IValue } from './dynamic-form.interface';
+import {
+  IControls,
+  IDynamicFormItem,
+  IDynamicFormControl,
+  ISelectItemsPayload,
+  IValue,
+  IDynamicFormConfig
+} from './dynamic-form.interface';
+import { IOption } from 'app/core/converter/value-converter.interface';
 
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { LookupService } from '../../../../core/lookup/lookup.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+
+import { makeKey, getTranslations } from '../../../../core/utils';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -22,22 +37,76 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   @Input() controls: Array<IDynamicFormItem>;
   @Input() data: IValue;
+  @Input() config: IDynamicFormConfig;
 
   @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
 
   form: FormGroup;
 
   private flatControls: Array<IDynamicFormControl>;
+  private label: (key: string) => string;
 
   constructor(
     private formBuilder: FormBuilder,
+    private lookupService: LookupService,
     private valueConverterService: ValueConverterService,
+    private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    this.flatControls = this.flattenFormControls(this.controls);
-    this.form = this.createForm(this.flatControls);
-    this.populateForm();
+    const config = this.config;
+    if (config) {
+      if (!config.suppressLabelCreation) {
+        const label = makeKey(config.labelKey);
+        const createLabels = (ctrl: IDynamicFormControl) => {
+          return !ctrl.children
+            ? { ...ctrl, label: ctrl.label || label(ctrl.controlName) }
+            : ctrl.children.map(createLabels);
+        };
+        this.controls = this.controls.map(createLabels);
+      }
+      // const flatControls: IDynamicFormControl[] = this.flattenFormControls(this.controls);
+      const dictCodes = this.flattenFormControls(this.controls)
+        .filter(ctrl => ctrl.dictCode && ctrl.type === 'select')
+        .map(ctrl => ctrl.dictCode);
+
+      this.userDictionariesService.getDictionariesAsOptions(dictCodes)
+        .pipe(
+          first()
+        )
+        .subscribe(dictionaries => {
+          console.log('dictionaries fetched', dictionaries);
+
+          // const assignOptions = (options: IOption[], dictCode: string) => (ctrl: IDynamicFormControl) => {
+          //   return ctrl.children
+          //     ? ctrl.children.map(assignOptions(options, dictCode))
+          //     : ctrl.dictCode === Number(dictCode)
+          //       ? { ...ctrl, options: ctrl.options || options }
+          //       : ctrl;
+          // };
+
+          Object.keys(dictionaries).forEach(dictCode => {
+            const options: IOption[] = dictionaries[dictCode];
+            const control = this.recursivelyFindControlByProp(
+              <IDynamicFormControl[]>this.controls, { dictCode: Number(dictCode) }
+            );
+            // this.controls = this.controls.map(assignOptions(options, dictCode));
+            if (control) {
+              control.options = options;
+            }
+          });
+          this.flatControls = this.flattenFormControls(this.controls);
+
+          console.log('flatControls', this.flatControls);
+          this.form = this.createForm(this.flatControls);
+          this.populateForm();
+        });
+
+    } else {
+      this.flatControls = this.flattenFormControls(this.controls);
+      this.form = this.createForm(this.flatControls);
+      this.populateForm();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -165,6 +234,18 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   reset(): void {
     this.form.reset();
+  }
+
+  private getKey = R.compose(R.head, <any>R.keys);
+
+  private recursivelyFindControlByProp = (controls: IDynamicFormControl[], prop: Partial<IDynamicFormControl>) => {
+    return controls.find(ctrl => {
+      if (ctrl.children) {
+        return this.recursivelyFindControlByProp(ctrl.children, prop);
+      }
+      const key = this.getKey(prop);
+      return ctrl[key] === prop[key];
+    });
   }
 
   private createForm(flatControls: Array<IDynamicFormControl>): FormGroup {
