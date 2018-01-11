@@ -329,8 +329,6 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   private setFullHeight(): void {
     const rect = this.elRef.nativeElement.getBoundingClientRect();
     this.dataTableRef.nativeElement.style.height = `${rect.height}px`;
-    // this.dataTable.recalculate();
-    // this.dataTable.recalculateDims();
     this.cdRef.markForCheck();
   }
 }
