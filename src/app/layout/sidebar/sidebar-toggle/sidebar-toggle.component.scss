@@ -1,14 +1,13 @@
 .sidebar-toggle {
   position: absolute;
-  display: table;
+  display: block;
+  left: 0;
+  right: 0;
   bottom: 0;
-  height: 40px;
-  width: 100%;
+  padding: 12px 0;
   background-color: #f5f7fa;
-}
-.sidebar-toggle__vc {
-  display: table-cell;
-  vertical-align: middle;
+  text-align: center;
+  margin-right: 1px;
 }
 .sidebar-toggle__item {
   display: block;
