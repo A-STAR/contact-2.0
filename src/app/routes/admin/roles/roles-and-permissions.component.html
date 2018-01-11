@@ -6,8 +6,8 @@
   <!-- Permissions, Access, Objects tabs -->
   <split-area size="50">
     <div style="display: flex; flex-direction: column; height: 100%;">
-      <app-tabview-header style="flex: 0 0 0;" [noMargin]="true" [tabs]="tabs"></app-tabview-header>
-      <div style="flex: 1 0 0;">
+      <app-tabview-header style="flex: 0 0;" [noMargin]="true" [tabs]="tabs"></app-tabview-header>
+      <div style="flex: 1 0; overflow: hidden;">
         <router-outlet></router-outlet>
       </div>
     </div>
