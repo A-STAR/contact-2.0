@@ -57,6 +57,9 @@ export class PersonSelectCardComponent implements OnInit, PersonSelectorComponen
     const action = this.person
       ? this.personSelectService.update(this.person.id, this.form.serializedUpdates)
       : this.personSelectService.create(this.form.serializedUpdates);
-    return action.map(personId => ({ id: personId, ...this.form.serializedValue }));
+    return action.map(personId => ({
+      id: this.person ? this.person.id : personId,
+      ...this.form.serializedValue
+    }));
   }
 }

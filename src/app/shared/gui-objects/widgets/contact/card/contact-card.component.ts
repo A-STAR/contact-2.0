@@ -114,9 +114,14 @@ export class ContactCardComponent implements OnInit {
 
   onSubmit(): void {
     this.personSelect.getSelectedPerson().subscribe(data => {
+      const contactPerson = {
+        contactPersonId: data.id,
+        linkTypeCode: data.linkTypeCode
+      };
+
       const action = this.contactId
-        ? this.contactService.update(this.personId, this.contactId, data)
-        : this.contactService.create(this.personId, data);
+        ? this.contactService.update(this.personId, this.contactId, contactPerson)
+        : this.contactService.create(this.personId, contactPerson);
 
       action.subscribe(() => {
         this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);
