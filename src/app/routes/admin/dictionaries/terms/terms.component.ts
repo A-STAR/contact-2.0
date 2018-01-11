@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { first, filter, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -148,9 +149,9 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     return this.dropdownTerms.map(terms => !!terms);
   }
 
-  get hasLanguages(): Observable<boolean> {
-    return this.languages.map(languages => !!languages);
-  }
+  // get hasLanguages(): Observable<boolean> {
+  //   return this.languages.map(languages => !!languages);
+  // }
 
   onRemove(): void {
     this.dictionariesService.deleteTerm();
@@ -165,19 +166,20 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     combineLatestAnd([
       this.userPermissionsService.has('DICT_TERM_EDIT'),
       this.hasDropdownTerms,
-      this.hasLanguages,
+      // this.hasLanguages,
     ])
     .pipe(
       filter(Boolean),
       switchMap(_ => this.dictionariesService.selectedTerm),
       switchMap(term => {
         this.term = { ...term };
-        return this.dictionariesService.fetchTermTranslations(term.id);
+        // return this.dictionariesService.fetchTermTranslations(term.id);
+        return of(term);
       }),
       first()
     )
     .subscribe(translations => {
-      this.term.name = translations;
+      // this.term.name = translations;
       this.setDialog('edit');
       this.cdRef.markForCheck();
     });
@@ -195,6 +197,7 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     )
     .subscribe(_ => {
       this.setDialog('create');
+      this.cdRef.markForCheck();
     });
   }
 

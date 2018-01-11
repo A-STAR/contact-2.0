@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -9,8 +10,8 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-// import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first, switchMap, flatMap } from 'rxjs/operators';
 import * as R from 'ramda';
 
 import {
@@ -21,10 +22,12 @@ import {
   IValue,
   IDynamicFormConfig
 } from './dynamic-form.interface';
-import { IOption } from 'app/core/converter/value-converter.interface';
+import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
 
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { DataService } from '../../../../core/data/data.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 import { makeKey, getTranslations } from '../../../../core/utils';
@@ -47,6 +50,8 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   private label: (key: string) => string;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
+    private dataService: DataService,
     private formBuilder: FormBuilder,
     private lookupService: LookupService,
     private valueConverterService: ValueConverterService,
@@ -56,7 +61,12 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     const config = this.config;
     if (config) {
+      // set the default config options
+      const defaultConfig = { suppressLabelCreation: false };
+      this.config = Object.assign(defaultConfig, config);
+
       if (!config.suppressLabelCreation) {
+        // set control labels
         const label = makeKey(config.labelKey);
         const createLabels = (ctrl: IDynamicFormControl) => {
           return !ctrl.children
@@ -65,42 +75,73 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         };
         this.controls = this.controls.map(createLabels);
       }
-      // const flatControls: IDynamicFormControl[] = this.flattenFormControls(this.controls);
-      const dictCodes = this.flattenFormControls(this.controls)
+
+      const flatControls = this.flattenFormControls(this.controls);
+      // fetch & set the dictionary options for select controls
+      const dictCodes = flatControls
         .filter(ctrl => ctrl.dictCode && ctrl.type === 'select')
         .map(ctrl => ctrl.dictCode);
+      // get a subset of multilanguage controls
+      const multiLanguageCtrls = flatControls.filter(ctrl => ctrl.type === 'multilanguage');
 
-      this.userDictionariesService.getDictionariesAsOptions(dictCodes)
-        .pipe(
-          first()
-        )
-        .subscribe(dictionaries => {
-          console.log('dictionaries fetched', dictionaries);
+      combineLatest(
+        this.userDictionariesService.getDictionariesAsOptions(dictCodes),
+        this.lookupService.lookup<ILookupLanguage>('languages')
+          .pipe(
+            switchMap(languages => {
+              return combineLatest(
+                multiLanguageCtrls.map(ctrl => {
+                  // const translations = this.term && this.term.name || [];
+                  const langConfig = ctrl.langConfig;
+                  return this.dataService.readTranslations(langConfig.entityId, langConfig.entityAttributeId);
+                })
+              )
+              .pipe(
+                switchMap(translations => {
+                  // console.log('translations fetched', translations);
+                  const map = translations.map((translation, i) => {
+                    // set langOptions for `multilanguage` controls
+                    const ctrl = multiLanguageCtrls[i];
+                    ctrl.langOptions = getTranslations(languages, translation);
+                    return ctrl;
+                  });
+                  return [map];
+                })
+              );
+            })
+          ),
+      )
+      .pipe(first())
+      .subscribe(([ dictionaries, multiLanguageCtrlsWithOptions ]) => {
+        console.log('multilangCtrls with options', multiLanguageCtrlsWithOptions);
 
-          // const assignOptions = (options: IOption[], dictCode: string) => (ctrl: IDynamicFormControl) => {
-          //   return ctrl.children
-          //     ? ctrl.children.map(assignOptions(options, dictCode))
-          //     : ctrl.dictCode === Number(dictCode)
-          //       ? { ...ctrl, options: ctrl.options || options }
-          //       : ctrl;
-          // };
-
-          Object.keys(dictionaries).forEach(dictCode => {
-            const options: IOption[] = dictionaries[dictCode];
-            const control = this.recursivelyFindControlByProp(
-              <IDynamicFormControl[]>this.controls, { dictCode: Number(dictCode) }
-            );
-            // this.controls = this.controls.map(assignOptions(options, dictCode));
-            if (control) {
-              control.options = options;
-            }
-          });
-          this.flatControls = this.flattenFormControls(this.controls);
-
-          console.log('flatControls', this.flatControls);
-          this.form = this.createForm(this.flatControls);
-          this.populateForm();
+        Object.keys(dictionaries).forEach(dictCode => {
+          const options: IOption[] = dictionaries[dictCode];
+          const control = this.recursivelyFindControlByProp(
+            <IDynamicFormControl[]>this.controls,
+            { dictCode: Number(dictCode) }
+          );
+          if (control) {
+            control.options = options;
+          }
         });
+
+        multiLanguageCtrlsWithOptions.forEach(ctrl => {
+          const control = this.recursivelyFindControlByProp(
+            <IDynamicFormControl[]>this.controls,
+            { controlName: ctrl.controlName }
+          );
+          if (control) {
+            control.langOptions = ctrl.langOptions;
+          }
+        });
+
+        this.flatControls = this.flattenFormControls(this.controls);
+        this.form = this.createForm(this.flatControls);
+        this.populateForm();
+        this.cdRef.markForCheck();
+        console.log('flatControls', this.flatControls);
+      });
 
     } else {
       this.flatControls = this.flattenFormControls(this.controls);
@@ -116,7 +157,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   }
 
   get canSubmit(): boolean {
-    return this.form.dirty && this.form.valid;
+    return this.form && this.isDirty && this.isValid;
   }
 
   get isValid(): boolean {

@@ -39,7 +39,7 @@ export class TermEditComponent implements OnInit {
 
   @Input() canEdit = false;
   @Input() disableParentSelection = false;
-  @Input() languages: ILookupLanguage[];
+  // @Input() languages: ILookupLanguage[];
   @Input() term: ITerm;
   @Input() terms: ITerm[];
   @Input() title: string;
@@ -48,7 +48,6 @@ export class TermEditComponent implements OnInit {
   @Output() cancel = new EventEmitter<null>();
 
   config: IDynamicFormConfig = {
-    suppressLabelCreation: false,
     labelKey: 'terms.edit',
   };
   controls: Array<IDynamicFormItem>;
@@ -63,10 +62,10 @@ export class TermEditComponent implements OnInit {
     // .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE)
     // .pipe(first())
     // .subscribe(dictTypeOptions => {
-      const translations = this.term && this.term.name || [];
-      const dictTermTranslations = getTranslations(this.languages, translations);
+      // const translations = this.term && this.term.name || [];
+      // const dictTermTranslations = getTranslations(this.languages, translations);
       // this.controls = this.getControls(dictTypeOptions, dictTermTranslations);
-      this.controls = this.getControls(dictTermTranslations);
+      this.controls = this.getControls();
       this.cdRef.markForCheck();
     // });
   }
@@ -85,7 +84,7 @@ export class TermEditComponent implements OnInit {
 
   private getControls(
     // dictTypeOptions: IOption[],
-    nameTranslations: IMultiLanguageOption[],
+    // nameTranslations: IMultiLanguageOption[],
   ): IDynamicFormControl[] {
 
     const disabled = !this.canEdit;
@@ -100,7 +99,8 @@ export class TermEditComponent implements OnInit {
         controlName: 'name',
         type: this.term ? 'multilanguage' : 'text',
         required: true,
-        langOptions: nameTranslations,
+        // langOptions: nameTranslations,
+        langConfig: { entityAttributeId: 12, entityId: this.term.id },
         disabled,
       },
       {
