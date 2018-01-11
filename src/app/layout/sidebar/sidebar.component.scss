@@ -1,8 +1,26 @@
-.sidebar-nav {
-  padding-bottom: 40px;
-}
+@import "../../shared/styles/app/variables";
+
 .aside-inner {
-  padding-top: 0 !important;
   padding-bottom: 40px;
+  padding-top: 0 !important;
   position: relative;
+}
+
+.sidebar-nav {
+  background-color: #f5f7fa;
+  li {
+    > a,
+    > a > em {
+      color: $brand-primary-dark;
+    }
+    &:hover,
+    &.active {
+      // border-left-color: $brand-secondary;
+      > a,
+      > a > em {
+        background-color: #f5f7fa;
+        color: $brand-primary-light;
+      }
+    }
+  }
 }
