@@ -114,15 +114,15 @@ export class DictionariesService {
       );
   }
 
-  fetchTermTranslations(termId: number): Observable<IEntityTranslation[]> {
-    // left for debugging purposes
-    this.store.dispatch({ type: DictionariesService.TERM_TRANSLATIONS_FETCH });
-    return this.entityTranslationsService.readTermNameTranslations(termId)
-      .pipe(
-        tap(p => this.store.dispatch({ type: DictionariesService.TERM_TRANSLATIONS_FETCH_SUCCESS, payload: p })),
-        catchError(this.notificationsService.fetchError().entity('entities.terms.gen.singular').dispatchCallback())
-      );
-  }
+  // fetchTermTranslations(termId: number): Observable<IEntityTranslation[]> {
+  //   // left for debugging purposes
+  //   this.store.dispatch({ type: DictionariesService.TERM_TRANSLATIONS_FETCH });
+  //   return this.entityTranslationsService.readTermNameTranslations(termId)
+  //     .pipe(
+  //       tap(p => this.store.dispatch({ type: DictionariesService.TERM_TRANSLATIONS_FETCH_SUCCESS, payload: p })),
+  //       catchError(this.notificationsService.fetchError().entity('entities.terms.gen.singular').dispatchCallback())
+  //     );
+  // }
 
   clearDictionaries(): void {
     this.store.dispatch({ type: DictionariesService.DICTIONARIES_CLEAR });

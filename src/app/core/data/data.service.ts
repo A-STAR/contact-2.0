@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { publishReplay, refCount, finalize } from 'rxjs/operators';
 
+import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
 import { IQueryParam, IQueryParams } from './data.interface';
 
 interface RequestOptions {
@@ -64,6 +65,13 @@ export class DataService {
 
   readBlob(url: string, routeParams: object = {}): Observable<Blob> {
     return this.blobRequest(DataService.METHOD_GET, url, routeParams);
+  }
+
+  readTranslations(entityId: string|number, entityAttributesId: number|string): Observable<IEntityTranslation[]> {
+    return this.readAll('/entityAttributes/{entityAttributesId}/entities/{entitiesId}', {
+        entityAttributesId: entityAttributesId,
+        entitiesId: entityId
+      });
   }
 
   create(url: string, routeParams: object = {}, body: object, options: RequestOptions = {}): Observable<any> {
