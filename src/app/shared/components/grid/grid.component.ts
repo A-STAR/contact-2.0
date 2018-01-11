@@ -21,11 +21,13 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/merge';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
+import { SplitComponent } from 'angular-split';
 
 import { IContextMenuItem } from './grid.interface';
 import { IMessages, TSelectionType, IGridColumn } from './grid.interface';
 
 import { SettingsService } from '../../../core/settings/settings.service';
+
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,6 +89,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     private elRef: ElementRef,
     private renderer: Renderer2,
     public settings: SettingsService,
+    private split: SplitComponent,
     private translate: TranslateService,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
@@ -191,6 +194,15 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   }
 
   ngAfterViewInit(): void {
+    console.log(this.dataTableRef.nativeElement);
+    console.log(this.split);
+
+    this.split.dragEnd.subscribe(() => {
+      const rect = this.elRef.nativeElement.getBoundingClientRect();
+      this.dataTableRef.nativeElement.style.height = `${rect.height}px`;
+      this.dataTable.recalculate();
+    });
+
     if (this.contextMenuOptions.length) {
       this.ctxOutsideListener = this.renderer.listen('document', 'click', this.onDocumentClick);
     }
