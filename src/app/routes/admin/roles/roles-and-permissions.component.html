@@ -1,7 +1,15 @@
-<app-roles></app-roles>
-
-<app-hdivider></app-hdivider>
-
-<app-tabview-header [noMargin]="true" [tabs]="tabs"></app-tabview-header>
-
-<router-outlet></router-outlet>
+<split direction="vertical" gutterColor="inherit">
+  <!-- Roles Grid -->
+  <split-area size="50">
+    <app-roles></app-roles>
+  </split-area>
+  <!-- Permissions, Access, Objects tabs -->
+  <split-area size="50">
+    <div style="display: flex; flex-direction: column; height: 100%;">
+      <app-tabview-header style="flex: 0 0 0;" [noMargin]="true" [tabs]="tabs"></app-tabview-header>
+      <div style="flex: 1 0 0;">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </split-area>
+</split>

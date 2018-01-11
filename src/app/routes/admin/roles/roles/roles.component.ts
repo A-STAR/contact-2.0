@@ -22,6 +22,7 @@ import { DialogFunctions } from '../../../../core/dialog';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-roles',
+  styles: [ ':host { display: flex; flex-direction: column; height: 100%; }' ],
   templateUrl: './roles.component.html'
 })
 export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy {

@@ -84,6 +84,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private elRef: ElementRef,
     private renderer: Renderer2,
     public settings: SettingsService,
     private translate: TranslateService,
@@ -193,18 +194,25 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     if (this.contextMenuOptions.length) {
       this.ctxOutsideListener = this.renderer.listen('document', 'click', this.onDocumentClick);
     }
-    // Define a possible height of the datatable
-    // 43px - tab height,
-    // 2x12px - top & bottom padding around the grid
-    // 50px - toolbar height
-    // 8px => - ?, to be identified
+
     if (this.styles) {
-      // Don't calculate the full height if the `styles` param is set
-      return;
+      if (this.styles.height === 'auto') {
+        setTimeout(() => {
+          const rect = this.elRef.nativeElement.getBoundingClientRect();
+          this.dataTableRef.nativeElement.style.height = `${rect.height}px`;
+          this.dataTable.recalculate();
+        }, 0);
+      }
+    } else {
+      // Define a possible height of the datatable
+      // 43px - tab height,
+      // 2x12px - top & bottom padding around the grid
+      // 50px - toolbar height
+      // 8px => - ?, to be identified
+      const offset = 43 + 12 * 2 + 50;
+      const height = this.settings.getContentHeight() - offset;
+      this.dataTableRef.nativeElement.style.height = `${height}px`;
     }
-    const offset = 43 + 12 * 2 + 50;
-    const height = this.settings.getContentHeight() - offset;
-    this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
 
   ngOnDestroy(): void {

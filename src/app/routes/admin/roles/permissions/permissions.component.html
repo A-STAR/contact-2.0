@@ -24,16 +24,19 @@
 ></app-dialog-action>
 
 <app-toolbar-2
+  style="flex: 0 0 0;"
   [items]="toolbarItems"
 ></app-toolbar-2>
 
-<app-grid
-  [columns]="columns"
-  [columnTranslationKey]="'roles.permissions'"
-  [emptyMessage]="emptyMessage$ | async"
-  [rows]="permissions$ | async"
-  [selectionType]="'single'"
-  [styles]="{height: '400px'}"
-  (onDblClick)="onDblClick()"
-  (onSelect)="onSelect($event)"
-></app-grid>
+<div style="flex: 1 0 0;">
+  <app-grid
+    [columns]="columns"
+    [columnTranslationKey]="'roles.permissions'"
+    [emptyMessage]="emptyMessage$ | async"
+    [rows]="permissions$ | async"
+    [selectionType]="'single'"
+    [styles]="{ height: 'auto' }"
+    (onDblClick)="onDblClick()"
+    (onSelect)="onSelect($event)"
+  ></app-grid>
+</div>
