@@ -2,7 +2,6 @@ import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../state/state.interface';
@@ -10,12 +9,14 @@ import { IActionType, IDataStatus } from './debtor-card.interface';
 import { IDebt, IPerson } from '../app-modules.interface';
 
 import { AbstractActionService } from '../../state/action.service';
+import { RoutingService } from 'app/core/routing/routing.service';
+
 @Injectable()
 export class DebtorCardService extends AbstractActionService {
   constructor(
     protected actions: Actions,
-    private router: Router,
     protected store: Store<IAppState>,
+    private routingService: RoutingService,
   ) {
     super();
   }
@@ -108,8 +109,8 @@ export class DebtorCardService extends AbstractActionService {
       );
   }
 
-  openByDebtId(debtId: number): Promise<boolean> {
-    return this.router.navigate([ `/workplaces/debtor-card/${debtId}` ] );
+  openByDebtId(debtId: number): void {
+    this.routingService.navigate([ '/workplaces', `debtor-card/${debtId}` ]);
   }
 
   initByDebtId(debtId: number): void {
