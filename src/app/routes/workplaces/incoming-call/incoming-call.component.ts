@@ -10,6 +10,4 @@ import { IncomingCallService } from './incoming-call.service';
     IncomingCallService,
   ]
 })
-export class IncomingCallComponent {
-  static COMPONENT_NAME = 'IncomingCallComponent';
-}
+export class IncomingCallComponent {}

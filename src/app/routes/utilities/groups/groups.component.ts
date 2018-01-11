@@ -5,6 +5,4 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   templateUrl: './groups.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GroupsComponent {
-  static COMPONENT_NAME = 'GroupsComponent';
-}
+export class GroupsComponent {}

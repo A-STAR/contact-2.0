@@ -21,7 +21,6 @@ const label = makeKey('contractors.managers.grid');
   templateUrl: './manager-edit.component.html'
 })
 export class ContractorManagerEditComponent implements OnInit {
-  static COMPONENT_NAME = 'ContractorManagerEditComponent';
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 

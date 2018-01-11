@@ -7,8 +7,6 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactComponent {
-  static COMPONENT_NAME = 'ContactLogComponent';
-
   constructor(
     private route: ActivatedRoute,
   ) {}

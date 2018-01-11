@@ -27,7 +27,6 @@ import { DialogFunctions } from '../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConstantsComponent extends DialogFunctions implements AfterViewInit, OnDestroy, OnInit {
-  static COMPONENT_NAME = 'ConstantsComponent';
 
   @ViewChild(GridComponent) grid: GridComponent;
 

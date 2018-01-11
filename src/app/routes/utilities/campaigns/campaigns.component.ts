@@ -31,8 +31,6 @@ import { first } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CampaignsComponent extends DialogFunctions implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'CampaignsComponent';
-
   @ViewChild(GridComponent) grid: GridComponent;
 
   dialog: string;

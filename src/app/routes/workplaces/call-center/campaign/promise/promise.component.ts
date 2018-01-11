@@ -8,8 +8,6 @@ import { Observable } from 'rxjs/Observable';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromiseComponent {
-  static COMPONENT_NAME = 'DebtorPromiseComponent';
-
   constructor(
     private route: ActivatedRoute,
   ) {}

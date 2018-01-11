@@ -9,7 +9,6 @@ import { Observable } from 'rxjs/Observable';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorAttributesComponent implements OnInit {
-  static COMPONENT_NAME = 'ContractorAttributesComponent';
   static ENTITY_TYPE_CONTRACTOR = 13;
 
   entityTypeId: number;

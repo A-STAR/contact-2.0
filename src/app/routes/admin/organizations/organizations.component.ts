@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
   selector: 'app-organizations',
   templateUrl: './organizations.component.html'
 })
-export class OrganizationsComponent {
-  static COMPONENT_NAME = 'OrganizationsComponent';
-}
+export class OrganizationsComponent {}

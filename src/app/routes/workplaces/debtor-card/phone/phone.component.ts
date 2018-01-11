@@ -14,8 +14,6 @@ interface PhoneCardRouteParams {
   templateUrl: './phone.component.html'
 })
 export class DebtorPhoneComponent {
-  static COMPONENT_NAME = 'DebtorPhoneComponent';
-
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,

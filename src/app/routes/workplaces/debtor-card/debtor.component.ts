@@ -34,8 +34,6 @@ import { first } from 'rxjs/operators/first';
   styleUrls: ['./debtor.component.scss'],
 })
 export class DebtorComponent extends DialogFunctions implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'DebtorComponent';
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(DebtorInformationComponent) information: DebtorInformationComponent;
 

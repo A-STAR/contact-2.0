@@ -8,9 +8,4 @@ import {
   templateUrl: './payments.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PaymentsComponent {
-  static COMPONENT_NAME = 'PaymentsComponent';
-
-  constructor() { }
-
-}
+export class PaymentsComponent {}

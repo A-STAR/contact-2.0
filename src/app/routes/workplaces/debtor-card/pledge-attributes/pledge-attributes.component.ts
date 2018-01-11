@@ -12,7 +12,6 @@ import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debt
   templateUrl: './pledge-attributes.component.html'
 })
 export class DebtorPledgeAttributesComponent implements OnInit {
-  static COMPONENT_NAME = 'DebtorPledgeAttributesComponent';
   static ENTITY_TYPE_PROPERTY = 33;
 
   entityId$: Observable<number>;

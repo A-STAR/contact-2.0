@@ -30,8 +30,6 @@ const label = makeKey('widgets.debt');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtComponent implements OnInit {
-  static COMPONENT_NAME = 'DebtorDebtComponent';
-
   @ViewChild('form') form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;

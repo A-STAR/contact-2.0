@@ -15,8 +15,6 @@ interface IEmploymentCardRouteParams {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtorEmploymentComponent {
-  static COMPONENT_NAME = 'DebtorEmploymentComponent';
-
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,

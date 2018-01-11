@@ -7,8 +7,6 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupEditComponent {
-  static COMPONENT_NAME = 'GroupEditComponent';
-
   constructor(
     private route: ActivatedRoute,
   ) {}

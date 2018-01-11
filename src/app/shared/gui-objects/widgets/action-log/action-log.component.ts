@@ -36,12 +36,10 @@ const labelKey = makeKey('widgets.actionLog.form');
   encapsulation: ViewEncapsulation.None,
 })
 export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
-  static COMPONENT_NAME = 'DebtorActionLogComponent';
-
-  @Input() personId: number;
-
   @ViewChild(MetadataGridComponent) grid: MetadataGridComponent<any>;
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  @Input() personId: number;
 
   private canViewSub: Subscription;
   private constantSub: Subscription;

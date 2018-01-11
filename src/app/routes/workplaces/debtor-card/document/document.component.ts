@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
   selector: 'app-debtor-document',
   templateUrl: './document.component.html'
 })
-export class DebtorDocumentComponent {
-  static COMPONENT_NAME = 'DebtorDocumentComponent';
-}
+export class DebtorDocumentComponent {}
