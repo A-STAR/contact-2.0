@@ -1,19 +1,8 @@
+@import "../../../shared/styles/app/variables.scss";
+
 .header-menu__item span {
   display: inline-block;
-  padding-right: 10px;
-  border-right: 1px solid white;
-}
-
-.header-menu__item {
-  margin-left: -20px;
-}
-
-.header-menu__item:first-of-type {
-  margin-left: 0;
-}
-
-.header-menu__item:last-of-type span {
-  border-right: 0;
+  font-size: $font-size-top-menu;
 }
 
 .header-menu__item--active {
