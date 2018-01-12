@@ -2,8 +2,19 @@
   <app-tabview-tab *ngFor="let grid of grids" [title]="grid.title" [closable]="false">
     <app-info-debt-grid
       *ngIf="grid.isInitialised"
-      [gridKey]="grid.key"
+      [gridKey]="grid.gridKey$ | async"
       [rowIdKey]="grid.rowIdKey"
     ></app-info-debt-grid>
+  </app-tabview-tab>
+</app-tabview>
+
+<app-tabview (select)="onDetailTabSelect($event)">
+  <app-tabview-tab *ngFor="let grid of detailGrids" [title]="grid.title" [closable]="false">
+    <app-info-debt-detail-grid
+      *ngIf="grid.isInitialised"
+      [gridKey]="grid.gridKey$ | async"
+      [rowIdKey]="grid.rowIdKey"
+      [columns]="grid.columns"
+    ></app-info-debt-detail-grid>
   </app-tabview-tab>
 </app-tabview>

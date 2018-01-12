@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Observable';
+
 export interface IInfoDebtEntry {
   debtId: number;
   personId: number;
@@ -6,6 +8,7 @@ export interface IInfoDebtEntry {
   personMiddleName: string;
   personFullName: string;
   personTypeCode: number;
+  personRole: number;
   contract: string;
   dpd: number;
   creditTypeCode: number;
@@ -39,9 +42,38 @@ export interface IInfoDebtEntry {
   color: string;
 }
 
+export interface IInfoDebtSMS {
+  smsId: number;
+  phone: string;
+  statusCode: number;
+  startDateTime: string | Date;
+  sendDateTime: string | Date;
+  userFullName: string;
+  text: string;
+  templateName: string;
+}
+
+export interface IInfoDebtEmail {
+  emailId: number;
+  email: string;
+  statusCode: number;
+  startDateTime: string | Date;
+  sendDateTime: string | Date;
+  userFullName: string;
+  subject: string;
+  templateName: string;
+}
+
 export interface IGridDef {
   isInitialised: boolean;
-  key: string;
+  gridKey$: Observable<string>;
   rowIdKey?: string;
   title: string;
+  columns?: IGridColumn[];
+}
+
+export interface IGridColumn {
+  dataType: number;
+  name: string;
+  dictCode?: number;
 }

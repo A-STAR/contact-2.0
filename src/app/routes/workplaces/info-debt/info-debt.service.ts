@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IAGridRequestParams, IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
-import { IInfoDebtEntry } from './info-debt.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -18,9 +17,9 @@ export class InfoDebtService {
     private notifications: NotificationsService,
   ) {}
 
-  fetch(name: string, filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IInfoDebtEntry>> {
+  fetch(gridKey: string, filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<any>> {
     const request = this.gridService.buildRequest(params, filters);
-    return this.dataService.create(`/list?name=${name}`, {}, request)
+    return this.dataService.create(gridKey, {}, request)
       .catch(this.notifications.fetchError().entity('entities.infoDebt.gen.plural').dispatchCallback());
   }
 }

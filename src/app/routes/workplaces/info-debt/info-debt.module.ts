@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { DetailGridModule } from './detail-grid/detail-grid.module';
 import { GridModule } from './grid/grid.module';
 import { SharedModule } from '../../../shared/shared.module';
 
@@ -20,6 +21,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    DetailGridModule,
     GridModule,
     RouterModule.forChild(routes),
     SharedModule,
