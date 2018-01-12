@@ -28,7 +28,7 @@ li {
   &.active {
     color: black;
     .selection {
-      background-color: #1a8ada;
+      background-color: $brand-primary;
     }
   }
   &.disabled {
