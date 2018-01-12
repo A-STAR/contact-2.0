@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
+  host: { class: 'full-height' },
   selector: 'app-layout',
+  styleUrls: [ './layout.component.scss' ],
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent {}

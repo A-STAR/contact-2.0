@@ -49,12 +49,8 @@ xdescribe('Component: Header', () => {
     }).compileComponents();
   });
 
-  it('should create an instance', async(inject(
-    [SettingsService, AuthService, ChangeDetectorRef, TranslateService, NotificationsService, PersistenceService],
-    (settingsService, authService, cdRef, translateService, notificationsService, persistenceService) => {
-      const component = new HeaderComponent(
-        authService, cdRef, notificationsService, settingsService, persistenceService, translateService
-      );
-      expect(component).toBeTruthy();
+  it('should create an instance', async(inject([ ChangeDetectorRef ], cdRef => {
+    const component = new HeaderComponent(cdRef);
+    expect(component).toBeTruthy();
   })));
 });

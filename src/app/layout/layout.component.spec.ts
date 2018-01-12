@@ -1,5 +1,3 @@
-/* tslint:disable:no-unused-variable */
-
 import { LayoutComponent } from './layout.component';
 
 xdescribe('Component: Layout', () => {
