@@ -48,6 +48,7 @@
         "PORTFOLIO_EDIT": "Portfolio",
         "PORTFOLIO_ATTRIBUTES": "Portfolio attributes",
         "CONTRACTOR_ATTRIBUTES": "Contractor attributes",
+        "CONTRACTOR_OBJECTS": "Contractor objects",
         "CONTRACTOR": "Contractor",
         "ATTRIBUTES": "Attributes",
         "CONTRACTOR_MANAGERS": "Contractor managers",
@@ -1094,7 +1095,8 @@
     },
     "buttons": {
       "attributes": "Attributes",
-      "managers": "Managers"
+      "managers": "Managers",
+      "objects": "Objects"
     }
   },
   "portfolios": {
@@ -2071,6 +2073,21 @@
         "fromDateTime": "Date",
         "rate": "Rate"
       }
+    },
+    "contractorObject": {
+      "dialogs": {
+        "add": {
+          "title": "Create objects"
+        },
+        "delete": {
+          "title": "Delete objects",
+          "confirmMessage": "Are you sure you want to delete this objects?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Name"
+      }
     }
   },
   "entities": {
@@ -2251,6 +2268,9 @@
     },
     "currencyRates": {
       "gen": { "singular": "rate", "plural": "rates" }
+    },
+    "object": {
+      "gen": { "singular": "object", "plural": "objects" }
     }
   },
   "massOperations": {

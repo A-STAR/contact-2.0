@@ -48,6 +48,7 @@
         "PORTFOLIO_EDIT": "Портфель",
         "PORTFOLIO_ATTRIBUTES": "Атрибуты портфеля",
         "CONTRACTOR_ATTRIBUTES": "Атрибуты контрагента",
+        "CONTRACTOR_OBJECTS": "Объекты контрагента",
         "ATTRIBUTES": "Атрибуты",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
@@ -1094,7 +1095,8 @@
     },
     "buttons": {
       "attributes": "Атрибуты",
-      "managers": "Менеджеры"
+      "managers": "Менеджеры",
+      "objects": "Объекты"
     }
   },
   "portfolios": {
@@ -2071,6 +2073,21 @@
         "fromDateTime": "Дата",
         "rate": "Курс"
       }
+    },
+    "contractorObject": {
+      "dialogs": {
+        "add": {
+          "title": "Добавить объекты"
+        },
+        "delete": {
+          "title": "Удаление объектов",
+          "confirmMessage": "Вы действительно хотите удалить выделенные объекты?"
+        }
+      },
+      "grid": {
+        "id": "ID",
+        "name": "Название"
+      }
     }
   },
   "entities": {
@@ -2251,6 +2268,9 @@
     },
     "currencyRates": {
       "gen": { "singular": "курса", "plural": "курсов" }
+    },
+    "object": {
+      "gen": { "singular": "объекта", "plural": "объектов" }
     }
   },
   "massOperations": {
