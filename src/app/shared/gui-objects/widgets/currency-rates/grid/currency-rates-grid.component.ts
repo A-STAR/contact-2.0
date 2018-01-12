@@ -47,7 +47,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch(),
+      action: () => this.currencyId && this.fetch(),
       enabled: this.currencyRatesService.canView$
     }
   ];
