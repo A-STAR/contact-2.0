@@ -2,13 +2,14 @@
 
 nav {
   background-color: $brand-primary;
-  padding: 0 12px;
+  padding-left: 10px;
 
   .logo {
     color: #fff;
+    cursor: pointer;
     font-size: 20px;
-    line-height: 47px;
-    padding: 0 10px;
+    line-height: $layout-top-menu-height;
+    padding: 0 15px;
     white-space: nowrap;
 
     .logo-version {
@@ -24,9 +25,9 @@ nav {
       color: $brand-white;
       cursor: pointer;
       display: block;
-      font-size: $font-size-top-menu;
-      line-height: 49px;
-      padding: 0 10px;
+      font-size: $layout-top-menu-font-size;
+      line-height: $layout-top-menu-height;
+      padding: 0 15px;
       white-space: nowrap;
       &.active,
       &:hover {

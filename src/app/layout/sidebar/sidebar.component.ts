@@ -28,7 +28,8 @@ export class SidebarComponent {
       const url = '/' + this.router.url.split('/').filter(Boolean)[0];
       const item = items.find(i => i.link === url);
       return item && item.children || [ item ];
-    })
+    }),
+    map(items => items.filter(item => item.text)),
   );
 
   constructor(

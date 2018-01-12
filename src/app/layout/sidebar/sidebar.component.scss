@@ -1,26 +1,35 @@
 @import "../../shared/styles/app/variables";
 
-.aside-inner {
-  padding-bottom: 40px;
-  padding-top: 0 !important;
-  position: relative;
-}
-
-.sidebar-nav {
+nav {
   background-color: #f5f7fa;
-  li {
-    > a,
-    > a > em {
+  border-right: 1px solid #ddd;
+  width: $layout-sidebar-width;
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 0 0;
+
+    li {
+      border-left: 3px solid transparent;
       color: $brand-primary-dark;
-    }
-    &:hover,
-    &.active {
-      // border-left-color: $brand-secondary;
-      > a,
-      > a > em {
-        background-color: #f5f7fa;
-        color: $brand-primary-light;
+      cursor: pointer;
+      padding: 10px 18px;
+
+      &.active {
+        border-left-color: $brand-secondary;
+      }
+
+      i {
+        padding-right: 8px;
       }
     }
+  }
+
+  .sidebar-collapse {
+    color: #aaa;
+    cursor: pointer;
+    padding: 10px 18px;
+    text-align: right;
   }
 }
