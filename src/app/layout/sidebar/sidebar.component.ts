@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -33,41 +33,22 @@ export class SidebarComponent {
   );
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private menuService: GuiObjectsService,
     private router: Router,
-    public settings: SettingsService,
+    private settingsService: SettingsService,
   ) {}
 
   get menuItems$(): Observable<IMenuItem[]> {
     return this._menuItems$;
   }
 
-  // Close menu collapsing height
-  closeMenu(elem: any): void {
-      elem.height(elem[0].scrollHeight);
-      // and move to zero to collapse
-      elem.height(0);
-      elem.removeClass('opening');
+  get isCollapsed(): boolean {
+    return this.settingsService.getLayoutSetting('isCollapsed') as boolean;
   }
 
-  listenForExternalClicks(): void {
-    const $doc = $(document).on('click.sidebar', (e) => {
-      if (!$(e.target).parents('.aside').length) {
-        this.removeFloatingNav();
-        $doc.off('click.sidebar');
-      }
-    });
-  }
-
-  removeFloatingNav(): void {
-    $('.nav-floating').remove();
-  }
-
-  isSidebarCollapsedText(): boolean {
-    return this.settings.layout.isCollapsedText;
-  }
-
-  isEnabledHover(): boolean {
-    return this.settings.layout.asideHover;
+  onSidebarToggle(): void {
+    this.settingsService.toggleLayoutSetting('isCollapsed');
+    this.cdRef.markForCheck();
   }
 }
