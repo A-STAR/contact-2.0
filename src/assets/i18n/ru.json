@@ -305,6 +305,32 @@
         "title": "Подготовка выездов"
       }
     },
+    "infoDebt": {
+      "filters": {
+        "form": {
+          "branchCode": "Филиал",
+          "dictValue1": "Словарный атрибут 1",
+          "dictValue2": "Словарный атрибут 2",
+          "dictValue3": "Словарный атрибут 3",
+          "dictValue4": "Словарный атрибут 4",
+          "portfolioId": "Реестр КА",
+          "regionCode": "Регион",
+          "userId": "Оператор",
+          "addressTypeCode": "Тип адреса",
+          "visitStatusCode": "Статус выезда",
+          "visitPurposeCode": "Цель выезда"
+        }
+      },
+      "debtors": {
+        "title": "Должники"
+      },
+      "guarantors": {
+        "title": "Поручители"
+      },
+      "pledgors": {
+        "title": "Залогодатели"
+      }
+    },
     "contactRegistration": {
       "contact": {
         "title": "Изменение контактного лица"
@@ -2251,6 +2277,9 @@
     },
     "currencyRates": {
       "gen": { "singular": "курса", "plural": "курсов" }
+    },
+    "infoDebt": {
+      "gen": { "singular": "списка формирования", "plural": "списков формирования" }
     }
   },
   "massOperations": {

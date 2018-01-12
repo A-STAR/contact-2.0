@@ -1,0 +1,9 @@
+<app-tabview (select)="onTabSelect($event)">
+  <app-tabview-tab *ngFor="let grid of grids" [title]="grid.title" [closable]="false">
+    <app-info-debt-grid
+      *ngIf="grid.isInitialised"
+      [gridKey]="grid.key"
+      [rowIdKey]="grid.rowIdKey"
+    ></app-info-debt-grid>
+  </app-tabview-tab>
+</app-tabview>
