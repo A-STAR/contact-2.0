@@ -8,7 +8,6 @@ export class EntityTranslationsConstants {
 export interface IEntityTranslation {
   languageId: number;
   value: string;
-  initialValue?: string;
   isMain?: number;
 }
 

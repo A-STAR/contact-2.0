@@ -109,17 +109,12 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     return this.dictionariesService.dictionaries;
   }
 
-  get languages(): Observable<ILookupLanguage[]> {
-    return this.lookupService.lookup<ILookupLanguage>('languages');
-  }
-
   get dictionaryTermTypes(): Observable<ITerm[]> {
     return this.dictionariesService.dictionaryTermTypes;
   }
 
   get hasDictionaryRelations(): Observable<boolean> {
     return combineLatestAnd([
-      this.languages.map(Boolean),
       this.selectedDictionary.map(Boolean),
       this.dictionaryTermTypes.map(Boolean)
     ]);
@@ -138,21 +133,17 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
       .pipe(
         filter(Boolean),
         switchMap(_ => this.dictionariesService.selectedDictionary),
-        switchMap(dictionary => {
-          this.dictionary = { ...dictionary };
-          return this.dictionariesService.fetchDictTranslations(dictionary.id);
-        }),
         first(),
       )
-      .subscribe(translations => {
-        this.dictionary.name = translations;
+      .subscribe(dictionary => {
+        this.dictionary = { ...dictionary };
         this.setDialog('edit');
         this.cdRef.markForCheck();
       });
   }
 
   create(): void {
-    this.hasDictionaryRelations
+    this.dictionaryTermTypes.map(Boolean)
       .pipe(
         filter(Boolean),
         first(),

@@ -104,15 +104,15 @@ export class DictionariesService {
     this.store.dispatch({ type: DictionariesService.TERM_TYPES_FETCH });
   }
 
-  fetchDictTranslations(dictionaryId: number): Observable<IEntityTranslation[]> {
-    this.store.dispatch({ type: DictionariesService.DICTIONARY_TRANSLATIONS_FETCH });
-    return this.entityTranslationsService.readDictNameTranslations(dictionaryId)
-      .pipe(
-        tap(p => this.store.dispatch({ type: DictionariesService.DICTIONARY_TRANSLATIONS_FETCH_SUCCESS, payload: p })),
-        // TODO(a.tymchuk): parameterize this error call
-        catchError(this.notificationsService.fetchError().entity('entities.dictionaries.gen.singular').dispatchCallback())
-      );
-  }
+  // fetchDictTranslations(dictionaryId: number): Observable<IEntityTranslation[]> {
+  //   this.store.dispatch({ type: DictionariesService.DICTIONARY_TRANSLATIONS_FETCH });
+  //   return this.entityTranslationsService.readDictNameTranslations(dictionaryId)
+  //     .pipe(
+  //       tap(p => this.store.dispatch({ type: DictionariesService.DICTIONARY_TRANSLATIONS_FETCH_SUCCESS, payload: p })),
+  //       // TODO(a.tymchuk): parameterize this error call
+  //       catchError(this.notificationsService.fetchError().entity('entities.dictionaries.gen.singular').dispatchCallback())
+  //     );
+  // }
 
   // fetchTermTranslations(termId: number): Observable<IEntityTranslation[]> {
   //   // left for debugging purposes

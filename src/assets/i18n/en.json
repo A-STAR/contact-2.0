@@ -631,17 +631,15 @@
     "edit": {
       "title": "Dictionary: {{ code }}",
       "code": "Code",
-      "language": "Language",
       "name": "Name",
-      "type": "Type",
-      "parent": "Parent dictionary",
+      "typeCode": "Type",
+      "parentCode": "Parent dictionary",
       "select": {
         "title": {
           "dictList": "Dictionary list",
           "termTypesList": "Term types list"
         }
       },
-      "translation": "Translation language",
       "termTypeCode": "Type of terms"
     },
     "create": {

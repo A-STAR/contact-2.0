@@ -97,7 +97,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
               )
               .pipe(
                 switchMap(translations => {
-                  // console.log('translations fetched', translations);
+                  console.log('translations fetched', translations);
                   const map = translations.map((translation, i) => {
                     // set langOptions for `multilanguage` controls
                     const ctrl = multiLanguageCtrls[i];
@@ -112,7 +112,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       )
       .pipe(first())
       .subscribe(([ dictionaries, multiLanguageCtrlsWithOptions ]) => {
-        // console.log('multilangCtrls with options', multiLanguageCtrlsWithOptions);
+        console.log('multilangCtrls with options', multiLanguageCtrlsWithOptions);
 
         Object.keys(dictionaries).forEach(dictCode => {
           const options: IOption[] = dictionaries[dictCode];
@@ -139,7 +139,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         this.form = this.createForm(this.flatControls);
         this.populateForm();
         this.cdRef.markForCheck();
-        // console.log('flatControls', this.flatControls);
+        console.log('flatControls', this.flatControls);
       });
 
     } else {

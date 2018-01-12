@@ -9,6 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 
+import { EntityTranslationsConstants } from '../../../../../core/entity/translations/entity-translations.interface';
 import { ITerm } from '../../dictionaries.interface';
 import {
   IDynamicFormControl,
@@ -43,7 +44,7 @@ export class TermEditComponent implements OnInit {
   config: IDynamicFormConfig = {
     labelKey: 'terms.edit',
   };
-  controls: Array<IDynamicFormItem>;
+  controls: IDynamicFormItem[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -80,7 +81,10 @@ export class TermEditComponent implements OnInit {
         controlName: 'name',
         type: this.term ? 'multilanguage' : 'text',
         required: true,
-        langConfig: { entityAttributeId: 12, entityId: this.term.id },
+        langConfig: {
+          entityAttributeId: EntityTranslationsConstants.SPEC_TERM_NAME,
+          entityId: this.term && this.term.id
+        },
         disabled,
       },
       {
@@ -88,7 +92,6 @@ export class TermEditComponent implements OnInit {
         type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE,
         required: true,
-        label: 'terms.edit.typeCode',
         disabled,
       },
       {

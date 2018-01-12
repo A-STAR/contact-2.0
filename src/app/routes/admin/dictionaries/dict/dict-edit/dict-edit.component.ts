@@ -11,19 +11,19 @@ import {
 import { first } from 'rxjs/operators';
 
 import { IDictionary, ITerm } from '../../dictionaries.interface';
-import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
-import { IMultiLanguageOption } from '../../../../../shared/components/form/multi-language/multi-language.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import {
+  IDynamicFormControl,
+  IDynamicFormItem,
+  IDynamicFormConfig
+} from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { EntityTranslationsConstants } from '../../../../../core/entity/translations/entity-translations.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { makeKey, toLabeledValues, getTranslations } from '../../../../../core/utils';
+import { toLabeledValues } from '../../../../../core/utils';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
-
-const label = makeKey('dictionaries.edit');
 
 @Component({
   selector: 'app-dict-edit',
@@ -37,13 +37,15 @@ export class DictEditComponent implements OnInit {
   @Input() dictionaries: IDictionary[];
   @Input() dictionaryTermTypes: ITerm[];
   @Input() dictionary: IDictionary;
-  @Input() languages: ILookupLanguage[];
   @Input() title: string;
 
   @Output() cancel = new EventEmitter<null>();
   @Output() submit = new EventEmitter<null>();
 
-  controls: Array<IDynamicFormItem> = null;
+  config: IDynamicFormConfig = {
+    labelKey: 'dictionaries.edit',
+  };
+  controls: IDynamicFormItem[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -51,15 +53,8 @@ export class DictEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userDictionariesService
-        .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE)
-    .pipe(first())
-    .subscribe(dictTypeOptions => {
-      const translations = this.dictionary && this.dictionary.name || [];
-      const dictNameTranslations = getTranslations(this.languages, translations);
-      this.controls = this.getControls(dictTypeOptions, dictNameTranslations);
-      this.cdRef.markForCheck();
-    });
+    this.controls = this.getControls();
+    this.cdRef.markForCheck();
   }
 
   onSubmit(): any {
@@ -74,59 +69,54 @@ export class DictEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private getControls(
-    dictTypeOptions: IOption[],
-    nameTranslations: IMultiLanguageOption[],
-  ): Array<IDynamicFormControl> {
+  private getControls(): IDynamicFormControl[] {
 
     const disabled = !this.canEdit;
-    const controls: IDynamicFormControl[] = [
+    const controls: Partial<IDynamicFormControl>[] = [
       {
-        label: label('code'),
         controlName: 'code',
         type: 'number',
         required: true,
         disabled,
       },
       {
-        label: label('name'),
         controlName: 'name',
         type: this.dictionary ? 'multilanguage' : 'text',
         required: true,
-        langOptions: nameTranslations,
+        langConfig: {
+          entityAttributeId: EntityTranslationsConstants.SPEC_DICT_NAME,
+          entityId: this.dictionary && this.dictionary.id
+        },
         disabled,
       },
       {
-        label: label('type'),
         controlName: 'typeCode',
         type: 'select',
         required: true,
-        options: dictTypeOptions,
+        dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE,
         disabled,
       },
       {
-        label: label('parent'),
         controlName: 'parentCode',
         type: 'select',
         options: this.dictionaries.map(toLabeledValues),
         optionsActions: [
-          { text: 'select.title.dictList', type: SelectionActionTypeEnum.SORT }
+          { text: 'dictionaries.edit.select.title.dictList', type: SelectionActionTypeEnum.SORT }
         ],
         disabled,
       },
       {
-        label: label('termTypeCode'),
         controlName: 'termTypeCode',
         type: 'select',
         required: true,
         options: this.dictionaryTermTypes.map(toLabeledValues),
         optionsActions: [
-          { text: 'select.title.termTypesList', type: SelectionActionTypeEnum.SORT }
+          { text: 'dictionaries.edit.select.title.termTypesList', type: SelectionActionTypeEnum.SORT }
         ],
         disabled,
       }
     ];
 
-    return controls;
+    return controls as IDynamicFormControl[];
   }
 }
