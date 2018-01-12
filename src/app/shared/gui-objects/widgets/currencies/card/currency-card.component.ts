@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 import { Location } from '@angular/common';
-import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -46,7 +45,7 @@ export class CurrencyCardComponent implements OnInit {
   ngOnInit(): void {
     combineLatest(
       this.currencyId ? this.currenciesService.canEdit$ : this.currenciesService.canAdd$,
-      this.currencyId ? this.currenciesService.fetch(this.currencyId) : Observable.of({}),
+      this.currencyId ? this.currenciesService.fetch(this.currencyId) : of({}),
       this.currencyId ? this.lookupService.lookup<ILookupLanguage>('languages') : of([]),
       this.currencyId ? this.currenciesService.readCurrencyNameTranslations(this.currencyId) : of([]),
       this.currencyId ? this.currenciesService.readCurrencyShortNameTranslations(this.currencyId) : of([]),
@@ -117,7 +116,8 @@ export class CurrencyCardComponent implements OnInit {
         controlName: this.currencyId ? 'multiName' : 'name',
         type: this.currencyId ? 'multitext' : 'text',
         options: languageOptions,
-        disabled: !canEdit
+        disabled: !canEdit,
+        required: true
       },
       {
         label: label('shortName'),

@@ -9,6 +9,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  Optional,
   Output,
   Renderer2,
   SimpleChanges,
@@ -89,7 +90,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     private elRef: ElementRef,
     private renderer: Renderer2,
     public settings: SettingsService,
-    private split: SplitComponent,
+    @Optional() private split: SplitComponent,
     private translate: TranslateService,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
