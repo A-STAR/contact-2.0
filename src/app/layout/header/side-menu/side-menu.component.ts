@@ -1,20 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
-// import { Subscription } from 'rxjs/Subscription';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { PersistenceService } from '../../../core/persistence/persistence.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-// import { SettingsService } from '../../../core/settings/settings.service';
 
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { first, map } from 'rxjs/operators';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-header-side-menu',
+  styleUrls: [ './side-menu.component.scss' ],
   templateUrl: './side-menu.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SideMenuComponent {
   @ViewChild('accountDropdown') accountDropdown: DropdownComponent;
@@ -26,7 +25,6 @@ export class SideMenuComponent {
     private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private persistenceService: PersistenceService,
-    // private settings: SettingsService,
     private translateService: TranslateService,
   ) {}
 
