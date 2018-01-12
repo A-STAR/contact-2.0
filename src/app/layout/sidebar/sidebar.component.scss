@@ -4,6 +4,7 @@ nav {
   background-color: $brand-primary-light;
   border-right: 1px solid #ddd;
   width: $layout-sidebar-width;
+  transition: width 0.1s ease;
 
   &.collapsed {
     font-size: 20px;
