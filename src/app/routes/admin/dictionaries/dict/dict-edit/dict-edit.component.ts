@@ -8,11 +8,9 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { first } from 'rxjs/operators';
 
 import { IDictionary, ITerm } from '../../dictionaries.interface';
 import {
-  IDynamicFormControl,
   IDynamicFormItem,
   IDynamicFormConfig
 } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -49,7 +47,6 @@ export class DictEditComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
@@ -69,10 +66,10 @@ export class DictEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private getControls(): IDynamicFormControl[] {
+  private getControls(): IDynamicFormItem[] {
 
     const disabled = !this.canEdit;
-    const controls: Partial<IDynamicFormControl>[] = [
+    const controls: Partial<IDynamicFormItem>[] = [
       {
         controlName: 'code',
         type: 'number',
@@ -117,6 +114,6 @@ export class DictEditComponent implements OnInit {
       }
     ];
 
-    return controls as IDynamicFormControl[];
+    return controls as IDynamicFormItem[];
   }
 }

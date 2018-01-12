@@ -8,11 +8,9 @@ import { switchMap } from 'rxjs/operators';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IDictionary, ITerm } from '../dictionaries.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 
 import { DictionariesService } from '../dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -74,7 +72,6 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     private cdRef: ChangeDetectorRef,
     private dictionariesService: DictionariesService,
     private gridService: GridService,
-    private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();

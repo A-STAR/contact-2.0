@@ -1,20 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { catchError } from 'rxjs/operators/catchError';
-import { tap } from 'rxjs/operators/tap';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 
 import { IAppState } from '../../../core/state/state.interface';
-import { IEntityTranslation } from '../../../core/entity/translations/entity-translations.interface';
 import {
   IDictionary,
   IDictionariesState,
   ITerm,
 } from './dictionaries.interface';
-
-import { EntityTranslationsService } from '../../../core/entity/translations/entity-translations.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Injectable()
 export class DictionariesService {
@@ -26,10 +20,10 @@ export class DictionariesService {
   static DICTIONARY_UPDATE                      = 'DICTIONARY_UPDATE';
   static DICTIONARY_DELETE                      = 'DICTIONARY_DELETE';
   static DICTIONARY_SELECT                      = 'DICTIONARY_SELECT';
-  static DICTIONARY_TRANSLATIONS_FETCH          = 'DICTIONARY_TRANSLATIONS_FETCH';
-  static DICTIONARY_TRANSLATIONS_FETCH_SUCCESS  = 'DICTIONARY_TRANSLATIONS_FETCH_SUCCESS';
-  static TERM_TRANSLATIONS_FETCH                = 'TERM_TRANSLATIONS_FETCH';
-  static TERM_TRANSLATIONS_FETCH_SUCCESS        = 'TERM_TRANSLATIONS_FETCH_SUCCESS';
+  // static DICTIONARY_TRANSLATIONS_FETCH          = 'DICTIONARY_TRANSLATIONS_FETCH';
+  // static DICTIONARY_TRANSLATIONS_FETCH_SUCCESS  = 'DICTIONARY_TRANSLATIONS_FETCH_SUCCESS';
+  // static TERM_TRANSLATIONS_FETCH                = 'TERM_TRANSLATIONS_FETCH';
+  // static TERM_TRANSLATIONS_FETCH_SUCCESS        = 'TERM_TRANSLATIONS_FETCH_SUCCESS';
   static TERM_TYPES_FETCH                       = 'TERM_TYPES_FETCH';
   static TERM_TYPES_FETCH_SUCCESS               = 'TERM_TYPES_FETCH_SUCCESS';
   static TERM_CREATE                            = 'TERM_CREATE';
@@ -44,8 +38,6 @@ export class DictionariesService {
   static TERMS_CLEAR                            = 'TERMS_CLEAR';
 
   constructor(
-    private entityTranslationsService: EntityTranslationsService,
-    private notificationsService: NotificationsService,
     private store: Store<IAppState>
   ) {}
 
@@ -103,26 +95,6 @@ export class DictionariesService {
   fetchTermTypes(): void {
     this.store.dispatch({ type: DictionariesService.TERM_TYPES_FETCH });
   }
-
-  // fetchDictTranslations(dictionaryId: number): Observable<IEntityTranslation[]> {
-  //   this.store.dispatch({ type: DictionariesService.DICTIONARY_TRANSLATIONS_FETCH });
-  //   return this.entityTranslationsService.readDictNameTranslations(dictionaryId)
-  //     .pipe(
-  //       tap(p => this.store.dispatch({ type: DictionariesService.DICTIONARY_TRANSLATIONS_FETCH_SUCCESS, payload: p })),
-  //       // TODO(a.tymchuk): parameterize this error call
-  //       catchError(this.notificationsService.fetchError().entity('entities.dictionaries.gen.singular').dispatchCallback())
-  //     );
-  // }
-
-  // fetchTermTranslations(termId: number): Observable<IEntityTranslation[]> {
-  //   // left for debugging purposes
-  //   this.store.dispatch({ type: DictionariesService.TERM_TRANSLATIONS_FETCH });
-  //   return this.entityTranslationsService.readTermNameTranslations(termId)
-  //     .pipe(
-  //       tap(p => this.store.dispatch({ type: DictionariesService.TERM_TRANSLATIONS_FETCH_SUCCESS, payload: p })),
-  //       catchError(this.notificationsService.fetchError().entity('entities.terms.gen.singular').dispatchCallback())
-  //     );
-  // }
 
   clearDictionaries(): void {
     this.store.dispatch({ type: DictionariesService.DICTIONARIES_CLEAR });

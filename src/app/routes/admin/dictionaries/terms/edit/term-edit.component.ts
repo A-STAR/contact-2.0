@@ -12,7 +12,6 @@ import {
 import { EntityTranslationsConstants } from '../../../../../core/entity/translations/entity-translations.interface';
 import { ITerm } from '../../dictionaries.interface';
 import {
-  IDynamicFormControl,
   IDynamicFormItem,
   IDynamicFormConfig
 } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -67,10 +66,10 @@ export class TermEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private getControls(): IDynamicFormControl[] {
+  private getControls(): IDynamicFormItem[] {
 
     const disabled = !this.canEdit;
-    const controls: Partial<IDynamicFormControl>[] = [
+    const controls: Partial<IDynamicFormItem>[] = [
       {
         controlName: 'code',
         type: 'number',
@@ -110,6 +109,6 @@ export class TermEditComponent implements OnInit {
       }
     ];
 
-    return controls as IDynamicFormControl[];
+    return controls as IDynamicFormItem[];
   }
 }

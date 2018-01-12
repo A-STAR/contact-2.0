@@ -85,7 +85,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     }
 
     const flatControls = this.flattenFormControls(this.controls);
-    // 2. fetch & set the dictionary options for select controls
+    // 2. fetch the dictionaries for select options
     const dictCodes = flatControls
       .filter(ctrl => ctrl.dictCode && ctrl.type === 'select')
       .map(ctrl => ctrl.dictCode);
@@ -124,7 +124,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     .pipe(first())
     .subscribe(([ dictionaries, multiLanguageCtrlsWithOptions ]) => {
       // console.log('multilangCtrls with options', multiLanguageCtrlsWithOptions);
-
+      // 3. set the dictionary options for select controls
       Object.keys(dictionaries).forEach(dictCode => {
         const options: IOption[] = dictionaries[dictCode];
         const control = this.recursivelyFindControlByProp(
