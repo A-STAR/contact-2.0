@@ -1,8 +1,8 @@
 <nav class="flex vertical" [ngClass]="{ collapsed: isCollapsed }">
   <ul class="flex-item grow">
-    <li *ngFor="let item of menuItems$ | async" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
-      <i *ngIf="item.icon" [ngClass]="item.icon"></i>
-      <span *ngIf="!isCollapsed">{{ item.text | translate }}</span>
+    <li *ngFor="let item of menuItems$ | async" class="flex horizontal" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
+      <i *ngIf="item.icon" class="flex-item" [ngClass]="item.icon"></i>
+      <span *ngIf="!isCollapsed" class="flex-item grow">{{ item.text | translate }}</span>
     </li>
   </ul>
   <div class="flex-item">
