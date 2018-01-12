@@ -33,7 +33,6 @@ import { MetadataGridComponent } from '../../../shared/components/metadata-grid/
   templateUrl: './actions-log.component.html',
 })
 export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
-  static COMPONENT_NAME = 'ActionsLogComponent';
 
   @Output() onSelect = new EventEmitter<IAGridSelected>();
 

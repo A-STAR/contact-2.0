@@ -74,7 +74,8 @@ export class MetadataGridComponent<T> implements OnInit {
   .pipe(
     map(([ actions, constants, permissions, entityPermissions ]) => {
       return this.addPermissions(actions, constants, permissions, entityPermissions);
-  }));
+    })
+  );
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -170,6 +171,7 @@ export class MetadataGridComponent<T> implements OnInit {
 
   private buildPermissions(actions: any, constants: ValueBag, permissions: ValueBag, entityPerms: IEntityAttributes): any {
     return {
+      addVisit: selection => selection.length && permissions.has('ADDRESS_VISIT_ADD'),
       cancelVisit: selection => selection.length && permissions.has('VISIT_CANCEL'),
       changePortfolioAttr: selection => selection.length && permissions.has('DEBT_PORTFOLIO_EDIT'),
       changeRegionAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
@@ -203,6 +205,7 @@ export class MetadataGridComponent<T> implements OnInit {
       },
       // TODO(d.maltsev, i.kibisov): pass entityTypeId
       objectAddToGroup: selection => selection.length && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
+      openUserDetail: selection => selection.length && permissions.has('OPERATOR_DETAIL_VIEW'),
       paymentsCancel: selection => selection.length && permissions.has('PAYMENT_CANCEL'),
       paymentsConfirm: selection => selection.length && permissions.has('PAYMENT_CONFIRM'),
       prepareVisit: selection => selection.length && permissions.has('VISIT_PREPARE'),
@@ -215,8 +218,6 @@ export class MetadataGridComponent<T> implements OnInit {
           && constants.has('SMS.Use')
           && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
       },
-      // TODO(m.bobryshev): mock
-      visitAdd: selection => selection.length, // && permissions.has('VISIT_ADD'),
     };
   }
 }

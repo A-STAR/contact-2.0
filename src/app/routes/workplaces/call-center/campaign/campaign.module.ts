@@ -25,7 +25,13 @@ import { PhoneComponent } from './phone/phone.component';
 import { PromiseComponent } from './promise/promise.component';
 
 const routes: Routes = [
-  { path: '', component: CampaignComponent },
+  {
+    path: '',
+    component: CampaignComponent,
+    data: {
+      reuse: true,
+    },
+  },
   { path: 'phone', children: [
     { path: '', redirectTo: 'create', pathMatch: 'full' },
     { path: ':personId/create', component: PhoneComponent },

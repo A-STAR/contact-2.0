@@ -1,16 +1,14 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { first, filter } from 'rxjs/operators';
+import { first, filter, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 import { ITerm } from '../dictionaries.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DictionariesService } from '../dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
@@ -72,12 +70,12 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
 
   private dictionariesServiceSubscription: Subscription;
   private viewPermissionsSubscription: Subscription;
+  private term: ITerm;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private dictionariesService: DictionariesService,
     private gridService: GridService,
-    private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -130,10 +128,6 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     return this.dictionariesService.selectedTerm;
   }
 
-  get languages(): Observable<ILookupLanguage[]> {
-    return this.lookupService.lookup<ILookupLanguage>('languages');
-  }
-
   get terms(): Observable<ITerm[]> {
     return this.dictionariesService.terms;
   }
@@ -146,10 +140,6 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     return this.dropdownTerms.map(terms => !!terms);
   }
 
-  get hasLanguages(): Observable<boolean> {
-    return this.languages.map(languages => !!languages);
-  }
-
   onRemove(): void {
     this.dictionariesService.deleteTerm();
     this.setDialog();
@@ -160,19 +150,19 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
   }
 
   edit(): void {
-    this.dictionariesService.fetchTermTranslations();
     combineLatestAnd([
       this.userPermissionsService.has('DICT_TERM_EDIT'),
-      this.dictionariesService.hasTermTranslations,
       this.hasDropdownTerms,
-      this.hasLanguages,
     ])
     .pipe(
       filter(Boolean),
+      switchMap(_ => this.dictionariesService.selectedTerm),
       first()
     )
-    .subscribe(_ => {
+    .subscribe(term => {
+      this.term = { ...term };
       this.setDialog('edit');
+      this.cdRef.markForCheck();
     });
   }
 
@@ -180,7 +170,6 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     combineLatestAnd([
       this.userPermissionsService.has('DICT_TERM_ADD'),
       this.hasDropdownTerms,
-      this.hasLanguages,
     ])
     .pipe(
       filter(Boolean),
@@ -188,6 +177,7 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
     )
     .subscribe(_ => {
       this.setDialog('create');
+      this.cdRef.markForCheck();
     });
   }
 

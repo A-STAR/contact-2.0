@@ -22,7 +22,7 @@ export const menuConfig: IMenuConfig = {
   },
   roles: {
     text: 'sidebar.nav.menu.ROLES_AND_PERMISSIONS',
-    link: '/admin/roles-and-permissions',
+    link: '/admin/roles',
     icon: 'icon-user-following'
   },
   users: {

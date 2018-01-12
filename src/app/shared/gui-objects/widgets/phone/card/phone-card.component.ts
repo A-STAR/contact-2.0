@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPhone } from '../phone.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PhoneService } from '../phone.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -33,10 +33,11 @@ export class PhoneCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private phoneService: PhoneService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -72,7 +73,7 @@ export class PhoneCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   get canSubmit(): boolean {

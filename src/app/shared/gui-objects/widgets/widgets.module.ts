@@ -23,7 +23,7 @@ import { GuarantorModule } from './guarantor/guarantor.module';
 import { IdentityModule } from './identity/identity.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.module';
-import { ObjectModule } from './object/object.module';
+import { OperatorDetailsModule } from './operator-details/operator-details.module';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
 import { PhoneModule } from './phone/phone.module';
@@ -62,7 +62,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     IdentityModule,
     MassOpsModule,
     NextCallDateSetModule,
-    ObjectModule,
+    OperatorDetailsModule,
     PaymentModule,
     PaymentOperatorModule,
     PhoneModule,
@@ -99,7 +99,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     IdentityModule,
     MassOpsModule,
     NextCallDateSetModule,
-    ObjectModule,
+    OperatorDetailsModule,
     PaymentModule,
     PaymentOperatorModule,
     PhoneModule,

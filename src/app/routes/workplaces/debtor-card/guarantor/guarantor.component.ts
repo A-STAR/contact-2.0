@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
   selector: 'app-debtor-guarantor',
   templateUrl: './guarantor.component.html'
 })
-export class DebtorGuarantorComponent {
-  static COMPONENT_NAME = 'DebtorGuarantorComponent';
-}
+export class DebtorGuarantorComponent {}

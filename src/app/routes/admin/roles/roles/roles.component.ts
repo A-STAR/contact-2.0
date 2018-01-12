@@ -21,6 +21,7 @@ import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-roles',
   templateUrl: './roles.component.html'
 })

@@ -1,0 +1,16 @@
+<ul class="nav navbar-nav header-menu">
+  <li
+    *ngFor='let item of menuItems$ | async'
+    [ngClass]="{ 'nav-heading': item.heading }"
+    class="header-menu__item"
+    routerLinkActive="header-menu__item--active"
+  >
+    <a
+      *ngIf="item.text"
+      [routerLink]="item.link"
+      [title]="item.text | translate"
+    >
+      {{ item.text | translate }}
+    </a>
+  </li>
+</ul>

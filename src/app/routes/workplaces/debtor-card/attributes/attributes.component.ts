@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
 
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { IActionType } from '../../../../core/app-modules/debtor-card/debtor-card.interface';
 
 @Component({
   selector: 'app-debtor-attributes',
   templateUrl: './attributes.component.html'
 })
-export class DebtorAttributesComponent implements OnInit {
-  static COMPONENT_NAME = 'DebtorAttributesComponent';
+export class DebtorAttributesComponent implements OnInit, OnDestroy {
   static ENTITY_TYPE_DEBT = 19;
 
-  entityTypeId$: Observable<number>;
+  entityTypeId: number;
   entityId$: Observable<number>;
+  paramsSub: Subscription;
 
   constructor(
     private debtorCardService: DebtorCardService,
@@ -21,6 +22,20 @@ export class DebtorAttributesComponent implements OnInit {
 
   ngOnInit(): void {
     this.entityId$ = this.debtorCardService.selectedDebtId$;
-    this.entityTypeId$ = of(DebtorAttributesComponent.ENTITY_TYPE_DEBT);
+    this.entityTypeId = DebtorAttributesComponent.ENTITY_TYPE_DEBT;
+    this.paramsSub = this.debtorCardService.selectedDebtId$
+      .subscribe(entityId =>
+        this.debtorCardService.dispatchAction(IActionType.SELECT_ENTITY,
+          {
+            entityId,
+            entityTypeId: DebtorAttributesComponent.ENTITY_TYPE_DEBT
+          })
+      );
+  }
+
+  ngOnDestroy(): void {
+    if (this.paramsSub) {
+      this.paramsSub.unsubscribe();
+    }
   }
 }

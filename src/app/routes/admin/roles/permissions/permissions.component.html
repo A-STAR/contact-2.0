@@ -3,16 +3,14 @@
   [availablePermissions]="availablePermissions"
   (add)="onAdd($event)"
   (cancel)="onCancel()"
->
-</app-add-permission>
+></app-add-permission>
 
 <app-edit-permission
   *ngIf="isDialog('edit')"
   [record]="currentPermission"
   (save)="onEdit($event)"
   (cancel)="onCancel()"
->
-</app-edit-permission>
+></app-edit-permission>
 
 <app-dialog-action
   *ngIf="isDialog('remove')"
@@ -23,21 +21,24 @@
   [titleTranslationKey]="'roles.permissions.remove.title'"
   (action)="onRemove()"
   (cancel)="onCancel()"
->
-</app-dialog-action>
+></app-dialog-action>
 
-<app-toolbar-2
-  class="bordered"
-  [items]="toolbarItems">
-</app-toolbar-2>
+<div class="flex vertical">
+  <app-toolbar-2
+    class="flex-item"
+    [items]="toolbarItems"
+  ></app-toolbar-2>
 
-<app-grid
-  [columns]="columns"
-  [columnTranslationKey]="'roles.permissions'"
-  [emptyMessage]="emptyMessage$ | async"
-  [rows]="permissions$ | async"
-  [selectionType]="'single'"
-  [styles]="{height: '400px'}"
-  (onDblClick)="onDblClick()"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  <div class="flex-item grow">
+    <app-grid
+      [columns]="columns"
+      [columnTranslationKey]="'roles.permissions'"
+      [emptyMessage]="emptyMessage$ | async"
+      [rows]="permissions$ | async"
+      [selectionType]="'single'"
+      [styles]="{ height: 'auto' }"
+      (onDblClick)="onDblClick()"
+      (onSelect)="onSelect($event)"
+    ></app-grid>
+  </div>
+</div>

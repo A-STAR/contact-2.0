@@ -8,8 +8,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 
 import { IDictionary, ITerm } from '../../dictionaries.interface';
@@ -19,7 +17,6 @@ import { IMultiLanguageOption } from '../../../../../shared/components/form/mult
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 
-import { DictionariesService } from '../../dictionaries.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { makeKey, toLabeledValues, getTranslations } from '../../../../../core/utils';
@@ -50,22 +47,16 @@ export class DictEditComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private dictionariesService: DictionariesService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    combineLatest(
-      this.userDictionariesService
-        .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE),
-      this.dictionary
-        ? this.dictionariesService.selectedDictionary.map(dict => dict.name)
-        : of([]),
-    )
+    this.userDictionariesService
+        .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE)
     .pipe(first())
-    .subscribe(([dictTypeOptions, nameTranslations]) => {
-      const dictNameTranslations = getTranslations(this.languages, nameTranslations);
-
+    .subscribe(dictTypeOptions => {
+      const translations = this.dictionary && this.dictionary.name || [];
+      const dictNameTranslations = getTranslations(this.languages, translations);
       this.controls = this.getControls(dictTypeOptions, dictNameTranslations);
       this.cdRef.markForCheck();
     });

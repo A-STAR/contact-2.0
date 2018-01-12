@@ -11,4 +11,42 @@
   <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="contact"></app-dynamic-form>
 </div>
 
-<app-container *ngIf="contactId" [node]="node"></app-container>
+<app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+  <!-- Phones -->
+  <app-tabview-tab [title]="tabs[0].title" [closable]="false">
+    <app-phone-grid
+      *ngIf="tabs[0].isInitialised"
+      action="edit"
+      [contactType]="1"
+      [debtId]="debtId"
+      [personId]="contactPersonId"
+      [personRole]="4"
+    ></app-phone-grid>
+  </app-tabview-tab>
+
+  <!-- Addresses -->
+  <app-tabview-tab [title]="tabs[1].title" [closable]="false">
+    <app-address-grid
+      *ngIf="tabs[1].isInitialised"
+      action="edit"
+      [debtId]="debtId"
+      [debtorId]="debtorId"
+      [personId]="contactPersonId"
+      [personRole]="4"
+    ></app-address-grid>
+  </app-tabview-tab>
+
+  <!-- Identity Documents -->
+  <app-tabview-tab [title]="tabs[2].title" [closable]="false">
+    <app-identity-grid
+      *ngIf="tabs[2].isInitialised"
+    ></app-identity-grid>
+  </app-tabview-tab>
+
+  <!-- Employment History -->
+  <app-tabview-tab [title]="tabs[3].title" [closable]="false">
+    <app-employment-grid
+      *ngIf="tabs[3].isInitialised"
+    ></app-employment-grid>
+  </app-tabview-tab>
+</app-tabview>

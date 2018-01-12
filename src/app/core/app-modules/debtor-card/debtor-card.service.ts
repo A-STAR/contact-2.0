@@ -2,7 +2,6 @@ import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../state/state.interface';
@@ -10,15 +9,14 @@ import { IActionType, IDataStatus } from './debtor-card.interface';
 import { IDebt, IPerson } from '../app-modules.interface';
 
 import { AbstractActionService } from '../../state/action.service';
-import { ContentTabService } from '../../../shared/components/content-tabstrip/tab/content-tab.service';
+import { RoutingService } from 'app/core/routing/routing.service';
 
 @Injectable()
 export class DebtorCardService extends AbstractActionService {
   constructor(
     protected actions: Actions,
-    private contentTabService: ContentTabService,
-    private router: Router,
     protected store: Store<IAppState>,
+    private routingService: RoutingService,
   ) {
     super();
   }
@@ -36,6 +34,16 @@ export class DebtorCardService extends AbstractActionService {
   get selectedDebtId$(): Observable<number> {
     return this.store
       .select(state => state.debtorCard.selectedDebtId);
+  }
+
+  get entityTypeId$(): Observable<number> {
+    return this.store
+      .select(state => state.debtorCard.entityTypeId);
+  }
+
+  get entityId$(): Observable<number> {
+    return this.store
+      .select(state => state.debtorCard.entityId);
   }
 
   get selectedDebt$(): Observable<IDebt> {
@@ -101,9 +109,8 @@ export class DebtorCardService extends AbstractActionService {
       );
   }
 
-  openByDebtId(debtId: number): Promise<boolean> {
-    this.contentTabService.removeTabByPath(`\/workplaces\/debtor-card\/(.+)`);
-    return this.router.navigate([ `/workplaces/debtor-card/${debtId}` ] );
+  openByDebtId(debtId: number): void {
+    this.routingService.navigate([ '/workplaces', `debtor-card/${debtId}` ]);
   }
 
   initByDebtId(debtId: number): void {

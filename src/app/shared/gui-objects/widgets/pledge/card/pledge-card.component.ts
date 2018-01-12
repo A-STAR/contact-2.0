@@ -10,7 +10,6 @@ import { IPledgor } from '../../pledgor/pledgor.interface';
 import { IPledgorProperty } from '../../pledgor-property/pledgor-property.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { PledgeService } from '../pledge.service';
 import { PledgorService } from '../../pledgor/pledgor.service';
 import { PledgorPropertyService } from '../../pledgor-property/pledgor-property.service';
@@ -52,7 +51,6 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private pledgeService: PledgeService,
     private route: ActivatedRoute,
     private router: Router,
@@ -135,7 +133,8 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, isRoute(this.route, 'create') ? 2 : this.isAddingPledgor ? 4 : 5);
+    const relativeUrlCount = isRoute(this.route, 'create') ? 2 : this.isAddingPledgor ? 4 : 5;
+    this.router.navigate([new Array(relativeUrlCount + 1).join('../')], { relativeTo: this.route });
   }
 
   onSubmit(): void {

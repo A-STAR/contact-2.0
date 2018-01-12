@@ -9,7 +9,6 @@ import {
 } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -28,8 +27,6 @@ const label = makeKey('portfolios.grid');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortfolioEditComponent implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'PortfolioEditComponent';
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
@@ -45,7 +42,6 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
-    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -142,11 +138,7 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.router.navigate(['/admin/contractors']).then((isSuccess: boolean) => {
-      if (isSuccess) {
-        this.contentTabService.removeTabByPath(/\/admin\/contractors\/(\d+)\/portfolios\/(.+)/);
-      }
-    });
+    this.router.navigate(['/admin/contractors']);
   }
 
   onAttributesClick(): void {

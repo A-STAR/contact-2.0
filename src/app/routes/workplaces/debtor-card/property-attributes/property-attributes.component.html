@@ -2,8 +2,8 @@
   <app-tabview-tab *ngFor="let tab of tabs" [title]="tab.title">
     <app-entity-attribute-grid
       *ngIf="tab.isInitialised"
-      [entityId$]="entityId$"
-      [entityTypeId$]="entityTypeId$"
+      [entityId]="entityId$ | async"
+      [entityTypeId]="entityTypeId"
     ></app-entity-attribute-grid>
   </app-tabview-tab>
 </app-tabview>

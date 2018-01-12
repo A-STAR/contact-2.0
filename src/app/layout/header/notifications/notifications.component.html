@@ -11,7 +11,7 @@
   <perfect-scrollbar class="notifications_list_wrapper">
     <ul class="list-group">
       <ng-container *ngFor="let notification of notifications; let i = index;">
-        <li *ngIf="filters[notification.type]" class="list-group-item notifications_item" [title]="notification.message | translate">
+        <li *ngIf="filters && filters[notification.type]" class="list-group-item notifications_item" [title]="notification.message | translate">
           <span class="notifications_dismiss" [title]="'notifications.dismiss' | translate" (click)="onDismiss(i)">&#10005;</span>
           <p class="m0 notifications_message">
             <i [class]="getIconClass(notification.type)"></i>

@@ -1,37 +1,18 @@
-<div class="aside-inner">
-  <nav class="sidebar" sidebar-anyclick-close="" [class.show-scrollbar]="settings.layout.asideScrollbar">
-    <ul class="nav">
-      <li *ngFor='let item of menuItems' [ngClass]="{'nav-heading': item.heading}" [routerLinkActive]="['active']">
-        <a
-          *ngIf="item.text && !item.children"
-          [routerLink]="item.link"
-          [attr.route]="item.link"
-          [title]="item.text | translate"
-        >
-          <em [class]="item.icon" *ngIf="item.icon"></em><span>{{ item.text | translate }}</span>
-        </a>
-        <a
-          *ngIf="item.text && item.children"
-          [title]="item.text | translate"
-          (click)="toggleSubmenuClick($event)"
-          (mouseenter)="toggleSubmenuHover($event)"
-        >
-          <em [class]="item.icon" *ngIf="item.icon"></em><span>{{ item.text | translate }}</span>
-        </a>
-        <ul *ngIf="item.children" class="nav sidebar-subnav" [routerLinkActive]="['opening']">
-          <li class="sidebar-subnav-header">{{ (item.text | translate) || item.name }}</li>
-          <li *ngFor='let subitem of item.children' [routerLinkActive]="['active']">
-            <a
-              *ngIf="subitem.text && !subitem.children"
-              [routerLink]="subitem.link"
-              [attr.route]="subitem.link"
-              [title]="subitem.text | translate"
-            >
-              <em class="{{subitem.icon}}" *ngIf="subitem.icon"></em><span>{{ subitem.text | translate }}</span>
-            </a>
-          <li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
+<div class="aside-inner sidebar-aside">
+  <nav class="sidebar sidebar-nav" sidebar-anyclick-close="" [class.show-scrollbar]="settings.layout.asideScrollbar">
+      <ul class="nav sidebar-nav__menu">
+        <li *ngFor='let item of menuItems$ | async' [ngClass]="{ 'nav-heading': item.heading }" routerLinkActive="active">
+          <a
+            *ngIf="item.text"
+            [routerLink]="item.link"
+            [attr.route]="item.link"
+            [title]="item.text | translate"
+          >
+            <em [class]="item.icon" *ngIf="item.icon"></em>
+            <span>{{ item.text | translate }}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <app-sidebar-toggle></app-sidebar-toggle>
 </div>

@@ -5,6 +5,4 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   templateUrl: 'address.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressComponent {
-  static COMPONENT_NAME = 'DebtorAddressComponent';
-}
+export class AddressComponent {}

@@ -12,8 +12,6 @@ import { CampaignService } from './campaign.service';
   ]
 })
 export class CampaignComponent implements OnInit {
-  static COMPONENT_NAME = 'CampaignComponent';
-
   tabs = [
     { isInitialised: true },
     { isInitialised: false },

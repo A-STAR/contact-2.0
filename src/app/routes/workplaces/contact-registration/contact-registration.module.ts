@@ -15,7 +15,13 @@ import { SharedModule } from '../../../shared/shared.module';
 import { ContactRegistrationComponent } from './contact-registration.component';
 
 const routes: Routes = [
-  { path: ':debtId/:contactTypeCode/:contactId', component: ContactRegistrationComponent },
+  {
+    path: '',
+    component: ContactRegistrationComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

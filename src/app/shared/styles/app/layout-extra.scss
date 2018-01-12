@@ -185,12 +185,10 @@ $float-space: 15px;
         top: $float-space;
         bottom: $float-space;
         left: inherit;
-      }
-      .sidebar {
+        &:after {
+          display: none;
+        }
         border: 1px solid $gray-light;
-      }
-      .sidebar:after {
-        display: none;
       }
     }
     @media only screen and (min-width: $mq-tablet) {

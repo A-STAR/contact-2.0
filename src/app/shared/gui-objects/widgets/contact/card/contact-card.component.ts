@@ -1,22 +1,17 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { combineLatest } from 'rxjs/observable/combineLatest';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
 import { IContact } from '../contact.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { INode } from '../../../../../shared/gui-objects/container/container.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactService } from '../contact.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
-import { AddressGridComponent } from './address-grid/address-grid.component';
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { EmploymentGridComponent } from '../../../../../shared/gui-objects/widgets/employment/grid/employment-grid.component';
-import { IdentityGridComponent } from '../../../../../shared/gui-objects/widgets/identity/grid/identity-grid.component';
-import { PhoneGridComponent } from './phone-grid/phone-grid.component';
 
 import { makeKey } from '../../../../../core/utils';
 
@@ -35,34 +30,17 @@ export class ContactCardComponent {
   controls: IDynamicFormControl[] = null;
   contact: IContact;
 
-  // TODO(d.maltsev) get rid of this. Use widgets in html instead.
-  node: INode = {
-    container: 'tabs',
-    children: [
-      {
-        component: PhoneGridComponent,
-        title: 'debtor.information.phone.title',
-      },
-      {
-        component: AddressGridComponent,
-        title: 'debtor.information.address.title'
-      },
-      {
-        component: IdentityGridComponent,
-        title: 'debtor.identityDocs.title',
-        inject: { personRole: 4 }
-      },
-      {
-        component: EmploymentGridComponent,
-        title: 'debtor.employmentRecordTab.title',
-        inject: { personRole: 4 }
-      },
-    ]
-  };
+  tabs = [
+    { title: 'debtor.information.phone.title', isInitialised: true },
+    { title: 'debtor.information.address.title', isInitialised: true },
+    { title: 'debtor.identityDocs.title', isInitialised: false },
+    { title: 'debtor.employmentRecordTab.title', isInitialised: false }
+  ];
 
   constructor(
-    private contentTabService: ContentTabService,
     private contactService: ContactService,
+    private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -111,8 +89,24 @@ export class ContactCardComponent {
     return this.form && this.form.canSubmit;
   }
 
+  get debtId(): number {
+    return this.routeParams.debtId;
+  }
+
+  get debtorId(): number {
+    return this.routeParams.personId;
+  }
+
+  get contactPersonId(): number {
+    return this.routeParams.contactId || this.routeParams.personId;
+  }
+
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
+  }
+
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onSubmit(): void {
@@ -125,5 +119,9 @@ export class ContactCardComponent {
       this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);
       this.onBack();
     });
+  }
+
+  private get routeParams(): any {
+    return (this.route.params as any).value;
   }
 }

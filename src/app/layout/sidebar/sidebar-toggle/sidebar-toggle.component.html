@@ -1,0 +1,13 @@
+<div class="sidebar-toggle">
+  <a class="sidebar-toggle__item hidden-xs" *ngIf="!isSidebarCollapsed() else collapsed" trigger-resize="" (click)="toggleCollapsedSidebar()">
+    <i class="fa fa-chevron-left"></i>
+    <i class="fa fa-navicon"></i>
+    {{ 'sidebar.nav.hide' | translate }}
+  </a>
+  <ng-template #collapsed >
+    <a class="sidebar-toggle__item" (click)="toggleCollapsedSidebar()">
+      <i class="fa fa-navicon"></i>
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </ng-template>
+</div>

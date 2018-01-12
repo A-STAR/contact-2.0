@@ -1,6 +1,11 @@
-
 .grid {
   position: relative;
+  height: 100%;
+  overflow: hidden;
+  .grid-body {
+    height: 100%;
+    overflow: hidden;
+  }
 }
 
 .ngx-datatable {

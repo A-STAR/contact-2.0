@@ -9,18 +9,19 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  Optional,
   Output,
   Renderer2,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/merge';
+import { first } from 'rxjs/operators';
+import { merge } from 'rxjs/observable/merge';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { TranslateService } from '@ngx-translate/core';
+import { SplitComponent } from 'angular-split';
 
 import { IContextMenuItem } from './grid.interface';
 import { IMessages, TSelectionType, IGridColumn } from './grid.interface';
@@ -29,9 +30,10 @@ import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-grid',
+  styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html',
-  styleUrls: ['./grid.component.scss'],
 })
 export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
@@ -47,6 +49,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
   @Input() contextMenuOptions: IContextMenuItem[] = [];
+  @Input() rowIdKey = 'id';
   @Output() action = new EventEmitter<any>();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
@@ -78,13 +81,16 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   messages: IMessages = {};
   selected: Array<any> = [];
   subscription: Subscription;
+  resizeSubscription: Subscription;
 
   private _selected: any = [];
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private elRef: ElementRef,
     private renderer: Renderer2,
     public settings: SettingsService,
+    @Optional() private split: SplitComponent,
     private translate: TranslateService,
   ) {
     this.parseFn = this.parseFn || function (data: any): any { return data; };
@@ -135,7 +141,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       translationKeys.push(this.emptyMessage);
     }
 
-    this.subscription = Observable.merge(
+    this.subscription = merge(
       this.translate.get(translationKeys).pipe(first()),
       this.translate.onLangChange
         .map(data => data.translations)
@@ -192,23 +198,33 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
     if (this.contextMenuOptions.length) {
       this.ctxOutsideListener = this.renderer.listen('document', 'click', this.onDocumentClick);
     }
-    // Define a possible height of the datatable
-    // 43px - tab height,
-    // 2x12px - top & bottom padding around the grid
-    // 50px - toolbar height
-    // 8px => - ?, to be identified
+
     if (this.styles) {
-      // Don't calculate the full height if the `styles` param is set
-      return;
+      if (this.styles.height === 'auto') {
+        // TODO(d.maltsev): this is horrible, but nothing else seems to work
+        setTimeout(() => this.setFullHeight(), 0);
+        if (this.split) {
+          this.resizeSubscription = merge(this.split.dragEnd, this.split.dragProgress).subscribe(() => this.setFullHeight());
+        }
+      }
+    } else {
+      // Define a possible height of the datatable
+      // 43px - tab height,
+      // 2x12px - top & bottom padding around the grid
+      // 50px - toolbar height
+      // 8px => - ?, to be identified
+      const offset = 43 + 12 * 2 + 50;
+      const height = this.settings.getContentHeight() - offset;
+      this.dataTableRef.nativeElement.style.height = `${height}px`;
     }
-    const offset = 43 + 12 * 2 + 50;
-    const height = this.settings.getContentHeight() - offset;
-    this.dataTableRef.nativeElement.style.height = `${height}px`;
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.debouncerSub.unsubscribe();
+    if (this.resizeSubscription) {
+      this.resizeSubscription.unsubscribe();
+    }
     if (this.ctxOutsideListener) {
       this.ctxOutsideListener();
     }
@@ -226,7 +242,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
   onSelectRow(event: any): void {
     const { selected } = event;
     const rowSelected = this._selected[0];
-    if (!(rowSelected && selected[0] && rowSelected.id === selected[0].id)) {
+    if (!(rowSelected && selected[0] && rowSelected[this.rowIdKey] === selected[0][this.rowIdKey])) {
       const row = this.selectionType === 'single' ? selected[0] : selected;
       this.clickDebouncer.next({ type: 'select', row });
     }
@@ -309,5 +325,11 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       col.name = columnTranslations[col.prop];
       return col;
     });
+  }
+
+  private setFullHeight(): void {
+    const rect = this.elRef.nativeElement.getBoundingClientRect();
+    this.dataTableRef.nativeElement.style.height = `${rect.height}px`;
+    this.cdRef.markForCheck();
   }
 }

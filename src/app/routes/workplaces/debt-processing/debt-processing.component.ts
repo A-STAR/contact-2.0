@@ -10,8 +10,6 @@ const label = makeKey('modules.debtsProcessing');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtProcessingComponent {
-  static COMPONENT_NAME = 'DebtProcessingComponent';
-
   grids = [
     { key: 'debtsprocessingall', title: label('all.title'), isInitialised: true },
     { key: 'debtsprocessingcallback', title: label('callBack.title'), isInitialised: false },

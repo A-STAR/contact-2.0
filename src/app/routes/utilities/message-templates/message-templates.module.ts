@@ -10,7 +10,13 @@ import { MessageTemplateGridModule } from './grid/grid.module';
 import { MessageTemplatesComponent } from './message-templates.component';
 
 const routes: Routes = [
-  { path: '', component: MessageTemplatesComponent },
+  {
+    path: '',
+    component: MessageTemplatesComponent,
+    data: {
+      reuse: true,
+    },
+  },
 ];
 
 @NgModule({

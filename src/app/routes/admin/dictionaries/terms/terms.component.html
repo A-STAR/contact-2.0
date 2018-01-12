@@ -2,7 +2,6 @@
   *ngIf="isDialog('create')"
   [canEdit]="canEdit | async"
   [disableParentSelection]="disableParentSelection | async"
-  [languages]="languages | async"
   [terms]="dropdownTerms | async"
   [title]="'terms.create.title'"
   (submit)="onCreate($event)"
@@ -14,8 +13,7 @@
   *ngIf="isDialog('edit')"
   [canEdit]="canEdit | async"
   [disableParentSelection]="disableParentSelection | async"
-  [languages]="languages | async"
-  [term]="selectedTerm | async"
+  [term]="term"
   [terms]="dropdownTerms | async"
   [title]="'terms.edit.title'"
   (submit)="onUpdate($event)"
@@ -48,7 +46,7 @@
   [emptyMessage]="emptyMessage$ | async"
   [rows]="rows"
   [styles]="{height: '400px'}"
-  (onDblClick)="onEdit($event)"
+  (onDblClick)="edit()"
   (onSelect)="onSelect($event)"
 >
 </app-grid>

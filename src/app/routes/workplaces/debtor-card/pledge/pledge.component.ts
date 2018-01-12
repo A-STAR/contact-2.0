@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
   selector: 'app-debtor-pledge',
   templateUrl: './pledge.component.html'
 })
-export class DebtorPledgeComponent {
-  static COMPONENT_NAME = 'DebtorPledgeComponent';
-}
+export class DebtorPledgeComponent {}

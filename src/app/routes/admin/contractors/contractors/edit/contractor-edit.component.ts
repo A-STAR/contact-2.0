@@ -9,7 +9,6 @@ import {
 } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -27,7 +26,6 @@ import { first } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorEditComponent implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'ContractorEditComponent';
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
@@ -40,7 +38,6 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
@@ -105,11 +102,7 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.router.navigate(['/admin/contractors']).then((isSuccess: boolean) => {
-      if (isSuccess) {
-        this.contentTabService.removeTabByPath(/\/admin\/contractors\/(.+)/);
-      }
-    });
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onManagersClick(): void {

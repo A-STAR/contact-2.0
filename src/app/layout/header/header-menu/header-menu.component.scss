@@ -1,0 +1,11 @@
+@import "../../../shared/styles/app/variables.scss";
+
+.header-menu__item a {
+  color: $brand-white;
+  font-size: $font-size-top-menu;
+}
+
+.header-menu__item:hover a,
+.header-menu__item--active a {
+  color: #fff;
+}
