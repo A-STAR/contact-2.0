@@ -2,7 +2,7 @@
 
 $border-color: #d5d5d5;
 $arrow-width: 8px;
-$arrow-margin: 20px;
+$arrow-margin: 10px;
 
 .dropdown-container {
   position: relative;
@@ -33,26 +33,28 @@ $arrow-margin: 20px;
   &.arrow {
     &:before,
     &:after {
-      bottom: 100%;
       border-color: transparent;
       border: solid transparent;
+      bottom: 100%;
       content: ' ';
       height: 0;
-      width: 0;
-      position: absolute;
       pointer-events: none;
+      position: absolute;
+      width: 0;
     }
 
     &:before {
       border-bottom-color: $border-color;
       border-width: $arrow-width;
       margin-left: -$arrow-width;
+      top: -$arrow-width;
     }
 
     &:after {
       border-bottom-color: #fafafa;
       border-width: $arrow-width - 1;
       margin-left: -($arrow-width - 1);
+      top: -($arrow-width - 1);
     }
   }
 

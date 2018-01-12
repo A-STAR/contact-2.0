@@ -11,10 +11,10 @@ import {
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IFilters, INotification, NotificationTypeEnum } from '../../../core/notifications/notifications.interface';
+import { IFilters, INotification, NotificationTypeEnum } from '../../../../core/notifications/notifications.interface';
 
-import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { ValueConverterService } from '../../../core/converter/value-converter.service';
+import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 @Component({
   selector: 'app-notifications',

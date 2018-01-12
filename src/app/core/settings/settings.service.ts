@@ -62,14 +62,14 @@ export class SettingsService {
     }
   }
 
-  setLayoutSetting(name: string, value: any): any {
+  setLayoutSetting(name: string, value: any): void {
     if (typeof this.layout[name] !== 'undefined') {
-      return this.layout[name] = value;
+      this.layout[name] = value;
+      this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.layout);
     }
   }
 
-  toggleLayoutSetting(name: string): any {
-    return this.setLayoutSetting(name, !this.getLayoutSetting(name));
+  toggleLayoutSetting(name: string): void {
+    this.setLayoutSetting(name, !this.getLayoutSetting(name));
   }
-
 }

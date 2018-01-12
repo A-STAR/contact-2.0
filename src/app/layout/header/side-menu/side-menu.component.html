@@ -1,0 +1,38 @@
+<ul class="flex">
+  <li class="flex-item" [title]="Language" (click)="toggleLanguage()">
+    <span class="menu-item">
+      <i class="fa fa-language"></i>
+    </span>
+  </li>
+
+  <li class="flex-item">
+    <app-dropdown #notificationsDropdown position="right" [displayArrow]="true" [enabled]="hasNotifications$ | async">
+      <span trigger class="menu-item" title="'header.messages.title' | translate">
+        <i class="fa fa-bell"></i>
+        <div *ngIf="hasNotifications$ | async" class="label label-danger">
+          {{ notificationsCount$ | async }}
+        </div>
+      </span>
+      <app-notifications (close)="notificationsDropdown.close()">
+      </app-notifications>
+    </app-dropdown>
+  </li>
+
+  <li class="flex-item">
+    <app-dropdown #accountDropdown position="right" [displayArrow]="true">
+      <span trigger class="menu-item" [title]="'header.account.title' | translate">
+        <i class="fa fa-user"></i>
+      </span>
+      <div class="dropdown-content">
+        <ul class="list-group mb0">
+          <li class="list-group-item" (click)="resetSettings($event)">
+            <i class="icon-settings"></i> {{ 'header.account.reset' | translate }}
+          </li>
+          <li class="list-group-item" (click)="logout($event)">
+            <i class="icon-lock"></i> {{ 'header.account.logout' | translate }}
+          </li>
+        </ul>
+      </div>
+    </app-dropdown>
+  </li>
+</ul>
