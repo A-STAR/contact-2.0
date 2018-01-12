@@ -20,8 +20,7 @@
   top: 64px;
   left: 12%;
   right: 12%;
-  // TODO(d.maltsev): import sidebar width from layout.scss
-  padding-left: 220px;
+  padding-left: $layout-sidebar-width;
   transition: padding-left 0.2s ease;
 
   .toast {
@@ -34,6 +33,5 @@
 }
 
 :host /deep/ .collapsed .toaster-container {
-  // TODO(d.maltsev): import sidebar width from layout.scss
-  padding-left: 70px;
+  padding-left: $layout-sidebar-width-collapsed;
 }
