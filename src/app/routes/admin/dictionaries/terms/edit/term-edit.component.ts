@@ -9,9 +9,9 @@ import {
   ViewChild,
 } from '@angular/core';
 
+import { EntityTranslationsConstants } from '../../../../../core/entity/translations/entity-translations.interface';
 import { ITerm } from '../../dictionaries.interface';
 import {
-  IDynamicFormControl,
   IDynamicFormItem,
   IDynamicFormConfig
 } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -43,7 +43,7 @@ export class TermEditComponent implements OnInit {
   config: IDynamicFormConfig = {
     labelKey: 'terms.edit',
   };
-  controls: Array<IDynamicFormItem>;
+  controls: IDynamicFormItem[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -66,10 +66,10 @@ export class TermEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private getControls(): IDynamicFormControl[] {
+  private getControls(): IDynamicFormItem[] {
 
     const disabled = !this.canEdit;
-    const controls: Partial<IDynamicFormControl>[] = [
+    const controls: Partial<IDynamicFormItem>[] = [
       {
         controlName: 'code',
         type: 'number',
@@ -80,7 +80,10 @@ export class TermEditComponent implements OnInit {
         controlName: 'name',
         type: this.term ? 'multilanguage' : 'text',
         required: true,
-        langConfig: { entityAttributeId: 12, entityId: this.term.id },
+        langConfig: {
+          entityAttributeId: EntityTranslationsConstants.SPEC_TERM_NAME,
+          entityId: this.term && this.term.id
+        },
         disabled,
       },
       {
@@ -88,7 +91,6 @@ export class TermEditComponent implements OnInit {
         type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE,
         required: true,
-        label: 'terms.edit.typeCode',
         disabled,
       },
       {
@@ -107,6 +109,6 @@ export class TermEditComponent implements OnInit {
       }
     ];
 
-    return controls as IDynamicFormControl[];
+    return controls as IDynamicFormItem[];
   }
 }

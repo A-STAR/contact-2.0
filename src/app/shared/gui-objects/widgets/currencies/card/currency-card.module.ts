@@ -18,8 +18,8 @@ import { CurrencyCardComponent } from './currency-card.component';
   declarations: [
     CurrencyCardComponent,
   ],
-  entryComponents: [
-    CurrencyCardComponent,
-  ]
+  // entryComponents: [
+  //   CurrencyCardComponent,
+  // ]
 })
 export class CurrencyCardModule { }

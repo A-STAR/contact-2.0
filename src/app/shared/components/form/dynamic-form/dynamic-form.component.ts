@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, switchMap } from 'rxjs/operators';
 import * as R from 'ramda';
@@ -59,33 +60,42 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     const config = this.config;
-    if (config) {
-      // set the default config options
-      const defaultConfig = { suppressLabelCreation: false };
-      this.config = Object.assign(defaultConfig, config);
 
-      if (!config.suppressLabelCreation) {
-        // set control labels
-        const label = makeKey(config.labelKey);
-        const createLabels = (ctrl: IDynamicFormControl) => {
-          return !ctrl.children
-            ? { ...ctrl, label: ctrl.label || label(ctrl.controlName) }
-            : ctrl.children.map(createLabels);
-        };
-        this.controls = this.controls.map(createLabels);
-      }
+    if (!config) {
+        this.flatControls = this.flattenFormControls(this.controls);
+        this.form = this.createForm(this.flatControls);
+        this.populateForm();
+        this.cdRef.markForCheck();
+        return;
+    }
 
-      const flatControls = this.flattenFormControls(this.controls);
-      // fetch & set the dictionary options for select controls
-      const dictCodes = flatControls
-        .filter(ctrl => ctrl.dictCode && ctrl.type === 'select')
-        .map(ctrl => ctrl.dictCode);
-      // get a subset of multilanguage controls
-      const multiLanguageCtrls = flatControls.filter(ctrl => ctrl.type === 'multilanguage');
+    // set the default config options
+    const defaultConfig = { suppressLabelCreation: false };
+    this.config = Object.assign(defaultConfig, config);
 
-      combineLatest(
-        this.userDictionariesService.getDictionariesAsOptions(dictCodes),
-        this.lookupService.lookup<ILookupLanguage>('languages')
+    if (!this.config.suppressLabelCreation) {
+      // 1. set control labels
+      const label = makeKey(config.labelKey);
+      const createLabels = (ctrl: IDynamicFormControl) => {
+        return !ctrl.children
+          ? { ...ctrl, label: ctrl.label || label(ctrl.controlName) }
+          : ctrl.children.map(createLabels);
+      };
+      this.controls = this.controls.map(createLabels);
+    }
+
+    const flatControls = this.flattenFormControls(this.controls);
+    // 2. fetch the dictionaries for select options
+    const dictCodes = flatControls
+      .filter(ctrl => ctrl.dictCode && ctrl.type === 'select')
+      .map(ctrl => ctrl.dictCode);
+    // get a subset of multilanguage controls
+    const multiLanguageCtrls = flatControls.filter(ctrl => ctrl.type === 'multilanguage');
+
+    combineLatest(
+      this.userDictionariesService.getDictionariesAsOptions(dictCodes),
+      multiLanguageCtrls.length
+        ? this.lookupService.lookup<ILookupLanguage>('languages')
           .pipe(
             switchMap(languages => {
               return combineLatest(
@@ -108,46 +118,40 @@ export class DynamicFormComponent implements OnInit, OnChanges {
                 })
               );
             })
-          ),
-      )
-      .pipe(first())
-      .subscribe(([ dictionaries, multiLanguageCtrlsWithOptions ]) => {
-        // console.log('multilangCtrls with options', multiLanguageCtrlsWithOptions);
-
-        Object.keys(dictionaries).forEach(dictCode => {
-          const options: IOption[] = dictionaries[dictCode];
-          const control = this.recursivelyFindControlByProp(
-            <IDynamicFormControl[]>this.controls,
-            { dictCode: Number(dictCode) }
-          );
-          if (control) {
-            control.options = options;
-          }
-        });
-
-        multiLanguageCtrlsWithOptions.forEach(ctrl => {
-          const control = this.recursivelyFindControlByProp(
-            <IDynamicFormControl[]>this.controls,
-            { controlName: ctrl.controlName }
-          );
-          if (control) {
-            control.langOptions = ctrl.langOptions;
-          }
-        });
-
-        this.flatControls = this.flattenFormControls(this.controls);
-        this.form = this.createForm(this.flatControls);
-        this.populateForm();
-        this.cdRef.markForCheck();
-        // console.log('flatControls', this.flatControls);
+          )
+        : of([])
+    )
+    .pipe(first())
+    .subscribe(([ dictionaries, multiLanguageCtrlsWithOptions ]) => {
+      // console.log('multilangCtrls with options', multiLanguageCtrlsWithOptions);
+      // 3. set the dictionary options for select controls
+      Object.keys(dictionaries).forEach(dictCode => {
+        const options: IOption[] = dictionaries[dictCode];
+        const control = this.recursivelyFindControlByProp(
+          <IDynamicFormControl[]>this.controls,
+          { dictCode: Number(dictCode) }
+        );
+        if (control) {
+          control.options = options;
+        }
       });
 
-    } else {
+      multiLanguageCtrlsWithOptions.forEach(ctrl => {
+        const control = this.recursivelyFindControlByProp(
+          <IDynamicFormControl[]>this.controls,
+          { controlName: ctrl.controlName }
+        );
+        if (control) {
+          control.langOptions = ctrl.langOptions;
+        }
+      });
+
       this.flatControls = this.flattenFormControls(this.controls);
       this.form = this.createForm(this.flatControls);
       this.populateForm();
       this.cdRef.markForCheck();
-    }
+      // console.log('flatControls', this.flatControls);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
