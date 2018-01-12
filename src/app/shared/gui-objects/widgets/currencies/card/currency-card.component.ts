@@ -117,7 +117,8 @@ export class CurrencyCardComponent implements OnInit {
         controlName: this.currencyId ? 'multiName' : 'name',
         type: this.currencyId ? 'multitext' : 'text',
         options: languageOptions,
-        disabled: !canEdit
+        disabled: !canEdit,
+        required: true
       },
       {
         label: label('shortName'),
