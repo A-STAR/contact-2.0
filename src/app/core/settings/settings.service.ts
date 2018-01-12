@@ -3,23 +3,13 @@ import { Injectable } from '@angular/core';
 import { PersistenceService } from '../persistence/persistence.service';
 import { propOr } from '../utils';
 
-
 @Injectable()
 export class SettingsService {
 
   app: any;
   layout: any;
 
-  private user: any;
-
   constructor(private persistenceService: PersistenceService) {
-
-    // User Settings
-    this.user = {
-      name: 'John',
-      job: 'ng-developer',
-      picture: 'assets/img/user/02.jpg'
-    };
 
     // App Settings
     this.app = {
@@ -61,9 +51,7 @@ export class SettingsService {
   getAppSetting(name: string): string | number {
     return name ? this.app[name] : this.app;
   }
-  getUserSetting(name: string): string {
-    return name ? this.user[name] : this.user;
-  }
+
   getLayoutSetting(name: string): boolean | string {
     return name ? this.layout[name] : this.layout;
   }
@@ -73,11 +61,7 @@ export class SettingsService {
       this.app[name] = value;
     }
   }
-  setUserSetting(name: string, value: string): void {
-    if (typeof this.user[name] !== 'undefined') {
-      this.user[name] = value;
-    }
-  }
+
   setLayoutSetting(name: string, value: any): any {
     if (typeof this.layout[name] !== 'undefined') {
       return this.layout[name] = value;
