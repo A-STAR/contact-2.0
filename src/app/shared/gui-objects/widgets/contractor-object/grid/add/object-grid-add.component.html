@@ -9,8 +9,8 @@
       [columns]="columns"
       [rows]="rows"
       [styles]="{ height: '320px' }"
-      (onSelect)="onSelect()">
-    </app-grid>
+      (onSelect)="onSelect()"
+    ></app-grid>
   </div>
   <div dialog-footer>
     <app-button color="primary" type="add" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>

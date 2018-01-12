@@ -3,8 +3,8 @@
   [contractorId]="contractorId"
   [typeCode]="selectedTypeCode"
   (submit)="onAddDialogSubmit($event)"
-  (cancel)="onCloseDialog()">
-</app-object-grid-add>
+  (cancel)="onCloseDialog()"
+></app-object-grid-add>
 
 <app-dialog-action
   *ngIf="isDialog('delete')"
@@ -14,16 +14,16 @@
   actionMode="danger"
   [messageParams]="selectedObject$ | async"
   (action)="onRemoveDialogSubmit()"
-  (cancel)="onCloseDialog()">
-</app-dialog-action>
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
 
 <div class="panel m0 p ba">
   <app-select
     [ngModel]="selectedTypeCode"
     [nullable]="false"
     [options]="typeCodeOptions"
-    (onSelect)="onSelectType($event)">
-  </app-select>
+    (onSelect)="onSelectType($event)"
+  ></app-select>
 </div>
 
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
@@ -34,5 +34,5 @@
   [columns]="columns"
   [rows]="rows"
   [styles]="{ height: '600px' }"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  (onSelect)="onSelect($event)"
+></app-grid>
