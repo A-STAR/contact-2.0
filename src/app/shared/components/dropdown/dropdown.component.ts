@@ -34,6 +34,10 @@ export class DropdownComponent {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
+    console.log('click!');
+    console.log(!this.containsTarget(this.element, event));
+    console.log(!this.containsTarget(this.trigger, event));
+
     if (!this.containsTarget(this.element, event) && !this.containsTarget(this.trigger, event)) {
       this.setIsOpen(false);
     }

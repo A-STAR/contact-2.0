@@ -22,7 +22,8 @@ nav {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    li {
+
+    .menu-item {
       color: $brand-white;
       cursor: pointer;
       display: block;
@@ -30,6 +31,7 @@ nav {
       line-height: $layout-top-menu-height;
       padding: 0 12px;
       white-space: nowrap;
+
       &.active,
       &:hover {
         color: #fff;
