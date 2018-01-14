@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/timer';
 
 import { ContactRegistrationService } from './contact-registration.service';
 import { DebtorCardService } from '../../../core/app-modules/debtor-card/debtor-card.service';

@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
@@ -16,7 +18,6 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 import { GridComponent } from '../../../../shared/components/grid/grid.component';
 import { DialogFunctions } from '../../../../core/dialog';
 import { combineLatestAnd } from '../../../../core/utils/helpers';
-import { first } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,7 +59,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetchEmployees(),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('ORGANIZATION_VIEW'),
         this.organizationsService.selectedOrganization
       ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
@@ -104,7 +105,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
         this.columns = [...columns];
       });
 
-    this.selectedEmployeeSubscription = Observable.combineLatest(
+    this.selectedEmployeeSubscription = combineLatest(
       this.organizationsService.selectedEmployeeId,
       this.organizationsService.employees
     ).subscribe((data: [number, IEmployee[]]) => {
@@ -116,7 +117,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
 
     this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_VIEW');
 
-    this.viewPermissionSubscription = Observable.combineLatest(
+    this.viewPermissionSubscription = combineLatest(
       this.hasViewPermission$
     )
       .subscribe(([hasViewPermission, currentOrganization]) => {

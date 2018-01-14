@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { random } from 'faker';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs/observable/of';
 
 import { IButtonStyle, IButtonType } from './button.interface';
 
@@ -31,7 +31,7 @@ class ButtonServiceMock {
 
 class TranslateLoaderMock {
   getTranslation(language: string): Observable<any> {
-    return Observable.of([]);
+    return of([]);
   }
 }
 

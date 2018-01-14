@@ -2,9 +2,10 @@ import {
   AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
   Component, OnDestroy, ViewChild, ViewEncapsulation, EventEmitter, Output
 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IEmployee, IActionLog } from './actions-log.interface';
@@ -58,7 +59,7 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
     {
       action: 'openDebtCardByDebtor',
       label: 'default.grid.actions.openDebtCardByDebtor',
-      enabled: Observable.of(true),
+      enabled: of(true),
       params: [ 'personId' ],
     }
   ];

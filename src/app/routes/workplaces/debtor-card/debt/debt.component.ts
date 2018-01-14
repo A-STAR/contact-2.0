@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, flatMap, map } from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 import { IDebt } from '../../../../core/app-modules/app-modules.interface';
 import { IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -53,7 +53,7 @@ export class DebtComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.lookupService.portfolios,
       this.userDictionariesService.getDictionariesAsOptions([
         UserDictionariesService.DICTIONARY_DEBT_LIST_1,
@@ -110,7 +110,7 @@ export class DebtComponent implements OnInit {
   }
 
   onSubmit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.debtorCardService.personId$,
       this.debtorCardService.selectedDebtId$,
     )

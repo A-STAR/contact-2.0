@@ -8,6 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -49,7 +50,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.personSubscription = Observable.combineLatest(
+    this.personSubscription = combineLatest(
       this.userConstantsService.get(this.stringValuesConstantsName),
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
       this.entityAttributesService.getAttributes(this.attributeIds),

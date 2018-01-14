@@ -9,8 +9,9 @@ import {
   Output,
 } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
+import { zip } from 'rxjs/observable/zip';
 
 import { DictOperation } from '../attributes.interface';
 import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
@@ -74,9 +75,9 @@ export class DictionaryComponent implements OnInit, OnDestroy {
       });
 
     if (Number.isInteger(this.dictCodeNumber)) {
-      this.permissionsSub = Observable.zip(
+      this.permissionsSub = zip(
         this.userDictionariesService.getDictionary(this.dictCodeNumber),
-        this.attributesService.isDictCodeOperation(this.dictCodeNumber) ? this.userPermissionsService.bag() : Observable.of(null)
+        this.attributesService.isDictCodeOperation(this.dictCodeNumber) ? this.userPermissionsService.bag() : of(null)
       )
         .subscribe(([terms, valueBag]) => {
           if (valueBag && !valueBag.containsALL(this.attributesService.getDictCodePermName(this.dictCodeNumber))) {

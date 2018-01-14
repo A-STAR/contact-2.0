@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 
@@ -122,7 +123,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
 
   ngOnInit(): void {
 
-    Observable.combineLatest(
+    combineLatest(
       this.gridService.setAllRenderers(this._columns),
       this.canViewBlock$,
     )

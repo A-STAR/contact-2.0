@@ -2,10 +2,9 @@ import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import 'rxjs/add/observable/combineLatest';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IEntityTranslation } from '../../../../core/entity/translations/entity-translations.interface';
 import { IGroup } from './group.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 
@@ -16,13 +15,10 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { EntityTranslationsService } from '../../../../core/entity/translations/entity-translations.service';
 
 @Injectable()
 export class GroupService extends AbstractActionService {
   static MESSAGE_GROUP_SAVED = 'MESSAGE_GROUP_SAVED';
-
-  static GROUP_NAME_ID = 396;
 
   private baseUrl = '/groups';
 
@@ -32,10 +28,9 @@ export class GroupService extends AbstractActionService {
     private dataService: DataService,
     private notificationsService: NotificationsService,
     protected store: Store<IAppState>,
-    private userDictionariesService: UserDictionariesService,
     private userConstantsService: UserConstantsService,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-    private entityTranslationsService: EntityTranslationsService
   ) {
     super();
   }
@@ -53,7 +48,7 @@ export class GroupService extends AbstractActionService {
   }
 
   get groupEntityTypeOptions$(): Observable<IOption[]> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ENTITY_TYPE),
       this.userConstantsService.get('Group.EntityType.List').map(constant => constant.valueS)
     ).map(([ options, groupEntityTypeCodes ]) =>
@@ -64,7 +59,7 @@ export class GroupService extends AbstractActionService {
   }
 
   canEdit$(group: IGroup): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.userPermissionsService.has('GROUP_EDIT'),
       this.userPermissionsService.has('GROUP_WORK_ALL'),
       this.authService.currentUser$
@@ -73,7 +68,7 @@ export class GroupService extends AbstractActionService {
   }
 
   canDelete$(group: IGroup): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.userPermissionsService.has('GROUP_DELETE'),
       this.userPermissionsService.has('GROUP_WORK_ALL'),
       this.authService.currentUser$
@@ -81,7 +76,7 @@ export class GroupService extends AbstractActionService {
     .map(([ canEdit, canWorkAll, user ]) => canEdit && (user.userId === group.userId || canWorkAll));
   }
 
-  fetchAll(forCurrentUser: boolean): Observable<Array<IGroup>> {
+  fetchAll(forCurrentUser: boolean): Observable<IGroup[]> {
     return this.dataService.readAll(`${this.baseUrl}?forCurrentUser=${forCurrentUser ? 1 : 0}`)
       .catch(this.notificationsService.fetchError().entity('entities.group.gen.plural').dispatchCallback());
   }
@@ -104,9 +99,5 @@ export class GroupService extends AbstractActionService {
   delete(groupId: number): Observable<any> {
     return this.dataService.delete(`${this.baseUrl}/{groupId}`, { groupId })
       .catch(this.notificationsService.deleteError().entity('entities.group.gen.singular').dispatchCallback());
-  }
-
-  readGroupNameTranslations(groupId: number): Observable<IEntityTranslation[]> {
-    return this.entityTranslationsService.readTranslations(groupId, GroupService.GROUP_NAME_ID);
   }
 }

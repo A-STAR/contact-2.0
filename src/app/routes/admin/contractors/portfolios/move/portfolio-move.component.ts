@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnDestroy } from '@angular/core';
 import { ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -72,7 +72,7 @@ export class PortfolioMoveComponent implements OnDestroy {
         this.columns = [...columns];
       });
 
-    Observable.combineLatest(this.haveContractor$, this.havePortfolio$)
+    combineLatest(this.haveContractor$, this.havePortfolio$)
       .filter(([contractor, portfolio]) => !!(contractor && portfolio))
       .pipe(first())
       .flatMap(([contractor, portfolio]) => {

@@ -2,8 +2,9 @@ import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestro
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuaranteeContract, IGuarantor } from '../guarantee.interface';
@@ -72,7 +73,7 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.guaranteeService.fetchAll(this.debtId),
       this.contract$,
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE),

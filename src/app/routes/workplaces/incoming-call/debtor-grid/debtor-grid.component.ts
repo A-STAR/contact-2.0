@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn, IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
@@ -50,30 +50,30 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
       ],
       translationKey: 'default.grid.localeText',
       prop: 'fullName',
-      enabled: Observable.of(true)
+      enabled: of(true)
     },
     {
       action: 'showContactHistory',
       label: 'default.grid.actions.showContactHistory',
-      enabled: Observable.of(true),
+      enabled: of(true),
       params: [ 'personId' ],
     },
     {
       action: 'debtSetResponsible',
       label: 'default.grid.actions.debtSetResponsible',
-      enabled: Observable.of(true),
+      enabled: of(true),
       params: [ 'debtId' ]
     },
     {
       action: 'debtClearResponsible',
       label: 'default.grid.actions.debtClearResponsible',
-      enabled: Observable.of(true),
+      enabled: of(true),
       params: [ 'debtId' ]
     },
     {
       action: 'objectAddToGroup',
       label: 'default.grid.actions.objectAddToGroup',
-      enabled: Observable.of(true),
+      enabled: of(true),
       params: [ 'debtId' ],
       // TODO(d.maltsev, i.kibisov): currently using injection instead of this
       addOptions: [
@@ -100,7 +100,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
       });
 
     this.searchParamsSubscription = this.incomingCallService.searchParams$
-      .flatMap(params => params ? this.debtorGridService.fetchAll(params as any) : Observable.of(null))
+      .flatMap(params => params ? this.debtorGridService.fetchAll(params as any) : of(null))
       .subscribe(debtors => {
         this.debtors = debtors;
         this.incomingCallService.selectedDebtor = null;

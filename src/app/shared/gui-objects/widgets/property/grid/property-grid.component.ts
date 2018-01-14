@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
@@ -15,6 +14,7 @@ import { NotificationsService } from '../../../../../core/notifications/notifica
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
+import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'app-property-grid',
@@ -43,18 +43,18 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selectedProperty$.value),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.propertyService.canEdit$,
-        this.selectedProperty$
-      ).map(([canEdit, selectedProperty]) => !!canEdit && !!selectedProperty)
+        this.selectedProperty$.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('removeProperty'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.propertyService.canDelete$,
-        this.selectedProperty$
-      ).map(([canDelete, selectedProperty]) => !!canDelete && !!selectedProperty),
+        this.selectedProperty$.map(o => !!o)
+      ])
     },
   ];
 
@@ -89,7 +89,7 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
           this.fetch();
         } else {
           this.clear();
-          this.notificationsService.error('errors.default.read.403').entity('entities.property.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.property.gen.plural').dispatch();
         }
       });
 

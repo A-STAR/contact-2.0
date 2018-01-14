@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
@@ -17,8 +19,6 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
-import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contractor-edit',
@@ -49,7 +49,7 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     const contractorId = Number(this.route.snapshot.paramMap.get('contractorId'));
-    const getContractor$ = contractorId ? this.contractorsAndPortfoliosService.readContractor(contractorId) : Observable.of(null);
+    const getContractor$ = contractorId ? this.contractorsAndPortfoliosService.readContractor(contractorId) : of(null);
 
     this.editedContractorSub = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
