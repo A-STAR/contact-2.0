@@ -9,6 +9,7 @@ export class EntityTranslationsConstants {
   static SPEC_TEMPLATE_ATTRIBUTE_USER_NAME = 313;
   static SPEC_ATTRIBUTE_NAME = 318;
   static SPEC_CONTACT_TREE_NAME = 343;
+  static SPEC_GROUP_NAME = 396;
   static SPEC_CAMPAIGN_NAME = 402;
 }
 
