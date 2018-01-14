@@ -1,5 +1,5 @@
 <ul class="flex">
-  <li class="flex-item" [title]="Language" (click)="toggleLanguage()">
+  <li class="flex-item" [title]="'header.language' | translate" (click)="toggleLanguage()">
     <span class="menu-item">
       <i class="fa fa-language"></i>
     </span>
@@ -7,7 +7,7 @@
 
   <li class="flex-item">
     <app-dropdown #notificationsDropdown position="right" [displayArrow]="true" [enabled]="hasNotifications$ | async">
-      <span trigger class="menu-item" title="'header.messages.title' | translate">
+      <span trigger class="menu-item" [title]="'header.notifications' | translate">
         <i class="fa fa-bell"></i>
         <div *ngIf="hasNotifications$ | async" class="label label-danger">
           {{ notificationsCount$ | async }}

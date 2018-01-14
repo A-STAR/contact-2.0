@@ -1,8 +1,7 @@
 {
   "header": {
-    "search": {
-      "placeholder": "Введите строку поиска и нажмите ввод..."
-    },
+    "language": "Язык",
+    "notifications": "Сообщения",
     "license": {
       "title": "Лицензия",
       "info": "Номер Вашей лицензии"
