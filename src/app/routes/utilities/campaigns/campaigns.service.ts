@@ -99,8 +99,7 @@ export class CampaignsService {
       entityTypeIds: [19]
     })
       .catch(
-      this.notificationsService.fetchError()
-        .entity('entities.groups.gen.plural').dispatchCallback()
+        this.notificationsService.fetchError().entity('entities.groups.gen.plural').dispatchCallback()
       );
   }
 

@@ -1,7 +1,7 @@
-<form [formGroup]="form">
+<form *ngIf="controls && form" [formGroup]="form">
     <app-dynamic-form-group
       [form]="form"
       [items]="controls"
-      (onSelect)="onSelectItems($event)">
-    </app-dynamic-form-group>
+      (onSelect)="onSelectItems($event)"
+    ></app-dynamic-form-group>
 </form>

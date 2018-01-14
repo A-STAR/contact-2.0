@@ -3,12 +3,11 @@ import { Component } from '@angular/core';
 import { ITab } from '../../../shared/components/layout/tabview/header/header.interface';
 
 @Component({
+  host: { class: 'full-height' },
   selector: 'app-roles-and-permissions',
   templateUrl: './roles-and-permissions.component.html'
 })
 export class RolesAndPermissionsComponent {
-  static COMPONENT_NAME = 'RolesAndPermissionsComponent';
-
   tabs: ITab[] = [
     {
       link: 'permissions',

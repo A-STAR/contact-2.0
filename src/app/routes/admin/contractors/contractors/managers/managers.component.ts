@@ -24,7 +24,6 @@ import { DialogFunctions } from '../../../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorManagersComponent extends DialogFunctions implements OnDestroy, OnInit {
-  static COMPONENT_NAME = 'ContractorManagersComponent';
 
   dialog: string;
 

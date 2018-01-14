@@ -10,7 +10,6 @@ import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debt
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtorContactLogTabComponent {
-  static COMPONENT_NAME = 'DebtorContactLogTabComponent';
 
   constructor(
     private debtorCardService: DebtorCardService,

@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs/Subscription';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'ContractorsAndPortfoliosVersionComponent';
   static ENTITY_TYPE_CONTRACTOR = 13;
   static ENTITY_TYPE_PORTFOLIO = 15;
 

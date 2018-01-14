@@ -12,6 +12,7 @@ import { ContractorsAndPortfoliosComponent } from './contractors-and-portfolios.
 import { ContractorEditComponent } from './contractors/edit/contractor-edit.component';
 import { ContractorManagersComponent } from './contractors/managers/managers.component';
 import { ContractorManagerEditComponent } from './contractors/managers/edit/manager-edit.component';
+import { ContractorObjectsComponent } from './contractors/edit/objects/contractor-objects.component';
 import { PortfolioEditComponent } from './portfolios/edit/portfolio-edit.component';
 import { ContractorAttributesComponent } from './contractors/edit/attributes/contractor-attributes.component';
 import { PortfolioAttributesComponent } from './portfolios/edit/attributes/portfolio-attributes.component';
@@ -63,6 +64,11 @@ const routes: Routes = [
         path: 'attributes', children: [
           { path: '', component: ContractorAttributesComponent },
           { path: ':attributeId/versions', component: ContractorsAndPortfoliosVersionComponent },
+        ]
+      },
+      {
+        path: 'objects', children: [
+          { path: '', component: ContractorObjectsComponent },
         ]
       }
     ],

@@ -9,8 +9,6 @@ import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debt
   templateUrl: './property.component.html'
 })
 export class DebtorPropertyComponent {
-  static COMPONENT_NAME = 'DebtorPropertyComponent';
-
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,

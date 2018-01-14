@@ -19,10 +19,8 @@ import { combineLatestAnd } from '../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersComponent implements OnDestroy {
-  static COMPONENT_NAME = 'UsersComponent';
-
   private _users: Array<IUser> = [];
-  private _selectedUserId: number;
+  private selectedUserId: number;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
@@ -92,7 +90,7 @@ export class UsersComponent implements OnDestroy {
     this.filter = this.filter.bind(this);
 
     this.selectedUserSubscription = this.state
-      .subscribe(state => this._selectedUserId = state.selectedUserId);
+      .subscribe(state => this.selectedUserId = state.selectedUserId);
 
     this.filterUserSubscription = this.state
       .map(state => state.displayInactive)
@@ -105,11 +103,11 @@ export class UsersComponent implements OnDestroy {
       );
 
     this.hasViewPermission$ = this.userPermissionsService.has('USER_VIEW');
-    this.viewPermissionSubscription = this.hasViewPermission$.subscribe(hasViewPermission =>
-      hasViewPermission ? this.fetch() : this.clear()
+    this.viewPermissionSubscription = this.hasViewPermission$.subscribe(canView =>
+      canView ? this.fetch() : this.clear()
     );
 
-    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'users.errors.view');
+    this.emptyMessage$ = this.hasViewPermission$.map(canView => canView ? null : 'users.errors.view');
 
     this.actionSubscription = this.usersService
       .getAction(UsersService.USER_SAVED)
@@ -131,8 +129,12 @@ export class UsersComponent implements OnDestroy {
     return this._users;
   }
 
+  set users(users: IUser[]) {
+    this._users = users;
+  }
+
   get editedUser(): IUser {
-    return (this._users || []).find(users => users.id === this._selectedUserId);
+    return (this.users || []).find(user => user.id === this.selectedUserId);
   }
 
   get selection(): Array<IUser> {
@@ -160,24 +162,24 @@ export class UsersComponent implements OnDestroy {
 
   onSelect(user: IUser): void {
     if (user) {
-      this.usersService.select(String(user.id));
+      this.usersService.select(user.id);
     }
   }
 
   private fetch(): void {
     this.usersService.fetch().subscribe(users => {
-      this._users = users;
+      this.users = users;
       this.cdRef.markForCheck();
     });
   }
 
   private refresh(): void {
-    this._users = [].concat(this._users);
+    this.users = [].concat(this.users);
     this.cdRef.markForCheck();
   }
 
   private clear(): void {
-    this._users = [];
+    this.users = [];
     this.cdRef.markForCheck();
   }
 }

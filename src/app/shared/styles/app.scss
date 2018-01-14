@@ -26,14 +26,6 @@
 // Typography
 @import "app/typo";
 
-// Layout
-@import "app/layout";
-@import "app/layout-extra";
-@import "app/layout-animation";
-@import "app/top-navbar";
-@import "app/sidebar";
-// @import "app/offsidebar";
-
 // Components
 // @import "app/breadcrumbs";
 @import "app/loading-bar";
@@ -42,15 +34,13 @@
 @import "app/placeholder";
 @import "app/panels";
 @import "app/progress-extra";
-// @import "app/user-block";
 @import "app/circles";
 @import "app/dropdown-extra";
 @import "app/row-extra";
 @import "app/half-float";
 @import "app/widget";
 @import "app/table-grid";
-@import "app/todo";
-// @import "app/file-upload";
+// @import "app/todo";
 
 // Perfect scrollbar
 @import "app/ps";
@@ -71,3 +61,9 @@
 
 // Settings
 @import "app/settings";
+
+@import "app/flex";
+
+html, body {
+  height: 100%;
+}

@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { publishReplay, refCount, finalize } from 'rxjs/operators';
+import { publishReplay, refCount, finalize, catchError, flatMap } from 'rxjs/operators';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
+import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
 import { IQueryParam, IQueryParams } from './data.interface';
 
 interface RequestOptions {
@@ -64,6 +66,13 @@ export class DataService {
 
   readBlob(url: string, routeParams: object = {}): Observable<Blob> {
     return this.blobRequest(DataService.METHOD_GET, url, routeParams);
+  }
+
+  readTranslations(entityId: string|number, entityAttributesId: number|string): Observable<IEntityTranslation[]> {
+    return this.readAll('/entityAttributes/{entityAttributesId}/entities/{entitiesId}', {
+        entityAttributesId: entityAttributesId,
+        entitiesId: entityId
+      });
   }
 
   create(url: string, routeParams: object = {}, body: object, options: RequestOptions = {}): Observable<any> {
@@ -138,17 +147,25 @@ export class DataService {
     this.nRequests$.next(this.nRequests$.value + 1);
 
     return this.validateUrl(url)
-      .flatMap(rootUrl => {
-        const route = this.createRoute(url, routeParams);
-        const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
-
-        return this.http.request(method, `${rootUrl}${api}`, {
-          ...options,
-          params: this.prepareHttpParams(options.params),
-          headers
-        });
-      })
       .pipe(
+        flatMap(rootUrl => {
+          const route = this.createRoute(url, routeParams);
+          const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
+
+          return this.http.request(method, `${rootUrl}${api}`, {
+            ...options,
+            params: this.prepareHttpParams(options.params),
+            headers
+          });
+        }),
+        catchError(resp => {
+          if (401 === resp.status) {
+            // TODO(a.tymchuk): ask for the password again
+            console.log('authentication error', resp);
+          }
+          // rethrow the error up the chain
+          return ErrorObservable.create(resp);
+        }),
         finalize(() => {
           this.nRequests$.next(this.nRequests$.value - 1);
         })
@@ -182,7 +199,7 @@ export class DataService {
 
   private validateUrl(url: string = ''): Observable<string> {
     if (!url) {
-      return Observable.throw('Error: no url passed to the DataService');
+      return ErrorObservable.create('Error: no url passed to the DataService');
     }
     return this.rootUrl$;
   }

@@ -9,9 +9,8 @@ import { Observable } from 'rxjs/Observable';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfolioAttributesComponent implements OnInit {
-
-  static COMPONENT_NAME = 'PortfolioAttributesComponent';
   static ENTITY_TYPE_PORTFOLIO = 15;
+
   entityTypeId: number;
   entityId$: Observable<number>;
 

@@ -1,19 +1,19 @@
-<div class="aside-inner sidebar-aside">
-  <nav class="sidebar sidebar-nav" sidebar-anyclick-close="" [class.show-scrollbar]="settings.layout.asideScrollbar">
-      <ul class="nav sidebar-nav__menu">
-        <li *ngFor='let item of menuItems$ | async' [ngClass]="{ 'nav-heading': item.heading }" routerLinkActive="active">
-          <a
-            *ngIf="item.text"
-            [routerLink]="item.link"
-            [attr.route]="item.link"
-            [title]="item.text | translate"
-          >
-            <em [class]="item.icon" *ngIf="item.icon"></em>
-            <span>{{ item.text | translate }}</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <app-sidebar-toggle></app-sidebar-toggle>
-    <div class="sidebar-aside__divider"></div>
-</div>
+<nav class="flex vertical" [ngClass]="{ collapsed: isCollapsed }">
+  <ul class="flex-item grow">
+    <li *ngFor="let item of menuItems$ | async" class="flex horizontal" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
+      <i *ngIf="item.icon" class="flex-item" [ngClass]="item.icon"></i>
+      <span *ngIf="!isCollapsed" class="flex-item grow">{{ item.text | translate }}</span>
+    </li>
+  </ul>
+  <div class="flex-item">
+    <span class="sidebar-collapse" (click)="onSidebarToggle()">
+      <ng-container *ngIf="isCollapsed; else collapse">
+        <i class="fa fa-angle-double-right"></i>
+      </ng-container>
+    </span>
+  </div>
+</nav>
+
+<ng-template #collapse>
+  <i class="fa fa-angle-double-left"></i> {{ 'sidebar.nav.hide' | translate }}
+</ng-template>

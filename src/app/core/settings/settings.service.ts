@@ -3,23 +3,13 @@ import { Injectable } from '@angular/core';
 import { PersistenceService } from '../persistence/persistence.service';
 import { propOr } from '../utils';
 
-
 @Injectable()
 export class SettingsService {
 
   app: any;
   layout: any;
 
-  private user: any;
-
   constructor(private persistenceService: PersistenceService) {
-
-    // User Settings
-    this.user = {
-      name: 'John',
-      job: 'ng-developer',
-      picture: 'assets/img/user/02.jpg'
-    };
 
     // App Settings
     this.app = {
@@ -49,7 +39,7 @@ export class SettingsService {
     };
 
     if (!$('.app-content') || !$('.topnavbar-wrapper')) {
-      throw Error('Could not find the content area or the navbar div');
+      throw new Error('Could not find the content area or the navbar div');
     }
   }
 
@@ -61,9 +51,7 @@ export class SettingsService {
   getAppSetting(name: string): string | number {
     return name ? this.app[name] : this.app;
   }
-  getUserSetting(name: string): string {
-    return name ? this.user[name] : this.user;
-  }
+
   getLayoutSetting(name: string): boolean | string {
     return name ? this.layout[name] : this.layout;
   }
@@ -73,19 +61,15 @@ export class SettingsService {
       this.app[name] = value;
     }
   }
-  setUserSetting(name: string, value: string): void {
-    if (typeof this.user[name] !== 'undefined') {
-      this.user[name] = value;
-    }
-  }
-  setLayoutSetting(name: string, value: any): any {
+
+  setLayoutSetting(name: string, value: any): void {
     if (typeof this.layout[name] !== 'undefined') {
-      return this.layout[name] = value;
+      this.layout[name] = value;
+      this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.layout);
     }
   }
 
-  toggleLayoutSetting(name: string): any {
-    return this.setLayoutSetting(name, !this.getLayoutSetting(name));
+  toggleLayoutSetting(name: string): void {
+    this.setLayoutSetting(name, !this.getLayoutSetting(name));
   }
-
 }

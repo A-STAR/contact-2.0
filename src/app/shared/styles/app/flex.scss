@@ -1,0 +1,26 @@
+.flex {
+  display: flex;
+  &.horizontal {
+    flex-direction: row;
+  }
+  &.vertical {
+    flex-direction: column;
+    height: 100%;
+  }
+  &.justify-between {
+    justify-content: space-between;
+  }
+}
+
+.flex-item {
+  flex: 0 0;
+  &.grow {
+    flex: 1 0;
+    overflow: hidden;
+  }
+}
+
+.full-height {
+  display: block;
+  height: 100%;
+}

@@ -2,10 +2,23 @@
 // Variables
 // --------------------------------------------------
 
+// Layout
+$layout-top-menu-height:           49px;
+$layout-top-menu-font-size:        15px;
+$layout-sidebar-width:            220px;
+$layout-sidebar-width-collapsed:   64px;
 
 //== Colors
 //
 //## Gray and brand colors for use across Bootstrap.
+
+$brand-primary-dark:     #49435d;
+$brand-primary:          #4a445f;
+$brand-primary-light:    #58526e;
+
+$brand-white:            #d8d5e2;
+
+$brand-secondary:        #9bec00;
 
 // Redefined Gray colors for theme
 $gray-darker:            #232735;
@@ -16,7 +29,7 @@ $gray-lighter:           #edf1f2;
 
 // Classic brand colors
 
-$brand-primary:          #5d9cec;
+// $brand-primary:          #5d9cec;
 $brand-success:          #27c24c;
 $brand-info:             #23b7e5;
 $brand-warning:          #ff902b;
@@ -98,6 +111,8 @@ $font-size-h3:            ceil(($font-size-base * 1.7)); // ~24px
 $font-size-h4:            ceil(($font-size-base * 1.25)); // ~18px
 $font-size-h5:            $font-size-base;
 $font-size-h6:            ceil(($font-size-base * 0.85)); // ~12px
+
+$font-size-top-menu:      15px;
 
 //** Unit-less `line-height` for use in components like buttons.
 $line-height-base:        1.528571429; // 20/14

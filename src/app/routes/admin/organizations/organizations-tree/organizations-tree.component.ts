@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { merge } from 'rxjs/observable/merge';
 
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree/treenode/treenode.interface';
@@ -66,7 +67,7 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
 
   ngOnInit(): void {
     this.permissionSub = this.canViewOrganization.do(hasViewPermission => hasViewPermission
-      ? (this.organizations = Observable.merge(
+      ? (this.organizations = merge(
           this.organizationsService.fetchOrganizations(),
           this.organizationsService.organizations)
         )

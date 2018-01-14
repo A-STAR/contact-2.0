@@ -26,13 +26,13 @@ import { first } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorEditComponent implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'ContractorEditComponent';
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
   canViewAttributes: boolean;
+  canViewObjects: boolean;
   private editedContractorSub: Subscription;
   private contractorId: number;
 
@@ -55,12 +55,15 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
       getContractor$,
-      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
+      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST'),
+      this.userPermissionsService.has('OBJECT_CONTRACTOR_VIEW')
     )
     .pipe(first())
     // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes ]) => {
+    // TODO:(i.kibisov) remove canViewObjects default value when permission will be added on BE
+    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes, canViewObjects ]) => {
       this.canViewAttributes = true;
+      this.canViewObjects = true;
 
       this.contractorId = contractor && contractor.id;
 
@@ -112,5 +115,9 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
 
   onAttributesClick(): void {
     this.router.navigate([`/admin/contractors/${this.contractorId}/attributes`]);
+  }
+
+  onObjectsClick(): void {
+    this.router.navigate([`/admin/contractors/${this.contractorId}/objects`]);
   }
 }

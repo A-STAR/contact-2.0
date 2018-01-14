@@ -18,8 +18,6 @@ import { combineLatestOr } from '../../../core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactRegistrationComponent {
-  static COMPONENT_NAME = 'ContactRegistrationComponent';
-
   campaignId      = Number(this.queryParams.campaignId);
   contactId       = Number(this.routeParams.contactId);
   contactTypeCode = Number(this.routeParams.contactTypeCode);

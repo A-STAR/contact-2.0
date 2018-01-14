@@ -80,7 +80,7 @@ export class CurrencyRateCardComponent implements OnInit {
         label: label('fromDateTime'), controlName: 'fromDateTime', type: 'datepicker', displayTime: true,
         required: true, disabled: !canEdit || !!this.currencyRateId
       },
-      { label: label('rate'), controlName: 'rate', type: 'number', disabled: !canEdit },
+      { label: label('rate'), controlName: 'rate', type: 'number', disabled: !canEdit, required: true },
     ];
   }
 }

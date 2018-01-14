@@ -19,8 +19,6 @@ import { isEmpty } from '../../../core/utils';
   ]
 })
 export class CallCenterComponent {
-  static COMPONENT_NAME = 'CallCenterComponent';
-
   @ViewChild(GridComponent) grid: GridComponent;
 
   columns: IGridColumn[] = [

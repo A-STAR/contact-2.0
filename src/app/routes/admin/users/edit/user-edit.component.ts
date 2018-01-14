@@ -26,15 +26,13 @@ import { maxFileSize, password } from '../../../../core/validators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserEditComponent extends DialogFunctions {
-  static COMPONENT_NAME = 'UserEditComponent';
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem>;
   dialog: string = null;
   formData: any;
 
-  private userId = this.route.snapshot.paramMap.get('userId');
+  private userId = Number(this.route.snapshot.paramMap.get('userId'));
 
   constructor(
     private router: Router,

@@ -16,8 +16,6 @@ interface IIdentityCardRouteParams {
   templateUrl: './identity.component.html'
 })
 export class DebtorIdentityComponent {
-  static COMPONENT_NAME = 'DebtorIdentityComponent';
-
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,

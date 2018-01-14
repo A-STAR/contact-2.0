@@ -29,10 +29,9 @@ import { DialogFunctions } from '../../../../core/dialog/index';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantsComponent extends DialogFunctions implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'ParticipantsComponent';
+  @ViewChild(GridComponent) grid: GridComponent;
 
   @Input() campaign: Observable<ICampaign>;
-  @ViewChild(GridComponent) grid: GridComponent;
 
   participants: IParticipant[];
   notAddedParticipants: IParticipant[];
