@@ -76,8 +76,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   ];
 
   dialog: string;
-
-  private groups: IGroup[] = [];
+  groups: IGroup[] = [];
 
   private actionSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
