@@ -1,7 +1,8 @@
 import { Component, ViewChild, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IEmployment } from '../employment.interface';
@@ -40,13 +41,13 @@ export class EmploymentCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_WORK_TYPE),
       this.lookupService.currencyOptions,
       this.employmentId
         ? this.userPermissionsService.has('EMPLOYMENT_EDIT')
         : this.userPermissionsService.has('EMPLOYMENT_ADD'),
-      this.employmentId ? this.employmentService.fetch(this.personId, this.employmentId) : Observable.of(null)
+      this.employmentId ? this.employmentService.fetch(this.personId, this.employmentId) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, currencyOptions, canEdit, employment ]) => {

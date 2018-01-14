@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { DebtorCardService } from './debtor-card.service';
@@ -41,7 +41,7 @@ export class DebtorCardComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.selectedDebtorSubscription = this.incomingCallService.selectedDebtor$
-      .flatMap(debtor => debtor ? this.debtorCardService.fetch(debtor.debtId) : Observable.of(null))
+      .flatMap(debtor => debtor ? this.debtorCardService.fetch(debtor.debtId) : of(null))
       .subscribe(data => {
         this.form.reset();
         this.data = data;

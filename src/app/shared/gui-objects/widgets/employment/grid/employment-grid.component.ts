@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IEmployment } from '../employment.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -14,6 +14,7 @@ import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'app-employment-grid',
@@ -36,18 +37,18 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selectedEmployment$.value.id),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canEdit$,
-        this.selectedEmployment$
-      ).map(([canEdit, selectedEmployment]) => !!canEdit && !!selectedEmployment)
+        this.selectedEmployment$.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('removeEmployment'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.canDelete$,
-        this.selectedEmployment$
-      ).map(([canDelete, selectedEmployment]) => !!canDelete && !!selectedEmployment),
+        this.selectedEmployment$.map(o => !!o)
+      ]),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -182,5 +183,4 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     this.selectedEmployment$.next(null);
     this.cdRef.markForCheck();
   }
-
 }

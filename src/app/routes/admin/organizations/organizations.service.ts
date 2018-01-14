@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { of } from 'rxjs/observable/of';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
@@ -74,7 +76,7 @@ export class OrganizationsService {
     return this.selectedOrganization
       .pipe(first())
       .switchMap(organization => {
-        return organization ? this.readEmployees(organization.id) : Observable.of([]);
+        return organization ? this.readEmployees(organization.id) : of([]);
       })
       // because grid component relies on row's property id
       .map(employees => employees.map<IEmployee>(employee => (employee.id = employee.userId) && employee))
@@ -113,7 +115,7 @@ export class OrganizationsService {
   }
 
   updateOrganizationNoFetch(organization: ITreeNode, id?: number): Observable<any> {
-    return (id ? Observable.of({ id }) : this.selectedOrganization.pipe(first()))
+    return (id ? of({ id }) : this.selectedOrganization.pipe(first()))
       .switchMap(selectedOrganization =>
         this.dataService.update(`${this.baseUrl}/{organizationId}`, {
           organizationId: selectedOrganization.id
@@ -150,7 +152,7 @@ export class OrganizationsService {
   }
 
   updateEmployee(employee: IEmployeeUpdateRequest): Observable<any> {
-    return Observable.combineLatest(
+    return combineLatest(
         this.selectedOrganization,
         this.selectedEmployeeId
       )
@@ -164,19 +166,19 @@ export class OrganizationsService {
   }
 
   removeEmployee(): Observable<any> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.selectedOrganization,
       this.selectedEmployeeId)
-      .pipe(first())
-      .switchMap(data =>
-        this.dataService.delete(`${this.baseUrl}/{organizationId}/users/?id={userId}`,
-          {
-            organizationId: data[0].id,
-            userId: data[1]
-          })
-      )
-      .switchMap(() => this.fetchEmployees())
-      .catch(this.notificationsService.updateError().entity('entities.employees.gen.singular').callback());
+    .pipe(first())
+    .switchMap(data =>
+      this.dataService.delete(`${this.baseUrl}/{organizationId}/users/?id={userId}`,
+        {
+          organizationId: data[0].id,
+          userId: data[1]
+        })
+    )
+    .switchMap(() => this.fetchEmployees())
+    .catch(this.notificationsService.updateError().entity('entities.employees.gen.singular').callback());
   }
 
   clearAll(): void {
@@ -185,13 +187,13 @@ export class OrganizationsService {
   }
 
   updateOrganizations(organizations: IOrganization[]): Observable<any> {
-    return Observable.forkJoin(organizations
+    return forkJoin(organizations
       .map((organization: IOrganization) => this.updateOrganizationNoFetch(organization, organization.id)));
   }
 
   clearOrganizations(): Observable<any[]> {
     this.selectOrganization(null, []);
-    return Observable.of([]);
+    return of([]);
   }
 
   selectOrganization(selectedOrganization: ITreeNode, organizations?: ITreeNode[]): IOrganizationSelectState {

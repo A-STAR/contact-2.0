@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../../core/state/state.interface';
@@ -74,7 +75,7 @@ export class Toolbar2Component {
   }
 
   isDisabled(item: IToolbarItem): Observable<boolean> {
-    return item.enabled ? item.enabled.map(enabled => !enabled) : Observable.of(false);
+    return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
   getItemCls(item: IToolbarItem): object {

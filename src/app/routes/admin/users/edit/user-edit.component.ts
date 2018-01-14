@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -46,7 +46,7 @@ export class UserEditComponent extends DialogFunctions {
   ) {
     super();
 
-    Observable.combineLatest(
+    combineLatest(
       this.userPermissionsService.has('USER_EDIT'),
       this.userPermissionsService.has('USER_ROLE_EDIT'),
       this.userPermissionsService.has('USER_LDAP_LOGIN_EDIT'),

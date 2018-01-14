@@ -4,8 +4,10 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPledgor } from '../pledgor.interface';
@@ -72,7 +74,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_FAMILY_STATUS),
@@ -83,7 +85,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
       ),
       this.contract$.flatMap(contract => contract && contract.id && !this.isRoute('pledgor/add')
         ? this.pledgorService.fetch(contract.personId)
-        : Observable.of(null)
+        : of(null)
       )
     )
     .pipe(first())
@@ -110,7 +112,7 @@ export class PledgorCardComponent extends DialogFunctions implements OnInit, OnD
       .flatMap((typeCode: number) => {
         this.currentTypeCode = typeCode;
         const attrConstant = this.pledgorService.getAttributeConstant(typeCode);
-        return Observable.combineLatest(Observable.of(typeCode), this.userContantsService.get(attrConstant));
+        return combineLatest(of(typeCode), this.userContantsService.get(attrConstant));
       })
       .subscribe(([ typeCode, attributeList ]) => {
         const additionalControlNames = this.makeControlsFromAttributeList(<string>attributeList.valueS)

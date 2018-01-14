@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
 import { IAttribute } from '../attribute.interface';
@@ -91,7 +92,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionariesAsOptions([
           UserDictionariesService.DICTIONARY_PROPERTY_TYPE,
           UserDictionariesService.DICTIONARY_ENTITY_TYPE,

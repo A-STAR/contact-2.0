@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import { IAppState } from '../../state/state.interface';
 import { IUserAttributeType, IUserAttributeTypes, IUserAttributeTypesAction } from './user-attribute-types.interface';
@@ -54,7 +55,7 @@ export class UserAttributeTypesService {
               .switchMap(_ => {
                 return this.attributeTypes$.map(slice => slice[key]);
               })
-          : Observable.of(values);
+          : of(values);
       });
   }
 

@@ -1,8 +1,8 @@
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/throw';
 
 import { IAppState } from '../state/state.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
@@ -83,7 +83,7 @@ export class NotificationActionBuilder {
   dispatchCallback(): (response: object) => Observable<null> {
     return (response: object) => {
       this.response(response).dispatch();
-      return Observable.throw(response);
+      return ErrorObservable.create(response);
     };
   }
 

@@ -2,8 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, O
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IContactLog } from '../contact-log.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -46,7 +48,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selected[0]),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.canView$,
         this.selectedChanged$
       )
@@ -81,18 +83,18 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    this.viewPermissionSubscription = this.canView$.subscribe(hasViewPermission => {
-      if (hasViewPermission) {
+    this.viewPermissionSubscription = this.canView$.subscribe(canView => {
+      if (canView) {
         this.fetch();
       } else {
         this.clear();
-        this.notificationsService.error('errors.default.read.403').entity('entities.contactLog.gen.plural').dispatch();
+        this.notificationsService.permissionError().entity('entities.contactLog.gen.plural').dispatch();
       }
     });
 
     this.viewCommentUpdate = this.contactLogService.getPayload(ContactLogService.COMMENT_CONTACT_LOG_SAVED)
-      .flatMap(currentContactLogId => Observable.combineLatest(
-          Observable.of(currentContactLogId),
+      .flatMap(currentContactLogId => combineLatest(
+          of(currentContactLogId),
           this.contactLogService.fetchAll(this.personId, this.callCenter)),
       )
       .subscribe(([currentContactLogId, contactLogList]) => {
