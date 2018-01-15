@@ -6,7 +6,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { filter, first, map, mergeMap } from 'rxjs/operators';
 
 import { IDebt } from '../debt-processing.interface';
 import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
@@ -15,14 +14,14 @@ import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debt
 import { DebtProcessingService } from '../debt-processing.service';
 
 import { ActionGridComponent } from '../../../../shared/components/action-grid/action-grid.component';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
-  selector: 'app-debt-processing-grid',
-  templateUrl: './grid.component.html',
-  styleUrls: [ './grid.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  host: { class: 'full-height' },
+  selector: 'app-debt-processing-grid',
+  styleUrls: [ './grid.component.scss' ],
+  templateUrl: './grid.component.html',
 })
 export class GridComponent {
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IDebt>;
