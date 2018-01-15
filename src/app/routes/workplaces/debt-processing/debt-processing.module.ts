@@ -23,6 +23,8 @@ const routes: Routes = [
       // Can't pass grid key as route param because component will always be reused.
       // Instead, we have to use separate route for every grid key.
       // Also, [].map doesn't work here, so we have to list every route manually.
+      // TODO(d.maltsev): see whether it's possible to modify resuse strategy
+      // to use with route params
       { path: 'all',        loadChildren: './grid/grid.module#GridModule' },
       { path: 'callBack',   loadChildren: './grid/grid.module#GridModule' },
       { path: 'currentJob', loadChildren: './grid/grid.module#GridModule' },
