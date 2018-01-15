@@ -7,8 +7,7 @@ import { of } from 'rxjs/observable/of';
 
 import {
   IDynamicFormItem,
-  IDynamicFormControl,
-  IDynamicFormConfig
+  IDynamicFormControl
 } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUser, IUserEditPermissions } from '../users.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
@@ -66,7 +65,7 @@ export class UserEditComponent extends DialogFunctions {
     )
     .pipe(first())
     .subscribe(([
-      canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, 
+      canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize,
         branchOptions, languages, roles, user
     ]) => {
       const permissions: IUserEditPermissions = {
