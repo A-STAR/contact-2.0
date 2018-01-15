@@ -250,6 +250,13 @@
       }
     },
     "dataUpload": {
+      "buttons": {
+        "open": "Open File",
+        "save": "Save to DB",
+        "cancel": "Cancel",
+        "nextProblematicCell": "Next Problematic Cell",
+        "nextCriticalCell": "Next Critical Cell"
+      },
       "dialogs": {
         "cancel": {
           "message": "Are you sure you want to cancel?",
@@ -558,6 +565,7 @@
       }
     },
     "edit": {
+      "branchCode": "Branch",
       "personalData": "Personal Data",
       "details": "Details",
       "title": "User: {{ id }}",
@@ -592,6 +600,7 @@
     },
     "grid": {
       "id": "ID",
+      "branchCode": "Branch",
       "login": "Login",
       "lastName": "Family name",
       "firstName": "Name",
@@ -2364,6 +2373,19 @@
       "entityAttributeNotFound": "Entity attribute not found for the attribute",
       "entityTypeNotFound": "Entity type not found for the attribute",
       "entityTypeIsNotSupportedForEntity": "For entityTypeId {{ $1 }} operations for entity {{ $2 }} are not supported",
+      "excelInvalidColumnList": "Invalid column list in uploaded Excel file",
+      "excelValidationMandatoryMissing": "Mandatory field missing",
+      "excelValidationDebtNotFound": "Debt not found",
+      "excelValidationDebtNotFoundByAccount": "Debt not found by account number",
+      "excelValidationDebtNotFoundByContract": "Debt not found by contract number",
+      "excelValidationPortfolioNotFound": "Portfolio not found",
+      "excelValidationUserNotFound": "User not found",
+      "excelValidationDebtsFound": "Multiple debts found",
+      "excelValidationIncorrectValueForFormat": "Incorrect value for this column",
+      "excelValidationInvalidPaymentDate": "Invalid payment date",
+      "excelValidationValueMustBePositive": "Value must be positive",
+      "excelValidationInvalidCurrencyCode": "Invalid currency code",
+      "excelValidationCurrencyRateNotFound": "Currency rate not found",
       "fieldMustBeGreaterThan": "Value for field {{ $1 }} must be greater than {{ $2 }}",
       "fieldMustBeGreaterOrEqualThan": "Value for field {{ $1 }} must be greater than or equal to {{ $2 }}",
       "fieldMustNotBeEmpty": "Field {{ $1 }} must not be empty",
@@ -2666,6 +2688,7 @@
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
+        "openIncomingCall": "Open incoming call",
         "openUserDetail": "Open operator card",
         "paymentsCancel": "Payments cancel",
         "paymentsConfirm": "Payments confirm",
