@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { GridModule } from './grid/grid.module';
 import { SharedModule } from '../../../shared/shared.module';
 
 import { DebtProcessingService } from './debt-processing.service';
 
 import { DebtProcessingComponent } from './debt-processing.component';
+
+const gridKeys = [ 'all', 'callBack', 'currentJob', 'visits', 'promisePay', 'partPay', 'problem', 'returned' ];
 
 const routes: Routes = [
   {
@@ -15,12 +16,19 @@ const routes: Routes = [
     data: {
       reuse: true,
     },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'all',
+      },
+      ...gridKeys.map(path => ({ path, loadChildren: './grid/grid.module#GridModule' })),
+    ],
   },
 ];
 
 @NgModule({
   imports: [
-    GridModule,
     RouterModule.forChild(routes),
     SharedModule,
   ],
@@ -34,5 +42,4 @@ const routes: Routes = [
     DebtProcessingService,
   ]
 })
-export class DebtProcessingModule {
-}
+export class DebtProcessingModule {}
