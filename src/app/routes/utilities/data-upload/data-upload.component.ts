@@ -180,16 +180,20 @@ export class DataUploadComponent extends DialogFunctions {
   onNextProblematicCellClick(): void {
     this.grid.focusNextCell(cell => {
       const { rowIndex } = cell;
-      const colId = cell.column.getColId();
-      return this.rows[rowIndex].cells[colId].statusCode;
+      const columnId = cell.column.getColId();
+      return this.rows[rowIndex]
+        ? this.rows[rowIndex].cells.find(c => c.columnId === columnId).statusCode
+        : null;
     });
   }
 
   onNextCriticalCellClick(): void {
     this.grid.focusNextCell(cell => {
       const { rowIndex } = cell;
-      const colId = cell.column.getColId();
-      return this.rows[rowIndex].cells[colId].statusCode === 1;
+      const columnId = cell.column.getColId();
+      return this.rows[rowIndex]
+      ? this.rows[rowIndex].cells.find(c => c.columnId === columnId).statusCode === 1
+      : null;
     });
   }
 
@@ -199,17 +203,19 @@ export class DataUploadComponent extends DialogFunctions {
 
   private getColumnsFromResponse(response: IOpenFileResponse): Observable<IAGridColumn[]> {
     const columns = response.columns
-      .map((column, i) => ({
-        name: i.toString(),
-        cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
-        cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
-        dataType: column.typeCode,
-        dictCode: column.dictCode,
-        editable: true,
-        label: column.label,
-        valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
-        valueSetter: (params: any) => this.setCellValue(params),
-      }));
+      .map((column, i) => {
+        return {
+          name: column.id,
+          cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
+          cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
+          dataType: column.typeCode,
+          dictCode: column.dictCode,
+          editable: true,
+          label: column.label,
+          valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
+          valueSetter: (params: any) => this.setCellValue(params),
+        };
+      });
     return this.gridService.getColumns(columns, {});
   }
 
@@ -240,7 +246,8 @@ export class DataUploadComponent extends DialogFunctions {
   }
 
   private getCell(params: ICellRendererParams): ICell {
-    return params.data.cells[params.column.getColId()];
+    const columnId = params.column.getColId();
+    return params.data.cells.find(cell => cell.columnId === columnId);
   }
 
   private getCellStyleByStatusCode(code: number): Partial<CSSStyleDeclaration> {
