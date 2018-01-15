@@ -250,6 +250,13 @@
       }
     },
     "dataUpload": {
+      "buttons": {
+        "open": "Открыть файл",
+        "save": "Сохранить в БД",
+        "cancel": "Отмена",
+        "nextProblematicCell": "Следующая проблемная ячейка",
+        "nextCriticalCell": "Следующая критичная ячейка"
+      },
       "dialogs": {
         "cancel": {
           "message": "Вы уверены, что хотите отменить операцию?",
@@ -2364,6 +2371,19 @@
       "entityAttributeNotFound": "Не найдена запись в entity_attribute для атрибута объекта, с которым выполняется действие",
       "entityTypeNotFound": "Не найдена запись в entity_type для атрибута объекта, с которым выполняется действие",
       "entityTypeIsNotSupportedForEntity": "Для entityTypeId {{ $1 }} не поддерживаются операции с сущностью {{ $2 }}",
+      "excelInvalidColumnList": "Некорректный набор колонок в загружаемом Excel файле",
+      "excelValidationMandatoryMissing": "Не заполнено обязательное поле",
+      "excelValidationDebtNotFound": "Не найден долг",
+      "excelValidationDebtNotFoundByAccount": "Не найден долг по номеру счета",
+      "excelValidationDebtNotFoundByContract": "Не найден долг по номеру договора",
+      "excelValidationPortfolioNotFound": "Не найден портфель",
+      "excelValidationUserNotFound": "Не найден пользователь",
+      "excelValidationDebtsFound": "Найдено несколько долгов",
+      "excelValidationIncorrectValueForFormat": "Некорректное значение для данной колонки",
+      "excelValidationInvalidPaymentDate": "Неверная дата платежа",
+      "excelValidationValueMustBePositive": "Значение должно быть больше нуля",
+      "excelValidationInvalidCurrencyCode": "Неверный код валюты",
+      "excelValidationCurrencyRateNotFound": "Не найден курс валюты",
       "fieldMustBeGreaterThan": "Значение поля {{ $1 }} должно быть больше {{ $2 }}",
       "fieldMustBeGreaterOrEqualThan": "Значение поля {{ $1 }} должно быть больше или равно {{ $2 }}",
       "fieldMustNotBeEmpty": "Поле {{ $1 }} должно быть заполнено",
