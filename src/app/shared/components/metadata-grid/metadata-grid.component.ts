@@ -42,12 +42,13 @@ import { ValueBag } from '../../../core/value-bag/value-bag';
 })
 export class MetadataGridComponent<T> implements OnInit {
   @Input() columnIds: string[];
+  @Input() fullHeight = false;
   @Input() metadataKey: string;
   @Input() ngClass: string;
   @Input() persistenceKey: string;
+  @Input() rowCount: number;
   @Input() rowIdKey: string;
   @Input() rows: T[] = [];
-  @Input() rowCount: number;
 
   @Output() action = new EventEmitter<IAGridAction>();
   @Output() onDblClick = new EventEmitter<T>();

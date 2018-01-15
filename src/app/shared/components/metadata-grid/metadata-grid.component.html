@@ -1,20 +1,19 @@
-<div class="mv">
-  <app-metadata-filter
-    [metadataKey]="metadataKey"
-    (filter)="onFilterHandler()"
-  ></app-metadata-filter>
-</div>
+<app-metadata-filter
+  [metadataKey]="metadataKey"
+  (filter)="onFilterHandler()"
+></app-metadata-filter>
 
 <app-grid2
   *ngIf="initialized"
   [actions]="gridActions$ | async"
-  [columns]="columns"
   [columnIds]="columnIds"
+  [columns]="columns"
+  [fullHeight]="fullHeight"
   [ngClass]="ngClass"
   [persistenceKey]="persistenceKey"
+  [rowCount]="rowCount"
   [rowIdKey]="rowIdKey"
   [rows]="rows"
-  [rowCount]="rowCount"
   (action)="onAction($event)"
   (onDblClick)="onDblClickHandler($event)"
   (onFilter)="onFilterHandler()"
