@@ -1,5 +1,7 @@
+@import '../shared/styles/app/variables.scss';
+
 .wrapper {
   height: 100%;
-  padding: 10px;
+  padding: $layout-content-padding;
   overflow: auto;
 }
