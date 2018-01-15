@@ -22,6 +22,8 @@ const routes: Routes = [
         pathMatch: 'full',
         redirectTo: 'all',
       },
+      // Can't pass grid key as route param because component will always be reused.
+      // Instead, we have to use separate route for every grid key.
       ...gridKeys.map(path => ({ path, loadChildren: './grid/grid.module#GridModule' })),
     ],
   },
