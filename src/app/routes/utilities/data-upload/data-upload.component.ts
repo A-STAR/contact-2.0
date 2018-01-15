@@ -16,6 +16,7 @@ import { IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow } from './d
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 
+import { CellRendererComponent } from './cell-renderer.component';
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 import { DialogFunctions } from '../../../core/dialog';
@@ -207,7 +208,8 @@ export class DataUploadComponent extends DialogFunctions {
       .map((column, i) => {
         return {
           name: column.id,
-          cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
+          // cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
+          cellRendererFramework: CellRendererComponent,
           cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
           dataType: column.typeCode,
           dictCode: column.dictCode,
@@ -224,14 +226,15 @@ export class DataUploadComponent extends DialogFunctions {
     return response.rows.sort((a, b) => a.id - b.id);
   }
 
-  private getCellRenderer(params: ICellRendererParams): string {
-    const value = params.valueFormatted === null ? '' : params.valueFormatted;
-    return `
-      <div title="${this.getCell(params).errorMsg || ''}">
-        ${value}
-      </div>
-    `;
-  }
+  // private getCellRenderer(params: ICellRendererParams): string {
+  //   const { errorMsg } = this.getCell(params);
+  //   const value = params.valueFormatted === null ? '' : params.valueFormatted;
+  //   return `
+  //     <div title="${errorMsg ? 'errors.server.' + errorMsg : ''}">
+  //       ${value}
+  //     </div>
+  //   `;
+  // }
 
   private getCellValue(params: ICellRendererParams): number | string {
     return this.getCell(params).value;
