@@ -13,9 +13,9 @@
 }
 
 .flex-item {
-  flex: 0 0;
+  flex: 0 0 auto;
   &.grow {
-    flex: 1 0;
+    flex: 1 0 auto;
     overflow: hidden;
   }
 }
