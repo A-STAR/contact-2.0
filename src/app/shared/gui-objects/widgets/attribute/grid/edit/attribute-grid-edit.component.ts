@@ -11,13 +11,18 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators/first';
 import { of } from 'rxjs/observable/of';
 
 import { IAttribute } from '../../attribute.interface';
-import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
+import {
+  IDynamicFormItem,
+  IDynamicFormConfig,
+  IDynamicFormControl
+} from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 
 import { AttributeService } from '../../attribute.service';
-import { EntityTranslationsService } from '../../../../../../core/entity/translations/entity-translations.service';
+import { EntityTranslationsConstants } from '../../../../../../core/entity/translations/entity-translations.interface';
 import { LookupService } from '../../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -26,7 +31,7 @@ import { DynamicFormComponent } from '../../../../../components/form/dynamic-for
 import { makeKey } from '../../../../../../core/utils';
 import { TYPE_CODES } from '../../../../../../core/utils/value';
 
-const labelKey = makeKey('widgets.attribute.grid');
+const labelKey = makeKey('');
 
 @Component({
   selector: 'app-attribute-grid-edit',
@@ -43,65 +48,57 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
   @Output() submit = new EventEmitter<Partial<IAttribute>>();
   @Output() cancel = new EventEmitter<void>();
 
-
-  controls: IDynamicFormControl[] = [
-    { label: labelKey('name'), controlName: 'name', type: 'text', required: true },
-    { label: labelKey('code'), controlName: 'code', type: 'number', required: true },
-    { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', options: [] },
-    { label: labelKey('dictNameCode'), controlName: 'dictNameCode', type: 'hidden', options: [] },
-    { label: labelKey('disabledValue'), controlName: 'disabledValue', type: 'checkbox' },
-  ];
+  config: IDynamicFormConfig = {
+    labelKey: 'widgets.attribute.grid',
+  };
+  controls: IDynamicFormItem[];
   attribute: IAttribute;
 
-  private _formSubscription: Subscription;
+  private formSubscription: Subscription;
 
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
-    private entityTranslationsService: EntityTranslationsService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    this._formSubscription = combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_VARIABLE_TYPE),
+    this.formSubscription = combineLatest(
       this.lookupService.lookupAsOptions('dictionaries'),
-      this.lookupService.lookupAsOptions('languages'),
       this.attributeId ? this.attributeService.fetch(this.treeType, this.treeSubtype, this.attributeId) : of(null),
-      this.attributeId ? this.entityTranslationsService.readAttributeNameTranslations(this.attributeId) : of(null),
-    ).subscribe(([ types, dictionaries, languages, attribute, translations ]) => {
-      this.cdRef.detectChanges();
+    )
+    .pipe(first())
+    .subscribe(([ dictionaries, attribute ]) => {
+      // this.cdRef.detectChanges();
+      console.log('attributeId', this.attributeId);
+      console.log('attribute', attribute);
       if (this.attributeId) {
-        this.getControl('name').options = languages;
-        this.getControl('name').type = 'multitext';
+        // this.getControl('name').options = languages;
+        // this.getControl('name').type = 'multitext';
       }
-      this.getControl('typeCode').options = types;
-      this.getControl('typeCode').required = !!this.attributeId;
-      this.form.onCtrlValueChange('typeCode').subscribe(typeCode => {
-        const code = Array.isArray(typeCode) ? typeCode[0].value : typeCode;
-        if (code === TYPE_CODES.DICT) {
-          this.getControl('dictNameCode').options = dictionaries;
-          this.getControl('dictNameCode').type = 'select';
-          this.getControl('dictNameCode').required = true;
-        } else {
-          this.getControl('dictNameCode').options = undefined;
-          this.getControl('dictNameCode').type = 'hidden';
-          this.getControl('dictNameCode').required = false;
-        }
-      });
-      if (this.attributeId) {
-        this.attribute = {
-          ...attribute,
-          name: translations
-        };
-      }
+      this.attribute = attribute;
+      this.controls = this.getControls();
+
+      // this.form.onCtrlValueChange('typeCode').subscribe(typeCode => {
+      //   const code = Array.isArray(typeCode) ? typeCode[0].value : typeCode;
+      //   if (code === TYPE_CODES.DICT) {
+      //     this.getControl('dictNameCode').options = dictionaries;
+      //     this.getControl('dictNameCode').type = 'select';
+      //     this.getControl('dictNameCode').required = true;
+      //   } else {
+      //     this.getControl('dictNameCode').options = undefined;
+      //     this.getControl('dictNameCode').type = 'hidden';
+      //     this.getControl('dictNameCode').required = false;
+      //   }
+      // });
+
       this.cdRef.markForCheck();
     });
   }
 
   ngOnDestroy(): void {
-    this._formSubscription.unsubscribe();
+    this.formSubscription.unsubscribe();
   }
 
   get canSubmit(): boolean {
@@ -109,14 +106,9 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const formValue = this.form.serializedUpdates;
-    const data = this.attributeId ? {
-      ...formValue,
-      name: formValue.name
-        ? Object.keys(formValue.name).reduce((acc, k) => [ ...acc, { languageId: k, value: formValue.name[k] } ], [])
-        : undefined
-    } : formValue;
-    this.submit.emit(data);
+    // const data = this.form.serializedUpdates;
+    // const attribute = { ...data, parentId: null };
+    this.submit.emit(this.form.serializedUpdates);
   }
 
   onCancel(): void {
@@ -124,6 +116,25 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
   }
 
   private getControl(controlName: string): IDynamicFormControl {
-    return this.controls.find(control => control.controlName === controlName);
+    return (<IDynamicFormControl[]>this.controls).find(control => control.controlName === controlName);
+  }
+
+  private getControls(): IDynamicFormItem[] {
+    const controls: Partial<IDynamicFormItem>[] = [
+      {
+        controlName: 'name',
+        type: this.attributeId ? 'multilanguage' : 'text',
+        langConfig: {
+          entityAttributeId: EntityTranslationsConstants.SPEC_ATTRIBUTE_TYPE_NAME,
+          entityId: this.attribute && this.attribute.id
+        },
+        required: true
+      },
+      { controlName: 'code', type: 'number', required: true },
+      { controlName: 'typeCode', type: 'select', dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE },
+      { controlName: 'dictNameCode', type: 'hidden' },
+      { controlName: 'disabledValue', type: 'checkbox' },
+    ];
+    return controls as IDynamicFormItem[];
   }
 }

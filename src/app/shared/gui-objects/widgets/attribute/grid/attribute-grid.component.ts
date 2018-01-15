@@ -39,7 +39,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
 
-  columns: Array<IGridWrapperTreeColumn<any>> = [
+  columns: IGridWrapperTreeColumn<any>[] = [
     {
       label: labelKey('name'),
       prop: 'name',
