@@ -43,6 +43,11 @@ export class NotificationActionBuilder {
     return this;
   }
 
+  context(context: string): NotificationActionBuilder {
+    this._params.context = context;
+    return this;
+  }
+
   params(params: IMessageParams): NotificationActionBuilder {
     this._params = params;
     return this;
@@ -105,7 +110,7 @@ export class NotificationActionBuilder {
       if (responseBody && responseBody.message) {
         const { code, payload } = responseBody.message;
         const payloadParams = payload
-          ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = param; return acc; }, {})
+          ? payload.reduce((acc, param, i) => { acc[`$${i + 1}`] = this.translatePayloadParam(param); return acc; }, {})
           : {};
         const translatedMessageKey = `errors.server.${code}`;
         const translatedMessage = this.translateService.instant(translatedMessageKey, payloadParams);
@@ -136,6 +141,10 @@ export class NotificationActionBuilder {
     }
 
     return this.translateService.instant(message.text, translatedParams);
+  }
+
+  private translatePayloadParam(param: string): string {
+    return this._params.context ? this.translateService.instant(`${this._params.context}.${param}`) : param;
   }
 
   private createAction(type: INotificationActionType, payload?: INotificationActionPayload): UnsafeAction {
