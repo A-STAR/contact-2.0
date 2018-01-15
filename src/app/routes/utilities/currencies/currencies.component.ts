@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ICurrency } from 'app/shared/gui-objects/widgets/currencies/currencies.interface';
 
@@ -10,17 +11,24 @@ import { CurrenciesService } from 'app/shared/gui-objects/widgets/currencies/cur
   templateUrl: './currencies.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CurrenciesComponent implements OnInit {
-  selectedCurrency$: Observable<number>;
+export class CurrenciesComponent implements OnInit, OnDestroy {
+  selectedCurrency$ = new BehaviorSubject<number>(null);
+
+  private selectedCurrencySubscription: Subscription;
 
   constructor(
     private currenciesService: CurrenciesService,
   ) {}
 
   ngOnInit(): void {
-    this.selectedCurrency$ = this.currenciesService
+    this.selectedCurrencySubscription = this.currenciesService
       .getPayload<ICurrency>(CurrenciesService.MESSAGE_CURRENCY_SELECTED)
-      .map(currency => currency ? currency.id : null);
+      .map(currency => currency ? currency.id : null)
+      .subscribe(currencyId => this.selectedCurrency$.next(currencyId));
+  }
+
+  ngOnDestroy(): void {
+    this.selectedCurrencySubscription.unsubscribe();
   }
 }
 
