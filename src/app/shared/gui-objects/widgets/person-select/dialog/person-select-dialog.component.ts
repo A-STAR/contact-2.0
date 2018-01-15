@@ -6,7 +6,6 @@ import {
 import { ISelectedPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
 
 import { PersonSelectCardComponent } from 'app/shared/gui-objects/widgets/person-select/card/person-select-card.component';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-person-select-dialog',

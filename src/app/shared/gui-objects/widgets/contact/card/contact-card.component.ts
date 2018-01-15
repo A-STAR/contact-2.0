@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
@@ -42,10 +42,13 @@ export class ContactCardComponent implements OnInit {
 
   private selectedContact$ = new BehaviorSubject<ISelectedPerson>(null);
 
+  private routeUrl: string;
+
   constructor(
     private contentTabService: ContentTabService,
     private contactService: ContactService,
     private route: ActivatedRoute,
+    private router: Router,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) { }
@@ -90,6 +93,12 @@ export class ContactCardComponent implements OnInit {
       this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true });
       this.contact = contact;
     });
+
+    this.selectedContact$
+      .filter(Boolean)
+      .subscribe(contact => this.selectContact(contact.id));
+
+    this.routeUrl = this.router.url;
   }
 
   get canSubmit(): boolean {
@@ -146,5 +155,10 @@ export class ContactCardComponent implements OnInit {
 
   private get routeParams(): any {
     return (this.route.params as any).value;
+  }
+
+  private selectContact(contactId: number): void {
+    this.router.navigate([ this.routeUrl ])
+      .then(() => this.router.navigate([ `${this.routeUrl}/${contactId}` ]));
   }
 }

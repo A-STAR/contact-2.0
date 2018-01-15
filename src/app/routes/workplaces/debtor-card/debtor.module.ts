@@ -94,8 +94,7 @@ const routes: Routes = [
       {
         path: 'contact',
         children: [
-          { path: '', redirectTo: 'create', pathMatch: 'full' },
-          { path: 'create', component: DebtorContactsComponent },
+          { path: '', component: DebtorContactsComponent },
           {
             path: ':contactId',
             children: [
