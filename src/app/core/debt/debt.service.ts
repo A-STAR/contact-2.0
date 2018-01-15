@@ -4,11 +4,12 @@ import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
-import { IAddress, IContactRegistrationParams, IPhone, IDebt, IDebtNextCall } from './debt.interface';
+import { IAddress, IContactRegistrationParams, IPhone, IDebt, IDebtNextCall, IDebtOpenIncomingCallData } from './debt.interface';
 
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UserPermissionsService } from '../user/permissions/user-permissions.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class DebtService {
@@ -22,6 +23,8 @@ export class DebtService {
 
   baseUrl = '/persons/{personId}/debts';
   extUrl = `${this.baseUrl}/{debtId}`;
+
+  private _incomingCallSearchParams$ = new BehaviorSubject<IDebtOpenIncomingCallData>(null);
 
   constructor(
     private dataService: DataService,
@@ -59,6 +62,14 @@ export class DebtService {
 
   get canRegisterOfficeVisit$(): Observable<boolean> {
     return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_OFFICE_VISIT);
+  }
+
+  get incomingCallSearchParams(): any {
+    return this._incomingCallSearchParams$;
+  }
+
+  set incomingCallSearchParams(data: any) {
+    this._incomingCallSearchParams$.next(data);
   }
 
   canRegisterContactForDebt$(debt: { statusCode: number }): Observable<boolean> {
