@@ -56,7 +56,7 @@ export class ContactCardComponent implements OnInit {
     private contactService: ContactService,
     private route: ActivatedRoute,
     private router: Router,
-    private userDictionariesService: UserDictionariesService,    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService,
   ) { }
 
   ngOnInit(): void {
