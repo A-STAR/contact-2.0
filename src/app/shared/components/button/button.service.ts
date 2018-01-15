@@ -20,6 +20,7 @@ export class ButtonService {
     email:            { icon: 'fa fa-envelope',         label: 'default.buttons.email'            },
     edit:             { icon: 'fa fa-pencil',           label: 'default.buttons.edit'             },
     exportToExcel:    { icon: 'fa fa-file-excel-o',     label: 'default.buttons.exportToExcel'    },
+    loadFromExcel:    { icon: 'fa fa-file-excel-o',     label: 'default.buttons.loadFromExcel'    },
     move:             { icon: 'fa fa-share',            label: 'default.buttons.move'             },
     next:             { icon: 'fa fa-arrow-right',      label: 'default.buttons.next'             },
     ok:               { icon: 'fa fa-check',            label: 'default.buttons.ok'               },

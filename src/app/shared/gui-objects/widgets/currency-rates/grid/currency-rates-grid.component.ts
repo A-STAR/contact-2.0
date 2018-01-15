@@ -47,6 +47,11 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
       ])
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_EXCEL_LOAD,
+      action: () => this.onExcelLoad(this.currencyId),
+      enabled: this.currencyRatesService.canLoad$
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.currencyId && this.fetch(),
       enabled: this.currencyRatesService.canView$
@@ -125,6 +130,10 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
 
   onEdit(currencyRate: ICurrencyRate): void {
     this.router.navigate([ `${this.router.url}/${this.currencyId}/rates/${currencyRate.id}` ]);
+  }
+
+  onExcelLoad(currencyId: number): void {
+    // this.router.navigate([])
   }
 
   private onAdd(): void {

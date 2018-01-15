@@ -37,3 +37,32 @@ export interface IErrorsResponse {
   fileName: string;
   fileBody: File;
 }
+
+export enum DataUploaders {
+  CONTACT_HISTORY = 'CONTACT_HISTORY',
+  CURRENCY_RATE = 'CURRENCY_RATE',
+  DEBTS = 'DEBTS',
+  PAYMENT = 'PAYMENT',
+  SET_OPERATOR = 'SET_OPERATOR',
+}
+
+export type TDataUploaders = 'CONTACT_HISTORY' | 'CURRENCY_RATE' | 'DEBTS' | 'PAYMENT' | 'SET_OPERATOR';
+
+export interface IDataUploaderConfig {
+  fromExcel: string;
+  fromLoadedExcel: string;
+  editExcel: string;
+  removeRow: string;
+  cancelLoading: string;
+  saveDB: string;
+  errorFile: string;
+}
+
+/**
+ *  still no support for enum keys
+ * @see https://github.com/Microsoft/TypeScript/issues/2491
+*/
+export type IUploadersConfig = {
+  [key in TDataUploaders]: IDataUploaderConfig;
+};
+

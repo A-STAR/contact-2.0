@@ -2570,6 +2570,7 @@
       "email": "Email",
       "exportToExcel": "Export",
       "excel": "Export",
+      "loadFromExcel": "Load from Excel",
       "move": "Move",
       "next": "Next",
       "ok": "OK",

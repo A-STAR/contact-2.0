@@ -4,10 +4,12 @@ import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
 
 import {
+  DataUploaders,
   ICellPayload,
   IErrorsResponse,
   IDataResponse,
   IOpenFileResponse,
+  IUploadersConfig
 } from './data-upload.interface';
 import { IMassInfoResponse } from '../../../core/data/data.interface';
 
@@ -22,6 +24,56 @@ import { GridService } from '../../../shared/components/grid/grid.service';
  */
 @Injectable()
 export class DataUploadService {
+
+  private static UPLOADERS_CONFIG: IUploadersConfig = {
+    [DataUploaders.CURRENCY_RATE]: {
+      fromExcel: '/load/currencies/{currenciesId}/rates',
+      fromLoadedExcel: '/load/currencies/{currenciesId}/rates/guid/{tempDataGuid}',
+      editExcel: '/load/currencies/{currenciesId}/rates/guid/{tempDataGuid}',
+      removeRow: '/load/currencies/{currenciesId}/rates/guid/{tempDataGuid}/row/{rowIds}',
+      cancelLoading: '/load/currencies/{currenciesId}/rates/guid/{tempDataGuid}',
+      saveDB: '/load/currencies/{currenciesId}/rates/guid/{tempDataGuid}/save',
+      errorFile: '/load/currencies/{currenciesId}/rates/guid/{tempDataGuid}/error'
+    },
+    [DataUploaders.CONTACT_HISTORY]: {
+      fromExcel: '/load/contactHistory',
+      fromLoadedExcel: '/load/contactHistory/guid/{tempDataGuid}',
+      editExcel: '/load/contactHistory/guid/{tempDataGuid}',
+      removeRow: '/load/contactHistory/guid/{tempDataGuid}/row/{rowIds}',
+      cancelLoading: '/load/contactHistory/guid/{tempDataGuid}',
+      saveDB: '/load/contactHistory/guid/{tempDataGuid}/save',
+      errorFile: '/load/contactHistory/guid/{tempDataGuid}/error'
+    },
+    [DataUploaders.DEBTS]: {
+      fromExcel: '/load/debts',
+      fromLoadedExcel: '/load/debts/guid/{tempDataGuid}',
+      editExcel: '/load/debts/guid/{tempDataGuid}',
+      removeRow: '/load/debts/guid/{tempDataGuid}/row/{rowIds}',
+      cancelLoading: '/load/debts/guid/{tempDataGuid}',
+      saveDB: '/load/debts/guid/{tempDataGuid}/save',
+      errorFile: '/load/debts/guid/{tempDataGuid}/error'
+    },
+    [DataUploaders.PAYMENT]: {
+      fromExcel: '/load/payments/format/{formatCode}',
+      fromLoadedExcel: '/load/payments/format/{formatCode}/guid/{tempDataGuid}',
+      editExcel: '/load/payments/format/{formatCode}/guid/{tempDataGuid}',
+      removeRow: '/load/payments/format/{formatCode}/guid/{tempDataGuid}/row/{rowIds}',
+      cancelLoading: '/load/payments/format/{formatCode}/guid/{tempDataGuid}',
+      saveDB: '/load/payments/format/{formatCode}/guid/{tempDataGuid}/save',
+      errorFile: '/load/payments/format/{formatCode}/guid/{tempDataGuid}/error'
+    },
+    [DataUploaders.SET_OPERATOR]: {
+      fromExcel: '/load/debtSetOperator',
+      fromLoadedExcel: '/load/debtSetOperator/guid/{tempDataGuid}',
+      editExcel: '/load/debtSetOperator/guid/{tempDataGuid}',
+      removeRow: '/load/debtSetOperator/guid/{tempDataGuid}/row/{rowIds}',
+      cancelLoading: '/load/debtSetOperator/guid/{tempDataGuid}',
+      saveDB: '/load/debtSetOperator/guid/{tempDataGuid}/save',
+      errorFile: '/load/debtSetOperator/guid/{tempDataGuid}/error'
+    },
+  };
+
+
   format = 1;
 
   private guid: number;

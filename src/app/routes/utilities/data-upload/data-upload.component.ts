@@ -5,9 +5,12 @@ import {
   ElementRef,
   ViewChild,
   ViewEncapsulation,
+  OnInit,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
@@ -23,6 +26,8 @@ import { DialogFunctions } from '../../../core/dialog';
 
 import { isEmpty } from '../../../core/utils';
 
+
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -34,7 +39,7 @@ import { isEmpty } from '../../../core/utils';
   styleUrls: [ './data-upload.component.scss' ],
   templateUrl: './data-upload.component.html',
 })
-export class DataUploadComponent extends DialogFunctions {
+export class DataUploadComponent extends DialogFunctions implements OnInit {
   @ViewChild(Grid2Component) grid: Grid2Component;
   @ViewChild('fileInput') fileInput: ElementRef;
 
@@ -51,13 +56,24 @@ export class DataUploadComponent extends DialogFunctions {
   rowIdKey = 'id';
 
   private isFirstRequest = true;
+  private queryParamsSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
     private dataUploadService: DataUploadService,
     private gridService: GridService,
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    this.queryParamsSub = this.route.queryParamMap
+      .subscribe(params => {
+        if (params) {
+          const currencyId = params.get('currencyId');
+        }
+      });
   }
 
   get hasFile(): boolean {
