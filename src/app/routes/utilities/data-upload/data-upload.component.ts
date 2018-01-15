@@ -218,9 +218,10 @@ export class DataUploadComponent extends DialogFunctions {
   }
 
   private getCellRenderer(params: ICellRendererParams): string {
+    const value = params.valueFormatted === null ? '' : params.valueFormatted;
     return `
       <div title="${this.getCell(params).errorMsg || ''}">
-        ${params.valueFormatted}
+        ${value}
       </div>
     `;
   }

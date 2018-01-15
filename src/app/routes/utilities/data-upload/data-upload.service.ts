@@ -52,7 +52,10 @@ export class DataUploadService {
   editCell(cell: ICellPayload): Observable<IDataResponse> {
     const { guid } = this;
     return this.dataService
-      .update('/load/debtSetOperator/guid/{guid}', { guid }, cell);
+      .update('/load/debtSetOperator/guid/{guid}', { guid }, cell)
+      .pipe(
+        map(response => response.data[0]),
+      );
   }
 
   deleteRow(rowId: number): Observable<void> {
