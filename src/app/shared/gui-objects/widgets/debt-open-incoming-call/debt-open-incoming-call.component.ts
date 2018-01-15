@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { ICloseAction } from '../../../components/action-grid/action-grid.interface';
 
-import { DebtOpenIncomingCallService } from './debt-open-incoming-call.service';
+import { DebtService } from '../../../../core/debt/debt.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 import { DialogFunctions } from '../../../../core/dialog';
@@ -21,7 +21,7 @@ export class DebtOpenIncomingCallComponent extends DialogFunctions implements On
   constructor(
     private router: Router,
     private notificationsService: NotificationsService,
-    private openIncomingCallService: DebtOpenIncomingCallService
+    private debtService: DebtService
   ) {
     super();
   }
@@ -42,7 +42,8 @@ export class DebtOpenIncomingCallComponent extends DialogFunctions implements On
 
   openIncomingCall(): void {
     this.router.navigate(['workplaces/incoming-call']).then(() => {
-      this.openIncomingCallService.data$.next({debtId : this.debts});
+      const debtId = this.debts && this.debts.length ? this.debts[0] : null;
+      this.debtService.incomingCallSearchParams = { debtId };
       this.onClose();
     });
   }

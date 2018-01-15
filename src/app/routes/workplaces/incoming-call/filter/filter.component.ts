@@ -3,9 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import {
-  DebtOpenIncomingCallService
-} from '../../../../shared/gui-objects/widgets/debt-open-incoming-call/debt-open-incoming-call.service';
+import { DebtService } from '../../../../core/debt/debt.service';
 import { IncomingCallService } from '../incoming-call.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -38,17 +36,17 @@ export class FilterComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private openIncomingCallService: DebtOpenIncomingCallService,
+    private debtService: DebtService,
     private incomingCallService: IncomingCallService,
   ) {}
 
   ngOnInit(): void {
     this.openIncomingCallDataSub =
-      this.openIncomingCallService.data$
+      this.debtService.incomingCallSearchParams
         .subscribe(data => {
-          if (data) {
-            this.incomingCallService.searchParams = data;
-            // this.form.form.patchValue({ debtId: data.debtId });
+          if (data && data.debtId) {
+            this.setDebtIdControlValue(data.debtId);
+            this.onSearchClick();
           }
         });
   }
@@ -68,5 +66,13 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.form.reset();
     this.form.markAsPristine();
     this.cdRef.markForCheck();
+  }
+
+  private setDebtIdControlValue(debtId: number): void {
+    const control = this.form.getControl('debtId');
+    if (control) {
+      control.patchValue(debtId);
+      control.markAsDirty();
+    }
   }
 }

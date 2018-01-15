@@ -54,7 +54,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     CurrencyRatesModule,
     DebtComponentModule,
     DebtResponsibleModule,
-    DebtOpenIncomingCallModule.forRoot(),
+    DebtOpenIncomingCallModule,
     DebtorActionLogModule,
     DocumentModule,
     EmailModule,

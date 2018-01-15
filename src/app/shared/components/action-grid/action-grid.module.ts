@@ -25,7 +25,7 @@ import { ActionGridComponent } from './action-grid.component';
   imports: [
     CommonModule,
     ContactLogModule,
-    DebtOpenIncomingCallModule.forRoot(),
+    DebtOpenIncomingCallModule,
     DebtStatusModule,
     DebtResponsibleModule,
     EntityGroupModule,
