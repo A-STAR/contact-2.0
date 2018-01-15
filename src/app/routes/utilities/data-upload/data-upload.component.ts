@@ -23,14 +23,15 @@ import { DialogFunctions } from '../../../core/dialog';
 import { isEmpty } from '../../../core/utils';
 
 @Component({
-  selector: 'app-data-upload',
-  templateUrl: './data-upload.component.html',
-  styleUrls: [ './data-upload.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height' },
   providers: [
     DataUploadService,
-  ]
+  ],
+  selector: 'app-data-upload',
+  styleUrls: [ './data-upload.component.scss' ],
+  templateUrl: './data-upload.component.html',
 })
 export class DataUploadComponent extends DialogFunctions {
   @ViewChild(Grid2Component) grid: Grid2Component;
