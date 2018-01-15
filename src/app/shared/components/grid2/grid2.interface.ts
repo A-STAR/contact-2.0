@@ -1,4 +1,5 @@
 import { RowNode, ColDef, GetContextMenuItemsParams } from 'ag-grid';
+import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { Observable } from 'rxjs/Observable';
 
 import { ICellRendererParams } from 'ag-grid/dist/lib/rendering/cellRenderers/iCellRenderer';
@@ -14,6 +15,7 @@ export type IAGridSelected = Array<any>;
 export interface IAGridColumn {
   colId: string;
   cellRenderer?: (params: ICellRendererParams) => string;
+  cellRendererFramework: ICellRendererAngularComp;
   cellStyle?: (params: ICellRendererParams) => Partial<CSSStyleDeclaration>;
   dataType: number;
   dictCode?: number;
