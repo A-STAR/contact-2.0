@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
 
@@ -25,7 +18,6 @@ import { isEmpty } from '../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   host: { class: 'full-height' },
   providers: [
     DataUploadService,
