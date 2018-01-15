@@ -13,8 +13,11 @@
 }
 
 .flex-item {
+  // IE needs 'auto' here, otherwise height will be 0
   flex: 0 0 auto;
   &.grow {
+    // IE needs units for flex basis for some reason
+    // See: https://github.com/philipwalton/flexbugs#flexbug-4
     flex: 1 0 0px;
     overflow: hidden;
   }
