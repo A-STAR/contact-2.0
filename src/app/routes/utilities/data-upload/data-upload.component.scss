@@ -1,11 +1,5 @@
 @import '../../../shared/styles/app/variables.scss';
 
 .grid-container {
-  margin: 0 (-$layout-content-padding);
-}
-
-.data-upload {
-  .app-grid2 {
-    height: 600px;
-  }
+  margin: 0 (-$layout-content-padding) (-$layout-content-padding);
 }
