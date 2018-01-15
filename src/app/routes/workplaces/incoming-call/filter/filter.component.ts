@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -17,7 +24,7 @@ import { addFormLabel } from '../../../../core/utils';
   styleUrls: [ 'filter.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterComponent implements OnInit, OnDestroy {
+export class FilterComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = [
@@ -40,7 +47,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     private incomingCallService: IncomingCallService,
   ) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.openIncomingCallDataSub =
       this.debtService.incomingCallSearchParams
         .subscribe(data => {
