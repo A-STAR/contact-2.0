@@ -1,7 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
+import {
+  DebtOpenIncomingCallService
+} from '../../../../shared/gui-objects/widgets/debt-open-incoming-call/debt-open-incoming-call.service';
 import { IncomingCallService } from '../incoming-call.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -15,7 +19,7 @@ import { addFormLabel } from '../../../../core/utils';
   styleUrls: [ 'filter.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterComponent {
+export class FilterComponent implements OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = [
@@ -30,10 +34,30 @@ export class FilterComponent {
     { controlName: 'isClosedDebt', type: 'checkbox' },
   ].map(addFormLabel('modules.incomingCall.filter.form'));
 
+  private openIncomingCallDataSub: Subscription;
+
   constructor(
     private cdRef: ChangeDetectorRef,
+    private openIncomingCallService: DebtOpenIncomingCallService,
     private incomingCallService: IncomingCallService,
   ) {}
+
+  ngOnInit(): void {
+    this.openIncomingCallDataSub =
+      this.openIncomingCallService.data$
+        .subscribe(data => {
+          if (data) {
+            this.incomingCallService.searchParams = data;
+            // this.form.form.patchValue({ debtId: data.debtId });
+          }
+        });
+  }
+
+  ngOnDestroy(): void {
+    if (this.openIncomingCallDataSub) {
+      this.openIncomingCallDataSub.unsubscribe();
+    }
+  }
 
   onSearchClick(): void {
     this.incomingCallService.searchParams = this.form.serializedUpdates;

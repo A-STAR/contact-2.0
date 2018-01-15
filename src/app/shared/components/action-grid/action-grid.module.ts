@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ContactLogModule } from '../../gui-objects/widgets/contact-log/contact-log.module';
+import { DebtOpenIncomingCallModule } from '../../gui-objects/widgets/debt-open-incoming-call/debt-open-incoming-call.module';
 import { DebtStatusModule } from '../../gui-objects/widgets/debt-status/debt-status.module';
 import { DebtResponsibleModule } from '../../gui-objects/widgets/debt-responsible/debt-responsible.module';
 import { EntityGroupModule } from '../../gui-objects/widgets/entity-group/entity-group.module';
@@ -24,6 +25,7 @@ import { ActionGridComponent } from './action-grid.component';
   imports: [
     CommonModule,
     ContactLogModule,
+    DebtOpenIncomingCallModule.forRoot(),
     DebtStatusModule,
     DebtResponsibleModule,
     EntityGroupModule,
