@@ -1,21 +1,15 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse, ICell, ICellPayload, IDataResponse } from './data-upload.interface';
+import { IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 
+import { CellRendererComponent } from './cell-renderer.component';
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 import { DialogFunctions } from '../../../core/dialog';
@@ -23,14 +17,14 @@ import { DialogFunctions } from '../../../core/dialog';
 import { isEmpty } from '../../../core/utils';
 
 @Component({
-  selector: 'app-data-upload',
-  templateUrl: './data-upload.component.html',
-  styleUrls: [ './data-upload.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height' },
   providers: [
     DataUploadService,
-  ]
+  ],
+  selector: 'app-data-upload',
+  styleUrls: [ './data-upload.component.scss' ],
+  templateUrl: './data-upload.component.html',
 })
 export class DataUploadComponent extends DialogFunctions {
   @ViewChild(Grid2Component) grid: Grid2Component;
@@ -63,9 +57,7 @@ export class DataUploadComponent extends DialogFunctions {
   }
 
   get hasErrors(): boolean {
-    return false;
-    // TODO(d.maltsev): uncomment
-    // return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
+    return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
   }
 
   get format(): number {
@@ -107,15 +99,15 @@ export class DataUploadComponent extends DialogFunctions {
     const cell = this.getCell(event as any);
     const payload: ICellPayload = {
       rowId: event.data.id,
-      cellId: cell.id,
+      columnId: cell.columnId,
       value: String(cell.value),
     };
     this.dataUploadService
       .editCell(payload)
       .subscribe(response => {
-        // const row = response.rows[0];
-        // this.rows[row.id] = row;
-        // this.cdRef.markForCheck();
+        const row = response.rows[0];
+        this.rows[row.id] = row;
+        this.cdRef.markForCheck();
       });
   }
 
@@ -182,38 +174,43 @@ export class DataUploadComponent extends DialogFunctions {
   onNextProblematicCellClick(): void {
     this.grid.focusNextCell(cell => {
       const { rowIndex } = cell;
-      const colId = cell.column.getColId();
-      return this.rows[rowIndex].cells[colId].statusCode;
+      const columnId = cell.column.getColId();
+      return this.rows[rowIndex]
+        ? this.rows[rowIndex].cells.find(c => c.columnId === columnId).statusCode
+        : null;
     });
   }
 
   onNextCriticalCellClick(): void {
     this.grid.focusNextCell(cell => {
       const { rowIndex } = cell;
-      const colId = cell.column.getColId();
-      return this.rows[rowIndex].cells[colId].statusCode === 1;
+      const columnId = cell.column.getColId();
+      return this.rows[rowIndex]
+      ? this.rows[rowIndex].cells.find(c => c.columnId === columnId).statusCode === 1
+      : null;
     });
   }
 
-  // private rowHasErrors(row: IRow): boolean {
-  //   // TODO(d.maltsev): how to check for errors?
-  //   return row.cells.reduce((acc, cell) => acc || !!cell.errorMsg, false);
-  // }
+  private rowHasErrors(row: IRow): boolean {
+    return row.cells.reduce((acc, cell) => acc || !!cell.errorMsg, false);
+  }
 
   private getColumnsFromResponse(response: IOpenFileResponse): Observable<IAGridColumn[]> {
     const columns = response.columns
-      .sort((a, b) => a.order - b.order)
-      .map((column, i) => ({
-        name: i.toString(),
-        cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
-        cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
-        dataType: column.typeCode,
-        dictCode: column.dictCode,
-        editable: true,
-        label: column.name,
-        valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
-        valueSetter: (params: any) => this.setCellValue(params),
-      }));
+      .map((column, i) => {
+        return {
+          name: column.id,
+          // cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
+          cellRendererFramework: CellRendererComponent,
+          cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
+          dataType: column.typeCode,
+          dictCode: column.dictCode,
+          editable: true,
+          label: column.label,
+          valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
+          valueSetter: (params: any) => this.setCellValue(params),
+        };
+      });
     return this.gridService.getColumns(columns, {});
   }
 
@@ -221,13 +218,15 @@ export class DataUploadComponent extends DialogFunctions {
     return response.rows.sort((a, b) => a.id - b.id);
   }
 
-  private getCellRenderer(params: ICellRendererParams): string {
-    return `
-      <div title="${this.getCell(params).errorMsg || ''}">
-        ${params.valueFormatted}
-      </div>
-    `;
-  }
+  // private getCellRenderer(params: ICellRendererParams): string {
+  //   const { errorMsg } = this.getCell(params);
+  //   const value = params.valueFormatted === null ? '' : params.valueFormatted;
+  //   return `
+  //     <div title="${errorMsg ? 'errors.server.' + errorMsg : ''}">
+  //       ${value}
+  //     </div>
+  //   `;
+  // }
 
   private getCellValue(params: ICellRendererParams): number | string {
     return this.getCell(params).value;
@@ -238,23 +237,23 @@ export class DataUploadComponent extends DialogFunctions {
   }
 
   private getCellStyle(params: ICellRendererParams): Partial<CSSStyleDeclaration> {
-    return {
-      backgroundColor: this.getCellColorByStatusCode(this.getCell(params).statusCode),
-    };
+    const { statusCode } = this.getCell(params);
+    return this.getCellStyleByStatusCode(statusCode);
   }
 
   private getCell(params: ICellRendererParams): ICell {
-    return params.data.cells[params.column.getColId()];
+    const columnId = params.column.getColId();
+    return params.data.cells.find(cell => cell.columnId === columnId);
   }
 
-  private getCellColorByStatusCode(code: number): string {
+  private getCellStyleByStatusCode(code: number): Partial<CSSStyleDeclaration> {
     switch (code) {
-      case 1: return '#fdd';
-      case 2: return '#efe';
-      case 3: return '#eef';
-      case 4: return '#eff';
-      case 5: return '#fef';
-      case 6: return '#ffe';
+      case 1: return { backgroundColor: '#ffe7e7', color: '#ff0000' };
+      case 2: return { backgroundColor: '#f0f0f0', color: '#808080' };
+      case 3: return { backgroundColor: '#f0f0f0', color: '#ff6600' };
+      case 4: return { backgroundColor: '#ffffdd', color: '#000000' };
+      case 5: return { backgroundColor: '#e0f0ff', color: '#00ccff' };
+      case 6: return { backgroundColor: '#ddfade', color: '#339966' };
       default: return null;
     }
   }

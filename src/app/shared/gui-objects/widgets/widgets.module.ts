@@ -14,6 +14,7 @@ import { CurrenciesModule } from './currencies/currencies.module';
 import { CurrencyRatesModule } from './currency-rates/currency-rates.module';
 import { DebtComponentModule } from './debt/component/debt-component.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
+import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
 import { DocumentModule } from './documents/document.module';
 import { EmailModule } from './email/email.module';
@@ -54,6 +55,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     CurrencyRatesModule,
     DebtComponentModule,
     DebtResponsibleModule,
+    DebtOpenIncomingCallModule,
     DebtorActionLogModule,
     DocumentModule,
     EmailModule,
@@ -92,6 +94,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     CurrenciesModule,
     CurrencyRatesModule,
     DebtComponentModule,
+    DebtOpenIncomingCallModule,
     DebtResponsibleModule,
     DebtorActionLogModule,
     DocumentModule,
@@ -118,6 +121,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PropertyModule,
     GroupModule,
     VisitPrepareModule,
-  ]
+  ],
+  declarations: []
 })
 export class WidgetsModule { }

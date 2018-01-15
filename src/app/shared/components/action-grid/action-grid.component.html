@@ -10,6 +10,12 @@
   (close)="onCloseDialog()"
 ></app-open-debt-card>
 
+<app-debt-open-incoming-call
+  *ngIf="isDialog('openIncomingCall')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseDialog()"
+></app-debt-open-incoming-call>
+
 <app-visit-add-dialog
   *ngIf="isDialog('addVisit')"
   [visitParams]="getConfiguredParams('addVisit')"
