@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -18,8 +19,8 @@ export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestr
   private paramsSub: Subscription;
 
   constructor(
+    private location: Location,
     private route: ActivatedRoute,
-    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +45,6 @@ export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestr
   }
 
   onBack(): void {
-    this.router.navigate([ '..', '..' ], { relativeTo: this.route });
+    this.location.back();
   }
 }

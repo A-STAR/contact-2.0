@@ -44,6 +44,6 @@
   [emptyMessage]="emptyMessage$ | async"
   [rows]="dictionaries | async"
   [styles]="{height: '300px'}"
-  (onDblClick)="onEdit($event)"
+  (onDblClick)="edit($event)"
   (onSelect)="onSelect($event)">
 </app-grid>
