@@ -51,11 +51,12 @@
     <app-grid2
       [actions]="actions"
       [columns]="columns"
+      [fullHeight]="true"
       [ngClass]="'data-upload'"
       [persistenceKey]="'data-upload'"
+      [rowCount]="rowCount"
       [rowIdKey]="rowIdKey"
       [rows]="rows"
-      [rowCount]="rowCount"
       (action)="onAction($event)"
       (onFilter)="onRequest()"
       (onPage)="onRequest()"

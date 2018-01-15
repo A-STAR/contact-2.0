@@ -24,13 +24,11 @@ import { isEmpty } from '../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   host: { class: 'full-height' },
   providers: [
     DataUploadService,
   ],
   selector: 'app-data-upload',
-  styleUrls: [ './data-upload.component.scss' ],
   templateUrl: './data-upload.component.html',
 })
 export class DataUploadComponent extends DialogFunctions {

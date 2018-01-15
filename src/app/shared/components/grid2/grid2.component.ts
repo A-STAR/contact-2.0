@@ -78,23 +78,24 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static DESTROY_STATE      = 'AGRID_DESTROY_STATE';
 
   @Input() actions: IMetadataAction[] = [];
-  @Input() columns: IAGridColumn[];
   @Input() columnIds: string[];
+  @Input() columns: IAGridColumn[];
   @Input() disableFilters = false;
   @Input() fetchUrl: string;
+  @Input() fullHeight = false;
   @Input() groupColumnMinWidth = 120;
   @Input() headerHeight = 42;
   @Input() metadataKey: string;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
-  @Input() pagination = true;
   @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000])).sort((x, y) => x > y ? 1 : -1);
+  @Input() pagination = true;
   @Input() persistenceKey: string;
   @Input() remoteSorting = true;
   @Input() rowCount = 0;
   @Input() rowHeight = 36;
   @Input() rowIdKey = 'id';
-  @Input() rows: any[] = [];
   @Input() rowSelection = 'multiple';
+  @Input() rows: any[] = [];
   @Input() showDndGroupPanel = false;
   @Input() startPage = 1;
   @Input() styles: CSSStyleDeclaration;
@@ -136,6 +137,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     private userPermissionsService: UserPermissionsService,
     private valueConverter: ValueConverterService,
   ) {}
+
+  get style(): Partial<CSSStyleDeclaration> {
+    return {
+      ...this.styles,
+      ...(this.fullHeight ? { height: '100%' } : {}),
+    };
+  }
 
   get allColumns(): Column[] {
     return this.gridOptions.columnApi.getAllGridColumns();
