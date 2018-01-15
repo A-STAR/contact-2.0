@@ -30,6 +30,7 @@ import { isEmpty } from '../../../core/utils';
     DataUploadService,
   ],
   selector: 'app-data-upload',
+  styleUrls: [ './data-upload.component.scss' ],
   templateUrl: './data-upload.component.html',
 })
 export class DataUploadComponent extends DialogFunctions {
