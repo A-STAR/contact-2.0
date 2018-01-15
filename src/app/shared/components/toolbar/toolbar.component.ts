@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import { IToolbarAction, IToolbarActionSelect, ToolbarControlEnum } from './toolbar.interface';
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
@@ -38,7 +39,7 @@ export class ToolbarComponent {
 
   isActionDisabled(action: IToolbarAction): Observable<boolean> {
     if (!action.permission) {
-      return Observable.of(!!action.disabled);
+      return of(!!action.disabled);
     }
     const permissions = Array.isArray(action.permission) ? action.permission : [ action.permission ];
     return this.userPermissionsService.hasAll(permissions)

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IDynamicFormControl, IDynamicFormGroup } from './dynamic-form-2.interface';
 
@@ -20,8 +21,7 @@ export class DynamicForm2Component implements OnInit {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    Observable
-      .combineLatest(this.group, this.formValue)
+    combineLatest(this.group, this.formValue)
       .distinctUntilChanged()
       .subscribe(([ group, value ]) => {
         this.rootFormGroup = this.buildFormGroup(group);

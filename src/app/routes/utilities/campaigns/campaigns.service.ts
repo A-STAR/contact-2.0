@@ -2,6 +2,7 @@ import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { IAppState } from '../../../core/state/state.interface';
 import {
@@ -106,7 +107,7 @@ export class CampaignsService {
   fetchParticipants(): Observable<IParticipant[]> {
     return this.selectedCampaign
       .pipe(first())
-      .switchMap(selectedCampaign => selectedCampaign ? this.readParticipants(selectedCampaign.id) : Observable.of([]))
+      .switchMap(selectedCampaign => selectedCampaign ? this.readParticipants(selectedCampaign.id) : of([]))
       .catch(
       this.notificationsService.fetchError()
         .entity('entities.participant.gen.plural').dispatchCallback()
@@ -192,7 +193,7 @@ export class CampaignsService {
         }] as IUserStatistic[]
       ];
 
-      return Observable.of({
+      return of({
         userStatistic: userStatistic[campaignId - 1],
         aggregatedData: {
           untreated: 10,

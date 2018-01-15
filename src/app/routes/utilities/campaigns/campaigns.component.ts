@@ -7,6 +7,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first, switchMap } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ICampaign, CampaignStatus } from './campaigns.interface';
@@ -23,7 +25,6 @@ import { ValueConverterService } from '../../../core/converter/value-converter.s
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 import { DialogFunctions } from '../../../core/dialog';
-import { first, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-campaigns',
@@ -57,7 +58,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.setDialog('CAMPAIGN_EDIT'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
         this.selectedCampaign
       ).map(([canEdit, selectedCampaign]) => canEdit && !!selectedCampaign)
@@ -65,7 +66,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('CAMPAIGN_REMOVE'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_DELETE'),
         this.selectedCampaign
       )
@@ -82,7 +83,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.onStop(),
       label: this.translateService.instant('default.buttons.stop'),
       align: 'right',
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
         this.selectedCampaign
       )
@@ -94,7 +95,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.onStart(),
       label: this.translateService.instant('default.buttons.start'),
       align: 'right',
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
         this.selectedCampaign
       )

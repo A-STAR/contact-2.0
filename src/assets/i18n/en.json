@@ -1,8 +1,7 @@
 {
   "header": {
-    "search": {
-      "placeholder": "Type and hit enter..."
-    },
+    "language": "Language",
+    "notifications": "Notifications",
     "license": {
       "title": "License",
       "info": "Your license number is"
@@ -12,7 +11,7 @@
       "title": "No debts"
     },
     "noPerson": {
-      "title": "Отсутствует должник"
+      "title": "No debtor"
     },
     "account": {
       "title": "Account",

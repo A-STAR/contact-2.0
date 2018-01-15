@@ -10,6 +10,7 @@ import {
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute, IAttributeVersion } from '../../attribute.interface';
@@ -79,7 +80,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
 
     this.entitySubscription = this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
       .switchMap(canView => canView && this.entityTypeId
-        && this.attributeId ? this.fetchAll() : Observable.of([]))
+        && this.attributeId ? this.fetchAll() : of([]))
       .subscribe(versions => {
 
         this.onVersionsFetch(versions);
@@ -147,7 +148,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   private get canEdit$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-      Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
+      of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
     ]);
   }
 
@@ -158,7 +159,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
         action: () => this.setDialog('edit'),
         enabled: combineLatestAnd([
           this.userPermissionsService.contains('ATTRIBUTE_EDIT_LIST', this.entityTypeId),
-          Observable.of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
+          of(this.selectedAttribute && this.selectedAttribute.disabledValue !== -1),
           this.selectedVersion$.map(version => !!version)
         ]),
       },
@@ -182,5 +183,4 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
       name: this.selectedAttribute.name,
     }));
   }
-
 }

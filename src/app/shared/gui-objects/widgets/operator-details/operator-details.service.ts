@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import { IOperator } from './operator-details.interface';
 
@@ -17,7 +18,7 @@ export class OperatorDetailsService {
   fetch(userId: number): Observable<IOperator> {
     // return this.dataService.read('/users/{userId}/gridDetail', { userId })
       // .catch(this.notificationsService.fetchError().entity('entities.operator.gen.singular').dispatchCallback());
-    return Observable.of({
+    return of({
       userId: 1,
       fullName: 'fullName',
       isInactive: false,

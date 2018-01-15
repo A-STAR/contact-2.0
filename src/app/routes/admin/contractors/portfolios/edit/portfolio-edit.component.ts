@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
@@ -17,7 +18,6 @@ import { ValueConverterService } from '../../../../../core/converter/value-conve
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
-import { Observable } from 'rxjs/Observable';
 
 const label = makeKey('portfolios.grid');
 
@@ -53,11 +53,13 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
     const contractorId = Number(this.route.snapshot.paramMap.get('contractorId'));
     const portfolioId = Number(this.route.snapshot.paramMap.get('portfolioId'));
-    const getPortfolio$ = portfolioId ? this.contractorsAndPortfoliosService
-      .readPortfolio(contractorId, portfolioId).map(result => ({
-        portfolio: result,
-        contractorId
-      })) : Observable.of({ contractorId });
+    const getPortfolio$ = portfolioId
+      ? this.contractorsAndPortfoliosService
+          .readPortfolio(contractorId, portfolioId).map(result => ({
+            portfolio: result,
+            contractorId
+          }))
+      : of({ contractorId });
 
     this.portfolioChangeSub = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION),

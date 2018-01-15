@@ -8,7 +8,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDebt } from '../../../../../../../core/debt/debt.interface';
@@ -53,7 +53,7 @@ export class DebtGridCloseDialogComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    this.formDataSubscription = Observable.combineLatest(
+    this.formDataSubscription = combineLatest(
       this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE),
       this.userConstantsService.get('Debt.StatusReason.MandatoryList'),
     )

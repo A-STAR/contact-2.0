@@ -13,6 +13,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 import { CurrencyRatesService } from '../currency-rates.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
+import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'app-currency-rates-grid',
@@ -40,10 +41,10 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selectedCurrencyRate$.value),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.currencyRatesService.canEdit$,
-        this.selectedCurrencyRate$
-      ).map(([canEdit, selectedProperty]) => !!canEdit && !!selectedProperty)
+        this.selectedCurrencyRate$.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -78,7 +79,8 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     this.viewPermissionSubscription = combineLatest(
       this.currencyRatesService.canView$,
       this.currencyId$
-    ).subscribe(([hasViewPermission, currencyId]) => {
+    )
+    .subscribe(([hasViewPermission, currencyId]) => {
       this.currencyId = currencyId;
       if (hasViewPermission && currencyId) {
         this.fetch();
@@ -130,10 +132,11 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.currencyRatesService.fetchAll(this.currencyId).subscribe(currencyRates => {
-      this._currencyRates = currencyRates;
-      this.cdRef.markForCheck();
-    });
+    this.currencyRatesService.fetchAll(this.currencyId)
+      .subscribe(currencyRates => {
+        this._currencyRates = currencyRates;
+        this.cdRef.markForCheck();
+      });
   }
 
   private clear(): void {
