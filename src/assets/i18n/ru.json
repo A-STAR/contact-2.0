@@ -250,6 +250,13 @@
       }
     },
     "dataUpload": {
+      "buttons": {
+        "open": "Открыть файл",
+        "save": "Сохранить в БД",
+        "cancel": "Отмена",
+        "nextProblematicCell": "Следующая проблемная ячейка",
+        "nextCriticalCell": "Следующая критичная ячейка"
+      },
       "dialogs": {
         "cancel": {
           "message": "Вы уверены, что хотите отменить операцию?",

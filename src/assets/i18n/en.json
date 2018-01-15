@@ -250,6 +250,13 @@
       }
     },
     "dataUpload": {
+      "buttons": {
+        "open": "Open File",
+        "save": "Save to DB",
+        "cancel": "Cancel",
+        "nextProblematicCell": "Next Problematic Cell",
+        "nextCriticalCell": "Next Critical Cell"
+      },
       "dialogs": {
         "cancel": {
           "message": "Are you sure you want to cancel?",
