@@ -34,14 +34,15 @@ const labelKey = makeKey('widgets.attribute.grid');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridEditComponent implements OnInit, OnDestroy {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  @Input() attributeId: number;
   @Input() treeType: number;
   @Input() treeSubtype: number;
-  @Input() attributeId: number;
 
   @Output() submit = new EventEmitter<Partial<IAttribute>>();
   @Output() cancel = new EventEmitter<void>();
 
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = [
     { label: labelKey('name'), controlName: 'name', type: 'text', required: true },
