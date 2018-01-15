@@ -19,35 +19,37 @@
 ></app-dialog-action>
 
 <div class="flex vertical">
+  <!-- Toolbar -->
   <div class="flex-item">
     <div hidden>
       <input #fileInput type="file" accept=".xls,.xlsx" (change)="onFileChange()">
     </div>
-    <div class="mb">
-      <div class="row">
-        <div class="col-md-9">
-          <app-button label="modules.dataUpload.buttons.open" [disabled]="hasFile" (click)="onFileOpenClick()"></app-button>
-          <app-button label="modules.dataUpload.buttons.save" [disabled]="!hasFile || hasErrors" (click)="onSaveClick()"></app-button>
-          <app-button label="modules.dataUpload.buttons.cancel" [disabled]="!hasFile" (click)="onCancelClick()"></app-button>
-        </div>
-        <div class="col-md-3">
-          <app-select-wrapper
-            [dictCode]="62"
-            [disabled]="hasFile"
-            [ngModel]="format"
-            [nullable]="false"
-            (ngModelChange)="onFormatChange($event)"
-          ></app-select-wrapper>
-        </div>
+    <!-- Main Toolbar -->
+    <div class="row mb">
+      <div class="col-md-9">
+        <app-button label="modules.dataUpload.buttons.open" [disabled]="hasFile" (click)="onFileOpenClick()"></app-button>
+        <app-button label="modules.dataUpload.buttons.save" [disabled]="!hasFile || hasErrors" (click)="onSaveClick()"></app-button>
+        <app-button label="modules.dataUpload.buttons.cancel" [disabled]="!hasFile" (click)="onCancelClick()"></app-button>
+      </div>
+      <div class="col-md-3">
+        <app-select-wrapper
+          [dictCode]="62"
+          [disabled]="hasFile"
+          [ngModel]="format"
+          [nullable]="false"
+          (ngModelChange)="onFormatChange($event)"
+        ></app-select-wrapper>
       </div>
     </div>
+    <!-- Grid Toolbar -->
     <div class="mb">
       <app-button label="modules.dataUpload.buttons.nextProblematicCell" (click)="onNextProblematicCellClick()"></app-button>
       <app-button label="modules.dataUpload.buttons.nextCriticalCell" (click)="onNextCriticalCellClick()"></app-button>
     </div>
   </div>
 
-  <div *ngIf="columns" class="flex-item grow">
+  <!-- Grid -->
+  <div *ngIf="columns" class="flex-item grow grid-container">
     <app-grid2
       [actions]="actions"
       [columns]="columns"
