@@ -1,7 +1,7 @@
 <div class="flex vertical">
 
   <!-- Grid -->
-  <div class="flex-item grow">
+  <div class="flex-item" [ngClass]="{ grow: fullHeight }">
     <ag-grid-angular
       *ngIf="columnDefs"
       class="app-grid2 ag-theme-material"
