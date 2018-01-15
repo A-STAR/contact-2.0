@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 
 import {
   ICellPayload,
@@ -14,7 +13,7 @@ import { IMassInfoResponse } from '../../../core/data/data.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
+// import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 /**
  * Spec:       http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=140181557
@@ -30,7 +29,7 @@ export class DataUploadService {
   constructor(
     private dataService: DataService,
     private gridService: GridService,
-    private notificationsService: NotificationsService,
+    // private notificationsService: NotificationsService,
   ) {}
 
   openFile(file: File): Observable<IOpenFileResponse> {
@@ -46,7 +45,7 @@ export class DataUploadService {
     const { guid } = this;
     const request = this.gridService.buildRequest(params, null);
     return this.dataService
-      .create('/load/debtSetOperator/guid/{guid}', { guid }, params);
+      .create('/load/debtSetOperator/guid/{guid}', { guid }, request);
   }
 
   editCell(cell: ICellPayload): Observable<IDataResponse> {

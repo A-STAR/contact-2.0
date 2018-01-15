@@ -235,23 +235,22 @@ export class DataUploadComponent extends DialogFunctions {
   }
 
   private getCellStyle(params: ICellRendererParams): Partial<CSSStyleDeclaration> {
-    return {
-      backgroundColor: this.getCellColorByStatusCode(this.getCell(params).statusCode),
-    };
+    const { statusCode } = this.getCell(params);
+    return this.getCellStyleByStatusCode(statusCode);
   }
 
   private getCell(params: ICellRendererParams): ICell {
     return params.data.cells[params.column.getColId()];
   }
 
-  private getCellColorByStatusCode(code: number): string {
+  private getCellStyleByStatusCode(code: number): Partial<CSSStyleDeclaration> {
     switch (code) {
-      case 1: return '#fdd';
-      case 2: return '#efe';
-      case 3: return '#eef';
-      case 4: return '#eff';
-      case 5: return '#fef';
-      case 6: return '#ffe';
+      case 1: return { backgroundColor: '#ffe7e7', color: '#ff0000' };
+      case 2: return { backgroundColor: '#f0f0f0', color: '#808080' };
+      case 3: return { backgroundColor: '#f0f0f0', color: '#ff6600' };
+      case 4: return { backgroundColor: '#ffffdd', color: '#000000' };
+      case 5: return { backgroundColor: '#e0f0ff', color: '#00ccff' };
+      case 6: return { backgroundColor: '#ddfade', color: '#339966' };
       default: return null;
     }
   }
