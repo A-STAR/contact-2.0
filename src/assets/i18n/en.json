@@ -558,6 +558,7 @@
       }
     },
     "edit": {
+      "branchCode": "Branch",
       "personalData": "Personal Data",
       "details": "Details",
       "title": "User: {{ id }}",
@@ -592,6 +593,7 @@
     },
     "grid": {
       "id": "ID",
+      "branchCode": "Branch",
       "login": "Login",
       "lastName": "Family name",
       "firstName": "Name",

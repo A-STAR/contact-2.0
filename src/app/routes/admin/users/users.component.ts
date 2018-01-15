@@ -8,6 +8,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/to
 import { IUser, IUsersState } from './users.interface';
 
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 import { UsersService } from './users.service';
 
@@ -36,6 +37,7 @@ export class UsersComponent implements OnDestroy {
     { prop: 'intPhone', minWidth: 140 },
     { prop: 'email', minWidth: 120 },
     { prop: 'languageId', minWidth: 120, lookupKey: 'languages' },
+    { prop: 'branchCode', minWidth: 120, dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
   ];
 
   displayInactiveUsers: boolean;

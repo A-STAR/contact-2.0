@@ -5,12 +5,17 @@ import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
-import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import {
+  IDynamicFormItem,
+  IDynamicFormControl,
+  IDynamicFormConfig
+} from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUser, IUserEditPermissions } from '../users.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UsersService } from '../users.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
@@ -40,6 +45,7 @@ export class UserEditComponent extends DialogFunctions {
     private cdRef: ChangeDetectorRef,
     private lookupService: LookupService,
     private userConstantsService: UserConstantsService,
+    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
     private valueConverterService: ValueConverterService,
@@ -53,13 +59,15 @@ export class UserEditComponent extends DialogFunctions {
       this.userConstantsService.get('UserPassword.MinLength'),
       this.userConstantsService.get('UserPassword.Complexity.Use'),
       this.userConstantsService.get('UserPhoto.MaxSize'),
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_BRANCHES),
       this.lookupService.lookupAsOptions('languages'),
       this.lookupService.lookupAsOptions('roles'),
       this.userId ? this.usersService.fetchOne(this.userId) : of(null),
     )
     .pipe(first())
     .subscribe(([
-      canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, languages, roles, user
+      canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize, 
+        branchOptions, languages, roles, user
     ]) => {
       const permissions: IUserEditPermissions = {
         canEditUser: canEditUser,
@@ -70,7 +78,7 @@ export class UserEditComponent extends DialogFunctions {
       const passwordValidator = password(!this.userId, passwordMinLength.valueN, passwordComplexity.valueB);
       const photoValidator = maxFileSize(1e3 * photoMaxSize.valueN);
 
-      this.controls = this.getFormControls(languages, roles, passwordValidator, photoValidator, permissions);
+      this.controls = this.getFormControls(branchOptions, languages, roles, passwordValidator, photoValidator, permissions);
       this.formData = this.getFormData(user);
       this.cdRef.markForCheck();
     });
@@ -109,6 +117,7 @@ export class UserEditComponent extends DialogFunctions {
   }
 
   private getFormControls(
+    branchOptions: IOption[],
     languages: IOption[],
     roles: IOption[],
     passwordValidators: ValidatorFn,
@@ -138,6 +147,8 @@ export class UserEditComponent extends DialogFunctions {
       { label: 'users.edit.position', controlName: 'position', type: 'text' },
       { label: 'users.edit.startWorkDate', controlName: 'startWorkDate', type: 'datepicker' },
       { label: 'users.edit.endWorkDate', controlName: 'endWorkDate', type: 'datepicker' },
+      { label: 'users.edit.branchCode', controlName: 'branchCode', type: 'select', options: branchOptions,
+        dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
       { label: 'users.edit.mobPhone', controlName: 'mobPhone', type: 'text' },
       { label: 'users.edit.workPhone', controlName: 'workPhone', type: 'text' },
       { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text' },
