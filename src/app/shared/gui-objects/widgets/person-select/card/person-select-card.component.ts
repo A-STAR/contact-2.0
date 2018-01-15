@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, Component, ViewChild, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUserConstant } from 'app/core/user/constants/user-constants.interface';
-import { IPerson, ISelectedPerson } from '../person-select.interface';
+import { IPerson } from '../person-select.interface';
 
 import { UserConstantsService } from 'app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
 import { PersonSelectService } from '../person-select.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -33,55 +35,59 @@ export class PersonSelectCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private personSelectService: PersonSelectService,
     private userContantsService: UserConstantsService,
+    private userPermissionsService: UserPermissionsService,
   ) { }
 
   ngOnInit(): void {
-    this.userContantsService.get('Person.Individual.AdditionalAttribute.List')
-      .pipe(first())
-      .subscribe(attributeList => {
-        this.controls = [
-          { controlName: 'lastName', type: 'text', width: 4, required: true },
-          { controlName: 'firstName', type: 'text', width: 4 },
-          { controlName: 'middleName', type: 'text', width: 4 },
-          { controlName: 'birthDate',  type: 'datepicker', width: 4 },
-          {
-            controlName: 'genderCode',
-            type: 'selectwrapper',
-            width: 4,
-            dictCode: UserDictionariesService.DICTIONARY_GENDER
-          },
-          { controlName: 'birthPlace', type: 'text', width: 4 },
-          {
-            controlName: 'familyStatusCode',
-            type: 'selectwrapper',
-            width: 4,
-            dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS
-          },
-          {
-            controlName: 'educationCode',
-            type: 'selectwrapper',
-            width: 4,
-            dictCode: UserDictionariesService.DICTIONARY_EDUCATION
-          },
-          {
-            controlName: 'linkTypeCode',
-            type: 'selectwrapper',
-            width: 4,
-            dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE
-          },
-          {
-            controlName: 'typeCode',
-            dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
-            markAsDirty: !this.person,
-            required: true,
-            type: 'selectwrapper',
-          },
-          { controlName: 'comment', type: 'textarea', },
-        ].map(control => ({ label: labelKey(control.controlName), ...control } as IDynamicFormControl))
-          .concat(this.createAdditionalControls(attributeList));
+    combineLatest(
+      this.person
+        ? this.userPermissionsService.has('CONTACT_PERSON_EDIT')
+        : this.userPermissionsService.has('CONTACT_PERSON_ADD'),
+      this.userContantsService.get('Person.Individual.AdditionalAttribute.List')
+    )
+    .pipe(first())
+    .subscribe(([ canEdit, attributeList ]) => {
+      this.controls = [
+        { controlName: 'lastName', type: 'text', width: 4, required: true, disabled: !canEdit },
+        { controlName: 'firstName', type: 'text', width: 4, disabled: !canEdit },
+        { controlName: 'middleName', type: 'text', width: 4, disabled: !canEdit },
+        { controlName: 'birthDate',  type: 'datepicker', width: 4, disabled: !canEdit },
+        {
+          controlName: 'genderCode',
+          type: 'selectwrapper',
+          width: 4,
+          dictCode: UserDictionariesService.DICTIONARY_GENDER,
+          disabled: !canEdit
+        },
+        { controlName: 'birthPlace', type: 'text', width: 4 },
+        {
+          controlName: 'familyStatusCode',
+          type: 'selectwrapper',
+          width: 4,
+          dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
+          disabled: !canEdit
+        },
+        {
+          controlName: 'educationCode',
+          type: 'selectwrapper',
+          width: 4,
+          dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
+          disabled: !canEdit
+        },
+        {
+          controlName: 'typeCode',
+          dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
+          markAsDirty: !this.person,
+          required: true,
+          type: 'selectwrapper',
+          disabled: !canEdit
+        },
+        { controlName: 'comment', type: 'textarea', disabled: !canEdit },
+      ].map(control => ({ label: labelKey(control.controlName), ...control } as IDynamicFormControl))
+        .concat(this.createAdditionalControls(attributeList));
 
-        this.cdRef.markForCheck();
-      });
+      this.cdRef.markForCheck();
+    });
   }
 
   get isValid(): boolean {
@@ -92,7 +98,7 @@ export class PersonSelectCardComponent implements OnInit {
     return this.person || { typeCode: 1 };
   }
 
-  submitPerson(): Observable<ISelectedPerson> {
+  submitPerson(): Observable<IPerson> {
     const action = this.person
       ? this.personSelectService.update(this.person.id, this.form.serializedUpdates)
       : this.personSelectService.create(this.form.serializedUpdates);

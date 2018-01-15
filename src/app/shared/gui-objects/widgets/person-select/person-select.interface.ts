@@ -21,7 +21,3 @@ export interface IPerson {
   stringValue9?: string;
   stringValue10?: string;
 }
-
-export interface ISelectedPerson extends IPerson {
-  linkTypeCode?: number;
-}

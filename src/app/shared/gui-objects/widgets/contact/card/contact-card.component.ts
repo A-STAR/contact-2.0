@@ -1,20 +1,23 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IContact } from '../contact.interface';
+import { IContact, IContactLink } from '../contact.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { ISelectedPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
+import { IPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
 
 import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactService } from '../contact.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
+import { DynamicFormComponent } from 'app/shared/components/form/dynamic-form/dynamic-form.component';
 import { PersonSelectGridComponent } from 'app/shared/gui-objects/widgets/person-select/grid/person-select-grid.component';
+import { PersonSelectCardComponent } from 'app/shared/gui-objects/widgets/person-select/card/person-select-card.component';
 
 import { makeKey } from '../../../../../core/utils';
 
@@ -29,8 +32,12 @@ export class ContactCardComponent implements OnInit {
   @Input() personId: number;
 
   @ViewChild(PersonSelectGridComponent) personSelectGrid: PersonSelectGridComponent;
+  @ViewChild(PersonSelectCardComponent) personSelectCard: PersonSelectCardComponent;
 
-  controls: IDynamicFormControl[] = null;
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  controls: IDynamicFormControl[];
+
   contact: IContact;
 
   tabs = [
@@ -40,58 +47,40 @@ export class ContactCardComponent implements OnInit {
     { title: 'debtor.employmentRecordTab.title', isInitialised: false }
   ];
 
-  private selectedContact$ = new BehaviorSubject<ISelectedPerson>(null);
+  private _selectedContact$ = new BehaviorSubject<IPerson>(null);
 
   private routeUrl: string;
+
+  private canEdit: boolean;
 
   constructor(
     private contentTabService: ContentTabService,
     private contactService: ContactService,
     private route: ActivatedRoute,
     private router: Router,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) { }
 
   ngOnInit(): void {
     combineLatest(
-      this.userDictionariesService.getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_GENDER,
-        UserDictionariesService.DICTIONARY_FAMILY_STATUS,
-        UserDictionariesService.DICTIONARY_EDUCATION,
-        UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
-      ]),
       this.contactId
         ? this.userPermissionsService.has('CONTACT_PERSON_EDIT')
         : this.userPermissionsService.has('CONTACT_PERSON_ADD'),
       this.contactId ? this.contactService.fetch(this.personId, this.contactId) : of(null)
     )
     .pipe(first())
-    .subscribe(([ options, canEdit, contact ]) => {
-      const genderOptions = options[UserDictionariesService.DICTIONARY_GENDER];
-      const familyOptions = options[UserDictionariesService.DICTIONARY_FAMILY_STATUS];
-      const educationOptions = options[UserDictionariesService.DICTIONARY_EDUCATION];
-      const cTypeOptions = options[UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE];
-      const controls: IDynamicFormControl[] = [
-        { label: label('lastName'), controlName: 'lastName', type: 'text', width: 4, required: true },
-        { label: label('firstName'), controlName: 'firstName', type: 'text', width: 4 },
-        { label: label('middleName'), controlName: 'middleName', type: 'text', width: 4 },
-        { label: label('birthDate'), controlName: 'birthDate',  type: 'datepicker', width: 4 },
-        { label: label('genderCode'), controlName: 'genderCode', type: 'select', width: 4, options: genderOptions },
-        { label: label('birthPlace'), controlName: 'birthPlace',  type: 'text', width: 4 },
-        {
-          label: label('familyStatusCode'),
-          controlName: 'familyStatusCode',
-          type: 'select',
-          width: 4,
-          options: familyOptions
-        },
-        { label: label('educationCode'), controlName: 'educationCode',  type: 'select', width: 4, options: educationOptions },
-        { label: label('linkTypeCode'), controlName: 'linkTypeCode',  type: 'select', width: 4, options: cTypeOptions },
-        { label: label('comment'), controlName: 'comment', type: 'textarea', },
-      ];
-      this.controls = controls.map(control => canEdit ? control : { ...control, disabled: true });
+    .subscribe(([ canEdit, contact ]) => {
       this.contact = contact;
+      this.canEdit = canEdit;
+      this.controls = [
+        {
+          label: label('linkTypeCode'),
+          controlName: 'linkTypeCode',
+          type: 'selectwrapper',
+          dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
+          disabled: !canEdit
+        },
+      ];
     });
 
     this.selectedContact$
@@ -102,7 +91,8 @@ export class ContactCardComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return !!this.selectedContact$.value;
+    return !!this._selectedContact$.value || (this.form && this.form.canSubmit) ||
+      (this.personSelectCard && this.personSelectCard.isValid);
   }
 
   get debtId(): number {
@@ -114,7 +104,13 @@ export class ContactCardComponent implements OnInit {
   }
 
   get selectedContactId(): number {
-    return this.selectedContact$.value && this.selectedContact$.value.id;
+    return this._selectedContact$.value && this._selectedContact$.value.id;
+  }
+
+  get selectedContact$(): Observable<IPerson> {
+    return this.personSelectCard
+      ? this.personSelectCard.submitPerson()
+      : this._selectedContact$;
   }
 
   get contactPersonId(): number {
@@ -125,8 +121,8 @@ export class ContactCardComponent implements OnInit {
     this.tabs[tabIndex].isInitialised = true;
   }
 
-  onContactSelected(contact: ISelectedPerson): void {
-    this.selectedContact$.next(contact);
+  onContactSelected(contact: IPerson): void {
+    this._selectedContact$.next(contact);
   }
 
   onBack(): void {
@@ -134,19 +130,17 @@ export class ContactCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.createContact();
+    this.selectedContact$.subscribe(contact => this.createContact({
+      contactPersonId: contact.id,
+      linkTypeCode: this.form.serializedValue.linkTypeCode
+    }));
     this.onBack();
   }
 
-  private createContact(): void {
-    const contactPerson = {
-      contactPersonId: this.selectedContact$.value.id,
-      linkTypeCode: this.selectedContact$.value.linkTypeCode
-    };
-
+  private createContact(contactLink: IContactLink): void {
     const action = this.contactId
-      ? this.contactService.update(this.personId, this.contactId, contactPerson)
-      : this.contactService.create(this.personId, contactPerson);
+      ? this.contactService.update(this.personId, this.contactId, contactLink)
+      : this.contactService.create(this.personId, contactLink);
 
     action.subscribe(() => {
       this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);

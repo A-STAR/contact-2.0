@@ -9,6 +9,10 @@ export interface IContact {
   genderCode?: number;
   familyStatusCode?: number;
   educationCode?: number;
-  linkTypeCode?: number;
   comment?: string;
+}
+
+export interface IContactLink {
+  contactPersonId: number;
+  linkTypeCode?: number;
 }

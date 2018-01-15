@@ -1,52 +1,38 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, Output, EventEmitter } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component,
+  ViewChild, Output, EventEmitter, OnInit
+} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 
 import { IAGridResponse } from '../../../../../shared/components/grid2/grid2.interface';
-import { IPerson, ISelectedPerson } from '../person-select.interface';
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPerson } from '../person-select.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from 'app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { PersonSelectService } from '../person-select.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { Grid2Component } from '../../../../../shared/components/grid2/grid2.component';
+import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
 
-import { isEmpty, makeKey, range, addLabelForEntity } from '../../../../../core/utils';
+import { isEmpty, range, addLabelForEntity } from '../../../../../core/utils';
 import { DialogFunctions } from 'app/core/dialog';
-
-const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-person-select-grid',
   templateUrl: './person-select-grid.component.html',
 })
-export class PersonSelectGridComponent extends DialogFunctions {
+export class PersonSelectGridComponent extends DialogFunctions implements OnInit {
 
-  @Output() select = new EventEmitter<ISelectedPerson>();
+  @Output() select = new EventEmitter<IPerson>();
 
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   dialog;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.setDialog('create')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch()
-    }
-  ];
-
-  controls = [
-    { controlName: 'linkTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
-  ].map(control => ({ ...control, label: labelKey(control.controlName) } as IDynamicFormControl));
+  toolbarItems: Array<IToolbarItem>;
 
   columns$ = this.gridService.getColumns([
     { dataType: 1, name: 'id' },
@@ -68,19 +54,31 @@ export class PersonSelectGridComponent extends DialogFunctions {
     private cdRef: ChangeDetectorRef,
     private personSelectService: PersonSelectService,
     private gridService: GridService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    this.userPermissionsService.has('CONTACT_PERSON_ADD')
+      .pipe(first())
+      .filter(Boolean)
+      .subscribe(() => {
+        this.toolbarItems = [
+          {
+            type: ToolbarItemTypeEnum.BUTTON_ADD,
+            action: () => this.setDialog('create')
+          }
+        ];
+      });
   }
 
   get isValid(): boolean {
     return !isEmpty(this.grid && this.grid.selected);
   }
 
-  get selectedPerson(): ISelectedPerson {
-    return {
-      ...this.form.serializedValue,
-      ...this.gridSelectedPerson,
-    };
+  get selectedPerson(): IPerson {
+    return this.grid && this.grid.selected && this.grid.selected[0] as any;
   }
 
   onSelect(): void {
@@ -91,7 +89,7 @@ export class PersonSelectGridComponent extends DialogFunctions {
     this.fetch();
   }
 
-  onPersonCreated(person: ISelectedPerson): void {
+  onPersonCreated(person: IPerson): void {
     this.closeDialog();
     this.fetch()
       .map(rows => rows.findIndex(row => row.id === person.id))
@@ -101,10 +99,6 @@ export class PersonSelectGridComponent extends DialogFunctions {
   private selectPerson(index: number): void {
     this.grid.gridOptions.api.selectIndex(index, false, false);
     this.select.emit(this.selectedPerson);
-  }
-
-  private get gridSelectedPerson(): IPerson {
-    return this.grid && this.grid.selected && this.grid.selected[0] as any;
   }
 
   private fetch(): Observable<IPerson[]> {

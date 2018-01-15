@@ -69,7 +69,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
+      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd()
     },
     {
@@ -104,7 +104,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.canView$,
+      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },
   ];

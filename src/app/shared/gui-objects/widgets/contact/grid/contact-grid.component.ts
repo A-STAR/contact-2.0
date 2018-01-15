@@ -146,7 +146,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/contact/create` ]);
+    this.router.navigate([ `${this.router.url}/contact` ]);
   }
 
   private onEdit(contactId: number): void {

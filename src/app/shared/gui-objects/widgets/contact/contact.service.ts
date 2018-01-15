@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IContact } from './contact.interface';
+import { IContact, IContactLink } from './contact.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
@@ -38,13 +38,13 @@ export class ContactService extends AbstractActionService {
       .catch(this.notificationsService.error('errors.default.read').entity('entities.contact.gen.singular').dispatchCallback());
   }
 
-  create(personId: number, contact: IContact): Observable<any> {
+  create(personId: number, contact: IContactLink): Observable<any> {
     return this.dataService
       .create(this.baseUrl, { personId }, contact)
       .catch(this.notificationsService.error('errors.default.create').entity('entities.contact.gen.singular').dispatchCallback());
   }
 
-  update(personId: number, contactId: number, contact: IContact): Observable<any> {
+  update(personId: number, contactId: number, contact: IContactLink): Observable<any> {
     return this.dataService
       .update(this.extUrl, { personId, contactId }, contact)
       .catch(this.notificationsService.error('errors.default.update').entity('entities.contact.gen.singular').dispatchCallback());

@@ -4,14 +4,7 @@
   (close)="closeDialog()"
 ></app-person-select-dialog>
 
-<div class="mb">
-  <app-dynamic-form
-    [controls]="controls"
-    [data]="{}"
-  ></app-dynamic-form>
-</div>
-
-<app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2 *ngIf="toolbarItems" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid2
   *ngIf="columns$ | async"

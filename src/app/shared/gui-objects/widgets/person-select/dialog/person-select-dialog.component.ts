@@ -3,7 +3,7 @@ import {
   Output, ViewChild
 } from '@angular/core';
 
-import { ISelectedPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
+import { IPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
 
 import { PersonSelectCardComponent } from 'app/shared/gui-objects/widgets/person-select/card/person-select-card.component';
 
@@ -17,7 +17,7 @@ export class PersonSelectDialogComponent {
   @ViewChild(PersonSelectCardComponent) card: PersonSelectCardComponent;
 
   @Output() close = new EventEmitter<null>();
-  @Output() select = new EventEmitter<ISelectedPerson>();
+  @Output() select = new EventEmitter<IPerson>();
 
   get canSelect(): boolean {
     return !!this.card.isValid;
