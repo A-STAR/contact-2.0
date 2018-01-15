@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { Observable } from 'rxjs/Observable';
+import { map, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import {
@@ -11,107 +12,70 @@ import {
 } from './data-upload.interface';
 import { IMassInfoResponse } from '../../../core/data/data.interface';
 
+import { DataService } from '../../../core/data/data.service';
+import { GridService } from '../../../shared/components/grid/grid.service';
+import { NotificationsService } from '../../../core/notifications/notifications.service';
+
+/**
+ * Spec:       http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=140181557
+ * API:        http://confluence.luxbase.int:8090/display/WEB20/Load+Data
+ * Validation: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=137723952
+ */
 @Injectable()
 export class DataUploadService {
   format = 1;
 
   private guid: number;
 
-  private columns = [
-    { name: 'Ид', order: 0, typeCode: 1 },
-    { name: 'Оператор', order: 1, typeCode: 3 },
-    { name: 'Дата платежа', order: 2, typeCode: 2 },
-    { name: 'Долг', order: 3, typeCode: 3 },
-    { name: 'Статус', order: 4, typeCode: 6, dictCode: 1 },
-  ];
-
-  private rows = [
-    {
-      id: 1,
-      cells: [
-        { id: 1, value: '1', statusCode: 0, errorMsg: null },
-        { id: 2, value: 'Иванов Иван Иванович', statusCode: 0, errorMsg: 'Иванов - нехороший человек.' },
-        { id: 3, value: '2017-01-01T15:00:00', statusCode: 0, errorMsg: null },
-        { id: 4, value: 'Долг за машину', statusCode: 1, errorMsg: 'Иванов должен денег за машину. Иванов, верни деньги.' },
-        { id: 5, value: 1, statusCode: 0, errorMsg: null },
-      ]
-    },
-    {
-      id: 2,
-      cells: [
-        { id: 1, value: '2', statusCode: 0, errorMsg: null },
-        { id: 2, value: 'Петров Петр Петрович', statusCode: 2, errorMsg: null },
-        { id: 3, value: '2017-02-01T12:30:00', statusCode: 0, errorMsg: null },
-        { id: 4, value: 'Долг за квартиру', statusCode: 3, errorMsg: null },
-        { id: 5, value: 1, statusCode: 0, errorMsg: null },
-      ]
-    },
-    {
-      id: 3,
-      cells: [
-        { id: 1, value: '3', statusCode: 4, errorMsg: null },
-        { id: 2, value: 'Сидоров Сидор Сидорович', statusCode: 5, errorMsg: null },
-        { id: 3, value: '2017-03-01T10:45:00', statusCode: 0, errorMsg: null },
-        { id: 4, value: 'Долг за яхту', statusCode: 6, errorMsg: null },
-        { id: 5, value: 1, statusCode: 0, errorMsg: null },
-      ]
-    },
-  ];
+  constructor(
+    private dataService: DataService,
+    private gridService: GridService,
+    private notificationsService: NotificationsService,
+  ) {}
 
   openFile(file: File): Observable<IOpenFileResponse> {
-    // POST /load/debtSetOperator
-    return of({
-        columns: this.columns,
-        guid: 0,
-        rows: this.rows,
-      })
-      .do(response => this.guid = response.guid);
+    return this.dataService
+      .createMultipart('/load/debtSetOperator', {}, {}, file)
+      .pipe(
+        map(response => response.data[0]),
+        tap(data => this.guid = data.guid),
+      );
   }
 
   fetch(params: IAGridRequestParams): Observable<IDataResponse> {
-    // POST /load/debtSetOperator/guid/{tempDataGuid}
-    // const request = this.gridService.buildRequest(params, {});
-    return of({
-      rows: this.rows,
-    });
+    const { guid } = this;
+    const request = this.gridService.buildRequest(params, null);
+    return this.dataService
+      .create('/load/debtSetOperator/guid/{guid}', { guid }, params);
   }
 
   editCell(cell: ICellPayload): Observable<IDataResponse> {
-    // PUT /load/debtSetOperator/guid/{tempDataGuid}
-    return of({
-      rows: this.rows
-        .filter(r => r.id === cell.rowId)
-        .map(r => ({
-          ...r,
-          cells: r.cells.map(c => c.id === cell.cellId ? { ...c, value: cell.value } : c),
-        })),
-    });
+    const { guid } = this;
+    return this.dataService
+      .update('/load/debtSetOperator/guid/{guid}', { guid }, cell);
   }
 
   deleteRow(rowId: number): Observable<void> {
-    // DELETE /load/debtSetOperator/guid/{tempDataGuid}/row/{rowIds}
-    this.rows = this.rows.filter(row => row.id !== rowId);
-    return of(null);
+    const { guid } = this;
+    return this.dataService
+      .delete('/load/debtSetOperator/guid/{guid}/row/{rowId}', { guid, rowId });
   }
 
   save(): Observable<IMassInfoResponse> {
-    // POST /load/debtSetOperator/guid/{tempDataGuid}/save
-    return of({
-      success: true,
-      massInfo: {
-        processed: 1,
-        total: 2,
-      },
-    });
+    const { guid } = this;
+    return this.dataService
+      .create('/load/debtSetOperator/guid/{guid}/save', { guid }, {});
   }
 
   getErrors(): Observable<IErrorsResponse> {
-    // GET /load/debtSetOperator/guid/{tempDataGuid}/error
-    return of(null);
+    const { guid } = this;
+    return this.dataService
+      .read('/load/debtSetOperator/guid/{guid}/error', { guid });
   }
 
   cancel(): Observable<void> {
-    // DELETE /load/debtSetOperator/guid/{tempDataGuid}
-    return of(null);
+    const { guid } = this;
+    return this.dataService
+      .delete('/load/debtSetOperator/guid/{guid}', { guid });
   }
 }

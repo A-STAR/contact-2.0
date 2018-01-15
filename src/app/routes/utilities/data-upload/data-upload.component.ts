@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse, ICell, ICellPayload, IDataResponse } from './data-upload.interface';
+import { IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -63,9 +63,7 @@ export class DataUploadComponent extends DialogFunctions {
   }
 
   get hasErrors(): boolean {
-    return false;
-    // TODO(d.maltsev): uncomment
-    // return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
+    return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
   }
 
   get format(): number {
@@ -107,15 +105,15 @@ export class DataUploadComponent extends DialogFunctions {
     const cell = this.getCell(event as any);
     const payload: ICellPayload = {
       rowId: event.data.id,
-      cellId: cell.id,
+      columnId: cell.columnId,
       value: String(cell.value),
     };
     this.dataUploadService
       .editCell(payload)
       .subscribe(response => {
-        // const row = response.rows[0];
-        // this.rows[row.id] = row;
-        // this.cdRef.markForCheck();
+        const row = response.rows[0];
+        this.rows[row.id] = row;
+        this.cdRef.markForCheck();
       });
   }
 
@@ -195,14 +193,12 @@ export class DataUploadComponent extends DialogFunctions {
     });
   }
 
-  // private rowHasErrors(row: IRow): boolean {
-  //   // TODO(d.maltsev): how to check for errors?
-  //   return row.cells.reduce((acc, cell) => acc || !!cell.errorMsg, false);
-  // }
+  private rowHasErrors(row: IRow): boolean {
+    return row.cells.reduce((acc, cell) => acc || !!cell.errorMsg, false);
+  }
 
   private getColumnsFromResponse(response: IOpenFileResponse): Observable<IAGridColumn[]> {
     const columns = response.columns
-      .sort((a, b) => a.order - b.order)
       .map((column, i) => ({
         name: i.toString(),
         cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
@@ -210,7 +206,7 @@ export class DataUploadComponent extends DialogFunctions {
         dataType: column.typeCode,
         dictCode: column.dictCode,
         editable: true,
-        label: column.name,
+        label: column.label,
         valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
         valueSetter: (params: any) => this.setCellValue(params),
       }));

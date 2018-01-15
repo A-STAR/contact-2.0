@@ -1,18 +1,18 @@
 export interface ICell {
-  id: number;
-  value: number | string;
-  statusCode: number;
+  columnId: string;
   errorMsg: string;
+  statusCode: number;
+  value: number | string;
 }
 
 export interface IRow {
-  id: number;
   cells: ICell[];
+  id: number;
 }
 
 export interface IColumn {
-  name: string;
-  order?: number;
+  id: string;
+  label: string;
   typeCode: number;
   dictCode?: number;
 }
@@ -29,7 +29,7 @@ export interface IDataResponse {
 
 export interface ICellPayload {
   rowId: number;
-  cellId: number;
+  columnId: string;
   value: string;
 }
 
