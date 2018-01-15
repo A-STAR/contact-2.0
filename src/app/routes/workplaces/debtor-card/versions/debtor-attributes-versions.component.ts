@@ -3,7 +3,6 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 
 @Component({
@@ -12,8 +11,6 @@ import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debt
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'DebtorAttributesVersionsComponent';
-
   attributeId: number;
   entityId: number;
   entityTypeId: number;
@@ -23,7 +20,6 @@ export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private contentTabService: ContentTabService,
     private debtorCardService: DebtorCardService,
   ) { }
 
@@ -53,11 +49,9 @@ export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
     }
   }
 
-
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 2);
+    this.router.navigate([ '..', '..' ], { relativeTo: this.route });
   }
-
 }
 
 

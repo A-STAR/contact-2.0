@@ -1,0 +1,85 @@
+@import '../../../../styles/app/variables.scss';
+
+ul {
+  font-size: 0;
+  position: relative;
+  padding: 0;
+  width: 100%;
+  margin: 0 0 10px 0;
+  user-select: none;
+  border-bottom: 1px solid $gray-light;
+  &.no-margin {
+    margin-bottom: 0;
+  }
+}
+
+li {
+  display: inline-block;
+  padding: 0 16px;
+  height: 40px;
+  background: transparent;
+  font-size: 14px;
+  text-align: center;
+  line-height: 42px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  &.active {
+    a {
+      color: black;
+    }
+    .selection {
+      background-color: $brand-primary;
+    }
+  }
+  &.disabled {
+    cursor: default;
+    a {
+      color: $navbar-default-link-disabled-color;
+      cursor: default;
+    }
+  }
+  a {
+    color: $text-color;
+    text-decoration: none;
+  }
+  .selection {
+    height: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: transparent;
+  }
+}
+
+.slider {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: #e600c5;
+  transition: all 0.5s;
+}
+
+.ripple {
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(115, 204, 255, 0.4);
+  transform: scale(0);
+  position: absolute;
+  opacity: 1;
+}
+
+.rippleEffect {
+  animation: rippleDrop .6s linear;
+}
+
+@keyframes rippleDrop {
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}

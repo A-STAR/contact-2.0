@@ -13,8 +13,6 @@ interface AddressCardRouteParams {
   templateUrl: './contacts.component.html'
 })
 export class DebtorContactsComponent {
-  static COMPONENT_NAME = 'DebtorContactsComponent';
-
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,

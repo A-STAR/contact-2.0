@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
@@ -150,7 +151,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
         this.cdRef.markForCheck();
       });
 
-    this.contractorSubscription = Observable.combineLatest(
+    this.contractorSubscription = combineLatest(
       this.canView$,
       this.store.select(state => state.contractorsAndPortfolios.selectedContractor)
     )

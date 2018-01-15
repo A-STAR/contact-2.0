@@ -19,11 +19,11 @@ import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
+  host: { class: 'full-height' },
   selector: 'app-permissions-tree',
   templateUrl: './permissions-tree.component.html',
 })
 export class PermissionsTreeComponent implements OnDestroy {
-
   initialSelection: ITreeNode[] = [];
   selection: ITreeNode[] = [];
   value: ITreeNode[];

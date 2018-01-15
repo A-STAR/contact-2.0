@@ -42,6 +42,8 @@ const labelKey = makeKey('widgets.contactProperty.edit');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   @Input() contactType: number;
   @Input() isEditing: boolean;
   @Input() treeType: number;
@@ -49,8 +51,6 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
 
   @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
-
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormItem[];
   data = {};

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IAddress, IContactRegistrationParams, IPhone, IDebt, IDebtNextCall } from './debt.interface';
 
-import { ContentTabService } from '../../shared/components/content-tabstrip/tab/content-tab.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UserPermissionsService } from '../user/permissions/user-permissions.service';
@@ -23,7 +24,6 @@ export class DebtService {
   extUrl = `${this.baseUrl}/{debtId}`;
 
   constructor(
-    private contentTabService: ContentTabService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private router: Router,
@@ -35,7 +35,7 @@ export class DebtService {
   }
 
   canRegisterIncomingCall$(phone: IPhone): Observable<boolean> {
-    return phone && !phone.isInactive ? this.canRegisterIncomingCalls$ : Observable.of(false);
+    return phone && !phone.isInactive ? this.canRegisterIncomingCalls$ : of(false);
   }
 
   get canRegisterAddressVisits$(): Observable<boolean> {
@@ -43,7 +43,7 @@ export class DebtService {
   }
 
   canRegisterAddressVisit$(address: IAddress): Observable<boolean> {
-    return address && !address.isInactive ? this.canRegisterAddressVisits$ : Observable.of(false);
+    return address && !address.isInactive ? this.canRegisterAddressVisits$ : of(false);
   }
 
   get canRegisterSpecialOrOfficeVisit$(): Observable<boolean> {
@@ -62,7 +62,7 @@ export class DebtService {
   }
 
   canRegisterContactForDebt$(debt: { statusCode: number }): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG'),
       this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [
         DebtService.CONTACT_TYPE_INCOMING_CALL,
@@ -77,15 +77,8 @@ export class DebtService {
     return debt && ![6, 7, 8, 17].includes(debt.statusCode);
   }
 
-  // navigateToDebtorCard(debtId: number, personId: number): void {
-  //   this.contentTabService.removeTabByPath(`\/workplaces\/debt-processing\/(.+)`);
-  //   const url = `/workplaces/debt-processing/${personId}/${debtId}`;
-  //   this.router.navigate([ url ]);
-  // }
-
   navigateToRegistration(params: Partial<IContactRegistrationParams>): void {
     const { debtId, contactType, contactId, ...queryParams } = params;
-    this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration\/(.+)`);
     const url = `/workplaces/contact-registration/${Number(debtId)}/${Number(contactType)}/${Number(contactId)}`;
     this.router.navigate([ url ], { queryParams });
   }

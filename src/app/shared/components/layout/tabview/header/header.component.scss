@@ -1,0 +1,46 @@
+@import '../../../../styles/app/variables.scss';
+
+ul {
+  border-bottom: 1px solid $gray-light;
+  font-size: 0;
+  margin: 0 0 10px 0;
+  padding: 0;
+  position: relative;
+  user-select: none;
+  width: 100%;
+  &.no-margin {
+    margin-bottom: 0;
+  }
+}
+
+li {
+  background: transparent;
+  color: $text-color;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  height: 40px;
+  line-height: 42px;
+  overflow: hidden;
+  padding: 0 16px;
+  position: relative;
+  text-align: center;
+  &.active {
+    color: black;
+    .selection {
+      background-color: $brand-primary;
+    }
+  }
+  &.disabled {
+    color: $navbar-default-link-disabled-color;
+    cursor: default;
+  }
+  .selection {
+    height: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: transparent;
+  }
+}

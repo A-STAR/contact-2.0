@@ -10,7 +10,6 @@ import { IActionType } from '../../../../core/app-modules/debtor-card/debtor-car
   templateUrl: './attributes.component.html'
 })
 export class DebtorAttributesComponent implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'DebtorAttributesComponent';
   static ENTITY_TYPE_DEBT = 19;
 
   entityTypeId: number;

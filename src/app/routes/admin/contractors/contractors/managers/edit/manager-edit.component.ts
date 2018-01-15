@@ -7,7 +7,6 @@ import { of } from 'rxjs/observable/of';
 import { IContractorManager, IActionType } from '../../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../../contractors-and-portfolios.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -22,7 +21,6 @@ const label = makeKey('contractors.managers.grid');
   templateUrl: './manager-edit.component.html'
 })
 export class ContractorManagerEditComponent implements OnInit {
-  static COMPONENT_NAME = 'ContractorManagerEditComponent';
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
@@ -35,8 +33,8 @@ export class ContractorManagerEditComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private contentTabService: ContentTabService,
     private router: Router,
+    private route: ActivatedRoute,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private userDictionariesService: UserDictionariesService,
   ) { }
@@ -86,6 +84,6 @@ export class ContractorManagerEditComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, 1);
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 }

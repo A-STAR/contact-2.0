@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
@@ -14,8 +15,6 @@ interface PhoneCardRouteParams {
   templateUrl: './phone.component.html'
 })
 export class DebtorPhoneComponent {
-  static COMPONENT_NAME = 'DebtorPhoneComponent';
-
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
@@ -26,8 +25,7 @@ export class DebtorPhoneComponent {
   }
 
   get entityId$(): Observable<number> {
-    return Observable
-      .combineLatest(this.debtorCardService.personId$, this.routeParams$)
+    return combineLatest(this.debtorCardService.personId$, this.routeParams$)
       .map(([ personId, params ]) => params.contactId || personId);
   }
 

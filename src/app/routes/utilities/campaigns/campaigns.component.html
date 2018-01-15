@@ -6,7 +6,7 @@
 
 <app-campaigns-edit
   *ngIf="isDialog('CAMPAIGN_EDIT')"
-  [editedEntity]="selectedCampaign | async"
+  [campaign]="selectedCampaign | async"
   (submit)="updateCampaign($event)"
   (cancel)="closeDialog()">
 </app-campaigns-edit>
@@ -22,8 +22,7 @@
   (cancel)="closeDialog()">
 </app-dialog-action>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems">
-</app-toolbar-2>
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
   class="flat"

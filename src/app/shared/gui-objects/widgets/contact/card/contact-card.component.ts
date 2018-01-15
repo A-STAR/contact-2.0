@@ -10,7 +10,6 @@ import { IContact, IContactLink } from '../contact.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContactService } from '../contact.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -54,11 +53,10 @@ export class ContactCardComponent implements OnInit {
   private canEdit: boolean;
 
   constructor(
-    private contentTabService: ContentTabService,
     private contactService: ContactService,
     private route: ActivatedRoute,
     private router: Router,
-    private userPermissionsService: UserPermissionsService,
+    private userDictionariesService: UserDictionariesService,    private userPermissionsService: UserPermissionsService,
   ) { }
 
   ngOnInit(): void {
@@ -126,7 +124,7 @@ export class ContactCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onSubmit(): void {

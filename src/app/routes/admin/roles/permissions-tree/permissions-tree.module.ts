@@ -1,16 +1,29 @@
 import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
-import { PermissionsTreeComponent } from './permissions-tree.component';
 import { PermissionsTreeService } from './permissions-tree.service';
+
+import { PermissionsTreeComponent } from './permissions-tree.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: PermissionsTreeComponent,
+    data: {
+      reuse: true,
+    },
+  },
+];
 
 @NgModule({
   imports: [
+    RouterModule.forChild(routes),
     SharedModule,
   ],
   exports: [
-    PermissionsTreeComponent,
+    RouterModule,
   ],
   declarations: [
     PermissionsTreeComponent,
@@ -19,5 +32,4 @@ import { PermissionsTreeService } from './permissions-tree.service';
     PermissionsTreeService,
   ]
 })
-export class PermissionsTreeModule {
-}
+export class PermissionsTreeModule {}

@@ -2,13 +2,13 @@ import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestro
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGuaranteeContract, IGuarantor } from '../guarantee.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { GuaranteeService } from '../guarantee.service';
 import { GuarantorService } from '../../guarantor/guarantor.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -46,7 +46,6 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private guaranteeService: GuaranteeService,
     private route: ActivatedRoute,
     private router: Router,
@@ -74,7 +73,7 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.guaranteeService.fetchAll(this.debtId),
       this.contract$,
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE),
@@ -131,7 +130,8 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.contentTabService.gotoParent(this.router, this.isRoute('create') ? 2 : 4);
+    const relativeUrlCount = this.isRoute('create') ? 2 : 4;
+    this.router.navigate([new Array(relativeUrlCount + 1).join('../')], { relativeTo: this.route });
   }
 
   onSubmit(): void {

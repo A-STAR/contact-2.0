@@ -8,8 +8,6 @@ import { Observable } from 'rxjs/Observable';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentComponent {
-  static COMPONENT_NAME = 'DebtorPaymentComponent';
-
   constructor(
     private route: ActivatedRoute,
   ) {}

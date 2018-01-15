@@ -43,9 +43,9 @@ xdescribe('Component: Sidebar', () => {
     }).compileComponents();
   });
 
-  it('should create an instance', async(inject([GuiObjectsService, SettingsService, Router, ChangeDetectorRef],
+  it('should create an instance', async(inject([ChangeDetectorRef, GuiObjectsService, SettingsService, Router],
     (cdRef, menuService, settingsService, router) => {
-      const component = new SidebarComponent(cdRef, menuService, settingsService, router);
+      const component = new SidebarComponent(cdRef, menuService, router, settingsService);
       expect(component).toBeTruthy();
     }))
   );

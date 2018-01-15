@@ -18,7 +18,6 @@ import { CheckallDirective } from './directives/checkall/checkall.directive';
 import { VectormapDirective } from './directives/vectormap/vectormap.directive';
 import { NowDirective } from './directives/now/now.directive';
 import { ScrollableDirective } from './directives/scrollable/scrollable.directive';
-import { RouterOutlet2Directive } from './directives/outlet2/router-outlet2.directive';
 
 // App modules
 import { AccordionModule } from './components/accordion/accordion.module';
@@ -27,7 +26,6 @@ import { ActionGridModule } from './components/action-grid/action-grid.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
 import { ButtonModule } from './components/button/button.module';
 import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
-import { ContentTabstripModule } from './components/content-tabstrip/content-tabstrip.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogMultiSelectModule } from './components/form/dialog-multi-select/dialog-multi-select.module';
@@ -90,7 +88,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     BlockDialogModule,
     ButtonModule,
     ColorPickerModule,
-    ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
     DialogMultiSelectModule,
@@ -144,7 +141,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     NowDirective,
     ScrollableDirective,
     // app declarations
-    RouterOutlet2Directive,
     NumericInputComponent,
     QBuilderComponent
   ],
@@ -172,7 +168,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     BlockDialogModule,
     ButtonModule,
     ColorPickerModule,
-    ContentTabstripModule,
     DatePickerModule,
     DialogActionModule,
     DialogMultiSelectModule,
@@ -205,7 +200,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     QBuilder2Module,
     RadioGroupModule,
     RichTextEditorModule,
-    RouterOutlet2Directive,
     SpinnerModule,
     TabstripModule,
     TabViewModule,

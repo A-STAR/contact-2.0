@@ -9,7 +9,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ICloseAction } from '../../../../../shared/components/action-grid/action-grid.interface';
@@ -27,6 +26,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey, toLabeledValues } from '../../../../../core/utils';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 const label = makeKey('massOperations.debtStatus');
 
@@ -59,13 +59,14 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.dictsSub = Observable.combineLatest(
+    this.dictsSub = combineLatest(
       this.userDictionariesService.getDictionaries([
         UserDictionariesService.DICTIONARY_DEBT_STATUS,
         UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE,
       ]),
       this.userConstantsService.get('Debt.StatusReason.MandatoryList')
-    ).subscribe(([dicts, constant]) => {
+    )
+    .subscribe(([dicts, constant]) => {
 
       this.dicts = { ...dicts, constant };
 

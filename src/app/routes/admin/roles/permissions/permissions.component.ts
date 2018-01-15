@@ -20,9 +20,10 @@ import { combineLatestAnd } from '../../../../core/utils/helpers';
 import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-permissions',
   templateUrl: './permissions.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PermissionsComponent extends DialogFunctions implements OnInit, OnDestroy {
 

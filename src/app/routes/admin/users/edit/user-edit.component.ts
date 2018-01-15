@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormItem, IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUser, IUserEditPermissions } from '../users.interface';
 import { IOption } from '../../../../core/converter/value-converter.interface';
 
-import { ContentTabService } from '../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -27,20 +26,18 @@ import { maxFileSize, password } from '../../../../core/validators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserEditComponent extends DialogFunctions {
-  static COMPONENT_NAME = 'UserEditComponent';
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem>;
   dialog: string = null;
   formData: any;
 
-  private userId = this.route.snapshot.paramMap.get('userId');
+  private userId = Number(this.route.snapshot.paramMap.get('userId'));
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private lookupService: LookupService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -49,7 +46,7 @@ export class UserEditComponent extends DialogFunctions {
   ) {
     super();
 
-    Observable.combineLatest(
+    combineLatest(
       this.userPermissionsService.has('USER_EDIT'),
       this.userPermissionsService.has('USER_ROLE_EDIT'),
       this.userPermissionsService.has('USER_LDAP_LOGIN_EDIT'),
@@ -108,7 +105,7 @@ export class UserEditComponent extends DialogFunctions {
   }
 
   onClose(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   private getFormControls(

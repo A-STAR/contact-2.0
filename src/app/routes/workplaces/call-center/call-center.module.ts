@@ -9,10 +9,9 @@ const routes: Routes = [
   {
     path: '',
     component: CallCenterComponent,
-  },
-  {
-    path: ':campaignId',
-    loadChildren: './campaign/campaign.module#CampaignModule'
+    data: {
+      reuse: true,
+    },
   },
 ];
 

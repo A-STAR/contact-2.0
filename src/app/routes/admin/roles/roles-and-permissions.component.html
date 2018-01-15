@@ -1,15 +1,15 @@
-<app-roles></app-roles>
-
-<app-hdivider></app-hdivider>
-
-<app-tabstrip [disableScrollbar]="true" [inverse]="true">
-  <app-tab [title]="'roles.permissions.tab.title'">
-    <app-permissions></app-permissions>
-  </app-tab>
-  <app-tab [title]="'roles.permissions.access.title'" [closable]="false">
-    <app-permissions-tree></app-permissions-tree>
-  </app-tab>
-  <app-tab [title]="'roles.permissions.objects.title'" [closable]="false">
-    <app-object-grid></app-object-grid>
-  </app-tab>
-</app-tabstrip>
+<split direction="vertical" gutterColor="inherit">
+  <!-- Roles Grid -->
+  <split-area size="50">
+    <app-roles></app-roles>
+  </split-area>
+  <!-- Permissions, Access, Objects tabs -->
+  <split-area size="50">
+    <div class="flex vertical">
+      <app-tabview-header class="flex-item" [noMargin]="true" [tabs]="tabs"></app-tabview-header>
+      <div class="flex-item grow">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </split-area>
+</split>

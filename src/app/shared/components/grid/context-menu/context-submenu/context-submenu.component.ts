@@ -10,6 +10,8 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IContextMenuItem } from '../../grid.interface';
 
@@ -35,21 +37,21 @@ export class ContextSubmenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.parentEnabledSub = Observable.combineLatest(
+    this.parentEnabledSub = combineLatest(
       this.parent.enabled,
       this.isActionsDisabled(this.concatAllItems(this.parent.actions, this.parent.simpleActions))
     )
-      .subscribe(([isParentEnabled, isActionsDisabled]) => {
+    .subscribe(([isParentEnabled, isActionsDisabled]) => {
 
-        this.isSubmenuShown = isParentEnabled && !isActionsDisabled && (this.hasItems(this.parent.actions)
-          || this.hasItems(this.parent.simpleActions));
+      this.isSubmenuShown = isParentEnabled && !isActionsDisabled && (this.hasItems(this.parent.actions)
+        || this.hasItems(this.parent.simpleActions));
 
-        this.isActionsShown = isParentEnabled && this.hasItems(this.parent.actions);
+      this.isActionsShown = isParentEnabled && this.hasItems(this.parent.actions);
 
-        this.isSimpleActionsShown = isParentEnabled && this.hasItems(this.parent.simpleActions);
+      this.isSimpleActionsShown = isParentEnabled && this.hasItems(this.parent.simpleActions);
 
-        this.cdRef.markForCheck();
-      });
+      this.cdRef.markForCheck();
+    });
   }
 
   ngOnDestroy(): void {
@@ -67,11 +69,11 @@ export class ContextSubmenuComponent implements OnInit, OnDestroy {
   }
 
   isDisabled(item: IContextMenuItem): Observable<boolean> {
-    return item.enabled ? item.enabled.map(enabled => !enabled) : Observable.of(false);
+    return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
   private isActionsDisabled(items: IContextMenuItem[]): Observable<boolean>  {
-    return Observable.combineLatest(items.map(item => item.enabled))
+    return combineLatest(items.map(item => item.enabled))
       .map(results => !results.some(Boolean));
   }
 

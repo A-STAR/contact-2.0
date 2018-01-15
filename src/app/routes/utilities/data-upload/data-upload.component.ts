@@ -33,8 +33,6 @@ import { isEmpty } from '../../../core/utils';
   ]
 })
 export class DataUploadComponent extends DialogFunctions {
-  static COMPONENT_NAME = 'DataUploadComponent';
-
   @ViewChild(Grid2Component) grid: Grid2Component;
   @ViewChild('fileInput') fileInput: ElementRef;
 

@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -17,13 +18,17 @@ import { IEmployee } from '../actions-log.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from './actions-log-filter.interface';
 import { IDictionaryItem } from '../../dictionaries/dictionaries.interface';
 
+import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
+
+import { DataService } from '../../../../core/data/data.service';
+import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
 import { GridService } from '../../../../shared/components/grid/grid.service';
+import { LookupService } from '../../../../core/lookup/lookup.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 import { toFullName, timeToHourMinSec } from '../../../../core/utils';
-import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,11 +90,15 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   }
 
   constructor(
+    cdRef: ChangeDetectorRef,
+    dataService: DataService,
     formBuilder: FormBuilder,
     gridService: GridService,
+    lookupService: LookupService,
+    userDictionariesService: UserDictionariesService,
     valueConverterService: ValueConverterService,
   ) {
-    super(formBuilder, valueConverterService);
+    super(cdRef, dataService, formBuilder, lookupService, valueConverterService, userDictionariesService);
     this.employeesColumnsFrom = gridService.setRenderers(this.employeesColumnsFrom, this.renderers);
     this.employeesColumnsTo = gridService.setRenderers(this.employeesColumnsTo, this.renderers);
   }

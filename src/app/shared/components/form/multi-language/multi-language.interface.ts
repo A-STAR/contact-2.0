@@ -7,3 +7,8 @@ export interface IMultiLanguageOption {
   isUpdated?: boolean;
   value: string;
 }
+
+export interface IMultiLanguageConfig {
+  entityAttributeId: number;
+  entityId?: number;
+}

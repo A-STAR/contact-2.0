@@ -14,8 +14,6 @@ const label = makeKey('modules.workTask');
   templateUrl: 'work-task.component.html',
 })
 export class WorkTaskComponent {
-  static COMPONENT_NAME = 'WorkTaskComponent';
-
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IWorkTaskEntry>;
 
   rows: IWorkTaskEntry[] = [];

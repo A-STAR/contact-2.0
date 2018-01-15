@@ -3,7 +3,6 @@
   [canEdit]="canEdit | async"
   [dictionaries]="dictionaries | async"
   [dictionaryTermTypes]="dictionaryTermTypes | async"
-  [languages]="languages | async"
   [title]="'dictionaries.create.title'"
   (submit)="onCreate($event)"
   (cancel)="onCancel()">
@@ -15,7 +14,6 @@
   [dictionaries]="dictionaries | async"
   [dictionaryTermTypes]="dictionaryTermTypes | async"
   [dictionary]="dictionary"
-  [languages]="languages | async"
   [title]="'dictionaries.edit.title'"
   (submit)="onUpdate($event)"
   (cancel)="onCancel()">

@@ -8,6 +8,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators/first';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem } from '../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -24,7 +26,6 @@ import { DebtorInformationComponent } from './information/information.component'
 import { DynamicFormComponent } from '../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { DialogFunctions } from '../../../core/dialog';
-import { first } from 'rxjs/operators/first';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,8 +35,6 @@ import { first } from 'rxjs/operators/first';
   styleUrls: ['./debtor.component.scss'],
 })
 export class DebtorComponent extends DialogFunctions implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'DebtorComponent';
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(DebtorInformationComponent) information: DebtorInformationComponent;
 
@@ -78,7 +77,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
         this.cdRef.markForCheck();
       });
 
-    this.personSubscription = Observable.combineLatest(
+    this.personSubscription = combineLatest(
       this.debtorCardService.person$.filter(Boolean),
       this.debtorCardService.selectedDebt$.filter(Boolean),
     )
@@ -141,8 +140,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   }
 
   onRegisterContactDialogSubmit({ contactType, contactId }: any): void {
-    Observable
-      .combineLatest(this.personId$, this.debtId$)
+    combineLatest(this.personId$, this.debtId$)
       .pipe(first())
       .subscribe(([ personId, debtId ]) => {
         this.setDialog();

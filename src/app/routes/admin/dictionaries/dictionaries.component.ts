@@ -10,8 +10,6 @@ const label = makeKey('dictionaries.tabs');
   styleUrls: ['./dictionaries.component.scss'],
 })
 export class DictionariesComponent {
-  static COMPONENT_NAME = 'DictionariesComponent';
-
   tabs = [
     { title: label('dictionaries'), isInitialised: true },
     { title: label('attributes'), isInitialised: false },

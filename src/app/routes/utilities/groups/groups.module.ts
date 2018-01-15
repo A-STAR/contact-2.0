@@ -8,7 +8,13 @@ import { GroupsComponent } from './groups.component';
 import { GroupEditComponent } from './edit/edit.component';
 
 const routes: Routes = [
-  { path: '', component: GroupsComponent },
+  {
+    path: '',
+    component: GroupsComponent,
+    data: {
+      reuse: true,
+    },
+  },
   { path: 'create', component: GroupEditComponent },
   { path: ':groupId', component: GroupEditComponent }
 ];

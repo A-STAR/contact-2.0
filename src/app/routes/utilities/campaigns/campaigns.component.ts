@@ -7,6 +7,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first, switchMap } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ICampaign, CampaignStatus } from './campaigns.interface';
@@ -23,7 +25,6 @@ import { ValueConverterService } from '../../../core/converter/value-converter.s
 import { GridComponent } from '../../../shared/components/grid/grid.component';
 
 import { DialogFunctions } from '../../../core/dialog';
-import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-campaigns',
@@ -31,8 +32,6 @@ import { first } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CampaignsComponent extends DialogFunctions implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'CampaignsComponent';
-
   @ViewChild(GridComponent) grid: GridComponent;
 
   dialog: string;
@@ -59,19 +58,19 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.setDialog('CAMPAIGN_EDIT'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
         this.selectedCampaign
-      ).map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign)
+      ).map(([canEdit, selectedCampaign]) => canEdit && !!selectedCampaign)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       action: () => this.setDialog('CAMPAIGN_REMOVE'),
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_DELETE'),
         this.selectedCampaign
       )
-        .map(([hasPermissions, selectedCampaign]) => hasPermissions &&
+        .map(([canDelete, selectedCampaign]) => canDelete &&
           !!selectedCampaign && selectedCampaign.statusCode !== CampaignStatus.STARTED)
     },
     {
@@ -84,11 +83,11 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.onStop(),
       label: this.translateService.instant('default.buttons.stop'),
       align: 'right',
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
         this.selectedCampaign
       )
-        .map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
+        .map(([canEdit, selectedCampaign]) => canEdit && !!selectedCampaign
           && selectedCampaign.statusCode === CampaignStatus.STARTED)
     },
     {
@@ -96,7 +95,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.onStart(),
       label: this.translateService.instant('default.buttons.start'),
       align: 'right',
-      enabled: Observable.combineLatest(
+      enabled: combineLatest(
         this.userPermissionsService.has('CAMPAIGN_EDIT'),
         this.selectedCampaign
       )
@@ -105,13 +104,15 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     },
   ];
 
-  constructor(private gridService: GridService,
-              private cdRef: ChangeDetectorRef,
-              private campaignsService: CampaignsService,
-              private translateService: TranslateService,
-              private userPermissionsService: UserPermissionsService,
-              private valueConverterService: ValueConverterService,
-              private notificationsService: NotificationsService) {
+  constructor(
+    private campaignsService: CampaignsService,
+    private cdRef: ChangeDetectorRef,
+    private gridService: GridService,
+    private notificationsService: NotificationsService,
+    private translateService: TranslateService,
+    private userPermissionsService: UserPermissionsService,
+    private valueConverterService: ValueConverterService,
+  ) {
     super();
   }
 
@@ -144,8 +145,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     const permission = 'CAMPAIGN_EDIT';
     this.userPermissionsService.has(permission)
       .pipe(first())
-      .subscribe(hasPermission => {
-        if (hasPermission) {
+      .subscribe(canEdit => {
+        if (canEdit) {
           this.setDialog(permission);
         } else {
           this.notificationsService.error('roles.permissions.messages.no_edit').params({ permission }).dispatch();
@@ -154,52 +155,62 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   fetchCampaigns(): Observable<ICampaign[]> {
-    return this.campaignsService.fetchCampaigns()
-      .pipe(first());
+    return this.campaignsService.fetchCampaigns().pipe(first());
   }
 
   createCampaign(campaign: ICampaign): void {
     campaign.statusCode = CampaignStatus.CREATED;
 
     this.campaignsService.createCampaign(campaign)
-      .switchMap(() => this.fetchCampaigns())
-      .subscribe(campaigns => this.onCampaignsFetch(campaigns));
+      .pipe(
+        switchMap(() => this.fetchCampaigns())
+      )
+      .subscribe(campaigns => {
+        this.onCampaignsFetch(campaigns);
+        this.setDialog();
+      });
   }
 
   updateCampaign(campaign: ICampaign): void {
-    this.campaignsService.updateCampaign(campaign)
-      .switchMap(() => this.fetchCampaigns())
+    this.selectedCampaign
+      .pipe(
+        first(),
+        switchMap(selectedCampaign => this.campaignsService.updateCampaign({ ...campaign, id: selectedCampaign.id })),
+        switchMap(() => this.fetchCampaigns())
+      )
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onRemove(): void {
     this.campaignsService.removeCampaign()
-      .switchMap(() => this.fetchCampaigns())
+      .pipe(
+        switchMap(() => this.fetchCampaigns())
+      )
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
-  }
-
-  cancelAction(): void {
-    this.closeDialog();
   }
 
   onStart(): void {
     this.selectedCampaign
-      .pipe(first())
-      .switchMap(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STARTED }))
-      .switchMap((...results) => this.fetchCampaigns())
+      .pipe(
+        first(),
+        switchMap(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STARTED })),
+        switchMap(() => this.fetchCampaigns()),
+      )
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onStop(): void {
     this.selectedCampaign
-      .pipe(first())
-      .switchMap(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STOPPED }))
-      .switchMap((...results) => this.fetchCampaigns())
+      .pipe(
+        first(),
+        switchMap(campaign => this.campaignsService.updateCampaign({ id: campaign.id, statusCode: CampaignStatus.STOPPED })),
+        switchMap(() => this.fetchCampaigns()),
+      )
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
 
   onCampaignsFetch(campaigns: ICampaign[]): void {
-    this.cancelAction();
+    this.closeDialog();
     this.resetSelection();
     this.campaigns = this.formatCampaignsDates(campaigns);
     this.cdRef.markForCheck();

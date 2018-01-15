@@ -1,11 +1,12 @@
 import { Component, ViewChild, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IIdentityDoc } from '../identity.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { IdentityService } from '../identity.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -32,8 +33,9 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   identity: IIdentityDoc;
 
   constructor(
-    private contentTabService: ContentTabService,
     private identityService: IdentityService,
+    private router: Router,
+    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -41,12 +43,12 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
       this.identityId
         ? this.userPermissionsService.has('IDENTITY_DOCUMENT_EDIT')
         : this.userPermissionsService.has('IDENTITY_DOCUMENT_ADD'),
-      this.identityId ? this.identityService.fetch(this.personId, this.identityId) : Observable.of(null)
+      this.identityId ? this.identityService.fetch(this.personId, this.identityId) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, canEdit, identity ]) => {
@@ -90,7 +92,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   private onSubmit(data: any): void {

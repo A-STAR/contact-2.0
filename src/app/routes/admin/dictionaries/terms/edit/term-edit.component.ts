@@ -8,22 +8,20 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { first } from 'rxjs/operators/first';
 
+import { EntityTranslationsConstants } from '../../../../../core/entity/translations/entity-translations.interface';
 import { ITerm } from '../../dictionaries.interface';
-import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { ILookupLanguage } from '../../../../../core/lookup/lookup.interface';
-import { IMultiLanguageOption } from '../../../../../shared/components/form/multi-language/multi-language.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import {
+  IDynamicFormItem,
+  IDynamicFormConfig
+} from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey, toLabeledValues, getTranslations } from '../../../../../core/utils';
-
-const label = makeKey('terms.edit');
+import { toLabeledValues } from '../../../../../core/utils';
 
 @Component({
   selector: 'app-term-edit',
@@ -35,7 +33,6 @@ export class TermEditComponent implements OnInit {
 
   @Input() canEdit = false;
   @Input() disableParentSelection = false;
-  @Input() languages: ILookupLanguage[];
   @Input() term: ITerm;
   @Input() terms: ITerm[];
   @Input() title: string;
@@ -43,25 +40,21 @@ export class TermEditComponent implements OnInit {
   @Output() submit = new EventEmitter<ITerm>();
   @Output() cancel = new EventEmitter<null>();
 
-  controls: Array<IDynamicFormItem>;
+  config: IDynamicFormConfig = {
+    labelKey: 'terms.edit',
+  };
+  controls: IDynamicFormItem[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    this.userDictionariesService
-    .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DICTIONARY_TYPE)
-    .pipe(first())
-    .subscribe(dictTypeOptions => {
-      const dictTermTranslations = getTranslations(this.languages, this.term.name);
-      this.controls = this.getControls(dictTypeOptions, dictTermTranslations);
-      this.cdRef.markForCheck();
-    });
+    this.controls = this.getControls();
+    this.cdRef.markForCheck();
   }
 
-  onSubmit(values: ITerm): any {
+  onSubmit(): any {
     return this.submit.emit(this.form.serializedUpdates);
   }
 
@@ -73,13 +66,10 @@ export class TermEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private getControls(
-    dictTypeOptions: IOption[],
-    nameTranslations: IMultiLanguageOption[],
-  ): Array<IDynamicFormControl> {
+  private getControls(): IDynamicFormItem[] {
 
     const disabled = !this.canEdit;
-    const controls: Partial<IDynamicFormControl>[] = [
+    const controls: Partial<IDynamicFormItem>[] = [
       {
         controlName: 'code',
         type: 'number',
@@ -90,14 +80,17 @@ export class TermEditComponent implements OnInit {
         controlName: 'name',
         type: this.term ? 'multilanguage' : 'text',
         required: true,
-        langOptions: nameTranslations,
+        langConfig: {
+          entityAttributeId: EntityTranslationsConstants.SPEC_TERM_NAME,
+          entityId: this.term && this.term.id
+        },
         disabled,
       },
       {
         controlName: 'typeCode',
         type: 'select',
+        dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE,
         required: true,
-        options: dictTypeOptions,
         disabled,
       },
       {
@@ -116,6 +109,6 @@ export class TermEditComponent implements OnInit {
       }
     ];
 
-    return controls.map(ctrl => ({ ...ctrl, label: label(ctrl.controlName) }) as IDynamicFormControl);
+    return controls as IDynamicFormItem[];
   }
 }

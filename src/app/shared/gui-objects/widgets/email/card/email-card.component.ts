@@ -1,10 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { EmailService } from '../email.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
@@ -30,18 +31,19 @@ export class EmailCardComponent implements OnInit {
   email: any;
 
   constructor(
-    private contentTabService: ContentTabService,
     private emailService: EmailService,
+    private router: Router,
+    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
-      this.emailId ? this.userPermissionsService.has('EMAIL_EDIT') : Observable.of(true),
-      this.emailId ? this.userPermissionsService.has('EMAIL_COMMENT_EDIT') : Observable.of(true),
-      this.emailId ? this.emailService.fetch(this.entityType, this.entityId, this.emailId) : Observable.of(null)
+      this.emailId ? this.userPermissionsService.has('EMAIL_EDIT') : of(true),
+      this.emailId ? this.userPermissionsService.has('EMAIL_COMMENT_EDIT') : of(true),
+      this.emailId ? this.emailService.fetch(this.entityType, this.entityId, this.emailId) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, canEdit, canEditComment, email ]) => {
@@ -66,7 +68,7 @@ export class EmailCardComponent implements OnInit {
   }
 
   public onBack(): void {
-    this.contentTabService.back();
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   public get canSubmit(): boolean {

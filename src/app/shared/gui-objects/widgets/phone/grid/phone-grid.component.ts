@@ -12,8 +12,9 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
-import 'rxjs/add/observable/of';
+import { of } from 'rxjs/observable/of';
 
 import { IDebt } from '../../../../../core/debt/debt.interface';
 import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
@@ -21,7 +22,6 @@ import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContentTabService } from '../../../../components/content-tabstrip/tab/content-tab.service';
 import { DebtService } from '../../../../../core/debt/debt.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -117,7 +117,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       ],
       translationKey: 'default.grid.localeText',
       prop: 'phone',
-      enabled: Observable.of(true)
+      enabled: of(true)
     },
   ];
 
@@ -145,7 +145,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contentTabService: ContentTabService,
     private debtService: DebtService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -157,14 +156,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.debtSubscription = this._debtId$
-      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : Observable.of(null))
+      .flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : of(null))
       .subscribe(debt => {
         this.debt = debt;
         this.cdRef.markForCheck();
       });
 
-    this.canViewSubscription = Observable
-      .combineLatest(this.canView$, this._personId$)
+    this.canViewSubscription = combineLatest(this.canView$, this._personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
           this.notificationsService.error('errors.default.read.403').entity('entities.phones.gen.plural').dispatch();
@@ -176,7 +174,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         }
       });
 
-    Observable.combineLatest(
+    combineLatest(
       this.gridService.setDictionaryRenderers(this._columns),
       this.canViewBlock$,
     )
@@ -273,7 +271,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.selectedPhoneId$
       .pipe(first())
       .subscribe(phoneId => {
-        this.contentTabService.removeTabByPath(`\/workplaces\/contact-registration(.*)`);
         const url = `/workplaces/contact-registration/${this._debtId$.value}/${this.contactType}/${phoneId}`;
         this.router.navigate([ url ], { queryParams: {
           campaignId: this.campaignId,
@@ -326,7 +323,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
           this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this.personRole)
             .map(hasPermission => hasPermission || this.ignoreSmsSingleFormPersonRoleListPermissions),
         ])
-        : Observable.of(false);
+        : of(false);
     });
   }
 

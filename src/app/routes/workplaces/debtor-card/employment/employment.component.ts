@@ -1,5 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
@@ -15,8 +16,6 @@ interface IEmploymentCardRouteParams {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtorEmploymentComponent {
-  static COMPONENT_NAME = 'DebtorEmploymentComponent';
-
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
@@ -30,8 +29,7 @@ export class DebtorEmploymentComponent {
    * Depending on the route, this can be either a personId or a contactId
    */
   get personId$(): Observable<number> {
-    return Observable
-      .combineLatest(this.debtorCardService.personId$, this.routeParams$)
+    return combineLatest(this.debtorCardService.personId$, this.routeParams$)
       .map(([ personId, params ]) => params.contactId || personId)
       .distinctUntilChanged();
       /**

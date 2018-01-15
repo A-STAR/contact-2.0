@@ -1,40 +1,41 @@
 @import "../../shared/styles/app/variables";
 
-.menu-item {
-  height: 100%;
+nav {
+  background-color: $brand-primary;
+  padding-left: 10px;
+  padding-right: 3px;
 
-  a {
+  .logo {
     color: #fff;
-    line-height: 21px;
-    position: relative;
-    display: block;
-    padding: 17px 15px;
-    text-decoration: none;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: $layout-top-menu-height;
+    padding: 0 15px;
+    white-space: nowrap;
 
-    &:hover {
-      color: #117391;
-    }
-
-    .label {
-      position: absolute;
-      top: 10px;
-      right: 0;
-      padding: 3px 4px 2px;
+    .logo-version {
+      color: #ffead8;
     }
   }
-}
 
-.dropdown-content {
-  padding: 6px 0 5px;
-  background-color: #fff;
-  i {
-    margin-right: 5px;
-  }
-  a {
-    padding: 8px 20px;
-    color: $text-color;
-    &:hover {
-      color: $link-color;
+  ::ng-deep ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    .menu-item {
+      color: $brand-white;
+      cursor: pointer;
+      display: block;
+      font-size: $layout-top-menu-font-size;
+      line-height: $layout-top-menu-height;
+      padding: 0 12px;
+      white-space: nowrap;
+
+      &.active,
+      &:hover {
+        color: #fff;
+      }
     }
   }
 }

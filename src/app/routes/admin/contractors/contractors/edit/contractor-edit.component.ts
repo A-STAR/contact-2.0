@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import {
@@ -9,7 +11,6 @@ import {
 } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContentTabService } from '../../../../../shared/components/content-tabstrip/tab/content-tab.service';
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -18,8 +19,6 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
-import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contractor-edit',
@@ -27,20 +26,19 @@ import { first } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorEditComponent implements OnInit, OnDestroy {
-  static COMPONENT_NAME = 'ContractorEditComponent';
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
   canViewAttributes: boolean;
+  canViewObjects: boolean;
   private editedContractorSub: Subscription;
   private contractorId: number;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private contentTabService: ContentTabService,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
@@ -51,18 +49,21 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     const contractorId = Number(this.route.snapshot.paramMap.get('contractorId'));
-    const getContractor$ = contractorId ? this.contractorsAndPortfoliosService.readContractor(contractorId) : Observable.of(null);
+    const getContractor$ = contractorId ? this.contractorsAndPortfoliosService.readContractor(contractorId) : of(null);
 
     this.editedContractorSub = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
       getContractor$,
-      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
+      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST'),
+      this.userPermissionsService.has('OBJECT_CONTRACTOR_VIEW')
     )
     .pipe(first())
     // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes ]) => {
+    // TODO:(i.kibisov) remove canViewObjects default value when permission will be added on BE
+    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes, canViewObjects ]) => {
       this.canViewAttributes = true;
+      this.canViewObjects = true;
 
       this.contractorId = contractor && contractor.id;
 
@@ -105,11 +106,7 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.router.navigate(['/admin/contractors']).then((isSuccess: boolean) => {
-      if (isSuccess) {
-        this.contentTabService.removeTabByPath(/\/admin\/contractors\/(.+)/);
-      }
-    });
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onManagersClick(): void {
@@ -118,5 +115,9 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
 
   onAttributesClick(): void {
     this.router.navigate([`/admin/contractors/${this.contractorId}/attributes`]);
+  }
+
+  onObjectsClick(): void {
+    this.router.navigate([`/admin/contractors/${this.contractorId}/objects`]);
   }
 }

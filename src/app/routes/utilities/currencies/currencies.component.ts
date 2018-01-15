@@ -11,8 +11,6 @@ import { CurrenciesService } from 'app/shared/gui-objects/widgets/currencies/cur
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrenciesComponent implements OnInit {
-  static COMPONENT_NAME = 'CurrenciesComponent';
-
   selectedCurrency$: Observable<number>;
 
   constructor(

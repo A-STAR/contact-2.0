@@ -27,7 +27,7 @@ import { NotificationsService } from '../../notifications/notifications.service'
 /**
  * NOTE: this is a quick patch that places the operators
  * in the Observable prototype that persist across the app
- * TODO(a.tymchuk): import the lettable operators and pipe them
+ * TODO(a.tymchuk, i.kibisov, d.maltsev, i.lobanov): import the lettable operators and pipe them
  * wherever applicable accross the whole codebase
  */
 import 'rxjs/add/operator/catch';

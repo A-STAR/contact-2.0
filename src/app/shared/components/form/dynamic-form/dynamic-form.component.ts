@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -9,10 +10,28 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first, switchMap } from 'rxjs/operators';
+import * as R from 'ramda';
 
-import { IControls, IDynamicFormItem, IDynamicFormControl, ISelectItemsPayload, IValue } from './dynamic-form.interface';
+import {
+  IControls,
+  IDynamicFormItem,
+  IDynamicFormConfig,
+  IDynamicFormControl,
+  ISelectItemsPayload,
+  IValue,
+} from './dynamic-form.interface';
+import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
+import { IOption } from '../../../../core/converter/value-converter.interface';
 
+import { DataService } from '../../../../core/data/data.service';
+import { LookupService } from '../../../../core/lookup/lookup.service';
+import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+
+import { makeKey, getTranslations } from '../../../../core/utils';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -22,6 +41,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   @Input() controls: Array<IDynamicFormItem>;
   @Input() data: IValue;
+  @Input() config: IDynamicFormConfig;
 
   @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
 
@@ -30,14 +50,108 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   private flatControls: Array<IDynamicFormControl>;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
+    private dataService: DataService,
     private formBuilder: FormBuilder,
+    private lookupService: LookupService,
     private valueConverterService: ValueConverterService,
+    private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    this.flatControls = this.flattenFormControls(this.controls);
-    this.form = this.createForm(this.flatControls);
-    this.populateForm();
+    const config = this.config;
+
+    if (!config) {
+        this.flatControls = this.flattenFormControls(this.controls);
+        this.form = this.createForm(this.flatControls);
+        this.populateForm();
+        this.cdRef.markForCheck();
+        return;
+    }
+
+    // set the default config options
+    const defaultConfig = { suppressLabelCreation: false };
+    this.config = Object.assign(defaultConfig, config);
+
+    if (!this.config.suppressLabelCreation) {
+      // 1. set control labels
+      const label = makeKey(config.labelKey);
+      const createLabels = (ctrl: IDynamicFormControl) => {
+        return !ctrl.children
+          ? { ...ctrl, label: ctrl.label || label(ctrl.controlName) }
+          : ctrl.children.map(createLabels);
+      };
+      this.controls = this.controls.map(createLabels);
+    }
+
+    const flatControls = this.flattenFormControls(this.controls);
+    // 2. fetch the dictionaries for select options
+    const dictCodes = flatControls
+      .filter(ctrl => ctrl.dictCode && ctrl.type === 'select')
+      .map(ctrl => ctrl.dictCode);
+    // get a subset of multilanguage controls
+    const multiLanguageCtrls = flatControls.filter(ctrl => ctrl.type === 'multilanguage');
+
+    combineLatest(
+      this.userDictionariesService.getDictionariesAsOptions(dictCodes),
+      multiLanguageCtrls.length
+        ? this.lookupService.lookup<ILookupLanguage>('languages')
+          .pipe(
+            switchMap(languages => {
+              return combineLatest(
+                multiLanguageCtrls.map(ctrl => {
+                  // const translations = this.term && this.term.name || [];
+                  const langConfig = ctrl.langConfig;
+                  return this.dataService.readTranslations(langConfig.entityId, langConfig.entityAttributeId);
+                })
+              )
+              .pipe(
+                switchMap(translations => {
+                  // console.log('translations fetched', translations);
+                  const map = translations.map((translation, i) => {
+                    // set langOptions for `multilanguage` controls
+                    const ctrl = multiLanguageCtrls[i];
+                    ctrl.langOptions = getTranslations(languages, translation);
+                    return ctrl;
+                  });
+                  return [map];
+                })
+              );
+            })
+          )
+        : of([])
+    )
+    .pipe(first())
+    .subscribe(([ dictionaries, multiLanguageCtrlsWithOptions ]) => {
+      // console.log('multilangCtrls with options', multiLanguageCtrlsWithOptions);
+      // 3. set the dictionary options for select controls
+      Object.keys(dictionaries).forEach(dictCode => {
+        const options: IOption[] = dictionaries[dictCode];
+        const control = this.recursivelyFindControlByProp(
+          <IDynamicFormControl[]>this.controls,
+          { dictCode: Number(dictCode) }
+        );
+        if (control) {
+          control.options = options;
+        }
+      });
+
+      multiLanguageCtrlsWithOptions.forEach(ctrl => {
+        const control = this.recursivelyFindControlByProp(
+          <IDynamicFormControl[]>this.controls,
+          { controlName: ctrl.controlName }
+        );
+        if (control) {
+          control.langOptions = ctrl.langOptions;
+        }
+      });
+
+      this.flatControls = this.flattenFormControls(this.controls);
+      this.form = this.createForm(this.flatControls);
+      this.populateForm();
+      this.cdRef.markForCheck();
+      // console.log('flatControls', this.flatControls);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -47,7 +161,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   }
 
   get canSubmit(): boolean {
-    return this.form.dirty && this.form.valid;
+    return this.form && this.isDirty && this.isValid;
   }
 
   get isValid(): boolean {
@@ -167,6 +281,18 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     this.form.reset();
   }
 
+  private getKey = R.compose(R.head, <any>R.keys);
+
+  private recursivelyFindControlByProp = (controls: IDynamicFormControl[], prop: Partial<IDynamicFormControl>) => {
+    return controls.find(ctrl => {
+      if (ctrl.children) {
+        return this.recursivelyFindControlByProp(ctrl.children, prop);
+      }
+      const key = this.getKey(prop);
+      return ctrl[key] === prop[key];
+    });
+  }
+
   private createForm(flatControls: Array<IDynamicFormControl>): FormGroup {
     const controls = flatControls.reduce((acc, control: IDynamicFormControl) => {
       acc[control.controlName] = this.createControl(control);
@@ -214,7 +340,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         return control.multiple ? value.map(item => item.value) : value[0].value;
       case 'multilanguage': {
         // TODO(a.tymchuk): replace with proper type instead of ILabeledValue
-        const values = value
+        const values = (Array.isArray(value) ? value : control.langOptions)
           .filter((o: any) => o.isUpdated)
           .map((o: any) => ({ languageId: o.languageId, value: o.value }));
         return values.length ? values : undefined;

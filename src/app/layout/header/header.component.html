@@ -1,94 +1,17 @@
-<nav class="navbar topnavbar" role="navigation">
-  <div class="navbar-header">
-    <a class="navbar-brand" (click)="showLicenseInfo()">
-      <div class="brand-logo">
-        <div>Contact <span class="brand-logo-version">2.0</span></div>
-      </div>
-      <div class="brand-logo-collapsed">
-        <div>C <span class="brand-logo-version">2.0</span></div>
-      </div>
-    </a>
-  </div>
-
-  <div class="nav-wrapper">
-    <ul class="nav navbar-nav">
-      <li>
-        <a class="hidden-xs" trigger-resize="" (click)="toggleCollapsedSidebar()" *ngIf="!isCollapsedText()">
-          <i class="fa fa-navicon"></i>
-        </a>
-        <a class="visible-xs sidebar-toggle" (click)="toggleMenu()">
-          <i class="fa fa-navicon"></i>
-        </a>
-      </li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li>
-        <a title="Search" (click)="openNavSearch($event)">
-          <i class="icon-magnifier"></i>
-        </a>
-      </li>
-
-      <li class="visible-lg">
-        <a title="Language" (click)="toggleLanguage()">
-          <i class="fa fa-language"></i>
-        </a>
-      </li>
-
-      <li>
-        <app-dropdown
-          #notificationsDropdown
-          class="menu-item"
-          position="right"
-          [displayArrow]="true"
-          [enabled]="hasNotifications"
-        >
-          <a trigger title="Messages">
-            <i class="icon-bell"></i>
-            <div *ngIf="hasNotifications" class="label label-danger">
-              {{ notificationsCount }}
-            </div>
-          </a>
-          <app-notifications (close)="notificationsDropdown.close()">
-          </app-notifications>
-        </app-dropdown>
-      </li>
-
-      <li>
-        <app-dropdown
-          #accountDropdown
-          class="menu-item"
-          position="right"
-          [displayArrow]="true"
-        >
-          <a trigger [title]="'header.account.title' | translate">
-            <i class="icon-user"></i>
-          </a>
-          <div class="dropdown-content">
-            <ul class="list-group mb0">
-              <li class="list-group-item p0 b0">
-                <a class="text-nowrap" (click)="resetSettings($event)">
-                  <i class="icon-settings"></i> {{ 'header.account.reset' | translate }}
-                </a>
-              </li>
-              <li class="list-group-item p0 b0">
-                <a class="text-nowrap" (click)="logout($event)">
-                  <i class="icon-lock"></i> {{ 'header.account.logout' | translate }}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </app-dropdown>
-      </li>
-    </ul>
-  </div>
-
-  <app-navsearch *ngIf="isNavSearchVisible" (close)="closeNavSearch()"></app-navsearch>
-</nav>
-
-<app-info-dialog
-  *ngIf="isLicenseVisible"
-  titleTranslationKey="header.license.title"
-  (close)="closeLicenseInfo()"
->
-  <section class="pv-xl">{{ 'header.license.info' | translate }} <em>CRIF-CO-9821-9873-4259-5601</em>.</section>
+<app-info-dialog *ngIf="isLicenseVisible" titleTranslationKey="header.license.title" (close)="closeLicenseInfo()">
+  <section class="pv-xl">
+    {{ 'header.license.info' | translate }} <em>CRIF-CO-9821-9873-4259-5601</em>.
+  </section>
 </app-info-dialog>
+
+<nav class="flex justify-between">
+  <div class="flex flex-item">
+    <div class="flex-item">
+      <div class="logo" (click)="showLicenseInfo()">
+        Contact <span class="logo-version">2.0</span>
+      </div>
+    </div>
+    <app-header-main-menu class="flex-item"></app-header-main-menu>
+  </div>
+  <app-header-side-menu class="flex-item"></app-header-side-menu>
+</nav>

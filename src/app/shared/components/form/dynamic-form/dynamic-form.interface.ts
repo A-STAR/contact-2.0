@@ -4,7 +4,10 @@ import { IDialogMultiSelectFilterType } from '../dialog-multi-select/dialog-mult
 import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
 import { ILookupKey } from '../../../../core/lookup/lookup.interface';
-import { IMultiLanguageOption } from '../../../../shared/components/form/multi-language/multi-language.interface';
+import {
+  IMultiLanguageOption,
+  IMultiLanguageConfig
+} from '../../../../shared/components/form/multi-language/multi-language.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
 import { ISelectionAction } from '../select/select.interface';
@@ -21,6 +24,11 @@ export interface IDynamicFormGroup {
   collapsible?: boolean;
   title?: string;
   width?: number;
+}
+
+export interface IDynamicFormConfig {
+  suppressLabelCreation?: boolean;
+  labelKey?: string;
 }
 
 export interface IDynamicFormControl {
@@ -49,6 +57,7 @@ export interface IDynamicFormControl {
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
   // options for multilanguage
   langOptions?: IMultiLanguageOption[];
+  langConfig?: IMultiLanguageConfig;
   // options for select wrapper
   dictCode?: number;
   parentCode?: number;

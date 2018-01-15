@@ -10,7 +10,13 @@ import { CurrencyEditComponent } from './edit/edit.component';
 import { CurrencyRateEditComponent } from './rate/rate.component';
 
 const routes: Routes = [
-  { path: '', component: CurrenciesComponent },
+  {
+    path: '',
+    component: CurrenciesComponent,
+    data: {
+      reuse: true,
+    },
+  },
   { path: 'create', component: CurrencyEditComponent },
   { path: ':currencyId', component: CurrencyEditComponent },
   { path: ':currencyId/rates/create', component: CurrencyRateEditComponent },

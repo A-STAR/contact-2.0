@@ -1,8 +1,14 @@
+@import "../../../shared/styles/app/variables.scss";
+
 .wrapper {
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: center;
+}
+
+.panel-heading {
+  background-color: $brand-primary;
 }
 
 .fa {
