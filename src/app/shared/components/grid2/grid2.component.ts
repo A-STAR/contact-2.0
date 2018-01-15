@@ -626,6 +626,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         valueSetter: column.valueSetter,
         ...(column.editable ? this.getCellEditor(column) : {}),
         cellRenderer: column.cellRenderer,
+        cellRendererFramework: column.cellRendererFramework,
         cellStyle: column.cellStyle,
         colId: column.colId,
         editable: column.editable,
