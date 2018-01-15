@@ -144,7 +144,9 @@ export class NotificationActionBuilder {
   }
 
   private translatePayloadParam(param: string): string {
-    return this._params.context ? this.translateService.instant(`${this._params.context}.${param}`) : param;
+    const translationKey = `${this._params.context}.${param}`;
+    const translatedPayloadField = this.translateService.instant(translationKey);
+    return translationKey !== translatedPayloadField ? translatedPayloadField : param;
   }
 
   private createAction(type: INotificationActionType, payload?: INotificationActionPayload): UnsafeAction {
