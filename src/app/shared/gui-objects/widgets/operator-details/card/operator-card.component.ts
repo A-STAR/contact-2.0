@@ -55,12 +55,12 @@ export class OperatorCardComponent implements OnInit {
             width: 9
           },
           {
-            label: label('photo'), controlName: 'image', type: 'image', url: `/users/${1}/photo`,
+            label: label('photo'), controlName: 'image', type: 'image', url: `/users/${this.userId}/photo`,
             disabled: true, width: 3, height: 178
           }
         ],
       },
-      { label: label('roleCode'), controlName: 'roleCode', type: 'text', disabled: true },
+      { label: label('roleCode'), controlName: 'roleCode', type: 'selectwrapper', disabled: true, lookupKey: 'roles' },
       { label: label('email'), controlName: 'email', type: 'text', disabled: true },
       { label: label('mobPhone'), controlName: 'mobPhone', type: 'text', disabled: true },
       { label: label('workPhone'), controlName: 'workPhone', type: 'text', disabled: true },

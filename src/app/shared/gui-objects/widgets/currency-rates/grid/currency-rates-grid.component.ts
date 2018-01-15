@@ -81,6 +81,8 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
+    this.toolbarItems = this.createToolbar();
+
     this.viewPermissionSubscription = combineLatest(
       this.currencyRatesService.canView$,
       this.currencyId$
@@ -151,5 +153,34 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   private clear(): void {
     this._currencyRates = [];
     this.cdRef.markForCheck();
+  }
+
+  private createToolbar(): IToolbarItem[] {
+    return [
+      {
+        type: ToolbarItemTypeEnum.BUTTON_ADD,
+        enabled: combineLatestAnd([
+          this.currencyRatesService.canAdd$,
+          this.currencyId$.map(Boolean)
+        ]),
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.onEdit(this.selectedCurrencyRate$.value),
+        enabled: combineLatestAnd([
+          this.currencyRatesService.canEdit$,
+          this.selectedCurrencyRate$.map(o => !!o)
+        ])
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetch(),
+        enabled: combineLatestAnd([
+          this.currencyRatesService.canView$,
+          this.currencyId$.map(Boolean)
+        ])
+      }
+    ];
   }
 }
