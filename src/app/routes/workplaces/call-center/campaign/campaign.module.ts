@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AngularSplitModule } from 'angular-split';
 
 import { AddressModule } from './address/address.module';
 import { AddressesModule } from './addresses/addresses.module';
@@ -59,6 +60,7 @@ const routes: Routes = [
   imports: [
     AddressModule,
     AddressesModule,
+    AngularSplitModule,
     ContactModule,
     ContactsModule,
     DebtComponentsModule,

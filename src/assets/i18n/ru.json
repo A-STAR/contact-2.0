@@ -205,7 +205,8 @@
         }
       },
       "tabs": {
-        "phonesAndAddresses": "Телефоны и адреса",
+        "phones": "Телефоны",
+        "addresses": "Адреса",
         "debtComponents": "Компоненты долга",
         "contacts": "Контакты",
         "payments": "Платежи",
