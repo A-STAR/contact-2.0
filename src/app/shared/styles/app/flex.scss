@@ -7,12 +7,18 @@
     flex-direction: column;
     height: 100%;
   }
+  &.justify-between {
+    justify-content: space-between;
+  }
 }
 
 .flex-item {
-  flex: 0 0;
+  // IE needs 'auto' here, otherwise height will be 0
+  flex: 0 0 auto;
   &.grow {
-    flex: 1 0;
+    // IE needs units for flex basis for some reason
+    // See: https://github.com/philipwalton/flexbugs#flexbug-4
+    flex: 1 0 0px;
     overflow: hidden;
   }
 }

@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IOption } from '../../../../core/converter/value-converter.interface';
@@ -87,8 +88,8 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
         return selectedNode && isEmpty(selectedNode.children) && this.hasTemplate
           ? this.outcomeService
             .fetchScenario(this.debtId, this.contactTypeCode, selectedNode.id)
-            .catch(() => Observable.of(null))
-          : Observable.of(null);
+            .catch(() => of(null))
+          : of(null);
       })
       .subscribe(template => {
         this.template = template;
@@ -152,7 +153,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (templateId) {
       this.outcomeService
         .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
-        .catch(() => Observable.of(null))
+        .catch(() => of(null))
         .subscribe(autoComment => {
           this.autoComment = autoComment;
           this.cdRef.markForCheck();

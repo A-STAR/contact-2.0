@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -40,7 +41,7 @@ export class PersonComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.personSubscription = Observable.combineLatest(
+    this.personSubscription = combineLatest(
       this.userPermissionsService.has('PERSON_INFO_EDIT'),
       this.userPermissionsService.has('PERSON_COMMENT_EDIT'),
       this.userConstantsService.get('Person.Individual.AdditionalAttribute.List'),

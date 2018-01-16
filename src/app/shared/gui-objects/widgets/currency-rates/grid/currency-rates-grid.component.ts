@@ -13,6 +13,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 import { CurrencyRatesService } from '../currency-rates.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
+import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'app-currency-rates-grid',
@@ -31,26 +32,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     { prop: 'rate' }
   ];
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.currencyRatesService.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedCurrencyRate$.value),
-      enabled: Observable.combineLatest(
-        this.currencyRatesService.canEdit$,
-        this.selectedCurrencyRate$
-      ).map(([canEdit, selectedProperty]) => !!canEdit && !!selectedProperty)
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch(),
-      enabled: this.currencyRatesService.canView$
-    }
-  ];
+  toolbarItems: Array<IToolbarItem>;
 
   dialog: 'delete';
 
@@ -75,10 +57,13 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
+    this.toolbarItems = this.createToolbar();
+
     this.viewPermissionSubscription = combineLatest(
       this.currencyRatesService.canView$,
       this.currencyId$
-    ).subscribe(([hasViewPermission, currencyId]) => {
+    )
+    .subscribe(([hasViewPermission, currencyId]) => {
       this.currencyId = currencyId;
       if (hasViewPermission && currencyId) {
         this.fetch();
@@ -130,14 +115,44 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.currencyRatesService.fetchAll(this.currencyId).subscribe(currencyRates => {
-      this._currencyRates = currencyRates;
-      this.cdRef.markForCheck();
-    });
+    this.currencyRatesService.fetchAll(this.currencyId)
+      .subscribe(currencyRates => {
+        this._currencyRates = currencyRates;
+        this.cdRef.markForCheck();
+      });
   }
 
   private clear(): void {
     this._currencyRates = [];
     this.cdRef.markForCheck();
+  }
+
+  private createToolbar(): IToolbarItem[] {
+    return [
+      {
+        type: ToolbarItemTypeEnum.BUTTON_ADD,
+        enabled: combineLatestAnd([
+          this.currencyRatesService.canAdd$,
+          this.currencyId$.map(Boolean)
+        ]),
+        action: () => this.onAdd()
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.onEdit(this.selectedCurrencyRate$.value),
+        enabled: combineLatestAnd([
+          this.currencyRatesService.canEdit$,
+          this.selectedCurrencyRate$.map(o => !!o)
+        ])
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetch(),
+        enabled: combineLatestAnd([
+          this.currencyRatesService.canView$,
+          this.currencyId$.map(Boolean)
+        ])
+      }
+    ];
   }
 }

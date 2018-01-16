@@ -2,8 +2,10 @@ import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef,
   OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPledgor } from '../../pledgor/pledgor.interface';
@@ -18,6 +20,7 @@ import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+
 import { DialogFunctions } from '../../../../../core/dialog';
 import { makeKey } from '../../../../../core/utils';
 
@@ -75,7 +78,7 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.lookupService.currencyOptions,
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
       this.contract$.flatMap(
@@ -85,12 +88,12 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
         contract => contract && contract.id && !this.isRoute('pledgor/add')
           ? this.pledgorPropertyService.fetch(contract.personId, contract.propertyId)
             .map(property => this.getFormData(contract, property))
-          : Observable.of(this.getFormData())
+          : of(this.getFormData())
       ),
       this.contract$.flatMap(
         contract => contract && contract.id && !this.isRoute('pledgor/add')
           ? this.pledgorService.fetch(contract.personId)
-          : Observable.of(null)
+          : of(null)
       )
     )
     .pipe(first())

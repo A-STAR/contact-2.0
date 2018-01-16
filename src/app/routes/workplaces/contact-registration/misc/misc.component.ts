@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
@@ -32,11 +33,11 @@ const labelKey = makeKey('modules.contactRegistration.misc');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MiscComponent implements OnInit, OnDestroy {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   @Input() debtId: number;
   @Input() personId: number;
   @Input() personRole: number;
-
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls = [
     { controlName: 'nextCallDateTime', type: 'datepicker', displayTime: true },
@@ -145,7 +146,7 @@ export class MiscComponent implements OnInit, OnDestroy {
     if (templateId) {
       this.outcomeService
         .fetchAutoComment(this.debtId, this.personId, this.personRole, templateId)
-        .catch(() => Observable.of(null))
+        .catch(() => of(null))
         .subscribe(autoComment => {
           this.autoComment = autoComment;
           this.cdRef.markForCheck();

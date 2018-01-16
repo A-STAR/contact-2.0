@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { IGroup } from '../group.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
@@ -28,8 +28,8 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   private forCurrentUser = false;
 
   columns: Array<IGridColumn> = [
-    { prop: 'id', width: 50 },
-    { prop: 'entityTypeCode', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE, width: 50 },
+    { prop: 'id', width: 70 },
+    { prop: 'entityTypeCode', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE, width: 90 },
     { prop: 'name' },
     { prop: 'comment' },
     { prop: 'isManual', renderer: 'checkboxRenderer' },
@@ -50,7 +50,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       enabled: this.selectedGroup$.flatMap(
         selectedGroup => selectedGroup
           ? this.groupService.canEdit$(selectedGroup).map(canEdit => !!canEdit && !!selectedGroup)
-          : Observable.of(false)
+          : of(false)
       ),
     },
     {
@@ -59,7 +59,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       enabled: this.selectedGroup$.flatMap(
         selectedGroup => selectedGroup
           ? this.groupService.canDelete$(selectedGroup).map(canDelete => !!canDelete && !!selectedGroup)
-          : Observable.of(false)
+          : of(false)
       ),
     },
     {
@@ -76,11 +76,10 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   ];
 
   dialog: string;
+  groups: IGroup[] = [];
 
-  private _groups: Array<IGroup> = [];
-
-  private viewPermissionSubscription: Subscription;
   private actionSubscription: Subscription;
+  private viewPermissionSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -101,12 +100,12 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     });
 
     this.viewPermissionSubscription = this.groupService.canView$
-      .subscribe(hasViewPermission => {
-        if (hasViewPermission) {
+      .subscribe(canView => {
+        if (canView) {
           this.fetch();
         } else {
           this.clear();
-          this.notificationsService.error('errors.default.read.403').entity('entities.groups.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.groups.gen.plural').dispatch();
         }
       });
 
@@ -120,14 +119,11 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
   ngOnDestroy(): void {
     this.viewPermissionSubscription.unsubscribe();
-  }
-
-  get groups(): Array<IGroup> {
-    return this._groups;
+    this.actionSubscription.unsubscribe();
   }
 
   get selectedGroup(): IGroup {
-    return (this._groups || [])
+    return (this.groups || [])
       .find(group => this.selectedGroup$.value && group.id === this.selectedGroup$.value.id);
   }
 
@@ -153,7 +149,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     const { id: groupId } = this.selectedGroup;
     this.groupService.delete(groupId)
       .subscribe(() => {
-        this.setDialog(null);
+        this.setDialog();
         this.selectedGroup$.next(null);
         this.fetch();
       });
@@ -165,13 +161,13 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
   private fetch(): void {
     this.groupService.fetchAll(this.forCurrentUser).subscribe(groups => {
-      this._groups = groups;
+      this.groups = groups;
       this.cdRef.markForCheck();
     });
   }
 
   private clear(): void {
-    this._groups = [];
+    this.groups = [];
     this.cdRef.markForCheck();
   }
 }

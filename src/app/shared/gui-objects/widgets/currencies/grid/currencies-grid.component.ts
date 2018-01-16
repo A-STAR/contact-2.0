@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
@@ -11,9 +10,9 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { CurrenciesService } from '../currencies.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
+import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'app-currencies-grid',
@@ -41,10 +40,10 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       action: () => this.onEdit(this.selectedCurrency$.value),
-      enabled: Observable.combineLatest(
+      enabled: combineLatestAnd([
         this.currenciesService.canEdit$,
-        this.selectedCurrency$
-      ).map(([canEdit, selectedCurrency]) => !!canEdit && !!selectedCurrency)
+        this.selectedCurrency$.map(o => !!o)
+      ])
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
@@ -72,7 +71,6 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
     private cdRef: ChangeDetectorRef,
     private currenciesService: CurrenciesService,
     private gridService: GridService,
-    private notificationsService: NotificationsService,
     private router: Router,
   ) {
     super();
@@ -86,15 +84,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
         this.cdRef.markForCheck();
       });
 
-    this.viewPermissionSubscription = this.currenciesService.canView$
-      .subscribe(hasViewPermission => {
-        if (hasViewPermission) {
-          this.fetch();
-        } else {
-          this.clear();
-          this.notificationsService.permissionError().entity('entities.groups.gen.plural').dispatch();
-        }
-      });
+    this.fetch();
 
     this.actionSubscription = this.currenciesService
       .getAction(CurrenciesService.MESSAGE_CURRENCY_SAVED)
@@ -155,10 +145,5 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
       this._currencies = currencies;
       this.cdRef.markForCheck();
     });
-  }
-
-  private clear(): void {
-    this._currencies = [];
-    this.cdRef.markForCheck();
   }
 }

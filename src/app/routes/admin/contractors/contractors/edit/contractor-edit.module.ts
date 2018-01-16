@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../../shared/shared.module';
 import { ContractorAttributesModule } from './attributes/contractor-attributes.module';
+import { ContractorObjectsModule } from './objects/contractor-objects.module';
 
 import { ContractorEditComponent } from './contractor-edit.component';
 
@@ -9,6 +10,7 @@ import { ContractorEditComponent } from './contractor-edit.component';
   imports: [
     SharedModule,
     ContractorAttributesModule,
+    ContractorObjectsModule,
   ],
   exports: [
     ContractorEditComponent

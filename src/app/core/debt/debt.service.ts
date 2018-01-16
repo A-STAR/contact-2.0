@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
-import { IAddress, IContactRegistrationParams, IPhone, IDebt, IDebtNextCall } from './debt.interface';
+import { IAddress, IContactRegistrationParams, IPhone, IDebt, IDebtNextCall, IDebtOpenIncomingCallData } from './debt.interface';
 
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UserPermissionsService } from '../user/permissions/user-permissions.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class DebtService {
@@ -21,6 +24,8 @@ export class DebtService {
   baseUrl = '/persons/{personId}/debts';
   extUrl = `${this.baseUrl}/{debtId}`;
 
+  private _incomingCallSearchParams$ = new BehaviorSubject<IDebtOpenIncomingCallData>(null);
+
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
@@ -33,7 +38,7 @@ export class DebtService {
   }
 
   canRegisterIncomingCall$(phone: IPhone): Observable<boolean> {
-    return phone && !phone.isInactive ? this.canRegisterIncomingCalls$ : Observable.of(false);
+    return phone && !phone.isInactive ? this.canRegisterIncomingCalls$ : of(false);
   }
 
   get canRegisterAddressVisits$(): Observable<boolean> {
@@ -41,7 +46,7 @@ export class DebtService {
   }
 
   canRegisterAddressVisit$(address: IAddress): Observable<boolean> {
-    return address && !address.isInactive ? this.canRegisterAddressVisits$ : Observable.of(false);
+    return address && !address.isInactive ? this.canRegisterAddressVisits$ : of(false);
   }
 
   get canRegisterSpecialOrOfficeVisit$(): Observable<boolean> {
@@ -59,8 +64,16 @@ export class DebtService {
     return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_OFFICE_VISIT);
   }
 
+  get incomingCallSearchParams(): any {
+    return this._incomingCallSearchParams$;
+  }
+
+  set incomingCallSearchParams(data: any) {
+    this._incomingCallSearchParams$.next(data);
+  }
+
   canRegisterContactForDebt$(debt: { statusCode: number }): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG'),
       this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [
         DebtService.CONTACT_TYPE_INCOMING_CALL,

@@ -4,13 +4,12 @@ import { RouterModule } from '@angular/router';
 import { InfoDialogModule } from '../shared/components/dialog/info/info-dialog.module';
 import { SharedModule } from '../shared/shared.module';
 
-import { LayoutComponent } from './layout.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { HeaderComponent } from './header/header.component';
-import { NavsearchComponent } from './header/navsearch/navsearch.component';
-import { NotificationsComponent } from './header/notifications/notifications.component';
-import { SidebarToggleComponent } from './sidebar/sidebar-toggle/sidebar-toggle.component';
-import { HeaderMenuComponent } from './header/header-menu/header-menu.component';
+import { LayoutComponent } from './layout.component';
+import { MainMenuComponent } from './header/main-menu/main-menu.component';
+import { NotificationsComponent } from './header/side-menu/notifications/notifications.component';
+import { SideMenuComponent } from './header/side-menu/side-menu.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
   imports: [
@@ -21,18 +20,16 @@ import { HeaderMenuComponent } from './header/header-menu/header-menu.component'
   declarations: [
     HeaderComponent,
     LayoutComponent,
-    NavsearchComponent,
+    MainMenuComponent,
     NotificationsComponent,
+    SideMenuComponent,
     SidebarComponent,
-    SidebarToggleComponent,
-    HeaderMenuComponent,
   ],
   exports: [
     HeaderComponent,
     LayoutComponent,
-    NavsearchComponent,
     NotificationsComponent,
     SidebarComponent,
   ]
 })
-export class LayoutModule { }
+export class LayoutModule {}

@@ -1,8 +1,7 @@
 {
   "header": {
-    "search": {
-      "placeholder": "Введите строку поиска и нажмите ввод..."
-    },
+    "language": "Язык",
+    "notifications": "Сообщения",
     "license": {
       "title": "Лицензия",
       "info": "Номер Вашей лицензии"
@@ -48,6 +47,7 @@
         "PORTFOLIO_EDIT": "Портфель",
         "PORTFOLIO_ATTRIBUTES": "Атрибуты портфеля",
         "CONTRACTOR_ATTRIBUTES": "Атрибуты контрагента",
+        "CONTRACTOR_OBJECTS": "Объекты контрагента",
         "ATTRIBUTES": "Атрибуты",
         "CONTRACTOR": "Контрагент",
         "CONTRACTOR_MANAGERS": "Менеджеры контрагента",
@@ -250,6 +250,13 @@
       }
     },
     "dataUpload": {
+      "buttons": {
+        "open": "Открыть файл",
+        "save": "Сохранить в БД",
+        "cancel": "Отмена",
+        "nextProblematicCell": "Следующая проблемная ячейка",
+        "nextCriticalCell": "Следующая критичная ячейка"
+      },
       "dialogs": {
         "cancel": {
           "message": "Вы уверены, что хотите отменить операцию?",
@@ -584,6 +591,7 @@
       }
     },
     "edit": {
+      "branchCode": "Подразделение",
       "personalData": "Персональные данные",
       "details": "Подробная информация",
       "title": "Пользователь: {{ id }}",
@@ -618,6 +626,7 @@
     },
     "grid": {
       "id": "ID",
+      "branchCode": "Подразделение",
       "login": "Логин",
       "lastName": "Фамилия",
       "firstName": "Имя",
@@ -657,17 +666,15 @@
     "edit": {
       "title": "Словарь: {{ code }}",
       "code": "Код словаря",
-      "language": "Язык",
       "name": "Название словаря",
-      "type": "Тип словаря",
-      "parent": "Родительский словарь",
+      "typeCode": "Тип словаря",
+      "parentCode": "Родительский словарь",
       "select": {
         "title": {
           "dictList": "Перечень словарей",
           "termTypesList": "Перечень типов терминов"
         }
       },
-      "translation": "Язык перевода",
       "termTypeCode": "Тип терминов в словаре"
     },
     "create": {
@@ -1120,7 +1127,8 @@
     },
     "buttons": {
       "attributes": "Атрибуты",
-      "managers": "Менеджеры"
+      "managers": "Менеджеры",
+      "objects": "Объекты"
     }
   },
   "portfolios": {
@@ -2097,6 +2105,21 @@
         "fromDateTime": "Дата",
         "rate": "Курс"
       }
+    },
+    "contractorObject": {
+      "dialogs": {
+        "add": {
+          "title": "Добавить объекты"
+        },
+        "delete": {
+          "title": "Удаление объектов",
+          "confirmMessage": "Вы действительно хотите удалить выделенные объекты?"
+    }
+  },
+      "grid": {
+        "id": "ID",
+        "name": "Название"
+      }
     }
   },
   "entities": {
@@ -2278,6 +2301,9 @@
     "currencyRates": {
       "gen": { "singular": "курса", "plural": "курсов" }
     },
+    "object": {
+      "gen": { "singular": "объекта", "plural": "объектов" }
+    },
     "infoDebt": {
       "gen": { "singular": "списка формирования", "plural": "списков формирования" }
     }
@@ -2376,6 +2402,19 @@
       "entityAttributeNotFound": "Не найдена запись в entity_attribute для атрибута объекта, с которым выполняется действие",
       "entityTypeNotFound": "Не найдена запись в entity_type для атрибута объекта, с которым выполняется действие",
       "entityTypeIsNotSupportedForEntity": "Для entityTypeId {{ $1 }} не поддерживаются операции с сущностью {{ $2 }}",
+      "excelInvalidColumnList": "Некорректный набор колонок в загружаемом Excel файле",
+      "excelValidationMandatoryMissing": "Не заполнено обязательное поле",
+      "excelValidationDebtNotFound": "Не найден долг",
+      "excelValidationDebtNotFoundByAccount": "Не найден долг по номеру счета",
+      "excelValidationDebtNotFoundByContract": "Не найден долг по номеру договора",
+      "excelValidationPortfolioNotFound": "Не найден портфель",
+      "excelValidationUserNotFound": "Не найден пользователь",
+      "excelValidationDebtsFound": "Найдено несколько долгов",
+      "excelValidationIncorrectValueForFormat": "Некорректное значение для данной колонки",
+      "excelValidationInvalidPaymentDate": "Неверная дата платежа",
+      "excelValidationValueMustBePositive": "Значение должно быть больше нуля",
+      "excelValidationInvalidCurrencyCode": "Неверный код валюты",
+      "excelValidationCurrencyRateNotFound": "Не найден курс валюты",
       "fieldMustBeGreaterThan": "Значение поля {{ $1 }} должно быть больше {{ $2 }}",
       "fieldMustBeGreaterOrEqualThan": "Значение поля {{ $1 }} должно быть больше или равно {{ $2 }}",
       "fieldMustNotBeEmpty": "Поле {{ $1 }} должно быть заполнено",
@@ -2678,6 +2717,7 @@
         "objectAddToGroup": "Добавить в группу",
         "objectChangeColor": "Изменить цвет",
         "openDebtCard": "Открыть карточку долга",
+        "openIncomingCall": "Открыть входящий звонок по долгу",
         "openUserDetail": "Открыть карточку оператора",
         "paymentsCancel": "Отменить платежи",
         "paymentsConfirm": "Подтвердить платежи",

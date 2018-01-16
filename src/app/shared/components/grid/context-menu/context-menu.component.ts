@@ -8,6 +8,7 @@ import {
   Output
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IContextMenuItem, IGridColumn } from '../grid.interface';
@@ -74,7 +75,7 @@ export class ContextMenuComponent implements OnInit {
   }
 
   isDisabled(item: IContextMenuItem): Observable<boolean> {
-    return item.enabled ? item.enabled.map(enabled => !enabled) : Observable.of(false);
+    return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
   onAction(item: IContextMenuItem): void {

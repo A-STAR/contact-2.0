@@ -17,10 +17,6 @@ export interface ICampaignGroup {
 export interface ICampaign {
   id: number;
   name?: string;
-  multiName?: {
-    value: string;
-    languageId: number;
-  }[];
   groupId?: number;
   groupName?: string;
   statusCode?: CampaignStatus;

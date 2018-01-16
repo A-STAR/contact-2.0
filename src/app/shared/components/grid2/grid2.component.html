@@ -1,21 +1,28 @@
-<div class="grid grid-default">
-  <ag-grid-angular
-    *ngIf="columnDefs"
-    class="app-grid2 ag-theme-material"
-    [columnDefs]="columnDefs"
-    [gridOptions]="gridOptions"
-    [ngStyle]="styles"
-    [rowSelection]="rowSelection"
-    (dragStarted)="dragStarted()"
-    (dragStopped)="dragStopped()"
-    (cellValueChanged)="onCellValueChanged($event)"
-    (rowDoubleClicked)="rowDoubleClicked($event)"
-  ></ag-grid-angular>
-</div>
+<div class="flex vertical">
 
-<app-toolbar
-  class="app-toolbar"
-  [actions]="paginationPanel"
-  (actionClick)="onPageChange($event)"
-  (actionSelect)="onPageSizeChange($event)"
-></app-toolbar>
+  <!-- Grid -->
+  <div class="flex-item" [ngClass]="{ grow: fullHeight }">
+    <ag-grid-angular
+      *ngIf="columnDefs"
+      class="app-grid2 ag-theme-material"
+      [columnDefs]="columnDefs"
+      [gridOptions]="gridOptions"
+      [ngStyle]="style"
+      [rowSelection]="rowSelection"
+      (dragStarted)="dragStarted()"
+      (dragStopped)="dragStopped()"
+      (cellValueChanged)="onCellValueChanged($event)"
+      (rowDoubleClicked)="rowDoubleClicked($event)"
+    ></ag-grid-angular>
+  </div>
+
+  <!-- Bottom Toolbar -->
+  <div class="flex-item">
+    <app-toolbar
+      class="app-toolbar"
+      [actions]="paginationPanel"
+      (actionClick)="onPageChange($event)"
+      (actionSelect)="onPageSizeChange($event)"
+    ></app-toolbar>
+  </div>
+</div>

@@ -8,7 +8,9 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
@@ -19,11 +21,7 @@ import { GridComponent } from '../../../../shared/components/grid/grid.component
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 
-import {
-  ICampaignsStatistic,
-  IUserStatistic,
-  ICampaign,
-} from '../campaigns.interface';
+import { IUserStatistic, ICampaign } from '../campaigns.interface';
 import { CampaignsService } from '../campaigns.service';
 
 @Component({
@@ -34,7 +32,6 @@ import { CampaignsService } from '../campaigns.service';
   encapsulation: ViewEncapsulation.None
 })
 export class StatisticsComponent implements OnInit, OnDestroy {
-
   @ViewChild(GridComponent) grid: GridComponent;
 
   campaignUserStatistics: IUserStatistic[];
@@ -68,13 +65,15 @@ export class StatisticsComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.campaignsService.fetchCampaignStat(this.selectedCampaign.id)
         .pipe(first())
-        .map((statistic: ICampaignsStatistic) => statistic && statistic.userStatistic)
+        .map(statistic => statistic && statistic.userStatistic)
         .subscribe((statistics: IUserStatistic[]) => {
           this.campaignUserStatistics = statistics;
           this.cdRef.markForCheck();
         }),
-      enabled: Observable.combineLatest(this.userPermissionsService.has('CAMPAIGN_VIEW_STATISTICS'),
-        this.campaignsService.selectedCampaign).map(([hasRights, selected]) => hasRights && !!selected)
+      enabled: combineLatest(
+        this.userPermissionsService.has('CAMPAIGN_VIEW_STATISTICS'),
+        this.campaignsService.selectedCampaign)
+      .map(([hasRights, selected]) => hasRights && !!selected)
     }
   ];
 
@@ -95,8 +94,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
       this.cdRef.markForCheck();
     });
 
-    this.campaignStatisticSub = Observable
-      .combineLatest(
+    this.campaignStatisticSub = combineLatest(
         this.canView$,
         this.campaignsService.selectedCampaign)
       .filter(([canView, campaign]) => {
@@ -109,12 +107,12 @@ export class StatisticsComponent implements OnInit, OnDestroy {
       .map(([canView, campaign]) => campaign)
       .flatMap(campaign => {
         if (!campaign) {
-          return Observable.of(null);
+          return of(null);
         }
         this.selectedCampaign = campaign;
         return this.campaignsService.fetchCampaignStat(campaign.id);
       })
-      .map((statistic: ICampaignsStatistic) => statistic && statistic.userStatistic)
+      .map(statistic => statistic && statistic.userStatistic)
       .subscribe((statistics: IUserStatistic[]) => {
         this.campaignUserStatistics = statistics;
         this.cdRef.markForCheck();

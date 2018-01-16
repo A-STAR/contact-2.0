@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 
@@ -38,11 +39,11 @@ export class EmailCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
-      this.emailId ? this.userPermissionsService.has('EMAIL_EDIT') : Observable.of(true),
-      this.emailId ? this.userPermissionsService.has('EMAIL_COMMENT_EDIT') : Observable.of(true),
-      this.emailId ? this.emailService.fetch(this.entityType, this.entityId, this.emailId) : Observable.of(null)
+      this.emailId ? this.userPermissionsService.has('EMAIL_EDIT') : of(true),
+      this.emailId ? this.userPermissionsService.has('EMAIL_COMMENT_EDIT') : of(true),
+      this.emailId ? this.emailService.fetch(this.entityType, this.entityId, this.emailId) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, canEdit, canEditComment, email ]) => {

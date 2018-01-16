@@ -1,7 +1,8 @@
 import { Component, ViewChild, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IIdentityDoc } from '../identity.interface';
@@ -42,12 +43,12 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    Observable.combineLatest(
+    combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_IDENTITY_TYPE),
       this.identityId
         ? this.userPermissionsService.has('IDENTITY_DOCUMENT_EDIT')
         : this.userPermissionsService.has('IDENTITY_DOCUMENT_ADD'),
-      this.identityId ? this.identityService.fetch(this.personId, this.identityId) : Observable.of(null)
+      this.identityId ? this.identityService.fetch(this.personId, this.identityId) : of(null)
     )
     .pipe(first())
     .subscribe(([ options, canEdit, identity ]) => {

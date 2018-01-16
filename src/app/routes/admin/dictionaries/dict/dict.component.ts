@@ -8,11 +8,9 @@ import { switchMap } from 'rxjs/operators';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IDictionary, ITerm } from '../dictionaries.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
 
 import { DictionariesService } from '../dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
-import { LookupService } from '../../../../core/lookup/lookup.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -74,7 +72,6 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     private cdRef: ChangeDetectorRef,
     private dictionariesService: DictionariesService,
     private gridService: GridService,
-    private lookupService: LookupService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -109,17 +106,12 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     return this.dictionariesService.dictionaries;
   }
 
-  get languages(): Observable<ILookupLanguage[]> {
-    return this.lookupService.lookup<ILookupLanguage>('languages');
-  }
-
   get dictionaryTermTypes(): Observable<ITerm[]> {
     return this.dictionariesService.dictionaryTermTypes;
   }
 
   get hasDictionaryRelations(): Observable<boolean> {
     return combineLatestAnd([
-      this.languages.map(Boolean),
       this.selectedDictionary.map(Boolean),
       this.dictionaryTermTypes.map(Boolean)
     ]);
@@ -138,21 +130,17 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
       .pipe(
         filter(Boolean),
         switchMap(_ => this.dictionariesService.selectedDictionary),
-        switchMap(dictionary => {
-          this.dictionary = { ...dictionary };
-          return this.dictionariesService.fetchDictTranslations(dictionary.id);
-        }),
         first(),
       )
-      .subscribe(translations => {
-        this.dictionary.name = translations;
+      .subscribe(dictionary => {
+        this.dictionary = { ...dictionary };
         this.setDialog('edit');
         this.cdRef.markForCheck();
       });
   }
 
   create(): void {
-    this.hasDictionaryRelations
+    this.dictionaryTermTypes.map(Boolean)
       .pipe(
         filter(Boolean),
         first(),

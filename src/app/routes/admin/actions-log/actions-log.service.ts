@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/zip';
+import { zip } from 'rxjs/observable/zip';
 
 import { IUserTerm } from '../../../core/user/dictionaries/user-dictionaries.interface';
 import { IActionLog, IEmployee } from './actions-log.interface';
@@ -43,7 +43,7 @@ export class ActionsLogService {
   }
 
   getEmployeesAndActionTypes(): Observable<void> {
-    return Observable.zip(
+    return zip(
       this.getEmployees(),
       this.getActionTypes(),
       (employees, actionTypes) => {
