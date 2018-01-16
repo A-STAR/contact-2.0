@@ -1,27 +1,26 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { ITab } from '../../../shared/components/layout/tabview/header/header.interface';
+
 import { makeKey } from '../../../core/utils';
 
 const label = makeKey('modules.debtsProcessing');
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-debt-processing',
   templateUrl: './debt-processing.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtProcessingComponent {
-  grids = [
-    { key: 'debtsprocessingall', title: label('all.title'), isInitialised: true },
-    { key: 'debtsprocessingcallback', title: label('callBack.title'), isInitialised: false },
-    { key: 'debtsprocessingcurrentjob', title: label('currentJob.title'), isInitialised: false },
-    { key: 'debtsprocessingvisits', title: label('visits.title'), isInitialised: false },
-    { key: 'debtsprocessingpromisepay', title: label('promisePay.title'), isInitialised: false },
-    { key: 'debtsprocessingpartpay', title: label('partPay.title'), isInitialised: false },
-    { key: 'debtsprocessingproblem', title: label('problem.title'), isInitialised: false },
-    { key: 'debtsprocessingreturn', title: label('returned.title'), isInitialised: false },
-  ];
-
-  onTabSelect(tabIndex: number): void {
-    this.grids[tabIndex].isInitialised = true;
-  }
+  tabs: ITab[] = [
+    { link: 'all' },
+    { link: 'callBack' },
+    { link: 'currentJob' },
+    { link: 'visits' },
+    { link: 'promisePay' },
+    { link: 'partPay' },
+    { link: 'problem' },
+    { link: 'returned' },
+  ].map(tab => ({ ...tab, title: label(`${tab.link}.title`) }));
 }

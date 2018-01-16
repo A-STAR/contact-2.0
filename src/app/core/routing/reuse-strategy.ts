@@ -165,7 +165,9 @@ export class ReuseStrategy implements RouteReuseStrategy {
     const paths = route.pathFromRoot
       .map(r => r.routeConfig)
       .filter(Boolean)
-      .map(c => c.path.split('/'));
+      .map(c => c.path)
+      .filter(Boolean)
+      .map(c => c.split('/'));
     const mandatoryParamKeys = flattenArray(paths)
       .filter(p => p.startsWith(':'))
       .map(p => p.substr(1));
