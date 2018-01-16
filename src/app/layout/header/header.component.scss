@@ -6,15 +6,12 @@ nav {
   padding-right: 3px;
 
   .logo {
-    color: #fff;
     cursor: pointer;
-    font-size: 18px;
-    line-height: $layout-top-menu-height;
-    padding: 0 15px;
-    white-space: nowrap;
+    margin-right: 18px;
+    padding: ($layout-top-menu-height - $layout-logo-height) / 2 10px;
 
-    .logo-version {
-      color: #ffead8;
+    img {
+      height: $layout-logo-height;
     }
   }
 
