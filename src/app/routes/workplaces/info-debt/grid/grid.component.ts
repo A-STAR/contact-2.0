@@ -4,7 +4,9 @@ import {
   Component,
   Input,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Output,
+  EventEmitter
 } from '@angular/core';
 
 import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
@@ -25,6 +27,8 @@ export class GridComponent {
   @Input() gridKey: string;
   @Input() rowIdKey: string;
 
+  @Output() select = new EventEmitter<IInfoDebtEntry[]>();
+
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IInfoDebtEntry>;
 
   rows: IInfoDebtEntry[] = [];
@@ -38,11 +42,15 @@ export class GridComponent {
   onRequest(): void {
     const filters = this.grid.getFilters();
     const params = this.grid.getRequestParams();
-    this.infoDebtService.fetch(this.gridKey, filters, params)
+    this.infoDebtService.fetch(`/list?name=${this.gridKey}`, filters, params)
       .subscribe((response: IAGridResponse<IInfoDebtEntry>) => {
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
         this.cdRef.markForCheck();
       });
+  }
+
+  onSelect(ids: number[]): void {
+    this.select.emit(ids.map(id => this.rows.find(row => row[this.rowIdKey] === id)));
   }
 }

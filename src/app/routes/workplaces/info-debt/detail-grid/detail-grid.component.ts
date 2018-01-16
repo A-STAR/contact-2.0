@@ -45,7 +45,7 @@ export class DetailGridComponent implements OnInit, OnDestroy {
     this.columns$ = this.gridService.getColumns(this.columns, {});
 
     this.gridKeySubscription = this.gridKey$
-      .subscribe(gridKey => gridKey && this.grid ? this.fetch() : this.clear());
+      .subscribe(() => this.onRequest());
   }
 
   ngOnDestroy(): void {
@@ -57,7 +57,11 @@ export class DetailGridComponent implements OnInit, OnDestroy {
   }
 
   onRequest(): void {
-    this.fetch();
+    if (this.gridKey && this.grid) {
+      this.fetch();
+    } else {
+      this.clear();
+    }
   }
 
   private fetch(): void {

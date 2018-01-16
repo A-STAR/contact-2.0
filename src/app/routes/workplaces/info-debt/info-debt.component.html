@@ -4,6 +4,7 @@
       *ngIf="grid.isInitialised"
       [gridKey]="grid.gridKey$ | async"
       [rowIdKey]="grid.rowIdKey"
+      (select)="onSelect($event)"
     ></app-info-debt-grid>
   </app-tabview-tab>
 </app-tabview>

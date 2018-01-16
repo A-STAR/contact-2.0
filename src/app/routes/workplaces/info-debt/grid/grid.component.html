@@ -1,9 +1,10 @@
 <app-action-grid
-  [metadataKey]="gridKey.key"
-  [persistenceKey]="gridKey.key"
+  [metadataKey]="gridKey"
+  [persistenceKey]="gridKey"
   [rowIdKey]="rowIdKey"
-  [ngClass]="'work-task-grid'"
+  [ngClass]="'info-debt-grid'"
   [rows]="rows"
   [rowCount]="rowCount"
   (request)="onRequest()"
+  (select)="onSelect($event)"
 ></app-action-grid>

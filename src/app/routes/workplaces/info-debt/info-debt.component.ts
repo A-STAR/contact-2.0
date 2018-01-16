@@ -18,12 +18,10 @@ const label = makeKey('modules.infoDebt');
   templateUrl: 'info-debt.component.html',
 })
 export class InfoDebtComponent {
-  private selectedRow$ = new BehaviorSubject<IInfoDebtEntry>(null);
+  private selectedRows$ = new BehaviorSubject<IInfoDebtEntry[]>(null);
 
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IInfoDebtEntry>;
 
-  rows: IInfoDebtEntry[] = [];
-  rowCount = 0;
   selectedTabIndex = 0;
   selectedDetailGridIndex = 0;
 
@@ -52,19 +50,19 @@ export class InfoDebtComponent {
   grids: IGridDef[] = [
     {
       rowIdKey: 'debtId',
-      gridKey$: of('/list?name=workTask.NewDebt'),
+      gridKey$: of('infoDebtDebtors'),
       title: label('debtors.title'),
       isInitialised: true
     },
     {
       rowIdKey: 'debtId',
-      gridKey$: of('/list?name=workTask.ProblemDebt'),
+      gridKey$: of('infoDebtGuarantors'),
       title: label('guarantors.title'),
       isInitialised: false
     },
     {
       rowIdKey: 'debtId',
-      gridKey$: of('/list?name=workTask.DebtToContractor'),
+      gridKey$: of('infoDebtPledgors'),
       title: label('pledgors.title'),
       isInitialised: false
     },
@@ -73,14 +71,18 @@ export class InfoDebtComponent {
   detailGrids: IGridDef[] = [
     {
       rowIdKey: 'id',
-      gridKey$: this.selectedRow$.map(row => `debt/${row.debtId}/person/${row.personId}/personRoles/${row.personRole}/sms`),
+      gridKey$: this.selectedRows$
+        .map(rows => rows && rows[0])
+        .map(row => row && `/debt/${row.debtId}/person/${row.personId}/personRole/${row.personRole}/sms`),
       title: label('sms.title'),
       isInitialised: true,
       columns: this.smsGridColumns
     },
     {
       rowIdKey: 'id',
-      gridKey$: this.selectedRow$.map(row => `debt/${row.debtId}/person/${row.personId}/personRoles/${row.personRole}/email`),
+      gridKey$: this.selectedRows$
+        .map(rows => rows && rows[0])
+        .map(row => row && `/debt/${row.debtId}/person/${row.personId}/personRole/${row.personRole}/email`),
       title: label('email.title'),
       isInitialised: false,
       columns: this.emailGridColumns
@@ -99,5 +101,9 @@ export class InfoDebtComponent {
     this.detailGrids[gridIndex].isInitialised = true;
     this.selectedDetailGridIndex = gridIndex;
     this.cdRef.markForCheck();
+  }
+
+  onSelect(rows: IInfoDebtEntry[]): void {
+    this.selectedRows$.next(rows);
   }
 }
