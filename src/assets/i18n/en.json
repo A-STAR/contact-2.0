@@ -336,6 +336,32 @@
       },
       "pledgors": {
         "title": "Pledgors"
+      },
+      "sms": {
+        "title": "SMS",
+        "grid": {
+          "smsId": "ID",
+          "phone": "Phone",
+          "statusCode": "Status",
+          "startDateTime": "Planned sending date",
+          "sendDateTime": "Send date",
+          "userFullName": "Operator",
+          "text": "Text",
+          "templateName": "Template"
+        }
+      },
+      "email": {
+        "title": "Email",
+        "grid": {
+          "emailId": "ID",
+          "email": "Email",
+          "statusCode": "Status",
+          "startDateTime": "Planned sending date",
+          "sendDateTime": "Send date",
+          "userFullName": "Operator",
+          "subject": "Subject",
+          "templateName": "Template"
+        }
       }
     },
     "contactRegistration": {

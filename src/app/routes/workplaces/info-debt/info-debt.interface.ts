@@ -75,5 +75,6 @@ export interface IGridDef {
 export interface IGridColumn {
   dataType: number;
   name: string;
+  label: string;
   dictCode?: number;
 }

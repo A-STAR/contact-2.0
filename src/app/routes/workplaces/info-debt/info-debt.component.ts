@@ -34,7 +34,7 @@ export class InfoDebtComponent {
     { dataType: 3, name: 'userFullName' },
     { dataType: 3, name: 'text' },
     { dataType: 3, name: 'templateName' },
-  ];
+  ].map(col => ({ ...col, label: label(`sms.grid.${col.name}`)}));
 
   emailGridColumns: IGridColumn[] = [
     { dataType: 1, name: 'emailId' },
@@ -45,23 +45,23 @@ export class InfoDebtComponent {
     { dataType: 3, name: 'userFullName' },
     { dataType: 3, name: 'subject' },
     { dataType: 3, name: 'templateName' },
-  ];
+  ].map(col => ({ ...col, label: label(`email.grid.${col.name}`)}));
 
   grids: IGridDef[] = [
     {
-      rowIdKey: 'debtId',
+      rowIdKey: 'id',
       gridKey$: of('infoDebtDebtors'),
       title: label('debtors.title'),
       isInitialised: true
     },
     {
-      rowIdKey: 'debtId',
+      rowIdKey: 'id',
       gridKey$: of('infoDebtGuarantors'),
       title: label('guarantors.title'),
       isInitialised: false
     },
     {
-      rowIdKey: 'debtId',
+      rowIdKey: 'id',
       gridKey$: of('infoDebtPledgors'),
       title: label('pledgors.title'),
       isInitialised: false
