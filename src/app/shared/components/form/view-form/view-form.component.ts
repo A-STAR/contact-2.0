@@ -10,8 +10,4 @@ import { IViewFormControl, IViewFormData } from './view-form.interface';
 export class ViewFormComponent {
   @Input() data: IViewFormData = {};
   @Input() controls: IViewFormControl[] = [];
-
-  get items(): any {
-    return this.controls.map(control => ({ control, value: this.data[control.name] }));
-  }
 }

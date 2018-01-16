@@ -13,12 +13,12 @@ export class ViewFormGroupComponent {
   @Input() controls: IViewFormControl[] = [];
 
   get items(): any {
-    return this.controls.map(control => ({ control, value: this.data[control.name] }));
+    return this.controls.map(control => ({ control, value: this.data[control.controlName] }));
   }
 
   getStyle(item: IViewFormItem): Partial<CSSStyleDeclaration> {
     return {
-      flexBasis: item.width ? `${item.width}%` : '100%',
+      flexBasis: item.width ? `${100 / 12 * item.width}%` : '100%',
     };
   }
 }

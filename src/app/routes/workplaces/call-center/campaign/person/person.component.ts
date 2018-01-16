@@ -18,22 +18,22 @@ const labelKey = makeKey('modules.callCenter.overview');
 export class PersonComponent {
   controls: IViewFormItem[] = [
     {
-      width: 33.33,
+      width: 4,
       children: [
-        { label: labelKey('debtor.birthDate'), name: 'birthDate' } as IViewFormControl,
-        { label: labelKey('debtor.docNumber'), name: 'docNumber' } as IViewFormControl,
+        { label: labelKey('debtor.birthDate'), controlName: 'birthDate' } as IViewFormControl,
+        { label: labelKey('debtor.docNumber'), controlName: 'docNumber' } as IViewFormControl,
       ],
     },
     {
-      width: 33.33,
+      width: 4,
       children: [
-        { label: labelKey('info.shortInfo'), name: 'shortInfo' } as IViewFormControl,
+        { label: labelKey('info.shortInfo'), controlName: 'shortInfo' } as IViewFormControl,
       ],
     },
     {
-      width: 33.33,
+      width: 4,
       children: [
-        { label: labelKey('debtor.personComment'), name: 'personComment' } as IViewFormControl,
+        { label: labelKey('debtor.personComment'), controlName: 'personComment' } as IViewFormControl,
       ],
     },
   ];

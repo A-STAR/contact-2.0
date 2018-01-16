@@ -6,7 +6,7 @@ export type IViewFormControlType = 'text' | 'dict' | 'date';
 
 export interface IViewFormBasicControl {
   label: string;
-  name: string;
+  controlName: string;
   type: IViewFormControlType;
   width?: number;
 }

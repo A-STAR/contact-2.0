@@ -10,7 +10,7 @@ import { CampaignService } from '../campaign.service';
 import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { addViewFormLabel, range } from '../../../../../core/utils';
+import { addFormLabel, range } from '../../../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,36 +41,41 @@ export class DebtComponent implements OnInit {
 
   private buildControls(attributes: IEntityAttributes): IViewFormItem[] {
     return [
-      { name: 'debtId', type: 'text', width: 25 },
-      { name: 'portfolioName', type: 'text', width: 25 },
-      { name: 'bankName', type: 'text', width: 25 },
-      { name: 'creditTypeCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE, width: 25 },
-      { name: 'creditName', type: 'text', width: 25 },
-      { name: 'contract', type: 'text', width: 25 },
-      { name: 'creditStartDate', type: 'date', width: 25 },
-      { name: 'creditEndDate', type: 'date', width: 25 },
-      { name: 'regionCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_REGIONS, width: 25 },
-      { name: 'branchCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_BRANCHES, width: 25 },
-      { name: 'statusCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS, width: 25 },
-      { name: 'debtAmount', type: 'text', width: 25 },
-      { name: 'totalAmount', type: 'text', width: 25 },
-      { name: 'currencyName', type: 'text', width: 25 },
-      { name: 'dpd', type: 'text', width: 25 },
-      { name: 'startDate', type: 'date', width: 25 },
+      { controlName: 'debtId', type: 'text', width: 3 },
+      { controlName: 'portfolioName', type: 'text', width: 3 },
+      { controlName: 'bankName', type: 'text', width: 3 },
+      { controlName: 'creditTypeCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE, width: 3 },
+      { controlName: 'creditName', type: 'text', width: 3 },
+      { controlName: 'contract', type: 'text', width: 3 },
+      { controlName: 'creditStartDate', type: 'date', width: 3 },
+      { controlName: 'creditEndDate', type: 'date', width: 3 },
+      { controlName: 'regionCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_REGIONS, width: 3 },
+      { controlName: 'branchCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_BRANCHES, width: 3 },
+      { controlName: 'statusCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS, width: 3 },
+      { controlName: 'debtAmount', type: 'text', width: 3 },
+      { controlName: 'totalAmount', type: 'text', width: 3 },
+      { controlName: 'currencyName', type: 'text', width: 3 },
+      { controlName: 'dpd', type: 'text', width: 3 },
+      { controlName: 'startDate', type: 'date', width: 3 },
       ...range(1, 4).map(i => ({
-        name: `dict${i}Code`,
+        controlName: `dict${i}Code`,
         dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
         display: attributes[EntityAttributesService[`DICT_VALUE_${i}`]].isUsed,
-        width: 25,
+        width: 3,
       })),
-      { name: 'debtReasonCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON, width: 25 },
-      { name: 'lastPromStatusCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_PROMISE_STATUS, width: 25 },
-      { name: 'lastPromDate', type: 'date', width: 25 },
-      { name: 'lastPayDate', type: 'date', width: 25 },
-      { name: 'lastCallDateTime', type: 'date', width: 25 },
-      { name: 'lastVisitDateTime', type: 'date', width: 25 },
-      { name: 'nextCallDateTime', type: 'date', width: 25 },
-      { name: 'debtComment', type: 'text', width: 100 },
-    ].map(addViewFormLabel('modules.callCenter.overview.debt'));
+      {
+        controlName: 'debtReasonCode',
+        type: 'dict',
+        dictCode: UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
+        width: 3,
+      },
+      { controlName: 'lastPromStatusCode', type: 'dict', dictCode: UserDictionariesService.DICTIONARY_PROMISE_STATUS, width: 3 },
+      { controlName: 'lastPromDate', type: 'date', width: 3 },
+      { controlName: 'lastPayDate', type: 'date', width: 3 },
+      { controlName: 'lastCallDateTime', type: 'date', width: 3 },
+      { controlName: 'lastVisitDateTime', type: 'date', width: 3 },
+      { controlName: 'nextCallDateTime', type: 'date', width: 3 },
+      { controlName: 'debtComment', type: 'text', width: 100 },
+    ].map(addFormLabel('modules.callCenter.overview.debt'));
   }
 }
