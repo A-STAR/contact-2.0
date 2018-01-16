@@ -269,11 +269,6 @@
     <app-file-upload [formControlName]="control.controlName" [fileName]="control.fileName"></app-file-upload>
   </ng-container>
 
-  <input *ngSwitchCase="'hidden'"
-         type="hidden"
-         class="form-control"
-         [formControlName]="control.controlName">
-
   <ng-container *ngSwitchCase="'button'">
     <label><span class="form-label">&nbsp;</span></label>
     <button
