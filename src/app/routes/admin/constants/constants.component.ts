@@ -27,10 +27,7 @@ import { DialogFunctions } from '../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConstantsComponent extends DialogFunctions implements AfterViewInit, OnDestroy, OnInit {
-
   @ViewChild(GridComponent) grid: GridComponent;
-
-  dialog = null;
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -57,6 +54,7 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
     { prop: 'dsc', minWidth: 200 },
   ];
 
+  dialog: string;
   emptyMessage$: Observable<string>;
   hasViewPermission$: Observable<boolean>;
   permissionSub: Subscription;
@@ -86,16 +84,16 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
     this.hasViewPermission$ = this.userPermissionsService.has('CONST_VALUE_VIEW');
 
     this.permissionSub = this.hasViewPermission$
-      .subscribe(hasPermission => {
-        if (!hasPermission) {
+      .subscribe(canView => {
+        if (!canView) {
           this.clear();
-          this.notificationsService.error('errors.default.read.403').entity('entities.constants.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.constants.gen.plural').dispatch();
         } else {
           this.fetchAll();
         }
       });
 
-    this.emptyMessage$ = this.hasViewPermission$.map(hasPermission => hasPermission ? null : 'constants.errors.view');
+    this.emptyMessage$ = this.hasViewPermission$.map(canView => canView ? null : 'constants.errors.view');
   }
 
   fetchAll(): void {
@@ -111,9 +109,7 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
         if (currentConstant) {
           const found = this.rows.find(row => row.id === currentConstant.id);
           this.selection = found ? [found] : [];
-          if (!found) {
-            this.constantsService.changeSelected(null);
-          }
+          this.constantsService.changeSelected(found || null);
         } else {
           this.selection = [];
         }
@@ -144,8 +140,8 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
     const permission = 'CONST_VALUE_EDIT';
     this.userPermissionsService.has(permission)
       .pipe(first())
-      .subscribe(hasPermission => {
-        if (hasPermission) {
+      .subscribe(canEdit => {
+        if (canEdit) {
           this.setDialog('editConstant');
         } else {
           this.notificationsService.error('roles.permissions.messages.no_edit').params({ permission }).dispatch();

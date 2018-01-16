@@ -129,7 +129,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       lookupCtrls.length
         ? combineLatest(
             lookupCtrls.map(ctrl => {
-              console.log('lookupKey:', ctrl.lookupKey);
+              // console.log('lookupKey:', ctrl.lookupKey);
               return this.lookupService.lookupAsOptions(ctrl.lookupKey);
             })
           )
@@ -142,7 +142,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
                 ctrl.options = options;
                 return ctrl;
               });
-              console.log('map', map);
               return [map];
             })
           )

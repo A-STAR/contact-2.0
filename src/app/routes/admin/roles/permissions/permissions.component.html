@@ -7,7 +7,7 @@
 
 <app-edit-permission
   *ngIf="isDialog('edit')"
-  [record]="currentPermission"
+  [permission]="currentPermission"
   (save)="onEdit($event)"
   (cancel)="onCancel()"
 ></app-edit-permission>

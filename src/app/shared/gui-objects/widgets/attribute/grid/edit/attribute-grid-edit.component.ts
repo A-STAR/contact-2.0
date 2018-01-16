@@ -4,13 +4,10 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
 import { of } from 'rxjs/observable/of';
 
@@ -18,27 +15,22 @@ import { IAttribute } from '../../attribute.interface';
 import {
   IDynamicFormItem,
   IDynamicFormConfig,
-  IDynamicFormControl
 } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 
 import { AttributeService } from '../../attribute.service';
-import { EntityTranslationsConstants } from '../../../../../../core/entity/translations/entity-translations.interface';
-import { LookupService } from '../../../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../../core/utils';
-import { TYPE_CODES } from '../../../../../../core/utils/value';
-
-const labelKey = makeKey('');
+import { TYPE_CODES } from '@app/core/utils/value';
 
 @Component({
   selector: 'app-attribute-grid-edit',
   templateUrl: './attribute-grid-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttributeGridEditComponent implements OnInit, OnDestroy {
+export class AttributeGridEditComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   @Input() attributeId: number;
@@ -54,51 +46,22 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
   controls: IDynamicFormItem[];
   attribute: IAttribute;
 
-  private formSubscription: Subscription;
-
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
-    private lookupService: LookupService,
-    private userDictionariesService: UserDictionariesService,
   ) {}
 
   ngOnInit(): void {
-    this.formSubscription = combineLatest(
-      this.lookupService.lookupAsOptions('dictionaries'),
-      this.attributeId ? this.attributeService.fetch(this.treeType, this.treeSubtype, this.attributeId) : of(null),
-    )
-    .pipe(first())
-    .subscribe(([ dictionaries, attribute ]) => {
-      // this.cdRef.detectChanges();
-      console.log('attributeId', this.attributeId);
-      console.log('attribute', attribute);
-      if (this.attributeId) {
-        // this.getControl('name').options = languages;
-        // this.getControl('name').type = 'multitext';
-      }
-      this.attribute = attribute;
-      this.controls = this.getControls();
+    const action = this.attributeId ? this.attributeService.fetch(this.treeType, this.treeSubtype, this.attributeId) : of(null);
+    action.pipe(first())
+      .subscribe(attribute => {
 
-      // this.form.onCtrlValueChange('typeCode').subscribe(typeCode => {
-      //   const code = Array.isArray(typeCode) ? typeCode[0].value : typeCode;
-      //   if (code === TYPE_CODES.DICT) {
-      //     this.getControl('dictNameCode').options = dictionaries;
-      //     this.getControl('dictNameCode').type = 'select';
-      //     this.getControl('dictNameCode').required = true;
-      //   } else {
-      //     this.getControl('dictNameCode').options = undefined;
-      //     this.getControl('dictNameCode').type = 'hidden';
-      //     this.getControl('dictNameCode').required = false;
-      //   }
-      // });
+        this.attribute = attribute;
+        const isDictionary = this.attributeId && this.attribute.typeCode === TYPE_CODES.DICT;
+        this.controls = this.getControls(isDictionary);
 
-      this.cdRef.markForCheck();
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.formSubscription.unsubscribe();
+        this.cdRef.markForCheck();
+      });
   }
 
   get canSubmit(): boolean {
@@ -115,11 +78,7 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
     this.cancel.emit();
   }
 
-  private getControl(controlName: string): IDynamicFormControl {
-    return (<IDynamicFormControl[]>this.controls).find(control => control.controlName === controlName);
-  }
-
-  private getControls(): IDynamicFormItem[] {
+  private getControls(isDictionary: boolean): IDynamicFormItem[] {
     const controls: Partial<IDynamicFormItem>[] = [
       {
         controlName: 'name',
@@ -131,8 +90,25 @@ export class AttributeGridEditComponent implements OnInit, OnDestroy {
         required: true
       },
       { controlName: 'code', type: 'number', required: true },
-      { controlName: 'typeCode', type: 'select', dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE },
-      { controlName: 'dictNameCode', type: 'hidden' },
+      {
+        controlName: 'typeCode',
+        type: 'select',
+        dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE,
+        onChange: (typeCode) => {
+          const code = Array.isArray(typeCode) ? typeCode[0].value : typeCode;
+          const isDictionaryType = code === TYPE_CODES.DICT;
+          const dictNameCodeCtrl = this.form.getControlDef('dictNameCode');
+          dictNameCodeCtrl.display = isDictionaryType;
+          dictNameCodeCtrl.required = isDictionaryType;
+          this.cdRef.markForCheck();
+        }
+      },
+      {
+        controlName: 'dictNameCode',
+        type: isDictionary ? 'select' : 'text',
+        display: isDictionary,
+        lookupKey: 'dictionaries'
+      },
       { controlName: 'disabledValue', type: 'checkbox' },
     ];
     return controls as IDynamicFormItem[];
