@@ -1,6 +1,8 @@
 <split *ngIf="hasDebt$ | async; else noActiveDebts" direction="horizontal" gutterColor="inherit">
   <!-- Main Area -->
   <split-area size="60">
+    <!-- Stub View Form -->
+    <app-view-form></app-view-form>
     <!-- Overview -->
     <div>
       <app-call-center-overview></app-call-center-overview>
