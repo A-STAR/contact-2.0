@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { IViewFormControl, IViewFormData } from '../view-form.interface';
+import { IViewFormControl, IViewFormData, IViewFormItem } from '../view-form.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,5 +14,11 @@ export class ViewFormGroupComponent {
 
   get items(): any {
     return this.controls.map(control => ({ control, value: this.data[control.name] }));
+  }
+
+  getStyle(item: IViewFormItem): Partial<CSSStyleDeclaration> {
+    return {
+      flexBasis: item.width ? `${item.width}%` : '100%',
+    };
   }
 }

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
 import { ICampaignDebt } from '../campaign.interface';
+import { IViewFormItem, IViewFormControl } from '../../../../../shared/components/form/view-form/view-form.interface';
 
 import { CampaignService } from '../campaign.service';
 
@@ -15,24 +16,24 @@ const labelKey = makeKey('modules.callCenter.overview');
   templateUrl: 'person.component.html'
 })
 export class PersonComponent {
-  controls = [
+  controls: IViewFormItem[] = [
     {
       width: 33.33,
       children: [
-        { label: labelKey('debtor.birthDate'), name: 'birthDate' },
-        { label: labelKey('debtor.docNumber'), name: 'docNumber' },
+        { label: labelKey('debtor.birthDate'), name: 'birthDate' } as IViewFormControl,
+        { label: labelKey('debtor.docNumber'), name: 'docNumber' } as IViewFormControl,
       ],
     },
     {
       width: 33.33,
       children: [
-        { label: labelKey('info.shortInfo'), name: 'shortInfo' },
+        { label: labelKey('info.shortInfo'), name: 'shortInfo' } as IViewFormControl,
       ],
     },
     {
       width: 33.33,
       children: [
-        { label: labelKey('debtor.personComment'), name: 'personComment' },
+        { label: labelKey('debtor.personComment'), name: 'personComment' } as IViewFormControl,
       ],
     },
   ];

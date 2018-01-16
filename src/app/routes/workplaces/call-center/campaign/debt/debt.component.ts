@@ -3,6 +3,8 @@ import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
 import { ICampaignDebt } from '../campaign.interface';
+import { IEntityAttributes } from '../../../../../core/entity/attributes/entity-attributes.interface';
+import { IViewFormItem } from '../../../../../shared/components/form/view-form/view-form.interface';
 
 import { CampaignService } from '../campaign.service';
 import { EntityAttributesService } from '../../../../../core/entity/attributes/entity-attributes.service';
@@ -37,7 +39,7 @@ export class DebtComponent implements OnInit {
     return this.campaignService.campaignDebt$;
   }
 
-  private buildControls(attributes: any): any[] {
+  private buildControls(attributes: IEntityAttributes): IViewFormItem[] {
     return [
       { name: 'debtId', type: 'text', width: 25 },
       { name: 'portfolioName', type: 'text', width: 25 },
