@@ -27,16 +27,18 @@ import { FilterObject } from '../grid2/filter/grid-filter';
 })
 export class ActionGridComponent<T> extends DialogFunctions {
   @Input() columnIds: string[];
-  @Input() columns: IGridColumn[];
   @Input() columnTranslationKey: string;
-  @Input() metadataKey: string;
-  @Input() persistenceKey: string;
-  @Input() rowIdKey: string;
-  @Input() ngClass: string;
-  @Input() rows: T[] = [];
-  @Input() rowCount: number;
+  @Input() columns: IGridColumn[];
   @Input() contextMenuOptions: IContextMenuItem[];
+  @Input() fullHeight = false;
+  @Input() metadataKey: string;
+  @Input() ngClass: string;
+  @Input() persistenceKey: string;
+  @Input() rowCount: number;
+  @Input() rowIdKey: string;
+  @Input() rows: T[] = [];
   @Input() styles: CSSStyleDeclaration;
+
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();

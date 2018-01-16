@@ -51,3 +51,7 @@ export interface IDebtNextCall {
   forAllDebts: number;
   nextCallDateTime: string;
 }
+
+export interface IDebtOpenIncomingCallData {
+  debtId: number[];
+}

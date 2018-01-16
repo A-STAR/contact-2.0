@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
+import { DebtService } from '../../../../core/debt/debt.service';
 import { IncomingCallService } from '../incoming-call.service';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
 
@@ -15,7 +24,7 @@ import { addFormLabel } from '../../../../core/utils';
   styleUrls: [ 'filter.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterComponent {
+export class FilterComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = [
@@ -30,10 +39,30 @@ export class FilterComponent {
     { controlName: 'isClosedDebt', type: 'checkbox' },
   ].map(addFormLabel('modules.incomingCall.filter.form'));
 
+  private openIncomingCallDataSub: Subscription;
+
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtService: DebtService,
     private incomingCallService: IncomingCallService,
   ) {}
+
+  ngAfterViewInit(): void {
+    this.openIncomingCallDataSub =
+      this.debtService.incomingCallSearchParams
+        .subscribe(data => {
+          if (data && data.debtId) {
+            this.setDebtIdControlValue(data.debtId);
+            this.onSearchClick();
+          }
+        });
+  }
+
+  ngOnDestroy(): void {
+    if (this.openIncomingCallDataSub) {
+      this.openIncomingCallDataSub.unsubscribe();
+    }
+  }
 
   onSearchClick(): void {
     this.incomingCallService.searchParams = this.form.serializedUpdates;
@@ -44,5 +73,13 @@ export class FilterComponent {
     this.form.reset();
     this.form.markAsPristine();
     this.cdRef.markForCheck();
+  }
+
+  private setDebtIdControlValue(debtId: number): void {
+    const control = this.form.getControl('debtId');
+    if (control) {
+      control.patchValue(debtId);
+      control.markAsDirty();
+    }
   }
 }

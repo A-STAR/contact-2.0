@@ -2,10 +2,10 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   Component,
-  Input,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { IDebt } from '../debt-processing.interface';
 import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
@@ -16,32 +16,48 @@ import { DebtProcessingService } from '../debt-processing.service';
 import { ActionGridComponent } from '../../../../shared/components/action-grid/action-grid.component';
 
 @Component({
-  selector: 'app-debt-processing-grid',
-  templateUrl: './grid.component.html',
-  styleUrls: [ './grid.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  host: { class: 'full-height' },
+  selector: 'app-debt-processing-grid',
+  styleUrls: [ './grid.component.scss' ],
+  templateUrl: './grid.component.html',
 })
 export class GridComponent {
-  @Input() gridKey: string;
-
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IDebt>;
 
   rows: IDebt[] = [];
   rowCount = 0;
 
+  private gridKeys = {
+    all: 'debtsprocessingall',
+    callBack: 'debtsprocessingcallback',
+    currentJob: 'debtsprocessingcurrentjob',
+    visits: 'debtsprocessingvisits',
+    promisePay: 'debtsprocessingpromisepay',
+    partPay: 'debtsprocessingpartpay',
+    problem: 'debtsprocessingproblem',
+    returned: 'debtsprocessingreturn',
+  };
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private debtProcessingService: DebtProcessingService,
+    private route: ActivatedRoute,
   ) {}
+
+  get gridKey(): string {
+    const { path } = this.route.snapshot.parent.url[0];
+    return this.gridKeys[path];
+  }
 
   onRequest(): void {
     const filters = this.grid.getFilters();
     const params = this.grid.getRequestParams();
     this.debtProcessingService.fetch(this.gridKey, filters, params)
       .subscribe((response: IAGridResponse<IDebt>) => {
-        this.rows = [...response.data];
+        this.rows = [ ...response.data ];
         this.rowCount = response.total;
         this.cdRef.markForCheck();
       });
