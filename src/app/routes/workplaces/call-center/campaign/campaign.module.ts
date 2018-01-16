@@ -7,10 +7,11 @@ import { AddressesModule } from './addresses/addresses.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { DebtComponentsModule } from './debt-components/debt-components.module';
+import { DebtModule } from './debt/debt.module';
 import { DocumentsModule } from './documents/documents.module';
-import { OverviewModule } from './overview/overview.module';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentsModule } from './payments/payments.module';
+import { PersonModule } from './person/person.module';
 import { PhoneModule } from './phone/phone.module';
 import { PhonesModule } from './phones/phones.module';
 import { PromiseModule } from './promise/promise.module';
@@ -64,10 +65,11 @@ const routes: Routes = [
     ContactModule,
     ContactsModule,
     DebtComponentsModule,
+    DebtModule,
     DocumentsModule,
-    OverviewModule,
     PaymentModule,
     PaymentsModule,
+    PersonModule,
     PhoneModule,
     PhonesModule,
     PromiseModule,

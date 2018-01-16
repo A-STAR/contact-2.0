@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { IViewFormControl, IViewFormData } from './view-form.interface';
+import { IViewFormControl, IViewFormData } from '../view-form.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-view-form',
-  templateUrl: './view-form.component.html',
+  selector: 'app-view-form-group',
+  styleUrls: [ './view-form-group.component.scss' ],
+  templateUrl: './view-form-group.component.html',
 })
-export class ViewFormComponent {
+export class ViewFormGroupComponent {
   @Input() data: IViewFormData = {};
   @Input() controls: IViewFormControl[] = [];
 

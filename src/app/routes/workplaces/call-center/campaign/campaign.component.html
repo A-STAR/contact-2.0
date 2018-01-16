@@ -1,12 +1,12 @@
 <split *ngIf="hasDebt$ | async; else noActiveDebts" direction="horizontal" gutterColor="inherit">
   <!-- Main Area -->
   <split-area size="60">
-    <!-- Stub View Form -->
-    <app-view-form></app-view-form>
-    <!-- Overview -->
-    <div>
-      <app-call-center-overview></app-call-center-overview>
+    <!-- Call Center Toolbar -->
+    <div class="mb">
+      <app-call-center-toolbar></app-call-center-toolbar>
     </div>
+    <!-- Person Form -->
+    <app-call-center-person></app-call-center-person>
     <!-- Tabs -->
     <div>
       <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
@@ -40,15 +40,17 @@
         </app-tabview-tab>
       </app-tabview>
     </div>
-    <!-- Call Center Toolbar -->
-    <div>
-      <app-call-center-toolbar></app-call-center-toolbar>
-    </div>
+    <!-- Debt Form -->
+    <app-call-center-debt></app-call-center-debt>
+    <!-- Overview -->
+    <!-- <app-call-center-overview></app-call-center-overview> -->
   </split-area>
   <!-- Contact Registration -->
+  <!--
   <split-area size="40">
     Contact Registration
   </split-area>
+  -->
 </split>
 
 <ng-template #noActiveDebts>

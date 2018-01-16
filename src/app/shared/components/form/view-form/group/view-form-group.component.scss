@@ -1,0 +1,10 @@
+@import "../../../../../shared/styles/app/variables.scss";
+
+.field-label,
+.field-value {
+  display: block;
+}
+
+.field-label {
+  color: $text-light;
+}
