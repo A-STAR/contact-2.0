@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { first, map } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 
 import { ICampaignDebt } from '../campaign.interface';
 

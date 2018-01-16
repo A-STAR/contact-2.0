@@ -6,9 +6,11 @@
       <app-call-center-toolbar></app-call-center-toolbar>
     </div>
     <!-- Person Form -->
-    <app-call-center-person></app-call-center-person>
+    <div class="mb">
+      <app-call-center-person></app-call-center-person>
+    </div>
     <!-- Tabs -->
-    <div>
+    <div class="mb">
       <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
         <!-- Phones -->
         <app-tabview-tab [title]="'modules.callCenter.tabs.phones'">
@@ -42,8 +44,6 @@
     </div>
     <!-- Debt Form -->
     <app-call-center-debt></app-call-center-debt>
-    <!-- Overview -->
-    <!-- <app-call-center-overview></app-call-center-overview> -->
   </split-area>
   <!-- Contact Registration -->
   <!--

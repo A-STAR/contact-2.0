@@ -4,7 +4,7 @@
       <app-view-form-group [controls]="item.control.children" [data]="data"></app-view-form-group>
     </ng-container>
     <ng-template #field>
-      <div>
+      <div class="field">
         <span class="field-label">{{ item.control.label | translate }}</span>
         <span class="field-value">{{ item.value || '&nbsp;' }}</span>
       </div>
