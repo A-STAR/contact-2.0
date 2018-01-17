@@ -20,7 +20,7 @@ export class ScheduleEventGridComponent implements OnInit {
 
   columns: Array<IGridColumn> = [
     { prop: 'id', width: 70 },
-    { prop: 'groupId', width: 70 },
+    { prop: 'groupId', width: 100 },
     { prop: 'groupName' },
     { prop: 'eventTypeCode', dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE },
     { prop: 'periodTypeCode', dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE },
