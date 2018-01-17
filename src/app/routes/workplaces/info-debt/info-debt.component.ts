@@ -49,7 +49,7 @@ export class InfoDebtComponent {
 
   grids: IGridDef[] = [
     {
-      rowIdKey: 'id',
+      rowIdKey: 'debtId',
       gridKey$: of('infoDebtDebtors'),
       title: label('debtors.title'),
       isInitialised: true
@@ -70,7 +70,7 @@ export class InfoDebtComponent {
 
   detailGrids: IGridDef[] = [
     {
-      rowIdKey: 'id',
+      rowIdKey: 'smsId',
       gridKey$: this.selectedRows$
         .map(rows => rows && rows[0])
         .map(row => row && `/debt/${row.debtId}/person/${row.personId}/personRole/${row.personRole}/sms`),
@@ -79,7 +79,7 @@ export class InfoDebtComponent {
       columns: this.smsGridColumns
     },
     {
-      rowIdKey: 'id',
+      rowIdKey: 'emailId',
       gridKey$: this.selectedRows$
         .map(rows => rows && rows[0])
         .map(row => row && `/debt/${row.debtId}/person/${row.personId}/personRole/${row.personRole}/email`),
