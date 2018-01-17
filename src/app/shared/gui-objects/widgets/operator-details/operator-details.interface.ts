@@ -1,4 +1,5 @@
 export interface IOperator {
+  userId: number;
   fullName?: string;
   organization?: string;
   position?: string;
