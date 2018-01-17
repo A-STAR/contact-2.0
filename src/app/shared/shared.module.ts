@@ -49,7 +49,6 @@ import { ListModule } from './components/list/list.module';
 import { MetadataGridModule } from './components/metadata-grid/metadata-grid.module';
 import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
-import { MultiTextModule } from './components/form/multi-text/multi-text.module';
 import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
@@ -111,7 +110,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MetadataGridModule,
     MultiLanguageModule,
     MultiSelectModule,
-    MultiTextModule,
     PasswordModule,
     PopupInputModule,
     ProgressbarModule,
@@ -193,7 +191,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MetadataGridModule,
     MultiLanguageModule,
     MultiSelectModule,
-    MultiTextModule,
     NumericInputComponent,
     PasswordModule,
     PopupInputModule,

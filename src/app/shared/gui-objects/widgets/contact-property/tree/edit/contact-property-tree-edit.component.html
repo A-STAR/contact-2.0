@@ -6,7 +6,12 @@
     <app-tabstrip [disableScrollbar]="true" [inverse]="true">
       <app-tab [title]="'widgets.contactProperty.dialogs.edit.mainSettings'" [closable]="false">
         <div class="mt">
-          <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
+          <app-dynamic-form
+            *ngIf="controls"
+            [config]="config"
+            [controls]="controls"
+            [data]="data"
+          ></app-dynamic-form>
         </div>
       </app-tab>
       <app-tab [title]="'widgets.contactProperty.dialogs.edit.attributesSettings'" [closable]="false">
