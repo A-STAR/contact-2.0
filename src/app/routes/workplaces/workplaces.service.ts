@@ -24,4 +24,13 @@ export class WorkplacesService {
         catchError(this.notificationsService.fetchError().entity('entities.contactTreeItems.gen.singular').dispatchCallback())
       );
   }
+
+  fetchContactScenario(debtId: number, contactType: number, treeResultId: number): Observable<string> {
+    const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/scenarios';
+    return this.dataService
+      .read(url, { debtId, contactType, treeResultId })
+      .pipe(
+        catchError(this.notificationsService.fetchError().entity('entities.scenarios.gen.singular').dispatchCallback()),
+      );
+  }
 }

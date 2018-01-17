@@ -20,13 +20,6 @@ export class OutcomeService {
       .catch(this.notificationsService.error('modules.contactRegistration.outcome.errors.init').dispatchCallback());
   }
 
-  fetchScenario(debtId: number, contactType: number, treeResultId: number): Observable<string> {
-    const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/scenarios';
-    return this.dataService
-      .read(url, { debtId, contactType, treeResultId })
-      .catch(this.notificationsService.fetchError().entity('entities.scenarios.gen.singular').dispatchCallback());
-  }
-
   fetchAutoComment(debtId: number, personId: number, personRole: number, templateId: number): Observable<string> {
     const url = '/debts/{debtId}/persons/{personId}/personRoles/{personRole}/templates/{templateId}';
     return this.dataService

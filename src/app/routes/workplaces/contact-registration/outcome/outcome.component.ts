@@ -88,8 +88,8 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
       .distinctUntilChanged()
       .flatMap(selectedNode => {
         return selectedNode && isEmpty(selectedNode.children) && this.hasTemplate
-          ? this.outcomeService
-            .fetchScenario(this.debtId, this.contactTypeCode, selectedNode.id)
+          ? this.workplacesService
+            .fetchContactScenario(this.debtId, this.contactTypeCode, selectedNode.id)
             .catch(() => of(null))
           : of(null);
       })
