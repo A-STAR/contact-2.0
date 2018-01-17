@@ -2095,6 +2095,22 @@
         "id": "ID",
         "name": "Название"
       }
+    },
+    "scheduleEvents": {
+      "grid": {
+        "id": "ID",
+        "groupId": "ID Группы",
+        "groupName": "Группа",
+        "eventTypeCode": "Тип мероприятия",
+        "periodTypeCode": "Период",
+        "startTime": "Запуск",
+        "executeDateTime": "Последний запуск",
+        "isExecuted": "Выполеняется",
+        "startDate": "Начало",
+        "endDate": "Окончание",
+        "isInactive": "Выключено",
+        "priority": "Приоритет"
+      }
     }
   },
   "entities": {
@@ -2278,6 +2294,9 @@
     },
     "object": {
       "gen": { "singular": "объекта", "plural": "объектов" }
+    },
+    "scheduleEvents": {
+      "gen": { "singular": "мероприятия", "plural": "списка мероприятий" }
     }
   },
   "massOperations": {

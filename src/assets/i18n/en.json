@@ -2095,6 +2095,22 @@
         "id": "ID",
         "name": "Name"
       }
+    },
+    "scheduleEvents": {
+      "grid": {
+        "id": "ID",
+        "groupId": "ID Group",
+        "groupName": "Group name",
+        "eventTypeCode": "Event type",
+        "periodTypeCode": "Period",
+        "startTime": "Start",
+        "executeDateTime": "Last start",
+        "isExecuted": "Is Executed",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "isInactive": "Is inactive",
+        "priority": "Priority"
+      }
     }
   },
   "entities": {
@@ -2278,6 +2294,9 @@
     },
     "object": {
       "gen": { "singular": "object", "plural": "objects" }
+    },
+    "scheduleEvents": {
+      "gen": { "singular": "event", "plural": "events" }
     }
   },
   "massOperations": {
