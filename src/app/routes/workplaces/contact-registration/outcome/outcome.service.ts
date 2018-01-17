@@ -37,11 +37,4 @@ export class OutcomeService {
       .map(response => response.text)
       .catch(this.notificationsService.fetchError().entity('entities.autoComments.gen.singular').dispatchCallback());
   }
-
-  fetchContactTree(debtId: number, contactType: number): Observable<ITreeNode[]> {
-    return this.dataService
-      .readAll('/debts/{debtId}/contactTypes/{contactType}/treeResults', { debtId, contactType })
-      .map(toTreeNodes())
-      .catch(this.notificationsService.fetchError().entity('entities.contactTreeItems.gen.singular').dispatchCallback());
-  }
 }

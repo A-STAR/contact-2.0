@@ -19,6 +19,7 @@ import { AccordionService } from '../../../../shared/components/accordion/accord
 import { ContactRegistrationService } from '../contact-registration.service';
 import { OutcomeService } from './outcome.service';
 import { UserTemplatesService } from '../../../../core/user/templates/user-templates.service';
+import { WorkplacesService } from '../../workplaces.service';
 
 import { isEmpty, valuesToOptions, invert } from '../../../../core/utils';
 
@@ -53,6 +54,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private contactRegistrationService: ContactRegistrationService,
     private outcomeService: OutcomeService,
     private userTemplatesService: UserTemplatesService,
+    private workplacesService: WorkplacesService,
   ) {}
 
   ngOnInit(): void {
@@ -175,7 +177,7 @@ export class OutcomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private fetchNodes(): void {
-    this.outcomeService.fetchContactTree(this.debtId, this.contactTypeCode).subscribe(nodes => {
+    this.workplacesService.fetchContactTree(this.debtId, this.contactTypeCode).subscribe(nodes => {
       this.nodes = nodes;
       this.cdRef.markForCheck();
     });

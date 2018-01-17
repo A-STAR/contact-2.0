@@ -1,0 +1,25 @@
+<!-- TODO(d.maltsev: i18n) -->
+<p>Сценарий разговора</p>
+
+<div class="scenario-text">
+  <div class="scenario-text-inner">
+    <p>На сегодняшний день задолженность на Вашем кредитном договоре составляет 864.17.</p>
+    <p>Понимаю, что сегодня Вы урегулируете задолженность?!</p>
+    <p>Как Вы организуете такую сумму?</p>
+    <p>Где Вы произведёте оплату?</p>
+    <p>
+      После оплаты Вам нужно позвонить по этому номеру телефона и сообщить о произведенной оплате,
+      чтобы мы могли приостановить следующие действия.
+      Я буду лично контролировать поступления по Вашему делу.
+    </p>
+  </div>
+</div>
+
+<app-tree
+  layout="horizontal"
+  selectionMode="single"
+  [collapseAdjacentNodes]="true"
+  [expandNodeOnClick]="true"
+  [value]="nodes"
+  (onNodeSelect)="onNodeSelect($event)"
+></app-tree>

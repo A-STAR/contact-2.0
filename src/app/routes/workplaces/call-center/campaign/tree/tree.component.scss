@@ -1,0 +1,54 @@
+$scenario-color: #607189;
+
+:host ::ng-deep .ui-tree {
+  background: inherit;
+  border: none;
+  padding: 0;
+}
+
+.scenario-text {
+  border-radius: 6px;
+  border: 2px solid $scenario-color;
+  position: relative;
+  .scenario-text-inner {
+    background-color: $scenario-color;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    color: #fff;
+    padding: 10px 16px;
+    position: relative;
+    > p:last-child {
+      margin-bottom: 0;
+    }
+    &:before {
+      border: 8px solid transparent;
+      border-top-color: $scenario-color;
+      bottom: -16px;
+      content: '';
+      left: 50%;
+      margin-left: -3px;
+      position: absolute;
+      z-index: 3;
+    }
+    &:after {
+      border: 10px solid transparent;
+      border-top-color: #fff;
+      bottom: -20px;
+      content: '';
+      left: 50%;
+      margin-left: -5px;
+      position: absolute;
+      z-index: 2;
+    }
+  }
+  &:after {
+    border: 10px solid transparent;
+    border-top-color: $scenario-color;
+    bottom: -20px;
+    content: '';
+    left: 50%;
+    margin-left: -5px;
+    position: absolute;
+    z-index: 1;
+  }
+}
