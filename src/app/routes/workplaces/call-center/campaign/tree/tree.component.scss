@@ -21,22 +21,22 @@ $scenario-color: #607189;
       margin-bottom: 0;
     }
     &:before {
-      border: 8px solid transparent;
+      border: 6px solid transparent;
       border-top-color: $scenario-color;
-      bottom: -16px;
+      bottom: -12px;
       content: '';
       left: 50%;
-      margin-left: -3px;
+      margin-left: -1px;
       position: absolute;
       z-index: 3;
     }
     &:after {
-      border: 10px solid transparent;
+      border: 9px solid transparent;
       border-top-color: #fff;
-      bottom: -20px;
+      bottom: -18px;
       content: '';
       left: 50%;
-      margin-left: -5px;
+      margin-left: -4px;
       position: absolute;
       z-index: 2;
     }
