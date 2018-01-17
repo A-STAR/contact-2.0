@@ -292,9 +292,9 @@
           "portfolioId": "Portfolio",
           "regionCode": "Region",
           "userId": "Operator",
-          "addressTypeCode": "Тип адреса",
-          "visitStatusCode": "Статус выезда",
-          "visitPurposeCode": "Цель выезда"
+          "addressTypeCode": "Address",
+          "visitStatusCode": "Visit status",
+          "visitPurposeCode": "Visit purpose"
         }
       },
       "newDebt": {
@@ -311,6 +311,58 @@
       },
       "prepareVisits": {
         "title": "Prepare Visits"
+      }
+    },
+    "infoDebt": {
+      "filters": {
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "portfolioId": "Portfolio",
+          "regionCode": "Region",
+          "userId": "Operator",
+          "addressTypeCode": "Address",
+          "visitStatusCode": "Visit status",
+          "visitPurposeCode": "Visit purpose"
+        }
+      },
+      "debtors": {
+        "title": "Debtors"
+      },
+      "guarantors": {
+        "title": "Guarantors"
+      },
+      "pledgors": {
+        "title": "Pledgors"
+      },
+      "sms": {
+        "title": "SMS",
+        "grid": {
+          "smsId": "ID",
+          "phone": "Phone",
+          "statusCode": "Status",
+          "startDateTime": "Planned sending date",
+          "sendDateTime": "Send date",
+          "userFullName": "Operator",
+          "text": "Text",
+          "templateName": "Template"
+        }
+      },
+      "email": {
+        "title": "Email",
+        "grid": {
+          "emailId": "ID",
+          "email": "Email",
+          "statusCode": "Status",
+          "startDateTime": "Planned sending date",
+          "sendDateTime": "Send date",
+          "userFullName": "Operator",
+          "subject": "Subject",
+          "templateName": "Template"
+        }
       }
     },
     "contactRegistration": {
@@ -2089,8 +2141,8 @@
         "delete": {
           "title": "Delete objects",
           "confirmMessage": "Are you sure you want to delete this objects?"
-        }
-      },
+    }
+  },
       "grid": {
         "id": "ID",
         "name": "Name"
@@ -2278,6 +2330,9 @@
     },
     "object": {
       "gen": { "singular": "object", "plural": "objects" }
+    },
+    "infoDebt": {
+      "gen": { "singular": "task", "plural": "tasks" }
     }
   },
   "massOperations": {
