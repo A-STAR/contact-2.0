@@ -205,7 +205,8 @@
         }
       },
       "tabs": {
-        "phonesAndAddresses": "Phones and Addresses",
+        "phones": "Phones",
+        "addresses": "Addresses",
         "debtComponents": "Debt Components",
         "contacts": "Contacts",
         "payments": "Payments",

@@ -10,18 +10,6 @@ export class EntityTranslationsService {
 
   constructor(private dataService: DataService) {}
 
-  readDictNameTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
-    return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_DICT_NAME);
-  }
-
-  readTermNameTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
-    return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_TERM_NAME);
-  }
-
-  readAttributeNameTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
-    return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_ATTRIBUTE_NAME);
-  }
-
   readContactTreeNodeTranslations(entityId: string|number): Observable<IEntityTranslation[]> {
     return this.readTranslations(entityId, EntityTranslationsConstants.SPEC_CONTACT_TREE_NAME);
   }

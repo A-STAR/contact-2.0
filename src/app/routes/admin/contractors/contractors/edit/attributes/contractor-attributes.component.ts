@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-contractor-attributes',
   templateUrl: './contractor-attributes.component.html',
-  styleUrls: ['./contractor-attributes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorAttributesComponent implements OnInit {
@@ -15,7 +15,7 @@ export class ContractorAttributesComponent implements OnInit {
   entityId$: Observable<number>;
 
   constructor(
-    private router: Router,
+    private location: Location,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -24,7 +24,7 @@ export class ContractorAttributesComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.location.back();
   }
 
 }
