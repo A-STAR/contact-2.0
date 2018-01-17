@@ -4,7 +4,6 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { of as observableOf } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { CampaignService } from '../campaign.service';
 import { WorkplacesService } from '../../../workplaces.service';
