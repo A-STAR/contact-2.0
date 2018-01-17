@@ -1,4 +1,5 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -19,6 +20,7 @@ import { PersonSelectGridComponent } from 'app/shared/gui-objects/widgets/person
 import { PersonSelectCardComponent } from 'app/shared/gui-objects/widgets/person-select/card/person-select-card.component';
 
 import { makeKey } from '../../../../../core/utils';
+import { RoutingService } from 'app/core/routing/routing.service';
 
 const label = makeKey('widgets.contact.grid');
 
@@ -56,7 +58,9 @@ export class ContactCardComponent implements OnInit {
     private contactService: ContactService,
     private route: ActivatedRoute,
     private router: Router,
+    private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
+    private location: Location,
   ) { }
 
   ngOnInit(): void {
@@ -112,7 +116,7 @@ export class ContactCardComponent implements OnInit {
   }
 
   get contactPersonId(): number {
-    return this.routeParams.contactId || this.routeParams.personId || this.selectedContactId;
+    return this.contactId || this.personId || this.selectedContactId;
   }
 
   onTabSelect(tabIndex: number): void {
@@ -124,7 +128,7 @@ export class ContactCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.location.back();
   }
 
   onSubmit(): void {
@@ -150,7 +154,6 @@ export class ContactCardComponent implements OnInit {
   }
 
   private selectContact(contactId: number): void {
-    this.router.navigate([ this.routeUrl ])
-      .then(() => this.router.navigate([ `${this.routeUrl}/${contactId}` ]));
+    this.routingService.navigate([ `/workplaces/debtor-card/${this.debtId}/contact/create/${contactId}` ]);
   }
 }

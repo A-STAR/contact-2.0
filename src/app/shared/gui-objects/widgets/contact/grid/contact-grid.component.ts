@@ -15,6 +15,7 @@ import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { RoutingService } from 'app/core/routing/routing.service';
 
 @Component({
   selector: 'app-contact-grid',
@@ -79,6 +80,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private router: Router,
+    private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
   ) { }
 
@@ -146,11 +148,11 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/contact` ]);
+    this.routingService.navigate([ `${this.router.url}/contact/create` ]);
   }
 
   private onEdit(contactId: number): void {
-    this.router.navigate([ `${this.router.url}/contact/${contactId}` ]);
+    this.routingService.navigate([ `${this.router.url}/contact/${contactId}` ]);
   }
 
   get canView$(): Observable<boolean> {

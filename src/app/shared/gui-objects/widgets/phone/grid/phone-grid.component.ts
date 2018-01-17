@@ -31,6 +31,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { RoutingService } from 'app/core/routing/routing.service';
 
 @Component({
   selector: 'app-phone-grid',
@@ -150,6 +151,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
     private router: Router,
+    private routingService: RoutingService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -345,7 +347,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     const url = this.callCenter
       ? `${this.router.url}/phone/${this._personId$.value}/create`
       : `${this.router.url}/phone/create`;
-    this.router.navigate([ url ]);
+    this.routingService.navigate([ url ]);
   }
 
   private onEdit(phoneId: number): void {

@@ -91,14 +91,7 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
 
   onPersonCreated(person: IPerson): void {
     this.closeDialog();
-    this.fetch()
-      .map(rows => rows.findIndex(row => row.id === person.id))
-      .subscribe(rowIndex => this.selectPerson(rowIndex));
-  }
-
-  private selectPerson(index: number): void {
-    this.grid.gridOptions.api.selectIndex(index, false, false);
-    this.select.emit(this.selectedPerson);
+    this.fetch();
   }
 
   private fetch(): Observable<IPerson[]> {
