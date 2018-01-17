@@ -2,12 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IContactRegistrationData } from './outcome.interface';
-import { ITreeNode } from '../../../../shared/components/flowtree/treenode/treenode.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
-
-import { toTreeNodes } from '../../../../core/utils/tree';
 
 @Injectable()
 export class OutcomeService {
