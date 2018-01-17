@@ -722,12 +722,6 @@
       "system": "System",
       "client": "Client"
     },
-    "placeholder": {
-      "translatedName": "Select a dictionary",
-      "select": {
-        "translation": "Select language"
-      }
-    },
     "errors": {
       "view": "Access to dictionaries list denied"
     },
