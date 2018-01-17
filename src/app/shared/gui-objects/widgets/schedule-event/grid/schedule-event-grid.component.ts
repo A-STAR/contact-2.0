@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
 import { IScheduleEvent } from '../schedule-event.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { ScheduleEventService } from '../schedule-event.service';
 import { GridService } from '../../../../components/grid/grid.service';
@@ -15,6 +16,8 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScheduleEventGridComponent implements OnInit {
+
+  @Output() select = new EventEmitter<IScheduleEvent>();
 
   private selectedEvent$ = new BehaviorSubject<IScheduleEvent>(null);
 
@@ -31,6 +34,19 @@ export class ScheduleEventGridComponent implements OnInit {
     { prop: 'endDate', renderer: 'dateRenderer' },
     { prop: 'isInactive', renderer: 'checkboxRenderer' },
     { prop: 'priority' },
+  ];
+
+  toolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      enabled: this.scheduleEventService.canAdd$,
+      action: () => this.select.emit(this.selectedEvent)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
+      enabled: this.scheduleEventService.canView$,
+      action: () => this.fetch()
+    },
   ];
 
   events: IScheduleEvent[] = [];

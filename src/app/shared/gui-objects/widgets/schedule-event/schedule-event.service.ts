@@ -21,6 +21,10 @@ export class ScheduleEventService {
     return this.userPermissionsService.has('SCHEDULE_VIEW');
   }
 
+  get canAdd$(): Observable<boolean> {
+    return this.userPermissionsService.has('SCHEDULE_ADD');
+  }
+
   fetchAll(): Observable<IScheduleEvent[]> {
     return this.dataService.readAll(this.baseUrl)
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.plural').dispatchCallback());
