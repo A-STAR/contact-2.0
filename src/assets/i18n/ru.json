@@ -2503,7 +2503,7 @@
       "methodNotSupportedForTempData": "Произошла ошибка при создании записи в таблице Temp_data",
       "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один заполненный атрибут",
       "newStatusCodeNotSuitableForCurrentStatus": "Невозможно установить новый статус из-за конфликта с текущим статусом объекта",
-      "notAllowedFieldValue": "Ошибка модели данных: поле {{ $1 }} не является допустимым",
+      "notAllowedFieldValue": "Ошибка модели данных: значение поля {{ $1 }} не является допустимым",
       "objectInGroupNotFound": "Объект не найден по entityId и groupId",
       "objectNotFound": "Не найдена сущность {{ $1 }} при обращении по entityTypeId или entityAttributeId",
       "objectRoleNotFound": "Не найдена роль объекта по ID",

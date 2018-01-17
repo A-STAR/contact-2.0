@@ -2503,7 +2503,7 @@
       "methodNotSupportedForTempData": "Error has been occured when tried to create record in Temp_data table",
       "modelMustNotBeEmpty": "The data model requires to pass at least one non-empty attribute",
       "newStatusCodeNotSuitableForCurrentStatus": "New object status has conflict with the current status",
-      "notAllowedFieldValue": "Data model error: field {{ $1 }} is not allowed",
+      "notAllowedFieldValue": "Data model error: field value {{ $1 }} is not allowed",
       "objectInGroupNotFound": "Object not found by entityId and groupId",
       "objectNotFound": "Object {{ $1 }} not found by entityTypeId or entityAttributeId",
       "objectRoleNotFound": "Object's role not found by ID",
