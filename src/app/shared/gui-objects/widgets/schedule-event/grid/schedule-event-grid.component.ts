@@ -17,7 +17,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 })
 export class ScheduleEventGridComponent implements OnInit {
 
-  @Output() select = new EventEmitter<IScheduleEvent>();
+  @Output() add = new EventEmitter<IScheduleEvent>();
 
   private selectedEvent$ = new BehaviorSubject<IScheduleEvent>(null);
 
@@ -40,7 +40,7 @@ export class ScheduleEventGridComponent implements OnInit {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.scheduleEventService.canAdd$,
-      action: () => this.select.emit(this.selectedEvent)
+      action: () => this.add.emit(this.selectedEvent)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,

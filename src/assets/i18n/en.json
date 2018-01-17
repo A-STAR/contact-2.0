@@ -2110,6 +2110,16 @@
         "endDate": "End date",
         "isInactive": "Is inactive",
         "priority": "Priority"
+      },
+      "card": {
+        "startDate": "Start date",
+        "endDate": "End date",
+        "periodTypeCode": "Period",
+        "dayPeriod": "Repeat each N days",
+        "startTime": "Start time",
+        "isInactive": "Is inactive",
+        "eventTypeCode": "Event type",
+        "priority": "Priority"
       }
     }
   },

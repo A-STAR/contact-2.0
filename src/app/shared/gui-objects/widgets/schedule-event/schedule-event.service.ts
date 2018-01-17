@@ -29,4 +29,9 @@ export class ScheduleEventService {
     return this.dataService.readAll(this.baseUrl)
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.plural').dispatchCallback());
   }
+
+  fetch(eventId: number): Observable<IScheduleEvent> {
+    return this.dataService.read(`${this.baseUrl}/{eventId}`, { eventId })
+      .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.singular').dispatchCallback());
+  }
 }

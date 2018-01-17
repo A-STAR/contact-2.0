@@ -2110,6 +2110,16 @@
         "endDate": "Окончание",
         "isInactive": "Выключено",
         "priority": "Приоритет"
+      },
+      "card": {
+        "startDate": "Начало",
+        "endDate": "Окончание",
+        "periodTypeCode": "Период",
+        "dayPeriod": "Повторять каждые N дней",
+        "startTime": "Время запуска",
+        "isInactive": "Выключено",
+        "eventTypeCode": "Тип мероприятия",
+        "priority": "Приоритет"
       }
     }
   },
