@@ -1,5 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component,
+  OnInit, Output, EventEmitter, OnDestroy
+} from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IScheduleEvent } from '../schedule-event.interface';
@@ -15,7 +19,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
   templateUrl: './schedule-event-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleEventGridComponent implements OnInit {
+export class ScheduleEventGridComponent implements OnInit, OnDestroy {
 
   @Output() add = new EventEmitter<IScheduleEvent>();
 
@@ -51,6 +55,8 @@ export class ScheduleEventGridComponent implements OnInit {
 
   events: IScheduleEvent[] = [];
 
+  private actionSubscription: Subscription;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
@@ -66,6 +72,17 @@ export class ScheduleEventGridComponent implements OnInit {
       });
 
     this.fetch();
+
+    this.actionSubscription = this.scheduleEventService
+      .getAction(ScheduleEventService.MESSAGE_SCHEDULE_EVENT_SAVED)
+      .subscribe(() => {
+        this.fetch();
+        this.selectedEvent$.next(this.selectedEvent);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.actionSubscription.unsubscribe();
   }
 
   get selectedEvent(): IScheduleEvent {

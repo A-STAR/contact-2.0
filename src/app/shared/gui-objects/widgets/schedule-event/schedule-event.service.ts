@@ -1,21 +1,31 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 
-import { IScheduleEvent } from './schedule-event.interface';
+import { IAppState } from '../../../../core/state/state.interface';
+import { IScheduleEvent, IScheduleEventEntry } from './schedule-event.interface';
 
+import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Injectable()
-export class ScheduleEventService {
+export class ScheduleEventService extends AbstractActionService {
+  static MESSAGE_SCHEDULE_EVENT_SAVED = 'MESSAGE_SCHEDULE_EVENT_SAVED';
+
   private baseUrl = '/scheduleEvent';
 
   constructor(
+    protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
-  ) { }
+    protected store: Store<IAppState>,
+  ) {
+    super();
+  }
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('SCHEDULE_VIEW');
@@ -25,7 +35,7 @@ export class ScheduleEventService {
     return this.userPermissionsService.has('SCHEDULE_ADD');
   }
 
-  fetchAll(): Observable<IScheduleEvent[]> {
+  fetchAll(): Observable<IScheduleEventEntry[]> {
     return this.dataService.readAll(this.baseUrl)
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.plural').dispatchCallback());
   }
@@ -33,5 +43,15 @@ export class ScheduleEventService {
   fetch(eventId: number): Observable<IScheduleEvent> {
     return this.dataService.read(`${this.baseUrl}/{eventId}`, { eventId })
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.singular').dispatchCallback());
+  }
+
+  create(event: IScheduleEvent): Observable<IScheduleEvent> {
+    return this.dataService.create(this.baseUrl, {}, event)
+      .catch(this.notificationsService.createError().entity('entities.scheduleEvents.gen.singular').dispatchCallback());
+  }
+
+  update(eventId: number, event: IScheduleEvent): Observable<any> {
+    return this.dataService.update(`${this.baseUrl}/{eventId}`, { eventId }, event)
+      .catch(this.notificationsService.updateError().entity('entities.scheduleEvents.gen.singular').dispatchCallback());
   }
 }

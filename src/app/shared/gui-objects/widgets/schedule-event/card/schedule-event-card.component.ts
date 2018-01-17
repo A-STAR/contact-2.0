@@ -52,6 +52,14 @@ export class ScheduleEventCardComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const action = this.eventId
+    ? this.scheduleEventService.update(this.eventId, this.form.serializedUpdates)
+    : this.scheduleEventService.create(this.form.serializedUpdates);
+
+  action.subscribe(() => {
+    this.scheduleEventService.dispatchAction(ScheduleEventService.MESSAGE_SCHEDULE_EVENT_SAVED);
+    this.onBack();
+  });
   }
 
   onBack(): void {
@@ -76,11 +84,11 @@ export class ScheduleEventCardComponent implements OnInit {
         type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE,
         required: true,
-        disabled: !canEdit,
+        disabled: true,
         markAsDirty: !this.eventId,
       },
       { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true },
-      { controlName: 'startTime', type: 'datetimepicker', disabled: !canEdit, required: true },
+      { controlName: 'startTime', type: 'text', disabled: !canEdit, required: true },
       { controlName: 'isInactive', type: 'checkbox', disabled: !canEdit },
       { controlName: 'priority', type: 'number', disabled: !canEdit },
       {
@@ -100,4 +108,5 @@ export class ScheduleEventCardComponent implements OnInit {
       eventTypeCode: 1
     };
   }
+  
 }
