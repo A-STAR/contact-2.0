@@ -1,20 +1,17 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import { SharedModule } from '../../../../../shared/shared.module';
 
-import { OverviewComponent } from './overview.component';
+import { DebtComponent } from './debt.component';
 
 @NgModule({
   imports: [
-    CommonModule,
     SharedModule,
   ],
   exports: [
-    OverviewComponent,
+    DebtComponent,
   ],
   declarations: [
-    OverviewComponent,
+    DebtComponent,
   ],
 })
-export class OverviewModule { }
+export class DebtModule {}

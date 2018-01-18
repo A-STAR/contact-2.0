@@ -13,15 +13,15 @@ import { IDictionary, ITerm } from '../../dictionaries.interface';
 import {
   IDynamicFormItem,
   IDynamicFormConfig
-} from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { EntityTranslationsConstants } from '../../../../../core/entity/translations/entity-translations.interface';
-import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
+} from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
+import { SelectionActionTypeEnum } from '@app/shared/components/form/select/select.interface';
 
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { toLabeledValues } from '../../../../../core/utils';
+import { toLabeledValues } from '@app/core/utils';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-dict-edit',

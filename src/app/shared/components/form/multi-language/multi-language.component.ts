@@ -6,6 +6,7 @@ import { IMultiLanguageOption } from './multi-language.interface';
 @Component({
   selector: 'app-multilanguage-input',
   templateUrl: './multi-language.component.html',
+  styleUrls: [ './multi-language.component.scss' ],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -64,6 +65,10 @@ export class MultiLanguageComponent implements ControlValueAccessor {
       item.isUpdated = true;
       this.propagateChange(this.langOptions);
     }
+  }
+
+  onClear(): void {
+    this.onValueChange(null);
   }
 
   private propagateChange: Function = () => {};

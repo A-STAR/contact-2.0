@@ -32,12 +32,12 @@ export interface IDynamicFormConfig {
 }
 
 export interface IDynamicFormControl {
-  display?: boolean;
   children?: IDynamicFormControl[];
   controlName?: string;
-  displayTime?: boolean;
   dependsOn?: string;
   disabled?: boolean;
+  display?: boolean;
+  displayTime?: boolean;
   iconCls?: string;
   label: string;
   // markAsDirty if the control is passed a value
@@ -95,6 +95,9 @@ export interface IDynamicFormControl {
   max?: number;
 }
 
+/**
+ * To make the control `hidden` set `type` to whatever and `display`="false"
+ */
 export type TControlTypes =
     'boolean'
   | 'button'
@@ -107,13 +110,11 @@ export type TControlTypes =
   | 'dynamic'
   | 'file'
   | 'gridselect'
-  | 'hidden'
   | 'htmltextarea'
   | 'image'
   | 'multilanguage'
   | 'multiselect'
   | 'multiselectwrapper'
-  | 'multitext'
   | 'number'
   | 'password'
   | 'radio'

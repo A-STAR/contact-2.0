@@ -1,14 +1,12 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import {
-  IActionType,
-  IContractor
-} from '../../contractors-and-portfolios.interface';
+import { IActionType, IContractor } from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
@@ -40,6 +38,7 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
+    private location: Location,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -106,7 +105,7 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.location.back();
   }
 
   onManagersClick(): void {

@@ -12,4 +12,5 @@
     [disabled]="controlDisabled"
     (ngModelChange)="onValueChange($event)"
   >
+  <i *ngIf="model !== null" class="fa fa-close" (click)="onClear()"></i>
 </div>

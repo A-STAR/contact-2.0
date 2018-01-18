@@ -1,6 +1,4 @@
-//
-// Variables
-// --------------------------------------------------
+// App variables
 
 // Layout
 $layout-top-menu-height:           49px;
@@ -10,17 +8,22 @@ $layout-sidebar-width-collapsed:   64px;
 $layout-content-padding:           10px;
 $layout-logo-height:               39px;
 
+// Colors
+$text:                #222222;
+$text-light:          #808080;
+$brand-primary-dark:  #49435d;
+$brand-primary:       #4a445f;
+$brand-primary-light: #58526e;
+$brand-white:         #d8d5e2;
+$brand-secondary:     #9bec00;
+
+
+
+// Below are Angle variables:
+
 //== Colors
 //
 //## Gray and brand colors for use across Bootstrap.
-
-$brand-primary-dark:     #49435d;
-$brand-primary:          #4a445f;
-$brand-primary-light:    #58526e;
-
-$brand-white:            #d8d5e2;
-
-$brand-secondary:        #9bec00;
 
 // Redefined Gray colors for theme
 $gray-darker:            #232735;
@@ -82,7 +85,7 @@ $brand-yellow-dark:            darken($brand-yellow, $amountOfLight);
 //** Background color for `<body>`.
 $body-bg:               #f5f7fa;
 //** Global text color on `<body>`.
-$text-color:            #1f1f1f;
+$text-color:            $text;
 
 //** Global textual link color.
 $link-color:            $brand-primary;

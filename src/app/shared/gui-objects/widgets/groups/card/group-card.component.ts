@@ -36,7 +36,7 @@ export class GroupCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const group$ = this.groupId ? this.groupService.fetch(this.groupId) : of({});
+    const group$ = this.groupId ? this.groupService.fetch(this.groupId) : of(this.getFormData());
     combineLatest(
       group$.flatMap(group => this.groupId ? this.groupService.canEdit$(group as IGroup) : this.groupService.canAdd$),
       this.groupService.canConditionEdit$,
@@ -93,7 +93,7 @@ export class GroupCardComponent implements OnInit {
         options: entityTypeOptions,
         required: true,
         disabled: !canEdit,
-        markAsDirty: this.groupId,
+        markAsDirty: !this.groupId,
       },
       { controlName: 'comment', type: 'textarea', disabled: !canEdit },
       { controlName: 'isManual', type: 'checkbox', disabled: !canEdit, markAsDirty: !this.groupId },
@@ -110,5 +110,11 @@ export class GroupCardComponent implements OnInit {
     }
 
     return controls as IDynamicFormItem[];
+  }
+
+  private getFormData(): Partial<IGroup> {
+    return {
+      entityTypeCode: 19
+    };
   }
 }

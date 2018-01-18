@@ -4,7 +4,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -12,36 +11,32 @@ import {
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { Subscription } from 'rxjs/Subscription';
 import { Validators } from '@angular/forms';
 
-import { EntityTranslationsService } from '../../../../../../core/entity/translations/entity-translations.service';
+import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
 import { IContactTreeAttribute } from '../../contact-property.interface';
-import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IEntityAttributes } from '../../../../../../core/entity/attributes/entity-attributes.interface';
-import { IUserAttributeType } from '../../../../../../core/user/attribute-types/user-attribute-types.interface';
-import { IOption } from '../../../../../../core/converter/value-converter.interface';
+import { IDynamicFormItem, IDynamicFormConfig } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 import { ITreeNode } from '../../../../../components/flowtree/treenode/treenode.interface';
+import { IUserAttributeType } from '@app/core/user/attribute-types/user-attribute-types.interface';
 
 import { ContactPropertyService } from '../../contact-property.service';
-import { EntityAttributesService } from '../../../../../../core/entity/attributes/entity-attributes.service';
-import { LookupService } from '../../../../../../core/lookup/lookup.service';
-import { UserAttributeTypesService } from '../../../../../../core/user/attribute-types/user-attribute-types.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserTemplatesService } from '../../../../../../core/user/templates/user-templates.service';
+import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
+import { UserAttributeTypesService } from '@app/core/user/attribute-types/user-attribute-types.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { flatten, isEmpty, makeKey, range, valuesToOptions } from '../../../../../../core/utils';
-
-const labelKey = makeKey('widgets.contactProperty.edit');
+import { flatten, isEmpty, range, valuesToOptions } from '@app/core/utils';
 
 @Component({
   selector: 'app-contact-property-tree-edit',
   templateUrl: './contact-property-tree-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
+export class ContactPropertyTreeEditComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   @Input() contactType: number;
@@ -52,56 +47,46 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
 
+  config: IDynamicFormConfig = {
+    labelKey: 'widgets.contactProperty.edit',
+  };
   controls: IDynamicFormItem[];
-  data = {};
   attributeTypes: ITreeNode[] = [];
+  data = {};
+  tabs = [
+    { isInitialised: true },
+    { isInitialised: false },
+  ];
 
-  private _formSubscription: Subscription;
-  private statusReasonModeSubscription: Subscription;
-
-  private _attributeTypesChanged = false;
+  private attributeTypesChanged = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactPropertyService: ContactPropertyService,
     private entityAttributesService: EntityAttributesService,
-    private entityTranslationsService: EntityTranslationsService,
-    private lookupService: LookupService,
     private userAttributeTypesService: UserAttributeTypesService,
     private userDictionariesService: UserDictionariesService,
     private userTemplatesService: UserTemplatesService,
   ) {}
 
   ngOnInit(): void {
-    this._formSubscription = combineLatest(
-      this.userDictionariesService.getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_DEBT_STATUS,
-        UserDictionariesService.DICTIONARY_DEBT_LIST_1,
-        UserDictionariesService.DICTIONARY_DEBT_LIST_2,
-        UserDictionariesService.DICTIONARY_DEBT_LIST_3,
-        UserDictionariesService.DICTIONARY_DEBT_LIST_4,
-      ]),
+    combineLatest(
+      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DEBT_STATUS),
       this.entityAttributesService.getDictValueAttributes(),
       this.userTemplatesService.getTemplates(4, 0).map(valuesToOptions),
       this.userAttributeTypesService.getAttributeTypes(19, 0),
-      this.lookupService.lookupAsOptions('languages'),
       this.isEditing
         ? this.contactPropertyService.fetch(this.contactType, this.treeType, this.selectedId)
         : of(null),
-      this.isEditing
-        ? this.entityTranslationsService.readContactTreeNodeTranslations(this.selectedId)
-        : of([]),
     )
     .pipe(first())
-    .subscribe(([ dictionaries, attributes, templates, attributeTypes, languages, data, nameTranslations ]) => {
-      this.controls = this.buildControls(dictionaries, templates, attributes, languages);
+    .subscribe(([ debtStatusDict, attributes, templates, attributeTypes, data ]) => {
       this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
       this.data = {
         ...data,
         autoCommentIds: data && data.autoCommentIds
           ? data.autoCommentIds.split(',')
           : null,
-        name: nameTranslations,
         nextCallDays: data && data.nextCallFormula
           ? { name: 'nextCallFormula', value: data && data.nextCallFormula }
           : { name: 'nextCallDays', value: data && data.nextCallDays },
@@ -109,23 +94,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
           ? { name: 'templateFormula', value: data && data.templateFormula }
           : { name: 'templateId', value: data && data.templateId },
       };
-      this.cdRef.detectChanges();
-      this.statusReasonModeSubscription = this.form
-        .onCtrlValueChange('statusReasonMode')
-        .subscribe((options: IOption[]) => {
-          // TODO(d.maltsev): this is horrible. Do something about it.
-          const value = Number(options[0].value);
-          const ctrl = this.form.getControl('debtStatusCode');
-          if ([2, 3].includes(value)) {
-            this.form.getControlDef('debtStatusCode').required = true;
-            ctrl.setValidators([ Validators.required ]);
-          } else {
-            this.form.getControlDef('debtStatusCode').required = false;
-            ctrl.clearValidators();
-          }
-          ctrl.updateValueAndValidity();
-          this.cdRef.markForCheck();
-        });
+      this.controls = this.buildControls(debtStatusDict, templates, attributes);
+
       this.cdRef.markForCheck();
     });
   }
@@ -149,13 +119,8 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
       .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
   }
 
-  ngOnDestroy(): void {
-    this._formSubscription.unsubscribe();
-    this.statusReasonModeSubscription.unsubscribe();
-  }
-
   get canSubmit(): boolean {
-    return this.form && this.form.form.valid && (this.form.form.dirty || this._attributeTypesChanged);
+    return this.form && this.form.isValid && (this.form.isDirty || this.attributeTypesChanged);
   }
 
   onSubmit(): void {
@@ -182,7 +147,7 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   onIsDisplayedChange(value: boolean, node: ITreeNode, traverseUp: boolean = true, traverseDown: boolean = true): void {
-    this._attributeTypesChanged = true;
+    this.attributeTypesChanged = true;
     node.data.isDisplayed = value;
     if (!value && node.data.isMandatory) {
       node.data.isMandatory = false;
@@ -200,20 +165,23 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
   }
 
   onIsMandatoryChange(value: boolean, node: ITreeNode): void {
-    this._attributeTypesChanged = true;
+    this.attributeTypesChanged = true;
     node.data.isMandatory = value;
     if (value && !node.data.isDisplayed) {
       this.onIsDisplayedChange(true, node);
     }
   }
 
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
+  }
+
   private buildControls(
-    dictionaries: { [key: number]: IOption[] },
+    debtStatusDict: IOption[],
     templates: IOption[],
     attributes: IEntityAttributes,
-    languages: IOption[],
   ): IDynamicFormItem[] {
-    const debtStatusOptions = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS].filter(option => option.value > 20000);
+    const debtStatusOptions = debtStatusDict.filter(option => option.value > 20000);
     const templateInputOptions = {
       segmentedInputOptions: [
         { name: 'templateId', label: 'widgets.contactProperty.dialogs.edit.value' },
@@ -226,67 +194,94 @@ export class ContactPropertyTreeEditComponent implements OnInit, OnDestroy {
         { name: 'nextCallFormula', label: 'widgets.contactProperty.dialogs.edit.formula' },
       ]
     };
-    const nameOptions = {
-      type: this.isEditing ? 'multitext' : 'text',
-      options: languages,
-    };
-
     const modeOptions = {
-      type: 'selectwrapper',
+      type: 'select',
       dictCode: UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE,
     };
     const promiseOptions = {
-      type: 'selectwrapper',
+      type: 'select',
       dictCode: UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE,
     };
 
-    return [
-      { label: labelKey('code'), controlName: 'code', type: 'text', width: 3, disabled: this.isEditing },
-      { label: labelKey('name'), controlName: 'name', ...nameOptions, required: true, width: 6 },
-      { label: labelKey('boxColor'), controlName: 'boxColor', type: 'colorpicker', width: 3 },
+    const controls = [
+      { controlName: 'code', type: 'text', width: 3, disabled: this.isEditing },
+      {
+        controlName: 'name',
+        type: this.isEditing ? 'multilanguage' : 'text',
+        langConfig: {
+          entityAttributeId: EntityTranslationsConstants.SPEC_CONTACT_TREE_NAME,
+          entityId: this.selectedId
+        },
+        required: true,
+        width: 6
+      },
+      { controlName: 'boxColor', type: 'colorpicker', width: 3 },
       {
         children: [
           {
             width: 6,
             children: [
-              { label: labelKey('commentMode'), controlName: 'commentMode', ...modeOptions },
-              { label: labelKey('autoCommentIds'), controlName: 'autoCommentIds', type: 'multiselect', options: templates },
-              { label: labelKey('fileAttachMode'), controlName: 'fileAttachMode', ...modeOptions },
-              { label: labelKey('nextCallMode'), controlName: 'nextCallMode', ...modeOptions },
-              { label: labelKey('promiseMode'), controlName: 'promiseMode', ...promiseOptions },
-              { label: labelKey('paymentMode'), controlName: 'paymentMode', ...promiseOptions },
-              { label: labelKey('callReasonMode'), controlName: 'callReasonMode', ...modeOptions },
+              {
+                controlName: 'commentMode',
+                type: 'select',
+                dictCode: UserDictionariesService.DICTIONARY_CONTACT_INPUT_MODE,
+              },
+              { controlName: 'autoCommentIds', type: 'multiselect', options: templates },
+              { controlName: 'fileAttachMode', ...modeOptions },
+              { controlName: 'nextCallMode', ...modeOptions },
+              { controlName: 'promiseMode', ...promiseOptions },
+              { controlName: 'paymentMode', ...promiseOptions },
+              { controlName: 'callReasonMode', ...modeOptions },
               // TODO(d.maltsev):  required if statusReasonMode equals 2 or 3
               // See: http://confluence.luxbase.int:8080/browse/WEB20-419
-              { label: labelKey('debtStatusCode'), controlName: 'debtStatusCode', type: 'select', options: debtStatusOptions },
-              { label: labelKey('statusReasonMode'), controlName: 'statusReasonMode', ...modeOptions },
-              { label: labelKey('debtReasonMode'), controlName: 'debtReasonMode', ...modeOptions },
+              { controlName: 'debtStatusCode', type: 'select', options: debtStatusOptions },
+              {
+                controlName: 'statusReasonMode',
+                ...modeOptions,
+                onChange: ((options: IOption[]) => {
+                  // TODO(d.maltsev): make the form return the ready-to-consume value
+                  const value = Number(options[0].value);
+                  const ctrl = this.form.getControl('debtStatusCode');
+                  if ([2, 3].includes(value)) {
+                    this.form.getControlDef('debtStatusCode').required = true;
+                    ctrl.setValidators([ Validators.required ]);
+                  } else {
+                    this.form.getControlDef('debtStatusCode').required = false;
+                    ctrl.clearValidators();
+                  }
+                  ctrl.updateValueAndValidity();
+                  this.cdRef.markForCheck();
+                })
+              },
+              { controlName: 'debtReasonMode', ...modeOptions },
             ]
           },
           {
             width: 6,
             children: [
-              { label: labelKey('template'), controlName: 'template', type: 'segmented', ...templateInputOptions },
-              { label: labelKey('nextCallDays'), controlName: 'nextCallDays', type: 'segmented', ...nextCallInputOptions },
+              { controlName: 'template', type: 'segmented', ...templateInputOptions },
+              { controlName: 'nextCallDays', type: 'segmented', ...nextCallInputOptions },
               ...range(1, 4).map(i => ({
-                label: labelKey(`dictValue${i}`),
                 controlName: `dictValue${i}`,
-                type: 'selectwrapper',
+                type: 'select',
                 dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
-                display: attributes[EntityAttributesService[`DICT_VALUE_${i}`]],
+                // TODO(d.maltsev): check with BA for the rules
+                display: attributes[EntityAttributesService[`DICT_VALUE_${i}`]].isUsed,
               })),
-              { label: labelKey('isInvalidContact'), controlName: 'isInvalidContact', type: 'checkbox' },
-              { label: labelKey('addPhone'), controlName: 'addPhone', type: 'checkbox' },
-              { label: labelKey('isRefusal'), controlName: 'isRefusal', type: 'checkbox' },
-              { label: labelKey('isSuccess'), controlName: 'isSuccess', type: 'checkbox' },
-              { label: labelKey('changeResponsible'), controlName: 'changeResponsible', type: 'checkbox' },
-              { label: labelKey('contactInvisible'), controlName: 'contactInvisible', type: 'checkbox' },
-              { label: labelKey('regInvisible'), controlName: 'regInvisible', type: 'checkbox' },
-              { label: labelKey('changeContactPerson'), controlName: 'changeContactPerson', type: 'checkbox' },
+              { controlName: 'isInvalidContact', type: 'checkbox' },
+              { controlName: 'addPhone', type: 'checkbox' },
+              { controlName: 'isRefusal', type: 'checkbox' },
+              { controlName: 'isSuccess', type: 'checkbox' },
+              { controlName: 'changeResponsible', type: 'checkbox' },
+              { controlName: 'contactInvisible', type: 'checkbox' },
+              { controlName: 'regInvisible', type: 'checkbox' },
+              { controlName: 'changeContactPerson', type: 'checkbox' },
             ]
           }
         ]
       },
-    ] as IDynamicFormItem[];
+    ];
+
+    return controls as IDynamicFormItem[];
   }
 }

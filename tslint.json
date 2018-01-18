@@ -120,8 +120,7 @@
     "typedef": [true, "call-signature", "parameter"],
     "no-unused-variable": [true,
       {
-        "ignore-pattern": "^_",
-        "check-parameters": true
+        "ignore-pattern": "^_"
       }
     ]
   }

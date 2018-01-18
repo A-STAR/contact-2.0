@@ -1,10 +1,7 @@
-import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { first } from 'rxjs/operators';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 
 import { IOperator } from '../operator-details.interface';
 import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-
-import { OperatorDetailsService } from '../operator-details.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
@@ -19,27 +16,14 @@ const label = makeKey('widgets.operatorDetails.card');
 })
 export class OperatorCardComponent implements OnInit {
 
-  @Input() userId: number;
+  @Input() operator: IOperator;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem>;
 
-  operator: Partial<IOperator>;
-
-  constructor(
-    private cdRef: ChangeDetectorRef,
-    private operatorDetailsService: OperatorDetailsService,
-  ) {}
-
   ngOnInit(): void {
-    this.operatorDetailsService.fetch(this.userId)
-      .pipe(first())
-      .subscribe(operator => {
-        this.operator = operator;
-        this.controls = this.initControls();
-        this.cdRef.markForCheck();
-      });
+    this.controls = this.initControls();
   }
 
   private initControls(): Array<IDynamicFormItem> {
@@ -55,7 +39,7 @@ export class OperatorCardComponent implements OnInit {
             width: 9
           },
           {
-            label: label('photo'), controlName: 'image', type: 'image', url: `/users/${this.userId}/photo`,
+            label: label('photo'), controlName: 'image', type: 'image', url: `/users/${this.operator.userId}/photo`,
             disabled: true, width: 3, height: 178
           }
         ],

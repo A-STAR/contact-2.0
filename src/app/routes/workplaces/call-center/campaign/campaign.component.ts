@@ -4,16 +4,18 @@ import { Observable } from 'rxjs/Observable';
 import { CampaignService } from './campaign.service';
 
 @Component({
-  selector: 'app-campaign',
-  templateUrl: 'campaign.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   providers: [
     CampaignService,
-  ]
+  ],
+  selector: 'app-campaign',
+  templateUrl: 'campaign.component.html',
 })
 export class CampaignComponent implements OnInit {
   tabs = [
     { isInitialised: true },
+    { isInitialised: false },
     { isInitialised: false },
     { isInitialised: false },
     { isInitialised: false },

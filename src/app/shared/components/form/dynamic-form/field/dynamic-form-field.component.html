@@ -269,11 +269,6 @@
     <app-file-upload [formControlName]="control.controlName" [fileName]="control.fileName"></app-file-upload>
   </ng-container>
 
-  <input *ngSwitchCase="'hidden'"
-         type="hidden"
-         class="form-control"
-         [formControlName]="control.controlName">
-
   <ng-container *ngSwitchCase="'button'">
     <label><span class="form-label">&nbsp;</span></label>
     <button
@@ -348,20 +343,6 @@
       [formControlName]="control.controlName"
       [options]="control.segmentedInputOptions">
     </app-segmented-input>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'multitext'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-multitext-input
-        [formControlName]="control.controlName"
-        [options]="control.options"
-        [controlDisabled]="control.disabled">
-      </app-multitext-input>
-    </label>
   </ng-container>
 
   <ng-container *ngSwitchCase="'multilanguage'">
