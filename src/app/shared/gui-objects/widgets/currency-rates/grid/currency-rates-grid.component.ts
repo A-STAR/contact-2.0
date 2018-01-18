@@ -68,6 +68,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private currencyRatesService: CurrencyRatesService,
+    private store: Store<IAppState>,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private router: Router,
@@ -135,7 +136,12 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   }
 
   onExcelLoad(currencyId: number): void {
-    // this.router.navigate([])
+    this.router.navigate([`/utilities/data-upload`]).then(() => {
+      this.store.dispatch({
+        type: IActionType.SELECT_CURRENCY,
+        payload: { currencyId },
+      });
+    });
   }
 
   private onAdd(): void {

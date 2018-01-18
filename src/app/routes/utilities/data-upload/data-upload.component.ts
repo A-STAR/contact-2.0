@@ -9,12 +9,15 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import { IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow } from './data-upload.interface';
 
+import { CurrencyRatesService } from '../../../shared/gui-objects/widgets/currency-rates/currency-rates.service';
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 
@@ -56,7 +59,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
+    private store: Store<IAppState>,
     private dataUploadService: DataUploadService,
     private gridService: GridService,
   ) {
@@ -64,12 +67,11 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    this.queryParamsSub = this.route.queryParamMap
-      .subscribe(params => {
-        if (params) {
-          const currencyId = params.get('currencyId');
-          this.dataUploadService.uploader.parameter = currencyId;
-        }
+    this.queryParamsSub = this.store.select(store => store.currency)
+      .map(currency => currency.currencyId)
+      .filter(Boolean)
+      .subscribe(currencyId => {
+        this.dataUploadService.uploader.parameter = currencyId;
       });
   }
 

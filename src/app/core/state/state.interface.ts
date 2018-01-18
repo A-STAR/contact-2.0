@@ -5,6 +5,7 @@ import { IAuthState } from '../auth/auth.interface';
 import { ICampaignsState } from '../../routes/utilities/campaigns/campaigns.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
 import { IContractorsAndPortfoliosState } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
+import { ICurrencyState } from '@app/shared/gui-objects/widgets/currency-rates/currency-rates.interface';
 import { IDebtorCardState } from '../app-modules/debtor-card/debtor-card.interface';
 import { IDictionariesState } from '../../routes/admin/dictionaries/dictionaries.interface';
 import { IEntityAttributesState } from '../entity/attributes/entity-attributes.interface';
@@ -26,6 +27,7 @@ export interface IAppState {
   readonly auth: IAuthState;
   readonly constants: IConstantsState;
   readonly contractorsAndPortfolios: IContractorsAndPortfoliosState;
+  readonly currency: ICurrencyState;
   readonly debtorCard: IDebtorCardState;
   readonly dictionaries: IDictionariesState;
   readonly entityAttributes: IEntityAttributesState;
