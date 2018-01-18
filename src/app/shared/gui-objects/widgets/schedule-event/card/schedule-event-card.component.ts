@@ -88,7 +88,7 @@ export class ScheduleEventCardComponent implements OnInit {
         markAsDirty: !this.eventId,
       },
       { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true },
-      { controlName: 'startTime', type: 'text', disabled: !canEdit, required: true },
+      { controlName: 'startTime', type: 'datepicker', displayTime: true, disabled: !canEdit, required: true },
       { controlName: 'isInactive', type: 'checkbox', disabled: !canEdit },
       { controlName: 'priority', type: 'number', disabled: !canEdit },
       {
@@ -108,5 +108,4 @@ export class ScheduleEventCardComponent implements OnInit {
       eventTypeCode: 1
     };
   }
-  
 }
