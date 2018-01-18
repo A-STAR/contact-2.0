@@ -27,6 +27,8 @@ import { addFormLabel } from '../../../../core/utils';
 export class FilterComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  private static PERSON_ROLE_INITIAL = 1;
+
   controls: IDynamicFormControl[] = [
     { controlName: 'debtId', type: 'text' },
     { controlName: 'fullName', type: 'text' },
@@ -52,7 +54,8 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
       this.debtService.incomingCallSearchParams
         .subscribe(data => {
           if (data && data.debtId) {
-            this.setDebtIdControlValue(data.debtId);
+            this.patchControl('debtId', data.debtId);
+            this.patchControl('personRoleCodes', [FilterComponent.PERSON_ROLE_INITIAL]);
             this.onSearchClick();
           }
         });
@@ -75,10 +78,10 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
     this.cdRef.markForCheck();
   }
 
-  private setDebtIdControlValue(debtId: number): void {
-    const control = this.form.getControl('debtId');
+  private patchControl(name: string, data: any): void {
+    const control = this.form.getControl(name);
     if (control) {
-      control.patchValue(debtId);
+      control.patchValue(data);
       control.markAsDirty();
     }
   }
