@@ -106,6 +106,7 @@ export interface IDynamicFormGridSelectControl extends IDynamicFormBaseControl {
   gridValueGetter?: Function;
   gridOnSelect?: Function;
   gridColumns?: IGridColumn[];
+  placeholder?: string;
 }
 
 export interface IDynamicFormImageControl extends IDynamicFormBaseControl {
