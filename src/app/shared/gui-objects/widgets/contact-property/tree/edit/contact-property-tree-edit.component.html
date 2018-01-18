@@ -2,15 +2,23 @@
   <div dialog-header>
     <h3>{{ 'widgets.contactProperty.dialogs.edit.title' | translate }}</h3>
   </div>
+
   <div>
-    <app-tabstrip [disableScrollbar]="true" [inverse]="true">
-      <app-tab [title]="'widgets.contactProperty.dialogs.edit.mainSettings'" [closable]="false">
+    <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+
+      <app-tabview-tab [title]="'widgets.contactProperty.dialogs.edit.mainSettings'">
         <div class="mt">
-          <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
+          <app-dynamic-form
+            *ngIf="controls"
+            [config]="config"
+            [controls]="controls"
+            [data]="data"
+          ></app-dynamic-form>
         </div>
-      </app-tab>
-      <app-tab [title]="'widgets.contactProperty.dialogs.edit.attributesSettings'" [closable]="false">
-        <div class="mt">
+      </app-tabview-tab>
+
+      <app-tabview-tab [title]="'widgets.contactProperty.dialogs.edit.attributesSettings'">
+        <div class="mt" *ngIf="tabs[1].isInitialised">
           <p-treeTable selectionMode="none" [value]="attributeTypes">
             <p-column field="code" [header]="'widgets.contactProperty.dialogs.edit.attributes.code' | translate"></p-column>
             <p-column field="name" [header]="'widgets.contactProperty.dialogs.edit.attributes.name' | translate"></p-column>
@@ -26,15 +34,13 @@
             </p-column>
           </p-treeTable>
         </div>
-      </app-tab>
-    </app-tabstrip>
+      </app-tabview-tab>
+
+    </app-tabview>
   </div>
+
   <div dialog-footer>
-    <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
-      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-    </button>
-    <button class="btn btn-default" (click)="onCancel()">
-      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
-    </button>
+    <app-button color="primary" icon="check" type="save" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+    <app-button icon="remove" type="cancel" (click)="onCancel()"></app-button>
   </div>
 </app-dialog>

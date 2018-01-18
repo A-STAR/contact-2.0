@@ -4,19 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { TreeTableModule } from 'primeng/primeng';
 
-import { DialogModule } from '../../../../../components/dialog/dialog.module';
-import { DynamicFormModule } from '../../../../../components/form/dynamic-form/dynamic-form.module';
-import { TabstripModule } from '../../../../../components/tabstrip/tabstrip.module';
+import { ButtonModule } from '@app/shared/components/button/button.module';
+import { DialogModule } from '@app/shared/components/dialog/dialog.module';
+import { DynamicFormModule } from '@app/shared/components/form/dynamic-form/dynamic-form.module';
+import { TabViewModule } from '@app/shared/components/layout/tabview/tabview.module';
 
 import { ContactPropertyTreeEditComponent } from './contact-property-tree-edit.component';
 
 @NgModule({
   imports: [
+    ButtonModule,
     CommonModule,
     DialogModule,
     DynamicFormModule,
     FormsModule,
-    TabstripModule,
+    TabViewModule,
     TranslateModule,
     TreeTableModule,
   ],

@@ -8,7 +8,7 @@ import { filter, tap, switchMap } from 'rxjs/operators';
 import { IAppState } from '../../state/state.interface';
 import { IOption } from '../../converter/value-converter.interface';
 import {
-  ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserTerm, IUserDictionaryAction
+  ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserTerm, IUserDictionaryAction, IUserDictionaryOptions
 } from './user-dictionaries.interface';
 import { SafeAction } from '../../../core/state/state.interface';
 
@@ -109,7 +109,7 @@ export class UserDictionariesService {
     return this.loadDictionaries([ id ], term => ({ value: term.code, label: term.name })).map(dictionaries => dictionaries[id]);
   }
 
-  getDictionariesAsOptions(ids: Array<number>): Observable<{ [key: number]: IOption[] }> {
+  getDictionariesAsOptions(ids: Array<number>): Observable<IUserDictionaryOptions> {
     return this.loadDictionaries(ids, term => ({ value: term.code, label: term.name }));
   }
 

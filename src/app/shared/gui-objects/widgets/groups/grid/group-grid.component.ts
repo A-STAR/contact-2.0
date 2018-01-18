@@ -11,7 +11,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/compone
 
 import { GroupService } from '../group.service';
 import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '../../../../../core/dialog';
@@ -79,13 +78,11 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   groups: IGroup[] = [];
 
   private actionSubscription: Subscription;
-  private viewPermissionSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private groupService: GroupService,
     private gridService: GridService,
-    private notificationsService: NotificationsService,
     private router: Router,
   ) {
     super();
@@ -93,21 +90,13 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
   ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
-    .pipe(first())
-    .subscribe(columns => {
-      this.columns = [...columns];
-      this.cdRef.markForCheck();
-    });
-
-    this.viewPermissionSubscription = this.groupService.canView$
-      .subscribe(canView => {
-        if (canView) {
-          this.fetch();
-        } else {
-          this.clear();
-          this.notificationsService.permissionError().entity('entities.groups.gen.plural').dispatch();
-        }
+      .pipe(first())
+      .subscribe(columns => {
+        this.columns = [...columns];
+        this.cdRef.markForCheck();
       });
+
+    this.fetch();
 
     this.actionSubscription = this.groupService
       .getAction(GroupService.MESSAGE_GROUP_SAVED)
@@ -118,7 +107,6 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   ngOnDestroy(): void {
-    this.viewPermissionSubscription.unsubscribe();
     this.actionSubscription.unsubscribe();
   }
 
@@ -164,10 +152,5 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
       this.groups = groups;
       this.cdRef.markForCheck();
     });
-  }
-
-  private clear(): void {
-    this.groups = [];
-    this.cdRef.markForCheck();
   }
 }

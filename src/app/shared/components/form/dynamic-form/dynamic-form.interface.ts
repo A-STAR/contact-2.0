@@ -115,7 +115,6 @@ export type TControlTypes =
   | 'multilanguage'
   | 'multiselect'
   | 'multiselectwrapper'
-  | 'multitext'
   | 'number'
   | 'password'
   | 'radio'
