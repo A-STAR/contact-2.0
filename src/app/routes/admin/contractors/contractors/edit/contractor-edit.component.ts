@@ -59,10 +59,9 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
     )
     .pipe(first())
     // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-    // TODO:(i.kibisov) remove canViewObjects default value when permission will be added on BE
     .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes, canViewObjects ]) => {
       this.canViewAttributes = true;
-      this.canViewObjects = true;
+      this.canViewObjects = canViewObjects;
 
       this.contractorId = contractor && contractor.id;
 
