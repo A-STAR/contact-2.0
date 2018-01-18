@@ -7,9 +7,9 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { of } from 'rxjs/observable/of';
+// import { Observable } from 'rxjs/Observable';
+// import { combineLatest } from 'rxjs/observable/combineLatest';
+// import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -152,18 +152,18 @@ export class MiscComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  private toggleControl(name: string, display: boolean, required: boolean = false): void {
-    const control = this.getControl(name);
-    control.display = display;
-    control.required = display && required;
-    if (!display) {
-      this.data = {
-        ...this.data,
-        [name]: null,
-      };
-    }
-    this.cdRef.markForCheck();
-  }
+  // private toggleControl(name: string, display: boolean, required: boolean = false): void {
+  //   const control = this.getControl(name);
+  //   control.display = display;
+  //   control.required = display && required;
+  //   if (!display) {
+  //     this.data = {
+  //       ...this.data,
+  //       [name]: null,
+  //     };
+  //   }
+  //   this.cdRef.markForCheck();
+  // }
 
   private getControl(name: string): IDynamicFormControl {
     return this.controls.find(control => control.controlName === name);

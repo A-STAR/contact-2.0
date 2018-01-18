@@ -7,11 +7,11 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { filter, first, mergeMap } from 'rxjs/operators';
+// import { filter, first, mergeMap } from 'rxjs/operators';
 
 import { ILinkedContactPerson } from '../contact-select.interface';
 
-import { ContactSelectService } from '../contact-select.service';
+// import { ContactSelectService } from '../contact-select.service';
 import { ContactRegistrationService } from '../../../contact-registration.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -46,7 +46,7 @@ export class ContactSelectGridComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    private contactSelectService: ContactSelectService,
+    // private contactSelectService: ContactSelectService,
     private gridService: GridService,
   ) {}
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { ContactRegistrationService } from './contact-registration.service';
 import { IContactRegistrationMode } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
@@ -40,7 +40,6 @@ export class ContactRegistrationComponent {
   }
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 

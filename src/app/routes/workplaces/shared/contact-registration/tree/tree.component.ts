@@ -1,15 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, mergeMap } from 'rxjs/operators';
 
 import { IContactRegistrationMode } from '../contact-registration.interface';
-import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContactRegistrationService } from '../contact-registration.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { isEmpty } from '@app/core/utils';

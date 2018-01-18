@@ -12,7 +12,7 @@ import { PaymentService } from './payment.service';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { minStrict, max } from '@app/core/validators';
-import { isEmpty, makeKey, round } from '@app/core/utils';
+import { /* isEmpty, */ makeKey, round } from '@app/core/utils';
 
 const labelKey = makeKey('modules.contactRegistration.payment');
 
