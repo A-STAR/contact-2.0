@@ -165,7 +165,7 @@ export class MiscComponent implements OnInit, OnDestroy {
   //   this.cdRef.markForCheck();
   // }
 
-  private getControl(name: string): IDynamicFormControl {
-    return this.controls.find(control => control.controlName === name);
-  }
+  // private getControl(name: string): IDynamicFormControl {
+  //   return this.controls.find(control => control.controlName === name);
+  // }
 }
