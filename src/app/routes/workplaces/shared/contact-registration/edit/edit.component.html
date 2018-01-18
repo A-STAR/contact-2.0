@@ -1,0 +1,13 @@
+<div class="flex vertical">
+  <div class="flex-item grow">
+    <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
+    <h4>{{ 'modules.contactRegistration.contact.title' | translate }}</h4>
+    <!-- Contact -->
+    <!-- Attachments -->
+    <!-- Attributes -->
+  </div>
+  <div class="flex-item">
+    <app-button type="back" (click)="onBack()"></app-button>
+    <app-button type="ok"></app-button>
+  </div>
+</div>

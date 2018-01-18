@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-// import { DetailModule } from './detail/detail.module';
+import { EditModule } from './edit/edit.module';
 import { OverviewModule } from './overview/overview.module';
 import { SharedModule } from '@app/shared/shared.module';
 
@@ -10,7 +10,7 @@ import { ContactRegistrationComponent } from './contact-registration.component';
 
 @NgModule({
   imports: [
-    // DetailModule,
+    EditModule,
     OverviewModule,
     SharedModule,
   ],

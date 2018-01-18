@@ -1,23 +1,9 @@
-<ng-container *ngIf="mode === 'form'; then thenBlock; else elseBlock;"></ng-container>
+<ng-container *ngIf="mode === 'form'; then form; else tree;"></ng-container>
 
-<!-- Form -->
-<ng-template #thenBlock>
-  <div class="flex vertical">
-    <div class="flex-item grow">
-      <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
-      <h4>{{ 'modules.contactRegistration.contact.title' | translate }}</h4>
-      <!-- Contact -->
-      <!-- Attachments -->
-      <!-- Attributes -->
-    </div>
-    <div class="flex-item">
-      <app-button type="back" (click)="onBack()"></app-button>
-      <app-button type="ok"></app-button>
-    </div>
-  </div>
+<ng-template #tree>
+  <app-contact-registration-overview [debtId]="debtId" [contactTypeCode]="contactTypeCode"></app-contact-registration-overview>
 </ng-template>
 
-<!-- Tree -->
-<ng-template #elseBlock>
-  <app-contact-registration-overview [debtId]="debtId" [contactTypeCode]="contactTypeCode"></app-contact-registration-overview>
+<ng-template #form>
+  <app-contact-registration-edit></app-contact-registration-edit>
 </ng-template>
