@@ -50,6 +50,8 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
 
   dialog: 'cancel' | 'errorLogPrompt';
 
+  isSelectVisible = true;
+
   rows: any[];
   rowCount = 0;
   rowIdKey = 'id';
@@ -67,11 +69,16 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
+    // set initial value
+    this.dataUploadService.format = 1;
+    
     this.queryParamsSub = this.store.select(store => store.currency)
       .map(currency => currency.currencyId)
       .filter(Boolean)
       .subscribe(currencyId => {
         this.dataUploadService.uploader.parameter = currencyId;
+        this.isSelectVisible = false;
+        this.cdRef.markForCheck();
       });
   }
 
@@ -87,8 +94,8 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
     return this.dataUploadService.format;
   }
 
-  onFormatChange(format: number): void {
-    this.dataUploadService.format = format;
+  onFormatChange(format: {value: number}[]): void {
+    this.dataUploadService.format = format[0].value;
   }
 
   onRequest(): void {

@@ -171,6 +171,7 @@ export class DataUploadService {
 
     set format(value: number) {
         this.currentUploaderType = this.uploaderTypes[value];
+        this.instantiate(this.currentUploaderType);
     }
 
     get uploader(): DataUploader {
