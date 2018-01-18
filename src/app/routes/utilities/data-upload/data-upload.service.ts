@@ -180,9 +180,10 @@ export class DataUploadService {
 
     private instantiate(uploaderType: DataUploaders): DataUploader {
         if (!this.uploaders[uploaderType]) {
+            // get optional paramKey
             const paramKey = DataUploadService.UPLOADERS_CONFIG[uploaderType]
                 && DataUploadService.UPLOADERS_CONFIG[uploaderType].paramKey;
-
+            // create uploader with respective config and paramKey
             this.uploaders[uploaderType] = new DataUploader(this.dataService,
                 this.gridService, DataUploadService.UPLOADERS_CONFIG[uploaderType], paramKey);
         }

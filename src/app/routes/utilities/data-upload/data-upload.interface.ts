@@ -46,7 +46,7 @@ export enum DataUploaders {
   SET_OPERATOR = 'SET_OPERATOR',
 }
 
-export type TDataUploaders = 'CONTACT_HISTORY' | 'CURRENCY_RATE' | 'DEBTS' | 'PAYMENT' | 'SET_OPERATOR';
+export type TDataUploaders = 'CONTACT_HISTORY' & 'CURRENCY_RATE' & 'DEBTS' & 'PAYMENT' & 'SET_OPERATOR';
 
 export interface IDataUploaderConfig {
   openFile: string;

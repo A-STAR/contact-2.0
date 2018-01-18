@@ -5,15 +5,17 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { Store } from '@ngrx/store';
 
-import { ICurrencyRate } from '../currency-rates.interface';
+import { IAppState } from '@app/core/state/state.interface';
+import { ICurrencyRate, IActionType } from '../currency-rates.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { CurrencyRatesService } from '../currency-rates.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { combineLatestAnd } from 'app/core/utils/helpers';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-currency-rates-grid',
@@ -32,34 +34,9 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     { prop: 'rate' }
   ];
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.currencyRatesService.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedCurrencyRate$.value),
-      enabled: combineLatestAnd([
-        this.currencyRatesService.canEdit$,
-        this.selectedCurrencyRate$.map(o => !!o)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EXCEL_LOAD,
-      action: () => this.onExcelLoad(this.currencyId),
-      enabled: this.currencyRatesService.canLoad$
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.currencyId && this.fetch(),
-      enabled: this.currencyRatesService.canView$
-    }
-  ];
+  toolbarItems: Array<IToolbarItem>;
 
   dialog: 'delete';
-
   private _currencyRates: Array<ICurrencyRate> = [];
 
   private viewPermissionSubscription: Subscription;
@@ -177,6 +154,14 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
         enabled: combineLatestAnd([
           this.currencyRatesService.canEdit$,
           this.selectedCurrencyRate$.map(o => !!o)
+        ])
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_EXCEL_LOAD,
+        action: () => this.onExcelLoad(this.currencyId),
+        enabled: combineLatestAnd([
+          this.currencyRatesService.canLoad$,
+          this.currencyId$.map(Boolean)
         ])
       },
       {
