@@ -2,12 +2,8 @@
   <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
 </div>
 
-<div class="mb">
-  <app-contact-registration-contact-select
-    [debtId]="debtId"
-    [excludeCurrentPersonId]="false"
-    [personId]="personId"
-  ></app-contact-registration-contact-select>
-</div>
-
-<app-button type="next" [disabled]="!canSubmit" (click)="onNextClick()"></app-button>
+<app-contact-registration-contact-select
+  [debtId]="debtId"
+  [excludeCurrentPersonId]="false"
+  [personId]="personId"
+></app-contact-registration-contact-select>

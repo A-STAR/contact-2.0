@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { first, mergeMap } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { IDebt } from '@app/core/debt/debt.interface';
@@ -10,17 +10,17 @@ import { IPromise, IPromiseFormData } from './promise.interface';
 import { IPromiseLimit } from '@app/shared/gui-objects/widgets/promise/promise.interface';
 
 import { ContactRegistrationService } from '../../contact-registration.service';
-import { DebtService } from '@app/core/debt/debt.service';
 import { PromiseService } from '@app/shared/gui-objects/widgets/promise/promise.service';
 import { PromiseService as ContactPromiseService } from './promise.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { DialogFunctions } from '@app/core/dialog';
 
 import { minStrict, max } from '@app/core/validators';
-import { /* isEmpty, */ makeKey, round } from '@app/core/utils';
+import { makeKey, round } from '@app/core/utils';
 
 const labelKey = makeKey('modules.contactRegistration.promise');
 
@@ -30,8 +30,6 @@ const labelKey = makeKey('modules.contactRegistration.promise');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromiseComponent extends DialogFunctions implements OnInit {
-  @Input() debtId: number;
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
@@ -45,9 +43,9 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
     private cdRef: ChangeDetectorRef,
     private contactPromiseService: ContactPromiseService,
     private contactRegistrationService: ContactRegistrationService,
-    private debtService: DebtService,
     private promiseService: PromiseService,
     private userPermissionsService: UserPermissionsService,
+    private workplacesService: WorkplacesService,
   ) {
     super();
   }
@@ -55,8 +53,12 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
   ngOnInit(): void {
     combineLatest(
       this.contactRegistrationService.outcome$,
-      this.debtService.fetch(null, this.debtId),
-      this.promiseService.getPromiseLimit(this.debtId, false),
+      this.contactRegistrationService.debtId$.pipe(
+        mergeMap(debtId => this.workplacesService.fetchDebt(debtId)),
+      ),
+      this.contactRegistrationService.debtId$.pipe(
+        mergeMap(debtId => this.promiseService.getPromiseLimit(this.contactRegistrationService.debtId, false)),
+      ),
       this.canAddInsufficientAmount$,
     )
     .subscribe(([ outcome, debt, limit, canAddInsufficientAmount ]) => {
@@ -101,7 +103,8 @@ export class PromiseComponent extends DialogFunctions implements OnInit {
   private submit(data: Partial<IPromise>): void {
     const { guid } = this.contactRegistrationService;
     const { percentage, ...rest } = this.form.serializedUpdates;
-    this.contactPromiseService.create(this.debtId, guid, { ...data, amount: this.data.amount, ...rest })
+    this.contactPromiseService
+      .create(this.contactRegistrationService.debtId, guid, { ...data, amount: this.data.amount, ...rest })
       .subscribe(() => {
         //
         this.cdRef.markForCheck();

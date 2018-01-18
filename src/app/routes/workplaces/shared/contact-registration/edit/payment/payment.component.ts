@@ -1,18 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { mergeMap } from 'rxjs/operators/mergeMap';
 import * as moment from 'moment';
 
 import { IDebt } from '@app/core/debt/debt.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContactRegistrationService } from '../../contact-registration.service';
-import { DebtService } from '@app/core/debt/debt.service';
 import { PaymentService } from './payment.service';
+import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { minStrict, max } from '@app/core/validators';
-import { /* isEmpty, */ makeKey, round } from '@app/core/utils';
+import { makeKey, round } from '@app/core/utils';
 
 const labelKey = makeKey('modules.contactRegistration.payment');
 
@@ -22,8 +23,6 @@ const labelKey = makeKey('modules.contactRegistration.payment');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentComponent implements OnInit {
-  @Input() debtId: number;
-
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
@@ -32,14 +31,16 @@ export class PaymentComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    private debtService: DebtService,
     private paymentService: PaymentService,
+    private workplacesService: WorkplacesService,
   ) {}
 
   ngOnInit(): void {
     combineLatest(
       this.contactRegistrationService.outcome$,
-      this.debtService.fetch(null, this.debtId)
+      this.contactRegistrationService.debtId$.pipe(
+        mergeMap(debtId => this.workplacesService.fetchDebt(debtId)),
+      ),
     )
     .subscribe(([ outcome, debt ]) => {
       const { paymentMode } = outcome;
@@ -55,10 +56,13 @@ export class PaymentComponent implements OnInit {
     return this.form && this.form.canSubmit;
   }
 
-  onNextClick(): void {
+  submit(): void {
     const { guid } = this.contactRegistrationService;
     const { percentage, ...rest } = this.form.serializedUpdates;
-    this.paymentService.create(this.debtId, guid, { amount: this.data.amount, ...rest })
+    this.contactRegistrationService.debtId$
+      .pipe(
+        mergeMap(debtId => this.paymentService.create(debtId, guid, { amount: this.data.amount, ...rest })),
+      )
       .subscribe(() => {
         //
         this.cdRef.markForCheck();

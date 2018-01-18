@@ -14,8 +14,5 @@
   <app-html-textarea [ngModel]="autoComment"></app-html-textarea>
 </div>
 
-<div class="mb">
-  <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
-</div>
+<app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
 
-<app-button type="next" [disabled]="!canSubmit" (click)="onNextClick()"></app-button>

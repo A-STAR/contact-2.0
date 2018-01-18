@@ -4,6 +4,8 @@ import { IContactRegistrationMode } from '../contact-registration.interface';
 
 import { ContactRegistrationService } from '../contact-registration.service';
 
+import { AttachmentComponent } from './attachment/attachment.component';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-contact-registration-edit',
@@ -14,6 +16,14 @@ export class EditComponent {
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
   ) {}
+
+  get canSubmit(): boolean {
+    return true;
+  }
+
+  onSubmit(): void {
+    //
+  }
 
   onBack(): void {
     this.contactRegistrationService.mode = IContactRegistrationMode.TREE;

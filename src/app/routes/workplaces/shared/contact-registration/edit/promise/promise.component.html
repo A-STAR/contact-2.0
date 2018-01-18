@@ -17,8 +17,4 @@
   <section class="pv-xl">{{ 'debtor.promisesTab.infoIncreaseAmount.message' | translate: { percent: minAmountPercent} }}</section>
 </app-info-dialog>
 
-<div class="mb">
-  <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
-</div>
-
-<app-button type="next" [disabled]="!canSubmit" (click)="onNextClick()"></app-button>
+<app-dynamic-form *ngIf="controls" [controls]="controls" [data]="data"></app-dynamic-form>
