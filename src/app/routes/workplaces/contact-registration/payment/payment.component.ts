@@ -12,8 +12,7 @@ import { PaymentService } from './payment.service';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
-import { minStrict, max } from '../../../../core/validators';
-import { isEmpty, makeKey, round } from '../../../../core/utils';
+import { isEmpty, makeKey } from '../../../../core/utils';
 
 const labelKey = makeKey('modules.contactRegistration.payment');
 
@@ -72,7 +71,6 @@ export class PaymentComponent implements OnInit {
   }
 
   private buildControls(paymentMode: number, debt: IDebt): IDynamicFormControl[] {
-    const { debtAmount } = debt;
     return [
       {
         controlName: 'date',
