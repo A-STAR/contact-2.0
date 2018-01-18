@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
 
-import { AccordionService } from '@app/shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
 import { ContactService } from './contact.service';
 
@@ -18,7 +17,6 @@ export class ContactComponent {
   @ViewChild(ContactSelectComponent) select: ContactSelectComponent;
 
   constructor(
-    private accordionService: AccordionService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private contactService: ContactService,
@@ -32,7 +30,7 @@ export class ContactComponent {
     const { guid } = this.contactRegistrationService;
     this.contactService.create(this.debtId, guid, this.select.person)
       .subscribe(() => {
-        this.accordionService.next();
+        //
         this.cdRef.markForCheck();
       });
   }

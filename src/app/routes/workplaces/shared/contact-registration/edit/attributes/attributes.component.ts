@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } 
 
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
-import { AccordionService } from '@app/shared/components/accordion/accordion.service';
 import { AttributesService } from './attributes.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
 
@@ -21,7 +20,6 @@ export class AttributesComponent implements OnInit {
   attributes: ITreeNode[];
 
   constructor(
-    private accordionService: AccordionService,
     private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
@@ -51,7 +49,7 @@ export class AttributesComponent implements OnInit {
     };
     this.attributesService.create(this.debtId, guid, data)
       .subscribe(() => {
-        this.accordionService.next();
+        //
         this.cdRef.markForCheck();
       });
   }

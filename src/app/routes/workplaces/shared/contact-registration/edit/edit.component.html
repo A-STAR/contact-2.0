@@ -1,32 +1,42 @@
-<app-contact-registration-promise
-  [debtId]="debtId"
-></app-contact-registration-promise>
+<div class="flex vertical">
+  <!-- Form -->
+  <div class="flex-item grow" style="overflow-y: auto;">
+    <app-contact-registration-promise
+      [debtId]="debtId"
+    ></app-contact-registration-promise>
 
-<app-contact-registration-payment
-  [debtId]="debtId"
-></app-contact-registration-payment>
+    <app-contact-registration-payment
+      [debtId]="debtId"
+    ></app-contact-registration-payment>
 
-<app-contact-registration-phone
-  [debtId]="debtId"
-  [personId]="personId"
-></app-contact-registration-phone>
+    <app-contact-registration-phone
+      [debtId]="debtId"
+      [personId]="personId"
+    ></app-contact-registration-phone>
 
-<app-contact-registration-contact
-  [debtId]="debtId"
-  [personId]="personId"
-></app-contact-registration-contact>
+    <app-contact-registration-contact
+      [debtId]="debtId"
+      [personId]="personId"
+    ></app-contact-registration-contact>
 
-<app-contact-registration-attachment
-  [debtId]="debtId"
-></app-contact-registration-attachment>
+    <app-contact-registration-attachment
+      [debtId]="debtId"
+    ></app-contact-registration-attachment>
 
-<app-contact-registration-attributes
-  [debtId]="debtId"
-  [contactTypeCode]="contactTypeCode"
-></app-contact-registration-attributes>
+    <app-contact-registration-attributes
+      [debtId]="debtId"
+      [contactTypeCode]="contactTypeCode"
+    ></app-contact-registration-attributes>
 
-<app-contact-registration-misc
-  [debtId]="debtId"
-  [personId]="personId"
-  [personRole]="personRole"
-></app-contact-registration-misc>
+    <app-contact-registration-misc
+      [debtId]="debtId"
+      [personId]="personId"
+      [personRole]="personRole"
+    ></app-contact-registration-misc>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex-item">
+    <app-button type="back" (click)="onBack()"></app-button>
+  </div>
+</div>

@@ -5,7 +5,6 @@ import * as moment from 'moment';
 import { IDebt } from '@app/core/debt/debt.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { AccordionService } from '@app/shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
 import { DebtService } from '@app/core/debt/debt.service';
 import { PaymentService } from './payment.service';
@@ -31,7 +30,6 @@ export class PaymentComponent implements OnInit {
   data: any = {};
 
   constructor(
-    private accordionService: AccordionService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private debtService: DebtService,
@@ -62,7 +60,7 @@ export class PaymentComponent implements OnInit {
     const { percentage, ...rest } = this.form.serializedUpdates;
     this.paymentService.create(this.debtId, guid, { amount: this.data.amount, ...rest })
       .subscribe(() => {
-        this.accordionService.next();
+        //
         this.cdRef.markForCheck();
       });
   }

@@ -15,7 +15,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { AccordionService } from '@app/shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
 // import { OutcomeService } from '../outcome/outcome.service';
 import { MiscService } from './misc.service';
@@ -58,7 +57,6 @@ export class MiscComponent implements OnInit, OnDestroy {
   private outcomeSubscription: Subscription;
 
   constructor(
-    private accordionService: AccordionService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private miscService: MiscService,
@@ -136,7 +134,7 @@ export class MiscComponent implements OnInit, OnDestroy {
     };
     this.miscService.create(this.debtId, guid, data)
       .subscribe(() => {
-        this.accordionService.next();
+        //
         this.cdRef.markForCheck();
       });
   }

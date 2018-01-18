@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { AccordionService } from '@app/shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
 import { PhoneService } from './phone.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -37,7 +36,6 @@ export class PhoneComponent {
   data = {};
 
   constructor(
-    private accordionService: AccordionService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private phoneService: PhoneService,
@@ -55,7 +53,7 @@ export class PhoneComponent {
     };
     this.phoneService.create(this.debtId, guid, data)
       .subscribe(() => {
-        this.accordionService.next();
+        //
         this.cdRef.markForCheck();
       });
   }
