@@ -6,7 +6,7 @@ import {
   ViewChild,
   OnInit,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
@@ -17,7 +17,6 @@ import { IAppState } from '@app/core/state/state.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import { IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow } from './data-upload.interface';
 
-import { CurrencyRatesService } from '../../../shared/gui-objects/widgets/currency-rates/currency-rates.service';
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 
@@ -71,7 +70,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
   ngOnInit(): void {
     // set initial value
     this.dataUploadService.format = 1;
-    
+
     this.queryParamsSub = this.store.select(store => store.currency)
       .map(currency => currency.currencyId)
       .filter(Boolean)
