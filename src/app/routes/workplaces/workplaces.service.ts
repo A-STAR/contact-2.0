@@ -12,8 +12,6 @@ import { toTreeNodes } from '../../core/utils/tree';
 
 @Injectable()
 export class WorkplacesService {
-  private debts: { [key: number]: IDebt };
-
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,

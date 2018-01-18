@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { mergeMap } from 'rxjs/operators/mergeMap';
 import * as moment from 'moment';
