@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { TreeTableModule } from 'primeng/primeng';
 
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { AttributesService } from './attributes.service';
 
