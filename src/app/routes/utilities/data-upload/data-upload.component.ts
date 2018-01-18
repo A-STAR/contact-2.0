@@ -4,7 +4,6 @@ import {
   Component,
   ElementRef,
   ViewChild,
-  ViewEncapsulation,
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -25,8 +24,6 @@ import { Grid2Component } from '../../../shared/components/grid2/grid2.component
 import { DialogFunctions } from '../../../core/dialog';
 
 import { isEmpty } from '../../../core/utils';
-
-
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,6 +68,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
       .subscribe(params => {
         if (params) {
           const currencyId = params.get('currencyId');
+          this.dataUploadService.uploader.parameter = currencyId;
         }
       });
   }
@@ -96,7 +94,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
       this.isFirstRequest = false;
     } else {
       const params = this.grid.getRequestParams();
-      this.dataUploadService
+      this.dataUploadService.uploader
         .fetch(params)
         .subscribe(response => {
           this.rows = this.getRowsFromResponse(response);
@@ -111,7 +109,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
     switch (action) {
       case 'delete':
         const { id } = event.params.node;
-        this.dataUploadService
+        this.dataUploadService.uploader
           .deleteRow(Number(id))
           .subscribe(() => this.onRequest());
         break;
@@ -125,7 +123,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
       columnId: cell.columnId,
       value: String(cell.value),
     };
-    this.dataUploadService
+    this.dataUploadService.uploader
       .editCell(payload)
       .subscribe(response => {
         const row = response.rows[0];
@@ -140,7 +138,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
 
   onFileChange(): void {
     const file = (this.fileInput.nativeElement as HTMLInputElement).files[0];
-    this.dataUploadService
+    this.dataUploadService.uploader
       .openFile(file)
       .flatMap(response => this.getColumnsFromResponse(response).map(columns => ({ response, columns })))
       .subscribe(({ response, columns }) => {
@@ -155,7 +153,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
   }
 
   onSaveClick(): void {
-    this.dataUploadService
+    this.dataUploadService.uploader
       .save()
       .subscribe(response => {
         const { processed, total } = response.massInfo;
@@ -167,7 +165,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
   }
 
   onErrorLogSubmit(): void {
-    this.dataUploadService
+    this.dataUploadService.uploader
       .getErrors()
       .subscribe(() => {
         this.closeDialog();
@@ -181,7 +179,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
   }
 
   onCancelSubmit(): void {
-    this.dataUploadService
+    this.dataUploadService.uploader
       .cancel()
       .subscribe(() => {
         this.columns = null;

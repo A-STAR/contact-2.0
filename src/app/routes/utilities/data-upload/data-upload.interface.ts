@@ -49,13 +49,15 @@ export enum DataUploaders {
 export type TDataUploaders = 'CONTACT_HISTORY' | 'CURRENCY_RATE' | 'DEBTS' | 'PAYMENT' | 'SET_OPERATOR';
 
 export interface IDataUploaderConfig {
-  fromExcel: string;
-  fromLoadedExcel: string;
-  editExcel: string;
-  removeRow: string;
-  cancelLoading: string;
-  saveDB: string;
-  errorFile: string;
+  openFile: string;
+  fetch: string;
+  editCell: string;
+  deleteRow: string;
+  cancel: string;
+  save: string;
+  getErrors: string;
+  // optional key for additional parameter
+  paramKey?: string;
 }
 
 /**
