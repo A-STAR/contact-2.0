@@ -2,10 +2,7 @@
 <ng-container *ngIf="showTree; then tree; else edit;"></ng-container>
 
 <ng-template #tree>
-  <app-contact-registration-tree
-    [contactTypeCode]="contactTypeCode"
-    [debtId]="debtId"
-  ></app-contact-registration-tree>
+  <app-contact-registration-tree></app-contact-registration-tree>
 </ng-template>
 
 <ng-template #edit>

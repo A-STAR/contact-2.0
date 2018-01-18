@@ -1,13 +1,32 @@
-<div class="flex vertical">
-  <div class="flex-item grow">
-    <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
-    <h4>{{ 'modules.contactRegistration.contact.title' | translate }}</h4>
-    <!-- Contact -->
-    <!-- Attachments -->
-    <!-- Attributes -->
-  </div>
-  <div class="flex-item">
-    <app-button type="back" (click)="onBack()"></app-button>
-    <app-button type="ok"></app-button>
-  </div>
-</div>
+<app-contact-registration-promise
+  [debtId]="debtId"
+></app-contact-registration-promise>
+
+<app-contact-registration-payment
+  [debtId]="debtId"
+></app-contact-registration-payment>
+
+<app-contact-registration-phone
+  [debtId]="debtId"
+  [personId]="personId"
+></app-contact-registration-phone>
+
+<app-contact-registration-contact
+  [debtId]="debtId"
+  [personId]="personId"
+></app-contact-registration-contact>
+
+<app-contact-registration-attachment
+  [debtId]="debtId"
+></app-contact-registration-attachment>
+
+<app-contact-registration-attributes
+  [debtId]="debtId"
+  [contactTypeCode]="contactTypeCode"
+></app-contact-registration-attributes>
+
+<app-contact-registration-misc
+  [debtId]="debtId"
+  [personId]="personId"
+  [personRole]="personRole"
+></app-contact-registration-misc>

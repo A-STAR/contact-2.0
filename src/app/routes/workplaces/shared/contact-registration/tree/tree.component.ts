@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
@@ -18,26 +20,33 @@ import { isEmpty } from '@app/core/utils';
   styleUrls: [ './tree.component.scss' ],
   templateUrl: './tree.component.html',
 })
-export class TreeComponent {
-  @Input() contactTypeCode: number;
-
-  @Input('debtId')
-  set debtId(debtId: number) {
-    this._debtId = debtId;
-    this.fetchNodes();
-  }
-
+export class TreeComponent implements OnInit, OnDestroy {
   nodes = [];
   selectedNode = null;
   scenario: string = null;
 
-  private _debtId: number;
+  private nodesSub: Subscription;
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,
     private cdRef: ChangeDetectorRef,
     private workplacesService: WorkplacesService,
   ) {}
+
+  ngOnInit(): void {
+    this.nodesSub = combineLatest(this.contactRegistrationService.debtId$, this.contactRegistrationService.contactType$)
+      .pipe(
+        mergeMap(([ debtId, contactType ]) => this.workplacesService.fetchContactTree(debtId, contactType))
+      )
+      .subscribe(nodes => {
+        this.nodes = nodes;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.nodesSub.unsubscribe();
+  }
 
   get scenarioText(): string {
     // TODO(d.maltsev): i18n
@@ -64,18 +73,9 @@ export class TreeComponent {
     }
   }
 
-  private fetchNodes(): void {
-    this.workplacesService
-      .fetchContactTree(this._debtId, this.contactTypeCode)
-      .subscribe(nodes => {
-        this.nodes = nodes;
-        this.cdRef.markForCheck();
-      });
-  }
-
   private fetchScenario(nodeId: number): void {
     this.workplacesService
-      .fetchContactScenario(this._debtId, this.contactTypeCode, nodeId)
+      .fetchContactScenario(this.contactRegistrationService.debtId, this.contactRegistrationService.contactType, nodeId)
       .pipe(
         catchError(() => of(null)),
       )
