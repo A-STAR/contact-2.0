@@ -25,7 +25,6 @@ import {
   IValue,
 } from './dynamic-form.interface';
 import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
-import { IOption, ILabeledValue } from '../../../../core/converter/value-converter.interface';
 
 import { DataService } from '../../../../core/data/data.service';
 import { LookupService } from '../../../../core/lookup/lookup.service';
@@ -62,6 +61,9 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     const config = this.config;
 
+    /**
+     * The form has no `config`
+    */
     if (!config) {
         this.flatControls = this.flattenFormControls(this.controls);
         this.form = this.createForm(this.flatControls);
@@ -69,6 +71,11 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         this.cdRef.markForCheck();
         return;
     }
+
+    /**
+     * This form's `config` is defined
+     * example: @app\shared\gui-objects\widgets\contact-property\tree\edit\contact-property-tree-edit.component.ts
+     */
 
     // set the default config options
     const defaultConfig = { suppressLabelCreation: false };
@@ -84,10 +91,10 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       this.walkControlTreeLeafs(this.controls, createLabel);
     }
 
-    // flatten the controls for filtering
+    // flatten the controls for filtering subsets
     const flatControls = this.flattenFormControls(this.controls);
 
-    // get subsets of `multilanguage` & `select` controls with `dictCode` & `lookupKey`
+    // get subsets of `multilanguage` controls & `select` controls with `dictCode` & `lookupKey`
     const dictCodeCtrls = flatControls
       .filter(ctrl => ctrl.type === 'select' && ctrl.dictCode);
       const lookupCtrls = flatControls.filter(ctrl => ctrl.type === 'select' && ctrl.lookupKey);
@@ -169,31 +176,15 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     .subscribe(([ dictCtrlsWithOptions, multiLanguageCtrlsWithOptions, lookupCtrlsWithOptions ]) => {
 
       // 2. set the dictionary options for `select` controls
-      dictCtrlsWithOptions.forEach(control => {
-        // const assignOptions = (options: ILabeledValue[]) => (ctrl: IDynamicFormControl): void => {
-        //   Object.assign(ctrl, { options: ctrl.options || options });
-        // };
-        // this.findControlByPropAndApply(this.controls, { controlName: control.controlName }, assignOptions(control.options));
-        this.recursivelyMergeControlProps(this.controls, control);
-        // log(`dictCode: ${dictCode}`);
-        // log(`options:`, options);
-      });
-
       // 3. set the `multilanguage` controls' options
-      multiLanguageCtrlsWithOptions.forEach(control => {
-        const assignOptions = (langOptions: any[]) => (ctrl: IDynamicFormControl): void => {
-          Object.assign(ctrl, { langOptions: ctrl.langOptions || langOptions });
-        };
-        this.findControlByPropAndApply(this.controls, { controlName: control.controlName }, assignOptions(control.langOptions));
-      });
+      // 4. set the lookup options for `select` controls'
 
-      // 4. set the `select` controls' lookup options
-      lookupCtrlsWithOptions.forEach(control => {
-        const assignOptions = (options: any[]) => (ctrl: IDynamicFormControl): void => {
-          Object.assign(ctrl, { options: ctrl.options || options });
-        };
-        this.findControlByPropAndApply(this.controls, { controlName: control.controlName }, assignOptions(control.options));
-      });
+      dictCtrlsWithOptions
+        .concat(multiLanguageCtrlsWithOptions)
+        .concat(lookupCtrlsWithOptions)
+        .forEach(control => {
+          this.recursivelyMergeControlProps(this.controls, control);
+        });
 
       this.flatControls = this.flattenFormControls(this.controls);
       // log('this.controls', this.controls);
@@ -385,10 +376,11 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     switch (control.type) {
       case 'select':
       case 'selectwrapper':
-        // if (['nameTranslations', 'translatedName'].includes(control.controlName) || !Array.isArray(value)) {
-        //   return value;
-        // }
-        return control.multiple ? value.map(item => item.value) : value[0].value;
+        return !Array.isArray(value)
+          ? value
+          : control.multiple
+            ? value.map(item => item.value)
+            : value[0].value;
       case 'multilanguage': {
         // TODO(a.tymchuk): replace with proper type instead of ILabeledValue
         const values = (Array.isArray(value) ? value : control.langOptions)
