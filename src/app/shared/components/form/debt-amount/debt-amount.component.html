@@ -1,0 +1,19 @@
+<div class="flex horizontal">
+  <div class="flex-item grow">
+    <input
+      class="form-control"
+      [ngModel]="amount"
+      (blur)="onTouch()"
+      (input)="onAmountChange($event)"
+    >
+  </div>
+  <div class="flex-item grow percentage">
+    <input
+      class="form-control"
+      [ngModel]="percentage"
+      (blur)="onTouch()"
+      (input)="onPercentageChange($event)"
+    >
+    <span>%</span>
+  </div>
+</div>

@@ -93,6 +93,17 @@ export interface IDynamicFormControl {
   // min & max value for number input
   min?: number;
   max?: number;
+  // options for debt amount control
+  amount?: number;
+}
+
+// TODO(d.maltsev): extend from base control when it's merged
+export interface IDynamicFormDebtAmountControl {
+  amount: number;
+  controlName: string;
+  label?: string;
+  required?: boolean;
+  type: 'debt-amount';
 }
 
 /**
@@ -104,6 +115,7 @@ export type TControlTypes =
   | 'checkbox'
   | 'colorpicker'
   | 'datepicker'
+  | 'debt-amount'
   | 'dialog'
   | 'dialogmultiselect'
   | 'dialogmultiselectwrapper'

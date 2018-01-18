@@ -369,6 +369,19 @@
     </label>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'debt-amount'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+      <app-debt-amount
+        [formControlName]="control.controlName"
+        [total]="control.total"
+      ></app-debt-amount>
+    </label>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'dynamic'">
 
     <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">
