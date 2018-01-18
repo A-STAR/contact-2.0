@@ -15,13 +15,13 @@ import { IAttribute } from '../../attribute.interface';
 import {
   IDynamicFormItem,
   IDynamicFormConfig,
-} from '../../../../../components/form/dynamic-form/dynamic-form.interface';
+} from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { AttributeService } from '../../attribute.service';
 import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { TYPE_CODES } from '@app/core/utils/value';
 
@@ -79,7 +79,7 @@ export class AttributeGridEditComponent implements OnInit {
   }
 
   private getControls(isDictionary: boolean): IDynamicFormItem[] {
-    const controls: Partial<IDynamicFormItem>[] = [
+    const controls: IDynamicFormItem[] = [
       {
         controlName: 'name',
         type: this.attributeId ? 'multilanguage' : 'text',
@@ -110,7 +110,8 @@ export class AttributeGridEditComponent implements OnInit {
         lookupKey: 'dictionaries'
       },
       { controlName: 'disabledValue', type: 'checkbox' },
-    ];
-    return controls as IDynamicFormItem[];
+    ] as IDynamicFormItem[];
+
+    return controls;
   }
 }

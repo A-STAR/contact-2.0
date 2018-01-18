@@ -107,6 +107,7 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
 
   ngOnDestroy(): void {
     this.viewPermissionSubscription.unsubscribe();
+    this.busSubscription.unsubscribe();
   }
 
   get propertyList(): Array<IProperty> {

@@ -13,19 +13,19 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { ICloseAction } from '../../../../../shared/components/action-grid/action-grid.interface';
 import { IDebtStatusDictionaries } from '../debt-status.interface';
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, IDynamicFormSelectControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOperationResult } from '../../debt-responsible/debt-responsible.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
-import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
 import { DebtResponsibleService } from '../../debt-responsible/debt-responsible.service';
 import { DebtStatusService } from '../debt-status.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey, toLabeledValues } from '../../../../../core/utils';
+import { makeKey, toLabeledValues } from '@app/core/utils';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 const label = makeKey('massOperations.debtStatus');
@@ -36,11 +36,11 @@ const label = makeKey('massOperations.debtStatus');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtStatusComponent implements OnInit, OnDestroy {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   @Input() debts: number[];
 
   @Output() close = new EventEmitter<ICloseAction>();
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   dicts: IDebtStatusDictionaries = null;
 
@@ -85,7 +85,7 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
           this.form.form.patchValue({
             reasonCode: null
           });
-          const reasonCodeControl = this.getControl('reasonCode');
+          const reasonCodeControl = this.getControl('reasonCode') as IDynamicFormSelectControl;
 
           // filter reasonCode's options with respect to statusCode's value
           reasonCodeControl.options = this.dicts[UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE]

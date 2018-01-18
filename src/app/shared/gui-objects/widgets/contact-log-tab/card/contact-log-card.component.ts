@@ -59,15 +59,14 @@ export class ContactLogTabCardComponent implements OnInit {
     .pipe(first())
     .subscribe(([ canEditComment, contactLogType, contactLog, contactTypeOpts, roleOpts, statusOpts ]) => {
       this.contactLog = contactLog;
-      this.controls = this
-        .initControls(
-          contactTypeOpts,
-          contactLogType,
-          roleOpts,
-          statusOpts,
-          canEditComment,
-          contactLog,
-        );
+      this.controls = this.initControls(
+        contactTypeOpts,
+        contactLogType,
+        roleOpts,
+        statusOpts,
+        canEditComment,
+        contactLog,
+      );
       this.cdRef.markForCheck();
     });
   }
@@ -127,7 +126,7 @@ export class ContactLogTabCardComponent implements OnInit {
       type: 'textarea', width: 12, disabled: !canEditComment || this.disabled
     };
 
-    return [...baseControls, promiseAmount, comment].filter(Boolean) as IDynamicFormItem[];
+    return [...baseControls, contactNumber, promiseAmount, comment].filter(Boolean) as IDynamicFormItem[];
   }
 
   private createSMSControls(roleOpts: IOption[], statusOpts: IOption[]): IDynamicFormItem[] {
