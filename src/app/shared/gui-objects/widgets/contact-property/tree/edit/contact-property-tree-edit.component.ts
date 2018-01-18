@@ -51,8 +51,12 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     labelKey: 'widgets.contactProperty.edit',
   };
   controls: IDynamicFormItem[];
-  data = {};
   attributeTypes: ITreeNode[] = [];
+  data = {};
+  tabs = [
+    { isInitialised: true },
+    { isInitialised: false },
+  ];
 
   private attributeTypesChanged = false;
 
@@ -166,6 +170,10 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     if (value && !node.data.isDisplayed) {
       this.onIsDisplayedChange(true, node);
     }
+  }
+
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
   }
 
   private buildControls(
