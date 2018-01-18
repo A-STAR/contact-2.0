@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
+import { IContactRegistrationMode } from '../contact-registration.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContactRegistrationService } from '../contact-registration.service';
@@ -13,11 +14,11 @@ import { isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-contact-registration-overview',
-  styleUrls: [ './overview.component.scss' ],
-  templateUrl: './overview.component.html',
+  selector: 'app-contact-registration-tree',
+  styleUrls: [ './tree.component.scss' ],
+  templateUrl: './tree.component.html',
 })
-export class ContactRegistrationComponent {
+export class TreeComponent {
   @Input() contactTypeCode: number;
 
   @Input('debtId')
@@ -55,7 +56,7 @@ export class ContactRegistrationComponent {
   }
 
   onNodeDoubleClick(node: any): void {
-    this.contactRegistrationService.mode = 'form';
+    this.contactRegistrationService.mode = IContactRegistrationMode.EDIT;
     if (node && isEmpty(node.children)) {
       this.selectedNode = node.data;
       this.contactRegistrationService.outcome = node.data;

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 
+import { IContactRegistrationMode } from '../contact-registration.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContactRegistrationService } from '../contact-registration.service';
@@ -108,7 +109,7 @@ export class EditComponent {
   ) {}
 
   onBack(): void {
-    this.contactRegistrationService.mode = 'tree';
+    this.contactRegistrationService.mode = IContactRegistrationMode.TREE;
     this.cdRef.markForCheck();
   }
 }

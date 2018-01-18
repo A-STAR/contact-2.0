@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 
 import { ContactRegistrationService } from './contact-registration.service';
+import { IContactRegistrationMode } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,7 +17,7 @@ export class ContactRegistrationComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  get mode(): 'tree' | 'form' {
-    return this.contactRegistrationService.mode;
+  get showTree(): boolean {
+    return this.contactRegistrationService.mode === IContactRegistrationMode.TREE;
   }
 }

@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import { ContactRegistrationComponent } from './overview.component';
+import { TreeComponent } from './tree.component';
 
 @NgModule({
   imports: [
     SharedModule,
   ],
   exports: [
-    ContactRegistrationComponent,
+    TreeComponent,
   ],
   declarations: [
-    ContactRegistrationComponent,
+    TreeComponent,
   ],
 })
-export class OverviewModule {}
+export class TreeModule {}

@@ -1,9 +1,13 @@
-<ng-container *ngIf="mode === 'form'; then form; else tree;"></ng-container>
+<!-- TODO(d.maltsev): do NOT destroy tree & edit components; set visibility instead -->
+<ng-container *ngIf="showTree; then tree; else edit;"></ng-container>
 
 <ng-template #tree>
-  <app-contact-registration-overview [debtId]="debtId" [contactTypeCode]="contactTypeCode"></app-contact-registration-overview>
+  <app-contact-registration-tree
+    [contactTypeCode]="contactTypeCode"
+    [debtId]="debtId"
+  ></app-contact-registration-tree>
 </ng-template>
 
-<ng-template #form>
+<ng-template #edit>
   <app-contact-registration-edit></app-contact-registration-edit>
 </ng-template>
