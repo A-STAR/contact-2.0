@@ -27,3 +27,14 @@ export interface IScheduleEvent {
   isInactive: number;
   priority: number;
 }
+
+export enum SchedulePeriodEnum {
+  DAILY,
+  WEEKLY
+}
+
+export interface ISchedulePeriod {
+  periodTypeCode: number;
+  dayPeriod?: number;
+  weekDays?: number[];
+}

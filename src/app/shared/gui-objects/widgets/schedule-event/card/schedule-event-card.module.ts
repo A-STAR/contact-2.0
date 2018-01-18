@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
+import { SchedulePeriodCardModule } from './period/schedule-period-card.module';
 
 import { ScheduleEventCardComponent } from './schedule-event-card.component';
 
@@ -10,7 +11,8 @@ import { ScheduleEventCardComponent } from './schedule-event-card.component';
   imports: [
     CommonModule,
     TranslateModule,
-    DynamicFormModule
+    DynamicFormModule,
+    SchedulePeriodCardModule
   ],
   exports: [
     ScheduleEventCardComponent,

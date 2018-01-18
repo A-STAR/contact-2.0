@@ -1,0 +1,27 @@
+
+<div class="pb-lg">
+  <app-dynamic-form
+    #periodType
+    *ngIf="periodTypeControls"
+    [config]="periodTypeConfig"
+    [controls]="periodTypeControls"
+    [data]="period"
+  ></app-dynamic-form>
+</div>
+
+<div class="pb-lg">
+  <app-dynamic-form
+    #dailyPeriod
+    *ngIf="selectedPeriodTypeCode === 1"
+    [config]="dailyPeriodConfig"
+    [controls]="dailyPeriodControls"
+    [data]="period"
+  ></app-dynamic-form>
+  <app-dynamic-form
+    #weeklyPeriod
+    *ngIf="selectedPeriodTypeCode === 2"
+    [config]="weeklyPeriodConfig"
+    [controls]="weeklyPeriodControls"
+    [data]="period"
+  ></app-dynamic-form>
+</div>

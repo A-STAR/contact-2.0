@@ -1,8 +1,12 @@
 <div class="pb-lg">
   <app-dynamic-form
-    *ngIf="controls"
+    *ngIf="сontrols"
     [config]="config"
-    [controls]="controls"
+    [controls]="сontrols"
     [data]="event"
   ></app-dynamic-form>
 </div>
+
+<app-schedule-period-card
+  [period]="event"
+></app-schedule-period-card>

@@ -11,6 +11,7 @@ import { ScheduleEventService } from '../schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { SchedulePeriodCardComponent } from './period/schedule-period-card.component';
 
 @Component({
   selector: 'app-schedule-event-card',
@@ -18,11 +19,12 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduleEventCardComponent implements OnInit {
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent) commonForm: DynamicFormComponent;
+  @ViewChild(SchedulePeriodCardComponent) periodCard: SchedulePeriodCardComponent;
 
   @Input() eventId: number;
 
-  controls: IDynamicFormItem[];
+  сontrols: IDynamicFormItem[];
   config: IDynamicFormConfig = {
     labelKey: 'widgets.scheduleEvents.card',
   };
@@ -42,24 +44,37 @@ export class ScheduleEventCardComponent implements OnInit {
     .pipe(first())
     .subscribe(([ canEdit, event ]) => {
       this.event = event;
-      this.controls = this.initControls(canEdit);
+      this.сontrols = this.initControls(canEdit);
       this.cdRef.markForCheck();
     });
   }
 
+  get eventForms(): (DynamicFormComponent | SchedulePeriodCardComponent)[] {
+    return [ this.commonForm, this.periodCard ];
+  }
+
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+    return this.eventForms
+      .filter(Boolean)
+      .every(form => form.canSubmit);
+  }
+
+  get eventSerializedUpdates(): IScheduleEvent {
+    return {
+      ...this.commonForm.serializedUpdates,
+      ...this.periodCard.serializedUpdates
+    };
   }
 
   onSubmit(): void {
     const action = this.eventId
-    ? this.scheduleEventService.update(this.eventId, this.form.serializedUpdates)
-    : this.scheduleEventService.create(this.form.serializedUpdates);
+      ? this.scheduleEventService.update(this.eventId, this.eventSerializedUpdates)
+      : this.scheduleEventService.create(this.eventSerializedUpdates);
 
-  action.subscribe(() => {
-    this.scheduleEventService.dispatchAction(ScheduleEventService.MESSAGE_SCHEDULE_EVENT_SAVED);
-    this.onBack();
-  });
+    action.subscribe(() => {
+      this.scheduleEventService.dispatchAction(ScheduleEventService.MESSAGE_SCHEDULE_EVENT_SAVED);
+      this.onBack();
+    });
   }
 
   onBack(): void {
@@ -68,26 +83,8 @@ export class ScheduleEventCardComponent implements OnInit {
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
-      {
-        controlName: 'startDate',
-        type: 'datepicker',
-        required: true,
-        disabled: !canEdit,
-      },
-      {
-        controlName: 'endDate',
-        type: 'datepicker',
-        disabled: !canEdit,
-      },
-      {
-        controlName: 'periodTypeCode',
-        type: 'select',
-        dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE,
-        required: true,
-        disabled: true,
-        markAsDirty: !this.eventId,
-      },
-      { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true },
+      { controlName: 'startDate', type: 'datepicker', required: true, disabled: !canEdit },
+      { controlName: 'endDate', type: 'datepicker', disabled: !canEdit },
       { controlName: 'startTime', type: 'datepicker', displayTime: true, disabled: !canEdit, required: true },
       { controlName: 'isInactive', type: 'checkbox', disabled: !canEdit },
       { controlName: 'priority', type: 'number', disabled: !canEdit },
