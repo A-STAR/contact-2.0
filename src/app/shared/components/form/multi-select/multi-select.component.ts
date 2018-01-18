@@ -92,7 +92,7 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
   }
 
   registerOnTouched(fn: Function): void {
-    this.onTouched = fn;
+    // this.onTouched = fn;
   }
 
   onRightAction(): void {
@@ -123,7 +123,7 @@ export class MultiSelectComponent implements OnDestroy, OnInit, AfterViewInit, C
 
   private onChange: Function = () => {};
 
-  private onTouched: Function = () => {};
+  // private onTouched: Function = () => {};
 
   private updateState(): void {
     this.gridTo.selected = [];

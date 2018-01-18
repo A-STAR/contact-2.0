@@ -46,7 +46,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
 
   dialog: string;
 
-  private isDisabled = false;
+  // private isDisabled = false;
   private value: IDialogMultiSelectValue[];
   private previousValue: IDialogMultiSelectValue[];
 
@@ -165,9 +165,9 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
   registerOnTouched(fn: Function): void {
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
-  }
+  // setDisabledState(isDisabled: boolean): void {
+  //   this.isDisabled = isDisabled;
+  // }
 
   private propagateChange: Function = () => {};
 

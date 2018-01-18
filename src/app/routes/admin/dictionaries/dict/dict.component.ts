@@ -54,11 +54,11 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
 
   columns: IGridColumn[];
   dialog: 'create' | 'edit' | 'remove';
+  dictionary: IDictionary;
 
   viewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
 
-  private dictionary: IDictionary;
   private _columns: IGridColumn[] = [
     { prop: 'code', minWidth: 50, maxWidth: 70 },
     { prop: 'name', maxWidth: 300 },

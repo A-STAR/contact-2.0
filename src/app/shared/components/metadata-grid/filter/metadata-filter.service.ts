@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 
 import { IMetadataFilter, IMetadataFilterOption } from '../../../../core/metadata/metadata.interface';
-import { IFilterControl } from './metadata-filter.interface';
 
 import { FilterOperatorType } from '../../../../shared/components/grid2/filter/grid-filter';
-import { TControlTypes } from '../../form/dynamic-form/dynamic-form.interface';
+import { TControlTypes, IFilterControl } from '../../form/dynamic-form/dynamic-form.interface';
 
 @Injectable()
 export class MetadataFilterService {
@@ -29,7 +28,8 @@ export class MetadataFilterService {
         return 'dialogmultiselectwrapper';
       case 'BETWEEN':
         return filterType === 'dates' ? 'datepicker' : 'selectwrapper';
-      default: return 'selectwrapper';
+      default:
+        return 'selectwrapper';
     }
   }
 
