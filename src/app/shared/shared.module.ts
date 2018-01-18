@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TextMaskModule } from 'angular2-text-mask';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { AngularSplitModule } from 'angular-split';
 
 // Angle modules
 import { TranslateModule } from '@ngx-translate/core';
@@ -75,14 +76,16 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 // https://angular.io/styleguide#!#04-10
 @NgModule({
   imports: [
+    // Angular Modules
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    // Angle modules
+    // Third Party Modules
+    AngularSplitModule,
     TranslateModule,
     TextMaskModule,
     PerfectScrollbarModule,
-    // app modules
+    // App Modules
     AccordionModule,
     ActionDialogModule,
     ActionGridModule,
@@ -142,16 +145,19 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     VectormapDirective,
     NowDirective,
     ScrollableDirective,
-    // app declarations
+    // App Components
     NumericInputComponent,
     QBuilderComponent
   ],
   exports: [
+    // Angular Modules
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateModule,
     RouterModule,
+    // Third Party Modules
+    AngularSplitModule,
+    TranslateModule,
     // Angle exports
     TextMaskModule,
     CheckallDirective,

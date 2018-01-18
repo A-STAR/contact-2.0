@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { of as observableOf } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { CampaignService } from '@app/routes/workplaces/call-center/campaign/campaign.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { WorkplacesService } from '@app/routes/workplaces/workplaces.service';
 
@@ -15,15 +14,25 @@ const labelKey = makeKey('modules.contactRegistration.misc');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-call-center-tree',
-  styleUrls: [ './tree.component.scss' ],
-  templateUrl: './tree.component.html',
+  selector: 'app-contact-registration',
+  styleUrls: [ './contact-registration.component.scss' ],
+  templateUrl: './contact-registration.component.html',
 })
-export class TreeComponent implements OnInit {
+export class ContactRegistrationComponent {
+  @Input() contactTypeCode: number;
+
+  @Input('debtId')
+  set debtId(debtId: number) {
+    this._debtId = debtId;
+    this.fetchNodes();
+  }
+
   isFormOpen = false;
   nodes = [];
   selectedNode = null;
   scenario: string = null;
+
+  private _debtId: number;
 
   controls = [
     // Promise
@@ -112,20 +121,10 @@ export class TreeComponent implements OnInit {
 
   data = {};
 
-  // TODO(d.maltsev): should it be 1 or 2?
-  // See: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516
-  // Dictionary 50
-  private contactTypeCode = 1;
-
   constructor(
-    private campaignService: CampaignService,
     private cdRef: ChangeDetectorRef,
     private workplacesService: WorkplacesService,
   ) {}
-
-  ngOnInit(): void {
-    this.fetchNodes();
-  }
 
   get scenarioText(): string {
     // TODO(d.maltsev): i18n
@@ -157,27 +156,23 @@ export class TreeComponent implements OnInit {
   }
 
   private fetchNodes(): void {
-    this.debtId$.pipe(
-      mergeMap(debtId => this.workplacesService.fetchContactTree(debtId, this.contactTypeCode)),
-    )
-    .subscribe(nodes => {
-      this.nodes = nodes;
-      this.cdRef.markForCheck();
-    });
+    this.workplacesService
+      .fetchContactTree(this._debtId, this.contactTypeCode)
+      .subscribe(nodes => {
+        this.nodes = nodes;
+        this.cdRef.markForCheck();
+      });
   }
 
   private fetchScenario(nodeId: number): void {
-    this.debtId$.pipe(
-      mergeMap(debtId => this.workplacesService.fetchContactScenario(debtId, this.contactTypeCode, nodeId)),
-      catchError(() => observableOf(null)),
-    )
-    .subscribe(scenario => {
-      this.scenario = scenario;
-      this.cdRef.markForCheck();
-    });
-  }
-
-  private get debtId$(): Observable<number> {
-    return this.campaignService.campaignDebt$.pipe(map(debt => debt.debtId));
+    this.workplacesService
+      .fetchContactScenario(this._debtId, this.contactTypeCode, nodeId)
+      .pipe(
+        catchError(() => of(null)),
+      )
+      .subscribe(scenario => {
+        this.scenario = scenario;
+        this.cdRef.markForCheck();
+      });
   }
 }

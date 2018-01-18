@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 
 import { CampaignService } from './campaign.service';
 
@@ -32,7 +33,11 @@ export class CampaignComponent implements OnInit {
   }
 
   get hasDebt$(): Observable<boolean> {
-    return this.campaignService.campaignDebt$.map(Boolean);
+    return this.campaignService.campaignDebt$.pipe(map(Boolean));
+  }
+
+  get debtId$(): Observable<number> {
+    return this.campaignService.campaignDebt$.pipe(map(debt => debt.debtId));
   }
 
   onTabSelect(tabIndex: number): void {
