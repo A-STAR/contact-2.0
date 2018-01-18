@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   ViewChild,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 
@@ -26,6 +27,7 @@ import { Grid2Component } from '../../../shared/components/grid2/grid2.component
 import { DialogFunctions } from '../../../core/dialog';
 
 import { isEmpty } from '../../../core/utils';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,7 +39,7 @@ import { isEmpty } from '../../../core/utils';
   styleUrls: [ './data-upload.component.scss' ],
   templateUrl: './data-upload.component.html',
 })
-export class DataUploadComponent extends DialogFunctions implements OnInit {
+export class DataUploadComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(Grid2Component) grid: Grid2Component;
   @ViewChild('fileInput') fileInput: ElementRef;
 
@@ -54,6 +56,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
   rows: any[];
   rowCount = 0;
   rowIdKey = 'id';
+  dictCode = UserDictionariesService.DICTIONARY_DATA_LOAD_FORMAT;
 
   private isFirstRequest = true;
   private queryParamsSub: Subscription;
@@ -62,7 +65,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
     private cdRef: ChangeDetectorRef,
     private store: Store<IAppState>,
     private dataUploadService: DataUploadService,
-    private gridService: GridService,
+    private gridService: GridService
   ) {
     super();
   }
@@ -79,6 +82,12 @@ export class DataUploadComponent extends DialogFunctions implements OnInit {
         this.isSelectVisible = false;
         this.cdRef.markForCheck();
       });
+  }
+
+  ngOnDestroy(): void {
+    if (this.queryParamsSub) {
+       this.queryParamsSub.unsubscribe();
+    }
   }
 
   get hasFile(): boolean {

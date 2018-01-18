@@ -11,13 +11,13 @@ import {
     IErrorsResponse,
     IDataResponse,
     IOpenFileResponse,
-    IUploadersConfig,
     IDataUploaderConfig,
 } from './data-upload.interface';
 import { IMassInfoResponse } from '../../../core/data/data.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 class DataUploader {
     public guid: number;
@@ -96,7 +96,7 @@ class DataUploader {
 @Injectable()
 export class DataUploadService {
 
-    private static UPLOADERS_CONFIG: IUploadersConfig = {
+    private static UPLOADERS_CONFIG = {
         [DataUploaders.CURRENCY_RATE]: {
             openFile: '/load/currencies/{currenciesId}/rates',
             fetch: '/load/currencies/{currenciesId}/rates/guid/{guid}',
@@ -125,15 +125,23 @@ export class DataUploadService {
             save: '/load/debts/guid/{guid}/save',
             getErrors: '/load/debts/guid/{guid}/error'
         },
-        [DataUploaders.PAYMENT]: {
-            openFile: '/load/payments/format/{formatCode}',
-            fetch: '/load/payments/format/{formatCode}/guid/{guid}',
-            editCell: '/load/payments/format/{formatCode}/guid/{guid}',
-            deleteRow: '/load/payments/format/{formatCode}/guid/{guid}/row/{rowIds}',
-            cancel: '/load/payments/format/{formatCode}/guid/{guid}',
-            save: '/load/payments/format/{formatCode}/guid/{guid}/save',
-            getErrors: '/load/payments/format/{formatCode}/guid/{guid}/error',
-            paramKey: 'formatCode'
+        [DataUploaders.PAYMENT_NEW]: {
+            openFile: '/load/payments/format/1',
+            fetch: '/load/payments/format/1/guid/{guid}',
+            editCell: '/load/payments/format/1/guid/{guid}',
+            deleteRow: '/load/payments/format/1/guid/{guid}/row/{rowIds}',
+            cancel: '/load/payments/format/1/guid/{guid}',
+            save: '/load/payments/format/1/guid/{guid}/save',
+            getErrors: '/load/payments/format/1/guid/{guid}/error',
+        },
+        [DataUploaders.PAYMENT_UPDATE]: {
+            openFile: '/load/payments/format/1',
+            fetch: '/load/payments/format/1/guid/{guid}',
+            editCell: '/load/payments/format/1/guid/{guid}',
+            deleteRow: '/load/payments/format/1/guid/{guid}/row/{rowIds}',
+            cancel: '/load/payments/format/1/guid/{guid}',
+            save: '/load/payments/format/1/guid/{guid}/save',
+            getErrors: '/load/payments/format/1/guid/{guid}/error',
         },
         [DataUploaders.SET_OPERATOR]: {
             openFile: '/load/debtSetOperator',
@@ -150,20 +158,20 @@ export class DataUploadService {
 
     private currentUploaderType: DataUploaders;
 
-    private uploaderTypes = [
-        null,
-        DataUploaders.SET_OPERATOR,
-        DataUploaders.PAYMENT,
-        DataUploaders.DEBTS,
-        DataUploaders.CONTACT_HISTORY,
-        DataUploaders.CURRENCY_RATE
-    ];
+    private uploaderTypes;
 
     constructor(
         private dataService: DataService,
         private gridService: GridService,
+        private userDictionariesService: UserDictionariesService
         // private notificationsService: NotificationsService,
-    ) { }
+    ) {
+        this.userDictionariesService
+            .getDictionary(UserDictionariesService.DICTIONARY_DATA_LOAD_FORMAT)
+            .subscribe(terms => {
+                this.uploaderTypes = [null, ...terms.map(term => term.code), DataUploaders.CURRENCY_RATE];
+            });
+     }
 
     get format(): number {
         return this.uploaderTypes.indexOf(this.currentUploaderType);

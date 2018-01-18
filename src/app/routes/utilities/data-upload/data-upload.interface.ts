@@ -39,14 +39,16 @@ export interface IErrorsResponse {
 }
 
 export enum DataUploaders {
-  CONTACT_HISTORY = 'CONTACT_HISTORY',
-  CURRENCY_RATE = 'CURRENCY_RATE',
-  DEBTS = 'DEBTS',
-  PAYMENT = 'PAYMENT',
-  SET_OPERATOR = 'SET_OPERATOR',
+  NONE,
+  // 1 and 2
+  PAYMENT_NEW,
+  PAYMENT_UPDATE,
+  SET_OPERATOR,
+  DEBTS,
+  CONTACT_HISTORY,
+  // not fetched from the server
+  CURRENCY_RATE,
 }
-
-export type TDataUploaders = 'CONTACT_HISTORY' & 'CURRENCY_RATE' & 'DEBTS' & 'PAYMENT' & 'SET_OPERATOR';
 
 export interface IDataUploaderConfig {
   openFile: string;
@@ -59,12 +61,4 @@ export interface IDataUploaderConfig {
   // optional key for additional parameter
   paramKey?: string;
 }
-
-/**
- *  still no support for enum keys
- * @see https://github.com/Microsoft/TypeScript/issues/2491
-*/
-export type IUploadersConfig = {
-  [key in TDataUploaders]: IDataUploaderConfig;
-};
 
