@@ -78,8 +78,16 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
       .map(currency => currency.currencyId)
       .filter(Boolean)
       .subscribe(currencyId => {
+        // format setter also creates new loader if it wasn't created
+        this.dataUploadService.format = 6;
         this.dataUploadService.uploader.parameter = currencyId;
         this.isSelectVisible = false;
+        // reset previous loaded file
+        this.fileInput.nativeElement.value = '';
+        if (this.columns) {
+          // reset previous grid
+          this.resetGrid();
+        }
         this.cdRef.markForCheck();
       });
   }
@@ -202,9 +210,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
     this.dataUploadService.uploader
       .cancel()
       .subscribe(() => {
-        this.columns = null;
-        this.rows = [];
-        this.rowCount = 0;
+        this.resetGrid();
         // TODO(d.maltsev): maybe reset form instead?
         this.fileInput.nativeElement.value = '';
         this.closeDialog();
@@ -212,13 +218,14 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
       });
   }
 
+
   onNextProblematicCellClick(): void {
     this.grid.focusNextCell(cell => {
       const { rowIndex } = cell;
       const columnId = cell.column.getColId();
       return this.rows[rowIndex]
-        ? this.rows[rowIndex].cells.find(c => c.columnId === columnId).statusCode
-        : null;
+      ? this.rows[rowIndex].cells.find(c => c.columnId === columnId).statusCode
+      : null;
     });
   }
 
@@ -230,6 +237,12 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
       ? this.rows[rowIndex].cells.find(c => c.columnId === columnId).statusCode === 1
       : null;
     });
+  }
+
+  private resetGrid(): void {
+    this.columns = null;
+    this.rows = [];
+    this.rowCount = 0;
   }
 
   private rowHasErrors(row: IRow): boolean {
