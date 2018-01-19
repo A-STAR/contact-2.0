@@ -69,7 +69,7 @@ export class DictEditComponent implements OnInit {
   private getControls(): IDynamicFormItem[] {
 
     const disabled = !this.canEdit;
-    const controls: Partial<IDynamicFormItem>[] = [
+    return [
       {
         controlName: 'code',
         type: 'number',
@@ -112,8 +112,6 @@ export class DictEditComponent implements OnInit {
         ],
         disabled,
       }
-    ];
-
-    return controls as IDynamicFormItem[];
+    ] as IDynamicFormItem[];
   }
 }

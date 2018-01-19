@@ -203,7 +203,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
       dictCode: UserDictionariesService.DICTIONARY_CONTACT_PROMISE_INPUT_MODE,
     };
 
-    const controls = [
+    return [
       { controlName: 'code', type: 'text', width: 3, disabled: this.isEditing },
       {
         controlName: 'name',
@@ -280,8 +280,6 @@ export class ContactPropertyTreeEditComponent implements OnInit {
           }
         ]
       },
-    ];
-
-    return controls as IDynamicFormItem[];
+    ] as IDynamicFormItem[];
   }
 }
