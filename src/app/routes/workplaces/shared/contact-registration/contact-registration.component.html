@@ -1,10 +1,2 @@
-<!-- TODO(d.maltsev): do NOT destroy tree & edit components; set visibility instead -->
-<ng-container *ngIf="showTree; then tree; else edit;"></ng-container>
-
-<ng-template #tree>
-  <app-contact-registration-tree></app-contact-registration-tree>
-</ng-template>
-
-<ng-template #edit>
-  <app-contact-registration-edit></app-contact-registration-edit>
-</ng-template>
+<app-contact-registration-tree [hidden]="!showTree"></app-contact-registration-tree>
+<app-contact-registration-edit [hidden]="!showEdit"></app-contact-registration-edit>

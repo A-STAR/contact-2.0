@@ -43,6 +43,10 @@ export class ContactRegistrationComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
+  get showEdit(): boolean {
+    return this.contactRegistrationService.mode === IContactRegistrationMode.EDIT;
+  }
+
   get showTree(): boolean {
     return this.contactRegistrationService.mode === IContactRegistrationMode.TREE;
   }
