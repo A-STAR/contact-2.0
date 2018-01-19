@@ -124,7 +124,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const { autoCommentIds, template, name, nextCallDays, parentId, ...formData } = this.form.serializedUpdates;
+    const { autoCommentIds, template, nextCallDays, parentId, ...formData } = this.form.serializedUpdates;
 
     const attributes = flatten(this.attributeTypes, 'data')
       .filter(attr => attr.isDisplayed)
@@ -133,7 +133,6 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     const data = {
       ...formData,
       ...(autoCommentIds ? { autoCommentIds: autoCommentIds.join(',') } : {}),
-      ...(name ? { name: this.isEditing ? Object.keys(name).map(k => ({ languageId: k, value: name[k] })) : name } : {}),
       ...(template ? { [template.name]: template.value || null } : {}),
       ...(nextCallDays ? { [nextCallDays.name]: nextCallDays.value || null } : {}),
       ...(isEmpty(attributes) ? {} : { attributes }),

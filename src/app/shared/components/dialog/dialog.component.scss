@@ -1,6 +1,4 @@
 @import "../../../shared/styles/app/variables";
-@import "../../../shared/styles/bootstrap/bootstrap/_mixins";
-@import "../../../shared/styles/app/utils-definitions";
 
 .overlay {
   display: flex;
@@ -38,12 +36,13 @@
 .dialog_header /deep/ {
   [dialog-header] {
     padding: 14px 24px;
-    background-color: lighten($brand-info-light, 20%);
+    background-color: $app-dialog-header-bg-color;
   }
 
   h3 {
     margin: 0;
     font-weight: 400;
+    color: $app-dialog-header-color;
   }
 }
 

@@ -155,10 +155,10 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     ];
 
     this.data = {
-      [this.startTimeControl.controlName]: '00:00:00',
-      [this.endTimeControl.controlName]: '23:59:59',
-      [this.startDateControl.controlName]: moment().startOf('month').toDate(),
-      [this.endDateControl.controlName]: moment().endOf('month').toDate()
+      'startTime': '00:00:00',
+      'endTime': '23:59:59',
+      'startDate': moment().startOf('month').toDate(),
+      'endDate': moment().endOf('month').toDate()
     };
 
     super.ngOnInit();
