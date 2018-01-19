@@ -9,7 +9,7 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 @Injectable()
 export class ContactPropertyService {
   private baseUrl = '/contactTypes/{contactType}/treeTypes/{treeType}/results';
-  private errorMessage = 'entities.contact.gen';
+  private errorMessage = 'entities.contacts.gen';
 
   constructor(
     private dataService: DataService,

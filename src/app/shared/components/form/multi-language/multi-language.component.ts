@@ -49,8 +49,13 @@ export class MultiLanguageComponent implements ControlValueAccessor {
   }
 
   get model(): string {
-    const item = (this.langOptions || []).find((v, i) => i === this._selectedId);
-    return item && item.value || null;
+    const option = (this.langOptions || []).find((v, i) => i === this._selectedId);
+    return option ? option.value : null;
+  }
+
+  get label(): string {
+    const option = (this.langOptions || []).find((v, i) => i === this._selectedId);
+    return option ? option.label : '';
   }
 
   onLanguageChange(option: IMultiLanguageOption): void {

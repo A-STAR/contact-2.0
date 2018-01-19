@@ -19,9 +19,9 @@ import { DropdownComponent } from '../../dropdown/dropdown.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SegmentedInputComponent implements ControlValueAccessor {
-  @Input() options: ISegmentedInputOption[];
-
   @ViewChild(DropdownComponent) dropdown: DropdownComponent;
+
+  @Input() options: ISegmentedInputOption[];
 
   private _value: ISegmentedInputValue;
 

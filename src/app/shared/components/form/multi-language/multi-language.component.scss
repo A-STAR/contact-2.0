@@ -1,3 +1,5 @@
+@import '../../../styles/app/variables';
+
 .input-wrapper {
   position: relative;
   .fa-close {
@@ -5,5 +7,14 @@
     top: 0.8em;
     right: 0.8em;
     cursor: pointer;
+    z-index: 2;
   }
+}
+
+.input-group-btn {
+  font-size: inherit;
+}
+
+.main-language {
+  text-decoration: underline lighten($brand-primary-light, 20%);
 }
