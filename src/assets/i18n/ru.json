@@ -2115,11 +2115,14 @@
         "startDate": "Начало",
         "endDate": "Окончание",
         "periodTypeCode": "Период",
-        "dayPeriod": "Повторять каждые N дней",
+        "dayPeriod": "Период повторения",
         "startTime": "Время запуска",
         "isInactive": "Выключено",
         "eventTypeCode": "Тип мероприятия",
         "priority": "Приоритет"
+      },
+      "dialog": {
+        "title": "Мероприятие"
       }
     }
   },

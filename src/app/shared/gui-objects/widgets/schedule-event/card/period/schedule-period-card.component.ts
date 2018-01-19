@@ -113,7 +113,7 @@ export class SchedulePeriodCardComponent implements OnInit {
 
     this.weeklyPeriodControls = [
       ...Object.keys(this.daysOfWeek)
-        .map(day => ({ controlName: day, type: 'checkbox', disabled: !canEdit }))
+        .map(day => ({ controlName: day, type: 'checkbox', disabled: !canEdit, width: 3 }))
     ] as IDynamicFormItem[];
   }
 }

@@ -8,7 +8,6 @@ import { IDynamicFormItem, IDynamicFormConfig } from '../../../../components/for
 import { IScheduleEvent } from '../schedule-event.interface';
 
 import { ScheduleEventService } from '../schedule-event.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 import { SchedulePeriodCardComponent } from './period/schedule-period-card.component';
@@ -83,19 +82,11 @@ export class ScheduleEventCardComponent implements OnInit {
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
-      { controlName: 'startDate', type: 'datepicker', required: true, disabled: !canEdit },
-      { controlName: 'endDate', type: 'datepicker', disabled: !canEdit },
-      { controlName: 'startTime', type: 'datepicker', displayTime: true, disabled: !canEdit, required: true },
-      { controlName: 'isInactive', type: 'checkbox', disabled: !canEdit },
+      { controlName: 'startDate', type: 'datepicker', required: true, disabled: !canEdit, width: 4 },
+      { controlName: 'endDate', type: 'datepicker', disabled: !canEdit, width: 4 },
+      { controlName: 'startTime', type: 'datepicker', displayTime: true, disabled: !canEdit, required: true, width: 4 },
       { controlName: 'priority', type: 'number', disabled: !canEdit },
-      {
-        controlName: 'eventTypeCode',
-        type: 'select',
-        dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE,
-        required: true,
-        disabled: !canEdit,
-        markAsDirty: !this.eventId,
-      },
+      { controlName: 'isInactive', type: 'checkbox', disabled: !canEdit },
     ] as IDynamicFormItem[];
   }
 

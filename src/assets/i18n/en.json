@@ -2115,11 +2115,14 @@
         "startDate": "Start date",
         "endDate": "End date",
         "periodTypeCode": "Period",
-        "dayPeriod": "Repeat each N days",
+        "dayPeriod": "Repeat period",
         "startTime": "Start time",
         "isInactive": "Is inactive",
         "eventTypeCode": "Event type",
         "priority": "Priority"
+      },
+      "dialog": {
+        "title": "Event"
       }
     }
   },
