@@ -9,19 +9,19 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { EntityTranslationsConstants } from '../../../../../core/entity/translations/entity-translations.interface';
+import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
 import { ITerm } from '../../dictionaries.interface';
 import {
-  IDynamicFormItem,
-  IDynamicFormConfig
-} from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
+  IDynamicFormConfig,
+  IDynamicFormControl
+} from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { SelectionActionTypeEnum } from '@app/shared/components/form/select/select.interface';
 
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { toLabeledValues } from '../../../../../core/utils';
+import { toLabeledValues } from '@app/core/utils';
 
 @Component({
   selector: 'app-term-edit',
@@ -43,7 +43,7 @@ export class TermEditComponent implements OnInit {
   config: IDynamicFormConfig = {
     labelKey: 'terms.edit',
   };
-  controls: IDynamicFormItem[];
+  controls: IDynamicFormControl[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -66,10 +66,10 @@ export class TermEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private getControls(): IDynamicFormItem[] {
+  private getControls(): IDynamicFormControl[] {
 
     const disabled = !this.canEdit;
-    const controls: Partial<IDynamicFormItem>[] = [
+    const controls = [
       {
         controlName: 'code',
         type: 'number',
@@ -107,8 +107,8 @@ export class TermEditComponent implements OnInit {
         type: 'checkbox',
         disabled,
       }
-    ];
+    ] as IDynamicFormControl[];
 
-    return controls as IDynamicFormItem[];
+    return controls;
   }
 }

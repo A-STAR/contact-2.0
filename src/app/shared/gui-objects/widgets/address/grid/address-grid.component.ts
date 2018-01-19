@@ -194,6 +194,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
+    this.debtSubscription.unsubscribe();
   }
 
   get personId$(): Observable<number> {

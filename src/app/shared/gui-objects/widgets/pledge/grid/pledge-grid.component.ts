@@ -98,14 +98,15 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
       this.cdRef.markForCheck();
     });
 
-    this.viewPermissionSubscription = this.pledgeService.canView$.subscribe(hasViewPermission => {
-      if (hasViewPermission) {
-        this.fetch();
-      } else {
-        this.clear();
-        this.notificationsService.error('errors.default.read.403').entity('entities.pledgeContract.gen.plural').dispatch();
-      }
-    });
+    this.viewPermissionSubscription = this.pledgeService.canView$
+      .subscribe(canView => {
+        if (canView) {
+          this.fetch();
+        } else {
+          this.clear();
+          this.notificationsService.error('errors.default.read.403').entity('entities.pledgeContract.gen.plural').dispatch();
+        }
+      });
 
     this.actionSubscription = this.pledgeService
       .getAction(PledgeService.MESSAGE_PLEDGE_CONTRACT_SAVED)
@@ -118,6 +119,7 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
 
   ngOnDestroy(): void {
     this.viewPermissionSubscription.unsubscribe();
+    this.actionSubscription.unsubscribe();
   }
 
   get contracts(): Array<IPledgeContract> {

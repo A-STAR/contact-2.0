@@ -14,9 +14,8 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { FilterObject, FilterOperatorType } from '../../../../shared/components/grid2/filter/grid-filter';
 import { IAppState } from '../../../../core/state/state.interface';
-import { IDynamicFormControl } from '../../form/dynamic-form/dynamic-form.interface';
-import { IFilterControl } from './metadata-filter.interface';
-import { IMetadataColumn, IMetadataFilter } from '../../../../core/metadata/metadata.interface';
+import { IDynamicFormControl, IFilterControl } from '../../form/dynamic-form/dynamic-form.interface';
+import { IMetadataColumn } from '../../../../core/metadata/metadata.interface';
 
 import { EntityAttributesService } from '../../../../core/entity/attributes/entity-attributes.service';
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
@@ -42,7 +41,6 @@ export class MetadataFilterComponent implements OnInit {
   formControls: IDynamicFormControl[];
 
   private columnsMetadata: IMetadataColumn[];
-  private filtersMetadata: IMetadataFilter[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -65,7 +63,6 @@ export class MetadataFilterComponent implements OnInit {
       this.filterControls = this.metadataFilterService.createFilterControls(metadata.filters);
       this.formControls = this.buildFormControls(this.filterControls);
       this.columnsMetadata = metadata.columns;
-      this.filtersMetadata = metadata.baseFilters;
       this.cdRef.markForCheck();
     });
   }
@@ -101,7 +98,7 @@ export class MetadataFilterComponent implements OnInit {
         width: 3,
         action: () => this.onFilter()
       }
-    ];
+    ] as IDynamicFormControl[];
   }
 
   private getOperatorForControl(controlName: string): FilterOperatorType {
