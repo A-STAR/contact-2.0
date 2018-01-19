@@ -28,6 +28,7 @@ export type IDynamicFormControl =
   // IDynamicFormBaseControl
   IDynamicFormButtonControl |
   IDynamicFormDateControl |
+  IDynamicFormDebtAmountControl |
   IDynamicFormDialogMultiSelectControl |
   IDynamicFormFileControl |
   IDynamicFormGridSelectControl |
@@ -195,6 +196,12 @@ export interface IDynamicFormTextareaControl extends IDynamicFormBaseControl {
   dependsOn?: string;
 }
 
+export interface IDynamicFormDebtAmountControl extends IDynamicFormBaseControl {
+  amount: number;
+  placeholder?: string;
+  type: 'debt-amount';
+}
+
 export interface IFilterControl {
   label: string;
   controlName: string;
@@ -277,14 +284,6 @@ export interface IDynamicFormControlOld {
   amount?: number;
 }
 
-// TODO(d.maltsev): extend from base control when it's merged
-export interface IDynamicFormDebtAmountControl {
-  amount: number;
-  controlName: string;
-  label?: string;
-  required?: boolean;
-  type: 'debt-amount';
-}
 
 /**
  * To make the control `hidden` set `type: <any>` and `display: false`
