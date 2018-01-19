@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ColorPickerModule } from '../colorpicker/colorpicker.module';
 import { DatePickerModule } from '../datepicker/datepicker.module';
+import { DebtAmountModule } from '../debt-amount/debt-amount.module';
 import { DialogMultiSelectModule } from '../dialog-multi-select/dialog-multi-select.module';
 import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { FileUploadModule } from '../file-upload/file-upload.module';
@@ -28,6 +29,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     ColorPickerModule,
     CommonModule,
     DatePickerModule,
+    DebtAmountModule,
     DialogMultiSelectModule,
     DropdownInputModule,
     FileUploadModule,

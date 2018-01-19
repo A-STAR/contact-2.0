@@ -12,23 +12,28 @@ import { FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 
-import { IGridColumn, IRenderer } from '../../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IGridColumn, IRenderer } from '@app/shared/components/grid/grid.interface';
+import {
+  IDynamicFormControl,
+  IDynamicFormSelectControl,
+  IDynamicFormDateControl,
+  IDynamicFormTextControl
+} from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployee } from '../actions-log.interface';
 import { IToolbarAction, ToolbarActionTypeEnum } from './actions-log-filter.interface';
 import { IDictionaryItem } from '../../dictionaries/dictionaries.interface';
 
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { MultiSelectComponent } from '@app/shared/components/form/multi-select/multi-select.component';
 
-import { DataService } from '../../../../core/data/data.service';
-import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
-import { GridService } from '../../../../shared/components/grid/grid.service';
-import { LookupService } from '../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+import { DataService } from '@app/core/data/data.service';
+import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { toFullName, timeToHourMinSec } from '../../../../core/utils';
+import { toFullName, timeToHourMinSec } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,13 +50,13 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
   @ViewChild('employees') employeesComponent: MultiSelectComponent;
   @ViewChild('actionTypes') actionTypesComponent: MultiSelectComponent;
 
-  employeesControl: IDynamicFormControl;
-  inactiveEmployeesControl: IDynamicFormControl;
-  actionTypesControl: IDynamicFormControl;
-  startDateControl: IDynamicFormControl;
-  endDateControl: IDynamicFormControl;
-  startTimeControl: IDynamicFormControl;
-  endTimeControl: IDynamicFormControl;
+  employeesControl: IDynamicFormSelectControl;
+  inactiveEmployeesControl: IDynamicFormTextControl;
+  actionTypesControl: IDynamicFormSelectControl;
+  startDateControl: IDynamicFormDateControl;
+  endDateControl: IDynamicFormDateControl;
+  startTimeControl: IDynamicFormTextControl;
+  endTimeControl: IDynamicFormTextControl;
 
   employeesColumnsFrom: IGridColumn[] = [
     { prop: 'id', width: 50 },
