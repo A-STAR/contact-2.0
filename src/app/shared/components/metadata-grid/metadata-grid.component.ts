@@ -206,12 +206,12 @@ export class MetadataGridComponent<T> implements OnInit {
       },
       // TODO(d.maltsev, i.kibisov): pass entityTypeId
       objectAddToGroup: selection => selection.length && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
-      openUserDetail: selection => selection.length && permissions.has('OPERATOR_DETAIL_VIEW'),
+      openUserDetail: (selection, row) => row && row.userId && permissions.has('OPERATOR_DETAIL_VIEW'),
       paymentsCancel: selection => selection.length && permissions.has('PAYMENT_CANCEL'),
       paymentsConfirm: selection => selection.length && permissions.has('PAYMENT_CONFIRM'),
       prepareVisit: selection => selection.length && permissions.has('VISIT_PREPARE'),
       rejectPaymentsOperator: selection => selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
-      showContactHistory: selection => selection.length && permissions.has('CONTACT_LOG_VIEW'),
+      showContactHistory: (selection, row) => row && row.userId && permissions.has('CONTACT_LOG_VIEW'),
       smsCreate: selection => {
         const action = actions.find(a => a.action === 'smsCreate');
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
