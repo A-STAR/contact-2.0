@@ -14,7 +14,6 @@ import * as moment from 'moment';
 
 import { IGridColumn, IRenderer } from '@app/shared/components/grid/grid.interface';
 import {
-  IDynamicFormControl,
   IDynamicFormSelectControl,
   IDynamicFormDateControl,
   IDynamicFormTextControl

@@ -17,7 +17,6 @@ import { IMassInfoResponse } from '../../../core/data/data.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 class DataUploader {
   public guid: number;
@@ -178,8 +177,7 @@ export class DataUploadService {
 
   constructor(
     private dataService: DataService,
-    private gridService: GridService,
-    private userDictionariesService: UserDictionariesService
+    private gridService: GridService
     // private notificationsService: NotificationsService,
   ) { }
 
