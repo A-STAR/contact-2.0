@@ -248,9 +248,9 @@
         <div>
           <!-- TODO(d.maltsev): personId -->
           <app-contact-registration-contact-select
-            [debtId]="debtId"
+            [debtId]="debtId$ | async"
             [excludeCurrentPersonId]="false"
-            [personId]="personId"
+            [personId]="personId$ | async"
           ></app-contact-registration-contact-select>
         </div>
       </div>
@@ -261,9 +261,9 @@
         <h3>Изменение контактного лица</h3>
         <!-- TODO(d.maltsev): personId -->
         <app-contact-registration-contact-select
-          [debtId]="debtId"
+          [debtId]="debtId$ | async"
           [excludeCurrentPersonId]="true"
-          [personId]="personId"
+          [personId]="personId$ | async"
         ></app-contact-registration-contact-select>
       </div>
 
@@ -313,7 +313,7 @@
       <!-- Attachments -->
       <div>
         <app-contact-registration-attachment
-          [debtId]="debtId"
+          [debtId]="debtId$ | async"
         ></app-contact-registration-attachment>
       </div>
 
@@ -365,8 +365,8 @@
       <!-- Attributes -->
       <div>
         <app-contact-registration-attributes
-          [debtId]="debtId"
-          [contactTypeCode]="contactTypeCode"
+          [debtId]="debtId$ | async"
+          [contactTypeCode]="contactType$ | async"
         ></app-contact-registration-attributes>
       </div>
     </div>

@@ -56,12 +56,25 @@ export class EditComponent {
   //   return this.contactRegistrationService.canSetPromise$;
   // }
 
+  get debtId$(): Observable<number> {
+    return this.contactRegistrationService.debtId$;
+  }
+
+  get personId$(): Observable<number> {
+    return this.contactRegistrationService.personId$;
+  }
+
+  get contactType$(): Observable<number> {
+    return this.contactRegistrationService.contactType$;
+  }
+
   get canSubmit(): boolean {
     return true;
   }
 
   onSubmit(): void {
-    //
+    // TODO(d.maltsev): remove stub
+    this.onBack();
   }
 
   onBack(): void {
