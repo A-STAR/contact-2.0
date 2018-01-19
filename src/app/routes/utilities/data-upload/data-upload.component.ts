@@ -173,11 +173,14 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
     this.dataUploadService.uploader
       .save()
       .subscribe(response => {
-        const { processed, total } = response.massInfo;
-        if (processed !== total) {
-          this.setDialog('errorLogPrompt');
-          this.cdRef.markForCheck();
-        }
+        // TODO(i.lobanov): uncomment when ready on BE
+        // const { processed, total } = response.massInfo;
+        // if (processed !== total) {
+        //   this.setDialog('errorLogPrompt');
+        //   this.cdRef.markForCheck();
+        // }
+        this.setDialog('errorLogPrompt');
+        this.cdRef.markForCheck();
       });
   }
 
