@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IScheduleEvent, IScheduleEventEntry } from './schedule-event.interface';
+import { IScheduleEvent, IScheduleEventEntry, IScheduleGroup } from './schedule-event.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
@@ -53,5 +53,11 @@ export class ScheduleEventService extends AbstractActionService {
   update(eventId: number, event: IScheduleEvent): Observable<any> {
     return this.dataService.update(`${this.baseUrl}/{eventId}`, { eventId }, event)
       .catch(this.notificationsService.updateError().entity('entities.scheduleEvents.gen.singular').dispatchCallback());
+  }
+
+  fetchGroups(): Observable<IScheduleGroup[]> {
+    return this.dataService
+      .readAll('/filters/groups', {}, {})
+      .catch(this.notificationsService.fetchError().entity('entities.groups.gen.plural').dispatchCallback());
   }
 }

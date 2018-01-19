@@ -1,0 +1,22 @@
+<div class="pb-lg">
+  <app-dynamic-form
+    #eventType
+    *ngIf="eventTypeControls"
+    [config]="eventTypeConfig"
+    [controls]="eventTypeControls"
+    [data]="event"
+  ></app-dynamic-form>
+</div>
+
+<app-grid
+  #groupGrid
+  *ngIf="selectedEventTypeCode === 1"
+  columnTranslationKey="widgets.groups"
+  selectionType="single"
+  [columns]="groupGridColumns"
+  [selection]="groupSelection"
+  [footerHeight]="false"
+  [styles]="{height: '200px'}"
+  [rows]="groups"
+  (onSelect)="onGroupSelect($event)"
+></app-grid>

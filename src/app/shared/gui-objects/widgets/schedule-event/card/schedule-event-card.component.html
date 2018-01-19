@@ -1,12 +1,12 @@
 <div class="pb-lg">
   <app-dynamic-form
-    *ngIf="сontrols"
+    *ngIf="controls"
     [config]="config"
-    [controls]="сontrols"
+    [controls]="controls"
     [data]="event"
   ></app-dynamic-form>
 </div>
 
-<app-schedule-period-card
-  [period]="event"
-></app-schedule-period-card>
+<app-schedule-period-card *ngIf="event" [period]="event"></app-schedule-period-card>
+
+<app-schedule-type-card *ngIf="event" [event]="event"></app-schedule-type-card>

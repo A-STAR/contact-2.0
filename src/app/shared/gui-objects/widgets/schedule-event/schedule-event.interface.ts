@@ -38,3 +38,14 @@ export interface ISchedulePeriod {
   dayPeriod?: number;
   weekDays?: number[];
 }
+
+export enum ScheduleEventEnum {
+  GROUP
+}
+
+export interface IScheduleGroup {
+  id?: number;
+  name: string;
+  comment?: string;
+  entityTypeId: number;
+}

@@ -52,7 +52,6 @@ export class SchedulePeriodCardComponent implements OnInit {
     this.scheduleEventService.canView$
       .pipe(first())
       .subscribe(canEdit => {
-        this.period = this.period || { periodTypeCode: 1 };
         this.initPeriodControls(canEdit);
         this.selectedPeriodTypeCode$.next(this.period.periodTypeCode);
         this.cdRef.markForCheck();
@@ -70,9 +69,9 @@ export class SchedulePeriodCardComponent implements OnInit {
   get serializedUpdates(): ISchedulePeriod {
     switch (this.selectedPeriodTypeCode) {
       case SchedulePeriodEnum.DAILY:
-        return { ...this.periodTypeForm.serializedUpdates, ...this.dailyPeriodForm };
+        return { ...this.periodTypeForm.serializedUpdates, ...this.dailyFormSerializedUpdates };
       case SchedulePeriodEnum.WEEKLY:
-        return { ...this.weeklyPeriodForm.serializedUpdates, ...this.weeklyPeriodForm };
+        return { ...this.weeklyPeriodForm.serializedUpdates, ...this.weeklyFormSerializedUpdates };
     }
   }
 

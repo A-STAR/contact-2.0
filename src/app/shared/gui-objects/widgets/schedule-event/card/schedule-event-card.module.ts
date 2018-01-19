@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
 import { SchedulePeriodCardModule } from './period/schedule-period-card.module';
+import { ScheduleTypeCardModule } from './type/schedule-type-card.module';
 
 import { ScheduleEventCardComponent } from './schedule-event-card.component';
 
@@ -12,7 +13,8 @@ import { ScheduleEventCardComponent } from './schedule-event-card.component';
     CommonModule,
     TranslateModule,
     DynamicFormModule,
-    SchedulePeriodCardModule
+    SchedulePeriodCardModule,
+    ScheduleTypeCardModule,
   ],
   exports: [
     ScheduleEventCardComponent,

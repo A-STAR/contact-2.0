@@ -24,7 +24,7 @@ export class ScheduleEventCardComponent implements OnInit {
 
   @Input() eventId: number;
 
-  сontrols: IDynamicFormItem[];
+  controls: IDynamicFormItem[];
   config: IDynamicFormConfig = {
     labelKey: 'widgets.scheduleEvents.card',
   };
@@ -44,7 +44,7 @@ export class ScheduleEventCardComponent implements OnInit {
     .pipe(first())
     .subscribe(([ canEdit, event ]) => {
       this.event = event;
-      this.сontrols = this.initControls(canEdit);
+      this.controls = this.initControls(canEdit);
       this.cdRef.markForCheck();
     });
   }

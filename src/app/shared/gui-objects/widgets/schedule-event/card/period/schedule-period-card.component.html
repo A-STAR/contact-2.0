@@ -1,4 +1,3 @@
-
 <div class="pb-lg">
   <app-dynamic-form
     #periodType
@@ -7,9 +6,7 @@
     [controls]="periodTypeControls"
     [data]="period"
   ></app-dynamic-form>
-</div>
 
-<div class="pb-lg">
   <app-dynamic-form
     #dailyPeriod
     *ngIf="selectedPeriodTypeCode === 1"
@@ -17,6 +14,7 @@
     [controls]="dailyPeriodControls"
     [data]="period"
   ></app-dynamic-form>
+
   <app-dynamic-form
     #weeklyPeriod
     *ngIf="selectedPeriodTypeCode === 2"
