@@ -786,7 +786,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       name: this.translate.instant(`default.grid.actions.${action.action}`),
       action: () => this.action.emit({ metadataAction: action, params }),
       disabled: action.enabled
-        ? !action.enabled.call(null, this.selected)
+        ? !action.enabled.call(null, this.selected, params.node.data)
         : false,
       subMenu: action.children ? this.getMetadataMenuItems(action.children, params) : undefined
     }));
