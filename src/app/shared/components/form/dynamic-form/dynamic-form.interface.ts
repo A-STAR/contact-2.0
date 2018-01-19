@@ -28,6 +28,7 @@ export type IDynamicFormControl =
   // IDynamicFormBaseControl
   IDynamicFormButtonControl |
   IDynamicFormDateControl |
+  IDynamicFormDebtAmountControl |
   IDynamicFormDialogMultiSelectControl |
   IDynamicFormFileControl |
   IDynamicFormGridSelectControl |
@@ -195,6 +196,12 @@ export interface IDynamicFormTextareaControl extends IDynamicFormBaseControl {
   dependsOn?: string;
 }
 
+export interface IDynamicFormDebtAmountControl extends IDynamicFormBaseControl {
+  amount: number;
+  placeholder?: string;
+  type: 'debt-amount';
+}
+
 export interface IFilterControl {
   label: string;
   controlName: string;
@@ -273,7 +280,10 @@ export interface IDynamicFormControlOld {
   // min & max value for number input
   min?: number;
   max?: number;
+  // options for debt amount control
+  amount?: number;
 }
+
 
 /**
  * To make the control `hidden` set `type: <any>` and `display: false`
@@ -284,6 +294,7 @@ export type TControlTypes =
   | 'checkbox'
   | 'colorpicker'
   | 'datepicker'
+  | 'debt-amount'
   | 'dialog'
   | 'dialogmultiselect'
   | 'dialogmultiselectwrapper'

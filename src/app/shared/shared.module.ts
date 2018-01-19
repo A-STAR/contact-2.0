@@ -28,6 +28,7 @@ import { BlockDialogModule } from './components/dialog/block/block-dialog.module
 import { ButtonModule } from './components/button/button.module';
 import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
+import { DebtAmountModule } from './components/form/debt-amount/debt-amount.module';
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogMultiSelectModule } from './components/form/dialog-multi-select/dialog-multi-select.module';
 import { DialogActionModule } from './components/dialog-action/dialog-action.module';
@@ -92,6 +93,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ButtonModule,
     ColorPickerModule,
     DatePickerModule,
+    DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
     DownloaderModule,
@@ -175,6 +177,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ButtonModule,
     ColorPickerModule,
     DatePickerModule,
+    DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
     DownloaderModule,
