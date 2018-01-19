@@ -13,7 +13,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class TimeComponent implements ControlValueAccessor {
-
   @Input() name: string;
   @Input() value: string;
 
@@ -31,7 +30,7 @@ export class TimeComponent implements ControlValueAccessor {
   }
 
   registerOnTouched(fn: Function): void {
-    this.onTouched = fn;
+    // this.onTouched = fn;
   }
 
   onValueChange(value: string): void {
@@ -39,6 +38,5 @@ export class TimeComponent implements ControlValueAccessor {
   }
 
   private onChange: Function = () => {};
-  private onTouched: Function = () => {};
-
+  // private onTouched: Function = () => {};
 }

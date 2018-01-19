@@ -15,12 +15,12 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, IDynamicFormDateControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IPromise, IPromiseLimit } from '../promise.interface';
 import { IDebt } from '../../../../../core/debt/debt.interface';
 
 import { PromiseService } from '../promise.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
+// import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
@@ -43,8 +43,8 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   private canAddInsufficientAmount: boolean;
   private debt: IDebt;
   private promiseLimit: IPromiseLimit;
-  private minAmountPercentFormula: number;
-  private minAmountPercentPermission: boolean;
+  // private minAmountPercentFormula: number;
+  // private minAmountPercentPermission: boolean;
   private canAddInsufficientAmountSub: Subscription;
   private receiveDateTimeSub: Subscription;
 
@@ -82,7 +82,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     private promiseService: PromiseService,
     private router: Router,
     private route: ActivatedRoute,
-    private userConstantsService: UserConstantsService,
+    // private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {
 
@@ -98,15 +98,16 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       this.promiseId
         ? this.promiseService.fetch(this.debtId, this.promiseId, this.callCenter)
         : of(null),
-      this.userConstantsService.get('Promise.MinAmountPercent.Formula'),
-      this.userPermissionsService.has('PROMISE_MIN_AMOUNT_PERCENT'),
+      // this.userConstantsService.get('Promise.MinAmountPercent.Formula'),
+      // this.userPermissionsService.has('PROMISE_MIN_AMOUNT_PERCENT'),
     )
     .pipe(first())
     .subscribe(([
-      canAdd, promiseLimit, debt, promise, minAmountPercentFormula, minAmountPercentPermission
+      // canAdd, promiseLimit, debt, promise, minAmountPercentFormula, minAmountPercentPermission
+      canAdd, promiseLimit, debt, promise
     ]) => {
-      this.minAmountPercentFormula = Number(minAmountPercentFormula.valueN);
-      this.minAmountPercentPermission = minAmountPercentPermission;
+      // this.minAmountPercentFormula = Number(minAmountPercentFormula.valueN);
+      // this.minAmountPercentPermission = minAmountPercentPermission;
       this.promiseLimit = promiseLimit;
       this.debt = <IDebt>debt;
       const { maxDays, minAmountPercent } = <IPromiseLimit>promiseLimit;
@@ -115,9 +116,9 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       const today = new Date();
 
       if (!promise) {
-        const promiseDate = this.getControl('promiseDate');
+        const promiseDate = this.getControl('promiseDate') as IDynamicFormDateControl;
         promiseDate.maxDate = maxDays == null ? null : moment(today).add(maxDays, 'day').toDate();
-        const receiveDate = this.getControl('receiveDateTime');
+        const receiveDate = this.getControl('receiveDateTime') as IDynamicFormDateControl;
         receiveDate.maxDate = today;
       }
 
@@ -138,7 +139,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
         if (!value) { return; }
         const { maxDays } = this.promiseLimit;
         const today = new Date();
-        const promiseCtrl = this.getControl('promiseDate');
+        const promiseCtrl = this.getControl('promiseDate') as IDynamicFormDateControl;
 
         // minDate should not be set if the operator want to record a past promise
         promiseCtrl.minDate = moment(value).isBefore(today, 'day') || !maxDays

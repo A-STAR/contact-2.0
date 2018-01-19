@@ -32,7 +32,6 @@ export class AttachmentEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // TODO(d.maltsev): file form control wrapper that injects constants service (similar to select wrapper)
     this.userConstantsService.get('FileAttachment.MaxSize')
       .pipe(first())
       .subscribe(maxSize => {

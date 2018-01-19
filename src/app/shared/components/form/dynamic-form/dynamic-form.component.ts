@@ -14,7 +14,6 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, switchMap } from 'rxjs/operators';
-import * as R from 'ramda';
 
 import {
   IControls,
@@ -32,13 +31,17 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 import { ValueConverterService } from '../../../../core/converter/value-converter.service';
 
 import { makeKey, getTranslations } from '../../../../core/utils';
+import {
+  IDynamicFormSelectControl,
+  IDynamicFormLanguageControl
+} from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IEntityTranslation } from '@app/core/entity/translations/entity-translations.interface';
 
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: 'dynamic-form.component.html'
 })
 export class DynamicFormComponent implements OnInit, OnChanges {
-
   @Input() controls: Array<IDynamicFormItem>;
   @Input() data: IValue;
   @Input() config: IDynamicFormConfig;
@@ -65,11 +68,11 @@ export class DynamicFormComponent implements OnInit, OnChanges {
      * The form has no `config`
     */
     if (!config) {
-        this.flatControls = this.flattenFormControls(this.controls);
-        this.form = this.createForm(this.flatControls);
-        this.populateForm();
-        this.cdRef.markForCheck();
-        return;
+      this.flatControls = this.flattenFormControls(this.controls);
+      this.form = this.createForm(this.flatControls);
+      this.populateForm();
+      this.cdRef.markForCheck();
+      return;
     }
 
     /**
@@ -103,7 +106,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     combineLatest(
       dictCodeCtrls.length
         ? combineLatest(
-            dictCodeCtrls.map(ctrl => {
+            dictCodeCtrls.map((ctrl: IDynamicFormSelectControl) => {
               // log('lookupKey:', ctrl.lookupKey);
               return this.userDictionariesService.getDictionaryAsOptions(ctrl.dictCode);
             })
@@ -113,7 +116,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
               // log('dictionary options fetched', dictOptions);
               const map = dictOptions.map((options, i) => {
                 // set lookup options for `select` controls
-                const ctrl = dictCodeCtrls[i];
+                const ctrl = <IDynamicFormSelectControl>dictCodeCtrls[i];
                 ctrl.options = options;
                 return ctrl;
               });
@@ -127,7 +130,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
             .pipe(
               switchMap(languages => {
                 return combineLatest(
-                  multiLanguageCtrls.map(ctrl => {
+                  multiLanguageCtrls.map((ctrl: IDynamicFormLanguageControl) => {
                     const { langConfig } = ctrl;
                     if (!langConfig.entityId) {
                       return new ErrorObservable('The multilanguage config must contain a valid \'langConfig\'');
@@ -136,11 +139,11 @@ export class DynamicFormComponent implements OnInit, OnChanges {
                   })
                 )
                 .pipe(
-                  switchMap(translations => {
+                  switchMap((translations: IEntityTranslation[][]) => {
                     // log('translations fetched', translations);
                     const map = translations.map((translation, i) => {
                       // set langOptions for `multilanguage` controls
-                      const ctrl = multiLanguageCtrls[i];
+                      const ctrl = <IDynamicFormLanguageControl>multiLanguageCtrls[i];
                       ctrl.langOptions = getTranslations(languages, translation);
                       return ctrl;
                     });
@@ -153,7 +156,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
       lookupCtrls.length
         ? combineLatest(
-            lookupCtrls.map(ctrl => {
+            lookupCtrls.map((ctrl: IDynamicFormSelectControl) => {
               // log('lookupKey:', ctrl.lookupKey);
               return this.lookupService.lookupAsOptions(ctrl.lookupKey);
             })
@@ -163,7 +166,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
               // log('options fetched', lookupOptions);
               const map = lookupOptions.map((options, i) => {
                 // set lookup options for `select` controls
-                const ctrl = lookupCtrls[i];
+                const ctrl = <IDynamicFormSelectControl>lookupCtrls[i];
                 ctrl.options = options;
                 return ctrl;
               });
@@ -322,19 +325,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     this.form.reset();
   }
 
-  private getKey = R.compose(R.head, <any>R.keys);
-
-  private recursivelyFindControlByProp = (controls: IDynamicFormControl[], prop: Partial<IDynamicFormControl>) => {
-    return controls.find(ctrl => {
-      const key = this.getKey(prop);
-      if (ctrl.children) {
-        const found = this.recursivelyFindControlByProp(ctrl.children, prop);
-        return found && found[key] === prop[key];
-      }
-      return ctrl[key] === prop[key];
-    });
-  }
-
   private createForm(flatControls: IDynamicFormControl[]): FormGroup {
     const controls = flatControls.reduce((acc, control: IDynamicFormControl) => {
       acc[control.controlName] = this.createControl(control);
@@ -412,24 +402,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     });
   }
 
-  private findControlByPropAndApply = (
-    controls: IDynamicFormItem[],
-    prop: Partial<IDynamicFormControl>,
-    applyFn: (ctrl: IDynamicFormControl) => void
-  ): void => {
-
-    controls.forEach((ctrl: IDynamicFormControl) => {
-      if (ctrl.children) {
-        this.findControlByPropAndApply(ctrl.children, prop, applyFn);
-      } else {
-        const key = this.getKey(prop);
-        if (ctrl[key] === prop[key]) {
-          applyFn(ctrl);
-        }
-      }
-    });
-  }
-
   private recursivelyMergeControlProps = (
     controls: IDynamicFormItem[],
     control: IDynamicFormControl,
@@ -439,7 +411,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       if (ctrl.children) {
         this.recursivelyMergeControlProps(ctrl.children, control);
       } else {
-        // const key = this.getKey(prop);
         if (ctrl.controlName === control.controlName) {
           ctrl = Object.assign({}, control, ctrl);
         }
