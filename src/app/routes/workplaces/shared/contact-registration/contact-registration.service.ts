@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 
 import { IContactRegistrationMode, IOutcome } from './contact-registration.interface';
 
@@ -87,5 +88,21 @@ export class ContactRegistrationService {
 
   set personRole(personRole: number) {
     this._personRole$.next(personRole);
+  }
+
+  get canSetComment$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.commentMode)));
+  }
+
+  get canSetNextCallDate$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.nextCallMode)));
+  }
+
+  get canSetPayment$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.paymentMode)));
+  }
+
+  get canSetPromise$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.promiseMode)));
   }
 }
