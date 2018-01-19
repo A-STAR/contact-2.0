@@ -152,7 +152,9 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
       .editCell(payload)
       .subscribe(response => {
         const row = response.rows[0];
-        this.rows[row.id] = row;
+        const rows = this.rows.slice();
+        rows.splice(row.id - 1, 1, row);
+        this.rows = rows;
         this.cdRef.markForCheck();
       });
   }
@@ -239,6 +241,11 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
     });
   }
 
+  onErrorValueUpdate(rows: IRow[]): void {
+    // have to refresh row manually
+    this.grid.refreshCells({ force: true });
+  }
+
   private resetGrid(): void {
     this.columns = null;
     this.rows = [];
@@ -308,7 +315,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
       case 4: return { backgroundColor: '#ffffdd', color: '#000000' };
       case 5: return { backgroundColor: '#e0f0ff', color: '#00ccff' };
       case 6: return { backgroundColor: '#ddfade', color: '#339966' };
-      default: return null;
+      default: return { backgroundColor: '#ffffff', color: '#000000' };
     }
   }
 }

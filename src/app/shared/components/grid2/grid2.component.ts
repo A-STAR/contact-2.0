@@ -114,6 +114,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onSelect = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IAGridAction>();
   @Output() cellValueChange = new EventEmitter<CellValueChangedEvent>();
+  @Output() rowDataChange = new EventEmitter<any>();
 
   columnDefs: ColDef[];
   gridOptions: GridOptions = {};
@@ -192,6 +193,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       this.clearRangeSelections();
       this.viewportDatasource.params.setRowData(this.rows);
       this.viewportDatasource.params.setRowCount(this.rows.length);
+      this.rowDataChange.emit(rows);
     }
     if (rowCount) {
       if (this.page > this.getPageCount()) {
