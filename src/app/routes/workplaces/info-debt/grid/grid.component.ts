@@ -34,10 +34,16 @@ export class GridComponent {
   rows: IInfoDebtEntry[] = [];
   rowCount = 0;
 
+  private selectedIds: number[] = [];
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private infoDebtService: InfoDebtService,
   ) {}
+
+  get selection(): IInfoDebtEntry[] {
+    return this.selectedIds.map(id => this.rows.find(row => row[this.rowIdKey] === id));
+  }
 
   onRequest(): void {
     const filters = this.grid.getFilters();
@@ -46,11 +52,13 @@ export class GridComponent {
       .subscribe((response: IAGridResponse<IInfoDebtEntry>) => {
         this.rows = [ ...response.data ];
         this.rowCount = response.total;
+        this.select.emit(this.selection);
         this.cdRef.markForCheck();
       });
   }
 
   onSelect(ids: number[]): void {
-    this.select.emit(ids.map(id => this.rows.find(row => row[this.rowIdKey] === id)));
+    this.selectedIds = ids;
+    this.select.emit(this.selection);
   }
 }

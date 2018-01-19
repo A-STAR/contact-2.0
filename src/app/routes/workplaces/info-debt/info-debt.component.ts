@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChildren, QueryList } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { of } from 'rxjs/observable/of';
 
@@ -6,7 +6,7 @@ import { IGridDef, IInfoDebtEntry, IGridColumn } from './info-debt.interface';
 
 import { UserDictionariesService } from 'app/core/user/dictionaries/user-dictionaries.service';
 
-import { ActionGridComponent } from '../../../shared/components/action-grid/action-grid.component';
+import { GridComponent } from './grid/grid.component';
 
 import { makeKey } from '../../../core/utils';
 
@@ -20,10 +20,9 @@ const label = makeKey('modules.infoDebt');
 export class InfoDebtComponent {
   private selectedRows$ = new BehaviorSubject<IInfoDebtEntry[]>(null);
 
-  @ViewChild(ActionGridComponent) grid: ActionGridComponent<IInfoDebtEntry>;
+  @ViewChildren(GridComponent) gridComponents: QueryList<GridComponent>;
 
   selectedTabIndex = 0;
-  selectedDetailGridIndex = 0;
 
   smsGridColumns: IGridColumn[] = [
     { dataType: 1, name: 'smsId' },
@@ -91,19 +90,29 @@ export class InfoDebtComponent {
 
   constructor(private cdRef: ChangeDetectorRef) { }
 
+  get currentGrid(): GridComponent {
+    const components = this.gridComponents && this.gridComponents.toArray();
+    return components && components[this.selectedTabIndex];
+  }
+
+  get selection(): IInfoDebtEntry[] {
+    return this.currentGrid && this.currentGrid.selection;
+  }
+
   onTabSelect(tabIndex: number): void {
     this.grids[tabIndex].isInitialised = true;
     this.selectedTabIndex = tabIndex;
+    this.selectedRows$.next(this.selection);
     this.cdRef.markForCheck();
   }
 
   onDetailTabSelect(gridIndex: number): void {
     this.detailGrids[gridIndex].isInitialised = true;
-    this.selectedDetailGridIndex = gridIndex;
     this.cdRef.markForCheck();
   }
 
-  onSelect(rows: IInfoDebtEntry[]): void {
-    this.selectedRows$.next(rows);
+  onSelect(): void {
+    this.selectedRows$.next(this.selection);
+    this.cdRef.markForCheck();
   }
 }
