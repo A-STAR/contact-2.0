@@ -103,7 +103,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   get hasErrors(): boolean {
-    return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
+    return this.rows && this.rows.reduce((acc, row) => acc && this.rowHasErrors(row), true);
   }
 
   get format(): number {
