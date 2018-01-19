@@ -27,6 +27,7 @@ import {
   MenuItemDef,
   PostProcessPopupParams,
   RowNode,
+  RefreshCellsParams,
 } from 'ag-grid/main';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
@@ -317,6 +318,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onCellValueChanged(event: CellValueChangedEvent): void {
     this.cellValueChange.emit(event);
+  }
+
+  refreshCells(params: RefreshCellsParams = {}): void {
+    this.gridOptions.api.refreshCells(params);
   }
 
   rowDoubleClicked(row: RowNode): void {
