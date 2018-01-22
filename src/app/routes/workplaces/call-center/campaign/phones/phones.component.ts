@@ -48,13 +48,13 @@ export class PhonesComponent {
   onPhoneAdd(): void {
     this.personId$
       .pipe(first())
-      .subscribe(personId => this.routingService.navigate([ 'phone', `${personId}/create` ]));
+      .subscribe(personId => this.routingService.navigate([ `phone/${personId}/create` ], this.route));
   }
 
   onPhoneEdit(phone: IPhone): void {
     this.personId$
       .pipe(first())
-      .subscribe(personId => this.routingService.navigate([ 'phone', `${personId}/${phone.id}` ]));
+      .subscribe(personId => this.routingService.navigate([ `phone/${personId}/${phone.id}` ], this.route));
   }
 
   onPhoneRegister(phone: IPhone): void {

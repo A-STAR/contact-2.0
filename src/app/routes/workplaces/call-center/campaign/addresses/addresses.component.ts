@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
@@ -16,6 +16,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 export class AddressesComponent {
   constructor(
     private campaignService: CampaignService,
+    private route: ActivatedRoute,
     private router: Router,
     private routingService: RoutingService,
   ) {}
@@ -44,7 +45,7 @@ export class AddressesComponent {
     this.personId$
       .pipe(first())
       .subscribe(personId => {
-        this.routingService.navigate([ 'address', `${personId}/create` ]);
+        this.routingService.navigate([ `address/${personId}/create` ], this.route);
       });
   }
 
@@ -52,7 +53,7 @@ export class AddressesComponent {
     this.personId$
       .pipe(first())
       .subscribe(personId => {
-        this.routingService.navigate([ 'address', `${personId}/${address.id}` ]);
+        this.routingService.navigate([ `address/${personId}/${address.id}` ], this.route);
       });
   }
 

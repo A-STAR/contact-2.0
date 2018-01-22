@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
@@ -30,6 +30,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
     private incomingCallService: IncomingCallService,
+    private route: ActivatedRoute,
     private router: Router,
     private routingService: RoutingService,
   ) {}
@@ -95,11 +96,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onPhoneAdd(): void {
-    this.routingService.navigate([ 'phone', 'create' ]);
+    this.routingService.navigate([ 'phone', 'create' ], this.route);
   }
 
   onPhoneEdit(phone: IPhone): void {
-    this.routingService.navigate([ 'phone', `${phone.id}` ]);
+    this.routingService.navigate([ 'phone', `${phone.id}` ], this.route);
   }
 
   onPhoneRegister(phone: IPhone): void {
