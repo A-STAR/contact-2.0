@@ -3,7 +3,11 @@
   <div class="flex-item grow" style="overflow-y: auto;">
     <div [formGroup]="form">
 
-      <!-- Promise -->
+      <!--
+
+        PROMISE GROUP
+
+      -->
       <div formGroupName="promise" *ngIf="displayPromiseForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Регистрация обещания</h3>
@@ -41,9 +45,15 @@
             ></app-debt-amount>
           </label>
         </div>
+
+        <hr>
       </div>
 
-      <!-- Payment -->
+      <!--
+
+        PAYMENT GROUP
+
+      -->
       <div formGroupName="payment" *ngIf="displayPaymentForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Регистрация неподтвержденного платежа</h3>
@@ -95,13 +105,16 @@
             ></app-select-wrapper>
           </label>
         </div>
+
+        <hr>
       </div>
 
-      <!-- Next Call Date -->
-      <div *ngIf="displayNextCallDateForm$ | async">
-        <!-- TODO(d.maltsev): i18n -->
-        <h3>Ввод даты следующего звонка</h3>
+      <!--
 
+        NEXT CALL DATE GROUP
+
+      -->
+      <div *ngIf="displayNextCallDateForm$ | async">
         <!-- Next Call Date -->
         <div>
           <label>
@@ -120,12 +133,16 @@
             [required]="true"
           ></app-input-datepicker>
         </div>
+
+        <hr>
       </div>
 
-      <!-- Comment -->
+      <!--
+
+        COMMENT GROUP
+
+      -->
       <div *ngIf="displayCommentForm$ | async">
-        <!-- TODO(d.maltsev): i18n -->
-        <h3>Ввод комментария</h3>
         <div>
           <label>
             <span class="form-label">
@@ -140,14 +157,17 @@
               rows="2"
             ></textarea>
           </label>
+
+          <hr>
         </div>
       </div>
 
-      <!-- Autocomment -->
-      <div *ngIf="displayAutoCommentForm$ | async">
-        <!-- TODO(d.maltsev): i18n -->
-        <h3>Ввод автокомментария</h3>
+      <!--
 
+        AUTOCOMMENT GROUP
+
+      -->
+      <div *ngIf="displayAutoCommentForm$ | async">
         <!-- Autocomment ID -->
         <div>
           <label>
@@ -172,9 +192,15 @@
           </label>
           <app-html-textarea formControlName="autoComment"></app-html-textarea>
         </div>
+
+        <hr>
       </div>
 
-      <!-- Phone -->
+      <!--
+
+        PHONE GROUP
+
+      -->
       <!-- TODO(d.maltsev): double check phone edit form spec -->
       <div formGroupName="phone" *ngIf="displayPhoneForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
@@ -249,20 +275,30 @@
           <!-- TODO(d.maltsev): personId -->
           <app-contact-registration-contact-select [excludeCurrentPersonId]="false"></app-contact-registration-contact-select>
         </div>
+
+        <hr>
       </div>
 
-      <!-- Contact Person -->
+      <!--
+
+        CONTACT PERSON GROUP
+
+      -->
       <div *ngIf="displayContactPersonForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Изменение контактного лица</h3>
         <!-- TODO(d.maltsev): personId -->
         <app-contact-registration-contact-select [excludeCurrentPersonId]="true"></app-contact-registration-contact-select>
+
+        <hr>
       </div>
 
-      <!-- Debt Reason -->
+      <!--
+
+        DEBT REASON GROUP
+
+      -->
       <div *ngIf="displayDebtReasonForm$ | async">
-        <!-- TODO(d.maltsev): i18n -->
-        <h3>Ввод причины возникновения задолженности</h3>
         <div>
           <label>
             <span class="form-label">
@@ -279,12 +315,16 @@
             ></app-select-wrapper>
           </label>
         </div>
+
+        <hr>
       </div>
 
-      <!-- Refusal -->
+      <!--
+
+        REFUSAL GROUP
+
+      -->
       <div *ngIf="displayRefusalForm$ | async">
-        <!-- TODO(d.maltsev): i18n -->
-        <h3>Регистрация отказа от оплаты</h3>
         <div>
           <label>
             <span class="form-label">
@@ -300,17 +340,29 @@
             ></app-select-wrapper>
           </label>
         </div>
+
+        <hr>
       </div>
 
-      <!-- Attachments -->
+      <!--
+
+        ATTACHMENTS GROUP
+
+      -->
       <div *ngIf="displayAttachmentForm$ | async">
+        <!-- TODO(d.maltsev): i18n -->
+        <h3>Прикрепленные файлы</h3>
         <app-contact-registration-attachment></app-contact-registration-attachment>
+
+        <hr>
       </div>
 
-      <!-- Call Reason -->
+      <!--
+
+        CALL REASON GROUP
+
+      -->
       <div *ngIf="displayCallReasonForm$ | async">
-        <!-- TODO(d.maltsev): i18n -->
-        <h3>Ввод причины звонка</h3>
         <div>
           <label>
             <span class="form-label">
@@ -327,12 +379,16 @@
             ></app-select-wrapper>
           </label>
         </div>
+
+        <hr>
       </div>
 
-      <!-- Status Change Reason -->
-      <div>
-        <!-- TODO(d.maltsev): i18n -->
-        <h3>Ввод причины смены статуса на пользовательский</h3>
+      <!--
+
+        STATUS CHANGE REASON GROUP
+
+      -->
+      <div *ngIf="displayChangeReasonForm$ | async">
         <div>
           <label>
             <span class="form-label">
@@ -350,9 +406,15 @@
             ></app-select-wrapper>
           </label>
         </div>
+
+        <hr>
       </div>
 
-      <!-- Attributes -->
+      <!--
+
+        ATTRIBUTES GROUP
+
+      -->
       <div>
         <app-contact-registration-attributes></app-contact-registration-attributes>
       </div>
