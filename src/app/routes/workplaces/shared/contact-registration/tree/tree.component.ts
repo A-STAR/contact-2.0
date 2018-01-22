@@ -49,6 +49,7 @@ export class TreeComponent implements OnInit, OnDestroy {
 
   get scenarioText(): string {
     // TODO(d.maltsev): i18n
+    // TODO(d.maltsev): double check for xss vulnerabilities
     return this.selectedNode
       ? this.domSanitizer.bypassSecurityTrustHtml(this.scenario) as string || 'Scenario is empty:('
       : 'Select something below...';
