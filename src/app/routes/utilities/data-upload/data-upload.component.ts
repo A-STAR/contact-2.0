@@ -63,7 +63,6 @@ export class DataUploadComponent extends DialogFunctions
   rowIdKey = 'id';
   private static FORMAT_PERMISSION = 'LOAD_DATA_FROM_EXCEL_FORMAT_LIST';
 
-  private isFirstRequest = true;
   private uploadersOptionsSub: Subscription;
   private queryParamsSub: Subscription;
 
