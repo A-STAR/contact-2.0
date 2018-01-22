@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component,
+  forwardRef, Input, ViewChild, Output, EventEmitter
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IOption } from '../../../../../core/converter/value-converter.interface';
@@ -24,6 +27,8 @@ export class MultiSelectComponent implements ControlValueAccessor {
   @Input() nullable = false;
   @Input() options: IOption[] = [];
 
+  @Output() select = new EventEmitter<IMultiSelectValue>();
+
   @ViewChild(MultiListComponent) list: MultiListComponent<IOption>;
 
   private _isDisabled = false;
@@ -44,6 +49,7 @@ export class MultiSelectComponent implements ControlValueAccessor {
 
   onSelect(item: IOption): void {
     this.propagateChange(this.selection);
+    this.select.emit(this.selection);
   }
 
   writeValue(value: IMultiSelectValue): void {
