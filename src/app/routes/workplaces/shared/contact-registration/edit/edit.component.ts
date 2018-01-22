@@ -46,13 +46,49 @@ export class EditComponent {
     statusReasonCode: null,
   });
 
-  // get isPaymentFormHidden$(): Observable<boolean> {
-  //   return this.contactRegistrationService.canSetPayment$;
-  // }
+  get displayPromiseForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetPromise$;
+  }
 
-  // get isPromiseFormHidden$(): Observable<boolean> {
-  //   return this.contactRegistrationService.canSetPromise$;
-  // }
+  get displayPaymentForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetPayment$;
+  }
+
+  get displayNextCallDateForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetNextCallDate$;
+  }
+
+  get displayCommentForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetComment$;
+  }
+
+  get displayAutoCommentForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetAutoCommentId$;
+  }
+
+  get displayPhoneForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetPhone$;
+  }
+
+  get displayContactPersonForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetContactPerson$;
+  }
+
+  get displayDebtReasonForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetDebtReason$;
+  }
+
+  get displayRefusalForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetRefusal$;
+  }
+
+  get displayAttachmentForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetAttachment$;
+  }
+
+  get displayCallReasonForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetCallReason$;
+  }
 
   get debtId$(): Observable<number> {
     return this.contactRegistrationService.debtId$;

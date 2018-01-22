@@ -90,19 +90,47 @@ export class ContactRegistrationService {
     this._personRole$.next(personRole);
   }
 
-  get canSetComment$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.commentMode)));
-  }
-
-  get canSetNextCallDate$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.nextCallMode)));
+  get canSetPromise$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.promiseMode)));
   }
 
   get canSetPayment$(): Observable<boolean> {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.paymentMode)));
   }
 
-  get canSetPromise$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.promiseMode)));
+  get canSetNextCallDate$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.nextCallMode)));
+  }
+
+  get canSetComment$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.commentMode)));
+  }
+
+  get canSetAutoCommentId$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && Boolean(outcome.autoCommentIds)));
+  }
+
+  get canSetPhone$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.addPhone === 1));
+  }
+
+  get canSetContactPerson$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.changeContactPerson === 1));
+  }
+
+  get canSetDebtReason$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.debtReasonMode)));
+  }
+
+  get canSetRefusal$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.isRefusal === 1));
+  }
+
+  get canSetAttachment$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.fileAttachMode)));
+  }
+
+  get canSetCallReason$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.callReasonMode)));
   }
 }

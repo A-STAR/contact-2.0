@@ -4,7 +4,7 @@
     <div [formGroup]="form">
 
       <!-- Promise -->
-      <div formGroupName="promise">
+      <div formGroupName="promise" *ngIf="displayPromiseForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Регистрация обещания</h3>
 
@@ -44,7 +44,7 @@
       </div>
 
       <!-- Payment -->
-      <div formGroupName="payment">
+      <div formGroupName="payment" *ngIf="displayPaymentForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Регистрация неподтвержденного платежа</h3>
 
@@ -98,7 +98,7 @@
       </div>
 
       <!-- Next Call Date -->
-      <div>
+      <div *ngIf="displayNextCallDateForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Ввод даты следующего звонка</h3>
 
@@ -123,7 +123,7 @@
       </div>
 
       <!-- Comment -->
-      <div>
+      <div *ngIf="displayCommentForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Ввод комментария</h3>
         <div>
@@ -144,7 +144,7 @@
       </div>
 
       <!-- Autocomment -->
-      <div>
+      <div *ngIf="displayAutoCommentForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Ввод автокомментария</h3>
 
@@ -176,7 +176,7 @@
 
       <!-- Phone -->
       <!-- TODO(d.maltsev): double check phone edit form spec -->
-      <div formGroupName="phone">
+      <div formGroupName="phone" *ngIf="displayPhoneForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Ввод нового телефона</h3>
 
@@ -256,7 +256,7 @@
       </div>
 
       <!-- Contact Person -->
-      <div>
+      <div *ngIf="displayContactPersonForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Изменение контактного лица</h3>
         <!-- TODO(d.maltsev): personId -->
@@ -268,7 +268,7 @@
       </div>
 
       <!-- Debt Reason -->
-      <div>
+      <div *ngIf="displayDebtReasonForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Ввод причины возникновения задолженности</h3>
         <div>
@@ -290,7 +290,7 @@
       </div>
 
       <!-- Refusal -->
-      <div>
+      <div *ngIf="displayRefusalForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Регистрация отказа от оплаты</h3>
         <div>
@@ -311,14 +311,14 @@
       </div>
 
       <!-- Attachments -->
-      <div>
+      <div *ngIf="displayAttachmentForm$ | async">
         <app-contact-registration-attachment
           [debtId]="debtId$ | async"
         ></app-contact-registration-attachment>
       </div>
 
       <!-- Call Reason -->
-      <div>
+      <div *ngIf="displayCallReasonForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Ввод причины звонка</h3>
         <div>

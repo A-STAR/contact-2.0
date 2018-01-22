@@ -4,11 +4,12 @@ export enum IContactRegistrationMode {
 }
 
 export interface IOutcome {
-  addPhone: boolean;
+  addPhone: number;
   // attributes: IContactTreeAttribute[];
   autoCommentIds: string;
   boxColor: string;
   callReasonMode: number;
+  changeContactPerson: number;
   changeResponsible: number;
   // children: IContactTreeNode[];
   code: number;
