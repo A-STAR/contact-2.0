@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  OnDestroy,
+} from '@angular/core';
+// import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -28,7 +37,6 @@ import { combineLatestAnd, combineLatestOr } from '@app/core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressGridComponent implements OnInit, OnDestroy {
-  @Input() action: 'edit';
   @Input() callCenter = false;
   @Input() campaignId: number;
   @Input('debtId')
@@ -37,10 +45,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
   @Input() debtorId: number;
-  @Input() ignoreDebtRegContactTypeListPermissions = false;
-  @Input() ignoreViewPermissions = false;
-  @Input() ignoreVisitAddPermissions = false;
-  @Input() ignoreVisitViewPermissions = false;
+  @Input() ignorePermissions = false;
   @Input() entityType = 18;
   @Input('personId')
   set personId(personId: number) {
@@ -48,6 +53,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
   }
   @Input() personRole: number;
+
+  @Output() add = new EventEmitter<void>();
+  @Output() edit = new EventEmitter<IAddress>();
+  @Output() register = new EventEmitter<IAddress>();
 
   private _debtId$ = new BehaviorSubject<number>(null);
   private _personId$ = new BehaviorSubject<number>(null);
@@ -63,7 +72,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: this.canEdit$,
-      action: () => this.onEdit(this._selectedAddressId$.value)
+      action: () => this.selectedAddress$.pipe(first()).subscribe(address => this.onEdit(address)),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -149,7 +158,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private debtService: DebtService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private router: Router,
+    // private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
@@ -232,11 +241,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(address: IAddress): void {
-    switch (this.action) {
-      case 'edit':
-        this.onEdit(address.id);
-        break;
-    }
+    this.onEdit(address);
   }
 
   onSelect(address: IAddress): void {
@@ -268,18 +273,22 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   registerContact(): void {
-    this.selectedAddressId$
+    this.selectedAddress$
       .pipe(first())
-      .subscribe(addressId => {
-        // Contact type 'Visit' = 3
-        // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
-        const url = `/workplaces/contact-registration/${this._debtId$.value}/3/${addressId}`;
-        this.router.navigate([ url ], { queryParams: {
-          campaignId: this.campaignId,
-          personId: this._personId$.value,
-          personRole: this.personRole,
-        } });
-      });
+      .subscribe(address => this.register.emit(address));
+
+    // this.selectedAddressId$
+    //   .pipe(first())
+    //   .subscribe(addressId => {
+    //     // Contact type 'Visit' = 3
+    //     // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
+    //     const url = `/workplaces/contact-registration/${this._debtId$.value}/3/${addressId}`;
+    //     this.router.navigate([ url ], { queryParams: {
+    //       campaignId: this.campaignId,
+    //       personId: this._personId$.value,
+    //       personRole: this.personRole,
+    //     } });
+    //   });
   }
 
   get selectedAddressId$(): Observable<number> {
@@ -292,7 +301,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('ADDRESS_VIEW')
-      .map(hasPermission => hasPermission || this.ignoreViewPermissions);
+      .map(hasPermission => hasPermission || this.ignorePermissions);
   }
 
   get canViewBlock$(): Observable<boolean> {
@@ -334,7 +343,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   get canViewVisitLog$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.has('ADDRESS_VISIT_VIEW')
-        .map(hasPermission => hasPermission || this.ignoreVisitViewPermissions),
+        .map(hasPermission => hasPermission || this.ignorePermissions),
       this.selectedAddress$.map(Boolean),
     ]);
   }
@@ -342,7 +351,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   get canMarkVisit$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.has('ADDRESS_VISIT_ADD')
-        .map(hasPermission => hasPermission || this.ignoreVisitAddPermissions),
+        .map(hasPermission => hasPermission || this.ignorePermissions),
       this.selectedAddress$.map(address => address && address.statusCode !== 3 && !address.isInactive),
     ]);
   }
@@ -352,7 +361,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     return combineLatestAnd([
       this.selectedAddress$.map(address => address && !address.isInactive),
       this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3)
-        .map(hasPermission => hasPermission || this.ignoreDebtRegContactTypeListPermissions),
+        .map(hasPermission => hasPermission || this.ignorePermissions),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }
@@ -362,17 +371,19 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    const url = this.callCenter
-      ? `${this.router.url}/address/${this._personId$.value}/create`
-      : `${this.router.url}/address/create`;
-    this.router.navigate([ url ]);
+    this.add.emit();
+    // const url = this.callCenter
+    //   ? `${this.router.url}/address/${this._personId$.value}/create`
+    //   : `${this.router.url}/address/create`;
+    // this.router.navigate([ url ]);
   }
 
-  private onEdit(addressId: number): void {
-    const url = this.callCenter
-      ? `${this.router.url}/address/${this._personId$.value}/${addressId}`
-      : `${this.router.url}/address/${addressId}`;
-    this.router.navigate([ url ]);
+  private onEdit(address: IAddress): void {
+    this.edit.emit(address);
+    // const url = this.callCenter
+    //   ? `${this.router.url}/address/${this._personId$.value}/${addressId}`
+    //   : `${this.router.url}/address/${addressId}`;
+    // this.router.navigate([ url ]);
   }
 
   private onSubmitSuccess(): void {
