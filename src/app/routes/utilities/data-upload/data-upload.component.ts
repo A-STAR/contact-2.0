@@ -183,15 +183,25 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
     const file = (this.fileInput.nativeElement as HTMLInputElement).files[0];
     this.dataUploadService.uploader
       .openFile(file)
-      .flatMap(response => this.getColumnsFromResponse(response).map(columns => ({ response, columns })))
+      .catch(() => {
+        this.fileInput.nativeElement.value = '';
+        return of(null);
+      })
+      .flatMap(response => response ? this.getColumnsFromResponse(response).map(columns => ({
+            response,
+            columns,
+          })) : of({response: null, columns: null })
+      )
       .subscribe(({ response, columns }) => {
-        this.columns = [ ...columns ];
-        // The following line makes grid2 set `initialized = true` internally
-        this.cdRef.detectChanges();
-        this.rows = this.getRowsFromResponse(response);
-        this.rowCount = this.rows.length;
-        this.isFirstRequest = true;
-        this.cdRef.markForCheck();
+        if (response && columns) {
+          this.columns = [...columns];
+          // The following line makes grid2 set `initialized = true` internally
+          this.cdRef.detectChanges();
+          this.rows = this.getRowsFromResponse(response);
+          this.rowCount = this.rows.length;
+          this.isFirstRequest = true;
+          this.cdRef.markForCheck();
+        }
       });
   }
 

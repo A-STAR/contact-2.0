@@ -21,6 +21,7 @@ import { AbstractActionService } from '@app/core/state/action.service';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { IAppState } from '@app/core/state/state.interface';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 class DataUploader {
   public guid: number;
@@ -29,14 +30,15 @@ class DataUploader {
   constructor(
     public dataService: DataService,
     public gridService: GridService,
+    public notificationsService: NotificationsService,
     public api: IDataUploaderConfig,
-    private paramKey?: string
-    // private notificationsService: NotificationsService,
+    private paramKey?: string,
   ) { }
 
   openFile(file: File): Observable<IOpenFileResponse> {
     return this.dataService
       .createMultipart(this.api.openFile, this.buildRequestParams(), {}, file)
+      .catch(this.notificationsService.error('modules.dataUpload.errors.openFile').dispatchCallback())
       .pipe(
       map(response => response.data[0]),
       tap(data => this.guid = data.guid),
@@ -47,6 +49,7 @@ class DataUploader {
     const request = this.gridService.buildRequest(params, null);
     return this.dataService
       .create(this.api.fetch, this.buildRequestParams(), request)
+      .catch(this.notificationsService.error('modules.dataUpload.errors.fetch').dispatchCallback())
       .pipe(
         map(response => response.data[0])
       );
@@ -55,6 +58,7 @@ class DataUploader {
   editCell(cell: ICellPayload): Observable<IDataResponse> {
     return this.dataService
       .update(this.api.editCell, this.buildRequestParams(), cell)
+      .catch(this.notificationsService.error('modules.dataUpload.errors.editCell').dispatchCallback())
       .pipe(
       map(response => response.data[0]),
     );
@@ -62,22 +66,26 @@ class DataUploader {
 
   deleteRow(rowId: number): Observable<void> {
     return this.dataService
-      .delete(this.api.deleteRow, this.buildRequestParams(rowId));
+      .delete(this.api.deleteRow, this.buildRequestParams(rowId))
+      .catch(this.notificationsService.error('modules.dataUpload.errors.deleteRow').dispatchCallback());
   }
 
   save(): Observable<IMassInfoResponse> {
     return this.dataService
-      .create(this.api.save, this.buildRequestParams(), {});
+      .create(this.api.save, this.buildRequestParams(), {})
+      .catch(this.notificationsService.error('modules.dataUpload.errors.save').dispatchCallback());
   }
 
   getErrors(): Observable<IErrorsResponse> {
     return this.dataService
-      .read(this.api.getErrors, this.buildRequestParams());
+      .read(this.api.getErrors, this.buildRequestParams())
+      .catch(this.notificationsService.error('modules.dataUpload.errors.getErrors').dispatchCallback());
   }
 
   cancel(): Observable<void> {
     return this.dataService
-      .delete(this.api.cancel, this.buildRequestParams());
+      .delete(this.api.cancel, this.buildRequestParams())
+      .catch(this.notificationsService.error('modules.dataUpload.errors.cancel').dispatchCallback());
   }
 
   private buildRequestParams(rowId?: number): object {
@@ -143,13 +151,13 @@ export class DataUploadService extends AbstractActionService {
       getErrors: '/load/payments/format/1/guid/{guid}/error',
     },
     [DataUploaders.PAYMENT_UPDATE]: {
-      openFile: '/load/payments/format/1',
-      fetch: '/load/payments/format/1/guid/{guid}',
-      editCell: '/load/payments/format/1/guid/{guid}',
-      deleteRow: '/load/payments/format/1/guid/{guid}/row/{rowId}',
-      cancel: '/load/payments/format/1/guid/{guid}',
-      save: '/load/payments/format/1/guid/{guid}/save',
-      getErrors: '/load/payments/format/1/guid/{guid}/error',
+      openFile: '/load/payments/format/2',
+      fetch: '/load/payments/format/2/guid/{guid}',
+      editCell: '/load/payments/format/2/guid/{guid}',
+      deleteRow: '/load/payments/format/2/guid/{guid}/row/{rowId}',
+      cancel: '/load/payments/format/2/guid/{guid}',
+      save: '/load/payments/format/2/guid/{guid}/save',
+      getErrors: '/load/payments/format/2/guid/{guid}/error',
     },
     [DataUploaders.SET_OPERATOR]: {
       openFile: '/load/debtSetOperator',
@@ -186,7 +194,7 @@ export class DataUploadService extends AbstractActionService {
     protected store: Store<IAppState>,
     private dataService: DataService,
     private gridService: GridService,
-    // private notificationsService: NotificationsService,
+    private notificationsService: NotificationsService,
   ) {
     super();
   }
@@ -211,8 +219,12 @@ export class DataUploadService extends AbstractActionService {
       const paramKey = DataUploadService.UPLOADERS_CONFIG[uploaderType]
         && DataUploadService.UPLOADERS_CONFIG[uploaderType].paramKey;
       // create uploader with respective config and paramKey
-      this.uploaders[uploaderType] = new DataUploader(this.dataService,
-        this.gridService, DataUploadService.UPLOADERS_CONFIG[uploaderType], paramKey);
+      this.uploaders[uploaderType] = new DataUploader(
+        this.dataService,
+        this.gridService,
+        this.notificationsService,
+        DataUploadService.UPLOADERS_CONFIG[uploaderType],
+        paramKey);
     }
     return this.uploaders[uploaderType];
   }
