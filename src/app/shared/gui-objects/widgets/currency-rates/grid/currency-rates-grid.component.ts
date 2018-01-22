@@ -5,14 +5,13 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Store } from '@ngrx/store';
 
-import { IAppState } from '@app/core/state/state.interface';
-import { ICurrencyRate, IActionType } from '../currency-rates.interface';
+import { ICurrencyRate } from '../currency-rates.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { CurrencyRatesService } from '../currency-rates.service';
+import { DataUploadService } from '@app/routes/utilities/data-upload/data-upload.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { combineLatestAnd } from '@app/core/utils/helpers';
@@ -45,7 +44,6 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private currencyRatesService: CurrencyRatesService,
-    private store: Store<IAppState>,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private router: Router,
@@ -114,10 +112,10 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
 
   onExcelLoad(currencyId: number): void {
     this.router.navigate([`/utilities/data-upload`]).then(() => {
-      this.store.dispatch({
-        type: IActionType.SELECT_CURRENCY,
-        payload: { currencyId },
-      });
+      this.currencyRatesService.dispatchAction(
+        DataUploadService.SELECTED_CURRENCY,
+        currencyId,
+      );
     });
   }
 

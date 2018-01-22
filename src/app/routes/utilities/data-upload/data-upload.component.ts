@@ -10,11 +10,9 @@ import {
 
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
-import { IAppState } from '@app/core/state/state.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import { DataUploaders, IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow,  } from './data-upload.interface';
 
@@ -28,7 +26,6 @@ import { DialogFunctions } from '../../../core/dialog';
 
 import { isEmpty } from '../../../core/utils';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { SimpleChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +61,6 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private store: Store<IAppState>,
     private dataUploadService: DataUploadService,
     private gridService: GridService
   ) {
@@ -75,8 +71,8 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
     // set initial value
     this.dataUploadService.format = DataUploaders.SET_OPERATOR;
 
-    this.queryParamsSub = this.store.select(store => store.currency)
-      .map(currency => currency.currencyId)
+    this.queryParamsSub = this.dataUploadService
+      .getPayload(DataUploadService.SELECTED_CURRENCY)
       .filter(Boolean)
       .subscribe(currencyId => {
         // format setter also creates new loader if it wasn't created

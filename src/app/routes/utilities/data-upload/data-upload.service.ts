@@ -17,6 +17,10 @@ import { IMassInfoResponse } from '../../../core/data/data.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { AbstractActionService } from '@app/core/state/action.service';
+import { Actions } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { IAppState } from '@app/core/state/state.interface';
 
 class DataUploader {
   public guid: number;
@@ -96,7 +100,9 @@ class DataUploader {
  * Validation: http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=137723952
  */
 @Injectable()
-export class DataUploadService {
+export class DataUploadService extends AbstractActionService {
+
+  public static SELECTED_CURRENCY  = 'SELECTED_CURRENCY';
 
   private static UPLOADERS_CONFIG = {
     [DataUploaders.CURRENCY_RATE]: {
@@ -176,10 +182,14 @@ export class DataUploadService {
   ];
 
   constructor(
+    protected actions: Actions,
+    protected store: Store<IAppState>,
     private dataService: DataService,
-    private gridService: GridService
+    private gridService: GridService,
     // private notificationsService: NotificationsService,
-  ) { }
+  ) {
+    super();
+  }
 
   get format(): number {
     return this.uploaderTypes.indexOf(this.currentUploaderType);
