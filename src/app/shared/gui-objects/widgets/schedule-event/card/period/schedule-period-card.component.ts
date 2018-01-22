@@ -50,9 +50,10 @@ export class SchedulePeriodCardComponent implements OnInit {
     labelKey: 'common.entities.daysOfWeek',
   };
 
+  weekDays: any;
+
   private selectedPeriodTypeCode$ = new BehaviorSubject<number>(null);
 
-  private weekDays: any;
 
   constructor(
     private cdRef: ChangeDetectorRef,

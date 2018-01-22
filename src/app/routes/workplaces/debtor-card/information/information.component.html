@@ -15,17 +15,23 @@
       [debtId]="debtId$ | async"
       [debtorId]="personId$ | async"
       [personId]="personId$ | async"
-      [personRole]="1"
+      [personRole]="personRole"
+      (add)="onAddressAdd()"
+      (edit)="onAddressEdit($event)"
+      (register)="onAddressRegister($event)"
     ></app-address-grid>
   </app-tabview-tab>
   <app-tabview-tab [title]="tabs[1].title">
     <app-phone-grid
       *ngIf="tabs[1].isInitialised"
       action="edit"
-      [contactType]="1"
+      [contactType]="contactType"
       [debtId]="debtId$ | async"
       [personId]="personId$ | async"
-      [personRole]="1"
+      [personRole]="personRole"
+      (add)="onPhoneAdd()"
+      (edit)="onPhoneEdit($event)"
+      (register)="onPhoneRegister($event)"
     ></app-phone-grid>
   </app-tabview-tab>
   <app-tabview-tab [title]="tabs[2].title">
@@ -33,7 +39,7 @@
       *ngIf="tabs[2].isInitialised"
       [debt]="debt$ | async"
       [entityId]="personId$ | async"
-      [personRole]="1"
+      [personRole]="personRole"
     ></app-email-grid>
   </app-tabview-tab>
 </app-tabview>

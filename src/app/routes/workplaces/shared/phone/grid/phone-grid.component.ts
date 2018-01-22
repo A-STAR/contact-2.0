@@ -8,7 +8,7 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -38,7 +38,6 @@ import { combineLatestAnd } from '@app/core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridComponent implements OnInit, OnDestroy {
-  @Input() action: 'edit';
   @Input() campaignId: number;
   @Input() contactType: number;
   @Input('debtId')
@@ -48,9 +47,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
   @Input() callCenter = false;
   @Input() entityType = 18;
-  @Input() ignoreViewPermissions = false;
-  @Input() ignoreSmsSingleFormPersonRoleListPermissions = false;
-  @Input() ignoreDebtRegContactTypeListPermissions = false;
+  @Input() ignorePermissions = false;
   @Input('personId')
   set personId(personId: number) {
     this._personId$.next(personId);
@@ -59,6 +56,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   @Input() personRole: number;
   @Input() styles: Partial<CSSStyleDeclaration> = { height: '230px' };
 
+  @Output() add = new EventEmitter<void>();
+  @Output() edit = new EventEmitter<IPhone>();
+  @Output() register = new EventEmitter<IPhone>();
   @Output() select = new EventEmitter<IPhone>();
 
   private _debtId$ = new BehaviorSubject<number>(null);
@@ -75,7 +75,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: combineLatestAnd([this.canEdit$, this.selectedPhone$.map(Boolean)]),
-      action: () => this.onEdit(this.selectedPhoneId$.value)
+      action: () => this.selectedPhone$.pipe(first()).subscribe(phone => this.onEdit(phone)),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -149,7 +149,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
-    private router: Router,
+    // private router: Router,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -219,11 +219,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(phone: IPhone): void {
-    switch (this.action) {
-      case 'edit':
-        this.onEdit(phone.id);
-        break;
-    }
+    this.onEdit(phone);
+    // switch (this.action) {
+    //   case 'edit':
+    //     this.onEdit(phone.id);
+    //     break;
+    // }
   }
 
   onSelect(phone: IPhone): void {
@@ -268,16 +269,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   registerContact(): void {
-    this.selectedPhoneId$
+    this.selectedPhone$
       .pipe(first())
-      .subscribe(phoneId => {
-        const url = `/workplaces/contact-registration/${this._debtId$.value}/${this.contactType}/${phoneId}`;
-        this.router.navigate([ url ], { queryParams: {
-          campaignId: this.campaignId,
-          personId: this._personId$.value,
-          personRole: this.personRole,
-        }});
-      });
+      .subscribe(phone => this.register.emit(phone));
   }
 
   get selectedPhone$(): Observable<IPhone> {
@@ -286,7 +280,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('PHONE_VIEW')
-      .map(hasPermission => hasPermission || this.ignoreViewPermissions);
+      .map(hasPermission => hasPermission || this.ignorePermissions);
   }
 
   get canViewBlock$(): Observable<boolean> {
@@ -321,7 +315,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_TYPE_LIST', phone.typeCode),
           this.userPermissionsService.contains('SMS_SINGLE_PHONE_STATUS_LIST', phone.statusCode),
           this.userPermissionsService.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', this.personRole)
-            .map(hasPermission => hasPermission || this.ignoreSmsSingleFormPersonRoleListPermissions),
+            .map(hasPermission => hasPermission || this.ignorePermissions),
         ])
         : of(false);
     });
@@ -332,7 +326,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return combineLatestAnd([
       this.selectedPhone$.map(phone => phone && !phone.isInactive),
       this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 1)
-        .map(hasPermission => hasPermission || this.ignoreDebtRegContactTypeListPermissions),
+        .map(hasPermission => hasPermission || this.ignorePermissions),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
     ]);
   }
@@ -342,17 +336,19 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    const url = this.callCenter
-      ? `${this.router.url}/phone/${this._personId$.value}/create`
-      : `${this.router.url}/phone/create`;
-    this.router.navigate([ url ]);
+    this.add.emit();
+    // const url = this.callCenter
+    //   ? `${this.router.url}/phone/${this._personId$.value}/create`
+    //   : `${this.router.url}/phone/create`;
+    // this.router.navigate([ url ]);
   }
 
-  private onEdit(phoneId: number): void {
-    const url = this.callCenter
-      ? `${this.router.url}/phone/${this._personId$.value}/${phoneId}`
-      : `${this.router.url}/phone/${phoneId}`;
-    this.router.navigate([ url ]);
+  private onEdit(phone: IPhone): void {
+    this.edit.emit(phone);
+    // const url = this.callCenter
+    //   ? `${this.router.url}/phone/${this._personId$.value}/${phoneId}`
+    //   : `${this.router.url}/phone/${phoneId}`;
+    // this.router.navigate([ url ]);
   }
 
   private onSubmitSuccess(): void {

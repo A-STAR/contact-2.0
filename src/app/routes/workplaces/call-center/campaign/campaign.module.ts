@@ -36,12 +36,10 @@ const routes: Routes = [
     },
   },
   { path: 'phone', children: [
-    { path: '', redirectTo: 'create', pathMatch: 'full' },
     { path: ':personId/create', component: PhoneComponent },
     { path: ':personId/:phoneId', component: PhoneComponent },
   ]},
   { path: 'address', children: [
-    { path: '', redirectTo: 'create', pathMatch: 'full' },
     { path: ':personId/create', component: AddressComponent },
     { path: ':personId/:addressId', component: AddressComponent },
   ]},
@@ -49,11 +47,9 @@ const routes: Routes = [
     { path: ':debtId/:contactId/contactLogType/:contactType', component: ContactComponent },
   ]},
   { path: 'promise', children: [
-    { path: '', redirectTo: '', pathMatch: 'full' },
     { path: ':debtId/:promiseId', component: PromiseComponent },
   ]},
   { path: 'payment', children: [
-    { path: '', redirectTo: '', pathMatch: 'full' },
     { path: ':debtId/:paymentId', component: PaymentComponent },
   ]},
 ];
