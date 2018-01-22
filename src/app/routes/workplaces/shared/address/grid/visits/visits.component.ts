@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IVisit } from './visits.interface';
 
-import { GridService } from '../../../../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { VisitService } from './visits.service';
 
 @Component({

@@ -6,16 +6,16 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
 import { IAddress } from '../address.interface';
-import { IDynamicFormGroup } from '../../../../components/form/dynamic-form-2/dynamic-form-2.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form-2/dynamic-form-2.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { AddressService } from '../address.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicForm2Component } from '../../../../components/form/dynamic-form-2/dynamic-form-2.component';
+import { DynamicForm2Component } from '@app/shared/components/form/dynamic-form-2/dynamic-form-2.component';
 
-import { oneOfGroupRequired } from '../../../../../core/validators';
+import { oneOfGroupRequired } from '@app/core/validators';
 
 @Component({
   selector: 'app-address-card',

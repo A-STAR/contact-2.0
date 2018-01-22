@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AddressModule } from './address/address.module';
 import { AttributeModule as EntityAttributeModule } from './entity-attribute/attribute.module';
 import { AttributeModule } from './attribute/attribute.module';
 import { ComponentLogModule } from './debt/component-log/component-log.module';
@@ -28,7 +27,6 @@ import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.m
 import { OperatorDetailsModule } from './operator-details/operator-details.module';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
-import { PhoneModule } from './phone/phone.module';
 import { PledgeModule } from './pledge/pledge.module';
 import { PledgorModule } from './pledgor/pledgor.module';
 import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
@@ -41,7 +39,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
   imports: [
-    AddressModule,
     AttributeModule,
     CommonModule,
     ComponentLogModule,
@@ -69,7 +66,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     OperatorDetailsModule,
     PaymentModule,
     PaymentOperatorModule,
-    PhoneModule,
     PledgeModule,
     PledgorModule,
     PledgorPropertyModule,
@@ -81,7 +77,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     VisitPrepareModule,
   ],
   exports: [
-    AddressModule,
     AttributeModule,
     ComponentLogModule,
     ContactLogModule,
@@ -108,7 +103,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     OperatorDetailsModule,
     PaymentModule,
     PaymentOperatorModule,
-    PhoneModule,
     PledgeModule,
     PledgorModule,
     PledgorPropertyModule,

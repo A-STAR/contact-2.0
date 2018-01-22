@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
-import { IPhone } from '../../../../../shared/gui-objects/widgets/phone/phone.interface';
+import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
 import { DebtService } from '../../../../../core/debt/debt.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
-import { PhoneService } from '../../../../../shared/gui-objects/widgets/phone/phone.service';
+import { PhoneService } from '@app/routes/workplaces/shared/phone/phone.service';
 
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 

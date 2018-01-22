@@ -9,18 +9,18 @@ import { of } from 'rxjs/observable/of';
 
 import { IAddress } from '../address.interface';
 import { IAddressMarkData } from './mark/mark.interface';
-import { IDebt } from '../../../../../core/debt/debt.interface';
-import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IDebt } from '@app/core/debt/debt.interface';
+import { IGridColumn, IContextMenuItem } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
-import { DebtService } from '../../../../../core/debt/debt.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { DebtService } from '@app/core/debt/debt.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/helpers';
+import { combineLatestAnd, combineLatestOr } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-address-grid',
