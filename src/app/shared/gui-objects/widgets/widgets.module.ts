@@ -34,6 +34,7 @@ import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
 import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { PropertyModule } from './property/property.module';
+import { ScheduleEventModule } from './schedule-event/schedule-event.module';
 import { GroupModule } from './groups/group.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
@@ -73,6 +74,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PromiseModule,
     PromiseResolveModule,
     PropertyModule,
+    ScheduleEventModule,
     GroupModule,
     VisitPrepareModule,
   ],
@@ -110,6 +112,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PromiseModule,
     PromiseResolveModule,
     PropertyModule,
+    ScheduleEventModule,
     GroupModule,
     VisitPrepareModule,
   ],

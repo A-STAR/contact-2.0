@@ -2071,6 +2071,7 @@
       "grid": {
         "id": "ID",
         "entityTypeCode": "Тип",
+        "entityTypeId": "Тип",
         "name": "Название",
         "comment": "Комментарий",
         "isManual": "Ручное наполнение",
@@ -2145,11 +2146,41 @@
         "delete": {
           "title": "Удаление объектов",
           "confirmMessage": "Вы действительно хотите удалить выделенные объекты?"
-    }
-  },
+        }
+      },
       "grid": {
         "id": "ID",
         "name": "Название"
+      }
+    },
+    "scheduleEvents": {
+      "grid": {
+        "id": "ID",
+        "groupId": "ID Группы",
+        "groupName": "Группа",
+        "eventTypeCode": "Тип мероприятия",
+        "periodTypeCode": "Период",
+        "startTime": "Запуск",
+        "executeDateTime": "Последний запуск",
+        "isExecuted": "Выполеняется",
+        "startDate": "Начало",
+        "endDate": "Окончание",
+        "isInactive": "Выключено",
+        "priority": "Приоритет"
+      },
+      "card": {
+        "startDate": "Начало",
+        "endDate": "Окончание",
+        "periodTypeCode": "Период",
+        "dayPeriod": "Период повторения",
+        "startTime": "Время запуска",
+        "isInactive": "Выключено",
+        "eventTypeCode": "Тип мероприятия",
+        "priority": "Приоритет",
+        "group": "Группа"
+      },
+      "dialog": {
+        "title": "Мероприятие"
       }
     }
   },
@@ -2337,6 +2368,9 @@
     },
     "infoDebt": {
       "gen": { "singular": "списка формирования", "plural": "списков формирования" }
+    },
+    "scheduleEvents": {
+      "gen": { "singular": "мероприятия", "plural": "списка мероприятий" }
     }
   },
   "massOperations": {
@@ -2860,6 +2894,15 @@
           "stringValue9": "Строковый атрибут 9",
           "stringValue10": "Строковый атрибут 10"
         }
+      },
+      "daysOfWeek": {
+        "day1": "Понедельник",
+        "day2": "Вторник",
+        "day3": "Среда",
+        "day4": "Четверг",
+        "day5": "Пятница",
+        "day6": "Суббота",
+        "day7": "Воскресенье"
       }
     }
   }

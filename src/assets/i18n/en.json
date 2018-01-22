@@ -2071,6 +2071,7 @@
       "grid": {
         "id": "ID",
         "entityTypeCode": "Type",
+        "entityTypeId": "Type",
         "name": "Name",
         "comment": "Comment",
         "isManual": "Is manual",
@@ -2145,11 +2146,41 @@
         "delete": {
           "title": "Delete objects",
           "confirmMessage": "Are you sure you want to delete this objects?"
-    }
-  },
+        }
+      },
       "grid": {
         "id": "ID",
         "name": "Name"
+      }
+    },
+    "scheduleEvents": {
+      "grid": {
+        "id": "ID",
+        "groupId": "ID Group",
+        "groupName": "Group name",
+        "eventTypeCode": "Event type",
+        "periodTypeCode": "Period",
+        "startTime": "Start",
+        "executeDateTime": "Last start",
+        "isExecuted": "Is Executed",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "isInactive": "Is inactive",
+        "priority": "Priority"
+      },
+      "card": {
+        "startDate": "Start date",
+        "endDate": "End date",
+        "periodTypeCode": "Period",
+        "dayPeriod": "Repeat period",
+        "startTime": "Start time",
+        "isInactive": "Is inactive",
+        "eventTypeCode": "Event type",
+        "priority": "Priority",
+        "group": "Group"
+      },
+      "dialog": {
+        "title": "Event"
       }
     }
   },
@@ -2337,6 +2368,9 @@
     },
     "infoDebt": {
       "gen": { "singular": "task", "plural": "tasks" }
+    },
+    "scheduleEvents": {
+      "gen": { "singular": "event", "plural": "events" }
     }
   },
   "massOperations": {
@@ -2860,6 +2894,15 @@
           "stringValue9": "String Attribute 9",
           "stringValue10": "String Attribute 10"
         }
+      },
+      "daysOfWeek": {
+        "day1": "Monday",
+        "day2": "Tuesday",
+        "day3": "Wednesday",
+        "day4": "Thursday",
+        "day5": "Friday",
+        "day6": "Saturday",
+        "day7": "Sunday"
       }
     }
   }

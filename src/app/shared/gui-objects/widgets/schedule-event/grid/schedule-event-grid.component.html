@@ -1,0 +1,11 @@
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="widgets.scheduleEvents"
+  selectionType="single"
+  [columns]="columns"
+  [footerHeight]="false"
+  [rows]="events"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onEdit($event)"
+></app-grid>
