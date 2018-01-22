@@ -17,8 +17,10 @@ import { IMultiLanguageOption } from './multi-language.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MultiLanguageComponent implements ControlValueAccessor {
+  isHovering = false;
+
   private _langOptions: IMultiLanguageOption[] = [];
-  private _selectedId: number;
+  private selectedId: number;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
@@ -28,13 +30,18 @@ export class MultiLanguageComponent implements ControlValueAccessor {
   set langOptions(options: IMultiLanguageOption[]) {
     this._langOptions = options.map(option => ({ ...option, active: !!option.isMain }));
     if (options.length > 0) {
-      this._selectedId = options.length ? 0 : null;
+      this.selectedId = options.length ? 0 : null;
     }
     this.cdRef.markForCheck();
   }
 
   get langOptions(): IMultiLanguageOption[] {
     return this._langOptions;
+  }
+
+  onHoverChange(e: MouseEvent): void {
+    console.log(e.type === 'mouseenter');
+    this.isHovering = e.type === 'mouseenter';
   }
 
   writeValue(values: IMultiLanguageOption[]): void {
@@ -49,22 +56,22 @@ export class MultiLanguageComponent implements ControlValueAccessor {
   }
 
   get model(): string {
-    const option = (this.langOptions || []).find((v, i) => i === this._selectedId);
+    const option = (this.langOptions || []).find((v, i) => i === this.selectedId);
     return option ? option.value : null;
   }
 
   get label(): string {
-    const option = (this.langOptions || []).find((v, i) => i === this._selectedId);
+    const option = (this.langOptions || []).find((v, i) => i === this.selectedId);
     return option ? option.label : '';
   }
 
   onLanguageChange(option: IMultiLanguageOption): void {
-    this._selectedId = this.langOptions.findIndex(v => v.languageId === option.languageId);
+    this.selectedId = this.langOptions.findIndex(v => v.languageId === option.languageId);
     this.cdRef.markForCheck();
   }
 
   onValueChange(value: string): void {
-    const item = (this.langOptions || []).find((v, i) => i === this._selectedId);
+    const item = (this.langOptions || []).find((v, i) => i === this.selectedId);
     if (item) {
       item.value = value;
       item.isUpdated = true;

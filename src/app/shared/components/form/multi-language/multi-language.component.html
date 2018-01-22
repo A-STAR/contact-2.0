@@ -28,8 +28,10 @@
       [ngModel]="model"
       [disabled]="controlDisabled"
       (ngModelChange)="onValueChange($event)"
+      (mouseenter)="onHoverChange($event)"
+      (mouseleave)="onHoverChange($event)"
     >
-    <i *ngIf="model !== null" class="fa fa-close" (click)="onClear()"></i>
+    <i *ngIf="isHovering && model !== null" class="fa fa-close" (click)="onClear()"></i>
   </div>
 
 </div>

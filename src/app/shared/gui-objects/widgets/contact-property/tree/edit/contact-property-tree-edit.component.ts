@@ -203,7 +203,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     };
 
     return [
-      { controlName: 'code', type: 'text', width: 3, disabled: this.isEditing },
+      { controlName: 'code', type: 'text', width: 6, disabled: this.isEditing },
       {
         controlName: 'name',
         type: this.isEditing ? 'multilanguage' : 'text',
@@ -214,12 +214,12 @@ export class ContactPropertyTreeEditComponent implements OnInit {
         required: true,
         width: 6
       },
-      { controlName: 'boxColor', type: 'colorpicker', width: 3 },
       {
         children: [
           {
             width: 6,
             children: [
+              { controlName: 'boxColor', type: 'colorpicker' },
               {
                 controlName: 'commentMode',
                 type: 'select',
@@ -252,12 +252,12 @@ export class ContactPropertyTreeEditComponent implements OnInit {
                   this.cdRef.markForCheck();
                 })
               },
-              { controlName: 'debtReasonMode', ...modeOptions },
             ]
           },
           {
             width: 6,
             children: [
+              { controlName: 'debtReasonMode', ...modeOptions },
               { controlName: 'template', type: 'segmented', ...templateInputOptions },
               { controlName: 'nextCallDays', type: 'segmented', ...nextCallInputOptions },
               ...range(1, 4).map(i => ({
