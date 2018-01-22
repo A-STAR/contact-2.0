@@ -89,6 +89,10 @@ export class EditComponent {
     return this.contactRegistrationService.canSetCallReason$;
   }
 
+  get displayChangeReasonForm$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetChangeReason$;
+  }
+
   get debtId$(): Observable<number> {
     return this.contactRegistrationService.debtId$;
   }
