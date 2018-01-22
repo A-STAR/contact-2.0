@@ -53,6 +53,10 @@ const routes: Routes = [
         loadChildren: './work-task/work-task.module#WorkTaskModule',
       },
       {
+        path: 'outgoing-information',
+        loadChildren: './info-debt/info-debt.module#InfoDebtModule',
+      },
+      {
         path: '**',
         redirectTo: ''
       },

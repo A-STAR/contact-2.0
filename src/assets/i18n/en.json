@@ -292,9 +292,9 @@
           "portfolioId": "Portfolio",
           "regionCode": "Region",
           "userId": "Operator",
-          "addressTypeCode": "Тип адреса",
-          "visitStatusCode": "Статус выезда",
-          "visitPurposeCode": "Цель выезда"
+          "addressTypeCode": "Address",
+          "visitStatusCode": "Visit status",
+          "visitPurposeCode": "Visit purpose"
         }
       },
       "newDebt": {
@@ -311,6 +311,58 @@
       },
       "prepareVisits": {
         "title": "Prepare Visits"
+      }
+    },
+    "infoDebt": {
+      "filters": {
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "portfolioId": "Portfolio",
+          "regionCode": "Region",
+          "userId": "Operator",
+          "addressTypeCode": "Address",
+          "visitStatusCode": "Visit status",
+          "visitPurposeCode": "Visit purpose"
+        }
+      },
+      "debtors": {
+        "title": "Debtors"
+      },
+      "guarantors": {
+        "title": "Guarantors"
+      },
+      "pledgors": {
+        "title": "Pledgors"
+      },
+      "sms": {
+        "title": "SMS",
+        "grid": {
+          "smsId": "ID",
+          "phone": "Phone",
+          "statusCode": "Status",
+          "startDateTime": "Planned sending date",
+          "sendDateTime": "Send date",
+          "userFullName": "Operator",
+          "text": "Text",
+          "templateName": "Template"
+        }
+      },
+      "email": {
+        "title": "Email",
+        "grid": {
+          "emailId": "ID",
+          "email": "Email",
+          "statusCode": "Status",
+          "startDateTime": "Planned sending date",
+          "sendDateTime": "Send date",
+          "userFullName": "Operator",
+          "subject": "Subject",
+          "templateName": "Template"
+        }
       }
     },
     "contactRegistration": {
@@ -669,12 +721,6 @@
     "types": {
       "system": "System",
       "client": "Client"
-    },
-    "placeholder": {
-      "translatedName": "Select a dictionary",
-      "select": {
-        "translation": "Select language"
-      }
     },
     "errors": {
       "view": "Access to dictionaries list denied"
@@ -1103,7 +1149,7 @@
     "buttons": {
       "attributes": "Attributes",
       "managers": "Managers",
-      "objects": "Objects"
+      "objects": "Templates"
     }
   },
   "portfolios": {
@@ -2310,6 +2356,9 @@
     "object": {
       "gen": { "singular": "object", "plural": "objects" }
     },
+    "infoDebt": {
+      "gen": { "singular": "task", "plural": "tasks" }
+    },
     "scheduleEvents": {
       "gen": { "singular": "event", "plural": "events" }
     }
@@ -2482,7 +2531,7 @@
       "methodNotSupportedForTempData": "Error has been occured when tried to create record in Temp_data table",
       "modelMustNotBeEmpty": "The data model requires to pass at least one non-empty attribute",
       "newStatusCodeNotSuitableForCurrentStatus": "New object status has conflict with the current status",
-      "notAllowedFieldValue": "Data model error: field {{ $1 }} is not allowed",
+      "notAllowedFieldValue": "Data model error: field value {{ $1 }} is not allowed",
       "objectInGroupNotFound": "Object not found by entityId and groupId",
       "objectNotFound": "Object {{ $1 }} not found by entityTypeId or entityAttributeId",
       "objectRoleNotFound": "Object's role not found by ID",
@@ -2605,6 +2654,7 @@
       "email": "Email",
       "exportToExcel": "Export",
       "excel": "Export",
+      "loadFromExcel": "Load from Excel",
       "move": "Move",
       "next": "Next",
       "ok": "OK",

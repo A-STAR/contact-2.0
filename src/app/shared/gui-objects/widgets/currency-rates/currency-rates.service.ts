@@ -39,6 +39,10 @@ export class CurrencyRatesService extends AbstractActionService {
     return this.userPermissionsService.has('CURRENCY_RATES_EDIT');
   }
 
+  get canLoad$(): Observable<boolean> {
+    return this.userPermissionsService.has('CURRENCY_RATES_EDIT');
+  }
+
   fetchAll(currencyId: number): Observable<Array<ICurrencyRate>> {
     return this.dataService.readAll(this.baseUrl, { currencyId })
       .catch(this.notificationsService.fetchError().entity('entities.currencyRates.gen.plural').dispatchCallback());
@@ -51,7 +55,12 @@ export class CurrencyRatesService extends AbstractActionService {
 
   create(currencyId: number, currencyRate: ICurrencyRate): Observable<ICurrencyRate> {
     return this.dataService.update(this.baseUrl, { currencyId }, currencyRate)
-      .catch(this.notificationsService.createError().entity('entities.currencyRates.gen.singular').dispatchCallback());
+      .catch(this.notificationsService
+        .createError()
+        .entity('entities.currencyRates.gen.singular')
+        .context('widgets.currencyRates.card')
+        .dispatchCallback()
+      );
   }
 
   update(currencyId: number, currencyRate: ICurrencyRate): Observable<any> {

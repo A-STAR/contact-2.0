@@ -15,7 +15,7 @@ const routes: Routes = [
     data: {
       reuse: true,
     },
-  },
+  }
 ];
 
 @NgModule({

@@ -86,8 +86,8 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
 
     this.dictionarySubscription = this.userDictionariesService
       .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ROLE_ENTITIES)
-      .subscribe(options => {
-        this.typeCodeOptions = options;
+      .subscribe(([ firstOpt, secondOpt ]) => {
+        this.typeCodeOptions = [ firstOpt, secondOpt ];
         this.cdRef.markForCheck();
       });
   }

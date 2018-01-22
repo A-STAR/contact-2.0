@@ -14,17 +14,21 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { first } from 'rxjs/operators/first';
 
-import { IDebt } from '../../../../../../../core/debt/debt.interface';
-import { IDynamicFormControl } from '../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
+import { IDebt } from '@app/core/debt/debt.interface';
+import {
+  IDynamicFormControl,
+  IDynamicFormRadioControl,
+  IDynamicFormSelectControl
+} from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
-import { DebtorCardService } from '../../../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { DebtService } from '../../../../../../../core/debt/debt.service';
-import { UserConstantsService } from '../../../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../../../core/user/permissions/user-permissions.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtService } from '@app/core/debt/debt.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-debt-grid-status-dialog',
@@ -38,9 +42,9 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormControl> = [
-    { controlName: 'statusCode', type: 'radio', required: true, radioOptions: [] },
-    { controlName: 'reasonCode', type: 'select', options: [] },
-    { controlName: 'customStatusCode', type: 'select', options: [], disabled: true },
+    { controlName: 'statusCode', type: 'radio', required: true },
+    { controlName: 'reasonCode', type: 'select' },
+    { controlName: 'customStatusCode', type: 'select', disabled: true },
     { controlName: 'comment', type: 'textarea' }
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.statusChange.${control.controlName}` }) as IDynamicFormControl);
 
@@ -71,7 +75,7 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
       distinctUntilChanged()
     )
     .subscribe(([ dictionaries, bag, reasonCodeRequired, statusCode, customStatusCode ]) => {
-      this.getControl('statusCode').radioOptions = [
+      (<IDynamicFormRadioControl>this.getControl('statusCode')).radioOptions = [
         {
           label: 'widgets.debt.dialogs.statusChange.statusProblematic',
           value: 9,
@@ -94,14 +98,14 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
         },
       ];
 
-      const reasonCodeControl = this.getControl('reasonCode');
+      const reasonCodeControl = this.getControl('reasonCode') as IDynamicFormSelectControl;
       const code = customStatusCode || statusCode;
       reasonCodeControl.required = this.isReasonCodeRequired(reasonCodeRequired, code);
       reasonCodeControl.options = dictionaries[UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE]
         .filter(option => option.parentCode === code)
         .map(term => ({ value: term.code, label: term.name }));
 
-      const customStatusCodeControl = this.getControl('customStatusCode');
+      const customStatusCodeControl = this.getControl('customStatusCode') as IDynamicFormSelectControl;
       customStatusCodeControl.disabled = statusCode !== 0;
       customStatusCodeControl.required = statusCode === 0;
       customStatusCodeControl.options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS]

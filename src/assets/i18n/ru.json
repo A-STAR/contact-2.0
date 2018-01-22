@@ -313,6 +313,58 @@
         "title": "Подготовка выездов"
       }
     },
+    "infoDebt": {
+      "filters": {
+        "form": {
+          "branchCode": "Филиал",
+          "dictValue1": "Словарный атрибут 1",
+          "dictValue2": "Словарный атрибут 2",
+          "dictValue3": "Словарный атрибут 3",
+          "dictValue4": "Словарный атрибут 4",
+          "portfolioId": "Реестр КА",
+          "regionCode": "Регион",
+          "userId": "Оператор",
+          "addressTypeCode": "Тип адреса",
+          "visitStatusCode": "Статус выезда",
+          "visitPurposeCode": "Цель выезда"
+        }
+      },
+      "debtors": {
+        "title": "Должники"
+      },
+      "guarantors": {
+        "title": "Поручители"
+      },
+      "pledgors": {
+        "title": "Залогодатели"
+      },
+      "sms": {
+        "title": "SMS",
+        "grid": {
+          "smsId": "ID",
+          "phone": "Телефон",
+          "statusCode": "Статус",
+          "startDateTime": "Планируемая дата отправки",
+          "sendDateTime": "Фактическая дата отправки",
+          "userFullName": "Оператор",
+          "text": "Текст",
+          "templateName": "Название шаблона"
+        }
+      },
+      "email": {
+        "title": "Email",
+        "grid": {
+          "emailId": "ID",
+          "email": "Email",
+          "statusCode": "Статус",
+          "startDateTime": "Планируемая дата отправки",
+          "sendDateTime": "Фактическая дата отправки",
+          "userFullName": "Оператор",
+          "subject": "Тема",
+          "templateName": "Название шаблона"
+        }
+      }
+    },
     "contactRegistration": {
       "contact": {
         "title": "Изменение контактного лица"
@@ -566,7 +618,7 @@
       }
     },
     "edit": {
-      "branchCode": "Подразделение",
+      "branchCode": "Филиал",
       "personalData": "Персональные данные",
       "details": "Подробная информация",
       "title": "Пользователь: {{ id }}",
@@ -601,7 +653,7 @@
     },
     "grid": {
       "id": "ID",
-      "branchCode": "Подразделение",
+      "branchCode": "Филиал",
       "login": "Логин",
       "lastName": "Фамилия",
       "firstName": "Имя",
@@ -669,12 +721,6 @@
     "types": {
       "system": "Системный",
       "client": "Клиентский"
-    },
-    "placeholder": {
-      "translatedName": "Введите название словаря на выбраном языке",
-      "select": {
-        "translation": "Выберите язык"
-      }
     },
     "errors": {
       "view": "Доступ к списку словарей ограничен"
@@ -1103,7 +1149,7 @@
     "buttons": {
       "attributes": "Атрибуты",
       "managers": "Менеджеры",
-      "objects": "Объекты"
+      "objects": "Шаблоны"
     }
   },
   "portfolios": {
@@ -2310,6 +2356,9 @@
     "object": {
       "gen": { "singular": "объекта", "plural": "объектов" }
     },
+    "infoDebt": {
+      "gen": { "singular": "списка формирования", "plural": "списков формирования" }
+    },
     "scheduleEvents": {
       "gen": { "singular": "мероприятия", "plural": "списка мероприятий" }
     }
@@ -2482,7 +2531,7 @@
       "methodNotSupportedForTempData": "Произошла ошибка при создании записи в таблице Temp_data",
       "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один заполненный атрибут",
       "newStatusCodeNotSuitableForCurrentStatus": "Невозможно установить новый статус из-за конфликта с текущим статусом объекта",
-      "notAllowedFieldValue": "Ошибка модели данных: поле {{ $1 }} не является допустимым",
+      "notAllowedFieldValue": "Ошибка модели данных: значение поля {{ $1 }} не является допустимым",
       "objectInGroupNotFound": "Объект не найден по entityId и groupId",
       "objectNotFound": "Не найдена сущность {{ $1 }} при обращении по entityTypeId или entityAttributeId",
       "objectRoleNotFound": "Не найдена роль объекта по ID",
@@ -2605,6 +2654,7 @@
       "email": "Email",
       "exportToExcel": "Выгрузка",
       "excel": "Выгрузка",
+      "loadFromExcel": "Загрузить из Excel",
       "move": "Переместить",
       "next": "Далее",
       "ok": "OK",

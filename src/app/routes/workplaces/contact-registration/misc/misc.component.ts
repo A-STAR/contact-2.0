@@ -12,7 +12,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, IDynamicFormSelectControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { AccordionService } from '../../../../shared/components/accordion/accordion.service';
 import { ContactRegistrationService } from '../contact-registration.service';
@@ -104,7 +104,7 @@ export class MiscComponent implements OnInit, OnDestroy {
       this.toggleControl('nextCallDateTime', canAddNextCall, nextCallMode === 3);
       this.toggleControl('refusalReasonCode', canAddRefusal, true);
       this.toggleControl('statusReasonCode', canAddStatusChangeReason, statusReasonMode === 3);
-      this.getControl('statusReasonCode').parentCode = debtStatusCode;
+      (<IDynamicFormSelectControl>this.getControl('statusReasonCode')).parentCode = debtStatusCode;
     });
 
     this.userTemplatesService.getTemplates(4, 0)

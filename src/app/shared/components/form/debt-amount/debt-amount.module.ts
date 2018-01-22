@@ -2,22 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { SelectModule } from '../select/select.module';
-
-import { MultiTextComponent } from './multi-text.component';
+import { DebtAmountComponent } from './debt-amount.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    SelectModule,
   ],
   exports: [
-    MultiTextComponent,
+    DebtAmountComponent,
   ],
   declarations: [
-    MultiTextComponent,
+    DebtAmountComponent,
   ],
 })
-export class MultiTextModule { }
+export class DebtAmountModule {}

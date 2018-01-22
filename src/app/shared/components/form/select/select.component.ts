@@ -133,10 +133,6 @@ export class SelectComponent implements ControlValueAccessor {
     return this._inputMode;
   }
 
-  get active(): SelectInputValueType {
-    return this._active;
-  }
-
   get inputNgClass(): object {
     return {
       [this.inputClass]: true,
@@ -160,6 +156,10 @@ export class SelectComponent implements ControlValueAccessor {
     if (this.canSelectMultipleItem && this.multiple && this._active.length) {
       this._active[0].selected = true;
     }
+  }
+
+  get active(): SelectInputValueType {
+    return this._active;
   }
 
   constructor(

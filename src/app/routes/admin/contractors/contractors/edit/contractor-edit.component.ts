@@ -54,15 +54,14 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE),
       this.lookupService.lookupAsOptions('users'),
       getContractor$,
-      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST'),
+      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 13),
       this.userPermissionsService.has('OBJECT_CONTRACTOR_VIEW')
     )
     .pipe(first())
     // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-    // TODO:(i.kibisov) remove canViewObjects default value when permission will be added on BE
     .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes, canViewObjects ]) => {
-      this.canViewAttributes = true;
-      this.canViewObjects = true;
+      this.canViewAttributes = canViewAttributes;
+      this.canViewObjects = canViewObjects;
 
       this.contractorId = contractor && contractor.id;
 
