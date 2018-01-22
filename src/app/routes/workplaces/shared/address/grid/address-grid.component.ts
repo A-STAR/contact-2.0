@@ -276,19 +276,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.selectedAddress$
       .pipe(first())
       .subscribe(address => this.register.emit(address));
-
-    // this.selectedAddressId$
-    //   .pipe(first())
-    //   .subscribe(addressId => {
-    //     // Contact type 'Visit' = 3
-    //     // See http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=81002516#id-Списоксловарей-code=50.Типконтакта
-    //     const url = `/workplaces/contact-registration/${this._debtId$.value}/3/${addressId}`;
-    //     this.router.navigate([ url ], { queryParams: {
-    //       campaignId: this.campaignId,
-    //       personId: this._personId$.value,
-    //       personRole: this.personRole,
-    //     } });
-    //   });
   }
 
   get selectedAddressId$(): Observable<number> {

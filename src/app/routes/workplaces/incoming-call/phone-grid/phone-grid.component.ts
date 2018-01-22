@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
+import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
+
 import { DebtService } from '../../../../core/debt/debt.service';
 import { IncomingCallService } from '../incoming-call.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 
 import { invert } from '../../../../core/utils';
 import { combineLatestAnd } from '../../../../core/utils/helpers';
@@ -26,6 +30,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
     private incomingCallService: IncomingCallService,
+    private router: Router,
+    private routingService: RoutingService,
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +46,14 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.debtorSubscription.unsubscribe();
+  }
+
+  get contactType(): number {
+    return 2;
+  }
+
+  get personRole(): number {
+    return 1;
   }
 
   get fullName$(): Observable<string> {
@@ -78,6 +92,22 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   onRegisterOfficeVisit(): void {
     this.navigateToRegistration(8, 0);
+  }
+
+  onPhoneAdd(): void {
+    this.routingService.navigate([ 'phone', 'create' ]);
+  }
+
+  onPhoneEdit(phone: IPhone): void {
+    this.routingService.navigate([ 'phone', `${phone.id}` ]);
+  }
+
+  onPhoneRegister(phone: IPhone): void {
+    const url = `/workplaces/contact-registration/${this.debtId}/${this.contactType}/${phone.id}`;
+    this.router.navigate([ url ], { queryParams: {
+      personId: this.personId,
+      personRole: this.personRole,
+    } });
   }
 
   private navigateToRegistration(contactType: number, contactId: number): void {

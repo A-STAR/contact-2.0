@@ -7,5 +7,8 @@
   [callCenter]="true"
   [ignorePermissions]="true"
   [personId]="personId$ | async"
-  [personRole]="1"
+  [personRole]="personRole"
+  (add)="onAddressAdd()"
+  (edit)="onAddressEdit($event)"
+  (register)="onAddressRegister($event)"
 ></app-address-grid>

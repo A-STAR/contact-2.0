@@ -272,17 +272,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.selectedPhone$
       .pipe(first())
       .subscribe(phone => this.register.emit(phone));
-
-    // this.selectedPhoneId$
-    //   .pipe(first())
-    //   .subscribe(phoneId => {
-    //     const url = `/workplaces/contact-registration/${this._debtId$.value}/${this.contactType}/${phoneId}`;
-    //     this.router.navigate([ url ], { queryParams: {
-    //       campaignId: this.campaignId,
-    //       personId: this._personId$.value,
-    //       personRole: this.personRole,
-    //     }});
-    //   });
   }
 
   get selectedPhone$(): Observable<IPhone> {
