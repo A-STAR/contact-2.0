@@ -1,15 +1,45 @@
+import { Observable } from 'rxjs/Observable';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { random } from 'faker';
 
 import { IContactRegistrationMode, IOutcome } from './contact-registration.interface';
 
 import { ContactRegistrationService } from './contact-registration.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+
+class MockDataService {
+  create(): Observable<any> {
+    return of({
+      data: [
+        {
+          guid: random.uuid(),
+        },
+      ],
+    });
+  }
+}
+
+class MockNotificationService {
+  error(): any {
+    return {
+      dispatchCallback: () => {
+        return () => ErrorObservable.create({});
+      }
+    };
+  }
+}
 
 describe('ContactRegistrationService', () => {
   let service: ContactRegistrationService;
 
   beforeEach(() => {
-    service = new ContactRegistrationService();
+    service = new ContactRegistrationService(
+      new MockDataService() as any,
+      new MockNotificationService() as any,
+    );
   });
 
   it('should initialize', () => {
@@ -61,10 +91,11 @@ describe('ContactRegistrationService', () => {
 
   it('should get/set outcome', () => {
     const outcome: IOutcome = {
-      addPhone: random.boolean(),
+      addPhone: random.number(),
       autoCommentIds: random.word(),
       boxColor: random.word(),
       callReasonMode: random.number(),
+      changeContactPerson: random.number(),
       changeResponsible: random.number(),
       code: random.number(),
       commentMode: random.number(),

@@ -247,11 +247,7 @@
         <!-- Contact Person -->
         <div>
           <!-- TODO(d.maltsev): personId -->
-          <app-contact-registration-contact-select
-            [debtId]="debtId$ | async"
-            [excludeCurrentPersonId]="false"
-            [personId]="personId$ | async"
-          ></app-contact-registration-contact-select>
+          <app-contact-registration-contact-select [excludeCurrentPersonId]="false"></app-contact-registration-contact-select>
         </div>
       </div>
 
@@ -260,11 +256,7 @@
         <!-- TODO(d.maltsev): i18n -->
         <h3>Изменение контактного лица</h3>
         <!-- TODO(d.maltsev): personId -->
-        <app-contact-registration-contact-select
-          [debtId]="debtId$ | async"
-          [excludeCurrentPersonId]="true"
-          [personId]="personId$ | async"
-        ></app-contact-registration-contact-select>
+        <app-contact-registration-contact-select [excludeCurrentPersonId]="true"></app-contact-registration-contact-select>
       </div>
 
       <!-- Debt Reason -->
@@ -312,9 +304,7 @@
 
       <!-- Attachments -->
       <div *ngIf="displayAttachmentForm$ | async">
-        <app-contact-registration-attachment
-          [debtId]="debtId$ | async"
-        ></app-contact-registration-attachment>
+        <app-contact-registration-attachment></app-contact-registration-attachment>
       </div>
 
       <!-- Call Reason -->
@@ -364,10 +354,7 @@
 
       <!-- Attributes -->
       <div>
-        <app-contact-registration-attributes
-          [debtId]="debtId$ | async"
-          [contactTypeCode]="contactType$ | async"
-        ></app-contact-registration-attributes>
+        <app-contact-registration-attributes></app-contact-registration-attributes>
       </div>
     </div>
   </div>

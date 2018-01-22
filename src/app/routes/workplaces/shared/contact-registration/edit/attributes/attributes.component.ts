@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { filter, mergeMap } from 'rxjs/operators';
 
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
@@ -14,9 +16,6 @@ import { getRawValue, getValue } from '@app/core/utils/value';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributesComponent implements OnInit {
-  @Input() debtId: number;
-  @Input() contactTypeCode: number;
-
   attributes: ITreeNode[];
 
   constructor(
@@ -26,31 +25,29 @@ export class AttributesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.contactRegistrationService.outcome$
-      .filter(Boolean)
-      .map(outcome => outcome.id)
-      .flatMap(nodeId => this.attributesService.fetchAll(this.debtId, this.contactTypeCode, nodeId))
-      .subscribe(attributes => {
-        this.attributes = attributes;
-        this.cdRef.markForCheck();
-      });
+    combineLatest(
+      this.contactRegistrationService.contactType$,
+      this.contactRegistrationService.debtId$,
+      this.contactRegistrationService.outcome$,
+    )
+    .pipe(
+      filter(([ contactType, debtId, outcome ]) => Boolean(contactType && debtId && outcome)),
+      mergeMap(([ contactType, debtId, outcome ]) => this.attributesService.fetchAll(debtId, contactType, outcome.id))
+    )
+    .subscribe(attributes => {
+      this.attributes = attributes;
+      this.cdRef.markForCheck();
+    });
   }
 
-  onNextClick(): void {
+  get data(): any {
     const { guid } = this.contactRegistrationService;
-    const data = {
-      attributes: flatten(this.attributes)
-        .map(node => node.data)
-        .filter(attribute => attribute.typeCode)
-        .map(attribute => ({
-          ...getValue(attribute.typeCode, getRawValue(attribute)),
-          code: attribute.code
-        })),
-    };
-    this.attributesService.create(this.debtId, guid, data)
-      .subscribe(() => {
-        //
-        this.cdRef.markForCheck();
-      });
+    return flatten(this.attributes)
+      .map(node => node.data)
+      .filter(attribute => attribute.typeCode)
+      .map(attribute => ({
+        ...getValue(attribute.typeCode, getRawValue(attribute)),
+        code: attribute.code,
+      }));
   }
 }

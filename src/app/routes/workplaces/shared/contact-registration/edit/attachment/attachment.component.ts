@@ -22,8 +22,6 @@ import { isEmpty } from '@app/core/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttachmentComponent extends DialogFunctions {
-  @Input() debtId: number;
-
   private selectedDocumentGuid$ = new BehaviorSubject<string>(null);
 
   toolbarItems: IToolbarItem[] = [
@@ -85,8 +83,8 @@ export class AttachmentComponent extends DialogFunctions {
 
   onEditDialogSubmit(event: IAttachmentFormData): void {
     const { file, ...data } = event;
-    const { guid } = this.contactRegistrationService;
-    this.attachmentService.create(this.debtId, guid, data, file)
+    const { debtId, guid } = this.contactRegistrationService;
+    this.attachmentService.create(debtId, guid, data, file)
       .subscribe(fileGuid => {
         this.documents = [
           ...this.documents,
@@ -101,9 +99,9 @@ export class AttachmentComponent extends DialogFunctions {
   }
 
   onRemoveDialogSubmit(): void {
-    const { guid } = this.contactRegistrationService;
+    const { debtId, guid } = this.contactRegistrationService;
     const fileGuid = this.selectedDocumentGuid$.value;
-    this.attachmentService.delete(this.debtId, guid, fileGuid)
+    this.attachmentService.delete(debtId, guid, fileGuid)
       .subscribe(() => {
         this.documents = this.documents.filter(document => document.guid !== fileGuid);
         this.onSuccess();

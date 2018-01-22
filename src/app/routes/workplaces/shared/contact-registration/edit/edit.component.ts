@@ -30,7 +30,6 @@ export class EditComponent {
     }),
     nextCallDateTime: null,
     comment: '',
-    // TODO(d.maltsev): remove autoComment before sending request to server
     autoComment: '',
     autoCommentId: null,
     phone: this.formBuilder.group({
@@ -103,15 +102,21 @@ export class EditComponent {
   }
 
   get canSubmit(): boolean {
-    return true;
+    return this.form.valid;
   }
 
   onSubmit(): void {
-    // TODO(d.maltsev): remove stub
-    this.onBack();
+    const { autoComment, ...data } = this.form.value;
+    this.contactRegistrationService
+      .completeRegistration(data)
+      .subscribe(() => this.displayOutcomeTree());
   }
 
   onBack(): void {
+    this.displayOutcomeTree();
+  }
+
+  private displayOutcomeTree(): void {
     this.contactRegistrationService.mode = IContactRegistrationMode.TREE;
     this.cdRef.markForCheck();
   }

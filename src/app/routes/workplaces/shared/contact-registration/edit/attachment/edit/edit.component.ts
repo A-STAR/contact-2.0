@@ -22,6 +22,7 @@ const labelKey = makeKey('widgets.document.grid');
 export class AttachmentEditComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<void>();
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];

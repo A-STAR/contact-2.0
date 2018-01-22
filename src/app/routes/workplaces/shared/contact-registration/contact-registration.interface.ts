@@ -38,3 +38,16 @@ export interface IOutcome {
   templateFormula: number;
   templateId: number;
 }
+
+export interface IContactRegistrationData {
+  code: number;
+}
+
+export interface IContactRegistrationInitData {
+  addressId: number;
+  campaignId: number;
+  code: number;
+  personId: number;
+  personRole: number;
+  phoneId: number;
+}

@@ -7,11 +7,13 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-// import { filter, first, mergeMap } from 'rxjs/operators';
+import { filter, first, mergeMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { ILinkedContactPerson } from '../contact-select.interface';
 
-// import { ContactSelectService } from '../contact-select.service';
+import { ContactSelectService } from '../contact-select.service';
 import { ContactRegistrationService } from '../../../contact-registration.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -27,9 +29,7 @@ import { isEmpty, addLabelForEntity } from '@app/core/utils';
   templateUrl: 'contact-select-grid.component.html'
 })
 export class ContactSelectGridComponent implements OnInit {
-  @Input() debtId: number;
   @Input() excludeCurrentPersonId: boolean;
-  @Input() personId: number;
 
   @ViewChild(Grid2Component) grid: Grid2Component;
 
@@ -46,7 +46,7 @@ export class ContactSelectGridComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    // private contactSelectService: ContactSelectService,
+    private contactSelectService: ContactSelectService,
     private gridService: GridService,
   ) {}
 
@@ -75,18 +75,23 @@ export class ContactSelectGridComponent implements OnInit {
   }
 
   private fetch(): void {
-    // this.contactRegistrationService.guid$
-    //   .pipe(
-    //     filter(Boolean),
-    //     first(),
-    //     mergeMap(guid => {
-    //       return this.contactSelectService.fetchAll(guid, this.debtId, this.excludeCurrentPersonId ? this.personId : null);
-    //     }),
-    //   )
-    //   .subscribe(contacts => {
-    //     this.rows = contacts;
-    //     this.rowCount = contacts.length;
-    //     this.cdRef.markForCheck();
-    //   });
+    combineLatest(
+      this.contactRegistrationService.guid$,
+      this.contactRegistrationService.debtId$,
+      this.excludeCurrentPersonId
+        ? this.contactRegistrationService.personId$
+        : of(1),
+    )
+    .pipe(
+      filter(([ guid, debtId, personId ]) => Boolean(guid && debtId && personId)),
+      mergeMap(([ guid, debtId, personId ]) => {
+        return this.contactSelectService.fetchAll(guid, debtId, this.excludeCurrentPersonId ? personId : null);
+      })
+    )
+    .subscribe(contacts => {
+      this.rows = contacts;
+      this.rowCount = contacts.length;
+      this.cdRef.markForCheck();
+    });
   }
 }

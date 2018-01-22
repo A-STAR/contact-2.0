@@ -11,9 +11,7 @@ import { IContactPersonRequest, INewContactPerson } from './contact-select.inter
   templateUrl: 'contact-select.component.html'
 })
 export class ContactSelectComponent implements AfterViewInit {
-  @Input() debtId: number;
   @Input() excludeCurrentPersonId: boolean;
-  @Input() personId: number;
 
   @ViewChild(ContactSelectCardComponent) selectCard: ContactSelectCardComponent;
   @ViewChild(ContactSelectGridComponent) selectGrid: ContactSelectGridComponent;

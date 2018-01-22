@@ -27,31 +27,3 @@ import { ContactRegistrationComponent } from './contact-registration.component';
   ],
 })
 export class ContactRegistrationModule {}
-
-/*
- * Promise
- * - date               Date
- * - amount             Number
- * Payment
- * - date               Date
- * - amount             Number
- * - currencyId         Select
- * Misc:
- * - nextCallDateTime   Date
- * - comment            String
- * - autoCommentId      String
- * - debtReason         String
- * - isRefusal          Boolean
- * - callReason         Number
- * - statusReason       Number
- * Phone:
- * - phone              String
- * - linkTypeCode       Number
- * - contact            Contact Search
- * Contact
- * - contact            Contact Search
- * Attachments
- * - attachments        Grid
- * Attributes
- * - attributes         Grid
- */
