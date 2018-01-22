@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
@@ -27,6 +28,7 @@ export class TreeComponent implements OnInit, OnDestroy {
   constructor(
     private contactRegistrationService: ContactRegistrationService,
     private cdRef: ChangeDetectorRef,
+    private domSanitizer: DomSanitizer,
     private workplacesService: WorkplacesService,
   ) {}
 
@@ -47,8 +49,9 @@ export class TreeComponent implements OnInit, OnDestroy {
 
   get scenarioText(): string {
     // TODO(d.maltsev): i18n
+    // TODO(d.maltsev): double check for xss vulnerabilities
     return this.selectedNode
-      ? this.scenario || 'Scenario is empty:('
+      ? this.domSanitizer.bypassSecurityTrustHtml(this.scenario) as string || 'Scenario is empty:('
       : 'Select something below...';
   }
 
