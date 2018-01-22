@@ -11,7 +11,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
-// import { minStrict } from '@app/core/validators';
+import { min, oneOfGroupRequired } from '@app/core/validators';
 
 @Component({
   selector: 'app-schedule-period-card',
@@ -21,9 +21,16 @@ import { DynamicFormComponent } from '../../../../../components/form/dynamic-for
 export class SchedulePeriodCardComponent implements OnInit {
   private daysOfWeek = this.translateService.instant('common.entities.daysOfWeek');
 
+  private _weeklyPeriodForm: DynamicFormComponent;
+
   @ViewChild('periodType') periodTypeForm: DynamicFormComponent;
   @ViewChild('dailyPeriod') dailyPeriodForm: DynamicFormComponent;
-  @ViewChild('weeklyPeriod') weeklyPeriodForm: DynamicFormComponent;
+  @ViewChild('weeklyPeriod') set weeklyPeriodForm(form: DynamicFormComponent) {
+    this._weeklyPeriodForm = form;
+    if (form) {
+      this._weeklyPeriodForm.form.setValidators([ oneOfGroupRequired ]);
+    }
+  }
 
   @Input() eventId: number;
   @Input() period: ISchedulePeriod;
@@ -77,7 +84,7 @@ export class SchedulePeriodCardComponent implements OnInit {
       case SchedulePeriodEnum.DAILY:
         return this.dailyPeriodForm;
       case SchedulePeriodEnum.WEEKLY:
-        return this.weeklyPeriodForm;
+        return this._weeklyPeriodForm;
     }
   }
 
@@ -92,7 +99,7 @@ export class SchedulePeriodCardComponent implements OnInit {
       case SchedulePeriodEnum.DAILY:
         return { ...this.periodTypeForm.serializedUpdates, ...this.dailyFormSerializedUpdates };
       case SchedulePeriodEnum.WEEKLY:
-        return { ...this.weeklyPeriodForm.serializedUpdates, ...this.weeklyFormSerializedUpdates };
+        return { ...this._weeklyPeriodForm.serializedUpdates, ...this.weeklyFormSerializedUpdates };
     }
   }
 
@@ -107,7 +114,7 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   private get weeklyFormSerializedUpdates(): any {
-    const updates = this.weeklyPeriodForm.serializedUpdates;
+    const updates = this._weeklyPeriodForm.serializedUpdates;
     return {
       weekDays: Object.keys(this.daysOfWeek)
         .map((day, index) => updates[day] && ++index)
@@ -118,7 +125,6 @@ export class SchedulePeriodCardComponent implements OnInit {
   private initPeriodControls(canEdit: boolean): void {
     this.periodTypeControls = [
       {
-        label: null,
         controlName: 'periodTypeCode',
         type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE,
@@ -126,10 +132,16 @@ export class SchedulePeriodCardComponent implements OnInit {
         markAsDirty: !this.eventId,
         onChange: () => this.onPeriodSelect()
       },
-    ] as IDynamicFormItem[];
+    ] as Partial<IDynamicFormItem>[];
 
     this.dailyPeriodControls = [
-      { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true, },
+      {
+        controlName: 'dayPeriod',
+        type: 'number',
+        disabled: !canEdit,
+        required: true,
+        validators: [ min(1) ],
+      },
     ] as IDynamicFormItem[];
 
     this.weeklyPeriodControls = [
