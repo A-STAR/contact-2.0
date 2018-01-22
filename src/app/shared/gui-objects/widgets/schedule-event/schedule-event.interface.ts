@@ -29,8 +29,8 @@ export interface IScheduleEvent {
 }
 
 export enum SchedulePeriodEnum {
-  DAILY,
-  WEEKLY
+  DAILY = 1,
+  WEEKLY = 2,
 }
 
 export interface ISchedulePeriod {
@@ -40,7 +40,12 @@ export interface ISchedulePeriod {
 }
 
 export enum ScheduleEventEnum {
-  GROUP
+  GROUP = 1
+}
+
+export interface IScheduleType {
+  eventTypeCode: number;
+  groupId?: number;
 }
 
 export interface IScheduleGroup {

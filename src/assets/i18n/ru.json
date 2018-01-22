@@ -2015,6 +2015,7 @@
       "grid": {
         "id": "ID",
         "entityTypeCode": "Тип",
+        "entityTypeId": "Тип",
         "name": "Название",
         "comment": "Комментарий",
         "isManual": "Ручное наполнение",
@@ -2119,7 +2120,8 @@
         "startTime": "Время запуска",
         "isInactive": "Выключено",
         "eventTypeCode": "Тип мероприятия",
-        "priority": "Приоритет"
+        "priority": "Приоритет",
+        "group": "Группа"
       },
       "dialog": {
         "title": "Мероприятие"

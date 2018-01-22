@@ -4,9 +4,16 @@
     *ngIf="eventTypeControls"
     [config]="eventTypeConfig"
     [controls]="eventTypeControls"
-    [data]="event"
+    [data]="type"
   ></app-dynamic-form>
 </div>
+
+<label>
+  <span>
+    {{ 'widgets.scheduleEvents.card.group' | translate }}
+    <b class="text-danger">*</b>
+  </span>
+</label>
 
 <app-grid
   #groupGrid

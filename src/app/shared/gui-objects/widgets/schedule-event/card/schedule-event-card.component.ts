@@ -11,6 +11,7 @@ import { ScheduleEventService } from '../schedule-event.service';
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 import { SchedulePeriodCardComponent } from './period/schedule-period-card.component';
+import { ScheduleTypeCardComponent } from './type/schedule-type-card.component';
 
 @Component({
   selector: 'app-schedule-event-card',
@@ -20,6 +21,7 @@ import { SchedulePeriodCardComponent } from './period/schedule-period-card.compo
 export class ScheduleEventCardComponent implements OnInit {
   @ViewChild(DynamicFormComponent) commonForm: DynamicFormComponent;
   @ViewChild(SchedulePeriodCardComponent) periodCard: SchedulePeriodCardComponent;
+  @ViewChild(ScheduleTypeCardComponent) typeCard: ScheduleTypeCardComponent;
 
   @Input() eventId: number;
 
@@ -32,7 +34,6 @@ export class ScheduleEventCardComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private scheduleEventService: ScheduleEventService,
-    private location: Location,
   ) {}
 
   ngOnInit(): void {
@@ -48,8 +49,8 @@ export class ScheduleEventCardComponent implements OnInit {
     });
   }
 
-  get eventForms(): (DynamicFormComponent | SchedulePeriodCardComponent)[] {
-    return [ this.commonForm, this.periodCard ];
+  get eventForms(): { canSubmit: boolean } [] {
+    return [ this.commonForm, this.periodCard, this.typeCard ];
   }
 
   get canSubmit(): boolean {
@@ -61,23 +62,9 @@ export class ScheduleEventCardComponent implements OnInit {
   get eventSerializedUpdates(): IScheduleEvent {
     return {
       ...this.commonForm.serializedUpdates,
-      ...this.periodCard.serializedUpdates
+      ...this.periodCard.serializedUpdates,
+      ...this.typeCard.serializedUpdates
     };
-  }
-
-  onSubmit(): void {
-    const action = this.eventId
-      ? this.scheduleEventService.update(this.eventId, this.eventSerializedUpdates)
-      : this.scheduleEventService.create(this.eventSerializedUpdates);
-
-    action.subscribe(() => {
-      this.scheduleEventService.dispatchAction(ScheduleEventService.MESSAGE_SCHEDULE_EVENT_SAVED);
-      this.onBack();
-    });
-  }
-
-  onBack(): void {
-    this.location.back();
   }
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {

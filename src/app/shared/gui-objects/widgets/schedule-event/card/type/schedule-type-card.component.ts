@@ -4,7 +4,7 @@ import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
-import { ISchedulePeriod, IScheduleEvent, ScheduleEventEnum, IScheduleGroup } from '../../schedule-event.interface';
+import { ISchedulePeriod, IScheduleEvent, ScheduleEventEnum, IScheduleGroup, IScheduleType } from '../../schedule-event.interface';
 
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { ScheduleEventService } from '../../schedule-event.service';
@@ -22,7 +22,7 @@ export class ScheduleTypeCardComponent implements OnInit {
   @ViewChild('eventType') eventTypeForm: DynamicFormComponent;
   @ViewChild('groupGrid') groupGrid: GridComponent;
 
-  @Input() event: IScheduleEvent;
+  @Input() type: IScheduleType;
 
   eventTypeControls: Partial<IDynamicFormItem>[];
   eventTypeConfig: IDynamicFormConfig = {
@@ -31,13 +31,14 @@ export class ScheduleTypeCardComponent implements OnInit {
 
   groupGridColumns: Array<IGridColumn> = [
     { prop: 'id', width: 70 },
-    { prop: 'entityTypeId', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE, width: 90 },
+    { name: 'entityTypeCode', prop: 'entityTypeId', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE, width: 90 },
     { prop: 'name' },
     { prop: 'comment' },
   ];
   groups: IScheduleGroup[] = [];
 
   private selectedEventTypeCode$ = new BehaviorSubject<number>(null);
+  private selectedGroup$ = new BehaviorSubject<number>(null);
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -54,12 +55,13 @@ export class ScheduleTypeCardComponent implements OnInit {
       });
 
     this.fetchGroups();
+    this.selectedGroup$.next(this.type.groupId);
 
     this.scheduleEventService.canView$
       .pipe(first())
       .subscribe(canEdit => {
         this.initEventTypeControls(canEdit);
-        this.selectedEventTypeCode$.next(this.event.eventTypeCode);
+        this.selectedEventTypeCode$.next(this.type.eventTypeCode);
         this.cdRef.markForCheck();
       });
   }
@@ -69,17 +71,18 @@ export class ScheduleTypeCardComponent implements OnInit {
   }
 
   get groupSelection(): IScheduleGroup[] {
-    return this.groups.filter(group => group.id === this.event.groupId);
+    return this.groups.filter(group => group.id === this.selectedGroup$.value);
   }
 
   get canSubmit(): boolean {
-    return this.eventTypeForm && this.eventTypeForm.canSubmit;
+    return this.eventTypeForm && this.eventTypeForm.canSubmit && !!this.selectedGroup$.value;
   }
 
-  get serializedUpdates(): ISchedulePeriod {
+  get serializedUpdates(): IScheduleType {
+    debugger
     switch (this.selectedEventTypeCode) {
       case ScheduleEventEnum.GROUP:
-        return { ...this.eventTypeForm.serializedUpdates, ...this.groupFormSerializedUpdates };
+        return { ...this.eventTypeForm.serializedUpdates, ...this.groupGridSerializedUpdates };
     }
   }
 
@@ -89,12 +92,13 @@ export class ScheduleTypeCardComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  onGroupSelect(): void {
+  onGroupSelect(group: IScheduleGroup): void {
+    this.selectedGroup$.next(group.id);
     this.cdRef.markForCheck();
   }
 
-  private get groupFormSerializedUpdates(): any {
-    return this.eventTypeForm.serializedUpdates;
+  private get groupGridSerializedUpdates(): any {
+    return { groupId: this.selectedGroup$.value };
   }
 
   private initEventTypeControls(canEdit: boolean): void {
@@ -106,7 +110,7 @@ export class ScheduleTypeCardComponent implements OnInit {
         dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE,
         required: true,
         disabled: !canEdit,
-        markAsDirty: !this.event.id,
+        markAsDirty: true,
         onChange: () => this.onEventTypeSelect()
       },
     ] as IDynamicFormItem[];

@@ -11,6 +11,8 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
+// import { minStrict } from '@app/core/validators';
+
 @Component({
   selector: 'app-schedule-period-card',
   templateUrl: './schedule-period-card.component.html',
@@ -62,8 +64,20 @@ export class SchedulePeriodCardComponent implements OnInit {
     return this.selectedPeriodTypeCode$.value;
   }
 
+  get selectedPeriodForm(): DynamicFormComponent {
+    switch (this.selectedPeriodTypeCode) {
+      case SchedulePeriodEnum.DAILY:
+        return this.dailyPeriodForm;
+      case SchedulePeriodEnum.WEEKLY:
+        return this.weeklyPeriodForm;
+    }
+  }
+
   get canSubmit(): boolean {
-    return this.periodTypeForm && this.periodTypeForm.canSubmit;
+    return [
+      this.periodTypeForm,
+      this.selectedPeriodForm
+    ].every(form => form && form.canSubmit);
   }
 
   get serializedUpdates(): ISchedulePeriod {
@@ -102,13 +116,13 @@ export class SchedulePeriodCardComponent implements OnInit {
         type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE,
         required: true,
-        markAsDirty: !this.period,
+        markAsDirty: true,
         onChange: () => this.onPeriodSelect()
       },
     ] as IDynamicFormItem[];
 
     this.dailyPeriodControls = [
-      { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true },
+      { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true, },
     ] as IDynamicFormItem[];
 
     this.weeklyPeriodControls = [

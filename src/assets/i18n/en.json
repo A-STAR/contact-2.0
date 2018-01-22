@@ -2015,6 +2015,7 @@
       "grid": {
         "id": "ID",
         "entityTypeCode": "Type",
+        "entityTypeId": "Type",
         "name": "Name",
         "comment": "Comment",
         "isManual": "Is manual",
@@ -2119,7 +2120,8 @@
         "startTime": "Start time",
         "isInactive": "Is inactive",
         "eventTypeCode": "Event type",
-        "priority": "Priority"
+        "priority": "Priority",
+        "group": "Group"
       },
       "dialog": {
         "title": "Event"
