@@ -7,6 +7,14 @@
   ></app-dynamic-form>
 </div>
 
-<app-schedule-period-card *ngIf="event" [period]="event"></app-schedule-period-card>
+<app-schedule-period-card
+  *ngIf="event"
+  [eventId]="eventId"
+  [period]="event"
+></app-schedule-period-card>
 
-<app-schedule-type-card *ngIf="event" [type]="event"></app-schedule-type-card>
+<app-schedule-type-card
+  *ngIf="event"
+  [eventId]="eventId"
+  [type]="event"
+></app-schedule-type-card>

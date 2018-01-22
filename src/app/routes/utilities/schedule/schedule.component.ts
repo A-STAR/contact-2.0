@@ -13,7 +13,10 @@ export class ScheduleComponent extends DialogFunctions {
 
   dialog;
 
-  onAdd(event: IScheduleEvent): void {
+  eventId: number;
+
+  onEdit(event: IScheduleEvent): void {
     this.setDialog('schedule');
+    this.eventId = event && event.id;
   }
 }

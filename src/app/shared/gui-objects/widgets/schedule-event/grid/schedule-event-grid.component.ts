@@ -14,6 +14,8 @@ import { ScheduleEventService } from '../schedule-event.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { combineLatestAnd } from '@app/core/utils/helpers';
+
 @Component({
   selector: 'app-schedule-event-grid',
   templateUrl: './schedule-event-grid.component.html',
@@ -21,7 +23,7 @@ import { UserDictionariesService } from '../../../../../core/user/dictionaries/u
 })
 export class ScheduleEventGridComponent implements OnInit, OnDestroy {
 
-  @Output() add = new EventEmitter<IScheduleEvent>();
+  @Output() edit = new EventEmitter<IScheduleEvent>();
 
   private selectedEvent$ = new BehaviorSubject<IScheduleEvent>(null);
 
@@ -44,7 +46,15 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.scheduleEventService.canAdd$,
-      action: () => this.add.emit(this.selectedEvent)
+      action: () => this.edit.emit()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EDIT,
+      enabled: combineLatestAnd([
+        this.scheduleEventService.canEdit$,
+        this.selectedEvent$.map(Boolean)
+      ]),
+      action: () => this.edit.emit(this.selectedEvent)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -92,6 +102,11 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
 
   onSelect(event: IScheduleEvent): void {
     this.selectedEvent$.next(event);
+  }
+
+  onEdit(event: IScheduleEvent): void {
+    this.selectedEvent$.next(event);
+    this.edit.emit(event);
   }
 
   private fetch(): void {

@@ -1,5 +1,4 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { Location } from '@angular/common';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -54,9 +53,9 @@ export class ScheduleEventCardComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return this.eventForms
-      .filter(Boolean)
-      .every(form => form.canSubmit);
+    return this.eventId
+      ? !!this.eventForms.filter(Boolean).find(form => form.canSubmit)
+      : this.eventForms.filter(Boolean).every(form => form.canSubmit);
   }
 
   get eventSerializedUpdates(): IScheduleEvent {
@@ -71,7 +70,7 @@ export class ScheduleEventCardComponent implements OnInit {
     return [
       { controlName: 'startDate', type: 'datepicker', required: true, disabled: !canEdit, width: 4 },
       { controlName: 'endDate', type: 'datepicker', disabled: !canEdit, width: 4 },
-      { controlName: 'startTime', type: 'datepicker', displayTime: true, disabled: !canEdit, required: true, width: 4 },
+      { controlName: 'startTime', type: 'text', displayTime: true, disabled: !canEdit, required: true, width: 4 },
       { controlName: 'priority', type: 'number', disabled: !canEdit },
       { controlName: 'isInactive', type: 'checkbox', disabled: !canEdit },
     ] as IDynamicFormItem[];

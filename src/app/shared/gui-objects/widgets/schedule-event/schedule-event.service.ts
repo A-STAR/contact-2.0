@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IScheduleEvent, IScheduleEventEntry, IScheduleGroup } from './schedule-event.interface';
+import { IScheduleEvent, IScheduleGroup } from './schedule-event.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
@@ -35,13 +35,22 @@ export class ScheduleEventService extends AbstractActionService {
     return this.userPermissionsService.has('SCHEDULE_ADD');
   }
 
-  fetchAll(): Observable<IScheduleEventEntry[]> {
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.has('SCHEDULE_EDIT');
+  }
+
+  fetchAll(): Observable<IScheduleEvent[]> {
     return this.dataService.readAll(this.baseUrl)
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.plural').dispatchCallback());
   }
 
   fetch(eventId: number): Observable<IScheduleEvent> {
     return this.dataService.read(`${this.baseUrl}/{eventId}`, { eventId })
+      .map(event => ({
+        ...event,
+        eventTypeCode: event.evenTypeCode,
+        weekDays: [event.weekDays]
+      }))
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.singular').dispatchCallback());
   }
 

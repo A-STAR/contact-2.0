@@ -4,7 +4,7 @@ import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
-import { ISchedulePeriod, IScheduleEvent, ScheduleEventEnum, IScheduleGroup, IScheduleType } from '../../schedule-event.interface';
+import { ScheduleEventEnum, IScheduleGroup, IScheduleType } from '../../schedule-event.interface';
 
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { ScheduleEventService } from '../../schedule-event.service';
@@ -22,6 +22,7 @@ export class ScheduleTypeCardComponent implements OnInit {
   @ViewChild('eventType') eventTypeForm: DynamicFormComponent;
   @ViewChild('groupGrid') groupGrid: GridComponent;
 
+  @Input() eventId: number;
   @Input() type: IScheduleType;
 
   eventTypeControls: Partial<IDynamicFormItem>[];
@@ -79,7 +80,6 @@ export class ScheduleTypeCardComponent implements OnInit {
   }
 
   get serializedUpdates(): IScheduleType {
-    debugger
     switch (this.selectedEventTypeCode) {
       case ScheduleEventEnum.GROUP:
         return { ...this.eventTypeForm.serializedUpdates, ...this.groupGridSerializedUpdates };
@@ -110,7 +110,7 @@ export class ScheduleTypeCardComponent implements OnInit {
         dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE,
         required: true,
         disabled: !canEdit,
-        markAsDirty: true,
+        markAsDirty: !this.eventId,
         onChange: () => this.onEventTypeSelect()
       },
     ] as IDynamicFormItem[];

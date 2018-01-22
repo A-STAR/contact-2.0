@@ -25,6 +25,7 @@ export class SchedulePeriodCardComponent implements OnInit {
   @ViewChild('dailyPeriod') dailyPeriodForm: DynamicFormComponent;
   @ViewChild('weeklyPeriod') weeklyPeriodForm: DynamicFormComponent;
 
+  @Input() eventId: number;
   @Input() period: ISchedulePeriod;
 
   periodTypeControls: Partial<IDynamicFormItem>[];
@@ -44,6 +45,8 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   private selectedPeriodTypeCode$ = new BehaviorSubject<number>(null);
 
+  private weekDays: any;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private scheduleEventService: ScheduleEventService,
@@ -55,6 +58,7 @@ export class SchedulePeriodCardComponent implements OnInit {
       .pipe(first())
       .subscribe(canEdit => {
         this.initPeriodControls(canEdit);
+        this.initWeekDays();
         this.selectedPeriodTypeCode$.next(this.period.periodTypeCode);
         this.cdRef.markForCheck();
       });
@@ -62,6 +66,10 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   get selectedPeriodTypeCode(): SchedulePeriodEnum {
     return this.selectedPeriodTypeCode$.value;
+  }
+
+  get periodForms(): DynamicFormComponent[] {
+    return [ this.periodTypeForm, this.selectedPeriodForm ];
   }
 
   get selectedPeriodForm(): DynamicFormComponent {
@@ -74,10 +82,9 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return [
-      this.periodTypeForm,
-      this.selectedPeriodForm
-    ].every(form => form && form.canSubmit);
+    return this.eventId
+      ? !!this.periodForms.find(form => form && form.canSubmit)
+      : this.periodForms.every(form => form && form.canSubmit);
   }
 
   get serializedUpdates(): ISchedulePeriod {
@@ -116,7 +123,7 @@ export class SchedulePeriodCardComponent implements OnInit {
         type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE,
         required: true,
-        markAsDirty: true,
+        markAsDirty: !this.eventId,
         onChange: () => this.onPeriodSelect()
       },
     ] as IDynamicFormItem[];
@@ -129,5 +136,11 @@ export class SchedulePeriodCardComponent implements OnInit {
       ...Object.keys(this.daysOfWeek)
         .map(day => ({ controlName: day, type: 'checkbox', disabled: !canEdit, width: 3 }))
     ] as IDynamicFormItem[];
+  }
+
+  private initWeekDays(): any {
+    this.weekDays = (this.period.weekDays || [])
+      .map(dayIndex => Object.keys(this.daysOfWeek)[dayIndex - 1])
+      .reduce((acc, day) => ({...acc, [day]: 1 }), {});
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, ViewChild } from '@angular/core';
 
 import { ScheduleEventService } from '../schedule-event.service';
 
@@ -18,7 +18,6 @@ export class ScheduleEventDialogComponent {
   @ViewChild(ScheduleEventCardComponent) card: ScheduleEventCardComponent;
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private scheduleEventService: ScheduleEventService,
   ) {}
 
@@ -27,7 +26,6 @@ export class ScheduleEventDialogComponent {
   }
 
   onSubmit(): void {
-    debugger
     const action = this.eventId
       ? this.scheduleEventService.update(this.eventId, this.card.eventSerializedUpdates)
       : this.scheduleEventService.create(this.card.eventSerializedUpdates);
