@@ -52,7 +52,7 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   private selectedPeriodTypeCode$ = new BehaviorSubject<number>(null);
 
-  private weekDays: any;
+  public weekDays: any;
 
   constructor(
     private cdRef: ChangeDetectorRef,
