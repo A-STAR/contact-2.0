@@ -27,6 +27,7 @@ import {
   MenuItemDef,
   PostProcessPopupParams,
   RowNode,
+  RefreshCellsParams,
 } from 'ag-grid/main';
 
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
@@ -113,6 +114,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Output() onSelect = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IAGridAction>();
   @Output() cellValueChange = new EventEmitter<CellValueChangedEvent>();
+  @Output() rowDataChange = new EventEmitter<any>();
 
   columnDefs: ColDef[];
   gridOptions: GridOptions = {};
@@ -150,8 +152,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   // selected rows
-  get selected(): RowNode[] {
+  get selected(): any[] {
     return this.gridOptions.api ? this.gridOptions.api.getSelectedRows() : [];
+  }
+
+  get selectedNodes(): RowNode[] {
+    return this.gridOptions.api ? this.gridOptions.api.getSelectedNodes() : [];
   }
 
   deselectAll(): void {
@@ -191,6 +197,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       this.clearRangeSelections();
       this.viewportDatasource.params.setRowData(this.rows);
       this.viewportDatasource.params.setRowCount(this.rows.length);
+      this.rowDataChange.emit(rows.currentValue);
     }
     if (rowCount) {
       if (this.page > this.getPageCount()) {
@@ -317,6 +324,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   onCellValueChanged(event: CellValueChangedEvent): void {
     this.cellValueChange.emit(event);
+  }
+
+  refreshCells(params: RefreshCellsParams = {}): void {
+    this.gridOptions.api.refreshCells(params);
   }
 
   rowDoubleClicked(row: RowNode): void {

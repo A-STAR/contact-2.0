@@ -11,9 +11,10 @@ import { IGridColumn } from '../../../../../shared/components/grid/grid.interfac
 import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { CurrencyRatesService } from '../currency-rates.service';
+import { DataUploadService } from '@app/routes/utilities/data-upload/data-upload.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { combineLatestAnd } from 'app/core/utils/helpers';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-currency-rates-grid',
@@ -35,7 +36,6 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   toolbarItems: Array<IToolbarItem>;
 
   dialog: 'delete';
-
   private _currencyRates: Array<ICurrencyRate> = [];
 
   private viewPermissionSubscription: Subscription;
@@ -110,6 +110,15 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     this.router.navigate([ `${this.router.url}/${this.currencyId}/rates/${currencyRate.id}` ]);
   }
 
+  onExcelLoad(currencyId: number): void {
+    this.router.navigate([`/utilities/data-upload`]).then(() => {
+      this.currencyRatesService.dispatchAction(
+        DataUploadService.SELECTED_CURRENCY,
+        currencyId,
+      );
+    });
+  }
+
   private onAdd(): void {
     this.router.navigate([ `${this.router.url}/${this.currencyId}/rates/create` ]);
   }
@@ -143,6 +152,14 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
         enabled: combineLatestAnd([
           this.currencyRatesService.canEdit$,
           this.selectedCurrencyRate$.map(o => !!o)
+        ])
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_EXCEL_LOAD,
+        action: () => this.onExcelLoad(this.currencyId),
+        enabled: combineLatestAnd([
+          this.currencyRatesService.canLoad$,
+          this.currencyId$.map(Boolean)
         ])
       },
       {

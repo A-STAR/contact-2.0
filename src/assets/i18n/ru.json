@@ -2620,6 +2620,7 @@
       "email": "Email",
       "exportToExcel": "Выгрузка",
       "excel": "Выгрузка",
+      "loadFromExcel": "Загрузить из Excel",
       "move": "Переместить",
       "next": "Далее",
       "ok": "OK",

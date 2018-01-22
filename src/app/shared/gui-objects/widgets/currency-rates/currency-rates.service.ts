@@ -39,6 +39,10 @@ export class CurrencyRatesService extends AbstractActionService {
     return this.userPermissionsService.has('CURRENCY_RATES_EDIT');
   }
 
+  get canLoad$(): Observable<boolean> {
+    return this.userPermissionsService.has('CURRENCY_RATES_EDIT');
+  }
+
   fetchAll(currencyId: number): Observable<Array<ICurrencyRate>> {
     return this.dataService.readAll(this.baseUrl, { currencyId })
       .catch(this.notificationsService.fetchError().entity('entities.currencyRates.gen.plural').dispatchCallback());

@@ -1,10 +1,20 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow } from './data-upload.interface';
+import { DataUploaders, IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow,  } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -15,6 +25,7 @@ import { Grid2Component } from '../../../shared/components/grid2/grid2.component
 import { DialogFunctions } from '../../../core/dialog';
 
 import { isEmpty } from '../../../core/utils';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +37,7 @@ import { isEmpty } from '../../../core/utils';
   styleUrls: [ './data-upload.component.scss' ],
   templateUrl: './data-upload.component.html',
 })
-export class DataUploadComponent extends DialogFunctions {
+export class DataUploadComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(Grid2Component) grid: Grid2Component;
   @ViewChild('fileInput') fileInput: ElementRef;
 
@@ -38,18 +49,50 @@ export class DataUploadComponent extends DialogFunctions {
 
   dialog: 'cancel' | 'errorLogPrompt';
 
+  isSelectVisible = true;
+
   rows: any[];
   rowCount = 0;
   rowIdKey = 'id';
+  dictCode = UserDictionariesService.DICTIONARY_DATA_LOAD_FORMAT;
 
   private isFirstRequest = true;
+  private queryParamsSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private dataUploadService: DataUploadService,
-    private gridService: GridService,
+    private gridService: GridService
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    // set initial value
+    this.dataUploadService.format = DataUploaders.SET_OPERATOR;
+
+    this.queryParamsSub = this.dataUploadService
+      .getPayload(DataUploadService.SELECTED_CURRENCY)
+      .filter(Boolean)
+      .subscribe(currencyId => {
+        // format setter also creates new loader if it wasn't created
+        this.dataUploadService.format = DataUploaders.CURRENCY_RATE;
+        this.dataUploadService.uploader.parameter = currencyId;
+        this.isSelectVisible = false;
+        // reset previous loaded file
+        this.fileInput.nativeElement.value = '';
+        if (this.columns) {
+          // reset previous grid
+          this.resetGrid();
+        }
+        this.cdRef.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.queryParamsSub) {
+       this.queryParamsSub.unsubscribe();
+    }
   }
 
   get hasFile(): boolean {
@@ -57,15 +100,15 @@ export class DataUploadComponent extends DialogFunctions {
   }
 
   get hasErrors(): boolean {
-    return this.rows && this.rows.reduce((acc, row) => acc || this.rowHasErrors(row), false);
+    return this.rows && this.rows.reduce((acc, row) => acc && this.rowHasErrors(row), true);
   }
 
   get format(): number {
     return this.dataUploadService.format;
   }
 
-  onFormatChange(format: number): void {
-    this.dataUploadService.format = format;
+  onFormatChange(format: {value: number}[]): void {
+    this.dataUploadService.format = format[0].value;
   }
 
   onRequest(): void {
@@ -73,7 +116,7 @@ export class DataUploadComponent extends DialogFunctions {
       this.isFirstRequest = false;
     } else {
       const params = this.grid.getRequestParams();
-      this.dataUploadService
+      this.dataUploadService.uploader
         .fetch(params)
         .subscribe(response => {
           this.rows = this.getRowsFromResponse(response);
@@ -88,7 +131,7 @@ export class DataUploadComponent extends DialogFunctions {
     switch (action) {
       case 'delete':
         const { id } = event.params.node;
-        this.dataUploadService
+        this.dataUploadService.uploader
           .deleteRow(Number(id))
           .subscribe(() => this.onRequest());
         break;
@@ -102,11 +145,13 @@ export class DataUploadComponent extends DialogFunctions {
       columnId: cell.columnId,
       value: String(cell.value),
     };
-    this.dataUploadService
+    this.dataUploadService.uploader
       .editCell(payload)
       .subscribe(response => {
         const row = response.rows[0];
-        this.rows[row.id] = row;
+        const rows = this.rows.slice();
+        rows.splice(row.id - 1, 1, row);
+        this.rows = rows;
         this.cdRef.markForCheck();
       });
   }
@@ -117,7 +162,7 @@ export class DataUploadComponent extends DialogFunctions {
 
   onFileChange(): void {
     const file = (this.fileInput.nativeElement as HTMLInputElement).files[0];
-    this.dataUploadService
+    this.dataUploadService.uploader
       .openFile(file)
       .flatMap(response => this.getColumnsFromResponse(response).map(columns => ({ response, columns })))
       .subscribe(({ response, columns }) => {
@@ -132,19 +177,22 @@ export class DataUploadComponent extends DialogFunctions {
   }
 
   onSaveClick(): void {
-    this.dataUploadService
+    this.dataUploadService.uploader
       .save()
       .subscribe(response => {
-        const { processed, total } = response.massInfo;
-        if (processed !== total) {
-          this.setDialog('errorLogPrompt');
-          this.cdRef.markForCheck();
-        }
+        // TODO(i.lobanov): uncomment when ready on BE
+        // const { processed, total } = response.massInfo;
+        // if (processed !== total) {
+        //   this.setDialog('errorLogPrompt');
+        //   this.cdRef.markForCheck();
+        // }
+        this.setDialog('errorLogPrompt');
+        this.cdRef.markForCheck();
       });
   }
 
   onErrorLogSubmit(): void {
-    this.dataUploadService
+    this.dataUploadService.uploader
       .getErrors()
       .subscribe(() => {
         this.closeDialog();
@@ -158,12 +206,10 @@ export class DataUploadComponent extends DialogFunctions {
   }
 
   onCancelSubmit(): void {
-    this.dataUploadService
+    this.dataUploadService.uploader
       .cancel()
       .subscribe(() => {
-        this.columns = null;
-        this.rows = [];
-        this.rowCount = 0;
+        this.resetGrid();
         // TODO(d.maltsev): maybe reset form instead?
         this.fileInput.nativeElement.value = '';
         this.closeDialog();
@@ -171,13 +217,14 @@ export class DataUploadComponent extends DialogFunctions {
       });
   }
 
+
   onNextProblematicCellClick(): void {
     this.grid.focusNextCell(cell => {
       const { rowIndex } = cell;
       const columnId = cell.column.getColId();
       return this.rows[rowIndex]
-        ? this.rows[rowIndex].cells.find(c => c.columnId === columnId).statusCode
-        : null;
+      ? this.rows[rowIndex].cells.find(c => c.columnId === columnId).statusCode
+      : null;
     });
   }
 
@@ -189,6 +236,24 @@ export class DataUploadComponent extends DialogFunctions {
       ? this.rows[rowIndex].cells.find(c => c.columnId === columnId).statusCode === 1
       : null;
     });
+  }
+
+  onErrorValueUpdate(rows: IRow[]): void {
+    // do nothing if no row is selected
+    if (this.grid.selectedNodes.length) {
+      // we presume that changed rows are also currently selected ones
+      const rowNodes = this.grid.selectedNodes.filter(row => rows.includes(row.data));
+      // refresh grid manually to change cell's style
+      // if changed rows not found in selected rows, refresh the whole grid
+      // we need to force refresh in both cases, since row data is the same at this point
+      this.grid.refreshCells(rowNodes && rowNodes.length ? { rowNodes, force: true } : { force: true });
+    }
+  }
+
+  private resetGrid(): void {
+    this.columns = null;
+    this.rows = [];
+    this.rowCount = 0;
   }
 
   private rowHasErrors(row: IRow): boolean {
@@ -254,7 +319,9 @@ export class DataUploadComponent extends DialogFunctions {
       case 4: return { backgroundColor: '#ffffdd', color: '#000000' };
       case 5: return { backgroundColor: '#e0f0ff', color: '#00ccff' };
       case 6: return { backgroundColor: '#ddfade', color: '#339966' };
-      default: return null;
+      // we have to return some style, otherwise it wont be changed
+      // if a new style is not present (i.e. null), the last style is preserved
+      default: return { backgroundColor: '#ffffff', color: '#000000' };
     }
   }
 }

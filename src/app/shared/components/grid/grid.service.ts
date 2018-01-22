@@ -50,7 +50,7 @@ export class GridService {
       });
     }
 
-    if (filters.hasFilter() || filters.hasValues()) {
+    if (filters && (filters.hasFilter() || filters.hasValues())) {
       request.filtering = filters;
     }
 
