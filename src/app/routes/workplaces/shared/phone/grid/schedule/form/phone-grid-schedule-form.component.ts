@@ -5,19 +5,19 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { IDynamicFormControl } from '../../../../../../components/form/dynamic-form/dynamic-form.interface';
-import { INamedValue, IOption } from '../../../../../../../core/converter/value-converter.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { INamedValue, IOption } from '@app/core/converter/value-converter.interface';
 import { ISMSSchedule } from '../../../phone.interface';
-import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
-import { UserConstantsService } from '../../../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserTemplatesService } from '../../../../../../../core/user/templates/user-templates.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
-import { DynamicFormComponent } from '../../../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey, valuesToOptions } from '../../../../../../../core/utils';
-import { minDate } from '../../../../../../../core/validators';
+import { makeKey, valuesToOptions } from '@app/core/utils';
+import { minDate } from '@app/core/validators';
 
 const labelKey = makeKey('widgets.phone.dialogs.schedule.form');
 

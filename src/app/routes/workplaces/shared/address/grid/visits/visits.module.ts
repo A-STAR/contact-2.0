@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { DialogModule } from '../../../../../components/dialog/dialog.module';
-import { GridModule } from '../../../../../components/grid/grid.module';
+import { DialogModule } from '@app/shared/components/dialog/dialog.module';
+import { GridModule } from '@app/shared/components/grid/grid.module';
 
 import { VisitService } from './visits.service';
 

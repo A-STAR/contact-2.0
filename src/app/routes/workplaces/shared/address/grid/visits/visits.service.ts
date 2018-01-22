@@ -3,8 +3,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { IVisit } from './visits.interface';
 
-import { DataService } from '../../../../../../core/data/data.service';
-import { NotificationsService } from '../../../../../../core/notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Injectable()
 export class VisitService {

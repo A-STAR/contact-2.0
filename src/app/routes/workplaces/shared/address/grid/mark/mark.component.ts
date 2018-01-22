@@ -11,17 +11,17 @@ import {
 import { first } from 'rxjs/operators';
 
 import { IAddressMarkData, IDebt } from './mark.interface';
-import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IGridColumn } from '../../../../../components/grid/grid.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 
-import { GridService } from '../../../../../components/grid/grid.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
 import { MarkService } from './mark.service';
 import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
-import { GridComponent } from '../../../../../components/grid/grid.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { makeKey } from '../../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 
 const labelKey = makeKey('widgets.address.dialogs.mark.form');
 

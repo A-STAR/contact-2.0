@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { ISMSSchedule } from '../../phone.interface';
 
-import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { PhoneGridScheduleFormComponent } from './form/phone-grid-schedule-form.component';
 
