@@ -1446,7 +1446,8 @@
         "comment": "Comments",
         "typeCode": "Data Type",
         "dictNameCode": "Dictionary",
-        "disabledValue": "No Value"
+        "disabledValue": "No Value",
+        "version": "Version history"
       }
     },
     "contact": {
