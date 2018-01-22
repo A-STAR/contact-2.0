@@ -54,7 +54,8 @@
   </split-area>
   <!-- Contact Registration -->
   <split-area size="40">
-    <app-contact-registration [debtId]="debtId$ | async" [contactType]="1"></app-contact-registration>
+    <!-- TODO(d.maltsev): remove hard-coded inputs -->
+    <app-contact-registration [debtId]="debtId$ | async" [contactId]="541" [contactType]="1"></app-contact-registration>
   </split-area>
 </split>
 

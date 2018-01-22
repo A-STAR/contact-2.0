@@ -171,6 +171,12 @@ export class ContactRegistrationService {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.callReasonMode)));
   }
 
+  get canSetChangeReason$(): Observable<boolean> {
+    return this._outcome$.pipe(
+      map(outcome => outcome && [2, 3].includes(outcome.statusReasonMode) && Boolean(outcome.debtStatusCode)),
+    );
+  }
+
   completeRegistration(data: Partial<IContactRegistrationData>): Observable<void> {
     const { debtId, guid } = this;
     return this.dataService.create('/debts/{debtId}/contactRegistration/{guid}/save', { debtId, guid }, data)
