@@ -152,8 +152,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   // selected rows
-  get selected(): RowNode[] {
+  get selected(): any[] {
     return this.gridOptions.api ? this.gridOptions.api.getSelectedRows() : [];
+  }
+
+  get selectedNodes(): RowNode[] {
+    return this.gridOptions.api ? this.gridOptions.api.getSelectedNodes() : [];
   }
 
   deselectAll(): void {
@@ -193,7 +197,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       this.clearRangeSelections();
       this.viewportDatasource.params.setRowData(this.rows);
       this.viewportDatasource.params.setRowCount(this.rows.length);
-      this.rowDataChange.emit(rows);
+      this.rowDataChange.emit(rows.currentValue);
     }
     if (rowCount) {
       if (this.page > this.getPageCount()) {

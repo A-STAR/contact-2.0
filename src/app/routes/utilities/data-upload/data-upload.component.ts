@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IAppState } from '@app/core/state/state.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow } from './data-upload.interface';
+import { DataUploaders, IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow,  } from './data-upload.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -28,6 +28,7 @@ import { DialogFunctions } from '../../../core/dialog';
 
 import { isEmpty } from '../../../core/utils';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { SimpleChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,14 +73,14 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
 
   ngOnInit(): void {
     // set initial value
-    this.dataUploadService.format = 1;
+    this.dataUploadService.format = DataUploaders.SET_OPERATOR;
 
     this.queryParamsSub = this.store.select(store => store.currency)
       .map(currency => currency.currencyId)
       .filter(Boolean)
       .subscribe(currencyId => {
         // format setter also creates new loader if it wasn't created
-        this.dataUploadService.format = 6;
+        this.dataUploadService.format = DataUploaders.CURRENCY_RATE;
         this.dataUploadService.uploader.parameter = currencyId;
         this.isSelectVisible = false;
         // reset previous loaded file
@@ -242,8 +243,15 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onErrorValueUpdate(rows: IRow[]): void {
-    // have to refresh row manually
-    this.grid.refreshCells({ force: true });
+    // do nothing if no row is selected
+    if (this.grid.selectedNodes.length) {
+      // we presume that changed rows are also currently selected ones
+      const rowNodes = this.grid.selectedNodes.filter(row => rows.includes(row.data));
+      // refresh grid manually to change cell's style
+      // if changed rows not found in selected rows, refresh the whole grid
+      // we need to force refresh in both cases, since row data is the same at this point
+      this.grid.refreshCells(rowNodes && rowNodes.length ? { rowNodes, force: true } : { force: true });
+    }
   }
 
   private resetGrid(): void {
@@ -315,6 +323,8 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
       case 4: return { backgroundColor: '#ffffdd', color: '#000000' };
       case 5: return { backgroundColor: '#e0f0ff', color: '#00ccff' };
       case 6: return { backgroundColor: '#ddfade', color: '#339966' };
+      // we have to return some style, otherwise it wont be changed
+      // if a new style is not present (i.e. null), the last style is preserved
       default: return { backgroundColor: '#ffffff', color: '#000000' };
     }
   }
