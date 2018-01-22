@@ -1455,7 +1455,8 @@
         "comment": "Комментарий",
         "typeCode": "Тип данных",
         "dictNameCode": "Словарь",
-        "disabledValue": "Не содержит значение"
+        "disabledValue": "Не содержит значение",
+        "version": "Хранение версий"
       }
     },
     "contact": {
