@@ -39,7 +39,6 @@ export class ScheduleTypeCardComponent implements OnInit {
   groups: IScheduleGroup[] = [];
 
   private selectedEventTypeCode$ = new BehaviorSubject<number>(null);
-  private selectedGroup$ = new BehaviorSubject<number>(null);
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -56,7 +55,6 @@ export class ScheduleTypeCardComponent implements OnInit {
       });
 
     this.fetchGroups();
-    this.selectedGroup$.next(this.type.groupId);
 
     this.scheduleEventService.canView$
       .pipe(first())
@@ -71,18 +69,22 @@ export class ScheduleTypeCardComponent implements OnInit {
     return this.selectedEventTypeCode$.value;
   }
 
+  get selectedGroupId(): number {
+    return this.eventTypeForm.getControl('groupId').value;
+  }
+
   get groupSelection(): IScheduleGroup[] {
-    return this.groups.filter(group => group.id === this.selectedGroup$.value);
+    return this.groups.filter(group => group.id === this.selectedGroupId);
   }
 
   get canSubmit(): boolean {
-    return this.eventTypeForm && this.eventTypeForm.canSubmit && !!this.selectedGroup$.value;
+    return this.eventTypeForm && this.eventTypeForm.canSubmit && !!this.selectedGroupId;
   }
 
   get serializedUpdates(): IScheduleType {
     switch (this.selectedEventTypeCode) {
       case ScheduleEventEnum.GROUP:
-        return { ...this.eventTypeForm.serializedUpdates, ...this.groupGridSerializedUpdates };
+        return { ...this.eventTypeForm.serializedUpdates };
     }
   }
 
@@ -93,12 +95,9 @@ export class ScheduleTypeCardComponent implements OnInit {
   }
 
   onGroupSelect(group: IScheduleGroup): void {
-    this.selectedGroup$.next(group.id);
-    this.cdRef.markForCheck();
-  }
-
-  private get groupGridSerializedUpdates(): any {
-    return { groupId: this.selectedGroup$.value };
+    const groupIdControl = this.eventTypeForm.getControl('groupId');
+    groupIdControl.setValue(group.id);
+    groupIdControl.markAsDirty();
   }
 
   private initEventTypeControls(canEdit: boolean): void {
@@ -113,6 +112,7 @@ export class ScheduleTypeCardComponent implements OnInit {
         markAsDirty: !this.eventId,
         onChange: () => this.onEventTypeSelect()
       },
+      { controlName: 'groupId', type: 'number', display: false, required: true }
     ] as IDynamicFormItem[];
   }
 

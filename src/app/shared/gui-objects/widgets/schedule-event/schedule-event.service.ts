@@ -54,11 +54,6 @@ export class ScheduleEventService extends AbstractActionService {
 
   fetch(eventId: number): Observable<IScheduleEvent> {
     return this.dataService.read(`${this.baseUrl}/{eventId}`, { eventId })
-      .map(event => ({
-        ...event,
-        eventTypeCode: event.evenTypeCode,
-        weekDays: [event.weekDays]
-      }))
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.singular').dispatchCallback());
   }
 
