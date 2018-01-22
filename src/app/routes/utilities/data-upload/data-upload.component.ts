@@ -217,8 +217,12 @@ export class DataUploadComponent extends DialogFunctions
 
       if (!response || !response.success) {
         this.setDialog('errorLogPrompt');
-        this.cdRef.markForCheck();
+      } else {
+        // reset previous loaded file
+        this.fileInput.nativeElement.value = '';
+        this.resetGrid();
       }
+      this.cdRef.markForCheck();
     });
   }
 
