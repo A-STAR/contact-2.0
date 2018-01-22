@@ -110,6 +110,7 @@ export class AttributeGridEditComponent implements OnInit {
         lookupKey: 'dictionaries'
       },
       { controlName: 'disabledValue', type: 'checkbox' },
+      { controlName: 'version', type: 'checkbox' },
     ] as IDynamicFormItem[];
 
     return controls;

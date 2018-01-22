@@ -197,7 +197,7 @@ export interface IDynamicFormTextareaControl extends IDynamicFormBaseControl {
 }
 
 export interface IDynamicFormDebtAmountControl extends IDynamicFormBaseControl {
-  amount: number;
+  total: number;
   placeholder?: string;
   type: 'debt-amount';
 }

@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
-import { IAddress } from '../../../../../shared/gui-objects/widgets/address/address.interface';
+import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
 import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 
-import { AddressService } from '../../../../../shared/gui-objects/widgets/address/address.service';
+import { AddressService } from '@app/routes/workplaces/shared/address/address.service';
 import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { DebtService } from '../../../../../core/debt/debt.service';
 

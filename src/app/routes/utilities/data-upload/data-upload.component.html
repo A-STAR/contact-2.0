@@ -32,14 +32,14 @@
         <app-button label="modules.dataUpload.buttons.cancel" [disabled]="!hasFile" (click)="onCancelClick()"></app-button>
       </div>
       <div class="col-md-3">
-        <app-select-wrapper
+        <app-select
           *ngIf="isSelectVisible"
-          [dictCode]="dictCode"
+          [options]="uploaders"
           [disabled]="hasFile"
           [ngModel]="format"
           [nullable]="false"
           (ngModelChange)="onFormatChange($event)"
-        ></app-select-wrapper>
+        ></app-select>
       </div>
     </div>
     <!-- Grid Toolbar -->

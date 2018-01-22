@@ -94,12 +94,20 @@ export class DebtService {
     this.router.navigate([ url ], { queryParams });
   }
 
+  /**
+   * @deprecated
+   * Use /routes/workplaces/workplaces.service instead
+   */
   fetchAll(personId: number): Observable<Array<IDebt>> {
     return this.dataService
       .readAll(this.baseUrl, { personId })
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.plural').dispatchCallback());
   }
 
+  /**
+   * @deprecated
+   * Use /routes/workplaces/workplaces.service instead
+   */
   fetch(personId: number, debtId: number): Observable<IDebt> {
     return this.dataService
       .read('/debts/{debtId}', { personId, debtId })

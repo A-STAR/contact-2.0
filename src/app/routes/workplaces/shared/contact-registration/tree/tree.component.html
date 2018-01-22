@@ -1,0 +1,37 @@
+<split direction="vertical" gutterColor="inherit">
+
+  <!-- Scenario -->
+  <split-area size="30">
+    <div class="flex vertical">
+      <div class="flex-item">
+        <!-- TODO(d.maltsev): i18n -->
+        <p>Сценарий разговора</p>
+      </div>
+      <div class="flex-item grow">
+        <div class="full-height pb-lg">
+          <div class="scenario-text">
+            <div class="scenario-text-inner">
+              <div style="overflow-y: auto;">
+                {{ scenarioText }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </split-area>
+
+  <!-- Outcome Tree -->
+  <split-area size="70">
+    <app-tree
+      layout="horizontal"
+      selectionMode="single"
+      [collapseAdjacentNodes]="true"
+      [expandNodeOnClick]="true"
+      [style]="{ height: '100%', width: '100%', border: 'none' }"
+      [value]="nodes"
+      (onNodeSelect)="onNodeSelect($event)"
+      (onNodeDblClick)="onNodeDoubleClick($event)"
+    ></app-tree>
+  </split-area>
+</split>

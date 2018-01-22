@@ -267,6 +267,15 @@
           "message": "Download error log?",
           "title": "Could not save to DB"
         }
+      },
+      "errors": {
+        "openFile": "Error when trying to open file",
+        "fetch": "Error when trying to load data from file",
+        "deleteRow": "Error when trying to delete row",
+        "cancel": "Error when trying to cancel data load",
+        "save": "Error when trying to save data to DB",
+        "editCell": "Error when trying to edit cell",
+        "getErrors": "Error when trying to get error log file"
       }
     },
     "payments": {
@@ -1446,7 +1455,8 @@
         "comment": "Comments",
         "typeCode": "Data Type",
         "dictNameCode": "Dictionary",
-        "disabledValue": "No Value"
+        "disabledValue": "No Value",
+        "version": "Version history"
       }
     },
     "contact": {
