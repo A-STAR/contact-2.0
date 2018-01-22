@@ -8,7 +8,7 @@ import { DebtorCardService } from '../../../core/app-modules/debtor-card/debtor-
 import { combineLatestOr } from '../../../core/utils/helpers';
 
 @Component({
-  selector: 'app-contact-registration',
+  selector: 'app-routes-workplaces-contact-registration',
   templateUrl: './contact-registration.component.html',
   styleUrls: [ './contact-registration.component.scss' ],
   providers: [

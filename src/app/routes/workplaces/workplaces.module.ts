@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { WorkplacesService } from './workplaces.service';
+
 import { WorkplacesComponent } from './workplaces.component';
 
 const routes: Routes = [
@@ -74,5 +76,8 @@ const routes: Routes = [
   declarations: [
     WorkplacesComponent,
   ],
+  providers: [
+    WorkplacesService,
+  ]
 })
 export class WorkplacesModule {}
