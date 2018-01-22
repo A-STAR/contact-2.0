@@ -1,56 +1,61 @@
 <split *ngIf="hasDebt$ | async; else noActiveDebts" direction="horizontal" gutterColor="inherit">
   <!-- Main Area -->
   <split-area size="60">
-    <!-- Call Center Toolbar -->
-    <div class="mb">
-      <app-call-center-toolbar></app-call-center-toolbar>
+    <div class="flex vertical">
+      <!-- Toolbar + Person Form -->
+      <div class="flex-item">
+        <div class="mb">
+          <app-call-center-toolbar></app-call-center-toolbar>
+        </div>
+        <div class="mb">
+          <app-call-center-person></app-call-center-person>
+        </div>
+      </div>
+      <!-- Tabs -->
+      <div class="flex-item grow">
+        <div class="mb">
+          <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
+            <!-- Phones -->
+            <app-tabview-tab [title]="'modules.callCenter.tabs.phones'">
+              <app-call-center-phones *ngIf="shouldDisplayTab(0)"></app-call-center-phones>
+            </app-tabview-tab>
+            <!-- Addresses -->
+            <app-tabview-tab [title]="'modules.callCenter.tabs.addresses'">
+              <app-call-center-addresses *ngIf="shouldDisplayTab(1)"></app-call-center-addresses>
+            </app-tabview-tab>
+            <!-- Debt Components -->
+            <app-tabview-tab [title]="'modules.callCenter.tabs.debtComponents'">
+              <app-call-center-debt-components *ngIf="shouldDisplayTab(2)"></app-call-center-debt-components>
+            </app-tabview-tab>
+            <!-- Contacts -->
+            <app-tabview-tab [title]="'modules.callCenter.tabs.contacts'">
+              <app-call-center-contacts *ngIf="shouldDisplayTab(3)"></app-call-center-contacts>
+            </app-tabview-tab>
+            <!-- Payments -->
+            <app-tabview-tab [title]="'modules.callCenter.tabs.payments'">
+              <app-call-center-payments *ngIf="shouldDisplayTab(4)"></app-call-center-payments>
+            </app-tabview-tab>
+            <!--Promises -->
+            <app-tabview-tab [title]="'modules.callCenter.tabs.promises'">
+              <app-call-center-promises *ngIf="shouldDisplayTab(5)"></app-call-center-promises>
+            </app-tabview-tab>
+            <!-- Documents -->
+            <app-tabview-tab [title]="'modules.callCenter.tabs.documents'">
+              <app-call-center-documents *ngIf="shouldDisplayTab(6)"></app-call-center-documents>
+            </app-tabview-tab>
+          </app-tabview>
+        </div>
+      </div>
+      <!-- Debt Form -->
+      <div class="flex-item">
+        <app-call-center-debt></app-call-center-debt>
+      </div>
     </div>
-    <!-- Person Form -->
-    <div class="mb">
-      <app-call-center-person></app-call-center-person>
-    </div>
-    <!-- Tabs -->
-    <div class="mb">
-      <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
-        <!-- Phones -->
-        <app-tabview-tab [title]="'modules.callCenter.tabs.phones'">
-          <app-call-center-phones *ngIf="shouldDisplayTab(0)"></app-call-center-phones>
-        </app-tabview-tab>
-        <!-- Addresses -->
-        <app-tabview-tab [title]="'modules.callCenter.tabs.addresses'">
-          <app-call-center-addresses *ngIf="shouldDisplayTab(1)"></app-call-center-addresses>
-        </app-tabview-tab>
-        <!-- Debt Components -->
-        <app-tabview-tab [title]="'modules.callCenter.tabs.debtComponents'">
-          <app-call-center-debt-components *ngIf="shouldDisplayTab(2)"></app-call-center-debt-components>
-        </app-tabview-tab>
-        <!-- Contacts -->
-        <app-tabview-tab [title]="'modules.callCenter.tabs.contacts'">
-          <app-call-center-contacts *ngIf="shouldDisplayTab(3)"></app-call-center-contacts>
-        </app-tabview-tab>
-        <!-- Payments -->
-        <app-tabview-tab [title]="'modules.callCenter.tabs.payments'">
-          <app-call-center-payments *ngIf="shouldDisplayTab(4)"></app-call-center-payments>
-        </app-tabview-tab>
-        <!--Promises -->
-        <app-tabview-tab [title]="'modules.callCenter.tabs.promises'">
-          <app-call-center-promises *ngIf="shouldDisplayTab(5)"></app-call-center-promises>
-        </app-tabview-tab>
-        <!-- Documents -->
-        <app-tabview-tab [title]="'modules.callCenter.tabs.documents'">
-          <app-call-center-documents *ngIf="shouldDisplayTab(6)"></app-call-center-documents>
-        </app-tabview-tab>
-      </app-tabview>
-    </div>
-    <!-- Debt Form -->
-    <app-call-center-debt></app-call-center-debt>
   </split-area>
   <!-- Contact Registration -->
-  <!--
   <split-area size="40">
-    Contact Registration
+    <app-contact-registration [debtId]="debtId$ | async" [contactType]="1"></app-contact-registration>
   </split-area>
-  -->
 </split>
 
 <ng-template #noActiveDebts>

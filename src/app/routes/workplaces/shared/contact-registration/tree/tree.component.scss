@@ -1,0 +1,46 @@
+$scenario-color: #607189;
+
+@mixin arrow($width, $color, $marginLeft, $zIndex) {
+  border: $width solid transparent;
+  border-top-color: $color;
+  bottom: -(2 * $width);
+  content: '';
+  left: 50%;
+  margin-left: $marginLeft;
+  position: absolute;
+  z-index: $zIndex;
+}
+
+:host ::ng-deep .ui-tree {
+  background: inherit;
+  border: none;
+  padding: 0;
+}
+
+.scenario-text {
+  border-radius: 6px;
+  border: 2px solid $scenario-color;
+  height: 100%;
+  position: relative;
+  .scenario-text-inner {
+    background-color: $scenario-color;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    color: #fff;
+    height: 100%;
+    padding: 10px 16px;
+    position: relative;
+    > p:last-child {
+      margin-bottom: 0;
+    }
+    &:before {
+      @include arrow(6px, $scenario-color, -1px, 3);
+    }
+    &:after {
+      @include arrow(9px, #fff, -4px, 2);
+    }
+  }
+  &:after {
+    @include arrow(10px, $scenario-color, -5px, 1);
+  }
+}
