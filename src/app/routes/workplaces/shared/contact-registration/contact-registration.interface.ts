@@ -42,12 +42,3 @@ export interface IOutcome {
 export interface IContactRegistrationData {
   code: number;
 }
-
-export interface IContactRegistrationInitData {
-  addressId: number;
-  campaignId: number;
-  code: number;
-  personId: number;
-  personRole: number;
-  phoneId: number;
-}

@@ -7,7 +7,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { filter, first, mergeMap } from 'rxjs/operators';
+import { filter, mergeMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 

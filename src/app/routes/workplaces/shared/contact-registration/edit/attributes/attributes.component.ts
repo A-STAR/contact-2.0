@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, mergeMap } from 'rxjs/operators';
 
@@ -41,7 +41,6 @@ export class AttributesComponent implements OnInit {
   }
 
   get data(): any {
-    const { guid } = this.contactRegistrationService;
     return flatten(this.attributes)
       .map(node => node.data)
       .filter(attribute => attribute.typeCode)

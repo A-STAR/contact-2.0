@@ -7,8 +7,6 @@ import { random } from 'faker';
 import { IContactRegistrationMode, IOutcome } from './contact-registration.interface';
 
 import { ContactRegistrationService } from './contact-registration.service';
-import { DataService } from '@app/core/data/data.service';
-import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 class MockDataService {
   create(): Observable<any> {

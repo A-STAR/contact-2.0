@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import {
   IContactRegistrationData,
-  IContactRegistrationInitData,
   IContactRegistrationMode,
   IOutcome,
 } from './contact-registration.interface';
