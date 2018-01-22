@@ -10,11 +10,13 @@ import {
 
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import { DataUploaders, IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow,  } from './data-upload.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -46,6 +48,7 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
   ];
 
   columns: IAGridColumn[];
+  uploaders: IOption[];
 
   dialog: 'cancel' | 'errorLogPrompt';
 
@@ -54,20 +57,32 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
   rows: any[];
   rowCount = 0;
   rowIdKey = 'id';
-  dictCode = UserDictionariesService.DICTIONARY_DATA_LOAD_FORMAT;
+  private static FORMAT_PERMISSION = 'LOAD_DATA_FROM_EXCEL_FORMAT_LIST';
 
   private isFirstRequest = true;
+  private uploadersOptionsSub: Subscription;
   private queryParamsSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private dataUploadService: DataUploadService,
-    private gridService: GridService
+    private gridService: GridService,
+    private userDictionariesService: UserDictionariesService
   ) {
     super();
   }
 
   ngOnInit(): void {
+    this.uploadersOptionsSub = this.userDictionariesService.getDictionaryAsOptionsWithPermission(
+      UserDictionariesService.DICTIONARY_DATA_LOAD_FORMAT,
+      DataUploadComponent.FORMAT_PERMISSION
+    )
+      .subscribe(options => {
+        this.uploaders = options;
+        this.dataUploadService.format = options[0].value as any;
+        this.cdRef.markForCheck();
+      });
+
     // set initial value
     this.dataUploadService.format = DataUploaders.SET_OPERATOR;
 
@@ -92,6 +107,10 @@ export class DataUploadComponent extends DialogFunctions implements OnInit, OnDe
   ngOnDestroy(): void {
     if (this.queryParamsSub) {
        this.queryParamsSub.unsubscribe();
+    }
+
+    if (this.uploadersOptionsSub) {
+       this.uploadersOptionsSub.unsubscribe();
     }
   }
 
