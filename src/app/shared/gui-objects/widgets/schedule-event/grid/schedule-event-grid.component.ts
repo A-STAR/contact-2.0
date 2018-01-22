@@ -24,6 +24,7 @@ import { combineLatestAnd } from '@app/core/utils/helpers';
 export class ScheduleEventGridComponent implements OnInit, OnDestroy {
 
   @Output() edit = new EventEmitter<IScheduleEvent>();
+  @Output() delete = new EventEmitter<IScheduleEvent>();
 
   private selectedEvent$ = new BehaviorSubject<IScheduleEvent>(null);
 
@@ -55,6 +56,14 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
         this.selectedEvent$.map(Boolean)
       ]),
       action: () => this.edit.emit(this.selectedEvent)
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      enabled: combineLatestAnd([
+        this.scheduleEventService.canDelete$,
+        this.selectedEvent$.map(Boolean)
+      ]),
+      action: () => this.delete.emit(this.selectedEvent)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,

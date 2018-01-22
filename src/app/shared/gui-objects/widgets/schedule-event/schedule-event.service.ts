@@ -39,6 +39,10 @@ export class ScheduleEventService extends AbstractActionService {
     return this.userPermissionsService.has('SCHEDULE_EDIT');
   }
 
+  get canDelete$(): Observable<boolean> {
+    return this.userPermissionsService.has('SCHEDULE_DELETE');
+  }
+
   fetchAll(): Observable<IScheduleEvent[]> {
     return this.dataService.readAll(this.baseUrl)
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.plural').dispatchCallback());
@@ -68,5 +72,10 @@ export class ScheduleEventService extends AbstractActionService {
     return this.dataService
       .readAll('/filters/groups', {}, {})
       .catch(this.notificationsService.fetchError().entity('entities.groups.gen.plural').dispatchCallback());
+  }
+
+  delete(eventId: number): Observable<any> {
+    return this.dataService.delete(`${this.baseUrl}/{eventId}`, { eventId })
+    .catch(this.notificationsService.deleteError().entity('entities.scheduleEvents.gen.singular').dispatchCallback());
   }
 }
