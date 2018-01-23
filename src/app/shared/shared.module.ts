@@ -61,6 +61,7 @@ import { TabstripModule } from './components/tabstrip/tabstrip.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TextEditorModule } from './components/form/text-editor/text-editor.module';
 import { TimeModule } from './components/form/time/time.module';
+import { TimePickerModule } from './components/form/timepicker/timepicker.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
@@ -128,6 +129,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     Toolbar2Module,
     TreeModule,
     TimeModule,
+    TimePickerModule,
     ValueInputModule,
     ViewFormModule,
   ],
@@ -213,6 +215,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     Toolbar2Module,
     TreeModule,
     TimeModule,
+    TimePickerModule,
     ValueInputModule,
     ViewFormModule,
   ]

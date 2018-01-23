@@ -1,5 +1,6 @@
 import { Component, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
@@ -51,9 +52,9 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private location: Location,
     private pledgeService: PledgeService,
     private route: ActivatedRoute,
-    private router: Router,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
@@ -133,8 +134,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    const relativeUrlCount = isRoute(this.route, 'create') ? 2 : this.isAddingPledgor ? 4 : 5;
-    this.router.navigate([new Array(relativeUrlCount + 1).join('../')], { relativeTo: this.route });
+    this.location.back();
   }
 
   onSubmit(): void {

@@ -124,7 +124,8 @@
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
     "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
-    "oneOfGroupRequired": "At least one group field must not be empty"
+    "oneOfGroupRequired": "At least one group field must not be empty",
+    "timepicker": "Invalid time format"
   },
   "network": {
     "connectionError": "Connection error",
@@ -2841,10 +2842,12 @@
       },
       "format": {
         "dateTime": "MM/DD/YYYY HH:mm:ss",
-        "date": "MM/DD/YYYY"
+        "date": "MM/DD/YYYY",
+        "time": "HH:mm:ss"
       },
-      "datePicker": {
-        "placeholder": "Select a date"
+      "placeholders": {
+        "datepicker": "Enter a date",
+        "timepicker": "Enter time"
       }
     },
     "colors": {

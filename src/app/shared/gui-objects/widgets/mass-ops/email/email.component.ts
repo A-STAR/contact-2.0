@@ -31,13 +31,13 @@ import { addFormLabel, toOption } from '../../../../../core/utils';
   templateUrl: 'email.component.html'
 })
 export class EmailComponent implements OnInit {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   @Input() debtIds: number[];
   @Input() personIds: number[];
   @Input() personRoles: number[];
 
   @Output() close = new EventEmitter<void>();
-
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
 

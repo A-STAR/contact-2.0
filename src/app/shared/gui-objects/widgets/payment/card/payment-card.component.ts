@@ -1,21 +1,22 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPayment } from '../payment.interface';
 
 import { PaymentService } from '../payment.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { minStrict } from '../../../../../core/validators';
+import { minStrict } from '@app/core/validators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,10 +37,9 @@ export class PaymentCardComponent {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private location: Location,
     private lookupService: LookupService,
     private paymentService: PaymentService,
-    private router: Router,
-    private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -111,7 +111,7 @@ export class PaymentCardComponent {
   }
 
   onBack(): void {
-    this.router.navigate([new Array(4 + 1).join('../')], { relativeTo: this.route });
+    this.location.back();
   }
 
   onSubmit(): void {
