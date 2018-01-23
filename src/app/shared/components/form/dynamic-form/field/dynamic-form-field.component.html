@@ -301,21 +301,6 @@
     </button>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'richtexteditor'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
-    <app-rich-text-editor
-      [disabled]="control.disabled"
-      [formControlName]="control.controlName"
-      [toolbar]="control.toolbar"
-      (init)="control.onInit ? control.onInit($event) : null"
-    ></app-rich-text-editor>
-  </ng-container>
-
   <ng-container *ngSwitchCase="'texteditor'">
     <label>
       <span class="form-label">

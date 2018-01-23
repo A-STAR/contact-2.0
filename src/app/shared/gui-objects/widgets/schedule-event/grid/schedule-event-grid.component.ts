@@ -1,6 +1,12 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component,
-  OnInit, Output, EventEmitter, OnDestroy
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  ViewChild,
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,25 +20,38 @@ import { ScheduleEventService } from '../schedule-event.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { GridComponent } from '@app/shared/components/grid/grid.component';
+
 import { combineLatestAnd } from '@app/core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   selector: 'app-schedule-event-grid',
   templateUrl: './schedule-event-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleEventGridComponent implements OnInit, OnDestroy {
+export class ScheduleEventGridComponent extends DialogFunctions
+  implements OnInit, OnDestroy {
+  @ViewChild(GridComponent) grid: GridComponent;
 
   @Output() edit = new EventEmitter<IScheduleEvent>();
 
   private selectedEvent$ = new BehaviorSubject<IScheduleEvent>(null);
 
+  dialog: any;
+
   columns: Array<IGridColumn> = [
     { prop: 'id', width: 70 },
     { prop: 'groupId', width: 100 },
     { prop: 'groupName' },
-    { prop: 'eventTypeCode', dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE },
-    { prop: 'periodTypeCode', dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE },
+    {
+      prop: 'eventTypeCode',
+      dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE,
+    },
+    {
+      prop: 'periodTypeCode',
+      dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE,
+    },
     { prop: 'startTime' },
     { prop: 'executeDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'isExecuted', renderer: 'checkboxRenderer' },
@@ -46,20 +65,49 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.scheduleEventService.canAdd$,
-      action: () => this.edit.emit()
+      action: () => this.edit.emit(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: combineLatestAnd([
         this.scheduleEventService.canEdit$,
-        this.selectedEvent$.map(Boolean)
+        this.selectedEvent$.map(
+          selected => selected && this.grid.selected.length === 1,
+        ),
       ]),
-      action: () => this.edit.emit(this.selectedEvent)
+      action: () => this.edit.emit(this.selectedEvent),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DELETE,
+      enabled: combineLatestAnd([
+        this.scheduleEventService.canDelete$,
+        this.selectedEvent$.map(
+          selected => selected && this.grid.selected.length === 1,
+        ),
+      ]),
+      action: () => this.onDelete(this.selectedEvent),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_START,
+      enabled: combineLatestAnd([
+        this.scheduleEventService.canStart$,
+        this.selectedEvent$.map(Boolean),
+      ]),
+      children: [
+        {
+          label: 'widgets.scheduleEvents.start.withCheckGroup',
+          action: () => this.onStart(1),
+        },
+        {
+          label: 'widgets.scheduleEvents.start.withoutCheckGroup',
+          action: () => this.onStart(0),
+        },
+      ],
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: this.scheduleEventService.canView$,
-      action: () => this.fetch()
+      action: () => this.fetch(),
     },
   ];
 
@@ -71,10 +119,13 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private scheduleEventService: ScheduleEventService,
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
+    this.gridService
+      .setAllRenderers(this.columns)
       .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
@@ -96,8 +147,10 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
   }
 
   get selectedEvent(): IScheduleEvent {
-    return (this.events || [])
-      .find(event => this.selectedEvent$.value && event.id === this.selectedEvent$.value.id);
+    return (this.events || []).find(
+      event =>
+        this.selectedEvent$.value && event.id === this.selectedEvent$.value.id,
+    );
   }
 
   onSelect(event: IScheduleEvent): void {
@@ -109,9 +162,31 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
     this.edit.emit(event);
   }
 
+  onDelete(event: IScheduleEvent): void {
+    this.setDialog('delete');
+    this.cdRef.markForCheck();
+  }
+
+  onRemoveSubmit(): void {
+    this.scheduleEventService.delete(this.selectedEvent.id).subscribe(() => {
+      this.closeDialog();
+      this.fetch();
+    });
+  }
+
+  onStart(checkGroup: 0 | 1): void {
+    this.scheduleEventService
+      .start(this.grid.selected.map(event => event.id), { checkGroup })
+      .subscribe(() => {
+        this.fetch();
+      });
+  }
+
   private fetch(): void {
     this.scheduleEventService.fetchAll().subscribe(events => {
       this.events = events;
+      this.selectedEvent$.next(null);
+      this.grid.clearSelection();
       this.cdRef.markForCheck();
     });
   }

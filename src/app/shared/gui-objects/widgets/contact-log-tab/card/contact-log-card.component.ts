@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
@@ -25,24 +25,23 @@ const label = makeKey('widgets.contactLog.card');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactLogTabCardComponent implements OnInit {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   @Input() callCenter = false;
   @Input() contactId: number;
   @Input() debtId: number;
   @Input() disabled = false;
   @Input() contactLogType: number;
 
-  @ViewChild('form') form: DynamicFormComponent;
-
-  controls: Array<IDynamicFormItem> = null;
+  controls: Array<IDynamicFormItem>;
   contactLog: IContactLog;
 
   constructor(
     private contactLogService: ContactLogService,
     private cdRef: ChangeDetectorRef,
+    private location: Location,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-    private router: Router,
-    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -83,13 +82,13 @@ export class ContactLogTabCardComponent implements OnInit {
   onSubmit(): void {
     this.contactLogService.update(this.debtId, this.contactId, this.form.value.comment)
       .subscribe(() => {
-        this.contactLogService.dispatchAction(ContactLogService.COMMENT_CONTACT_LOG_SAVED, this.contactId );
+        this.contactLogService.dispatchAction(ContactLogService.COMMENT_CONTACT_LOG_SAVED, this.contactId);
         this.onBack();
       });
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.location.back();
   }
 
   private createDefaultControls(
@@ -144,6 +143,7 @@ export class ContactLogTabCardComponent implements OnInit {
   }
 
   private createEmailControls(roleOpts: IOption[], statusOpts: IOption[]): IDynamicFormItem[] {
+    const richTextMode = this.contactLog.formatCode === 1;
     return [
       { label: label('contract'), controlName: 'contract', type: 'number',  width: 6, disabled: true },
       { label: label('userFullName'), controlName: 'userFullName', type: 'text', width: 6,  disabled: true },
@@ -154,8 +154,7 @@ export class ContactLogTabCardComponent implements OnInit {
       { label: label('personRole'), controlName: 'personRole', options: roleOpts, width: 6, disabled: true, type: 'select'},
       { label: label('status'), controlName: 'statusCode', options: statusOpts, width: 6, disabled: true, type: 'select'},
       { label: label('subject'), controlName: 'subject', disabled: true, type: 'text'},
-      { label: label('text'), controlName: 'text', type: 'richtexteditor',
-        width: 12, disabled: true, toolbar: this.contactLog.formatCode === 1 },
+      { label: label('text'), controlName: 'text', type: 'texteditor', width: 12, disabled: true, richTextMode },
     ];
   }
 

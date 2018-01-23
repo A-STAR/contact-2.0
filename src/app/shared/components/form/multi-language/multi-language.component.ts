@@ -40,7 +40,6 @@ export class MultiLanguageComponent implements ControlValueAccessor {
   }
 
   onHoverChange(e: MouseEvent): void {
-    console.log(e.type === 'mouseenter');
     this.isHovering = e.type === 'mouseenter';
   }
 

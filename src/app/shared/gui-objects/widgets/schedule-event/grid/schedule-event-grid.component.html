@@ -1,8 +1,17 @@
+<app-dialog-action
+  *ngIf="isDialog('delete')"
+  titleTranslationKey="widgets.scheduleEvents.dialog.remove.title"
+  actionTranslationKey="widgets.scheduleEvents.dialog.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  (action)="onRemoveSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
 <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
   columnTranslationKey="widgets.scheduleEvents"
-  selectionType="single"
   [columns]="columns"
   [footerHeight]="false"
   [rows]="events"
