@@ -70,7 +70,15 @@ export class ScheduleEventCardComponent implements OnInit {
     return [
       { controlName: 'startDate', type: 'datepicker', required: true, disabled: !canEdit, width: 4 },
       { controlName: 'endDate', type: 'datepicker', disabled: !canEdit, width: 4 },
-      { controlName: 'startTime', type: 'text', displayTime: true, disabled: !canEdit, required: true, width: 4 },
+      {
+        controlName: 'startTime',
+        type: 'datepicker',
+        displayTime: true,
+        timeOnly: true,
+        disabled: !canEdit,
+        required: true,
+        width: 4
+      },
       { controlName: 'priority', type: 'number', disabled: !canEdit },
       { controlName: 'isInactive', type: 'checkbox', disabled: !canEdit },
     ] as IDynamicFormItem[];

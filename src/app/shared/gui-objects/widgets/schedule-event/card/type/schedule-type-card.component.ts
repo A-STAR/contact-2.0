@@ -147,7 +147,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   get canSubmit(): boolean {
     return this.eventId
       ? !!this.eventTypeForms.find(form => form && form.canSubmit)
-      : this.eventTypeForms.every(form => form && form.canSubmit);
+      : this.eventTypeForms.every(form => !form || form.canSubmit);
   }
 
   get serializedUpdates(): IScheduleType {
@@ -155,10 +155,10 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       case ScheduleEventEnum.GROUP:
         return { ...this.eventTypeForm.serializedUpdates };
       case ScheduleEventEnum.SMS:
-        return {
+        return this.serializeEventTypeForm({
           ...this.eventTypeForm.serializedUpdates,
-          ...this.mapAdditionalParameters(this.smsTypeForm.serializedUpdates)
-        };
+          ...this.smsTypeForm.serializedUpdates
+        });
     }
   }
 
@@ -262,18 +262,27 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           phoneTypes: [ 1 ],
           personRoles: [ 1 ],
           senderCode: this.useSender ? this.defaultSender : null,
-          ...this.type,
+          ...this.serializeEventType(this.type),
           eventTypeCode: 2
         };
     }
   }
 
-  private mapAdditionalParameters(serializedUpdates: any): Partial<IScheduleType> {
+  private serializeEventTypeForm(serializedUpdates: any): IScheduleType {
     return {
+      ...serializedUpdates,
       checkGroup: serializedUpdates.checkGroup,
       additionalParameters: Object.keys(serializedUpdates)
         .filter(key => key !== 'checkGroup')
-        .map(key => ({ name: key, value: serializedUpdates[key].toString() }))
+        .map(key => ({ name: key, value: JSON.stringify(serializedUpdates[key]) }))
+    };
+  }
+
+  private serializeEventType(type: IScheduleType): Partial<IScheduleType> {
+    return {
+      ...type,
+      ...(type.additionalParameters || [])
+        .reduce((acc, param) => ({ ...acc, [param.name]: JSON.parse(String(param.value)) }), {})
     };
   }
 }
