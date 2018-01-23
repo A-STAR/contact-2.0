@@ -39,3 +39,7 @@ export interface IScheduleGroup {
   comment?: string;
   entityTypeId: number;
 }
+
+export interface IScheduleStartRequest {
+  checkGroup?: 0 | 1;
+}

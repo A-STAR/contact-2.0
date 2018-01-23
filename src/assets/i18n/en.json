@@ -2180,7 +2180,18 @@
         "group": "Group"
       },
       "dialog": {
-        "title": "Event"
+        "title": "Event",
+        "remove": {
+          "title": "Remove event",
+          "confirmMessage": "Are you sure you want to delete this event?"
+        },
+        "start": {
+          "title": "Start schedule event",
+          "checkGroup": "Check for groups formation"
+        }
+      },
+      "errors": {
+        "start": "Error has been occurred when tried to start schedule event with the ID {{ eventId }}"
       }
     }
   },

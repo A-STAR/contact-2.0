@@ -15,6 +15,10 @@ export class ScheduleComponent extends DialogFunctions {
 
   eventId: number;
 
+  constructor() {
+    super();
+  }
+
   onEdit(event: IScheduleEvent): void {
     this.setDialog('schedule');
     this.eventId = event && event.id;
