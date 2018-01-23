@@ -2841,7 +2841,8 @@
       },
       "format": {
         "dateTime": "DD.MM.YYYY HH:mm:ss",
-        "date": "DD.MM.YYYY"
+        "date": "DD.MM.YYYY",
+        "time": "HH:mm:ss"
       },
       "datePicker": {
         "placeholder": "Выберите дату"
