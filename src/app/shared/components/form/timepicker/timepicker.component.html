@@ -1,0 +1,40 @@
+<div class="datepicker">
+  <span class="input-group">
+    <input
+      #input
+      [attr.placeholder]="!isDisabled ? (placeholder | translate) : ''"
+      [disabled]="isDisabled"
+      [ngClass]="inputClass"
+      [ngModel]="formattedDate"
+      [required]="required"
+      (blur)="onBlur()"
+      (change)="onValueChange($event)"
+    />
+
+    <span class="input-group-btn" *ngIf="!isDisabled">
+      <button
+        #trigger
+        type="button"
+        [ngClass]="buttonClass"
+        (click)="toggleCalendar()"
+      >
+        <i class="fa fa-calendar"></i>
+      </button>
+    </span>
+  </span>
+
+  <div #dropdown class="datepicker-dd-wrapper">
+    <div *ngIf="isExpanded" class="dropdown" [ngStyle]="style">
+      <p-calendar
+        [inline]="true"
+        [hourFormat]="'24'"
+        [ngModel]="value"
+        [required]="required"
+        [timeOnly]="true"
+        [showSeconds]="showSeconds"
+        [yearRange]="'1900:9999'"
+        (ngModelChange)="onValueChange($event)"
+      ></p-calendar>
+    </div>
+  </div>
+</div>

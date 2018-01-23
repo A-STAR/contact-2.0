@@ -40,7 +40,8 @@ export type IDynamicFormControl =
   IDynamicFormSegmentedInputControl |
   IDynamicFormSelectControl |
   IDynamicFormTextControl |
-  IDynamicFormTextareaControl
+  IDynamicFormTextareaControl |
+  IDynamicFormTimeControl
   ;
 
 export interface IDynamicFormConfig {
@@ -91,6 +92,14 @@ export interface IDynamicFormDateControl extends IDynamicFormBaseControl {
   maxDate?: Date;
   placeholder?: string;
   dependsOn?: string;
+}
+
+export interface IDynamicFormTimeControl extends IDynamicFormBaseControl {
+  // options for time controls
+  type: 'timepicker';
+  placeholder?: string;
+  dependsOn?: string;
+  showSeconds?: boolean;
 }
 
 export interface IDynamicFormFileControl extends IDynamicFormBaseControl {
@@ -293,6 +302,7 @@ export type TControlTypes =
   | 'checkbox'
   | 'colorpicker'
   | 'datepicker'
+  | 'timepicker'
   | 'debt-amount'
   | 'dialog'
   | 'dialogmultiselect'
