@@ -14,6 +14,24 @@ const routes: Routes = [
     data: {
       reuse: true,
     },
+    children: [
+      // {
+      //   path: '',
+      //   pathMatch: 'full',
+      //   redirectTo: 'all',
+      // },
+      {
+        path: '',
+        pathMatch: 'full',
+        loadChildren:
+          '@app/shared/gui-objects/widgets/groups/group.module#GroupModule',
+      },
+      {
+        path: 'debtsInGroup',
+        loadChildren:
+          '@app/shared/gui-objects/widgets/debts-in-group/debts-in-group.module#DebtsInGroupModule',
+      },
+    ],
   },
   { path: 'create', component: GroupEditComponent },
   { path: ':groupId', component: GroupEditComponent }
@@ -24,6 +42,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     GroupEditModule,
+  ],
+  exports: [
+    RouterModule,
   ],
   declarations: [
     GroupsComponent,

@@ -2093,6 +2093,10 @@
         "action": {
           "forCurrentUser": "Current user groups"
         }
+      },
+      "tabs": {
+        "all": "Groups",
+        "debtsInGroup": "Debts in group"
       }
     },
     "visit": {

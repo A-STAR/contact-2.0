@@ -2093,6 +2093,10 @@
         "action": {
           "forCurrentUser": "Группы текущего пользователя"
         }
+      },
+      "tabs": {
+        "all": "Группы",
+        "debtsInGroup": "Долги в группе"
       }
     },
     "visit": {
