@@ -4,10 +4,9 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { random } from 'faker';
 
-import { IContactRegistrationMode, IOutcome } from './contact-registration.interface';
+import { IContactRegistrationMode, IOutcome, IContactRegistrationParams } from './contact-registration.interface';
 
 import { ContactRegistrationService } from './contact-registration.service';
-import { IContactRegistrationParams } from '@app/core/debt/debt.interface';
 
 class MockDataService {
   create(): Observable<any> {

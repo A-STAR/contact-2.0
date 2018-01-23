@@ -43,35 +43,35 @@ export class ContactRegistrationService {
   }
 
   get campaignId$(): Observable<number> {
-    return this.params$.pipe(map(params => params.campaignId));
+    return this.params$.pipe(map(params => params && params.campaignId));
   }
 
   get campaignId(): number {
-    return this.params.campaignId;
+    return this.params && this.params.campaignId;
   }
 
   get contactId$(): Observable<number> {
-    return this.params$.pipe(map(params => params.contactId));
+    return this.params$.pipe(map(params => params && params.contactId));
   }
 
   get contactId(): number {
-    return this.params.contactId;
+    return this.params && this.params.contactId;
   }
 
   get contactType$(): Observable<number> {
-    return this.params$.pipe(map(params => params.contactType));
+    return this.params$.pipe(map(params => params && params.contactType));
   }
 
   get contactType(): number {
-    return this.params.contactType;
+    return this.params && this.params.contactType;
   }
 
   get debtId$(): Observable<number> {
-    return this.params$.pipe(map(params => params.debtId));
+    return this.params$.pipe(map(params => params && params.debtId));
   }
 
   get debtId(): number {
-    return this.params.debtId;
+    return this.params && this.params.debtId;
   }
 
   get guid$(): Observable<string> {
@@ -100,19 +100,19 @@ export class ContactRegistrationService {
   }
 
   get personId$(): Observable<number> {
-    return this.params$.pipe(map(params => params.personId));
+    return this.params$.pipe(map(params => params && params.personId));
   }
 
   get personId(): number {
-    return this.params.personId;
+    return this.params && this.params.personId;
   }
 
   get personRole$(): Observable<number> {
-    return this.params$.pipe(map(params => params.personRole));
+    return this.params$.pipe(map(params => params && params.personRole));
   }
 
   get personRole(): number {
-    return this.params.personRole;
+    return this.params && this.params.personRole;
   }
 
   get canSetPromise$(): Observable<boolean> {
