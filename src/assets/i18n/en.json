@@ -2177,7 +2177,13 @@
         "isInactive": "Is inactive",
         "eventTypeCode": "Event type",
         "priority": "Priority",
-        "group": "Group"
+        "group": "Group",
+        "checkGroup": "Group rearrangement check",
+        "delay": "Delay (hours)",
+        "phoneTypes": "Phono type",
+        "personRoles": "Receiver",
+        "templateId": "Template",
+        "senderCode": "Sender"
       },
       "dialog": {
         "title": "Event",

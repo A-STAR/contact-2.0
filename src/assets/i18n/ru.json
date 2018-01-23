@@ -2177,7 +2177,13 @@
         "isInactive": "Выключено",
         "eventTypeCode": "Тип мероприятия",
         "priority": "Приоритет",
-        "group": "Группа"
+        "group": "Группа",
+        "checkGroup": "Проверка переформирования группы",
+        "delay": "Задержка отправки (ч.)",
+        "phoneTypes": "Тип телефона",
+        "personRoles": "Получатель",
+        "templateId": "Сценарий",
+        "senderCode": "Отправитель"
       },
       "dialog": {
         "title": "Мероприятие",

@@ -100,7 +100,7 @@ export class SchedulePeriodCardComponent implements OnInit {
       case SchedulePeriodEnum.DAILY:
         return { ...this.periodTypeForm.serializedUpdates, ...this.dailyFormSerializedUpdates };
       case SchedulePeriodEnum.WEEKLY:
-        return { ...this._weeklyPeriodForm.serializedUpdates, ...this.weeklyFormSerializedUpdates };
+        return { ...this.periodTypeForm.serializedUpdates, ...this.weeklyFormSerializedUpdates };
     }
   }
 
@@ -115,10 +115,9 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   private get weeklyFormSerializedUpdates(): any {
-    const updates = this._weeklyPeriodForm.serializedUpdates;
     return {
       weekDays: Object.keys(this.daysOfWeek)
-        .map((day, index) => updates[day] && ++index)
+        .map((day, index) => this._weeklyPeriodForm.serializedValue[day] && ++index)
         .filter(Boolean)
     };
   }

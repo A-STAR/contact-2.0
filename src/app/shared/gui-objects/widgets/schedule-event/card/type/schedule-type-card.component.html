@@ -4,26 +4,37 @@
     *ngIf="eventTypeControls"
     [config]="eventTypeConfig"
     [controls]="eventTypeControls"
-    [data]="type"
+    [data]="selectedType"
   ></app-dynamic-form>
 </div>
 
-<label>
-  <span>
-    {{ 'widgets.scheduleEvents.card.group' | translate }}
-    <b class="text-danger">*</b>
-  </span>
-</label>
+<div class="pb-lg">
+  <label>
+    <span>
+      {{ 'widgets.scheduleEvents.card.group' | translate }}
+      <b class="text-danger">*</b>
+    </span>
+  </label>
+  
+  <app-grid
+    #groupGrid
+    columnTranslationKey="widgets.groups"
+    selectionType="single"
+    [columns]="groupGridColumns"
+    [selection]="groupSelection"
+    [footerHeight]="false"
+    [styles]="{height: '200px'}"
+    [rows]="groups"
+    (onSelect)="onGroupSelect($event)"
+  ></app-grid>
+</div>
 
-<app-grid
-  #groupGrid
-  *ngIf="selectedEventTypeCode === 1"
-  columnTranslationKey="widgets.groups"
-  selectionType="single"
-  [columns]="groupGridColumns"
-  [selection]="groupSelection"
-  [footerHeight]="false"
-  [styles]="{height: '200px'}"
-  [rows]="groups"
-  (onSelect)="onGroupSelect($event)"
-></app-grid>
+<div class="pb-lg">
+  <app-dynamic-form
+    #smsType
+    *ngIf="selectedEventTypeCode === 2"
+    [config]="smsTypeConfig"
+    [controls]="smsTypeControls"
+    [data]="selectedType"
+  ></app-dynamic-form>
+</div>

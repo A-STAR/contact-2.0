@@ -25,12 +25,25 @@ export interface ISchedulePeriod {
 }
 
 export enum ScheduleEventEnum {
-  GROUP = 1
+  GROUP = 1,
+  SMS = 2
 }
 
 export interface IScheduleType {
   eventTypeCode: number;
   groupId?: number;
+  checkGroup?: number;
+  delay?: number;
+  phoneTypes?: number[];
+  personRoles?: number[];
+  templateId?: number;
+  senderCode?: number;
+  additionalParameters: IScheduleTypeParameter[];
+}
+
+export interface IScheduleTypeParameter {
+  name: string;
+  value: string | number;
 }
 
 export interface IScheduleGroup {
