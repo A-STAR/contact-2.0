@@ -4,7 +4,7 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { random } from 'faker';
 
-import { IContactRegistrationMode, IOutcome } from './contact-registration.interface';
+import { IContactRegistrationMode, IOutcome, IContactRegistrationParams } from './contact-registration.interface';
 
 import { ContactRegistrationService } from './contact-registration.service';
 
@@ -44,10 +44,18 @@ describe('ContactRegistrationService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get/set campaignId', () => {
-    const campaignId = random.number();
-    service.campaignId = campaignId;
-    expect(service.campaignId).toEqual(campaignId);
+  it('should get/set params', () => {
+    const params: IContactRegistrationParams = {
+      campaignId: random.number(),
+      contactId: random.number(),
+      contactType: random.number(),
+      debtId: random.number(),
+      personId: random.number(),
+      personRole: random.number(),
+    };
+    service.params = params;
+    expect(service.params).toEqual(params);
+    service.params$.pipe(first()).subscribe(p => expect(p).toEqual(params));
   });
 
   it('should get/set guid', () => {
@@ -64,27 +72,6 @@ describe('ContactRegistrationService', () => {
   it('should get/set tree mode', () => {
     service.mode = IContactRegistrationMode.TREE;
     expect(service.mode).toEqual(IContactRegistrationMode.TREE);
-  });
-
-  it('should get/set contactId', () => {
-    const contactId = random.number();
-    service.contactId = contactId;
-    expect(service.contactId).toEqual(contactId);
-    service.contactId$.pipe(first()).subscribe(id => expect(id).toEqual(contactId));
-  });
-
-  it('should get/set contactType', () => {
-    const contactType = random.number();
-    service.contactType = contactType;
-    expect(service.contactType).toEqual(contactType);
-    service.contactType$.pipe(first()).subscribe(type => expect(type).toEqual(contactType));
-  });
-
-  it('should get/set debtId', () => {
-    const debtId = random.number();
-    service.debtId = debtId;
-    expect(service.debtId).toEqual(debtId);
-    service.debtId$.pipe(first()).subscribe(id => expect(id).toEqual(debtId));
   });
 
   it('should get/set outcome', () => {
@@ -124,19 +111,5 @@ describe('ContactRegistrationService', () => {
     service.outcome = outcome;
     expect(service.outcome).toEqual(outcome);
     service.outcome$.pipe(first()).subscribe(o => expect(o).toEqual(outcome));
-  });
-
-  it('should get/set personId', () => {
-    const personId = random.number();
-    service.personId = personId;
-    expect(service.personId).toEqual(personId);
-    service.personId$.pipe(first()).subscribe(id => expect(id).toEqual(personId));
-  });
-
-  it('should get/set personRole', () => {
-    const personRole = random.number();
-    service.personRole = personRole;
-    expect(service.personRole).toEqual(personRole);
-    service.personRole$.pipe(first()).subscribe(role => expect(role).toEqual(personRole));
   });
 });
