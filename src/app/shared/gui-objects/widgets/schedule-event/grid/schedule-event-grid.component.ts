@@ -175,7 +175,6 @@ export class ScheduleEventGridComponent extends DialogFunctions
   }
 
   onStart(checkGroup: 0 | 1): void {
-    this.closeDialog();
     this.scheduleEventService
       .start(this.grid.selected.map(event => event.id), { checkGroup })
       .subscribe(() => {
