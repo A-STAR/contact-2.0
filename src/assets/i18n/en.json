@@ -2182,8 +2182,8 @@
       "dialog": {
         "title": "Event",
         "remove": {
-          "title": "Remove schedule {{ schedule }}",
-          "confirmMessage": "Are you sure you want to delete this schedule?"
+          "title": "Remove event",
+          "confirmMessage": "Are you sure you want to delete this event?"
         }
       }
     }

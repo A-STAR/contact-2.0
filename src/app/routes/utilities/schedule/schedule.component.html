@@ -4,18 +4,6 @@
   (close)="closeDialog('schedule')"
 ></app-schedule-event-dialog>
 
-<app-dialog-action
-  *ngIf="isDialog('delete')"
-  titleTranslationKey="widgets.scheduleEvents.dialog.remove.title"
-  actionTranslationKey="widgets.scheduleEvents.dialog.remove.confirmMessage"
-  actionMessage="default.buttons.remove"
-  actionMode="danger"
-  [titleParams]="titleParams"
-  (action)="onRemoveSubmit()"
-  (cancel)="onCloseDialog()">
-</app-dialog-action>
-
 <app-schedule-event-grid
   (edit)="onEdit($event)"
-  (delete)="onDelete($event)"
 ></app-schedule-event-grid>

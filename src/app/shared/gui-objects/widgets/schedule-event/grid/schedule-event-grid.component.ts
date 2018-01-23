@@ -15,25 +15,33 @@ import { GridService } from '../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
 import { combineLatestAnd } from '@app/core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   selector: 'app-schedule-event-grid',
   templateUrl: './schedule-event-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleEventGridComponent implements OnInit, OnDestroy {
-
+export class ScheduleEventGridComponent extends DialogFunctions
+  implements OnInit, OnDestroy {
   @Output() edit = new EventEmitter<IScheduleEvent>();
-  @Output() delete = new EventEmitter<IScheduleEvent>();
 
   private selectedEvent$ = new BehaviorSubject<IScheduleEvent>(null);
+
+  dialog: any;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', width: 70 },
     { prop: 'groupId', width: 100 },
     { prop: 'groupName' },
-    { prop: 'eventTypeCode', dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE },
-    { prop: 'periodTypeCode', dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE },
+    {
+      prop: 'eventTypeCode',
+      dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE,
+    },
+    {
+      prop: 'periodTypeCode',
+      dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE,
+    },
     { prop: 'startTime' },
     { prop: 'executeDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'isExecuted', renderer: 'checkboxRenderer' },
@@ -47,28 +55,28 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.scheduleEventService.canAdd$,
-      action: () => this.edit.emit()
+      action: () => this.edit.emit(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: combineLatestAnd([
         this.scheduleEventService.canEdit$,
-        this.selectedEvent$.map(Boolean)
+        this.selectedEvent$.map(Boolean),
       ]),
-      action: () => this.edit.emit(this.selectedEvent)
+      action: () => this.edit.emit(this.selectedEvent),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: combineLatestAnd([
         this.scheduleEventService.canDelete$,
-        this.selectedEvent$.map(Boolean)
+        this.selectedEvent$.map(Boolean),
       ]),
-      action: () => this.delete.emit(this.selectedEvent)
+      action: () => this.onDelete(this.selectedEvent),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: this.scheduleEventService.canView$,
-      action: () => this.fetch()
+      action: () => this.fetch(),
     },
   ];
 
@@ -80,10 +88,13 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private scheduleEventService: ScheduleEventService,
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
+    this.gridService
+      .setAllRenderers(this.columns)
       .pipe(first())
       .subscribe(columns => {
         this.columns = [...columns];
@@ -105,8 +116,10 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
   }
 
   get selectedEvent(): IScheduleEvent {
-    return (this.events || [])
-      .find(event => this.selectedEvent$.value && event.id === this.selectedEvent$.value.id);
+    return (this.events || []).find(
+      event =>
+        this.selectedEvent$.value && event.id === this.selectedEvent$.value.id,
+    );
   }
 
   onSelect(event: IScheduleEvent): void {
@@ -116,6 +129,20 @@ export class ScheduleEventGridComponent implements OnInit, OnDestroy {
   onEdit(event: IScheduleEvent): void {
     this.selectedEvent$.next(event);
     this.edit.emit(event);
+  }
+
+  onDelete(event: IScheduleEvent): void {
+    this.setDialog('delete');
+    this.cdRef.markForCheck();
+  }
+
+  onRemoveSubmit(): void {
+    this.scheduleEventService
+      .delete(this.selectedEvent.id)
+      .subscribe(() => {
+        this.closeDialog();
+        this.fetch();
+    });
   }
 
   private fetch(): void {
