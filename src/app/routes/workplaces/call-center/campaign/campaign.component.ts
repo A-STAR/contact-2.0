@@ -54,4 +54,12 @@ export class CampaignComponent implements OnInit {
   shouldDisplayTab(tabIndex: number): boolean {
     return this.tabs[tabIndex].isInitialised;
   }
+
+  toNextDebt(): void {
+    this.campaignService
+      .markCurrentDebtAsFinished()
+      .subscribe(() => {
+        this.campaignService.preloadCampaignDebt();
+      });
+  }
 }
