@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import {
   IContactRegistrationData,
   IContactRegistrationMode,
+  IContactRegistrationParams,
   IOutcome,
 } from './contact-registration.interface';
 
@@ -16,66 +17,61 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 export class ContactRegistrationService {
   mode = IContactRegistrationMode.TREE;
 
-  private _campaignId$  = new BehaviorSubject<number>(null);
-  private _contactId$   = new BehaviorSubject<number>(null);
-  private _contactType$ = new BehaviorSubject<number>(null);
-  private _debtId$      = new BehaviorSubject<number>(null);
-  private _guid$        = new BehaviorSubject<string>(null);
-  private _outcome$     = new BehaviorSubject<IOutcome>(null);
-  private _personId$    = new BehaviorSubject<number>(null);
-  private _personRole$  = new BehaviorSubject<number>(null);
+  private _guid$    = new BehaviorSubject<string>(null);
+  private _outcome$ = new BehaviorSubject<IOutcome>(null);
+  private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
 
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
+  get isActive$(): Observable<boolean> {
+    return this._params$.pipe(map(Boolean));
+  }
+
+  get params$(): Observable<Partial<IContactRegistrationParams>> {
+    return this._params$.asObservable();
+  }
+
+  get params(): Partial<IContactRegistrationParams> {
+    return this._params$.value;
+  }
+
+  set params(params: Partial<IContactRegistrationParams>) {
+    this._params$.next(params);
+  }
+
   get campaignId$(): Observable<number> {
-    return this._campaignId$.asObservable();
+    return this.params$.pipe(map(params => params.campaignId));
   }
 
   get campaignId(): number {
-    return this._campaignId$.value;
-  }
-
-  set campaignId(campaignId: number) {
-    this._campaignId$.next(campaignId);
+    return this.params.campaignId;
   }
 
   get contactId$(): Observable<number> {
-    return this._contactId$.asObservable();
+    return this.params$.pipe(map(params => params.contactId));
   }
 
   get contactId(): number {
-    return this._contactId$.value;
-  }
-
-  set contactId(contactId: number) {
-    this._contactId$.next(contactId);
+    return this.params.contactId;
   }
 
   get contactType$(): Observable<number> {
-    return this._contactType$.asObservable();
+    return this.params$.pipe(map(params => params.contactType));
   }
 
   get contactType(): number {
-    return this._contactType$.value;
-  }
-
-  set contactType(contactType: number) {
-    this._contactType$.next(contactType);
+    return this.params.contactType;
   }
 
   get debtId$(): Observable<number> {
-    return this._debtId$.asObservable();
+    return this.params$.pipe(map(params => params.debtId));
   }
 
   get debtId(): number {
-    return this._debtId$.value;
-  }
-
-  set debtId(debtId: number) {
-    this._debtId$.next(debtId);
+    return this.params.debtId;
   }
 
   get guid$(): Observable<string> {
@@ -104,27 +100,19 @@ export class ContactRegistrationService {
   }
 
   get personId$(): Observable<number> {
-    return this._personId$.asObservable();
+    return this.params$.pipe(map(params => params.personId));
   }
 
   get personId(): number {
-    return this._personId$.value;
-  }
-
-  set personId(personId: number) {
-    this._personId$.next(personId);
+    return this.params.personId;
   }
 
   get personRole$(): Observable<number> {
-    return this._personRole$.asObservable();
+    return this.params$.pipe(map(params => params.personRole));
   }
 
   get personRole(): number {
-    return this._personRole$.value;
-  }
-
-  set personRole(personRole: number) {
-    this._personRole$.next(personRole);
+    return this.params.personRole;
   }
 
   get canSetPromise$(): Observable<boolean> {

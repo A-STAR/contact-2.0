@@ -28,10 +28,15 @@ export class CampaignComponent implements OnInit {
 
   constructor(
     private campaignService: CampaignService,
+    private contactRegistrationService: ContactRegistrationService,
   ) {}
 
   ngOnInit(): void {
     this.campaignService.preloadCampaignDebt();
+  }
+
+  get displayContactRegistration$(): Observable<boolean> {
+    return this.contactRegistrationService.isActive$;
   }
 
   get hasDebt$(): Observable<boolean> {

@@ -1,3 +1,12 @@
+export interface IContactRegistrationParams {
+  campaignId: number;
+  contactId: number;
+  contactType: number;
+  debtId: number;
+  personId: number;
+  personRole: number;
+}
+
 export enum IContactRegistrationMode {
   TREE,
   EDIT,

@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
 import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
 
 import { CampaignService } from '../campaign.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
@@ -16,8 +17,8 @@ import { RoutingService } from '@app/core/routing/routing.service';
 export class AddressesComponent {
   constructor(
     private campaignService: CampaignService,
+    private contactRegistrationService: ContactRegistrationService,
     private route: ActivatedRoute,
-    private router: Router,
     private routingService: RoutingService,
   ) {}
 
@@ -41,6 +42,10 @@ export class AddressesComponent {
     return 1;
   }
 
+  get contactType(): number {
+    return 3;
+  }
+
   onAddressAdd(): void {
     this.personId$
       .pipe(first())
@@ -61,12 +66,13 @@ export class AddressesComponent {
     this.campaignService.campaignDebt$
       .pipe(first())
       .subscribe(debt => {
-        const url = `/workplaces/contact-registration/${debt.debtId}/3/${address.id}`;
-        this.router.navigate([ url ], { queryParams: {
-          campaignId: this.campaignId,
+        this.contactRegistrationService.params = {
+          contactId: address.id,
+          contactType: this.contactType,
+          debtId: debt.debtId,
           personId: debt.personId,
           personRole: this.personRole,
-        } });
+        };
       });
   }
 }
