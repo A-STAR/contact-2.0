@@ -7,6 +7,7 @@ import { DialogModule } from '../../../../components/dialog/dialog.module';
 import { ScheduleEventCardModule } from '../card/schedule-event-card.module';
 
 import { ScheduleEventDialogComponent } from './schedule-event-dialog.component';
+import { ScheduleEventDialogStartComponent } from './schedule-event-dialog-start.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { ScheduleEventDialogComponent } from './schedule-event-dialog.component'
   ],
   declarations: [
     ScheduleEventDialogComponent,
+    ScheduleEventDialogStartComponent,
   ],
   entryComponents: [
     ScheduleEventDialogComponent,

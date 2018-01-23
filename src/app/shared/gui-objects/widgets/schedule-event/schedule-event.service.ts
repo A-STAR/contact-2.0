@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IScheduleEvent, IScheduleGroup } from './schedule-event.interface';
+import { IScheduleEvent, IScheduleGroup, IScheduleStartRequest } from './schedule-event.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
@@ -43,6 +43,10 @@ export class ScheduleEventService extends AbstractActionService {
     return this.userPermissionsService.has('SCHEDULE_DELETE');
   }
 
+  get canStart$(): Observable<boolean> {
+    return this.userPermissionsService.has('SCHEDULE_MANUAL_EXECUTE');
+  }
+
   fetchAll(): Observable<IScheduleEvent[]> {
     return this.dataService.readAll(this.baseUrl)
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.plural').dispatchCallback());
@@ -77,5 +81,11 @@ export class ScheduleEventService extends AbstractActionService {
   delete(eventId: number): Observable<any> {
     return this.dataService.delete(`${this.baseUrl}/{eventId}`, { eventId })
     .catch(this.notificationsService.deleteError().entity('entities.scheduleEvents.gen.singular').dispatchCallback());
+  }
+
+  start(eventId: number, data: IScheduleStartRequest): Observable<any> {
+    return this.dataService.create(`${this.baseUrl}/{eventId}`, { eventId }, data)
+    .catch(this.notificationsService.error('widgets.scheduleEvents.errors.start')
+      .params({ eventId: eventId.toString() }).dispatchCallback());
   }
 }

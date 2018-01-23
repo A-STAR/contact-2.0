@@ -74,6 +74,14 @@ export class ScheduleEventGridComponent extends DialogFunctions
       action: () => this.onDelete(this.selectedEvent),
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_START,
+      enabled: combineLatestAnd([
+        this.scheduleEventService.canStart$,
+        this.selectedEvent$.map(Boolean),
+      ]),
+      action: () => this.onStart(this.selectedEvent),
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: this.scheduleEventService.canView$,
       action: () => this.fetch(),
@@ -133,6 +141,11 @@ export class ScheduleEventGridComponent extends DialogFunctions
 
   onDelete(event: IScheduleEvent): void {
     this.setDialog('delete');
+    this.cdRef.markForCheck();
+  }
+
+  onStart(event: IScheduleEvent): void {
+    this.setDialog('start');
     this.cdRef.markForCheck();
   }
 
