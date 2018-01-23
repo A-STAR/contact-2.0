@@ -151,8 +151,7 @@ export interface IDynamicFormRadioControl extends IDynamicFormBaseControl {
 }
 
 export interface IDynamicFormRichTextControl extends IDynamicFormBaseControl {
-  // @deprecated `richtexteditor`
-  type: 'richtexteditor' | 'texteditor';
+  type: 'texteditor';
   // options for rich text editor
   codeMode?: boolean;
   onInit?: Function;
@@ -309,7 +308,6 @@ export type TControlTypes =
   | 'number'
   | 'password'
   | 'radio'
-  | 'richtexteditor'
   | 'searchBtn'
   | 'segmented'
   | 'select'
