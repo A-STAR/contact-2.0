@@ -1,6 +1,12 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component,
-  OnInit, Output, EventEmitter, OnDestroy
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnDestroy,
+  ViewChild,
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,6 +20,8 @@ import { ScheduleEventService } from '../schedule-event.service';
 import { GridService } from '../../../../components/grid/grid.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
+import { GridComponent } from '@app/shared/components/grid/grid.component';
+
 import { combineLatestAnd } from '@app/core/utils/helpers';
 import { DialogFunctions } from '@app/core/dialog';
 
@@ -24,6 +32,8 @@ import { DialogFunctions } from '@app/core/dialog';
 })
 export class ScheduleEventGridComponent extends DialogFunctions
   implements OnInit, OnDestroy {
+  @ViewChild(GridComponent) grid: GridComponent;
+
   @Output() edit = new EventEmitter<IScheduleEvent>();
 
   private selectedEvent$ = new BehaviorSubject<IScheduleEvent>(null);
@@ -61,7 +71,9 @@ export class ScheduleEventGridComponent extends DialogFunctions
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: combineLatestAnd([
         this.scheduleEventService.canEdit$,
-        this.selectedEvent$.map(Boolean),
+        this.selectedEvent$.map(
+          selected => selected && this.grid.selected.length === 1,
+        ),
       ]),
       action: () => this.edit.emit(this.selectedEvent),
     },
@@ -69,7 +81,9 @@ export class ScheduleEventGridComponent extends DialogFunctions
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: combineLatestAnd([
         this.scheduleEventService.canDelete$,
-        this.selectedEvent$.map(Boolean),
+        this.selectedEvent$.map(
+          selected => selected && this.grid.selected.length === 1,
+        ),
       ]),
       action: () => this.onDelete(this.selectedEvent),
     },
@@ -79,7 +93,16 @@ export class ScheduleEventGridComponent extends DialogFunctions
         this.scheduleEventService.canStart$,
         this.selectedEvent$.map(Boolean),
       ]),
-      action: () => this.onStart(this.selectedEvent),
+      children: [
+        {
+          label: 'widgets.scheduleEvents.start.withCheckGroup',
+          action: () => this.onStart(1),
+        },
+        {
+          label: 'widgets.scheduleEvents.start.withoutCheckGroup',
+          action: () => this.onStart(0),
+        },
+      ],
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -144,23 +167,18 @@ export class ScheduleEventGridComponent extends DialogFunctions
     this.cdRef.markForCheck();
   }
 
-  onStart(event: IScheduleEvent): void {
-    this.setDialog('start');
-    this.cdRef.markForCheck();
-  }
-
   onRemoveSubmit(): void {
-    this.scheduleEventService
-      .delete(this.selectedEvent.id)
-      .subscribe(() => {
-        this.closeDialog();
-        this.fetch();
+    this.scheduleEventService.delete(this.selectedEvent.id).subscribe(() => {
+      this.closeDialog();
+      this.fetch();
     });
   }
 
-  onStartEventSubmit(checkGroup: 0 | 1): void {
+  onStart(checkGroup: 0 | 1): void {
     this.closeDialog();
-      this.scheduleEventService.start(this.selectedEvent.id, { checkGroup }).subscribe(() => {
+    this.scheduleEventService
+      .start(this.grid.selected.map(event => event.id), { checkGroup })
+      .subscribe(() => {
         this.fetch();
       });
   }
@@ -169,6 +187,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
     this.scheduleEventService.fetchAll().subscribe(events => {
       this.events = events;
       this.selectedEvent$.next(null);
+      this.grid.clearSelection();
       this.cdRef.markForCheck();
     });
   }
