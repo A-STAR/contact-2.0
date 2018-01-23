@@ -1,4 +1,4 @@
-<split *ngIf="hasDebt$ | async; else noActiveDebts" direction="horizontal" gutterColor="inherit">
+<split *ngIf="hasDebt$ | async; else noActiveDebts" direction="horizontal" gutterColor="inherit" [useTransition]="true">
   <!-- Main Area -->
   <split-area size="60">
     <div class="flex vertical">
