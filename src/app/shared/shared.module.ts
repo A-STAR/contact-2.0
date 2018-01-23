@@ -56,7 +56,6 @@ import { PopupInputModule } from './components/form/popup-input/popup-input.modu
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
 import { RadioGroupModule } from './components/form/radio-group/radio-group.module';
-import { RichTextEditorModule } from './components/form/rich-text-editor/rich-text-editor.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
 import { TabstripModule } from './components/tabstrip/tabstrip.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
@@ -120,7 +119,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ProgressbarModule,
     QBuilder2Module,
     RadioGroupModule,
-    RichTextEditorModule,
     SpinnerModule,
     TabstripModule,
     TabViewModule,
@@ -207,7 +205,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     QBuilderComponent,
     QBuilder2Module,
     RadioGroupModule,
-    RichTextEditorModule,
     SpinnerModule,
     TabstripModule,
     TabViewModule,
