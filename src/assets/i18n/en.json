@@ -2184,14 +2184,14 @@
         "remove": {
           "title": "Remove event",
           "confirmMessage": "Are you sure you want to delete this event?"
-        },
-        "start": {
-          "title": "Start schedule event",
-          "checkGroup": "Check for groups formation"
         }
       },
+      "start": {
+        "withCheckGroup": "Check for groups formation",
+        "withoutCheckGroup": "Do not check for groups formation"
+      },
       "errors": {
-        "start": "Error has been occurred when tried to start schedule event with the ID {{ eventId }}"
+        "start": "Error has been occurred when tried to start schedule events with the ID {{ eventId }}"
       }
     }
   },

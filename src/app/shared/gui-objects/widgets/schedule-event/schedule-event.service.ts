@@ -83,9 +83,9 @@ export class ScheduleEventService extends AbstractActionService {
     .catch(this.notificationsService.deleteError().entity('entities.scheduleEvents.gen.singular').dispatchCallback());
   }
 
-  start(eventId: number, data: IScheduleStartRequest): Observable<any> {
-    return this.dataService.create(`${this.baseUrl}/start?id={eventId}`, { eventId }, data)
+  start(eventIds: number[], data: IScheduleStartRequest): Observable<any> {
+    return this.dataService.create(`${this.baseUrl}/start?id={eventIds}`, { eventIds: eventIds.join() }, data)
     .catch(this.notificationsService.error('widgets.scheduleEvents.errors.start')
-      .params({ eventId: eventId.toString() }).dispatchCallback());
+      .params({ eventId: eventIds.join() }).dispatchCallback());
   }
 }

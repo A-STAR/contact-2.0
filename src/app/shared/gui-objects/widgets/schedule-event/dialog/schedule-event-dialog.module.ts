@@ -8,7 +8,6 @@ import { DynamicFormModule } from '@app/shared/components/form/dynamic-form/dyna
 import { ScheduleEventCardModule } from '../card/schedule-event-card.module';
 
 import { ScheduleEventDialogComponent } from './schedule-event-dialog.component';
-import { ScheduleEventDialogStartComponent } from './schedule-event-dialog-start.component';
 
 @NgModule({
   imports: [
@@ -20,12 +19,10 @@ import { ScheduleEventDialogStartComponent } from './schedule-event-dialog-start
     ScheduleEventCardModule,
   ],
   exports: [
-    ScheduleEventDialogComponent,
-    ScheduleEventDialogStartComponent
+    ScheduleEventDialogComponent
   ],
   declarations: [
-    ScheduleEventDialogComponent,
-    ScheduleEventDialogStartComponent,
+    ScheduleEventDialogComponent
   ],
   entryComponents: [
     ScheduleEventDialogComponent,

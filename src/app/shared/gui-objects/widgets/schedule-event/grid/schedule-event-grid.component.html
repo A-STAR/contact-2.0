@@ -8,18 +8,10 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<app-schedule-event-dialog-start
-  *ngIf="isDialog('start')"
-  (cancel)="onCloseDialog()"
-  (action)="onStartEventSubmit($event)"
->
-</app-schedule-event-dialog-start>
-
 <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid
   columnTranslationKey="widgets.scheduleEvents"
-  selectionType="single"
   [columns]="columns"
   [footerHeight]="false"
   [rows]="events"
