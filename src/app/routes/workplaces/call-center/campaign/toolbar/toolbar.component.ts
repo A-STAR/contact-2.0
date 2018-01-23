@@ -2,16 +2,16 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CampaignService } from '../campaign.service';
-import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { DebtService } from '../../../../../core/debt/debt.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
+import { DialogFunctions } from '@app/core/dialog';
 
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-call-center-toolbar',
@@ -38,11 +38,6 @@ export class ToolbarComponent extends DialogFunctions {
       enabled: this.canChangeStatusToProblematic$,
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_NEXT,
-      label: 'Переход к следующему долгу',
-      action: () => this.toNextDebt(),
-    },
-    {
       type: ToolbarItemTypeEnum.BUTTON,
       icon: 'fa fa-book',
       label: 'Информация о предыдущих долгах',
@@ -54,8 +49,8 @@ export class ToolbarComponent extends DialogFunctions {
 
   constructor(
     private campaignService: CampaignService,
+    private contactRegistrationService: ContactRegistrationService,
     private debtorCardService: DebtorCardService,
-    private debtService: DebtService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -77,20 +72,14 @@ export class ToolbarComponent extends DialogFunctions {
   private registerSpecial(): void {
     this.campaignService.campaignDebt$
       .pipe(first())
-      .subscribe(debt => this.debtService.navigateToRegistration({
-        debtId: debt.debtId,
-        personId: debt.personId,
-        personRole: 1,
-        contactType: 7,
-        campaignId: this.campaignService.campaignId
-      }));
-  }
-
-  private toNextDebt(): void {
-    this.campaignService
-      .markCurrentDebtAsFinished()
-      .subscribe(() => {
-        this.campaignService.preloadCampaignDebt();
+      .subscribe(debt => {
+        this.contactRegistrationService.params = {
+          debtId: debt.debtId,
+          personId: debt.personId,
+          personRole: 1,
+          contactType: 7,
+          campaignId: this.campaignService.campaignId
+        };
       });
   }
 }

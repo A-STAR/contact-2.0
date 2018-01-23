@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import {
   IContactRegistrationData,
   IContactRegistrationMode,
+  IContactRegistrationParams,
   IOutcome,
 } from './contact-registration.interface';
 
@@ -16,66 +17,61 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 export class ContactRegistrationService {
   mode = IContactRegistrationMode.TREE;
 
-  private _campaignId$  = new BehaviorSubject<number>(null);
-  private _contactId$   = new BehaviorSubject<number>(null);
-  private _contactType$ = new BehaviorSubject<number>(null);
-  private _debtId$      = new BehaviorSubject<number>(null);
-  private _guid$        = new BehaviorSubject<string>(null);
-  private _outcome$     = new BehaviorSubject<IOutcome>(null);
-  private _personId$    = new BehaviorSubject<number>(null);
-  private _personRole$  = new BehaviorSubject<number>(null);
+  private _guid$    = new BehaviorSubject<string>(null);
+  private _outcome$ = new BehaviorSubject<IOutcome>(null);
+  private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
 
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
+  get isActive$(): Observable<boolean> {
+    return this._params$.pipe(map(Boolean));
+  }
+
+  get params$(): Observable<Partial<IContactRegistrationParams>> {
+    return this._params$.asObservable();
+  }
+
+  get params(): Partial<IContactRegistrationParams> {
+    return this._params$.value;
+  }
+
+  set params(params: Partial<IContactRegistrationParams>) {
+    this._params$.next(params);
+  }
+
   get campaignId$(): Observable<number> {
-    return this._campaignId$.asObservable();
+    return this.params$.pipe(map(params => params && params.campaignId));
   }
 
   get campaignId(): number {
-    return this._campaignId$.value;
-  }
-
-  set campaignId(campaignId: number) {
-    this._campaignId$.next(campaignId);
+    return this.params && this.params.campaignId;
   }
 
   get contactId$(): Observable<number> {
-    return this._contactId$.asObservable();
+    return this.params$.pipe(map(params => params && params.contactId));
   }
 
   get contactId(): number {
-    return this._contactId$.value;
-  }
-
-  set contactId(contactId: number) {
-    this._contactId$.next(contactId);
+    return this.params && this.params.contactId;
   }
 
   get contactType$(): Observable<number> {
-    return this._contactType$.asObservable();
+    return this.params$.pipe(map(params => params && params.contactType));
   }
 
   get contactType(): number {
-    return this._contactType$.value;
-  }
-
-  set contactType(contactType: number) {
-    this._contactType$.next(contactType);
+    return this.params && this.params.contactType;
   }
 
   get debtId$(): Observable<number> {
-    return this._debtId$.asObservable();
+    return this.params$.pipe(map(params => params && params.debtId));
   }
 
   get debtId(): number {
-    return this._debtId$.value;
-  }
-
-  set debtId(debtId: number) {
-    this._debtId$.next(debtId);
+    return this.params && this.params.debtId;
   }
 
   get guid$(): Observable<string> {
@@ -100,31 +96,25 @@ export class ContactRegistrationService {
 
   set outcome(outcome: IOutcome) {
     this._outcome$.next(outcome);
-    this.initRegistration();
+    if (outcome && this.params) {
+      this.initRegistration();
+    }
   }
 
   get personId$(): Observable<number> {
-    return this._personId$.asObservable();
+    return this.params$.pipe(map(params => params && params.personId));
   }
 
   get personId(): number {
-    return this._personId$.value;
-  }
-
-  set personId(personId: number) {
-    this._personId$.next(personId);
+    return this.params && this.params.personId;
   }
 
   get personRole$(): Observable<number> {
-    return this._personRole$.asObservable();
+    return this.params$.pipe(map(params => params && params.personRole));
   }
 
   get personRole(): number {
-    return this._personRole$.value;
-  }
-
-  set personRole(personRole: number) {
-    this._personRole$.next(personRole);
+    return this.params && this.params.personRole;
   }
 
   get canSetPromise$(): Observable<boolean> {
@@ -179,7 +169,11 @@ export class ContactRegistrationService {
 
   completeRegistration(data: Partial<IContactRegistrationData>): Observable<void> {
     const { debtId, guid } = this;
-    return this.dataService.create('/debts/{debtId}/contactRegistration/{guid}/save', { debtId, guid }, data)
+    const payload = {
+      ...this.initData,
+      ...data,
+    };
+    return this.dataService.create('/debts/{debtId}/contactRegistration/{guid}/save', { debtId, guid }, payload)
       .pipe(
         catchError(this.notificationsService.error('modules.contactRegistration.outcome.errors.init').dispatchCallback()),
       );
@@ -187,20 +181,33 @@ export class ContactRegistrationService {
 
   private initRegistration(): void {
     this.guid = null;
-    const { campaignId, debtId, personId, personRole } = this;
-    const data = {
-      addressId: this.contactType === 3 ? this.contactId : undefined,
-      campaignId,
-      code: this.outcome.code,
-      personId,
-      personRole,
-      phoneId: [1, 2].includes(this.contactType) ? this.contactId : undefined,
-    };
-    this.dataService.create('/debts/{debtId}/contactRegistration', { debtId }, data)
+    const { debtId } = this;
+    this.dataService.create('/debts/{debtId}/contactRegistration', { debtId }, this.initData)
       .pipe(
         // TODO(d.maltsev): correct error message
         catchError(this.notificationsService.error('modules.contactRegistration.outcome.errors.init').dispatchCallback()),
       )
       .subscribe(response => this.guid = response.data[0].guid);
+  }
+
+  private get initData(): any {
+    const { contactId, contactType, ...params } = this.params;
+    return {
+      ...params,
+      ...this.getContactParams(contactId, contactType),
+      code: this.outcome.code,
+    };
+  }
+
+  private getContactParams(contactId: number, contactType: number): any {
+    switch (contactType) {
+      case 1:
+      case 2:
+        return { phoneId: contactId };
+      case 3:
+        return { addressId: contactId };
+      default:
+        return {};
+    }
   }
 }

@@ -273,7 +273,10 @@
         <!-- Contact Person -->
         <div>
           <!-- TODO(d.maltsev): personId -->
-          <app-contact-registration-contact-select [excludeCurrentPersonId]="false"></app-contact-registration-contact-select>
+          <app-contact-registration-contact-select
+            #contactForPhone
+            [excludeCurrentPersonId]="false"
+          ></app-contact-registration-contact-select>
         </div>
 
         <hr>
@@ -288,7 +291,10 @@
         <!-- TODO(d.maltsev): i18n -->
         <h3>Изменение контактного лица</h3>
         <!-- TODO(d.maltsev): personId -->
-        <app-contact-registration-contact-select [excludeCurrentPersonId]="true"></app-contact-registration-contact-select>
+        <app-contact-registration-contact-select
+          #contactForPerson
+          [excludeCurrentPersonId]="true"
+        ></app-contact-registration-contact-select>
 
         <hr>
       </div>

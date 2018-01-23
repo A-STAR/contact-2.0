@@ -55,6 +55,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   @Input() personRole: number;
 
   @Output() add = new EventEmitter<void>();
+  @Output() dblClick = new EventEmitter<IAddress>();
   @Output() edit = new EventEmitter<IAddress>();
   @Output() register = new EventEmitter<IAddress>();
 
@@ -67,12 +68,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
-      action: () => this.onAdd()
+      action: () => this.onAdd(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: this.canEdit$,
-      action: () => this.selectedAddress$.pipe(first()).subscribe(address => this.onEdit(address)),
+      action: () => this.onEdit(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -241,7 +242,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(address: IAddress): void {
-    this.onEdit(address);
+    this.dblClick.emit(address);
   }
 
   onSelect(address: IAddress): void {
@@ -359,18 +360,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private onAdd(): void {
     this.add.emit();
-    // const url = this.callCenter
-    //   ? `${this.router.url}/address/${this._personId$.value}/create`
-    //   : `${this.router.url}/address/create`;
-    // this.router.navigate([ url ]);
   }
 
-  private onEdit(address: IAddress): void {
-    this.edit.emit(address);
-    // const url = this.callCenter
-    //   ? `${this.router.url}/address/${this._personId$.value}/${addressId}`
-    //   : `${this.router.url}/address/${addressId}`;
-    // this.router.navigate([ url ]);
+  private onEdit(): void {
+    this.selectedAddress$
+      .pipe(first())
+      .subscribe(address => this.edit.emit(address));
   }
 
   private onSubmitSuccess(): void {

@@ -57,6 +57,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   @Input() styles: Partial<CSSStyleDeclaration> = { height: '230px' };
 
   @Output() add = new EventEmitter<void>();
+  @Output() dblClick = new EventEmitter<IPhone>();
   @Output() edit = new EventEmitter<IPhone>();
   @Output() register = new EventEmitter<IPhone>();
   @Output() select = new EventEmitter<IPhone>();
@@ -75,7 +76,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: combineLatestAnd([this.canEdit$, this.selectedPhone$.map(Boolean)]),
-      action: () => this.selectedPhone$.pipe(first()).subscribe(phone => this.onEdit(phone)),
+      action: () => this.onEdit(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_BLOCK,
@@ -219,12 +220,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(phone: IPhone): void {
-    this.onEdit(phone);
-    // switch (this.action) {
-    //   case 'edit':
-    //     this.onEdit(phone.id);
-    //     break;
-    // }
+    this.dblClick.emit(phone);
   }
 
   onSelect(phone: IPhone): void {
@@ -337,18 +333,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private onAdd(): void {
     this.add.emit();
-    // const url = this.callCenter
-    //   ? `${this.router.url}/phone/${this._personId$.value}/create`
-    //   : `${this.router.url}/phone/create`;
-    // this.router.navigate([ url ]);
   }
 
-  private onEdit(phone: IPhone): void {
-    this.edit.emit(phone);
-    // const url = this.callCenter
-    //   ? `${this.router.url}/phone/${this._personId$.value}/${phoneId}`
-    //   : `${this.router.url}/phone/${phoneId}`;
-    // this.router.navigate([ url ]);
+  private onEdit(): void {
+    this.selectedPhone$
+      .pipe(first())
+      .subscribe(phone => this.edit.emit(phone));
   }
 
   private onSubmitSuccess(): void {
