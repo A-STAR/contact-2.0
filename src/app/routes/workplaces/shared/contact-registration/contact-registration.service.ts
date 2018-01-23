@@ -96,7 +96,9 @@ export class ContactRegistrationService {
 
   set outcome(outcome: IOutcome) {
     this._outcome$.next(outcome);
-    this.initRegistration();
+    if (outcome && this.params) {
+      this.initRegistration();
+    }
   }
 
   get personId$(): Observable<number> {
