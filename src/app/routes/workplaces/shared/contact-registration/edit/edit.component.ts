@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
 import { IContactRegistrationMode } from '../contact-registration.interface';
 
 import { ContactRegistrationService } from '../contact-registration.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,6 +17,7 @@ export class EditComponent {
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private formBuilder: FormBuilder,
+    private valueConverterService: ValueConverterService,
   ) {}
 
   form = this.formBuilder.group({
@@ -110,10 +112,14 @@ export class EditComponent {
   }
 
   onSubmit(): void {
-    const { autoComment, ...data } = this.form.value;
+    // TODO(d.maltsev): add attributes & contact search results
+    const { autoComment, ...data } = this.formValue;
     this.contactRegistrationService
       .completeRegistration(data)
-      .subscribe(() => this.displayOutcomeTree());
+      .subscribe(() => {
+        this.displayOutcomeTree();
+        this.contactRegistrationService.params = null;
+      });
   }
 
   onBack(): void {
@@ -123,5 +129,36 @@ export class EditComponent {
   private displayOutcomeTree(): void {
     this.contactRegistrationService.mode = IContactRegistrationMode.TREE;
     this.cdRef.markForCheck();
+  }
+
+  private get formValue(): any {
+    return this.getFormGroupValueRecursively(this.form);
+  }
+
+  private getFormGroupValueRecursively(group: FormGroup): any {
+    return Object.keys(group.controls).reduce((acc, key) => {
+      const control = group.controls[key];
+      if (control instanceof FormGroup) {
+        const value = this.getFormGroupValueRecursively(control);
+        return Object.keys(value).length
+          ? { ...acc, [key]: value }
+          : acc;
+      } else {
+        return control.dirty
+          ? { ...acc, [key]: this.convertValue(control.value) }
+          : acc;
+      }
+    }, {});
+  }
+
+  private convertValue(value: any): string | number {
+    switch (true) {
+      case Array.isArray(value):
+        return value[0].value;
+      case value instanceof Date:
+        return this.valueConverterService.toISO(value);
+      default:
+        return value;
+    }
   }
 }
