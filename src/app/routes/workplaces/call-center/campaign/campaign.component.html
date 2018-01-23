@@ -1,6 +1,6 @@
 <split *ngIf="hasDebt$ | async; else noActiveDebts" direction="horizontal" gutterColor="inherit" [useTransition]="true">
   <!-- Main Area -->
-  <split-area size="60">
+  <split-area size="60" class="minw-500">
     <div class="flex vertical">
       <!-- Toolbar + Person Form -->
       <div class="flex-item">
@@ -12,7 +12,7 @@
         </div>
       </div>
       <!-- Tabs -->
-      <div class="flex-item grow">
+      <div class="flex-item grow minh-200">
         <div class="mb">
           <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
             <!-- Phones -->
@@ -57,7 +57,7 @@
     </div>
   </split-area>
   <!-- Contact Registration -->
-  <split-area *ngIf="displayContactRegistration$ | async" size="40">
+  <split-area *ngIf="displayContactRegistration$ | async" size="40" class="minw-200">
     <app-contact-registration></app-contact-registration>
   </split-area>
 </split>
