@@ -84,7 +84,7 @@ export class ScheduleEventService extends AbstractActionService {
   }
 
   start(eventId: number, data: IScheduleStartRequest): Observable<any> {
-    return this.dataService.create(`${this.baseUrl}/{eventId}`, { eventId }, data)
+    return this.dataService.create(`${this.baseUrl}/start?id={eventId}`, { eventId }, data)
     .catch(this.notificationsService.error('widgets.scheduleEvents.errors.start')
       .params({ eventId: eventId.toString() }).dispatchCallback());
   }

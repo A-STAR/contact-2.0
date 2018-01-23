@@ -11,7 +11,7 @@
 <app-schedule-event-dialog-start
   *ngIf="isDialog('start')"
   (cancel)="onCloseDialog()"
-  (action)="onStartEventSubmit()"
+  (action)="onStartEventSubmit($event)"
 >
 </app-schedule-event-dialog-start>
 

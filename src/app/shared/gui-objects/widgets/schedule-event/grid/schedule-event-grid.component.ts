@@ -158,9 +158,17 @@ export class ScheduleEventGridComponent extends DialogFunctions
     });
   }
 
+  onStartEventSubmit(checkGroup: 0 | 1): void {
+    this.closeDialog();
+      this.scheduleEventService.start(this.selectedEvent.id, { checkGroup }).subscribe(() => {
+        this.fetch();
+      });
+  }
+
   private fetch(): void {
     this.scheduleEventService.fetchAll().subscribe(events => {
       this.events = events;
+      this.selectedEvent$.next(null);
       this.cdRef.markForCheck();
     });
   }

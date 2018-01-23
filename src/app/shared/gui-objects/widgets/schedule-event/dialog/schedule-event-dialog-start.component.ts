@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, ViewChild, Output } from '@angular/core';
 
 import { IDynamicFormControl, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -11,6 +11,9 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 export class ScheduleEventDialogStartComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  @Output() cancel = new EventEmitter<void>();
+  @Output() action = new EventEmitter<0 | 1>();
+
   config: IDynamicFormConfig = {
     labelKey: 'widgets.scheduleEvents.dialog.start',
   };
@@ -18,7 +21,18 @@ export class ScheduleEventDialogStartComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.controls = this.getControls();
+  }
+
+  onClose(): void {
+    this.cancel.emit();
+  }
+
+  onSubmit(): void {
+    const { checkGroup } = this.form.serializedValue;
+    this.action.emit(checkGroup);
+  }
 
   private getControls(): IDynamicFormControl[] {
     return [
