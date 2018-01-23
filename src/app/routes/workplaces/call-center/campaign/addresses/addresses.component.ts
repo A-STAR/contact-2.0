@@ -67,6 +67,7 @@ export class AddressesComponent {
       .pipe(first())
       .subscribe(debt => {
         this.contactRegistrationService.params = {
+          campaignId: this.campaignId,
           contactId: address.id,
           contactType: this.contactType,
           debtId: debt.debtId,

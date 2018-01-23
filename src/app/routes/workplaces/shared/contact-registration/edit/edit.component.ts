@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
@@ -7,12 +7,23 @@ import { IContactRegistrationMode } from '../contact-registration.interface';
 import { ContactRegistrationService } from '../contact-registration.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
+import { AttachmentComponent } from './attachment/attachment.component';
+import { AttributesComponent } from './attributes/attributes.component';
+import { ContactSelectComponent } from './contact-select/contact-select.component';
+
+import { isEmpty } from '@app/core/utils';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-contact-registration-edit',
   templateUrl: './edit.component.html',
 })
 export class EditComponent {
+  @ViewChild(AttachmentComponent) attachments: AttachmentComponent;
+  @ViewChild(AttributesComponent) attributes: AttributesComponent;
+  @ViewChild('contactForPerson') contactForPerson: ContactSelectComponent;
+  @ViewChild('contactForPhone') contactForPhone: ContactSelectComponent;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
@@ -112,8 +123,16 @@ export class EditComponent {
   }
 
   onSubmit(): void {
-    // TODO(d.maltsev): add attributes & contact search results
     const { autoComment, ...data } = this.formValue;
+    if (this.attributes && !isEmpty(this.attributes.data)) {
+      data.attributes = this.attributes.data;
+    }
+    if (this.contactForPerson && this.contactForPerson.person) {
+      data.contactPerson = this.contactForPerson.person;
+    }
+    if (data.phone && this.contactForPhone && this.contactForPhone.person) {
+      data.phone.person = this.contactForPhone.person;
+    }
     this.contactRegistrationService
       .completeRegistration(data)
       .subscribe(() => {

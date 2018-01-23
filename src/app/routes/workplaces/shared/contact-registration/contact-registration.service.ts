@@ -167,7 +167,11 @@ export class ContactRegistrationService {
 
   completeRegistration(data: Partial<IContactRegistrationData>): Observable<void> {
     const { debtId, guid } = this;
-    return this.dataService.create('/debts/{debtId}/contactRegistration/{guid}/save', { debtId, guid }, data)
+    const payload = {
+      ...this.initData,
+      ...data,
+    };
+    return this.dataService.create('/debts/{debtId}/contactRegistration/{guid}/save', { debtId, guid }, payload)
       .pipe(
         catchError(this.notificationsService.error('modules.contactRegistration.outcome.errors.init').dispatchCallback()),
       );
@@ -175,20 +179,33 @@ export class ContactRegistrationService {
 
   private initRegistration(): void {
     this.guid = null;
-    const { campaignId, debtId, personId, personRole } = this;
-    const data = {
-      addressId: this.contactType === 3 ? this.contactId : undefined,
-      campaignId,
-      code: this.outcome.code,
-      personId,
-      personRole,
-      phoneId: [1, 2].includes(this.contactType) ? this.contactId : undefined,
-    };
-    this.dataService.create('/debts/{debtId}/contactRegistration', { debtId }, data)
+    const { debtId } = this;
+    this.dataService.create('/debts/{debtId}/contactRegistration', { debtId }, this.initData)
       .pipe(
         // TODO(d.maltsev): correct error message
         catchError(this.notificationsService.error('modules.contactRegistration.outcome.errors.init').dispatchCallback()),
       )
       .subscribe(response => this.guid = response.data[0].guid);
+  }
+
+  private get initData(): any {
+    const { contactId, contactType, ...params } = this.params;
+    return {
+      ...params,
+      ...this.getContactParams(contactId, contactType),
+      code: this.outcome.code,
+    };
+  }
+
+  private getContactParams(contactId: number, contactType: number): any {
+    switch (contactType) {
+      case 1:
+      case 2:
+        return { phoneId: contactId };
+      case 3:
+        return { addressId: contactId };
+      default:
+        return {};
+    }
   }
 }
