@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CalendarModule } from 'primeng/primeng';
-import { TextMaskModule } from 'angular2-text-mask';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { DatePickerComponent } from './datepicker.component';
+import { TimePickerComponent } from './timepicker.component';
 
 @NgModule({
   imports: [
@@ -14,14 +13,13 @@ import { DatePickerComponent } from './datepicker.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TextMaskModule,
     TranslateModule,
   ],
   exports: [
-    DatePickerComponent
+    TimePickerComponent
   ],
   declarations: [
-    DatePickerComponent,
+    TimePickerComponent,
   ],
 })
-export class DatePickerModule { }
+export class TimePickerModule { }

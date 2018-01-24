@@ -81,9 +81,9 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private pledgeService: PledgeService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private pledgeService: PledgeService,
     private route: ActivatedRoute,
     private router: Router,
   ) {
