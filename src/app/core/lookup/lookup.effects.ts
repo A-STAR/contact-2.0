@@ -15,7 +15,7 @@ export class LookupEffects {
     .ofType(LookupService.LOOKUP_FETCH)
     .mergeMap((action: UnsafeAction) => {
       const { key } = action.payload;
-      return this.readData(key)
+      return this.lookup(key)
         .map(data => ({
           type: LookupService.LOOKUP_FETCH_SUCCESS,
           payload: { key, data }
@@ -33,7 +33,7 @@ export class LookupEffects {
     private notificationService: NotificationsService,
   ) {}
 
-  private readData(key: ILookupKey): any {
+  private lookup(key: ILookupKey): any {
     return this.dataService.readAll(`/lookup/${key}`);
   }
 }

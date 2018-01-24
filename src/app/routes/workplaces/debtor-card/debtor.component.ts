@@ -164,7 +164,9 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   }
 
   onTabSelect(tabIndex: number): void {
-    this.tabs[tabIndex].isInitialised = true;
+    if (Number.isInteger(tabIndex)) {
+      this.tabs[tabIndex].isInitialised = true;
+    }
   }
 
   private buildControls(canEdit: boolean): IDynamicFormItem[] {
