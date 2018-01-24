@@ -227,7 +227,12 @@ export class DataUploadComponent extends DialogFunctions
   onErrorLogSubmit(): void {
     this.downloader.download();
     this.closeDialog();
-    this.cdRef.markForCheck();
+    this.onRequest();
+  }
+
+  onErrorLogClose(): void {
+    this.closeDialog();
+    this.onRequest();
   }
 
   onCancelClick(): void {

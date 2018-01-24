@@ -4,103 +4,21 @@ import { Injectable } from '@angular/core';
 import { IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
 import { Observable } from 'rxjs/Observable';
 import { map, tap } from 'rxjs/operators';
+import { Actions } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 
+import { IAppState } from '@app/core/state/state.interface';
 import {
-  DataUploaders,
-  ICellPayload,
-  IDataResponse,
-  IOpenFileResponse,
-  IDataUploaderConfig,
+  DataUploaders
 } from './data-upload.interface';
 import { IMassInfoResponse } from '../../../core/data/data.interface';
 
+import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
-import { AbstractActionService } from '@app/core/state/action.service';
-import { Actions } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
-import { IAppState } from '@app/core/state/state.interface';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { DataUploader } from './data-uploader';
 
-class DataUploader {
-  public guid: number;
-  public parameter: any;
-
-  constructor(
-    public dataService: DataService,
-    public gridService: GridService,
-    public notificationsService: NotificationsService,
-    public api: IDataUploaderConfig,
-    private paramKey?: string,
-  ) { }
-
-  openFile(file: File): Observable<IOpenFileResponse> {
-    return this.dataService
-      .createMultipart(this.api.openFile, this.buildRequestParams(), {}, file)
-      .catch(this.notificationsService.error('modules.dataUpload.errors.openFile').dispatchCallback())
-      .pipe(
-      map(response => response.data[0]),
-      tap(data => this.guid = data.guid),
-    );
-  }
-
-  fetch(params: IAGridRequestParams): Observable<IDataResponse> {
-    const request = this.gridService.buildRequest(params, null);
-    return this.dataService
-      .create(this.api.fetch, this.buildRequestParams(), request)
-      .catch(this.notificationsService.error('modules.dataUpload.errors.fetch').dispatchCallback())
-      .pipe(
-        map(response => response.data[0])
-      );
-  }
-
-  editCell(cell: ICellPayload): Observable<IDataResponse> {
-    return this.dataService
-      .update(this.api.editCell, this.buildRequestParams(), cell)
-      .catch(this.notificationsService.error('modules.dataUpload.errors.editCell').dispatchCallback())
-      .pipe(
-      map(response => response.data[0]),
-    );
-  }
-
-  deleteRow(rowId: number): Observable<void> {
-    return this.dataService
-      .delete(this.api.deleteRow, this.buildRequestParams(rowId))
-      .catch(this.notificationsService.error('modules.dataUpload.errors.deleteRow').dispatchCallback());
-  }
-
-  save(): Observable<IMassInfoResponse> {
-    return this.dataService
-      .create(this.api.save, this.buildRequestParams(), {})
-      .catch(this.notificationsService.error('modules.dataUpload.errors.save').dispatchCallback());
-  }
-
-  getErrors(): string {
-    const url = typeof this.parameter !== 'undefined' ?
-      this.api.getErrors.replace(new RegExp('\\{' + this.paramKey + '\\}'), this.parameter) : this.api.getErrors;
-    return this.guid ? url.replace(/(guid\/)(\{[\w]+\})(.*)/g, `$1${this.guid}$3`) : url;
-  }
-
-  cancel(): Observable<void> {
-    return this.dataService
-      .delete(this.api.cancel, this.buildRequestParams())
-      .catch(this.notificationsService.error('modules.dataUpload.errors.cancel').dispatchCallback());
-  }
-
-  private buildRequestParams(rowId?: number): object {
-    const result = {} as any;
-    if (this.guid) {
-      result.guid = this.guid;
-    }
-    if (this.parameter && this.paramKey) {
-      result[this.paramKey] = this.parameter;
-    }
-    if (rowId) {
-      result.rowId = rowId;
-    }
-    return result;
-  }
-}
 /**
  * Spec:       http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=140181557
  * API:        http://confluence.luxbase.int:8090/display/WEB20/Load+Data

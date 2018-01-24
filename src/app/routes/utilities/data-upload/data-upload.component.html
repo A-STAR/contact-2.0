@@ -5,7 +5,7 @@
   actionMessage="default.buttons.ok"
   actionMode="primary"
   (action)="onErrorLogSubmit()"
-  (cancel)="onCloseDialog()"
+  (cancel)="onErrorLogClose()"
 ></app-dialog-action>
 
 <app-dialog-action
@@ -23,9 +23,8 @@
 <app-downloader
   #downloader
   entityTranslationKey="modules.dataUpload.errors.getErrors"
-  name="error-log.xlsx"
-  [url]="errorFileUrl">
-</app-downloader>
+  [url]="errorFileUrl"
+></app-downloader>
 
 <div class="flex vertical">
   <!-- Toolbar -->

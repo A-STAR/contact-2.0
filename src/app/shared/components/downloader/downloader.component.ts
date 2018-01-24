@@ -38,7 +38,7 @@ export class DownloaderComponent {
       .subscribe();
   }
 
-  private createLink(href: string, name: string): HTMLAnchorElement {
+  private createLink(href: string, name: string = ''): HTMLAnchorElement {
     const link: HTMLAnchorElement = this.renderer.createElement('a');
     this.renderer.setAttribute(link, 'href', href);
     this.renderer.setAttribute(link, 'download', name);
