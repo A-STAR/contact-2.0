@@ -5,7 +5,7 @@
   actionMessage="default.buttons.ok"
   actionMode="primary"
   (action)="onErrorLogSubmit()"
-  (cancel)="onCloseDialog()"
+  (cancel)="onErrorLogClose()"
 ></app-dialog-action>
 
 <app-dialog-action
@@ -17,6 +17,14 @@
   (action)="onCancelSubmit()"
   (cancel)="onCloseDialog()"
 ></app-dialog-action>
+
+<!-- Downloader -->
+
+<app-downloader
+  #downloader
+  entityTranslationKey="modules.dataUpload.errors.getErrors"
+  [url]="errorFileUrl"
+></app-downloader>
 
 <div class="flex vertical">
   <!-- Toolbar -->

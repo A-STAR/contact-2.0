@@ -20,14 +20,14 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { CellRendererComponent } from './cell-renderer.component';
+import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 import { DialogFunctions } from '../../../core/dialog';
-
 import { isEmpty } from '../../../core/utils';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +41,7 @@ export class DataUploadComponent extends DialogFunctions
   implements OnInit, OnDestroy {
   @ViewChild(Grid2Component) grid: Grid2Component;
   @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('downloader') downloader: DownloaderComponent;
 
   actions: IMetadataAction[] = [
     {
@@ -133,6 +134,10 @@ export class DataUploadComponent extends DialogFunctions
     return this.dataUploadService.format;
   }
 
+  get errorFileUrl(): string {
+    return this.dataUploadService.uploader.getErrors();
+  }
+
   onFormatChange(format: { value: number }[]): void {
     this.dataUploadService.format = format[0].value;
   }
@@ -207,17 +212,11 @@ export class DataUploadComponent extends DialogFunctions
 
   onSaveClick(): void {
     this.dataUploadService.uploader.save().subscribe(response => {
-      // TODO(i.lobanov): uncomment when ready on BE
-      // const { processed, total } = response.massInfo;
-      // if (processed !== total) {
-      //   this.setDialog('errorLogPrompt');
-      //   this.cdRef.markForCheck();
-      // }
-
-      if (!response || !response.success) {
+      const { processed, total } = response.massInfo;
+      if (processed !== total) {
         this.setDialog('errorLogPrompt');
       } else {
-        // reset previous loaded file
+        // handles both successful and erroneous response
         this.fileInput.nativeElement.value = '';
         this.resetGrid();
       }
@@ -226,10 +225,14 @@ export class DataUploadComponent extends DialogFunctions
   }
 
   onErrorLogSubmit(): void {
-    this.dataUploadService.uploader.getErrors().subscribe(() => {
-      this.closeDialog();
-      this.cdRef.markForCheck();
-    });
+    this.downloader.download();
+    this.closeDialog();
+    this.onRequest();
+  }
+
+  onErrorLogClose(): void {
+    this.closeDialog();
+    this.onRequest();
   }
 
   onCancelClick(): void {

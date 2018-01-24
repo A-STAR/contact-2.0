@@ -32,7 +32,7 @@ export class GuiObjectsEffects {
                 .entity('entities.guiObjects.gen.plural').response(error).action()
             ];
           })
-        : of({ type: 'FETCHING_OBJECTS_BUT_NOT_AUTHORIZED' });
+        : of({ type: 'FETCHING_OBJECTS_WHEN_NOT_AUTHORIZED' });
     });
 
   constructor(

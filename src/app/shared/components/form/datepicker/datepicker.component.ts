@@ -40,7 +40,7 @@ import { ValueConverterService } from '../../../../core/converter/value-converte
 export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, Validator {
   @Input() buttonClass = 'btn btn-default';
   @Input() inputClass = 'form-control';
-  @Input() placeholder = 'default.date.datePicker.placeholder';
+  @Input() placeholder = 'default.date.placeholders.datepicker';
   @Input() maxDate: Date = null;
   @Input() minDate: Date = null;
   @Input() required = false;

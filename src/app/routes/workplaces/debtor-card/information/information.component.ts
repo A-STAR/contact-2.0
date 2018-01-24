@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { IAddress } from '@app/routes/workplaces/shared/address/address.interfac
 import { IDebt } from '../../../../core/app-modules/app-modules.interface';
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 
+import { ContactRegistrationService } from '../../shared/contact-registration/contact-registration.service';
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
@@ -31,9 +32,9 @@ export class DebtorInformationComponent {
   ];
 
   constructor(
+    private contactRegistrationService: ContactRegistrationService,
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
-    private router: Router,
     private routingService: RoutingService,
   ) {}
 
@@ -66,7 +67,7 @@ export class DebtorInformationComponent {
     return this.debtorCardService.isCompany$;
   }
 
-  get contactType(): number {
+  get phoneContactType(): number {
     return 1;
   }
 
@@ -90,11 +91,13 @@ export class DebtorInformationComponent {
     combineLatest(this.personId$, this.debtId$)
       .pipe(first())
       .subscribe(([ personId, debtId ]) => {
-        const url = `/workplaces/contact-registration/${debtId}/3/${address.id}`;
-        this.router.navigate([ url ], { queryParams: {
-          personId: personId,
+        this.contactRegistrationService.params = {
+          contactId: address.id,
+          contactType: 3,
+          debtId,
+          personId,
           personRole: this.personRole,
-        } });
+        };
       });
   }
 
@@ -110,11 +113,13 @@ export class DebtorInformationComponent {
     combineLatest(this.personId$, this.debtId$)
       .pipe(first())
       .subscribe(([ personId, debtId ]) => {
-        const url = `/workplaces/contact-registration/${debtId}/${this.contactType}/${phone.id}`;
-        this.router.navigate([ url ], { queryParams: {
-          personId: personId,
+        this.contactRegistrationService.params = {
+          contactId: phone.id,
+          contactType: this.phoneContactType,
+          debtId,
+          personId,
           personRole: this.personRole,
-        } });
+        };
       });
   }
 }
