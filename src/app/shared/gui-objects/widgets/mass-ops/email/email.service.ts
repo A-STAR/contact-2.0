@@ -14,9 +14,9 @@ export class EmailService {
   ) {}
 
   schedule(debtIds: number[], personIds: number[], personRole: number, email: IMassEmail): Observable<void> {
-    const idData = debtIds.map((debtId, i) => [ debtId, personIds[i] ]);
+    const ids = debtIds.map((debtId, i) => [ debtId, personIds[i] ]);
     return this.dataService
-      .update('/mass/emails/form', {}, { ...email, idData, personRole })
+      .create('/mass/emails/form', {}, { actionData: { ...email, personRole }, idData: { ids } })
       .pipe(
         tap(response => {
           if (response.success) {
