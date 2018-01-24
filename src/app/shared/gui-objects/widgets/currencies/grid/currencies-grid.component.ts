@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -72,6 +73,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
     private currenciesService: CurrenciesService,
     private gridService: GridService,
     private router: Router,
+    private routingService: RoutingService
   ) {
     super();
   }
@@ -123,7 +125,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
   }
 
   onEdit(currency: ICurrency): void {
-    this.router.navigate([ `${this.router.url}/${currency.id}` ]);
+    this.routingService.navigate([ `${this.router.url}/${currency.id}` ]);
   }
 
   onRemove(): void {
@@ -137,7 +139,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/create` ]);
+    this.routingService.navigate([ `${this.router.url}/create` ]);
   }
 
   private fetch(): void {

@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { ActivatedRoute, Router} from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
@@ -84,10 +85,11 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private routingService: RoutingService,
     private router: Router,
     private store: Store<IAppState>,
     private route: ActivatedRoute,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {
     super();
   }
@@ -153,7 +155,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.routingService.navigate([ `/admin/contractors/${this.contractorId}` ], this.route);
   }
 
   onRemoveSubmit(): void {

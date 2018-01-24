@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { Location } from '@angular/common';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -33,7 +33,7 @@ export class CurrencyCardComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private currenciesService: CurrenciesService,
-    private location: Location,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +67,7 @@ export class CurrencyCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    this.routingService.navigate([ '/utilities/currencies' ]);
   }
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {

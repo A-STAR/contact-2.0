@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -32,7 +33,7 @@ export class EmailCardComponent implements OnInit {
 
   constructor(
     private emailService: EmailService,
-    private router: Router,
+    private routingService: RoutingService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -52,11 +53,12 @@ export class EmailCardComponent implements OnInit {
         { label: labelKey('email'), controlName: 'email', type: 'text', required: true, disabled: !canEdit },
         { label: labelKey('comment'), controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
       ];
+      // TODO: fix displaying of selected email
       this.email = email;
     });
   }
 
-  public onSubmit(): void {
+  onSubmit(): void {
     const action = this.emailId
       ? this.emailService.update(this.entityType, this.entityId, this.emailId, this.form.serializedUpdates)
       : this.emailService.create(this.entityType, this.entityId, this.form.serializedUpdates);
@@ -67,11 +69,11 @@ export class EmailCardComponent implements OnInit {
     });
   }
 
-  public onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+  onBack(): void {
+    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
   }
 
-  public get canSubmit(): boolean {
+  get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 }

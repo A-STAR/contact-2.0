@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -36,9 +36,8 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private location: Location,
+    private routingService: RoutingService,
     private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -104,18 +103,18 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.location.back();
+    this.routingService.navigate([ '/admin/contractors' ]);
   }
 
   onManagersClick(): void {
-    this.router.navigate([`/admin/contractors/${this.contractorId}/managers`]);
+    this.routingService.navigate([ `/admin/contractors/${this.contractorId}/managers` ]);
   }
 
   onAttributesClick(): void {
-    this.router.navigate([`/admin/contractors/${this.contractorId}/attributes`]);
+    this.routingService.navigate([ `/admin/contractors/${this.contractorId}/attributes` ]);
   }
 
   onObjectsClick(): void {
-    this.router.navigate([`/admin/contractors/${this.contractorId}/objects`]);
+    this.routingService.navigate([ `/admin/contractors/${this.contractorId}/objects` ]);
   }
 }

@@ -7,7 +7,8 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Location } from '@angular/common';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -76,9 +77,10 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private location: Location,
     private promiseService: PromiseService,
     private userPermissionsService: UserPermissionsService,
+    private route: ActivatedRoute,
+    private routingService: RoutingService
   ) {
 
     this.canAddInsufficientAmountSub = this.canAddInsufficientAmount$
@@ -178,7 +180,11 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   }
 
   onBack(): void {
-    this.location.back();
+    const url = this.callCenter
+      ? `/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}`
+      : `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}`;
+
+    this.routingService.navigate([ url ], this.route);
   }
 
   onSubmit(): void {

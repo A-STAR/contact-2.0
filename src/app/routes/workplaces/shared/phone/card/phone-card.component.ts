@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -36,8 +37,8 @@ export class PhoneCardComponent implements OnInit {
     private phoneService: PhoneService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-    private router: Router,
     private route: ActivatedRoute,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
@@ -73,7 +74,11 @@ export class PhoneCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    const url = this.callCenter
+      ? `/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}`
+      : `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}`;
+
+    this.routingService.navigate([ url ], this.route);
   }
 
   get canSubmit(): boolean {

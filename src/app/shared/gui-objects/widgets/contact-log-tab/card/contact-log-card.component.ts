@@ -16,6 +16,8 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '../../../../../core/utils';
+import { ActivatedRoute, Router } from "@angular/router";
+import { RoutingService } from "@app/core/routing/routing.service";
 
 const label = makeKey('widgets.contactLog.card');
 
@@ -42,6 +44,9 @@ export class ContactLogTabCardComponent implements OnInit {
     private location: Location,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
@@ -88,7 +93,11 @@ export class ContactLogTabCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    const url = this.callCenter
+      ? `/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}`
+      : `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}`;
+
+    this.routingService.navigate([ url ], this.route);
   }
 
   private createDefaultControls(

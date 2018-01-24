@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from "@angular/router";
+import { RoutingService } from '@app/core/routing/routing.service';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -72,7 +73,8 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
-    private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
@@ -140,9 +142,10 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   onEdit(contactLog: IContactLog): void {
     const { contactId, contactType } = contactLog;
     const url = this.callCenter
-      ? `${this.router.url}/contactLog/${this.debtId}/${contactId}/contactLogType/${contactType}`
-      : `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`;
-    this.router.navigate([ url ]);
+      ? `contactLog/${this.debtId}/${contactId}/contactLogType/${contactType}`
+      : `contactLog/${contactId}/contactLogType/${contactType}`;
+
+    this.routingService.navigate([ url ], this.route);
   }
 
   private fetch(): void {

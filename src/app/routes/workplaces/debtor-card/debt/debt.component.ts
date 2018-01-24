@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, flatMap, map } from 'rxjs/operators';
@@ -47,7 +48,7 @@ export class DebtComponent implements OnInit {
     private entityAttributesService: EntityAttributesService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -125,7 +126,7 @@ export class DebtComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
   }
 
   get displayDebtData(): Observable<boolean> {

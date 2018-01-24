@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -117,6 +118,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
+    private routingService: RoutingService
   ) {
     // Bind the context to the filter, or it will throw
     this.filter = this.filter.bind(this);
@@ -236,14 +238,14 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     const url = this.callCenter
       ? `${this.router.url}/payment/${this.debtId}/${id}`
       : `${this.router.url}/debt/payment/${id}`;
-    this.router.navigate([ url ]);
+    this.routingService.navigate([ url ], this.route);
   }
 
   private onAdd(): void {
     if (!this.debtId) {
       return;
     }
-    this.router.navigate([ `${this.router.url}/debt/payment/create` ]);
+    this.routingService.navigate([ `${this.router.url}/debt/payment/create` ], this.route);
   }
 
   private fetch(): void {

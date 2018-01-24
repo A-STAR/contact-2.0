@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-import { Observable } from 'rxjs/Observable';
+import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
   selector: 'app-contractor-attributes',
@@ -12,19 +11,19 @@ export class ContractorAttributesComponent implements OnInit {
   static ENTITY_TYPE_CONTRACTOR = 13;
 
   entityTypeId: number;
-  entityId$: Observable<number>;
+  entityId: number;
 
   constructor(
-    private location: Location,
+    private routingService: RoutingService,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.entityTypeId = ContractorAttributesComponent.ENTITY_TYPE_CONTRACTOR;
-    this.entityId$ = this.route.paramMap.map(params => Number(params.get('contractorId')));
+    this.entityId = Number(this.route.snapshot.paramMap.get('contractorId'));
   }
 
   onBack(): void {
-    this.location.back();
+    this.routingService.navigate([ `/admin/contractors/${this.entityId}` ], this.route);
   }
 
 }

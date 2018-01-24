@@ -1,5 +1,6 @@
 import { Component, ViewChild, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -34,10 +35,10 @@ export class EmploymentCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,
     private lookupService: LookupService,
-    private router: Router,
+    private routingService: RoutingService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -72,7 +73,7 @@ export class EmploymentCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
   }
 
   onSubmit(): void {

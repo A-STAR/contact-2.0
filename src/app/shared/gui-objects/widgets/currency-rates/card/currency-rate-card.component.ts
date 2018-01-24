@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { Location } from '@angular/common';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -32,7 +32,7 @@ export class CurrencyRateCardComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private currencyRatesService: CurrencyRatesService,
-    private location: Location,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +64,7 @@ export class CurrencyRateCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    this.routingService.navigate([ '/utilities/currencies' ]);
   }
 
   private serializeCurrencyRate(currencyRate: ICurrencyRate): ICurrencyRate {

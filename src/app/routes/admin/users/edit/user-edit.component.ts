@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { ActivatedRoute } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -39,7 +40,7 @@ export class UserEditComponent extends DialogFunctions {
   private userId = Number(this.route.snapshot.paramMap.get('userId'));
 
   constructor(
-    private router: Router,
+    private routingService: RoutingService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private lookupService: LookupService,
@@ -112,7 +113,7 @@ export class UserEditComponent extends DialogFunctions {
   }
 
   onClose(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.routingService.navigate([ '/admin/users' ]);
   }
 
   private getFormControls(

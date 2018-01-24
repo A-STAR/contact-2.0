@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -47,6 +48,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private router: Router,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
@@ -107,7 +109,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   }
 
   onEdit(currencyRate: ICurrencyRate): void {
-    this.router.navigate([ `${this.router.url}/${this.currencyId}/rates/${currencyRate.id}` ]);
+    this.routingService.navigate([ `${this.router.url}/${this.currencyId}/rates/${currencyRate.id}` ]);
   }
 
   onExcelLoad(currencyId: number): void {
@@ -120,7 +122,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/${this.currencyId}/rates/create` ]);
+    this.routingService.navigate([ `${this.router.url}/${this.currencyId}/rates/create` ]);
   }
 
   private fetch(): void {

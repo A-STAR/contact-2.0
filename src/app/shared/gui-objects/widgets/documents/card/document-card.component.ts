@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
@@ -37,10 +38,10 @@ export class DocumentCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private documentService: DocumentService,
-    private router: Router,
+    private routingService: RoutingService,
     private route: ActivatedRoute,
     private userConstantsService: UserConstantsService,
-    private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionariesService
   ) {}
 
   ngOnInit(): void {
@@ -91,8 +92,8 @@ export class DocumentCardComponent implements OnInit {
     });
   }
 
-  public onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+  onBack(): void {
+    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
   }
 
   get canSubmit(): boolean {

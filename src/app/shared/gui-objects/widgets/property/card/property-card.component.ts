@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first, map, distinctUntilChanged } from 'rxjs/operators';
@@ -42,9 +43,9 @@ export class PropertyCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private propertyService: PropertyService,
-    private router: Router,
+    private routingService: RoutingService,
     private route: ActivatedRoute,
-    private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionariesService
   ) {}
 
   ngOnInit(): void {
@@ -93,7 +94,7 @@ export class PropertyCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
   }
 
   private initControls(canEdit: boolean, propertyTypeOptions: IOption[]): Array<IDynamicFormItem> {

@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
@@ -35,8 +36,8 @@ export class AddressCardComponent implements OnInit {
     private addressService: AddressService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-    private router: Router,
     private route: ActivatedRoute,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +71,11 @@ export class AddressCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    const url = this.callCenter
+      ? `/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}`
+      : `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}`;
+
+    this.routingService.navigate([ url ], this.route);
   }
 
   get canSubmit(): boolean {

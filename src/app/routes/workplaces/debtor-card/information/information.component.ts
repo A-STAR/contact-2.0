@@ -83,7 +83,7 @@ export class DebtorInformationComponent {
   }
 
   onAddressEdit(address: IAddress): void {
-    this.routingService.navigate([ 'address', `${address.id}` ], this.route);
+    this.routingService.navigate([ `address/${address.id}` ], this.route);
   }
 
   onAddressRegister(address: IAddress): void {
@@ -103,7 +103,7 @@ export class DebtorInformationComponent {
   }
 
   onPhoneEdit(phone: IPhone): void {
-    this.routingService.navigate([ 'phone', `${phone.id}` ], this.route);
+    this.routingService.navigate([ `phone/${phone.id}` ], this.route);
   }
 
   onPhoneRegister(phone: IPhone): void {

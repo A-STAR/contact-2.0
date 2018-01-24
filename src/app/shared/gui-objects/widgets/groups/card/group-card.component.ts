@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { Location } from '@angular/common';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -32,7 +32,7 @@ export class GroupCardComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private groupService: GroupService,
-    private location: Location,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +68,7 @@ export class GroupCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    this.routingService.navigate([ '/utilities/groups' ]);
   }
 
   private initControls(

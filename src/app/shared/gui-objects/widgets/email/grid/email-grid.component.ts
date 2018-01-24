@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -22,6 +22,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 
 import { DialogFunctions } from '../../../../../core/dialog';
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-email-grid',
@@ -114,7 +115,8 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     private debtService: DebtService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -263,11 +265,11 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/email/create` ]);
+    this.routingService.navigate([ 'email', 'create' ], this.route);
   }
 
   private onEdit(emailId: number): void {
-    this.router.navigate([ `${this.router.url}/email/${emailId}` ]);
+    this.routingService.navigate([ `email/${emailId}` ], this.route);
   }
 
   private onSubmitSuccess(): void {

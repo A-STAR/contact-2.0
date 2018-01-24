@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy, ViewChild
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
@@ -48,7 +49,7 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private guaranteeService: GuaranteeService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -130,8 +131,7 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    const relativeUrlCount = this.isRoute('create') ? 2 : 4;
-    this.router.navigate([new Array(relativeUrlCount + 1).join('../')], { relativeTo: this.route });
+    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
   }
 
   onSubmit(): void {

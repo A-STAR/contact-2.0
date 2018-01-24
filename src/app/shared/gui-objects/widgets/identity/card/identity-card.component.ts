@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -34,10 +35,10 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
 
   constructor(
     private identityService: IdentityService,
-    private router: Router,
+    private routingService: RoutingService,
     private route: ActivatedRoute,
     private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {
     super();
   }
@@ -63,6 +64,8 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
           { label: label('isMain'), controlName: 'isMain', type: 'checkbox', required: true },
         ] as IDynamicFormControl[])
         .map(control => canEdit ? control : { ...control, disabled: true });
+
+      // TODO: fix displaying of selected identity
       this.identity = identity;
     });
   }
@@ -92,7 +95,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
   }
 
   private onSubmit(data: any): void {

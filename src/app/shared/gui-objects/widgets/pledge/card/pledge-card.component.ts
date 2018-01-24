@@ -21,6 +21,7 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 import { makeKey, isRoute } from '../../../../../core/utils';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
+import {RoutingService} from "@app/core/routing/routing.service";
 
 const label = makeKey('widgets.pledgeContract.card');
 
@@ -52,10 +53,10 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private location: Location,
     private pledgeService: PledgeService,
+    private routingService: RoutingService,
     private route: ActivatedRoute,
-    private userDictionariesService: UserDictionariesService,
+    private userDictionariesService: UserDictionariesService
   ) {}
 
   get form(): DynamicFormComponent {
@@ -134,7 +135,7 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.location.back();
+    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
   }
 
   onSubmit(): void {
