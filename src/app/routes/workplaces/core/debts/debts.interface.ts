@@ -2,8 +2,12 @@ export interface IDebt {
   id: number;
 }
 
-export interface IDebtsState {
+export interface IDebtsCollection {
   [key: number]: IDebt;
+}
+
+export interface IDebtsState {
+  debts: IDebtsCollection;
 }
 
 export enum IDebtsActionType {

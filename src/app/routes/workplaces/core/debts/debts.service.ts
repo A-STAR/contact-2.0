@@ -12,7 +12,7 @@ export class DebtsService {
   };
 
   constructor(
-    private store: Store<{ debts: IDebtsState }>,
+    private store: Store<IDebtsState>,
   ) {}
 
   getDebt(debtId: number): Observable<IDebt> {

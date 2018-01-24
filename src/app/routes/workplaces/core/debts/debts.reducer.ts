@@ -1,6 +1,6 @@
-import { IDebtsAction, IDebtsState, IDebtsActionType } from './debts.interface';
+import { IDebtsAction, IDebtsCollection, IDebtsActionType } from './debts.interface';
 
-export const debtsReducer = (state: IDebtsState = [], action: IDebtsAction) => {
+export const debtsReducer = (state: IDebtsCollection = [], action: IDebtsAction) => {
   switch (action.type) {
     case IDebtsActionType.FETCH_SUCCESS:
       return action.payload.debts;
