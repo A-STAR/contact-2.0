@@ -90,9 +90,8 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return this.eventId
-      ? !!this.periodForms.find(form => form && form.canSubmit)
-      : this.periodForms.every(form => form && form.canSubmit);
+    return this.periodForms.find(form => form && form.canSubmit)
+      && this.periodForms.every(form => form && form.isValid);
   }
 
   get serializedUpdates(): ISchedulePeriod {

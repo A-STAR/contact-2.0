@@ -4,12 +4,16 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IScheduleEvent, IScheduleGroup, IScheduleStartRequest } from './schedule-event.interface';
+import { IScheduleEvent, IScheduleGroup, IScheduleType, IScheduleParam, IScheduleStartRequest } from './schedule-event.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
+
+import { toOption } from '@app/core/utils';
 
 @Injectable()
 export class ScheduleEventService extends AbstractActionService {
@@ -22,6 +26,7 @@ export class ScheduleEventService extends AbstractActionService {
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
+    private userTemplatesService: UserTemplatesService,
     protected store: Store<IAppState>,
   ) {
     super();
@@ -83,4 +88,25 @@ export class ScheduleEventService extends AbstractActionService {
     .catch(this.notificationsService.error('widgets.scheduleEvents.errors.start')
       .params({ eventId: eventIds.join() }).dispatchCallback());
   }
-}
+  getEventTemplateOptions(typeCode: number, addParams: IScheduleParam[]): Observable<IOption[]> {
+    const personRoles = this.findEventAddParam<number[]>(addParams, 'personRoles') || [];
+    return this.userTemplatesService
+      .getTemplates(typeCode, personRoles.length === 1 ? personRoles[0] : 0)
+      .map(templates => templates.map(toOption('id', 'name')));
+  }
+
+  getEventAddParams(scheduleType: IScheduleType): any {
+    return (scheduleType.additionalParameters || [])
+      .reduce((acc, param) => ({ ...acc, [param.name]: JSON.parse(String(param.value)) }), {});
+  }
+
+  findEventAddParam<T>(addParams: IScheduleParam[], name: string): T {
+    const param = (addParams || []).find(p => p.name === name);
+    return param && param.value && JSON.parse(String(param.value));
+  }
+
+  createEventAddParams(params: any): IScheduleParam[] {
+    return Object.keys(params)
+      .filter(key => key !== 'checkGroup')
+      .map(key => ({ name: key, value: JSON.stringify(params[key]) }));
+  }}

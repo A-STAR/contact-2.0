@@ -15,13 +15,11 @@ import { GridService } from '@app/shared/components/grid/grid.service';
 import { ScheduleEventService } from '../../schedule-event.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 import { GridComponent } from '@app/shared/components/grid/grid.component';
 
 import { min } from '@app/core/validators';
-import { toOption } from '@app/core/utils';
 
 @Component({
   selector: 'app-schedule-type-card',
@@ -69,7 +67,6 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private userConstantsService: UserConstantsService,
     private userDictionaryService: UserDictionariesService,
-    private userTemplatesService: UserTemplatesService,
     private scheduleEventService: ScheduleEventService,
   ) {}
 
@@ -89,10 +86,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       this.userDictionaryService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE),
       this.userConstantsService.get('SMS.Sender.Default'),
       this.userConstantsService.get('SMS.Sender.Use'),
-      this.userTemplatesService.getTemplates(
-        2,
-        this.type.personRoles && this.type.personRoles.length === 1 ? this.type.personRoles[0] : 0
-      ).map(templates => templates.map(toOption('id', 'name'))),
+      this.scheduleEventService.getEventTemplateOptions(2, this.type.additionalParameters),
     )
     .pipe(first())
     .subscribe(([canEdit, phoneOptions, personRoleOptions, defaultSender, useSender, templateOptions]) => {
@@ -104,17 +98,15 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     });
 
     this.selectedEventTypeCodeSub = this.selectedEventTypeCode$.subscribe(() => {
-      this.selectedType = this.getFormData();
+      this.selectedType = { ...this.type, ...this.getFormAdditionalData() };
     });
 
     this.selectedPersonRolesSub = this.selectedPersonRoles$
       .filter(Boolean)
-      .flatMap(roles => this.userTemplatesService.getTemplates(2, roles.length > 1 ? 0 : roles[0]))
-      .map(templates => templates.map(toOption('id', 'name')))
+      .map(roles => this.scheduleEventService.createEventAddParams({ personRoles: roles }))
+      .flatMap(addParam => this.scheduleEventService.getEventTemplateOptions(2, addParam))
       .subscribe(templateOptions => {
-        const control = this.smsTypeControls.find(c => c.controlName === 'templateId') as IDynamicFormSelectControl;
-        control.options = templateOptions;
-        this.smsTypeForm.getControl('templateId').setValue('');
+        this.setControlOptions(this.smsTypeForm, 'templateId', templateOptions);
         this.cdRef.markForCheck();
       });
   }
@@ -128,7 +120,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     return this.selectedEventTypeCode$.value;
   }
 
-  get selectedEventTypeForm(): DynamicFormComponent {
+  get selectedScheduleTypeForm(): DynamicFormComponent {
     switch (this.selectedEventTypeCode) {
       case ScheduleEventEnum.SMS:
         return this.smsTypeForm;
@@ -136,7 +128,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   }
 
   get eventTypeForms(): DynamicFormComponent[] {
-    return [ this.eventTypeForm, this.selectedEventTypeForm ];
+    return [ this.eventTypeForm, this.selectedScheduleTypeForm ];
   }
 
   get groupSelection(): IScheduleGroup[] {
@@ -145,21 +137,13 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   }
 
   get canSubmit(): boolean {
-    return this.eventId
-      ? !!this.eventTypeForms.find(form => form && form.canSubmit)
-      : this.eventTypeForms.every(form => !form || form.canSubmit);
+    return !!this.eventTypeForms.find(form => form && form.canSubmit)
+      && this.eventTypeForms.every(form => !form || form.isValid);
   }
 
   get serializedUpdates(): IScheduleType {
-    switch (this.selectedEventTypeCode) {
-      case ScheduleEventEnum.GROUP:
-        return { ...this.eventTypeForm.serializedUpdates };
-      case ScheduleEventEnum.SMS:
-        return this.serializeEventTypeForm({
-          ...this.eventTypeForm.serializedUpdates,
-          ...this.smsTypeForm.serializedUpdates
-        });
-    }
+    const form = this.selectedScheduleTypeForm && this.selectedScheduleTypeForm.serializedUpdates;
+    return this.serializeScheduleType(form || {});
   }
 
   onEventTypeSelect(): void {
@@ -232,6 +216,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
         validators: [ min(1) ],
         width: this.useSender ? 4 : 12
       },
+      { controlName: 'checkGroup', type: 'checkbox', disabled: !canEdit },
     ] as IDynamicFormControl[];
 
     if (this.useSender) {
@@ -253,36 +238,31 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getFormData(): Partial<IScheduleType> {
+  private getFormAdditionalData(): any {
     switch (this.selectedEventTypeCode) {
-      case ScheduleEventEnum.GROUP:
-        return { ...this.type, eventTypeCode: 1 };
       case ScheduleEventEnum.SMS:
         return {
           phoneTypes: [ 1 ],
           personRoles: [ 1 ],
           senderCode: this.useSender ? this.defaultSender : null,
-          ...this.serializeEventType(this.type),
-          eventTypeCode: 2
+          ...this.type,
+          ...this.scheduleEventService.getEventAddParams(this.type)
         };
     }
   }
 
-  private serializeEventTypeForm(serializedUpdates: any): IScheduleType {
+  private serializeScheduleType(fromData: any): IScheduleType {
     return {
-      ...serializedUpdates,
-      checkGroup: serializedUpdates.checkGroup,
-      additionalParameters: Object.keys(serializedUpdates)
-        .filter(key => key !== 'checkGroup')
-        .map(key => ({ name: key, value: JSON.stringify(serializedUpdates[key]) }))
+      ...this.eventTypeForm.serializedUpdates,
+      checkGroup: fromData.checkGroup,
+      additionalParameters: this.scheduleEventService.createEventAddParams(FormData)
     };
   }
 
-  private serializeEventType(type: IScheduleType): Partial<IScheduleType> {
-    return {
-      ...type,
-      ...(type.additionalParameters || [])
-        .reduce((acc, param) => ({ ...acc, [param.name]: JSON.parse(String(param.value)) }), {})
-    };
+  private setControlOptions(form: DynamicFormComponent, controlName: string, options: IOption[]): void {
+    const control = form.getFlatControls()
+      .find(c => c.controlName === controlName) as IDynamicFormSelectControl;
+    control.options = options;
+    form.getControl(controlName).setValue('');
   }
 }
