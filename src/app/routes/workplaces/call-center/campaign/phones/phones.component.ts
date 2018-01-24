@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators/first';
 
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 
 import { CampaignService } from '../campaign.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
@@ -16,8 +17,8 @@ import { RoutingService } from '@app/core/routing/routing.service';
 export class PhonesComponent {
   constructor(
     private campaignService: CampaignService,
+    private contactRegistrationService: ContactRegistrationService,
     private route: ActivatedRoute,
-    private router: Router,
     private routingService: RoutingService,
   ) {}
 
@@ -61,11 +62,14 @@ export class PhonesComponent {
     this.campaignService.campaignDebt$
       .pipe(first())
       .subscribe(debt => {
-        const url = `/workplaces/contact-registration/${debt.debtId}/${this.contactType}/${phone.id}`;
-        this.router.navigate([ url ], { queryParams: {
+        this.contactRegistrationService.params = {
+          campaignId: this.campaignId,
+          contactId: phone.id,
+          contactType: this.contactType,
+          debtId: debt.debtId,
           personId: debt.personId,
           personRole: this.personRole,
-        } });
+        };
       });
   }
 }

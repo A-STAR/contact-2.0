@@ -10,6 +10,7 @@
     [personRole]="personRole"
     [styles]="{ height: '420px' }"
     (add)="onPhoneAdd()"
+    (dblClick)="onPhoneEdit($event)"
     (edit)="onPhoneEdit($event)"
     (register)="onPhoneRegister($event)"
     (select)="onSelect($event)"
