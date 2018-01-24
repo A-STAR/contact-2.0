@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { empty } from 'rxjs/observable/empty';
 import { publishReplay, refCount, finalize, catchError, flatMap } from 'rxjs/operators';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
 import { IQueryParam, IQueryParams } from './data.interface';
+
+import { AuthService } from '@app/core/auth/auth.service';
 
 interface RequestOptions {
   body?: any;
@@ -28,7 +31,10 @@ export class DataService {
   private nRequests$ = new BehaviorSubject<number>(0);
   private rootUrl$: Observable<string>;
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private authService: AuthService,
+    private http: HttpClient
+  ) {
     this.rootUrl$ = this
       .readLocal('./assets/server/root.json')
       .pipe(
@@ -144,6 +150,12 @@ export class DataService {
       headers.append('Content-Type', 'application/json');
     }
 
+    const isAuthenticated = this.authService.isRetrievedTokenValid();
+    if (!isAuthenticated && !['/auth/login', '/api/refresh'].includes(url)) {
+      return empty();
+    }
+
+    // increase the request counter for the loader
     this.nRequests$.next(this.nRequests$.value + 1);
 
     return this.validateUrl(url)

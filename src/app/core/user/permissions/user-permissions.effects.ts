@@ -29,7 +29,7 @@ export class UserPermissionsEffects {
               })),
               catchError(this.notificationService.fetchError().entity('entities.user.permissions.gen.plural').callback()),
           )
-          : of({ type: 'FETCHING_USER_PERMISSIONS_BUT_NOT_AUTHORIZED' });
+          : of({ type: 'FETCHING_USER_PERMISSIONS_WHEN_NOT_AUTHORIZED' });
       })
     );
 
