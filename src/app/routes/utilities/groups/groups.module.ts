@@ -30,11 +30,11 @@ const routes: Routes = [
   },
   {
     path: 'all/create',
-    loadChildren: '../card/group-card.module#GroupCardModule',
+    loadChildren: './card/group-card.module#GroupCardModule',
   },
   {
     path: 'all/:groupId',
-    loadChildren: '../card/group-card.module#GroupCardModule',
+    loadChildren: './card/group-card.module#GroupCardModule',
   },
 ];
 

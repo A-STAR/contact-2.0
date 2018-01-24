@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRe
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { of } from 'rxjs/observable/of';
-import { first, switchMap } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';

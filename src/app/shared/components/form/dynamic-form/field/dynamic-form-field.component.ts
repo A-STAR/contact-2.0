@@ -2,8 +2,7 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output,
-  OnInit
+  Output
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
