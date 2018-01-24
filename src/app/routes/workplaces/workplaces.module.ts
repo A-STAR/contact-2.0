@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { WorkplacesCoreModule } from './core/core.module';
+
 import { WorkplacesService } from './workplaces.service';
 
 import { WorkplacesComponent } from './workplaces.component';
@@ -69,6 +71,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
+    WorkplacesCoreModule,
   ],
   exports: [
     RouterModule,

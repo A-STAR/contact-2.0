@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 
 import {
   IContactRegistrationData,
@@ -9,9 +9,14 @@ import {
   IContactRegistrationParams,
   IOutcome,
 } from './contact-registration.interface';
+import { IDebt } from '@app/routes/workplaces/core/debts/debts.interface';
+import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
 
 import { DataService } from '@app/core/data/data.service';
+import { DebtsService } from '@app/routes/workplaces/core/debts/debts.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
+import { first } from 'rxjs/operators/first';
 
 @Injectable()
 export class ContactRegistrationService {
@@ -21,9 +26,14 @@ export class ContactRegistrationService {
   private _outcome$ = new BehaviorSubject<IOutcome>(null);
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
 
+  private _debt$ = new BehaviorSubject<any>(null);
+  private _limit$ = new BehaviorSubject<any>(null);
+
   constructor(
     private dataService: DataService,
+    private debtsService: DebtsService,
     private notificationsService: NotificationsService,
+    private promiseService: PromiseService,
   ) {}
 
   get isActive$(): Observable<boolean> {
@@ -115,6 +125,23 @@ export class ContactRegistrationService {
 
   get personRole(): number {
     return this.params && this.params.personRole;
+  }
+
+  get debt$(): Observable<IDebt> {
+    return this.debtId$.pipe(
+      mergeMap(debtId => this.debtsService.getDebt(debtId)),
+    );
+  }
+
+  get limit$(): Observable<IPromiseLimit> {
+    return this.debtId$.pipe(
+      mergeMap(debtId => {
+        // TODO(d.maltsev): if contact registration is used NOT in call center, pass `false`
+        return this.promiseService.getLimit(debtId, true).pipe(
+          first(),
+        );
+      }),
+    );
   }
 
   get canSetPromise$(): Observable<boolean> {

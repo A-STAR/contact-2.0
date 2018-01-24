@@ -20,12 +20,11 @@
               Дата <b class="text-danger">*</b>
             </span>
           </label>
-          <!-- TODO(d.maltsev): minDate, maxDate -->
           <app-input-datepicker
             formControlName="date"
             [displayTime]="false"
-            [minDate]="promiseMinDate"
-            [maxDate]="promiseMaxDate"
+            [minDate]="promiseMinDate$ | async"
+            [maxDate]="promiseMaxDate$ | async"
             [required]="true"
           ></app-input-datepicker>
         </div>

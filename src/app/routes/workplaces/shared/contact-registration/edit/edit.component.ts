@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { timer } from 'rxjs/observable/timer';
+import { map, mapTo } from 'rxjs/operators';
+import * as moment from 'moment';
 
 import { IContactRegistrationMode } from '../contact-registration.interface';
 
@@ -12,6 +15,7 @@ import { AttributesComponent } from './attributes/attributes.component';
 import { ContactSelectComponent } from './contact-select/contact-select.component';
 
 import { isEmpty } from '@app/core/utils';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -116,6 +120,31 @@ export class EditComponent {
 
   get contactType$(): Observable<number> {
     return this.contactRegistrationService.contactType$;
+  }
+
+  get now$(): Observable<moment.Moment> {
+    return timer(0, 60e3).pipe(
+      mapTo(moment()),
+    );
+  }
+
+  get promiseMinDate$(): Observable<Date> {
+    return this.now$.pipe(
+      map(now => now.toDate()),
+    );
+  }
+
+  get promiseMaxDate$(): Observable<Date> {
+    return combineLatest(
+      this.now$,
+      this.contactRegistrationService.limit$,
+    )
+    .pipe(
+      map(([ today, limit ]) => {
+        const { maxDays } = limit;
+        return maxDays === null ? null : today.add(maxDays, 'day').toDate();
+      }),
+    );
   }
 
   get canSubmit(): boolean {
