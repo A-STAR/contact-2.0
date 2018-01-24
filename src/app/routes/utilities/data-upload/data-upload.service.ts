@@ -1,9 +1,5 @@
 
 import { Injectable } from '@angular/core';
-
-import { IAGridRequestParams } from '../../../shared/components/grid2/grid2.interface';
-import { Observable } from 'rxjs/Observable';
-import { map, tap } from 'rxjs/operators';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 
@@ -11,7 +7,6 @@ import { IAppState } from '@app/core/state/state.interface';
 import {
   DataUploaders
 } from './data-upload.interface';
-import { IMassInfoResponse } from '../../../core/data/data.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '../../../core/data/data.service';

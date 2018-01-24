@@ -68,8 +68,8 @@ export class DataUploader {
   }
 
   getErrors(): string {
-    const url = typeof this.parameter !== 'undefined' ?
-      this.api.getErrors.replace(new RegExp('\\{' + this.paramKey + '\\}'), this.parameter) : this.api.getErrors;
+    const url = this.parameter == null ? this.api.getErrors :
+      this.api.getErrors.replace(new RegExp('\\{' + this.paramKey + '\\}'), this.parameter);
     return this.guid ? url.replace(/(guid\/)(\{[\w]+\})(.*)/g, `$1${this.guid}$3`) : url;
   }
 
