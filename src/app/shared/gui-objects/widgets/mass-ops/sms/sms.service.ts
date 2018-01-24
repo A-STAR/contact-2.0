@@ -14,9 +14,9 @@ export class SmsService {
   ) {}
 
   schedule(debtIds: number[], personIds: number[], personRole: number, sms: IMassSms): Observable<void> {
-    const idData = debtIds.map((debtId, i) => [ debtId, personIds[i] ]);
+    const ids = debtIds.map((debtId, i) => [ debtId, personIds[i] ]);
     return this.dataService
-      .update('/mass/sms/form', {}, { ...sms, idData, personRole })
+      .create('/mass/sms/form', {}, { actionData: { ...sms, personRole }, idData: { ids } })
       .pipe(
         tap(response => {
           if (response.success) {

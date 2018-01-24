@@ -83,7 +83,7 @@ export class SmsComponent implements OnInit {
   onSubmit(): void {
     const email = this.form.serializedUpdates;
     this.smsService
-      .schedule(this.debtIds, this.personIds, this.personRoles[0], email)
+      .schedule(this.debtIds, this.personIds, Number(this.personRoles[0]), email)
       .subscribe(() => this.close.emit());
   }
 
