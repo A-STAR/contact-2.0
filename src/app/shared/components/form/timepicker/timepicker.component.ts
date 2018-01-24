@@ -6,8 +6,6 @@ import {
   forwardRef,
   HostListener,
   Input,
-  OnInit,
-  OnDestroy,
   ViewChild,
   // Renderer2
 } from '@angular/core';
@@ -33,10 +31,10 @@ import { ValueConverterService } from '../../../../core/converter/value-converte
     },
   ]
 })
-export class TimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, Validator {
+export class TimePickerComponent implements ControlValueAccessor, Validator {
   @Input() buttonClass = 'btn btn-default';
   @Input() inputClass = 'form-control';
-  @Input() placeholder = 'default.date.datePicker.placeholder';
+  @Input() placeholder = 'default.date.placeholders.timepicker';
   @Input() required = false;
   @Input() showSeconds = false;
 
@@ -44,11 +42,11 @@ export class TimePickerComponent implements ControlValueAccessor, OnInit, OnDest
   @ViewChild('trigger') trigger: ElementRef;
   @ViewChild('dropdown') dropdown: ElementRef;
 
-  formattedDate = '';
+  formattedTime = '';
   isDisabled = false;
   isExpanded = false;
   isValid = true;
-  value: string = null;
+  value: Date = null;
   style = { top: '-1px', right: '0px' };
 
   constructor(
@@ -67,28 +65,27 @@ export class TimePickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
   }
 
-  ngOnInit(): void {
-    // this.renderer.appendChild(document.body, this.dropdown.nativeElement);
-    // document.body.appendChild(this.dropdown.nativeElement);
-  }
-
-  ngOnDestroy(): void {
-    // document.body.removeChild(this.dropdown.nativeElement);
-    // this.renderer.removeChild(document.body, this.dropdown.nativeElement);
-  }
-
+  /**
+   * ControlValueAccessor implementation
+   */
   writeValue(value: string): void {
     this.value = typeof value === 'string'
-      ? this.valueConverterService.fromLocalTime(value) as string
+      ? this.valueConverterService.fromLocalTime(value) as Date || null
       : value;
-    this.updateFormattedDate();
+    this.updateFormattedTime();
     this.cdRef.markForCheck();
   }
 
+  /**
+   * ControlValueAccessor implementation
+   */
   registerOnChange(fn: Function): void {
     this.propagateChange = fn;
   }
 
+  /**
+   * ControlValueAccessor implementation
+   */
   registerOnTouched(fn: Function): void {
     this.propagateTouch = fn;
   }
@@ -98,23 +95,25 @@ export class TimePickerComponent implements ControlValueAccessor, OnInit, OnDest
     this.cdRef.markForCheck();
   }
 
+  /**
+   * Validator implementation
+   */
   validate(): object {
-    return this.isValid ? null : { datepicker: false };
+    return this.isValid ? null : { timepicker: false };
   }
 
-  onValueChange(event: Date): void {
+  onValueChange(time: string): void {
     if (this.isExpanded) {
       this.toggleCalendar(false);
     }
-
-    const newTime = this.timeFromInput(event);
+    const newTime = this.timeFromInput(time);
     if (newTime === false) {
       this.isValid = false;
       this.setValue(null);
     } else {
       this.isValid = true;
       this.setValue(newTime);
-      this.updateFormattedDate();
+      this.updateFormattedTime();
     }
     this.cdRef.markForCheck();
   }
@@ -127,25 +126,23 @@ export class TimePickerComponent implements ControlValueAccessor, OnInit, OnDest
     this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
     if (this.isExpanded) {
       this.positionDropdown();
-      this.cdRef.detectChanges();
     } else {
       this.propagateTouch(true);
     }
-    // this.cdRef.markForCheck();
+    this.cdRef.markForCheck();
   }
 
-  private updateFormattedDate(): void {
-    this.formattedDate = this.value || '';
+  private updateFormattedTime(): void {
+    this.formattedTime = this.valueConverterService.toLocalTime(this.value) || '';
   }
 
-  private setValue(value: string): void {
+  private setValue(value: Date): void {
     this.value = value;
     this.propagateChange(value);
   }
 
-  private timeFromInput(date: Date): string | false {
-    console.log('converted', this.valueConverterService.toLocalTime(date));
-    return this.valueConverterService.toLocalTime(date) || false;
+  private timeFromInput(time: string): Date | false {
+    return this.valueConverterService.fromLocalTime(time);
   }
 
   private propagateChange: Function = () => {};

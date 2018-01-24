@@ -93,6 +93,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
         template: data && data.templateFormula
           ? { name: 'templateFormula', value: data && data.templateFormula }
           : { name: 'templateId', value: data && data.templateId },
+        contactTime: '14:05:10'
       };
       this.controls = this.buildControls(debtStatusDict, templates, attributes);
 
@@ -275,7 +276,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
               { controlName: 'contactInvisible', type: 'checkbox' },
               { controlName: 'regInvisible', type: 'checkbox' },
               { controlName: 'changeContactPerson', type: 'checkbox' },
-              { controlName: 'changeContactTime', type: 'timepicker' },
+              { controlName: 'contactTime', type: 'timepicker' },
             ]
           }
         ]

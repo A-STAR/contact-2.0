@@ -124,7 +124,8 @@
     "fieldLowerCase": "Это поле должно содержать хотя бы один символ в нижнем регистре",
     "fieldUpperCase": "Это поле должно содержать хотя бы один символ в верхнем регистре",
     "fieldMaxSize": "Размер файла не должен превышать {{ requiredSize }}",
-    "oneOfGroupRequired": "Хотя бы одно из полей должно быть заполнено"
+    "oneOfGroupRequired": "Хотя бы одно из полей должно быть заполнено",
+    "timepicker": "Неверный формат времени"
   },
   "network": {
     "connectionError": "Ошибка соединения",
@@ -2844,8 +2845,9 @@
         "date": "DD.MM.YYYY",
         "time": "HH:mm:ss"
       },
-      "datePicker": {
-        "placeholder": "Выберите дату"
+      "placeholders": {
+        "datepicker": "Введите дату",
+        "timepicker": "Введите время "
       }
     },
     "colors": {
