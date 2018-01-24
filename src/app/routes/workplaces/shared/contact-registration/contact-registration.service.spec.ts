@@ -20,6 +20,10 @@ class MockDataService {
   }
 }
 
+class MockDebtsService {
+
+}
+
 class MockNotificationService {
   error(): any {
     return {
@@ -30,13 +34,19 @@ class MockNotificationService {
   }
 }
 
+class MockPromiseService {
+
+}
+
 describe('ContactRegistrationService', () => {
   let service: ContactRegistrationService;
 
   beforeEach(() => {
     service = new ContactRegistrationService(
       new MockDataService() as any,
+      new MockDebtsService() as any,
       new MockNotificationService() as any,
+      new MockPromiseService() as any,
     );
   });
 
