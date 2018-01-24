@@ -28,8 +28,7 @@ import { min } from '@app/core/validators';
 })
 export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   @ViewChild('eventType') eventTypeForm: DynamicFormComponent;
-  @ViewChild('smsType') smsTypeForm: DynamicFormComponent;
-  @ViewChild('emailType') emailTypeForm: DynamicFormComponent;
+  @ViewChild('addParams') addParamsForm:  DynamicFormComponent;
   @ViewChild('groupGrid') groupGrid: GridComponent;
 
   @Input() eventId: number;
@@ -40,8 +39,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     labelKey: 'widgets.scheduleEvents.card',
   };
 
-  smsTypeControls: Partial<IDynamicFormControl>[];
-  emailTypeControls: Partial<IDynamicFormControl>[];
+  addParamsControls: Array<Partial<IDynamicFormControl>[]>;
 
   groupGridColumns: Array<IGridColumn> = [
     { prop: 'id', width: 70 },
@@ -57,8 +55,12 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   private selectedEventTypeCodeSub: Subscription;
 
   private formControls = {
-    eventTypeCode: { controlName: 'eventTypeCode', type: 'select', required: true, onChange: () => this.onEventTypeSelect() },
-    phoneTypes: { controlName: 'phoneTypes', type: 'multiselect', required: true, width: 4 },
+    eventTypeCode: {
+      controlName: 'eventTypeCode',
+      type: 'select',
+      required: true,
+      onChange: () => this.onEventTypeSelect()
+    },
     personRoles: {
       controlName: 'personRoles',
       type: 'multiselect',
@@ -66,11 +68,16 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       onChange: () => this.onPersonRoleSelect(),
       width: 4
     },
+    phoneTypes: { controlName: 'phoneTypes', type: 'multiselect', required: true, width: 4 },
     templateId: { controlName: 'templateId', type: 'select', required: true, width: 4 },
     delay: { controlName: 'delay', type: 'number', required: true, validators: [ min(1) ] },
     checkGroup: { controlName: 'checkGroup', type: 'checkbox' },
     senderCode: { controlName: 'senderCode', type: 'select', required: true, width: 4 },
-    groupId: { controlName: 'groupId', type: 'number', required: true }
+    groupId: { controlName: 'groupId', type: 'number', required: true },
+    dict1code: { controlName: 'dict1code', type: 'select', required: true },
+    dict2code: { controlName: 'dict2code', type: 'select', required: true },
+    dict3code: { controlName: 'dict3code', type: 'select', required: true },
+    dict4code: { controlName: 'dict4code', type: 'select', required: true },
   };
 
   constructor(
@@ -112,27 +119,34 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       const [ useSmsSender, useEmailSender, smsSender, emailSender ] = constants;
 
       this.eventTypeControls = this.createEventTypeControls(canEdit);
-      this.smsTypeControls = this.createScheduleTypeControls(
-        canEdit,
-        options[UserDictionariesService.DICTIONARY_PHONE_TYPE],
-        options[UserDictionariesService.DICTIONARY_PERSON_ROLE],
-        templateSmsOptions, useSmsSender.valueB
-      );
-      this.emailTypeControls = this.createScheduleTypeControls(
-        canEdit,
-        options[UserDictionariesService.DICTIONARY_EMAIL_TYPE],
-        options[UserDictionariesService.DICTIONARY_PERSON_ROLE],
-        templateEmailOptions,
-        useEmailSender.valueB
-      );
+
+      this.addParamsControls = [
+        ,
+        this.createSendTypeControls(
+          canEdit,
+          options[UserDictionariesService.DICTIONARY_PHONE_TYPE],
+          options[UserDictionariesService.DICTIONARY_PERSON_ROLE],
+          templateSmsOptions, useSmsSender.valueB
+        ),
+        this.createSendTypeControls(
+          canEdit,
+          options[UserDictionariesService.DICTIONARY_EMAIL_TYPE],
+          options[UserDictionariesService.DICTIONARY_PERSON_ROLE],
+          templateEmailOptions,
+          useEmailSender.valueB
+        ),
+        ...Array.from(new Array(4), (v, i) => this.createDictTypeControls(canEdit, i + 1)),
+      ];
 
       this.selectedEventTypeCode$.next(this.type.eventTypeCode);
-      this.selectedEventTypeCodeSub = this.selectedEventTypeCode$.subscribe(() => {
-        this.selectedType = this.getFormData(
-          useSmsSender.valueB && smsSender.valueN,
-          useEmailSender.valueB && emailSender.valueN
-        );
-      });
+      this.selectedEventTypeCodeSub = this.selectedEventTypeCode$
+        .subscribe(() => {
+          this.selectedType = this.getFormData(
+            useSmsSender.valueB && smsSender.valueN,
+            useEmailSender.valueB && emailSender.valueN
+          );
+          this.cdRef.markForCheck();
+        });
 
       this.cdRef.markForCheck();
     });
@@ -146,17 +160,8 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     return this.selectedEventTypeCode$.value;
   }
 
-  get selectedScheduleTypeForm(): DynamicFormComponent {
-    switch (this.selectedEventTypeCode) {
-      case ScheduleEventEnum.SMS:
-        return this.smsTypeForm;
-      case ScheduleEventEnum.EMAIL:
-        return this.emailTypeForm;
-    }
-  }
-
   get eventTypeForms(): DynamicFormComponent[] {
-    return [ this.eventTypeForm, this.selectedScheduleTypeForm ];
+    return [ this.eventTypeForm, this.addParamsForm ];
   }
 
   get groupSelection(): IScheduleGroup[] {
@@ -170,14 +175,13 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   }
 
   get serializedUpdates(): IScheduleType {
-    const formData = this.selectedScheduleTypeForm && this.selectedScheduleTypeForm.serializedValue;
+    const formData = this.addParamsForm && this.addParamsForm.serializedValue;
     return this.serializeScheduleType(formData || {});
   }
 
   onEventTypeSelect(): void {
     const [ eventTypeControl ] = this.eventTypeForm.getControl('eventTypeCode').value;
     this.selectedEventTypeCode$.next(eventTypeControl.value);
-    this.cdRef.markForCheck();
   }
 
   onGroupSelect(group: IScheduleGroup): void {
@@ -187,12 +191,12 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   }
 
   onPersonRoleSelect(): void {
-    const personRoleControl = this.selectedScheduleTypeForm.getControl('personRoles');
+    const personRoleControl = this.addParamsForm.getControl('personRoles');
     this.scheduleEventService.getEventTemplateOptions(
       this.selectedEventTypeCode,
       this.scheduleEventService.createEventAddParams({ personRoles: personRoleControl.value })
     ).subscribe(templateOptions => {
-      this.setControlOptions(this.selectedScheduleTypeForm, 'templateId', templateOptions);
+      this.setControlOptions(this.addParamsForm, 'templateId', templateOptions);
       this.cdRef.markForCheck();
     });
   }
@@ -211,7 +215,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createScheduleTypeControls(
+  private createSendTypeControls(
     canEdit: boolean,
     phoneOptions: IOption[],
     personRoleOptions: IOption[],
@@ -236,6 +240,18 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     }));
 
     return addControls;
+  }
+
+  private createDictTypeControls(canEdit: boolean, dictIndex: number): Partial<IDynamicFormControl>[] {
+    return this.createFormControls({
+      [`dict${dictIndex}code`]: {
+        controlName: `dict${dictIndex}code`,
+        disabled: !canEdit,
+        dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${dictIndex}`],
+        markAsDirty: !this.eventId
+      },
+      checkGroup: { disabled: !canEdit }
+    });
   }
 
   private fetchGroups(): void {

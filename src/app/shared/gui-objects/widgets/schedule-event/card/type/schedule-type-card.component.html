@@ -29,22 +29,13 @@
   ></app-grid>
 </div>
 
-<div class="pb-lg">
-  <app-dynamic-form
-    #smsType
-    *ngIf="selectedEventTypeCode === 2"
-    [config]="eventTypeConfig"
-    [controls]="smsTypeControls"
-    [data]="selectedType"
-  ></app-dynamic-form>
-</div>
-
-<div class="pb-lg">
-  <app-dynamic-form
-    #emailType
-    *ngIf="selectedEventTypeCode === 3"
-    [config]="eventTypeConfig"
-    [controls]="emailTypeControls"
-    [data]="selectedType"
-  ></app-dynamic-form>
-</div>
+<ng-container *ngFor="let controls of addParamsControls; let i = index">
+  <div class="pb-lg" *ngIf="selectedEventTypeCode === (i + 1)">
+    <app-dynamic-form
+      #addParams
+      [config]="eventTypeConfig"
+      [controls]="controls"
+      [data]="selectedType"
+    ></app-dynamic-form>
+  </div>
+</ng-container>
