@@ -8,7 +8,6 @@ import { map, tap } from 'rxjs/operators';
 import {
   DataUploaders,
   ICellPayload,
-  IErrorsResponse,
   IDataResponse,
   IOpenFileResponse,
   IDataUploaderConfig,
@@ -76,10 +75,10 @@ class DataUploader {
       .catch(this.notificationsService.error('modules.dataUpload.errors.save').dispatchCallback());
   }
 
-  getErrors(): Observable<IErrorsResponse> {
-    return this.dataService
-      .read(this.api.getErrors, this.buildRequestParams())
-      .catch(this.notificationsService.error('modules.dataUpload.errors.getErrors').dispatchCallback());
+  getErrors(): string {
+    const url = typeof this.parameter !== 'undefined' ?
+      this.api.getErrors.replace(new RegExp('\\{' + this.paramKey + '\\}'), this.parameter) : this.api.getErrors;
+    return this.guid ? url.replace(/(guid\/)(\{[\w]+\})(.*)/g, `$1${this.guid}$3`) : url;
   }
 
   cancel(): Observable<void> {
