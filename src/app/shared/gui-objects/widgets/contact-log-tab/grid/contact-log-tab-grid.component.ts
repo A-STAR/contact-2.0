@@ -37,7 +37,7 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     { prop: 'creditName', minWidth: 100, maxWidth: 150 },
     { prop: 'fullName', minWidth: 150, maxWidth: 200 },
     { prop: 'personRole', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-    { prop: 'contactDateTime', minWidth: 100, maxWidth: 150, renderer: 'dateRenderer' },
+    { prop: 'contactDateTime', minWidth: 150, maxWidth: 200, renderer: 'dateTimeRenderer' },
     { prop: 'contactType', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
     { prop: 'userFullName', minWidth: 150, maxWidth: 200 },
     { prop: 'resultName', minWidth: 150, maxWidth: 200 },
