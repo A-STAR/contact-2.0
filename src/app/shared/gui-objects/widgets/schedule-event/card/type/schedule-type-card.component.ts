@@ -29,6 +29,7 @@ import { min } from '@app/core/validators';
 export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   @ViewChild('eventType') eventTypeForm: DynamicFormComponent;
   @ViewChild('smsType') smsTypeForm: DynamicFormComponent;
+  @ViewChild('emailType') emailTypeForm: DynamicFormComponent;
   @ViewChild('groupGrid') groupGrid: GridComponent;
 
   @Input() eventId: number;
@@ -40,9 +41,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   };
 
   smsTypeControls: Partial<IDynamicFormControl>[];
-  smsTypeConfig: IDynamicFormConfig = {
-    labelKey: 'widgets.scheduleEvents.card',
-  };
+  emailTypeControls: Partial<IDynamicFormControl>[];
 
   groupGridColumns: Array<IGridColumn> = [
     { prop: 'id', width: 70 },
@@ -56,8 +55,6 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   private selectedEventTypeCode$ = new BehaviorSubject<number>(null);
   private selectedEventTypeCodeSub: Subscription;
-  private selectedPersonRoles$ = new BehaviorSubject<number[]>(null);
-  private selectedPersonRolesSub: Subscription;
 
   private formControls = {
     eventTypeCode: { controlName: 'eventTypeCode', type: 'select', required: true, onChange: () => this.onEventTypeSelect() },
@@ -95,41 +92,54 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     this.fetchGroups();
 
     combineLatest(
-      this.scheduleEventService.canView$,
-      this.userDictionaryService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PHONE_TYPE),
-      this.userDictionaryService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_ROLE),
-      this.userConstantsService.get('SMS.Sender.Default'),
-      this.userConstantsService.get('SMS.Sender.Use'),
+      this.eventId ? this.scheduleEventService.canEdit$ : this.scheduleEventService.canView$,
+      this.userDictionaryService.getDictionariesAsOptions([
+        UserDictionariesService.DICTIONARY_PHONE_TYPE,
+        UserDictionariesService.DICTIONARY_EMAIL_TYPE,
+        UserDictionariesService.DICTIONARY_PERSON_ROLE,
+      ]),
       this.scheduleEventService.getEventTemplateOptions(2, this.type.additionalParameters),
+      this.scheduleEventService.getEventTemplateOptions(3, this.type.additionalParameters),
+      combineLatest(
+        this.userConstantsService.get('SMS.Sender.Use'),
+        this.userConstantsService.get('Email.Sender.Use'),
+        this.userConstantsService.get('SMS.Sender.Default'),
+        this.userConstantsService.get('Email.Sender.Default'),
+      )
     )
     .pipe(first())
-    .subscribe(([canEdit, phoneOptions, personRoleOptions, defaultSmsSender, useSmsSender, templateOptions]) => {
+    .subscribe(([canEdit, options, templateSmsOptions, templateEmailOptions, constants]) => {
+      const [ useSmsSender, useEmailSender, smsSender, emailSender ] = constants;
+
       this.eventTypeControls = this.createEventTypeControls(canEdit);
       this.smsTypeControls = this.createScheduleTypeControls(
-        canEdit, phoneOptions, personRoleOptions, templateOptions, useSmsSender.valueB
+        canEdit,
+        options[UserDictionariesService.DICTIONARY_PHONE_TYPE],
+        options[UserDictionariesService.DICTIONARY_PERSON_ROLE],
+        templateSmsOptions, useSmsSender.valueB
+      );
+      this.emailTypeControls = this.createScheduleTypeControls(
+        canEdit,
+        options[UserDictionariesService.DICTIONARY_EMAIL_TYPE],
+        options[UserDictionariesService.DICTIONARY_PERSON_ROLE],
+        templateEmailOptions,
+        useEmailSender.valueB
       );
 
       this.selectedEventTypeCode$.next(this.type.eventTypeCode);
       this.selectedEventTypeCodeSub = this.selectedEventTypeCode$.subscribe(() => {
-        this.selectedType = { ...this.type, ...this.getFormAdditionalData(useSmsSender.valueB, defaultSmsSender.valueN) };
+        this.selectedType = this.getFormData(
+          useSmsSender.valueB && smsSender.valueN,
+          useEmailSender.valueB && emailSender.valueN
+        );
       });
 
       this.cdRef.markForCheck();
     });
-
-    this.selectedPersonRolesSub = this.selectedPersonRoles$
-      .filter(Boolean)
-      .map(roles => this.scheduleEventService.createEventAddParams({ personRoles: roles }))
-      .flatMap(addParam => this.scheduleEventService.getEventTemplateOptions(2, addParam))
-      .subscribe(templateOptions => {
-        this.setControlOptions(this.smsTypeForm, 'templateId', templateOptions);
-        this.cdRef.markForCheck();
-      });
   }
 
   ngOnDestroy(): void {
     this.selectedEventTypeCodeSub.unsubscribe();
-    this.selectedPersonRolesSub.unsubscribe();
   }
 
   get selectedEventTypeCode(): ScheduleEventEnum {
@@ -140,6 +150,8 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     switch (this.selectedEventTypeCode) {
       case ScheduleEventEnum.SMS:
         return this.smsTypeForm;
+      case ScheduleEventEnum.EMAIL:
+        return this.emailTypeForm;
     }
   }
 
@@ -158,8 +170,8 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   }
 
   get serializedUpdates(): IScheduleType {
-    const form = this.selectedScheduleTypeForm && this.selectedScheduleTypeForm.serializedUpdates;
-    return this.serializeScheduleType(form || {});
+    const formData = this.selectedScheduleTypeForm && this.selectedScheduleTypeForm.serializedValue;
+    return this.serializeScheduleType(formData || {});
   }
 
   onEventTypeSelect(): void {
@@ -175,8 +187,14 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   }
 
   onPersonRoleSelect(): void {
-    const personRoleControl = this.smsTypeForm.getControl('personRoles');
-    this.selectedPersonRoles$.next(personRoleControl.value);
+    const personRoleControl = this.selectedScheduleTypeForm.getControl('personRoles');
+    this.scheduleEventService.getEventTemplateOptions(
+      this.selectedEventTypeCode,
+      this.scheduleEventService.createEventAddParams({ personRoles: personRoleControl.value })
+    ).subscribe(templateOptions => {
+      this.setControlOptions(this.selectedScheduleTypeForm, 'templateId', templateOptions);
+      this.cdRef.markForCheck();
+    });
   }
 
   private createFormControls(controls: any): Partial<IDynamicFormControl>[] {
@@ -227,15 +245,31 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getFormAdditionalData(useSender: boolean, defaultSender: number): any {
+  private getFormData(smsSender: number, emailSender: number): any {
+    const sameType = this.type.eventTypeCode === this.selectedEventTypeCode;
     switch (this.selectedEventTypeCode) {
+      case ScheduleEventEnum.GROUP:
+        return {
+          ...(sameType ? this.type : {}),
+          eventTypeCode: 1,
+        };
       case ScheduleEventEnum.SMS:
         return {
           phoneTypes: [ 1 ],
           personRoles: [ 1 ],
-          senderCode: useSender ? defaultSender : null,
-          ...this.type,
-          ...this.scheduleEventService.getEventAddParams(this.type)
+          senderCode: smsSender,
+          ...(sameType ? this.type : {}),
+          eventTypeCode: 2,
+          ...(sameType ? this.scheduleEventService.getEventAddParams(this.type) : {})
+        };
+      case ScheduleEventEnum.EMAIL:
+        return {
+          phoneTypes: [ 1 ],
+          personRoles: [ 1 ],
+          senderCode: emailSender,
+          ...(sameType ? this.type : {}),
+          eventTypeCode: 3,
+          ...(sameType ? this.scheduleEventService.getEventAddParams(this.type) : {})
         };
     }
   }
@@ -244,7 +278,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     return {
       ...this.eventTypeForm.serializedUpdates,
       checkGroup: fromData.checkGroup,
-      additionalParameters: this.scheduleEventService.createEventAddParams(FormData)
+      additionalParameters: this.scheduleEventService.createEventAddParams(fromData)
     };
   }
 

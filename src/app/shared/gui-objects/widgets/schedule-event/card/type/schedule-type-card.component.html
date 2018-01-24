@@ -33,8 +33,18 @@
   <app-dynamic-form
     #smsType
     *ngIf="selectedEventTypeCode === 2"
-    [config]="smsTypeConfig"
+    [config]="eventTypeConfig"
     [controls]="smsTypeControls"
+    [data]="selectedType"
+  ></app-dynamic-form>
+</div>
+
+<div class="pb-lg">
+  <app-dynamic-form
+    #emailType
+    *ngIf="selectedEventTypeCode === 3"
+    [config]="eventTypeConfig"
+    [controls]="emailTypeControls"
     [data]="selectedType"
   ></app-dynamic-form>
 </div>

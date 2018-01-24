@@ -54,7 +54,6 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   private selectedPeriodTypeCode$ = new BehaviorSubject<number>(null);
 
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private scheduleEventService: ScheduleEventService,
@@ -62,7 +61,7 @@ export class SchedulePeriodCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.scheduleEventService.canView$
+    (this.eventId ? this.scheduleEventService.canEdit$ : this.scheduleEventService.canView$)
       .pipe(first())
       .subscribe(canEdit => {
         this.initPeriodControls(canEdit);

@@ -20,7 +20,8 @@ export enum SchedulePeriodEnum {
 
 export enum ScheduleEventEnum {
   GROUP = 1,
-  SMS = 2
+  SMS = 2,
+  EMAIL = 3
 }
 
 export interface ISchedulePeriod {
@@ -38,7 +39,7 @@ export interface IScheduleType {
 
 export interface IScheduleParam {
   name: string;
-  value: any;
+  value: string;
 }
 
 export interface IScheduleGroup {

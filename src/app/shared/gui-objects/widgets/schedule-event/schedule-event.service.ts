@@ -88,6 +88,15 @@ export class ScheduleEventService extends AbstractActionService {
     .catch(this.notificationsService.error('widgets.scheduleEvents.errors.start')
       .params({ eventId: eventIds.join() }).dispatchCallback());
   }
+
+  getEventAddParamValue<T>(param: IScheduleParam): T {
+    return JSON.parse(param.value);
+  }
+
+  createEventAddParam(name: string, value: any): IScheduleParam {
+    return { name, value: JSON.stringify(value) };
+  }
+
   getEventTemplateOptions(typeCode: number, addParams: IScheduleParam[]): Observable<IOption[]> {
     const personRoles = this.findEventAddParam<number[]>(addParams, 'personRoles') || [];
     return this.userTemplatesService
@@ -97,16 +106,17 @@ export class ScheduleEventService extends AbstractActionService {
 
   getEventAddParams(scheduleType: IScheduleType): any {
     return (scheduleType.additionalParameters || [])
-      .reduce((acc, param) => ({ ...acc, [param.name]: JSON.parse(String(param.value)) }), {});
+      .reduce((acc, param) => ({ ...acc, [param.name]: this.getEventAddParamValue(param) }), {});
   }
 
   findEventAddParam<T>(addParams: IScheduleParam[], name: string): T {
     const param = (addParams || []).find(p => p.name === name);
-    return param && param.value && JSON.parse(String(param.value));
+    return param && this.getEventAddParamValue(param);
   }
 
   createEventAddParams(params: any): IScheduleParam[] {
     return Object.keys(params)
       .filter(key => key !== 'checkGroup')
-      .map(key => ({ name: key, value: JSON.stringify(params[key]) }));
-  }}
+      .map(key => this.createEventAddParam(key, params[key]));
+  }
+}
