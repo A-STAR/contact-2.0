@@ -44,6 +44,12 @@ class MockPromiseService {
   }
 }
 
+class MockUserPermissionsService {
+  has(permissionName: string): Observable<boolean> {
+    return of(true);
+  }
+}
+
 describe('ContactRegistrationService', () => {
   let service: ContactRegistrationService;
 
@@ -53,6 +59,7 @@ describe('ContactRegistrationService', () => {
       new MockDebtsService() as any,
       new MockNotificationService() as any,
       new MockPromiseService() as any,
+      new MockUserPermissionsService() as any,
     );
   });
 

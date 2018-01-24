@@ -1,5 +1,6 @@
 export interface IDebt {
   id: number;
+  debtAmount: number;
 }
 
 export interface IDebtsCollection {

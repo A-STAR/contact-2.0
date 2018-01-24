@@ -1,3 +1,24 @@
+<!-- TODO(d.maltsev): minAmountPercent -->
+
+<app-dialog-action
+  *ngIf="isDialog('confirm')"
+  actionMode="warning"
+  actionTranslationKey="debtor.promisesTab.confirmInsufficient.message"
+  actionMessage="default.buttons.save"
+  [messageParams]="{ percent: minAmountPercent }"
+  titleTranslationKey="debtor.promisesTab.confirmInsufficient.title"
+  (action)="onConfirm()"
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
+
+<app-info-dialog
+  *ngIf="isDialog('info')"
+  titleTranslationKey="debtor.promisesTab.infoIncreaseAmount.title"
+  (onClose)="onCloseDialog()"
+>
+  <section class="pv-xl">{{ 'debtor.promisesTab.infoIncreaseAmount.message' | translate: { percent: minAmountPercent} }}</section>
+</app-info-dialog>
+
 <div class="flex vertical">
   <!-- Form -->
   <div class="flex-item grow" style="overflow-y: auto;">
@@ -36,12 +57,34 @@
               <!-- TODO(d.maltsev): i18n -->
               Сумма <b class="text-danger">*</b>
             </span>
-            <!-- TODO(d.maltsev): total -->
             <!-- TODO(d.maltsev): patch value on promiseMode changes -->
-            <app-debt-amount
+            <input
+              class="form-control"
+              type="number"
               formControlName="amount"
-              [total]="debtTotal"
-            ></app-debt-amount>
+              [disabled]="isPromiseAmountDisabled$ | async"
+              [required]="true"
+              (input)="onPromiseAmountInput($event)"
+            />
+          </label>
+        </div>
+
+        <!-- Promise Percentage -->
+        <div>
+          <label>
+            <span class="form-label">
+              <!-- TODO(d.maltsev): i18n -->
+              Процент от остатка <b class="text-danger">*</b>
+            </span>
+            <!-- TODO(d.maltsev): patch value on promiseMode changes -->
+            <input
+              class="form-control"
+              type="number"
+              formControlName="percentage"
+              [disabled]="isPromiseAmountDisabled$ | async"
+              [required]="true"
+              (input)="onPromisePercentageInput($event)"
+            />
           </label>
         </div>
 

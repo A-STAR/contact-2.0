@@ -18,6 +18,9 @@ import { DataService } from '@app/core/data/data.service';
 import { DebtsService } from '@app/routes/workplaces/core/debts/debts.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
+import { combineLatestOr } from '@app/core/utils/helpers';
 
 @Injectable()
 export class ContactRegistrationService {
@@ -33,6 +36,7 @@ export class ContactRegistrationService {
     private debtsService: DebtsService,
     private notificationsService: NotificationsService,
     private promiseService: PromiseService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     combineLatest(this.canSetPromise$, this.debtId$)
       .pipe(
@@ -146,8 +150,23 @@ export class ContactRegistrationService {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.promiseMode)));
   }
 
+  get canSetPromiseAmount$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.promiseMode === 3));
+  }
+
+  get canSetInsufficientPromiseAmount$(): Observable<boolean> {
+    return combineLatestOr([
+      this._outcome$.pipe(map(outcome => outcome && outcome.promiseMode && outcome.promiseMode !== 2)),
+      this.userPermissionsService.has('PROMISE_INSUFFICIENT_AMOUNT_ADD'),
+    ]);
+  }
+
   get canSetPayment$(): Observable<boolean> {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.paymentMode)));
+  }
+
+  get canSetPaymentAmount$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.paymentMode === 3));
   }
 
   get canSetNextCallDate$(): Observable<boolean> {
