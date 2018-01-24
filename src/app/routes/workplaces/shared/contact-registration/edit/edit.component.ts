@@ -141,8 +141,8 @@ export class EditComponent {
     )
     .pipe(
       map(([ today, limit ]) => {
-        const { maxDays } = limit;
-        return maxDays === null ? null : today.add(maxDays, 'day').toDate();
+        const maxDays = limit && limit.maxDays;
+        return maxDays == null ? null : today.add(maxDays, 'day').toDate();
       }),
     );
   }

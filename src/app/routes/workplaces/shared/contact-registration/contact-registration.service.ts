@@ -15,8 +15,8 @@ import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.inter
 import { DataService } from '@app/core/data/data.service';
 import { DebtsService } from '@app/routes/workplaces/core/debts/debts.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
-import { first } from 'rxjs/operators/first';
+// import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
+// import { first } from 'rxjs/operators/first';
 
 @Injectable()
 export class ContactRegistrationService {
@@ -33,7 +33,7 @@ export class ContactRegistrationService {
     private dataService: DataService,
     private debtsService: DebtsService,
     private notificationsService: NotificationsService,
-    private promiseService: PromiseService,
+    // private promiseService: PromiseService,
   ) {}
 
   get isActive$(): Observable<boolean> {
@@ -135,12 +135,13 @@ export class ContactRegistrationService {
 
   get limit$(): Observable<IPromiseLimit> {
     return this.debtId$.pipe(
-      mergeMap(debtId => {
-        // TODO(d.maltsev): if contact registration is used NOT in call center, pass `false`
-        return this.promiseService.getLimit(debtId, true).pipe(
-          first(),
-        );
-      }),
+      map(() => null),
+      // mergeMap(debtId => {
+      //   // TODO(d.maltsev): if contact registration is used NOT in call center, pass `false`
+      //   return this.promiseService.getLimit(debtId, true).pipe(
+      //     first(),
+      //   );
+      // }),
     );
   }
 
