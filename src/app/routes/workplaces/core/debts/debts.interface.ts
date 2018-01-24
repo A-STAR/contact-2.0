@@ -12,10 +12,10 @@ export interface IDebtsState {
 }
 
 export enum IDebtsActionType {
-  FETCH            = '[workplaces/debts] FETCH',
-  FETCH_FOR_PERSON = '[workplaces/debts] FETCH_FOR_PERSON',
-  FETCH_SUCCESS    = '[workplaces/debts] FETCH_SUCCESS',
-  FETCH_FAILURE    = '[workplaces/debts] FETCH_FAILURE',
+  FETCH            = 'WORKPLACES_DEBTS_FETCH',
+  FETCH_FOR_PERSON = 'WORKPLACES_DEBTS_FETCH_FOR_PERSON',
+  FETCH_SUCCESS    = 'WORKPLACES_DEBTS_FETCH_SUCCESS',
+  FETCH_FAILURE    = 'WORKPLACES_DEBTS_FETCH_FAILURE',
 }
 
 export interface IDebtsFetchAction {
