@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { timer } from 'rxjs/observable/timer';
+import { of } from 'rxjs/observable/of';
 import { map, mapTo } from 'rxjs/operators';
 import * as moment from 'moment';
 
@@ -122,27 +123,15 @@ export class EditComponent {
     return this.contactRegistrationService.contactType$;
   }
 
-  get now$(): Observable<moment.Moment> {
-    return timer(0, 60e3).pipe(
-      mapTo(moment()),
-    );
-  }
-
-  get promiseMinDate$(): Observable<Date> {
-    return this.now$.pipe(
-      map(now => now.toDate()),
-    );
+  get promiseMinDate(): Date {
+    return moment().toDate();
   }
 
   get promiseMaxDate$(): Observable<Date> {
-    return combineLatest(
-      this.now$,
-      this.contactRegistrationService.limit$,
-    )
-    .pipe(
-      map(([ today, limit ]) => {
+    return this.contactRegistrationService.limit$.pipe(
+      map(limit => {
         const maxDays = limit && limit.maxDays;
-        return maxDays == null ? null : today.add(maxDays, 'day').toDate();
+        return maxDays == null ? null : moment().add(maxDays, 'day').toDate();
       }),
     );
   }

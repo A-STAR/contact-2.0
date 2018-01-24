@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 
 import {
@@ -15,26 +17,29 @@ import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.inter
 import { DataService } from '@app/core/data/data.service';
 import { DebtsService } from '@app/routes/workplaces/core/debts/debts.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-// import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
-// import { first } from 'rxjs/operators/first';
+import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
 
 @Injectable()
 export class ContactRegistrationService {
   mode = IContactRegistrationMode.TREE;
 
   private _guid$    = new BehaviorSubject<string>(null);
+  private _limit$ = new BehaviorSubject<IPromiseLimit>(null);
   private _outcome$ = new BehaviorSubject<IOutcome>(null);
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
-
-  private _debt$ = new BehaviorSubject<any>(null);
-  private _limit$ = new BehaviorSubject<any>(null);
 
   constructor(
     private dataService: DataService,
     private debtsService: DebtsService,
     private notificationsService: NotificationsService,
-    // private promiseService: PromiseService,
-  ) {}
+    private promiseService: PromiseService,
+  ) {
+    combineLatest(this.canSetPromise$, this.debtId$)
+      .pipe(
+        mergeMap(([ canLoad, debtId ]) => canLoad ? this.promiseService.getLimit(debtId, true) : of(null)),
+      )
+      .subscribe(limit => this._limit$.next(limit));
+  }
 
   get isActive$(): Observable<boolean> {
     return this._params$.pipe(map(Boolean));
@@ -134,15 +139,7 @@ export class ContactRegistrationService {
   }
 
   get limit$(): Observable<IPromiseLimit> {
-    return this.debtId$.pipe(
-      map(() => null),
-      // mergeMap(debtId => {
-      //   // TODO(d.maltsev): if contact registration is used NOT in call center, pass `false`
-      //   return this.promiseService.getLimit(debtId, true).pipe(
-      //     first(),
-      //   );
-      // }),
-    );
+    return this._limit$.asObservable();
   }
 
   get canSetPromise$(): Observable<boolean> {
