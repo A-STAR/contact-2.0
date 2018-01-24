@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
@@ -33,7 +33,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private debtService: DebtService,
     private incomingCallService: IncomingCallService,
     private route: ActivatedRoute,
-    private router: Router,
     private routingService: RoutingService,
   ) {}
 
