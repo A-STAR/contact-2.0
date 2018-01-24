@@ -8,7 +8,6 @@ import {
   Output,
   OnDestroy,
 } from '@angular/core';
-// import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -159,7 +158,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private debtService: DebtService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    // private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {}
 

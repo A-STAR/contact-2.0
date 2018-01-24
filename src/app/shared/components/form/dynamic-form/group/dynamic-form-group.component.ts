@@ -33,7 +33,8 @@ export class DynamicFormGroupComponent {
     hasuppercasechars: 'validation.fieldUpperCase',
     maxsize: 'validation.fieldMaxSize',
     oneofgrouprequired: 'validation.oneOfGroupRequired',
-    datepicker: 'validation.datepicker'
+    datepicker: 'validation.datepicker',
+    timepicker: 'validation.timepicker'
   };
 
   @Input() collapsible = false;
