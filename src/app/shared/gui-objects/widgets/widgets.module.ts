@@ -35,7 +35,6 @@ import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { PropertyModule } from './property/property.module';
 import { ScheduleEventModule } from './schedule-event/schedule-event.module';
-import { GroupModule } from './groups/group.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
@@ -75,7 +74,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PromiseResolveModule,
     PropertyModule,
     ScheduleEventModule,
-    GroupModule,
     VisitPrepareModule,
   ],
   exports: [
@@ -113,7 +111,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PromiseResolveModule,
     PropertyModule,
     ScheduleEventModule,
-    GroupModule,
     VisitPrepareModule,
   ],
   declarations: []

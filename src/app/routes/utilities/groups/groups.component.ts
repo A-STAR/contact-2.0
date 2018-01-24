@@ -15,8 +15,8 @@ const label = makeKey('widgets.groups.tabs');
 export class GroupsComponent {
 
   tabs: ITab[] = [
-    { link: 'all' },
-    { link: 'debtsInGroup' },
-  ].map(tab => ({ ...tab, title: label(`${tab.link}`) }));
+    { link: '', title: label('groups') },
+    { link: 'debts', title: label('debtsInGroup') },
+  ];
 
 }

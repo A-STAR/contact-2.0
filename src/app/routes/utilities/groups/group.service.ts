@@ -4,17 +4,17 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { IAppState } from '../../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IGroup } from './group.interface';
-import { IOption } from '../../../../core/converter/value-converter.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { AbstractActionService } from '../../../../core/state/action.service';
-import { AuthService } from '../../../../core/auth/auth.service';
-import { DataService } from '../../../../core/data/data.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { AbstractActionService } from '@app/core/state/action.service';
+import { AuthService } from '@app/core/auth/auth.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Injectable()
 export class GroupService extends AbstractActionService {

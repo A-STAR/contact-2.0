@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes } from '@angular/router';
 
-import { DialogActionModule } from '../../../../components/dialog-action/dialog-action.module';
-import { GridModule } from '../../../../components/grid/grid.module';
-import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
+import { SharedModule } from '@app/shared/shared.module';
+
+import { GroupService } from '../group.service';
 
 import { GroupGridComponent } from './group-grid.component';
 
@@ -18,13 +18,10 @@ const routes: Routes = [
   },
 ];
 
-
 @NgModule({
   imports: [
     CommonModule,
-    DialogActionModule,
-    GridModule,
-    Toolbar2Module,
+    SharedModule
   ],
   exports: [
     GroupGridComponent,
@@ -32,8 +29,6 @@ const routes: Routes = [
   declarations: [
     GroupGridComponent,
   ],
-  entryComponents: [
-    GroupGridComponent,
-  ]
+  providers: [ GroupService ]
 })
 export class GroupGridModule { }

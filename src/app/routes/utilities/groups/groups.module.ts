@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { GroupGridModule } from '@app/routes/utilities/groups/grid/group-grid.module';
+import { GroupCardModule } from '@app/routes/utilities/groups/card/group-card.module';
+import { GroupDebtsModule } from '@app/routes/utilities/groups/group-debts/group-debts.module';
 import { SharedModule } from '../../../shared/shared.module';
-import { GroupEditModule } from './edit/edit.module';
 
 import { GroupsComponent } from './groups.component';
-import { GroupEditComponent } from './edit/edit.component';
 
 const routes: Routes = [
   {
@@ -15,36 +16,30 @@ const routes: Routes = [
       reuse: true,
     },
     children: [
-      // {
-      //   path: '',
-      //   pathMatch: 'full',
-      //   redirectTo: 'all',
-      // },
       {
         path: '',
         pathMatch: 'full',
         loadChildren:
-          '@app/shared/gui-objects/widgets/groups/group.module#GroupModule',
+          './grid/group-grid.module#GroupGridModule',
       },
       {
-        path: 'debtsInGroup',
+        path: 'debts',
         loadChildren:
-          '@app/shared/gui-objects/widgets/debts-in-group/debts-in-group.module#DebtsInGroupModule',
+          './group-debts/group-debts.module#GroupDebtsModule',
       },
     ],
   },
-  { path: 'create', component: GroupEditComponent },
-  { path: ':groupId', component: GroupEditComponent }
+  { path: 'create', loadChildren: './card/group-card.module#GroupCardModule', },
+  { path: ':groupId', loadChildren: './card/group-card.module#GroupCardModule', }
 ];
 
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
     SharedModule,
-    GroupEditModule,
-  ],
-  exports: [
-    RouterModule,
+    GroupCardModule,
+    GroupDebtsModule,
+    GroupGridModule,
   ],
   declarations: [
     GroupsComponent,

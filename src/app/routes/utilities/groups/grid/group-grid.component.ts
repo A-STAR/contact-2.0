@@ -6,14 +6,14 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IGroup } from '../group.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { GroupService } from '../group.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
+import { DialogFunctions } from '@app/core/dialog';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { GridService } from '@app/shared/components/grid/grid.service';
 
 @Component({
   selector: 'app-group-grid',
