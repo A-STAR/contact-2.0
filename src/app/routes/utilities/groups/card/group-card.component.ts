@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRe
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { of } from 'rxjs/observable/of';
-import { first } from 'rxjs/operators';
+import { first, switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -38,10 +38,7 @@ export class GroupCardComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.route.paramMap.map(params => {
-        this.groupId = Number(params.get('groupId'));
-        return this.groupId;
-    })
+    this.route.paramMap.map(params => (this.groupId = Number(params.get('groupId'))))
     .switchMap(groupId => {
       const group$ = groupId ? this.groupService.fetch(groupId) : of(this.getFormData());
       return combineLatest(
@@ -90,7 +87,7 @@ export class GroupCardComponent implements OnInit {
         type: this.groupId ? 'multilanguage' : 'text',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_GROUP_NAME,
-          entityId: this.group && this.group.id
+          entityId: this.groupId
         },
         required: true,
         disabled: !canEdit

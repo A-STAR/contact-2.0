@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
 
@@ -14,13 +14,14 @@ const routes: Routes = [
     component: GroupGridComponent,
     data: {
       reuse: true,
-    },
+    }
   },
 ];
 
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule.forChild(routes),
     SharedModule
   ],
   exports: [
