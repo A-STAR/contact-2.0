@@ -6,20 +6,19 @@ import { propOr } from '../utils';
 @Injectable()
 export class SettingsService {
 
-  app: any;
+  // App Settings
+  app = {
+    name: 'CRIF',
+    description: 'Contact v2.0',
+    year: (new Date()).getFullYear()
+  };
+
   layout: any;
 
   constructor(private persistenceService: PersistenceService) {
-
-    // App Settings
-    this.app = {
-      name: 'CRIF',
-      description: 'Contact v2.0',
-      year: (new Date()).getFullYear()
-    };
-
     const layout = this.persistenceService.getOr(PersistenceService.LAYOUT_KEY, {});
     const isCollapsed = propOr('isCollapsed', false)(layout);
+
     // Layout Settings
     this.layout = {
       isFixed: true,
@@ -57,13 +56,13 @@ export class SettingsService {
   }
 
   setAppSetting(name: string, value: string): void {
-    if (typeof this.app[name] !== 'undefined') {
+    if (Object.prototype.hasOwnProperty.call(this.app, name)) {
       this.app[name] = value;
     }
   }
 
   setLayoutSetting(name: string, value: any): void {
-    if (typeof this.layout[name] !== 'undefined') {
+    if (Object.prototype.hasOwnProperty.call(this.layout, name)) {
       this.layout[name] = value;
       this.persistenceService.set(PersistenceService.LAYOUT_KEY, this.layout);
     }
