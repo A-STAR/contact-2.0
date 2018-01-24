@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { tap } from 'rxjs/operators';
 
-import { IAppState } from '@app/core/state/state.interface';
 import { IDebt, IDebtsActionType, IDebtsState } from './debts.interface';
 
 @Injectable()
