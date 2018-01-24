@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { first } from 'rxjs/operators';
 
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 
+import { ContactRegistrationService } from '../../shared/contact-registration/contact-registration.service';
 import { DebtService } from '../../../../core/debt/debt.service';
 import { IncomingCallService } from '../incoming-call.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -28,10 +28,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
     private debtService: DebtService,
     private incomingCallService: IncomingCallService,
     private route: ActivatedRoute,
-    private router: Router,
     private routingService: RoutingService,
   ) {}
 
@@ -84,15 +84,15 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onRegisterContact(): void {
-    this.navigateToRegistration(1, this.selectedPhoneId);
+    this.registerContact(this.contactType, this.selectedPhoneId);
   }
 
   onRegisterUnidentifiedContact(): void {
-    this.navigateToRegistration(2, 0);
+    this.registerContact(this.contactType);
   }
 
   onRegisterOfficeVisit(): void {
-    this.navigateToRegistration(8, 0);
+    this.registerContact(8);
   }
 
   onPhoneAdd(): void {
@@ -104,19 +104,16 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onPhoneRegister(phone: IPhone): void {
-    const url = `/workplaces/contact-registration/${this.debtId}/${this.contactType}/${phone.id}`;
-    this.router.navigate([ url ], { queryParams: {
-      personId: this.personId,
-      personRole: this.personRole,
-    } });
+    this.registerContact(this.contactType, phone.id);
   }
 
-  private navigateToRegistration(contactType: number, contactId: number): void {
-    this.incomingCallService.selectedDebtor$
-      .pipe(first())
-      .subscribe(debtor => {
-        const { debtId, personId, personRole } = debtor;
-        this.debtService.navigateToRegistration({ debtId, personId, personRole, contactType, contactId });
-      });
+  private registerContact(contactType: number, contactId: number = null): void {
+    this.contactRegistrationService.params = {
+      contactId,
+      contactType,
+      debtId: this.debtId,
+      personId: this.personId,
+      personRole: this.personRole,
+    };
   }
 }
