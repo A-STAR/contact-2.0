@@ -46,7 +46,7 @@ describe('ContactRegistrationService', () => {
       new MockDataService() as any,
       new MockDebtsService() as any,
       new MockNotificationService() as any,
-      new MockPromiseService() as any,
+      // new MockPromiseService() as any,
     );
   });
 
