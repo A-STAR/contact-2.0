@@ -1,5 +1,7 @@
 import { Actions } from '@ngrx/effects';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -17,7 +19,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Injectable()
-export class GroupService extends AbstractActionService {
+export class GroupService extends AbstractActionService implements CanActivateChild {
   static MESSAGE_GROUP_SAVED = 'MESSAGE_GROUP_SAVED';
 
   private baseUrl = '/groups';
@@ -39,6 +41,14 @@ export class GroupService extends AbstractActionService {
     return this.userPermissionsService.has('GROUP_VIEW');
   }
 
+  get canViewDebtGroup$(): Observable<boolean> {
+    return this.userPermissionsService.has('GROUP_TAB_DEBT_GROUP');
+  }
+
+  get canViewSchedule$(): Observable<boolean> {
+    return this.userPermissionsService.has('SCHEDULE_VIEW');
+  }
+
   get canAdd$(): Observable<boolean> {
     return this.userPermissionsService.has('GROUP_ADD');
   }
@@ -56,6 +66,26 @@ export class GroupService extends AbstractActionService {
         ? options
         : options.filter(option => groupEntityTypeCodes.split(',').map(Number).includes(<number>option.value))
     );
+  }
+
+  canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    let routePerm: Observable<boolean>;
+
+    switch (childRoute.routeConfig.path) {
+      case 'all':
+        routePerm = this.canView$;
+        break;
+      case 'debts':
+        routePerm = this.canViewDebtGroup$;
+        break;
+      case 'schedule':
+        routePerm = this.canViewSchedule$;
+        break;
+      default:
+        break;
+    }
+
+    return routePerm || of(true);
   }
 
   canEdit$(group: IGroup): Observable<boolean> {

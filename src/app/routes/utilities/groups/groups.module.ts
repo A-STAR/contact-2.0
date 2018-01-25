@@ -3,12 +3,15 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
 
+import { GroupService } from './group.service';
+
 import { GroupsComponent } from './groups.component';
 
 const routes: Routes = [
   {
     path: '',
     component: GroupsComponent,
+    canActivateChild: [GroupService],
     data: {
       reuse: true,
     },
@@ -26,6 +29,10 @@ const routes: Routes = [
         path: 'debts',
         loadChildren: './group-debts/group-debts.module#GroupDebtsModule',
       }
+      // {
+      //   path: 'schedule',
+      //   loadChildren: '',
+      // }
     ],
   },
   {
@@ -43,6 +50,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule
   ],
+  providers: [ GroupService ],
   exports: [
     RouterModule,
   ],
