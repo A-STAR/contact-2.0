@@ -387,7 +387,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       case 'timepicker':
         return ['', null].includes(value)
           ? null
-          : this.valueConverterService.fromLocalTime(value);
+          : this.valueConverterService.toLocalTime(value);
       case 'boolean':
       case 'checkbox':
         return Number(value);

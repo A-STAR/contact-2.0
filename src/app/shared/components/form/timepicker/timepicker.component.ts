@@ -61,7 +61,7 @@ export class TimePickerComponent implements ControlValueAccessor, Validator {
       && !this.dropdown.nativeElement.contains(event.target)
       && !this.trigger.nativeElement.contains(event.target)
     ) {
-      this.toggleCalendar(false);
+      this.toggleTimepicker(false);
     }
   }
 
@@ -104,7 +104,7 @@ export class TimePickerComponent implements ControlValueAccessor, Validator {
 
   onValueChange(time: string): void {
     if (this.isExpanded) {
-      this.toggleCalendar(false);
+      this.toggleTimepicker(false);
     }
     const newTime = this.timeFromInput(time);
     if (newTime === false) {
@@ -122,7 +122,7 @@ export class TimePickerComponent implements ControlValueAccessor, Validator {
     this.propagateTouch(true);
   }
 
-  toggleCalendar(isExpanded?: boolean): void {
+  toggleTimepicker(isExpanded?: boolean): void {
     this.isExpanded = isExpanded === undefined ? !this.isExpanded : isExpanded;
     if (this.isExpanded) {
       this.positionDropdown();

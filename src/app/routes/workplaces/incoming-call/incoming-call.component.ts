@@ -6,6 +6,7 @@ import { IncomingCallService } from './incoming-call.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   providers: [
     ContactRegistrationService,
     IncomingCallService,

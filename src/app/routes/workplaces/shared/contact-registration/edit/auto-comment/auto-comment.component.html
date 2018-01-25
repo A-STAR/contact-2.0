@@ -1,0 +1,31 @@
+<div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
+  <!-- Autocomment ID -->
+  <div>
+    <label>
+      <span class="form-label">
+        <!-- TODO(d.maltsev): i18n -->
+        Выберите автокомментарий
+      </span>
+      <!-- TODO(d.maltsev): fetch options -->
+      <app-select
+        formControlName="autoCommentId"
+        [nullable]="true"
+        [options]="autoCommentIdOptions"
+      ></app-select>
+    </label>
+  </div>
+
+  <!-- Autocomment Text -->
+  <div>
+    <label>
+      <span class="form-label">
+        {{ 'modules.contactRegistration.misc.autoComment' | translate }}
+      </span>
+    </label>
+    <app-html-textarea
+      formControlName="autoComment"
+    ></app-html-textarea>
+  </div>
+
+  <hr>
+</div>
