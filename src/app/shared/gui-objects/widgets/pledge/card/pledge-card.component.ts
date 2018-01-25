@@ -1,6 +1,5 @@
 import { Component, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
@@ -21,7 +20,7 @@ import { DynamicFormComponent } from '../../../../components/form/dynamic-form/d
 import { makeKey, isRoute } from '../../../../../core/utils';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import {RoutingService} from "@app/core/routing/routing.service";
+import { RoutingService } from '@app/core/routing/routing.service';
 
 const label = makeKey('widgets.pledgeContract.card');
 

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -39,7 +38,6 @@ export class PaymentCardComponent {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private location: Location,
     private lookupService: LookupService,
     private paymentService: PaymentService,
     private userDictionariesService: UserDictionariesService,

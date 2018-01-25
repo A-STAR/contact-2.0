@@ -22,7 +22,7 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 
 import { DialogFunctions } from '../../../../../core/dialog';
 import { combineLatestAnd } from '../../../../../core/utils/helpers';
-import {ActivatedRoute} from "@angular/router";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-email-grid',
