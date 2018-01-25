@@ -1,17 +1,17 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { IDynamicFormItem, IDynamicFormConfig } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { EntityTranslationsConstants } from '../../../../../core/entity/translations/entity-translations.interface';
-import { IGroup } from '../group.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
+import { IGroup } from '@app/shared/gui-objects/widgets/groups/group.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { GroupService } from '../group.service';
+import { GroupService } from '@app/shared/gui-objects/widgets/groups/group.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-group-card',
@@ -45,6 +45,7 @@ export class GroupCardComponent implements OnInit {
     )
     .pipe(first())
     .subscribe(([ canEdit, canConditionEdit, group, respTypeOpts ]) => {
+      // TODO: fix displaying of selected group
       this.group = group;
 
       this.controls = this.initControls(canEdit, canConditionEdit, respTypeOpts);
@@ -68,7 +69,7 @@ export class GroupCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ '/utilities/groups' ]);
+    this.routingService.navigate([ '/utilities', 'groups' ]);
   }
 
   private initControls(

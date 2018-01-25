@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IPhone } from '../phone.interface';
+import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 
-import { PhoneService } from '../phone.service';
+import { PhoneService } from '@app/routes/workplaces/shared/phone/phone.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -35,10 +35,10 @@ export class PhoneCardComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private phoneService: PhoneService,
-    private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
     private route: ActivatedRoute,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -75,10 +75,17 @@ export class PhoneCardComponent implements OnInit {
 
   onBack(): void {
     const url = this.callCenter
-      ? `/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}`
-      : `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}`;
-
-    this.routingService.navigate([ url ], this.route);
+      ? [
+        '/workplaces',
+        'call-center',
+        this.route.snapshot.paramMap.get('campaignId')
+      ]
+      : [
+        '/workplaces',
+        'debtor-card',
+        this.route.snapshot.paramMap.get('debtId')
+      ];
+    this.routingService.navigate(url);
   }
 
   get canSubmit(): boolean {

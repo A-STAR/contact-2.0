@@ -1,21 +1,21 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first, map, distinctUntilChanged } from 'rxjs/operators';
 
-import { IProperty } from '../property.interface';
-import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IProperty } from '@app/shared/gui-objects/widgets/property/property.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { PropertyService } from '../property.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { PropertyService } from '@app/shared/gui-objects/widgets/property/property.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 import { Observable } from 'rxjs/Observable';
 
 interface IPropertyCardRouteParams {
@@ -43,8 +43,8 @@ export class PropertyCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private propertyService: PropertyService,
-    private routingService: RoutingService,
     private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService
   ) {}
 
@@ -94,7 +94,11 @@ export class PropertyCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId')
+    ]);
   }
 
   private initControls(canEdit: boolean, propertyTypeOptions: IOption[]): Array<IDynamicFormItem> {

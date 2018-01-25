@@ -1,23 +1,23 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IPayment } from '../payment.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IPayment } from '@app/shared/gui-objects/widgets/payment/payment.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { PaymentService } from '../payment.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { PaymentService } from '@app/shared/gui-objects/widgets/payment/payment.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-payment-grid',
@@ -116,9 +116,8 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
-    private router: Router,
-    private userPermissionsService: UserPermissionsService,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private userPermissionsService: UserPermissionsService
   ) {
     // Bind the context to the filter, or it will throw
     this.filter = this.filter.bind(this);
@@ -236,8 +235,8 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   private onEdit(payment: IPayment = null): void {
     const { id } = payment || this.selectedPayment$.value;
     const url = this.callCenter
-      ? `${this.router.url}/payment/${this.debtId}/${id}`
-      : `${this.router.url}/debt/payment/${id}`;
+      ? `payment/${this.debtId}/${id}`
+      : `debt/payment/${id}`;
     this.routingService.navigate([ url ], this.route);
   }
 
@@ -245,7 +244,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     if (!this.debtId) {
       return;
     }
-    this.routingService.navigate([ `${this.router.url}/debt/payment/create` ], this.route);
+    this.routingService.navigate([ 'debt/payment/create' ], this.route);
   }
 
   private fetch(): void {

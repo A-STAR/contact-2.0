@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
 import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
@@ -11,8 +12,8 @@ export class ContractorObjectsComponent {
   static COMPONENT_NAME = 'ContractorObjectsComponent';
 
   constructor(
-    private routingService: RoutingService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private routingService: RoutingService
   ) { }
 
   get contractorId(): number {
@@ -20,6 +21,10 @@ export class ContractorObjectsComponent {
   }
 
   onBack(): void {
-    this.routingService.navigate([ `/admin/contractors/${this.contractorId}` ], this.route);
+    this.routingService.navigate([
+      '/admin',
+      'contractors',
+      String(this.contractorId)
+    ]);
   }
 }

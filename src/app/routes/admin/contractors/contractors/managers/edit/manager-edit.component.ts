@@ -1,19 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IContractorManager, IActionType } from '../../../contractors-and-portfolios.interface';
-import { IDynamicFormItem } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IContractorManager, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContractorsAndPortfoliosService } from '../../../contractors-and-portfolios.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 
 const label = makeKey('contractors.managers.grid');
 
@@ -34,10 +34,9 @@ export class ContractorManagerEditComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private routingService: RoutingService,
-    private route: ActivatedRoute,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private userDictionariesService: UserDictionariesService,
+    private routingService: RoutingService,
+    private userDictionariesService: UserDictionariesService
   ) { }
 
   ngOnInit(): void {
@@ -85,6 +84,11 @@ export class ContractorManagerEditComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ `/admin/contractors/${this.contractorId}/managers` ], this.route);
+    this.routingService.navigate([
+      '/admin',
+      'contractors',
+      String(this.contractorId),
+      'managers'
+    ]);
   }
 }

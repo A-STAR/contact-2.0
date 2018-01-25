@@ -1,21 +1,21 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnInit, ViewChild } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
-import { IDocument } from '../document.interface';
-import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDocument } from '@app/shared/gui-objects/widgets/documents/document.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { DocumentService } from '../document.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DocumentService } from '@app/shared/gui-objects/widgets/documents/document.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { maxFileSize } from '../../../../../core/validators';
+import { maxFileSize } from '@app/core/validators';
 
 @Component({
   selector: 'app-document-card',
@@ -38,8 +38,8 @@ export class DocumentCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private documentService: DocumentService,
-    private routingService: RoutingService,
     private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService
   ) {}
@@ -93,7 +93,11 @@ export class DocumentCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId')
+    ]);
   }
 
   get canSubmit(): boolean {

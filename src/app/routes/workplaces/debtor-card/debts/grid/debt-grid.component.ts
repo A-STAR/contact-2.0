@@ -1,22 +1,22 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDebt } from '../../../../../core/debt/debt.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IDebt } from '@app/core/debt/debt.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { GridService } from '../../../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
-import { DialogFunctions } from '../../../../../core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   selector: 'app-debt-grid',
@@ -178,13 +178,17 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
   }
 
   private onAdd(): void {
-    this.routingService.navigate([ `${this.router.url}/debt/create` ]);
+    this.routingService.navigate([
+      this.router.url,
+      'debt',
+      'create'
+    ]);
   }
 
   private onEdit(): void {
     this.selectedDebt$
       .pipe(first())
-      .subscribe(debt => this.routingService.navigate([ `${this.router.url}/debt` ]));
+      .subscribe(debt => this.routingService.navigate([ this.router.url, 'debt' ]));
   }
 
   private fetch(): void {

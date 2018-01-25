@@ -1,16 +1,16 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { ICurrency } from '../currencies.interface';
-import { IDynamicFormItem, IDynamicFormConfig } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { EntityTranslationsConstants } from '../../../../../core/entity/translations/entity-translations.interface';
+import { ICurrency } from '@app/shared/gui-objects/widgets/currencies/currencies.interface';
+import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
 
-import { CurrenciesService } from '../currencies.service';
+import { CurrenciesService } from '@app/shared/gui-objects/widgets/currencies/currencies.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-currency-card',
@@ -67,7 +67,7 @@ export class CurrencyCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ '/utilities/currencies' ]);
+    this.routingService.navigate([ '/utilities', 'currencies' ]);
   }
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {

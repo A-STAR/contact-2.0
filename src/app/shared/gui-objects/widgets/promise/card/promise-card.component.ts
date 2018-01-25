@@ -7,7 +7,6 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -16,16 +15,17 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { IDynamicFormControl, IDynamicFormDateControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IPromise, IPromiseLimit } from '../promise.interface';
-import { IDebt } from '../../../../../core/debt/debt.interface';
+import { IDynamicFormControl, IDynamicFormDateControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPromise, IPromiseLimit } from '@app/shared/gui-objects/widgets/promise/promise.interface';
+import { IDebt } from '@app/core/debt/debt.interface';
 
 import { PromiseService } from '../promise.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { minStrict } from '../../../../../core/validators';
+import { minStrict } from '@app/core/validators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,9 +78,9 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private promiseService: PromiseService,
-    private userPermissionsService: UserPermissionsService,
     private route: ActivatedRoute,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private userPermissionsService: UserPermissionsService
   ) {
 
     this.canAddInsufficientAmountSub = this.canAddInsufficientAmount$
@@ -181,10 +181,18 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
 
   onBack(): void {
     const url = this.callCenter
-      ? `/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}`
-      : `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}`;
+      ? [
+        '/workplaces',
+        'call-center',
+        this.route.snapshot.paramMap.get('campaignId'),
+      ]
+      : [
+        '/workplaces',
+        'debtor-card',
+        this.route.snapshot.paramMap.get('debtId'),
+      ];
 
-    this.routingService.navigate([ url ], this.route);
+    this.routingService.navigate(url);
   }
 
   onSubmit(): void {

@@ -1,19 +1,19 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { EmailService } from '../email.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { EmailService } from '@app/shared/gui-objects/widgets/email/email.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 
 const labelKey = makeKey('widgets.email.card');
 
@@ -33,10 +33,10 @@ export class EmailCardComponent implements OnInit {
 
   constructor(
     private emailService: EmailService,
-    private routingService: RoutingService,
     private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +70,11 @@ export class EmailCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ], this.route);
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId')
+    ]);
   }
 
   get canSubmit(): boolean {

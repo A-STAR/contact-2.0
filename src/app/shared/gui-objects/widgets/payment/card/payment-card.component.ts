@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
@@ -8,10 +7,11 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IPayment } from '../payment.interface';
+import { IPayment } from '@app/shared/gui-objects/widgets/payment/payment.interface';
 
-import { PaymentService } from '../payment.service';
+import { PaymentService } from '@app/shared/gui-objects/widgets/payment/payment.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -40,10 +40,10 @@ export class PaymentCardComponent {
     private cdRef: ChangeDetectorRef,
     private lookupService: LookupService,
     private paymentService: PaymentService,
-    private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
     private route: ActivatedRoute,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService
   ) {
 
     combineLatest(
@@ -93,6 +93,7 @@ export class PaymentCardComponent {
         },
       ].map(item => ({ ...item, disabled: this.readOnly } as IDynamicFormControl));
 
+      // TODO: fix displaying of selected payment
       this.controls =  this.payment.isCanceled
         ? controls.map(control => ({ ...control, disabled: true }))
         : !canConfirm && !this.paymentId
@@ -114,10 +115,18 @@ export class PaymentCardComponent {
 
   onBack(): void {
     const url = this.callCenter
-      ? `/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}`
-      : `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}`;
+      ? [
+        '/workplaces',
+        'call-center',
+        this.route.snapshot.paramMap.get('campaignId'),
+      ]
+      : [
+        '/workplaces',
+        'debtor-card',
+        this.route.snapshot.paramMap.get('debtId'),
+      ];
 
-    this.routingService.navigate([ url ], this.route);
+    this.routingService.navigate(url);
   }
 
   onSubmit(): void {

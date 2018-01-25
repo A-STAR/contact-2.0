@@ -1,23 +1,23 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { RoutingService } from '@app/core/routing/routing.service';
-import { ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IAppState } from '../../../../../core/state/state.interface';
-import { IContractorManager, IActionType } from '../../contractors-and-portfolios.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IAppState } from '@app/core/state/state.interface';
+import { IContractorManager, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
-import { GridService } from '../../../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
-import { DialogFunctions } from '../../../../../core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   selector: 'app-contractor-managers',
@@ -85,10 +85,9 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private routingService: RoutingService,
-    private router: Router,
-    private store: Store<IAppState>,
     private route: ActivatedRoute,
+    private routingService: RoutingService,
+    private store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService
   ) {
     super();
@@ -142,11 +141,23 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
   }
 
   onAdd(): void {
-    this.router.navigate([`/admin/contractors/${this.contractorId}/managers/create`]);
+    this.routingService.navigate([
+      '/admin',
+      'contractors',
+      String(this.contractorId),
+      'managers',
+      'create'
+    ]);
   }
 
   onEdit(): void {
-    this.router.navigate([`/admin/contractors/${this.contractorId}/managers/${this.selection[0].id}`]);
+    this.routingService.navigate([
+      '/admin',
+      'contractors',
+      String(this.contractorId),
+      'managers',
+      String(this.selection[0].id)
+    ]);
   }
 
   onSelect(manager: IContractorManager): void {
@@ -155,7 +166,11 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
   }
 
   onBack(): void {
-    this.routingService.navigate([ `/admin/contractors/${this.contractorId}` ], this.route);
+    this.routingService.navigate([
+      '/admin',
+      'contractors',
+      String(this.contractorId)
+    ]);
   }
 
   onRemoveSubmit(): void {

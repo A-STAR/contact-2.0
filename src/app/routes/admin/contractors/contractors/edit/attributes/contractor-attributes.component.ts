@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+
 import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
@@ -14,8 +15,8 @@ export class ContractorAttributesComponent implements OnInit {
   entityId: number;
 
   constructor(
-    private routingService: RoutingService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private routingService: RoutingService) { }
 
   ngOnInit(): void {
     this.entityTypeId = ContractorAttributesComponent.ENTITY_TYPE_CONTRACTOR;
@@ -23,7 +24,11 @@ export class ContractorAttributesComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ `/admin/contractors/${this.entityId}` ], this.route);
+    this.routingService.navigate([
+      '/admin',
+      'contractors',
+      String(this.entityId)
+    ]);
   }
 
 }
