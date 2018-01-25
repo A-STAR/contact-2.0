@@ -35,9 +35,9 @@ export class AuthService implements CanActivate {
 
   constructor(
     private jwtHelper: JwtHelperService,
+    private persistenceService: PersistenceService,
     private router: Router,
     private store: Store<IAppState>,
-    private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private zone: NgZone,
   ) {

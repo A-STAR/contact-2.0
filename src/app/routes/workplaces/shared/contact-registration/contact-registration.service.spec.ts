@@ -7,6 +7,8 @@ import { random } from 'faker';
 import { IContactRegistrationMode, IOutcome, IContactRegistrationParams } from './contact-registration.interface';
 
 import { ContactRegistrationService } from './contact-registration.service';
+import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
+import { IDebt } from '@app/routes/workplaces/core/debts/debts.interface';
 
 class MockDataService {
   create(): Observable<any> {
@@ -20,6 +22,12 @@ class MockDataService {
   }
 }
 
+class MockDebtsService {
+  getDebt(debtId: number): Observable<IDebt> {
+    return of(null);
+  }
+}
+
 class MockNotificationService {
   error(): any {
     return {
@@ -30,13 +38,28 @@ class MockNotificationService {
   }
 }
 
+class MockPromiseService {
+  getLimit(): Observable<IPromiseLimit> {
+    return of(null);
+  }
+}
+
+class MockUserPermissionsService {
+  has(permissionName: string): Observable<boolean> {
+    return of(true);
+  }
+}
+
 describe('ContactRegistrationService', () => {
   let service: ContactRegistrationService;
 
   beforeEach(() => {
     service = new ContactRegistrationService(
       new MockDataService() as any,
+      new MockDebtsService() as any,
       new MockNotificationService() as any,
+      new MockPromiseService() as any,
+      new MockUserPermissionsService() as any,
     );
   });
 

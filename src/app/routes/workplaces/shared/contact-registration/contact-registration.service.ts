@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 
 import {
   IContactRegistrationData,
@@ -9,22 +11,39 @@ import {
   IContactRegistrationParams,
   IOutcome,
 } from './contact-registration.interface';
+import { IDebt } from '@app/routes/workplaces/core/debts/debts.interface';
+import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
 
 import { DataService } from '@app/core/data/data.service';
+import { DebtsService } from '@app/routes/workplaces/core/debts/debts.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
+import { combineLatestOr } from '@app/core/utils/helpers';
 
 @Injectable()
 export class ContactRegistrationService {
   mode = IContactRegistrationMode.TREE;
 
   private _guid$    = new BehaviorSubject<string>(null);
+  private _limit$ = new BehaviorSubject<IPromiseLimit>(null);
   private _outcome$ = new BehaviorSubject<IOutcome>(null);
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
 
   constructor(
     private dataService: DataService,
+    private debtsService: DebtsService,
     private notificationsService: NotificationsService,
-  ) {}
+    private promiseService: PromiseService,
+    private userPermissionsService: UserPermissionsService,
+  ) {
+    combineLatest(this.canSetPromise$, this.debtId$)
+      .pipe(
+        mergeMap(([ canLoad, debtId ]) => canLoad ? this.promiseService.getLimit(debtId, true) : of(null)),
+      )
+      .subscribe(limit => this._limit$.next(limit));
+  }
 
   get isActive$(): Observable<boolean> {
     return this._params$.pipe(map(Boolean));
@@ -117,12 +136,37 @@ export class ContactRegistrationService {
     return this.params && this.params.personRole;
   }
 
+  get debt$(): Observable<IDebt> {
+    return this.debtId$.pipe(
+      mergeMap(debtId => this.debtsService.getDebt(debtId)),
+    );
+  }
+
+  get limit$(): Observable<IPromiseLimit> {
+    return this._limit$.asObservable();
+  }
+
   get canSetPromise$(): Observable<boolean> {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.promiseMode)));
   }
 
+  get canSetPromiseAmount$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.promiseMode === 3));
+  }
+
+  get canSetInsufficientPromiseAmount$(): Observable<boolean> {
+    return combineLatestOr([
+      this._outcome$.pipe(map(outcome => outcome && outcome.promiseMode && outcome.promiseMode !== 2)),
+      this.userPermissionsService.has('PROMISE_INSUFFICIENT_AMOUNT_ADD'),
+    ]);
+  }
+
   get canSetPayment$(): Observable<boolean> {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.paymentMode)));
+  }
+
+  get canSetPaymentAmount$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.paymentMode === 3));
   }
 
   get canSetNextCallDate$(): Observable<boolean> {

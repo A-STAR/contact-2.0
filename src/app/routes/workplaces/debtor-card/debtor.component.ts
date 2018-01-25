@@ -16,6 +16,7 @@ import { IDynamicFormItem } from '../../../shared/components/form/dynamic-form/d
 import { IPerson } from './debtor.interface';
 import { IDebt } from '../debt-processing/debt-processing.interface';
 
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtService } from '../../../core/debt/debt.service';
 import { DebtorCardService } from '../../../core/app-modules/debtor-card/debtor-card.service';
 import { DebtorService } from './debtor.service';
@@ -30,9 +31,12 @@ import { DialogFunctions } from '../../../core/dialog';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [
+    ContactRegistrationService,
+  ],
   selector: 'app-debtor',
-  templateUrl: './debtor.component.html',
   styleUrls: ['./debtor.component.scss'],
+  templateUrl: './debtor.component.html',
 })
 export class DebtorComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -61,6 +65,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
     private debtService: DebtService,
     private debtorCardService: DebtorCardService,
     private debtorService: DebtorService,
@@ -96,6 +101,10 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
 
   ngOnDestroy(): void {
     this.personSubscription.unsubscribe();
+  }
+
+  get displayContactRegistration$(): Observable<boolean> {
+    return this.contactRegistrationService.isActive$;
   }
 
   get debtId$(): Observable<number> {
@@ -144,18 +153,20 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       .pipe(first())
       .subscribe(([ personId, debtId ]) => {
         this.setDialog();
-        this.debtService.navigateToRegistration({
+        this.contactRegistrationService.params = {
           contactId,
           contactType,
           debtId,
           personId,
           personRole: 1,
-        });
+        };
       });
   }
 
   onTabSelect(tabIndex: number): void {
-    this.tabs[tabIndex].isInitialised = true;
+    if (Number.isInteger(tabIndex)) {
+      this.tabs[tabIndex].isInitialised = true;
+    }
   }
 
   private buildControls(canEdit: boolean): IDynamicFormItem[] {

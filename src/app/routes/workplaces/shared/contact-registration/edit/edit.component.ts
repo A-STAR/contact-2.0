@@ -1,6 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { filter, first, map } from 'rxjs/operators';
+import * as moment from 'moment';
 
 import { IContactRegistrationMode } from '../contact-registration.interface';
 
@@ -11,34 +14,34 @@ import { AttachmentComponent } from './attachment/attachment.component';
 import { AttributesComponent } from './attributes/attributes.component';
 import { ContactSelectComponent } from './contact-select/contact-select.component';
 
-import { isEmpty } from '@app/core/utils';
+import { DialogFunctions } from '@app/core/dialog';
+
+import { isEmpty, invert } from '@app/core/utils';
+import { minStrict, max } from '@app/core/validators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-contact-registration-edit',
   templateUrl: './edit.component.html',
 })
-export class EditComponent {
+export class EditComponent extends DialogFunctions implements OnInit {
   @ViewChild(AttachmentComponent) attachments: AttachmentComponent;
   @ViewChild(AttributesComponent) attributes: AttributesComponent;
   @ViewChild('contactForPerson') contactForPerson: ContactSelectComponent;
   @ViewChild('contactForPhone') contactForPhone: ContactSelectComponent;
 
-  constructor(
-    private cdRef: ChangeDetectorRef,
-    private contactRegistrationService: ContactRegistrationService,
-    private formBuilder: FormBuilder,
-    private valueConverterService: ValueConverterService,
-  ) {}
+  dialog: 'confirm' | 'info';
 
   form = this.formBuilder.group({
     promise: this.formBuilder.group({
       date: null,
       amount: null,
+      percentage: null,
     }),
     payment: this.formBuilder.group({
       date: null,
       amount: null,
+      percentage: null,
       currencyId: null,
     }),
     nextCallDateTime: null,
@@ -58,12 +61,49 @@ export class EditComponent {
     statusReasonCode: null,
   });
 
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
+    private formBuilder: FormBuilder,
+    private valueConverterService: ValueConverterService,
+  ) {
+    super();
+  }
+
+  ngOnInit(): void {
+    // TODO(d.maltsev): check out async validators?
+    // TODO(d.maltsev): unsubscribe
+    combineLatest(
+      this.contactRegistrationService.canSetInsufficientPromiseAmount$,
+      this.contactRegistrationService.debt$.pipe(filter(Boolean)),
+      this.contactRegistrationService.limit$.pipe(filter(Boolean)),
+    )
+    .subscribe(([ canSet, debt, limit ]) => {
+      this.form.get('promise.amount').setValidators([
+        minStrict(canSet ? 0 : limit.minAmountPercent * debt.debtAmount / 100),
+        max(debt.debtAmount),
+      ]);
+      this.form.get('promise.percentage').setValidators([
+        minStrict(canSet ? 0 : limit.minAmountPercent),
+        max(100),
+      ]);
+    });
+  }
+
   get displayPromiseForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetPromise$;
   }
 
+  get isPromiseAmountDisabled$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetPromiseAmount$.pipe(map(invert));
+  }
+
   get displayPaymentForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetPayment$;
+  }
+
+  get isPaymentAmountDisabled$(): Observable<boolean> {
+    return this.contactRegistrationService.canSetPaymentAmount$.pipe(map(invert));
   }
 
   get displayNextCallDateForm$(): Observable<boolean> {
@@ -118,12 +158,76 @@ export class EditComponent {
     return this.contactRegistrationService.contactType$;
   }
 
+  get promiseMinDate(): Date {
+    return moment().toDate();
+  }
+
+  get promiseMaxDate$(): Observable<Date> {
+    return this.contactRegistrationService.limit$.pipe(
+      map(limit => {
+        const maxDays = limit && limit.maxDays;
+        return maxDays == null ? null : moment().add(maxDays, 'day').toDate();
+      }),
+    );
+  }
+
   get canSubmit(): boolean {
     return this.form.valid;
   }
 
+  onPromiseAmountInput(event: Event): void {
+    const { value } = event.target as HTMLInputElement;
+    const amount = Number(value);
+    this.contactRegistrationService.debt$
+      .pipe(first())
+      .subscribe(debt => debt && this.setPromiseAmount(amount, 100.0 * amount / debt.debtAmount));
+  }
+
+  onPromisePercentageInput(event: Event): void {
+    const { value } = event.target as HTMLInputElement;
+    const percentage = Number(value);
+    this.contactRegistrationService.debt$
+      .pipe(first())
+      .subscribe(debt => debt && this.setPromiseAmount(debt.debtAmount * percentage / 100.0, percentage));
+  }
+
   onSubmit(): void {
-    const { autoComment, ...data } = this.formValue;
+    combineLatest(
+      this.contactRegistrationService.canSetInsufficientPromiseAmount$,
+      this.contactRegistrationService.debt$,
+      this.contactRegistrationService.limit$,
+    )
+    .pipe(first())
+    .subscribe(([ canSet, debt, limit ]) => {
+      if (this.form.value.promise.amount < limit.minAmountPercent * debt.debtAmount / 100) {
+        this.setDialog(canSet ? 'confirm' : 'info');
+        this.cdRef.markForCheck();
+      } else {
+        this.submit(false);
+      }
+    });
+  }
+
+  onConfirm(): void {
+    this.submit(true);
+  }
+
+  onBack(): void {
+    this.displayOutcomeTree();
+  }
+
+  private setPromiseAmount(amount: number, percentage: number): void {
+    this.form.patchValue({ promise: { amount, percentage } });
+    this.cdRef.markForCheck();
+  }
+
+  private displayOutcomeTree(): void {
+    this.contactRegistrationService.mode = IContactRegistrationMode.TREE;
+    this.cdRef.markForCheck();
+  }
+
+  private submit(isUnconfirmed: boolean = null): void {
+    const { autoComment, ...data } = this.getFormGroupValueRecursively(this.form);
     if (this.attributes && !isEmpty(this.attributes.data)) {
       data.attributes = this.attributes.data;
     }
@@ -133,25 +237,19 @@ export class EditComponent {
     if (data.phone && this.contactForPhone && this.contactForPhone.person) {
       data.phone.person = this.contactForPhone.person;
     }
+    if (data.payment) {
+      delete data.payment.percentage;
+    }
+    if (data.promise) {
+      data.promise.isUnconfirmed = isUnconfirmed;
+      delete data.promise.percentage;
+    }
     this.contactRegistrationService
       .completeRegistration(data)
       .subscribe(() => {
         this.displayOutcomeTree();
         this.contactRegistrationService.params = null;
       });
-  }
-
-  onBack(): void {
-    this.displayOutcomeTree();
-  }
-
-  private displayOutcomeTree(): void {
-    this.contactRegistrationService.mode = IContactRegistrationMode.TREE;
-    this.cdRef.markForCheck();
-  }
-
-  private get formValue(): any {
-    return this.getFormGroupValueRecursively(this.form);
   }
 
   private getFormGroupValueRecursively(group: FormGroup): any {
