@@ -1,15 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { of } from 'rxjs/observable/of';
 
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
-import { IContextMenuItem } from '@app/shared/components/grid/grid.interface';
 import { IGroupDebt } from './group-debts.interface';
 
 import { GroupDebtsService } from './group-debts.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
-
-import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
 @Component({
   selector: 'app-group-debts',

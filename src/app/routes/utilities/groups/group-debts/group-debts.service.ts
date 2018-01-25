@@ -22,7 +22,7 @@ export class GroupDebtsService {
   fetch(groupId: number, filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IGroupDebt>> {
     const request = this.gridService.buildRequest(params, filters);
 
-    return this.dataService.create('/group/{groupId}/debts', { groupId }, request)
+    return this.dataService.create('/groups/{groupId}/debts', { groupId }, request)
       .catch(this.notificationsService.fetchError().entity('entities.groupDebts.gen.plural').callback());
   }
 
