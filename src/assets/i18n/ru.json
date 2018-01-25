@@ -2735,6 +2735,13 @@
       "to": "Окончание"
     },
     "filters": {
+      "groups": {
+        "grid": {
+          "id": "ID",
+          "name": "Имя"
+        },
+        "title": "Выберите группы"
+      },
       "portfolios": {
         "grid": {
           "contractorName": "Контрагент",

@@ -27,15 +27,19 @@ export class GroupDebtsComponent implements OnInit {
   }
 
   onRequest(): void {
-    const filters = this.grid.getFilters();
-    const params = this.grid.getRequestParams();
 
-    this.groupDebtsService.fetch(this.groupId, filters, params)
-      .subscribe((response: IAGridResponse<IGroupDebt>) => {
-        this.rows = [...response.data];
-        this.rowCount = response.total;
-        this.cdRef.markForCheck();
-      });
+    if (this.groupId) {
+      const filters = this.grid.getFilters();
+      const params = this.grid.getRequestParams();
+
+      this.groupDebtsService
+        .fetch(this.groupId, filters, params)
+        .subscribe((response: IAGridResponse<IGroupDebt>) => {
+          this.rows = [...response.data];
+          this.rowCount = response.total;
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
 }

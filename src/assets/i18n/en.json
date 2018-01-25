@@ -2735,6 +2735,13 @@
       "to": "To"
     },
     "filters": {
+      "groups": {
+        "grid": {
+          "id": "ID",
+          "name": "Name"
+        },
+        "title": "Select Groups"
+      },
       "portfolios": {
         "grid": {
           "contractorName": "Contractor",
@@ -2758,6 +2765,7 @@
         },
         "title": "Select Users"
       },
+
       "fields": {
         "branchCode": "Branch",
         "dictValue1": "Dictionary Value 1",
