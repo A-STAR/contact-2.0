@@ -156,7 +156,8 @@ export class EditComponent extends DialogFunctions {
     )
     .pipe(first())
     .subscribe(([ canSet, debt, limit ]) => {
-      if (this.form.value.promise.amount < limit.minAmountPercent * debt.debtAmount / 100) {
+      const { amount } = this.form.value.promise;
+      if (amount && limit && amount < limit.minAmountPercent * debt.debtAmount / 100) {
         this.setDialog(canSet ? 'confirm' : 'info');
         this.cdRef.markForCheck();
       } else {
@@ -188,7 +189,7 @@ export class EditComponent extends DialogFunctions {
       delete data.payment.percentage;
     }
     if (data.promise) {
-      data.promise.isUnconfirmed = isUnconfirmed;
+      data.promise.isUnconfirmed = Number(isUnconfirmed);
       delete data.promise.percentage;
     }
     this.contactRegistrationService
@@ -226,6 +227,8 @@ export class EditComponent extends DialogFunctions {
         return value[0].value;
       case value instanceof Date:
         return this.valueConverterService.toISO(value);
+      case value instanceof Boolean:
+        return Number(value);
       default:
         return value;
     }
