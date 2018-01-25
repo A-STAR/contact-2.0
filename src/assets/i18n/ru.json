@@ -2188,7 +2188,8 @@
         "dict1Code": "Значение",
         "dict2Code": "Значение",
         "dict3Code": "Значение",
-        "dict4Code": "Значение"
+        "dict4Code": "Значение",
+        "stage": "Стадия"
       },
       "dialog": {
         "title": "Мероприятие",

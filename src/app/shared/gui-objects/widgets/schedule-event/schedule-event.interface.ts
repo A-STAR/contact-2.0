@@ -25,7 +25,8 @@ export enum ScheduleEventEnum {
   DICT1CODE = 4,
   DICT2CODE = 5,
   DICT3CODE = 6,
-  DICT4CODE = 7
+  DICT4CODE = 7,
+  DEBTSTAGE = 8
 }
 
 export interface ISchedulePeriod {

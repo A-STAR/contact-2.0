@@ -2188,7 +2188,8 @@
         "dict1Code": "Value",
         "dict2Code": "Value",
         "dict3Code": "Value",
-        "dict4Code": "Value"
+        "dict4Code": "Value",
+        "stage": "Stage"
       },
       "dialog": {
         "title": "Event",

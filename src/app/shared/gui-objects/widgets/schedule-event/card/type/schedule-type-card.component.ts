@@ -78,6 +78,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     dict2Code: { controlName: 'dict2Code', type: 'select', required: true },
     dict3Code: { controlName: 'dict3Code', type: 'select', required: true },
     dict4Code: { controlName: 'dict4Code', type: 'select', required: true },
+    stage: { controlName: 'stage', type: 'select', required: true },
   };
 
   constructor(
@@ -136,6 +137,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           useEmailSender.valueB
         ),
         ...Array.from(new Array(4), (v, i) => this.createDictTypeControls(canEdit, i + 1)),
+        this.createDebtStageTypeControls(canEdit)
       ];
 
       this.selectedEventTypeCode$.next(this.type.eventTypeCode);
@@ -253,6 +255,17 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     });
   }
 
+  private createDebtStageTypeControls(canEdit: boolean): Partial<IDynamicFormControl>[] {
+    return this.createFormControls({
+      stage: {
+        disabled: !canEdit,
+        dictCode: UserDictionariesService.DICTIONARY_DEBT_STAGE_CODE,
+        markAsDirty: !this.eventId
+      },
+      checkGroup: { disabled: !canEdit }
+    });
+  }
+
   private fetchGroups(): void {
     this.scheduleEventService.fetchGroups().subscribe(groups => {
       this.groups = groups;
@@ -292,6 +305,13 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       case ScheduleEventEnum.DICT4CODE:
         return {
           [`dict${this.selectedEventTypeCode - 3}Code`]: 1,
+          ...(sameType ? this.type : {}),
+          eventTypeCode: this.selectedEventTypeCode,
+          ...(sameType ? this.scheduleEventService.getEventAddParams(this.type) : {})
+        };
+      case ScheduleEventEnum.DEBTSTAGE:
+        return {
+          stage: 1,
           ...(sameType ? this.type : {}),
           eventTypeCode: this.selectedEventTypeCode,
           ...(sameType ? this.scheduleEventService.getEventAddParams(this.type) : {})

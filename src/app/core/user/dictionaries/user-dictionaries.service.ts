@@ -79,6 +79,7 @@ export class UserDictionariesService {
   static DICTIONARY_VISIT_PURPOSE                 = 57;
   static DICTIONARY_CALL_CAMPAIGN_STATUS          = 58;
   static DICTIONARY_CALL_CAMPAIGN_TYPE            = 59;
+  static DICTIONARY_DEBT_STAGE_CODE               = 60;
   static DICTIONARY_DEBTOR_STAGE_CODE             = 61;
   static DICTIONARY_DATA_LOAD_FORMAT              = 62;
   static DICTIONARY_EMAIL_FORMAT                  = 63;
