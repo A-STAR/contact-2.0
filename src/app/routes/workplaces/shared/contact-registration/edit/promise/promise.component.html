@@ -1,0 +1,61 @@
+<div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
+  <div formGroupName="promise">
+    <!-- TODO(d.maltsev): i18n -->
+    <h3>Регистрация обещания</h3>
+
+    <!-- Promise Date -->
+    <div>
+      <label>
+        <span class="form-label">
+          <!-- TODO(d.maltsev): i18n -->
+          Дата <b class="text-danger">*</b>
+        </span>
+      </label>
+      <app-input-datepicker
+        formControlName="date"
+        [displayTime]="false"
+        [minDate]="today"
+        [maxDate]="promiseMaxDate$ | async"
+        [required]="true"
+      ></app-input-datepicker>
+    </div>
+
+    <!-- Promise Amount -->
+    <div>
+      <label>
+        <span class="form-label">
+          <!-- TODO(d.maltsev): i18n -->
+          Сумма <b class="text-danger">*</b>
+        </span>
+        <input
+          class="form-control"
+          type="number"
+          formControlName="amount"
+          [disabled]="isPromiseAmountDisabled$ | async"
+          [required]="true"
+          (input)="onPromiseAmountInput($event)"
+        />
+      </label>
+    </div>
+
+    <!-- Promise Percentage -->
+    <div>
+      <label>
+        <span class="form-label">
+          <!-- TODO(d.maltsev): i18n -->
+          Процент от остатка <b class="text-danger">*</b>
+        </span>
+        <input
+          class="form-control"
+          type="number"
+          formControlName="percentage"
+          [disabled]="isPromiseAmountDisabled$ | async"
+          [required]="true"
+          (input)="onPromisePercentageInput($event)"
+        />
+      </label>
+    </div>
+
+    <hr>
+  </div>
+</div>

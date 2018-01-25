@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { filter, first, map } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { IContactRegistrationMode } from '../contact-registration.interface';
@@ -10,25 +10,25 @@ import { IContactRegistrationMode } from '../contact-registration.interface';
 import { ContactRegistrationService } from '../contact-registration.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { AttachmentComponent } from './attachment/attachment.component';
-import { AttributesComponent } from './attributes/attributes.component';
+import { ContactRegistrationAttachmentsComponent } from './attachment/attachment.component';
+import { ContactRegistrationAttributesComponent } from './attributes/attributes.component';
+import { ContactRegistrationPhoneComponent } from './phone/phone.component';
 import { ContactSelectComponent } from './contact-select/contact-select.component';
 
 import { DialogFunctions } from '@app/core/dialog';
 
-import { isEmpty, invert } from '@app/core/utils';
-import { minStrict, max } from '@app/core/validators';
+import { isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-contact-registration-edit',
   templateUrl: './edit.component.html',
 })
-export class EditComponent extends DialogFunctions implements OnInit {
-  @ViewChild(AttachmentComponent) attachments: AttachmentComponent;
-  @ViewChild(AttributesComponent) attributes: AttributesComponent;
-  @ViewChild('contactForPerson') contactForPerson: ContactSelectComponent;
-  @ViewChild('contactForPhone') contactForPhone: ContactSelectComponent;
+export class EditComponent extends DialogFunctions {
+  @ViewChild(ContactRegistrationAttachmentsComponent) attachments: ContactRegistrationAttachmentsComponent;
+  @ViewChild(ContactRegistrationAttributesComponent) attributes: ContactRegistrationAttributesComponent;
+  @ViewChild(ContactRegistrationPhoneComponent) contactForPhone: ContactRegistrationPhoneComponent;
+  @ViewChild(ContactSelectComponent) contactForPerson: ContactSelectComponent;
 
   dialog: 'confirm' | 'info';
 
@@ -70,56 +70,6 @@ export class EditComponent extends DialogFunctions implements OnInit {
     super();
   }
 
-  ngOnInit(): void {
-    // TODO(d.maltsev): check out async validators?
-    // TODO(d.maltsev): unsubscribe
-    combineLatest(
-      this.contactRegistrationService.canSetInsufficientPromiseAmount$,
-      this.contactRegistrationService.debt$.pipe(filter(Boolean)),
-      this.contactRegistrationService.limit$.pipe(filter(Boolean)),
-    )
-    .subscribe(([ canSet, debt, limit ]) => {
-      this.form.get('promise.amount').setValidators([
-        minStrict(canSet ? 0 : limit.minAmountPercent * debt.debtAmount / 100),
-        max(debt.debtAmount),
-      ]);
-      this.form.get('promise.percentage').setValidators([
-        minStrict(canSet ? 0 : limit.minAmountPercent),
-        max(100),
-      ]);
-      this.form.get('payment.amount').setValidators([
-        minStrict(0),
-        max(debt.debtAmount),
-      ]);
-      this.form.get('payment.percentage').setValidators([
-        minStrict(0),
-        max(100),
-      ]);
-    });
-
-    // TODO(d.maltsev): unsubscribe
-    this.form.get('autoCommentId').valueChanges.subscribe(autoCommentId => {
-      // TODO(d.mmaltsev): fetch autocomment
-      console.log(autoCommentId);
-    });
-  }
-
-  get displayPromiseForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPromise$;
-  }
-
-  get isPromiseAmountDisabled$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPromiseAmount$.pipe(map(invert));
-  }
-
-  get displayPaymentForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPayment$;
-  }
-
-  get isPaymentAmountDisabled$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPaymentAmount$.pipe(map(invert));
-  }
-
   get displayNextCallDateForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetNextCallDate$;
   }
@@ -134,14 +84,6 @@ export class EditComponent extends DialogFunctions implements OnInit {
 
   get isCommentRequired$(): Observable<boolean> {
     return this.contactRegistrationService.isCommentRequired$;
-  }
-
-  get displayAutoCommentForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetAutoCommentId$;
-  }
-
-  get displayPhoneForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPhone$;
   }
 
   get displayContactPersonForm$(): Observable<boolean> {
@@ -196,15 +138,6 @@ export class EditComponent extends DialogFunctions implements OnInit {
     return moment().toDate();
   }
 
-  get promiseMaxDate$(): Observable<Date> {
-    return this.contactRegistrationService.limit$.pipe(
-      map(limit => {
-        const maxDays = limit && limit.maxDays;
-        return maxDays == null ? null : moment().add(maxDays, 'day').toDate();
-      }),
-    );
-  }
-
   get nextCallMaxDate$(): Observable<Date> {
     return this.contactRegistrationService.nextCallDays$.pipe(
       map(nextCallDays => moment().add(nextCallDays, 'day').toDate()),
@@ -213,38 +146,6 @@ export class EditComponent extends DialogFunctions implements OnInit {
 
   get canSubmit(): boolean {
     return this.form.valid;
-  }
-
-  onPromiseAmountInput(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const amount = Number(value);
-    this.contactRegistrationService.debt$
-      .pipe(first())
-      .subscribe(debt => debt && this.setPromiseAmount(amount, 100.0 * amount / debt.debtAmount));
-  }
-
-  onPromisePercentageInput(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const percentage = Number(value);
-    this.contactRegistrationService.debt$
-      .pipe(first())
-      .subscribe(debt => debt && this.setPromiseAmount(debt.debtAmount * percentage / 100.0, percentage));
-  }
-
-  onPaymentAmountInput(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const amount = Number(value);
-    this.contactRegistrationService.debt$
-      .pipe(first())
-      .subscribe(debt => debt && this.setPaymentAmount(amount, 100.0 * amount / debt.debtAmount));
-  }
-
-  onPaymentPercentageInput(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const percentage = Number(value);
-    this.contactRegistrationService.debt$
-      .pipe(first())
-      .subscribe(debt => debt && this.setPaymentAmount(debt.debtAmount * percentage / 100.0, percentage));
   }
 
   onSubmit(): void {
@@ -272,21 +173,6 @@ export class EditComponent extends DialogFunctions implements OnInit {
     this.displayOutcomeTree();
   }
 
-  private setPromiseAmount(amount: number, percentage: number): void {
-    this.form.patchValue({ promise: { amount, percentage } });
-    this.cdRef.markForCheck();
-  }
-
-  private setPaymentAmount(amount: number, percentage: number): void {
-    this.form.patchValue({ payment: { amount, percentage } });
-    this.cdRef.markForCheck();
-  }
-
-  private displayOutcomeTree(): void {
-    this.contactRegistrationService.mode = IContactRegistrationMode.TREE;
-    this.cdRef.markForCheck();
-  }
-
   private submit(isUnconfirmed: boolean = null): void {
     const { autoComment, ...data } = this.getFormGroupValueRecursively(this.form);
     if (this.attributes && !isEmpty(this.attributes.data)) {
@@ -311,6 +197,11 @@ export class EditComponent extends DialogFunctions implements OnInit {
         this.displayOutcomeTree();
         this.contactRegistrationService.params = null;
       });
+  }
+
+  private displayOutcomeTree(): void {
+    this.contactRegistrationService.mode = IContactRegistrationMode.TREE;
+    this.cdRef.markForCheck();
   }
 
   private getFormGroupValueRecursively(group: FormGroup): any {

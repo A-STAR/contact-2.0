@@ -21,7 +21,7 @@ import { isEmpty } from '@app/core/utils';
   templateUrl: './attachment.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttachmentComponent extends DialogFunctions {
+export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
   private selectedDocumentGuid$ = new BehaviorSubject<string>(null);
 
   toolbarItems: IToolbarItem[] = [
