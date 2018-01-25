@@ -26,7 +26,7 @@
     <app-phone-grid
       *ngIf="tabs[1].isInitialised"
       action="edit"
-      [contactType]="contactType"
+      [contactType]="phoneContactType"
       [debtId]="debtId$ | async"
       [personId]="personId$ | async"
       [personRole]="personRole"

@@ -5,10 +5,10 @@
       [attr.placeholder]="!isDisabled ? (placeholder | translate) : ''"
       [disabled]="isDisabled"
       [ngClass]="inputClass"
-      [ngModel]="formattedDate"
+      [ngModel]="formattedTime"
       [required]="required"
       (blur)="onBlur()"
-      (change)="onValueChange($event)"
+      (ngModelChange)="onValueChange($event)"
     />
 
     <span class="input-group-btn" *ngIf="!isDisabled">

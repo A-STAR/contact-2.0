@@ -83,7 +83,7 @@ export class EmailComponent implements OnInit {
   onSubmit(): void {
     const email = this.form.serializedUpdates;
     this.emailService
-      .schedule(this.debtIds, this.personIds, this.personRoles[0], email)
+      .schedule(this.debtIds, this.personIds, Number(this.personRoles[0]), email)
       .subscribe(() => this.close.emit());
   }
 
@@ -105,10 +105,12 @@ export class EmailComponent implements OnInit {
       {
         controlName: 'emailTypes',
         options: emailOptions,
+        required: true,
         type: 'multiselect',
       },
       {
         controlName: 'subject',
+        required: true,
         type: 'text',
       },
       {

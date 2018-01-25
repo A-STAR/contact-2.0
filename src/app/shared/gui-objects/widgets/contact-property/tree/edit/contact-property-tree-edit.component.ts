@@ -275,7 +275,6 @@ export class ContactPropertyTreeEditComponent implements OnInit {
               { controlName: 'contactInvisible', type: 'checkbox' },
               { controlName: 'regInvisible', type: 'checkbox' },
               { controlName: 'changeContactPerson', type: 'checkbox' },
-              { controlName: 'changeContactTime', type: 'timepicker' },
             ]
           }
         ]
