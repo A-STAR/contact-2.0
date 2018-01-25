@@ -5,7 +5,7 @@ import { SharedModule } from '@app/shared/shared.module';
 
 import { AttributesService } from './attributes.service';
 
-import { AttributesComponent } from './attributes.component';
+import { ContactRegistrationAttributesComponent } from './attributes.component';
 
 @NgModule({
   imports: [
@@ -13,10 +13,10 @@ import { AttributesComponent } from './attributes.component';
     TreeTableModule,
   ],
   exports: [
-    AttributesComponent,
+    ContactRegistrationAttributesComponent,
   ],
   declarations: [
-    AttributesComponent,
+    ContactRegistrationAttributesComponent,
   ],
   providers: [
     AttributesService,

@@ -31,6 +31,7 @@ import { DialogFunctions } from '../../../core/dialog';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height' },
   providers: [
     ContactRegistrationService,
   ],
