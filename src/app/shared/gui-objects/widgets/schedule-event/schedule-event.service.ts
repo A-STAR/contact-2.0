@@ -4,7 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IScheduleEvent, IScheduleGroup, IScheduleType, IScheduleParam, IScheduleStartRequest } from './schedule-event.interface';
+import {
+  IScheduleEvent, IScheduleGroup, IScheduleType,
+  IScheduleParam, IScheduleStartRequest, IScheduleUser
+} from './schedule-event.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
@@ -76,6 +79,12 @@ export class ScheduleEventService extends AbstractActionService {
     return this.dataService
       .readAll('/filters/groups', {}, {})
       .catch(this.notificationsService.fetchError().entity('entities.groups.gen.plural').dispatchCallback());
+  }
+
+  fetchUsers(): Observable<IScheduleUser[]> {
+    return this.dataService
+      .readAll('/filters/users', {}, {})
+      .catch(this.notificationsService.fetchError().entity('entities.users.gen.plural').dispatchCallback());
   }
 
   delete(eventId: number): Observable<any> {

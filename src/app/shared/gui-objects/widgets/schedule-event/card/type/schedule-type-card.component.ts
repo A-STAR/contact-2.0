@@ -7,11 +7,9 @@ import { first } from 'rxjs/operators';
 import {
   IDynamicFormItem, IDynamicFormConfig, IDynamicFormSelectControl, IDynamicFormControl
 } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
-import { ScheduleEventEnum, IScheduleGroup, IScheduleType } from '../../schedule-event.interface';
+import { ScheduleEventEnum, IScheduleGroup, IScheduleType, IScheduleUser } from '../../schedule-event.interface';
 
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { ScheduleEventService } from '../../schedule-event.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -41,20 +39,12 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   addParamsControls: Array<Partial<IDynamicFormControl>[]>;
 
-  groupGridColumns: Array<IGridColumn> = [
-    { prop: 'id', width: 70 },
-    { name: 'entityTypeCode', prop: 'entityTypeId', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE, width: 90 },
-    { prop: 'name' },
-    { prop: 'comment' },
-  ];
-  groups: IScheduleGroup[] = [];
-
   selectedType: Partial<IScheduleType>;
 
   private selectedEventTypeCode$ = new BehaviorSubject<number>(null);
   private selectedEventTypeCodeSub: Subscription;
 
-  private formControls = {
+  private formControlsFactory = {
     eventTypeCode: {
       controlName: 'eventTypeCode',
       type: 'select',
@@ -68,37 +58,53 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       onChange: () => this.onPersonRoleSelect(),
       width: 4
     },
+    userId: {
+      controlName: 'userId',
+      type: 'gridselect',
+      gridColumns: [
+        { prop: 'id', width: 70 },
+        { prop: 'fullName' },
+        { prop: 'organization' },
+        { prop: 'position' },
+      ],
+      gridLabelGetter: row => row.fullName,
+      gridValueGetter: row => row.id,
+      required: true,
+    },
+    groupId: {
+      controlName: 'groupId',
+      type: 'gridselect',
+      gridColumns: [
+        { prop: 'id', width: 70 },
+        { name: 'entityTypeCode', prop: 'entityTypeId', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE, width: 90 },
+        { prop: 'name' },
+        { prop: 'comment' },
+      ],
+      gridLabelGetter: row => row.name,
+      gridValueGetter: row => row.id,
+      required: true,
+    },
     phoneTypes: { controlName: 'phoneTypes', type: 'multiselect', required: true, width: 4 },
     templateId: { controlName: 'templateId', type: 'select', required: true, width: 4 },
     delay: { controlName: 'delay', type: 'number', required: true, validators: [ min(1) ] },
     checkGroup: { controlName: 'checkGroup', type: 'checkbox' },
     senderCode: { controlName: 'senderCode', type: 'select', required: true, width: 4 },
-    groupId: { controlName: 'groupId', type: 'number', required: true },
     dict1Code: { controlName: 'dict1Code', type: 'select', required: true },
     dict2Code: { controlName: 'dict2Code', type: 'select', required: true },
     dict3Code: { controlName: 'dict3Code', type: 'select', required: true },
     dict4Code: { controlName: 'dict4Code', type: 'select', required: true },
     stage: { controlName: 'stage', type: 'select', required: true },
+    modeCode: { controlName: 'modeCode', type: 'select', required: true },
   };
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private userConstantsService: UserConstantsService,
     private userDictionaryService: UserDictionariesService,
     private scheduleEventService: ScheduleEventService,
   ) {}
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.groupGridColumns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.groupGridColumns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
-    this.fetchGroups();
-
     combineLatest(
       this.eventId ? this.scheduleEventService.canEdit$ : this.scheduleEventService.canView$,
       this.userDictionaryService.getDictionariesAsOptions([
@@ -113,13 +119,15 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
         this.userConstantsService.get('Email.Sender.Use'),
         this.userConstantsService.get('SMS.Sender.Default'),
         this.userConstantsService.get('Email.Sender.Default'),
-      )
+      ),
+      this.scheduleEventService.fetchGroups(),
+      this.scheduleEventService.fetchUsers()
     )
     .pipe(first())
-    .subscribe(([canEdit, options, templateSmsOptions, templateEmailOptions, constants]) => {
+    .subscribe(([canEdit, options, templateSmsOptions, templateEmailOptions, constants, groups, users]) => {
       const [ useSmsSender, useEmailSender, smsSender, emailSender ] = constants;
 
-      this.eventTypeControls = this.createEventTypeControls(canEdit);
+      this.eventTypeControls = this.createEventTypeControls(canEdit, groups);
 
       this.addParamsControls = [
         [],
@@ -137,13 +145,14 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           useEmailSender.valueB
         ),
         ...Array.from(new Array(4), (v, i) => this.createDictTypeControls(canEdit, i + 1)),
-        this.createDebtStageTypeControls(canEdit)
+        this.createDebtStageTypeControls(canEdit),
+        this.createChangeOperatorTypeControls(canEdit, users)
       ];
 
       this.selectedEventTypeCode$.next(this.type.eventTypeCode);
       this.selectedEventTypeCodeSub = this.selectedEventTypeCode$
         .subscribe(() => {
-          this.selectedType = this.getFormData(
+         this.selectedType = this.getFormData(
             useSmsSender.valueB && smsSender.valueN,
             useEmailSender.valueB && emailSender.valueN
           );
@@ -162,13 +171,12 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     return this.selectedEventTypeCode$.value;
   }
 
-  get eventTypeForms(): DynamicFormComponent[] {
-    return [ this.eventTypeForm, this.addParamsForm ];
+  get isOriginalEventType(): boolean {
+    return this.type.eventTypeCode === this.selectedEventTypeCode;
   }
 
-  get groupSelection(): IScheduleGroup[] {
-    const groupId = this.eventTypeForm && this.eventTypeForm.getControl('groupId').value;
-    return this.groups.filter(group => group.id === groupId);
+  get eventTypeForms(): DynamicFormComponent[] {
+    return [ this.eventTypeForm, this.addParamsForm ];
   }
 
   get canSubmit(): boolean {
@@ -205,15 +213,15 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   private createFormControls(controls: any): Partial<IDynamicFormControl>[] {
     return Object.keys(controls).map(controlName => ({
-      ...this.formControls[controlName],
+      ...this.formControlsFactory[controlName],
       ...controls[controlName]
     }));
   }
 
-  private createEventTypeControls(canEdit: boolean): Partial<IDynamicFormItem>[] {
+  private createEventTypeControls(canEdit: boolean, groups: IScheduleGroup[]): Partial<IDynamicFormItem>[] {
     return this.createFormControls({
       eventTypeCode: { disabled: !canEdit, dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE },
-      groupId: { display: false },
+      groupId: { gridRows: groups, disabled: !canEdit },
     });
   }
 
@@ -266,64 +274,63 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private fetchGroups(): void {
-    this.scheduleEventService.fetchGroups().subscribe(groups => {
-      this.groups = groups;
-      this.cdRef.markForCheck();
+  private createChangeOperatorTypeControls(canEdit: boolean, users: IScheduleUser[]): Partial<IDynamicFormControl>[] {
+    return this.createFormControls({
+      userId: { gridRows: users, disabled: !canEdit },
+      modeCode: {
+        disabled: !canEdit,
+        dictCode: UserDictionariesService.DICTIONARY_OPERATOR_MODE_CODE,
+        markAsDirty: !this.eventId
+      },
+      checkGroup: { disabled: !canEdit }
     });
   }
 
   private getFormData(smsSender: number, emailSender: number): any {
-    const sameType = this.type.eventTypeCode === this.selectedEventTypeCode;
+    return {
+      ...this.getDefaultFormData(smsSender, emailSender),
+      ...(this.isOriginalEventType ? this.type : {}),
+      eventTypeCode: this.selectedEventTypeCode,
+      ...(this.isOriginalEventType ? this.scheduleEventService.getEventAddParams(this.type) : {})
+    };
+  }
+
+  private getDefaultFormData(smsSender: number, emailSender: number): any {
     switch (this.selectedEventTypeCode) {
       case ScheduleEventEnum.GROUP:
-        return {
-          ...(sameType ? this.type : {}),
-          eventTypeCode: 1,
-        };
+        return {};
       case ScheduleEventEnum.SMS:
         return {
           phoneTypes: [ 1 ],
           personRoles: [ 1 ],
           senderCode: smsSender,
-          ...(sameType ? this.type : {}),
-          eventTypeCode: 2,
-          ...(sameType ? this.scheduleEventService.getEventAddParams(this.type) : {})
         };
       case ScheduleEventEnum.EMAIL:
         return {
           phoneTypes: [ 1 ],
           personRoles: [ 1 ],
           senderCode: emailSender,
-          ...(sameType ? this.type : {}),
-          eventTypeCode: 3,
-          ...(sameType ? this.scheduleEventService.getEventAddParams(this.type) : {})
         };
       case ScheduleEventEnum.DICT1CODE:
       case ScheduleEventEnum.DICT2CODE:
       case ScheduleEventEnum.DICT3CODE:
       case ScheduleEventEnum.DICT4CODE:
         return {
-          [`dict${this.selectedEventTypeCode - 3}Code`]: 1,
-          ...(sameType ? this.type : {}),
-          eventTypeCode: this.selectedEventTypeCode,
-          ...(sameType ? this.scheduleEventService.getEventAddParams(this.type) : {})
+          [`dict${this.selectedEventTypeCode - 3}Code`]: 1
         };
       case ScheduleEventEnum.DEBTSTAGE:
-        return {
-          stage: 1,
-          ...(sameType ? this.type : {}),
-          eventTypeCode: this.selectedEventTypeCode,
-          ...(sameType ? this.scheduleEventService.getEventAddParams(this.type) : {})
-        };
+        return { stage: 1 };
+      case ScheduleEventEnum.USERCHANGE:
+        return { modeCode: 1 };
     }
   }
 
   private serializeScheduleType(fromData: any): IScheduleType {
+    const additionalParameters = this.scheduleEventService.createEventAddParams(fromData);
     return {
       ...this.eventTypeForm.serializedUpdates,
       checkGroup: fromData.checkGroup,
-      additionalParameters: this.scheduleEventService.createEventAddParams(fromData)
+      ...(additionalParameters.length ? { additionalParameters } : {})
     };
   }
 

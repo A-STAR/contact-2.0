@@ -26,7 +26,8 @@ export enum ScheduleEventEnum {
   DICT2CODE = 5,
   DICT3CODE = 6,
   DICT4CODE = 7,
-  DEBTSTAGE = 8
+  DEBTSTAGE = 8,
+  USERCHANGE = 9
 }
 
 export interface ISchedulePeriod {
@@ -52,6 +53,13 @@ export interface IScheduleGroup {
   name: string;
   comment?: string;
   entityTypeId: number;
+}
+
+export interface IScheduleUser {
+  id?: number;
+  fullName: string;
+  organization: string;
+  position: string;
 }
 
 export interface IScheduleStartRequest {

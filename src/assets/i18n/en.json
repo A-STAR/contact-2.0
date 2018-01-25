@@ -2178,7 +2178,7 @@
         "isInactive": "Is inactive",
         "eventTypeCode": "Event type",
         "priority": "Priority",
-        "group": "Group",
+        "groupId": "Group",
         "checkGroup": "Group rearrangement check",
         "delay": "Delay (hours)",
         "phoneTypes": "Phono type",
@@ -2189,7 +2189,9 @@
         "dict2Code": "Value",
         "dict3Code": "Value",
         "dict4Code": "Value",
-        "stage": "Stage"
+        "stage": "Stage",
+        "userId": "Operator",
+        "modeCode": "Mode"
       },
       "dialog": {
         "title": "Event",

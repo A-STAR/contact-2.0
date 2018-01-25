@@ -8,27 +8,6 @@
   ></app-dynamic-form>
 </div>
 
-<div class="pb-lg">
-  <label>
-    <span>
-      {{ 'widgets.scheduleEvents.card.group' | translate }}
-      <b class="text-danger">*</b>
-    </span>
-  </label>
-  
-  <app-grid
-    #groupGrid
-    columnTranslationKey="widgets.groups"
-    selectionType="single"
-    [columns]="groupGridColumns"
-    [selection]="groupSelection"
-    [footerHeight]="false"
-    [styles]="{height: '200px'}"
-    [rows]="groups"
-    (onSelect)="onGroupSelect($event)"
-  ></app-grid>
-</div>
-
 <ng-container *ngFor="let controls of addParamsControls; let i = index">
   <div class="pb-lg" *ngIf="selectedEventTypeCode === i + 1">
     <app-dynamic-form

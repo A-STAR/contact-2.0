@@ -87,6 +87,7 @@ export class UserDictionariesService {
   static DICTIONARY_EMAIL_STATUS                  = 65;
   static DICTIONARY_SCHEDULE_EVENT_TYPE           = 67;
   static DICTIONARY_PERIOD_TYPE                   = 68;
+  static DICTIONARY_OPERATOR_MODE_CODE            = 69;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
