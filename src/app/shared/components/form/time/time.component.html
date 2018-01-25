@@ -1,10 +1,11 @@
-<label>&nbsp;
-  <input #inputField
-         type="text"
-         autocomplete="false"
-         class="form-control"
-         [textMask]="mask"
-         [ngModel]="value"
-         (ngModelChange)="onValueChange($event)"
-         [attr.placeholder]="('time' || '') | translate">
+<label>{{ name }}&nbsp;
+  <input
+    type="text"
+    autocomplete="false"
+    class="form-control"
+    [textMask]="mask"
+    [ngModel]="value"
+    (ngModelChange)="onValueChange($event)"
+    [attr.placeholder]="'default.date.placeholders.timepicker' | translate"
+  />
 </label>
