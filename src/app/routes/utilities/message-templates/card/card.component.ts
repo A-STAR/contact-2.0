@@ -148,14 +148,14 @@ export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
       {
         controlName: 'subject',
         display: isEmail,
-        required: true,
+        required: isEmail,
         type: 'text',
       },
       {
         controlName: 'formatCode',
         dictCode: UserDictionariesService.DICTIONARY_EMAIL_FORMAT,
         display: isEmail,
-        required: true,
+        required: isEmail,
         type: 'selectwrapper',
       },
       {
