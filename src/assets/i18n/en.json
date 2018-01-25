@@ -2184,7 +2184,11 @@
         "phoneTypes": "Phono type",
         "personRoles": "Receiver",
         "templateId": "Template",
-        "senderCode": "Sender"
+        "senderCode": "Sender",
+        "dict1Code": "Value",
+        "dict2Code": "Value",
+        "dict3Code": "Value",
+        "dict4Code": "Value"
       },
       "dialog": {
         "title": "Event",

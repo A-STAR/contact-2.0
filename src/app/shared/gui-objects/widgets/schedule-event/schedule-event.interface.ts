@@ -21,7 +21,11 @@ export enum SchedulePeriodEnum {
 export enum ScheduleEventEnum {
   GROUP = 1,
   SMS = 2,
-  EMAIL = 3
+  EMAIL = 3,
+  DICT1CODE = 4,
+  DICT2CODE = 5,
+  DICT3CODE = 6,
+  DICT4CODE = 7
 }
 
 export interface ISchedulePeriod {

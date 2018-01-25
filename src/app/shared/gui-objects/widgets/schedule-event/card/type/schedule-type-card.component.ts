@@ -74,10 +74,10 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     checkGroup: { controlName: 'checkGroup', type: 'checkbox' },
     senderCode: { controlName: 'senderCode', type: 'select', required: true, width: 4 },
     groupId: { controlName: 'groupId', type: 'number', required: true },
-    dict1code: { controlName: 'dict1code', type: 'select', required: true },
-    dict2code: { controlName: 'dict2code', type: 'select', required: true },
-    dict3code: { controlName: 'dict3code', type: 'select', required: true },
-    dict4code: { controlName: 'dict4code', type: 'select', required: true },
+    dict1Code: { controlName: 'dict1Code', type: 'select', required: true },
+    dict2Code: { controlName: 'dict2Code', type: 'select', required: true },
+    dict3Code: { controlName: 'dict3Code', type: 'select', required: true },
+    dict4Code: { controlName: 'dict4Code', type: 'select', required: true },
   };
 
   constructor(
@@ -121,7 +121,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       this.eventTypeControls = this.createEventTypeControls(canEdit);
 
       this.addParamsControls = [
-        ,
+        [],
         this.createSendTypeControls(
           canEdit,
           options[UserDictionariesService.DICTIONARY_PHONE_TYPE],
@@ -171,7 +171,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   get canSubmit(): boolean {
     return !!this.eventTypeForms.find(form => form && form.canSubmit)
-      && this.eventTypeForms.every(form => !form || form.isValid);
+      && this.eventTypeForms.map(dform => dform.form).every(form => !form || form.valid);
   }
 
   get serializedUpdates(): IScheduleType {
@@ -244,8 +244,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   private createDictTypeControls(canEdit: boolean, dictIndex: number): Partial<IDynamicFormControl>[] {
     return this.createFormControls({
-      [`dict${dictIndex}code`]: {
-        controlName: `dict${dictIndex}code`,
+      [`dict${dictIndex}Code`]: {
         disabled: !canEdit,
         dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${dictIndex}`],
         markAsDirty: !this.eventId
@@ -285,6 +284,16 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           senderCode: emailSender,
           ...(sameType ? this.type : {}),
           eventTypeCode: 3,
+          ...(sameType ? this.scheduleEventService.getEventAddParams(this.type) : {})
+        };
+      case ScheduleEventEnum.DICT1CODE:
+      case ScheduleEventEnum.DICT2CODE:
+      case ScheduleEventEnum.DICT3CODE:
+      case ScheduleEventEnum.DICT4CODE:
+        return {
+          [`dict${this.selectedEventTypeCode - 3}Code`]: 1,
+          ...(sameType ? this.type : {}),
+          eventTypeCode: this.selectedEventTypeCode,
           ...(sameType ? this.scheduleEventService.getEventAddParams(this.type) : {})
         };
     }

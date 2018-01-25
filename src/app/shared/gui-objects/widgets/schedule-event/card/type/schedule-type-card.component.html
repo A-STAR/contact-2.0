@@ -30,7 +30,7 @@
 </div>
 
 <ng-container *ngFor="let controls of addParamsControls; let i = index">
-  <div class="pb-lg" *ngIf="selectedEventTypeCode === (i + 1)">
+  <div class="pb-lg" *ngIf="selectedEventTypeCode === i + 1">
     <app-dynamic-form
       #addParams
       [config]="eventTypeConfig"

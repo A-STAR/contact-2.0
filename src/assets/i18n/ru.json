@@ -2184,7 +2184,11 @@
         "phoneTypes": "Тип телефона",
         "personRoles": "Получатель",
         "templateId": "Сценарий",
-        "senderCode": "Отправитель"
+        "senderCode": "Отправитель",
+        "dict1Code": "Значение",
+        "dict2Code": "Значение",
+        "dict3Code": "Значение",
+        "dict4Code": "Значение"
       },
       "dialog": {
         "title": "Мероприятие",
