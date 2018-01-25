@@ -2090,6 +2090,37 @@
         "formDateTime": "Form date",
         "sql": "SQL"
       },
+      "groupObjectDebts": {
+        "filter": {
+          "groups": {
+            "grid": {
+              "id": "ID",
+              "name": "Name"
+            },
+            "title": "Select Groups"
+          }
+        },
+        "grid": {
+          "id": "ID",
+          "debtId": "Debt ID",
+          "personId": "Person ID",
+          "personFullName": "Full Name",
+          "bankName": "Bank",
+          "portfolioName": "Portfolio",
+          "contract": "Contact No",
+          "creditName": "Credit Name",
+          "currencyName": "Currency",
+          "debtAmount": "Debt amount",
+          "totalAmount": "Total amount",
+          "dpd": "DPD",
+          "userFullName": "Operator",
+          "statusCode": "Status",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4"
+        }
+      },
       "toolbar": {
         "action": {
           "forCurrentUser": "Current user groups"

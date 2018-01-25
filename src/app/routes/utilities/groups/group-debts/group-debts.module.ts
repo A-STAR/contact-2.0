@@ -2,6 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
+import { SharedModule } from '@app/shared/shared.module';
+
+import { GroupDebtsService } from './group-debts.service';
+
 import { GroupDebtsComponent } from './group-debts.component';
 
 const routes: Routes = [
@@ -17,8 +21,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    SharedModule
   ],
+  providers: [ GroupDebtsService ],
   declarations: [GroupDebtsComponent]
 })
 export class GroupDebtsModule { }
