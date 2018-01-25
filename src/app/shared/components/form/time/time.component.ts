@@ -17,7 +17,7 @@ export class TimeComponent implements ControlValueAccessor {
   @Input() value: string;
 
   mask = {
-    mask: [/\d/, /\d/, ':', /\d/, /\d/, ':', /\d/, /\d/],
+    mask: [/[0-2]/, /[0-3]/, ':', /[0-5]/, /[0-9]/, ':', /[0-5]/, /[0-9]/],
     keepCharPositions: true
   };
 
@@ -35,6 +35,10 @@ export class TimeComponent implements ControlValueAccessor {
 
   onValueChange(value: string): void {
     this.onChange(value);
+  }
+
+  onScroll(event: MouseEvent): void {
+    console.log('scroll', (<HTMLInputElement>event.target).value);
   }
 
   private onChange: Function = () => {};
