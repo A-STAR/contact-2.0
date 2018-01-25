@@ -1,15 +1,11 @@
 <ul [ngClass]="{ 'no-margin': noMargin }">
-  <ng-container
+  <li
     *ngFor="let tab of tabs"
-    >
-    <li
-      *ngIf="tab.hasPermission | async"
-      routerLinkActive="active"
-      [routerLink]="tab.link"
-      [class.disabled]="tab.disabled"
-    >
-      {{ tab.title | translate }}
-      <div class="selection"></div>
-    </li>
-  </ng-container>
+    routerLinkActive="active"
+    [routerLink]="tab.link"
+    [class.disabled]="tab.disabled"
+  >
+    {{ tab.title | translate }}
+    <div class="selection"></div>
+  </li>
 </ul>
