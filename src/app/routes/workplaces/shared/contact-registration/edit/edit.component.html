@@ -44,7 +44,7 @@
           <app-input-datepicker
             formControlName="date"
             [displayTime]="false"
-            [minDate]="promiseMinDate"
+            [minDate]="today"
             [maxDate]="promiseMaxDate$ | async"
             [required]="true"
           ></app-input-datepicker>
@@ -57,7 +57,6 @@
               <!-- TODO(d.maltsev): i18n -->
               Сумма <b class="text-danger">*</b>
             </span>
-            <!-- TODO(d.maltsev): patch value on promiseMode changes -->
             <input
               class="form-control"
               type="number"
@@ -76,7 +75,6 @@
               <!-- TODO(d.maltsev): i18n -->
               Процент от остатка <b class="text-danger">*</b>
             </span>
-            <!-- TODO(d.maltsev): patch value on promiseMode changes -->
             <input
               class="form-control"
               type="number"
@@ -108,11 +106,10 @@
               Дата <b class="text-danger">*</b>
             </span>
           </label>
-          <!-- TODO(d.maltsev): minDate -->
           <app-input-datepicker
             formControlName="date"
             [displayTime]="false"
-            [minDate]="promiseMinDate"
+            [minDate]="today"
             [required]="true"
           ></app-input-datepicker>
         </div>
@@ -124,12 +121,32 @@
               <!-- TODO(d.maltsev): i18n -->
               Сумма <b class="text-danger">*</b>
             </span>
-            <!-- TODO(d.maltsev): total -->
-            <!-- TODO(d.maltsev): patch value on paymentMode changes -->
-            <app-debt-amount
+            <input
+              class="form-control"
+              type="number"
               formControlName="amount"
-              [total]="debtTotal"
-            ></app-debt-amount>
+              [disabled]="isPaymentAmountDisabled$ | async"
+              [required]="true"
+              (input)="onPaymentAmountInput($event)"
+            />
+          </label>
+        </div>
+
+        <!-- Payment Percentage -->
+        <div>
+          <label>
+            <span class="form-label">
+              <!-- TODO(d.maltsev): i18n -->
+              Процент от остатка <b class="text-danger">*</b>
+            </span>
+            <input
+              class="form-control"
+              type="number"
+              formControlName="percentage"
+              [disabled]="isPaymentAmountDisabled$ | async"
+              [required]="true"
+              (input)="onPaymentPercentageInput($event)"
+            />
           </label>
         </div>
 
@@ -144,6 +161,7 @@
               formControlName="currencyId"
               lookupKey="currencies"
               [nullable]="false"
+              [required]="true"
             ></app-select-wrapper>
           </label>
         </div>
@@ -163,16 +181,16 @@
             <span class="form-label">
               <!-- TODO(d.maltsev): i18n -->
               <!-- TODO(d.maltsev): required -->
-              Дата следующего звонка <b class="text-danger">*</b>
+              Дата следующего звонка <b *ngIf="isNextCallDateRequired$ | async" class="text-danger">*</b>
             </span>
           </label>
           <!-- TODO(d.maltsev): nextCallMinDate, nextCallMaxDate, required -->
           <app-input-datepicker
             formControlName="nextCallDateTime"
             [displayTime]="true"
-            [minDate]="nextCallMinDate"
-            [maxDate]="nextCallMaxDate"
-            [required]="true"
+            [minDate]="today"
+            [maxDate]="nextCallMaxDate$ | async"
+            [required]="isNextCallDateRequired$ | async"
           ></app-input-datepicker>
         </div>
 
@@ -189,14 +207,13 @@
           <label>
             <span class="form-label">
               <!-- TODO(d.maltsev): i18n -->
-              <!-- TODO(d.maltsev): required -->
-              Комментарий <b class="text-danger">*</b>
+              Комментарий <b *ngIf="isCommentRequired$ | async" class="text-danger">*</b>
             </span>
-            <!-- TODO(d.maltsev): required -->
             <textarea
               class="form-control"
               formControlName="comment"
               rows="2"
+              [required]="isCommentRequired$ | async"
             ></textarea>
           </label>
 
@@ -314,7 +331,6 @@
 
         <!-- Contact Person -->
         <div>
-          <!-- TODO(d.maltsev): personId -->
           <app-contact-registration-contact-select
             #contactForPhone
             [excludeCurrentPersonId]="false"
@@ -332,7 +348,6 @@
       <div *ngIf="displayContactPersonForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Изменение контактного лица</h3>
-        <!-- TODO(d.maltsev): personId -->
         <app-contact-registration-contact-select
           #contactForPerson
           [excludeCurrentPersonId]="true"
@@ -351,15 +366,13 @@
           <label>
             <span class="form-label">
               <!-- TODO(d.maltsev): i18n -->
-              <!-- TODO(d.maltsev): required -->
-              Причина возникновения задолженности <b class="text-danger">*</b>
+              Причина возникновения задолженности <b *ngIf="isDebtReasonCodeRequired$ | async" class="text-danger">*</b>
             </span>
-            <!-- TODO(d.maltsev): required, nullable -->
             <app-select-wrapper
               formControlName="debtReasonCode"
               dictCode="11"
-              [nullable]="false"
-              [required]="true"
+              [nullable]="!(isDebtReasonCodeRequired$ | async)"
+              [required]="isDebtReasonCodeRequired$ | async"
             ></app-select-wrapper>
           </label>
         </div>
@@ -377,7 +390,7 @@
           <label>
             <span class="form-label">
               <!-- TODO(d.maltsev): i18n -->
-              Причина возникновения задолженности <b class="text-danger">*</b>
+              Причина отказа от оплаты <b class="text-danger">*</b>
             </span>
             <!-- TODO(d.maltsev): filter by parent 3 -->
             <app-select-wrapper
@@ -416,14 +429,14 @@
             <span class="form-label">
               <!-- TODO(d.maltsev): required -->
               <!-- TODO(d.maltsev): i18n -->
-              Причина звонка должника <b class="text-danger">*</b>
+              Причина звонка должника <b *ngIf="isCallReasonRequired$ | async" class="text-danger">*</b>
             </span>
             <!-- TODO(d.maltsev): nullable, required -->
             <app-select-wrapper
               formControlName="callReasonCode"
               dictCode="49"
-              [nullable]="false"
-              [required]="true"
+              [nullable]="!(isCallReasonRequired$ | async)"
+              [required]="isCallReasonRequired$ | async"
             ></app-select-wrapper>
           </label>
         </div>
@@ -442,15 +455,15 @@
             <span class="form-label">
               <!-- TODO(d.maltsev): required -->
               <!-- TODO(d.maltsev): i18n -->
-              Причина перевода в пользовательский статус <b class="text-danger">*</b>
+              Причина перевода в пользовательский статус <b *ngIf="isChangeReasonRequired$ | async" class="text-danger">*</b>
             </span>
             <!-- TODO(d.maltsev): nullable, required -->
             <!-- Filter by terms whose parent is debtStatusCode -->
             <app-select-wrapper
               formControlName="statusReasonCode"
               dictCode="19"
-              [nullable]="false"
-              [required]="true"
+              [nullable]="!(isChangeReasonRequired$ | async)"
+              [required]="isChangeReasonRequired$ | async"
             ></app-select-wrapper>
           </label>
         </div>

@@ -87,6 +87,20 @@ export class EditComponent extends DialogFunctions implements OnInit {
         minStrict(canSet ? 0 : limit.minAmountPercent),
         max(100),
       ]);
+      this.form.get('payment.amount').setValidators([
+        minStrict(0),
+        max(debt.debtAmount),
+      ]);
+      this.form.get('payment.percentage').setValidators([
+        minStrict(0),
+        max(100),
+      ]);
+    });
+
+    // TODO(d.maltsev): unsubscribe
+    this.form.get('autoCommentId').valueChanges.subscribe(autoCommentId => {
+      // TODO(d.mmaltsev): fetch autocomment
+      console.log(autoCommentId);
     });
   }
 
@@ -110,8 +124,16 @@ export class EditComponent extends DialogFunctions implements OnInit {
     return this.contactRegistrationService.canSetNextCallDate$;
   }
 
+  get isNextCallDateRequired$(): Observable<boolean> {
+    return this.contactRegistrationService.isNextCallDateRequired$;
+  }
+
   get displayCommentForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetComment$;
+  }
+
+  get isCommentRequired$(): Observable<boolean> {
+    return this.contactRegistrationService.isCommentRequired$;
   }
 
   get displayAutoCommentForm$(): Observable<boolean> {
@@ -130,6 +152,10 @@ export class EditComponent extends DialogFunctions implements OnInit {
     return this.contactRegistrationService.canSetDebtReason$;
   }
 
+  get isDebtReasonCodeRequired$(): Observable<boolean> {
+    return this.contactRegistrationService.isDebtReasonCodeRequired$;
+  }
+
   get displayRefusalForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetRefusal$;
   }
@@ -142,8 +168,16 @@ export class EditComponent extends DialogFunctions implements OnInit {
     return this.contactRegistrationService.canSetCallReason$;
   }
 
+  get isCallReasonRequired$(): Observable<boolean> {
+    return this.contactRegistrationService.isCallReasonRequired$;
+  }
+
   get displayChangeReasonForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetChangeReason$;
+  }
+
+  get isChangeReasonRequired$(): Observable<boolean> {
+    return this.contactRegistrationService.isChangeReasonRequired$;
   }
 
   get debtId$(): Observable<number> {
@@ -158,7 +192,7 @@ export class EditComponent extends DialogFunctions implements OnInit {
     return this.contactRegistrationService.contactType$;
   }
 
-  get promiseMinDate(): Date {
+  get today(): Date {
     return moment().toDate();
   }
 
@@ -168,6 +202,12 @@ export class EditComponent extends DialogFunctions implements OnInit {
         const maxDays = limit && limit.maxDays;
         return maxDays == null ? null : moment().add(maxDays, 'day').toDate();
       }),
+    );
+  }
+
+  get nextCallMaxDate$(): Observable<Date> {
+    return this.contactRegistrationService.nextCallDays$.pipe(
+      map(nextCallDays => moment().add(nextCallDays, 'day').toDate()),
     );
   }
 
@@ -189,6 +229,22 @@ export class EditComponent extends DialogFunctions implements OnInit {
     this.contactRegistrationService.debt$
       .pipe(first())
       .subscribe(debt => debt && this.setPromiseAmount(debt.debtAmount * percentage / 100.0, percentage));
+  }
+
+  onPaymentAmountInput(event: Event): void {
+    const { value } = event.target as HTMLInputElement;
+    const amount = Number(value);
+    this.contactRegistrationService.debt$
+      .pipe(first())
+      .subscribe(debt => debt && this.setPaymentAmount(amount, 100.0 * amount / debt.debtAmount));
+  }
+
+  onPaymentPercentageInput(event: Event): void {
+    const { value } = event.target as HTMLInputElement;
+    const percentage = Number(value);
+    this.contactRegistrationService.debt$
+      .pipe(first())
+      .subscribe(debt => debt && this.setPaymentAmount(debt.debtAmount * percentage / 100.0, percentage));
   }
 
   onSubmit(): void {
@@ -218,6 +274,11 @@ export class EditComponent extends DialogFunctions implements OnInit {
 
   private setPromiseAmount(amount: number, percentage: number): void {
     this.form.patchValue({ promise: { amount, percentage } });
+    this.cdRef.markForCheck();
+  }
+
+  private setPaymentAmount(amount: number, percentage: number): void {
+    this.form.patchValue({ payment: { amount, percentage } });
     this.cdRef.markForCheck();
   }
 
