@@ -8,7 +8,7 @@ import {
   IDynamicFormItem, IDynamicFormConfig, IDynamicFormSelectControl, IDynamicFormControl
 } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
-import { ScheduleEventEnum, IScheduleGroup, IScheduleType, IScheduleUser } from '../../schedule-event.interface';
+import { IScheduleGroup, IScheduleType, IScheduleUser } from '../../schedule-event.interface';
 
 import { ScheduleEventService } from '../../schedule-event.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -146,14 +146,15 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
         ),
         ...Array.from(new Array(4), (v, i) => this.createDictTypeControls(canEdit, i + 1)),
         this.createDebtStageTypeControls(canEdit),
-        this.createChangeOperatorTypeControls(canEdit, users)
+        this.createChangeOperatorTypeControls(canEdit, users),
+        this.createChangeOperatorTypeControls(canEdit)
       ];
 
       this.selectedEventTypeCode$.next(this.type.eventTypeCode);
       this.selectedEventTypeCodeSub = this.selectedEventTypeCode$
         .subscribe(() => {
          this.selectedType = this.getFormData(
-            useSmsSender.valueB && smsSender.valueN,
+            useSmsSender.valueB && smsSender.valueN ||
             useEmailSender.valueB && emailSender.valueN
           );
           this.cdRef.markForCheck();
@@ -167,7 +168,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     this.selectedEventTypeCodeSub.unsubscribe();
   }
 
-  get selectedEventTypeCode(): ScheduleEventEnum {
+  get selectedEventTypeCode(): number {
     return this.selectedEventTypeCode$.value;
   }
 
@@ -274,9 +275,9 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createChangeOperatorTypeControls(canEdit: boolean, users: IScheduleUser[]): Partial<IDynamicFormControl>[] {
+  private createChangeOperatorTypeControls(canEdit: boolean, users?: IScheduleUser[]): Partial<IDynamicFormControl>[] {
     return this.createFormControls({
-      userId: { gridRows: users, disabled: !canEdit },
+      ...(users ? { userId: { gridRows: users, disabled: !canEdit } } : {}),
       modeCode: {
         disabled: !canEdit,
         dictCode: UserDictionariesService.DICTIONARY_OPERATOR_MODE_CODE,
@@ -286,43 +287,24 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getFormData(smsSender: number, emailSender: number): any {
+  private getFormData(sender: number): any {
     return {
-      ...this.getDefaultFormData(smsSender, emailSender),
+      ...this.getDefaultFormData(sender),
       ...(this.isOriginalEventType ? this.type : {}),
       eventTypeCode: this.selectedEventTypeCode,
       ...(this.isOriginalEventType ? this.scheduleEventService.getEventAddParams(this.type) : {})
     };
   }
 
-  private getDefaultFormData(smsSender: number, emailSender: number): any {
-    switch (this.selectedEventTypeCode) {
-      case ScheduleEventEnum.GROUP:
-        return {};
-      case ScheduleEventEnum.SMS:
-        return {
-          phoneTypes: [ 1 ],
-          personRoles: [ 1 ],
-          senderCode: smsSender,
-        };
-      case ScheduleEventEnum.EMAIL:
-        return {
-          phoneTypes: [ 1 ],
-          personRoles: [ 1 ],
-          senderCode: emailSender,
-        };
-      case ScheduleEventEnum.DICT1CODE:
-      case ScheduleEventEnum.DICT2CODE:
-      case ScheduleEventEnum.DICT3CODE:
-      case ScheduleEventEnum.DICT4CODE:
-        return {
-          [`dict${this.selectedEventTypeCode - 3}Code`]: 1
-        };
-      case ScheduleEventEnum.DEBTSTAGE:
-        return { stage: 1 };
-      case ScheduleEventEnum.USERCHANGE:
-        return { modeCode: 1 };
-    }
+  private getDefaultFormData(sender: number): any {
+    return {
+      phoneTypes: [ 1 ],
+      personRoles: [ 1 ],
+      senderCode: sender,
+      [`dict${this.selectedEventTypeCode - 3}Code`]: 1,
+      stage: 1,
+      modeCode: 1
+    };
   }
 
   private serializeScheduleType(fromData: any): IScheduleType {

@@ -18,18 +18,6 @@ export enum SchedulePeriodEnum {
   WEEKLY = 2,
 }
 
-export enum ScheduleEventEnum {
-  GROUP = 1,
-  SMS = 2,
-  EMAIL = 3,
-  DICT1CODE = 4,
-  DICT2CODE = 5,
-  DICT3CODE = 6,
-  DICT4CODE = 7,
-  DEBTSTAGE = 8,
-  USERCHANGE = 9
-}
-
 export interface ISchedulePeriod {
   periodTypeCode: number;
   dayPeriod?: number;
