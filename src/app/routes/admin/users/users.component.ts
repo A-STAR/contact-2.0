@@ -159,9 +159,8 @@ export class UsersComponent implements OnDestroy {
     this.routingService.navigate([ 'create' ], this.route);
   }
 
-  onEdit(user?: IUser): void {
-    const id = user ? user.id : this.editedUser.id;
-    this.routingService.navigate([ String(id) ], this.route);
+  onEdit(): void {
+    this.routingService.navigate([ String(this.editedUser.id) ], this.route);
   }
 
   onSelect(user: IUser): void {

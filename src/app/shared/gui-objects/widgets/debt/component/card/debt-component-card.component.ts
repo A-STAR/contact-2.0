@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -28,6 +28,7 @@ export class DebtComponentCardComponent {
   debtComponent: IDebtComponent;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private debtComponentService: DebtComponentService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
@@ -63,8 +64,8 @@ export class DebtComponentCardComponent {
           required: true
         },
       ];
-      // TODO: fix displaying of selected debt component
       this.debtComponent = debtComponent;
+      this.cdRef.markForCheck();
     });
   }
 

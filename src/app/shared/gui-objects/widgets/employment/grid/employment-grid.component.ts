@@ -147,7 +147,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.routingService.navigate([ 'employment', 'create' ], this.route);
+    this.routingService.navigate([ 'employment/create' ], this.route);
   }
 
   private onEdit(employmentId: number): void {
