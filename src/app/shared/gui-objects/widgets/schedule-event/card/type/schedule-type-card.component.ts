@@ -11,7 +11,6 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 import { IScheduleGroup, IScheduleType, IScheduleUser } from '../../schedule-event.interface';
 
 import { ScheduleEventService } from '../../schedule-event.service';
-import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
@@ -38,6 +37,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   };
 
   addParamsControls: Array<Partial<IDynamicFormControl>[]>;
+  addParamsData: any;
 
   selectedType: Partial<IScheduleType>;
 
@@ -62,7 +62,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       controlName: 'userId',
       type: 'gridselect',
       gridColumns: [
-        { prop: 'id', width: 70 },
+        { prop: 'id', maxWidth: 70 },
         { prop: 'fullName' },
         { prop: 'organization' },
         { prop: 'position' },
@@ -75,8 +75,13 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       controlName: 'groupId',
       type: 'gridselect',
       gridColumns: [
-        { prop: 'id', width: 70 },
-        { name: 'entityTypeCode', prop: 'entityTypeId', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE, width: 90 },
+        { prop: 'id', maxWidth: 70 },
+        {
+          name: 'entityTypeCode',
+          prop: 'entityTypeId',
+          dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE,
+          maxWidth: 90
+        },
         { prop: 'name' },
         { prop: 'comment' },
       ],
@@ -84,81 +89,108 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       gridValueGetter: row => row.id,
       required: true,
     },
+    inactiveReasonCode: { controlName: 'inactiveReasonCode', type: 'select' },
     phoneTypes: { controlName: 'phoneTypes', type: 'multiselect', required: true, width: 4 },
     templateId: { controlName: 'templateId', type: 'select', required: true, width: 4 },
-    delay: { controlName: 'delay', type: 'number', required: true, validators: [ min(1) ] },
     checkGroup: { controlName: 'checkGroup', type: 'checkbox' },
     senderCode: { controlName: 'senderCode', type: 'select', required: true, width: 4 },
     dict1Code: { controlName: 'dict1Code', type: 'select', required: true },
     dict2Code: { controlName: 'dict2Code', type: 'select', required: true },
     dict3Code: { controlName: 'dict3Code', type: 'select', required: true },
     dict4Code: { controlName: 'dict4Code', type: 'select', required: true },
-    stage: { controlName: 'stage', type: 'select', required: true },
     modeCode: { controlName: 'modeCode', type: 'select', required: true },
+    delay: { controlName: 'delay', type: 'number', required: true, validators: [ min(1) ] },
+    stage: { controlName: 'stage', type: 'select', required: true },
   };
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private userConstantsService: UserConstantsService,
-    private userDictionaryService: UserDictionariesService,
     private scheduleEventService: ScheduleEventService,
   ) {}
 
   ngOnInit(): void {
     combineLatest(
       this.eventId ? this.scheduleEventService.canEdit$ : this.scheduleEventService.canView$,
-      this.userDictionaryService.getDictionariesAsOptions([
-        UserDictionariesService.DICTIONARY_PHONE_TYPE,
-        UserDictionariesService.DICTIONARY_EMAIL_TYPE,
-        UserDictionariesService.DICTIONARY_PERSON_ROLE,
-      ]),
+      this.scheduleEventService.dictionaries$,
       this.scheduleEventService.getEventTemplateOptions(2, this.type.additionalParameters),
       this.scheduleEventService.getEventTemplateOptions(3, this.type.additionalParameters),
-      combineLatest(
-        this.userConstantsService.get('SMS.Sender.Use'),
-        this.userConstantsService.get('Email.Sender.Use'),
-        this.userConstantsService.get('SMS.Sender.Default'),
-        this.userConstantsService.get('Email.Sender.Default'),
-      ),
+      this.scheduleEventService.constants$,
       this.scheduleEventService.fetchGroups(),
       this.scheduleEventService.fetchUsers()
     )
     .pipe(first())
     .subscribe(([canEdit, options, templateSmsOptions, templateEmailOptions, constants, groups, users]) => {
       const [ useSmsSender, useEmailSender, smsSender, emailSender ] = constants;
+      const groupsByEntityType = this.scheduleEventService.getGroupsByEntityType(groups);
 
-      this.eventTypeControls = this.createEventTypeControls(canEdit, groups);
+      this.eventTypeControls = this.createEventTypeControls(canEdit);
 
       this.addParamsControls = [
-        [],
+        this.createChangeGroupTypeControls(canEdit, groups),
         this.createSendTypeControls(
           canEdit,
+          groupsByEntityType[19],
           options[UserDictionariesService.DICTIONARY_PHONE_TYPE],
           options[UserDictionariesService.DICTIONARY_PERSON_ROLE],
-          templateSmsOptions, useSmsSender.valueB
+          templateSmsOptions,
+          useSmsSender.valueB && UserDictionariesService.DICTIONARY_SMS_SENDER
         ),
         this.createSendTypeControls(
           canEdit,
+          groupsByEntityType[19],
           options[UserDictionariesService.DICTIONARY_EMAIL_TYPE],
           options[UserDictionariesService.DICTIONARY_PERSON_ROLE],
           templateEmailOptions,
-          useEmailSender.valueB
+          useEmailSender.valueB && UserDictionariesService.DICTIONARY_EMAIL_SENDER
         ),
-        ...Array.from(new Array(4), (v, i) => this.createDictTypeControls(canEdit, i + 1)),
-        this.createDebtStageTypeControls(canEdit),
-        this.createChangeOperatorTypeControls(canEdit, users),
-        this.createChangeOperatorTypeControls(canEdit)
+        ...Array.from(new Array(4), (v, i) =>
+          this.createDictTypeControls(canEdit, groupsByEntityType[19], i + 1)
+        ),
+        this.createDebtStageTypeControls(canEdit, groupsByEntityType[19]),
+        this.createChangeOperatorTypeControls(
+          canEdit,
+          groupsByEntityType[19],
+          UserDictionariesService.DICTIONARY_ACCEPT_OPERATOR_MODE_CODE,
+          users
+        ),
+        this.createChangeOperatorTypeControls(
+          canEdit,
+          groupsByEntityType[19],
+          UserDictionariesService.DICTIONARY_CLEAR_OPERATOR_MODE_CODE
+        ),
+        this.createBlockTypeControls(
+          canEdit,
+          groupsByEntityType[21],
+          UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING
+        ),
+        this.createBlockTypeControls(
+          canEdit,
+          groupsByEntityType[20],
+          UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING
+        ),
+        this.createBlockTypeControls(
+          canEdit,
+          groupsByEntityType[22],
+          UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING
+        )
       ];
 
+      this.addParamsData = {
+        1: {
+          senderCode: useSmsSender.valueB && smsSender.valueN,
+          templateId: templateSmsOptions[0] && templateSmsOptions[0].value
+        },
+        2: {
+          senderCode: useEmailSender.valueB && emailSender.valueN,
+          templateId: templateEmailOptions[0] && templateEmailOptions[0].value
+        }
+      };
+
       this.selectedEventTypeCode$.next(this.type.eventTypeCode);
-      this.selectedEventTypeCodeSub = this.selectedEventTypeCode$
-        .subscribe(() => {
-         this.selectedType = this.getFormData(
-            useSmsSender.valueB && smsSender.valueN ||
-            useEmailSender.valueB && emailSender.valueN
-          );
-          this.cdRef.markForCheck();
-        });
+      this.selectedEventTypeCodeSub = this.selectedEventTypeCode$.subscribe(type => {
+        this.selectedType = this.getFormData();
+        this.cdRef.markForCheck();
+      });
 
       this.cdRef.markForCheck();
     });
@@ -219,42 +251,45 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     }));
   }
 
-  private createEventTypeControls(canEdit: boolean, groups: IScheduleGroup[]): Partial<IDynamicFormItem>[] {
+  private createEventTypeControls(canEdit: boolean): Partial<IDynamicFormItem>[] {
     return this.createFormControls({
       eventTypeCode: { disabled: !canEdit, dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE },
+    });
+  }
+
+  private createChangeGroupTypeControls(canEdit: boolean, groups: IScheduleGroup[]): Partial<IDynamicFormControl>[] {
+    return this.createFormControls({
       groupId: { gridRows: groups, disabled: !canEdit },
     });
   }
 
   private createSendTypeControls(
     canEdit: boolean,
+    groups: IScheduleGroup[],
     phoneOptions: IOption[],
     personRoleOptions: IOption[],
     templateOptions: IOption[],
-    useSender: boolean
+    senderDictCode: number
   ): Partial<IDynamicFormControl>[] {
     const addControls = this.createFormControls({
+      groupId: { gridRows: groups, disabled: !canEdit },
+      delay: { disabled: !canEdit, width: senderDictCode ? 4 : 12 },
       phoneTypes: { disabled: !canEdit, options: phoneOptions, markAsDirty: !this.eventId },
       personRoles: { disabled: !canEdit, options: personRoleOptions, markAsDirty: !this.eventId },
       templateId: { disabled: !canEdit, options: templateOptions, markAsDirty: !this.eventId },
-      delay: { disabled: !canEdit, width: useSender ? 4 : 12 },
+      checkGroup: { disabled: !canEdit }
     });
-
-    if (useSender) {
-      addControls.push(...this.createFormControls({
-        senderCode: { disabled: !canEdit, dictCode: UserDictionariesService.DICTIONARY_SMS_SENDER, markAsDirty: !this.eventId }
+    if (senderDictCode) {
+      addControls.splice(addControls.length - 1, 0, ...this.createFormControls({
+        senderCode: { disabled: !canEdit, dictCode: senderDictCode, markAsDirty: !this.eventId }
       }));
     }
-
-    addControls.push(...this.createFormControls({
-      checkGroup: { disabled: !canEdit }
-    }));
-
     return addControls;
   }
 
-  private createDictTypeControls(canEdit: boolean, dictIndex: number): Partial<IDynamicFormControl>[] {
+  private createDictTypeControls(canEdit: boolean, groups: IScheduleGroup[], dictIndex: number): Partial<IDynamicFormControl>[] {
     return this.createFormControls({
+      groupId: { gridRows: groups, disabled: !canEdit },
       [`dict${dictIndex}Code`]: {
         disabled: !canEdit,
         dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${dictIndex}`],
@@ -264,8 +299,9 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createDebtStageTypeControls(canEdit: boolean): Partial<IDynamicFormControl>[] {
+  private createDebtStageTypeControls(canEdit: boolean, groups: IScheduleGroup[]): Partial<IDynamicFormControl>[] {
     return this.createFormControls({
+      groupId: { gridRows: groups, disabled: !canEdit },
       stage: {
         disabled: !canEdit,
         dictCode: UserDictionariesService.DICTIONARY_DEBT_STAGE_CODE,
@@ -275,43 +311,63 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createChangeOperatorTypeControls(canEdit: boolean, users?: IScheduleUser[]): Partial<IDynamicFormControl>[] {
+  private createChangeOperatorTypeControls(
+    canEdit: boolean,
+    groups: IScheduleGroup[],
+    modeDictCode: number,
+    users?: IScheduleUser[],
+  ): Partial<IDynamicFormControl>[] {
     return this.createFormControls({
+      groupId: { gridRows: groups, disabled: !canEdit },
       ...(users ? { userId: { gridRows: users, disabled: !canEdit } } : {}),
       modeCode: {
         disabled: !canEdit,
-        dictCode: UserDictionariesService.DICTIONARY_OPERATOR_MODE_CODE,
+        dictCode: modeDictCode,
         markAsDirty: !this.eventId
       },
       checkGroup: { disabled: !canEdit }
     });
   }
 
-  private getFormData(sender: number): any {
+  private createBlockTypeControls(canEdit: boolean, groups: IScheduleGroup[], dictCode: number): Partial<IDynamicFormControl>[] {
+    return this.createFormControls({
+      groupId: { gridRows: groups, disabled: !canEdit },
+      modeCode: {
+        disabled: !canEdit,
+        dictCode: dictCode,
+        markAsDirty: !this.eventId
+      },
+      checkGroup: { disabled: !canEdit }
+    });
+  }
+
+  private getFormData(): any {
     return {
-      ...this.getDefaultFormData(sender),
+      ...this.getDefaultFormData(),
+      ...(this.addParamsData[this.selectedEventTypeCode - 1] || {}),
       ...(this.isOriginalEventType ? this.type : {}),
       eventTypeCode: this.selectedEventTypeCode,
       ...(this.isOriginalEventType ? this.scheduleEventService.getEventAddParams(this.type) : {})
     };
   }
 
-  private getDefaultFormData(sender: number): any {
+  private getDefaultFormData(): any {
     return {
       phoneTypes: [ 1 ],
       personRoles: [ 1 ],
-      senderCode: sender,
       [`dict${this.selectedEventTypeCode - 3}Code`]: 1,
       stage: 1,
-      modeCode: 1
+      modeCode: 1,
+      inactiveReasonCode: 1
     };
   }
 
-  private serializeScheduleType(fromData: any): IScheduleType {
-    const additionalParameters = this.scheduleEventService.createEventAddParams(fromData);
+  private serializeScheduleType(formData: any): IScheduleType {
+    const additionalParameters = this.scheduleEventService.createEventAddParams(formData);
     return {
       ...this.eventTypeForm.serializedUpdates,
-      checkGroup: fromData.checkGroup,
+      groupId: formData.groupId,
+      checkGroup: formData.checkGroup,
       ...(additionalParameters.length ? { additionalParameters } : {})
     };
   }

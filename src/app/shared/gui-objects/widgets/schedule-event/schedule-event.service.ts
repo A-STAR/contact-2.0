@@ -2,6 +2,7 @@ import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '../../../../core/state/state.interface';
 import {
@@ -9,10 +10,14 @@ import {
   IScheduleParam, IScheduleStartRequest, IScheduleUser
 } from './schedule-event.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
+import { IUserDictionaryOptions } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
@@ -28,6 +33,8 @@ export class ScheduleEventService extends AbstractActionService {
     protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    private userConstantsService: UserConstantsService,
+    private userDictionaryService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private userTemplatesService: UserTemplatesService,
     protected store: Store<IAppState>,
@@ -53,6 +60,23 @@ export class ScheduleEventService extends AbstractActionService {
 
   get canStart$(): Observable<boolean> {
     return this.userPermissionsService.has('SCHEDULE_MANUAL_EXECUTE');
+  }
+
+  get dictionaries$(): Observable<IUserDictionaryOptions> {
+    return this.userDictionaryService.getDictionariesAsOptions([
+      UserDictionariesService.DICTIONARY_PHONE_TYPE,
+      UserDictionariesService.DICTIONARY_EMAIL_TYPE,
+      UserDictionariesService.DICTIONARY_PERSON_ROLE,
+    ]);
+  }
+
+  get constants$(): Observable<IUserConstant[]> {
+    return combineLatest(
+      this.userConstantsService.get('SMS.Sender.Use'),
+      this.userConstantsService.get('Email.Sender.Use'),
+      this.userConstantsService.get('SMS.Sender.Default'),
+      this.userConstantsService.get('Email.Sender.Default'),
+    );
   }
 
   fetchAll(): Observable<IScheduleEvent[]> {
@@ -98,12 +122,24 @@ export class ScheduleEventService extends AbstractActionService {
       .params({ eventId: eventIds.join() }).dispatchCallback());
   }
 
-  getEventAddParamValue<T>(param: IScheduleParam): T {
-    return JSON.parse(param.value);
+  getEventAddParamValue(param: IScheduleParam): string | string[] {
+    switch (param.name) {
+      case 'personRoles':
+      case 'phoneTypes':
+        return param.value.split(',');
+      default:
+        return param.value;
+    }
   }
 
   createEventAddParam(name: string, value: any): IScheduleParam {
-    return { name, value: JSON.stringify(value) };
+    switch (name) {
+      case 'personRoles':
+      case 'phoneTypes':
+        return { name, value: value.join(',') };
+      default:
+        return { name, value };
+    }
   }
 
   getEventTemplateOptions(typeCode: number, addParams: IScheduleParam[]): Observable<IOption[]> {
@@ -120,12 +156,20 @@ export class ScheduleEventService extends AbstractActionService {
 
   findEventAddParam<T>(addParams: IScheduleParam[], name: string): T {
     const param = (addParams || []).find(p => p.name === name);
-    return param && this.getEventAddParamValue(param);
+    return param && this.getEventAddParamValue(param) as any;
   }
 
   createEventAddParams(params: any): IScheduleParam[] {
     return Object.keys(params)
       .filter(key => key !== 'checkGroup')
+      .filter(key => key !== 'groupId')
       .map(key => this.createEventAddParam(key, params[key]));
+  }
+
+  getGroupsByEntityType(groups: IScheduleGroup[]): { [type: number]: IScheduleGroup[] } {
+    return groups.reduce((acc, group) => ({
+      ...acc,
+      [group.entityTypeId]: [ ...(acc[group.entityTypeId] || []), group ]
+    }), {});
   }
 }
