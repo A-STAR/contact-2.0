@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AttachmentModule } from './attachment/attachment.module';
 import { AttributesModule } from './attributes/attributes.module';
 import { ContactRegistrationAutoCommentModule } from './auto-comment/auto-comment.module';
+import { ContactRegistrationNextCallModule } from './next-call/next-call.module';
 import { ContactRegistrationPaymentModule } from './payment/payment.module';
 import { ContactRegistrationPhoneModule } from './phone/phone.module';
 import { ContactRegistrationPromiseModule } from './promise/promise.module';
@@ -18,6 +19,7 @@ import { EditComponent } from './edit.component';
     AttachmentModule,
     AttributesModule,
     ContactRegistrationAutoCommentModule,
+    ContactRegistrationNextCallModule,
     ContactRegistrationPaymentModule,
     ContactRegistrationPhoneModule,
     ContactRegistrationPromiseModule,

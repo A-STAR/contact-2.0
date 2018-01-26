@@ -70,14 +70,6 @@ export class EditComponent extends DialogFunctions {
     super();
   }
 
-  get displayNextCallDateForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetNextCallDate$;
-  }
-
-  get isNextCallDateRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isNextCallDateRequired$;
-  }
-
   get displayCommentForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetComment$;
   }
@@ -136,12 +128,6 @@ export class EditComponent extends DialogFunctions {
 
   get today(): Date {
     return moment().toDate();
-  }
-
-  get nextCallMaxDate$(): Observable<Date> {
-    return this.contactRegistrationService.nextCallDays$.pipe(
-      map(nextCallDays => moment().add(nextCallDays, 'day').toDate()),
-    );
   }
 
   get canSubmit(): boolean {

@@ -31,26 +31,7 @@
       <app-contact-registration-payment [formGroup]="form"></app-contact-registration-payment>
 
       <!-- NEXT CALL DATE GROUP -->
-      <div *ngIf="displayNextCallDateForm$ | async">
-        <!-- Next Call Date -->
-        <div>
-          <label>
-            <span class="form-label">
-              <!-- TODO(d.maltsev): i18n -->
-              Дата следующего звонка <b *ngIf="isNextCallDateRequired$ | async" class="text-danger">*</b>
-            </span>
-          </label>
-          <app-input-datepicker
-            formControlName="nextCallDateTime"
-            [displayTime]="true"
-            [minDate]="today"
-            [maxDate]="nextCallMaxDate$ | async"
-            [required]="isNextCallDateRequired$ | async"
-          ></app-input-datepicker>
-        </div>
-
-        <hr>
-      </div>
+      <app-contact-registration-next-call [formGroup]="form"></app-contact-registration-next-call>
 
       <!-- COMMENT GROUP -->
       <div *ngIf="displayCommentForm$ | async">
