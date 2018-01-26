@@ -8,7 +8,6 @@ import * as moment from 'moment';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 
-import { invert } from '@app/core/utils';
 import { minStrict, max } from '@app/core/validators';
 
 @Component({
