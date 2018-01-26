@@ -1,19 +1,20 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IEmployment } from '../employment.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IEmployment } from '@app/shared/gui-objects/widgets/employment/employment.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { EmploymentService } from '../employment.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
@@ -83,7 +84,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
@@ -146,11 +147,11 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/employment/create` ]);
+    this.routingService.navigate([ 'employment', 'create' ], this.route);
   }
 
   private onEdit(employmentId: number): void {
-    this.router.navigate([ `${this.router.url}/employment/${employmentId}` ]);
+    this.routingService.navigate([ `employment/${employmentId}` ], this.route);
   }
 
   get canView$(): Observable<boolean> {

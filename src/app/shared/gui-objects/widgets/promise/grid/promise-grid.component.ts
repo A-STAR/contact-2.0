@@ -1,23 +1,24 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first, map, distinctUntilChanged } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IPromise } from '../promise.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IPromise } from '@app/shared/gui-objects/widgets/promise/promise.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { PromiseService } from '../promise.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { PromiseService } from '@app/shared/gui-objects/widgets/promise/promise.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-promise-grid',
@@ -100,9 +101,9 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userConstantsService: UserConstantsService,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {
     this.gridService.setAllRenderers(this.columns)
       .pipe(first())
@@ -146,9 +147,9 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     const { debtId } = this;
     if (!debtId) { return; }
     const url = this.callCenter
-      ? `${this.router.url}/promise/${this.debtId}/${promiseId}`
-      : `${this.router.url}/debt/promise/${promiseId}`;
-    this.router.navigate([ url ]);
+      ? `promise/${this.debtId}/${promiseId}`
+      : `debt/promise/${promiseId}`;
+    this.routingService.navigate([ url ], this.route);
   }
 
   onRemove(): void {
@@ -224,8 +225,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     if (!this.debtId) {
       return;
     }
-    const url = `${this.router.url}/debt/promise/create`;
-    this.router.navigate([ url ]);
+    this.routingService.navigate([ 'debt/promise/create' ], this.route);
   }
 
   private fetch(): void {

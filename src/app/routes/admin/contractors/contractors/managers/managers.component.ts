@@ -141,23 +141,11 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
   }
 
   onAdd(): void {
-    this.routingService.navigate([
-      '/admin',
-      'contractors',
-      String(this.contractorId),
-      'managers',
-      'create'
-    ]);
+    this.routingService.navigate([ 'create' ], this.route);
   }
 
   onEdit(): void {
-    this.routingService.navigate([
-      '/admin',
-      'contractors',
-      String(this.contractorId),
-      'managers',
-      String(this.selection[0].id)
-    ]);
+    this.routingService.navigate([ String(this.selection[0].id) ], this.route);
   }
 
   onSelect(manager: IContractorManager): void {

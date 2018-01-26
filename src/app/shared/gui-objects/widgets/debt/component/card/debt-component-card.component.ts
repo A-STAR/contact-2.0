@@ -1,17 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
-import { IDebtComponent } from '../debt-component.interface';
-import { IDynamicFormItem } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDebtComponent } from '@app/shared/gui-objects/widgets/debt/component/debt-component.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtComponentService } from '../debt-component.service';
-import { LookupService } from '../../../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { DebtComponentService } from '@app/shared/gui-objects/widgets/debt/component/debt-component.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-debt-component-card',
@@ -29,9 +30,9 @@ export class DebtComponentCardComponent {
   constructor(
     private debtComponentService: DebtComponentService,
     private lookupService: LookupService,
-    private router: Router,
     private route: ActivatedRoute,
-    private userDictionariesService: UserDictionariesService,
+    private routingService: RoutingService,
+    private userDictionariesService: UserDictionariesService
   ) {
     combineLatest(
       this.lookupService.currencyOptions,
@@ -62,6 +63,7 @@ export class DebtComponentCardComponent {
           required: true
         },
       ];
+      // TODO: fix displaying of selected debt component
       this.debtComponent = debtComponent;
     });
   }
@@ -79,7 +81,12 @@ export class DebtComponentCardComponent {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId'),
+      'debt'
+    ]);
   }
 
   get canSubmit(): boolean {
