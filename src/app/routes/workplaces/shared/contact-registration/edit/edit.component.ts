@@ -70,14 +70,6 @@ export class EditComponent extends DialogFunctions {
     super();
   }
 
-  get displayCommentForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetComment$;
-  }
-
-  get isCommentRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isCommentRequired$;
-  }
-
   get displayContactPersonForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetContactPerson$;
   }

@@ -34,24 +34,7 @@
       <app-contact-registration-next-call [formGroup]="form"></app-contact-registration-next-call>
 
       <!-- COMMENT GROUP -->
-      <div *ngIf="displayCommentForm$ | async">
-        <div>
-          <label>
-            <span class="form-label">
-              <!-- TODO(d.maltsev): i18n -->
-              Комментарий <b *ngIf="isCommentRequired$ | async" class="text-danger">*</b>
-            </span>
-            <textarea
-              class="form-control"
-              formControlName="comment"
-              rows="2"
-              [required]="isCommentRequired$ | async"
-            ></textarea>
-          </label>
-
-          <hr>
-        </div>
-      </div>
+      <app-contact-registration-comment [formGroup]="form"></app-contact-registration-comment>
 
       <!-- AUTOCOMMENT GROUP -->
       <app-contact-registration-auto-comment [formGroup]="form"></app-contact-registration-auto-comment>

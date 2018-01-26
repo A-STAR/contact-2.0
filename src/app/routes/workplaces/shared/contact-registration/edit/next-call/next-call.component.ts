@@ -26,6 +26,10 @@ export class ContactRegistrationNextCallComponent {
     return this.contactRegistrationService.isNextCallDateRequired$;
   }
 
+  get nextCallMinDate(): Date {
+    return moment().toDate();
+  }
+
   get nextCallMaxDate$(): Observable<Date> {
     return this.contactRegistrationService.nextCallDays$.pipe(
       map(nextCallDays => moment().add(nextCallDays, 'day').toDate()),

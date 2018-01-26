@@ -10,7 +10,7 @@
     <app-input-datepicker
       formControlName="nextCallDateTime"
       [displayTime]="true"
-      [minDate]="today"
+      [minDate]="nextCallMinDate"
       [maxDate]="nextCallMaxDate$ | async"
       [required]="isNextCallDateRequired$ | async"
     ></app-input-datepicker>

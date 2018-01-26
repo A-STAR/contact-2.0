@@ -15,4 +15,4 @@ import { ContactRegistrationNextCallComponent } from './next-call.component';
     SharedModule,
   ]
 })
-export class ContactRegistrationNextCallModule { }
+export class ContactRegistrationNextCallModule {}
