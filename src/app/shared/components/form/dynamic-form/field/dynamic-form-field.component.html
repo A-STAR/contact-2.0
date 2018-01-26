@@ -128,8 +128,9 @@
       </span>
       <app-multi-select
         [formControlName]="control.controlName"
-        [options]="control.options">
-      </app-multi-select>
+        [options]="control.options"
+        (select)="selectHandler({ control: control, items: $event})"
+      ></app-multi-select>
     </label>
   </ng-container>
 
