@@ -1,29 +1,21 @@
-<h3 class="form-title mt0">Лог действий</h3>
+<div class="form-toolbar">
+  <div class="form-toolbar-section">
+    <div class="form-title mt0">{{ 'actionsLog.title' | translate }}</div>
+  </div>
+  <div class="form-toolbar-section">
+    <div class="icon-section">
+      <div class="icon" (click)="onSearch()">
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </div>
+      <div class="icon" (click)="onExport()">
+        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
+</div>
 
 <app-dynamic-form
   *ngIf="controls"
   [controls]="controls"
   [data]="data"
 ></app-dynamic-form>
-
-<div class="row mt">
-
-  <div class="col-md-6">
-    <button class="btn btn-block btn-default" (click)="onSearch()">
-      <i class="fa fa-search" aria-hidden="true"></i>
-      <span>
-        {{ 'default.buttons.search' | translate }}
-      </span>
-    </button>
-  </div>
-
-  <div class="col-md-6">
-    <button class="btn btn-block btn-default" (click)="onExport()">
-      <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-      <span>
-        {{ 'default.buttons.excel' | translate }}
-      </span>
-    </button>
-  </div>
-
-</div>
