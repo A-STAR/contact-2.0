@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
@@ -47,12 +47,19 @@ export class TreeComponent implements OnInit, OnDestroy {
     this.nodesSub.unsubscribe();
   }
 
-  get scenarioText(): string {
-    // TODO(d.maltsev): i18n
+  get scenarioText(): SafeHtml {
+    if (!this.selectedNode) {
+      // TODO(d.maltsev): i18n
+      return 'Выберите исход';
+    }
+
+    if (!this.scenario) {
+      // TODO(d.maltsev): i18n
+      return 'Пустой сценарий';
+    }
+
     // TODO(d.maltsev): double check for xss vulnerabilities
-    return this.selectedNode
-      ? this.domSanitizer.bypassSecurityTrustHtml(this.scenario) as string || 'Пустой сценарий'
-      : 'Выберите исход';
+    return this.domSanitizer.bypassSecurityTrustHtml(this.scenario);
   }
 
   onNodeSelect(event: any): void {
