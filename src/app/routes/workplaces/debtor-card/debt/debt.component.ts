@@ -185,6 +185,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.portfolioId',
         controlName: 'portfolioId',
+        translationKey: 'widgets.debt.portfolioChange',
         type: 'gridselect',
         gridColumns: [
           { prop: 'id', minWidth: 50, maxWidth: 50 },

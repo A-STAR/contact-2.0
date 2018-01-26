@@ -1844,6 +1844,13 @@
         "dict3Code": "Score 3",
         "dict4Code": "Score 4"
       },
+      "portfolioChange": {
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "contractor": "Bank"
+        }
+      },
       "dialogs": {
         "closeDebt": {
           "title": "Debt Closure",
@@ -2224,7 +2231,15 @@
         "dict4Code": "Value",
         "stage": "Stage",
         "userId": "Operator",
-        "modeCode": "Mode"
+        "modeCode": "Mode",
+        "changeGroupId": {
+          "grid": {
+            "id": "ID",
+            "entityTypeId": "Type",
+            "name": "Name",
+            "comment": "Comment"
+          }
+        }
       },
       "dialog": {
         "title": "Event",

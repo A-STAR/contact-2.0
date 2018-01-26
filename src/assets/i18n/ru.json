@@ -1867,6 +1867,13 @@
           "forAllDebts": "По всем долгам"
         }
       },
+      "portfolioChange": {
+        "grid": {
+          "id": "ID",
+          "name": "Имя",
+          "contractor": "Банк"
+        }
+      },
       "component": {
         "title": "Компоненты долга",
         "grid": {
@@ -2224,7 +2231,15 @@
         "dict4Code": "Значение",
         "stage": "Стадия",
         "userId": "Оператор",
-        "modeCode": "Режим"
+        "modeCode": "Режим",
+        "changeGroupId": {
+          "grid": {
+            "id": "ID",
+            "entityTypeId": "Тип",
+            "name": "Имя",
+            "comment": "Комментарий"
+          }
+        }
       },
       "dialog": {
         "title": "Мероприятие",

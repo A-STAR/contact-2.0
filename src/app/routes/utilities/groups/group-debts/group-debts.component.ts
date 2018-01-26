@@ -92,9 +92,10 @@ export class GroupDebtsComponent implements OnInit {
       {
         controlName: 'groups',
         type: 'gridselect',
+        translationKey: 'widgets.groups.groupObjectDebts.filter',
         gridColumns: [
           { prop: 'id', minWidth: 50, maxWidth: 50 },
-          { prop: 'name', minWidth: 300, maxWidth: 300 }
+          { prop: 'name', minWidth: 300 }
         ],
         gridRows: groups,
         gridLabelGetter: (row: IFilterGroup) => row.name,

@@ -61,6 +61,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     userId: {
       controlName: 'userId',
       type: 'gridselect',
+      translationKey: 'default.filters.users',
       gridColumns: [
         { prop: 'id', maxWidth: 70 },
         { prop: 'fullName' },
@@ -74,10 +75,10 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     groupId: {
       controlName: 'groupId',
       type: 'gridselect',
+      translationKey: 'widgets.scheduleEvents.card.changeGroupId',
       gridColumns: [
         { prop: 'id', maxWidth: 70 },
         {
-          name: 'entityTypeCode',
           prop: 'entityTypeId',
           dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE,
           maxWidth: 90
