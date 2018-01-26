@@ -2746,7 +2746,7 @@
       "to": "Окончание"
     },
     "filters": {
-      "groups": {
+      "entityGroups": {
         "grid": {
           "id": "ID",
           "name": "Имя"

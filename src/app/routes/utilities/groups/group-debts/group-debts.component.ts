@@ -66,9 +66,9 @@ export class GroupDebtsComponent implements OnInit {
       {
         type: 'dialogmultiselectwrapper',
         controlName: 'groups',
-        filterType: 'groups',
+        filterType: 'entityGroups',
         filterParams: { entityTypeId: 19, isManual: false },
-        onChange: this.onGroupSelect
+        onChange: (group) => this.onGroupSelect(group)
       }
     ];
   }

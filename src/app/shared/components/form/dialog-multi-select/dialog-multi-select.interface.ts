@@ -5,6 +5,5 @@ export type IDialogMultiSelectFilterType =
   'entityGroups' |
   'portfolios' |
   'users' |
-  'actions' |
-  'groups'
+  'actions'
   ;

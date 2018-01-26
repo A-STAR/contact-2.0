@@ -2746,7 +2746,7 @@
       "to": "To"
     },
     "filters": {
-      "groups": {
+      "entityGroups": {
         "grid": {
           "id": "ID",
           "name": "Name"
