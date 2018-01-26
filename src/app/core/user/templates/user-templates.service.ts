@@ -53,6 +53,17 @@ export class UserTemplatesService {
       .distinctUntilChanged();
   }
 
+  /**
+   * Fetches evaluated template for given debt and person
+   *
+   * See http://confluence.luxbase.int:8090/display/WEB20/Debt+Template+Text
+   *
+   * @param debtId
+   * @param personId
+   * @param personRole
+   * @param templateId
+   * @param callCenter whether the request is coming from call center
+   */
   fetchMessageTemplateText(
     debtId: number,
     personId: number,
