@@ -8,7 +8,7 @@
       <!-- Filter by terms whose parent is debtStatusCode -->
       <app-select-wrapper
         formControlName="statusReasonCode"
-        dictCode="19"
+        [dictCode]="statusChangeReasonDictCode"
         [nullable]="!(isChangeReasonRequired$ | async)"
         [required]="isChangeReasonRequired$ | async"
       ></app-select-wrapper>

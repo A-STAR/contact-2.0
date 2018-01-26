@@ -7,7 +7,7 @@
       </span>
       <app-select-wrapper
         formControlName="callReasonCode"
-        dictCode="49"
+        [dictCode]="callReasonDictCode"
         [nullable]="!(isCallReasonRequired$ | async)"
         [required]="isCallReasonRequired$ | async"
       ></app-select-wrapper>

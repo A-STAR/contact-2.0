@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
 import { ContactRegistrationService } from '../../contact-registration.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,6 +12,8 @@ import { ContactRegistrationService } from '../../contact-registration.service';
 })
 export class ContactRegistrationStatusChangeComponent {
   @Input() formGroup: FormGroup;
+
+  private statusChangeReasonDictCode = UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE;
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,

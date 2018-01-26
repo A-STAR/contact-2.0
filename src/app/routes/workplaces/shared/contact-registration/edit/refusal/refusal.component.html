@@ -8,7 +8,7 @@
       <!-- TODO(d.maltsev): filter by parent 3 -->
       <app-select-wrapper
         formControlName="refusalReasonCode"
-        dictCode="19"
+        [dictCode]="statusChangeReasonDictCode"
         [nullable]="false"
         [required]="true"
       ></app-select-wrapper>
