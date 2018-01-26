@@ -1,0 +1,20 @@
+<div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
+  <!-- Next Call Date -->
+  <div>
+    <label>
+      <span class="form-label">
+        <!-- TODO(d.maltsev): i18n -->
+        Дата следующего звонка <b *ngIf="isNextCallDateRequired$ | async" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-input-datepicker
+      formControlName="nextCallDateTime"
+      [displayTime]="true"
+      [minDate]="nextCallMinDate"
+      [maxDate]="nextCallMaxDate$ | async"
+      [required]="isNextCallDateRequired$ | async"
+    ></app-input-datepicker>
+  </div>
+
+  <hr>
+</div>

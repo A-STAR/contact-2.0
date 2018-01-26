@@ -20,6 +20,7 @@ export class TimeComponent implements ControlValueAccessor {
 
   mask = {
     keepCharPositions: true,
+    // the second digit in hours is not ideal, since it can't validate 25 hours for example
     mask: [/[0-2]/, /[0-9]/, ':', /[0-5]/, /[0-9]/, ':', /[0-5]/, /[0-9]/],
   };
 

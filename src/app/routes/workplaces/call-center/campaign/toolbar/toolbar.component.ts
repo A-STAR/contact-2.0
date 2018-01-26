@@ -72,14 +72,12 @@ export class ToolbarComponent extends DialogFunctions {
   private registerSpecial(): void {
     this.campaignService.campaignDebt$
       .pipe(first())
-      .subscribe(debt => {
-        this.contactRegistrationService.params = {
-          debtId: debt.debtId,
-          personId: debt.personId,
-          personRole: 1,
-          contactType: 7,
-          campaignId: this.campaignService.campaignId
-        };
-      });
+      .subscribe(debt => this.contactRegistrationService.startRegistration({
+        debtId: debt.debtId,
+        personId: debt.personId,
+        personRole: 1,
+        contactType: 7,
+        campaignId: this.campaignService.campaignId
+      }));
   }
 }

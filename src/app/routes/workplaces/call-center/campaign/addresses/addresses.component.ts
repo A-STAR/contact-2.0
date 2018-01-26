@@ -65,15 +65,13 @@ export class AddressesComponent {
   onAddressRegister(address: IAddress): void {
     this.campaignService.campaignDebt$
       .pipe(first())
-      .subscribe(debt => {
-        this.contactRegistrationService.params = {
-          campaignId: this.campaignId,
-          contactId: address.id,
-          contactType: this.contactType,
-          debtId: debt.debtId,
-          personId: debt.personId,
-          personRole: this.personRole,
-        };
-      });
+      .subscribe(debt => this.contactRegistrationService.startRegistration({
+        campaignId: this.campaignId,
+        contactId: address.id,
+        contactType: this.contactType,
+        debtId: debt.debtId,
+        personId: debt.personId,
+        personRole: this.personRole,
+      }));
   }
 }

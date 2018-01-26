@@ -1,2 +1,14 @@
-<app-contact-registration-tree [hidden]="!showTree"></app-contact-registration-tree>
-<app-contact-registration-edit [hidden]="!showEdit"></app-contact-registration-edit>
+<!-- TODO(d.maltsev): i18n -->
+
+<app-dialog-action
+  *ngIf="showDialog$ | async"
+  titleTranslationKey="Отмена"
+  actionTranslationKey="Вы действительно хотите отменить регистрацию текущего контакта?"
+  actionMessage="default.buttons.ok"
+  actionMode="warning"
+  (action)="onConfirm()"
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
+
+<app-contact-registration-tree [hidden]="showEdit$ | async"></app-contact-registration-tree>
+<app-contact-registration-edit [hidden]="showTree$ | async"></app-contact-registration-edit>

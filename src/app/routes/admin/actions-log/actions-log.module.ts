@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { EffectsModule } from '@ngrx/effects';
 
 import { ActionsLogFilterModule } from './filter/actions-log-filter.module';
 import { SharedModule } from '../../../shared/shared.module';
@@ -22,7 +21,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     ActionsLogFilterModule,
-    EffectsModule.forFeature([ActionsLogService]),
     RouterModule.forChild(routes),
     SharedModule,
   ],
