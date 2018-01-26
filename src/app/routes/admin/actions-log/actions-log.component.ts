@@ -93,7 +93,6 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
   onRequest(): void {
     const filters = this.getCombinedFilters();
     const params = (<any>this.grid.grid).grid.getRequestParams();
-
     this.actionsLogService.fetch(filters, params)
       .subscribe((response: IAGridResponse<IActionLog>) => {
         this.rows = [...response.data];

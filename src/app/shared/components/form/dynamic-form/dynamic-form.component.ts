@@ -85,10 +85,15 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     this.config = { ...defaultConfig, ...config };
 
     if (!this.config.suppressLabelCreation) {
-      // 1. set control labels
+      /**
+       * 1. set control labels
+       * a) when `null` the label will be empty
+       * b) when there is a value, the form will use it
+       * c) when `undefined`, the form will use the `labelKey` to construct it & translate it
+       */
       const label = makeKey(config.labelKey);
       const createLabel = (ctrl: IDynamicFormControl): void => {
-        Object.assign(ctrl, { label: ctrl.label || label(ctrl.controlName) });
+        Object.assign(ctrl, { label: ctrl.label === null ? '' : ctrl.label || label(ctrl.controlName) });
       };
 
       this.walkControlTreeLeafs(this.controls, createLabel);
