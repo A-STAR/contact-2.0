@@ -1,22 +1,22 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IActionType, IContractor } from '../../contractors-and-portfolios.interface';
-import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IActionType, IContractor } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 
 @Component({
   selector: 'app-contractor-edit',
@@ -35,14 +35,13 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   private contractorId: number;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
+    private cdRef: ChangeDetectorRef,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private location: Location,
     private lookupService: LookupService,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
-    private cdRef: ChangeDetectorRef
+    private userPermissionsService: UserPermissionsService
   ) { }
 
   ngOnInit(): void {
@@ -104,18 +103,33 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.location.back();
+    this.routingService.navigate([ '/admin', 'contractors' ]);
   }
 
   onManagersClick(): void {
-    this.router.navigate([`/admin/contractors/${this.contractorId}/managers`]);
+    this.routingService.navigate([
+      '/admin',
+      'contractors',
+      String(this.contractorId),
+      'managers'
+    ]);
   }
 
   onAttributesClick(): void {
-    this.router.navigate([`/admin/contractors/${this.contractorId}/attributes`]);
+    this.routingService.navigate([
+      '/admin',
+      'contractors',
+      String(this.contractorId),
+      'attributes'
+    ]);
   }
 
   onObjectsClick(): void {
-    this.router.navigate([`/admin/contractors/${this.contractorId}/objects`]);
+    this.routingService.navigate([
+      '/admin',
+      'contractors',
+      String(this.contractorId),
+      'objects'
+    ]);
   }
 }

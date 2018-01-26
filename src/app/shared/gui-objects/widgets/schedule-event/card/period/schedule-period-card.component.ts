@@ -54,7 +54,6 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   private selectedPeriodTypeCode$ = new BehaviorSubject<number>(null);
 
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private scheduleEventService: ScheduleEventService,
@@ -62,7 +61,7 @@ export class SchedulePeriodCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.scheduleEventService.canView$
+    (this.eventId ? this.scheduleEventService.canEdit$ : this.scheduleEventService.canView$)
       .pipe(first())
       .subscribe(canEdit => {
         this.initPeriodControls(canEdit);
@@ -90,9 +89,8 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return this.eventId
-      ? !!this.periodForms.find(form => form && form.canSubmit)
-      : this.periodForms.every(form => form && form.canSubmit);
+    return this.periodForms.find(form => form && form.canSubmit)
+      && this.periodForms.every(form => form && form.isValid);
   }
 
   get serializedUpdates(): ISchedulePeriod {
@@ -100,7 +98,7 @@ export class SchedulePeriodCardComponent implements OnInit {
       case SchedulePeriodEnum.DAILY:
         return { ...this.periodTypeForm.serializedUpdates, ...this.dailyFormSerializedUpdates };
       case SchedulePeriodEnum.WEEKLY:
-        return { ...this._weeklyPeriodForm.serializedUpdates, ...this.weeklyFormSerializedUpdates };
+        return { ...this.periodTypeForm.serializedUpdates, ...this.weeklyFormSerializedUpdates };
     }
   }
 
@@ -115,10 +113,9 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   private get weeklyFormSerializedUpdates(): any {
-    const updates = this._weeklyPeriodForm.serializedUpdates;
     return {
       weekDays: Object.keys(this.daysOfWeek)
-        .map((day, index) => updates[day] && ++index)
+        .map((day, index) => this._weeklyPeriodForm.serializedValue[day] && ++index)
         .filter(Boolean)
     };
   }

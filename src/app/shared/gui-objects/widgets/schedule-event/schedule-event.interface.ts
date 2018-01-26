@@ -24,13 +24,16 @@ export interface ISchedulePeriod {
   weekDays?: number[];
 }
 
-export enum ScheduleEventEnum {
-  GROUP = 1
+export interface IScheduleType {
+  eventTypeCode?: number;
+  groupId?: number;
+  checkGroup?: number;
+  additionalParameters?: IScheduleParam[];
 }
 
-export interface IScheduleType {
-  eventTypeCode: number;
-  groupId?: number;
+export interface IScheduleParam {
+  name: string;
+  value: string;
 }
 
 export interface IScheduleGroup {
@@ -38,6 +41,13 @@ export interface IScheduleGroup {
   name: string;
   comment?: string;
   entityTypeId: number;
+}
+
+export interface IScheduleUser {
+  id?: number;
+  fullName: string;
+  organization: string;
+  position: string;
 }
 
 export interface IScheduleStartRequest {

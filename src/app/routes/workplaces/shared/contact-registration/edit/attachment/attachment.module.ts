@@ -6,7 +6,7 @@ import { AttachmentEditModule } from './edit/edit.module';
 
 import { AttachmentService } from './attachment.service';
 
-import { AttachmentComponent } from './attachment.component';
+import { ContactRegistrationAttachmentsComponent } from './attachment.component';
 
 @NgModule({
   imports: [
@@ -14,10 +14,10 @@ import { AttachmentComponent } from './attachment.component';
     SharedModule,
   ],
   exports: [
-    AttachmentComponent,
+    ContactRegistrationAttachmentsComponent,
   ],
   declarations: [
-    AttachmentComponent,
+    ContactRegistrationAttachmentsComponent,
   ],
   providers: [
     AttachmentService,

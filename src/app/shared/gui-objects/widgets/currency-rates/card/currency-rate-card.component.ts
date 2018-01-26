@@ -1,17 +1,17 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { Location } from '@angular/common';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { ICurrencyRate } from '../currency-rates.interface';
-import { IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { ICurrencyRate } from '@app/shared/gui-objects/widgets/currency-rates/currency-rates.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { CurrencyRatesService } from '../currency-rates.service';
+import { CurrencyRatesService } from '@app/shared/gui-objects/widgets/currency-rates/currency-rates.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 
 const label = makeKey('widgets.currencyRates.card');
 
@@ -32,7 +32,7 @@ export class CurrencyRateCardComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private currencyRatesService: CurrencyRatesService,
-    private location: Location,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +64,7 @@ export class CurrencyRateCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    this.routingService.navigate([ '/utilities', 'currencies' ]);
   }
 
   private serializeCurrencyRate(currencyRate: ICurrencyRate): ICurrencyRate {

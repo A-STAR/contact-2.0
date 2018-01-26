@@ -1,21 +1,22 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IContactLog } from '../contact-log.interface';
-import { IDynamicFormControl, IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IContactLog } from '@app/shared/gui-objects/widgets/contact-log-tab/contact-log.interface';
+import { IDynamicFormControl, IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { ContactLogService } from '../contact-log.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ContactLogService } from '@app/shared/gui-objects/widgets/contact-log-tab/contact-log.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
+import { ActivatedRoute } from '@angular/router';
 
 const label = makeKey('widgets.contactLog.card');
 
@@ -39,9 +40,10 @@ export class ContactLogTabCardComponent implements OnInit {
   constructor(
     private contactLogService: ContactLogService,
     private cdRef: ChangeDetectorRef,
-    private location: Location,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -88,7 +90,18 @@ export class ContactLogTabCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    const url = this.callCenter
+      ? [
+        '/workplaces',
+        'call-center',
+        this.route.snapshot.paramMap.get('campaignId')
+      ]
+      : [
+        '/workplaces',
+        'debtor-card',
+        this.route.snapshot.paramMap.get('debtId')
+      ];
+    this.routingService.navigate(url);
   }
 
   private createDefaultControls(

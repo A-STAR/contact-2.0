@@ -149,7 +149,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
   get selectedEvent(): IScheduleEvent {
     return (this.events || []).find(
       event =>
-        this.selectedEvent$.value && event.id === this.selectedEvent$.value.id,
+        this.selectedEvent$.value[0] && event.id === this.selectedEvent$.value[0].id,
     );
   }
 

@@ -146,6 +146,10 @@ export class ContactRegistrationService {
     return this._limit$.asObservable();
   }
 
+  get nextCallDays$(): Observable<number> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.nextCallDays));
+  }
+
   get canSetPromise$(): Observable<boolean> {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.promiseMode)));
   }
@@ -173,8 +177,16 @@ export class ContactRegistrationService {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.nextCallMode)));
   }
 
+  get isNextCallDateRequired$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.nextCallMode === 3));
+  }
+
   get canSetComment$(): Observable<boolean> {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.commentMode)));
+  }
+
+  get isCommentRequired$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.commentMode === 3));
   }
 
   get canSetAutoCommentId$(): Observable<boolean> {
@@ -193,6 +205,10 @@ export class ContactRegistrationService {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.debtReasonMode)));
   }
 
+  get isDebtReasonCodeRequired$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.debtReasonMode === 3));
+  }
+
   get canSetRefusal$(): Observable<boolean> {
     return this._outcome$.pipe(map(outcome => outcome && outcome.isRefusal === 1));
   }
@@ -209,6 +225,14 @@ export class ContactRegistrationService {
     return this._outcome$.pipe(
       map(outcome => outcome && [2, 3].includes(outcome.statusReasonMode) && Boolean(outcome.debtStatusCode)),
     );
+  }
+
+  get isCallReasonRequired$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.callReasonMode === 3));
+  }
+
+  get isChangeReasonRequired$(): Observable<boolean> {
+    return this._outcome$.pipe(map(outcome => outcome && outcome.statusReasonMode === 3));
   }
 
   completeRegistration(data: Partial<IContactRegistrationData>): Observable<void> {

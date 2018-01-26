@@ -1,19 +1,20 @@
 import { Component, ViewChild, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IEmployment } from '../employment.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IEmployment } from '@app/shared/gui-objects/widgets/employment/employment.interface';
 
-import { EmploymentService } from '../employment.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { EmploymentService } from '@app/shared/gui-objects/widgets/employment/employment.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
-import { makeKey } from '../../../../../core/utils';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { makeKey } from '@app/core/utils';
 
 const label = makeKey('widgets.employment.grid');
 
@@ -34,10 +35,10 @@ export class EmploymentCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,
     private lookupService: LookupService,
-    private router: Router,
     private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -72,7 +73,11 @@ export class EmploymentCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId')
+    ]);
   }
 
   onSubmit(): void {
