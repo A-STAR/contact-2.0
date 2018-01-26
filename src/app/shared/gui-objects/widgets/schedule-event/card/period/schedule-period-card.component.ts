@@ -3,7 +3,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TranslateService } from '@ngx-translate/core';
 import { first } from 'rxjs/operators';
 
-import { IDynamicFormItem, IDynamicFormConfig } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
+import {
+  IDynamicFormItem, IDynamicFormConfig, IDynamicFormControl
+} from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { ISchedulePeriod, SchedulePeriodEnum } from '../../schedule-event.interface';
 
 import { ScheduleEventService } from '../../schedule-event.service';
@@ -12,6 +14,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
 
 import { min, oneOfGroupRequired } from '@app/core/validators';
+import { ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-schedule-period-card',
@@ -21,14 +24,13 @@ import { min, oneOfGroupRequired } from '@app/core/validators';
 export class SchedulePeriodCardComponent implements OnInit {
   private daysOfWeek = this.translateService.instant('common.entities.daysOfWeek');
 
-  private _weeklyPeriodForm: DynamicFormComponent;
+  private _periodForm: DynamicFormComponent;
 
   @ViewChild('periodType') periodTypeForm: DynamicFormComponent;
-  @ViewChild('dailyPeriod') dailyPeriodForm: DynamicFormComponent;
-  @ViewChild('weeklyPeriod') set weeklyPeriodForm(form: DynamicFormComponent) {
-    this._weeklyPeriodForm = form;
+  @ViewChild('period') set periodForm(form: DynamicFormComponent) {
+    this._periodForm = form;
     if (form) {
-      this._weeklyPeriodForm.form.setValidators([ oneOfGroupRequired ]);
+      this.setPeriodFromValidators();
     }
   }
 
@@ -40,17 +42,14 @@ export class SchedulePeriodCardComponent implements OnInit {
     labelKey: 'widgets.scheduleEvents.card',
   };
 
-  dailyPeriodControls: Partial<IDynamicFormItem>[];
-  dailyPeriodConfig: IDynamicFormConfig = {
-    labelKey: 'widgets.scheduleEvents.card',
-  };
+  periodConfig: IDynamicFormConfig[] = [
+    { labelKey: 'widgets.scheduleEvents.card' },
+    { labelKey: 'common.entities.daysOfWeek' }
+  ];
+  periodControls: Array<Partial<IDynamicFormItem>[]>;
+  periodValidators: Array<ValidatorFn[]>;
 
-  weeklyPeriodControls: Partial<IDynamicFormItem>[];
-  weeklyPeriodConfig: IDynamicFormConfig = {
-    labelKey: 'common.entities.daysOfWeek',
-  };
-
-  weekDays: any;
+  selectedPeriod: ISchedulePeriod;
 
   private selectedPeriodTypeCode$ = new BehaviorSubject<number>(null);
 
@@ -65,8 +64,13 @@ export class SchedulePeriodCardComponent implements OnInit {
       .pipe(first())
       .subscribe(canEdit => {
         this.initPeriodControls(canEdit);
-        this.initWeekDays();
+
         this.selectedPeriodTypeCode$.next(this.period.periodTypeCode);
+        this.selectedPeriodTypeCode$.subscribe(() => {
+          this.selectedPeriod = this.getFormData();
+          this.cdRef.markForCheck();
+        });
+
         this.cdRef.markForCheck();
       });
   }
@@ -75,21 +79,17 @@ export class SchedulePeriodCardComponent implements OnInit {
     return this.selectedPeriodTypeCode$.value;
   }
 
-  get periodForms(): DynamicFormComponent[] {
-    return [ this.periodTypeForm, this.selectedPeriodForm ];
+  get currentPeriodFormType(): number {
+    return this.periodControls.indexOf(this._periodForm.controls) + 1;
   }
 
-  get selectedPeriodForm(): DynamicFormComponent {
-    switch (this.selectedPeriodTypeCode) {
-      case SchedulePeriodEnum.DAILY:
-        return this.dailyPeriodForm;
-      case SchedulePeriodEnum.WEEKLY:
-        return this._weeklyPeriodForm;
-    }
+  get periodForms(): DynamicFormComponent[] {
+    return [ this.periodTypeForm, this._periodForm ];
   }
 
   get canSubmit(): boolean {
-    return this.periodForms.find(form => form && form.canSubmit)
+    return this.selectedPeriodTypeCode === this.currentPeriodFormType
+      && this.periodForms.find(form => form && form.canSubmit)
       && this.periodForms.every(form => form && form.isValid);
   }
 
@@ -105,17 +105,16 @@ export class SchedulePeriodCardComponent implements OnInit {
   onPeriodSelect(): void {
     const [ periodControl ] = this.periodTypeForm.getControl('periodTypeCode').value;
     this.selectedPeriodTypeCode$.next(periodControl.value);
-    this.cdRef.markForCheck();
   }
 
   private get dailyFormSerializedUpdates(): any {
-    return this.dailyPeriodForm.serializedUpdates;
+    return this._periodForm.serializedUpdates;
   }
 
   private get weeklyFormSerializedUpdates(): any {
     return {
       weekDays: Object.keys(this.daysOfWeek)
-        .map((day, index) => this._weeklyPeriodForm.serializedValue[day] && ++index)
+        .map((day, index) => this._periodForm.serializedValue[day] && ++index)
         .filter(Boolean)
     };
   }
@@ -132,25 +131,37 @@ export class SchedulePeriodCardComponent implements OnInit {
       },
     ] as Partial<IDynamicFormItem>[];
 
-    this.dailyPeriodControls = [
-      {
-        controlName: 'dayPeriod',
-        type: 'number',
-        disabled: !canEdit,
-        required: true,
-        validators: [ min(1) ],
-      },
-    ] as IDynamicFormItem[];
+    this.periodControls = [
+      [ { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true, validators: [ min(1) ] } ],
+      [
+        ...Object.keys(this.daysOfWeek)
+          .map(day => ({ controlName: day, type: 'checkbox', disabled: !canEdit, width: 3 }))
+      ]
+    ] as Array<Partial<IDynamicFormControl>[]>;
 
-    this.weeklyPeriodControls = [
-      ...Object.keys(this.daysOfWeek)
-        .map(day => ({ controlName: day, type: 'checkbox', disabled: !canEdit, width: 3 }))
-    ] as IDynamicFormItem[];
+    this.periodValidators = [
+      [],
+      [ oneOfGroupRequired ]
+    ];
   }
 
-  private initWeekDays(): any {
-    this.weekDays = (this.period.weekDays || [])
+  private createWeekDays(): any {
+    return (this.period.weekDays || [])
       .map(dayIndex => Object.keys(this.daysOfWeek)[dayIndex - 1])
       .reduce((acc, day) => ({...acc, [day]: 1 }), {});
+  }
+
+  private getFormData(): ISchedulePeriod {
+    switch (this.selectedPeriodTypeCode) {
+      case SchedulePeriodEnum.DAILY:
+        return { ...this.period };
+      case SchedulePeriodEnum.WEEKLY:
+        return this.createWeekDays();
+    }
+  }
+
+  private setPeriodFromValidators(): void {
+    this._periodForm.form.setValidators(this.periodValidators[this.selectedPeriodTypeCode]);
+    this._periodForm.form.updateValueAndValidity();
   }
 }

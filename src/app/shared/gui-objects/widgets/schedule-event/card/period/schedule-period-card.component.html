@@ -7,20 +7,13 @@
     [data]="period"
   ></app-dynamic-form>
 </div>
-<div class="pb-lg">
-  <app-dynamic-form
-    #dailyPeriod
-    *ngIf="selectedPeriodTypeCode === 1"
-    [config]="dailyPeriodConfig"
-    [controls]="dailyPeriodControls"
-    [data]="period"
-  ></app-dynamic-form>
 
+<div class="pb-lg" *ngFor="let controls of periodControls; let i = index">
   <app-dynamic-form
-    #weeklyPeriod
-    *ngIf="selectedPeriodTypeCode === 2"
-    [config]="weeklyPeriodConfig"
-    [controls]="weeklyPeriodControls"
-    [data]="weekDays"
+    #period
+    *ngIf="selectedPeriodTypeCode === i + 1"
+    [config]="periodConfig[i]"
+    [controls]="controls"
+    [data]="selectedPeriod"
   ></app-dynamic-form>
 </div>
