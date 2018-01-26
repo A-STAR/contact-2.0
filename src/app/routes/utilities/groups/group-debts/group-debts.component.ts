@@ -4,7 +4,6 @@ import {
   Component,
   OnInit,
   ViewChild,
-  ViewEncapsulation,
   Inject,
 } from '@angular/core';
 
@@ -26,14 +25,14 @@ import { GridFiltersService } from '@app/core/filters/grid-filters.service';
   templateUrl: './group-debts.component.html',
   styleUrls: ['./group-debts.component.scss'],
   host: { class: 'full-height' },
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GroupDebtsComponent implements OnInit {
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IGroupDebt>;
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   groupId: number;
+  rowIdKey = 'debtId';
   rowCount = 0;
   rows: any[] = [];
 
