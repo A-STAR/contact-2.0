@@ -147,7 +147,7 @@ export class ContactRegistrationService {
 
   get debt$(): Observable<IDebt> {
     return this.debtId$.pipe(
-      mergeMap(debtId => this.debtsService.getDebt(debtId)),
+      mergeMap(debtId => debtId ? this.debtsService.getDebt(debtId) : of(null)),
     );
   }
 
