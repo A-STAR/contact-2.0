@@ -2178,7 +2178,20 @@
         "isInactive": "Is inactive",
         "eventTypeCode": "Event type",
         "priority": "Priority",
-        "group": "Group"
+        "groupId": "Group",
+        "checkGroup": "Group rearrangement check",
+        "delay": "Delay (hours)",
+        "phoneTypes": "Phono type",
+        "personRoles": "Receiver",
+        "templateId": "Template",
+        "senderCode": "Sender",
+        "dict1Code": "Value",
+        "dict2Code": "Value",
+        "dict3Code": "Value",
+        "dict4Code": "Value",
+        "stage": "Stage",
+        "userId": "Operator",
+        "modeCode": "Mode"
       },
       "dialog": {
         "title": "Event",

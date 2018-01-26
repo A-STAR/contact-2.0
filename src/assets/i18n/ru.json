@@ -2178,7 +2178,20 @@
         "isInactive": "Выключено",
         "eventTypeCode": "Тип мероприятия",
         "priority": "Приоритет",
-        "group": "Группа"
+        "groupId": "Группа",
+        "checkGroup": "Проверка переформирования группы",
+        "delay": "Задержка отправки (ч.)",
+        "phoneTypes": "Тип телефона",
+        "personRoles": "Получатель",
+        "templateId": "Сценарий",
+        "senderCode": "Отправитель",
+        "dict1Code": "Значение",
+        "dict2Code": "Значение",
+        "dict3Code": "Значение",
+        "dict4Code": "Значение",
+        "stage": "Стадия",
+        "userId": "Оператор",
+        "modeCode": "Режим"
       },
       "dialog": {
         "title": "Мероприятие",
