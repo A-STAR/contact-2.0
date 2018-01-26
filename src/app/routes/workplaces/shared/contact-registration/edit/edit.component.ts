@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, map } from 'rxjs/operators';
-import * as moment from 'moment';
+import { first } from 'rxjs/operators';
 
 import { IContactRegistrationMode } from '../contact-registration.interface';
 
