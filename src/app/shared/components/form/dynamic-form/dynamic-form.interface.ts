@@ -81,7 +81,6 @@ export interface IDynamicFormButtonControl extends IDynamicFormBaseControl {
   // options for dialog input, button, searchBtn
   type: 'button' | 'searchBtn' | 'dialog';
   action?: () => void;
-  placeholder?: string;
 }
 
 export interface IDynamicFormDateControl extends IDynamicFormBaseControl {
@@ -139,6 +138,7 @@ export interface IDynamicFormDialogMultiSelectControl extends IDynamicFormBaseCo
   type: 'dialogmultiselect' | 'dialogmultiselectwrapper';
   // options for dialog multiselect
   filterType?: IDialogMultiSelectFilterType;
+  filterParams?: IFilterParam;
   placeholder?: string;
   dependsOn?: string;
 }

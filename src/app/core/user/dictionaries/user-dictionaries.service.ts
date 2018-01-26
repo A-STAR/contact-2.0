@@ -79,6 +79,7 @@ export class UserDictionariesService {
   static DICTIONARY_VISIT_PURPOSE                 = 57;
   static DICTIONARY_CALL_CAMPAIGN_STATUS          = 58;
   static DICTIONARY_CALL_CAMPAIGN_TYPE            = 59;
+  static DICTIONARY_DEBT_STAGE_CODE               = 60;
   static DICTIONARY_DEBTOR_STAGE_CODE             = 61;
   static DICTIONARY_DATA_LOAD_FORMAT              = 62;
   static DICTIONARY_EMAIL_FORMAT                  = 63;
@@ -86,6 +87,8 @@ export class UserDictionariesService {
   static DICTIONARY_EMAIL_STATUS                  = 65;
   static DICTIONARY_SCHEDULE_EVENT_TYPE           = 67;
   static DICTIONARY_PERIOD_TYPE                   = 68;
+  static DICTIONARY_ACCEPT_OPERATOR_MODE_CODE     = 69;
+  static DICTIONARY_CLEAR_OPERATOR_MODE_CODE      = 70;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
