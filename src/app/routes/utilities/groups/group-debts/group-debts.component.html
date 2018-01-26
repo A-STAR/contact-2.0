@@ -1,16 +1,24 @@
-<app-dynamic-form
+<div class="group-debts-form">
+  <app-dynamic-form
   *ngIf="controls"
   [config]="config"
   [controls]="controls"
-></app-dynamic-form>
+  >
+  </app-dynamic-form>
+</div>
 
 <app-action-grid
   metadataKey="groupObjectDebts"
   persistenceKey="groupObjectDebts"
+  [ngClass]="'group-debts-grid'"
   [rowIdKey]="rowIdKey"
   [rows]="rows"
-  [ngClass]="'group-debts-grid'"
   [rowCount]="rowCount"
   (request)="onRequest()"
+  (dblClick)="onDblClick($event)"
   (select)="onSelect($event)"
-></app-action-grid>
+>
+</app-action-grid>
+
+
+
