@@ -67,7 +67,9 @@ export class ContactRegistrationPromiseComponent implements OnInit, OnDestroy {
   }
 
   get isPromiseAmountDisabled$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPromiseAmount$.pipe(map(invert));
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => !outcome || outcome.promiseMode !== 3),
+    );
   }
 
   onPromiseAmountInput(event: Event): void {

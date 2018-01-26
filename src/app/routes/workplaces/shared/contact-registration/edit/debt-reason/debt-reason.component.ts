@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 
 import { ContactRegistrationService } from '../../contact-registration.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -20,10 +21,14 @@ export class ContactRegistrationDebtReasonComponent {
   ) {}
 
   get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetDebtReason$;
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && [2, 3].includes(outcome.debtReasonMode))
+    );
   }
 
   get isDebtReasonCodeRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isDebtReasonCodeRequired$;
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && outcome.debtReasonMode === 3)
+    );
   }
 }
