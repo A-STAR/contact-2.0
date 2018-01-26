@@ -22,6 +22,7 @@ export interface ISchedulePeriod {
   periodTypeCode: number;
   dayPeriod?: number;
   weekDays?: number[];
+  monthDays?: number[];
 }
 
 export interface IScheduleType {

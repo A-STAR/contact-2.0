@@ -8,12 +8,13 @@
   ></app-dynamic-form>
 </div>
 
-<div class="pb-lg" *ngFor="let controls of periodControls; let i = index">
-  <app-dynamic-form
-    #period
-    *ngIf="selectedPeriodTypeCode === i + 1"
-    [config]="periodConfig[i]"
-    [controls]="controls"
-    [data]="selectedPeriod"
-  ></app-dynamic-form>
-</div>
+<ng-container *ngFor="let controls of periodControls; let i = index">
+  <div class="pb-lg" *ngIf="selectedPeriodTypeCode === i + 1">
+    <app-dynamic-form
+      #period
+      [config]="periodConfig[i]"
+      [controls]="controls"
+      [data]="selectedPeriod"
+    ></app-dynamic-form>
+  </div>
+</ng-container>
