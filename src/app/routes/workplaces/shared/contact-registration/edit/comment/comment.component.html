@@ -1,0 +1,16 @@
+<div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
+  <label>
+    <span class="form-label">
+      <!-- TODO(d.maltsev): i18n -->
+      Комментарий <b *ngIf="isCommentRequired$ | async" class="text-danger">*</b>
+    </span>
+    <textarea
+      class="form-control"
+      formControlName="comment"
+      rows="2"
+      [required]="isCommentRequired$ | async"
+    ></textarea>
+  </label>
+
+  <hr>
+</div>
