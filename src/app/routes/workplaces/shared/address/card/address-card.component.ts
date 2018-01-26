@@ -1,15 +1,16 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
-import { IAddress } from '../address.interface';
+import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
 import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form-2/dynamic-form-2.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { AddressService } from '../address.service';
+import { AddressService } from '@app/routes/workplaces/shared/address/address.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -33,10 +34,10 @@ export class AddressCardComponent implements OnInit {
 
   constructor(
     private addressService: AddressService,
-    private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
-    private router: Router,
     private route: ActivatedRoute,
+    private routingService: RoutingService,
+    private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +71,18 @@ export class AddressCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    const url = this.callCenter
+      ? [
+        '/workplaces',
+        'call-center',
+        this.route.snapshot.paramMap.get('campaignId')
+      ]
+      : [
+        '/workplaces',
+        'debtor-card',
+        this.route.snapshot.paramMap.get('debtId')
+      ];
+    this.routingService.navigate(url);
   }
 
   get canSubmit(): boolean {

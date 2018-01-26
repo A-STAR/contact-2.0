@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -7,15 +7,16 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IContactLog } from '../contact-log.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IContactLog } from '@app/shared/gui-objects/widgets/contact-log-tab/contact-log.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContactLogService } from '../contact-log.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ContactLogService } from '@app/shared/gui-objects/widgets/contact-log-tab/contact-log.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-contact-log-tab-grid',
@@ -70,9 +71,10 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private contactLogService: ContactLogService,
     private gridService: GridService,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private notificationsService: NotificationsService,
-    private userPermissionsService: UserPermissionsService,
-    private router: Router,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -140,9 +142,10 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   onEdit(contactLog: IContactLog): void {
     const { contactId, contactType } = contactLog;
     const url = this.callCenter
-      ? `${this.router.url}/contactLog/${this.debtId}/${contactId}/contactLogType/${contactType}`
-      : `${this.router.url}/contactLog/${contactId}/contactLogType/${contactType}`;
-    this.router.navigate([ url ]);
+      ? `contactLog/${this.debtId}/${contactId}/contactLogType/${contactType}`
+      : `contactLog/${contactId}/contactLogType/${contactType}`;
+
+    this.routingService.navigate([ url ], this.route);
   }
 
   private fetch(): void {

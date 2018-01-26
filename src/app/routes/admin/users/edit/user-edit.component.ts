@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ValidatorFn } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -8,21 +8,22 @@ import { of } from 'rxjs/observable/of';
 import {
   IDynamicFormItem,
   IDynamicFormControl
-} from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IUser, IUserEditPermissions } from '../users.interface';
-import { IOption } from '../../../../core/converter/value-converter.interface';
+} from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IUser, IUserEditPermissions } from '@app/routes/admin/users/users.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { LookupService } from '../../../../core/lookup/lookup.service';
-import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { UsersService } from '../users.service';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { UsersService } from '@app/routes/admin/users/users.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { DialogFunctions } from '../../../../core/dialog';
-import { maxFileSize, password } from '../../../../core/validators';
+import { DialogFunctions } from '@app/core/dialog';
+import { maxFileSize, password } from '@app/core/validators';
 
 @Component({
   selector: 'app-user-edit',
@@ -39,15 +40,15 @@ export class UserEditComponent extends DialogFunctions {
   private userId = Number(this.route.snapshot.paramMap.get('userId'));
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private lookupService: LookupService,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
-    private valueConverterService: ValueConverterService,
+    private valueConverterService: ValueConverterService
   ) {
     super();
 
@@ -112,7 +113,7 @@ export class UserEditComponent extends DialogFunctions {
   }
 
   onClose(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.routingService.navigate([ '/admin', 'users' ]);
   }
 
   private getFormControls(

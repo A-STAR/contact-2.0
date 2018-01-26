@@ -5,16 +5,16 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
 import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
-import { IDebt } from '../../../../core/app-modules/app-modules.interface';
+import { IDebt } from '@app/core/app-modules/app-modules.interface';
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 
-import { ContactRegistrationService } from '../../shared/contact-registration/contact-registration.service';
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
-import { CompanyComponent } from './company/company.component';
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { PersonComponent } from './person/person.component';
+import { CompanyComponent } from '@app/routes/workplaces/debtor-card/information/company/company.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { PersonComponent } from '@app/routes/workplaces/debtor-card/information/person/person.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +35,7 @@ export class DebtorInformationComponent {
     private contactRegistrationService: ContactRegistrationService,
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
-    private routingService: RoutingService,
+    private routingService: RoutingService
   ) {}
 
   get debt$(): Observable<IDebt> {
@@ -84,7 +84,7 @@ export class DebtorInformationComponent {
   }
 
   onAddressEdit(address: IAddress): void {
-    this.routingService.navigate([ 'address', `${address.id}` ], this.route);
+    this.routingService.navigate([ `address/${address.id}` ], this.route);
   }
 
   onAddressRegister(address: IAddress): void {
@@ -106,7 +106,7 @@ export class DebtorInformationComponent {
   }
 
   onPhoneEdit(phone: IPhone): void {
-    this.routingService.navigate([ 'phone', `${phone.id}` ], this.route);
+    this.routingService.navigate([ `phone/${phone.id}` ], this.route);
   }
 
   onPhoneRegister(phone: IPhone): void {
