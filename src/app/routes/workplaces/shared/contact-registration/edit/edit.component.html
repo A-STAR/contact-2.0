@@ -24,164 +24,54 @@
   <div class="flex-item grow" style="overflow-y: auto;">
     <div [formGroup]="form">
 
-      <!-- PROMISE GROUP -->
+      <!-- Promise -->
       <app-contact-registration-promise [formGroup]="form"></app-contact-registration-promise>
 
-      <!-- PAYMENT GROUP -->
+      <!-- Payment -->
       <app-contact-registration-payment [formGroup]="form"></app-contact-registration-payment>
 
-      <!-- NEXT CALL DATE GROUP -->
-      <div *ngIf="displayNextCallDateForm$ | async">
-        <!-- Next Call Date -->
-        <div>
-          <label>
-            <span class="form-label">
-              <!-- TODO(d.maltsev): i18n -->
-              Дата следующего звонка <b *ngIf="isNextCallDateRequired$ | async" class="text-danger">*</b>
-            </span>
-          </label>
-          <app-input-datepicker
-            formControlName="nextCallDateTime"
-            [displayTime]="true"
-            [minDate]="today"
-            [maxDate]="nextCallMaxDate$ | async"
-            [required]="isNextCallDateRequired$ | async"
-          ></app-input-datepicker>
-        </div>
+      <!-- Next Call -->
+      <app-contact-registration-next-call [formGroup]="form"></app-contact-registration-next-call>
 
-        <hr>
-      </div>
+      <!-- Comment -->
+      <app-contact-registration-comment [formGroup]="form"></app-contact-registration-comment>
 
-      <!-- COMMENT GROUP -->
-      <div *ngIf="displayCommentForm$ | async">
-        <div>
-          <label>
-            <span class="form-label">
-              <!-- TODO(d.maltsev): i18n -->
-              Комментарий <b *ngIf="isCommentRequired$ | async" class="text-danger">*</b>
-            </span>
-            <textarea
-              class="form-control"
-              formControlName="comment"
-              rows="2"
-              [required]="isCommentRequired$ | async"
-            ></textarea>
-          </label>
-
-          <hr>
-        </div>
-      </div>
-
-      <!-- AUTOCOMMENT GROUP -->
+      <!-- Autocomment -->
       <app-contact-registration-auto-comment [formGroup]="form"></app-contact-registration-auto-comment>
 
-      <!-- PHONE GROUP -->
+      <!-- Phone -->
       <app-contact-registration-phone [formGroup]="form"></app-contact-registration-phone>
 
-      <!-- CONTACT PERSON GROUP -->
+      <!-- Contact Person -->
       <div *ngIf="displayContactPersonForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Изменение контактного лица</h3>
         <app-contact-registration-contact-select [excludeCurrentPersonId]="true"></app-contact-registration-contact-select>
-
         <hr>
       </div>
 
-      <!-- DEBT REASON GROUP -->
-      <div *ngIf="displayDebtReasonForm$ | async">
-        <div>
-          <label>
-            <span class="form-label">
-              <!-- TODO(d.maltsev): i18n -->
-              Причина возникновения задолженности <b *ngIf="isDebtReasonCodeRequired$ | async" class="text-danger">*</b>
-            </span>
-            <app-select-wrapper
-              formControlName="debtReasonCode"
-              dictCode="11"
-              [nullable]="!(isDebtReasonCodeRequired$ | async)"
-              [required]="isDebtReasonCodeRequired$ | async"
-            ></app-select-wrapper>
-          </label>
-        </div>
+      <!-- Debt Reason -->
+      <app-contact-registration-debt-reason [formGroup]="form"></app-contact-registration-debt-reason>
 
-        <hr>
-      </div>
+      <!-- Refusal -->
+      <app-contact-registration-refusal [formGroup]="form"></app-contact-registration-refusal>
 
-      <!-- REFUSAL GROUP -->
-      <div *ngIf="displayRefusalForm$ | async">
-        <div>
-          <label>
-            <span class="form-label">
-              <!-- TODO(d.maltsev): i18n -->
-              Причина отказа от оплаты <b class="text-danger">*</b>
-            </span>
-            <!-- TODO(d.maltsev): filter by parent 3 -->
-            <app-select-wrapper
-              formControlName="refusalReasonCode"
-              dictCode="19"
-              [nullable]="false"
-              [required]="true"
-            ></app-select-wrapper>
-          </label>
-        </div>
-
-        <hr>
-      </div>
-
-      <!-- ATTACHMENTS GROUP -->
+      <!-- Attachments -->
       <div *ngIf="displayAttachmentForm$ | async">
         <!-- TODO(d.maltsev): i18n -->
         <h3>Прикрепленные файлы</h3>
         <app-contact-registration-attachment></app-contact-registration-attachment>
-
         <hr>
       </div>
 
-      <!-- CALL REASON GROUP -->
-      <div *ngIf="displayCallReasonForm$ | async">
-        <div>
-          <label>
-            <span class="form-label">
-              <!-- TODO(d.maltsev): i18n -->
-              Причина звонка должника <b *ngIf="isCallReasonRequired$ | async" class="text-danger">*</b>
-            </span>
-            <app-select-wrapper
-              formControlName="callReasonCode"
-              dictCode="49"
-              [nullable]="!(isCallReasonRequired$ | async)"
-              [required]="isCallReasonRequired$ | async"
-            ></app-select-wrapper>
-          </label>
-        </div>
+      <!-- Call Reason -->
+      <app-contact-registration-call-reason [formGroup]="form"></app-contact-registration-call-reason>
 
-        <hr>
-      </div>
+      <!-- Status Change -->
+      <app-contact-registration-status-change [formGroup]="form"></app-contact-registration-status-change>
 
-      <!-- STATUS CHANGE REASON GROUP -->
-      <div *ngIf="displayChangeReasonForm$ | async">
-        <div>
-          <label>
-            <span class="form-label">
-              <!-- TODO(d.maltsev): i18n -->
-              Причина перевода в пользовательский статус <b *ngIf="isChangeReasonRequired$ | async" class="text-danger">*</b>
-            </span>
-            <!-- Filter by terms whose parent is debtStatusCode -->
-            <app-select-wrapper
-              formControlName="statusReasonCode"
-              dictCode="19"
-              [nullable]="!(isChangeReasonRequired$ | async)"
-              [required]="isChangeReasonRequired$ | async"
-            ></app-select-wrapper>
-          </label>
-        </div>
-
-        <hr>
-      </div>
-
-      <!-- ATTRIBUTES GROUP -->
-      <div>
-        <app-contact-registration-attributes></app-contact-registration-attributes>
-      </div>
+      <!-- Attributes -->
+      <app-contact-registration-attributes></app-contact-registration-attributes>
     </div>
   </div>
 
