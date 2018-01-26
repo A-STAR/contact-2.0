@@ -144,8 +144,8 @@ export class EditComponent extends DialogFunctions {
     this.contactRegistrationService
       .completeRegistration(data)
       .subscribe(() => {
-        this.displayOutcomeTree();
-        this.contactRegistrationService.startRegistration(null);
+        this.contactRegistrationService.cancelRegistration();
+        this.form.reset();
       });
   }
 
