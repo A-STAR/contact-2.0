@@ -11,7 +11,7 @@ textarea {
   min-height: 4em;
 }
 
-:host ::ng-deep .input-group-btn > .btn {
+::ng-deep .input-group-btn > .btn {
   padding-left: 8px;
   padding-right: 8px;
 }
