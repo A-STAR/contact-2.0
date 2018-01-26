@@ -13,7 +13,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 export class ContactRegistrationCallReasonComponent {
   @Input() formGroup: FormGroup;
 
-  private callReasonDictCode = UserDictionariesService.DICTIONARY_CALL_REASON;
+  callReasonDictCode = UserDictionariesService.DICTIONARY_CALL_REASON;
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,

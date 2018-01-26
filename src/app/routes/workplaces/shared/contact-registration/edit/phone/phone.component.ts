@@ -16,7 +16,7 @@ import { ContactSelectComponent } from '../contact-select/contact-select.compone
 export class ContactRegistrationPhoneComponent {
   @ViewChild(ContactSelectComponent) contactForPhone: ContactSelectComponent;
 
-  private phoneTypeDictCode = UserDictionariesService.DICTIONARY_PHONE_TYPE;
+  phoneTypeDictCode = UserDictionariesService.DICTIONARY_PHONE_TYPE;
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,

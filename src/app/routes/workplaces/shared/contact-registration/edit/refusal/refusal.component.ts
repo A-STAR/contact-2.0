@@ -13,7 +13,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 export class ContactRegistrationRefusalComponent {
   @Input() formGroup: FormGroup;
 
-  private statusChangeReasonDictCode = UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE;
+  statusChangeReasonDictCode = UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE;
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,
