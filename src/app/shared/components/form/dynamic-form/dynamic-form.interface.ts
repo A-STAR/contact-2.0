@@ -139,6 +139,7 @@ export interface IDynamicFormDialogMultiSelectControl extends IDynamicFormBaseCo
   type: 'dialogmultiselect' | 'dialogmultiselectwrapper';
   // options for dialog multiselect
   filterType?: IDialogMultiSelectFilterType;
+  filterParams: any;
   placeholder?: string;
   dependsOn?: string;
 }

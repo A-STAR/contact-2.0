@@ -2092,12 +2092,10 @@
       },
       "groupObjectDebts": {
         "filter": {
-          "groups": {
-            "grid": {
+          "groups": "Select Groups",
+          "grid": {
               "id": "ID",
               "name": "Name"
-            },
-            "title": "Select Groups"
           }
         },
         "grid": {

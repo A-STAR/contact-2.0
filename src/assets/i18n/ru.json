@@ -2092,12 +2092,10 @@
       },
       "groupObjectDebts": {
         "filter": {
-          "groups": {
-            "grid": {
+          "groups": "Выберите группы",
+          "grid": {
               "id": "ID",
               "name": "Имя"
-            },
-            "title": "Выберите группы"
           }
         },
         "grid": {
