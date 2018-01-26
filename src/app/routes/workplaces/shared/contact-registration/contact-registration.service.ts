@@ -24,12 +24,13 @@ import { combineLatestOr } from '@app/core/utils/helpers';
 
 @Injectable()
 export class ContactRegistrationService {
-  mode = IContactRegistrationMode.TREE;
-
   private _guid$    = new BehaviorSubject<string>(null);
-  private _limit$ = new BehaviorSubject<IPromiseLimit>(null);
+  private _limit$   = new BehaviorSubject<IPromiseLimit>(null);
+  private _mode$    = new BehaviorSubject<IContactRegistrationMode>(IContactRegistrationMode.TREE);
   private _outcome$ = new BehaviorSubject<IOutcome>(null);
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
+
+  private nextParams$ = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
 
   constructor(
     private dataService: DataService,
@@ -45,8 +46,20 @@ export class ContactRegistrationService {
       .subscribe(limit => this._limit$.next(limit));
   }
 
+  get shouldConfirm$(): Observable<boolean> {
+    return this.nextParams$.pipe(map(Boolean));
+  }
+
   get isActive$(): Observable<boolean> {
     return this._params$.pipe(map(Boolean));
+  }
+
+  get mode$(): Observable<IContactRegistrationMode> {
+    return this._mode$.asObservable();
+  }
+
+  set mode(mode: IContactRegistrationMode) {
+    this._mode$.next(mode);
   }
 
   get params$(): Observable<Partial<IContactRegistrationParams>> {
@@ -55,10 +68,6 @@ export class ContactRegistrationService {
 
   get params(): Partial<IContactRegistrationParams> {
     return this._params$.value;
-  }
-
-  set params(params: Partial<IContactRegistrationParams>) {
-    this._params$.next(params);
   }
 
   get campaignId$(): Observable<number> {
@@ -233,6 +242,25 @@ export class ContactRegistrationService {
 
   get isChangeReasonRequired$(): Observable<boolean> {
     return this._outcome$.pipe(map(outcome => outcome && outcome.statusReasonMode === 3));
+  }
+
+  startRegistration(params: Partial<IContactRegistrationParams>): void {
+    if (this.params) {
+      this.nextParams$.next(params);
+    } else {
+      this._params$.next(params);
+    }
+  }
+
+  cancelRegistration(): void {
+    this._params$.next(this.nextParams$.value);
+    this._outcome$.next(null);
+    this._mode$.next(IContactRegistrationMode.TREE);
+    this.nextParams$.next(null);
+  }
+
+  continueRegistration(): void {
+    this.nextParams$.next(null);
   }
 
   completeRegistration(data: Partial<IContactRegistrationData>): Observable<void> {

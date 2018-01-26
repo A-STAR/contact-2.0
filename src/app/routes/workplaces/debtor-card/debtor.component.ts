@@ -154,13 +154,13 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       .pipe(first())
       .subscribe(([ personId, debtId ]) => {
         this.setDialog();
-        this.contactRegistrationService.params = {
+        this.contactRegistrationService.startRegistration({
           contactId,
           contactType,
           debtId,
           personId,
           personRole: 1,
-        };
+        });
       });
   }
 

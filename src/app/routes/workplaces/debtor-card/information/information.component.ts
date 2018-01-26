@@ -90,15 +90,13 @@ export class DebtorInformationComponent {
   onAddressRegister(address: IAddress): void {
     combineLatest(this.personId$, this.debtId$)
       .pipe(first())
-      .subscribe(([ personId, debtId ]) => {
-        this.contactRegistrationService.params = {
-          contactId: address.id,
-          contactType: 3,
-          debtId,
-          personId,
-          personRole: this.personRole,
-        };
-      });
+      .subscribe(([ personId, debtId ]) => this.contactRegistrationService.startRegistration({
+        contactId: address.id,
+        contactType: 3,
+        debtId,
+        personId,
+        personRole: this.personRole,
+      }));
   }
 
   onPhoneAdd(): void {
@@ -112,14 +110,12 @@ export class DebtorInformationComponent {
   onPhoneRegister(phone: IPhone): void {
     combineLatest(this.personId$, this.debtId$)
       .pipe(first())
-      .subscribe(([ personId, debtId ]) => {
-        this.contactRegistrationService.params = {
-          contactId: phone.id,
-          contactType: this.phoneContactType,
-          debtId,
-          personId,
-          personRole: this.personRole,
-        };
-      });
+      .subscribe(([ personId, debtId ]) => this.contactRegistrationService.startRegistration({
+        contactId: phone.id,
+        contactType: this.phoneContactType,
+        debtId,
+        personId,
+        personRole: this.personRole,
+      }));
   }
 }
