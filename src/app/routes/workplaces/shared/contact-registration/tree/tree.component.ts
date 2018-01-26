@@ -34,14 +34,11 @@ export class TreeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.nodesSub = this.contactRegistrationService.params$
       .pipe(
-        mergeMap(params => params ? this.workplacesService.fetchContactTree(params.debtId, params.contactType) : of(null)),
+        filter(Boolean),
+        mergeMap(params => this.workplacesService.fetchContactTree(params.debtId, params.contactType)),
       )
       .subscribe(nodes => {
-        if (nodes) {
-          this.nodes = nodes;
-        } else {
-          this.selectNode(null);
-        }
+        this.nodes = nodes;
         this.cdRef.markForCheck();
       });
   }
