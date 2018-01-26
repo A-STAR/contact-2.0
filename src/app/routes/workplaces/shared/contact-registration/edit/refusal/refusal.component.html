@@ -1,0 +1,19 @@
+<div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
+  <div>
+    <label>
+      <span class="form-label">
+        <!-- TODO(d.maltsev): i18n -->
+        Причина отказа от оплаты <b class="text-danger">*</b>
+      </span>
+      <!-- TODO(d.maltsev): filter by parent 3 -->
+      <app-select-wrapper
+        formControlName="refusalReasonCode"
+        dictCode="19"
+        [nullable]="false"
+        [required]="true"
+      ></app-select-wrapper>
+    </label>
+  </div>
+
+  <hr>
+</div>

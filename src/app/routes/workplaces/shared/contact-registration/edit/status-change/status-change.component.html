@@ -1,0 +1,19 @@
+<div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
+  <div>
+    <label>
+      <span class="form-label">
+        <!-- TODO(d.maltsev): i18n -->
+        Причина перевода в пользовательский статус <b *ngIf="isChangeReasonRequired$ | async" class="text-danger">*</b>
+      </span>
+      <!-- Filter by terms whose parent is debtStatusCode -->
+      <app-select-wrapper
+        formControlName="statusReasonCode"
+        dictCode="19"
+        [nullable]="!(isChangeReasonRequired$ | async)"
+        [required]="isChangeReasonRequired$ | async"
+      ></app-select-wrapper>
+    </label>
+  </div>
+
+  <hr>
+</div>

@@ -74,36 +74,8 @@ export class EditComponent extends DialogFunctions {
     return this.contactRegistrationService.canSetContactPerson$;
   }
 
-  get displayDebtReasonForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetDebtReason$;
-  }
-
-  get isDebtReasonCodeRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isDebtReasonCodeRequired$;
-  }
-
-  get displayRefusalForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetRefusal$;
-  }
-
   get displayAttachmentForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetAttachment$;
-  }
-
-  get displayCallReasonForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetCallReason$;
-  }
-
-  get isCallReasonRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isCallReasonRequired$;
-  }
-
-  get displayChangeReasonForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetChangeReason$;
-  }
-
-  get isChangeReasonRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isChangeReasonRequired$;
   }
 
   get debtId$(): Observable<number> {
@@ -116,10 +88,6 @@ export class EditComponent extends DialogFunctions {
 
   get contactType$(): Observable<number> {
     return this.contactRegistrationService.contactType$;
-  }
-
-  get today(): Date {
-    return moment().toDate();
   }
 
   get canSubmit(): boolean {

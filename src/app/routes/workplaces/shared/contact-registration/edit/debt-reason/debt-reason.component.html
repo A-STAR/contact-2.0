@@ -1,0 +1,16 @@
+<div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
+  <label>
+    <span class="form-label">
+      <!-- TODO(d.maltsev): i18n -->
+      Причина возникновения задолженности <b *ngIf="isDebtReasonCodeRequired$ | async" class="text-danger">*</b>
+    </span>
+    <app-select-wrapper
+      formControlName="debtReasonCode"
+      dictCode="11"
+      [nullable]="!(isDebtReasonCodeRequired$ | async)"
+      [required]="isDebtReasonCodeRequired$ | async"
+    ></app-select-wrapper>
+  </label>
+
+  <hr>
+</div>
