@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { IContactPersonRequest, INewContactPerson } from '../contact-select/contact-select.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { ContactSelectComponent } from '../contact-select/contact-select.component';
 
@@ -14,6 +15,8 @@ import { ContactSelectComponent } from '../contact-select/contact-select.compone
 })
 export class ContactRegistrationPhoneComponent {
   @ViewChild(ContactSelectComponent) contactForPhone: ContactSelectComponent;
+
+  phoneTypeDictCode = UserDictionariesService.DICTIONARY_PHONE_TYPE;
 
   constructor(
     private contactRegistrationService: ContactRegistrationService,

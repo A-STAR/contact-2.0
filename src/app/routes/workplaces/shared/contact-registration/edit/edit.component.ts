@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, map } from 'rxjs/operators';
-import * as moment from 'moment';
+import { first } from 'rxjs/operators';
 
 import { IContactRegistrationMode } from '../contact-registration.interface';
 
@@ -70,56 +69,12 @@ export class EditComponent extends DialogFunctions {
     super();
   }
 
-  get displayNextCallDateForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetNextCallDate$;
-  }
-
-  get isNextCallDateRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isNextCallDateRequired$;
-  }
-
-  get displayCommentForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetComment$;
-  }
-
-  get isCommentRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isCommentRequired$;
-  }
-
   get displayContactPersonForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetContactPerson$;
   }
 
-  get displayDebtReasonForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetDebtReason$;
-  }
-
-  get isDebtReasonCodeRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isDebtReasonCodeRequired$;
-  }
-
-  get displayRefusalForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetRefusal$;
-  }
-
   get displayAttachmentForm$(): Observable<boolean> {
     return this.contactRegistrationService.canSetAttachment$;
-  }
-
-  get displayCallReasonForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetCallReason$;
-  }
-
-  get isCallReasonRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isCallReasonRequired$;
-  }
-
-  get displayChangeReasonForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetChangeReason$;
-  }
-
-  get isChangeReasonRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isChangeReasonRequired$;
   }
 
   get debtId$(): Observable<number> {
@@ -132,16 +87,6 @@ export class EditComponent extends DialogFunctions {
 
   get contactType$(): Observable<number> {
     return this.contactRegistrationService.contactType$;
-  }
-
-  get today(): Date {
-    return moment().toDate();
-  }
-
-  get nextCallMaxDate$(): Observable<Date> {
-    return this.contactRegistrationService.nextCallDays$.pipe(
-      map(nextCallDays => moment().add(nextCallDays, 'day').toDate()),
-    );
   }
 
   get canSubmit(): boolean {
