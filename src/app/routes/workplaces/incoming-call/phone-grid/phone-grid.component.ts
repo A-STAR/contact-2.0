@@ -108,12 +108,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private registerContact(contactType: number, contactId: number = null): void {
-    this.contactRegistrationService.params = {
+    this.contactRegistrationService.startRegistration({
       contactId,
       contactType,
       debtId: this.debtId,
       personId: this.personId,
       personRole: this.personRole,
-    };
+    });
   }
 }

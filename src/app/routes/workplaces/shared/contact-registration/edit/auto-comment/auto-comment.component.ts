@@ -52,6 +52,8 @@ export class ContactRegistrationAutoCommentComponent implements OnInit, OnDestro
   }
 
   get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetAutoCommentId$;
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && Boolean(outcome.autoCommentIds)),
+    );
   }
 }

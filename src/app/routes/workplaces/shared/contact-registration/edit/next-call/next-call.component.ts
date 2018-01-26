@@ -19,11 +19,15 @@ export class ContactRegistrationNextCallComponent {
   ) {}
 
   get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetNextCallDate$;
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && [2, 3].includes(outcome.nextCallMode)),
+    );
   }
 
   get isNextCallDateRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.isNextCallDateRequired$;
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && outcome.nextCallMode === 3),
+    );
   }
 
   get nextCallMinDate(): Date {
@@ -31,8 +35,9 @@ export class ContactRegistrationNextCallComponent {
   }
 
   get nextCallMaxDate$(): Observable<Date> {
-    return this.contactRegistrationService.nextCallDays$.pipe(
-      map(nextCallDays => moment().add(nextCallDays, 'day').toDate()),
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && outcome.nextCallDays),
+      map(nextCallDays => moment().add(nextCallDays, 'day').toDate())
     );
   }
 }

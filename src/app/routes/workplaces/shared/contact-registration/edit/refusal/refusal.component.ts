@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 
 import { ContactRegistrationService } from '../../contact-registration.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -20,6 +21,8 @@ export class ContactRegistrationRefusalComponent {
   ) {}
 
   get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetRefusal$;
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && outcome.isRefusal === 1),
+    );
   }
 }

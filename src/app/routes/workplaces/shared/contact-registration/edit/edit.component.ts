@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 
 import { IContactRegistrationMode } from '../contact-registration.interface';
 
@@ -70,11 +70,15 @@ export class EditComponent extends DialogFunctions {
   }
 
   get displayContactPersonForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetContactPerson$;
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && outcome.changeContactPerson === 1),
+    );
   }
 
   get displayAttachmentForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetAttachment$;
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && [2, 3].includes(outcome.fileAttachMode)),
+    );
   }
 
   get debtId$(): Observable<number> {
@@ -141,7 +145,7 @@ export class EditComponent extends DialogFunctions {
       .completeRegistration(data)
       .subscribe(() => {
         this.displayOutcomeTree();
-        this.contactRegistrationService.params = null;
+        this.contactRegistrationService.startRegistration(null);
       });
   }
 

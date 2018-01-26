@@ -1,36 +1,48 @@
-<split direction="vertical" gutterColor="inherit">
+<div class="flex vertical">
+  <div class="flex-item grow">
 
-  <!-- Scenario -->
-  <split-area size="30">
-    <div class="flex vertical">
-      <div class="flex-item">
-        <!-- TODO(d.maltsev): i18n -->
-        <p>Сценарий разговора</p>
-      </div>
-      <div class="flex-item grow">
-        <div class="full-height pb-lg">
-          <div class="scenario-text">
-            <div class="scenario-text-inner">
-              <div [innerHTML]="scenarioText" style="overflow-y: auto;">
+    <!-- Main Area -->
+    <split direction="vertical" gutterColor="inherit">
+
+      <!-- Scenario -->
+      <split-area size="30">
+        <div class="flex vertical">
+          <div class="flex-item">
+            <!-- TODO(d.maltsev): i18n -->
+            <p>Сценарий разговора</p>
+          </div>
+          <div class="flex-item grow">
+            <div class="full-height pb-lg">
+              <div class="scenario-text">
+                <div class="scenario-text-inner">
+                  <div [innerHTML]="scenarioText" style="overflow-y: auto;">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </split-area>
+      </split-area>
 
-  <!-- Outcome Tree -->
-  <split-area size="70">
-    <app-tree
-      layout="horizontal"
-      selectionMode="single"
-      [collapseAdjacentNodes]="true"
-      [expandNodeOnClick]="true"
-      [style]="{ height: '100%', width: '100%', border: 'none' }"
-      [value]="nodes"
-      (onNodeSelect)="onNodeSelect($event)"
-      (onNodeDblClick)="onNodeDoubleClick($event)"
-    ></app-tree>
-  </split-area>
-</split>
+      <!-- Outcome Tree -->
+      <split-area size="70">
+        <app-tree
+          layout="horizontal"
+          selectionMode="single"
+          [collapseAdjacentNodes]="true"
+          [expandNodeOnClick]="true"
+          [selection]="selectedNode"
+          [style]="{ height: '100%', width: '100%', border: 'none' }"
+          [value]="nodes"
+          (onNodeSelect)="onNodeSelect($event)"
+          (onNodeDblClick)="onNodeDoubleClick($event)"
+        ></app-tree>
+      </split-area>
+    </split>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex-item mt">
+    <app-button type="cancel" (click)="onCancelClick()"></app-button>
+  </div>
+</div>
