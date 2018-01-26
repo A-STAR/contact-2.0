@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, filter, mergeMap } from 'rxjs/operators';
 
 import { IContactRegistrationMode } from '../contact-registration.interface';
 
@@ -33,9 +32,10 @@ export class TreeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.nodesSub = combineLatest(this.contactRegistrationService.debtId$, this.contactRegistrationService.contactType$)
+    this.nodesSub = this.contactRegistrationService.params$
       .pipe(
-        mergeMap(([ debtId, contactType ]) => this.workplacesService.fetchContactTree(debtId, contactType))
+        filter(Boolean),
+        mergeMap(params => this.workplacesService.fetchContactTree(params.debtId, params.contactType)),
       )
       .subscribe(nodes => {
         this.nodes = nodes;
