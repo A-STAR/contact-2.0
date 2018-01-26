@@ -4,7 +4,7 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { random } from 'faker';
 
-import { IContactRegistrationMode, IOutcome, IContactRegistrationParams } from './contact-registration.interface';
+import { /* IContactRegistrationMode, */ IOutcome, IContactRegistrationParams } from './contact-registration.interface';
 
 import { ContactRegistrationService } from './contact-registration.service';
 import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
