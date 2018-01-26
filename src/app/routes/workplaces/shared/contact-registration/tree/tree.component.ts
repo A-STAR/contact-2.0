@@ -83,6 +83,9 @@ export class TreeComponent implements OnInit, OnDestroy {
     this.cdRef.markForCheck();
     if (node && isEmpty(node.children)) {
       this.fetchScenario(node.data.id);
+    } else {
+      this.scenario = null;
+      this.cdRef.markForCheck();
     }
   }
 
