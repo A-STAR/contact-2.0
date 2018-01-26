@@ -6,11 +6,10 @@
         <!-- TODO(d.maltsev): i18n -->
         Выберите автокомментарий
       </span>
-      <!-- TODO(d.maltsev): fetch options -->
       <app-select
         formControlName="autoCommentId"
         [nullable]="true"
-        [options]="autoCommentIdOptions"
+        [options]="autoCommentIdOptions$ | async"
       ></app-select>
     </label>
   </div>

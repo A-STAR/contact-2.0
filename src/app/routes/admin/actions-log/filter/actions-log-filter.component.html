@@ -1,134 +1,29 @@
-<div class="app-actions-log-filter">
-  <form [formGroup]="form" class="log-filter-form">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="row">
-          <div class="col-md-4">
-            <label>
-              {{ startDateControl.label | translate }}
-              <app-input-datepicker
-                [formControlName]="startDateControl.controlName">
-              </app-input-datepicker>
-            </label>
-          </div>
-          <div class="col-md-2 pl0">
-            <app-time [formControlName]="startTimeControl.controlName"></app-time>
-          </div>
-          <div class="col-md-4">
-            <label>
-              {{ endDateControl.label | translate }}
-              <app-input-datepicker
-                [formControlName]="endDateControl.controlName">
-              </app-input-datepicker>
-            </label>
-          </div>
-          <div class="col-md-2 pl0">
-            <app-time [formControlName]="endTimeControl.controlName"></app-time>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <label class="mb0">&nbsp;</label>
-        <button class="btn btn-default export-button" (click)="onExport()">
-          <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-          {{ 'default.buttons.excel' | translate }}
-        </button>
-        <button *ngIf="false" class="btn btn-default export-button" (click)="onQueryBuilderOpen()">
-          <i class="fa fa-filter" aria-hidden="true"></i>
-        </button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="row">
-          <label class="col-md-12">
-            {{ employeesControl.label | translate }}
-          </label>
-          <app-popup-input
-            class="col-md-12"
-            [value]="selectedEmployees"
-            [placeholder]="employeesControl.placeholder"
-            (action)="setDialog('employees')"
-          >
-          </app-popup-input>
-          <app-action-dialog
-            *ngIf="isDialog('employees')"
-            [titleTranslationKey]="employeesControl.label"
-            [autoWidth]="false"
-            [styles]="{width: '70%'}"
-            (action)="onSetEmployees()"
-            (cancel)="setDialog(null)"
-          >
-            <app-multi-select
-              #employees
-              [formControlName]="employeesControl.controlName"
-              [syncFormControlChanges]="false"
-              [height]="300"
-              [rowsFrom]="employeesRows | async"
-              [rowsFilterFrom]="employeesRowsFilter"
-              columnsTranslationKeyFrom="actionsLog.filter.employees"
-              columnsTranslationKeyTo="actionsLog.filter.employees"
-              [columnsFrom]="employeesColumnsFrom"
-              [columnsTo]="employeesColumnsTo">
-            </app-multi-select>
-            <div class="checkbox mb0">
-              <label>
-                <input type="checkbox" [formControlName]="inactiveEmployeesControl.controlName"/>
-                {{ inactiveEmployeesControl.label | translate }}
-              </label>
-            </div>
-          </app-action-dialog>
-        </div>
-      </div>
-      <div class="col-md-5">
-        <div class="row">
-          <label class="col-md-12">
-            {{ actionTypesControl.label | translate }}
-          </label>
-          <app-popup-input
-            class="col-md-12"
-            [value]="selectedActionTypes"
-            [placeholder]="actionTypesControl.placeholder"
-            (action)="setDialog('actionTypes')"
-          >
-          </app-popup-input>
-          <app-action-dialog
-            *ngIf="isDialog('actionTypes')"
-            [autoWidth]="false"
-            [styles]="{width: '70%'}"
-            [titleTranslationKey]="actionTypesControl.label"
-            (action)="onSetActionTypes()"
-            (cancel)="setDialog()"
-          >
-            <app-multi-select
-              #actionTypes
-              [formControlName]="actionTypesControl.controlName"
-              [syncFormControlChanges]="false"
-              [height]="300"
-              [rowsFrom]="actionTypesRows | async"
-              columnsTranslationKeyFrom="actionsLog.filter.actionsTypes"
-              columnsTranslationKeyTo="actionsLog.filter.actionsTypes"
-              [columnsFrom]="actionsTypesColumnsFrom"
-              [columnsTo]="actionsTypesColumnsTo">
-            </app-multi-select>
-          </app-action-dialog>
-        </div>
-      </div>
-      <div class="col-md-1">
-        <div class="row">
-          <label class="col-md-12">
-            &nbsp;
-          </label>
-          <div class="col-md-12 align-right pl0">
-            <button class="btn btn-default search-button" (click)="onSearch()">
-              <i class="fa fa-search" aria-hidden="true"></i>
-              <span>
-                {{ 'default.buttons.search' | translate }}
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+<h3 class="form-title mt0">Лог действий</h3>
+
+<app-dynamic-form
+  *ngIf="controls"
+  [controls]="controls"
+  [data]="data"
+></app-dynamic-form>
+
+<div class="row mt">
+
+  <div class="col-md-6">
+    <button class="btn btn-block btn-default" (click)="onSearch()">
+      <i class="fa fa-search" aria-hidden="true"></i>
+      <span>
+        {{ 'default.buttons.search' | translate }}
+      </span>
+    </button>
+  </div>
+
+  <div class="col-md-6">
+    <button class="btn btn-block btn-default" (click)="onExport()">
+      <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+      <span>
+        {{ 'default.buttons.excel' | translate }}
+      </span>
+    </button>
+  </div>
+
 </div>

@@ -1,50 +1,42 @@
 import {
   AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
-  Component, OnDestroy, ViewChild, ViewEncapsulation, EventEmitter, Output
+  Component, OnDestroy, ViewChild, EventEmitter, Output
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IEmployee, IActionLog } from './actions-log.interface';
+import { IActionLog } from './actions-log.interface';
 import { IContextMenuItem } from '../../../shared/components/grid/grid.interface';
 
 import { IAGridResponse, IAGridSelected } from '../../../shared/components/grid2/grid2.interface';
-import { IUserTerm } from '../../../core/user/dictionaries/user-dictionaries.interface';
 import { IQuery } from '../../../shared/components/qbuilder2/qbuilder2.interface';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 
 import { ActionsLogService } from './actions-log.service';
-
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
+import { ActionGridComponent } from '../../../shared/components/action-grid/action-grid.component';
 import { ActionsLogFilterComponent } from './filter/actions-log-filter.component';
 import { DownloaderComponent } from '../../../shared/components/downloader/downloader.component';
-import { ActionGridComponent } from '../../../shared/components/action-grid/action-grid.component';
 import { MetadataGridComponent } from '../../../shared/components/metadata-grid/metadata-grid.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height' },
   selector: 'app-actions-log',
   styleUrls: ['./actions-log.component.scss'],
   templateUrl: './actions-log.component.html',
 })
 export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
-
   @Output() onSelect = new EventEmitter<IAGridSelected>();
 
   @ViewChild('downloader') downloader: DownloaderComponent;
   @ViewChild('filter') filter: ActionsLogFilterComponent;
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<any>;
 
-  // filter
-  actionTypesRows: Observable<IUserTerm[]>;
-  employeesRows: Observable<IEmployee[]>;
-  // grid
   hasViewPermission$: Observable<boolean>;
   permissionSub: Subscription;
   actions = 'contactLogContact';
@@ -71,9 +63,6 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
     private userPermissionsService: UserPermissionsService,
   ) {
     // filter
-    this.actionTypesRows = this.actionsLogService.actionTypesRows;
-    this.employeesRows = this.actionsLogService.employeesRows;
-    // grid
     this.hasViewPermission$ = this.userPermissionsService.has('ACTION_LOG_VIEW');
   }
 
@@ -83,15 +72,12 @@ export class ActionsLogComponent implements  OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.permissionSub = this.hasViewPermission$
-      .subscribe(hasPermission => {
-        if (!hasPermission) {
+      .subscribe(canView => {
+        if (!canView) {
           this.rows = [];
           this.rowCount = 0;
           this.notificationsService.permissionError().entity('entities.actionsLog.gen.plural').dispatch();
         } else {
-          this.actionsLogService.getEmployeesAndActionTypes()
-            .pipe(first())
-            .subscribe();
           // load data
           if ((this.grid && this.grid.grid as any).gridOptions) {
             this.onRequest();

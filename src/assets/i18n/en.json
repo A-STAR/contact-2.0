@@ -2776,7 +2776,13 @@
         },
         "title": "Select Users"
       },
-
+      "actions": {
+        "grid": {
+          "code": "Code",
+          "name": "Action"
+        },
+        "title": "Action types"
+      },
       "fields": {
         "branchCode": "Branch",
         "dictValue1": "Dictionary Value 1",
