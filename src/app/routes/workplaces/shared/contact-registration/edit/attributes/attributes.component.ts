@@ -15,7 +15,7 @@ import { getRawValue, getValue } from '@app/core/utils/value';
   templateUrl: './attributes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributesComponent implements OnInit {
+export class ContactRegistrationAttributesComponent implements OnInit {
   attributes: ITreeNode[];
 
   constructor(
