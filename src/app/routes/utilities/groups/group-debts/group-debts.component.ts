@@ -1,8 +1,16 @@
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+  Inject,
+} from '@angular/core';
 
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IDynamicFormConfig, IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IGroup } from '../group.interface';
+import { IFilterGroup } from '@app/core/filters/grid-filters.interface';
 import { IGroupDebt } from './group-debts.interface';
 
 import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
@@ -12,8 +20,7 @@ import { ActionGridComponent } from '@app/shared/components/action-grid/action-g
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '@app/core/utils';
-
-const label = makeKey('widgets.groups.groupObjectDebts');
+import { GridFiltersService } from '@app/core/filters/grid-filters.service';
 
 @Component({
   selector: 'app-group-debts',
@@ -41,10 +48,17 @@ export class GroupDebtsComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private groupDebtsService: GroupDebtsService,
+    private gridFiltersService: GridFiltersService,
+    @Inject(GroupDebtsService.ENTITY_GROUP_ID) private entityTypeId: number[]
   ) { }
 
   ngOnInit(): void {
-    this.controls = this.getControls();
+    this.gridFiltersService
+      .fetchEntitiesGroups(this.entityTypeId, 0)
+      .subscribe(groups => {
+        this.controls = this.getControls(groups);
+        this.cdRef.markForCheck();
+      });
   }
 
   onRequest(): void {
@@ -69,17 +83,23 @@ export class GroupDebtsComponent implements OnInit {
 
   onSearch(): void {
     const { groups } = this.form.serializedUpdates;
-    this.groupId = groups[0];
+    this.groupId = groups;
     this.onRequest();
   }
 
-  private getControls(): IDynamicFormControl[] {
+  private getControls(groups: IFilterGroup[]): IDynamicFormControl[] {
     return [
       {
-        type: 'dialogmultiselectwrapper',
         controlName: 'groups',
-        filterType: 'entityGroups',
-        filterParams: { entityTypeId: 19, isManual: false },
+        type: 'gridselect',
+        gridColumns: [
+          { prop: 'id', minWidth: 50, maxWidth: 50 },
+          { prop: 'name', minWidth: 300, maxWidth: 300 }
+        ],
+        gridRows: groups,
+        gridLabelGetter: (row: IFilterGroup) => row.name,
+        gridValueGetter: (row: IFilterGroup) => row.id,
+        gridOnSelect: (row: IFilterGroup) => this.form.form.patchValue({ groups: row && row.id }),
         width: 5
       },
       {

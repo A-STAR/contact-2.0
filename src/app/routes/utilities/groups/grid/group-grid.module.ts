@@ -30,6 +30,8 @@ const routes: Routes = [
   declarations: [
     GroupGridComponent,
   ],
-  providers: [ GroupService ]
+  providers: [
+    GroupService
+  ]
 })
 export class GroupGridModule { }

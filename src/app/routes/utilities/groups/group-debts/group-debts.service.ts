@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IAGridRequestParams, IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
@@ -12,6 +12,8 @@ import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
 @Injectable()
 export class GroupDebtsService {
+
+  public static ENTITY_GROUP_ID = new InjectionToken<number[]>('ENTITY_GROUP_ID');
 
   constructor(
     private dataService: DataService,

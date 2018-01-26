@@ -24,7 +24,13 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule
   ],
-  providers: [ GroupDebtsService ],
+  providers: [
+    GroupDebtsService,
+    {
+      provide: GroupDebtsService.ENTITY_GROUP_ID,
+      useValue: [19]
+    }
+  ],
   declarations: [GroupDebtsComponent]
 })
 export class GroupDebtsModule { }
