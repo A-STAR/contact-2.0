@@ -175,9 +175,9 @@ export class ContactRegistrationService {
   }
 
   cancelRegistration(): void {
-    this._params$.next(this.nextParams$.value);
-    this._outcome$.next(null);
     this._mode$.next(IContactRegistrationMode.TREE);
+    this._outcome$.next(null);
+    this._params$.next(this.nextParams$.value);
     this.nextParams$.next(null);
   }
 
