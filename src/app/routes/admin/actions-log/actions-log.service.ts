@@ -1,63 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { zip } from 'rxjs/observable/zip';
 
-import { IUserTerm } from '../../../core/user/dictionaries/user-dictionaries.interface';
-import { IActionLog, IEmployee } from './actions-log.interface';
-import { IAppState } from '../../../core/state/state.interface';
+import { IActionLog } from './actions-log.interface';
 import { IAGridRequestParams, IAGridResponse } from '../../../shared/components/grid2/grid2.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 
 @Injectable()
 export class ActionsLogService {
-  static ACTION_TYPES_FETCH_SUCCESS           = 'ACTION_TYPES_FETCH_SUCCESS';
-  static ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS  = 'ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS';
-  static ACTIONS_LOG_FETCH                    = 'ACTIONS_LOG_FETCH';
-  static ACTIONS_LOG_FETCH_SUCCESS            = 'ACTIONS_LOG_FETCH_SUCCESS';
-  static ACTIONS_LOG_DESTROY                  = 'ACTIONS_LOG_DESTROY';
+  // static ACTION_TYPES_FETCH_SUCCESS           = 'ACTION_TYPES_FETCH_SUCCESS';
+  // static ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS  = 'ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS';
+  // static ACTIONS_LOG_FETCH                    = 'ACTIONS_LOG_FETCH';
+  // static ACTIONS_LOG_FETCH_SUCCESS            = 'ACTIONS_LOG_FETCH_SUCCESS';
+  // static ACTIONS_LOG_DESTROY                  = 'ACTIONS_LOG_DESTROY';
 
   constructor(
     private dataService: DataService,
     private gridService: GridService,
     private notifications: NotificationsService,
-    private store: Store<IAppState>,
-    private userDictionariesService: UserDictionariesService,
   ) {}
-
-  get employeesRows(): Observable<IEmployee[]> {
-    return this.store
-      .select(state => state.actionsLog.employees)
-      .distinctUntilChanged();
-  }
-
-  get actionTypesRows(): Observable<IUserTerm[]> {
-    return this.store
-      .select(state => state.actionsLog.actionTypes)
-      .distinctUntilChanged();
-  }
-
-  getEmployeesAndActionTypes(): Observable<void> {
-    return zip(
-      this.getEmployees(),
-      this.getActionTypes(),
-      (employees, actionTypes) => {
-        this.store.dispatch({
-          payload: employees,
-          type: ActionsLogService.ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS,
-        });
-        this.store.dispatch({
-          payload: actionTypes,
-          type: ActionsLogService.ACTION_TYPES_FETCH_SUCCESS,
-        });
-      }
-    );
-  }
 
   fetch(filters: FilterObject, params: IAGridRequestParams): Observable<IAGridResponse<IActionLog>> {
     const request = this.gridService.buildRequest(params, filters);
@@ -66,16 +30,4 @@ export class ActionsLogService {
       .catch(this.notifications.fetchError().entity('entities.actionsLog.gen.plural').callback());
   }
 
-  destroy(): void {
-    this.store.dispatch({ type: ActionsLogService.ACTIONS_LOG_DESTROY });
-  }
-
-  getActionTypes(): Observable<IUserTerm[]> {
-    return this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_ACTION_TYPES);
-  }
-
-  // TODO(a.tymchuk): use the user API
-  getEmployees(): Observable<IEmployee[]> {
-    return this.dataService.readAll('/users');
-  }
 }

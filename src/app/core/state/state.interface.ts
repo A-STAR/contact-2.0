@@ -1,6 +1,5 @@
 import { Action } from '@ngrx/store';
 
-import { IActionsLogState } from '../../routes/admin/actions-log/actions-log.interface';
 import { IAuthState } from '../auth/auth.interface';
 import { ICampaignsState } from '../../routes/utilities/campaigns/campaigns.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
@@ -22,7 +21,6 @@ import { IUserTemplatesState } from '../user/templates/user-templates.interface'
 import { IUsersState } from '../../routes/admin/users/users.interface';
 
 export interface IAppState {
-  readonly actionsLog: IActionsLogState;
   readonly auth: IAuthState;
   readonly constants: IConstantsState;
   readonly contractorsAndPortfolios: IContractorsAndPortfoliosState;
