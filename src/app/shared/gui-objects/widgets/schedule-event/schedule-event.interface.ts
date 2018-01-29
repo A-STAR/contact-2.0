@@ -33,7 +33,7 @@ export interface IScheduleType {
 
 export interface IScheduleParam {
   name: string;
-  value: string;
+  value: any;
 }
 
 export interface IScheduleGroup {
