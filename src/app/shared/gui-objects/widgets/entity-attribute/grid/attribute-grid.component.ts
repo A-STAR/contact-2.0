@@ -11,23 +11,24 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, flatMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IAttribute } from '../attribute.interface';
-import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
-import { IGridTreeColumn, IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
+import { IAttribute } from '@app/shared/gui-objects/widgets/entity-attribute/attribute.interface';
+import { IGridWrapperTreeColumn } from '@app/shared/components/gridtree-wrapper/gridtree-wrapper.interface';
+import { IGridTreeColumn, IGridTreeRow } from '@app/shared/components/gridtree/gridtree.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { AttributeService } from '../attribute.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
+import { AttributeService } from '@app/shared/gui-objects/widgets/entity-attribute/attribute.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { GridTreeWrapperComponent } from '../../../../../shared/components/gridtree-wrapper/gridtree-wrapper.component';
+import { GridTreeWrapperComponent } from '@app/shared/components/gridtree-wrapper/gridtree-wrapper.component';
 
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
-import { DialogFunctions } from '../../../../../core/dialog';
-import { makeKey } from '../../../../../core/utils';
+import { combineLatestAnd } from '@app/core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
+import { makeKey } from '@app/core/utils';
 import { of } from 'rxjs/observable/of';
 
 const label = makeKey('widgets.attribute.grid');
@@ -95,9 +96,10 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   constructor(
     private attributeService: AttributeService,
     private cdRef: ChangeDetectorRef,
-    private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
+    private valueConverterService: ValueConverterService
   ) {
     super();
   }
@@ -165,7 +167,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   onVersionClick(): void {
-    this.router.navigate([`${this.router.url}/${this.selectedAttribute$.value.code}/versions`]);
+    this.routingService.navigate([ `${this.selectedAttribute$.value.code}/versions` ], this.route);
   }
 
   idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;

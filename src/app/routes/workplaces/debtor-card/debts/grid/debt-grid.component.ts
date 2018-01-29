@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
@@ -120,7 +120,7 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private gridService: GridService,
-    private router: Router,
+    private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -178,17 +178,13 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
   }
 
   private onAdd(): void {
-    this.routingService.navigate([
-      this.router.url,
-      'debt',
-      'create'
-    ]);
+    this.routingService.navigate([ 'debt/create' ], this.route);
   }
 
   private onEdit(): void {
     this.selectedDebt$
       .pipe(first())
-      .subscribe(debt => this.routingService.navigate([ this.router.url, 'debt' ]));
+      .subscribe(debt => this.routingService.navigate([ 'debt' ], this.route));
   }
 
   private fetch(): void {

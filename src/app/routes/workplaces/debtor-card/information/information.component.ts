@@ -26,8 +26,8 @@ export class DebtorInformationComponent {
   @ViewChild(PersonComponent) personComponent: PersonComponent;
 
   tabs = [
-    { title: 'debtor.information.address.title', isInitialised: true },
     { title: 'debtor.information.phone.title', isInitialised: false },
+    { title: 'debtor.information.address.title', isInitialised: true },
     { title: 'debtor.information.email.title', isInitialised: false },
   ];
 
@@ -80,7 +80,7 @@ export class DebtorInformationComponent {
   }
 
   onAddressAdd(): void {
-    this.routingService.navigate([ 'address', 'create' ], this.route);
+    this.routingService.navigate([ 'address/create' ], this.route);
   }
 
   onAddressEdit(address: IAddress): void {
@@ -100,7 +100,7 @@ export class DebtorInformationComponent {
   }
 
   onPhoneAdd(): void {
-    this.routingService.navigate([ 'phone', 'create' ], this.route);
+    this.routingService.navigate([ 'phone/create' ], this.route);
   }
 
   onPhoneEdit(phone: IPhone): void {
