@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
@@ -34,6 +34,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   identity: IIdentityDoc;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private identityService: IdentityService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -64,9 +65,8 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
           { label: label('isMain'), controlName: 'isMain', type: 'checkbox', required: true },
         ] as IDynamicFormControl[])
         .map(control => canEdit ? control : { ...control, disabled: true });
-
-      // TODO: fix displaying of selected identity
       this.identity = identity;
+      this.cdRef.markForCheck();
     });
   }
 
@@ -95,10 +95,14 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   onBack(): void {
+    const contactSegments = this.route.snapshot.paramMap.get('contactId')
+      ? [ 'contact', this.route.snapshot.paramMap.get('contactId') ]
+      : [];
     this.routingService.navigate([
       '/workplaces',
       'debtor-card',
-      this.route.snapshot.paramMap.get('debtId')
+      this.route.snapshot.paramMap.get('debtId'),
+      ...contactSegments
     ]);
   }
 

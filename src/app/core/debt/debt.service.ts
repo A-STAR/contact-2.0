@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
-import { IAddress, IContactRegistrationParams, IPhone, IDebt, IDebtNextCall, IDebtOpenIncomingCallData } from './debt.interface';
+import { IAddress, IPhone, IDebt, IDebtNextCall, IDebtOpenIncomingCallData } from '@app/core/debt/debt.interface';
 
-import { DataService } from '../data/data.service';
-import { NotificationsService } from '../notifications/notifications.service';
-import { UserPermissionsService } from '../user/permissions/user-permissions.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
@@ -29,8 +28,7 @@ export class DebtService {
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
-    private router: Router,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   get canRegisterIncomingCalls$(): Observable<boolean> {
@@ -86,12 +84,6 @@ export class DebtService {
 
   isDebtActive(debt: { statusCode: number }): boolean {
     return debt && ![6, 7, 8, 17].includes(debt.statusCode);
-  }
-
-  navigateToRegistration(params: Partial<IContactRegistrationParams>): void {
-    const { debtId, contactType, contactId, ...queryParams } = params;
-    const url = `/workplaces/contact-registration/${Number(debtId)}/${Number(contactType)}/${Number(contactId)}`;
-    this.router.navigate([ url ], { queryParams });
   }
 
   /**

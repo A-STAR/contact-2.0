@@ -1,20 +1,21 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
 import { IPledgeContract } from '../pledge.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { PledgeService } from '../pledge.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { PledgeService } from '@app/shared/gui-objects/widgets/pledge/pledge.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-pledge-grid',
@@ -85,7 +86,7 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
     private notificationsService: NotificationsService,
     private pledgeService: PledgeService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService
   ) {
     super();
   }
@@ -148,17 +149,17 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/pledge/create` ]);
+    this.routingService.navigate([ 'pledge/create' ], this.route);
   }
 
   private onAddPledgor(contract: IPledgeContract): void {
     const { contractId } = contract;
-    this.router.navigate([ `${this.router.url}/pledge/${contractId}/pledgor/add` ]);
+    this.routingService.navigate([ `pledge/${contractId}/pledgor/add` ], this.route);
   }
 
   private onEdit(contract: IPledgeContract): void {
     const { contractId, personId, propertyId } = contract;
-    this.router.navigate([ `${this.router.url}/pledge/${contractId}/pledgor/${personId}/${propertyId}` ]);
+    this.routingService.navigate([ `pledge/${contractId}/pledgor/${personId}/${propertyId}` ], this.route);
   }
 
   private fetch(): void {

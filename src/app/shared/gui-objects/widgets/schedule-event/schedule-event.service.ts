@@ -20,6 +20,7 @@ import { UserConstantsService } from '@app/core/user/constants/user-constants.se
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
+import { TranslateService } from '@ngx-translate/core';
 
 import { toOption } from '@app/core/utils';
 
@@ -37,6 +38,7 @@ export class ScheduleEventService extends AbstractActionService {
     private userDictionaryService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
     private userTemplatesService: UserTemplatesService,
+    private translateService: TranslateService,
     protected store: Store<IAppState>,
   ) {
     super();
@@ -77,6 +79,16 @@ export class ScheduleEventService extends AbstractActionService {
       this.userConstantsService.get('SMS.Sender.Default'),
       this.userConstantsService.get('Email.Sender.Default'),
     );
+  }
+
+  get weekDays(): { [dayControl: string]: string } {
+    return this.translateService.instant('default.date.days.full')
+      .reduce((acc, day, i) => ({ ...acc, [`weekDays${i}`]: day }), {});
+  }
+
+  get monthDays(): { [dayControl: string]: string } {
+    return Array.from(new Array(32), (v, i) => String(++i))
+      .reduce((acc, day, i) => ({ ...acc, [`monthDays${i}`]: day }), {});
   }
 
   fetchAll(): Observable<IScheduleEvent[]> {
@@ -122,13 +134,13 @@ export class ScheduleEventService extends AbstractActionService {
       .params({ eventId: eventIds.join() }).dispatchCallback());
   }
 
-  getEventAddParamValue(param: IScheduleParam): string | string[] {
+  getEventAddParamValue(param: IScheduleParam): any {
     switch (param.name) {
       case 'personRoles':
       case 'phoneTypes':
         return param.value.split(',');
       default:
-        return param.value;
+        return +param.value || param.value;
     }
   }
 

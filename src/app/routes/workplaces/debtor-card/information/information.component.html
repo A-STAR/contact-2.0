@@ -9,32 +9,32 @@
 
 <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
   <app-tabview-tab [title]="tabs[0].title">
-    <app-address-grid
-      *ngIf="tabs[0].isInitialised"
-      action="edit"
-      [debtId]="debtId$ | async"
-      [debtorId]="personId$ | async"
-      [personId]="personId$ | async"
-      [personRole]="personRole"
-      (add)="onAddressAdd()"
-      (dblClick)="onAddressEdit($event)"
-      (edit)="onAddressEdit($event)"
-      (register)="onAddressRegister($event)"
-    ></app-address-grid>
-  </app-tabview-tab>
-  <app-tabview-tab [title]="tabs[1].title">
     <app-phone-grid
-      *ngIf="tabs[1].isInitialised"
+      *ngIf="tabs[0].isInitialised"
       action="edit"
       [contactType]="phoneContactType"
       [debtId]="debtId$ | async"
       [personId]="personId$ | async"
       [personRole]="personRole"
       (add)="onPhoneAdd()"
-      (dblClick)="onPhoneEdit($event)"
+      (dblClick)="onPhoneRegister($event)"
       (edit)="onPhoneEdit($event)"
       (register)="onPhoneRegister($event)"
     ></app-phone-grid>
+  </app-tabview-tab>
+  <app-tabview-tab [title]="tabs[1].title">
+    <app-address-grid
+      *ngIf="tabs[1].isInitialised"
+      action="edit"
+      [debtId]="debtId$ | async"
+      [debtorId]="personId$ | async"
+      [personId]="personId$ | async"
+      [personRole]="personRole"
+      (add)="onAddressAdd()"
+      (dblClick)="onAddressRegister($event)"
+      (edit)="onAddressEdit($event)"
+      (register)="onAddressRegister($event)"
+    ></app-address-grid>
   </app-tabview-tab>
   <app-tabview-tab [title]="tabs[2].title">
     <app-email-grid

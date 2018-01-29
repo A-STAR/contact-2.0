@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
   selector: 'app-debtor-attributes-versions',
@@ -18,9 +19,9 @@ export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
   private paramsSub: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
     private debtorCardService: DebtorCardService,
+    private route: ActivatedRoute,
+    private routingService: RoutingService
   ) { }
 
   ngOnInit(): void {
@@ -50,7 +51,11 @@ export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.router.navigate([ '..', '..' ], { relativeTo: this.route });
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId')
+    ]);
   }
 }
 

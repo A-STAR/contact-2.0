@@ -1,20 +1,21 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDebtComponent, IDebtDialog } from '../debt-component.interface';
-import { IGridColumn, IRenderer } from '../../../../../components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../components/toolbar-2/toolbar-2.interface';
+import { IGridColumn, IRenderer } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { DebtComponentService } from '../debt-component.service';
-import { GridService } from '../../../../../components/grid/grid.service';
-import { LookupService } from '../../../../../../core/lookup/lookup.service';
-import { NotificationsService } from '../../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
+import { DebtComponentService } from '@app/shared/gui-objects/widgets/debt/component/debt-component.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-debt-component-grid',
@@ -88,8 +89,10 @@ export class DebtComponentGridComponent implements OnDestroy {
     private lookupService: LookupService,
     private notificationsService: NotificationsService,
     private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {
     this.gridSubscription = combineLatest(
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DEBT_COMPONENTS),
@@ -156,11 +159,12 @@ export class DebtComponentGridComponent implements OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/debt-component/create` ]);
+    this.routingService.navigate([ 'debt-component/create' ], this.route);
   }
 
   private onEdit(debtComponentId: number): void {
-    this.router.navigate([ `${this.router.url}/debt-component/${debtComponentId}` ], {
+    this.router.navigate([ `debt-component/${debtComponentId}` ], {
+      relativeTo: this.route,
       queryParams: this.callCenter ? { callCenter: 1 } : {}
     });
   }

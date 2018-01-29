@@ -22,6 +22,11 @@ export interface ISchedulePeriod {
   periodTypeCode: number;
   dayPeriod?: number;
   weekDays?: number[];
+  monthDays?: number[];
+}
+
+export interface IScheduleDate {
+  date?: string | Date;
 }
 
 export interface IScheduleType {
@@ -33,7 +38,7 @@ export interface IScheduleType {
 
 export interface IScheduleParam {
   name: string;
-  value: string;
+  value: any;
 }
 
 export interface IScheduleGroup {

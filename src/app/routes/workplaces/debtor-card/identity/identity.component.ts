@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 
 interface IIdentityCardRouteParams {
@@ -18,7 +18,7 @@ interface IIdentityCardRouteParams {
 export class DebtorIdentityComponent {
   constructor(
     private debtorCardService: DebtorCardService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {}
 
   get identityId$(): Observable<number> {

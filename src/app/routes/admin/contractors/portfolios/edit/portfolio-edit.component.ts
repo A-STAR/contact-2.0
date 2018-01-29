@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
@@ -7,17 +7,18 @@ import { Subscription } from 'rxjs/Subscription';
 import {
   IActionType,
   IPortfolio
-} from '../../contractors-and-portfolios.interface';
-import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+} from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
+import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 
 const label = makeKey('portfolios.grid');
 
@@ -40,12 +41,12 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    private router: Router,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService,
+    private valueConverterService: ValueConverterService
   ) {
   }
 
@@ -140,10 +141,10 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.router.navigate(['/admin/contractors']);
+    this.routingService.navigate([ '/admin', 'contractors' ]);
   }
 
   onAttributesClick(): void {
-    this.router.navigate([`/admin/contractors/${this.contractorId}/portfolios/${this.portfolioId}/attributes`]);
+    this.routingService.navigate([ 'attributes' ], this.route);
   }
 }

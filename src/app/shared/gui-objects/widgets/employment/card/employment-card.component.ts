@@ -73,10 +73,14 @@ export class EmploymentCardComponent implements OnInit {
   }
 
   onBack(): void {
+    const contactSegments = this.route.snapshot.paramMap.get('contactId')
+      ? [ 'contact', this.route.snapshot.paramMap.get('contactId') ]
+      : [];
     this.routingService.navigate([
       '/workplaces',
       'debtor-card',
-      this.route.snapshot.paramMap.get('debtId')
+      this.route.snapshot.paramMap.get('debtId'),
+      ...contactSegments
     ]);
   }
 

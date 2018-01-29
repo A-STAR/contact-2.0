@@ -265,7 +265,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private onAdd(): void {
-    this.routingService.navigate([ 'email', 'create' ], this.route);
+    this.routingService.navigate([ 'email/create' ], this.route);
   }
 
   private onEdit(emailId: number): void {
