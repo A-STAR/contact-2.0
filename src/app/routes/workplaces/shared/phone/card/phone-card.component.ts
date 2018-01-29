@@ -74,6 +74,9 @@ export class PhoneCardComponent implements OnInit {
   }
 
   onBack(): void {
+    const contactSegments = this.route.snapshot.paramMap.get('contactId')
+      ? [ 'contact', this.route.snapshot.paramMap.get('contactId') ]
+      : [];
     const url = this.callCenter
       ? [
         '/workplaces',
@@ -83,7 +86,8 @@ export class PhoneCardComponent implements OnInit {
       : [
         '/workplaces',
         'debtor-card',
-        this.route.snapshot.paramMap.get('debtId')
+        this.route.snapshot.paramMap.get('debtId'),
+        ...contactSegments
       ];
     this.routingService.navigate(url);
   }

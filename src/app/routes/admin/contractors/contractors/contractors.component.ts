@@ -1,26 +1,27 @@
 import { Actions } from '@ngrx/effects';
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IAppState } from '../../../../core/state/state.interface';
-import { IContractor, IActionType } from '../contractors-and-portfolios.interface';
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IAppState } from '@app/core/state/state.interface';
+import { IContractor, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { DialogFunctions } from '../../../../core/dialog';
-import { combineLatestAnd } from '../../../../core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-contractors',
@@ -85,8 +86,9 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
     private gridService: GridService,
     private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private router: Router,
-    private userPermissionsService: UserPermissionsService,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
+    private userPermissionsService: UserPermissionsService
   ) {
     super();
   }
@@ -136,15 +138,15 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
   }
 
   onAdd(): void {
-    this.router.navigate([ `/admin/contractors/create` ]);
+    this.routingService.navigate([ 'create' ], this.route);
     this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_CREATE);
   }
 
   onEdit(): void {
-    this.router.navigate([ `/admin/contractors/${this.grid.selected[0].id}` ]);
+    this.routingService.navigate([ this.grid.selected[0].id ], this.route);
     this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_EDIT, {
       selectedContractor: this.grid.selected[0]
-  });
+    });
   }
 
   onSelect(contractor: IContractor): void {

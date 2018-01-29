@@ -4,8 +4,10 @@ import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
+import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
 import { IContact } from '@app/shared/gui-objects/widgets/contact/contact.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 
 import { ContactService } from '@app/shared/gui-objects/widgets/contact/contact.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -100,6 +102,22 @@ export class ContactCardComponent {
 
   get contactPersonId(): number {
     return this.routeParams.contactId || this.routeParams.personId;
+  }
+
+  onAddressAdd(): void {
+    this.routingService.navigate([ 'address/create' ], this.route);
+  }
+
+  onAddressEdit(address: IAddress): void {
+    this.routingService.navigate([ `address/${address.id}` ], this.route);
+  }
+
+  onPhoneAdd(): void {
+    this.routingService.navigate([ 'phone/create' ], this.route);
+  }
+
+  onPhoneEdit(phone: IPhone): void {
+    this.routingService.navigate([ `phone/${phone.id}` ], this.route);
   }
 
   onTabSelect(tabIndex: number): void {
