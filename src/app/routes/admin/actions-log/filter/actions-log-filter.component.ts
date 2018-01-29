@@ -9,8 +9,6 @@ import {
 import * as moment from 'moment';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEmployee } from '../actions-log.interface';
-import { IDictionaryItem } from '../../dictionaries/dictionaries.interface';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
@@ -20,7 +18,9 @@ import { timeToHourMinSec } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-actions-log-filter',
+  styleUrls: [ './actions-log-filter.component.scss' ],
   templateUrl: './actions-log-filter.component.html',
 })
 export class ActionsLogFilterComponent implements OnInit {
@@ -96,34 +96,11 @@ export class ActionsLogFilterComponent implements OnInit {
             label: 'actionsLog.filter.actionsTypes.title',
             placeholder: 'actionsLog.filter.actionsTypes.placeholder',
             filterType: 'actions',
-            // filterParams: ,
             type: 'dialogmultiselectwrapper',
             width: 6,
           },
-          // {
-          //   controlName: 'blockingEmployees',
-          //   label: 'actionsLog.filter.employees.inactive',
-          //   type: 'checkbox',
-          //   width: 4
-          // }
         ]
       },
-      // {
-      //   controlName: 'exportBtn',
-      //   label: 'default.buttons.excel',
-      //   type: 'searchBtn',
-      //   iconCls: 'fa-file-excel-o',
-      //   action: () => this.onExport(),
-      //   width: 2,
-      // },
-      // {
-      //   controlName: 'searchBtn',
-      //   label: 'default.buttons.search',
-      //   type: 'searchBtn',
-      //   iconCls: 'fa-search',
-      //   action: () => this.onSearch(),
-      //   width: 2,
-      // },
     ];
   }
 
@@ -152,8 +129,8 @@ export class ActionsLogFilterComponent implements OnInit {
     const endDate = moment(value.endDate).set(endTime).toISOString();
     const startDate = moment(value.startDate).set(startTime).toISOString();
 
-    const actionsCodes = (value.actionsTypes as IDictionaryItem[] || []).map(action => action.code);
-    const employeeIds = (value.employees as IEmployee[] || []).map(employee => employee.id);
+    const actionsCodes = value.actionsTypes;
+    const employeeIds = value.employees;
 
     return FilterObject
       .create()

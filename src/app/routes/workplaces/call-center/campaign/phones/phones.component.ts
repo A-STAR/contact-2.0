@@ -61,15 +61,13 @@ export class PhonesComponent {
   onPhoneRegister(phone: IPhone): void {
     this.campaignService.campaignDebt$
       .pipe(first())
-      .subscribe(debt => {
-        this.contactRegistrationService.params = {
-          campaignId: this.campaignId,
-          contactId: phone.id,
-          contactType: this.contactType,
-          debtId: debt.debtId,
-          personId: debt.personId,
-          personRole: this.personRole,
-        };
-      });
+      .subscribe(debt => this.contactRegistrationService.startRegistration({
+        campaignId: this.campaignId,
+        contactId: phone.id,
+        contactType: this.contactType,
+        debtId: debt.debtId,
+        personId: debt.personId,
+        personRole: this.personRole,
+      }));
   }
 }

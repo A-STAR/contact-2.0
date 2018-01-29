@@ -8,7 +8,6 @@ import * as moment from 'moment';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 
-import { invert } from '@app/core/utils';
 import { minStrict, max } from '@app/core/validators';
 
 @Component({
@@ -67,7 +66,9 @@ export class ContactRegistrationPromiseComponent implements OnInit, OnDestroy {
   }
 
   get isPromiseAmountDisabled$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPromiseAmount$.pipe(map(invert));
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => !outcome || outcome.promiseMode !== 3),
+    );
   }
 
   onPromiseAmountInput(event: Event): void {

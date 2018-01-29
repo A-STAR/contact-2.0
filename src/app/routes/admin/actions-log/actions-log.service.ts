@@ -11,11 +11,6 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 
 @Injectable()
 export class ActionsLogService {
-  // static ACTION_TYPES_FETCH_SUCCESS           = 'ACTION_TYPES_FETCH_SUCCESS';
-  // static ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS  = 'ACTIONS_LOG_EMPLOYEES_FETCH_SUCCESS';
-  // static ACTIONS_LOG_FETCH                    = 'ACTIONS_LOG_FETCH';
-  // static ACTIONS_LOG_FETCH_SUCCESS            = 'ACTIONS_LOG_FETCH_SUCCESS';
-  // static ACTIONS_LOG_DESTROY                  = 'ACTIONS_LOG_DESTROY';
 
   constructor(
     private dataService: DataService,
@@ -27,7 +22,6 @@ export class ActionsLogService {
     const request = this.gridService.buildRequest(params, filters);
 
     return this.dataService.create('/list?name=actions', {}, request)
-      .catch(this.notifications.fetchError().entity('entities.actionsLog.gen.plural').callback());
+      .catch(this.notifications.fetchError().entity('entities.actionsLog.gen.plural').dispatchCallback());
   }
-
 }

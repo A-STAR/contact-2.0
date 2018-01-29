@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 
 import { IContactPersonRequest, INewContactPerson } from '../contact-select/contact-select.interface';
 
@@ -27,6 +28,8 @@ export class ContactRegistrationPhoneComponent {
   }
 
   get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPhone$;
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && outcome.addPhone === 1),
+    );
   }
 }

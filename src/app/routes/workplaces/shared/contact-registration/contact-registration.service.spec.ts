@@ -4,7 +4,7 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { random } from 'faker';
 
-import { IContactRegistrationMode, IOutcome, IContactRegistrationParams } from './contact-registration.interface';
+import { /* IContactRegistrationMode, */ IOutcome, IContactRegistrationParams } from './contact-registration.interface';
 
 import { ContactRegistrationService } from './contact-registration.service';
 import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
@@ -76,7 +76,7 @@ describe('ContactRegistrationService', () => {
       personId: random.number(),
       personRole: random.number(),
     };
-    service.params = params;
+    service.startRegistration(params);
     expect(service.params).toEqual(params);
     service.params$.pipe(first()).subscribe(p => expect(p).toEqual(params));
   });
@@ -87,15 +87,15 @@ describe('ContactRegistrationService', () => {
     expect(service.guid).toEqual(guid);
   });
 
-  it('should get/set edit mode', () => {
-    service.mode = IContactRegistrationMode.EDIT;
-    expect(service.mode).toEqual(IContactRegistrationMode.EDIT);
-  });
+  // it('should get/set edit mode', () => {
+  //   service.mode = IContactRegistrationMode.EDIT;
+  //   expect(service.mode).toEqual(IContactRegistrationMode.EDIT);
+  // });
 
-  it('should get/set tree mode', () => {
-    service.mode = IContactRegistrationMode.TREE;
-    expect(service.mode).toEqual(IContactRegistrationMode.TREE);
-  });
+  // it('should get/set tree mode', () => {
+  //   service.mode = IContactRegistrationMode.TREE;
+  //   expect(service.mode).toEqual(IContactRegistrationMode.TREE);
+  // });
 
   it('should get/set outcome', () => {
     const outcome: IOutcome = {

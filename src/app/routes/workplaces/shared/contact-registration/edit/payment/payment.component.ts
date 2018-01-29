@@ -8,7 +8,6 @@ import * as moment from 'moment';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 
-import { invert } from '@app/core/utils';
 import { minStrict, max } from '@app/core/validators';
 
 @Component({
@@ -49,7 +48,9 @@ export class ContactRegistrationPaymentComponent implements OnInit, OnDestroy {
   }
 
   get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPayment$;
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome && [2, 3].includes(outcome.paymentMode))
+    );
   }
 
   get today(): Date {
@@ -57,7 +58,9 @@ export class ContactRegistrationPaymentComponent implements OnInit, OnDestroy {
   }
 
   get isPaymentAmountDisabled$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPaymentAmount$.pipe(map(invert));
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => !outcome || outcome.paymentMode !== 3),
+    );
   }
 
   onPaymentAmountInput(event: Event): void {

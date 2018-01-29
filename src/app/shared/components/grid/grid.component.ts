@@ -38,18 +38,20 @@ import { SettingsService } from '../../../core/settings/settings.service';
 export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @ViewChild(DatatableComponent, {read: ElementRef}) dataTableRef: ElementRef;
   @ViewChild(DatatableComponent) dataTable: DatatableComponent;
+
   @Input() allowDblClick = true;
   @Input() footerHeight = 50;
   @Input() columns: IGridColumn[] = [];
   @Input() columnTranslationKey: string;
+  @Input() contextMenuOptions: IContextMenuItem[] = [];
   @Input() emptyMessage: string = null;
   @Input() parseFn: Function;
+  @Input() rowIdKey = 'id';
   @Input() rows: Array<any> = [];
   @Input() selection: Array<any> = [];
   @Input() selectionType: TSelectionType = 'multi';
   @Input() styles: { [key: string]: any };
-  @Input() contextMenuOptions: IContextMenuItem[] = [];
-  @Input() rowIdKey = 'id';
+
   @Output() action = new EventEmitter<any>();
   @Output() onDblClick: EventEmitter<any> = new EventEmitter();
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
@@ -204,7 +206,8 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
         // TODO(d.maltsev): this is horrible, but nothing else seems to work
         setTimeout(() => this.setFullHeight(), 0);
         if (this.split) {
-          this.resizeSubscription = merge(this.split.dragEnd, this.split.dragProgress).subscribe(() => this.setFullHeight());
+          this.resizeSubscription = merge(this.split.dragEnd, this.split.dragProgress)
+            .subscribe(() => this.setFullHeight());
         }
       }
     } else {
@@ -213,7 +216,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
       // 2x12px - top & bottom padding around the grid
       // 50px - toolbar height
       // 8px => - ?, to be identified
-      const offset = 43 + 12 * 2 + 50;
+      const offset = 49 + 7 * 2 + 50;
       const height = this.settings.getContentHeight() - offset;
       this.dataTableRef.nativeElement.style.height = `${height}px`;
     }

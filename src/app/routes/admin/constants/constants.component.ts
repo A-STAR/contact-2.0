@@ -22,9 +22,10 @@ import { combineLatestAnd } from '../../../core/utils/helpers';
 import { DialogFunctions } from '../../../core/dialog';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-constants',
   templateUrl: './constants.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConstantsComponent extends DialogFunctions implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(GridComponent) grid: GridComponent;
