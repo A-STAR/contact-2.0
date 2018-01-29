@@ -53,8 +53,8 @@
     </div>
     <!-- Grid Toolbar -->
     <div class="mb">
-      <app-button label="modules.dataUpload.buttons.nextProblematicCell" (click)="onNextProblematicCellClick()"></app-button>
-      <app-button label="modules.dataUpload.buttons.nextCriticalCell" (click)="onNextCriticalCellClick()"></app-button>
+      <app-button label="modules.dataUpload.buttons.nextProblematicCell" [disabled]="!hasFile" (click)="onNextProblematicCellClick()"></app-button>
+      <app-button label="modules.dataUpload.buttons.nextCriticalCell" [disabled]="!hasFile" (click)="onNextCriticalCellClick()"></app-button>
     </div>
   </div>
 
