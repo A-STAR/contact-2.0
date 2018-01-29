@@ -6,7 +6,9 @@ import {
   OnInit,
   ViewChild,
   ViewEncapsulation,
+  AfterViewInit,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
@@ -27,7 +29,6 @@ import { DebtorInformationComponent } from './information/information.component'
 import { DynamicFormComponent } from '../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 import { DialogFunctions } from '../../../core/dialog';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,7 +41,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./debtor.component.scss'],
   templateUrl: './debtor.component.html',
 })
-export class DebtorComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class DebtorComponent extends DialogFunctions implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(DebtorInformationComponent) information: DebtorInformationComponent;
 
@@ -78,7 +79,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     super();
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.userPermissionsService.has('PERSON_INFO_EDIT')
       .pipe(first())
       .subscribe(canEdit => {
