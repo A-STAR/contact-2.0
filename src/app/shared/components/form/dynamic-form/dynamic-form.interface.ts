@@ -118,6 +118,7 @@ export interface IDynamicFormFileControl extends IDynamicFormBaseControl {
 export interface IDynamicFormGridSelectControl extends IDynamicFormBaseControl {
   // options for grid select
   type: 'gridselect';
+  translationKey?: string;
   gridRows?: Array<any>;
   gridLabelGetter?: Function;
   gridValueGetter?: Function;

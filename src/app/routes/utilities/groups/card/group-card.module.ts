@@ -1,24 +1,36 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Routes, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
+import { SharedModule } from '@app/shared/shared.module';
+
+import { GroupService } from '@app/routes/utilities/groups/group.service';
 
 import { GroupCardComponent } from './group-card.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: GroupCardComponent,
+    data: {
+      reuse: true,
+    },
+  },
+];
 
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule.forChild(routes),
     TranslateModule,
-    DynamicFormModule
+    SharedModule
   ],
   exports: [
     GroupCardComponent,
   ],
+  providers: [ GroupService ],
   declarations: [
-    GroupCardComponent,
-  ],
-  entryComponents: [
     GroupCardComponent,
   ]
 })

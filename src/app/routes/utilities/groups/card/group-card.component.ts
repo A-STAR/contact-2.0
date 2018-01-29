@@ -1,15 +1,16 @@
-import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
-import { IGroup } from '@app/shared/gui-objects/widgets/groups/group.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
+import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
+import { IGroup } from '../group.interface';
 
-import { GroupService } from '@app/shared/gui-objects/widgets/groups/group.service';
-import { RoutingService } from '@app/core/routing/routing.service';
+import { GroupService } from '../group.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -21,31 +22,34 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 export class GroupCardComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  @Input() groupId: number;
-
   controls: IDynamicFormItem[];
   config: IDynamicFormConfig = {
     labelKey: 'widgets.groups.card',
   };
   group: Partial<IGroup>;
+  groupId: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private groupService: GroupService,
-    private routingService: RoutingService
+    private route: ActivatedRoute,
+    private location: Location,
   ) {}
 
   ngOnInit(): void {
-    const group$ = this.groupId ? this.groupService.fetch(this.groupId) : of(this.getFormData());
-    combineLatest(
-      group$.flatMap(group => this.groupId ? this.groupService.canEdit$(group as IGroup) : this.groupService.canAdd$),
-      this.groupService.canConditionEdit$,
-      group$,
-      this.groupService.groupEntityTypeOptions$,
-    )
+
+    this.route.paramMap.map(params => (this.groupId = Number(params.get('groupId'))))
+    .switchMap(groupId => {
+      const group$ = groupId ? this.groupService.fetch(groupId) : of(this.getFormData());
+      return combineLatest(
+        group$.flatMap(group => this.groupId ? this.groupService.canEdit$(group as IGroup) : this.groupService.canAdd$),
+        this.groupService.canConditionEdit$,
+        group$,
+        this.groupService.groupEntityTypeOptions$,
+      );
+    })
     .pipe(first())
     .subscribe(([ canEdit, canConditionEdit, group, respTypeOpts ]) => {
-      // TODO: fix displaying of selected group
       this.group = group;
 
       this.controls = this.initControls(canEdit, canConditionEdit, respTypeOpts);
@@ -69,7 +73,7 @@ export class GroupCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ '/utilities', 'groups' ]);
+    this.location.back();
   }
 
   private initControls(
@@ -83,7 +87,7 @@ export class GroupCardComponent implements OnInit {
         type: this.groupId ? 'multilanguage' : 'text',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_GROUP_NAME,
-          entityId: this.group && this.group.id
+          entityId: this.groupId
         },
         required: true,
         disabled: !canEdit

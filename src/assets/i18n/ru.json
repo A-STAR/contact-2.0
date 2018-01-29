@@ -1867,6 +1867,13 @@
           "forAllDebts": "По всем долгам"
         }
       },
+      "portfolioChange": {
+        "grid": {
+          "id": "ID",
+          "name": "Имя",
+          "contractor": "Банк"
+        }
+      },
       "component": {
         "title": "Компоненты долга",
         "grid": {
@@ -2090,10 +2097,43 @@
         "formDateTime": "Дата переформирования",
         "sql": "SQL"
       },
+      "groupObjectDebts": {
+        "filter": {
+          "groups": "Выберите группу",
+          "grid": {
+              "id": "ID",
+              "name": "Имя"
+          }
+        },
+        "grid": {
+          "id": "ID объекта",
+          "debtId": "ID долга",
+          "personId": "ID должника",
+          "personFullName": "ФИО должника",
+          "bankName": "Банк",
+          "portfolioName": "Портфель",
+          "contract": "Номер договора",
+          "creditName": "Название продукта",
+          "currencyName": "Валюта",
+          "debtAmount": "Сумма просроченной задолженности",
+          "totalAmount": "Общая сумма кредита",
+          "dpd": "Количество дней просрочки",
+          "userFullName": "Оператор",
+          "statusCode": "Статус",
+          "dictValue1": "Словарный атрибут 1",
+          "dictValue2": "Словарный атрибут 2",
+          "dictValue3": "Словарный атрибут 3",
+          "dictValue4": "Словарный атрибут 4"
+        }
+      },
       "toolbar": {
         "action": {
           "forCurrentUser": "Группы текущего пользователя"
         }
+      },
+      "tabs": {
+        "all": "Группы",
+        "debtsInGroup": "Долги в группе"
       }
     },
     "visit": {
@@ -2191,7 +2231,15 @@
         "dict4Code": "Значение",
         "stage": "Стадия",
         "userId": "Оператор",
-        "modeCode": "Режим"
+        "modeCode": "Режим",
+        "changeGroupId": {
+          "grid": {
+            "id": "ID",
+            "entityTypeId": "Тип",
+            "name": "Имя",
+            "comment": "Комментарий"
+          }
+        }
       },
       "dialog": {
         "title": "Мероприятие",
@@ -2713,6 +2761,13 @@
       "to": "Окончание"
     },
     "filters": {
+      "entityGroups": {
+        "grid": {
+          "id": "ID",
+          "name": "Имя"
+        },
+        "title": "Выберите группы"
+      },
       "portfolios": {
         "grid": {
           "contractorName": "Контрагент",

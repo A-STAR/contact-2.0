@@ -1,1 +1,8 @@
-<app-group-grid></app-group-grid>
+<div class="flex vertical">
+  <app-tabview-header class="flex-item" [noMargin]="true" [tabs]="tabs"></app-tabview-header>
+  <div class="flex-item grow">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+

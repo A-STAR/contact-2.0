@@ -65,6 +65,21 @@ export class DialogMultiSelectWrapperService {
       title: 'default.filters.actions.title',
       valueGetter: row => row.code,
     },
+    entityGroups: {
+      columnsFrom: [
+        { prop: 'id' },
+        { prop: 'name' },
+      ],
+      columnsFromTranslationKey: 'default.filters.entityGroups',
+      columnsTo: [
+        { prop: 'name' },
+      ],
+      columnsToTranslationKey: 'default.filters.entityGroups',
+      fetchCallback: ({entityTypeId, isManual}) => this.gridFiltersService.fetchEntitiesGroups(entityTypeId, isManual),
+      labelGetter: row => row.name,
+      title: 'default.filters.entityGroups.title',
+      valueGetter: row => row.id,
+    },
   };
 
   constructor(
