@@ -24,8 +24,7 @@ export class CellRendererComponent implements ICellRendererAngularComp {
   }
 
   get error(): string {
-    const { errorMsg } = this.getCell(this.params);
-    return errorMsg ? 'errors.server.' + errorMsg : '';
+    return this.getCell(this.params).errorMsg || '';
   }
 
   private getCell(params: ICellRendererParams): ICell {
