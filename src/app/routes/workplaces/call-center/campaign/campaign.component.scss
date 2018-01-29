@@ -1,9 +1,9 @@
-::ng-deep app-layout {
-  app-sidebar + .wrapper {
-    padding: 3px !important;
+::ng-deep app-sidebar + .wrapper {
+  .content {
+    padding: 0 !important;
   }
 }
 
 split-area {
-  padding: 7px;
+  padding: 10px;
 }
