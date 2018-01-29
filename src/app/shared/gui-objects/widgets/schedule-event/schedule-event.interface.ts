@@ -25,6 +25,10 @@ export interface ISchedulePeriod {
   monthDays?: number[];
 }
 
+export interface IScheduleDate {
+  date?: string | Date;
+}
+
 export interface IScheduleType {
   eventTypeCode?: number;
   groupId?: number;

@@ -5,7 +5,8 @@ import { first } from 'rxjs/operators';
 import {
   IDynamicFormItem, IDynamicFormConfig, IDynamicFormControl
 } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
-import { ISchedulePeriod, SchedulePeriodEnum } from '../../schedule-event.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISchedulePeriod, SchedulePeriodEnum, IScheduleDate } from '../../schedule-event.interface';
 
 import { ScheduleEventService } from '../../schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -18,6 +19,7 @@ import { ValidatorFn } from '@angular/forms';
 @Component({
   selector: 'app-schedule-period-card',
   templateUrl: './schedule-period-card.component.html',
+  styleUrls: [ './schedule-period-card.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SchedulePeriodCardComponent implements OnInit {
@@ -43,8 +45,17 @@ export class SchedulePeriodCardComponent implements OnInit {
     { labelKey: 'widgets.scheduleEvents.card' },
     { labelKey: 'default.date.days.full' }
   ];
-  periodControls: Array<Partial<IDynamicFormItem>[]>;
+  periodFromControls: Array<Partial<IDynamicFormItem>[]>;
   periodValidators: Array<ValidatorFn[]>;
+
+  periodToolbarControls: Partial<IDynamicFormItem>[] = [
+    { controlName: 'date', type: 'datepicker' },
+    { controlName: 'dates', type: 'multiselect', required: true, display: false },
+  ];
+  periodGridControls: IGridColumn[] = [
+    { prop: 'date', renderer: 'dateRenderer' }
+  ];
+  dates: IScheduleDate[] = [];
 
   selectedPeriod: ISchedulePeriod;
 
@@ -76,7 +87,7 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   get currentPeriodFormType(): number {
-    return this.periodControls.indexOf(this._periodForm.controls) + 1;
+    return this.periodFromControls.indexOf(this._periodForm.controls) + 1;
   }
 
   get periodForms(): DynamicFormComponent[] {
@@ -99,6 +110,11 @@ export class SchedulePeriodCardComponent implements OnInit {
   onPeriodSelect(): void {
     const [ periodControl ] = this.periodTypeForm.getControl('periodTypeCode').value;
     this.selectedPeriodTypeCode$.next(periodControl.value);
+  }
+
+  onDateAdd(): void {
+    const dateControl = this._periodForm.getControl('date');
+    this.dates = this.dates.concat({ date: dateControl.value });
   }
 
   private get dailyFormSerializedUpdates(): any {
@@ -133,7 +149,7 @@ export class SchedulePeriodCardComponent implements OnInit {
       },
     ] as Partial<IDynamicFormItem>[];
 
-    this.periodControls = [
+    this.periodFromControls = [
       [ { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true, validators: [ min(1) ] } ],
       [
         ...Object.keys(this.scheduleEventService.weekDays)
@@ -153,7 +169,8 @@ export class SchedulePeriodCardComponent implements OnInit {
             disabled: !canEdit,
             width: 1
           }))
-      ]
+      ],
+      ,
     ] as Array<Partial<IDynamicFormControl>[]>;
 
     this.periodValidators = [
