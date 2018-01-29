@@ -114,6 +114,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
 
   ngOnDestroy(): void {
     this.personSubscription.unsubscribe();
+    this.routeIdSubscription.unsubscribe();
   }
 
   get displayContactRegistration$(): Observable<boolean> {
