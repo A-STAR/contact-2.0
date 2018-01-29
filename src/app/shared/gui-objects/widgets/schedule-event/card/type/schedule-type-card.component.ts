@@ -11,6 +11,7 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 import { IScheduleGroup, IScheduleType, IScheduleUser } from '../../schedule-event.interface';
 
 import { ScheduleEventService } from '../../schedule-event.service';
+import { TranslateService } from '@ngx-translate/core';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
@@ -69,7 +70,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
         { prop: 'fullName' },
         { prop: 'organization' },
         { prop: 'position' },
-      ],
+      ].map(c => ({ ...c, name: this.translateService.instant(`widgets.operator.grid.${c.prop}`) })),
       gridLabelGetter: row => row.fullName,
       gridValueGetter: row => row.id,
       required: true,
@@ -80,14 +81,13 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       gridColumns: [
         { prop: 'id', maxWidth: 70 },
         {
-          name: 'entityTypeCode',
           prop: 'entityTypeId',
           dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE,
           maxWidth: 90
         },
         { prop: 'name' },
         { prop: 'comment' },
-      ],
+      ].map(c => ({ ...c, name: this.translateService.instant(`widgets.groups.grid.${c.prop}`) })),
       gridLabelGetter: row => row.name || row.id,
       gridValueGetter: row => row.id,
       required: true,
@@ -109,6 +109,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private scheduleEventService: ScheduleEventService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
