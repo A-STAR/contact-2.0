@@ -170,7 +170,7 @@ export class DataUploadComponent extends DialogFunctions
     const payload: ICellPayload = {
       rowId: event.data.id,
       columnId: cell.columnId,
-      value: String(cell.value),
+      value: cell.value === '' ? null : cell.value,
     };
     this.dataUploadService.uploader.editCell(payload).subscribe(response => {
       const row = response.rows[0];

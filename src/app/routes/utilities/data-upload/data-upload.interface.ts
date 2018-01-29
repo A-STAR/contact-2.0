@@ -2,7 +2,7 @@ export interface ICell {
   columnId: string;
   errorMsg: string;
   statusCode: number;
-  value: number | string;
+  value: string | number | null;
 }
 
 export interface IRow {
@@ -30,7 +30,7 @@ export interface IDataResponse {
 export interface ICellPayload {
   rowId: number;
   columnId: string;
-  value: string;
+  value: string | number | null;
 }
 
 export interface IErrorsResponse {
