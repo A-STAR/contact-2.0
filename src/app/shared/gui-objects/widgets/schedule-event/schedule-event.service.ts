@@ -134,13 +134,13 @@ export class ScheduleEventService extends AbstractActionService {
       .params({ eventId: eventIds.join() }).dispatchCallback());
   }
 
-  getEventAddParamValue(param: IScheduleParam): string | string[] {
+  getEventAddParamValue(param: IScheduleParam): any {
     switch (param.name) {
       case 'personRoles':
       case 'phoneTypes':
         return param.value.split(',');
       default:
-        return param.value;
+        return +param.value || param.value;
     }
   }
 

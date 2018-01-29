@@ -26,8 +26,8 @@ export class DebtorInformationComponent {
   @ViewChild(PersonComponent) personComponent: PersonComponent;
 
   tabs = [
-    { title: 'debtor.information.address.title', isInitialised: true },
     { title: 'debtor.information.phone.title', isInitialised: false },
+    { title: 'debtor.information.address.title', isInitialised: true },
     { title: 'debtor.information.email.title', isInitialised: false },
   ];
 

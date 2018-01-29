@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { map, mergeMap } from 'rxjs/operators';
+import { filter, map, mergeMap } from 'rxjs/operators';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
@@ -29,10 +29,11 @@ export class ContactRegistrationAutoCommentComponent implements OnInit, OnDestro
     this.formSub = combineLatest(
       this.contactRegistrationService.params$,
       this.formGroup.get('autoCommentId').valueChanges.pipe(
-        map(item => item[0].value),
+        map(item => item && item[0].value),
       ),
     )
     .pipe(
+      filter(([ params, autoCommentId ]) => params && autoCommentId),
       mergeMap(([ params, autoCommentId ]) => {
         const { campaignId, debtId, personId, personRole } = params;
         // If `campaignId` is a number (can also be 0) - the request is made from call center

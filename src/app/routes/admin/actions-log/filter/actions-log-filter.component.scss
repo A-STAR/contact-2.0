@@ -1,0 +1,53 @@
+@import '../../../../shared/styles/app/variables.scss';
+
+.form-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: flex-start;
+  border-bottom: 1px solid $form-toolbar-border-color;
+  padding-top: 5px;
+  padding-bottom: 3px;
+  margin-bottom: 7px;
+}
+
+.form-toolbar-section {
+  order: 0;
+  flex: 1 1 0px;
+  align-self: auto;
+
+  color: $form-toolbar-title-color;
+  height: 30px;
+  line-height: 30px;
+
+  .form-title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .icon-section {
+    text-align: right;
+    color: $form-toolbar-icon-color;
+  }
+}
+
+.icon {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  padding-top: 3px;
+  width: 30px;
+  height: 30px;
+  transition: all 150ms ease-in-out;
+  &:hover {
+    background-color: #f9f9f9;
+    box-shadow: 0 0 15px 3px rgba(0,0,0, 0.1);
+    cursor: pointer;
+  }
+
+  .fa {
+    font-size: 18px;
+  }
+}
