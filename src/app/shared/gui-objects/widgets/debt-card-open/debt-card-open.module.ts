@@ -2,10 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { InfoDialogModule } from '../../../components/dialog/info/info-dialog.module';
+
 import { OpenDebtCardService } from './debt-card-open.service';
 
-import { InfoDialogModule } from '../../../components/dialog/info/info-dialog.module';
-import { DebtCardOpenComponent } from './debt-card-open.component';
+import { DebtCardOpenByDebtorComponent } from './debt-card-open-by-debtor.component';
+import { DebtCardOpenByDebtComponent } from './debt-card-open-by-debt.component';
 
 
 @NgModule({
@@ -15,10 +17,12 @@ import { DebtCardOpenComponent } from './debt-card-open.component';
     TranslateModule,
   ],
   exports: [
-    DebtCardOpenComponent,
+    DebtCardOpenByDebtComponent,
+    DebtCardOpenByDebtorComponent,
   ],
   declarations: [
-    DebtCardOpenComponent,
+    DebtCardOpenByDebtComponent,
+    DebtCardOpenByDebtorComponent,
   ],
   providers: [
     OpenDebtCardService,
