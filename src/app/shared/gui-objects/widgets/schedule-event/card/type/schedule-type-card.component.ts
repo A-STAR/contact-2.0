@@ -11,6 +11,7 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 import { IScheduleGroup, IScheduleType, IScheduleUser } from '../../schedule-event.interface';
 
 import { ScheduleEventService } from '../../schedule-event.service';
+import { TranslateService } from '@ngx-translate/core';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
@@ -44,6 +45,9 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   private selectedEventTypeCode$ = new BehaviorSubject<number>(null);
   private selectedEventTypeCodeSub: Subscription;
 
+  private selectedPersonRoles$ = new BehaviorSubject<number>(null);
+  private selectedPersonRolesSub: Subscription;
+
   private formControlsFactory = {
     eventTypeCode: {
       controlName: 'eventTypeCode',
@@ -66,7 +70,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
         { prop: 'fullName' },
         { prop: 'organization' },
         { prop: 'position' },
-      ],
+      ].map(c => ({ ...c, name: this.translateService.instant(`widgets.operator.grid.${c.prop}`) })),
       gridLabelGetter: row => row.fullName,
       gridValueGetter: row => row.id,
       required: true,
@@ -77,15 +81,14 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       gridColumns: [
         { prop: 'id', maxWidth: 70 },
         {
-          name: 'entityTypeCode',
           prop: 'entityTypeId',
           dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE,
           maxWidth: 90
         },
         { prop: 'name' },
         { prop: 'comment' },
-      ],
-      gridLabelGetter: row => row.name,
+      ].map(c => ({ ...c, name: this.translateService.instant(`widgets.groups.grid.${c.prop}`) })),
+      gridLabelGetter: row => row.name || row.id,
       gridValueGetter: row => row.id,
       required: true,
     },
@@ -93,7 +96,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     phoneTypes: { controlName: 'phoneTypes', type: 'multiselect', required: true, width: 4 },
     templateId: { controlName: 'templateId', type: 'select', required: true, width: 4 },
     checkGroup: { controlName: 'checkGroup', type: 'checkbox' },
-    senderCode: { controlName: 'senderCode', type: 'select', required: true, width: 4 },
+    senderCode: { controlName: 'senderCode', type: 'select', required: true },
     dict1Code: { controlName: 'dict1Code', type: 'select', required: true },
     dict2Code: { controlName: 'dict2Code', type: 'select', required: true },
     dict3Code: { controlName: 'dict3Code', type: 'select', required: true },
@@ -106,6 +109,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private scheduleEventService: ScheduleEventService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -192,12 +196,26 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
+      this.selectedPersonRolesSub = this.selectedPersonRoles$
+        .filter(Boolean)
+        .flatMap(personRoles =>
+          this.scheduleEventService.getEventTemplateOptions(
+            this.selectedEventTypeCode,
+            this.scheduleEventService.createEventAddParams({ personRoles })
+          )
+        )
+        .subscribe(templateOptions => {
+          this.setControlOptions(this.addParamsForm, 'templateId', templateOptions);
+          this.cdRef.markForCheck();
+        });
+
       this.cdRef.markForCheck();
     });
   }
 
   ngOnDestroy(): void {
     this.selectedEventTypeCodeSub.unsubscribe();
+    this.selectedPersonRolesSub.unsubscribe();
   }
 
   get selectedEventTypeCode(): number {
@@ -235,13 +253,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   onPersonRoleSelect(): void {
     const personRoleControl = this.addParamsForm.getControl('personRoles');
-    this.scheduleEventService.getEventTemplateOptions(
-      this.selectedEventTypeCode,
-      this.scheduleEventService.createEventAddParams({ personRoles: personRoleControl.value })
-    ).subscribe(templateOptions => {
-      this.setControlOptions(this.addParamsForm, 'templateId', templateOptions);
-      this.cdRef.markForCheck();
-    });
+    this.selectedPersonRoles$.next(personRoleControl.value);
   }
 
   private createFormControls(controls: any): Partial<IDynamicFormControl>[] {
@@ -273,10 +285,10 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   ): Partial<IDynamicFormControl>[] {
     const addControls = this.createFormControls({
       groupId: { gridRows: groups, disabled: !canEdit },
-      delay: { disabled: !canEdit, width: senderDictCode ? 4 : 12 },
       phoneTypes: { disabled: !canEdit, options: phoneOptions, markAsDirty: !this.eventId },
       personRoles: { disabled: !canEdit, options: personRoleOptions, markAsDirty: !this.eventId },
       templateId: { disabled: !canEdit, options: templateOptions, markAsDirty: !this.eventId },
+      delay: { disabled: !canEdit },
       checkGroup: { disabled: !canEdit }
     });
     if (senderDictCode) {
@@ -376,6 +388,6 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     const control = form.getFlatControls()
       .find(c => c.controlName === controlName) as IDynamicFormSelectControl;
     control.options = options;
-    form.getControl(controlName).setValue('');
+    form.getControl(controlName).setValue(options[0] && options[0].value);
   }
 }
