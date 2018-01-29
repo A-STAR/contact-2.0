@@ -1,0 +1,67 @@
+<div class="form-toolbar">
+    <div class="form-toolbar-section">
+      <div class="form-title mt0">{{ 'actionsLog.title' | translate }}</div>
+    </div>
+    <div class="form-toolbar-section">
+
+    <div class="titlebar">
+        <div class="titlebar-item" [ngClass]="getItemCls(item)" *ngFor="let item of items">
+
+          <!-- Button -->
+          <ng-container *ngIf="isButton(item)">
+
+            <!-- Dropdown Group -->
+            <div *ngIf="item.children; else button">
+              <app-dropdown position="left" [enabled]="!(isDisabled(item) | async)">
+                <app-button
+                  trigger
+                  [disabled]="isDisabled(item) | async"
+                  [icon]="item.icon"
+                  [label]="false"
+                  [title]="item.label"
+                  [type]="getButtonType(item)"
+                  (click)="onClick(item)">
+                </app-button>
+                <ul class="list-group mb0">
+                  <li *ngFor="let child of item.children" class="list-group-item p0 b0">
+                    <app-button
+                      color="none"
+                      [disabled]="isDisabled(child) | async"
+                      [label]="child.label"
+                      (click)="onClick(child)">
+                    </app-button>
+                  </li>
+                </ul>
+              </app-dropdown>
+            </div>
+
+            <!-- Simple Button -->
+            <ng-template #button>
+              <app-button
+                [disabled]="isDisabled(item) | async"
+                [icon]="item.icon"
+                [label]="false"
+                [title]="item.label"
+                [type]="getButtonType(item)"
+                (click)="onClick(item)">
+              </app-button>
+            </ng-template>
+          </ng-container>
+
+          <!-- Checkbox -->
+          <span *ngIf="isCheckbox(item)" class="checkbox mt0 mb0">
+            <label>
+              <input
+                type="checkbox"
+                [checked]="item.state | async"
+                [disabled]="item.disabled | async"
+                (change)="onClick(item)"
+              >
+              {{ item.label | translate }}
+            </label>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
