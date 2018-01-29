@@ -1,3 +1,8 @@
+export enum IContactRegistrationStatus {
+  REGISTRATION,
+  PAUSE,
+}
+
 export interface IContactRegistrationParams {
   campaignId: number;
   contactId: number;
