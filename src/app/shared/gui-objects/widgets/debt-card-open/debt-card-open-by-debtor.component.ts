@@ -9,11 +9,11 @@ import { NotificationsService } from '../../../../core/notifications/notificatio
 import { DialogFunctions } from '../../../../core/dialog';
 
 @Component({
-  selector: 'app-open-debt-card',
-  templateUrl: './debt-card-open.component.html',
+  selector: 'app-open-debt-card-by-debtor',
+  templateUrl: './debt-card-open-by-debtor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DebtCardOpenComponent extends DialogFunctions implements OnInit {
+export class DebtCardOpenByDebtorComponent extends DialogFunctions implements OnInit {
   @Input() personId: number[];
   @Output() close = new EventEmitter<ICloseAction>();
 

@@ -1,20 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IGroup } from '@app/shared/gui-objects/widgets/groups/group.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IGroup } from '../group.interface';
 
-import { GroupService } from '@app/shared/gui-objects/widgets/groups/group.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
-import { RoutingService } from '@app/core/routing/routing.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { GroupService } from '../group.service';
 
 import { DialogFunctions } from '@app/core/dialog';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { GridService } from '@app/shared/components/grid/grid.service';
 
 @Component({
   selector: 'app-group-grid',
@@ -84,8 +83,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     private cdRef: ChangeDetectorRef,
     private groupService: GroupService,
     private gridService: GridService,
-    private route: ActivatedRoute,
-    private routingService: RoutingService
+    private router: Router,
   ) {
     super();
   }
@@ -132,7 +130,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   onEdit(group: IGroup): void {
-    this.routingService.navigate([ String(group.id) ], this.route);
+    this.router.navigate([ `${this.router.url}/${group.id}` ]);
   }
 
   onRemove(): void {
@@ -146,7 +144,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private onAdd(): void {
-    this.routingService.navigate([ 'create' ], this.route);
+    this.router.navigate([ `${this.router.url}/create` ]);
   }
 
   private fetch(): void {
