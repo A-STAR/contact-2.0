@@ -37,7 +37,7 @@ export class ContactRegistrationNextCallComponent {
   get nextCallMaxDate$(): Observable<Date> {
     return this.contactRegistrationService.outcome$.pipe(
       map(outcome => outcome && outcome.nextCallDays),
-      map(nextCallDays => moment().add(nextCallDays, 'day').toDate())
+      map(nextCallDays => nextCallDays ? moment().add(nextCallDays, 'day').toDate() : null)
     );
   }
 }
