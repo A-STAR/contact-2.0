@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid/main';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ICell } from './data-upload.interface';
 
@@ -10,6 +11,10 @@ import { ICell } from './data-upload.interface';
 })
 export class CellRendererComponent implements ICellRendererAngularComp {
   private params: ICellRendererParams;
+
+  constructor(
+    private translateService: TranslateService
+  ) {}
 
   agInit(params: ICellRendererParams): void {
     this.params = params;
@@ -24,7 +29,7 @@ export class CellRendererComponent implements ICellRendererAngularComp {
   }
 
   get error(): string {
-    return this.getCell(this.params).errorMsg || '';
+    return this.getCell(this.params).errorMsg || this.translateService.instant('modules.dataUpload.errors.defaultError');
   }
 
   private getCell(params: ICellRendererParams): ICell {
