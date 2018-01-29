@@ -2868,7 +2868,8 @@
       "placeholders": {
         "datepicker": "Enter a date",
         "timepicker": "Enter time"
-      }
+      },
+      "lastMonthDay": "Last"
     },
     "colors": {
       "transparent": "Transparent",
@@ -2928,15 +2929,6 @@
           "stringValue9": "String Attribute 9",
           "stringValue10": "String Attribute 10"
         }
-      },
-      "daysOfWeek": {
-        "day1": "Monday",
-        "day2": "Tuesday",
-        "day3": "Wednesday",
-        "day4": "Thursday",
-        "day5": "Friday",
-        "day6": "Saturday",
-        "day7": "Sunday"
       }
     }
   }

@@ -1,0 +1,8 @@
+:host {
+  /deep/ .date-control app-dynamic-form label {
+    display: none;
+  }
+  /deep/ app-grid datatable-header {
+    display: none !important;
+  }
+}
