@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
-  OnInit,
   ViewChild,
   ViewEncapsulation,
   AfterViewInit,
