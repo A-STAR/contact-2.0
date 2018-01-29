@@ -9,6 +9,7 @@ import {
   IContactRegistrationData,
   IContactRegistrationMode,
   IContactRegistrationParams,
+  IContactRegistrationStatus,
   IOutcome,
 } from './contact-registration.interface';
 import { IDebt } from '@app/routes/workplaces/core/debts/debts.interface';
@@ -30,7 +31,7 @@ export class ContactRegistrationService {
   private _outcome$ = new BehaviorSubject<IOutcome>(null);
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
 
-  private status$   = new BehaviorSubject<'reg' | 'pause'>(null);
+  private status$   = new BehaviorSubject<IContactRegistrationStatus>(null);
 
   constructor(
     private dataService: DataService,
@@ -46,12 +47,12 @@ export class ContactRegistrationService {
       .subscribe(limit => this._limit$.next(limit));
   }
 
-  set status(status: 'reg' | 'pause') {
+  set status(status: IContactRegistrationStatus) {
     this.status$.next(status);
   }
 
   get shouldConfirm$(): Observable<boolean> {
-    return this.status$.pipe(map(status => status === 'pause'));
+    return this.status$.pipe(map(status => status === IContactRegistrationStatus.PAUSE));
   }
 
   get isActive$(): Observable<boolean> {
@@ -170,11 +171,11 @@ export class ContactRegistrationService {
     ]);
   }
 
-  pauseRegistration(): Observable<'reg' | 'pause'> {
+  pauseRegistration(): Observable<IContactRegistrationStatus> {
     if (this.status$.value) {
-      this.status$.next('pause');
+      this.status$.next(IContactRegistrationStatus.PAUSE);
       return this.status$.pipe(
-        filter(status => status === 'reg' || status === null),
+        filter(status => status === IContactRegistrationStatus.REGISTRATION || status === null),
         first(),
       );
     } else {
@@ -189,12 +190,12 @@ export class ContactRegistrationService {
           this.continueRegistration();
         } else {
           this.cancelRegistration();
-          this.status$.next('reg');
+          this.status$.next(IContactRegistrationStatus.REGISTRATION);
           this._params$.next(params);
         }
       });
     } else {
-      this.status$.next('reg');
+      this.status$.next(IContactRegistrationStatus.REGISTRATION);
       this._params$.next(params);
     }
   }
@@ -207,7 +208,7 @@ export class ContactRegistrationService {
   }
 
   continueRegistration(): void {
-    this.status$.next('reg');
+    this.status$.next(IContactRegistrationStatus.REGISTRATION);
   }
 
   completeRegistration(data: Partial<IContactRegistrationData>): Observable<void> {
