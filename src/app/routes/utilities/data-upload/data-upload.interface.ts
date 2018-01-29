@@ -1,8 +1,10 @@
+export type ICellValue = string | number | Date | boolean | null;
+
 export interface ICell {
   columnId: string;
   errorMsg: string;
   statusCode: number;
-  value: string | number | null;
+  value: ICellValue;
 }
 
 export interface IRow {
@@ -30,7 +32,7 @@ export interface IDataResponse {
 export interface ICellPayload {
   rowId: number;
   columnId: string;
-  value: string | number | null;
+  value: ICellValue;
 }
 
 export interface IErrorsResponse {

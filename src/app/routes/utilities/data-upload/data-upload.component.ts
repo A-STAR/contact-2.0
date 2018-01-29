@@ -15,8 +15,16 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { DataUploaders, IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow,  } from './data-upload.interface';
+import { DataUploaders,
+  IOpenFileResponse,
+  ICell,
+  ICellPayload,
+  IDataResponse,
+  IRow,
+  ICellValue,
+} from './data-upload.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
+import { TColumnType } from '@app/shared/components/grid/grid.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -174,7 +182,7 @@ export class DataUploadComponent extends DialogFunctions
     const payload: ICellPayload = {
       rowId: event.data.id,
       columnId: cell.columnId,
-      value: cell.value === '' ? null : cell.value,
+      value: this.dataUploadService.formatCellValue(cell.columnId as TColumnType, cell.value),
     };
     this.dataUploadService.uploader.editCell(payload).subscribe(response => {
       const row = response.rows[0];
@@ -333,17 +341,7 @@ export class DataUploadComponent extends DialogFunctions
     return response.rows.sort((a, b) => a.id - b.id);
   }
 
-  // private getCellRenderer(params: ICellRendererParams): string {
-  //   const { errorMsg } = this.getCell(params);
-  //   const value = params.valueFormatted === null ? '' : params.valueFormatted;
-  //   return `
-  //     <div title="${errorMsg ? 'errors.server.' + errorMsg : ''}">
-  //       ${value}
-  //     </div>
-  //   `;
-  // }
-
-  private getCellValue(params: ICellRendererParams): number | string {
+  private getCellValue(params: ICellRendererParams): ICellValue {
     return this.getCell(params).value;
   }
 

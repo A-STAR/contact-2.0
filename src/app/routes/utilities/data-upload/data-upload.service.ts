@@ -2,18 +2,22 @@
 import { Injectable } from '@angular/core';
 import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 
 import { IAppState } from '@app/core/state/state.interface';
 import {
-  DataUploaders
+  DataUploaders,
+  ICellValue
 } from './data-upload.interface';
+import { TColumnType } from '@app/shared/components/grid/grid.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+
 import { DataUploader } from './data-uploader';
-import { TranslateService } from '@ngx-translate/core';
+import * as moment from 'moment';
 
 /**
  * Spec:       http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=140181557
@@ -125,6 +129,21 @@ export class DataUploadService extends AbstractActionService {
   get uploader(): DataUploader {
     return this.uploaders[this.currentUploaderType] ||
       (this.uploaders[this.currentUploaderType] = this.create(this.currentUploaderType));
+  }
+
+  formatCellValue(valueType: TColumnType, value: ICellValue): ICellValue {
+    switch (valueType) {
+      case 'date':
+        return moment(value as Date).format('YYYY-MM-DD');
+      case 'datetime':
+        return moment(value as Date).format('YYYY-MM-DD HH:mm:ss');
+      case 'string':
+        return value === '' ? null : value;
+      case 'boolean':
+      case 'number':
+      default:
+        return value;
+    }
   }
 
   private create(uploaderType: DataUploaders): DataUploader {
