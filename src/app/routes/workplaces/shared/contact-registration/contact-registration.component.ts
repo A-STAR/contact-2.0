@@ -32,10 +32,10 @@ export class ContactRegistrationComponent {
   }
 
   onConfirm(): void {
-    this.contactRegistrationService.cancelRegistration();
+    this.contactRegistrationService.status = null;
   }
 
   onCloseDialog(): void {
-    this.contactRegistrationService.continueRegistration();
+    this.contactRegistrationService.status = 'reg';
   }
 }
