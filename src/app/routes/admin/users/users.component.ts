@@ -1,18 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
-import { IUser, IUsersState } from './users.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IUser, IUsersState } from '@app/routes/admin/users/users.interface';
 
-import { GridService } from '../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { UsersService } from './users.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { UsersService } from '@app/routes/admin/users/users.service';
 
-import { combineLatestAnd } from '../../../core/utils/helpers';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-users',
@@ -80,7 +81,8 @@ export class UsersComponent implements OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
-    private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
   ) {
@@ -154,12 +156,11 @@ export class UsersComponent implements OnDestroy {
   }
 
   onAdd(): void {
-    this.router.navigate([ '/admin/users/create' ]);
+    this.routingService.navigate([ 'create' ], this.route);
   }
 
-  onEdit(user?: IUser): void {
-    const id = user ? user.id : this.editedUser.id;
-    this.router.navigate([ `/admin/users/${id}` ]);
+  onEdit(): void {
+    this.routingService.navigate([ String(this.editedUser.id) ], this.route);
   }
 
   onSelect(user: IUser): void {

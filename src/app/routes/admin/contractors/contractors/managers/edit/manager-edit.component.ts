@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
@@ -33,6 +33,7 @@ export class ContractorManagerEditComponent implements OnInit {
   private managerId: number = this.routeParams.managerId;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
     private routingService: RoutingService,
@@ -64,6 +65,7 @@ export class ContractorManagerEditComponent implements OnInit {
         { label: label('comment'), controlName: 'comment', type: 'textarea' },
       ];
       this.formData = manager;
+      this.cdRef.markForCheck();
     });
   }
 

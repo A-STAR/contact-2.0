@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
@@ -32,6 +32,7 @@ export class EmailCardComponent implements OnInit {
   email: any;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private emailService: EmailService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -53,8 +54,8 @@ export class EmailCardComponent implements OnInit {
         { label: labelKey('email'), controlName: 'email', type: 'text', required: true, disabled: !canEdit },
         { label: labelKey('comment'), controlName: 'comment', type: 'textarea', disabled: !canEdit && !canEditComment },
       ];
-      // TODO: fix displaying of selected email
       this.email = email;
+      this.cdRef.markForCheck();
     });
   }
 
