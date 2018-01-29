@@ -14,9 +14,10 @@ import { DialogFunctions } from '@app/core/dialog';
 import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
-  selector: 'app-call-center-toolbar',
-  templateUrl: 'toolbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-call-center-toolbar',
+  styleUrls: [ './toolbar.component.scss' ],
+  templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent extends DialogFunctions {
   toolbarItems: IToolbarItem[] = [
