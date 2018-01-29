@@ -13,6 +13,7 @@ import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { DataUploader } from './data-uploader';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Spec:       http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=140181557
@@ -107,6 +108,7 @@ export class DataUploadService extends AbstractActionService {
     private dataService: DataService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
+    private translateService: TranslateService
   ) {
     super();
   }
@@ -117,15 +119,15 @@ export class DataUploadService extends AbstractActionService {
 
   set format(value: number) {
     this.currentUploaderType = this.uploaderTypes[value];
-    this.instantiate(this.currentUploaderType);
+    this.create(this.currentUploaderType);
   }
 
   get uploader(): DataUploader {
     return this.uploaders[this.currentUploaderType] ||
-      (this.uploaders[this.currentUploaderType] = this.instantiate(this.currentUploaderType));
+      (this.uploaders[this.currentUploaderType] = this.create(this.currentUploaderType));
   }
 
-  private instantiate(uploaderType: DataUploaders): DataUploader {
+  private create(uploaderType: DataUploaders): DataUploader {
     if (!this.uploaders[uploaderType]) {
       // get optional paramKey
       const paramKey = DataUploadService.UPLOADERS_CONFIG[uploaderType]
@@ -135,6 +137,7 @@ export class DataUploadService extends AbstractActionService {
         this.dataService,
         this.gridService,
         this.notificationsService,
+        this.translateService,
         DataUploadService.UPLOADERS_CONFIG[uploaderType],
         paramKey);
     }

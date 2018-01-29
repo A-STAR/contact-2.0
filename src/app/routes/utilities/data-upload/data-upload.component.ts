@@ -100,7 +100,7 @@ export class DataUploadComponent extends DialogFunctions
         this.dataUploadService.uploader.parameter = currencyId;
         this.isSelectVisible = false;
         // reset previous loaded file
-        this.fileInput.nativeElement.value = '';
+        this.resetFile();
         if (this.columns) {
           // reset previous grid
           this.resetGrid();
@@ -136,6 +136,10 @@ export class DataUploadComponent extends DialogFunctions
 
   get errorFileUrl(): string {
     return this.dataUploadService.uploader.getErrors();
+  }
+
+  get errorFileName(): string {
+    return this.dataUploadService.uploader.errorFileName;
   }
 
   onFormatChange(format: { value: number }[]): void {
@@ -190,7 +194,7 @@ export class DataUploadComponent extends DialogFunctions
     this.dataUploadService.uploader
       .openFile(file)
       .catch(() => {
-        this.fileInput.nativeElement.value = '';
+        this.resetFile();
         return of(null);
       })
       .flatMap(
@@ -217,7 +221,7 @@ export class DataUploadComponent extends DialogFunctions
         this.setDialog('errorLogPrompt');
       } else {
         // handles both successful and erroneous response
-        this.fileInput.nativeElement.value = '';
+        this.resetFile();
         this.resetGrid();
       }
       this.cdRef.markForCheck();
@@ -244,7 +248,7 @@ export class DataUploadComponent extends DialogFunctions
     this.dataUploadService.uploader.cancel().subscribe(() => {
       this.resetGrid();
       // TODO(d.maltsev): maybe reset form instead?
-      this.fileInput.nativeElement.value = '';
+      this.resetFile();
       this.closeDialog();
       this.cdRef.markForCheck();
     });
@@ -288,6 +292,11 @@ export class DataUploadComponent extends DialogFunctions
           : { force: true },
       );
     }
+  }
+
+  private resetFile(): void {
+    this.fileInput.nativeElement.value = '';
+    this.dataUploadService.uploader.fileName = '';
   }
 
   private resetGrid(): void {
