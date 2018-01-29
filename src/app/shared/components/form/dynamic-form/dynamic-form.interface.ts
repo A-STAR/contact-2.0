@@ -28,6 +28,7 @@ export type IDynamicFormControl =
   // IDynamicFormBaseControl
   IDynamicFormButtonControl |
   IDynamicFormDateControl |
+  IDynamicFormDateTimeControl |
   IDynamicFormDebtAmountControl |
   IDynamicFormDialogMultiSelectControl |
   IDynamicFormFileControl |
@@ -91,6 +92,13 @@ export interface IDynamicFormDateControl extends IDynamicFormBaseControl {
   maxDate?: Date;
   placeholder?: string;
   dependsOn?: string;
+}
+
+export interface IDynamicFormDateTimeControl extends IDynamicFormBaseControl {
+  // options for datetime controls
+  type: 'datetimepicker';
+  minDateTime?: Date;
+  maxDateTime?: Date;
 }
 
 export interface IDynamicFormTimeControl extends IDynamicFormBaseControl {
@@ -302,6 +310,7 @@ export type TControlTypes =
   | 'checkbox'
   | 'colorpicker'
   | 'datepicker'
+  | 'datetimepicker'
   | 'timepicker'
   | 'debt-amount'
   | 'dialog'

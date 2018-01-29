@@ -1,0 +1,49 @@
+$day-light: #b3b2b7;
+$day-dark: #49455e;
+
+:host {
+  display: block;
+  width: 20em;
+}
+
+ul {
+  display: flex;
+  flex-flow: row wrap;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+
+  li {
+    color: $day-dark;
+    cursor: pointer;
+    flex: 1 0 14.28%;
+    text-align: center;
+
+    &.current {
+      color: green;
+    }
+
+    &.outside {
+      color: $day-light;
+    }
+
+    &.selected {
+      color: red;
+    }
+
+    span {
+      display: inline-block;
+      padding: 2px 0;
+      text-align: right;
+      width: 1.2em;
+    }
+  }
+
+  &.header {
+    border-bottom: 1px solid #eee;
+    li {
+      color: $day-light;
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ColorPickerModule } from '../colorpicker/colorpicker.module';
 import { DatePickerModule } from '../datepicker/datepicker.module';
-import { TimePickerModule } from '../timepicker/timepicker.module';
+import { DateTimePickerModule } from '../datetimepicker/datetimepicker.module';
 import { DebtAmountModule } from '../debt-amount/debt-amount.module';
 import { DialogMultiSelectModule } from '../dialog-multi-select/dialog-multi-select.module';
 import { DropdownInputModule } from '../dropdown/dropdown-input.module';
@@ -19,6 +19,7 @@ import { RadioGroupModule } from '../radio-group/radio-group.module';
 import { SegmentedInputModule } from '../segmented-input/segmented-input.module';
 import { SelectModule } from '../select/select.module';
 import { TextEditorModule } from '../text-editor/text-editor.module';
+import { TimePickerModule } from '../timepicker/timepicker.module';
 
 import { DynamicFormComponent } from './dynamic-form.component';
 import { DynamicFormGroupComponent } from './group/dynamic-form-group.component';
@@ -29,6 +30,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     ColorPickerModule,
     CommonModule,
     DatePickerModule,
+    DateTimePickerModule,
     DebtAmountModule,
     DialogMultiSelectModule,
     DropdownInputModule,
@@ -40,11 +42,11 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     PopupInputModule,
     RadioGroupModule,
     ReactiveFormsModule,
-    TimePickerModule,
-    TranslateModule,
     SegmentedInputModule,
     SelectModule,
     TextEditorModule,
+    TimePickerModule,
+    TranslateModule,
   ],
   exports: [
     DynamicFormComponent,
