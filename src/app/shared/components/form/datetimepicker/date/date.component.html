@@ -12,17 +12,13 @@ Date
 
 <ul class="header">
   <li *ngFor="let date of range | slice:0:7">
-    <span>
-      {{ getDayName(date) }}
-    </span>
+    {{ getDayName(date) }}
   </li>
 </ul>
 
 <ul>
   <li *ngFor="let date of range" [ngClass]="getClass(date)" (click)="onClick(date)">
-    <span>
-      {{ getDay(date) }}
-    </span>
+    {{ getDay(date) }}
   </li>
 </ul>
 
