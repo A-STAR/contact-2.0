@@ -11,9 +11,11 @@ import {
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import { DataUploaders,
   IOpenFileResponse,
@@ -77,6 +79,7 @@ export class DataUploadComponent extends DialogFunctions
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private store: Store<IAppState>,
     private dataUploadService: DataUploadService,
     private gridService: GridService,
     private userDictionariesService: UserDictionariesService,
@@ -85,6 +88,27 @@ export class DataUploadComponent extends DialogFunctions
   }
 
   ngOnInit(): void {
+    // set initial value
+    this.dataUploadService.format = DataUploaders.SET_OPERATOR;
+
+    this.queryParamsSub = this.store.select(store => store.currency)
+      .map(currency => currency.currencyId)
+      .filter(Boolean)
+      .subscribe(currencyId => {
+        console.log(currencyId);
+         // format setter also creates new loader if it wasn't created
+         this.dataUploadService.format = DataUploaders.CURRENCY_RATE;
+         this.dataUploadService.uploader.parameter = currencyId;
+         this.isSelectVisible = false;
+         // reset previous loaded file
+         this.resetFile();
+         if (this.columns) {
+           // reset previous grid
+           this.resetGrid();
+         }
+         this.cdRef.markForCheck();
+      });
+
     this.uploadersOptionsSub = this.userDictionariesService
       .getDictionaryAsOptionsWithPermission(
         UserDictionariesService.DICTIONARY_DATA_LOAD_FORMAT,
@@ -93,26 +117,6 @@ export class DataUploadComponent extends DialogFunctions
       .subscribe(options => {
         this.uploaders = options;
         this.dataUploadService.format = options[0].value as any;
-        this.cdRef.markForCheck();
-      });
-
-    // set initial value
-    this.dataUploadService.format = DataUploaders.SET_OPERATOR;
-
-    this.queryParamsSub = this.dataUploadService
-      .getPayload(DataUploadService.SELECTED_CURRENCY)
-      .filter(Boolean)
-      .subscribe(currencyId => {
-        // format setter also creates new loader if it wasn't created
-        this.dataUploadService.format = DataUploaders.CURRENCY_RATE;
-        this.dataUploadService.uploader.parameter = currencyId;
-        this.isSelectVisible = false;
-        // reset previous loaded file
-        this.resetFile();
-        if (this.columns) {
-          // reset previous grid
-          this.resetGrid();
-        }
         this.cdRef.markForCheck();
       });
   }

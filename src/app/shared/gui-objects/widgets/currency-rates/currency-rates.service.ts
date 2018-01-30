@@ -1,12 +1,12 @@
-import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 
-import { IAppState } from '../../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { ICurrencyRate } from './currency-rates.interface';
 
-import { AbstractActionService } from '../../../../core/state/action.service';
+import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -19,9 +19,9 @@ export class CurrencyRatesService extends AbstractActionService {
 
   constructor(
     protected actions: Actions,
+    protected store: Store<IAppState>,
     private dataService: DataService,
     private notificationsService: NotificationsService,
-    protected store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
