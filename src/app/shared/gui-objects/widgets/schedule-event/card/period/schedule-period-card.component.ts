@@ -233,7 +233,7 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   private setPeriodFromValidators(): void {
-    this._periodForm.form.setValidators(this.periodValidators[this.selectedPeriodTypeCode]);
+    this._periodForm.form.setValidators(this.periodValidators[this.selectedPeriodTypeCode - 1]);
     this._periodForm.form.updateValueAndValidity();
   }
 }
