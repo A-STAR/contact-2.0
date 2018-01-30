@@ -10,9 +10,13 @@
   (close)="closeDialog('scheduleLogView')"
 ></app-schedule-log-view-dialog>
 
-<button class="btn btn-default" (click)="openViewLogDialog()" *ngIf="canViewLog$ | async" [disabled]="!eventId">
-  <i class="icon-info"></i> {{ 'utilities.schedule.buttons.history' | translate }}
-</button>
+<app-button
+  *ngIf="canViewLog$ | async"
+  [disabled]="!eventId"
+  [icon]="'icon-info'"
+  [label]="'utilities.schedule.log.buttons.history' | translate"
+  (click)="openViewLogDialog()"
+></app-button>
 
 <app-schedule-event-grid
   (edit)="onEdit($event)"

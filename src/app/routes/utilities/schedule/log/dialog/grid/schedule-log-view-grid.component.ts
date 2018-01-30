@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, Input } from '@angular/core';
+import { first } from 'rxjs/operators';
 
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IScheduleEventLog } from '@app/shared/gui-objects/widgets/schedule-event/schedule-event.interface';
 
+import { GridService } from '@app/shared/components/grid/grid.service';
 import { ScheduleEventService } from '@app/shared/gui-objects/widgets/schedule-event/schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
@@ -19,8 +21,8 @@ export class ScheduleLogViewGridComponent implements OnInit {
   @Input() eventId: number;
 
   columns: Array<IGridColumn> = [
-    { prop: 'startDateTime' },
-    { prop: 'endDateTime' },
+    { prop: 'startDateTime', renderer: 'dateTimeRenderer' },
+    { prop: 'endDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'startType', dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_START_TYPE_CODE },
     { prop: 'userFullName' },
   ];
@@ -30,10 +32,19 @@ export class ScheduleLogViewGridComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private gridService: GridService,
     private scheduleEventService: ScheduleEventService,
   ) { }
 
   ngOnInit(): void {
+    this.gridService
+      .setAllRenderers(this.columns)
+      .pipe(first())
+      .subscribe(columns => {
+        this.columns = [ ...columns ];
+        this.cdRef.markForCheck();
+      });
+
     this.fetch();
   }
 

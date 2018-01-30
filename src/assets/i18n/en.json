@@ -1327,11 +1327,19 @@
       "title": "Rates"
     },
     "schedule": {
-      "dialog": {
-        "title": "History of launches"
-      },
-      "buttons": {
-        "history": "History"
+      "log": {
+        "grid": {
+          "startDateTime": "Start",
+          "endDateTime": "Stop",
+          "startType": "Start type",
+          "userFullName": "User"
+        },
+        "dialog": {
+          "title": "History of launches"
+        },
+        "buttons": {
+          "history": "History"
+        }
       }
     }
   },

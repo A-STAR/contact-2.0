@@ -1327,11 +1327,19 @@
       "title": "Курсы"
     },
     "schedule": {
-      "dialog": {
-        "title": "История запусков"
-      },
-      "buttons": {
-        "history": "История"
+      "log": {
+        "grid": {
+          "startDateTime": "Запуск",
+          "endDateTime": "Остановка",
+          "startType": "Режим запуска",
+          "userFullName": "Пользователь"
+        },
+        "dialog": {
+          "title": "История запусков"
+        },
+        "buttons": {
+          "history": "История"
+        }
       }
     }
   },
