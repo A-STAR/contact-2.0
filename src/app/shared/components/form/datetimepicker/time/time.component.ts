@@ -15,6 +15,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   templateUrl: './time.component.html'
 })
 export class TimeComponent implements ControlValueAccessor {
+  @Input() minDateTime: Date;
+  @Input() maxDateTime: Date;
+
   private _value: Date;
 
   constructor(

@@ -6,6 +6,10 @@ $day-dark: #49455e;
   width: 20em;
 }
 
+span {
+  cursor: pointer;
+}
+
 ul {
   display: flex;
   flex-flow: row wrap;

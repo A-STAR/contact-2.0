@@ -16,23 +16,30 @@ import * as moment from 'moment';
   templateUrl: './date.component.html'
 })
 export class DateComponent implements ControlValueAccessor {
+  @Input() minDateTime: Date;
+  @Input() maxDateTime: Date;
+
   private _value: Date;
+
+  page = moment(new Date()).locale('ru');
 
   constructor(
     private cdRef: ChangeDetectorRef,
   ) {}
 
   get range(): moment.Moment[] {
-    const n = this.lastDay.diff(this.firstDay, 'days') || 0;
-    return Array(n + 1).fill(null).map((_, i) => this.firstDay.clone().add(i, 'd'));
+    const firstDay = this.page.clone().startOf('month').startOf('week');
+    const lastDay = this.page.clone().endOf('month').endOf('week');
+    const n = lastDay.diff(firstDay, 'days') || 0;
+    return Array(n + 1).fill(null).map((_, i) => firstDay.clone().add(i, 'd'));
   }
 
   get month(): string {
-    return this.moment.format('MMMM');
+    return this.page.format('MMMM');
   }
 
   get year(): string {
-    return this.moment.format('YYYY');
+    return this.page.format('YYYY');
   }
 
   get value(): Date {
@@ -49,14 +56,17 @@ export class DateComponent implements ControlValueAccessor {
 
   getClass(date: moment.Moment): object {
     return {
-      outside: date.isBefore(this.firstDayOfMonth) || date.isAfter(this.lastDayOfMonth),
-      current: date.startOf('day').isSame(this.now.startOf('day')),
+      outside: date.isBefore(this.page.clone().startOf('month')) || date.isAfter(this.page.clone().endOf('month')),
+      current: date.startOf('day').isSame(moment().startOf('day')),
       selected: date.startOf('day').isSame(this._value),
     };
   }
 
   writeValue(value: Date): void {
     this._value = value;
+    if (value) {
+      this.page = moment(value).locale('ru');
+    }
     this.cdRef.markForCheck();
   }
 
@@ -74,29 +84,20 @@ export class DateComponent implements ControlValueAccessor {
     this.cdRef.markForCheck();
   }
 
-  private get firstDay(): moment.Moment {
-    return this.firstDayOfMonth.startOf('week');
+  showNextMonth(): void {
+    this.page.add(1, 'M');
   }
 
-  private get lastDay(): moment.Moment {
-    return this.lastDayOfMonth.endOf('week');
+  showPrevMonth(): void {
+    this.page.subtract(1, 'M');
   }
 
-  private get firstDayOfMonth(): moment.Moment {
-    return this.moment.startOf('month');
+  showNextYear(): void {
+    this.page.add(1, 'y');
   }
 
-  private get lastDayOfMonth(): moment.Moment {
-    return this.moment.endOf('month');
-  }
-
-  private get moment(): moment.Moment {
-    // TODO(d.maltsev): get locale from service
-    return moment(this._value).locale('ru');
-  }
-
-  private get now(): moment.Moment {
-    return moment();
+  showPrevYear(): void {
+    this.page.subtract(1, 'y');
   }
 
   private propagateChange: Function = () => {};

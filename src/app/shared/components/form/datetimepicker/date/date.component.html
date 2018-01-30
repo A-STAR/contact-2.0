@@ -1,14 +1,8 @@
-Date
-
-<br>
-
------
-
-<br>
-
-{{ month }} {{ year }}
-
-<br>
+<header>
+  <span (click)="showPrevMonth()">&larr;</span>
+  {{ month }} {{ year }}
+  <span (click)="showNextMonth()">&rarr;</span>
+</header>
 
 <ul class="header">
   <li *ngFor="let date of range | slice:0:7">
@@ -21,9 +15,3 @@ Date
     {{ getDay(date) }}
   </li>
 </ul>
-
-<br>
-
------
-
-<br>
