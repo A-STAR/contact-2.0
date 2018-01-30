@@ -1,7 +1,5 @@
 import { ITreeNode } from '../../shared/components/flowtree/treenode/treenode.interface';
 
-import { isEmpty } from '.';
-
 interface IResponseTreeNode {
   boxColor: string;
   children: IResponseTreeNode[];
@@ -9,6 +7,8 @@ interface IResponseTreeNode {
   name: string;
   sortOrder: number;
 }
+
+const isEmpty = (array: any[]): boolean => !array || array.length === 0;
 
 const convertToTreeNodes = (nodes: IResponseTreeNode[], table: boolean, expand: boolean) => {
   return nodes

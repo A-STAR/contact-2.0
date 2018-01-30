@@ -1844,6 +1844,13 @@
         "dict3Code": "Score 3",
         "dict4Code": "Score 4"
       },
+      "portfolioChange": {
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "contractor": "Bank"
+        }
+      },
       "dialogs": {
         "closeDebt": {
           "title": "Debt Closure",
@@ -2090,10 +2097,43 @@
         "formDateTime": "Form date",
         "sql": "SQL"
       },
+      "groupObjectDebts": {
+        "filter": {
+          "groups": "Select Group",
+          "grid": {
+              "id": "ID",
+              "name": "Name"
+          }
+        },
+        "grid": {
+          "id": "ID",
+          "debtId": "Debt ID",
+          "personId": "Person ID",
+          "personFullName": "Full Name",
+          "bankName": "Bank",
+          "portfolioName": "Portfolio",
+          "contract": "Contact No",
+          "creditName": "Credit Name",
+          "currencyName": "Currency",
+          "debtAmount": "Debt amount",
+          "totalAmount": "Total amount",
+          "dpd": "DPD",
+          "userFullName": "Operator",
+          "statusCode": "Status",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4"
+        }
+      },
       "toolbar": {
         "action": {
           "forCurrentUser": "Current user groups"
         }
+      },
+      "tabs": {
+        "all": "Groups",
+        "debtsInGroup": "Debts in group"
       }
     },
     "visit": {
@@ -2191,7 +2231,15 @@
         "dict4Code": "Value",
         "stage": "Stage",
         "userId": "Operator",
-        "modeCode": "Mode"
+        "modeCode": "Mode",
+        "changeGroupId": {
+          "grid": {
+            "id": "ID",
+            "entityTypeId": "Type",
+            "name": "Name",
+            "comment": "Comment"
+          }
+        }
       },
       "dialog": {
         "title": "Event",
@@ -2713,6 +2761,13 @@
       "to": "To"
     },
     "filters": {
+      "entityGroups": {
+        "grid": {
+          "id": "ID",
+          "name": "Name"
+        },
+        "title": "Select Groups"
+      },
       "portfolios": {
         "grid": {
           "contractorName": "Contractor",

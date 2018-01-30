@@ -3,12 +3,13 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, filter, first, map, mergeMap } from 'rxjs/operators';
 
 import {
   IContactRegistrationData,
   IContactRegistrationMode,
   IContactRegistrationParams,
+  IContactRegistrationStatus,
   IOutcome,
 } from './contact-registration.interface';
 import { IDebt } from '@app/routes/workplaces/core/debts/debts.interface';
@@ -30,7 +31,7 @@ export class ContactRegistrationService {
   private _outcome$ = new BehaviorSubject<IOutcome>(null);
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
 
-  private nextParams$ = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
+  private status$   = new BehaviorSubject<IContactRegistrationStatus>(null);
 
   constructor(
     private dataService: DataService,
@@ -46,8 +47,12 @@ export class ContactRegistrationService {
       .subscribe(limit => this._limit$.next(limit));
   }
 
+  set status(status: IContactRegistrationStatus) {
+    this.status$.next(status);
+  }
+
   get shouldConfirm$(): Observable<boolean> {
-    return this.nextParams$.pipe(map(Boolean));
+    return this.status$.pipe(map(status => status === IContactRegistrationStatus.PAUSE));
   }
 
   get isActive$(): Observable<boolean> {
@@ -166,10 +171,31 @@ export class ContactRegistrationService {
     ]);
   }
 
+  pauseRegistration(): Observable<IContactRegistrationStatus> {
+    if (this.status$.value) {
+      this.status$.next(IContactRegistrationStatus.PAUSE);
+      return this.status$.pipe(
+        filter(status => status === IContactRegistrationStatus.REGISTRATION || status === null),
+        first(),
+      );
+    } else {
+      return of(null);
+    }
+  }
+
   startRegistration(params: Partial<IContactRegistrationParams>): void {
     if (this.params) {
-      this.nextParams$.next(params);
+      this.pauseRegistration().subscribe(proceed => {
+        if (proceed) {
+          this.continueRegistration();
+        } else {
+          this.cancelRegistration();
+          this.status$.next(IContactRegistrationStatus.REGISTRATION);
+          this._params$.next(params);
+        }
+      });
     } else {
+      this.status$.next(IContactRegistrationStatus.REGISTRATION);
       this._params$.next(params);
     }
   }
@@ -177,12 +203,12 @@ export class ContactRegistrationService {
   cancelRegistration(): void {
     this._mode$.next(IContactRegistrationMode.TREE);
     this._outcome$.next(null);
-    this._params$.next(this.nextParams$.value);
-    this.nextParams$.next(null);
+    this._params$.next(null);
+    this.status$.next(null);
   }
 
   continueRegistration(): void {
-    this.nextParams$.next(null);
+    this.status$.next(IContactRegistrationStatus.REGISTRATION);
   }
 
   completeRegistration(data: Partial<IContactRegistrationData>): Observable<void> {
