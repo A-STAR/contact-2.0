@@ -1,0 +1,18 @@
+<div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
+  <div>
+    <label>
+      <span class="form-label">
+        <!-- TODO(d.maltsev): i18n -->
+        Причина звонка должника <b *ngIf="isCallReasonRequired$ | async" class="text-danger">*</b>
+      </span>
+      <app-select-wrapper
+        formControlName="callReasonCode"
+        [dictCode]="callReasonDictCode"
+        [nullable]="!(isCallReasonRequired$ | async)"
+        [required]="isCallReasonRequired$ | async"
+      ></app-select-wrapper>
+    </label>
+  </div>
+
+  <hr>
+</div>

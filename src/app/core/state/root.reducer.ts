@@ -1,6 +1,5 @@
 import { IAppState } from './state.interface';
 
-import * as actionsLog from '../../routes/admin/actions-log/actions-log.reducer';
 import * as auth from '../auth/auth.reducer';
 import * as campaigns from '../../routes/utilities/campaigns/campaigns.reducer';
 import * as constants from '../../routes/admin/constants/constants.reducer';
@@ -22,7 +21,6 @@ import * as userTemplates from '../user/templates/user-templates.reducer';
 import * as users from '../../routes/admin/users/users.reducer';
 
 export const reducers = {
-  actionsLog: actionsLog.reducer,
   auth: auth.reducer,
   campaigns: campaigns.reducer,
   contractorsAndPortfolios: contractorsAndPortfolios.reducer,
@@ -45,7 +43,6 @@ export const reducers = {
 };
 
 export const initialState: Partial<IAppState> = {
-  actionsLog: actionsLog.defaultState,
   campaigns: campaigns.defaultState,
   contractorsAndPortfolios: contractorsAndPortfolios.defaultState,
   constants: constants.defaultState,

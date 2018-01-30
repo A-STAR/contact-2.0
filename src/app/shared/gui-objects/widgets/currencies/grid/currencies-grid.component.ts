@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
-import { ICurrency } from '../currencies.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { ICurrency } from '@app/shared/gui-objects/widgets/currencies/currencies.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { CurrenciesService } from '../currencies.service';
-import { GridService } from '../../../../components/grid/grid.service';
+import { CurrenciesService } from '@app/shared/gui-objects/widgets/currencies/currencies.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
+import { DialogFunctions } from '@app/core/dialog';
 import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
@@ -71,7 +72,8 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
     private cdRef: ChangeDetectorRef,
     private currenciesService: CurrenciesService,
     private gridService: GridService,
-    private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService
   ) {
     super();
   }
@@ -123,7 +125,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
   }
 
   onEdit(currency: ICurrency): void {
-    this.router.navigate([ `${this.router.url}/${currency.id}` ]);
+    this.routingService.navigate([ String(currency.id) ], this.route);
   }
 
   onRemove(): void {
@@ -137,7 +139,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/create` ]);
+    this.routingService.navigate([ 'create' ], this.route);
   }
 
   private fetch(): void {

@@ -3,5 +3,11 @@
 .wrapper {
   height: 100%;
   padding: $layout-content-padding;
+  background-color: $layout-content-background-color;
   overflow: auto;
+  .content {
+    height: 100%;
+    padding: $layout-content-padding;;
+    background-color: white;
+  }
 }

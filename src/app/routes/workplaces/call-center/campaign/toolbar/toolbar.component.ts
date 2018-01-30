@@ -14,9 +14,10 @@ import { DialogFunctions } from '@app/core/dialog';
 import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
-  selector: 'app-call-center-toolbar',
-  templateUrl: 'toolbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-call-center-toolbar',
+  styleUrls: [ './toolbar.component.scss' ],
+  templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent extends DialogFunctions {
   toolbarItems: IToolbarItem[] = [
@@ -72,14 +73,12 @@ export class ToolbarComponent extends DialogFunctions {
   private registerSpecial(): void {
     this.campaignService.campaignDebt$
       .pipe(first())
-      .subscribe(debt => {
-        this.contactRegistrationService.params = {
-          debtId: debt.debtId,
-          personId: debt.personId,
-          personRole: 1,
-          contactType: 7,
-          campaignId: this.campaignService.campaignId
-        };
-      });
+      .subscribe(debt => this.contactRegistrationService.startRegistration({
+        debtId: debt.debtId,
+        personId: debt.personId,
+        personRole: 1,
+        contactType: 7,
+        campaignId: this.campaignService.campaignId
+      }));
   }
 }

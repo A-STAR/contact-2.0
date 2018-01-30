@@ -25,6 +25,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   @Input() columns: Array<IGridColumn>;
   @Input() controlClass = 'form-control';
   @Input() rows: Array<T>;
+  @Input() translationKey: string;
 
   @Output() select = new EventEmitter<T>();
 

@@ -15,7 +15,7 @@ import { getRawValue, getValue } from '@app/core/utils/value';
   templateUrl: './attributes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributesComponent implements OnInit {
+export class ContactRegistrationAttributesComponent implements OnInit {
   attributes: ITreeNode[];
 
   constructor(
@@ -26,13 +26,12 @@ export class AttributesComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest(
-      this.contactRegistrationService.contactType$,
-      this.contactRegistrationService.debtId$,
+      this.contactRegistrationService.params$,
       this.contactRegistrationService.outcome$,
     )
     .pipe(
-      filter(([ contactType, debtId, outcome ]) => Boolean(contactType && debtId && outcome)),
-      mergeMap(([ contactType, debtId, outcome ]) => this.attributesService.fetchAll(debtId, contactType, outcome.id))
+      filter(([ params, outcome ]) => Boolean(params) && Boolean(outcome)),
+      mergeMap(([ params, outcome ]) => this.attributesService.fetchAll(params.debtId, params.contactType, outcome.id)),
     )
     .subscribe(attributes => {
       this.attributes = attributes;

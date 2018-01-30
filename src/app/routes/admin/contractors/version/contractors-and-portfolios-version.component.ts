@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+
+import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
   selector: 'app-contractors-and-portfolios-version',
@@ -19,8 +20,8 @@ export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestr
   private paramsSub: Subscription;
 
   constructor(
-    private location: Location,
     private route: ActivatedRoute,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
@@ -45,6 +46,21 @@ export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestr
   }
 
   onBack(): void {
-    this.location.back();
+    const url = this.entityTypeId === ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_PORTFOLIO
+      ? [
+        '/admin',
+        'contractors',
+        this.route.snapshot.paramMap.get('contractorId'),
+        'portfolios',
+        this.route.snapshot.paramMap.get('portfolioId'),
+        'attributes'
+      ]
+      : [
+        '/admin',
+        'contractors',
+        this.route.snapshot.paramMap.get('contractorId'),
+        'attributes'
+      ];
+    this.routingService.navigate(url);
   }
 }

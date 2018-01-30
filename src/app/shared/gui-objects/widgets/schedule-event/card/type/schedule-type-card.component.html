@@ -4,26 +4,17 @@
     *ngIf="eventTypeControls"
     [config]="eventTypeConfig"
     [controls]="eventTypeControls"
-    [data]="type"
+    [data]="selectedType"
   ></app-dynamic-form>
 </div>
 
-<label>
-  <span>
-    {{ 'widgets.scheduleEvents.card.group' | translate }}
-    <b class="text-danger">*</b>
-  </span>
-</label>
-
-<app-grid
-  #groupGrid
-  *ngIf="selectedEventTypeCode === 1"
-  columnTranslationKey="widgets.groups"
-  selectionType="single"
-  [columns]="groupGridColumns"
-  [selection]="groupSelection"
-  [footerHeight]="false"
-  [styles]="{height: '200px'}"
-  [rows]="groups"
-  (onSelect)="onGroupSelect($event)"
-></app-grid>
+<ng-container *ngFor="let controls of addParamsControls; let i = index">
+  <div class="pb-lg" *ngIf="selectedEventTypeCode === i + 1">
+    <app-dynamic-form
+      #addParams
+      [config]="eventTypeConfig"
+      [controls]="controls"
+      [data]="selectedType"
+    ></app-dynamic-form>
+  </div>
+</ng-container>

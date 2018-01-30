@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
+import { filter, map, mergeMap } from 'rxjs/operators';
 
 import { CampaignService } from './campaign.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
@@ -13,7 +13,8 @@ import { ContactRegistrationService } from '@app/routes/workplaces/shared/contac
     ContactRegistrationService,
   ],
   selector: 'app-campaign',
-  templateUrl: 'campaign.component.html',
+  styleUrls: [ './campaign.component.scss' ],
+  templateUrl: './campaign.component.html',
 })
 export class CampaignComponent implements OnInit {
   tabs = [
@@ -56,10 +57,17 @@ export class CampaignComponent implements OnInit {
   }
 
   toNextDebt(): void {
-    this.campaignService
-      .markCurrentDebtAsFinished()
-      .subscribe(() => {
+    this.contactRegistrationService.pauseRegistration().pipe(
+      filter(status => status === null),
+      mergeMap(() => this.campaignService.markCurrentDebtAsFinished()),
+    )
+    .subscribe(result => {
+      if (result) {
         this.campaignService.preloadCampaignDebt();
-      });
+        this.contactRegistrationService.cancelRegistration();
+      } else {
+        this.contactRegistrationService.continueRegistration();
+      }
+    });
   }
 }

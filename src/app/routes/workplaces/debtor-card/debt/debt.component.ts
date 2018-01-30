@@ -1,26 +1,27 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, flatMap, map } from 'rxjs/operators';
 
-import { IDebt } from '../../../../core/app-modules/app-modules.interface';
-import { IDynamicFormItem } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEntityAttributes } from '../../../../core/entity/attributes/entity-attributes.interface';
-import { ILookupPortfolio } from '../../../../core/lookup/lookup.interface';
-import { IOption, IOptionSet } from '../../../../core/converter/value-converter.interface';
-import { IUserPermission, IUserPermissions } from '../../../../core/user/permissions/user-permissions.interface';
+import { IDebt } from '@app/core/app-modules/app-modules.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
+import { ILookupPortfolio } from '@app/core/lookup/lookup.interface';
+import { IOption, IOptionSet } from '@app/core/converter/value-converter.interface';
+import { IUserPermission, IUserPermissions } from '@app/core/user/permissions/user-permissions.interface';
 
-import { DebtService } from '../../../../core/debt/debt.service';
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
-import { EntityAttributesService } from '../../../../core/entity/attributes/entity-attributes.service';
-import { LookupService } from '../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { DebtService } from '@app/core/debt/debt.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 
 const label = makeKey('widgets.debt');
 
@@ -47,9 +48,9 @@ export class DebtComponent implements OnInit {
     private entityAttributesService: EntityAttributesService,
     private lookupService: LookupService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -125,7 +126,11 @@ export class DebtComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId')
+    ]);
   }
 
   get displayDebtData(): Observable<boolean> {
@@ -180,6 +185,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.portfolioId',
         controlName: 'portfolioId',
+        translationKey: 'widgets.debt.portfolioChange',
         type: 'gridselect',
         gridColumns: [
           { prop: 'id', minWidth: 50, maxWidth: 50 },

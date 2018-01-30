@@ -96,11 +96,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onPhoneAdd(): void {
-    this.routingService.navigate([ 'phone', 'create' ], this.route);
+    this.routingService.navigate([ 'phone/create' ], this.route);
   }
 
   onPhoneEdit(phone: IPhone): void {
-    this.routingService.navigate([ 'phone', `${phone.id}` ], this.route);
+    this.routingService.navigate([ `phone/${phone.id}` ], this.route);
   }
 
   onPhoneRegister(phone: IPhone): void {
@@ -108,12 +108,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private registerContact(contactType: number, contactId: number = null): void {
-    this.contactRegistrationService.params = {
+    this.contactRegistrationService.startRegistration({
       contactId,
       contactType,
       debtId: this.debtId,
       personId: this.personId,
       personRole: this.personRole,
-    };
+    });
   }
 }

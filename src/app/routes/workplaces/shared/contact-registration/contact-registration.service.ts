@@ -3,12 +3,13 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, filter, first, map, mergeMap } from 'rxjs/operators';
 
 import {
   IContactRegistrationData,
   IContactRegistrationMode,
   IContactRegistrationParams,
+  IContactRegistrationStatus,
   IOutcome,
 } from './contact-registration.interface';
 import { IDebt } from '@app/routes/workplaces/core/debts/debts.interface';
@@ -24,12 +25,13 @@ import { combineLatestOr } from '@app/core/utils/helpers';
 
 @Injectable()
 export class ContactRegistrationService {
-  mode = IContactRegistrationMode.TREE;
-
   private _guid$    = new BehaviorSubject<string>(null);
-  private _limit$ = new BehaviorSubject<IPromiseLimit>(null);
+  private _limit$   = new BehaviorSubject<IPromiseLimit>(null);
+  private _mode$    = new BehaviorSubject<IContactRegistrationMode>(IContactRegistrationMode.TREE);
   private _outcome$ = new BehaviorSubject<IOutcome>(null);
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
+
+  private status$   = new BehaviorSubject<IContactRegistrationStatus>(null);
 
   constructor(
     private dataService: DataService,
@@ -45,8 +47,24 @@ export class ContactRegistrationService {
       .subscribe(limit => this._limit$.next(limit));
   }
 
+  set status(status: IContactRegistrationStatus) {
+    this.status$.next(status);
+  }
+
+  get shouldConfirm$(): Observable<boolean> {
+    return this.status$.pipe(map(status => status === IContactRegistrationStatus.PAUSE));
+  }
+
   get isActive$(): Observable<boolean> {
     return this._params$.pipe(map(Boolean));
+  }
+
+  get mode$(): Observable<IContactRegistrationMode> {
+    return this._mode$.asObservable();
+  }
+
+  set mode(mode: IContactRegistrationMode) {
+    this._mode$.next(mode);
   }
 
   get params$(): Observable<Partial<IContactRegistrationParams>> {
@@ -55,10 +73,6 @@ export class ContactRegistrationService {
 
   get params(): Partial<IContactRegistrationParams> {
     return this._params$.value;
-  }
-
-  set params(params: Partial<IContactRegistrationParams>) {
-    this._params$.next(params);
   }
 
   get campaignId$(): Observable<number> {
@@ -138,7 +152,7 @@ export class ContactRegistrationService {
 
   get debt$(): Observable<IDebt> {
     return this.debtId$.pipe(
-      mergeMap(debtId => this.debtsService.getDebt(debtId)),
+      mergeMap(debtId => debtId ? this.debtsService.getDebt(debtId) : of(null)),
     );
   }
 
@@ -150,10 +164,6 @@ export class ContactRegistrationService {
     return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.promiseMode)));
   }
 
-  get canSetPromiseAmount$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && outcome.promiseMode === 3));
-  }
-
   get canSetInsufficientPromiseAmount$(): Observable<boolean> {
     return combineLatestOr([
       this._outcome$.pipe(map(outcome => outcome && outcome.promiseMode && outcome.promiseMode !== 2)),
@@ -161,54 +171,44 @@ export class ContactRegistrationService {
     ]);
   }
 
-  get canSetPayment$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.paymentMode)));
+  pauseRegistration(): Observable<IContactRegistrationStatus> {
+    if (this.status$.value) {
+      this.status$.next(IContactRegistrationStatus.PAUSE);
+      return this.status$.pipe(
+        filter(status => status === IContactRegistrationStatus.REGISTRATION || status === null),
+        first(),
+      );
+    } else {
+      return of(null);
+    }
   }
 
-  get canSetPaymentAmount$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && outcome.paymentMode === 3));
+  startRegistration(params: Partial<IContactRegistrationParams>): void {
+    if (this.params) {
+      this.pauseRegistration().subscribe(proceed => {
+        if (proceed) {
+          this.continueRegistration();
+        } else {
+          this.cancelRegistration();
+          this.status$.next(IContactRegistrationStatus.REGISTRATION);
+          this._params$.next(params);
+        }
+      });
+    } else {
+      this.status$.next(IContactRegistrationStatus.REGISTRATION);
+      this._params$.next(params);
+    }
   }
 
-  get canSetNextCallDate$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.nextCallMode)));
+  cancelRegistration(): void {
+    this._mode$.next(IContactRegistrationMode.TREE);
+    this._outcome$.next(null);
+    this._params$.next(null);
+    this.status$.next(null);
   }
 
-  get canSetComment$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.commentMode)));
-  }
-
-  get canSetAutoCommentId$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && Boolean(outcome.autoCommentIds)));
-  }
-
-  get canSetPhone$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && outcome.addPhone === 1));
-  }
-
-  get canSetContactPerson$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && outcome.changeContactPerson === 1));
-  }
-
-  get canSetDebtReason$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.debtReasonMode)));
-  }
-
-  get canSetRefusal$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && outcome.isRefusal === 1));
-  }
-
-  get canSetAttachment$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.fileAttachMode)));
-  }
-
-  get canSetCallReason$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.callReasonMode)));
-  }
-
-  get canSetChangeReason$(): Observable<boolean> {
-    return this._outcome$.pipe(
-      map(outcome => outcome && [2, 3].includes(outcome.statusReasonMode) && Boolean(outcome.debtStatusCode)),
-    );
+  continueRegistration(): void {
+    this.status$.next(IContactRegistrationStatus.REGISTRATION);
   }
 
   completeRegistration(data: Partial<IContactRegistrationData>): Observable<void> {

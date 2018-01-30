@@ -1,20 +1,21 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IContact } from '../contact.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IContact } from '@app/shared/gui-objects/widgets/contact/contact.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContactService } from '../contact.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ContactService } from '@app/shared/gui-objects/widgets/contact/contact.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Component({
   selector: 'app-contact-grid',
@@ -78,8 +79,9 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     private contactService: ContactService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private router: Router,
-    private userPermissionsService: UserPermissionsService,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
+    private userPermissionsService: UserPermissionsService
   ) { }
 
   ngOnInit(): void {
@@ -146,11 +148,11 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/contact/create` ]);
+    this.routingService.navigate([ 'contact/create' ], this.route);
   }
 
   private onEdit(contactId: number): void {
-    this.router.navigate([ `${this.router.url}/contact/${contactId}` ]);
+    this.routingService.navigate([ `contact/${contactId}` ], this.route);
   }
 
   get canView$(): Observable<boolean> {

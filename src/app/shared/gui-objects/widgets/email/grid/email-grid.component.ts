@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -7,21 +6,23 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 
-import { IDebt } from '../../../../../core/app-modules/app-modules.interface';
-import { IEmail, IEmailSchedule } from '../email.interface';
-import { IGridColumn, IContextMenuItem } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IDebt } from '@app/core/app-modules/app-modules.interface';
+import { IEmail, IEmailSchedule } from '@app/shared/gui-objects/widgets/email/email.interface';
+import { IGridColumn, IContextMenuItem } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { EmailService } from '../email.service';
-import { DebtService } from '../../../../../core/debt/debt.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { EmailService } from '@app/shared/gui-objects/widgets/email/email.service';
+import { DebtService } from '@app/core/debt/debt.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-email-grid',
@@ -114,9 +115,10 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     private debtService: DebtService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userConstantsService: UserConstantsService,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {
     super();
   }
@@ -263,11 +265,11 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/email/create` ]);
+    this.routingService.navigate([ 'email/create' ], this.route);
   }
 
   private onEdit(emailId: number): void {
-    this.router.navigate([ `${this.router.url}/email/${emailId}` ]);
+    this.routingService.navigate([ `email/${emailId}` ], this.route);
   }
 
   private onSubmitSuccess(): void {

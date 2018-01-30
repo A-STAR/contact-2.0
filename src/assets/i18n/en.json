@@ -1844,6 +1844,13 @@
         "dict3Code": "Score 3",
         "dict4Code": "Score 4"
       },
+      "portfolioChange": {
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "contractor": "Bank"
+        }
+      },
       "dialogs": {
         "closeDebt": {
           "title": "Debt Closure",
@@ -2090,10 +2097,43 @@
         "formDateTime": "Form date",
         "sql": "SQL"
       },
+      "groupObjectDebts": {
+        "filter": {
+          "groups": "Select Group",
+          "grid": {
+              "id": "ID",
+              "name": "Name"
+          }
+        },
+        "grid": {
+          "id": "ID",
+          "debtId": "Debt ID",
+          "personId": "Person ID",
+          "personFullName": "Full Name",
+          "bankName": "Bank",
+          "portfolioName": "Portfolio",
+          "contract": "Contact No",
+          "creditName": "Credit Name",
+          "currencyName": "Currency",
+          "debtAmount": "Debt amount",
+          "totalAmount": "Total amount",
+          "dpd": "DPD",
+          "userFullName": "Operator",
+          "statusCode": "Status",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4"
+        }
+      },
       "toolbar": {
         "action": {
           "forCurrentUser": "Current user groups"
         }
+      },
+      "tabs": {
+        "all": "Groups",
+        "debtsInGroup": "Debts in group"
       }
     },
     "visit": {
@@ -2178,7 +2218,28 @@
         "isInactive": "Is inactive",
         "eventTypeCode": "Event type",
         "priority": "Priority",
-        "group": "Group"
+        "groupId": "Group",
+        "checkGroup": "Group rearrangement check",
+        "delay": "Delay (hours)",
+        "phoneTypes": "Phono type",
+        "personRoles": "Receiver",
+        "templateId": "Template",
+        "senderCode": "Sender",
+        "dict1Code": "Value",
+        "dict2Code": "Value",
+        "dict3Code": "Value",
+        "dict4Code": "Value",
+        "stage": "Stage",
+        "userId": "Operator",
+        "modeCode": "Mode",
+        "changeGroupId": {
+          "grid": {
+            "id": "ID",
+            "entityTypeId": "Type",
+            "name": "Name",
+            "comment": "Comment"
+          }
+        }
       },
       "dialog": {
         "title": "Event",
@@ -2700,6 +2761,13 @@
       "to": "To"
     },
     "filters": {
+      "entityGroups": {
+        "grid": {
+          "id": "ID",
+          "name": "Name"
+        },
+        "title": "Select Groups"
+      },
       "portfolios": {
         "grid": {
           "contractorName": "Contractor",
@@ -2722,6 +2790,13 @@
           "position": "Position"
         },
         "title": "Select Users"
+      },
+      "actions": {
+        "grid": {
+          "code": "Code",
+          "name": "Action"
+        },
+        "title": "Action types"
       },
       "fields": {
         "branchCode": "Branch",
@@ -2848,7 +2923,8 @@
       "placeholders": {
         "datepicker": "Enter a date",
         "timepicker": "Enter time"
-      }
+      },
+      "lastMonthDay": "Last"
     },
     "colors": {
       "transparent": "Transparent",
@@ -2908,15 +2984,6 @@
           "stringValue9": "String Attribute 9",
           "stringValue10": "String Attribute 10"
         }
-      },
-      "daysOfWeek": {
-        "day1": "Monday",
-        "day2": "Tuesday",
-        "day3": "Wednesday",
-        "day4": "Thursday",
-        "day5": "Friday",
-        "day6": "Saturday",
-        "day7": "Sunday"
       }
     }
   }

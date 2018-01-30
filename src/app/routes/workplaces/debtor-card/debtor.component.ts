@@ -3,10 +3,11 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
-  OnInit,
   ViewChild,
   ViewEncapsulation,
+  AfterViewInit,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
@@ -31,6 +32,7 @@ import { DialogFunctions } from '../../../core/dialog';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height' },
   providers: [
     ContactRegistrationService,
   ],
@@ -38,7 +40,7 @@ import { DialogFunctions } from '../../../core/dialog';
   styleUrls: ['./debtor.component.scss'],
   templateUrl: './debtor.component.html',
 })
-export class DebtorComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class DebtorComponent extends DialogFunctions implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(DebtorInformationComponent) information: DebtorInformationComponent;
 
@@ -62,6 +64,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
   ];
 
   private personSubscription: Subscription;
+  private routeIdSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -70,11 +73,12 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
     private debtorCardService: DebtorCardService,
     private debtorService: DebtorService,
     private userPermissionsService: UserPermissionsService,
+    private route: ActivatedRoute,
   ) {
     super();
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.userPermissionsService.has('PERSON_INFO_EDIT')
       .pipe(first())
       .subscribe(canEdit => {
@@ -82,16 +86,25 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
         this.cdRef.markForCheck();
       });
 
+    this.routeIdSubscription = this.route.paramMap
+      .subscribe(paramMap => {
+        const debtId = paramMap.get('debtId');
+        if (debtId) {
+          this.debtorCardService.initByDebtId(Number(debtId));
+        }
+    });
+
     this.personSubscription = combineLatest(
       this.debtorCardService.person$.filter(Boolean),
       this.debtorCardService.selectedDebt$.filter(Boolean),
     )
     .map(([person, debt]) => ({
-      ...person,
-      responsibleFullName: debt.responsibleFullName,
-      utc: debt.utc,
-      shortInfo: debt.shortInfo,
-    }))
+        ...person,
+        responsibleFullName: debt.responsibleFullName,
+        utc: debt.utc,
+        shortInfo: debt.shortInfo,
+      })
+    )
     .distinctUntilChanged()
     .subscribe(data => {
       this.data = data;
@@ -101,6 +114,7 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
 
   ngOnDestroy(): void {
     this.personSubscription.unsubscribe();
+    this.routeIdSubscription.unsubscribe();
   }
 
   get displayContactRegistration$(): Observable<boolean> {
@@ -153,13 +167,13 @@ export class DebtorComponent extends DialogFunctions implements OnInit, OnDestro
       .pipe(first())
       .subscribe(([ personId, debtId ]) => {
         this.setDialog();
-        this.contactRegistrationService.params = {
+        this.contactRegistrationService.startRegistration({
           contactId,
           contactType,
           debtId,
           personId,
           personRole: 1,
-        };
+        });
       });
   }
 

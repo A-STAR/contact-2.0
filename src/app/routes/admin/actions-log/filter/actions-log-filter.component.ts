@@ -1,199 +1,111 @@
 import {
-  ChangeDetectorRef,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   OnInit,
   Output,
   ViewChild
 } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 
-import { IGridColumn, IRenderer } from '@app/shared/components/grid/grid.interface';
-import {
-  IDynamicFormSelectControl,
-  IDynamicFormDateControl,
-  IDynamicFormTextControl
-} from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEmployee } from '../actions-log.interface';
-import { IToolbarAction, ToolbarActionTypeEnum } from './actions-log-filter.interface';
-import { IDictionaryItem } from '../../dictionaries/dictionaries.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+
+import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-import { MultiSelectComponent } from '@app/shared/components/form/multi-select/multi-select.component';
 
-import { DataService } from '@app/core/data/data.service';
-import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
-import { GridService } from '@app/shared/components/grid/grid.service';
-import { LookupService } from '@app/core/lookup/lookup.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { ValueConverterService } from '@app/core/converter/value-converter.service';
-
-import { toFullName, timeToHourMinSec } from '@app/core/utils';
+import { timeToHourMinSec } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-actions-log-filter',
-  styleUrls: ['./actions-log-filter.component.scss'],
+  styleUrls: [ './actions-log-filter.component.scss' ],
   templateUrl: './actions-log-filter.component.html',
 })
-export class ActionsLogFilterComponent extends DynamicFormComponent implements OnInit {
-  @Input() employeesRows: Observable<any>;
-  @Input() actionTypesRows: Observable<any>;
+export class ActionsLogFilterComponent implements OnInit {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   @Output() export = new EventEmitter<void>();
-  @Output() search = new EventEmitter<void>();
   @Output() queryBuilderOpen = new EventEmitter<void>();
-  @ViewChild('employees') employeesComponent: MultiSelectComponent;
-  @ViewChild('actionTypes') actionTypesComponent: MultiSelectComponent;
+  @Output() search = new EventEmitter<void>();
 
-  employeesControl: IDynamicFormSelectControl;
-  inactiveEmployeesControl: IDynamicFormTextControl;
-  actionTypesControl: IDynamicFormSelectControl;
-  startDateControl: IDynamicFormDateControl;
-  endDateControl: IDynamicFormDateControl;
-  startTimeControl: IDynamicFormTextControl;
-  endTimeControl: IDynamicFormTextControl;
+  controls: IDynamicFormItem[];
+  data: any;
 
-  employeesColumnsFrom: IGridColumn[] = [
-    { prop: 'id', width: 50 },
-    { prop: 'fullName', width: 150 },
-    { prop: 'position', width: 150 },
-    { prop: 'organization' },
-  ];
-
-  employeesColumnsTo: IGridColumn[] = [
-    { prop: 'fullName'}
-  ];
-
-  actionsTypesColumnsFrom: IGridColumn[] = [
-    { prop: 'code', maxWidth: 70 },
-    { prop: 'name' },
-  ];
-
-  actionsTypesColumnsTo: IGridColumn[] = [
-    { prop: 'name'}
-  ];
-
-  renderers: IRenderer = {
-    fullName: toFullName
-  };
-
-  toolbarActions: IToolbarAction[] = [
-    { text: 'default.buttons.search', type: ToolbarActionTypeEnum.SEARCH, hasLabel: true },
-  ];
-
-  private _dialog: string;
-
-  get employeesRowsFilter(): Function {
-    return this.value[this.inactiveEmployeesControl.controlName]
-      ? () => true
-      : (record: IEmployee) => !record.isInactive;
-  }
-
-  constructor(
-    cdRef: ChangeDetectorRef,
-    dataService: DataService,
-    formBuilder: FormBuilder,
-    gridService: GridService,
-    lookupService: LookupService,
-    userDictionariesService: UserDictionariesService,
-    valueConverterService: ValueConverterService,
-  ) {
-    super(cdRef, dataService, formBuilder, lookupService, valueConverterService, userDictionariesService);
-    this.employeesColumnsFrom = gridService.setRenderers(this.employeesColumnsFrom, this.renderers);
-    this.employeesColumnsTo = gridService.setRenderers(this.employeesColumnsTo, this.renderers);
-  }
+  constructor() {}
 
   ngOnInit(): void {
-    this.controls = [
-      this.employeesControl = {
-        controlName: 'employees',
-        label: 'actionsLog.filter.employees.title',
-        placeholder: 'actionsLog.filter.employees.placeholder',
-        required: true,
-        type: 'multiselect',
-      },
-      this.inactiveEmployeesControl = {
-        controlName: 'blockingEmployees',
-        label: 'actionsLog.filter.employees.inactive',
-        type: 'checkbox',
-      },
-      this.actionTypesControl = {
-        controlName: 'actionsTypes',
-        label: 'actionsLog.filter.actionsTypes.title',
-        placeholder: 'actionsLog.filter.actionsTypes.placeholder',
-        required: true,
-        type: 'multiselect',
-      },
-      this.startDateControl = {
-        controlName: 'startDate',
-        label: 'default.dateTimeRange.from',
-        required: true,
-        type: 'datepicker',
-      },
-      this.startTimeControl = {
-        controlName: 'startTime',
-        label: null,
-        required: true,
-        type: 'text',
-      },
-      this.endDateControl = {
-        controlName: 'endDate',
-        label: 'default.dateTimeRange.to',
-        required: true,
-        type: 'datepicker',
-      },
-      this.endTimeControl = {
-        controlName: 'endTime',
-        label: null,
-        required: true,
-        type: 'text',
-      },
-    ];
+    const start = moment().startOf('month').toDate();
+    const end = moment().endOf('month').toDate();
 
     this.data = {
-      'startTime': '00:00:00',
-      'endTime': '23:59:59',
-      'startDate': moment().startOf('month').toDate(),
-      'endDate': moment().endOf('month').toDate()
+      startDate: start,
+      // startTime should be preset to '00:00:00'
+      startTime: start,
+      endDate: end,
+      // endTime should be preset '23:59:59'
+      endTime: end,
     };
 
-    super.ngOnInit();
+    this.controls = [
+      {
+        children: [
+          {
+            controlName: 'startDate',
+            label: 'default.dateTimeRange.from',
+            required: true,
+            type: 'datepicker',
+            width: 4,
+          },
+          {
+            controlName: 'startTime',
+            label: null,
+            required: true,
+            type: 'timepicker',
+            width: 2,
+          },
+          {
+            controlName: 'endDate',
+            label: 'default.dateTimeRange.to',
+            required: true,
+            type: 'datepicker',
+            width: 4,
+          },
+          {
+            controlName: 'endTime',
+            label: null,
+            required: true,
+            type: 'timepicker',
+            width: 2,
+          },
+        ]
+      },
+      {
+        children: [
+          {
+            controlName: 'employees',
+            label: 'actionsLog.filter.employees.title',
+            placeholder: 'actionsLog.filter.employees.placeholder',
+            filterType: 'users',
+            type: 'dialogmultiselectwrapper',
+            width: 6
+          },
+          {
+            controlName: 'actionsTypes',
+            label: 'actionsLog.filter.actionsTypes.title',
+            placeholder: 'actionsLog.filter.actionsTypes.placeholder',
+            filterType: 'actions',
+            type: 'dialogmultiselectwrapper',
+            width: 6,
+          },
+        ]
+      },
+    ];
   }
 
-  get selectedEmployees(): string {
-    if (Array.isArray(this.value.employees)) {
-      return (this.value.employees as IEmployee[] || []).map(record => toFullName(record)).join(', ');
-    }
-    return '';
-  }
-
-  get selectedActionTypes(): string {
-    if (Array.isArray(this.value.actionsTypes)) {
-      return (this.value.actionsTypes as IDictionaryItem[] || []).map(record => record.name).join(', ');
-    }
-    return '';
-  }
-
-  isDialog(type: string): boolean {
-    return this._dialog === type;
-  }
-
-  setDialog(type: string = null): void {
-    this._dialog = type;
-  }
-
-  onSetEmployees(): void {
-    this.employeesComponent.syncChanges();
-    this.setDialog();
-  }
-
-  onSetActionTypes(): void {
-    this.actionTypesComponent.syncChanges();
-    this.setDialog();
+  get isFilterValid(): boolean {
+    return this.form && this.form.isValid;
   }
 
   onSearch(): void {
@@ -204,19 +116,21 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
     this.export.emit();
   }
 
-  onQueryBuilderOpen(): void {
-    this.queryBuilderOpen.emit();
-  }
+  // onQueryBuilderOpen(): void {
+  //   this.queryBuilderOpen.emit();
+  // }
 
   getFilters(): FilterObject {
-    const endTime = timeToHourMinSec(this.value.endTime);
-    const startTime = timeToHourMinSec(this.value.startTime);
+    const value = this.form.serializedValue;
+    // log('formValue', value);
+    const endTime = timeToHourMinSec(value.endTime);
+    const startTime = timeToHourMinSec(value.startTime);
 
-    const endDate = moment(this.value.endDate).set(endTime).toISOString();
-    const startDate = moment(this.value.startDate).set(startTime).toISOString();
+    const endDate = moment(value.endDate).set(endTime).toISOString();
+    const startDate = moment(value.startDate).set(startTime).toISOString();
 
-    const actionsTypes = (this.value.actionsTypes as IDictionaryItem[] || []).map(record => record.code);
-    const employees = (this.value.employees as IEmployee[] || []).map(record => record.id);
+    const actionsCodes = value.actionsTypes;
+    const employeeIds = value.employees;
 
     return FilterObject
       .create()
@@ -231,13 +145,13 @@ export class ActionsLogFilterComponent extends DynamicFormComponent implements O
         FilterObject.create()
           .setName('typeCode')
           .inOperator()
-          .setValues(actionsTypes)
+          .setValues(actionsCodes)
       )
       .addFilter(
         FilterObject.create()
           .setName('userId')
           .inOperator()
-          .setValues(employees)
+          .setValues(employeeIds)
       );
   }
 }

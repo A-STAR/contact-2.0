@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs/Subscription';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, filter, mergeMap } from 'rxjs/operators';
 
 import { IContactRegistrationMode } from '../contact-registration.interface';
 
@@ -33,9 +32,10 @@ export class TreeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.nodesSub = combineLatest(this.contactRegistrationService.debtId$, this.contactRegistrationService.contactType$)
+    this.nodesSub = this.contactRegistrationService.params$
       .pipe(
-        mergeMap(([ debtId, contactType ]) => this.workplacesService.fetchContactTree(debtId, contactType))
+        filter(Boolean),
+        mergeMap(params => this.workplacesService.fetchContactTree(params.debtId, params.contactType)),
       )
       .subscribe(nodes => {
         this.nodes = nodes;
@@ -47,28 +47,44 @@ export class TreeComponent implements OnInit, OnDestroy {
     this.nodesSub.unsubscribe();
   }
 
-  get scenarioText(): string {
-    // TODO(d.maltsev): i18n
+  get scenarioText(): SafeHtml {
+    if (!this.selectedNode) {
+      // TODO(d.maltsev): i18n
+      return 'Выберите исход';
+    }
+
+    if (!this.scenario) {
+      // TODO(d.maltsev): i18n
+      return 'Пустой сценарий';
+    }
+
     // TODO(d.maltsev): double check for xss vulnerabilities
-    return this.selectedNode
-      ? this.domSanitizer.bypassSecurityTrustHtml(this.scenario) as string || 'Scenario is empty:('
-      : 'Select something below...';
+    return this.domSanitizer.bypassSecurityTrustHtml(this.scenario);
   }
 
   onNodeSelect(event: any): void {
-    const { node } = event;
-    if (node && isEmpty(node.children)) {
-      this.selectedNode = node.data;
-      this.cdRef.markForCheck();
-      this.fetchScenario(event.node.data.id);
-    }
+    this.selectNode(event.node);
   }
 
   onNodeDoubleClick(node: any): void {
-    this.contactRegistrationService.mode = IContactRegistrationMode.EDIT;
+    this.selectNode(node);
     if (node && isEmpty(node.children)) {
-      this.selectedNode = node.data;
+      this.contactRegistrationService.mode = IContactRegistrationMode.EDIT;
       this.contactRegistrationService.outcome = node.data;
+    }
+  }
+
+  onCancelClick(): void {
+    this.contactRegistrationService.cancelRegistration();
+  }
+
+  private selectNode(node: any): void {
+    this.selectedNode = node;
+    this.cdRef.markForCheck();
+    if (node && isEmpty(node.children)) {
+      this.fetchScenario(node.data.id);
+    } else {
+      this.scenario = null;
       this.cdRef.markForCheck();
     }
   }

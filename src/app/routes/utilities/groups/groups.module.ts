@@ -2,10 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
-import { GroupEditModule } from './edit/edit.module';
 
 import { GroupsComponent } from './groups.component';
-import { GroupEditComponent } from './edit/edit.component';
 
 const routes: Routes = [
   {
@@ -14,16 +12,43 @@ const routes: Routes = [
     data: {
       reuse: true,
     },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'all'
+      },
+      {
+        path: 'all',
+        loadChildren: './grid/group-grid.module#GroupGridModule'
+      },
+      {
+        path: 'debts',
+        loadChildren: './group-debts/group-debts.module#GroupDebtsModule',
+      }
+      // {
+      //   path: 'schedule',
+      //   loadChildren: '',
+      // }
+    ],
   },
-  { path: 'create', component: GroupEditComponent },
-  { path: ':groupId', component: GroupEditComponent }
+  {
+    path: 'all/create',
+    loadChildren: './card/group-card.module#GroupCardModule',
+  },
+  {
+    path: 'all/:groupId',
+    loadChildren: './card/group-card.module#GroupCardModule',
+  },
 ];
 
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
-    SharedModule,
-    GroupEditModule,
+    SharedModule
+  ],
+  exports: [
+    RouterModule,
   ],
   declarations: [
     GroupsComponent,

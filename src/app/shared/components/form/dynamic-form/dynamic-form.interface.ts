@@ -81,7 +81,6 @@ export interface IDynamicFormButtonControl extends IDynamicFormBaseControl {
   // options for dialog input, button, searchBtn
   type: 'button' | 'searchBtn' | 'dialog';
   action?: () => void;
-  placeholder?: string;
 }
 
 export interface IDynamicFormDateControl extends IDynamicFormBaseControl {
@@ -111,6 +110,7 @@ export interface IDynamicFormFileControl extends IDynamicFormBaseControl {
 export interface IDynamicFormGridSelectControl extends IDynamicFormBaseControl {
   // options for grid select
   type: 'gridselect';
+  translationKey?: string;
   gridRows?: Array<any>;
   gridLabelGetter?: Function;
   gridValueGetter?: Function;
@@ -139,6 +139,7 @@ export interface IDynamicFormDialogMultiSelectControl extends IDynamicFormBaseCo
   type: 'dialogmultiselect' | 'dialogmultiselectwrapper';
   // options for dialog multiselect
   filterType?: IDialogMultiSelectFilterType;
+  filterParams?: IFilterParam;
   placeholder?: string;
   dependsOn?: string;
 }

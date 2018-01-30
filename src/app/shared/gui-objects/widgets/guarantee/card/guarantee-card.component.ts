@@ -1,21 +1,22 @@
 import { Component, ChangeDetectorRef, ChangeDetectionStrategy, OnInit, OnDestroy, ViewChild
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IGuaranteeContract, IGuarantor } from '../guarantee.interface';
+import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IGuaranteeContract, IGuarantor } from '@app/shared/gui-objects/widgets/guarantee/guarantee.interface';
 
-import { GuaranteeService } from '../guarantee.service';
-import { GuarantorService } from '../../guarantor/guarantor.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { GuaranteeService } from '@app/shared/gui-objects/widgets/guarantee/guarantee.service';
+import { GuarantorService } from '@app/shared/gui-objects/widgets/guarantor/guarantor.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
-import { makeKey } from '../../../../../core/utils';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { makeKey } from '@app/core/utils';
 
 const label = makeKey('widgets.guaranteeContract.grid');
 
@@ -48,7 +49,7 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private guaranteeService: GuaranteeService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -130,8 +131,11 @@ export class GuaranteeCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    const relativeUrlCount = this.isRoute('create') ? 2 : 4;
-    this.router.navigate([new Array(relativeUrlCount + 1).join('../')], { relativeTo: this.route });
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId')
+    ]);
   }
 
   onSubmit(): void {
