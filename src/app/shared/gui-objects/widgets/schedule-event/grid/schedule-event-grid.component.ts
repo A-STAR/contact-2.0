@@ -55,7 +55,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
     },
     { prop: 'startTime' },
     { prop: 'executeDateTime', renderer: 'dateTimeRenderer' },
-    { prop: 'isExecuted', renderer: 'checkboxRenderer' },
+    { prop: 'isExecuting', renderer: 'checkboxRenderer' },
     { prop: 'startDate', renderer: 'dateRenderer' },
     { prop: 'endDate', renderer: 'dateRenderer' },
     { prop: 'isInactive', renderer: 'checkboxRenderer' },

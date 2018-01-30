@@ -2203,7 +2203,7 @@
         "periodTypeCode": "Период",
         "startTime": "Запуск",
         "executeDateTime": "Последний запуск",
-        "isExecuted": "Выполняется",
+        "isExecuting": "Выполняется",
         "startDate": "Начало",
         "endDate": "Окончание",
         "isInactive": "Выключено",
