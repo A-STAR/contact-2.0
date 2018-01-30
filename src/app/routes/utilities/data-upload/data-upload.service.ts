@@ -89,7 +89,6 @@ export class DataUploadService {
 
   /**
    * The order of this corresponds dict 62
-   * CURRENCY_RATE are not from this dict
    */
   private uploaderTypes = [
     // filler for 0 index

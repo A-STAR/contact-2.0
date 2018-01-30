@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
@@ -63,7 +64,7 @@ export class DataUploadComponent extends DialogFunctions
   ];
 
   columns: IAGridColumn[];
-  uploaders: IOption[];
+  uploaders: IOption[] = [];
 
   dialog: 'cancel' | 'errorLogPrompt';
 
@@ -75,7 +76,6 @@ export class DataUploadComponent extends DialogFunctions
   private static FORMAT_PERMISSION = 'LOAD_DATA_FROM_EXCEL_FORMAT_LIST';
 
   private uploadersOptionsSub: Subscription;
-  private queryParamsSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -88,44 +88,40 @@ export class DataUploadComponent extends DialogFunctions
   }
 
   ngOnInit(): void {
-    // set initial value
-    this.dataUploadService.format = DataUploaders.SET_OPERATOR;
-
-    this.queryParamsSub = this.store.select(store => store.currency)
-      .map(currency => currency.currencyId)
-      .filter(Boolean)
-      .subscribe(currencyId => {
-        console.log(currencyId);
-         // format setter also creates new loader if it wasn't created
-         this.dataUploadService.format = DataUploaders.CURRENCY_RATE;
-         this.dataUploadService.uploader.parameter = currencyId;
-         this.isSelectVisible = false;
-         // reset previous loaded file
-         this.resetFile();
-         if (this.columns) {
-           // reset previous grid
-           this.resetGrid();
-         }
-         this.cdRef.markForCheck();
-      });
-
-    this.uploadersOptionsSub = this.userDictionariesService
-      .getDictionaryAsOptionsWithPermission(
+    this.uploadersOptionsSub = combineLatest(
+      this.userDictionariesService.getDictionaryAsOptionsWithPermission(
         UserDictionariesService.DICTIONARY_DATA_LOAD_FORMAT,
-        DataUploadComponent.FORMAT_PERMISSION,
+        DataUploadComponent.FORMAT_PERMISSION
+      ),
+      this.store
+        .select(store => store.currency)
+        .map(
+          currency => currency.currencyId,
+        )
       )
-      .subscribe(options => {
+      .subscribe(([options, currencyId]) => {
+        // ensure that currency uploader is permitted
+        if (currencyId && options
+            .map(option => option.value)
+            .includes(DataUploaders.CURRENCY_RATE)) {
+          this.dataUploadService.format = DataUploaders.CURRENCY_RATE;
+          this.dataUploadService.uploader.parameter = currencyId;
+          this.isSelectVisible = false;
+        } else {
+          this.dataUploadService.format = options[0].value as any;
+        }
+        // reset previous loaded file
+        this.resetFile();
+        if (this.columns) {
+          // reset previous grid
+          this.resetGrid();
+        }
         this.uploaders = options;
-        this.dataUploadService.format = options[0].value as any;
         this.cdRef.markForCheck();
-      });
+    });
   }
 
   ngOnDestroy(): void {
-    if (this.queryParamsSub) {
-      this.queryParamsSub.unsubscribe();
-    }
-
     if (this.uploadersOptionsSub) {
       this.uploadersOptionsSub.unsubscribe();
     }

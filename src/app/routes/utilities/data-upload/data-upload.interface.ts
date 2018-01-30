@@ -48,7 +48,6 @@ export enum DataUploaders {
   SET_OPERATOR,
   DEBTS,
   CONTACT_HISTORY,
-  // not fetched from the server
   CURRENCY_RATE,
 }
 
