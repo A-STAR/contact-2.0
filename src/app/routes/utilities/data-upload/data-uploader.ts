@@ -79,9 +79,7 @@ export class DataUploader {
   }
 
   getErrors(): string {
-    const url = this.parameter == null ? this.api.getErrors :
-      this.api.getErrors.replace(new RegExp('\\{' + this.paramKey + '\\}'), this.parameter);
-    return this.guid ? url.replace(/(guid\/)(\{[\w]+\})(.*)/g, `$1${this.guid}$3`) : url;
+    return this.api && this.api.getErrors ? this.createErrorFileUrl() : '';
   }
 
   get fileName(): string {
@@ -107,6 +105,12 @@ export class DataUploader {
     return this.dataService
       .delete(this.api.cancel, this.buildRequestParams())
       .catch(this.notificationsService.error('modules.dataUpload.errors.cancel').dispatchCallback());
+  }
+
+  private createErrorFileUrl(): string {
+    const url = this.parameter == null ? this.api.getErrors :
+      this.api.getErrors.replace(new RegExp('\\{' + this.paramKey + '\\}'), this.parameter);
+    return this.guid ? url.replace(/(guid\/)(\{[\w]+\})(.*)/g, `$1${this.guid}$3`) : url;
   }
 
   private buildRequestParams(rowId?: number): object {
