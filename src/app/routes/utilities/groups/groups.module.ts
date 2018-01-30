@@ -25,11 +25,11 @@ const routes: Routes = [
       {
         path: 'debts',
         loadChildren: './group-debts/group-debts.module#GroupDebtsModule',
+      },
+      {
+        path: 'schedule',
+        loadChildren: './schedule/schedule-event.module#ScheduleEventModule',
       }
-      // {
-      //   path: 'schedule',
-      //   loadChildren: '',
-      // }
     ],
   },
   {
