@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SharedModule } from '../../../shared/shared.module';
-import { ScheduleEditModule } from './edit/edit.module';
+import { SharedModule } from '@app/shared/shared.module';
+import { ScheduleEditModule } from '@app/routes/utilities/schedule/edit/edit.module';
+import { ScheduleLogViewDialogModule } from '@app/routes/utilities/schedule/dialog/schedule-log-view-dialog.module';
 
-import { ScheduleComponent } from './schedule.component';
-import { ScheduleEditComponent } from './edit/edit.component';
+import { ScheduleComponent } from '@app/routes/utilities/schedule/schedule.component';
+import { ScheduleEditComponent } from '@app/routes/utilities/schedule/edit/edit.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     ScheduleEditModule,
+    ScheduleLogViewDialogModule,
   ],
   declarations: [
     ScheduleComponent,

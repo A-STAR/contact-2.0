@@ -1325,6 +1325,14 @@
     },
     "currencyRatesTab": {
       "title": "Rates"
+    },
+    "schedule": {
+      "dialog": {
+        "title": "History of launches"
+      },
+      "buttons": {
+        "history": "History"
+      }
     }
   },
   "notifications": {
@@ -2396,6 +2404,9 @@
     },
     "scheduleEvents": {
       "gen": { "singular": "event", "plural": "events" }
+    },
+    "scheduleEventLog": {
+      "gen": { "singular": "event history", "plural": "events history" }
     }
   },
   "massOperations": {
