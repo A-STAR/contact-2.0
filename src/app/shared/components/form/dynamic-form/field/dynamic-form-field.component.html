@@ -128,8 +128,9 @@
       </span>
       <app-multi-select
         [formControlName]="control.controlName"
-        [options]="control.options">
-      </app-multi-select>
+        [options]="control.options"
+        (select)="selectHandler({ control: control, items: $event})"
+      ></app-multi-select>
     </label>
   </ng-container>
 
@@ -172,6 +173,20 @@
       [maxDate]="control.maxDate"
       [required]="control.required"
     ></app-input-datepicker>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'timepicker'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-input-timepicker
+      [formControlName]="control.controlName"
+      [showSeconds]="control.showSeconds"
+      [required]="control.required"
+    ></app-input-timepicker>
   </ng-container>
 
   <ng-container *ngSwitchCase="'image'">
@@ -221,6 +236,7 @@
       [rows]="control.gridRows"
       [labelGetter]="control.gridLabelGetter"
       [valueGetter]="control.gridValueGetter"
+      [translationKey]="control.translationKey"
       (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
     </app-grid-dropdown>
   </ng-container>
@@ -269,11 +285,6 @@
     <app-file-upload [formControlName]="control.controlName" [fileName]="control.fileName"></app-file-upload>
   </ng-container>
 
-  <input *ngSwitchCase="'hidden'"
-         type="hidden"
-         class="form-control"
-         [formControlName]="control.controlName">
-
   <ng-container *ngSwitchCase="'button'">
     <label><span class="form-label">&nbsp;</span></label>
     <button
@@ -306,21 +317,6 @@
     </button>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'richtexteditor'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
-    <app-rich-text-editor
-      [disabled]="control.disabled"
-      [formControlName]="control.controlName"
-      [toolbar]="control.toolbar"
-      (init)="control.onInit ? control.onInit($event) : null"
-    ></app-rich-text-editor>
-  </ng-container>
-
   <ng-container *ngSwitchCase="'texteditor'">
     <label>
       <span class="form-label">
@@ -350,24 +346,11 @@
     </app-segmented-input>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'multitext'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-multitext-input
-        [formControlName]="control.controlName"
-        [options]="control.options"
-        [controlDisabled]="control.disabled">
-      </app-multitext-input>
-    </label>
-  </ng-container>
-
   <ng-container *ngSwitchCase="'multilanguage'">
     <label>
       <span class="form-label">
         {{ control.label | translate }}
+        <i class="fa fa-language"></i>
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <app-multilanguage-input
@@ -385,6 +368,19 @@
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
       <app-colorpicker-input [formControlName]="control.controlName"></app-colorpicker-input>
+    </label>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'debt-amount'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+      <app-debt-amount
+        [formControlName]="control.controlName"
+        [total]="control.total"
+      ></app-debt-amount>
     </label>
   </ng-container>
 

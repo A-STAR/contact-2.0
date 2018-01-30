@@ -26,6 +26,9 @@
       [debtId]="debtId"
       [personId]="contactPersonId"
       [personRole]="4"
+      (add)="onPhoneAdd()"
+      (dblClick)="onPhoneEdit($event)"
+      (edit)="onPhoneEdit($event)"
     ></app-phone-grid>
   </app-tabview-tab>
 
@@ -38,6 +41,9 @@
       [debtorId]="debtorId"
       [personId]="contactPersonId"
       [personRole]="4"
+      (add)="onAddressAdd()"
+      (dblClick)="onAddressEdit($event)"
+      (edit)="onAddressEdit($event)"
     ></app-address-grid>
   </app-tabview-tab>
 

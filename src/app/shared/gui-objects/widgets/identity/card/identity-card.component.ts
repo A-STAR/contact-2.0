@@ -1,20 +1,21 @@
-import { Component, ViewChild, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ViewChild, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IIdentityDoc } from '../identity.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IIdentityDoc } from '@app/shared/gui-objects/widgets/identity/identity.interface';
 
-import { IdentityService } from '../identity.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { IdentityService } from '@app/shared/gui-objects/widgets/identity/identity.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DialogFunctions } from '@app/core/dialog';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 
 const label = makeKey('debtor.identityDocs.grid');
 
@@ -33,11 +34,12 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   identity: IIdentityDoc;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private identityService: IdentityService,
-    private router: Router,
     private route: ActivatedRoute,
+    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService
   ) {
     super();
   }
@@ -64,6 +66,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
         ] as IDynamicFormControl[])
         .map(control => canEdit ? control : { ...control, disabled: true });
       this.identity = identity;
+      this.cdRef.markForCheck();
     });
   }
 
@@ -92,7 +95,15 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    const contactSegments = this.route.snapshot.paramMap.get('contactId')
+      ? [ 'contact', this.route.snapshot.paramMap.get('contactId') ]
+      : [];
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId'),
+      ...contactSegments
+    ]);
   }
 
   private onSubmit(data: any): void {

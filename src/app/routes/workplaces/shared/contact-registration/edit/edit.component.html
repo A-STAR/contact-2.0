@@ -1,0 +1,83 @@
+<!-- TODO(d.maltsev): minAmountPercent -->
+
+<app-dialog-action
+  *ngIf="isDialog('confirm')"
+  actionMode="warning"
+  actionTranslationKey="debtor.promisesTab.confirmInsufficient.message"
+  actionMessage="default.buttons.save"
+  [messageParams]="{ percent: minAmountPercent }"
+  titleTranslationKey="debtor.promisesTab.confirmInsufficient.title"
+  (action)="onConfirm()"
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
+
+<app-info-dialog
+  *ngIf="isDialog('info')"
+  titleTranslationKey="debtor.promisesTab.infoIncreaseAmount.title"
+  (onClose)="onCloseDialog()"
+>
+  <section class="pv-xl">{{ 'debtor.promisesTab.infoIncreaseAmount.message' | translate: { percent: minAmountPercent} }}</section>
+</app-info-dialog>
+
+<div class="flex vertical">
+  <!-- Form -->
+  <div class="flex-item grow" style="overflow-y: auto;">
+    <div [formGroup]="form">
+
+      <!-- Promise -->
+      <app-contact-registration-promise [formGroup]="form"></app-contact-registration-promise>
+
+      <!-- Payment -->
+      <app-contact-registration-payment [formGroup]="form"></app-contact-registration-payment>
+
+      <!-- Next Call -->
+      <app-contact-registration-next-call [formGroup]="form"></app-contact-registration-next-call>
+
+      <!-- Comment -->
+      <app-contact-registration-comment [formGroup]="form"></app-contact-registration-comment>
+
+      <!-- Autocomment -->
+      <app-contact-registration-auto-comment [formGroup]="form"></app-contact-registration-auto-comment>
+
+      <!-- Phone -->
+      <app-contact-registration-phone [formGroup]="form"></app-contact-registration-phone>
+
+      <!-- Contact Person -->
+      <div *ngIf="displayContactPersonForm$ | async">
+        <!-- TODO(d.maltsev): i18n -->
+        <h3>Изменение контактного лица</h3>
+        <app-contact-registration-contact-select [excludeCurrentPersonId]="true"></app-contact-registration-contact-select>
+        <hr>
+      </div>
+
+      <!-- Debt Reason -->
+      <app-contact-registration-debt-reason [formGroup]="form"></app-contact-registration-debt-reason>
+
+      <!-- Refusal -->
+      <app-contact-registration-refusal [formGroup]="form"></app-contact-registration-refusal>
+
+      <!-- Attachments -->
+      <div *ngIf="displayAttachmentForm$ | async">
+        <!-- TODO(d.maltsev): i18n -->
+        <h3>Прикрепленные файлы</h3>
+        <app-contact-registration-attachment></app-contact-registration-attachment>
+        <hr>
+      </div>
+
+      <!-- Call Reason -->
+      <app-contact-registration-call-reason [formGroup]="form"></app-contact-registration-call-reason>
+
+      <!-- Status Change -->
+      <app-contact-registration-status-change [formGroup]="form"></app-contact-registration-status-change>
+
+      <!-- Attributes -->
+      <app-contact-registration-attributes></app-contact-registration-attributes>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex-item">
+    <app-button type="back" (click)="onBack()"></app-button>
+    <app-button type="ok" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
+  </div>
+</div>

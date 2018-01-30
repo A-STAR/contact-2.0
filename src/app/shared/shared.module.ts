@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TextMaskModule } from 'angular2-text-mask';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { AngularSplitModule } from 'angular-split';
 
 // Angle modules
 import { TranslateModule } from '@ngx-translate/core';
@@ -27,6 +28,7 @@ import { BlockDialogModule } from './components/dialog/block/block-dialog.module
 import { ButtonModule } from './components/button/button.module';
 import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
 import { DatePickerModule } from './components/form/datepicker/datepicker.module';
+import { DebtAmountModule } from './components/form/debt-amount/debt-amount.module';
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogMultiSelectModule } from './components/form/dialog-multi-select/dialog-multi-select.module';
 import { DialogActionModule } from './components/dialog-action/dialog-action.module';
@@ -49,18 +51,17 @@ import { ListModule } from './components/list/list.module';
 import { MetadataGridModule } from './components/metadata-grid/metadata-grid.module';
 import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
-import { MultiTextModule } from './components/form/multi-text/multi-text.module';
 import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
 import { RadioGroupModule } from './components/form/radio-group/radio-group.module';
-import { RichTextEditorModule } from './components/form/rich-text-editor/rich-text-editor.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
 import { TabstripModule } from './components/tabstrip/tabstrip.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TextEditorModule } from './components/form/text-editor/text-editor.module';
 import { TimeModule } from './components/form/time/time.module';
+import { TimePickerModule } from './components/form/timepicker/timepicker.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
@@ -75,14 +76,16 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
 // https://angular.io/styleguide#!#04-10
 @NgModule({
   imports: [
+    // Angular Modules
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    // Angle modules
+    // Third Party Modules
+    AngularSplitModule,
     TranslateModule,
     TextMaskModule,
     PerfectScrollbarModule,
-    // app modules
+    // App Modules
     AccordionModule,
     ActionDialogModule,
     ActionGridModule,
@@ -90,6 +93,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ButtonModule,
     ColorPickerModule,
     DatePickerModule,
+    DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
     DownloaderModule,
@@ -111,13 +115,11 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MetadataGridModule,
     MultiLanguageModule,
     MultiSelectModule,
-    MultiTextModule,
     PasswordModule,
     PopupInputModule,
     ProgressbarModule,
     QBuilder2Module,
     RadioGroupModule,
-    RichTextEditorModule,
     SpinnerModule,
     TabstripModule,
     TabViewModule,
@@ -127,6 +129,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     Toolbar2Module,
     TreeModule,
     TimeModule,
+    TimePickerModule,
     ValueInputModule,
     ViewFormModule,
   ],
@@ -142,16 +145,19 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     VectormapDirective,
     NowDirective,
     ScrollableDirective,
-    // app declarations
+    // App Components
     NumericInputComponent,
     QBuilderComponent
   ],
   exports: [
+    // Angular Modules
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateModule,
     RouterModule,
+    // Third Party Modules
+    AngularSplitModule,
+    TranslateModule,
     // Angle exports
     TextMaskModule,
     CheckallDirective,
@@ -171,6 +177,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ButtonModule,
     ColorPickerModule,
     DatePickerModule,
+    DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
     DownloaderModule,
@@ -193,7 +200,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MetadataGridModule,
     MultiLanguageModule,
     MultiSelectModule,
-    MultiTextModule,
     NumericInputComponent,
     PasswordModule,
     PopupInputModule,
@@ -201,7 +207,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     QBuilderComponent,
     QBuilder2Module,
     RadioGroupModule,
-    RichTextEditorModule,
     SpinnerModule,
     TabstripModule,
     TabViewModule,
@@ -210,6 +215,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     Toolbar2Module,
     TreeModule,
     TimeModule,
+    TimePickerModule,
     ValueInputModule,
     ViewFormModule,
   ]

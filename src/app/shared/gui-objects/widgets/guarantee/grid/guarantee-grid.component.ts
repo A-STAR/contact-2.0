@@ -1,22 +1,23 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGuaranteeContract } from '../guarantee.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IGuaranteeContract } from '@app/shared/gui-objects/widgets/guarantee/guarantee.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { GuaranteeService } from '../guarantee.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { GuaranteeService } from '@app/shared/gui-objects/widgets/guarantee/guarantee.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-guarantee-grid',
@@ -35,7 +36,7 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedContract$.value),
+      action: () => this.onEdit(),
       enabled: combineLatestAnd([
         this.canEdit$,
         this.selectedContract$.map(selectedContract => !!selectedContract)
@@ -43,7 +44,7 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD_USER,
-      action: () => this.onAddGuarantor(this.selectedContract$.value),
+      action: () => this.onAddGuarantor(),
       label: 'widgets.guaranteeContract.toolbar.add',
       enabled: combineLatestAnd([
         this.canEdit$,
@@ -93,7 +94,7 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
-    private router: Router,
+    private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -144,8 +145,8 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
     return this.userPermissionsService.has('GUARANTEE_DELETE');
   }
 
-  onDoubleClick(contract: IGuaranteeContract): void {
-    this.onEdit(contract);
+  onDoubleClick(): void {
+    this.onEdit();
   }
 
   onSelect(contract: IGuaranteeContract): void {
@@ -166,17 +167,17 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/guarantee/create` ]);
+    this.routingService.navigate([ 'guarantee', 'create' ], this.route);
   }
 
-  private onAddGuarantor(contract: IGuaranteeContract): void {
+  private onAddGuarantor(): void {
     const { contractId } = this.selectedContract$.value;
-    this.router.navigate([ `${this.router.url}/guarantee/${contractId}/guarantor/add` ]);
+    this.routingService.navigate([ `guarantee/${contractId}/guarantor/add` ], this.route);
   }
 
-  private onEdit(contract: IGuaranteeContract): void {
+  private onEdit(): void {
     const { contractId, personId } = this.selectedContract$.value;
-    this.router.navigate([ `${this.router.url}/guarantee/${contractId}/guarantor/${personId}` ]);
+    this.routingService.navigate([ `guarantee/${contractId}/guarantor/${personId}` ], this.route);
   }
 
   private fetch(): void {

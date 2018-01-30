@@ -67,10 +67,10 @@ export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy
   dialog: 'create' | 'edit' | 'remove';
 
   rows = [];
+  term: ITerm;
 
   private dictionariesServiceSubscription: Subscription;
   private viewPermissionsSubscription: Subscription;
-  private term: ITerm;
 
   constructor(
     private cdRef: ChangeDetectorRef,

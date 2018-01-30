@@ -1,9 +1,9 @@
-<app-dialog (close)="onClose()">
+<app-dialog *ngIf="operator" (close)="onClose()">
   <div dialog-header>
     <h3>{{ 'widgets.operatorDetails.dialog.title' | translate }}</h3>
   </div>
 
-  <app-operator-card [userId]="userId"></app-operator-card>
+  <app-operator-card [operator]="operator"></app-operator-card>
 
   <div dialog-footer>
     <app-button type="close" (click)="onClose()"></app-button>

@@ -1,19 +1,20 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
-import { IProperty } from '../property.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IProperty } from '@app/shared/gui-objects/widgets/property/property.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { PropertyService } from '../property.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { PropertyService } from '@app/shared/gui-objects/widgets/property/property.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
+import { DialogFunctions } from '@app/core/dialog';
 import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
@@ -70,7 +71,8 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
     private propertyService: PropertyService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private router: Router,
+    private route: ActivatedRoute,
+    private routingService: RoutingService
   ) {
     super();
   }
@@ -107,6 +109,7 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
 
   ngOnDestroy(): void {
     this.viewPermissionSubscription.unsubscribe();
+    this.busSubscription.unsubscribe();
   }
 
   get propertyList(): Array<IProperty> {
@@ -128,7 +131,7 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
   }
 
   onEdit(property: IProperty): void {
-    this.router.navigate([ `${this.router.url}/property/${property.id}` ]);
+    this.routingService.navigate([ `property/${property.id}` ], this.route);
   }
 
   onRemove(): void {
@@ -142,7 +145,7 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/property/create` ]);
+    this.routingService.navigate([ 'property/create' ], this.route);
   }
 
   private fetch(): void {

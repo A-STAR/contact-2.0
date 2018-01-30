@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import { IGuiObject } from './gui-objects.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
@@ -17,19 +18,21 @@ export class GuiObjectsEffects {
   fetchGuiObjects$ = this.actions
     .ofType(GuiObjectsService.GUI_OBJECTS_FETCH)
     .switchMap((action: UnsafeAction) => {
-      return this.readGuiObjects()
-        .map(guiObjects => ({ type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: guiObjects }))
-        .catch(error => {
-          if (error.status === 401) {
-            this.authService.redirectToLogin();
-          } else {
-            this.router.navigate(['/connection-error']);
-          }
-          return [
-            this.notificationService.fetchError()
-              .entity('entities.guiObjects.gen.plural').response(error).action()
-          ];
-        });
+      return this.authService.isRetrievedTokenValid()
+        ? this.readGuiObjects()
+          .map(guiObjects => ({ type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: guiObjects }))
+          .catch(error => {
+            if (error.status === 401) {
+              this.authService.redirectToLogin();
+            } else {
+              this.router.navigate(['/connection-error']);
+            }
+            return [
+              this.notificationService.fetchError()
+                .entity('entities.guiObjects.gen.plural').response(error).action()
+            ];
+          })
+        : of({ type: 'FETCHING_OBJECTS_WHEN_NOT_AUTHORIZED' });
     });
 
   constructor(

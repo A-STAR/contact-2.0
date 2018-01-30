@@ -18,6 +18,7 @@ import { PromiseModule } from './promise/promise.module';
 import { PromisesModule } from './promises/promises.module';
 import { SharedModule } from '../../../../shared/shared.module';
 import { ToolbarModule } from './toolbar/toolbar.module';
+import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { AddressComponent } from './address/address.component';
 import { CampaignComponent } from './campaign.component';
@@ -35,12 +36,10 @@ const routes: Routes = [
     },
   },
   { path: 'phone', children: [
-    { path: '', redirectTo: 'create', pathMatch: 'full' },
     { path: ':personId/create', component: PhoneComponent },
     { path: ':personId/:phoneId', component: PhoneComponent },
   ]},
   { path: 'address', children: [
-    { path: '', redirectTo: 'create', pathMatch: 'full' },
     { path: ':personId/create', component: AddressComponent },
     { path: ':personId/:addressId', component: AddressComponent },
   ]},
@@ -48,11 +47,9 @@ const routes: Routes = [
     { path: ':debtId/:contactId/contactLogType/:contactType', component: ContactComponent },
   ]},
   { path: 'promise', children: [
-    { path: '', redirectTo: '', pathMatch: 'full' },
     { path: ':debtId/:promiseId', component: PromiseComponent },
   ]},
   { path: 'payment', children: [
-    { path: '', redirectTo: '', pathMatch: 'full' },
     { path: ':debtId/:paymentId', component: PaymentComponent },
   ]},
 ];
@@ -77,6 +74,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     ToolbarModule,
+    WorkplacesSharedModule,
   ],
   exports: [
     RouterModule,

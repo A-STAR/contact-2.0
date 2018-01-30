@@ -1,0 +1,9 @@
+<app-schedule-event-dialog
+  *ngIf="isDialog('schedule')"
+  [eventId]="eventId"
+  (close)="closeDialog('schedule')"
+></app-schedule-event-dialog>
+
+<app-schedule-event-grid
+  (edit)="onEdit($event)"
+></app-schedule-event-grid>

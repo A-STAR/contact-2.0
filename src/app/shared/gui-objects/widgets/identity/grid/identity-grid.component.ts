@@ -1,24 +1,25 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnDestroy, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '../../../../components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
-import { IIdentityDoc } from '../identity.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IIdentityDoc } from '@app/shared/gui-objects/widgets/identity/identity.interface';
 
-import { GridService } from '../../../../components/grid/grid.service';
-import { IdentityService } from '../identity.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { IdentityService } from '@app/shared/gui-objects/widgets/identity/identity.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { GridComponent } from '../../../../components/grid/grid.component';
+import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
-import { DialogFunctions } from '../../../../../core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -81,8 +82,8 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
     private identityService: IdentityService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
-    private router: Router,
-    private userPermissionsService: UserPermissionsService,
+    private routingService: RoutingService,
+    private userPermissionsService: UserPermissionsService
   ) {
     super();
     this.onSubmitSuccess = this.onSubmitSuccess.bind(this);
@@ -160,11 +161,11 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   }
 
   private onAdd(): void {
-    this.router.navigate([ `${this.router.url}/identity/create` ]);
+    this.routingService.navigate([ 'identity/create' ], this.route);
   }
 
   private onEdit(identityId: number): void {
-    this.router.navigate([ `${this.router.url}/identity/${identityId}` ]);
+    this.routingService.navigate([ `identity/${identityId}` ], this.route);
   }
 
   private clear(): void {

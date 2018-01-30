@@ -1,13 +1,25 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { IncomingCallService } from './incoming-call.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
+  providers: [
+    ContactRegistrationService,
+    IncomingCallService,
+  ],
   selector: 'app-incoming-call',
   templateUrl: 'incoming-call.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    IncomingCallService,
-  ]
 })
-export class IncomingCallComponent {}
+export class IncomingCallComponent {
+  constructor(
+    private contactRegistrationService: ContactRegistrationService,
+  ) {}
+
+  get displayContactRegistration$(): Observable<boolean> {
+    return this.contactRegistrationService.isActive$;
+  }
+}

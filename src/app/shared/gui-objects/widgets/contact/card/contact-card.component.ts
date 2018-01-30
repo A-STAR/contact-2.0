@@ -1,27 +1,27 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IContact, IContactLink } from '../contact.interface';
-import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
+import { IContact, IContactLink } from '@app/shared/gui-objects/widgets/contact/contact.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 import { IPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
 
-import { ContactService } from '../contact.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ContactService } from '@app/shared/gui-objects/widgets/contact/contact.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from 'app/shared/components/form/dynamic-form/dynamic-form.component';
-import { PersonSelectGridComponent } from 'app/shared/gui-objects/widgets/person-select/grid/person-select-grid.component';
-import { PersonSelectCardComponent } from 'app/shared/gui-objects/widgets/person-select/card/person-select-card.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { PersonSelectGridComponent } from '@app/shared/gui-objects/widgets/person-select/grid/person-select-grid.component';
+import { PersonSelectCardComponent } from '@app/shared/gui-objects/widgets/person-select/card/person-select-card.component';
 
-import { makeKey } from '../../../../../core/utils';
-import { RoutingService } from 'app/core/routing/routing.service';
-
+import { makeKey } from '@app/core/utils';
 const label = makeKey('widgets.contact.grid');
 
 @Component({
@@ -50,17 +50,11 @@ export class ContactCardComponent implements OnInit {
 
   private _selectedContact$ = new BehaviorSubject<IPerson>(null);
 
-  private routeUrl: string;
-
-  private canEdit: boolean;
-
   constructor(
     private contactService: ContactService,
     private route: ActivatedRoute,
-    private router: Router,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
-    private location: Location,
   ) { }
 
   ngOnInit(): void {
@@ -73,7 +67,6 @@ export class ContactCardComponent implements OnInit {
     .pipe(first())
     .subscribe(([ canEdit, contact ]) => {
       this.contact = contact;
-      this.canEdit = canEdit;
       this.controls = [
         {
           label: label('linkTypeCode'),
@@ -88,8 +81,6 @@ export class ContactCardComponent implements OnInit {
     this.selectedContact$
       .filter(Boolean)
       .subscribe(contact => this.selectContact(contact.id));
-
-    this.routeUrl = this.router.url;
   }
 
   get canSubmit(): boolean {
@@ -119,6 +110,22 @@ export class ContactCardComponent implements OnInit {
     return this.contactId || this.personId || this.selectedContactId;
   }
 
+  onAddressAdd(): void {
+    this.routingService.navigate([ 'address/create' ], this.route);
+  }
+
+  onAddressEdit(address: IAddress): void {
+    this.routingService.navigate([ `address/${address.id}` ], this.route);
+  }
+
+  onPhoneAdd(): void {
+    this.routingService.navigate([ 'phone/create' ], this.route);
+  }
+
+  onPhoneEdit(phone: IPhone): void {
+    this.routingService.navigate([ `phone/${phone.id}` ], this.route);
+  }
+
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
   }
@@ -128,7 +135,11 @@ export class ContactCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId')
+    ]);
   }
 
   onSubmit(): void {

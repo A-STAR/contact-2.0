@@ -5,17 +5,18 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ColorPickerModule } from '../colorpicker/colorpicker.module';
 import { DatePickerModule } from '../datepicker/datepicker.module';
+import { TimePickerModule } from '../timepicker/timepicker.module';
+import { DebtAmountModule } from '../debt-amount/debt-amount.module';
 import { DialogMultiSelectModule } from '../dialog-multi-select/dialog-multi-select.module';
 import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { FileUploadModule } from '../file-upload/file-upload.module';
+import { FormToolbarModule } from '../titlebar/titlebar.module';
 import { HtmlTextareaModule } from '../html-textarea/html-textarea.module';
 import { ImageUploadModule } from '../image-upload/image-upload.module';
 import { MultiLanguageModule } from '../multi-language/multi-language.module';
-import { MultiTextModule } from '../multi-text/multi-text.module';
 import { PasswordModule } from '../password/password.module';
 import { PopupInputModule } from '../popup-input/popup-input.module';
 import { RadioGroupModule } from '../radio-group/radio-group.module';
-import { RichTextEditorModule } from '../rich-text-editor/rich-text-editor.module';
 import { SegmentedInputModule } from '../segmented-input/segmented-input.module';
 import { SelectModule } from '../select/select.module';
 import { TextEditorModule } from '../text-editor/text-editor.module';
@@ -29,18 +30,19 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     ColorPickerModule,
     CommonModule,
     DatePickerModule,
+    DebtAmountModule,
     DialogMultiSelectModule,
     DropdownInputModule,
     FileUploadModule,
+    FormToolbarModule,
     HtmlTextareaModule,
     ImageUploadModule,
     MultiLanguageModule,
-    MultiTextModule,
     PasswordModule,
     PopupInputModule,
     RadioGroupModule,
     ReactiveFormsModule,
-    RichTextEditorModule,
+    TimePickerModule,
     TranslateModule,
     SegmentedInputModule,
     SelectModule,

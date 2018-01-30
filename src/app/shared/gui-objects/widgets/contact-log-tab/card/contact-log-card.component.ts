@@ -1,21 +1,22 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IContactLog } from '../contact-log.interface';
-import { IDynamicFormControl, IDynamicFormItem } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IContactLog } from '@app/shared/gui-objects/widgets/contact-log-tab/contact-log.interface';
+import { IDynamicFormControl, IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { ContactLogService } from '../contact-log.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ContactLogService } from '@app/shared/gui-objects/widgets/contact-log-tab/contact-log.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
+import { ActivatedRoute } from '@angular/router';
 
 const label = makeKey('widgets.contactLog.card');
 
@@ -25,24 +26,24 @@ const label = makeKey('widgets.contactLog.card');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactLogTabCardComponent implements OnInit {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   @Input() callCenter = false;
   @Input() contactId: number;
   @Input() debtId: number;
   @Input() disabled = false;
   @Input() contactLogType: number;
 
-  @ViewChild('form') form: DynamicFormComponent;
-
-  controls: Array<IDynamicFormItem> = null;
+  controls: Array<IDynamicFormItem>;
   contactLog: IContactLog;
 
   constructor(
     private contactLogService: ContactLogService,
     private cdRef: ChangeDetectorRef,
-    private userDictionariesService: UserDictionariesService,
-    private userPermissionsService: UserPermissionsService,
-    private router: Router,
     private route: ActivatedRoute,
+    private routingService: RoutingService,
+    private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
@@ -59,15 +60,14 @@ export class ContactLogTabCardComponent implements OnInit {
     .pipe(first())
     .subscribe(([ canEditComment, contactLogType, contactLog, contactTypeOpts, roleOpts, statusOpts ]) => {
       this.contactLog = contactLog;
-      this.controls = this
-        .initControls(
-          contactTypeOpts,
-          contactLogType,
-          roleOpts,
-          statusOpts,
-          canEditComment,
-          contactLog,
-        );
+      this.controls = this.initControls(
+        contactTypeOpts,
+        contactLogType,
+        roleOpts,
+        statusOpts,
+        canEditComment,
+        contactLog,
+      );
       this.cdRef.markForCheck();
     });
   }
@@ -84,13 +84,24 @@ export class ContactLogTabCardComponent implements OnInit {
   onSubmit(): void {
     this.contactLogService.update(this.debtId, this.contactId, this.form.value.comment)
       .subscribe(() => {
-        this.contactLogService.dispatchAction(ContactLogService.COMMENT_CONTACT_LOG_SAVED, this.contactId );
+        this.contactLogService.dispatchAction(ContactLogService.COMMENT_CONTACT_LOG_SAVED, this.contactId);
         this.onBack();
       });
   }
 
   onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    const url = this.callCenter
+      ? [
+        '/workplaces',
+        'call-center',
+        this.route.snapshot.paramMap.get('campaignId')
+      ]
+      : [
+        '/workplaces',
+        'debtor-card',
+        this.route.snapshot.paramMap.get('debtId')
+      ];
+    this.routingService.navigate(url);
   }
 
   private createDefaultControls(
@@ -127,7 +138,7 @@ export class ContactLogTabCardComponent implements OnInit {
       type: 'textarea', width: 12, disabled: !canEditComment || this.disabled
     };
 
-    return [...baseControls, promiseAmount, comment].filter(Boolean) as IDynamicFormItem[];
+    return [...baseControls, contactNumber, promiseAmount, comment].filter(Boolean) as IDynamicFormItem[];
   }
 
   private createSMSControls(roleOpts: IOption[], statusOpts: IOption[]): IDynamicFormItem[] {
@@ -145,6 +156,7 @@ export class ContactLogTabCardComponent implements OnInit {
   }
 
   private createEmailControls(roleOpts: IOption[], statusOpts: IOption[]): IDynamicFormItem[] {
+    const richTextMode = this.contactLog.formatCode === 1;
     return [
       { label: label('contract'), controlName: 'contract', type: 'number',  width: 6, disabled: true },
       { label: label('userFullName'), controlName: 'userFullName', type: 'text', width: 6,  disabled: true },
@@ -155,8 +167,7 @@ export class ContactLogTabCardComponent implements OnInit {
       { label: label('personRole'), controlName: 'personRole', options: roleOpts, width: 6, disabled: true, type: 'select'},
       { label: label('status'), controlName: 'statusCode', options: statusOpts, width: 6, disabled: true, type: 'select'},
       { label: label('subject'), controlName: 'subject', disabled: true, type: 'text'},
-      { label: label('text'), controlName: 'text', type: 'richtexteditor',
-        width: 12, disabled: true, toolbar: this.contactLog.formatCode === 1 },
+      { label: label('text'), controlName: 'text', type: 'texteditor', width: 12, disabled: true, richTextMode },
     ];
   }
 

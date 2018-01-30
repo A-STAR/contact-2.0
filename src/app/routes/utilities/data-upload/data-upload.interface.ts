@@ -37,3 +37,28 @@ export interface IErrorsResponse {
   fileName: string;
   fileBody: File;
 }
+
+export enum DataUploaders {
+  NONE,
+  // 1 and 2
+  PAYMENT_NEW,
+  PAYMENT_UPDATE,
+  SET_OPERATOR,
+  DEBTS,
+  CONTACT_HISTORY,
+  // not fetched from the server
+  CURRENCY_RATE,
+}
+
+export interface IDataUploaderConfig {
+  openFile: string;
+  fetch: string;
+  editCell: string;
+  deleteRow: string;
+  cancel: string;
+  save: string;
+  getErrors: string;
+  // optional key for additional parameter
+  paramKey?: string;
+}
+

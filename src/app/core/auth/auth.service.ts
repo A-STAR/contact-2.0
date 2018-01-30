@@ -35,9 +35,9 @@ export class AuthService implements CanActivate {
 
   constructor(
     private jwtHelper: JwtHelperService,
+    private persistenceService: PersistenceService,
     private router: Router,
     private store: Store<IAppState>,
-    private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private zone: NgZone,
   ) {
@@ -115,6 +115,15 @@ export class AuthService implements CanActivate {
     }
   }
 
+  isRetrievedTokenValid(): boolean {
+    const token = this.persistenceService.get(AuthService.TOKEN_NAME);
+    const isValid = this.isTokenValid(token);
+    if (isValid) {
+      this.store.dispatch({ type: AuthService.AUTH_RETRIEVE_TOKEN, payload: { token } });
+    }
+    return isValid;
+  }
+
   private onTimer(token: string): void {
     const timeUntilExpiration = this.jwtHelper.getTokenExpirationDate(token).getTime() - Date.now();
     if (timeUntilExpiration < AuthService.JWT_EXPIRATION_THRESHOLD) {
@@ -134,15 +143,6 @@ export class AuthService implements CanActivate {
 
   private isTokenValid(token: string): boolean {
     return !!token && !this.jwtHelper.isTokenExpired(token);
-  }
-
-  private isRetrievedTokenValid(): boolean {
-    const token = this.persistenceService.get(AuthService.TOKEN_NAME);
-    const isValid = this.isTokenValid(token);
-    if (isValid) {
-      this.store.dispatch({ type: AuthService.AUTH_RETRIEVE_TOKEN, payload: { token } });
-    }
-    return isValid;
   }
 
   private get token$(): Observable<string> {

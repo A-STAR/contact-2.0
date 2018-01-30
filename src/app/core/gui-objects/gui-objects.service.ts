@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
+import { filter } from 'rxjs/operators/filter';
+import { tap } from 'rxjs/operators/tap';
 
 import { IAppState } from '../state/state.interface';
 import { IGuiObjectsState, IMenuItem, IGuiObject } from './gui-objects.interface';
@@ -43,13 +46,8 @@ export class GuiObjectsService {
       .distinctUntilChanged();
   }
 
-  createRefreshGuiObjectsAction(): Action {
-    return { type: GuiObjectsService.GUI_OBJECTS_FETCH };
-  }
-
   refreshGuiObjects(): void {
-    const action = this.createRefreshGuiObjectsAction();
-    this.store.dispatch(action);
+    this.store.dispatch({ type: GuiObjectsService.GUI_OBJECTS_FETCH });
     this.isFetching = true;
   }
 
@@ -86,11 +84,18 @@ export class GuiObjectsService {
     if (!this._guiObjects && !this.isFetching) {
       this.refreshGuiObjects();
     }
-    return this.state$.map(state => state.data).filter(Boolean).distinctUntilChanged();
+    return this.state$
+      .map(state => state.data)
+      .pipe(
+        filter(Boolean),
+        tap(data => {
+          this.isFetching = false;
+        }),
+        distinctUntilChanged(),
+      );
   }
 
   private get state$(): Observable<IGuiObjectsState> {
-    return this.store.select(state => state.guiObjects)
-      .filter(Boolean);
+    return this.store.select(state => state.guiObjects);
   }
 }

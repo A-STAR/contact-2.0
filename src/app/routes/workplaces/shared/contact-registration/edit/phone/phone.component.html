@@ -1,0 +1,77 @@
+<div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
+  <div formGroupName="phone">
+    <!-- TODO(d.maltsev): i18n -->
+    <h3>Ввод нового телефона</h3>
+
+    <!-- Phone Type -->
+    <div>
+      <label>
+        <span class="form-label">
+          <!-- TODO(d.maltsev): i18n -->
+          Тип <b class="text-danger">*</b>
+        </span>
+        <app-select-wrapper
+          formControlName="typeCode"
+          [dictCode]="phoneTypeDictCode"
+          [nullable]="false"
+        ></app-select-wrapper>
+      </label>
+    </div>
+
+    <!-- Phone Number -->
+    <div>
+      <label>
+        <span class="form-label">
+          <!-- TODO(d.maltsev): i18n -->
+          Номер <b class="text-danger">*</b>
+        </span>
+        <!-- TODO(d.maltsev): double check form control name -->
+        <input type="text" class="form-control" formControlName="phone"/>
+      </label>
+    </div>
+
+    <!-- Phone Auto SMS -->
+    <div>
+      <div class="checkbox mt0 mb0">
+        <label>
+          <input type="checkbox" formControlName="stopAutoSms"/>
+          <!-- TODO(d.maltsev): i18n -->
+          Не отправлять автоматические SMS
+        </label>
+      </div>
+    </div>
+
+    <!-- Phone Auto Info -->
+    <div>
+      <div class="checkbox mt0 mb0">
+        <label>
+          <input type="checkbox" formControlName="stopAutoInfo"/>
+          <!-- TODO(d.maltsev): i18n -->
+          Запретить голосовое информирование
+        </label>
+      </div>
+    </div>
+
+    <!-- Phone Comment -->
+    <div>
+      <label>
+        <span class="form-label">
+          <!-- TODO(d.maltsev): i18n -->
+          Комментарий
+        </span>
+        <textarea
+          class="form-control"
+          formControlName="comment"
+          rows="2"
+        ></textarea>
+      </label>
+    </div>
+
+    <!-- Contact Person -->
+    <div>
+      <app-contact-registration-contact-select [excludeCurrentPersonId]="false"></app-contact-registration-contact-select>
+    </div>
+
+    <hr>
+  </div>
+</div>

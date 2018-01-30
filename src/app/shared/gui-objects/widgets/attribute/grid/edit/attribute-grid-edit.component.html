@@ -2,15 +2,18 @@
   <div dialog-header>
     <h3>{{ 'widgets.attribute.dialogs.edit.title' | translate }}</h3>
   </div>
+
   <div>
-    <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="attribute"></app-dynamic-form>
+    <app-dynamic-form
+      *ngIf="controls"
+      [config]="config"
+      [controls]="controls"
+      [data]="attribute"
+    ></app-dynamic-form>
   </div>
+
   <div dialog-footer>
-    <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
-      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-    </button>
-    <button class="btn btn-default" (click)="onCancel()">
-      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
-    </button>
+    <app-button color="primary" icon="check" type="save" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+    <app-button icon="close" type="cancel" (click)="onCancel()"></app-button>
   </div>
 </app-dialog>

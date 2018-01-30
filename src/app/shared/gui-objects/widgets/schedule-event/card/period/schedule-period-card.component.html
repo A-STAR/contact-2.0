@@ -1,0 +1,42 @@
+<div class="pb-lg">
+  <app-dynamic-form
+    #periodType
+    *ngIf="periodTypeControls"
+    [config]="periodTypeConfig"
+    [controls]="periodTypeControls"
+    [data]="period"
+  ></app-dynamic-form>
+</div>
+
+<ng-container *ngFor="let controls of periodFromControls; let i = index">
+  <div class="pb-lg" *ngIf="selectedPeriodTypeCode === i + 1">
+    <app-dynamic-form
+      #period
+      *ngIf="controls"
+      [config]="periodConfig[i]"
+      [controls]="controls"
+      [data]="selectedPeriod"
+    ></app-dynamic-form>
+
+    <div *ngIf="!controls" class="date-control">
+      <div class="panel m0 p-sm bt bl br">
+        <div class="col-xs-4 p0">
+          <app-dynamic-form
+            #period
+            [controls]="periodToolbarControls"
+            [data]="selectedPeriod"
+          ></app-dynamic-form>
+        </div>
+        <div class="p0">
+          <app-button type="add" [label]="false" (click)="onDateAdd()"></app-button> 
+        </div>
+      </div>
+      <app-grid
+        selectionType="single"
+        [styles]="{height: '50px'}"
+        [columns]="periodGridControls"
+        [rows]="dates"
+      ></app-grid>
+    </div>
+  </div>
+</ng-container>

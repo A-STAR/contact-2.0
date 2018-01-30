@@ -104,6 +104,10 @@ export class ValueConverterService {
     return this.toLocal(date, this.formats.dateTime);
   }
 
+  toLocalTime(date: Date): string {
+    return moment(date).isValid() ? moment(date, this.dateFormat).format(this.formats.time) : null;
+  }
+
   toLocalDate(date: Date): string {
     return this.toLocal(date, this.formats.date);
   }
@@ -122,6 +126,10 @@ export class ValueConverterService {
 
   fromLocalDate(value: string): Date | false {
     return this.fromLocal(value, this.formats.date);
+  }
+
+  fromLocalTime(value: string): Date | false {
+    return this.fromLocal(value, this.formats.time);
   }
 
   dateStringToISO(date: string): string {

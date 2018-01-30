@@ -7,7 +7,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -15,17 +15,17 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IPromise, IPromiseLimit } from '../promise.interface';
-import { IDebt } from '../../../../../core/debt/debt.interface';
+import { IDynamicFormControl, IDynamicFormDateControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPromise, IPromiseLimit } from '@app/shared/gui-objects/widgets/promise/promise.interface';
+import { IDebt } from '@app/core/debt/debt.interface';
 
 import { PromiseService } from '../promise.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { minStrict } from '../../../../../core/validators';
+import { minStrict } from '@app/core/validators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,18 +33,16 @@ import { minStrict } from '../../../../../core/validators';
   templateUrl: './promise-card.component.html'
 })
 export class PromiseCardComponent implements AfterViewInit, OnDestroy {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   @Input() callCenter = false;
   @Input() readOnly = false;
   @Input() debtId: number;
   @Input() promiseId: number;
 
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
   private canAddInsufficientAmount: boolean;
   private debt: IDebt;
   private promiseLimit: IPromiseLimit;
-  private minAmountPercentFormula: number;
-  private minAmountPercentPermission: boolean;
   private canAddInsufficientAmountSub: Subscription;
   private receiveDateTimeSub: Subscription;
 
@@ -80,10 +78,9 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private promiseService: PromiseService,
-    private router: Router,
     private route: ActivatedRoute,
-    private userConstantsService: UserConstantsService,
-    private userPermissionsService: UserPermissionsService,
+    private routingService: RoutingService,
+    private userPermissionsService: UserPermissionsService
   ) {
 
     this.canAddInsufficientAmountSub = this.canAddInsufficientAmount$
@@ -98,15 +95,11 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       this.promiseId
         ? this.promiseService.fetch(this.debtId, this.promiseId, this.callCenter)
         : of(null),
-      this.userConstantsService.get('Promise.MinAmountPercent.Formula'),
-      this.userPermissionsService.has('PROMISE_MIN_AMOUNT_PERCENT'),
     )
     .pipe(first())
     .subscribe(([
-      canAdd, promiseLimit, debt, promise, minAmountPercentFormula, minAmountPercentPermission
+      canAdd, promiseLimit, debt, promise
     ]) => {
-      this.minAmountPercentFormula = Number(minAmountPercentFormula.valueN);
-      this.minAmountPercentPermission = minAmountPercentPermission;
       this.promiseLimit = promiseLimit;
       this.debt = <IDebt>debt;
       const { maxDays, minAmountPercent } = <IPromiseLimit>promiseLimit;
@@ -115,9 +108,9 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
       const today = new Date();
 
       if (!promise) {
-        const promiseDate = this.getControl('promiseDate');
+        const promiseDate = this.getControl('promiseDate') as IDynamicFormDateControl;
         promiseDate.maxDate = maxDays == null ? null : moment(today).add(maxDays, 'day').toDate();
-        const receiveDate = this.getControl('receiveDateTime');
+        const receiveDate = this.getControl('receiveDateTime') as IDynamicFormDateControl;
         receiveDate.maxDate = today;
       }
 
@@ -138,7 +131,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
         if (!value) { return; }
         const { maxDays } = this.promiseLimit;
         const today = new Date();
-        const promiseCtrl = this.getControl('promiseDate');
+        const promiseCtrl = this.getControl('promiseDate') as IDynamicFormDateControl;
 
         // minDate should not be set if the operator want to record a past promise
         promiseCtrl.minDate = moment(value).isBefore(today, 'day') || !maxDays
@@ -187,7 +180,19 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
   }
 
   onBack(): void {
-    this.router.navigate([new Array(4 + 1).join('../')], { relativeTo: this.route });
+    const url = this.callCenter
+      ? [
+        '/workplaces',
+        'call-center',
+        this.route.snapshot.paramMap.get('campaignId'),
+      ]
+      : [
+        '/workplaces',
+        'debtor-card',
+        this.route.snapshot.paramMap.get('debtId'),
+      ];
+
+    this.routingService.navigate(url);
   }
 
   onSubmit(): void {

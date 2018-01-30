@@ -5,7 +5,7 @@
   actionMessage="default.buttons.ok"
   actionMode="primary"
   (action)="onErrorLogSubmit()"
-  (cancel)="onCloseDialog()"
+  (cancel)="onErrorLogClose()"
 ></app-dialog-action>
 
 <app-dialog-action
@@ -17,6 +17,14 @@
   (action)="onCancelSubmit()"
   (cancel)="onCloseDialog()"
 ></app-dialog-action>
+
+<!-- Downloader -->
+
+<app-downloader
+  #downloader
+  entityTranslationKey="modules.dataUpload.errors.getErrors"
+  [url]="errorFileUrl"
+></app-downloader>
 
 <div class="flex vertical">
   <!-- Toolbar -->
@@ -32,13 +40,14 @@
         <app-button label="modules.dataUpload.buttons.cancel" [disabled]="!hasFile" (click)="onCancelClick()"></app-button>
       </div>
       <div class="col-md-3">
-        <app-select-wrapper
-          [dictCode]="62"
+        <app-select
+          *ngIf="isSelectVisible"
+          [options]="uploaders"
           [disabled]="hasFile"
           [ngModel]="format"
           [nullable]="false"
           (ngModelChange)="onFormatChange($event)"
-        ></app-select-wrapper>
+        ></app-select>
       </div>
     </div>
     <!-- Grid Toolbar -->
@@ -65,6 +74,7 @@
       (onPageSize)="onRequest()"
       (onSort)="onRequest()"
       (cellValueChange)="onCellValueChange($event)"
+      (rowDataChange)="onErrorValueUpdate($event)"
     ></app-grid2>
   </div>
 </div>

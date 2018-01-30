@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { WorkplacesCoreModule } from './core/core.module';
+
+import { WorkplacesService } from './workplaces.service';
+
 import { WorkplacesComponent } from './workplaces.component';
 
 const routes: Routes = [
@@ -24,10 +28,10 @@ const routes: Routes = [
         path: 'debtor-card/:debtId',
         loadChildren: './debtor-card/debtor.module#DebtorCardModule',
       },
-      {
-        path: 'contact-registration/:debtId/:contactTypeCode/:contactId',
-        loadChildren: './contact-registration/contact-registration.module#ContactRegistrationModule',
-      },
+      // {
+      //   path: 'contact-registration/:debtId/:contactTypeCode/:contactId',
+      //   loadChildren: './contact-registration/contact-registration.module#ContactRegistrationModule',
+      // },
       {
         path: 'incoming-call',
         loadChildren: './incoming-call/incoming-call.module#IncomingCallModule',
@@ -53,6 +57,10 @@ const routes: Routes = [
         loadChildren: './work-task/work-task.module#WorkTaskModule',
       },
       {
+        path: 'outgoing-information',
+        loadChildren: './info-debt/info-debt.module#InfoDebtModule',
+      },
+      {
         path: '**',
         redirectTo: ''
       },
@@ -63,6 +71,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
+    WorkplacesCoreModule,
   ],
   exports: [
     RouterModule,
@@ -70,5 +79,8 @@ const routes: Routes = [
   declarations: [
     WorkplacesComponent,
   ],
+  providers: [
+    WorkplacesService,
+  ]
 })
 export class WorkplacesModule {}

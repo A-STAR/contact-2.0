@@ -13,7 +13,10 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators/first';
 
-import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import {
+  IDynamicFormControl,
+  IDynamicFormRichTextControl
+} from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IMessageTemplate } from '../message-templates.interface';
 
 import { MessageTemplatesService } from '../message-templates.service';
@@ -145,14 +148,14 @@ export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
       {
         controlName: 'subject',
         display: isEmail,
-        required: true,
+        required: isEmail,
         type: 'text',
       },
       {
         controlName: 'formatCode',
         dictCode: UserDictionariesService.DICTIONARY_EMAIL_FORMAT,
         display: isEmail,
-        required: true,
+        required: isEmail,
         type: 'selectwrapper',
       },
       {
@@ -184,7 +187,9 @@ export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
         .onCtrlValueChange('formatCode')
         .subscribe(value => {
           const formatCode = Array.isArray(value) ? value[0].value : value;
-          this.controls.find(control => control.controlName === 'text').richTextMode = formatCode === 1;
+          const ctrl = this.controls
+            .find(control => control.controlName === 'text');
+          (<IDynamicFormRichTextControl>ctrl).richTextMode = formatCode === 1;
         });
     }
 

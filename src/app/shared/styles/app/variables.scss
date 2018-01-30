@@ -5,7 +5,7 @@ $layout-top-menu-height:           49px;
 $layout-top-menu-font-size:        15px;
 $layout-sidebar-width:            220px;
 $layout-sidebar-width-collapsed:   64px;
-$layout-content-padding:           10px;
+$layout-content-padding:            7px;
 $layout-logo-height:               39px;
 
 // Colors
@@ -17,7 +17,7 @@ $brand-primary-light: #58526e;
 $brand-white:         #d8d5e2;
 $brand-secondary:     #9bec00;
 
-
+$layout-content-background-color:#dcdae2;
 
 // Below are Angle variables:
 
@@ -66,7 +66,7 @@ $brand-purple-light:           lighten($brand-purple, $amountOfLight);
 $brand-dark-light:             lighten($brand-dark, $amountOfLight);
 $brand-yellow-light:           lighten($brand-yellow, $amountOfLight);
 
-$brand-primary-dark:           darken($brand-primary, $amountOfLight);
+// $brand-primary-dark:           darken($brand-primary, $amountOfLight);
 $brand-success-dark:           darken($brand-success, $amountOfLight);
 $brand-info-dark:              darken($brand-info, $amountOfLight);
 $brand-warning-dark:           darken($brand-warning, $amountOfLight);
@@ -106,7 +106,7 @@ $font-family-serif:       Georgia, "Times New Roman", Times, serif;
 $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 $font-family-base:        $font-family-sans-serif;
 
-$font-size-base:          14px;
+$font-size-base:          13px;
 $font-size-large:         ceil(($font-size-base * 1.25)); // ~18px
 $font-size-small:         ceil(($font-size-base * 0.85)); // ~12px
 
@@ -147,11 +147,11 @@ $icon-font-svg-id:        "glyphicons_halflingsregular";
 //
 //## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
 
-$padding-base-vertical:     6px;
-$padding-base-horizontal:   12px;
+$padding-base-vertical:     2px;
+$padding-base-horizontal:   6px;
 
 $padding-large-vertical:    10px;
-$padding-large-horizontal:  20px;
+$padding-large-horizontal:  15px;
 
 $padding-small-vertical:    5px;
 $padding-small-horizontal:  10px;
@@ -210,6 +210,7 @@ $btn-font-weight:                normal;
 $btn-default-color:              #333;
 $btn-default-bg:                 #fff;
 $btn-default-border:             #eaeaea;
+$btn-default-border-focus:       lighten($brand-primary-light, 20%);
 
 $btn-primary-color:              #fff;
 $btn-primary-bg:                 $brand-primary;
@@ -260,7 +261,7 @@ $input-border-radius-large:      $border-radius-large;
 $input-border-radius-small:      $border-radius-small;
 
 //** Border color for inputs on focus
-$input-border-focus:             #66afe9;
+$input-border-focus:             lighten($brand-primary-light, 20%);
 
 //** Placeholder text color
 $input-color-placeholder:        #b7bac9;
@@ -275,8 +276,12 @@ $input-height-small:             (floor($font-size-small * $line-height-small) +
 $legend-color:                   $gray-dark;
 $legend-border-color:            #e5e5e5;
 
-$form-accordion-title:           #ddf4fd;
-
+// Custom dynamic form tweaks
+$form-accordion-title:           lighten($brand-primary-light, 40%);
+$form-group-bottom-margin:       6px;
+$form-toolbar-title-color:       #594b62;
+$form-toolbar-border-color:      $form-toolbar-title-color;
+$form-toolbar-icon-color:        #44a1f8;
 //** Background color for textual input addons
 $input-group-addon-bg:           $gray-lighter;
 //** Border color for textual input addons
@@ -335,6 +340,7 @@ $zindex-modal-background:     1040;
 $zindex-modal:                1050;
 $zindex-app-grid-contextmenu: 2000;
 $zindex-app-dialog:          10000;
+$zindex-app-grid-dropdown:   10100;
 $zindex-app-datepicker:      10100;
 $zindex-popover:             10150;
 $zindex-app-validation:      10200;
@@ -910,8 +916,6 @@ $pre-scrollable-max-height:   340px;
 
 
 //== Type
-//
-//##
 
 //** Horizontal offset for forms and lists.
 $component-offset-horizontal: 180px;
@@ -936,24 +940,20 @@ $hr-border:                   $gray-lighter;
 
 
 //== App-dialog
-//
-//##
-$app-dialog-close-color:        #aaa;
+$app-dialog-header-color:       lighten($brand-white, 20%);
+$app-dialog-header-bg-color:    lighten($brand-primary-light, 20%);
+$app-dialog-close-color:        darken($gray, 10%);
 $app-dialog-close-hover-color:  #333;
 
 
 // == App Widgets
-//
-//##
 $app-widget-border-color:       #e5e5e5;
 $app-widget-border-color-light: #f5f5f5;
 $app-widget-border-color-dark:  #d5d5d5;
-$app-widget-label-bg:           #ace4f5;
+$app-widget-label-bg:           lighten($brand-primary-light, 20%);
 
 
 //== App Grid Tree
-//
-//##
 $app-gridtree-border-color:                   $app-widget-border-color;
 $app-gridtree-border-color-light:             $app-widget-border-color-light;
 $app-gridtree-border-color-dark:              $app-widget-border-color-dark;

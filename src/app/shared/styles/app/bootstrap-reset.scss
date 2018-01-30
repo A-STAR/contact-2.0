@@ -129,12 +129,11 @@ hr {
   &.btn-default {
     border-color: $btn-default-border;
     &:hover {
-      border: 1px solid grey;
-      background-color: lightgrey;
+      border: 1px solid $btn-default-border-focus;
     }
   }
   .input-group & {
-    font-size: 14px;
+    font-size: $font-size-base;
     border-color: $input-border;
   }
   .input-group .input-sm + .input-group-btn & {
@@ -145,7 +144,7 @@ hr {
 // FORMS
 
 .form-control {
-  box-shadow: 0 0 0 #000 !important;
+  box-shadow: 0 0 0 #000;
 }
 
 input.form-control,

@@ -26,8 +26,8 @@ import { DebtorPropertyModule } from './property/property.module';
 import { DebtsModule } from './debts/debts.module';
 import { InformationModule } from './information/information.module';
 import { RegisterContactModule } from './register-contact/register-contact.module';
+import { WorkplacesSharedModule } from '../shared/shared.module';
 
-import { DebtorCardResolver } from './debtor.resolver';
 import { DebtorService } from './debtor.service';
 
 import { DebtComponent } from './debt/debt.component';
@@ -52,9 +52,6 @@ const routes: Routes = [
   {
     path: '',
     component: DebtorComponent,
-    resolve: {
-      isLoaded: DebtorCardResolver,
-    },
     data: {
       reuse: true,
     },
@@ -291,6 +288,7 @@ const routes: Routes = [
     RegisterContactModule,
     RouterModule.forChild(routes),
     SharedModule,
+    WorkplacesSharedModule,
   ],
   declarations: [
     DebtorComponent,
@@ -299,7 +297,6 @@ const routes: Routes = [
     RouterModule,
   ],
   providers: [
-    DebtorCardResolver,
     DebtorService,
   ]
 })

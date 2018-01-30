@@ -3,14 +3,19 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { of } from 'rxjs/observable/of';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, tap, switchMap } from 'rxjs/operators';
 
 import { IAppState } from '../../state/state.interface';
 import { IOption } from '../../converter/value-converter.interface';
 import {
-  ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserTerm, IUserDictionaryAction
+  ITransformCallback, IUserDictionariesState, IUserDictionaries, IUserTerm, IUserDictionaryAction, IUserDictionaryOptions
 } from './user-dictionaries.interface';
 import { SafeAction } from '../../../core/state/state.interface';
+
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
+import { ValueBag } from '@app/core/value-bag/value-bag';
 
 @Injectable()
 export class UserDictionariesService {
@@ -74,10 +79,16 @@ export class UserDictionariesService {
   static DICTIONARY_VISIT_PURPOSE                 = 57;
   static DICTIONARY_CALL_CAMPAIGN_STATUS          = 58;
   static DICTIONARY_CALL_CAMPAIGN_TYPE            = 59;
+  static DICTIONARY_DEBT_STAGE_CODE               = 60;
   static DICTIONARY_DEBTOR_STAGE_CODE             = 61;
+  static DICTIONARY_DATA_LOAD_FORMAT              = 62;
   static DICTIONARY_EMAIL_FORMAT                  = 63;
   static DICTIONARY_EMAIL_SENDER                  = 64;
   static DICTIONARY_EMAIL_STATUS                  = 65;
+  static DICTIONARY_SCHEDULE_EVENT_TYPE           = 67;
+  static DICTIONARY_PERIOD_TYPE                   = 68;
+  static DICTIONARY_ACCEPT_OPERATOR_MODE_CODE     = 69;
+  static DICTIONARY_CLEAR_OPERATOR_MODE_CODE      = 70;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';
@@ -88,6 +99,7 @@ export class UserDictionariesService {
   constructor(
     // private dataService: DataService,
     private store: Store<IAppState>,
+    private userPermissionsService: UserPermissionsService
   ) {}
 
   createRefreshAction(dictionaryId: number): SafeAction<IUserDictionaryAction> {
@@ -109,8 +121,24 @@ export class UserDictionariesService {
     return this.loadDictionaries([ id ], term => ({ value: term.code, label: term.name })).map(dictionaries => dictionaries[id]);
   }
 
-  getDictionariesAsOptions(ids: Array<number>): Observable<{ [key: number]: IOption[] }> {
+  getDictionariesAsOptions(ids: Array<number>): Observable<IUserDictionaryOptions> {
     return this.loadDictionaries(ids, term => ({ value: term.code, label: term.name }));
+  }
+
+  getDictionaryAsOptionsWithPermission(id: number, permissionName: string): Observable<IOption[]> {
+    return combineLatest(
+      this.getDictionaryAsOptions(id),
+      this.userPermissionsService.bag()
+    )
+      .map(([options, valueBag]) => {
+        if (valueBag && !valueBag.containsALL(permissionName)) {
+          const allowedOptionsValues = (valueBag as ValueBag)
+            .getStringValueAsArray(permissionName);
+          // filter options with allowed options values
+          options = options.filter(optionValue => allowedOptionsValues.includes(optionValue.value as any));
+        }
+        return options;
+      });
   }
 
   /*

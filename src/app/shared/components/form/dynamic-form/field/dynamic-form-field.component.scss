@@ -6,3 +6,12 @@ label {
   display: block;
   margin-bottom: 2px;
 }
+
+textarea {
+  min-height: 4em;
+}
+
+::ng-deep .input-group-btn > .btn {
+  padding-left: 8px;
+  padding-right: 8px;
+}

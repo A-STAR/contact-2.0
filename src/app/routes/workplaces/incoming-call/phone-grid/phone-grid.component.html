@@ -4,11 +4,15 @@
 
 <div class="mb">
   <app-phone-grid
-    [contactType]="2"
+    [contactType]="contactType"
     [debtId]="debtId"
     [personId]="personId"
-    [personRole]="1"
+    [personRole]="personRole"
     [styles]="{ height: '420px' }"
+    (add)="onPhoneAdd()"
+    (dblClick)="onPhoneEdit($event)"
+    (edit)="onPhoneEdit($event)"
+    (register)="onPhoneRegister($event)"
     (select)="onSelect($event)"
   ></app-phone-grid>
 </div>

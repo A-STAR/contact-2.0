@@ -100,7 +100,7 @@
         "HELP": "Помощь",
         "INCOMING_CALL": "Входящий звонок",
         "CURRENCY_RATE_EDIT": "Валютный Курс"
-    },
+      },
       "hide": "Скрыть меню"
     },
     "messages": {
@@ -124,7 +124,8 @@
     "fieldLowerCase": "Это поле должно содержать хотя бы один символ в нижнем регистре",
     "fieldUpperCase": "Это поле должно содержать хотя бы один символ в верхнем регистре",
     "fieldMaxSize": "Размер файла не должен превышать {{ requiredSize }}",
-    "oneOfGroupRequired": "Хотя бы одно из полей должно быть заполнено"
+    "oneOfGroupRequired": "Хотя бы одно из полей должно быть заполнено",
+    "timepicker": "Неверный формат времени"
   },
   "network": {
     "connectionError": "Ошибка соединения",
@@ -267,6 +268,15 @@
           "message": "Скачать файл с описанием ошибок?",
           "title": "Не удалось сохранить в БД"
         }
+      },
+      "errors": {
+        "openFile": "Ошибка при открытии файла",
+        "fetch": "Ошибка при загрузке данных из файла",
+        "deleteRow": "Ошибка при попытке удалить строку",
+        "cancel": "Ошибка при отмене загрузки файла",
+        "save": "Ошибка при попытке сохранить данные в БД",
+        "editCell": "Ошибка при попытке отредактировать ячейку",
+        "getErrors": "Ошибка при попытке получить файл с описанием ошибок"
       }
     },
     "payments": {
@@ -311,6 +321,58 @@
       },
       "prepareVisits": {
         "title": "Подготовка выездов"
+      }
+    },
+    "infoDebt": {
+      "filters": {
+        "form": {
+          "branchCode": "Филиал",
+          "dictValue1": "Словарный атрибут 1",
+          "dictValue2": "Словарный атрибут 2",
+          "dictValue3": "Словарный атрибут 3",
+          "dictValue4": "Словарный атрибут 4",
+          "portfolioId": "Реестр КА",
+          "regionCode": "Регион",
+          "userId": "Оператор",
+          "addressTypeCode": "Тип адреса",
+          "visitStatusCode": "Статус выезда",
+          "visitPurposeCode": "Цель выезда"
+        }
+      },
+      "debtors": {
+        "title": "Должники"
+      },
+      "guarantors": {
+        "title": "Поручители"
+      },
+      "pledgors": {
+        "title": "Залогодатели"
+      },
+      "sms": {
+        "title": "SMS",
+        "grid": {
+          "smsId": "ID",
+          "phone": "Телефон",
+          "statusCode": "Статус",
+          "startDateTime": "Планируемая дата отправки",
+          "sendDateTime": "Фактическая дата отправки",
+          "userFullName": "Оператор",
+          "text": "Текст",
+          "templateName": "Название шаблона"
+        }
+      },
+      "email": {
+        "title": "Email",
+        "grid": {
+          "emailId": "ID",
+          "email": "Email",
+          "statusCode": "Статус",
+          "startDateTime": "Планируемая дата отправки",
+          "sendDateTime": "Фактическая дата отправки",
+          "userFullName": "Оператор",
+          "subject": "Тема",
+          "templateName": "Название шаблона"
+        }
       }
     },
     "contactRegistration": {
@@ -566,7 +628,7 @@
       }
     },
     "edit": {
-      "branchCode": "Подразделение",
+      "branchCode": "Филиал",
       "personalData": "Персональные данные",
       "details": "Подробная информация",
       "title": "Пользователь: {{ id }}",
@@ -601,7 +663,7 @@
     },
     "grid": {
       "id": "ID",
-      "branchCode": "Подразделение",
+      "branchCode": "Филиал",
       "login": "Логин",
       "lastName": "Фамилия",
       "firstName": "Имя",
@@ -669,12 +731,6 @@
     "types": {
       "system": "Системный",
       "client": "Клиентский"
-    },
-    "placeholder": {
-      "translatedName": "Введите название словаря на выбраном языке",
-      "select": {
-        "translation": "Выберите язык"
-      }
     },
     "errors": {
       "view": "Доступ к списку словарей ограничен"
@@ -1103,7 +1159,7 @@
     "buttons": {
       "attributes": "Атрибуты",
       "managers": "Менеджеры",
-      "objects": "Объекты"
+      "objects": "Шаблоны"
     }
   },
   "portfolios": {
@@ -1400,7 +1456,8 @@
         "comment": "Комментарий",
         "typeCode": "Тип данных",
         "dictNameCode": "Словарь",
-        "disabledValue": "Не содержит значение"
+        "disabledValue": "Не содержит значение",
+        "version": "Хранение версий"
       }
     },
     "contact": {
@@ -1810,6 +1867,13 @@
           "forAllDebts": "По всем долгам"
         }
       },
+      "portfolioChange": {
+        "grid": {
+          "id": "ID",
+          "name": "Имя",
+          "contractor": "Банк"
+        }
+      },
       "component": {
         "title": "Компоненты долга",
         "grid": {
@@ -2015,6 +2079,7 @@
       "grid": {
         "id": "ID",
         "entityTypeCode": "Тип",
+        "entityTypeId": "Тип",
         "name": "Название",
         "comment": "Комментарий",
         "isManual": "Ручное наполнение",
@@ -2032,10 +2097,43 @@
         "formDateTime": "Дата переформирования",
         "sql": "SQL"
       },
+      "groupObjectDebts": {
+        "filter": {
+          "groups": "Выберите группу",
+          "grid": {
+              "id": "ID",
+              "name": "Имя"
+          }
+        },
+        "grid": {
+          "id": "ID объекта",
+          "debtId": "ID долга",
+          "personId": "ID должника",
+          "personFullName": "ФИО должника",
+          "bankName": "Банк",
+          "portfolioName": "Портфель",
+          "contract": "Номер договора",
+          "creditName": "Название продукта",
+          "currencyName": "Валюта",
+          "debtAmount": "Сумма просроченной задолженности",
+          "totalAmount": "Общая сумма кредита",
+          "dpd": "Количество дней просрочки",
+          "userFullName": "Оператор",
+          "statusCode": "Статус",
+          "dictValue1": "Словарный атрибут 1",
+          "dictValue2": "Словарный атрибут 2",
+          "dictValue3": "Словарный атрибут 3",
+          "dictValue4": "Словарный атрибут 4"
+        }
+      },
       "toolbar": {
         "action": {
           "forCurrentUser": "Группы текущего пользователя"
         }
+      },
+      "tabs": {
+        "all": "Группы",
+        "debtsInGroup": "Долги в группе"
       }
     },
     "visit": {
@@ -2099,6 +2197,68 @@
     "personSelect": {
       "dialog": {
         "title": "Добавление персоны"
+      }
+    },
+    "scheduleEvents": {
+      "grid": {
+        "id": "ID",
+        "groupId": "ID Группы",
+        "groupName": "Группа",
+        "eventTypeCode": "Тип мероприятия",
+        "periodTypeCode": "Период",
+        "startTime": "Запуск",
+        "executeDateTime": "Последний запуск",
+        "isExecuted": "Выполняется",
+        "startDate": "Начало",
+        "endDate": "Окончание",
+        "isInactive": "Выключено",
+        "priority": "Приоритет"
+      },
+      "card": {
+        "startDate": "Начало",
+        "endDate": "Окончание",
+        "periodTypeCode": "Период",
+        "dayPeriod": "Период повторения",
+        "startTime": "Время запуска",
+        "isInactive": "Выключено",
+        "eventTypeCode": "Тип мероприятия",
+        "priority": "Приоритет",
+        "groupId": "Группа",
+        "checkGroup": "Проверка переформирования группы",
+        "delay": "Задержка отправки (ч.)",
+        "phoneTypes": "Тип телефона",
+        "personRoles": "Получатель",
+        "templateId": "Сценарий",
+        "senderCode": "Отправитель",
+        "dict1Code": "Значение",
+        "dict2Code": "Значение",
+        "dict3Code": "Значение",
+        "dict4Code": "Значение",
+        "stage": "Стадия",
+        "userId": "Оператор",
+        "modeCode": "Режим",
+        "changeGroupId": {
+          "grid": {
+            "id": "ID",
+            "entityTypeId": "Тип",
+            "name": "Имя",
+            "comment": "Комментарий"
+          }
+        }
+      },
+      "dialog": {
+        "title": "Мероприятие",
+        "remove": {
+          "title": "Удаление мероприятия",
+          "confirmMessage": "Вы уверены, что хотите удалить данное мероприятие?"
+        }
+      },
+      "start": {
+          "withCheckGroup": "Проверять формирование групп",
+          "withoutCheckGroup": "Не проверять формирование групп"
+      },
+      "errors": {
+        "start": "Произошла ошибка при попытке стартовать мероприятия с ID {{ eventId }}"
       }
     }
   },
@@ -2283,6 +2443,12 @@
     },
     "object": {
       "gen": { "singular": "объекта", "plural": "объектов" }
+    },
+    "infoDebt": {
+      "gen": { "singular": "списка формирования", "plural": "списков формирования" }
+    },
+    "scheduleEvents": {
+      "gen": { "singular": "мероприятия", "plural": "списка мероприятий" }
     }
   },
   "massOperations": {
@@ -2453,7 +2619,7 @@
       "methodNotSupportedForTempData": "Произошла ошибка при создании записи в таблице Temp_data",
       "modelMustNotBeEmpty": "Во входной модели должен быть хотя бы один заполненный атрибут",
       "newStatusCodeNotSuitableForCurrentStatus": "Невозможно установить новый статус из-за конфликта с текущим статусом объекта",
-      "notAllowedFieldValue": "Ошибка модели данных: поле {{ $1 }} не является допустимым",
+      "notAllowedFieldValue": "Ошибка модели данных: значение поля {{ $1 }} не является допустимым",
       "objectInGroupNotFound": "Объект не найден по entityId и groupId",
       "objectNotFound": "Не найдена сущность {{ $1 }} при обращении по entityTypeId или entityAttributeId",
       "objectRoleNotFound": "Не найдена роль объекта по ID",
@@ -2576,6 +2742,7 @@
       "email": "Email",
       "exportToExcel": "Выгрузка",
       "excel": "Выгрузка",
+      "loadFromExcel": "Загрузить из Excel",
       "move": "Переместить",
       "next": "Далее",
       "ok": "OK",
@@ -2599,6 +2766,13 @@
       "to": "Окончание"
     },
     "filters": {
+      "entityGroups": {
+        "grid": {
+          "id": "ID",
+          "name": "Имя"
+        },
+        "title": "Выберите группы"
+      },
       "portfolios": {
         "grid": {
           "contractorName": "Контрагент",
@@ -2621,6 +2795,13 @@
           "position": "Должность"
         },
         "title": "Выберите пользователей"
+      },
+      "actions": {
+        "grid": {
+          "code": "Код",
+          "name": "Действие"
+        },
+        "title": "Типы действий"
       },
       "fields": {
         "branchCode": "Филиал",
@@ -2741,11 +2922,14 @@
       },
       "format": {
         "dateTime": "DD.MM.YYYY HH:mm:ss",
-        "date": "DD.MM.YYYY"
+        "date": "DD.MM.YYYY",
+        "time": "HH:mm:ss"
       },
-      "datePicker": {
-        "placeholder": "Выберите дату"
-      }
+      "placeholders": {
+        "datepicker": "Введите дату",
+        "timepicker": "Введите время "
+      },
+      "lastMonthDay": "Последний"
     },
     "colors": {
       "transparent": "Прозрачный",
@@ -2794,11 +2978,6 @@
           "birthDate": "Дата рождения",
           "genderCode": "Пол",
           "passportNumber": "Серия и номер паспорта",
-          "birthPlace": "Место рождения",
-          "familyStatusCode": "Семейное положение",
-          "educationCode": "Образование",
-          "linkTypeCode": "Тип связи",
-          "comment": "Комментарий",
           "stringValue1": "Строковый атрибут 1",
           "stringValue2": "Строковый атрибут 2",
           "stringValue3": "Строковый атрибут 3",

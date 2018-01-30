@@ -4,15 +4,15 @@ import { Observable } from 'rxjs/Observable';
 import { IDialogMultiSelectFilterType, IDialogMultiSelectValue } from './dialog-multi-select.interface';
 import { IGridColumn } from '../../grid/grid.interface';
 
-import { GridFiltersService } from '../../../../core/filters/grid-filters.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { GridFiltersService } from '@app/core/filters/grid-filters.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Injectable()
 export class DialogMultiSelectWrapperService {
   private config = {
     portfolios: {
       columnsFrom: [
-        { prop: 'id' },
+        { prop: 'id', maxWidth: 70 },
         { prop: 'name' },
         { prop: 'contractorName' },
         { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS },
@@ -34,7 +34,7 @@ export class DialogMultiSelectWrapperService {
     },
     users: {
       columnsFrom: [
-        { prop: 'id' },
+        { prop: 'id', maxWidth: 70 },
         { prop: 'fullName' },
         { prop: 'organization' },
         { prop: 'position' },
@@ -47,6 +47,37 @@ export class DialogMultiSelectWrapperService {
       fetchCallback: () => this.gridFiltersService.fetchUsers(0),
       labelGetter: row => row.fullName,
       title: 'default.filters.users.title',
+      valueGetter: row => row.id,
+    },
+    actions: {
+      columnsFrom: [
+        { prop: 'code', maxWidth: 70 },
+        { prop: 'name' },
+      ],
+      columnsFromTranslationKey: 'default.filters.actions',
+      columnsTo: [
+        { prop: 'code', maxWidth: 70 },
+        { prop: 'name' },
+      ],
+      columnsToTranslationKey: 'default.filters.actions',
+      fetchCallback: () => this.gridFiltersService.fetchDictionaries(4),
+      labelGetter: row => row.name,
+      title: 'default.filters.actions.title',
+      valueGetter: row => row.code,
+    },
+    entityGroups: {
+      columnsFrom: [
+        { prop: 'id' },
+        { prop: 'name' },
+      ],
+      columnsFromTranslationKey: 'default.filters.entityGroups',
+      columnsTo: [
+        { prop: 'name' },
+      ],
+      columnsToTranslationKey: 'default.filters.entityGroups',
+      fetchCallback: ({entityTypeId, isManual}) => this.gridFiltersService.fetchEntitiesGroups(entityTypeId, isManual),
+      labelGetter: row => row.name,
+      title: 'default.filters.entityGroups.title',
       valueGetter: row => row.id,
     },
   };

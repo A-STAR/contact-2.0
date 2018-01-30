@@ -50,7 +50,7 @@ export class GridService {
       });
     }
 
-    if (filters.hasFilter() || filters.hasValues()) {
+    if (filters && (filters.hasFilter() || filters.hasValues())) {
       request.filtering = filters;
     }
 
@@ -248,6 +248,7 @@ export class GridService {
      * It should be possible and safe to reinitialize the rendereres. This is why we have to keep
      * the column's `renderer` property untouched, so that the renderer function should go to `$$valueGetter`
      */
+    // This is no longer applied
     // column.renderer = column.$$valueGetter;
     return column;
   }

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 
 interface AddressCardRouteParams {
   contactId: number;
@@ -15,7 +15,7 @@ interface AddressCardRouteParams {
 export class DebtorContactsComponent {
   constructor(
     private debtorCardService: DebtorCardService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {}
 
   get contactId$(): Observable<number> {

@@ -30,3 +30,17 @@
   display: block;
   height: 100%;
 }
+
+split-area {
+  min-height: 100px;
+  min-width: 100px;
+}
+
+@each $i in 100 200 300 400 500 600 {
+  .minw-#{$i} {
+    min-width: #{$i}px;
+  }
+  .minh-#{$i} {
+    min-height: #{$i}px;
+  }
+}

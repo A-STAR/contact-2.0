@@ -8,7 +8,7 @@ export class PopupInputComponent {
   @Input() value: string;
   @Input() placeholder: string;
 
-  @Output() action: EventEmitter<void> = new EventEmitter<void>();
+  @Output() action = new EventEmitter<void>();
 
   togglePopup(): void {
     this.action.emit();

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AddressModule } from './address/address.module';
 import { AttributeModule as EntityAttributeModule } from './entity-attribute/attribute.module';
 import { AttributeModule } from './attribute/attribute.module';
 import { ComponentLogModule } from './debt/component-log/component-log.module';
@@ -29,7 +28,6 @@ import { OperatorDetailsModule } from './operator-details/operator-details.modul
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
 import { PersonSelectModule } from './person-select/person-select.module';
-import { PhoneModule } from './phone/phone.module';
 import { PledgeModule } from './pledge/pledge.module';
 import { PledgorModule } from './pledgor/pledgor.module';
 import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
@@ -37,12 +35,11 @@ import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
 import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { PropertyModule } from './property/property.module';
-import { GroupModule } from './groups/group.module';
+import { ScheduleEventModule } from './schedule-event/schedule-event.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
   imports: [
-    AddressModule,
     AttributeModule,
     CommonModule,
     ComponentLogModule,
@@ -71,7 +68,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PaymentModule,
     PaymentOperatorModule,
     PersonSelectModule,
-    PhoneModule,
     PledgeModule,
     PledgorModule,
     PledgorPropertyModule,
@@ -79,11 +75,10 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PromiseModule,
     PromiseResolveModule,
     PropertyModule,
-    GroupModule,
+    ScheduleEventModule,
     VisitPrepareModule,
   ],
   exports: [
-    AddressModule,
     AttributeModule,
     ComponentLogModule,
     ContactLogModule,
@@ -111,7 +106,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PaymentModule,
     PaymentOperatorModule,
     PersonSelectModule,
-    PhoneModule,
     PledgeModule,
     PledgorModule,
     PledgorPropertyModule,
@@ -119,7 +113,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PromiseModule,
     PromiseResolveModule,
     PropertyModule,
-    GroupModule,
+    ScheduleEventModule,
     VisitPrepareModule,
   ],
   declarations: []

@@ -31,6 +31,7 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_DOWNLOAD]: 'download',
     [ToolbarItemTypeEnum.BUTTON_EDIT]: 'edit',
     [ToolbarItemTypeEnum.BUTTON_EMAIL]: 'email',
+    [ToolbarItemTypeEnum.BUTTON_EXCEL_LOAD]: 'loadFromExcel',
     [ToolbarItemTypeEnum.BUTTON_MOVE]: 'move',
     [ToolbarItemTypeEnum.BUTTON_NEXT]: 'next',
     [ToolbarItemTypeEnum.BUTTON_OK]: 'ok',

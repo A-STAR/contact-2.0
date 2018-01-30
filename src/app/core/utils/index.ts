@@ -119,6 +119,11 @@ export const round = (value: number, precision: number) => {
   return Math.round(k * value) / k;
 };
 
+export const floor = (value: number, precision: number) => {
+  const k = Math.pow(10, precision);
+  return Math.floor(k * value) / k;
+};
+
 export const range = (min: number, max: number): number[] => Array(max - min + 1).fill(null).map((_, i) => min + i);
 
 /**
@@ -149,3 +154,10 @@ export function getTranslations(languages: ILookupLanguage[], translations: IEnt
   );
 }
 
+/**
+ * Reexport makes it possible to import all functions only from the root,
+ * i.e. import { doOnceIf } from '@app/core/utils';
+ */
+export * from './helpers';
+export * from './tree';
+export * from './value';

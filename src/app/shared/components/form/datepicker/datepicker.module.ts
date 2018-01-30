@@ -6,7 +6,7 @@ import { CalendarModule } from 'primeng/primeng';
 import { TextMaskModule } from 'angular2-text-mask';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { DatePickerComponent } from './../datepicker/datepicker.component';
+import { DatePickerComponent } from './datepicker.component';
 
 @NgModule({
   imports: [

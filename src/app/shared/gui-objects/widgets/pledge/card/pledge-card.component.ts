@@ -1,23 +1,24 @@
 import { Component, ChangeDetectorRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
-import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IPledgeContract } from '../pledge.interface';
-import { IPledgor } from '../../pledgor/pledgor.interface';
-import { IPledgorProperty } from '../../pledgor-property/pledgor-property.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPledgeContract } from '@app/shared/gui-objects/widgets/pledge/pledge.interface';
+import { IPledgor } from '@app/shared/gui-objects/widgets/pledgor/pledgor.interface';
+import { IPledgorProperty } from '@app/shared/gui-objects/widgets/pledgor-property/pledgor-property.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { PledgeService } from '../pledge.service';
-import { PledgorService } from '../../pledgor/pledgor.service';
-import { PledgorPropertyService } from '../../pledgor-property/pledgor-property.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { PledgeService } from '@app/shared/gui-objects/widgets/pledge/pledge.service';
+import { PledgorService } from '@app/shared/gui-objects/widgets/pledgor/pledgor.service';
+import { PledgorPropertyService } from '@app/shared/gui-objects/widgets/pledgor-property/pledgor-property.service';
+import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey, isRoute } from '../../../../../core/utils';
+import { makeKey, isRoute } from '@app/core/utils';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
@@ -53,8 +54,8 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private pledgeService: PledgeService,
     private route: ActivatedRoute,
-    private router: Router,
-    private userDictionariesService: UserDictionariesService,
+    private routingService: RoutingService,
+    private userDictionariesService: UserDictionariesService
   ) {}
 
   get form(): DynamicFormComponent {
@@ -133,8 +134,11 @@ export class PledgeCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    const relativeUrlCount = isRoute(this.route, 'create') ? 2 : this.isAddingPledgor ? 4 : 5;
-    this.router.navigate([new Array(relativeUrlCount + 1).join('../')], { relativeTo: this.route });
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId')
+    ]);
   }
 
   onSubmit(): void {

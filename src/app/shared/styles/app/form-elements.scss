@@ -275,21 +275,13 @@ $switch-sm-hg: $switch-sm-wd/2;
   left: $padding-base-horizontal;
   right: auto;
 
-  .form-control + &,
-  .form-control + .parsley-errors-list + & {
+  .form-control + & {
     right: 0;
     left: auto;
-    // transform: translateY(25%);
   }
 
-  .input-sm + &,
-  .input-sm + .parsley-errors-list + & {
+  .input-sm + & {
     top: 0;
-  }
-
-  label + .form-control + &,
-  label + .form-control + .parsley-errors-list + & {
-    // top: 36px;
   }
 
 }

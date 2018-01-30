@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPermissionModel } from '../../../../../routes/admin/roles/permissions.interface';
+
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
@@ -10,27 +12,23 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 })
 export class EditPermissionComponent implements OnInit {
 
-  @Input() record: any;
-  @Output() save: EventEmitter<any> = new EventEmitter<any>();
-  @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
+  @Input() permission: any;
+  @Output() save = new EventEmitter<any>();
+  @Output() cancel = new EventEmitter<null>();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  controls: Array<IDynamicFormControl>;
+  controls: IDynamicFormControl[];
 
-  // TODO: add type
-  data: any;
+  data: IPermissionModel;
 
   ngOnInit(): void {
     this.controls = this.getControls();
-    this.data = this.getData();
-  }
-
-  getData(): any {
-    return {
-      ...this.record,
-      value: String(this.record.value)
+    this.data = {
+      ...this.permission,
+      value: String(this.permission.value)
     };
   }
+
 
   onCancel(): void {
     this.cancel.emit();
@@ -40,18 +38,20 @@ export class EditPermissionComponent implements OnInit {
     this.save.emit(this.form.value);
   }
 
-  private getControls(): Array<IDynamicFormControl> {
+  private getControls(): IDynamicFormControl[] {
     return [
       {
         label: 'ID',
         controlName: 'id',
-        type: 'hidden',
+        type: 'text',
+        display: false,
         required: true
       },
       {
         label: 'roles.permissions.edit.type',
         controlName: 'typeCode',
-        type: 'hidden',
+        type: 'text',
+        display: false,
         required: true
       },
       {
@@ -71,7 +71,7 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'roles.permissions.edit.description',
         controlName: 'dsc',
-        type: 'text',
+        type: 'textarea',
         disabled: true
       },
       {

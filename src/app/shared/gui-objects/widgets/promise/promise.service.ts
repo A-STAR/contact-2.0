@@ -58,6 +58,10 @@ export class PromiseService extends AbstractActionService {
       .catch(this.notificationsService.deleteError().entity('entities.promises.gen.singular').dispatchCallback());
   }
 
+  /**
+   * @deprecated
+   * Use `workplaces/core/promise` instead
+   */
   getPromiseLimit(debtId: number, callCenter: boolean): Observable<IPromiseLimit> {
     return this.dataService
       .read('/debts/{debtId}/promiseslimit', { debtId }, { params: { callCenter } })

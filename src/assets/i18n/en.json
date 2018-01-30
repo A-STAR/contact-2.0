@@ -100,7 +100,7 @@
         "HELP": "Help",
         "INCOMING_CALL": "Incoming call",
         "CURRENCY_RATE_EDIT": "Currency rate"
-    },
+      },
       "hide": "Hide menu"
     },
     "messages": {
@@ -124,7 +124,8 @@
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
     "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
-    "oneOfGroupRequired": "At least one group field must not be empty"
+    "oneOfGroupRequired": "At least one group field must not be empty",
+    "timepicker": "Invalid time format"
   },
   "network": {
     "connectionError": "Connection error",
@@ -267,6 +268,15 @@
           "message": "Download error log?",
           "title": "Could not save to DB"
         }
+      },
+      "errors": {
+        "openFile": "Error when trying to open file",
+        "fetch": "Error when trying to load data from file",
+        "deleteRow": "Error when trying to delete row",
+        "cancel": "Error when trying to cancel data load",
+        "save": "Error when trying to save data to DB",
+        "editCell": "Error when trying to edit cell",
+        "getErrors": "Error when trying to get error log file"
       }
     },
     "payments": {
@@ -292,9 +302,9 @@
           "portfolioId": "Portfolio",
           "regionCode": "Region",
           "userId": "Operator",
-          "addressTypeCode": "Тип адреса",
-          "visitStatusCode": "Статус выезда",
-          "visitPurposeCode": "Цель выезда"
+          "addressTypeCode": "Address",
+          "visitStatusCode": "Visit status",
+          "visitPurposeCode": "Visit purpose"
         }
       },
       "newDebt": {
@@ -311,6 +321,58 @@
       },
       "prepareVisits": {
         "title": "Prepare Visits"
+      }
+    },
+    "infoDebt": {
+      "filters": {
+        "form": {
+          "branchCode": "Branch",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4",
+          "portfolioId": "Portfolio",
+          "regionCode": "Region",
+          "userId": "Operator",
+          "addressTypeCode": "Address",
+          "visitStatusCode": "Visit status",
+          "visitPurposeCode": "Visit purpose"
+        }
+      },
+      "debtors": {
+        "title": "Debtors"
+      },
+      "guarantors": {
+        "title": "Guarantors"
+      },
+      "pledgors": {
+        "title": "Pledgors"
+      },
+      "sms": {
+        "title": "SMS",
+        "grid": {
+          "smsId": "ID",
+          "phone": "Phone",
+          "statusCode": "Status",
+          "startDateTime": "Planned sending date",
+          "sendDateTime": "Send date",
+          "userFullName": "Operator",
+          "text": "Text",
+          "templateName": "Template"
+        }
+      },
+      "email": {
+        "title": "Email",
+        "grid": {
+          "emailId": "ID",
+          "email": "Email",
+          "statusCode": "Status",
+          "startDateTime": "Planned sending date",
+          "sendDateTime": "Send date",
+          "userFullName": "Operator",
+          "subject": "Subject",
+          "templateName": "Template"
+        }
       }
     },
     "contactRegistration": {
@@ -669,12 +731,6 @@
     "types": {
       "system": "System",
       "client": "Client"
-    },
-    "placeholder": {
-      "translatedName": "Select a dictionary",
-      "select": {
-        "translation": "Select language"
-      }
     },
     "errors": {
       "view": "Access to dictionaries list denied"
@@ -1103,7 +1159,7 @@
     "buttons": {
       "attributes": "Attributes",
       "managers": "Managers",
-      "objects": "Objects"
+      "objects": "Templates"
     }
   },
   "portfolios": {
@@ -1400,7 +1456,8 @@
         "comment": "Comments",
         "typeCode": "Data Type",
         "dictNameCode": "Dictionary",
-        "disabledValue": "No Value"
+        "disabledValue": "No Value",
+        "version": "Version history"
       }
     },
     "contact": {
@@ -1787,6 +1844,13 @@
         "dict3Code": "Score 3",
         "dict4Code": "Score 4"
       },
+      "portfolioChange": {
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "contractor": "Bank"
+        }
+      },
       "dialogs": {
         "closeDebt": {
           "title": "Debt Closure",
@@ -2015,6 +2079,7 @@
       "grid": {
         "id": "ID",
         "entityTypeCode": "Type",
+        "entityTypeId": "Type",
         "name": "Name",
         "comment": "Comment",
         "isManual": "Is manual",
@@ -2032,10 +2097,43 @@
         "formDateTime": "Form date",
         "sql": "SQL"
       },
+      "groupObjectDebts": {
+        "filter": {
+          "groups": "Select Group",
+          "grid": {
+              "id": "ID",
+              "name": "Name"
+          }
+        },
+        "grid": {
+          "id": "ID",
+          "debtId": "Debt ID",
+          "personId": "Person ID",
+          "personFullName": "Full Name",
+          "bankName": "Bank",
+          "portfolioName": "Portfolio",
+          "contract": "Contact No",
+          "creditName": "Credit Name",
+          "currencyName": "Currency",
+          "debtAmount": "Debt amount",
+          "totalAmount": "Total amount",
+          "dpd": "DPD",
+          "userFullName": "Operator",
+          "statusCode": "Status",
+          "dictValue1": "Dictionary Value 1",
+          "dictValue2": "Dictionary Value 2",
+          "dictValue3": "Dictionary Value 3",
+          "dictValue4": "Dictionary Value 4"
+        }
+      },
       "toolbar": {
         "action": {
           "forCurrentUser": "Current user groups"
         }
+      },
+      "tabs": {
+        "all": "Groups",
+        "debtsInGroup": "Debts in group"
       }
     },
     "visit": {
@@ -2099,6 +2197,68 @@
     "personSelect": {
       "dialog": {
         "title": "Add person"
+      }
+    },
+    "scheduleEvents": {
+      "grid": {
+        "id": "ID",
+        "groupId": "ID Group",
+        "groupName": "Group name",
+        "eventTypeCode": "Event type",
+        "periodTypeCode": "Period",
+        "startTime": "Start",
+        "executeDateTime": "Last start",
+        "isExecuted": "Is Executed",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "isInactive": "Is inactive",
+        "priority": "Priority"
+      },
+      "card": {
+        "startDate": "Start date",
+        "endDate": "End date",
+        "periodTypeCode": "Period",
+        "dayPeriod": "Repeat period",
+        "startTime": "Start time",
+        "isInactive": "Is inactive",
+        "eventTypeCode": "Event type",
+        "priority": "Priority",
+        "groupId": "Group",
+        "checkGroup": "Group rearrangement check",
+        "delay": "Delay (hours)",
+        "phoneTypes": "Phono type",
+        "personRoles": "Receiver",
+        "templateId": "Template",
+        "senderCode": "Sender",
+        "dict1Code": "Value",
+        "dict2Code": "Value",
+        "dict3Code": "Value",
+        "dict4Code": "Value",
+        "stage": "Stage",
+        "userId": "Operator",
+        "modeCode": "Mode",
+        "changeGroupId": {
+          "grid": {
+            "id": "ID",
+            "entityTypeId": "Type",
+            "name": "Name",
+            "comment": "Comment"
+          }
+        }
+      },
+      "dialog": {
+        "title": "Event",
+        "remove": {
+          "title": "Remove event",
+          "confirmMessage": "Are you sure you want to delete this event?"
+        }
+      },
+      "start": {
+        "withCheckGroup": "Check for groups formation",
+        "withoutCheckGroup": "Do not check for groups formation"
+      },
+      "errors": {
+        "start": "Error has been occurred when tried to start schedule events with the ID {{ eventId }}"
       }
     }
   },
@@ -2283,6 +2443,12 @@
     },
     "object": {
       "gen": { "singular": "object", "plural": "objects" }
+    },
+    "infoDebt": {
+      "gen": { "singular": "task", "plural": "tasks" }
+    },
+    "scheduleEvents": {
+      "gen": { "singular": "event", "plural": "events" }
     }
   },
   "massOperations": {
@@ -2453,7 +2619,7 @@
       "methodNotSupportedForTempData": "Error has been occured when tried to create record in Temp_data table",
       "modelMustNotBeEmpty": "The data model requires to pass at least one non-empty attribute",
       "newStatusCodeNotSuitableForCurrentStatus": "New object status has conflict with the current status",
-      "notAllowedFieldValue": "Data model error: field {{ $1 }} is not allowed",
+      "notAllowedFieldValue": "Data model error: field value {{ $1 }} is not allowed",
       "objectInGroupNotFound": "Object not found by entityId and groupId",
       "objectNotFound": "Object {{ $1 }} not found by entityTypeId or entityAttributeId",
       "objectRoleNotFound": "Object's role not found by ID",
@@ -2576,6 +2742,7 @@
       "email": "Email",
       "exportToExcel": "Export",
       "excel": "Export",
+      "loadFromExcel": "Load from Excel",
       "move": "Move",
       "next": "Next",
       "ok": "OK",
@@ -2599,6 +2766,13 @@
       "to": "To"
     },
     "filters": {
+      "entityGroups": {
+        "grid": {
+          "id": "ID",
+          "name": "Name"
+        },
+        "title": "Select Groups"
+      },
       "portfolios": {
         "grid": {
           "contractorName": "Contractor",
@@ -2621,6 +2795,13 @@
           "position": "Position"
         },
         "title": "Select Users"
+      },
+      "actions": {
+        "grid": {
+          "code": "Code",
+          "name": "Action"
+        },
+        "title": "Action types"
       },
       "fields": {
         "branchCode": "Branch",
@@ -2741,11 +2922,14 @@
       },
       "format": {
         "dateTime": "MM/DD/YYYY HH:mm:ss",
-        "date": "MM/DD/YYYY"
+        "date": "MM/DD/YYYY",
+        "time": "HH:mm:ss"
       },
-      "datePicker": {
-        "placeholder": "Select a date"
-      }
+      "placeholders": {
+        "datepicker": "Enter a date",
+        "timepicker": "Enter time"
+      },
+      "lastMonthDay": "Last"
     },
     "colors": {
       "transparent": "Transparent",
@@ -2794,11 +2978,6 @@
           "birthDate": "Date of Birth",
           "genderCode": "Gender",
           "passportNumber": "Passport Number",
-          "birthPlace": "Place of birth",
-          "familyStatusCode": "Family status",
-          "educationCode": "Education",
-          "linkTypeCode": "Link Type",
-          "comment": "Comment",
           "stringValue1": "String Attribute 1",
           "stringValue2": "String Attribute 2",
           "stringValue3": "String Attribute 3",

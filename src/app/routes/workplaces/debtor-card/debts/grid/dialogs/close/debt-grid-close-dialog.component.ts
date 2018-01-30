@@ -5,37 +5,42 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   Output,
   ViewChild
 } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators/first';
+import { switchMap } from 'rxjs/operators/switchMap';
+import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDebt } from '../../../../../../../core/debt/debt.interface';
-import { IDynamicFormControl } from '../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDebt } from '@app/core/debt/debt.interface';
+import { IDynamicFormControl, IDynamicFormSelectControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUserConstant } from '../../../../../../../core/user/constants/user-constants.interface';
 
-import { DebtorCardService } from '../../../../../../../core/app-modules/debtor-card/debtor-card.service';
-import { DebtService } from '../../../../../../../core/debt/debt.service';
-import { UserConstantsService } from '../../../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtService } from '@app/core/debt/debt.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { toOption } from '../../../../../../../core/utils';
-import { first } from 'rxjs/operators/first';
+import { toOption } from '@app/core/utils';
 
 @Component({
   selector: 'app-debt-grid-close-dialog',
   templateUrl: './debt-grid-close-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DebtGridCloseDialogComponent implements AfterViewInit {
+export class DebtGridCloseDialogComponent implements AfterViewInit, OnDestroy {
+  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   @Input() debt: IDebt;
   @Input() statusCode: number;
+
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<void>();
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormControl> = [
     { controlName: 'reasonCode', type: 'select', options: [] },
@@ -57,9 +62,9 @@ export class DebtGridCloseDialogComponent implements AfterViewInit {
       this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE),
       this.userConstantsService.get('Debt.StatusReason.MandatoryList'),
     )
-    .distinctUntilChanged()
+    .pipe(distinctUntilChanged())
     .subscribe(([ dictionary, reasonCodeRequired ]) => {
-      const reasonCodeControl = this.getControl('reasonCode');
+      const reasonCodeControl = this.getControl('reasonCode') as IDynamicFormSelectControl;
 
       reasonCodeControl.options = dictionary
         .filter(term => term.parentCode === this.statusCode)
@@ -71,18 +76,23 @@ export class DebtGridCloseDialogComponent implements AfterViewInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.formDataSubscription.unsubscribe();
+  }
+
   onSubmit(): void {
     const data = {
       ...this.form.serializedUpdates,
       statusCode: this.statusCode
     };
     this.debtorCardService.personId$
-      .pipe(first())
-      .subscribe(personId => {
-        this.debtService.changeStatus(personId, this.debt.id, data, false).subscribe(() => {
-          this.submit.emit();
-          this.close.emit();
-        });
+      .pipe(
+        switchMap(personId => this.debtService.changeStatus(personId, this.debt.id, data, false)),
+        first()
+      )
+      .subscribe(() => {
+        this.submit.emit();
+        this.onClose();
       });
   }
 
