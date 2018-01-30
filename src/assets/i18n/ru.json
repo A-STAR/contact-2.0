@@ -1327,6 +1327,22 @@
     },
     "currencyRatesTab": {
       "title": "Курсы"
+    },
+    "schedule": {
+      "log": {
+        "grid": {
+          "startDateTime": "Запуск",
+          "endDateTime": "Остановка",
+          "startType": "Режим запуска",
+          "userFullName": "Пользователь"
+        },
+        "dialog": {
+          "title": "История запусков"
+        },
+        "buttons": {
+          "history": "История"
+        }
+      }
     }
   },
   "notifications": {
@@ -2446,6 +2462,9 @@
     },
     "scheduleEvents": {
       "gen": { "singular": "мероприятия", "plural": "списка мероприятий" }
+    },
+    "scheduleEventLog": {
+      "gen": { "singular": "история запуска мероприятия", "plural": "история запуска мероприятий" }
     }
   },
   "massOperations": {
