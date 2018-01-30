@@ -6,7 +6,9 @@
 
 <ng-template #wheel let-modifier="modifier">
   <div class="wheel" (wheel)="onWheel(modifier, $event)">
-    <span class="arrow" (click)="onUp(modifier)">&uarr;</span>
+    <span class="arrow" (click)="onUp(modifier)">
+      <i class="fa fa-angle-up"></i>
+    </span>
     <span>
       {{ getFormattedValue(modifier, -1) }}
     </span>
@@ -16,6 +18,8 @@
     <span>
       {{ getFormattedValue(modifier, 1) }}
     </span>
-    <span class="arrow" (click)="onDown(modifier)">&darr;</span>
+    <span class="arrow" (click)="onDown(modifier)">
+      <i class="fa fa-angle-down"></i>
+    </span>
   </div>
 </ng-template>

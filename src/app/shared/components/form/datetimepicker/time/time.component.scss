@@ -1,6 +1,7 @@
 :host {
   display: flex;
   flex-direction: row;
+  user-select: none;
 
   .wheel {
     color: #aaa;
@@ -9,18 +10,29 @@
 
     span {
       display: block;
+      padding: 2px 0;
+
+      &.arrow {
+        padding: 0;
+      }
     }
   }
 
   .divider {
     align-self: center;
-    flex: 0 0 20px;
+    flex: 0 0 32px;
     text-align: center;
   }
 }
 
 .arrow {
+  color: #aaa;
   cursor: pointer;
+  display: inline-block;
+  transition: color 0.2s ease;
+  &:hover {
+    color: #46a2f9;
+  }
 }
 
 .current {

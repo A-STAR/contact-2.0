@@ -1,0 +1,30 @@
+.datetimepicker {
+  box-shadow: 1px 1px 10px 0 rgba(0, 0, 0, 0.2);
+  margin: 10px 0;
+  padding: 20px;
+  user-select: none;
+  width: 22em;
+
+  app-date,
+  app-time {
+    padding-bottom: 16px;
+  }
+
+  footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 0 auto;
+    width: 80%;
+
+    span {
+      color: #888;
+      cursor: pointer;
+      flex: 0 0 auto;
+      transition: color 0.2s ease;
+      &:hover {
+        color: #46a2f9;
+      }
+    }
+  }
+}

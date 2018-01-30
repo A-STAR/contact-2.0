@@ -1,7 +1,13 @@
 <header>
-  <span (click)="showPrevMonth()">&larr;</span>
-  {{ month }} {{ year }}
-  <span (click)="showNextMonth()">&rarr;</span>
+  <span class="arrow" (click)="showPrevMonth()">
+    <i class="fa fa-angle-left"></i>
+  </span>
+  <span>
+    {{ month }} {{ year }}
+  </span>
+  <span class="arrow" (click)="showNextMonth()">
+    <i class="fa fa-angle-right"></i>
+  </span>
 </header>
 
 <ul class="header">

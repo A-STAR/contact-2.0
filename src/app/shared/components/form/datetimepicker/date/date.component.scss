@@ -3,15 +3,23 @@ $day-dark: #49455e;
 
 :host {
   display: block;
+  user-select: none;
 }
 
 header {
   text-align: center;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
 }
 
-span {
+.arrow {
+  color: #aaa;
   cursor: pointer;
+  display: inline-block;
+  padding: 0 10px;
+  transition: color 0.2s ease;
+  &:hover {
+    color: #46a2f9;
+  }
 }
 
 ul {
@@ -26,7 +34,7 @@ ul {
     color: $day-dark;
     cursor: pointer;
     flex: 1 0 14.28%;
-    padding: 2px 0;
+    padding: 5px 0;
     text-align: center;
 
     &.current {
