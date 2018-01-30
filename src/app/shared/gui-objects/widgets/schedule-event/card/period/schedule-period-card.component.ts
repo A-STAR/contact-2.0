@@ -6,12 +6,15 @@ import {
   IDynamicFormItem, IDynamicFormConfig, IDynamicFormControl
 } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
-import { ISchedulePeriod, SchedulePeriodEnum, IScheduleDate } from '../../schedule-event.interface';
+import { ISchedulePeriod, SchedulePeriodEnum } from '../../schedule-event.interface';
 
+import { GridService } from '@app/shared/components/grid/grid.service';
 import { ScheduleEventService } from '../../schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
+import { GridComponent } from '@app/shared/components/grid/grid.component';
 
 import { min, oneOfGroupRequired } from '@app/core/validators';
 import { ValidatorFn } from '@angular/forms';
@@ -32,6 +35,7 @@ export class SchedulePeriodCardComponent implements OnInit {
       this.setPeriodFromValidators();
     }
   }
+  @ViewChild('datesGrid') datesGrid: GridComponent;
 
   @Input() eventId: number;
   @Input() period: ISchedulePeriod;
@@ -48,14 +52,9 @@ export class SchedulePeriodCardComponent implements OnInit {
   periodFromControls: Array<Partial<IDynamicFormItem>[]>;
   periodValidators: Array<ValidatorFn[]>;
 
-  periodToolbarControls: Partial<IDynamicFormItem>[] = [
-    { controlName: 'date', type: 'datepicker' },
-    { controlName: 'dates', type: 'multiselect', required: true, display: false },
+  periodGridControls: Array<IGridColumn> = [
+    { prop: 'date', renderer: 'dateRenderer' },
   ];
-  periodGridControls: IGridColumn[] = [
-    { prop: 'date', renderer: 'dateRenderer' }
-  ];
-  dates: IScheduleDate[] = [];
 
   selectedPeriod: ISchedulePeriod;
 
@@ -63,10 +62,20 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private gridService: GridService,
     private scheduleEventService: ScheduleEventService,
+    private valueConverterService: ValueConverterService,
   ) {}
 
   ngOnInit(): void {
+    this.gridService
+    .setAllRenderers(this.periodGridControls)
+    .pipe(first())
+    .subscribe(columns => {
+      this.periodGridControls = [...columns];
+      this.cdRef.markForCheck();
+    });
+
     (this.eventId ? this.scheduleEventService.canEdit$ : this.scheduleEventService.canView$)
       .pipe(first())
       .subscribe(canEdit => {
@@ -107,6 +116,11 @@ export class SchedulePeriodCardComponent implements OnInit {
     };
   }
 
+  get selectedDates(): any[] {
+    const datesControl = this._periodForm && this._periodForm.getControl('dates');
+    return datesControl && datesControl.value;
+  }
+
   onPeriodSelect(): void {
     const [ periodControl ] = this.periodTypeForm.getControl('periodTypeCode').value;
     this.selectedPeriodTypeCode$.next(periodControl.value);
@@ -114,7 +128,23 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   onDateAdd(): void {
     const dateControl = this._periodForm.getControl('date');
-    this.dates = this.dates.concat({ date: dateControl.value });
+    const selectedDatesControl = this._periodForm.getControl('dates');
+    const date = this.valueConverterService.dateStringToISO(dateControl.value);
+    const selectedDates = selectedDatesControl.value;
+    if (date && selectedDates.indexOf(date) === -1) {
+      selectedDatesControl.setValue([ ...selectedDates, { date: dateControl.value } ]);
+    }
+    dateControl.setValue('');
+    this.cdRef.markForCheck();
+  }
+
+  onDateDelete(): void {
+    const date = this.datesGrid.selected[0] && this.datesGrid.selected[0].date;
+    const datesControl = this._periodForm.getControl('dates');
+    if (date) {
+      datesControl.setValue(this.selectedDates.filter(d => d.date !== date));
+      datesControl.markAsDirty();
+    }
   }
 
   private get dailyFormSerializedUpdates(): any {
@@ -134,6 +164,10 @@ export class SchedulePeriodCardComponent implements OnInit {
           .map((day, index) => this._periodForm.serializedValue[day] && ++index)
           .filter(Boolean)
       },
+      {
+        dates: (this.selectedDates || [])
+          .map(date => this.valueConverterService.toDateOnly(date.date))
+      }
     ];
   }
 
@@ -170,7 +204,10 @@ export class SchedulePeriodCardComponent implements OnInit {
             width: 1
           }))
       ],
-      ,
+      [
+        { controlName: 'date', type: 'datepicker' },
+        { controlName: 'dates', type: 'multiselect', required: true, display: false },
+      ]
     ] as Array<Partial<IDynamicFormControl>[]>;
 
     this.periodValidators = [
@@ -190,7 +227,8 @@ export class SchedulePeriodCardComponent implements OnInit {
     return {
       ...this.period,
       ...this.createDaysData(this.period.weekDays || [], this.scheduleEventService.weekDays),
-      ...this.createDaysData(this.period.monthDays || [], this.scheduleEventService.monthDays)
+      ...this.createDaysData(this.period.monthDays || [], this.scheduleEventService.monthDays),
+      dates: (this.period.dates || []).map(date => ({ date: this.valueConverterService.dateStringToISO(date) }))
     };
   }
 

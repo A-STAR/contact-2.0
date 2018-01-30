@@ -265,7 +265,11 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   private createEventTypeControls(canEdit: boolean): Partial<IDynamicFormItem>[] {
     return this.createFormControls({
-      eventTypeCode: { disabled: !canEdit, dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE },
+      eventTypeCode: {
+        disabled: !canEdit,
+        dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE,
+        markAsDirty: !this.eventId
+      },
     });
   }
 
