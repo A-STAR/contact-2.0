@@ -205,7 +205,7 @@ export class SchedulePeriodCardComponent implements OnInit {
           }))
       ],
       [
-        { controlName: 'date', type: 'datepicker' },
+        { controlName: 'date', type: 'datepicker', minDate: new Date() },
         { controlName: 'dates', type: 'multiselect', required: true, display: false },
       ]
     ] as Array<Partial<IDynamicFormControl>[]>;
