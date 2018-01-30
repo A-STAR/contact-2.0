@@ -7,9 +7,9 @@ import { IAppState } from '@app/core/state/state.interface';
 import { ICurrencyRate } from './currency-rates.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
-import { DataService } from '../../../../core/data/data.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Injectable()
 export class CurrencyRatesService extends AbstractActionService {

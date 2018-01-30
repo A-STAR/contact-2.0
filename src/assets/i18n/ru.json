@@ -2920,6 +2920,7 @@
       "format": {
         "dateTime": "DD.MM.YYYY HH:mm:ss",
         "date": "DD.MM.YYYY",
+        "dateISO": "YYYY-MM-DD",
         "time": "HH:mm:ss"
       },
       "placeholders": {

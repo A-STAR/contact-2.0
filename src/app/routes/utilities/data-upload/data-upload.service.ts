@@ -11,6 +11,7 @@ import { TColumnType } from '@app/shared/components/grid/grid.interface';
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { DataUploader } from './data-uploader';
 import * as moment from 'moment';
@@ -105,7 +106,8 @@ export class DataUploadService {
     private dataService: DataService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private valueConverterService: ValueConverterService
   ) {}
 
   get format(): number {
@@ -125,9 +127,9 @@ export class DataUploadService {
   formatCellValue(valueType: TColumnType, value: ICellValue): ICellValue {
     switch (valueType) {
       case 'date':
-        return moment(value as Date).format('YYYY-MM-DD');
+        return this.valueConverterService.toDateOnly(value as Date);
       case 'datetime':
-        return moment(value as Date).format('YYYY-MM-DD HH:mm:ss');
+        return this.valueConverterService.toISO(value as Date);
       case 'string':
         return value === '' ? null : value;
       case 'boolean':
