@@ -38,6 +38,8 @@ export interface IToolbarElement {
   enabled?: Observable<boolean>;
   label?: string;
   align?: 'right';
+  // TODO:(i.lobanov) move it to some type which would work with IToolbarItem
+  closeOnClick?: boolean;
 }
 
 export interface IToolbarButton extends IToolbarElement {

@@ -32,6 +32,7 @@ import { DialogFunctions } from '@app/core/dialog';
 })
 export class ScheduleEventGridComponent extends DialogFunctions
   implements OnInit, OnDestroy {
+
   @ViewChild(GridComponent) grid: GridComponent;
 
   @Output() edit = new EventEmitter<IScheduleEvent>();
@@ -97,10 +98,12 @@ export class ScheduleEventGridComponent extends DialogFunctions
         {
           label: 'widgets.scheduleEvents.start.withCheckGroup',
           action: () => this.onStart(1),
+          closeOnClick: true
         },
         {
           label: 'widgets.scheduleEvents.start.withoutCheckGroup',
           action: () => this.onStart(0),
+          closeOnClick: true
         },
       ],
     },
