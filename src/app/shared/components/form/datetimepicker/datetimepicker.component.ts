@@ -34,13 +34,13 @@ export class DateTimePickerComponent implements ControlValueAccessor {
   }
 
   registerOnChange(fn: Function): void {
-    this.propagateChange = fn;
+    // this.propagateChange = fn;
   }
 
   registerOnTouched(fn: Function): void {
-    this.propagateTouch = fn;
+    // this.propagateTouch = fn;
   }
 
-  private propagateChange: Function = () => {};
-  private propagateTouch: Function = () => {};
+  // private propagateChange: Function = () => {};
+  // private propagateTouch: Function = () => {};
 }

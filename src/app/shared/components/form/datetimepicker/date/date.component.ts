@@ -35,7 +35,7 @@ export class DateComponent implements ControlValueAccessor {
   }
 
   get month(): string {
-    return this.page.format('MMMM');
+    return this.capitalize(this.page.format('MMMM'));
   }
 
   get year(): string {
@@ -51,7 +51,7 @@ export class DateComponent implements ControlValueAccessor {
   }
 
   getDayName(date: moment.Moment): string {
-    return date.format('ddd');
+    return this.capitalize(date.format('ddd'));
   }
 
   getClass(date: moment.Moment): object {
@@ -75,7 +75,7 @@ export class DateComponent implements ControlValueAccessor {
   }
 
   registerOnTouched(fn: Function): void {
-    this.propagateTouch = fn;
+    // this.propagateTouch = fn;
   }
 
   onClick(date: moment.Moment): void {
@@ -100,6 +100,11 @@ export class DateComponent implements ControlValueAccessor {
     this.page.subtract(1, 'y');
   }
 
+  // TODO(d.maltsev): this should probably be a pipe
+  private capitalize(s: string): string {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
   private propagateChange: Function = () => {};
-  private propagateTouch: Function = () => {};
+  // private propagateTouch: Function = () => {};
 }

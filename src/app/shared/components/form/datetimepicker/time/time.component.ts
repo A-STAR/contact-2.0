@@ -41,7 +41,7 @@ export class TimeComponent implements ControlValueAccessor {
   }
 
   registerOnTouched(fn: Function): void {
-    this.propagateTouch = fn;
+    // this.propagateTouch = fn;
   }
 
   getFormattedValue(modifier: IModifier, delta: number): string {
@@ -69,5 +69,5 @@ export class TimeComponent implements ControlValueAccessor {
   }
 
   private propagateChange: Function = () => {};
-  private propagateTouch: Function = () => {};
+  // private propagateTouch: Function = () => {};
 }
