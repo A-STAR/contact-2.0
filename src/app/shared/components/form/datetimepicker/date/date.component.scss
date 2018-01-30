@@ -38,7 +38,7 @@ ul {
     text-align: center;
 
     &.current {
-      color: green;
+      outline: 1px solid #46a2f9;
     }
 
     &.outside {
@@ -46,7 +46,8 @@ ul {
     }
 
     &.selected {
-      color: red;
+      background-color: #46a2f9;
+      color: #fff;
     }
   }
 
