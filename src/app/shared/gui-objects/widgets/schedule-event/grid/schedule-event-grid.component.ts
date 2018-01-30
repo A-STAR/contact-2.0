@@ -35,6 +35,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
   @ViewChild(GridComponent) grid: GridComponent;
 
   @Output() edit = new EventEmitter<IScheduleEvent>();
+  @Output() select = new EventEmitter<IScheduleEvent>();
 
   private selectedEvent$ = new BehaviorSubject<IScheduleEvent>(null);
 
@@ -154,7 +155,9 @@ export class ScheduleEventGridComponent extends DialogFunctions
   }
 
   onSelect(event: IScheduleEvent): void {
-    this.selectedEvent$.next(event);
+    const eventObj = Array.isArray(event) ? event[0] : event;
+    this.selectedEvent$.next(eventObj);
+    this.select.emit(eventObj);
   }
 
   onEdit(event: IScheduleEvent): void {
