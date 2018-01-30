@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  flex-direction: row;
+
+  .wheel {
+    color: #aaa;
+    flex: 1;
+    text-align: center;
+
+    span {
+      display: block;
+    }
+  }
+
+  .divider {
+    align-self: center;
+    flex: 0 0 20px;
+    text-align: center;
+  }
+}
+
+.arrow {
+  cursor: pointer;
+}
+
+.current {
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  color: #444;
+}

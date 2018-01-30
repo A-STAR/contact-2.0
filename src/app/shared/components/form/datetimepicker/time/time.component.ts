@@ -1,5 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import * as moment from 'moment';
+
+type IModifier = 'h' | 'm' | 's';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,6 +42,30 @@ export class TimeComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: Function): void {
     this.propagateTouch = fn;
+  }
+
+  getFormattedValue(modifier: IModifier, delta: number): string {
+    const format = { h: 'HH', m: 'mm', s: 'ss' }[modifier] || '';
+    return moment(this._value).clone().add(delta, modifier).format(format);
+  }
+
+  onUp(modifier: IModifier): void {
+    this.update(1, modifier);
+  }
+
+  onDown(modifier: IModifier): void {
+    this.update(-1, modifier);
+  }
+
+  onWheel(modifier: IModifier, event: WheelEvent): void {
+    const delta = -Math.sign(event.deltaY);
+    this.update(delta, modifier);
+  }
+
+  private update(delta: number, modifier: IModifier): void {
+    this._value = moment(this._value).clone().add(delta, modifier).toDate();
+    this.propagateChange(this._value);
+    this.cdRef.markForCheck();
   }
 
   private propagateChange: Function = () => {};

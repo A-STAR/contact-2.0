@@ -3,7 +3,11 @@ $day-dark: #49455e;
 
 :host {
   display: block;
-  width: 20em;
+}
+
+header {
+  text-align: center;
+  padding-bottom: 5px;
 }
 
 span {
