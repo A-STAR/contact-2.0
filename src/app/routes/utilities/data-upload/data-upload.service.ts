@@ -6,7 +6,6 @@ import {
   DataUploaders,
   ICellValue
 } from './data-upload.interface';
-import { TColumnType } from '@app/shared/components/grid/grid.interface';
 
 import { DataService } from '../../../core/data/data.service';
 import { GridService } from '../../../shared/components/grid/grid.service';

@@ -27,7 +27,6 @@ import { DataUploaders,
   ICellValue,
 } from './data-upload.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
-import { TColumnType } from '@app/shared/components/grid/grid.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
