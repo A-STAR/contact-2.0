@@ -3,6 +3,7 @@
     #dropdownParent
     type="text"
     class="form-control"
+    [ngModel]="momentValue | momentFormat:'MM/DD/YYYY HH:mm:SS'"
     [textMask]="mask"
     (wheel)="onWheel($event)"
   />
@@ -11,10 +12,10 @@
   </span>
   <div #dropdownContent style="z-index: 60000;">
     <div class="datetimepicker">
-      <app-date [minDateTime]="minDateTime" [maxDateTime]="maxDateTime" [ngModel]="value"></app-date>
-      <app-time [minDateTime]="minDateTime" [maxDateTime]="maxDateTime" [ngModel]="value"></app-time>
+      <app-date [minDateTime]="minDateTime" [maxDateTime]="maxDateTime" [ngModel]="value" (ngModelChange)="onDateChange($event)"></app-date>
+      <app-time [minDateTime]="minDateTime" [maxDateTime]="maxDateTime" [ngModel]="value" (ngModelChange)="onTimeChange($event)"></app-time>
       <footer>
-        <span>Сейчас</span>
+        <span (click)="setCurrentTime()">Сейчас</span>
         <span>OK</span>
       </footer>
     </div>

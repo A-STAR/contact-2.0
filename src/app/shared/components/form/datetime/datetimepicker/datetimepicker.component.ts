@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+import * as moment from 'moment';
+
+import { DateTimeService } from '../datetime.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,22 +24,23 @@ export class DateTimePickerComponent implements ControlValueAccessor {
   private _value: Date;
 
   // TODO(d.maltsev): get format from locale
-  private format = 'mm/dd/yyyy HH:MM';
+  format = 'MM/DD/YYYY HH:mm:SS';
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private dateTimeService: DateTimeService,
   ) {}
+
+  get momentValue(): moment.Moment {
+    return moment(this._value);
+  }
 
   get value(): Date {
     return this._value;
   }
 
   get mask(): any {
-    return {
-      keepCharPositions: true,
-      mask: this.createMaskFromFormat(this.format),
-      pipe: createAutoCorrectedDatePipe(this.format),
-    };
+    return this.dateTimeService.getMaskParamsFromMomentFormat(this.format);
   }
 
   writeValue(value: Date): void {
@@ -46,7 +49,7 @@ export class DateTimePickerComponent implements ControlValueAccessor {
   }
 
   registerOnChange(fn: Function): void {
-    // this.propagateChange = fn;
+    this.propagateChange = fn;
   }
 
   registerOnTouched(fn: Function): void {
@@ -60,12 +63,27 @@ export class DateTimePickerComponent implements ControlValueAccessor {
     console.log(delta, start);
   }
 
-  private createMaskFromFormat(format: string): any[] {
-    // Do NOT use `.split('')` here!
-    // See https://stackoverflow.com/questions/4547609/how-do-you-get-a-string-to-a-character-array-in-javascript
-    return Array.from(this.format).map(c => c.match(/[a-z]/i) ? /\d/ : c);
+  setCurrentTime(): void {
+    const value = new Date();
+    this.update(value);
   }
 
-  // private propagateChange: Function = () => {};
+  onDateChange(date: Date): void {
+    const value = this.dateTimeService.setDate(this._value, date);
+    this.update(value);
+  }
+
+  onTimeChange(time: Date): void {
+    const value = this.dateTimeService.setTime(this._value, time);
+    this.update(value);
+  }
+
+  private update(value: Date): void {
+    this._value = value;
+    this.propagateChange(this._value);
+    this.cdRef.markForCheck();
+  }
+
+  private propagateChange: Function = () => {};
   // private propagateTouch: Function = () => {};
 }
