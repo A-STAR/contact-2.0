@@ -185,11 +185,17 @@ export class DataUploadComponent extends DialogFunctions
       value: this.dataUploadService.formatCellValue(cell.columnId as TColumnType, cell.value),
     };
     this.dataUploadService.uploader.editCell(payload).subscribe(response => {
-      const row = response.rows[0];
-      const rows = this.rows.slice();
-      rows.splice(row.id - 1, 1, row);
-      this.rows = rows;
-      this.cdRef.markForCheck();
+      const row = response && response.rows && response.rows[0];
+      if (row) {
+        // we have to change reference to the rows arr
+        const rows = this.rows.slice();
+        const rowIndex = rows.findIndex((_row => _row.id === row.id));
+        if (rowIndex !== -1) {
+          rows.splice(rowIndex, 1, row);
+          this.rows = rows;
+          this.cdRef.markForCheck();
+        }
+      }
     });
   }
 
