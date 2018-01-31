@@ -6,7 +6,7 @@
 
       <!-- Dropdown Group -->
       <div *ngIf="item.children; else button">
-        <app-dropdown position="left" [enabled]="!(isDisabled(item) | async)">
+        <app-dropdown #dropdown position="left" [enabled]="!(isDisabled(item) | async)">
           <app-button
             trigger
             [disabled]="isDisabled(item) | async"
