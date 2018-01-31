@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 
@@ -15,7 +15,7 @@ import * as moment from 'moment';
   styleUrls: [ './date.component.scss' ],
   templateUrl: './date.component.html'
 })
-export class DateComponent implements ControlValueAccessor, OnDestroy {
+export class DateComponent implements ControlValueAccessor {
   @Input() minDateTime: Date;
   @Input() maxDateTime: Date;
 
@@ -26,10 +26,6 @@ export class DateComponent implements ControlValueAccessor, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
   ) {}
-
-  ngOnDestroy(): void {
-    // this.langSub.unsubscribe();
-  }
 
   getClass(date: moment.Moment): object {
     return {
