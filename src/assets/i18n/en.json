@@ -60,7 +60,6 @@
         "CONTACT_TREES": "Contact trees",
         "MESSAGE_SCENARIOS": "Message scenarios",
         "CONTACT_REGISTRATION": "Contact tegistration",
-        "GROUPS": "Groups",
         "GROUP_EDIT": "Group",
         "CAMPAIGNS": "Campaigns",
         "SCHEDULE": "Schedule",
@@ -2151,7 +2150,8 @@
       },
       "tabs": {
         "all": "Groups",
-        "debtsInGroup": "Debts in group"
+        "debtsInGroup": "Debts in group",
+        "scheduleEvents": "Events"
       }
     },
     "visit": {

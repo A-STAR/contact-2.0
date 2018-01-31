@@ -1,0 +1,20 @@
+<app-schedule-log-view-dialog
+  *ngIf="isDialog('scheduleLogView')"
+  [eventId]="eventId"
+  (close)="closeDialog()"
+></app-schedule-log-view-dialog>
+
+<div class="pt-lg">
+  <app-button
+    [disabled]="!(canViewLog$ | async)"
+    [icon]="'icon-info'"
+    [label]="'utilities.schedule.log.buttons.history' | translate"
+    (click)="setDialog('scheduleLogView')"
+  ></app-button>
+</div>
+
+<div class="pt-lg">
+  <app-schedule-event-grid
+    (select)="onSelect($event)"
+  ></app-schedule-event-grid>
+</div>

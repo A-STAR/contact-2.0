@@ -1,43 +1,28 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
-import { IScheduleEvent } from '@app/shared/gui-objects/widgets/schedule-event/schedule-event.interface';
+import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
 
-import { ScheduleEventService } from '@app/shared/gui-objects/widgets/schedule-event/schedule-event.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '@app/core/dialog';
+import { makeKey } from '@app/core/utils';
+
+const label = makeKey('widgets.groups.tabs');
 
 @Component({
   selector: 'app-schedule',
+  host: { class: 'full-height' },
   templateUrl: './schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleComponent extends DialogFunctions {
-
-  dialog;
-
-  eventId: number;
+export class ScheduleComponent {
 
   constructor(
-    private scheduleEventService: ScheduleEventService,
-  ) {
-    super();
-  }
+    private userPermissionsService: UserPermissionsService
+  ) { }
 
-  get canViewLog$(): Observable<boolean> {
-    return this.scheduleEventService.canViewLog$;
-  }
-
-  onEdit(event: IScheduleEvent): void {
-    this.setDialog('schedule');
-    this.eventId = event && event.id;
-  }
-
-  onSelect(event: IScheduleEvent): void {
-    this.eventId = event && event.id;
-  }
-
-  openViewLogDialog(): void {
-    this.setDialog('scheduleLogView');
-  }
+  tabs: ITab[] = [
+    { link: 'all', title: label('all'), hasPermission: this.userPermissionsService.has('GROUP_VIEW') },
+    { link: 'debts', title: label('debtsInGroup'), hasPermission: this.userPermissionsService.has('GROUP_TAB_DEBT_GROUP') },
+    { link: 'schedule', title: label('scheduleEvents'), hasPermission: this.userPermissionsService.has('SCHEDULE_VIEW') },
+  ];
 }
