@@ -1,15 +1,22 @@
-<input
-  type="text"
-  class="form-control"
-  [textMask]="mask"
-  (wheel)="onWheel($event)"
-/>
-
-<div class="datetimepicker">
-  <app-date [minDateTime]="minDateTime" [maxDateTime]="maxDateTime" [ngModel]="value"></app-date>
-  <app-time [minDateTime]="minDateTime" [maxDateTime]="maxDateTime" [ngModel]="value"></app-time>
-  <footer>
-    <span>Сейчас</span>
-    <span>OK</span>
-  </footer>
+<div appDropdown style="position: relative;">
+  <input
+    #dropdownParent
+    type="text"
+    class="form-control"
+    [textMask]="mask"
+    (wheel)="onWheel($event)"
+  />
+  <span class="toggle" #dropdownTrigger>
+    <i class="fa fa-calendar"></i>
+  </span>
+  <div #dropdownContent style="z-index: 60000;">
+    <div class="datetimepicker">
+      <app-date [minDateTime]="minDateTime" [maxDateTime]="maxDateTime" [ngModel]="value"></app-date>
+      <app-time [minDateTime]="minDateTime" [maxDateTime]="maxDateTime" [ngModel]="value"></app-time>
+      <footer>
+        <span>Сейчас</span>
+        <span>OK</span>
+      </footer>
+    </div>
+  </div>
 </div>
