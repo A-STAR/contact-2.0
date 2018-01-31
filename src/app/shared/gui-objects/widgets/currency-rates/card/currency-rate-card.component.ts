@@ -41,7 +41,7 @@ export class CurrencyRateCardComponent implements OnInit {
       this.currencyRateId
         ? this.currencyRatesService.fetch(this.currencyId, this.currencyRateId)
         // TODO(d.maltsev): REMOVE `fromDateTime`!!!!!
-        : of({ fromDateTime: new Date() })
+        : of({ fromDateTime: new Date('2018-01-10T13:24:00') })
     )
     .pipe(first())
     .subscribe(([ canEdit, currencyRate ]) => {
