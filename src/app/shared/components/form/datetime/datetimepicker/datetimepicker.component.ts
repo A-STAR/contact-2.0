@@ -27,7 +27,7 @@ export class DateTimePickerComponent implements ControlValueAccessor {
   private _value: Date;
 
   // TODO(d.maltsev): get format from locale
-  format = 'MM/DD/YYYY HH:mm:SS';
+  format = 'MM/DD/YYYY HH:mm:ss';
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -72,7 +72,10 @@ export class DateTimePickerComponent implements ControlValueAccessor {
 
   onChange(event: Event): void {
     const { value } = event.target as HTMLInputElement;
-    console.log(value);
+    const date = moment(value, this.format);
+    if (date.isValid()) {
+      this.update(date.toDate());
+    }
   }
 
   setCurrentTime(): void {
@@ -93,7 +96,7 @@ export class DateTimePickerComponent implements ControlValueAccessor {
 
   private update(value: Date): void {
     this._value = value;
-    this.propagateChange(this._value);
+    this.propagateChange(value);
     this.cdRef.markForCheck();
   }
 

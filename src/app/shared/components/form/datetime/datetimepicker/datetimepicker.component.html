@@ -6,7 +6,7 @@
     [ngModel]="momentValue | momentFormat:'MM/DD/YYYY HH:mm:SS'"
     [textMask]="mask"
     (blur)="onTouch()"
-    (input)="onChange($event)"
+    (change)="onChange($event)"
     (wheel)="onWheel($event)"
   />
   <span class="toggle" #dropdownTrigger (click)="onTouch()">

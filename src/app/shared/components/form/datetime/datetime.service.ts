@@ -19,7 +19,7 @@ export class DateTimeService {
     YYYY: 'yyyy',
     HH:   'HH',
     mm:   'MM',
-    SS:   'SS',
+    ss:   'SS',
   };
 
   getMaskParamsFromMomentFormat(format: string): any {
