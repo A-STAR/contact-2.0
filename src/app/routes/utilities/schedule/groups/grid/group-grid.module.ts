@@ -15,14 +15,6 @@ const routes: Routes = [
     data: {
       reuse: true,
     }
-  },
-  {
-    path: 'create',
-    loadChildren: './card/group-card.module#GroupCardModule',
-  },
-  {
-    path: ':groupId',
-    loadChildren: './card/group-card.module#GroupCardModule',
   }
 ];
 
