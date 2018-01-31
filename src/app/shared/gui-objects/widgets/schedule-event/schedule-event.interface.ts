@@ -31,10 +31,7 @@ export interface ISchedulePeriod {
   dayPeriod?: number;
   weekDays?: number[];
   monthDays?: number[];
-}
-
-export interface IScheduleDate {
-  date?: string | Date;
+  dates?: any[];
 }
 
 export interface IScheduleType {
