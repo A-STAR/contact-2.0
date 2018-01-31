@@ -275,7 +275,9 @@
         "cancel": "Error when trying to cancel data load",
         "save": "Error when trying to save data to DB",
         "editCell": "Error when trying to edit cell",
-        "getErrors": "Error when trying to get error log file"
+        "getErrors": "Error when trying to get error log file",
+        "errorFile": "errors",
+        "defaultError": "Unknown error has been occurred"
       }
     },
     "payments": {
@@ -2937,6 +2939,7 @@
       "format": {
         "dateTime": "MM/DD/YYYY HH:mm:ss",
         "date": "MM/DD/YYYY",
+        "dateISO": "YYYY-MM-DD",
         "time": "HH:mm:ss"
       },
       "placeholders": {
