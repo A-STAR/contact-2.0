@@ -21,6 +21,7 @@ export class DateTimePickerComponent implements ControlValueAccessor {
 
   private _value: Date;
 
+  // TODO(d.maltsev): get format from locale
   private format = 'mm/dd/yyyy HH:MM';
 
   constructor(

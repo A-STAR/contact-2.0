@@ -8,7 +8,6 @@ import * as moment from 'moment';
   pure: false,
 })
 export class MomentMonthPipe implements OnDestroy, PipeTransform {
-  private formattedValue: string;
   private langSub: Subscription;
 
   constructor(
