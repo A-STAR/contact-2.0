@@ -3,7 +3,8 @@
     <i class="fa fa-angle-left"></i>
   </span>
   <span>
-    {{ month }} {{ year }}
+    {{ page | moment:'MMMM' | capitalize }} {{ page | moment:'YYYY' }}
+    <!-- {{ month }} {{ year }} -->
   </span>
   <span class="arrow" (click)="showNextMonth()">
     <i class="fa fa-angle-right"></i>
@@ -12,12 +13,12 @@
 
 <ul class="header">
   <li *ngFor="let date of range | slice:0:7">
-    {{ getDayName(date) }}
+    {{ date | moment:'ddd' | capitalize }}
   </li>
 </ul>
 
 <ul>
   <li *ngFor="let date of range" [ngClass]="getClass(date)" (click)="onClick(date)">
-    {{ getDay(date) }}
+    {{ date | moment:'D' }}
   </li>
 </ul>

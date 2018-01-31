@@ -21,7 +21,7 @@ export class DateComponent implements ControlValueAccessor {
 
   private _value: Date;
 
-  page = moment(new Date()).locale('ru');
+  page = moment();
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -34,25 +34,9 @@ export class DateComponent implements ControlValueAccessor {
     return Array(n + 1).fill(null).map((_, i) => firstDay.clone().add(i, 'd'));
   }
 
-  get month(): string {
-    return this.capitalize(this.page.format('MMMM'));
-  }
-
-  get year(): string {
-    return this.page.format('YYYY');
-  }
-
-  get value(): Date {
-    return this._value;
-  }
-
-  getDay(date: moment.Moment): string {
-    return date.format('D');
-  }
-
-  getDayName(date: moment.Moment): string {
-    return this.capitalize(date.format('ddd'));
-  }
+  // get value(): Date {
+  //   return this._value;
+  // }
 
   getClass(date: moment.Moment): object {
     return {
@@ -65,7 +49,7 @@ export class DateComponent implements ControlValueAccessor {
   writeValue(value: Date): void {
     this._value = value;
     if (value) {
-      this.page = moment(value).locale('ru');
+      this.page = moment(value);
     }
     this.cdRef.markForCheck();
   }
