@@ -2187,11 +2187,11 @@
     },
     "currencyRates": {
       "grid": {
-        "fromDateTime": "Дата",
+        "fromDate": "Дата",
         "rate": "Курс"
       },
       "card": {
-        "fromDateTime": "Дата",
+        "fromDate": "Дата",
         "rate": "Курс"
       }
     },

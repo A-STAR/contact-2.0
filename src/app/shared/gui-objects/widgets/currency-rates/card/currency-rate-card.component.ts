@@ -69,7 +69,7 @@ export class CurrencyRateCardComponent implements OnInit {
 
   private serializeCurrencyRate(currencyRate: ICurrencyRate): ICurrencyRate {
     return {
-      fromDateTime: this.currencyRate.fromDateTime,
+      fromDate: this.currencyRate.fromDate,
       ...currencyRate
     };
   }
@@ -77,7 +77,7 @@ export class CurrencyRateCardComponent implements OnInit {
   private initControls(canEdit: boolean): Array<IDynamicFormItem> {
     return [
       {
-        label: label('fromDateTime'), controlName: 'fromDateTime', type: 'datepicker', displayTime: true,
+        label: label('fromDate'), controlName: 'fromDate', type: 'datepicker', displayTime: false,
         required: true, disabled: !canEdit || !!this.currencyRateId
       },
       { label: label('rate'), controlName: 'rate', type: 'number', disabled: !canEdit, required: true },
