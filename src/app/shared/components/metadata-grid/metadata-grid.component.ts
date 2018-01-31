@@ -170,7 +170,8 @@ export class MetadataGridComponent<T> implements OnInit {
     }));
   }
 
-  private buildPermissions(actions: any, constants: ValueBag, permissions: ValueBag, entityPerms: IEntityAttributes): any {
+  private buildPermissions(actions: any, constants: ValueBag, permissions: ValueBag, entityPerms: IEntityAttributes)
+    : { [key: string]: (...args: any[]) => any } {
     return {
       addVisit: selection => selection.length && permissions.has('ADDRESS_VISIT_ADD'),
       cancelVisit: selection => selection.length && permissions.has('VISIT_CANCEL'),
@@ -219,6 +220,9 @@ export class MetadataGridComponent<T> implements OnInit {
           && constants.has('SMS.Use')
           && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
       },
+      debtOutsourcingSend: selection => selection.length && permissions.has('DEBT_OUTSOURCING_SEND'),
+      debtOutsourcingExclude: selection => selection.length && permissions.has('DEBT_OUTSOURCING_EXCLUDE'),
+      debtOutsourcingReturn: selection => selection.length && permissions.has('DEBT_OUTSOURCING_RETURN'),
     };
   }
 }

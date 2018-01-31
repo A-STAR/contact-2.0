@@ -1717,6 +1717,29 @@
       },
       "changeDefaultAttr": {
         "title": "Change attribute"
+      },
+      "outsourcing": {
+        "send": {
+          "title": "Choose a portfolio",
+          "grid": {
+            "id": "ID",
+            "name": "Name",
+            "contractorName": "Contractor",
+            "statusCode": "Status",
+            "stageCode": "Stage",
+            "signDate": "Signed on",
+            "startWorkDate": "Processing start date",
+            "endWorkDate": "Processing end date"
+          }
+        },
+        "exclude": {
+          "message": "Do you really want to exclude outsourcing for the selected debts?",
+          "text": "Exclude outsourcing"
+        },
+        "return": {
+          "message": "Do you really want to return outsourcing for the selected debts?",
+          "text": "Return outsourcing"
+        }
       }
     },
     "nextCallDateSet": {
@@ -2908,7 +2931,10 @@
         "changeDict4Attr": "Dictionary Attribute 4",
         "changeCreditTypeAttr": "Credit Product Type",
         "changeBranchAttr": "Branch",
-        "changeTimezoneAttr": "Time zone"
+        "changeTimezoneAttr": "Time zone",
+        "debtOutsourcingSend": "Send to outsourcing",
+        "debtOutsourcingExclude": "Exclude from outsourcing",
+        "debtOutsourcingReturn": "Return from outsourcing"
       }
     },
     "filter": {
