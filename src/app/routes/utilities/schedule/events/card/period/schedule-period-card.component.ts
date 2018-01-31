@@ -96,7 +96,8 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   get currentPeriodFormType(): number {
-    return this.periodFromControls.indexOf(this._periodForm.controls) + 1;
+    return this.periodFromControls
+      .indexOf(this._periodForm && this._periodForm.controls) + 1;
   }
 
   get periodForms(): DynamicFormComponent[] {

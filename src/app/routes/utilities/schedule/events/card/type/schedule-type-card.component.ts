@@ -37,7 +37,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     labelKey: 'widgets.scheduleEvents.card',
   };
 
-  addParamsControls: Array<Partial<IDynamicFormControl>[]>;
+  addParamsControls: Array<Partial<IDynamicFormItem>[]>;
   addParamsData: any;
 
   selectedType: Partial<IScheduleType>;
@@ -224,6 +224,11 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     return this.selectedEventTypeCode$.value;
   }
 
+  get currentAddParamsForm(): number {
+    return this.addParamsControls
+      .indexOf(this.addParamsForm && this.addParamsForm.controls) + 1;
+  }
+
   get isOriginalEventType(): boolean {
     return this.type.eventTypeCode === this.selectedEventTypeCode;
   }
@@ -233,7 +238,8 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   }
 
   get canSubmit(): boolean {
-    return !!this.eventTypeForms.find(form => form && form.canSubmit)
+    return this.selectedEventTypeCode === this.currentAddParamsForm
+      && this.eventTypeForms.find(form => form && form.canSubmit)
       && this.eventTypeForms.map(dform => dform.form).every(form => !form || form.valid);
   }
 
