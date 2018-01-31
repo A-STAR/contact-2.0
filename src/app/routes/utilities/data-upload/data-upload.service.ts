@@ -14,7 +14,6 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { DataUploader } from './data-uploader';
-import * as moment from 'moment';
 
 /**
  * Spec:       http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=140181557
