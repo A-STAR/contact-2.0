@@ -9,14 +9,25 @@ import {
 } from '@angular/core';
 
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
-import { DataUploaders, IOpenFileResponse, ICell, ICellPayload, IDataResponse, IRow,  } from './data-upload.interface';
+import { DataUploaders,
+  IOpenFileResponse,
+  ICell,
+  ICellPayload,
+  IDataResponse,
+  IRow,
+  ICellValue,
+} from './data-upload.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
+import { TColumnType } from '@app/shared/components/grid/grid.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
@@ -53,7 +64,7 @@ export class DataUploadComponent extends DialogFunctions
   ];
 
   columns: IAGridColumn[];
-  uploaders: IOption[];
+  uploaders: IOption[] = [];
 
   dialog: 'cancel' | 'errorLogPrompt';
 
@@ -65,10 +76,10 @@ export class DataUploadComponent extends DialogFunctions
   private static FORMAT_PERMISSION = 'LOAD_DATA_FROM_EXCEL_FORMAT_LIST';
 
   private uploadersOptionsSub: Subscription;
-  private queryParamsSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private store: Store<IAppState>,
     private dataUploadService: DataUploadService,
     private gridService: GridService,
     private userDictionariesService: UserDictionariesService,
@@ -77,43 +88,40 @@ export class DataUploadComponent extends DialogFunctions
   }
 
   ngOnInit(): void {
-    this.uploadersOptionsSub = this.userDictionariesService
-      .getDictionaryAsOptionsWithPermission(
+    this.uploadersOptionsSub = combineLatest(
+      this.userDictionariesService.getDictionaryAsOptionsWithPermission(
         UserDictionariesService.DICTIONARY_DATA_LOAD_FORMAT,
-        DataUploadComponent.FORMAT_PERMISSION,
+        DataUploadComponent.FORMAT_PERMISSION
+      ),
+      this.store
+        .select(store => store.currency)
+        .map(
+          currency => currency.currencyId,
+        )
       )
-      .subscribe(options => {
-        this.uploaders = options;
-        this.dataUploadService.format = options[0].value as any;
-        this.cdRef.markForCheck();
-      });
-
-    // set initial value
-    this.dataUploadService.format = DataUploaders.SET_OPERATOR;
-
-    this.queryParamsSub = this.dataUploadService
-      .getPayload(DataUploadService.SELECTED_CURRENCY)
-      .filter(Boolean)
-      .subscribe(currencyId => {
-        // format setter also creates new loader if it wasn't created
-        this.dataUploadService.format = DataUploaders.CURRENCY_RATE;
-        this.dataUploadService.uploader.parameter = currencyId;
-        this.isSelectVisible = false;
+      .subscribe(([options, currencyId]) => {
+        // ensure that currency uploader is permitted
+        if (currencyId && options
+            .map(option => option.value)
+            .includes(DataUploaders.CURRENCY_RATE)) {
+          this.dataUploadService.format = DataUploaders.CURRENCY_RATE;
+          this.dataUploadService.uploader.parameter = currencyId;
+          this.isSelectVisible = false;
+        } else {
+          this.dataUploadService.format = options[0].value as any;
+        }
         // reset previous loaded file
-        this.fileInput.nativeElement.value = '';
+        this.resetFile();
         if (this.columns) {
           // reset previous grid
           this.resetGrid();
         }
+        this.uploaders = options;
         this.cdRef.markForCheck();
-      });
+    });
   }
 
   ngOnDestroy(): void {
-    if (this.queryParamsSub) {
-      this.queryParamsSub.unsubscribe();
-    }
-
     if (this.uploadersOptionsSub) {
       this.uploadersOptionsSub.unsubscribe();
     }
@@ -136,6 +144,10 @@ export class DataUploadComponent extends DialogFunctions
 
   get errorFileUrl(): string {
     return this.dataUploadService.uploader.getErrors();
+  }
+
+  get errorFileName(): string {
+    return this.dataUploadService.uploader.errorFileName;
   }
 
   onFormatChange(format: { value: number }[]): void {
@@ -170,14 +182,20 @@ export class DataUploadComponent extends DialogFunctions
     const payload: ICellPayload = {
       rowId: event.data.id,
       columnId: cell.columnId,
-      value: String(cell.value),
+      value: this.dataUploadService.formatCellValue(cell.columnId as TColumnType, cell.value),
     };
     this.dataUploadService.uploader.editCell(payload).subscribe(response => {
-      const row = response.rows[0];
-      const rows = this.rows.slice();
-      rows.splice(row.id - 1, 1, row);
-      this.rows = rows;
-      this.cdRef.markForCheck();
+      const row = response && response.rows && response.rows[0];
+      if (row) {
+        // we have to change reference to the rows arr
+        const rows = this.rows.slice();
+        const rowIndex = rows.findIndex((_row => _row.id === row.id));
+        if (rowIndex !== -1) {
+          rows.splice(rowIndex, 1, row);
+          this.rows = rows;
+          this.cdRef.markForCheck();
+        }
+      }
     });
   }
 
@@ -190,7 +208,7 @@ export class DataUploadComponent extends DialogFunctions
     this.dataUploadService.uploader
       .openFile(file)
       .catch(() => {
-        this.fileInput.nativeElement.value = '';
+        this.resetFile();
         return of(null);
       })
       .flatMap(
@@ -217,7 +235,7 @@ export class DataUploadComponent extends DialogFunctions
         this.setDialog('errorLogPrompt');
       } else {
         // handles both successful and erroneous response
-        this.fileInput.nativeElement.value = '';
+        this.resetFile();
         this.resetGrid();
       }
       this.cdRef.markForCheck();
@@ -244,7 +262,7 @@ export class DataUploadComponent extends DialogFunctions
     this.dataUploadService.uploader.cancel().subscribe(() => {
       this.resetGrid();
       // TODO(d.maltsev): maybe reset form instead?
-      this.fileInput.nativeElement.value = '';
+      this.resetFile();
       this.closeDialog();
       this.cdRef.markForCheck();
     });
@@ -290,6 +308,11 @@ export class DataUploadComponent extends DialogFunctions
     }
   }
 
+  private resetFile(): void {
+    this.fileInput.nativeElement.value = '';
+    this.dataUploadService.uploader.fileName = '';
+  }
+
   private resetGrid(): void {
     this.columns = null;
     this.rows = [];
@@ -324,17 +347,7 @@ export class DataUploadComponent extends DialogFunctions
     return response.rows.sort((a, b) => a.id - b.id);
   }
 
-  // private getCellRenderer(params: ICellRendererParams): string {
-  //   const { errorMsg } = this.getCell(params);
-  //   const value = params.valueFormatted === null ? '' : params.valueFormatted;
-  //   return `
-  //     <div title="${errorMsg ? 'errors.server.' + errorMsg : ''}">
-  //       ${value}
-  //     </div>
-  //   `;
-  // }
-
-  private getCellValue(params: ICellRendererParams): number | string {
+  private getCellValue(params: ICellRendererParams): ICellValue {
     return this.getCell(params).value;
   }
 
