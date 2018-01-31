@@ -3,7 +3,7 @@
     <i class="fa fa-angle-left"></i>
   </span>
   <span>
-    {{ page | moment:'MMMM' | capitalize }} {{ page | moment:'YYYY' }}
+    {{ page | momentFormat:'MMMM' | capitalize }} {{ page | momentFormat:'YYYY' }}
   </span>
   <span class="arrow" (click)="showNextMonth()">
     <i class="fa fa-angle-right"></i>
@@ -11,13 +11,13 @@
 </header>
 
 <ul class="header">
-  <li *ngFor="let date of range | slice:0:7">
-    {{ date | moment:'ddd' | capitalize }}
+  <li *ngFor="let date of page | momentWeek">
+    {{ date | momentFormat:'ddd' | capitalize }}
   </li>
 </ul>
 
 <ul>
-  <li *ngFor="let date of range" [ngClass]="getClass(date)" (click)="onClick(date)">
-    {{ date | moment:'D' }}
+  <li *ngFor="let date of page | momentMonth" [ngClass]="getClass(date)" (click)="onClick(date)">
+    {{ date | momentFormat:'D' }}
   </li>
 </ul>

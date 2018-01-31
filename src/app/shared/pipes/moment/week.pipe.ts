@@ -4,10 +4,10 @@ import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
 
 @Pipe({
-  name: 'moment',
+  name: 'momentWeek',
   pure: false,
 })
-export class MomentPipe implements OnDestroy, PipeTransform {
+export class MomentWeekPipe implements OnDestroy, PipeTransform {
   private formattedValue: string;
   private langSub: Subscription;
 
@@ -22,10 +22,12 @@ export class MomentPipe implements OnDestroy, PipeTransform {
     this.langSub.unsubscribe();
   }
 
-  transform(value: moment.Moment, format: string): string {
+  transform(value: moment.Moment, format: string): moment.Moment[] {
     const { currentLang, defaultLang } = this.translateService;
     const lang = currentLang || defaultLang;
-    this.formattedValue = value.locale(lang).format(format);
-    return this.formattedValue;
+    const firstDay = value.clone().locale(lang).startOf('week');
+    const lastDay = value.clone().locale(lang).endOf('week');
+    const n = lastDay.diff(firstDay, 'days') || 0;
+    return Array(n + 1).fill(null).map((_, i) => firstDay.clone().add(i, 'd'));
   }
 }

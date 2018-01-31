@@ -1,17 +1,23 @@
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { MomentPipe } from './moment.pipe';
+import { MomentFormatPipe } from './format.pipe';
+import { MomentMonthPipe } from './month.pipe';
+import { MomentWeekPipe } from './week.pipe';
 
 @NgModule({
   imports: [
     TranslateModule,
   ],
   exports: [
-    MomentPipe,
+    MomentFormatPipe,
+    MomentMonthPipe,
+    MomentWeekPipe,
   ],
   declarations: [
-    MomentPipe,
+    MomentFormatPipe,
+    MomentMonthPipe,
+    MomentWeekPipe,
   ],
 })
 export class MomentModule {}
