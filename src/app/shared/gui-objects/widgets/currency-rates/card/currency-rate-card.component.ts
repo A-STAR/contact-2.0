@@ -38,10 +38,7 @@ export class CurrencyRateCardComponent implements OnInit {
   ngOnInit(): void {
     combineLatest(
       this.currencyRateId ? this.currencyRatesService.canEdit$ : this.currencyRatesService.canAdd$,
-      this.currencyRateId
-        ? this.currencyRatesService.fetch(this.currencyId, this.currencyRateId)
-        // TODO(d.maltsev): REMOVE `fromDateTime`!!!!!
-        : of({ fromDateTime: new Date('2018-01-10T13:24:00') })
+      this.currencyRateId ? this.currencyRatesService.fetch(this.currencyId, this.currencyRateId) : of({}),
     )
     .pipe(first())
     .subscribe(([ canEdit, currencyRate ]) => {

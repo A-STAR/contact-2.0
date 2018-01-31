@@ -46,7 +46,7 @@ export class TimeComponent implements ControlValueAccessor {
 
   getFormattedValue(modifier: IModifier, delta: number): string {
     const format = { h: 'HH', m: 'mm', s: 'ss' }[modifier] || '';
-    return moment(this._value).clone().add(delta, modifier).format(format);
+    return moment(this._value || new Date()).clone().add(delta, modifier).format(format);
   }
 
   onUp(modifier: IModifier): void {
@@ -63,7 +63,7 @@ export class TimeComponent implements ControlValueAccessor {
   }
 
   private update(delta: number, modifier: IModifier): void {
-    this._value = moment(this._value).clone().add(delta, modifier).toDate();
+    this._value = moment(this._value || new Date()).clone().add(delta, modifier).toDate();
     this.propagateChange(this._value);
     this.cdRef.markForCheck();
   }
