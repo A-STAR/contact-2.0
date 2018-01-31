@@ -4,21 +4,21 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { IAppState } from '../../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import {
   IScheduleEvent, IScheduleGroup, IScheduleType,
-  IScheduleParam, IScheduleStartRequest, IScheduleUser
+  IScheduleParam, IScheduleStartRequest, IScheduleUser, IScheduleEventLog
 } from './schedule-event.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 import { IUserDictionaryOptions } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
-import { AbstractActionService } from '../../../../core/state/action.service';
-import { DataService } from '../../../../core/data/data.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { AbstractActionService } from '@app/core/state/action.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -46,6 +46,10 @@ export class ScheduleEventService extends AbstractActionService {
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('SCHEDULE_VIEW');
+  }
+
+  get canViewLog$(): Observable<boolean> {
+    return this.userPermissionsService.has('SCHEDULE_LOG_VIEW');
   }
 
   get canAdd$(): Observable<boolean> {
@@ -121,6 +125,11 @@ export class ScheduleEventService extends AbstractActionService {
     return this.dataService
       .readAll('/filters/users', {}, {})
       .catch(this.notificationsService.fetchError().entity('entities.users.gen.plural').dispatchCallback());
+  }
+
+  fetchLogs(eventId: number): Observable<IScheduleEventLog[]> {
+    return this.dataService.readAll(`${this.baseUrl}/{eventId}/executionLogs`, { eventId })
+      .catch(this.notificationsService.fetchError().entity('entities.scheduleEventLog.gen.singular').dispatchCallback());
   }
 
   delete(eventId: number): Observable<any> {

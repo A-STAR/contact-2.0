@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { IScheduleEvent } from '@app/shared/gui-objects/widgets/schedule-event/schedule-event.interface';
+
+import { ScheduleEventService } from '@app/shared/gui-objects/widgets/schedule-event/schedule-event.service';
 
 import { DialogFunctions } from '@app/core/dialog';
 
@@ -15,12 +18,26 @@ export class ScheduleComponent extends DialogFunctions {
 
   eventId: number;
 
-  constructor() {
+  constructor(
+    private scheduleEventService: ScheduleEventService,
+  ) {
     super();
+  }
+
+  get canViewLog$(): Observable<boolean> {
+    return this.scheduleEventService.canViewLog$;
   }
 
   onEdit(event: IScheduleEvent): void {
     this.setDialog('schedule');
     this.eventId = event && event.id;
+  }
+
+  onSelect(event: IScheduleEvent): void {
+    this.eventId = event && event.id;
+  }
+
+  openViewLogDialog(): void {
+    this.setDialog('scheduleLogView');
   }
 }

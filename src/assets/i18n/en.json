@@ -1324,6 +1324,22 @@
     },
     "currencyRatesTab": {
       "title": "Rates"
+    },
+    "schedule": {
+      "log": {
+        "grid": {
+          "startDateTime": "Start",
+          "endDateTime": "Stop",
+          "startType": "Start type",
+          "userFullName": "User"
+        },
+        "dialog": {
+          "title": "History of launches"
+        },
+        "buttons": {
+          "history": "History"
+        }
+      }
     }
   },
   "notifications": {
@@ -2444,6 +2460,9 @@
     },
     "scheduleEvents": {
       "gen": { "singular": "event", "plural": "events" }
+    },
+    "scheduleEventLog": {
+      "gen": { "singular": "event history", "plural": "events history" }
     }
   },
   "massOperations": {
