@@ -38,7 +38,10 @@ export class DateTimeService {
    * @param date date that holds year, month and day to set to base value
    */
   setDate(value: Date, date: Date): Date {
-    const result = new Date(value.getTime());
+    const result = new Date();
+    if (value) {
+      result.setTime(value.getTime());
+    }
     result.setFullYear(date.getFullYear());
     result.setMonth(date.getMonth());
     result.setDate(date.getDate());
@@ -50,7 +53,10 @@ export class DateTimeService {
    * @param time time that holds hours, minutes, seconds and milliseconds to set to base value
    */
   setTime(value: Date, time: Date): Date {
-    const result = new Date(value.getTime());
+    const result = new Date();
+    if (value) {
+      result.setTime(value.getTime());
+    }
     result.setHours(time.getHours());
     result.setMinutes(time.getMinutes());
     result.setSeconds(time.getSeconds());
