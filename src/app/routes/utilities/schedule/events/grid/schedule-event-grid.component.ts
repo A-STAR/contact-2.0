@@ -160,7 +160,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
 
   onSelect(event: IScheduleEvent): void {
     const eventObj = Array.isArray(event) ? event[0] : event;
-    this.selectedEvent$.next(eventObj);
+    this.selectedEvent$.next(event);
     this.select.emit(eventObj);
   }
 

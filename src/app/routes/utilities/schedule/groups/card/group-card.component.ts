@@ -8,9 +8,9 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
-import { IGroup } from '../group.interface';
+import { IGroup } from '../groups.interface';
 
-import { GroupService } from '../group.service';
+import { GroupsService } from '../groups.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -31,7 +31,7 @@ export class GroupCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private groupService: GroupService,
+    private groupService: GroupsService,
     private route: ActivatedRoute,
     private location: Location,
   ) {}
@@ -67,7 +67,7 @@ export class GroupCardComponent implements OnInit {
       : this.groupService.create(this.form.serializedUpdates);
 
     action.subscribe(() => {
-      this.groupService.dispatchAction(GroupService.MESSAGE_GROUP_SAVED);
+      this.groupService.dispatchAction(GroupsService.MESSAGE_GROUP_SAVED);
       this.onBack();
     });
   }

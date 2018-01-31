@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import { GroupService } from '../group.service';
+import { GroupsService } from '../groups.service';
 
 import { GroupGridComponent } from './group-grid.component';
 
@@ -16,6 +16,14 @@ const routes: Routes = [
       reuse: true,
     }
   },
+  {
+    path: 'create',
+    loadChildren: './card/group-card.module#GroupCardModule',
+  },
+  {
+    path: ':groupId',
+    loadChildren: './card/group-card.module#GroupCardModule',
+  }
 ];
 
 @NgModule({
@@ -31,7 +39,7 @@ const routes: Routes = [
     GroupGridComponent,
   ],
   providers: [
-    GroupService
+    GroupsService
   ]
 })
 export class GroupGridModule { }

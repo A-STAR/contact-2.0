@@ -5,9 +5,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IGroup } from '../group.interface';
+import { IGroup } from '../groups.interface';
 
-import { GroupService } from '../group.service';
+import { GroupsService } from '../groups.service';
 
 import { DialogFunctions } from '@app/core/dialog';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -81,7 +81,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private groupService: GroupService,
+    private groupService: GroupsService,
     private gridService: GridService,
     private router: Router,
   ) {
@@ -99,7 +99,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     this.fetch();
 
     this.actionSubscription = this.groupService
-      .getAction(GroupService.MESSAGE_GROUP_SAVED)
+      .getAction(GroupsService.MESSAGE_GROUP_SAVED)
       .subscribe(() => {
         this.fetch();
         this.selectedGroup$.next(this.selectedGroup);

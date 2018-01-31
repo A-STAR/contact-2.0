@@ -25,8 +25,8 @@ const routes: Routes = [
         loadChildren: './currencies/currencies.module#CurrenciesModule',
       },
       {
-        path: 'groups',
-        loadChildren: './groups/groups.module#GroupsModule',
+        path: 'schedule',
+        loadChildren: './schedule/schedule.module#ScheduleModule',
       },
       {
         path: 'contact-properties',

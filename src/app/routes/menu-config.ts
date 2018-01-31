@@ -92,9 +92,9 @@ export const menuConfig: IMenuConfig = {
     link: '/utilities/message-templates',
     icon: 'icon-bubbles'
   },
-  groups: {
+  schedule: {
     text: 'sidebar.nav.menu.SCHEDULE',
-    link: '/utilities/groups',
+    link: '/utilities/schedule',
     icon: 'icon-calendar'
   },
   callCampaign: {

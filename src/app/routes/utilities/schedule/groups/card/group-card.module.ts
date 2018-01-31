@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import { GroupService } from '@app/routes/utilities/groups/group.service';
+import { GroupsService } from '../groups.service';
 
 import { GroupCardComponent } from './group-card.component';
 
@@ -29,7 +29,7 @@ const routes: Routes = [
   exports: [
     GroupCardComponent,
   ],
-  providers: [ GroupService ],
+  providers: [ GroupsService ],
   declarations: [
     GroupCardComponent,
   ]

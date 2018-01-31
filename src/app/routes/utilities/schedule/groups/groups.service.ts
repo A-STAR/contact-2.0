@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IGroup } from './group.interface';
+import { IGroup } from './groups.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
@@ -19,7 +19,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Injectable()
-export class GroupService extends AbstractActionService implements CanActivateChild {
+export class GroupsService extends AbstractActionService implements CanActivateChild {
   static MESSAGE_GROUP_SAVED = 'MESSAGE_GROUP_SAVED';
 
   private baseUrl = '/groups';

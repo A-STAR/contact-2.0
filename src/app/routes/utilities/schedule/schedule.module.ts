@@ -3,12 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
 
-import { GroupsComponent } from './groups.component';
+import { ScheduleComponent } from './schedule.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: GroupsComponent,
+    component: ScheduleComponent,
     data: {
       reuse: true,
     },
@@ -20,7 +20,7 @@ const routes: Routes = [
       },
       {
         path: 'all',
-        loadChildren: './grid/group-grid.module#GroupGridModule'
+        loadChildren: './groups/groups.module#GroupsModule'
       },
       {
         path: 'debts',
@@ -28,17 +28,9 @@ const routes: Routes = [
       },
       {
         path: 'schedule',
-        loadChildren: './schedule/schedule-event.module#ScheduleEventModule',
+        loadChildren: './events/schedule-event.module#ScheduleEventModule',
       }
     ],
-  },
-  {
-    path: 'all/create',
-    loadChildren: './card/group-card.module#GroupCardModule',
-  },
-  {
-    path: 'all/:groupId',
-    loadChildren: './card/group-card.module#GroupCardModule',
   },
 ];
 
@@ -51,7 +43,7 @@ const routes: Routes = [
     RouterModule,
   ],
   declarations: [
-    GroupsComponent,
+    ScheduleComponent,
   ],
 })
-export class GroupsModule {}
+export class ScheduleModule {}

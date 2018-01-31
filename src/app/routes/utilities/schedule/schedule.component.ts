@@ -9,23 +9,20 @@ import { makeKey } from '@app/core/utils';
 const label = makeKey('widgets.groups.tabs');
 
 @Component({
-  selector: 'app-groups',
+  selector: 'app-schedule',
   host: { class: 'full-height' },
-  templateUrl: './groups.component.html',
+  templateUrl: './schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GroupsComponent {
+export class ScheduleComponent {
 
   constructor(
     private userPermissionsService: UserPermissionsService
-  ) {
-
-  }
+  ) { }
 
   tabs: ITab[] = [
     { link: 'all', title: label('all'), hasPermission: this.userPermissionsService.has('GROUP_VIEW') },
     { link: 'debts', title: label('debtsInGroup'), hasPermission: this.userPermissionsService.has('GROUP_TAB_DEBT_GROUP') },
     { link: 'schedule', title: label('scheduleEvents'), hasPermission: this.userPermissionsService.has('SCHEDULE_VIEW') },
   ];
-
 }

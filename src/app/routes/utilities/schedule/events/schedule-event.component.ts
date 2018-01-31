@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IScheduleEvent } from '@app/routes/utilities/groups/schedule/schedule-event.interface';
+import { IScheduleEvent } from './schedule-event.interface';
 
-import { ScheduleEventService } from '@app/routes/utilities/groups/schedule/schedule-event.service';
+import { ScheduleEventService } from './schedule-event.service';
 
 import { DialogFunctions } from '@app/core/dialog';
 
