@@ -14,6 +14,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { DataUploader } from './data-uploader';
+import { TYPE_CODES } from '@app/core/utils';
 
 /**
  * Spec:       http://confluence.luxbase.int:8090/pages/viewpage.action?pageId=140181557
@@ -123,16 +124,16 @@ export class DataUploadService {
       (this.uploaders[this.currentUploaderType] = this.create(this.currentUploaderType));
   }
 
-  formatCellValue(valueType: TColumnType, value: ICellValue): ICellValue {
+  formatCellValue(valueType: TYPE_CODES, value: ICellValue): ICellValue {
     switch (valueType) {
-      case 'date':
+      case TYPE_CODES.DATE:
         return this.valueConverterService.toDateOnly(value as Date);
-      case 'datetime':
+      case TYPE_CODES.DATETIME:
         return this.valueConverterService.toISO(value as Date);
-      case 'string':
+      case TYPE_CODES.STRING:
         return value === '' ? null : value;
-      case 'boolean':
-      case 'number':
+      case TYPE_CODES.BOOLEAN:
+      case TYPE_CODES.NUMBER:
       default:
         return value;
     }

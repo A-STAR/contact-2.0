@@ -38,7 +38,7 @@ import { DownloaderComponent } from '@app/shared/components/downloader/downloade
 import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
 
 import { DialogFunctions } from '../../../core/dialog';
-import { isEmpty } from '../../../core/utils';
+import { isEmpty, TYPE_CODES } from '../../../core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -182,7 +182,10 @@ export class DataUploadComponent extends DialogFunctions
     const payload: ICellPayload = {
       rowId: event.data.id,
       columnId: cell.columnId,
-      value: this.dataUploadService.formatCellValue(cell.columnId as TColumnType, cell.value),
+      value: this.dataUploadService.formatCellValue(
+        this.findColumnType(cell),
+        cell.value
+      ),
     };
     this.dataUploadService.uploader.editCell(payload).subscribe(response => {
       const row = response && response.rows && response.rows[0];
@@ -306,6 +309,11 @@ export class DataUploadComponent extends DialogFunctions
           : { force: true },
       );
     }
+  }
+
+  private findColumnType(cell: ICell): TYPE_CODES {
+    const col = this.columns.find(column => column.colId === cell.columnId);
+    return col ? col.dataType : null;
   }
 
   private resetFile(): void {
