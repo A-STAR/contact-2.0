@@ -241,7 +241,6 @@ export interface IDynamicFormControlOld {
   dependsOn?: string;
   disabled?: boolean;
   display?: boolean;
-  displayTime?: boolean;
   iconCls?: string;
   label: string;
   // markAsDirty if the control is passed a value
