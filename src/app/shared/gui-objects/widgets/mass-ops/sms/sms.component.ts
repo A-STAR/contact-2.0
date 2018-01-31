@@ -95,11 +95,10 @@ export class SmsComponent implements OnInit {
     return [
       {
         controlName: 'startDateTime',
-        displayTime: true,
         markAsDirty: true,
         minDate: new Date(),
         required: true,
-        type: 'datepicker',
+        type: 'datetimepicker',
         validators: [ minDateThreeDaysAgo() ],
       },
       {

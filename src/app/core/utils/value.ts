@@ -56,7 +56,7 @@ export const getFormControlConfig = <T extends IValue>(value: T): Partial<IDynam
     case TYPE_CODES.DATE:
       return { type: 'datepicker' };
     case TYPE_CODES.DATETIME:
-      return { type: 'datepicker', displayTime: true };
+      return { type: 'datetimepicker' };
     case TYPE_CODES.STRING:
       return { type: 'text' };
     case TYPE_CODES.BOOLEAN:

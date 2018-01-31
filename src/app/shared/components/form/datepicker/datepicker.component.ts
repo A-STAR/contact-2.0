@@ -44,7 +44,6 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   @Input() maxDate: Date = null;
   @Input() minDate: Date = null;
   @Input() required = false;
-  @Input() displayTime = false;
 
   @ViewChild('input') input: ElementRef;
   @ViewChild('trigger') trigger: ElementRef;
@@ -134,7 +133,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   onValueChange(newValue: Date | Event): void {
-    if (this.isExpanded && !this.displayTime) {
+    if (this.isExpanded) {
       this.toggleCalendar(false);
     }
 
@@ -172,9 +171,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   private updateFormattedDate(): void {
-    this.formattedDate = this.displayTime
-      ? this.valueConverterService.toLocalDateTime(this.value)
-      : this.valueConverterService.toLocalDate(this.value);
+    this.formattedDate = this.valueConverterService.toLocalDate(this.value);
   }
 
   private setValue(value: Date): void {
@@ -188,7 +185,7 @@ export class DatePickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     const date = (value.target as HTMLInputElement).value;
-    return this.displayTime ? this.valueConverterService.fromLocalDateTime(date) : this.valueConverterService.fromLocalDate(date);
+    return this.valueConverterService.fromLocalDate(date);
   }
 
   private propagateChange: Function = () => {};

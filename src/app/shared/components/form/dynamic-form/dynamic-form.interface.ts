@@ -87,7 +87,6 @@ export interface IDynamicFormButtonControl extends IDynamicFormBaseControl {
 export interface IDynamicFormDateControl extends IDynamicFormBaseControl {
   // options for date controls
   type: 'datepicker';
-  displayTime?: boolean;
   minDate?: Date;
   maxDate?: Date;
   placeholder?: string;

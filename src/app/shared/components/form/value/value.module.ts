@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DatePickerModule } from '../datepicker/datepicker.module';
+import { DateTimeModule } from '../datetime/datetime.module';
 import { SelectModule } from '../select/select.module';
 
 import { ValueInputComponent } from './value.component';
@@ -11,6 +12,7 @@ import { ValueInputComponent } from './value.component';
   imports: [
     CommonModule,
     DatePickerModule,
+    DateTimeModule,
     FormsModule,
     ReactiveFormsModule,
     SelectModule,
