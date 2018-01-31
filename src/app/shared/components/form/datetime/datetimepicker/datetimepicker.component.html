@@ -3,7 +3,7 @@
     #dropdownParent
     type="text"
     class="form-control"
-    [ngModel]="momentValue | momentFormat:'MM/DD/YYYY HH:mm:SS'"
+    [ngModel]="momentValue | momentFormat:format"
     [textMask]="mask"
     (blur)="onTouch()"
     (change)="onChange($event)"
