@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
+import { TitlebarModule } from '@app/shared/components/form/titlebar/titlebar.module';
 import { UserEditModule } from './edit/user-edit.module';
 
 import { UsersService } from './users.service';
@@ -25,6 +26,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     SharedModule,
+    TitlebarModule,
     UserEditModule,
   ],
   exports: [

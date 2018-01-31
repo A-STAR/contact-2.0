@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ActionsLogFilterModule } from './filter/actions-log-filter.module';
 import { SharedModule } from '../../../shared/shared.module';
+import { TitlebarModule } from '@app/shared/components/form/titlebar/titlebar.module';
 
 import { ActionsLogService } from './actions-log.service';
 
@@ -20,9 +20,9 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    ActionsLogFilterModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TitlebarModule,
   ],
   declarations: [
     ActionsLogComponent,

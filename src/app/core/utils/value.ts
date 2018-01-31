@@ -1,4 +1,4 @@
-import { IDynamicFormControl } from '../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { UserDictionariesService } from '../user/dictionaries/user-dictionaries.service';
 
