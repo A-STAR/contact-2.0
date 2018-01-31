@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { ActionDialogModule } from '@app/shared/components/dialog/action/action-dialog.module';
+import { DialogActionModule } from '@app/shared/components/dialog-action/dialog-action.module';
+import { DialogModule } from '@app/shared/components/dialog/dialog.module';
 import { GridModule } from '@app/shared/components/grid/grid.module';
 
 import { OutsourcingService } from './outsourcing.service';
@@ -13,8 +15,10 @@ import { OutsourcingReturnComponent } from './return/outsourcing-return.componen
 @NgModule({
   imports: [
     CommonModule,
-    ActionDialogModule,
+    DialogActionModule,
+    DialogModule,
     GridModule,
+    TranslateModule,
   ],
   providers: [ OutsourcingService ],
   declarations: [ OutsourcingSendComponent, OutsourcingExcludeComponent, OutsourcingReturnComponent ],

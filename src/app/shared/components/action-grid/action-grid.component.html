@@ -161,7 +161,7 @@
   *ngIf="isDialog('debtOutsourcingSend')"
   [debts]="getSelectionParam(0)"
   (close)="onCloseAction($event)"
-></app-outsourcing-exclude>
+></app-outsourcing-send>
 
 <app-outsourcing-exclude
   *ngIf="isDialog('debtOutsourcingExclude')"
@@ -173,7 +173,7 @@
   *ngIf="isDialog('debtOutsourcingReturn')"
   [debts]="getSelectionParam(0)"
   (close)="onCloseAction($event)"
-></app-outsourcing-exclude>
+></app-outsourcing-return>
 
 <app-metadata-grid
   #grid
