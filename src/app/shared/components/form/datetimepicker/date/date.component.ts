@@ -84,11 +84,6 @@ export class DateComponent implements ControlValueAccessor {
     this.page.subtract(1, 'y');
   }
 
-  // TODO(d.maltsev): this should probably be a pipe
-  private capitalize(s: string): string {
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  }
-
   private propagateChange: Function = () => {};
   // private propagateTouch: Function = () => {};
 }
