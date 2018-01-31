@@ -17,7 +17,7 @@
 </ul>
 
 <ul>
-  <li *ngFor="let date of page | momentMonth" [ngClass]="getClass(date)" (click)="onClick(date)">
+  <li *ngFor="let date of page | momentMonth; trackBy: trackDateBy" [ngClass]="getClass(date)" (click)="onClick(date)">
     {{ date | momentFormat:'D' }}
   </li>
 </ul>

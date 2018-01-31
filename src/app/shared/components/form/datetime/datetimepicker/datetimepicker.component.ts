@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 
 import { DateTimeService } from '../datetime.service';
+import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,6 +21,8 @@ import { DateTimeService } from '../datetime.service';
 export class DateTimePickerComponent implements ControlValueAccessor {
   @Input() minDateTime: Date;
   @Input() maxDateTime: Date;
+
+  @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
   private _value: Date;
 
@@ -53,7 +56,7 @@ export class DateTimePickerComponent implements ControlValueAccessor {
   }
 
   registerOnTouched(fn: Function): void {
-    // this.propagateTouch = fn;
+    this.propagateTouch = fn;
   }
 
   onWheel(event: WheelEvent): void {
@@ -63,9 +66,19 @@ export class DateTimePickerComponent implements ControlValueAccessor {
     console.log(delta, start);
   }
 
+  onTouch(): void {
+    this.propagateTouch();
+  }
+
+  onChange(event: Event): void {
+    const { value } = event.target as HTMLInputElement;
+    console.log(value);
+  }
+
   setCurrentTime(): void {
     const value = new Date();
     this.update(value);
+    this.dropdown.close();
   }
 
   onDateChange(date: Date): void {
@@ -85,5 +98,5 @@ export class DateTimePickerComponent implements ControlValueAccessor {
   }
 
   private propagateChange: Function = () => {};
-  // private propagateTouch: Function = () => {};
+  private propagateTouch: Function = () => {};
 }

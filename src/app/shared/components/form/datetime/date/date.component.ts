@@ -73,6 +73,14 @@ export class DateComponent implements ControlValueAccessor {
     this.page.subtract(1, 'y');
   }
 
+  /**
+   * This fixes a slightly less than obvious bug:
+   * Without tracking, on date click datepicker dropdown closes due to changed reference to event target.
+   */
+  trackDateBy(index: number): number {
+    return index;
+  }
+
   private propagateChange: Function = () => {};
   // private propagateTouch: Function = () => {};
 }

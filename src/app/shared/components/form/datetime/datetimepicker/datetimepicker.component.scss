@@ -1,7 +1,14 @@
 .toggle {
+  color: #555;
+  cursor: pointer;
   position: absolute;
-  top: 2px;
   right: 7px;
+  top: 2px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #46a2f9;
+  }
 }
 
 .datetimepicker {

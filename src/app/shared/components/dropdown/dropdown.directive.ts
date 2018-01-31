@@ -58,7 +58,8 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
       position: 'fixed',
       top: `${top}px`,
       left: `${left}px`,
-      width: `${width}px`,
+      // TODO(d.maltsev): make configurable
+      // width: `${width}px`,
     });
     this.outsideClickListener = this.createOutsideClickListener();
     this.outsideScrollListener = this.createOutsideScrollListener();
