@@ -556,6 +556,19 @@
           "recommendation": "Recommendation"
         }
       }
+    },
+    "reports": {
+      "arbitrary": {
+        "remove": {
+          "title": "Delete report",
+          "confirmMessage": "Do you really want to delete selected report?"
+        },
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "comment": "Comment"
+        }
+      }
     }
   },
   "login": {
