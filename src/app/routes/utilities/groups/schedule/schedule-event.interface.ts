@@ -13,6 +13,14 @@ export interface IScheduleEvent {
   priority: number;
 }
 
+export interface IScheduleEventLog {
+  id?: number;
+  startDateTime: string;
+  endDateTime: string;
+  startType: number;
+  userFullName: string;
+}
+
 export enum SchedulePeriodEnum {
   DAILY = 1,
   WEEKLY = 2,

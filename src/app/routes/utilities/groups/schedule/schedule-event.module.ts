@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
+import { SharedModule } from '@app/shared/shared.module';
 import { ScheduleEventGridModule } from './grid/schedule-event-grid.module';
+import { ScheduleLogViewDialogModule } from './log/dialog/schedule-log-view-dialog.module';
 
 import { ScheduleEventService } from './schedule-event.service';
 
@@ -22,7 +24,9 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    SharedModule,
     ScheduleEventGridModule,
+    ScheduleLogViewDialogModule,
   ],
   exports: [
     RouterModule

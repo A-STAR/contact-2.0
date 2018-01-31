@@ -7,7 +7,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { IAppState } from '../../../../core/state/state.interface';
 import {
   IScheduleEvent, IScheduleGroup, IScheduleType,
-  IScheduleParam, IScheduleStartRequest, IScheduleUser
+  IScheduleParam, IScheduleStartRequest, IScheduleUser, IScheduleEventLog
 } from './schedule-event.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
@@ -46,6 +46,10 @@ export class ScheduleEventService extends AbstractActionService {
 
   get canView$(): Observable<boolean> {
     return this.userPermissionsService.has('SCHEDULE_VIEW');
+  }
+
+  get canViewLog$(): Observable<boolean> {
+    return this.userPermissionsService.has('SCHEDULE_LOG_VIEW');
   }
 
   get canAdd$(): Observable<boolean> {
@@ -121,6 +125,11 @@ export class ScheduleEventService extends AbstractActionService {
     return this.dataService
       .readAll('/filters/users', {}, {})
       .catch(this.notificationsService.fetchError().entity('entities.users.gen.plural').dispatchCallback());
+  }
+
+  fetchLogs(eventId: number): Observable<IScheduleEventLog[]> {
+    return this.dataService.readAll(`${this.baseUrl}/{eventId}/executionLogs`, { eventId })
+      .catch(this.notificationsService.fetchError().entity('entities.scheduleEventLog.gen.singular').dispatchCallback());
   }
 
   delete(eventId: number): Observable<any> {

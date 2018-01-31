@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { GridModule } from '@app/shared/components/grid/grid.module';
 
-import { ScheduleLogViewGridComponent } from '@app/routes/utilities/schedule/log/dialog/grid/schedule-log-view-grid.component';
+import { ScheduleLogViewGridComponent } from './schedule-log-view-grid.component';
 
 @NgModule({
   imports: [
@@ -14,9 +14,6 @@ import { ScheduleLogViewGridComponent } from '@app/routes/utilities/schedule/log
     ScheduleLogViewGridComponent,
   ],
   declarations: [
-    ScheduleLogViewGridComponent,
-  ],
-  entryComponents: [
     ScheduleLogViewGridComponent,
   ]
 })

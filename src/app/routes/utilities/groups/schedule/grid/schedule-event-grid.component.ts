@@ -5,6 +5,8 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -30,9 +32,12 @@ import { DialogFunctions } from '@app/core/dialog';
 })
 export class ScheduleEventGridComponent extends DialogFunctions
   implements OnInit, OnDestroy {
-  @ViewChild(GridComponent) grid: GridComponent;
 
   private selectedEvent$ = new BehaviorSubject<IScheduleEvent>(null);
+
+  @Output() select = new EventEmitter<IScheduleEvent>();
+
+  @ViewChild(GridComponent) grid: GridComponent;
 
   dialog: any;
 
@@ -154,7 +159,9 @@ export class ScheduleEventGridComponent extends DialogFunctions
   }
 
   onSelect(event: IScheduleEvent): void {
-    this.selectedEvent$.next(event);
+    const eventObj = Array.isArray(event) ? event[0] : event;
+    this.selectedEvent$.next(eventObj);
+    this.select.emit(eventObj);
   }
 
   onEdit(): void {
