@@ -60,7 +60,6 @@
         "CONTACT_TREES": "Дерево контактов",
         "CONTACT_REGISTRATION": "Регистрация контакта",
         "MESSAGE_SCENARIOS": "Сценарии сообщений",
-        "GROUPS": "Группы",
         "GROUP_EDIT": "Группа",
         "CAMPAIGNS": "Кампании обзвона",
         "SCHEDULE": "Расписание",
@@ -2149,7 +2148,8 @@
       },
       "tabs": {
         "all": "Группы",
-        "debtsInGroup": "Долги в группе"
+        "debtsInGroup": "Долги в группе",
+        "scheduleEvents": "Мероприятия"
       }
     },
     "visit": {
