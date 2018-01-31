@@ -24,6 +24,7 @@ const routes: Route[] = [
       { path: 'admin', loadChildren: './admin/admin.module#AdminModule' },
       { path: 'workplaces', loadChildren: './workplaces/workplaces.module#WorkplacesModule' },
       { path: 'utilities', loadChildren: './utilities/utilities.module#UtilitiesModule' },
+      { path: 'reports', loadChildren: './reports/reports.module#ReportsModule' }
     ]
   },
   { path: 'login', component: LoginComponent },
