@@ -6,7 +6,7 @@ export interface IScheduleEvent {
   periodTypeCode: number;
   startTime: string;
   executeDateTime: string;
-  isExecuted: number;
+  isExecuting: number;
   startDate: string;
   endDate: string;
   isInactive: number;
@@ -31,10 +31,7 @@ export interface ISchedulePeriod {
   dayPeriod?: number;
   weekDays?: number[];
   monthDays?: number[];
-}
-
-export interface IScheduleDate {
-  date?: string | Date;
+  dates?: any[];
 }
 
 export interface IScheduleType {

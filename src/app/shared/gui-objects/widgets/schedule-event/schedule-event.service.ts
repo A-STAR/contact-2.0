@@ -159,7 +159,7 @@ export class ScheduleEventService extends AbstractActionService {
       case 'phoneTypes':
         return { name, value: value.join(',') };
       default:
-        return { name, value };
+        return { name, value: String(value) };
     }
   }
 
