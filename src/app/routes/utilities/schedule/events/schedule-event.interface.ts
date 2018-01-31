@@ -6,7 +6,7 @@ export interface IScheduleEvent {
   periodTypeCode: number;
   startTime: string;
   executeDateTime: string;
-  isExecuted: number;
+  isExecuting: number;
   startDate: string;
   endDate: string;
   isInactive: number;

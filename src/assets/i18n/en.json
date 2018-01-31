@@ -2219,7 +2219,7 @@
         "periodTypeCode": "Period",
         "startTime": "Start",
         "executeDateTime": "Last start",
-        "isExecuted": "Is Executed",
+        "isExecuting": "Is Executing",
         "startDate": "Start date",
         "endDate": "End date",
         "isInactive": "Is inactive",
