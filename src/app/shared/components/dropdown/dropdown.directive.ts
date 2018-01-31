@@ -4,6 +4,7 @@ import {
   ContentChild,
   Directive,
   ElementRef,
+  Input,
   OnInit,
   OnDestroy,
   Renderer2,
@@ -16,6 +17,8 @@ type IListener = () => void;
 })
 export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
   static OFFSET = -1;
+
+  @Input() fitWidthToContent = false;
 
   @ContentChild('dropdownContent') content: ElementRef;
   @ContentChild('dropdownParent') parent: ElementRef;
@@ -58,8 +61,7 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
       position: 'fixed',
       top: `${top}px`,
       left: `${left}px`,
-      // TODO(d.maltsev): make configurable
-      // width: `${width}px`,
+      width: this.fitWidthToContent ? 'auto' : `${width}px`,
     });
     this.outsideClickListener = this.createOutsideClickListener();
     this.outsideScrollListener = this.createOutsideScrollListener();
