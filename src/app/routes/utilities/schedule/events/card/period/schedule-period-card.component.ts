@@ -153,7 +153,7 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   private get periodSerializedUpdates(): any {
     return [
-      {},
+      this._periodForm.serializedUpdates,
       {
         weekDays: Object.keys(this.scheduleEventService.weekDays)
           .map((day, index) => this._periodForm.serializedValue[day] && ++index)
@@ -188,7 +188,7 @@ export class SchedulePeriodCardComponent implements OnInit {
       [
         ...Object.keys(this.scheduleEventService.weekDays)
           .map((day, i) => ({
-            label: `default.date.days.full.${i}`,
+            label: `default.date.days.full.${(i + 1) % 7}`,
             controlName: day,
             type: 'checkbox',
             disabled: !canEdit, width: 3
