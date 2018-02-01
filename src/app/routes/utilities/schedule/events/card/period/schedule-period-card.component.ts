@@ -49,7 +49,7 @@ export class SchedulePeriodCardComponent implements OnInit {
     { labelKey: 'widgets.scheduleEvents.card' },
     { labelKey: 'default.date.days.full' }
   ];
-  periodFromControls: Array<Partial<IDynamicFormItem>[]>;
+  periodFromControls: Array<Partial<IDynamicFormItem>[]> = [];
   periodValidators: Array<ValidatorFn[]>;
 
   periodGridControls: Array<IGridColumn> = [
