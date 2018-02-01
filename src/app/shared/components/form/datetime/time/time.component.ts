@@ -18,8 +18,8 @@ type IModifier = 'h' | 'm' | 's';
   templateUrl: './time.component.html'
 })
 export class TimeComponent implements ControlValueAccessor {
-  @Input() minDateTime: Date;
-  @Input() maxDateTime: Date;
+  @Input() minTime: Date;
+  @Input() maxTime: Date;
 
   private _value: Date;
 

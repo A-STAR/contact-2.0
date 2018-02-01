@@ -10,18 +10,24 @@ import { MomentModule } from '@app/shared/pipes/moment/moment.module';
 
 import { DateTimeService } from './datetime.service';
 
-import { DateTimePickerComponent } from './datetimepicker/datetimepicker.component';
 import { DateComponent } from './date/date.component';
+import { DatePickerComponent } from './datepicker/datepicker.component';
+import { DateTimePickerComponent } from './datetimepicker/datetimepicker.component';
 import { TimeComponent } from './time/time.component';
+import { TimePickerComponent } from './timepicker/timepicker.component';
 
 @NgModule({
   declarations: [
-    DateTimePickerComponent,
     DateComponent,
+    DatePickerComponent,
+    DateTimePickerComponent,
     TimeComponent,
+    TimePickerComponent,
   ],
   exports: [
+    DatePickerComponent,
     DateTimePickerComponent,
+    TimePickerComponent,
   ],
   imports: [
     CapitalizeModule,

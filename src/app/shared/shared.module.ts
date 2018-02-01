@@ -28,7 +28,6 @@ import { BlockDialogModule } from './components/dialog/block/block-dialog.module
 import { ButtonModule } from './components/button/button.module';
 import { CapitalizeModule } from './pipes/capitalize/capitalize.module';
 import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
-import { DatePickerModule } from './components/form/datepicker/datepicker.module';
 import { DateTimeModule } from './components/form/datetime/datetime.module';
 import { DebtAmountModule } from './components/form/debt-amount/debt-amount.module';
 import { DialogModule } from './components/dialog/dialog.module';
@@ -63,7 +62,6 @@ import { SpinnerModule } from './components/spinner/spinner.module';
 import { TabstripModule } from './components/tabstrip/tabstrip.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TextEditorModule } from './components/form/text-editor/text-editor.module';
-import { TimePickerModule } from './components/form/timepicker/timepicker.module';
 import { TitlebarModule } from '@app/shared/components/form/titlebar/titlebar.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
@@ -96,7 +94,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ButtonModule,
     CapitalizeModule,
     ColorPickerModule,
-    DatePickerModule,
     DateTimeModule,
     DebtAmountModule,
     DialogActionModule,
@@ -134,7 +131,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ToolbarModule,
     Toolbar2Module,
     TreeModule,
-    TimePickerModule,
     TitlebarModule,
     ValueInputModule,
     ViewFormModule,
@@ -183,7 +179,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ButtonModule,
     CapitalizeModule,
     ColorPickerModule,
-    DatePickerModule,
     DateTimeModule,
     DebtAmountModule,
     DialogActionModule,
@@ -224,7 +219,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     Toolbar2Module,
     TreeModule,
     TitlebarModule,
-    TimePickerModule,
     ValueInputModule,
     ViewFormModule,
   ]

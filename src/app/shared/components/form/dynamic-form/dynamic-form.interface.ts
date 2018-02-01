@@ -84,15 +84,6 @@ export interface IDynamicFormButtonControl extends IDynamicFormBaseControl {
   action?: () => void;
 }
 
-export interface IDynamicFormDateControl extends IDynamicFormBaseControl {
-  // options for date controls
-  type: 'datepicker';
-  minDate?: Date;
-  maxDate?: Date;
-  placeholder?: string;
-  dependsOn?: string;
-}
-
 export interface IDynamicFormDateTimeControl extends IDynamicFormBaseControl {
   // options for datetime controls
   type: 'datetimepicker';
@@ -100,12 +91,19 @@ export interface IDynamicFormDateTimeControl extends IDynamicFormBaseControl {
   maxDateTime?: Date;
 }
 
+export interface IDynamicFormDateControl extends IDynamicFormBaseControl {
+  // options for date controls
+  type: 'datepicker';
+  minDate?: Date;
+  maxDate?: Date;
+  dependsOn?: string;
+}
+
 export interface IDynamicFormTimeControl extends IDynamicFormBaseControl {
   // options for time controls
   type: 'timepicker';
-  placeholder?: string;
-  dependsOn?: string;
-  showSeconds?: boolean;
+  minTime?: Date;
+  maxTime?: Date;
 }
 
 export interface IDynamicFormFileControl extends IDynamicFormBaseControl {

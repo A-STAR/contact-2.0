@@ -16,8 +16,8 @@ import * as moment from 'moment';
   templateUrl: './date.component.html'
 })
 export class DateComponent implements ControlValueAccessor {
-  @Input() minDateTime: Date;
-  @Input() maxDateTime: Date;
+  @Input() minDate: Date;
+  @Input() maxDate: Date;
 
   private _value: Date;
 

@@ -14,11 +14,9 @@
   </span>
   <div #dropdownContent>
     <div class="datetimepicker">
-      <app-date [minDate]="minDateTime" [maxDate]="maxDateTime" [ngModel]="value" (ngModelChange)="onDateChange($event)"></app-date>
-      <app-time [minTime]="minDateTime" [maxTime]="maxDateTime" [ngModel]="value" (ngModelChange)="onTimeChange($event)"></app-time>
+      <app-date [minDate]="minDate" [maxDate]="maxDate" [ngModel]="value" (ngModelChange)="onDateChange($event)"></app-date>
       <footer>
-        <span (click)="setCurrentTime()">{{ 'default.buttons.now' | translate }}</span>
-        <span (click)="dropdown.close()">{{ 'default.buttons.ok' | translate }}</span>
+        <span (click)="setCurrentTime()">{{ 'default.buttons.today' | translate }}</span>
       </footer>
     </div>
   </div>
