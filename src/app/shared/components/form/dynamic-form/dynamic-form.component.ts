@@ -46,7 +46,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   @Input() data: IValue;
   @Input() config: IDynamicFormConfig;
 
-  @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
+  @Output() onSelect = new EventEmitter<ISelectItemsPayload>();
 
   form: FormGroup;
 

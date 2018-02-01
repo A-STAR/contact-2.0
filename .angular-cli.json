@@ -20,6 +20,7 @@
       "polyfills": "polyfills.ts",
       "styles": [
         "styles.scss",
+        "./assets/icons/icons.css",
         "../node_modules/font-awesome/css/font-awesome.css",
         "../node_modules/weather-icons/css/weather-icons-wind.css",
         "../node_modules/weather-icons/css/weather-icons.css",

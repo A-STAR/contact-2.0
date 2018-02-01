@@ -24,6 +24,7 @@
   #downloader
   entityTranslationKey="modules.dataUpload.errors.getErrors"
   [url]="errorFileUrl"
+  [name]="errorFileName"
 ></app-downloader>
 
 <div class="flex vertical">
@@ -51,7 +52,7 @@
       </div>
     </div>
     <!-- Grid Toolbar -->
-    <div class="mb">
+    <div class="mb" *ngIf="hasFile">
       <app-button label="modules.dataUpload.buttons.nextProblematicCell" (click)="onNextProblematicCellClick()"></app-button>
       <app-button label="modules.dataUpload.buttons.nextCriticalCell" (click)="onNextCriticalCellClick()"></app-button>
     </div>

@@ -1,26 +1,28 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { IScheduleEvent } from '@app/shared/gui-objects/widgets/schedule-event/schedule-event.interface';
+import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
 
-import { DialogFunctions } from '@app/core/dialog';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
+import { makeKey } from '@app/core/utils';
+
+const label = makeKey('widgets.groups.tabs');
 
 @Component({
   selector: 'app-schedule',
+  host: { class: 'full-height' },
   templateUrl: './schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ScheduleComponent extends DialogFunctions {
+export class ScheduleComponent {
 
-  dialog;
+  constructor(
+    private userPermissionsService: UserPermissionsService
+  ) { }
 
-  eventId: number;
-
-  constructor() {
-    super();
-  }
-
-  onEdit(event: IScheduleEvent): void {
-    this.setDialog('schedule');
-    this.eventId = event && event.id;
-  }
+  tabs: ITab[] = [
+    { link: 'all', title: label('all'), hasPermission: this.userPermissionsService.has('GROUP_VIEW') },
+    { link: 'debts', title: label('debtsInGroup'), hasPermission: this.userPermissionsService.has('GROUP_TAB_DEBT_GROUP') },
+    { link: 'events', title: label('scheduleEvents'), hasPermission: this.userPermissionsService.has('SCHEDULE_VIEW') },
+  ];
 }

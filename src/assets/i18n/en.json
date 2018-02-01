@@ -60,7 +60,6 @@
         "CONTACT_TREES": "Contact trees",
         "MESSAGE_SCENARIOS": "Message scenarios",
         "CONTACT_REGISTRATION": "Contact tegistration",
-        "GROUPS": "Groups",
         "GROUP_EDIT": "Group",
         "CAMPAIGNS": "Campaigns",
         "SCHEDULE": "Schedule",
@@ -276,7 +275,9 @@
         "cancel": "Error when trying to cancel data load",
         "save": "Error when trying to save data to DB",
         "editCell": "Error when trying to edit cell",
-        "getErrors": "Error when trying to get error log file"
+        "getErrors": "Error when trying to get error log file",
+        "errorFile": "errors",
+        "defaultError": "Unknown error has been occurred"
       }
     },
     "payments": {
@@ -741,6 +742,7 @@
     }
   },
   "terms": {
+    "title": "Dictionary terms",
     "edit": {
       "title": "Term: {{ code }}",
       "code": "Term code",
@@ -773,6 +775,7 @@
   },
   "roles": {
     "roles": {
+      "title": "Roles",
       "copy": {
         "title": "Copy role",
         "originalRoleName": "Original role name",
@@ -1083,6 +1086,7 @@
       }
     },
     "employees": {
+      "title": "Employees",
       "add": {
         "title": "Choose employees",
         "grid": {
@@ -1113,6 +1117,7 @@
     }
   },
   "contractors": {
+    "title": "Contractors",
     "managers": {
       "remove": {
         "title": "Delete manager",
@@ -1163,6 +1168,7 @@
     }
   },
   "portfolios": {
+    "title": "Portfolios",
     "grid": {
       "id": "ID",
       "name": "Name",
@@ -1325,6 +1331,22 @@
     },
     "currencyRatesTab": {
       "title": "Rates"
+    },
+    "schedule": {
+      "log": {
+        "grid": {
+          "startDateTime": "Start",
+          "endDateTime": "Stop",
+          "startType": "Start type",
+          "userFullName": "User"
+        },
+        "dialog": {
+          "title": "History of launches"
+        },
+        "buttons": {
+          "history": "History"
+        }
+      }
     }
   },
   "notifications": {
@@ -2133,7 +2155,8 @@
       },
       "tabs": {
         "all": "Groups",
-        "debtsInGroup": "Debts in group"
+        "debtsInGroup": "Debts in group",
+        "scheduleEvents": "Events"
       }
     },
     "visit": {
@@ -2203,7 +2226,7 @@
         "periodTypeCode": "Period",
         "startTime": "Start",
         "executeDateTime": "Last start",
-        "isExecuted": "Is Executed",
+        "isExecuting": "Is Executing",
         "startDate": "Start date",
         "endDate": "End date",
         "isInactive": "Is inactive",
@@ -2444,6 +2467,9 @@
     },
     "scheduleEvents": {
       "gen": { "singular": "event", "plural": "events" }
+    },
+    "scheduleEventLog": {
+      "gen": { "singular": "event history", "plural": "events history" }
     }
   },
   "massOperations": {
@@ -2919,6 +2945,7 @@
       "format": {
         "dateTime": "MM/DD/YYYY HH:mm:ss",
         "date": "MM/DD/YYYY",
+        "dateISO": "YYYY-MM-DD",
         "time": "HH:mm:ss"
       },
       "placeholders": {

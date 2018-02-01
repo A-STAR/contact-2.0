@@ -60,7 +60,6 @@
         "CONTACT_TREES": "Дерево контактов",
         "CONTACT_REGISTRATION": "Регистрация контакта",
         "MESSAGE_SCENARIOS": "Сценарии сообщений",
-        "GROUPS": "Группы",
         "GROUP_EDIT": "Группа",
         "CAMPAIGNS": "Кампании обзвона",
         "SCHEDULE": "Расписание",
@@ -276,7 +275,9 @@
         "cancel": "Ошибка при отмене загрузки файла",
         "save": "Ошибка при попытке сохранить данные в БД",
         "editCell": "Ошибка при попытке отредактировать ячейку",
-        "getErrors": "Ошибка при попытке получить файл с описанием ошибок"
+        "getErrors": "Ошибка при попытке получить файл с описанием ошибок",
+        "errorFile": "ошибки",
+        "defaultError": "Произошла неизвестная ошибка"
       }
     },
     "payments": {
@@ -741,6 +742,7 @@
     }
   },
   "terms": {
+    "title": "Словарные термины",
     "edit": {
       "title": "Словарный термин: {{ code }}",
       "code": "Код термина",
@@ -773,6 +775,7 @@
   },
   "roles": {
     "roles": {
+      "title": "Roles",
       "copy": {
         "title": "Копировать роль",
         "originalRoleName": "Название оригинальной роли",
@@ -1083,6 +1086,7 @@
       }
     },
     "employees": {
+      "title": "Сотрудники",
       "add": {
         "title": "Выберите сотрудника",
         "grid": {
@@ -1113,6 +1117,7 @@
     }
   },
   "contractors": {
+    "title": "Клиенты",
     "managers": {
       "remove": {
         "title": "Удаление менеджера",
@@ -1163,6 +1168,7 @@
     }
   },
   "portfolios": {
+    "title": "Портфели",
     "grid": {
       "id": "ID",
       "name": "Название",
@@ -1325,6 +1331,22 @@
     },
     "currencyRatesTab": {
       "title": "Курсы"
+    },
+    "schedule": {
+      "log": {
+        "grid": {
+          "startDateTime": "Запуск",
+          "endDateTime": "Остановка",
+          "startType": "Режим запуска",
+          "userFullName": "Пользователь"
+        },
+        "dialog": {
+          "title": "История запусков"
+        },
+        "buttons": {
+          "history": "История"
+        }
+      }
     }
   },
   "notifications": {
@@ -2133,7 +2155,8 @@
       },
       "tabs": {
         "all": "Группы",
-        "debtsInGroup": "Долги в группе"
+        "debtsInGroup": "Долги в группе",
+        "scheduleEvents": "Мероприятия"
       }
     },
     "visit": {
@@ -2203,7 +2226,7 @@
         "periodTypeCode": "Период",
         "startTime": "Запуск",
         "executeDateTime": "Последний запуск",
-        "isExecuted": "Выполняется",
+        "isExecuting": "Выполняется",
         "startDate": "Начало",
         "endDate": "Окончание",
         "isInactive": "Выключено",
@@ -2444,6 +2467,9 @@
     },
     "scheduleEvents": {
       "gen": { "singular": "мероприятия", "plural": "списка мероприятий" }
+    },
+    "scheduleEventLog": {
+      "gen": { "singular": "история запуска мероприятия", "plural": "история запуска мероприятий" }
     }
   },
   "massOperations": {
@@ -2919,6 +2945,7 @@
       "format": {
         "dateTime": "DD.MM.YYYY HH:mm:ss",
         "date": "DD.MM.YYYY",
+        "dateISO": "YYYY-MM-DD",
         "time": "HH:mm:ss"
       },
       "placeholders": {

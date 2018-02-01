@@ -3,7 +3,10 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
 import { ContactRegistrationService } from './contact-registration.service';
-import { IContactRegistrationMode } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
+import {
+  IContactRegistrationMode,
+  IContactRegistrationStatus,
+} from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,10 +35,10 @@ export class ContactRegistrationComponent {
   }
 
   onConfirm(): void {
-    this.contactRegistrationService.cancelRegistration();
+    this.contactRegistrationService.status = null;
   }
 
   onCloseDialog(): void {
-    this.contactRegistrationService.continueRegistration();
+    this.contactRegistrationService.status = IContactRegistrationStatus.REGISTRATION;
   }
 }

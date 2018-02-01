@@ -92,20 +92,15 @@ export const menuConfig: IMenuConfig = {
     link: '/utilities/message-templates',
     icon: 'icon-bubbles'
   },
-  groups: {
-    text: 'sidebar.nav.menu.GROUPS',
-    link: '/utilities/groups',
-    icon: 'icon-folder'
+  schedule: {
+    text: 'sidebar.nav.menu.SCHEDULE',
+    link: '/utilities/schedule',
+    icon: 'icon-calendar'
   },
   callCampaign: {
     text: 'sidebar.nav.menu.CAMPAIGNS',
     link: '/utilities/campaigns',
     icon: 'icon-rocket'
-  },
-  schedule: {
-    text: 'sidebar.nav.menu.SCHEDULE',
-    link: '/utilities/schedule',
-    icon: 'icon-calendar'
   },
   formulas: {
     text: 'sidebar.nav.menu.FORMULAS',
