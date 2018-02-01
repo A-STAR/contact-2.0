@@ -1,5 +1,7 @@
+@import '../../../../styles/app/variables.scss';
+
 .toggle {
-  color: #555;
+  color: $gray-dark;
   cursor: pointer;
   position: absolute;
   right: 7px;
@@ -7,7 +9,7 @@
   transition: color 0.2s ease;
 
   &:hover {
-    color: #46a2f9;
+    color: $link-color;
   }
 }
 
@@ -18,6 +20,7 @@
   padding: 20px;
   user-select: none;
   width: 22em;
+  z-index: $zindex-app-datepicker;
 
   app-date,
   app-time {
@@ -32,12 +35,12 @@
     width: 80%;
 
     span {
-      color: #888;
+      color: $text-light;
       cursor: pointer;
       flex: 0 0 auto;
       transition: color 0.2s ease;
       &:hover {
-        color: #46a2f9;
+        color: $link-color;
       }
     }
   }

@@ -1,5 +1,7 @@
-$day-light: #b3b2b7;
-$day-dark: #49455e;
+@import '../../../../styles/app/variables.scss';
+
+$day-light: $text-light;
+$day-dark: $brand-primary-dark;
 
 :host {
   display: block;
@@ -12,13 +14,13 @@ header {
 }
 
 .arrow {
-  color: #aaa;
+  color: $text-light;
   cursor: pointer;
   display: inline-block;
   padding: 0 10px;
   transition: color 0.2s ease;
   &:hover {
-    color: #46a2f9;
+    color: $link-color;
   }
 }
 
@@ -38,7 +40,7 @@ ul {
     text-align: center;
 
     &.current {
-      outline: 1px solid #46a2f9;
+      outline: 1px solid $link-color;
     }
 
     &.outside {
@@ -46,13 +48,13 @@ ul {
     }
 
     &.selected {
-      background-color: #46a2f9;
+      background-color: $link-color;
       color: #fff;
     }
   }
 
   &.header {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid $gray-lighter;
     li {
       color: $day-light;
     }

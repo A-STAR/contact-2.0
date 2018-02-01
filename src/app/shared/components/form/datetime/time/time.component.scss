@@ -1,10 +1,12 @@
+@import '../../../../styles/app/variables.scss';
+
 :host {
   display: flex;
   flex-direction: row;
   user-select: none;
 
   .wheel {
-    color: #aaa;
+    color: $text-light;
     flex: 1;
     text-align: center;
 
@@ -26,17 +28,17 @@
 }
 
 .arrow {
-  color: #aaa;
+  color: $text-light;
   cursor: pointer;
   display: inline-block;
   transition: color 0.2s ease;
   &:hover {
-    color: #46a2f9;
+    color: $link-color;
   }
 }
 
 .current {
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-  color: #444;
+  border-top: 1px solid $gray-lighter;
+  border-bottom: 1px solid $gray-lighter;
+  color: $gray-dark;
 }

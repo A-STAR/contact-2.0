@@ -12,13 +12,13 @@
   <span class="toggle" #dropdownTrigger (click)="onTouch()">
     <i class="fa fa-calendar"></i>
   </span>
-  <div #dropdownContent style="z-index: 60000;">
+  <div #dropdownContent>
     <div class="datetimepicker">
       <app-date [minDateTime]="minDateTime" [maxDateTime]="maxDateTime" [ngModel]="value" (ngModelChange)="onDateChange($event)"></app-date>
       <app-time [minDateTime]="minDateTime" [maxDateTime]="maxDateTime" [ngModel]="value" (ngModelChange)="onTimeChange($event)"></app-time>
       <footer>
-        <span (click)="setCurrentTime()">Сейчас</span>
-        <span (click)="dropdown.close()">OK</span>
+        <span (click)="setCurrentTime()">{{ 'default.buttons.now' | translate }}</span>
+        <span (click)="dropdown.close()">{{ 'default.buttons.ok' | translate }}</span>
       </footer>
     </div>
   </div>

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TextMaskModule } from 'angular2-text-mask';
 
 import { CapitalizeModule } from '@app/shared/pipes/capitalize/capitalize.module';
@@ -29,6 +30,7 @@ import { TimeComponent } from './time/time.component';
     FormsModule,
     MomentModule,
     TextMaskModule,
+    TranslateModule,
   ],
   providers: [
     DateTimeService,
