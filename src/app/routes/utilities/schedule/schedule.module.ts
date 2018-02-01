@@ -34,11 +34,11 @@ const routes: Routes = [
   },
   {
     path: 'all/create',
-    loadChildren: './card/group-card.module#GroupCardModule',
+    loadChildren: './groups/card/group-card.module#GroupCardModule',
   },
   {
     path: 'all/:groupId',
-    loadChildren: './card/group-card.module#GroupCardModule',
+    loadChildren: './groups/card/group-card.module#GroupCardModule',
   },
 ];
 
