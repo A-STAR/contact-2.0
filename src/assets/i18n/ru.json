@@ -559,6 +559,9 @@
     },
     "reports": {
       "arbitrary": {
+        "tabs": {
+          "fields": "Описание полей"
+        },
         "remove": {
           "title": "Удаление отчета",
           "confirmMessage": "Вы действительно хотите удалить выбранный отчет?"
@@ -573,6 +576,19 @@
           "sql": "SQL",
           "comment": "Комментарий",
           "exportUndescribed": "Выгружать неописанные поля"
+        },
+        "fields": {
+          "remove": {
+            "title": "Удаление поля отчета",
+            "confirmMessage": "Вы действительно хотите удалить выбранное поле отчета?"
+          },
+          "grid": {
+            "id": "ID",
+            "name": "Название",
+            "sortOrder": "Порядковый номер",
+            "systemName": "Системное название",
+            "textWidth": "Ширина столбца"
+          }
         }
       }
     }
@@ -2482,6 +2498,12 @@
     },
     "scheduleEventLog": {
       "gen": { "singular": "история запуска мероприятия", "plural": "история запуска мероприятий" }
+    },
+    "reports": {
+      "gen": { "singular": "отчета", "plural": "отчетов" }
+    },
+    "fields": {
+      "gen": { "singular": "поля", "plural": "полей" }
     }
   },
   "massOperations": {

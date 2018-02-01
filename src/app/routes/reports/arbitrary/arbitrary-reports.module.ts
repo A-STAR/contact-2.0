@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { ReportsModule } from './reports/reports.module';
+import { FieldsModule } from './fields/fields.module';
 
 import { ArbitraryReportsComponent } from './arbitrary-reports.component';
 import { ReportCardComponent } from './reports/card/report-card.component';
@@ -36,6 +37,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     ReportsModule,
+    FieldsModule,
   ],
   exports: [
     RouterModule,

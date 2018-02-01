@@ -559,6 +559,9 @@
     },
     "reports": {
       "arbitrary": {
+        "tabs": {
+          "fields": "Fields"
+        },
         "remove": {
           "title": "Delete report",
           "confirmMessage": "Do you really want to delete selected report?"
@@ -573,6 +576,19 @@
           "sql": "SQL",
           "comment": "Comment",
           "exportUndescribed": "Export undescribed"
+        },
+        "fields": {
+          "remove": {
+            "title": "Delete report field",
+            "confirmMessage": "Do you really want to delete selected report field?"
+          },
+          "grid": {
+            "id": "ID",
+            "name": "Name",
+            "sortOrder": "Sort order",
+            "systemName": "System name",
+            "textWidth": "Text width"
+          }
         }
       }
     }
@@ -2482,6 +2498,12 @@
     },
     "scheduleEventLog": {
       "gen": { "singular": "event history", "plural": "events history" }
+    },
+    "reports": {
+      "gen": { "singular": "report", "plural": "reports" }
+    },
+    "fields": {
+      "gen": { "singular": "field", "plural": "fields" }
     }
   },
   "massOperations": {
