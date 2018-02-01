@@ -7,7 +7,7 @@ import { LicenseManager } from 'ag-grid-enterprise/main';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ActionDialogModule } from '../dialog/action/action-dialog.module';
-import { DatePickerModule } from '../form/datepicker/datepicker.module';
+import { DateTimeModule } from '../form/datetime/datetime.module';
 import { EditorsModule } from './editors/editors.module';
 import { ToolbarModule } from '../toolbar/toolbar.module';
 import { SelectModule } from '../form/select/select.module';
@@ -24,7 +24,7 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
       GridDatePickerComponent
     ]),
     CommonModule,
-    DatePickerModule,
+    DateTimeModule,
     EditorsModule,
     FormsModule,
     SelectModule,

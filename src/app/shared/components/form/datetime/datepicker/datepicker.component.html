@@ -1,0 +1,23 @@
+<div appDropdown [fitWidthToContent]="true" style="position: relative;">
+  <input
+    #dropdownParent
+    type="text"
+    class="form-control"
+    [ngModel]="momentValue | momentFormat:format"
+    [textMask]="mask"
+    (blur)="onTouch()"
+    (change)="onChange($event)"
+    (wheel)="onWheel($event)"
+  />
+  <span class="toggle" #dropdownTrigger (click)="onTouch()">
+    <i class="fa fa-calendar"></i>
+  </span>
+  <div #dropdownContent>
+    <div class="datetimepicker">
+      <app-date [minDate]="minDate" [maxDate]="maxDate" [ngModel]="value" (ngModelChange)="onDateChange($event)"></app-date>
+      <footer>
+        <span (click)="setCurrentTime()">{{ 'default.buttons.today' | translate }}</span>
+      </footer>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+@import '../../../../styles/app/variables.scss';
+
+:host {
+  display: flex;
+  flex-direction: row;
+  user-select: none;
+
+  .wheel {
+    color: $text-light;
+    flex: 1;
+    text-align: center;
+
+    span {
+      display: block;
+      padding: 2px 0;
+
+      &.arrow {
+        padding: 0;
+      }
+    }
+  }
+
+  .divider {
+    align-self: center;
+    flex: 0 0 32px;
+    text-align: center;
+  }
+}
+
+.arrow {
+  color: $text-light;
+  cursor: pointer;
+  display: inline-block;
+  transition: color 0.2s ease;
+  &:hover {
+    color: $link-color;
+  }
+}
+
+.current {
+  border-top: 1px solid $gray-lighter;
+  border-bottom: 1px solid $gray-lighter;
+  color: $gray-dark;
+}
