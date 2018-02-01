@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '../../button/button.module';
 import { DropdownModule } from '../../dropdown/dropdown.module';
 
-import { FormToolbarComponent } from './titlebar.component';
+import { TitlebarComponent } from './titlebar.component';
 
 @NgModule({
   imports: [
@@ -15,10 +15,10 @@ import { FormToolbarComponent } from './titlebar.component';
     TranslateModule,
   ],
   exports: [
-    FormToolbarComponent,
+    TitlebarComponent,
   ],
   declarations: [
-    FormToolbarComponent,
+    TitlebarComponent,
   ]
 })
-export class FormToolbarModule { }
+export class TitlebarModule { }
