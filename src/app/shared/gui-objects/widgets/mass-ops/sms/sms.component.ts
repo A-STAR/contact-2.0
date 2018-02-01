@@ -70,10 +70,17 @@ export class SmsComponent implements OnInit {
       const filteredPhoneOptions = phoneOptions
         .filter(option => this.userPermissionsService.contains('SMS_MASS_PHONE_TYPE_LIST', Number(option.value)));
 
-      this.controls = this.buildControls(filteredPhoneOptions, templates.map(toOption('id', 'name')), Boolean(useSender.valueB));
+      const senderCode = defaultSender.valueN;
 
-      if (defaultSender.valueN) {
-        this.data.senderCode = defaultSender.valueN;
+      this.controls = this.buildControls(
+        filteredPhoneOptions,
+        templates.map(toOption('id', 'name')),
+        Boolean(useSender.valueB),
+        Boolean(senderCode),
+      );
+
+      if (senderCode) {
+        this.data.senderCode = senderCode;
       }
 
       this.cdRef.markForCheck();
@@ -91,7 +98,12 @@ export class SmsComponent implements OnInit {
     this.close.emit();
   }
 
-  private buildControls(phoneOptions: IOption[], templateOptions: IOption[], useSender: boolean): IDynamicFormControl[] {
+  private buildControls(
+    phoneOptions: IOption[],
+    templateOptions: IOption[],
+    useSender: boolean,
+    isSenderPresent: boolean,
+  ): IDynamicFormControl[] {
     return [
       {
         controlName: 'startDateTime',
@@ -105,6 +117,7 @@ export class SmsComponent implements OnInit {
         controlName: 'phoneTypes',
         options: phoneOptions,
         type: 'multiselect',
+        required: true,
       },
       {
         controlName: 'templateId',
@@ -116,9 +129,9 @@ export class SmsComponent implements OnInit {
         controlName: 'senderCode',
         dictCode: UserDictionariesService.DICTIONARY_SMS_SENDER,
         display: useSender,
-        markAsDirty: useSender,
+        markAsDirty: useSender && isSenderPresent,
         required: useSender,
-        type: 'selectwrapper',
+        type: 'singleselectwrapper',
       },
     ]
     .map(addFormLabel('widgets.mass.sms.form'));
