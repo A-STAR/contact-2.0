@@ -1,1 +1,20 @@
-<app-view-form-group [controls]="controls" [data]="data"></app-view-form-group>
+<!-- <app-view-form-group [controls]="controls" [data]="data"></app-view-form-group> -->
+
+<div class="flex horizontal wrap">
+  <div *ngFor="let item of items" class="flex horizontal wrap flex-item" [ngStyle]="getStyle(item.control)">
+
+    <app-view-form
+      *ngIf="item.control.children; else field"
+      [controls]="item.control.children"
+      [data]="data"
+    ></app-view-form>
+
+    <ng-template #field>
+      <div class="field">
+        <div class="field-label">{{ item.control.label | translate }}</div>
+        <div class="field-value">{{ item.value || '&nbsp;' }}</div>
+      </div>
+    </ng-template>
+
+  </div>
+</div>

@@ -16,7 +16,7 @@ import { UserDictionariesService } from '../../../core/user/dictionaries/user-di
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
-import { renderers as gridRenderers } from '../../../core/utils/index';
+import { renderers as gridRenderers, TYPE_CODES } from '../../../core/utils/index';
 
 @Injectable()
 export class GridService {
@@ -194,12 +194,10 @@ export class GridService {
         .map(column => {
           // Data types
           switch (column.dataType) {
-            case 2:
-              // Date
+            case TYPE_CODES.DATE:
               column.$$valueGetter = (value: any) => this.converterService.ISOToLocalDate(value);
               break;
-            case 6:
-              // Dictionary
+            case TYPE_CODES.DICT:
               const dictionary = dictionaries[column.dictCode];
               if (dictionary) {
                 const dictionaryHash = dictionary.reduce((acc, item) => { acc[item.code] = item.name; return acc; }, {});
@@ -210,14 +208,11 @@ export class GridService {
                 column.filterValues = dictionary.map(item => ({ code: item.code, name: item.name }));
               }
               break;
-            case 7:
-              // Datetime
+            case TYPE_CODES.DATETIME:
               column.$$valueGetter = (value: any) => this.converterService.ISOToLocalDateTime(value);
               break;
-            case 1:
-              // Number
-            case 3:
-              // String
+            case TYPE_CODES.NUMBER:
+            case TYPE_CODES.STRING:
             default:
           }
         return column;

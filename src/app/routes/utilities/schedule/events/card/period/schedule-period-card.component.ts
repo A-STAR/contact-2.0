@@ -96,7 +96,8 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   get currentPeriodFormType(): number {
-    return this.periodFromControls.indexOf(this._periodForm.controls) + 1;
+    return this.periodFromControls
+      .indexOf(this._periodForm && this._periodForm.controls) + 1;
   }
 
   get periodForms(): DynamicFormComponent[] {
@@ -153,7 +154,7 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   private get periodSerializedUpdates(): any {
     return [
-      {},
+      this._periodForm.serializedUpdates,
       {
         weekDays: Object.keys(this.scheduleEventService.weekDays)
           .map((day, index) => this._periodForm.serializedValue[day] && ++index)
@@ -187,8 +188,8 @@ export class SchedulePeriodCardComponent implements OnInit {
       [ { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true, validators: [ min(1) ] } ],
       [
         ...Object.keys(this.scheduleEventService.weekDays)
-          .map((day, i) => ({
-            label: `default.date.days.full.${i}`,
+          .map(day => ({
+            label: this.scheduleEventService.weekDays[day],
             controlName: day,
             type: 'checkbox',
             disabled: !canEdit, width: 3

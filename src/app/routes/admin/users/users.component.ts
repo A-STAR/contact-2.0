@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
 import { IUser, IUsersState } from '@app/routes/admin/users/users.interface';
 
 import { GridService } from '@app/shared/components/grid/grid.service';
@@ -13,14 +13,14 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { UsersService } from '@app/routes/admin/users/users.service';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
+import { combineLatestAnd } from '@app/core/utils';
 
 @Component({
   selector: 'app-users',
   templateUrl: 'users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsersComponent implements OnDestroy {
+export class UsersComponent implements OnInit, OnDestroy {
   private _users: Array<IUser> = [];
   private selectedUserId: number;
 
@@ -43,32 +43,36 @@ export class UsersComponent implements OnDestroy {
 
   displayInactiveUsers: boolean;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.onAdd(),
-      enabled: this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
-        this.usersService.state.map(state => !!state.selectedUserId)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch(),
-      enabled: this.userPermissionsService.has('USER_VIEW')
-    },
-    {
-      type: ToolbarItemTypeEnum.CHECKBOX,
-      action: () => this.toggleInactiveFilter(),
-      label: 'users.toolbar.action.show_inactive_users',
-      state: this.usersService.state.map(state => state.displayInactive)
-    }
-  ];
+  titlebar: ITitlebar = {
+    title: 'users.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        action: () => this.onAdd(),
+        enabled: this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.onEdit(),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
+          this.usersService.state.map(state => !!state.selectedUserId)
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetch(),
+        enabled: this.userPermissionsService.has('USER_VIEW')
+      },
+      // TODO(a.tymchuk): implement a dropdown settings button with options
+      // {
+      //   type: ToolbarItemTypeEnum.CHECKBOX,
+      //   action: () => this.toggleInactiveFilter(),
+      //   label: 'users.toolbar.action.show_inactive_users',
+      //   state: this.usersService.state.map(state => state.displayInactive)
+      // }
+    ]
+  };
 
   emptyMessage$: Observable<string>;
 
@@ -85,7 +89,9 @@ export class UsersComponent implements OnDestroy {
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
     private usersService: UsersService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.gridService.setAllRenderers(this.columns)
       .subscribe(columns => {
         this.columns = [ ...columns ];

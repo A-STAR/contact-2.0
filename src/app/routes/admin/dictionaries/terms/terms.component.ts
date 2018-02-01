@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { ITerm } from '../dictionaries.interface';
 import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
 
 import { DictionariesService } from '../dictionaries.service';
 import { GridService } from '../../../../shared/components/grid/grid.service';
@@ -14,6 +13,7 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 
 import { combineLatestAnd } from '../../../../core/utils/helpers';
 import { DialogFunctions } from '../../../../core/dialog';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,37 +22,40 @@ import { DialogFunctions } from '../../../../core/dialog';
 })
 export class TermsComponent extends DialogFunctions implements OnInit, OnDestroy {
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.create(),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('DICT_TERM_ADD'),
-        this.dictionariesService.hasSelectedDictionary
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.edit(),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('DICT_TERM_EDIT'),
-        this.dictionariesService.hasSelectedTerm
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('remove'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('DICT_TERM_DELETE'),
-        this.dictionariesService.hasSelectedTerm
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.dictionariesService.fetchTerms(),
-      enabled: this.dictionariesService.hasSelectedDictionary
-    }
-  ];
+  titlebar: ITitlebar = {
+    title: 'terms.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        action: () => this.create(),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('DICT_TERM_ADD'),
+          this.dictionariesService.hasSelectedDictionary
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.edit(),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('DICT_TERM_EDIT'),
+          this.dictionariesService.hasSelectedTerm
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        action: () => this.setDialog('remove'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('DICT_TERM_DELETE'),
+          this.dictionariesService.hasSelectedTerm
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.dictionariesService.fetchTerms(),
+        enabled: this.dictionariesService.hasSelectedDictionary
+      }
+    ]
+  };
 
   columns: Array<IGridColumn> = [
     { prop: 'code', minWidth: 50, maxWidth: 70 },

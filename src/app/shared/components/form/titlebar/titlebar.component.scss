@@ -1,53 +1,74 @@
-$button-size: 32px;
-$checkbox-size: 15px;
+@import '../../../../shared/styles/app/variables.scss';
 
 .titlebar {
-  width: 100%;
-  padding: 8px;
-  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: flex-start;
+  border-bottom: 1px solid $form-toolbar-border-color;
+  padding-top: 5px;
+  padding-bottom: 3px;
+  margin-bottom: 7px;
   user-select: none;
 }
 
-:host(.bordered) > .titlebar {
-  border: 1px solid #d5d5d5;
-  border-bottom: none;
+.titlebar-zone {
+  order: 0;
+  flex: 1 0 0px;
+  align-self: auto;
+  // The middle part should shrink
+  .middle & {
+    flex: 1 1 0px;
+  }
+  // The toolbar with buttons
+  .right & {
+    flex: 1 0 0px;
+  }
+
+  color: $form-toolbar-title-color;
+  height: 30px;
+  line-height: 30px;
+
+  .form-title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .icon-section {
+    text-align: right;
+    color: $form-toolbar-icon-color;
+  }
 }
 
-:host(.bh) > .titlebar {
-  border-left: 1px solid #d5d5d5;
-  border-right: 1px solid #d5d5d5;
-}
-
-:host(.bt) > .titlebar {
-  border-top: 1px solid #d5d5d5;
-}
-
-.titlebar-item {
+.icon {
   display: inline-block;
-  &:not(:last-child) {
-    margin-right: 8px;
+  position: relative;
+  text-align: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  padding-top: 3px;
+  margin-right: 4px;
+  border: 0;
+  background-color: $form-toolbar-icon-bg-color;
+  transition: all 150ms ease-in-out;
+
+  &:not(:disabled):hover {
+    box-shadow: 0 0 10px 1px rgba(0,0,0, 0.1);
+    cursor: pointer;
   }
-  &.align-right {
-    float: right;
-    margin-right: 0;
-    padding-left: 8px;
+  &:disabled {
+    color: $form-toolbar-icon-disabled-color;
+  }
+
+  .fa {
+    font-size: 18px;
   }
 }
 
-:host ::ng-deep .btn-default {
-  width: $button-size;
-  height: $button-size;
-  padding: 0;
-  line-height: $button-size;
-  text-align: center;
-  font-size: 14px;
-  // This prevents changing default button styles on hover
-  // TODO: fix this in global app theme
-  &[disabled]:hover {
-    background-color: #fff;
-    border-color: #eaeaea;
-  }
-}
+$checkbox-size: 15px;
 
 .checkbox {
   display: inline-block;

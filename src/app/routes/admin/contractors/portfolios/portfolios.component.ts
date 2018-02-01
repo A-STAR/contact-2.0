@@ -16,7 +16,7 @@ import {
   PortfolioAction,
   IActionType
 } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
 
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
@@ -35,51 +35,53 @@ import { GridComponent } from '@app/shared/components/grid/grid.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDestroy {
-
   @ViewChild(GridComponent) grid: GridComponent;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.onAdd(),
-      enabled: combineLatestAnd([
-        this.canAdd$,
-        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(),
-      enabled: combineLatestAnd([
-        this.canEdit$,
-        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
-        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_MOVE,
-      action: () => this.onMove(),
-      enabled: combineLatestAnd([
-        this.canMove$,
-        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
-        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('delete'),
-      enabled: combineLatestAnd([
-        this.canDelete$,
-        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
-        this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios)),
-      enabled: this.canView$
-    }
-  ];
+  titlebar: ITitlebar = {
+    title: 'portfolios.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        action: () => this.onAdd(),
+        enabled: combineLatestAnd([
+          this.canAdd$,
+          this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.onEdit(),
+        enabled: combineLatestAnd([
+          this.canEdit$,
+          this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+          this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_MOVE,
+        action: () => this.onMove(),
+        enabled: combineLatestAnd([
+          this.canMove$,
+          this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+          this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        action: () => this.setDialog('delete'),
+        enabled: combineLatestAnd([
+          this.canDelete$,
+          this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+          this.store.select(state => state.contractorsAndPortfolios.selectedPortfolio).map(o => !!o),
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios)),
+        enabled: this.canView$
+      }
+    ]
+  };
 
   contextMenuOptions: IContextMenuItem[] = [
     {

@@ -742,6 +742,7 @@
     }
   },
   "terms": {
+    "title": "Dictionary terms",
     "edit": {
       "title": "Term: {{ code }}",
       "code": "Term code",
@@ -774,6 +775,7 @@
   },
   "roles": {
     "roles": {
+      "title": "Roles",
       "copy": {
         "title": "Copy role",
         "originalRoleName": "Original role name",
@@ -1084,6 +1086,7 @@
       }
     },
     "employees": {
+      "title": "Employees",
       "add": {
         "title": "Choose employees",
         "grid": {
@@ -1114,6 +1117,7 @@
     }
   },
   "contractors": {
+    "title": "Contractors",
     "managers": {
       "remove": {
         "title": "Delete manager",
@@ -1164,6 +1168,7 @@
     }
   },
   "portfolios": {
+    "title": "Portfolios",
     "grid": {
       "id": "ID",
       "name": "Name",
