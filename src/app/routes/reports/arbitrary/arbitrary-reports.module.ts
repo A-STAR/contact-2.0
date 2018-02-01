@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 import { ReportsModule } from './reports/reports.module';
 import { FieldsModule } from './fields/fields.module';
+import { ParamsModule } from './params/params.module';
 
 import { ArbitraryReportsComponent } from './arbitrary-reports.component';
 import { ReportCardComponent } from './reports/card/report-card.component';
@@ -53,6 +54,7 @@ const routes: Routes = [
     SharedModule,
     ReportsModule,
     FieldsModule,
+    ParamsModule,
   ],
   exports: [
     RouterModule,

@@ -560,7 +560,8 @@
     "reports": {
       "arbitrary": {
         "tabs": {
-          "fields": "Описание полей"
+          "fields": "Описание полей",
+          "params": "Входные параметры"
         },
         "remove": {
           "title": "Удаление отчета",
@@ -594,6 +595,21 @@
             "systemName": "Системное название",
             "sortOrder": "Порядковый номер",
             "textWidth": "Ширина столбца"
+          }
+        },
+        "params": {
+          "remove": {
+            "title": "Удаление параметра отчета",
+            "confirmMessage": "Вы действительно хотите удалить выбранный параметр отчета?"
+          },
+          "grid": {
+            "id": "ID",
+            "name": "Название",
+            "paramTypeCode": "Тип параметра",
+            "sortOrder": "Порядковый номер",
+            "systemName": "Системное название",
+            "isMandatory": "Обязательность",
+            "multiSelect": "Множенственный выбор"
           }
         }
       }
@@ -2510,6 +2526,9 @@
     },
     "fields": {
       "gen": { "singular": "поля", "plural": "полей" }
+    },
+    "params": {
+      "gen": { "singular": "параметра", "plural": "параметров" }
     }
   },
   "massOperations": {

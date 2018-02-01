@@ -560,7 +560,8 @@
     "reports": {
       "arbitrary": {
         "tabs": {
-          "fields": "Fields"
+          "fields": "Fields",
+          "params": "Paramerers"
         },
         "remove": {
           "title": "Delete report",
@@ -594,6 +595,21 @@
             "systemName": "System name",
             "sortOrder": "Sort order",
             "textWidth": "Text width"
+          }
+        },
+        "params": {
+          "remove": {
+            "title": "Delete report param",
+            "confirmMessage": "Do you really want to delete selected report param?"
+          },
+          "grid": {
+            "id": "ID",
+            "name": "Name",
+            "paramTypeCode": "Param type",
+            "sortOrder": "Sort Order",
+            "systemName": "System name",
+            "isMandatory": "Is mandatory",
+            "multiSelect": "Multi select"
           }
         }
       }
@@ -2510,6 +2526,9 @@
     },
     "fields": {
       "gen": { "singular": "field", "plural": "fields" }
+    },
+    "params": {
+      "gen": { "singular": "parameter", "plural": "parameters" }
     }
   },
   "massOperations": {

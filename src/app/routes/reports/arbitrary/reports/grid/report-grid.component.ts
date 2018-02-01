@@ -87,7 +87,6 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
     this.fetch();
 
     this.selectedReport$
-      .filter(Boolean)
       .subscribe(report => this.select.emit(report));
 
     this.actionSubscription = this.reportsService

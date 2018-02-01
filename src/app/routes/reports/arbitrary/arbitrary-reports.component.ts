@@ -16,7 +16,7 @@ export class ArbitraryReportsComponent {
   ) { }
 
   onReportSelect(report: IReport): void {
-    this.reportId = report.id;
+    this.reportId = report && report.id;
     this.cdRef.markForCheck();
   }
 }
