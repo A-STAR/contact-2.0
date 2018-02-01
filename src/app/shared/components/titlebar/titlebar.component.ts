@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy
 import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
 
-import { IButtonType } from '../../button/button.interface';
+import { IButtonType } from '../button/button.interface';
 import { ITitlebar, ITitlebarItem, TitlebarItemTypeEnum, ITitlebarButton } from './titlebar.interface';
 
 import { doOnceIf, invert } from '@app/core/utils';
@@ -18,7 +18,7 @@ export class TitlebarComponent implements OnInit {
 
   @Output() action = new EventEmitter<ITitlebarItem>();
 
-  title: string;
+  borderCls: object;
   items: ITitlebarItem[] = [];
   props: { [key: string]: Partial<ITitlebarButton> } = {
     [TitlebarItemTypeEnum.BUTTON_ADD]: { iconCls: 'fa-plus', title: 'Добавить' },
@@ -30,10 +30,14 @@ export class TitlebarComponent implements OnInit {
     [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'fa-refresh', title: 'Обновить' },
     [TitlebarItemTypeEnum.BUTTON_SEARCH]: { iconCls: 'fa-search', title: 'Поиск' },
   };
+  supressCenterZone: boolean;
+  title: string;
 
   ngOnInit(): void {
-    this.title = this.titlebar.title;
+    this.borderCls = { 'no-border': this.titlebar.suppressBorder === true };
     this.items = this.titlebar.items || this.items;
+    this.supressCenterZone = this.titlebar.suppressCenterZone || false;
+    this.title = this.titlebar.title;
   }
 
   getButtonType(item: ITitlebarItem): IButtonType {

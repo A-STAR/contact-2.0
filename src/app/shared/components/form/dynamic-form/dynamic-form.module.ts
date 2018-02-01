@@ -9,7 +9,7 @@ import { DebtAmountModule } from '../debt-amount/debt-amount.module';
 import { DialogMultiSelectModule } from '../dialog-multi-select/dialog-multi-select.module';
 import { DropdownInputModule } from '../dropdown/dropdown-input.module';
 import { FileUploadModule } from '../file-upload/file-upload.module';
-import { TitlebarModule } from '../titlebar/titlebar.module';
+import { TitlebarModule } from '../../titlebar/titlebar.module';
 import { HtmlTextareaModule } from '../html-textarea/html-textarea.module';
 import { ImageUploadModule } from '../image-upload/image-upload.module';
 import { MultiLanguageModule } from '../multi-language/multi-language.module';

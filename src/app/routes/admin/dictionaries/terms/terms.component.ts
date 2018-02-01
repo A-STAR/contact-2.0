@@ -13,7 +13,7 @@ import { UserPermissionsService } from '../../../../core/user/permissions/user-p
 
 import { combineLatestAnd } from '../../../../core/utils/helpers';
 import { DialogFunctions } from '../../../../core/dialog';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
