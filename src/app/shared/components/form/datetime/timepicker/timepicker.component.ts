@@ -27,7 +27,7 @@ export class TimePickerComponent implements ControlValueAccessor {
   private _value: Date;
 
   // TODO(d.maltsev): get format from locale
-  format = 'MM/DD/YYYY HH:mm:ss';
+  format = 'HH:mm:ss';
 
   constructor(
     private cdRef: ChangeDetectorRef,
