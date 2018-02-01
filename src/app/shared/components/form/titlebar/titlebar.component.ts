@@ -1,62 +1,47 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
 
-import { IAppState } from '@app/core/state/state.interface';
 import { IButtonType } from '../../button/button.interface';
-import { ITitlebarItem, TitlebarItemTypeEnum } from './titlebar.interface';
+import { ITitlebar, ITitlebarItem, TitlebarItemTypeEnum, ITitlebarButton } from './titlebar.interface';
 
 import { doOnceIf, invert } from '@app/core/utils';
 
 @Component({
-  selector: 'app-form-titlebar',
+  selector: 'app-titlebar',
   templateUrl: './titlebar.component.html',
   styleUrls: [ './titlebar.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormToolbarComponent {
-  @Input() items: ITitlebarItem[] = [];
+export class TitlebarComponent implements OnInit {
+  @Input() titlebar: ITitlebar;
+
   @Output() action = new EventEmitter<ITitlebarItem>();
 
-  defaultItems: { [TitlebarItemTypeEnum: number]: IButtonType } = {
-    [TitlebarItemTypeEnum.BUTTON_ADD]: 'add',
-    [TitlebarItemTypeEnum.BUTTON_ADD_USER]: 'addUser',
-    [TitlebarItemTypeEnum.BUTTON_BLOCK]: 'block',
-    [TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS]: 'changeStatus',
-    [TitlebarItemTypeEnum.BUTTON_CLOSE]: 'close',
-    [TitlebarItemTypeEnum.BUTTON_COPY]: 'copy',
-    [TitlebarItemTypeEnum.BUTTON_DELETE]: 'delete',
-    [TitlebarItemTypeEnum.BUTTON_DOWNLOAD]: 'download',
-    [TitlebarItemTypeEnum.BUTTON_EDIT]: 'edit',
-    [TitlebarItemTypeEnum.BUTTON_EMAIL]: 'email',
-    [TitlebarItemTypeEnum.BUTTON_EXCEL_LOAD]: 'loadFromExcel',
-    [TitlebarItemTypeEnum.BUTTON_MOVE]: 'move',
-    [TitlebarItemTypeEnum.BUTTON_NEXT]: 'next',
-    [TitlebarItemTypeEnum.BUTTON_OK]: 'ok',
-    [TitlebarItemTypeEnum.BUTTON_REFRESH]: 'refresh',
-    [TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT]: 'registerContact',
-    [TitlebarItemTypeEnum.BUTTON_SAVE]: 'save',
-    [TitlebarItemTypeEnum.BUTTON_SMS]: 'sms',
-    [TitlebarItemTypeEnum.BUTTON_START]: 'start',
-    [TitlebarItemTypeEnum.BUTTON_STOP]: 'stop',
-    [TitlebarItemTypeEnum.BUTTON_UNBLOCK]: 'unblock',
-    [TitlebarItemTypeEnum.BUTTON_UNDO]: 'undo',
-    [TitlebarItemTypeEnum.BUTTON_UPLOAD]: 'upload',
-    [TitlebarItemTypeEnum.BUTTON_VERSION]: 'version',
-    [TitlebarItemTypeEnum.BUTTON_VISIT]: 'visit',
+  title: string;
+  items: ITitlebarItem[] = [];
+  props: { [key: string]: Partial<ITitlebarButton> } = {
+    [TitlebarItemTypeEnum.BUTTON_ADD]: { iconCls: 'fa-plus', title: 'Добавить' },
+    [TitlebarItemTypeEnum.BUTTON_COPY]: { iconCls: 'fa-copy', title: 'Копировать' },
+    [TitlebarItemTypeEnum.BUTTON_DELETE]: { iconCls: 'fa-trash', title: 'Удалить' },
+    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'fa-pencil', title: 'Редактировать' },
+    [TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL]: { iconCls: 'fa-file-excel-o', title: 'Выгрузить в Excel' },
+    [TitlebarItemTypeEnum.BUTTON_MOVE]: { iconCls: 'fa-share', title: 'Переместить' },
+    [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'fa-refresh', title: 'Обновить' },
+    [TitlebarItemTypeEnum.BUTTON_SEARCH]: { iconCls: 'fa-search', title: 'Поиск' },
   };
 
-  constructor(
-    private store: Store<IAppState>,
-  ) {}
+  ngOnInit(): void {
+    this.title = this.titlebar.title;
+    this.items = this.titlebar.items || this.items;
+  }
 
   getButtonType(item: ITitlebarItem): IButtonType {
-    return this.defaultItems[item.type];
+    return TitlebarItemTypeEnum[item.type];
   }
 
   isButton(item: ITitlebarItem): boolean {
-    return item.type === TitlebarItemTypeEnum.BUTTON || !!this.defaultItems[String(item.type)];
+    return !!TitlebarItemTypeEnum[item.type];
   }
 
   isCheckbox(item: ITitlebarItem): boolean {
@@ -67,8 +52,6 @@ export class FormToolbarComponent {
     doOnceIf(this.isDisabled(item).map(invert), () => {
       if (typeof item.action === 'function') {
         item.action();
-      } else if (item.action) {
-        this.store.dispatch(item.action);
       }
       this.action.emit(item);
     });
@@ -78,9 +61,21 @@ export class FormToolbarComponent {
     return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
-  getItemCls(item: ITitlebarItem): object {
-    return {
-      'align-right': item.align === 'right'
-    };
+  /**
+   * Get the icon's css class, or show an exclamation if the icon class is not listed
+   * @param item {ITitlebarButton}
+   */
+  getIconCls(item: ITitlebarButton): object {
+    const prop = this.props[item.type];
+    const iconCls = item.iconCls || (prop && prop.iconCls) || 'fa-exclamation';
+    const cls = { 'align-right': item.align === 'right' };
+    return iconCls
+      ? { ...cls, [iconCls]: true }
+      : cls;
+  }
+
+  getTitle(item: ITitlebarButton): string {
+    const prop = this.props[item.type];
+    return item.title || (prop && prop.title) || null;
   }
 }
