@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
+import { GroupGridModule } from './grid/group-grid.module';
 
 import { GroupsService } from './groups.service';
 
@@ -21,14 +22,12 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    GroupGridModule,
     RouterModule.forChild(routes),
     SharedModule
   ],
   providers: [
     GroupsService,
-  ],
-  declarations: [
-    GroupGridComponent
   ]
 })
 export class GroupsModule { }
