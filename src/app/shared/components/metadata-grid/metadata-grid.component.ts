@@ -247,6 +247,9 @@ export class MetadataGridComponent<T> implements OnInit {
           && constants.has('SMS.Use')
           && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole as number);
       },
+      debtOutsourcingSend: selection => selection.length && permissions.has('DEBT_OUTSOURCING_SEND'),
+      debtOutsourcingExclude: selection => selection.length && permissions.has('DEBT_OUTSOURCING_EXCLUDE'),
+      debtOutsourcingReturn: selection => selection.length && permissions.has('DEBT_OUTSOURCING_RETURN'),
     };
   }
 }

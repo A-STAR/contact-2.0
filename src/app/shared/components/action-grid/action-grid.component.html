@@ -157,6 +157,24 @@
   (close)="onCloseAction($event)"
 ></app-operator-details>
 
+<app-outsourcing-send
+  *ngIf="isDialog('debtOutsourcingSend')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-outsourcing-send>
+
+<app-outsourcing-exclude
+  *ngIf="isDialog('debtOutsourcingExclude')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-outsourcing-exclude>
+
+<app-outsourcing-return
+  *ngIf="isDialog('debtOutsourcingReturn')"
+  [debts]="getSelectionParam(0)"
+  (close)="onCloseAction($event)"
+></app-outsourcing-return>
+
 <app-metadata-grid
   #grid
   *ngIf="isUsingAGGrid; else simpleGrid"
