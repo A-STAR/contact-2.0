@@ -155,6 +155,9 @@ export class DataUploadComponent extends DialogFunctions
   onFormatChange(format: { value: number }[]): void {
     this.dataUploadService.format = format[0].value;
     this.isCurrencySelected = format[0].value === DataUploaders.CURRENCY_RATE;
+    if (this.isCurrencySelected) {
+      this.dataUploadService.uploader.parameter = this.currencies[0].value;
+    }
   }
 
   onCurrencyChange(currency: { value: number }[]): void {
