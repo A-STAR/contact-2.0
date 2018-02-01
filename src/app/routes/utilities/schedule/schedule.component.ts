@@ -23,6 +23,6 @@ export class ScheduleComponent {
   tabs: ITab[] = [
     { link: 'all', title: label('all'), hasPermission: this.userPermissionsService.has('GROUP_VIEW') },
     { link: 'debts', title: label('debtsInGroup'), hasPermission: this.userPermissionsService.has('GROUP_TAB_DEBT_GROUP') },
-    { link: 'schedule', title: label('scheduleEvents'), hasPermission: this.userPermissionsService.has('SCHEDULE_VIEW') },
+    { link: 'events', title: label('scheduleEvents'), hasPermission: this.userPermissionsService.has('SCHEDULE_VIEW') },
   ];
 }

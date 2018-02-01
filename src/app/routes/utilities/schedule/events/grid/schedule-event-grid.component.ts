@@ -65,7 +65,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.scheduleEventService.canAdd$,
-      action: () => this.onEdit(),
+      action: () => this.onAdd(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
@@ -163,6 +163,11 @@ export class ScheduleEventGridComponent extends DialogFunctions
     const eventObj = Array.isArray(event) ? event[0] : event;
     this.selectedEvent$.next(event);
     this.select.emit(eventObj);
+  }
+
+  onAdd(): void {
+    this.setDialog('add');
+    this.cdRef.markForCheck();
   }
 
   onEdit(): void {

@@ -27,10 +27,18 @@ const routes: Routes = [
         loadChildren: './group-debts/group-debts.module#GroupDebtsModule',
       },
       {
-        path: 'schedule',
+        path: 'events',
         loadChildren: './events/schedule-event.module#ScheduleEventModule',
       }
     ],
+  },
+  {
+    path: 'all/create',
+    loadChildren: './groups/card/group-card.module#GroupCardModule',
+  },
+  {
+    path: 'all/:groupId',
+    loadChildren: './groups/card/group-card.module#GroupCardModule',
   },
 ];
 

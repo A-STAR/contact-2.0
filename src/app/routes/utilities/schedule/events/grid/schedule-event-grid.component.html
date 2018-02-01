@@ -1,4 +1,9 @@
 <app-schedule-event-dialog
+  *ngIf="isDialog('add')"
+  (close)="closeDialog()"
+></app-schedule-event-dialog>
+
+<app-schedule-event-dialog
   *ngIf="isDialog('edit')"
   [eventId]="selectedEventId"
   (close)="closeDialog()"
