@@ -9,14 +9,11 @@ import {
 } from '@angular/core';
 
 import { CellValueChangedEvent, ICellRendererParams } from 'ag-grid/main';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
-import { IAppState } from '@app/core/state/state.interface';
 import { IMetadataAction } from '../../../core/metadata/metadata.interface';
 import { DataUploaders,
   IOpenFileResponse,
@@ -80,7 +77,6 @@ export class DataUploadComponent extends DialogFunctions
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private store: Store<IAppState>,
     private dataUploadService: DataUploadService,
     private gridService: GridService,
     private lookupService: LookupService,
