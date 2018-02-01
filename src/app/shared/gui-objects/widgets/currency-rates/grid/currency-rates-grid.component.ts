@@ -116,15 +116,6 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     this.routingService.navigate([ `${this.currencyId}/rates/${currencyRate.id}` ], this.route);
   }
 
-  onExcelLoad(currencyId: number): void {
-    this.router.navigate([`/utilities/data-upload`]).then(() => {
-      this.store.dispatch({
-        type: IActionType.SELECT_CURRENCY,
-        payload: { currencyId },
-      });
-    });
-  }
-
   private onAdd(): void {
     this.routingService.navigate([ `${this.currencyId}/rates/create` ], this.route);
   }
@@ -158,14 +149,6 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
         enabled: combineLatestAnd([
           this.currencyRatesService.canEdit$,
           this.selectedCurrencyRate$.map(o => !!o)
-        ])
-      },
-      {
-        type: ToolbarItemTypeEnum.BUTTON_EXCEL_LOAD,
-        action: () => this.onExcelLoad(this.currencyId),
-        enabled: combineLatestAnd([
-          this.currencyRatesService.canLoad$,
-          this.currencyId$.map(Boolean)
         ])
       },
       {
