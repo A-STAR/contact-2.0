@@ -14,7 +14,7 @@
   user-select: none;
 }
 
-.titlebar-section {
+.titlebar-zone {
   order: 0;
   flex: 1 0 0px;
   align-self: auto;
@@ -50,12 +50,13 @@
   height: 30px;
   padding: 0;
   padding-top: 3px;
+  margin-right: 4px;
   border: 0;
   background-color: $form-toolbar-icon-bg-color;
   transition: all 150ms ease-in-out;
 
   &:not(:disabled):hover {
-    box-shadow: 0 0 10px 0px rgba(0,0,0, 0.1);
+    box-shadow: 0 0 10px 1px rgba(0,0,0, 0.1);
     cursor: pointer;
   }
   &:disabled {
@@ -67,29 +68,7 @@
   }
 }
 
-
-$button-size: 32px;
 $checkbox-size: 15px;
-
-// .titlebar {
-//   width: 100%;
-//   padding: 8px;
-//   background-color: #fff;
-//   user-select: none;
-// }
-
-// .titlebar-item {
-//   display: inline-block;
-//   &:not(:last-child) {
-//     margin-right: 8px;
-//   }
-//   &.align-right {
-//     float: right;
-//     margin-right: 0;
-//     padding-left: 8px;
-//   }
-// }
-
 
 .checkbox {
   display: inline-block;

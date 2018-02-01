@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
-import { TitlebarModule } from '@app/shared/components/form/titlebar/titlebar.module';
 
 import { ActionsLogService } from './actions-log.service';
 
@@ -22,7 +21,6 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     SharedModule,
-    TitlebarModule,
   ],
   declarations: [
     ActionsLogComponent,

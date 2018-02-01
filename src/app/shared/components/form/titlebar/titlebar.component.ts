@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy
 import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
 
-import { IAppState } from '@app/core/state/state.interface';
 import { IButtonType } from '../../button/button.interface';
 import { ITitlebar, ITitlebarItem, TitlebarItemTypeEnum, ITitlebarButton } from './titlebar.interface';
 
@@ -21,11 +20,13 @@ export class TitlebarComponent implements OnInit {
 
   title: string;
   items: ITitlebarItem[] = [];
-  props: any = {
+  props: { [key: string]: Partial<ITitlebarButton> } = {
     [TitlebarItemTypeEnum.BUTTON_ADD]: { iconCls: 'fa-plus', title: 'Добавить' },
-    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'fa-pencil', title: 'Редактировать' },
+    [TitlebarItemTypeEnum.BUTTON_COPY]: { iconCls: 'fa-copy', title: 'Копировать' },
     [TitlebarItemTypeEnum.BUTTON_DELETE]: { iconCls: 'fa-trash', title: 'Удалить' },
+    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'fa-pencil', title: 'Редактировать' },
     [TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL]: { iconCls: 'fa-file-excel-o', title: 'Выгрузить в Excel' },
+    [TitlebarItemTypeEnum.BUTTON_MOVE]: { iconCls: 'fa-share', title: 'Переместить' },
     [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'fa-refresh', title: 'Обновить' },
     [TitlebarItemTypeEnum.BUTTON_SEARCH]: { iconCls: 'fa-search', title: 'Поиск' },
   };
@@ -60,11 +61,21 @@ export class TitlebarComponent implements OnInit {
     return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
+  /**
+   * Get the icon's css class, or show an exclamation if the icon class is not listed
+   * @param item {ITitlebarButton}
+   */
   getIconCls(item: ITitlebarButton): object {
-    const iconCls = item.iconCls || this.props[item.type].iconCls;
+    const prop = this.props[item.type];
+    const iconCls = item.iconCls || (prop && prop.iconCls) || 'fa-exclamation';
     const cls = { 'align-right': item.align === 'right' };
     return iconCls
       ? { ...cls, [iconCls]: true }
       : cls;
+  }
+
+  getTitle(item: ITitlebarButton): string {
+    const prop = this.props[item.type];
+    return item.title || (prop && prop.title) || null;
   }
 }

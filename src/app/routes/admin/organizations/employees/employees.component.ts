@@ -8,7 +8,7 @@ import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import {
   IEmployee, IOrganizationsState, IEmployeeUpdateRequest, IEmployeeCreateRequest
 } from '../organizations.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../organizations.service';
@@ -31,40 +31,43 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
 
   dialog: string;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.setDialog('create'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('ORGANIZATION_EDIT'),
-        this.organizationsService.selectedOrganization.map(o => !!o)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.setDialog('edit'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('ORGANIZATION_EDIT'),
-        this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('remove'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('ORGANIZATION_DELETE'),
-        this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetchEmployees(),
-      enabled: combineLatest(
-        this.userPermissionsService.has('ORGANIZATION_VIEW'),
-        this.organizationsService.selectedOrganization
-      ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
-    },
-  ];
+  titlebar: ITitlebar = {
+    title: 'organizations.employees.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        action: () => this.setDialog('create'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('ORGANIZATION_EDIT'),
+          this.organizationsService.selectedOrganization.map(o => !!o)
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('ORGANIZATION_EDIT'),
+          this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        action: () => this.setDialog('remove'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('ORGANIZATION_DELETE'),
+          this.organizationsService.state.map(state => !!state.selectedEmployeeUserId)
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetchEmployees(),
+        enabled: combineLatest(
+          this.userPermissionsService.has('ORGANIZATION_VIEW'),
+          this.organizationsService.selectedOrganization
+        ).map(([hasPermissions, hasSelectedEntity]) => hasPermissions && !!hasSelectedEntity)
+      },
+    ]
+  };
 
   columns: Array<IGridColumn> = [
     { prop: 'fullName', minWidth: 150 },
@@ -72,8 +75,6 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'roleCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE },
     { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
   ];
-
-  // action: IOrganizationDialogActionEnum;
 
   editedEntity: IEmployee;
 
