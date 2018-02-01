@@ -35,15 +35,15 @@ export type ITitlebarAction = () => void;
 
 export interface ITitlebarElement {
   action?: ITitlebarAction;
+  align?: 'right' | 'left';
   enabled?: Observable<boolean>;
   title?: string;
-  align?: 'right' | 'left';
 }
 
 export interface ITitlebarButton extends ITitlebarElement {
   type: TitlebarItemTypeEnum;
-  iconCls?: string;
   children?: Array<ITitlebarElement>;
+  iconCls?: string;
 }
 
 export interface ITitlebarCheckbox extends ITitlebarElement {
@@ -54,6 +54,10 @@ export interface ITitlebarCheckbox extends ITitlebarElement {
 export type ITitlebarItem = ITitlebarButton | ITitlebarCheckbox;
 
 export interface ITitlebar {
-  title?: string;
+  noBorder?: boolean;
   items?: Array<ITitlebarItem>;
+  title?: string;
+  // false by default
+  suppressCenterZone?: boolean;
+  suppressBorder?: boolean;
 }

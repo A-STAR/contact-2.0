@@ -7,7 +7,7 @@ import { first } from 'rxjs/operators';
 
 import { IConstant } from './constants.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ConstantsService } from './constants.service';
 import { GridService } from '@app/shared/components/grid/grid.service';

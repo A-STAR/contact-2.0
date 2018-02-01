@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IPermissionRole } from '../permissions.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';

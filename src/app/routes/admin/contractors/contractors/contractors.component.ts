@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IAppState } from '@app/core/state/state.interface';
 import { IContractor, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
