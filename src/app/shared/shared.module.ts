@@ -26,8 +26,9 @@ import { ActionDialogModule } from './components/dialog/action/action-dialog.mod
 import { ActionGridModule } from './components/action-grid/action-grid.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
 import { ButtonModule } from './components/button/button.module';
+import { CapitalizeModule } from './pipes/capitalize/capitalize.module';
 import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
-import { DatePickerModule } from './components/form/datepicker/datepicker.module';
+import { DateTimeModule } from './components/form/datetime/datetime.module';
 import { DebtAmountModule } from './components/form/debt-amount/debt-amount.module';
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogMultiSelectModule } from './components/form/dialog-multi-select/dialog-multi-select.module';
@@ -49,6 +50,7 @@ import { ImageUploadModule } from './components/form/image-upload/image-upload.m
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { ListModule } from './components/list/list.module';
 import { MetadataGridModule } from './components/metadata-grid/metadata-grid.module';
+import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
 import { PasswordModule } from './components/form/password/password.module';
@@ -91,8 +93,9 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ActionGridModule,
     BlockDialogModule,
     ButtonModule,
+    CapitalizeModule,
     ColorPickerModule,
-    DatePickerModule,
+    DateTimeModule,
     DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
@@ -113,6 +116,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     ListModule,
     MetadataGridModule,
+    MomentModule,
     MultiLanguageModule,
     MultiSelectModule,
     PasswordModule,
@@ -128,7 +132,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ToolbarModule,
     Toolbar2Module,
     TreeModule,
-    TimePickerModule,
     TitlebarModule,
     ValueInputModule,
     ViewFormModule,
@@ -175,8 +178,9 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ActionGridModule,
     BlockDialogModule,
     ButtonModule,
+    CapitalizeModule,
     ColorPickerModule,
-    DatePickerModule,
+    DateTimeModule,
     DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
@@ -198,6 +202,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     ListModule,
     MetadataGridModule,
+    MomentModule,
     MultiLanguageModule,
     MultiSelectModule,
     NumericInputComponent,
@@ -215,7 +220,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     Toolbar2Module,
     TreeModule,
     TitlebarModule,
-    TimePickerModule,
     ValueInputModule,
     ViewFormModule,
   ]

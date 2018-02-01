@@ -38,7 +38,7 @@ export class CurrencyRateCardComponent implements OnInit {
   ngOnInit(): void {
     combineLatest(
       this.currencyRateId ? this.currencyRatesService.canEdit$ : this.currencyRatesService.canAdd$,
-      this.currencyRateId ? this.currencyRatesService.fetch(this.currencyId, this.currencyRateId) : of({})
+      this.currencyRateId ? this.currencyRatesService.fetch(this.currencyId, this.currencyRateId) : of({}),
     )
     .pipe(first())
     .subscribe(([ canEdit, currencyRate ]) => {
@@ -77,7 +77,7 @@ export class CurrencyRateCardComponent implements OnInit {
   private initControls(canEdit: boolean): Array<IDynamicFormItem> {
     return [
       {
-        label: label('fromDateTime'), controlName: 'fromDateTime', type: 'datepicker', displayTime: true,
+        label: label('fromDateTime'), controlName: 'fromDateTime', type: 'datetimepicker',
         required: true, disabled: !canEdit || !!this.currencyRateId
       },
       { label: label('rate'), controlName: 'rate', type: 'number', disabled: !canEdit, required: true },

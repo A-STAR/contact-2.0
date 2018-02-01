@@ -6,7 +6,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 
 import { createTranslateLoader } from '../../../app.module';
 
-import { DatePickerModule } from '../form/datepicker/datepicker.module';
+import { DateTimeModule } from '../form/datetime/datetime.module';
 
 import { QBuilderService } from './qbuilder.service';
 import { QBuilderComponent } from './qbuilder.component';
@@ -20,7 +20,7 @@ xdescribe('QbuilderComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        DatePickerModule,
+        DateTimeModule,
         FormsModule,
         HttpClientModule,
         ReactiveFormsModule,

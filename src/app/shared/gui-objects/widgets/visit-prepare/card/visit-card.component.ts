@@ -62,10 +62,7 @@ export class VisitCardComponent implements OnInit, OnDestroy {
   private createControls(visitOpts: IOption[]): Array<IDynamicFormItem> {
     return [
       { label: label('purposeCode'), controlName: 'purposeCode', type: 'select', options: visitOpts },
-      {
-        label: label('planVisitDateTime'), controlName: 'planVisitDateTime',
-        type: 'datepicker', displayTime: true, required: true
-      },
+      { label: label('planVisitDateTime'), controlName: 'planVisitDateTime', type: 'datetimepicker', required: true },
       { label: label('planUserId'), controlName: 'planUserId', type: 'text', display: false, required: true },
       { label: label('comment'), controlName: 'comment', type: 'textarea' },
     ];

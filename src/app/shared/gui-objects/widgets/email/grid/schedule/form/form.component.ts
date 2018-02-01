@@ -119,8 +119,7 @@ export class FormComponent implements OnInit, OnDestroy {
       {
         label: labelKey('startDateTime'),
         controlName: 'startDateTime',
-        type: 'datepicker',
-        displayTime: true,
+        type: 'datetimepicker',
         minDate: new Date(),
         validators: [ minDate(moment().subtract(3, 'd').toDate()) ],
         required: true
