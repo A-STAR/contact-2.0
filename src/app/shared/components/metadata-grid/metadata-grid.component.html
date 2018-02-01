@@ -5,7 +5,7 @@
 
 <app-grid2
   *ngIf="initialized"
-  [actions]="gridActions$ | async"
+  [actions]="gridActionsForSelected$ | async"
   [columnIds]="columnIds"
   [columns]="columns"
   [fullHeight]="fullHeight"

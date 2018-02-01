@@ -10,7 +10,20 @@ export interface IMetadataAction {
   addOptions: IMetadataActionOption[];
   enabled: (selection: any[]) => boolean;
   params: string[];
+  applyTo?: {
+    all: boolean;
+    selected?: boolean;
+  };
   children?: IMetadataAction[];
+}
+
+export interface IMetadataActionPermissions {
+  [key: string]: (...args: any[]) => any;
+}
+
+export interface IMetadataSortedActions {
+  all: IMetadataAction[];
+  selected: IMetadataAction[];
 }
 
 export interface IMetadataColumn {

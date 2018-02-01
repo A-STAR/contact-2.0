@@ -34,6 +34,7 @@ import { MetadataFilterComponent } from '../metadata-grid/filter/metadata-filter
 
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { ValueBag } from '../../../core/value-bag/value-bag';
+import { IMetadataAction, IMetadataActionPermissions, IMetadataSortedActions } from '@app/core/metadata/metadata.interface';
 
 @Component({
   selector: 'app-metadata-grid',
@@ -65,18 +66,10 @@ export class MetadataGridComponent<T> implements OnInit {
   private _initialized = false;
 
   private actions$ = new BehaviorSubject<any[]>(null);
+  private actionsWithPermissions$: Observable<IMetadataSortedActions>;
+  private actionsWithPermissionsForAll$: Observable<IMetadataAction[]>;
+  private actionsWithPermissionsForSelected$: Observable<IMetadataAction[]>;
 
-  private actionsWithPermissions$ = combineLatest(
-    this.actions$.pipe(filter(Boolean)),
-    this.userConstantsService.bag(),
-    this.userPermissionsService.bag(),
-    this.entityAttributesService.getDictValueAttributes()
-  )
-  .pipe(
-    map(([ actions, constants, permissions, entityPermissions ]) => {
-      return this.addPermissions(actions, constants, permissions, entityPermissions);
-    })
-  );
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -95,14 +88,37 @@ export class MetadataGridComponent<T> implements OnInit {
         this._initialized = true;
         this.cdRef.markForCheck();
       });
+
+     this.actionsWithPermissions$ = combineLatest(
+        this.actions$.pipe(filter(Boolean)),
+        this.userConstantsService.bag(),
+        this.userPermissionsService.bag(),
+        this.entityAttributesService.getDictValueAttributes()
+      )
+      .pipe(
+        map(([ actions, constants, permissions, entityPermissions ]) => {
+          return this.addPermissions(actions, constants, permissions, entityPermissions);
+        })
+      );
+
+      this.actionsWithPermissionsForAll$ = this.actionsWithPermissions$.map(sortedActions => sortedActions.all);
+      this.actionsWithPermissionsForSelected$ = this.actionsWithPermissions$.map(sortedActions => sortedActions.selected);
   }
 
   get selected(): T[] {
     return this.grid && this.grid.selected || [] as any[];
   }
 
-  get gridActions$(): Observable<any[]> {
+  get gridActions$(): Observable<IMetadataSortedActions> {
     return this.actionsWithPermissions$;
+  }
+
+  get gridActionsForSelected$(): Observable<IMetadataAction[]> {
+    return this.actionsWithPermissionsForSelected$;
+  }
+
+  get gridActionsForAll$(): Observable<IMetadataAction[]> {
+    return this.actionsWithPermissionsForAll$;
   }
 
   get gridOptions(): GridOptions {
@@ -157,20 +173,32 @@ export class MetadataGridComponent<T> implements OnInit {
     return this.grid.getRequestParams();
   }
 
-  private addPermissions(mockActions: any[], constants: ValueBag, permissions: ValueBag, entityPerms: IEntityAttributes): any[] {
-    const actionPermissions = this.buildPermissions(mockActions, constants, permissions, entityPerms);
-    return this.attachPermissions(mockActions, actionPermissions);
+  private filterActions(actions: IMetadataAction[]): IMetadataSortedActions  {
+    return actions.reduce((acc, action: IMetadataAction) => {
+      const arr = action.applyTo && action.applyTo.all ? acc.all : acc.selected;
+      arr.push(action);
+      return acc;
+    }, { all: [], selected: [] });
   }
 
-  private attachPermissions(mockActions: any[], actionPermissions: any): any[] {
-    return mockActions.map(action => ({
+  private addPermissions(actions: IMetadataAction[], constants: ValueBag, permissions: ValueBag,
+      entityPerms: IEntityAttributes): IMetadataSortedActions {
+
+    const actionPermissions = this.buildPermissions(actions, constants, permissions, entityPerms);
+
+    return this.filterActions(this.attachPermissions(actions, actionPermissions));
+  }
+
+  private attachPermissions(actions: IMetadataAction[], actionPermissions: IMetadataActionPermissions): IMetadataAction[] {
+    return actions.map(action => ({
       ...action,
       enabled: actionPermissions[action.action],
       children: action.children ? this.attachPermissions(action.children, actionPermissions) : undefined
     }));
   }
 
-  private buildPermissions(actions: any, constants: ValueBag, permissions: ValueBag, entityPerms: IEntityAttributes): any {
+  private buildPermissions(actions: IMetadataAction[], constants: ValueBag,
+    permissions: ValueBag, entityPerms: IEntityAttributes): IMetadataActionPermissions {
     return {
       addVisit: selection => selection.length && permissions.has('ADDRESS_VISIT_ADD'),
       cancelVisit: selection => selection.length && permissions.has('VISIT_CANCEL'),
@@ -202,7 +230,7 @@ export class MetadataGridComponent<T> implements OnInit {
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
         return selection.length
           && constants.has('Email.Use')
-          && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+          && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', personRole as number);
       },
       // TODO(d.maltsev, i.kibisov): pass entityTypeId
       objectAddToGroup: selection => selection.length && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
@@ -217,7 +245,7 @@ export class MetadataGridComponent<T> implements OnInit {
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
         return selection.length
           && constants.has('SMS.Use')
-          && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+          && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole as number);
       },
     };
   }
