@@ -379,9 +379,9 @@ export class DataUploadComponent extends DialogFunctions
       case 1:
         return { backgroundColor: '#ffe7e7', color: '#ff0000' };
       case 2:
-        return { backgroundColor: '#ff6600', color: '#ffffff' };
-      case 3:
         return { backgroundColor: '#f0f0f0', color: '#ff6600' };
+      case 3:
+        return { backgroundColor: '#ff6600', color: '#ffffff' };
       case 4:
         return { backgroundColor: '#ffffdd', color: '#000000' };
       case 5:

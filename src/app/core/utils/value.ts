@@ -12,13 +12,13 @@ export interface IValue {
 }
 
 export enum TYPE_CODES {
-  NUMBER = 1,
-  DATE,
-  STRING,
-  BOOLEAN,
-  FLOAT,
-  DICT,
-  DATETIME
+  NUMBER   = 1,
+  DATE     = 2,
+  STRING   = 3,
+  BOOLEAN  = 4,
+  FLOAT    = 5,
+  DICT     = 6,
+  DATETIME = 7
 }
 
 export const getRawValue = <T extends IValue>(value: T): number | string => {
