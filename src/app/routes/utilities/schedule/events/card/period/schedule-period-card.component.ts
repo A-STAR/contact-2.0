@@ -188,8 +188,8 @@ export class SchedulePeriodCardComponent implements OnInit {
       [ { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true, validators: [ min(1) ] } ],
       [
         ...Object.keys(this.scheduleEventService.weekDays)
-          .map((day, i) => ({
-            label: `default.date.days.full.${(i + 1) % 7}`,
+          .map(day => ({
+            label: this.scheduleEventService.weekDays[day],
             controlName: day,
             type: 'checkbox',
             disabled: !canEdit, width: 3
