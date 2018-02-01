@@ -32,11 +32,11 @@ import { DialogFunctions } from '@app/core/dialog';
 })
 export class ScheduleEventGridComponent extends DialogFunctions
   implements OnInit, OnDestroy {
-  private selectedEvent$ = new BehaviorSubject<IScheduleEvent>(null);
+  private selectedEvents$ = new BehaviorSubject<IScheduleEvent[]>(null);
 
   @ViewChild(GridComponent) grid: GridComponent;
 
-  @Output() select = new EventEmitter<IScheduleEvent>();
+  @Output() select = new EventEmitter<IScheduleEvent[]>();
 
   dialog: any;
 
@@ -71,7 +71,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: combineLatestAnd([
         this.scheduleEventService.canEdit$,
-        this.selectedEvent$.map(
+        this.selectedEvents$.map(
           selected => selected && this.grid.selected.length === 1,
         ),
       ]),
@@ -81,17 +81,17 @@ export class ScheduleEventGridComponent extends DialogFunctions
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: combineLatestAnd([
         this.scheduleEventService.canDelete$,
-        this.selectedEvent$.map(
+        this.selectedEvents$.map(
           selected => selected && this.grid.selected.length === 1,
         ),
       ]),
-      action: () => this.onDelete(this.selectedEvent),
+      action: () => this.onDelete(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_START,
       enabled: combineLatestAnd([
         this.scheduleEventService.canStart$,
-        this.selectedEvent$.map(Boolean),
+        this.selectedEvents$.map(Boolean),
       ]),
       children: [
         {
@@ -136,11 +136,15 @@ export class ScheduleEventGridComponent extends DialogFunctions
 
     this.fetch();
 
+    this.selectedEvents$
+      .filter(Boolean)
+      .subscribe(events => this.select.emit(events));
+
     this.actionSubscription = this.scheduleEventService
       .getAction(ScheduleEventService.MESSAGE_SCHEDULE_EVENT_SAVED)
       .subscribe(() => {
         this.fetch();
-        this.selectedEvent$.next(this.selectedEvent);
+        this.selectedEvents$.next(this.selectedEvents);
       });
   }
 
@@ -148,21 +152,18 @@ export class ScheduleEventGridComponent extends DialogFunctions
     this.actionSubscription.unsubscribe();
   }
 
-  get selectedEvent(): IScheduleEvent {
-    return (this.events || []).find(
-      event =>
-        this.selectedEvent$.value[0] && event.id === this.selectedEvent$.value[0].id,
+  get selectedEvents(): IScheduleEvent[] {
+    return (this.events || []).filter(
+      event => this.selectedEvents$.value && event.id === this.selectedEvents$.value[0].id,
     );
   }
 
   get selectedEventId(): number {
-    return this.selectedEvent && this.selectedEvent.id;
+    return this.selectedEvents && this.selectedEvents[0].id;
   }
 
-  onSelect(event: IScheduleEvent): void {
-    const eventObj = Array.isArray(event) ? event[0] : event;
-    this.selectedEvent$.next(event);
-    this.select.emit(eventObj);
+  onSelect(events: IScheduleEvent[]): void {
+    this.selectedEvents$.next(events);
   }
 
   onAdd(): void {
@@ -175,14 +176,16 @@ export class ScheduleEventGridComponent extends DialogFunctions
     this.cdRef.markForCheck();
   }
 
-  onDelete(event: IScheduleEvent): void {
+  onDelete(): void {
     this.setDialog('delete');
     this.cdRef.markForCheck();
   }
 
   onRemoveSubmit(): void {
-    this.scheduleEventService.delete(this.selectedEvent.id).subscribe(() => {
+    this.scheduleEventService.delete(this.selectedEvents[0].id).subscribe(() => {
       this.closeDialog();
+      this.selectedEvents$.next(null);
+      this.grid.clearSelection();
       this.fetch();
     });
   }
@@ -191,6 +194,8 @@ export class ScheduleEventGridComponent extends DialogFunctions
     this.scheduleEventService
       .start(this.grid.selected.map(event => event.id), { checkGroup })
       .subscribe(() => {
+        this.selectedEvents$.next(null);
+        this.grid.clearSelection();
         this.fetch();
       });
   }
@@ -198,8 +203,6 @@ export class ScheduleEventGridComponent extends DialogFunctions
   private fetch(): void {
     this.scheduleEventService.fetchAll().subscribe(events => {
       this.events = events;
-      this.selectedEvent$.next(null);
-      this.grid.clearSelection();
       this.cdRef.markForCheck();
     });
   }
