@@ -7,6 +7,7 @@ import { FieldsModule } from './fields/fields.module';
 
 import { ArbitraryReportsComponent } from './arbitrary-reports.component';
 import { ReportCardComponent } from './reports/card/report-card.component';
+import { FieldCardComponent } from './fields/card/field-card.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,20 @@ const routes: Routes = [
   {
     path: ':reportId',
     component: ReportCardComponent,
+    data: {
+      reuse: true,
+    },
+  },
+  {
+    path: 'fields/create',
+    component: FieldCardComponent,
+    data: {
+      reuse: true,
+    },
+  },
+  {
+    path: 'fields/:reportId',
+    component: FieldCardComponent,
     data: {
       reuse: true,
     },

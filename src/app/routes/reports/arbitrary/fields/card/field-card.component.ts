@@ -6,46 +6,50 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
-import { IReport } from '../reports.interface';
+import { IReportField } from '../fields.interface';
 
-import { ReportsService } from '../reports.service';
+import { FieldsService } from '../fields.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
-  selector: 'app-arbitrary-report-card',
-  templateUrl: './report-card.component.html',
+  selector: 'app-arbitrary-report-field-card',
+  templateUrl: './field-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ReportCardComponent implements OnInit {
+export class FieldCardComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormItem[];
   config: IDynamicFormConfig = {
-    labelKey: 'modules.reports.arbitrary.card',
+    labelKey: 'modules.reports.arbitrary.fields.card',
   };
-  report: Partial<IReport>;
+  field: Partial<IReportField>;
   reportId: number;
+  fieldId: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private reportsService: ReportsService,
+    private fieldsService: FieldsService,
     private route: ActivatedRoute,
     private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap
-      .map(params => Number(params.get('reportId')))
-      .do(reportId => this.reportId = reportId)
-      .switchMap(reportId => combineLatest(
-        reportId ? this.reportsService.canEdit$ : this.reportsService.canAdd$,
-        reportId ? this.reportsService.fetch(reportId) : of({}),
+      .map(params => ([ Number(params.get('reportId')), Number(params.get('fieldId')) ]))
+      .do(([ reportId, fieldId ]) => {
+        this.reportId = reportId;
+        this.fieldId = fieldId;
+      })
+      .switchMap(() => combineLatest(
+        this.fieldId ? this.fieldsService.canEdit$ : this.fieldsService.canAdd$,
+        this.fieldId ? this.fieldsService.fetch(this.reportId, this.fieldId) : of({}),
       ))
       .pipe(first())
-      .subscribe(([ canEdit, report ]) => {
-        this.report = report;
+      .subscribe(([ canEdit, field ]) => {
+        this.field = field;
         this.controls = this.initControls(canEdit);
         this.cdRef.markForCheck();
       });
@@ -56,12 +60,12 @@ export class ReportCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const action = this.reportId
-      ? this.reportsService.update(this.reportId, this.form.serializedUpdates)
-      : this.reportsService.create(this.form.serializedUpdates);
+    const action = this.fieldId
+      ? this.fieldsService.update(this.reportId, this.fieldId, this.form.serializedUpdates)
+      : this.fieldsService.create(this.reportId, this.form.serializedUpdates);
 
     action.subscribe(() => {
-      this.reportsService.dispatchAction(ReportsService.MESSAGE_REPORT_SAVED);
+      this.fieldsService.dispatchAction(FieldsService.MESSAGE_FIELD_SAVED);
       this.onBack();
     });
   }
@@ -76,15 +80,15 @@ export class ReportCardComponent implements OnInit {
         controlName: 'name',
         type: this.reportId ? 'multilanguage' : 'text',
         langConfig: {
-          entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_NAME,
-          entityId: this.reportId
+          entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_FIELD_NAME,
+          entityId: this.fieldId
         },
         required: true,
         disabled: !canEdit
       },
-      { controlName: 'sql', type: 'textarea', disabled: !canEdit, required: true },
-      { controlName: 'comment', type: 'textarea', disabled: !canEdit },
-      { controlName: 'exportUndescribed', type: 'checkbox', disabled: !canEdit, markAsDirty: !this.reportId },
+      { controlName: 'systemName', type: 'text', disabled: !canEdit, required: true },
+      { controlName: 'sortOrder', type: 'number', disabled: !canEdit },
+      { controlName: 'textWidth', type: 'number', disabled: !canEdit },
     ] as IDynamicFormItem[];
   }
 }

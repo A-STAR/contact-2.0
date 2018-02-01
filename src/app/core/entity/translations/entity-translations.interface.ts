@@ -12,6 +12,7 @@ export class EntityTranslationsConstants {
   static SPEC_GROUP_NAME = 396;
   static SPEC_CAMPAIGN_NAME = 402;
   static SPEC_REPORT_NAME = 692;
+  static SPEC_REPORT_FIELD_NAME = 708;
 }
 
 export interface IEntityTranslation {

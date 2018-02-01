@@ -588,6 +588,12 @@
             "sortOrder": "Sort order",
             "systemName": "System name",
             "textWidth": "Text width"
+          },
+          "card": {
+            "name": "Name",
+            "systemName": "System name",
+            "sortOrder": "Sort order",
+            "textWidth": "Text width"
           }
         }
       }
