@@ -30,6 +30,7 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { CellRendererComponent } from './cell-renderer.component';
@@ -64,10 +65,10 @@ export class DataUploadComponent extends DialogFunctions
 
   columns: IAGridColumn[];
   uploaders: IOption[] = [];
+  currencies: IOption[] = [];
 
   dialog: 'cancel' | 'errorLogPrompt';
-
-  isSelectVisible = true;
+  isCurrencySelected: boolean;
 
   rows: any[];
   rowCount = 0;
@@ -75,40 +76,28 @@ export class DataUploadComponent extends DialogFunctions
   private static FORMAT_PERMISSION = 'LOAD_DATA_FROM_EXCEL_FORMAT_LIST';
 
   private uploadersOptionsSub: Subscription;
+  private currencyOptionsSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private store: Store<IAppState>,
     private dataUploadService: DataUploadService,
     private gridService: GridService,
+    private lookupService: LookupService,
     private userDictionariesService: UserDictionariesService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.uploadersOptionsSub = combineLatest(
-      this.userDictionariesService.getDictionaryAsOptionsWithPermission(
+    this.uploadersOptionsSub = this.userDictionariesService
+      .getDictionaryAsOptionsWithPermission(
         UserDictionariesService.DICTIONARY_DATA_LOAD_FORMAT,
         DataUploadComponent.FORMAT_PERMISSION
-      ),
-      this.store
-        .select(store => store.currency)
-        .map(
-          currency => currency.currencyId,
-        )
       )
-      .subscribe(([options, currencyId]) => {
-        // ensure that currency uploader is permitted
-        if (currencyId && options
-            .map(option => option.value)
-            .includes(DataUploaders.CURRENCY_RATE)) {
-          this.dataUploadService.format = DataUploaders.CURRENCY_RATE;
-          this.dataUploadService.uploader.parameter = currencyId;
-          this.isSelectVisible = false;
-        } else {
-          this.dataUploadService.format = options[0].value as any;
-        }
+      .subscribe(options => {
+        // this will create corresponding uploader
+        this.dataUploadService.format = options[0].value as DataUploaders;
         // reset previous loaded file
         this.resetFile();
         if (this.columns) {
@@ -118,11 +107,21 @@ export class DataUploadComponent extends DialogFunctions
         this.uploaders = options;
         this.cdRef.markForCheck();
     });
+
+    this.currencyOptionsSub = this.lookupService.lookupAsOptions('currencies')
+      .subscribe(currencies => {
+        this.currencies = currencies;
+        this.cdRef.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {
     if (this.uploadersOptionsSub) {
       this.uploadersOptionsSub.unsubscribe();
+    }
+
+    if (this.currencyOptionsSub) {
+      this.currencyOptionsSub.unsubscribe();
     }
   }
 
@@ -141,6 +140,10 @@ export class DataUploadComponent extends DialogFunctions
     return this.dataUploadService.format;
   }
 
+  get currency(): number {
+    return this.dataUploadService.uploader.parameter;
+  }
+
   get errorFileUrl(): string {
     return this.dataUploadService.uploader.getErrors();
   }
@@ -151,6 +154,13 @@ export class DataUploadComponent extends DialogFunctions
 
   onFormatChange(format: { value: number }[]): void {
     this.dataUploadService.format = format[0].value;
+    this.isCurrencySelected = format[0].value === DataUploaders.CURRENCY_RATE;
+  }
+
+  onCurrencyChange(currency: { value: number }[]): void {
+    if (this.dataUploadService.uploaderOfType(DataUploaders.CURRENCY_RATE)) {
+      this.dataUploadService.uploader.parameter = currency[0].value;
+    }
   }
 
   onRequest(): void {

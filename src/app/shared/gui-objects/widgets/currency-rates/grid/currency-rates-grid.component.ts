@@ -8,7 +8,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { ICurrencyRate, IActionType } from '../currency-rates.interface';
+import { ICurrencyRate } from '../currency-rates.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
