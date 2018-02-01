@@ -567,6 +567,12 @@
           "id": "ID",
           "name": "Name",
           "comment": "Comment"
+        },
+        "card": {
+          "name": "Name",
+          "sql": "SQL",
+          "comment": "Comment",
+          "exportUndescribed": "Export undescribed"
         }
       }
     }
