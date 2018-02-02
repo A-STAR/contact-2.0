@@ -57,7 +57,15 @@ export class ParamCardComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit;
+    return this.form && this.form.canSubmit && (this.paramTypeCode !== 7 || !!this.dictCode);
+  }
+
+  get paramTypeCode(): number {
+    return this.form && this.form.serializedValue.paramTypeCode;
+  }
+
+  get dictCode(): number {
+    return this.form && this.form.serializedValue.dictNameCode;
   }
 
   onSubmit(): void {
@@ -79,21 +87,23 @@ export class ParamCardComponent implements OnInit {
     const { value: options } = this.form.getControl('paramTypeCode');
     const isMandatoryControl = this.form.getControl('isMandatory');
     const multiSelectControl = this.form.getControl('multiSelect');
+    const dictControl = this.form.getFlatControls().find(c => c.controlName === 'dictNameCode');
+    multiSelectControl.disable();
+    multiSelectControl.setValue(false);
+    isMandatoryControl.disable();
+    isMandatoryControl.setValue(false);
+    dictControl.required = false;
     switch (options[0].value) {
       case 3: case 4: case 5: case 8: case 10:
         multiSelectControl.enable();
         break;
       case 7:
         multiSelectControl.enable();
+        dictControl.required = true;
         break;
       case 9:
         isMandatoryControl.enable();
         break;
-      default:
-        multiSelectControl.disable();
-        multiSelectControl.setValue(false);
-        isMandatoryControl.disable();
-        isMandatoryControl.setValue(false);
     }
     this.cdRef.markForCheck();
   }
