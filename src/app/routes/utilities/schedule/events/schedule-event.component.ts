@@ -28,7 +28,7 @@ export class ScheduleEventComponent extends DialogFunctions {
       .map(canView => canView && !!this.eventId);
   }
 
-  onSelect(event: IScheduleEvent): void {
-    this.eventId = event && event.id;
+  onSelect(events: IScheduleEvent[]): void {
+    this.eventId = events.length && events[0].id;
   }
 }
