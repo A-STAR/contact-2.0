@@ -6,12 +6,7 @@ export const menuConfig: IMenuConfig = {
   menuItemHome: {
     text: 'sidebar.nav.menu.HOME',
     link: '/home',
-    icon: 'icon-home'
-  },
-  menuItemWorkflow: {
-    text: 'sidebar.nav.menu.WORKFLOW',
-    link: '/workflow',
-    icon: 'icon-graph'
+    icon: 'co-home'
   },
 
   // Администрирование:
@@ -23,59 +18,59 @@ export const menuConfig: IMenuConfig = {
   roles: {
     text: 'sidebar.nav.menu.ROLES_AND_PERMISSIONS',
     link: '/admin/roles',
-    icon: 'icon-user-following'
+    icon: 'co-roles'
   },
   users: {
     text: 'sidebar.nav.menu.USERS',
     link: '/admin/users',
-    icon: 'icon-people'
+    icon: 'co-users'
   },
   actionLog: {
     text: 'sidebar.nav.menu.ACTIONS_LOG',
     link: '/admin/action-log',
-    icon: 'icon-doc'
+    icon: 'co-action-log'
   },
   constants: {
     text: 'sidebar.nav.menu.CONSTANTS',
     link: '/admin/constants',
-    icon: 'icon-equalizer'
+    icon: 'co-constants'
   },
   dictionary: {
     text: 'sidebar.nav.menu.DICTIONARIES',
     link: '/admin/dictionaries',
-    icon: 'icon-book-open'
+    icon: 'co-dictionaries'
   },
   clients: {
     text: 'sidebar.nav.menu.PORTFOLIOS_CONTRACTORS',
     link: '/admin/contractors',
-    icon: 'icon-briefcase'
+    icon: 'co-portfolios'
   },
   structure: {
     text: 'sidebar.nav.menu.DEPARTMENTS',
     link: '/admin/organizations',
-    icon: 'icon-link'
+    icon: 'co-org-structure'
   },
 
   // Утилиты:
   utilities: {
     text: 'sidebar.nav.menu.UTILITIES',
     link: '/utilities',
-    icon: 'icon-settings'
+    icon: ''
   },
   loadTemplates: {
     text: 'sidebar.nav.menu.UPLOAD_TEMPLATES',
     link: '/utilities/upload-templates',
-    icon: 'icon-docs'
+    icon: 'co-load-templates'
   },
   currencyRates: {
     text: 'sidebar.nav.menu.CURRENCIES',
     link: '/utilities/currencies',
-    icon: 'icon-wallet'
+    icon: 'co-currencies'
   },
   dataLoad: {
     text: 'sidebar.nav.menu.DATA_UPLOAD',
     link: '/utilities/data-upload',
-    icon: 'icon-cloud-upload'
+    icon: 'co-data-upload'
   },
   attributes: {
     text: 'sidebar.nav.menu.ARBITRARY_VALUES',
@@ -85,101 +80,101 @@ export const menuConfig: IMenuConfig = {
   contacts: {
     text: 'sidebar.nav.menu.CONTACT_TREES',
     link: '/utilities/contact-properties',
-    icon: 'icon-people'
+    icon: 'co-contact-tree'
   },
   messages: {
     text: 'sidebar.nav.menu.MESSAGE_SCENARIOS',
     link: '/utilities/message-templates',
-    icon: 'icon-bubbles'
+    icon: 'co-message-scenarios'
   },
   schedule: {
     text: 'sidebar.nav.menu.SCHEDULE',
     link: '/utilities/schedule',
-    icon: 'icon-calendar'
+    icon: 'co-schedule'
   },
   callCampaign: {
     text: 'sidebar.nav.menu.CAMPAIGNS',
     link: '/utilities/campaigns',
-    icon: 'icon-rocket'
+    icon: 'co-call-campaigns'
   },
   formulas: {
     text: 'sidebar.nav.menu.FORMULAS',
     link: '/utilities/formulas',
-    icon: 'icon-note'
+    icon: 'co-formulae'
   },
   courts: {
     text: 'sidebar.nav.menu.COURTS',
     link: '/utilities/courts',
-    icon: 'icon-badge'
+    icon: 'co-legal'
   },
 
   // Рабочие места:
   workplaces: {
     text: 'sidebar.nav.menu.WORKPLACES',
     link: '/workplaces',
-    icon: 'icon-earphones-alt'
+    icon: ''
   },
   debtList: {
     text: 'sidebar.nav.menu.DEBT_LIST',
     link: '/workplaces/debts',
-    icon: 'icon-wallet'
+    icon: 'co-debt-list'
   },
   tasks: {
     text: 'sidebar.nav.menu.TASKS',
     link: '/workplaces/tasks',
-    icon: 'icon-action-redo'
+    icon: 'co-tasks'
   },
   debts: {
     text: 'sidebar.nav.menu.DEBTS',
     link: '/workplaces/debt-processing',
-    icon: 'icon-fire'
+    icon: 'co-debt-processing'
   },
   contactProtocol: {
     text: 'sidebar.nav.menu.CONTACT_LOG',
     link: '/workplaces/contact-log',
-    icon: 'icon-call-in'
+    icon: 'co-contact-log'
   },
   callcenter: {
     text: 'sidebar.nav.menu.CALL_CENTER',
     link: '/workplaces/call-center',
-    icon: 'icon-phone'
+    icon: 'co-call-center'
   },
   payments: {
     text: 'sidebar.nav.menu.PAYMENTS',
     link: '/workplaces/payments',
-    icon: 'icon-wallet'
+    icon: 'co-payments'
   },
   courts2: {
     text: 'sidebar.nav.menu.COURTS_2',
     link: '/workplaces/courts',
-    icon: 'icon-badge'
+    icon: 'co-court'
   },
   outgoingInformation: {
     text: 'sidebar.nav.menu.OUTGOING_INFORMATION',
     link: '/workplaces/outgoing-information',
-    icon: 'icon-share-alt'
+    icon: 'co-communication-out'
   },
   searchGroups: {
     text: 'sidebar.nav.menu.SEARCH_GROUPS',
     link: '/workplaces/search-groups',
-    icon: 'icon-eyeglass'
+    icon: 'co-search-groups'
   },
   mail: {
     text: 'sidebar.nav.menu.MAIL',
     link: '/workplaces/mail',
-    icon: 'icon-envelope-letter'
+    icon: 'co-mail'
   },
   incomingCall: {
     text: 'sidebar.nav.menu.INCOMING_CALL',
     link: '/workplaces/incoming-call',
-    icon: 'icon-phone'
+    icon: 'co-call-incoming'
   },
 
   // Отчеты
   reports: {
     text: 'sidebar.nav.menu.REPORTS',
     link: '/reports',
-    icon: 'icon-docs'
+    icon: ''
   },
   anyReports: {
     text: 'sidebar.nav.menu.ARBITRARY_REPORTS',
