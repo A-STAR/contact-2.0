@@ -78,7 +78,7 @@ export class FieldCardComponent implements OnInit {
     return [
       {
         controlName: 'name',
-        type: this.reportId ? 'multilanguage' : 'text',
+        type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_FIELD_NAME,
           entityId: this.fieldId

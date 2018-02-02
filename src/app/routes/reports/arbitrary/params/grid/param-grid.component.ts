@@ -131,7 +131,7 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   onEdit(param: IReportParam): void {
-    this.routingService.navigate([ `params/${param.id}` ], this.route);
+    this.routingService.navigate([ `${this.reportId}/params/${param.id}` ], this.route);
   }
 
   onRemove(): void {
@@ -145,7 +145,7 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private onAdd(): void {
-    this.routingService.navigate([ 'params/create' ], this.route);
+    this.routingService.navigate([ `${this.reportId}/params/create` ], this.route);
   }
 
   private fetch(): void {

@@ -610,6 +610,15 @@
             "systemName": "System name",
             "isMandatory": "Is mandatory",
             "multiSelect": "Multi select"
+          },
+          "card": {
+            "name": "Name",
+            "systemName": "System name",
+            "sortOrder": "Sort order",
+            "paramTypeCode": "Param type",
+            "isMandatory": "Is mandatory",
+            "multiSelect": "Multi select",
+            "dictNameCode": "Dictionary"
           }
         }
       }

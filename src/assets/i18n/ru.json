@@ -610,6 +610,15 @@
             "systemName": "Системное название",
             "isMandatory": "Обязательность",
             "multiSelect": "Множенственный выбор"
+          },
+          "card": {
+            "name": "Название",
+            "systemName": "Системное название",
+            "sortOrder": "Порядковый номер",
+            "paramTypeCode": "Тип параметра",
+            "isMandatory": "Обязательность",
+            "multiSelect": "Множенственный выбор",
+            "dictNameCode": "Словарь"
           }
         }
       }

@@ -74,7 +74,7 @@ export class ReportCardComponent implements OnInit {
     return [
       {
         controlName: 'name',
-        type: this.reportId ? 'multilanguage' : 'text',
+        type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_NAME,
           entityId: this.reportId

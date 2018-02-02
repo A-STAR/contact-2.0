@@ -128,7 +128,7 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   onEdit(field: IReportField): void {
-    this.routingService.navigate([ `fields/${field.id}` ], this.route);
+    this.routingService.navigate([ `${this.reportId}/fields/${field.id}` ], this.route);
   }
 
   onRemove(): void {
@@ -142,7 +142,7 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private onAdd(): void {
-    this.routingService.navigate([ 'fields/create' ], this.route);
+    this.routingService.navigate([ `${this.reportId}/fields/create` ], this.route);
   }
 
   private fetch(): void {

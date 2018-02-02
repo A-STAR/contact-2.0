@@ -9,6 +9,7 @@ import { ParamsModule } from './params/params.module';
 import { ArbitraryReportsComponent } from './arbitrary-reports.component';
 import { ReportCardComponent } from './reports/card/report-card.component';
 import { FieldCardComponent } from './fields/card/field-card.component';
+import { ParamCardComponent } from './params/card/param-card.component';
 
 const routes: Routes = [
   {
@@ -33,15 +34,29 @@ const routes: Routes = [
     },
   },
   {
-    path: 'fields/create',
+    path: ':reportId/fields/create',
     component: FieldCardComponent,
     data: {
       reuse: true,
     },
   },
   {
-    path: 'fields/:reportId',
+    path: ':reportId/fields/:fieldId',
     component: FieldCardComponent,
+    data: {
+      reuse: true,
+    },
+  },
+  {
+    path: ':reportId/params/create',
+    component: ParamCardComponent,
+    data: {
+      reuse: true,
+    },
+  },
+  {
+    path: ':reportId/params/:paramId',
+    component: ParamCardComponent,
     data: {
       reuse: true,
     },
