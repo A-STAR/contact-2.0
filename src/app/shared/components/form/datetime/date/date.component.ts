@@ -29,8 +29,9 @@ export class DateComponent implements ControlValueAccessor {
 
   getClass(date: moment.Moment): object {
     return {
-      outside: date.isBefore(this.page.startOf('month')) || date.isAfter(this.page.endOf('month')),
+      disabled: this.isDateDisabled(date),
       current: moment().startOf('day').isSame(date),
+      outside: date.isBefore(this.page.startOf('month'), 'day') || date.isAfter(this.page.endOf('month'), 'day'),
       selected: moment(this._value).startOf('day').isSame(date),
     };
   }
@@ -52,9 +53,11 @@ export class DateComponent implements ControlValueAccessor {
   }
 
   onClick(date: moment.Moment): void {
-    this._value = date.toDate();
-    this.propagateChange(this._value);
-    this.cdRef.markForCheck();
+    if (!this.isDateDisabled(date)) {
+      this._value = date.toDate();
+      this.propagateChange(this._value);
+      this.cdRef.markForCheck();
+    }
   }
 
   showNextMonth(): void {
@@ -79,6 +82,10 @@ export class DateComponent implements ControlValueAccessor {
    */
   trackDateBy(index: number): number {
     return index;
+  }
+
+  private isDateDisabled(date: moment.Moment): boolean {
+    return (this.minDate && date.isBefore(this.minDate, 'day')) || (this.maxDate && date.isAfter(this.maxDate, 'day'));
   }
 
   private propagateChange: Function = () => {};
