@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import * as moment from 'moment';
 
 import { DateTimeService } from '../datetime.service';
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
