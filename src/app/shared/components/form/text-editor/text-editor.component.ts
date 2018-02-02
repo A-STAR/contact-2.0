@@ -28,7 +28,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() codeMode = false;
   @Input() height = 240;
-  @Input() set richTextMode(richTextMode: boolean) {
+
+  @Input()
+  set richTextMode(richTextMode: boolean) {
     this._richTextMode = richTextMode;
     this.destroyEditor();
     this.initEditor();
@@ -53,9 +55,6 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   ) {}
 
   ngOnInit(): void {
-    this.element.on('summernote.init', () => this.onInit());
-    this.element.on('summernote.focus', () => this.onFocus());
-    this.element.on('summernote.change', () => this.onChange());
     this.initEditor();
   }
 
@@ -93,6 +92,11 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     this.summernote({
       height: this.height,
       toolbar: this._richTextMode ? this.initToolbar() : null,
+      callbacks: {
+        onInit: () => this.init.emit(this),
+        onFocus: () => this.propagateTouch(),
+        onChange: () => this.onChange(),
+      }
     });
     this.summernote(this.isDisabled ? 'disable' : 'enable');
   }
@@ -115,14 +119,6 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     return toolbar;
-  }
-
-  private onInit(): void {
-    this.init.emit(this);
-  }
-
-  private onFocus(): void {
-    this.propagateTouch();
   }
 
   private onChange(): void {
