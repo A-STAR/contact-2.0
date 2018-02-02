@@ -163,8 +163,7 @@ export class ScheduleEventService extends AbstractActionService {
     }
   }
 
-  getEventTemplateOptions(typeCode: number, addParams: IScheduleParam[]): Observable<IOption[]> {
-    const personRoles = this.findEventAddParam<number[]>(addParams, 'personRoles') || [];
+  getEventTemplateOptions(typeCode: number, personRoles: number[]): Observable<IOption[]> {
     return this.userTemplatesService
       .getTemplates(typeCode, personRoles.length === 1 ? personRoles[0] : 0)
       .map(templates => templates.map(toOption('id', 'name')));

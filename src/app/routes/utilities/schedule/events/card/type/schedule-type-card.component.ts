@@ -118,8 +118,14 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     combineLatest(
       this.eventId ? this.scheduleEventService.canEdit$ : this.scheduleEventService.canView$,
       this.scheduleEventService.dictionaries$,
-      this.scheduleEventService.getEventTemplateOptions(2, this.type.additionalParameters),
-      this.scheduleEventService.getEventTemplateOptions(3, this.type.additionalParameters),
+      this.scheduleEventService.getEventTemplateOptions(
+        2,
+        this.scheduleEventService.findEventAddParam<number[]>(this.type.additionalParameters, 'personRoles') || [1]
+      ),
+      this.scheduleEventService.getEventTemplateOptions(
+        3,
+        this.scheduleEventService.findEventAddParam<number[]>(this.type.additionalParameters, 'personRoles') || [1]
+      ),
       this.scheduleEventService.constants$,
       this.scheduleEventService.fetchGroups(),
       this.scheduleEventService.fetchUsers()
@@ -201,10 +207,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       this.selectedPersonRolesSub = this.selectedPersonRoles$
         .filter(Boolean)
         .flatMap(personRoles =>
-          this.scheduleEventService.getEventTemplateOptions(
-            this.selectedEventTypeCode,
-            this.scheduleEventService.createEventAddParams({ personRoles })
-          )
+          this.scheduleEventService.getEventTemplateOptions(this.selectedEventTypeCode, personRoles)
         )
         .subscribe(templateOptions => {
           this.setControlOptions(this.addParamsForm, 'templateId', templateOptions);
