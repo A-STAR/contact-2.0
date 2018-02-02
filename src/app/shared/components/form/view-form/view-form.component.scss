@@ -2,10 +2,16 @@
 
 .field {
   margin-bottom: 4px;
+  width: 100%;
+  padding-right: 10px;
 
   .field-label,
   .field-value {
-    // display: block;
+    // padding-right: 6px;
+  }
+
+  .field-value.empty {
+    // border-bottom: 1px dotted lightgrey;
   }
 
   .field-label {

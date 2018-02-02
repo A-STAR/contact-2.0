@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import * as moment from 'moment';
 
 import { DateTimeService } from '../datetime.service';
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
@@ -34,8 +35,10 @@ export class TimePickerComponent implements ControlValueAccessor {
     return this._value;
   }
 
-  writeValue(value: Date): void {
-    this._value = value;
+  writeValue(value: Date | string): void {
+    this._value = value instanceof Date
+      ? value
+      : moment(value, 'HH:mm:ss').toDate();
     this.cdRef.markForCheck();
   }
 
