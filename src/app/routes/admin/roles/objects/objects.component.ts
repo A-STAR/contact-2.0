@@ -1,18 +1,22 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { distinctUntilKeyChanged, map } from 'rxjs/operators';
 
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IObject } from './objects.interface';
-import { IOption } from '../../../../core/converter/value-converter.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ObjectsService } from './objects.service';
-import { PermissionsService } from '../../../../routes/admin/roles/permissions.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { PermissionsService } from '@app/routes/admin/roles/permissions.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../core/dialog';
+import { DialogFunctions } from '@app/core/dialog';
+
+import { combineLatestAnd } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,12 +34,12 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.masterRoleId$.pipe(map(Boolean)),
+      enabled: combineLatestAnd([ this.masterRoleId$.pipe(map(Boolean)), this.canEdit$ ]),
       action: () => this.setDialog('add'),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      enabled: this.selectedObject$.pipe(map(Boolean)),
+      enabled: combineLatestAnd([ this.selectedObject$.pipe(map(Boolean)), this.canEdit$ ]),
       action: () => this.setDialog('delete'),
     },
     {
@@ -62,6 +66,7 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
     private objectsService: ObjectsService,
     private permissionsService: PermissionsService,
     private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     super();
   }
@@ -87,6 +92,10 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
   ngOnDestroy(): void {
     this._dictionarySubscription.unsubscribe();
     this._masterRoleSubscription.unsubscribe();
+  }
+
+  get canEdit$(): Observable<boolean> {
+    return this.userPermissionsService.has('OBJECT_ROLE_EDIT');
   }
 
   onSelectType(options: IOption[]): void {

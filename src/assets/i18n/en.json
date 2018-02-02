@@ -2268,6 +2268,7 @@
         "checkGroup": "Group rearrangement check",
         "delay": "Delay (hours)",
         "phoneTypes": "Phono type",
+        "emailTypes": "Email type",
         "personRoles": "Receiver",
         "templateId": "Template",
         "senderCode": "Sender",

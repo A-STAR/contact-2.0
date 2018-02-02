@@ -28,7 +28,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() codeMode = false;
   @Input() height = 240;
-  @Input() set richTextMode(richTextMode: boolean) {
+
+  @Input()
+  set richTextMode(richTextMode: boolean) {
     this._richTextMode = richTextMode;
     this.destroyEditor();
     this.initEditor();
@@ -45,6 +47,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
 
   @ViewChild('editor') editor: ElementRef;
 
+  private cachedValue: string;
   private isDisabled = false;
   private _richTextMode = true;
 
@@ -53,9 +56,6 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   ) {}
 
   ngOnInit(): void {
-    this.element.on('summernote.init', () => this.onInit());
-    this.element.on('summernote.focus', () => this.onFocus());
-    this.element.on('summernote.change', () => this.onChange());
     this.initEditor();
   }
 
@@ -64,10 +64,8 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   writeValue(value: string): void {
-    this.summernote('reset');
-    if (value) {
-      this.summernote('code', value);
-    }
+    this.cachedValue = value;
+    this.writeValueHandler();
   }
 
   registerOnChange(fn: Function): void {
@@ -89,10 +87,22 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     this.summernote('insertText', text);
   }
 
+  private writeValueHandler(): void {
+    this.summernote('reset');
+    if (this.cachedValue) {
+      this.summernote('code', this.cachedValue);
+    }
+  }
+
   private initEditor(): void {
     this.summernote({
       height: this.height,
       toolbar: this._richTextMode ? this.initToolbar() : null,
+      callbacks: {
+        onInit: () => this.onInit(),
+        onFocus: () => this.propagateTouch(),
+        onChange: () => this.onChange(),
+      }
     });
     this.summernote(this.isDisabled ? 'disable' : 'enable');
   }
@@ -118,11 +128,9 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   private onInit(): void {
+    this.writeValueHandler();
+    this.cachedValue = null;
     this.init.emit(this);
-  }
-
-  private onFocus(): void {
-    this.propagateTouch();
   }
 
   private onChange(): void {

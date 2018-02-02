@@ -13,6 +13,10 @@
   }
 }
 
+.datetimepicker-container {
+  z-index: $zindex-app-datepicker;
+}
+
 .datetimepicker {
   background-color: #fff;
   box-shadow: 1px 1px 10px 0 rgba(0, 0, 0, 0.2);
@@ -20,7 +24,6 @@
   padding: 20px;
   user-select: none;
   width: 22em;
-  z-index: $zindex-app-datepicker;
 
   app-date,
   app-time {

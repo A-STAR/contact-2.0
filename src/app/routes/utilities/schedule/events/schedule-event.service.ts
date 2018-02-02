@@ -147,6 +147,7 @@ export class ScheduleEventService extends AbstractActionService {
     switch (param.name) {
       case 'personRoles':
       case 'phoneTypes':
+      case 'emailTypes':
         return param.value.split(',');
       default:
         return +param.value || param.value;
@@ -157,14 +158,14 @@ export class ScheduleEventService extends AbstractActionService {
     switch (name) {
       case 'personRoles':
       case 'phoneTypes':
+      case 'emailTypes':
         return { name, value: value.join(',') };
       default:
-        return { name, value };
+        return { name, value: String(value) };
     }
   }
 
-  getEventTemplateOptions(typeCode: number, addParams: IScheduleParam[]): Observable<IOption[]> {
-    const personRoles = this.findEventAddParam<number[]>(addParams, 'personRoles') || [];
+  getEventTemplateOptions(typeCode: number, personRoles: number[]): Observable<IOption[]> {
     return this.userTemplatesService
       .getTemplates(typeCode, personRoles.length === 1 ? personRoles[0] : 0)
       .map(templates => templates.map(toOption('id', 'name')));
