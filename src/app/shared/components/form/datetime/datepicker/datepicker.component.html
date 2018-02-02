@@ -12,7 +12,7 @@
   <span class="toggle" #dropdownTrigger (click)="onTouch()">
     <i class="fa fa-calendar"></i>
   </span>
-  <div #dropdownContent>
+  <div #dropdownContent class="datetimepicker-container">
     <div class="datetimepicker">
       <app-date [minDate]="minDate" [maxDate]="maxDate" [ngModel]="value" (ngModelChange)="onDateChange($event)"></app-date>
       <footer>
