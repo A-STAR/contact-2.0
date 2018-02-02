@@ -137,8 +137,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
     this.fetch();
 
     this.selectedEvents$
-      .filter(Boolean)
-      .subscribe(events => this.select.emit(events));
+      .subscribe(events => this.select.emit(events || []));
 
     this.actionSubscription = this.scheduleEventService
       .getAction(ScheduleEventService.MESSAGE_SCHEDULE_EVENT_SAVED)
