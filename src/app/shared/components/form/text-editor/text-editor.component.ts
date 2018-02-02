@@ -47,6 +47,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
 
   @ViewChild('editor') editor: ElementRef;
 
+  private cachedValue: string;
   private isDisabled = false;
   private _richTextMode = true;
 
@@ -63,10 +64,8 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   writeValue(value: string): void {
-    this.summernote('reset');
-    if (value) {
-      this.summernote('code', value);
-    }
+    this.cachedValue = value;
+    this.writeValueHandler();
   }
 
   registerOnChange(fn: Function): void {
@@ -88,12 +87,19 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     this.summernote('insertText', text);
   }
 
+  private writeValueHandler(): void {
+    this.summernote('reset');
+    if (this.cachedValue) {
+      this.summernote('code', this.cachedValue);
+    }
+  }
+
   private initEditor(): void {
     this.summernote({
       height: this.height,
       toolbar: this._richTextMode ? this.initToolbar() : null,
       callbacks: {
-        onInit: () => this.init.emit(this),
+        onInit: () => this.onInit(),
         onFocus: () => this.propagateTouch(),
         onChange: () => this.onChange(),
       }
@@ -119,6 +125,12 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     return toolbar;
+  }
+
+  private onInit(): void {
+    this.writeValueHandler();
+    this.cachedValue = null;
+    this.init.emit(this);
   }
 
   private onChange(): void {
