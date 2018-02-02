@@ -36,9 +36,13 @@ export class DatePickerComponent implements ControlValueAccessor {
   }
 
   writeValue(value: Date | string): void {
-    this._value = value instanceof Date
-      ? value
-      : moment(value, 'YYYY-MM-DD').toDate();
+    if (value) {
+      this._value = value instanceof Date
+        ? value
+        : moment(value, 'YYYY-MM-DD').toDate();
+    } else {
+      this._value = null;
+    }
     this.cdRef.markForCheck();
   }
 
