@@ -64,6 +64,44 @@ export class ActionsLogComponent implements  OnDestroy, OnInit, AfterViewInit {
         enabled: this.isFilterValid,
         action: () => this.doExport(),
       },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_MASS,
+        enabled: of(true),
+        title: 'Массовые операции',
+        children: [
+          {
+            title: 'widgets.mass.outsourcing.send.title',
+            action: () => alert('Children 1 fired!'),
+            enabled: of(true)
+          },
+          {
+            title: 'widgets.mass.outsourcing.exclude.title',
+            action: () => alert('Children 2 fired!'),
+            enabled: of(false)
+          },
+          {
+            title: 'widgets.mass.outsourcing.return.title',
+            enabled: of(true),
+            children: [
+              {
+                title: 'Sub child 1',
+                action: () => alert('Sub child 1 of child 3 fired!'),
+                enabled: of(true)
+              },
+              {
+                title: 'Sub child 2',
+                action: () => alert('Sub child 2 of child 3 fired!'),
+                enabled: of(false)
+              },
+              {
+                title: 'Sub child 3',
+                action: () => alert('Sub child 3 of child 3 fired!'),
+                enabled: of(true)
+              },
+            ],
+          },
+        ]
+      },
     ],
   };
 

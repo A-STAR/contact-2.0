@@ -13,6 +13,7 @@ export enum TitlebarItemTypeEnum {
   BUTTON_EDIT             = 'edit',
   BUTTON_EMAIL            = 'email',
   BUTTON_DOWNLOAD_EXCEL   = 'downloadExcel',
+  BUTTON_MASS             = 'mass',
   BUTTON_MOVE             = 'move',
   BUTTON_NEXT             = 'next',
   BUTTON_OK               = 'ok',
@@ -31,13 +32,14 @@ export enum TitlebarItemTypeEnum {
   CHECKBOX                = 'checkbox',
 }
 
-export type ITitlebarAction = () => void;
+export type ITitlebarAction = (item?: ITitlebarElement) => void;
 
 export interface ITitlebarElement {
   action?: ITitlebarAction;
   align?: 'right' | 'left';
   enabled?: Observable<boolean>;
   title?: string;
+  children?: ITitlebarElement[];
 }
 
 export interface ITitlebarButton extends ITitlebarElement {

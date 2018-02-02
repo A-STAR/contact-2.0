@@ -1740,11 +1740,11 @@
         },
         "exclude": {
           "message": "Do you really want to exclude outsourcing for the selected debts?",
-          "text": "Exclude outsourcing"
+          "title": "Exclude outsourcing"
         },
         "return": {
           "message": "Do you really want to return outsourcing for the selected debts?",
-          "text": "Return outsourcing"
+          "title": "Return outsourcing"
         }
       }
     },
