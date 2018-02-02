@@ -96,6 +96,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     },
     inactiveReasonCode: { controlName: 'inactiveReasonCode', type: 'select' },
     phoneTypes: { controlName: 'phoneTypes', type: 'multiselect', required: true, width: 4 },
+    emailTypes: { controlName: 'emailTypes', type: 'multiselect', required: true, width: 4 },
     templateId: { controlName: 'templateId', type: 'select', required: true, width: 4 },
     checkGroup: { controlName: 'checkGroup', type: 'checkbox' },
     senderCode: { controlName: 'senderCode', type: 'select', required: true },
@@ -104,7 +105,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     dict3Code: { controlName: 'dict3Code', type: 'select', required: true },
     dict4Code: { controlName: 'dict4Code', type: 'select', required: true },
     modeCode: { controlName: 'modeCode', type: 'select', required: true },
-    delay: { controlName: 'delay', type: 'number', required: true, validators: [ min(1) ] },
+    delay: { controlName: 'delay', type: 'number', required: true, validators: [ min(0) ] },
     stage: { controlName: 'stage', type: 'select', required: true },
   };
 
@@ -145,7 +146,8 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           options[UserDictionariesService.DICTIONARY_PHONE_TYPE],
           options[UserDictionariesService.DICTIONARY_PERSON_ROLE],
           templateSmsOptions,
-          useSmsSender.valueB && UserDictionariesService.DICTIONARY_SMS_SENDER
+          useSmsSender.valueB && UserDictionariesService.DICTIONARY_SMS_SENDER,
+          'phoneTypes'
         ),
         this.createSendTypeControls(
           canEdit,
@@ -153,7 +155,9 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           options[UserDictionariesService.DICTIONARY_EMAIL_TYPE],
           options[UserDictionariesService.DICTIONARY_PERSON_ROLE],
           templateEmailOptions,
-          useEmailSender.valueB && UserDictionariesService.DICTIONARY_EMAIL_SENDER
+          useEmailSender.valueB && UserDictionariesService.DICTIONARY_EMAIL_SENDER,
+          'emailTypes'
+
         ),
         ...Array.from(new Array(4), (v, i) =>
           this.createDictTypeControls(canEdit, groupsByEntityType[19], i + 1)
@@ -296,11 +300,12 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     phoneOptions: IOption[],
     personRoleOptions: IOption[],
     templateOptions: IOption[],
-    senderDictCode: number
+    senderDictCode: number,
+    contactControl: string,
   ): Partial<IDynamicFormControl>[] {
     const addControls = this.createFormControls({
       groupId: { gridRows: groups, disabled: !canEdit },
-      phoneTypes: { disabled: !canEdit, options: phoneOptions, markAsDirty: !this.eventId },
+      [contactControl]: { disabled: !canEdit, options: phoneOptions, markAsDirty: !this.eventId },
       personRoles: { disabled: !canEdit, options: personRoleOptions, markAsDirty: !this.eventId },
       templateId: { disabled: !canEdit, options: templateOptions, markAsDirty: !this.eventId },
       delay: { disabled: !canEdit },
@@ -381,6 +386,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   private getDefaultFormData(): any {
     return {
       phoneTypes: [ 1 ],
+      emailTypes: [ 1 ],
       personRoles: [ 1 ],
       [`dict${this.selectedEventTypeCode - 3}Code`]: 1,
       stage: 1,
