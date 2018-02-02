@@ -23,21 +23,23 @@ export class TitlebarComponent implements OnInit {
   props: { [key: string]: Partial<ITitlebarButton> } = {
     [TitlebarItemTypeEnum.BUTTON_ADD]: { iconCls: 'fa-plus', title: 'Добавить' },
     [TitlebarItemTypeEnum.BUTTON_COPY]: { iconCls: 'fa-copy', title: 'Копировать' },
+    [TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS]: { iconCls: 'fa-random', title: 'Изменить статус' },
     [TitlebarItemTypeEnum.BUTTON_DELETE]: { iconCls: 'fa-trash', title: 'Удалить' },
     [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'fa-pencil', title: 'Редактировать' },
     [TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL]: { iconCls: 'fa-file-excel-o', title: 'Выгрузить в Excel' },
     [TitlebarItemTypeEnum.BUTTON_MOVE]: { iconCls: 'fa-share', title: 'Переместить' },
     [TitlebarItemTypeEnum.BUTTON_MASS]: { iconCls: 'fa-flag', title: 'Массовые операции' },
     [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'fa-refresh', title: 'Обновить' },
+    [TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT]: { iconCls: 'fa-tty', title: 'Зарегистрировать контакт' },
     [TitlebarItemTypeEnum.BUTTON_SEARCH]: { iconCls: 'fa-search', title: 'Поиск' },
   };
-  supressCenterZone: boolean;
+  suppressCenterZone: boolean;
   title: string;
 
   ngOnInit(): void {
     this.borderCls = { 'no-border': this.titlebar.suppressBorder === true };
     this.items = this.titlebar.items || this.items;
-    this.supressCenterZone = this.titlebar.suppressCenterZone || false;
+    this.suppressCenterZone = this.titlebar.suppressCenterZone || false;
     this.title = this.titlebar.title;
   }
 
