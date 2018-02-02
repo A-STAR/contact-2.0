@@ -23,37 +23,37 @@ export const menuConfig: IMenuConfig = {
   roles: {
     text: 'sidebar.nav.menu.ROLES_AND_PERMISSIONS',
     link: '/admin/roles',
-    icon: 'icon-user-following'
+    icon: 'co-roles'
   },
   users: {
     text: 'sidebar.nav.menu.USERS',
     link: '/admin/users',
-    icon: 'icon-people'
+    icon: 'co-users'
   },
   actionLog: {
     text: 'sidebar.nav.menu.ACTIONS_LOG',
     link: '/admin/action-log',
-    icon: 'icon-doc'
+    icon: 'co-action-log'
   },
   constants: {
     text: 'sidebar.nav.menu.CONSTANTS',
     link: '/admin/constants',
-    icon: 'icon-equalizer'
+    icon: 'co-constants'
   },
   dictionary: {
     text: 'sidebar.nav.menu.DICTIONARIES',
     link: '/admin/dictionaries',
-    icon: 'icon-book-open'
+    icon: 'co-dictionaries'
   },
   clients: {
     text: 'sidebar.nav.menu.PORTFOLIOS_CONTRACTORS',
     link: '/admin/contractors',
-    icon: 'icon-briefcase'
+    icon: 'co-portfolios'
   },
   structure: {
     text: 'sidebar.nav.menu.DEPARTMENTS',
     link: '/admin/organizations',
-    icon: 'icon-link'
+    icon: 'co-org-structure'
   },
 
   // Утилиты:
