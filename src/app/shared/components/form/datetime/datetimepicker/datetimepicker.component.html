@@ -1,14 +1,11 @@
 <div appDropdown [fitWidthToContent]="true" style="position: relative;">
-  <input
-    #dropdownParent
-    type="text"
-    class="form-control"
-    [ngModel]="momentValue | momentFormat:format"
-    [textMask]="mask"
-    (blur)="onTouch()"
-    (change)="onChange($event)"
-    (wheel)="onWheel($event)"
-  />
+  <div #dropdownParent>
+    <app-datetime-input
+      format="MM/DD/YYYY HH:mm:ss"
+      [ngModel]="value"
+      (ngModelChange)="onChange($event)"
+    ></app-datetime-input>
+  </div>
   <span class="toggle" #dropdownTrigger (click)="onTouch()">
     <i class="fa fa-calendar"></i>
   </span>

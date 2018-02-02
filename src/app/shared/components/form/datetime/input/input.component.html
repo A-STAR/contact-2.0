@@ -1,0 +1,9 @@
+<input
+  type="text"
+  class="form-control"
+  [ngModel]="momentValue | momentFormat:format"
+  [textMask]="mask"
+  (blur)="onBlur()"
+  (change)="onChange($event)"
+  (wheel)="onWheel($event)"
+/>
