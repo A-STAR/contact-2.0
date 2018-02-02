@@ -27,7 +27,7 @@ export class DateTimePickerComponent implements ControlValueAccessor {
   private _value: Date;
 
   // TODO(d.maltsev): get format from locale
-  format = 'MM/DD/YYYY HH:mm:ss';
+  format = 'DD.MM.YYYY HH:mm:ss';
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -46,8 +46,10 @@ export class DateTimePickerComponent implements ControlValueAccessor {
     return this.dateTimeService.getMaskParamsFromMomentFormat(this.format);
   }
 
-  writeValue(value: Date): void {
-    this._value = value;
+  writeValue(value: Date | string): void {
+    this._value = value instanceof Date
+      ? value
+      : moment(value, 'YYYY-MM-DD HH:mm:ss').toDate();
     this.cdRef.markForCheck();
   }
 
