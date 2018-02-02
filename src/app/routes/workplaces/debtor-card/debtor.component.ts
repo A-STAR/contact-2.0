@@ -135,7 +135,7 @@ export class DebtorComponent extends DialogFunctions implements AfterViewInit, O
   }
 
   get canSubmit(): boolean {
-    return this.form && this.information.form && (this.form.canSubmit || this.information.form.canSubmit);
+    return this.form && this.information && this.information.form && (this.form.canSubmit || this.information.form.canSubmit);
   }
 
   get isContactRegistrationDisabled$(): Observable<boolean> {
