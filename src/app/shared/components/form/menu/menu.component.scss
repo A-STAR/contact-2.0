@@ -33,17 +33,11 @@
     .menu__submenu {
       display: block;
     }
-    .menu__arrow {
-      display: inline;
-    }
   }
   &.disabled {
     color: #d6d6d6a8;
     cursor: not-allowed;
     pointer-events: none;
-  }
-  & .menu__arrow {
-    display: none;
   }
 }
 
