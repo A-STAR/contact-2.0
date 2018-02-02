@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
 
 import { ICampaignDebt } from '../campaign.interface';
-import { IViewFormItem, IViewFormControl } from '../../../../../shared/components/form/view-form/view-form.interface';
+import { IViewFormItem, IViewFormControl } from '@app/shared/components/form/view-form/view-form.interface';
 
 import { CampaignService } from '../campaign.service';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 
 const labelKey = makeKey('modules.callCenter.overview');
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-call-center-person',
   templateUrl: 'person.component.html'
 })
@@ -41,15 +41,6 @@ export class PersonComponent {
   constructor(
     private campaignService: CampaignService,
   ) {}
-
-  get personFullName$(): Observable<string> {
-    return this.campaignService.campaignDebt$.pipe(
-      map(campaignDebt => {
-        const { personLastName, personFirstName, personMiddleName } = campaignDebt;
-        return [ personLastName, personFirstName, personMiddleName ].filter(Boolean).join(' ');
-      }),
-    );
-  }
 
   get campaignDebt$(): Observable<ICampaignDebt> {
     return this.campaignService.campaignDebt$;
