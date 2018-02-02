@@ -1,5 +1,5 @@
 export enum IContactRegistrationStatus {
-  REGISTRATION,
+  REGISTRATION = 1,
   PAUSE,
 }
 
