@@ -49,6 +49,11 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'timeZoneUsed', minWidth: 50, renderer: 'checkboxRenderer' },
   ];
 
+  tabs = [
+    { isInitialised: true, },
+    { isInitialised: false, },
+  ];
+
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -219,6 +224,10 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   resetSelection(): void {
     this.grid.clearSelection();
     this.campaignsService.selectCampaign(null);
+  }
+
+  onTabSelect(tabIndex: number): void {
+    this.tabs[tabIndex].isInitialised = true;
   }
 
   private formatCampaignsDates(campaings: ICampaign[]): ICampaign[] {
