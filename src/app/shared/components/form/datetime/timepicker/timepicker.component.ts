@@ -47,9 +47,13 @@ export class TimePickerComponent implements ControlValueAccessor {
   }
 
   writeValue(value: Date | string): void {
-    this._value = value instanceof Date
-      ? value
-      : moment(value, 'HH:mm:ss').toDate();
+    if (value) {
+      this._value = value instanceof Date
+        ? value
+        : moment(value, 'HH:mm:ss').toDate();
+    } else {
+      this._value = null;
+    }
     this.cdRef.markForCheck();
   }
 
