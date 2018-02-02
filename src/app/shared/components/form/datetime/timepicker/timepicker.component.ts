@@ -46,8 +46,10 @@ export class TimePickerComponent implements ControlValueAccessor {
     return this.dateTimeService.getMaskParamsFromMomentFormat(this.format);
   }
 
-  writeValue(value: Date): void {
-    this._value = value;
+  writeValue(value: Date | string): void {
+    this._value = value instanceof Date
+      ? value
+      : moment(value, 'HH:mm:ss').toDate();
     this.cdRef.markForCheck();
   }
 
