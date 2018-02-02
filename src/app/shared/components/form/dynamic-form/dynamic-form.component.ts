@@ -386,9 +386,11 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       case 'datepicker':
         return ['', null].includes(value)
           ? null
-          : control.displayTime
-            ? this.valueConverterService.toISO(value)
-            : this.valueConverterService.toDateOnly(value);
+          : this.valueConverterService.toDateOnly(value);
+      case 'datetimepicker':
+        return ['', null].includes(value)
+          ? null
+          : this.valueConverterService.toISO(value);
       case 'timepicker':
         return ['', null].includes(value)
           ? null

@@ -138,6 +138,10 @@ export class DataUploadService {
     }
   }
 
+  uploaderOfType(uploaderType: DataUploaders): boolean {
+    return this.currentUploaderType && this.currentUploaderType === uploaderType;
+  }
+
   private create(uploaderType: DataUploaders): DataUploader {
     if (!this.uploaders[uploaderType]) {
       // get optional paramKey

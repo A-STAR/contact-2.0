@@ -4,7 +4,6 @@ import * as auth from '../auth/auth.reducer';
 import * as campaigns from '../../routes/utilities/campaigns/campaigns.reducer';
 import * as constants from '../../routes/admin/constants/constants.reducer';
 import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
-import * as currency from '@app/shared/gui-objects/widgets/currency-rates/currency-rates.reducer';
 import * as debtorCard from '../app-modules/debtor-card/debtor-card.reducer';
 import * as dictionaries from '../../routes/admin/dictionaries/dictionaries.reducer';
 import * as entityAttributes from '../entity/attributes/entity-attributes.reducer';
@@ -26,7 +25,6 @@ export const reducers = {
   campaigns: campaigns.reducer,
   contractorsAndPortfolios: contractorsAndPortfolios.reducer,
   constants: constants.reducer,
-  currency: currency.reducer,
   debtorCard: debtorCard.reducer,
   dictionaries: dictionaries.reducer,
   entityAttributes: entityAttributes.reducer,

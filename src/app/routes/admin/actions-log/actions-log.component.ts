@@ -14,7 +14,7 @@ import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IContextMenuItem } from '@app/shared/components/grid/grid.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IQuery } from '@app/shared/components/qbuilder2/qbuilder2.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ActionsLogService } from './actions-log.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';

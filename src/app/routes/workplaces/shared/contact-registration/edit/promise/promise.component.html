@@ -11,13 +11,12 @@
           Дата <b class="text-danger">*</b>
         </span>
       </label>
-      <app-input-datepicker
+      <app-datepicker
         formControlName="date"
-        [displayTime]="false"
         [minDate]="today"
         [maxDate]="promiseMaxDate$ | async"
         [required]="true"
-      ></app-input-datepicker>
+      ></app-datepicker>
     </div>
 
     <!-- Promise Amount -->

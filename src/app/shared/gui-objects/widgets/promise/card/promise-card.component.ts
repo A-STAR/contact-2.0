@@ -64,8 +64,7 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
     {
       label: 'widgets.promise.grid.receiveDateTime',
       controlName: 'receiveDateTime',
-      type: 'datepicker',
-      displayTime: true,
+      type: 'datetimepicker',
       markAsDirty: true,
       required: true,
     },

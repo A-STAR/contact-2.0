@@ -35,14 +35,23 @@
     </div>
     <!-- Main Toolbar -->
     <div class="row mb">
-      <div class="col-md-9">
+      <div class="col-md-6">
         <app-button label="modules.dataUpload.buttons.open" [disabled]="hasFile" (click)="onFileOpenClick()"></app-button>
         <app-button label="modules.dataUpload.buttons.save" [disabled]="!hasFile || hasErrors" (click)="onSaveClick()"></app-button>
         <app-button label="modules.dataUpload.buttons.cancel" [disabled]="!hasFile" (click)="onCancelClick()"></app-button>
       </div>
       <div class="col-md-3">
         <app-select
-          *ngIf="isSelectVisible"
+          *ngIf="isCurrencySelected"
+          [options]="currencies"
+          [disabled]="hasFile"
+          [nullable]="false"
+          [ngModel]="currency"
+          (ngModelChange)="onCurrencyChange($event)"
+        ></app-select>
+      </div>
+      <div class="col-md-3">
+        <app-select
           [options]="uploaders"
           [disabled]="hasFile"
           [ngModel]="format"

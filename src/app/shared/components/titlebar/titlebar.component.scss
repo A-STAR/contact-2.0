@@ -1,4 +1,4 @@
-@import '../../../../shared/styles/app/variables.scss';
+@import '../../../shared/styles/app/variables.scss';
 
 .titlebar {
   display: flex;
@@ -12,18 +12,27 @@
   padding-bottom: 3px;
   margin-bottom: 7px;
   user-select: none;
+
+  .no-border & {
+    border-bottom: 0;
+  }
 }
 
+/*
+ * The titlebar has the zone: left, center and right.
+ * The left zone holds the title, the right zone - action buttons,
+ * and the center zone - arbitrary content throught the use of ng-content.
+ */
 .titlebar-zone {
   order: 0;
   flex: 1 0 0px;
   align-self: auto;
   // The middle part should shrink
-  .middle & {
-    flex: 1 1 0px;
+  &.center {
+    flex: 0 1 20%;
   }
   // The toolbar with buttons
-  .right & {
+  &.right {
     flex: 1 0 0px;
   }
 

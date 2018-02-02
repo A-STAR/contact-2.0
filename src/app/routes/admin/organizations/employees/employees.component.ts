@@ -8,7 +8,7 @@ import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import {
   IEmployee, IOrganizationsState, IEmployeeUpdateRequest, IEmployeeCreateRequest
 } from '../organizations.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { GridService } from '../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../organizations.service';

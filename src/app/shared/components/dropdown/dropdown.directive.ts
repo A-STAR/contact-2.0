@@ -1,9 +1,9 @@
 import {
   AfterContentInit,
-  ChangeDetectorRef,
   ContentChild,
   Directive,
   ElementRef,
+  Input,
   OnInit,
   OnDestroy,
   Renderer2,
@@ -17,6 +17,8 @@ type IListener = () => void;
 export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
   static OFFSET = -1;
 
+  @Input() fitWidthToContent = false;
+
   @ContentChild('dropdownContent') content: ElementRef;
   @ContentChild('dropdownParent') parent: ElementRef;
   @ContentChild('dropdownTrigger') trigger: ElementRef;
@@ -24,7 +26,6 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
   private isExpanded: boolean;
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private renderer: Renderer2,
   ) {}
 
@@ -52,14 +53,19 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
   private expand(): void {
     this.isExpanded = true;
     this.renderer.appendChild(document.body, this.contentElement);
-    this.cdRef.detectChanges();
-    const { top, left, width } = this.getPosition();
     this.setStyles(this.contentElement, {
       position: 'fixed',
+      top: 0,
+      left: 0,
+      width: 'auto',
+    });
+    const { top, left, width } = this.getPosition();
+    this.setStyles(this.contentElement, {
       top: `${top}px`,
       left: `${left}px`,
-      width: `${width}px`,
+      width: this.fitWidthToContent ? 'auto' : `${width}px`,
     });
+
     this.outsideClickListener = this.createOutsideClickListener();
     this.outsideScrollListener = this.createOutsideScrollListener();
   }

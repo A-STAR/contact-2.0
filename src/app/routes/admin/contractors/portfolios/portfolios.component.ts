@@ -16,7 +16,7 @@ import {
   PortfolioAction,
   IActionType
 } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/form/titlebar/titlebar.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
 import { GridService } from '@app/shared/components/grid/grid.service';

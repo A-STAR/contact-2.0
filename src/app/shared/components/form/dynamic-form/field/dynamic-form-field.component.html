@@ -159,6 +159,21 @@
     </label>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'datetimepicker'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-datetimepicker
+      [formControlName]="control.controlName"
+      [minDateTime]="control.minDateTime"
+      [maxDateTime]="control.maxDateTime"
+      [required]="control.required"
+    ></app-datetimepicker>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'datepicker'">
     <label>
       <span class="form-label">
@@ -166,13 +181,12 @@
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
-    <app-input-datepicker
+    <app-datepicker
       [formControlName]="control.controlName"
-      [displayTime]="control.displayTime"
       [minDate]="control.minDate"
       [maxDate]="control.maxDate"
       [required]="control.required"
-    ></app-input-datepicker>
+    ></app-datepicker>
   </ng-container>
 
   <ng-container *ngSwitchCase="'timepicker'">
@@ -182,11 +196,12 @@
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
-    <app-input-timepicker
+    <app-timepicker
       [formControlName]="control.controlName"
-      [showSeconds]="control.showSeconds"
+      [minTime]="control.minTime"
+      [maxTime]="control.maxTime"
       [required]="control.required"
-    ></app-input-timepicker>
+    ></app-timepicker>
   </ng-container>
 
   <ng-container *ngSwitchCase="'image'">
@@ -402,11 +417,16 @@
       </ng-container>
 
       <ng-container *ngSwitchCase="2">
-        <label class="form-label">
-          {{ control.label | translate }}
-          <b *ngIf="control.required" class="text-danger">*</b>
+        <label>
+          <span class="form-label">
+            {{ control.label | translate }}
+            <b *ngIf="control.required" class="text-danger">*</b>
+          </span>
         </label>
-        <app-input-datepicker [formControlName]="control.controlName"></app-input-datepicker>
+        <app-datepicker
+          [formControlName]="control.controlName"
+          [required]="control.required"
+        ></app-datepicker>
       </ng-container>
 
       <ng-container *ngSwitchCase="4">

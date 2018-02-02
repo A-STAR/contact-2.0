@@ -1,14 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Store } from '@ngrx/store';
 
-import { IAppState } from '@app/core/state/state.interface';
-import { ICurrencyRate, IActionType } from '../currency-rates.interface';
+import { ICurrencyRate } from '../currency-rates.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
@@ -47,11 +45,9 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private currencyRatesService: CurrencyRatesService,
-    private store: Store<IAppState>,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
-    private router: Router,
     private routingService: RoutingService
   ) {}
 
@@ -116,15 +112,6 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     this.routingService.navigate([ `${this.currencyId}/rates/${currencyRate.id}` ], this.route);
   }
 
-  onExcelLoad(currencyId: number): void {
-    this.router.navigate([`/utilities/data-upload`]).then(() => {
-      this.store.dispatch({
-        type: IActionType.SELECT_CURRENCY,
-        payload: { currencyId },
-      });
-    });
-  }
-
   private onAdd(): void {
     this.routingService.navigate([ `${this.currencyId}/rates/create` ], this.route);
   }
@@ -158,14 +145,6 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
         enabled: combineLatestAnd([
           this.currencyRatesService.canEdit$,
           this.selectedCurrencyRate$.map(o => !!o)
-        ])
-      },
-      {
-        type: ToolbarItemTypeEnum.BUTTON_EXCEL_LOAD,
-        action: () => this.onExcelLoad(this.currencyId),
-        enabled: combineLatestAnd([
-          this.currencyRatesService.canLoad$,
-          this.currencyId$.map(Boolean)
         ])
       },
       {

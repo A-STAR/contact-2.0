@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/primeng';
 
-import { DatePickerModule as FormDatePickerModule } from '../../../form/datepicker/datepicker.module';
+import { DateTimeModule } from '../../../form/datetime/datetime.module';
 
 import { DatePickerComponent } from './datepicker.component';
 
@@ -19,7 +19,7 @@ import { DatePickerComponent } from './datepicker.component';
   imports: [
     CalendarModule,
     FormsModule,
-    FormDatePickerModule,
+    DateTimeModule,
   ],
 })
-export class DatePickerModule { }
+export class DatePickerModule {}
