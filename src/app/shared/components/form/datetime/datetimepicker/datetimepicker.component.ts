@@ -49,7 +49,7 @@ export class DateTimePickerComponent implements ControlValueAccessor {
   writeValue(value: Date | string): void {
     this._value = value instanceof Date
       ? value
-      : moment(value, 'YYYY-MM-DD HH:mm:ss').toDate();
+      : moment(value).toDate();
     this.cdRef.markForCheck();
   }
 
