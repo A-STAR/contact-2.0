@@ -556,6 +556,72 @@
           "recommendation": "Recommendation"
         }
       }
+    },
+    "reports": {
+      "arbitrary": {
+        "tabs": {
+          "fields": "Fields",
+          "params": "Paramerers"
+        },
+        "remove": {
+          "title": "Delete report",
+          "confirmMessage": "Do you really want to delete selected report?"
+        },
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "comment": "Comment"
+        },
+        "card": {
+          "name": "Name",
+          "sql": "SQL",
+          "comment": "Comment",
+          "exportUndescribed": "Export undescribed"
+        },
+        "fields": {
+          "remove": {
+            "title": "Delete report field",
+            "confirmMessage": "Do you really want to delete selected report field?"
+          },
+          "grid": {
+            "id": "ID",
+            "name": "Name",
+            "sortOrder": "Sort order",
+            "systemName": "System name",
+            "textWidth": "Text width"
+          },
+          "card": {
+            "name": "Name",
+            "systemName": "System name",
+            "sortOrder": "Sort order",
+            "textWidth": "Text width"
+          }
+        },
+        "params": {
+          "remove": {
+            "title": "Delete report param",
+            "confirmMessage": "Do you really want to delete selected report param?"
+          },
+          "grid": {
+            "id": "ID",
+            "name": "Name",
+            "paramTypeCode": "Param type",
+            "sortOrder": "Sort Order",
+            "systemName": "System name",
+            "isMandatory": "Is mandatory",
+            "multiSelect": "Multi select"
+          },
+          "card": {
+            "name": "Name",
+            "systemName": "System name",
+            "sortOrder": "Sort order",
+            "paramTypeCode": "Param type",
+            "isMandatory": "Is mandatory",
+            "multiSelect": "Multi select",
+            "dictNameCode": "Dictionary"
+          }
+        }
+      }
     }
   },
   "login": {
@@ -2470,6 +2536,15 @@
     },
     "scheduleEventLog": {
       "gen": { "singular": "event history", "plural": "events history" }
+    },
+    "reports": {
+      "gen": { "singular": "report", "plural": "reports" }
+    },
+    "fields": {
+      "gen": { "singular": "field", "plural": "fields" }
+    },
+    "params": {
+      "gen": { "singular": "parameter", "plural": "parameters" }
     }
   },
   "massOperations": {
