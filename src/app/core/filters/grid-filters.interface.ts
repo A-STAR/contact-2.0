@@ -35,3 +35,11 @@ export interface IFilterGroup {
   comment: string;
 }
 
+export interface IFilterContractor {
+  id: number;
+  name: string;
+  fullName: string;
+  typeCode: number;
+  comment: string;
+}
+

@@ -2901,6 +2901,16 @@
         },
         "title": "Action types"
       },
+      "contractors": {
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "fullName": "Full Name",
+          "typeCode": "Type",
+          "comment": "Comment"
+        },
+        "title": "Select Contractors"
+      },
       "fields": {
         "branchCode": "Branch",
         "dictValue1": "Dictionary Value 1",
