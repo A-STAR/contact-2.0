@@ -8,10 +8,11 @@
 
 .label {
   color: #333;
-  display: block;
+  display: inline-block;
   font-size: 14px;
   font-weight: normal;
   margin-bottom: 5px;
   padding: 0;
   text-align: left;
+  width: auto;
 }

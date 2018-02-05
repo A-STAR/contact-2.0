@@ -6,6 +6,7 @@
   display: inline-block;
   height: 18px;
   margin: 0;
+  position: relative;
   transition: background-color 0.2s ease, border-color 0.2s ease;
   vertical-align: bottom;
   width: 18px;
@@ -17,6 +18,27 @@
   &.checked {
     background-color: #44a1f8;
     border-color: #44a1f8;
+
+    &:before,
+    &:after {
+      background-color: #fff;
+      bottom: 4px;
+      content: ' ';
+      left: 7px;
+      position: absolute;
+      transform-origin: bottom left;
+      width: 1px;
+    }
+
+    &:before {
+      height: 6px;
+      transform: rotate(-45deg);
+    }
+
+    &:after {
+      height: 10px;
+      transform: rotate(35deg);
+    }
   }
 }
 
