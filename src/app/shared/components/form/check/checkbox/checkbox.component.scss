@@ -19,3 +19,9 @@
     border-color: #44a1f8;
   }
 }
+
+input {
+  left: -10000px;
+  position: absolute;
+  visibility: hidden;
+}

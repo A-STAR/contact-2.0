@@ -4,7 +4,6 @@ import {
   Component,
   forwardRef,
   HostBinding,
-  HostListener,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -19,7 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
   selector: 'app-checkbox',
   styleUrls: [ './checkbox.component.scss' ],
-  template: ''
+  templateUrl: './checkbox.component.html'
 })
 export class CheckboxComponent {
   private _value: boolean;
@@ -47,8 +46,7 @@ export class CheckboxComponent {
     // because a click will change its value and mark control as dirty anyway
   }
 
-  @HostListener('click')
-  onClick(): void {
+  onChange(): void {
     this._value = !this._value;
     this.propagateChange(this._value);
     this.cdRef.markForCheck();
@@ -56,4 +54,3 @@ export class CheckboxComponent {
 
   private propagateChange: Function = () => {};
 }
-
