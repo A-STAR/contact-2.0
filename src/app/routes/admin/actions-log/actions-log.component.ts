@@ -23,7 +23,6 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-import { MetadataGridComponent } from '@app/shared/components/metadata-grid/metadata-grid.component';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 import { timeToHourMinSec } from '@app/core/utils';
@@ -298,6 +297,6 @@ export class ActionsLogComponent implements  OnDestroy, OnInit, AfterViewInit {
 
   private getCombinedFilters(): FilterObject {
     const filters = this.getFilters();
-    return filters.addFilter((this.grid.grid as MetadataGridComponent<any>).getFilters());
+    return filters.addFilter((this.grid as ActionGridComponent<any>).getFilters());
   }
 }

@@ -6,7 +6,7 @@ import { FilterOperatorType } from '../../../../shared/components/grid2/filter/g
 import { TControlTypes, IFilterControl } from '../../form/dynamic-form/dynamic-form.interface';
 
 @Injectable()
-export class MetadataFilterService {
+export class ActionGridFilterService {
 
   getMetadataOption(metadata: IMetadataFilter, name: string): IMetadataFilterOption {
     return (metadata.addOptions || []).find(option => option.name === name);

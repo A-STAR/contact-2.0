@@ -12,19 +12,20 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
 
-import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
+import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IDebtorActionLog } from './action-log.interface';
 import { IDynamicFormControl } from '../../../components/form/dynamic-form/dynamic-form.interface';
+
 import { ActionLogService } from './action-log.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { UserConstantsService } from '../../../../core/user/constants/user-constants.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
-import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
-import { MetadataGridComponent } from '../../../../shared/components/metadata-grid/metadata-grid.component';
+import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../core/utils';
+import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
+import { makeKey } from '@app/core/utils';
 
 const labelKey = makeKey('widgets.actionLog.form');
 
@@ -36,7 +37,7 @@ const labelKey = makeKey('widgets.actionLog.form');
   encapsulation: ViewEncapsulation.None,
 })
 export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
-  @ViewChild(MetadataGridComponent) grid: MetadataGridComponent<any>;
+  @ViewChild(ActionGridComponent) grid: ActionGridComponent<any>;
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   @Input() personId: number;

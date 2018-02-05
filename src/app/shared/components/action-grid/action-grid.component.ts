@@ -9,30 +9,30 @@ import {
   ViewEncapsulation,
   OnInit
 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first, filter, map } from 'rxjs/operators';
+import { GridOptions } from 'ag-grid';
+import { Observable } from 'rxjs/Observable';
 
 import { IActionGridDialogData, ICloseAction } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected, IAGridSortModel, IAGridColumn } from '../grid2/grid2.interface';
+import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
-
-import { GridComponent } from '../../components/grid/grid.component';
-import { MetadataGridComponent } from '../../components/metadata-grid/metadata-grid.component';
-
-import { DialogFunctions } from '../../../core/dialog';
-import { FilterObject } from '../grid2/filter/grid-filter';
-import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
-import { MetadataFilterComponent } from '@app/shared/components/action-grid/filter/metadata-filter.component';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
 import { IMetadataSortedActions, IMetadataAction, IMetadataActionPermissions } from '@app/core/metadata/metadata.interface';
+
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
-import { first, filter, map } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
+
+import { ActionGridFilterComponent } from './filter/action-grid-filter.component';
+import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
+import { GridComponent } from '../../components/grid/grid.component';
+
+import { DialogFunctions } from '../../../core/dialog';
+import { FilterObject } from '../grid2/filter/grid-filter';
 import { ValueBag } from '@app/core/value-bag/value-bag';
-import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
-import { GridOptions } from 'ag-grid';
 
 @Component({
   selector: 'app-action-grid',
@@ -50,21 +50,21 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() rowCount: number;
   @Input() rowIdKey: string;
   @Input() rows: T[] = [];
-  @Output() onFilter = new EventEmitter<FilterObject>();
-  @Output() onPage = new EventEmitter<number>();
-  @Output() onPageSize = new EventEmitter<number>();
-  @Output() onSort = new EventEmitter<IAGridSortModel[]>();
   @Input() columnTranslationKey: string;
   @Input() columns: IGridColumn[];
   @Input() contextMenuOptions: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
 
+  @Output() onFilter = new EventEmitter<FilterObject>();
+  @Output() onPage = new EventEmitter<number>();
+  @Output() onPageSize = new EventEmitter<number>();
+  @Output() onSort = new EventEmitter<IAGridSortModel[]>();
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IActionGridDialogData>();
 
-  @ViewChild(MetadataFilterComponent) filter: MetadataFilterComponent;
+  @ViewChild(ActionGridFilterComponent) filter: ActionGridFilterComponent;
   @ViewChild('grid') grid: GridComponent | Grid2Component;
 
   private _columns: IAGridColumn[];
@@ -89,14 +89,17 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gridService.getMetadata(this.metadataKey, {})
-      .pipe(first())
-      .subscribe(({ actions, columns }) => {
-        this.actions$.next(actions);
-        this._columns = [ ...columns ];
-        this._initialized = true;
-        this.cdRef.markForCheck();
-      });
+
+    if (this.metadataKey) {
+      this.gridService.getMetadata(this.metadataKey, {})
+        .pipe(first())
+        .subscribe(({ actions, columns }) => {
+          this.actions$.next(actions);
+          this._columns = [ ...columns ];
+          this._initialized = true;
+          this.cdRef.markForCheck();
+        });
+    }
 
      this.actionsWithPermissions$ = combineLatest(
         this.actions$.pipe(filter(Boolean)),

@@ -175,30 +175,10 @@
   (close)="onCloseAction($event)"
 ></app-outsourcing-return>
 
-<app-metadata-grid
-  #grid
-  *ngIf="isUsingAGGrid; else simpleGrid"
-  [columnIds]="columnIds"
-  [fullHeight]="fullHeight"
-  [metadataKey]="metadataKey"
-  [ngClass]="ngClass"
-  [persistenceKey]="persistenceKey"
-  [rowCount]="rowCount"
-  [rowIdKey]="rowIdKey"
-  [rows]="rows"
-  (action)="onAction($event)"
-  (onDblClick)="onDblClick($event)"
-  (onFilter)="onRequest()"
-  (onPage)="onRequest()"
-  (onPageSize)="onRequest()"
-  (onSort)="onRequest()"
-  (onSelect)="onSelect($event)"
-></app-metadata-grid>
-
-<app-metadata-filter
+<app-action-grid-filter
   [metadataKey]="metadataKey"
   (filter)="onFilterHandler()"
-></app-metadata-filter>
+></app-action-grid-filter>
 
 <app-grid2
   #grid
@@ -224,7 +204,7 @@
 <ng-template #simpleGrid>
   <app-grid
     #grid
-    [columns]="columnsDef"
+    [columns]="columns"
     [columnTranslationKey]="columnTranslationKey"
     [contextMenuOptions]="contextMenuOptions"
     [rows]="rows"

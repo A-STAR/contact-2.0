@@ -9,7 +9,7 @@ import { EntityGroupModule } from '../../gui-objects/widgets/entity-group/entity
 import { GridModule } from '../grid/grid.module';
 import { Grid2Module } from '../grid2/grid2.module';
 import { MassOpsModule } from '../../gui-objects/widgets/mass-ops/mass-ops.module';
-import { MetadataFilterModule } from './filter/metadata-filter.module';
+import { ActionGridFilterModule } from './filter/action-grid-filter.module';
 import { NextCallDateSetModule } from '../../gui-objects/widgets/next-call-date-set/next-call-date-set.module';
 import { PaymentConfirmModule } from '../../gui-objects/widgets/payment-confirm/payment-confirm.module';
 import { PromiseResolveModule } from '../../gui-objects/widgets/promise-resolve/promise-resolve.module';
@@ -33,7 +33,7 @@ import { ActionGridComponent } from './action-grid.component';
     GridModule,
     Grid2Module,
     MassOpsModule,
-    MetadataFilterModule,
+    ActionGridFilterModule,
     NextCallDateSetModule,
     OpenDebtCardModule,
     OperatorDetailsModule,

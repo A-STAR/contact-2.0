@@ -12,25 +12,25 @@ import { Store } from '@ngrx/store';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { FilterObject, FilterOperatorType } from '../../../../shared/components/grid2/filter/grid-filter';
-import { IAppState } from '../../../../core/state/state.interface';
+import { FilterObject, FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
+import { IAppState } from '@app/core/state/state.interface';
 import { IDynamicFormControl, IFilterControl } from '../../form/dynamic-form/dynamic-form.interface';
-import { IMetadataColumn } from '../../../../core/metadata/metadata.interface';
+import { IMetadataColumn } from '@app/core/metadata/metadata.interface';
 
-import { EntityAttributesService } from '../../../../core/entity/attributes/entity-attributes.service';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
-import { MetadataFilterService } from '../../../../shared/components/metadata-grid/filter/metadata-filter.service';
+import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
+import { ActionGridFilterService } from './action-grid-filter.service';
 
-import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { TYPE_CODES } from '../../../../core/utils/value';
+import { TYPE_CODES } from '@app/core/utils/value';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-metadata-filter',
-  templateUrl: './metadata-filter.component.html'
+  selector: 'app-action-grid-filter',
+  templateUrl: './action-grid-filter.component.html'
 })
-export class MetadataFilterComponent implements OnInit {
+export class ActionGridFilterComponent implements OnInit {
   @Input() metadataKey: string;
 
   @Output() filter = new EventEmitter<void>();
@@ -47,7 +47,7 @@ export class MetadataFilterComponent implements OnInit {
     private entityAttributesService: EntityAttributesService,
     private store: Store<IAppState>,
     private valueConverterService: ValueConverterService,
-    private metadataFilterService: MetadataFilterService
+    private metadataFilterService: ActionGridFilterService
   ) {}
 
   ngOnInit(): void {

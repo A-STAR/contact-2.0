@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 
 import { DynamicFormModule } from '../../form/dynamic-form/dynamic-form.module';
 
-import { MetadataFilterService } from './metadata-filter.service';
+import { ActionGridFilterService } from './action-grid-filter.service';
 
-import { MetadataFilterComponent } from './metadata-filter.component';
+import { ActionGridFilterComponent } from './action-grid-filter.component';
 
 @NgModule({
   imports: [
@@ -13,13 +13,13 @@ import { MetadataFilterComponent } from './metadata-filter.component';
     DynamicFormModule,
   ],
   exports: [
-    MetadataFilterComponent,
+    ActionGridFilterComponent,
   ],
   declarations: [
-    MetadataFilterComponent,
+    ActionGridFilterComponent,
   ],
   providers: [
-    MetadataFilterService
+    ActionGridFilterService
   ]
 })
-export class MetadataFilterModule { }
+export class ActionGridFilterModule { }
