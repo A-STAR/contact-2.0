@@ -1,0 +1,19 @@
+:host {
+  border: 1px solid #dcdae2;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-block;
+  height: 18px;
+  margin: 0;
+  transition: border-color 0.2s ease;
+  vertical-align: bottom;
+  width: 18px;
+
+  &:hover {
+    border-color: #44a1f8;
+  }
+
+  &.checked {
+    background-color: #44a1f8;
+  }
+}
