@@ -2321,6 +2321,7 @@
         "stage": "Стадия",
         "userId": "Оператор",
         "modeCode": "Режим",
+        "inactiveReasonCode": "Причина блокировки",
         "changeGroupId": {
           "grid": {
             "id": "ID",
