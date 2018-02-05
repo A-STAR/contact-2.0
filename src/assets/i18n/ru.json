@@ -31,7 +31,6 @@
     "nav": {
       "menu": {
         "HOME": "Главная",
-        "WORKFLOW": "Процесс",
         "QUERY_BUILDER": "Построитель запросов",
         "ADMIN_PANEL": "Администрирование",
         "ROLES_AND_PERMISSIONS": "Роли и доступы",
@@ -60,7 +59,6 @@
         "CONTACT_TREES": "Дерево контактов",
         "CONTACT_REGISTRATION": "Регистрация контакта",
         "MESSAGE_SCENARIOS": "Сценарии сообщений",
-        "GROUPS": "Группы",
         "GROUP_EDIT": "Группа",
         "CAMPAIGNS": "Кампании обзвона",
         "SCHEDULE": "Расписание",
@@ -276,7 +274,9 @@
         "cancel": "Ошибка при отмене загрузки файла",
         "save": "Ошибка при попытке сохранить данные в БД",
         "editCell": "Ошибка при попытке отредактировать ячейку",
-        "getErrors": "Ошибка при попытке получить файл с описанием ошибок"
+        "getErrors": "Ошибка при попытке получить файл с описанием ошибок",
+        "errorFile": "ошибки",
+        "defaultError": "Произошла неизвестная ошибка"
       }
     },
     "payments": {
@@ -807,6 +807,7 @@
     }
   },
   "terms": {
+    "title": "Словарные термины",
     "edit": {
       "title": "Словарный термин: {{ code }}",
       "code": "Код термина",
@@ -839,6 +840,7 @@
   },
   "roles": {
     "roles": {
+      "title": "Роли",
       "copy": {
         "title": "Копировать роль",
         "originalRoleName": "Название оригинальной роли",
@@ -1149,6 +1151,7 @@
       }
     },
     "employees": {
+      "title": "Сотрудники",
       "add": {
         "title": "Выберите сотрудника",
         "grid": {
@@ -1179,6 +1182,7 @@
     }
   },
   "contractors": {
+    "title": "Клиенты",
     "managers": {
       "remove": {
         "title": "Удаление менеджера",
@@ -1229,6 +1233,7 @@
     }
   },
   "portfolios": {
+    "title": "Портфели",
     "grid": {
       "id": "ID",
       "name": "Название",
@@ -2215,7 +2220,8 @@
       },
       "tabs": {
         "all": "Группы",
-        "debtsInGroup": "Долги в группе"
+        "debtsInGroup": "Долги в группе",
+        "scheduleEvents": "Мероприятия"
       }
     },
     "visit": {
@@ -2285,7 +2291,7 @@
         "periodTypeCode": "Период",
         "startTime": "Запуск",
         "executeDateTime": "Последний запуск",
-        "isExecuted": "Выполняется",
+        "isExecuting": "Выполняется",
         "startDate": "Начало",
         "endDate": "Окончание",
         "isInactive": "Выключено",
@@ -2304,6 +2310,7 @@
         "checkGroup": "Проверка переформирования группы",
         "delay": "Задержка отправки (ч.)",
         "phoneTypes": "Тип телефона",
+        "emailTypes": "Тип адреса",
         "personRoles": "Получатель",
         "templateId": "Сценарий",
         "senderCode": "Отправитель",
@@ -2834,6 +2841,7 @@
       "loadFromExcel": "Загрузить из Excel",
       "move": "Переместить",
       "next": "Далее",
+      "now": "Сейчас",
       "ok": "OK",
       "refresh": "Перезагрузить",
       "registerContact": "Зарегистрировать контакт",
@@ -2842,6 +2850,7 @@
       "search": "Искать",
       "select": "Выбрать",
       "sms": "СМС",
+      "today": "Сегодня",
       "unblock": "Разблокировать",
       "undo": "Отменить",
       "upload": "Загрузить",
@@ -3012,6 +3021,7 @@
       "format": {
         "dateTime": "DD.MM.YYYY HH:mm:ss",
         "date": "DD.MM.YYYY",
+        "dateISO": "YYYY-MM-DD",
         "time": "HH:mm:ss"
       },
       "placeholders": {

@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ICampaignDebt } from '@app/routes/workplaces/call-center/campaign/campaign.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { CampaignService } from '../campaign.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
@@ -16,37 +17,41 @@ import { combineLatestAnd } from '@app/core/utils/helpers';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-call-center-toolbar',
-  styleUrls: [ './toolbar.component.scss' ],
   templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent extends DialogFunctions {
-  toolbarItems: IToolbarItem[] = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON,
-      icon: 'fa fa-newspaper-o',
-      label: 'Открытие карточки должника',
-      action: () => this.openDebtorCard(),
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,
-      label: 'Регистрация контакта с типом "Специальное"',
-      action: () => this.registerSpecial(),
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
-      label: 'Перевод в проблемные',
-      action: () => this.setDialog('change-status'),
-      enabled: this.canChangeStatusToProblematic$,
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON,
-      icon: 'fa fa-book',
-      label: 'Информация о предыдущих долгах',
-      action: () => this.setDialog('processed-debts'),
-    },
-  ];
 
   dialog: 'processed-debts' | 'change-status' = null;
+
+  // TODO(d.maltsev): i18n
+  private titlebar: ITitlebar = {
+    title: 'Сальников Андрей Юрьевич',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON,
+        iconCls: 'fa fa-newspaper-o',
+        title: 'Открытие карточки должника',
+        action: () => this.openDebtorCard(),
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT,
+        title: 'Регистрация контакта с типом "Специальное"',
+        action: () => this.registerSpecial(),
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS,
+        title: 'Перевод в проблемные',
+        action: () => this.setDialog('change-status'),
+        enabled: this.canChangeStatusToProblematic$,
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON,
+        iconCls: 'fa fa-book',
+        title: 'Информация о предыдущих долгах',
+        action: () => this.setDialog('processed-debts'),
+      },
+    ]
+  };
 
   constructor(
     private campaignService: CampaignService,
@@ -62,6 +67,21 @@ export class ToolbarComponent extends DialogFunctions {
       this.campaignService.isCampaignDebtActive$,
       this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 9),
     ]);
+  }
+
+  get titlebar$(): Observable<ITitlebar> {
+    return this.campaignService.campaignDebt$.pipe(
+      map(campaignDebt => {
+        const { personLastName, personFirstName, personMiddleName } = campaignDebt;
+        const title = [ personLastName, personFirstName, personMiddleName ].filter(Boolean).join(' ');
+        this.titlebar.title = title;
+        return { ...this.titlebar };
+      }),
+    );
+  }
+
+  get campaignDebt$(): Observable<ICampaignDebt> {
+    return this.campaignService.campaignDebt$;
   }
 
   private openDebtorCard(): void {

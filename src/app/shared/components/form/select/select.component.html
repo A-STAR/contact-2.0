@@ -6,14 +6,6 @@
     [alignTarget]="inputRef"
     [autoAlign]="autoAlign"
   >
-    <li *ngIf="filterEnabled" class="app-select-search-wrapper">
-      <input
-        appFocus
-        type="text"
-        [ngClass]="[ inputClass, 'app-select-search' ]"
-        [(ngModel)]="filterValue"
-      >
-    </li>
     <li *ngFor="let action of actions" class="app-select-unselectable">
       <div class="app-select-tool" (click)="actionClick(action, $event)">
         {{ action.text | translate }}

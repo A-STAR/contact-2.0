@@ -10,14 +10,14 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IPermissionRole } from '../permissions.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from 'app/core/utils/helpers';
-import { DialogFunctions } from '../../../../core/dialog';
+import { combineLatestAnd } from '@app/core/utils';
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,42 +30,45 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
 
   roles$: Observable<Array<IPermissionRole>>;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.setDialog('add'),
-      enabled: this.userPermissionsService.has('ROLE_ADD')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_COPY,
-      action: () => this.setDialog('copy'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('ROLE_COPY'),
-        this.hasCurrentRole$,
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.setDialog('edit'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('ROLE_EDIT'),
-        this.hasCurrentRole$,
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('remove'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('ROLE_DELETE'),
-        this.hasCurrentRole$,
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.permissionsService.fetchRoles(),
-      enabled: this.userPermissionsService.has('ROLE_VIEW')
-    },
-  ];
+  titlebar: ITitlebar = {
+    title: 'roles.roles.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        action: () => this.setDialog('add'),
+        enabled: this.userPermissionsService.has('ROLE_ADD')
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_COPY,
+        action: () => this.setDialog('copy'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('ROLE_COPY'),
+          this.hasCurrentRole$,
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('ROLE_EDIT'),
+          this.hasCurrentRole$,
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        action: () => this.setDialog('remove'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('ROLE_DELETE'),
+          this.hasCurrentRole$,
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.permissionsService.fetchRoles(),
+        enabled: this.userPermissionsService.has('ROLE_VIEW')
+      },
+    ]
+  };
 
   columns: Array<any> = [
     { prop: 'id', minWidth: 30, maxWidth: 70 },

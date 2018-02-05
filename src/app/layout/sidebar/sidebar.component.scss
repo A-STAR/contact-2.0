@@ -27,21 +27,22 @@ nav {
       }
 
       i {
-        line-height: 20px;
+        font-size: 20px;
+        line-height: 1;
         padding-right: 16px;
       }
     }
   }
 
   &.collapsed {
-    font-size: 20px;
     width: $layout-sidebar-width-collapsed;
 
     ul li {
-      padding: 16px 0;
+      padding: 12px 0;
       justify-content: center;
 
       i {
+        font-size: 30px;
         padding-right: $menu-item-border-width;
       }
     }
@@ -50,7 +51,7 @@ nav {
   .sidebar-collapse {
     color: $brand-white;
     cursor: pointer;
-    display: inline-block;
+    display: block;
     padding: 10px 18px;
 
     &:hover {

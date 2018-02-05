@@ -23,7 +23,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { TYPE_CODES } from '@app/core/utils/value';
+import { TYPE_CODES } from '@app/core/utils';
 
 @Component({
   selector: 'app-attribute-grid-edit',

@@ -28,8 +28,13 @@ export class NextCallDateSetDialogComponent  {
   ) {}
 
   controls: IDynamicFormControl[] = [
-    { label: labelKey('nextCallDate'), controlName: 'nextCallDate', type: 'datepicker',
-      displayTime: true, minDate:  moment().toDate(), width: 5 }
+    {
+      label: labelKey('nextCallDate'),
+      controlName: 'nextCallDate',
+      type: 'datetimepicker',
+      minDateTime: moment().toDate(),
+      width: 5,
+    }
   ];
 
   get canSubmit(): boolean {

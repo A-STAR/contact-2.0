@@ -6,20 +6,20 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IConstant } from './constants.interface';
-import { IGridColumn } from '../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ConstantsService } from './constants.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { UserConstantsService } from '../../../core/user/constants/user-constants.service';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../core/converter/value-converter.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { GridComponent } from '../../../shared/components/grid/grid.component';
+import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { combineLatestAnd } from '../../../core/utils/helpers';
-import { DialogFunctions } from '../../../core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,21 +30,25 @@ import { DialogFunctions } from '../../../core/dialog';
 export class ConstantsComponent extends DialogFunctions implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(GridComponent) grid: GridComponent;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.setDialog('editConstant'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('CONST_VALUE_EDIT'),
-        this.constantsService.state.map(state => !!state.currentConstant)
-    ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetchAll(),
-      enabled: this.userPermissionsService.has('CONST_VALUE_VIEW')
-    },
-  ];
+  titlebar: ITitlebar = {
+    title: 'constants.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.setDialog('editConstant'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('CONST_VALUE_EDIT'),
+          this.constantsService.state.map(state => !!state.currentConstant)
+      ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetchAll(),
+        enabled: this.userPermissionsService.has('CONST_VALUE_VIEW')
+      },
+    ]
+  };
+
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },

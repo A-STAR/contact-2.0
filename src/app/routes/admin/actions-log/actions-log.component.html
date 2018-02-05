@@ -11,7 +11,7 @@
   </div>
 </app-dialog>
 
-  <button *ngIf="false" class="btn btn-default export-button" (click)="onQueryBuilderOpen()">
+  <button *ngIf="false" class="btn btn-default export-button" (click)="openQueryBuilder()">
     <i class="fa fa-filter" aria-hidden="true"></i>
   </button>
 -->
@@ -26,12 +26,13 @@
 <div class="flex vertical">
 
   <div class="flex-item mb">
-    <app-actions-log-filter
-      #filter
-      (export)="doExport()"
-      (search)="onRequest()"
-      (queryBuilderOpen)="openQueryBuilder()"
-    ></app-actions-log-filter>
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+
+    <app-dynamic-form
+      *ngIf="controls"
+      [controls]="controls"
+      [data]="data"
+    ></app-dynamic-form>
   </div>
 
   <div class="flex-item grow">
@@ -43,7 +44,7 @@
       [rowIdKey]="rowIdKey"
       [rows]="rows"
       [rowCount]="rowCount"
-      (request)="onRequest()"
+      (request)="doSearch()"
     ></app-action-grid>
   </div>
 

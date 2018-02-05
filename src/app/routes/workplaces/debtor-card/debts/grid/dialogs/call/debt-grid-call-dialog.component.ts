@@ -19,7 +19,7 @@ export class DebtGridCallDialogComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormControl> = [
-    { controlName: 'nextCallDateTime', type: 'datepicker', displayTime: true },
+    { controlName: 'nextCallDateTime', type: 'datetimepicker' },
     { controlName: 'forAllDebts', type: 'checkbox' },
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.nextCall.${control.controlName}` }) as IDynamicFormControl);
 

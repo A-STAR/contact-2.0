@@ -7,13 +7,12 @@
         Дата следующего звонка <b *ngIf="isNextCallDateRequired$ | async" class="text-danger">*</b>
       </span>
     </label>
-    <app-input-datepicker
+    <app-datetimepicker
       formControlName="nextCallDateTime"
-      [displayTime]="true"
-      [minDate]="nextCallMinDate"
-      [maxDate]="nextCallMaxDate$ | async"
+      [minDateTime]="nextCallMinDate"
+      [maxDateTime]="nextCallMaxDate$ | async"
       [required]="isNextCallDateRequired$ | async"
-    ></app-input-datepicker>
+    ></app-datetimepicker>
   </div>
 
   <hr>
