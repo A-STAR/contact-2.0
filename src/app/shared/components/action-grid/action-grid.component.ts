@@ -273,22 +273,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return this._columns || [];
   }
 
-  onFilterHandler(): void {
-    this.onFilter.emit();
-  }
-
-  onPageHandler(): void {
-    this.onPage.emit();
-  }
-
-  onPageSizeHandler(): void {
-    this.onPageSize.emit();
-  }
-
-  onSortHandler(): void {
-    this.onSort.emit();
-  }
-
   private getGridFilters(): FilterObject {
     const filters = (this.grid as Grid2Component).getFilters();
     if (this.filter) {
