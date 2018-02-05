@@ -180,26 +180,30 @@
   (filter)="onFilterHandler()"
 ></app-action-grid-filter>
 
-<app-grid2
-  #grid
+<ng-container
   *ngIf="isUsingAGGrid; else simpleGrid"
-  [actions]="gridActionsForSelected$ | async"
-  [columnIds]="columnIds"
-  [columns]="columnsDef"
-  [fullHeight]="fullHeight"
-  [ngClass]="ngClass"
-  [persistenceKey]="persistenceKey"
-  [rowCount]="rowCount"
-  [rowIdKey]="rowIdKey"
-  [rows]="rows"
-  (action)="onAction($event)"
-  (onDblClick)="onDblClick($event)"
-  (onFilter)="onFilterHandler()"
-  (onPage)="onPageHandler()"
-  (onPageSize)="onPageSizeHandler()"
-  (onSort)="onSortHandler()"
-  (onSelect)="onSelect($event)"
-></app-grid2>
+>
+  <app-grid2
+    #grid
+    *ngIf="initialized"
+    [actions]="gridActionsForSelected$ | async"
+    [columnIds]="columnIds"
+    [columns]="columnsDef"
+    [fullHeight]="fullHeight"
+    [ngClass]="ngClass"
+    [persistenceKey]="persistenceKey"
+    [rowCount]="rowCount"
+    [rowIdKey]="rowIdKey"
+    [rows]="rows"
+    (action)="onAction($event)"
+    (onDblClick)="onDblClick($event)"
+    (onFilter)="onRequest()"
+    (onPage)="onRequest()"
+    (onPageSize)="onRequest()"
+    (onSort)="onRequest()"
+    (onSelect)="onSelect($event)"
+  ></app-grid2>
+</ng-container>
 
 <ng-template #simpleGrid>
   <app-grid

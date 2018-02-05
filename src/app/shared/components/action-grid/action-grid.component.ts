@@ -55,10 +55,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() contextMenuOptions: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
 
-  @Output() onFilter = new EventEmitter<FilterObject>();
-  @Output() onPage = new EventEmitter<number>();
-  @Output() onPageSize = new EventEmitter<number>();
-  @Output() onSort = new EventEmitter<IAGridSortModel[]>();
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
@@ -247,6 +243,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   onSelect(selected: number[]): void {
     this.select.emit(selected);
+  }
+
+  get initialized(): boolean {
+    return this._initialized;
   }
 
   get selected(): T[] {
