@@ -1,7 +1,8 @@
-<app-action-grid
-  metadataKey="contactSearchContactLog"
+<app-grid2
+  *ngIf="columns$ | async"
   persistenceKey="contactSearchContactLog"
   [columnIds]="columnIds"
+  [columns]="columns$ | async"
   [ngClass]="'contact-log-grid'"
   [rowCount]="rowCount"
   [rows]="data"
@@ -9,4 +10,4 @@
   (onPage)="onRequest()"
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
-></app-action-grid>
+></app-grid2>

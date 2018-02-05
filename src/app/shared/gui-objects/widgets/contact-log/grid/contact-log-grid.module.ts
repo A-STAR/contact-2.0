@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ActionGridModule } from '@app/shared/components/action-grid/action-grid.module';
+import { Grid2Module } from '@app/shared/components/grid2/grid2.module';
 
 import { ContactLogGridComponent } from './contact-log-grid.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    ActionGridModule,
+    Grid2Module,
   ],
   exports: [
     ContactLogGridComponent,
