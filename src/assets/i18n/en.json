@@ -31,7 +31,6 @@
     "nav": {
       "menu": {
         "HOME": "Home",
-        "WORKFLOW": "Workflow",
         "QUERY_BUILDER": "Query builder",
         "ADMIN_PANEL": "Administration",
         "ROLES_AND_PERMISSIONS": "Roles and permissions",
@@ -60,7 +59,6 @@
         "CONTACT_TREES": "Contact trees",
         "MESSAGE_SCENARIOS": "Message scenarios",
         "CONTACT_REGISTRATION": "Contact tegistration",
-        "GROUPS": "Groups",
         "GROUP_EDIT": "Group",
         "CAMPAIGNS": "Campaigns",
         "SCHEDULE": "Schedule",
@@ -276,7 +274,9 @@
         "cancel": "Error when trying to cancel data load",
         "save": "Error when trying to save data to DB",
         "editCell": "Error when trying to edit cell",
-        "getErrors": "Error when trying to get error log file"
+        "getErrors": "Error when trying to get error log file",
+        "errorFile": "errors",
+        "defaultError": "Unknown error has been occurred"
       }
     },
     "payments": {
@@ -741,6 +741,7 @@
     }
   },
   "terms": {
+    "title": "Dictionary terms",
     "edit": {
       "title": "Term: {{ code }}",
       "code": "Term code",
@@ -773,6 +774,7 @@
   },
   "roles": {
     "roles": {
+      "title": "Roles",
       "copy": {
         "title": "Copy role",
         "originalRoleName": "Original role name",
@@ -1083,6 +1085,7 @@
       }
     },
     "employees": {
+      "title": "Employees",
       "add": {
         "title": "Choose employees",
         "grid": {
@@ -1113,6 +1116,7 @@
     }
   },
   "contractors": {
+    "title": "Contractors",
     "managers": {
       "remove": {
         "title": "Delete manager",
@@ -1163,6 +1167,7 @@
     }
   },
   "portfolios": {
+    "title": "Portfolios",
     "grid": {
       "id": "ID",
       "name": "Name",
@@ -2149,7 +2154,8 @@
       },
       "tabs": {
         "all": "Groups",
-        "debtsInGroup": "Debts in group"
+        "debtsInGroup": "Debts in group",
+        "scheduleEvents": "Events"
       }
     },
     "visit": {
@@ -2219,7 +2225,7 @@
         "periodTypeCode": "Period",
         "startTime": "Start",
         "executeDateTime": "Last start",
-        "isExecuted": "Is Executed",
+        "isExecuting": "Is Executing",
         "startDate": "Start date",
         "endDate": "End date",
         "isInactive": "Is inactive",
@@ -2238,6 +2244,7 @@
         "checkGroup": "Group rearrangement check",
         "delay": "Delay (hours)",
         "phoneTypes": "Phono type",
+        "emailTypes": "Email type",
         "personRoles": "Receiver",
         "templateId": "Template",
         "senderCode": "Sender",
@@ -2759,6 +2766,7 @@
       "loadFromExcel": "Load from Excel",
       "move": "Move",
       "next": "Next",
+      "now": "Now",
       "ok": "OK",
       "refresh": "Refresh",
       "registerContact": "Register Contact",
@@ -2767,6 +2775,7 @@
       "search": "Search",
       "select": "Select",
       "sms": "SMS",
+      "today": "Today",
       "unblock": "Unblock",
       "undo": "Undo",
       "upload": "Upload",
@@ -2816,6 +2825,16 @@
           "name": "Action"
         },
         "title": "Action types"
+      },
+      "contractors": {
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "fullName": "Full Name",
+          "typeCode": "Type",
+          "comment": "Comment"
+        },
+        "title": "Select Contractors"
       },
       "fields": {
         "branchCode": "Branch",
@@ -2937,6 +2956,7 @@
       "format": {
         "dateTime": "MM/DD/YYYY HH:mm:ss",
         "date": "MM/DD/YYYY",
+        "dateISO": "YYYY-MM-DD",
         "time": "HH:mm:ss"
       },
       "placeholders": {

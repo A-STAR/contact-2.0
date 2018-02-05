@@ -4,10 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map, startWith } from 'rxjs/operators';
 
-import { IMenuItem } from '../../core/gui-objects/gui-objects.interface';
+import { IMenuItem } from '@app/core/gui-objects/gui-objects.interface';
 
-import { GuiObjectsService } from '../../core/gui-objects/gui-objects.service';
-import { SettingsService } from '../../core/settings/settings.service';
+import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';
+import { SettingsService } from '@app/core/settings/settings.service';
 
 @Component({
   selector: 'app-sidebar',

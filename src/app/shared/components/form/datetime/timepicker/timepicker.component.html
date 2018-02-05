@@ -1,0 +1,21 @@
+<div appDropdown [fitWidthToContent]="true" style="position: relative;">
+  <div #dropdownParent>
+    <app-datetime-input
+      format="HH:mm:ss"
+      [ngModel]="value"
+      (ngModelChange)="onChange($event)"
+    ></app-datetime-input>
+  </div>
+  <span class="toggle" #dropdownTrigger (click)="onTouch()">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <div #dropdownContent class="datetimepicker-container">
+    <div class="datetimepicker">
+      <app-time [minTime]="minTime" [maxTime]="maxTime" [ngModel]="value" (ngModelChange)="onTimeChange($event)"></app-time>
+      <footer>
+        <span (click)="setCurrentTime()">{{ 'default.buttons.now' | translate }}</span>
+        <span (click)="dropdown.close()">{{ 'default.buttons.ok' | translate }}</span>
+      </footer>
+    </div>
+  </div>
+</div>

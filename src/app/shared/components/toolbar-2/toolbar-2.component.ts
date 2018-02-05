@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
@@ -6,6 +6,8 @@ import { Observable } from 'rxjs/Observable';
 import { IAppState } from '../../../core/state/state.interface';
 import { IButtonType } from '../button/button.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from './toolbar-2.interface';
+
+import { DropdownComponent } from '@app/shared/components/dropdown/dropdown.component';
 
 import { invert } from '../../../core/utils';
 import { doOnceIf } from '../../../core/utils/helpers';
@@ -19,6 +21,7 @@ import { doOnceIf } from '../../../core/utils/helpers';
 export class Toolbar2Component {
   @Input() items: IToolbarItem[] = [];
   @Output() action = new EventEmitter<IToolbarItem>();
+  @ViewChild('dropdown') dropdown: DropdownComponent;
 
   defaultItems: { [ToolbarItemTypeEnum: number]: IButtonType } = {
     [ToolbarItemTypeEnum.BUTTON_ADD]: 'add',
@@ -65,6 +68,9 @@ export class Toolbar2Component {
   }
 
   onClick(item: IToolbarItem): void {
+    if (item.closeOnClick && this.dropdown) {
+      this.dropdown.close();
+    }
     doOnceIf(this.isDisabled(item).map(invert), () => {
       if (typeof item.action === 'function') {
         item.action();

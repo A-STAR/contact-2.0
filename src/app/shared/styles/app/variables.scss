@@ -5,7 +5,7 @@ $layout-top-menu-height:           49px;
 $layout-top-menu-font-size:        15px;
 $layout-sidebar-width:            220px;
 $layout-sidebar-width-collapsed:   64px;
-$layout-content-padding:            7px;
+$layout-content-padding:           10px;
 $layout-logo-height:               39px;
 
 // Colors
@@ -17,20 +17,20 @@ $brand-primary-light: #58526e;
 $brand-white:         #d8d5e2;
 $brand-secondary:     #9bec00;
 
-$layout-content-background-color:#dcdae2;
+$link-color: #46a2f9;
+
+$layout-content-background-color: #dcdae2;
+
+$gray-darker:  #232735;
+$gray-dark:    #3a3f51;
+$gray:         #dde6e9;
+$gray-light:   #e4eaec;
+$gray-lighter: #edf1f2;
 
 // Below are Angle variables:
 
 //== Colors
 //
-//## Gray and brand colors for use across Bootstrap.
-
-// Redefined Gray colors for theme
-$gray-darker:            #232735;
-$gray-dark:              #3a3f51;
-$gray:                   #dde6e9;
-$gray-light:             #e4eaec;
-$gray-lighter:           #edf1f2;
 
 // Classic brand colors
 
@@ -88,7 +88,7 @@ $body-bg:               #f5f7fa;
 $text-color:            $text;
 
 //** Global textual link color.
-$link-color:            $brand-primary;
+// $link-color:            $brand-primary;
 //** Link hover color set via `darken()` function.
 $link-hover-color:      darken($link-color, 15%);
 //** Link hover decoration.
@@ -282,6 +282,8 @@ $form-group-bottom-margin:       6px;
 $form-toolbar-title-color:       #594b62;
 $form-toolbar-border-color:      $form-toolbar-title-color;
 $form-toolbar-icon-color:        #44a1f8;
+$form-toolbar-icon-disabled-color:#88839d;
+$form-toolbar-icon-bg-color:     #ffffff;
 //** Background color for textual input addons
 $input-group-addon-bg:           $gray-lighter;
 //** Border color for textual input addons

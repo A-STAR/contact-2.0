@@ -1,0 +1,20 @@
+@import "../../../../shared/styles/app/variables.scss";
+
+.field {
+  margin-bottom: 4px;
+  width: 100%;
+  padding-right: 10px;
+
+  .field-label,
+  .field-value {
+    // padding-right: 6px;
+  }
+
+  .field-value.empty {
+    // border-bottom: 1px dotted lightgrey;
+  }
+
+  .field-label {
+    color: $text-light;
+  }
+}

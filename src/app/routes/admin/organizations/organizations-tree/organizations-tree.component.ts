@@ -9,14 +9,14 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { merge } from 'rxjs/observable/merge';
 
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { ITreeNode, ITreeNodeInfo } from '../../../../shared/components/flowtree/treenode/treenode.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITreeNode, ITreeNodeInfo } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
 import { OrganizationsService } from '../organizations.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../core/dialog';
-import { combineLatestAnd } from '../../../../core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,34 +28,37 @@ export class OrganizationsTreeComponent extends DialogFunctions implements OnDes
   organizations: Observable<ITreeNode[]>;
   dialog: string;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.setDialog('create'),
-      enabled: this.userPermissionsService.has('ORGANIZATION_ADD')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.setDialog('edit'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('ORGANIZATION_EDIT'),
-        this.organizationsService.selectedOrganization.map(o => !!o)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('remove'),
-      enabled: combineLatestAnd([
-        this.userPermissionsService.has('ORGANIZATION_DELETE'),
-        this.organizationsService.selectedOrganization.map(o => !!o)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetchOrganizations(),
-      enabled: this.userPermissionsService.has('ORGANIZATION_VIEW')
-    },
-  ];
+  titlebar: ITitlebar = {
+    title: 'organizations.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        action: () => this.setDialog('create'),
+        enabled: this.userPermissionsService.has('ORGANIZATION_ADD')
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('ORGANIZATION_EDIT'),
+          this.organizationsService.selectedOrganization.map(o => !!o)
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        action: () => this.setDialog('remove'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('ORGANIZATION_DELETE'),
+          this.organizationsService.selectedOrganization.map(o => !!o)
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetchOrganizations(),
+        enabled: this.userPermissionsService.has('ORGANIZATION_VIEW')
+      },
+    ]
+  };
 
   constructor(
     private organizationsService: OrganizationsService,

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { DatePickerModule } from '../form/datepicker/datepicker.module';
+import { DateTimeModule } from '../form/datetime/datetime.module';
 import { SelectModule } from '../form/select/select.module';
 
 import { QBuilder2Component } from './qbuilder2.component';
@@ -14,7 +14,7 @@ import { QBuilder2ValueComponent } from './value/qbuilder2-value.component';
 @NgModule({
   imports: [
     CommonModule,
-    DatePickerModule,
+    DateTimeModule,
     FormsModule,
     ReactiveFormsModule,
     SelectModule,

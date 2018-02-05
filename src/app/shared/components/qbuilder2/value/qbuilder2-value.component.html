@@ -6,12 +6,12 @@
 
       <!-- Datepicker -->
       <ng-container *ngSwitchCase="'date'">
-        <app-input-datepicker
+        <app-datepicker
           buttonClass="btn btn-sm btn-default"
           inputClass="form-control input-sm"
           [ngModel]="toDate(v)"
           (ngModelChange)="onDateValueChange($event, i)">
-        </app-input-datepicker>
+        </app-datepicker>
       </ng-container>
 
       <!-- Dropdown -->
