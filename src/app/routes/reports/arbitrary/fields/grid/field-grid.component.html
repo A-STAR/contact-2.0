@@ -1,0 +1,22 @@
+<app-dialog-action
+  *ngIf="isDialog('remove')"
+  actionMode="danger"
+  actionTranslationKey="modules.reports.arbitrary.fields.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  titleTranslationKey="modules.reports.arbitrary.fields.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
+
+<app-grid
+  columnTranslationKey="modules.reports.arbitrary.fields"
+  selectionType="single"
+  [columns]="columns"
+  [selection]="selection"
+  [footerHeight]="false"
+  [rows]="fields"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onEdit($event)"
+></app-grid>
