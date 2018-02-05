@@ -20,12 +20,18 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   styleUrls: [ './checkbox.component.scss' ],
   templateUrl: './checkbox.component.html'
 })
-export class CheckboxComponent {
+export class CheckboxComponent implements ControlValueAccessor {
+  private _disabled: boolean;
   private _value: boolean;
 
   constructor(
     private cdRef: ChangeDetectorRef,
   ) {}
+
+  @HostBinding('class.disabled')
+  get disabled(): boolean {
+    return this._disabled;
+  }
 
   @HostBinding('class.checked')
   get value(): boolean {
@@ -33,7 +39,7 @@ export class CheckboxComponent {
   }
 
   writeValue(value: boolean): void {
-    this._value = null;
+    this._value = value;
     this.cdRef.markForCheck();
   }
 
@@ -44,6 +50,11 @@ export class CheckboxComponent {
   registerOnTouched(fn: Function): void {
     // No need in touch callback for checkbox
     // because a click will change its value and mark control as dirty anyway
+  }
+
+  setDisabledState(disabled: boolean): void {
+    this._disabled = disabled;
+    this.cdRef.markForCheck();
   }
 
   onChange(): void {

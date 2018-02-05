@@ -5,8 +5,29 @@
 
   <div class="form-group">
     <label class="label">
-      <app-checkbox></app-checkbox>
+      <app-checkbox [ngModel]="null"></app-checkbox>
       Empty value
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="label">
+      <app-checkbox [ngModel]="true"></app-checkbox>
+      Checked
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="label">
+      <app-checkbox [ngModel]="null" [disabled]="true"></app-checkbox>
+      Disabled
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="label">
+      <app-checkbox [ngModel]="true" [disabled]="true"></app-checkbox>
+      Disabled & Checked
     </label>
   </div>
 
