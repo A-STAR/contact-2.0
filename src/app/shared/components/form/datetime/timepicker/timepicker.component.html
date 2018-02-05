@@ -2,11 +2,12 @@
   <div #dropdownParent>
     <app-datetime-input
       format="HH:mm:ss"
+      [disabled]="disabled"
       [ngModel]="value"
       (ngModelChange)="onChange($event)"
     ></app-datetime-input>
   </div>
-  <span class="toggle" #dropdownTrigger (click)="onTouch()">
+  <span [ngClass]="{ toggle: true, disabled: disabled }" #dropdownTrigger (click)="onTouch()">
     <i class="fa fa-clock-o"></i>
   </span>
   <div #dropdownContent class="datetimepicker-container">

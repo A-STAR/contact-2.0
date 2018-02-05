@@ -20,12 +20,17 @@ export class DateTimeInputComponent implements ControlValueAccessor {
   // TODO(d.maltsev): get format from locale
   @Input() format: string;
 
+  private _disabled = false;
   private _value: Date;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
   ) {}
+
+  get disabled(): boolean {
+    return this._disabled;
+  }
 
   get mask(): any {
     return this.dateTimeService.getMaskParamsFromMomentFormat(this.format);
@@ -46,6 +51,10 @@ export class DateTimeInputComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: Function): void {
     this.propagateTouch = fn;
+  }
+
+  setDisabledState(disabled: boolean): void {
+    this._disabled = disabled;
   }
 
   onBlur(): void {

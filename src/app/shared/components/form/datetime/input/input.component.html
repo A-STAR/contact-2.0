@@ -1,6 +1,7 @@
 <input
   type="text"
   class="form-control"
+  [disabled]="disabled"
   [ngModel]="momentValue | momentFormat:format"
   [textMask]="mask"
   (blur)="onBlur()"
