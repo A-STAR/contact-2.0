@@ -23,8 +23,6 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-debtor-action-log',
