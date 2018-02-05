@@ -26,30 +26,23 @@ export class TimePickerComponent implements ControlValueAccessor {
 
   private _value: Date;
 
-  // TODO(d.maltsev): get format from locale
-  format = 'HH:mm:ss';
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
   ) {}
 
-  get momentValue(): moment.Moment {
-    return moment(this._value);
-  }
-
   get value(): Date {
     return this._value;
   }
 
-  get mask(): any {
-    return this.dateTimeService.getMaskParamsFromMomentFormat(this.format);
-  }
-
   writeValue(value: Date | string): void {
-    this._value = value instanceof Date
-      ? value
-      : moment(value, 'HH:mm:ss').toDate();
+    if (value) {
+      this._value = value instanceof Date
+        ? value
+        : moment(value, 'HH:mm:ss').toDate();
+    } else {
+      this._value = null;
+    }
     this.cdRef.markForCheck();
   }
 
@@ -61,23 +54,12 @@ export class TimePickerComponent implements ControlValueAccessor {
     this.propagateTouch = fn;
   }
 
-  onWheel(event: WheelEvent): void {
-    const target = event.target as HTMLInputElement;
-    const delta = Math.sign(event.deltaY);
-    const start = target.selectionStart;
-    console.log(delta, start);
-  }
-
   onTouch(): void {
     this.propagateTouch();
   }
 
-  onChange(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const date = moment(value, this.format);
-    if (date.isValid()) {
-      this.update(date.toDate());
-    }
+  onChange(date: Date): void {
+    this.update(date);
   }
 
   setCurrentTime(): void {

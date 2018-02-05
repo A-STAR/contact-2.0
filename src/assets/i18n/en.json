@@ -31,7 +31,6 @@
     "nav": {
       "menu": {
         "HOME": "Home",
-        "WORKFLOW": "Workflow",
         "QUERY_BUILDER": "Query builder",
         "ADMIN_PANEL": "Administration",
         "ROLES_AND_PERMISSIONS": "Roles and permissions",

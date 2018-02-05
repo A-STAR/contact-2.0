@@ -31,7 +31,6 @@
     "nav": {
       "menu": {
         "HOME": "Главная",
-        "WORKFLOW": "Процесс",
         "QUERY_BUILDER": "Построитель запросов",
         "ADMIN_PANEL": "Администрирование",
         "ROLES_AND_PERMISSIONS": "Роли и доступы",

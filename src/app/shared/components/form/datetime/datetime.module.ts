@@ -12,6 +12,7 @@ import { DateTimeService } from './datetime.service';
 
 import { DateComponent } from './date/date.component';
 import { DatePickerComponent } from './datepicker/datepicker.component';
+import { DateTimeInputComponent } from './input/input.component';
 import { DateTimePickerComponent } from './datetimepicker/datetimepicker.component';
 import { TimeComponent } from './time/time.component';
 import { TimePickerComponent } from './timepicker/timepicker.component';
@@ -20,6 +21,7 @@ import { TimePickerComponent } from './timepicker/timepicker.component';
   declarations: [
     DateComponent,
     DatePickerComponent,
+    DateTimeInputComponent,
     DateTimePickerComponent,
     TimeComponent,
     TimePickerComponent,

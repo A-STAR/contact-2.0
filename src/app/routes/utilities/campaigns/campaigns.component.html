@@ -35,11 +35,14 @@
   (onDblClick)="onCampaignDblClick($event)">
 </app-grid>
 
-<app-tabstrip [disableScrollbar]="true" [inverse]="true">
-  <app-tab [title]="'utilities.campaigns.tabs.participants'" [closable]="false">
-    <app-participants></app-participants>
-  </app-tab>
-  <app-tab [title]="'utilities.campaigns.tabs.statistics'" [closable]="false">
-    <app-statistics></app-statistics>
-  </app-tab>
-</app-tabstrip>
+<app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+
+  <app-tabview-tab [title]="'utilities.campaigns.tabs.participants'">
+    <app-participants *ngIf="tabs[0].isInitialised"></app-participants>
+  </app-tabview-tab>
+
+  <app-tabview-tab [title]="'utilities.campaigns.tabs.statistics'">
+    <app-statistics *ngIf="tabs[1].isInitialised"></app-statistics>
+  </app-tabview-tab>
+
+</app-tabview>

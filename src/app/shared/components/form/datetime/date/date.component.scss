@@ -47,6 +47,11 @@ ul {
       color: $day-light;
     }
 
+    &.disabled {
+      color: $gray-light;
+      cursor: default;
+    }
+
     &.selected {
       background-color: $link-color;
       color: #fff;

@@ -89,39 +89,42 @@
 .co-groups:before {
   content: "\e010";
 }
-.co-legal:before {
+.co-home:before {
   content: "\e011";
 }
-.co-load-templates:before {
+.co-legal:before {
   content: "\e012";
 }
-.co-mail:before {
+.co-load-templates:before {
   content: "\e013";
 }
-.co-message-scenarios:before {
+.co-mail:before {
   content: "\e014";
 }
-.co-org-structure:before {
+.co-message-scenarios:before {
   content: "\e015";
 }
-.co-payments:before {
+.co-org-structure:before {
   content: "\e016";
 }
-.co-portfolios:before {
+.co-payments:before {
   content: "\e017";
 }
-.co-roles:before {
+.co-portfolios:before {
   content: "\e018";
 }
-.co-schedule:before {
+.co-roles:before {
   content: "\e019";
 }
-.co-search-groups:before {
+.co-schedule:before {
   content: "\e01a";
 }
-.co-tasks:before {
+.co-search-groups:before {
   content: "\e01b";
 }
-.co-users:before {
+.co-tasks:before {
   content: "\e01c";
+}
+.co-users:before {
+  content: "\e01d";
 }
