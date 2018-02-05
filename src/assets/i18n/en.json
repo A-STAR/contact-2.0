@@ -2193,11 +2193,11 @@
     },
     "currencyRates": {
       "grid": {
-        "fromDateTime": "Date",
+        "fromDate": "Date",
         "rate": "Rate"
       },
       "card": {
-        "fromDateTime": "Date",
+        "fromDate": "Date",
         "rate": "Rate"
       }
     },
