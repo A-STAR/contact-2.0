@@ -13,9 +13,7 @@
       ],
       "index": "index.html",
       "main": "main.ts",
-      "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
-      "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "polyfills": "polyfills.ts",
       "styles": [
@@ -66,11 +64,6 @@
       "project": "e2e/tsconfig.e2e.json"
     }
   ],
-  "test": {
-    "karma": {
-      "config": "./karma.conf.js"
-    }
-  },
   "defaults": {
     "styleExt": "scss",
     "class": {

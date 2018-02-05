@@ -1,5 +1,4 @@
 import { async as Async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
