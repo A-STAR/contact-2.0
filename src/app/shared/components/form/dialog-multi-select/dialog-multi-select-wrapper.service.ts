@@ -80,6 +80,24 @@ export class DialogMultiSelectWrapperService {
       title: 'default.filters.entityGroups.title',
       valueGetter: row => row.id,
     },
+    contractors: {
+      columnsFrom: [
+        { prop: 'id', maxWidth: 70 },
+        { prop: 'name' },
+        { prop: 'fullName' },
+        { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE },
+        { prop: 'comment' },
+      ],
+      columnsFromTranslationKey: 'default.filters.contractors',
+      columnsTo: [
+        { prop: 'fullName' },
+      ],
+      columnsToTranslationKey: 'default.filters.contractors',
+      fetchCallback: () => this.gridFiltersService.fetchContractors(),
+      labelGetter: row => row.fullName,
+      title: 'default.filters.contractors.title',
+      valueGetter: row => row.id,
+    },
   };
 
   constructor(

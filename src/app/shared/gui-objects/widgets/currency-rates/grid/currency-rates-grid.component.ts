@@ -30,7 +30,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   private selectedCurrencyRate$ = new BehaviorSubject<ICurrencyRate>(null);
 
   columns: Array<IGridColumn> = [
-    { prop: 'fromDateTime', renderer: 'dateTimeRenderer' },
+    { prop: 'fromDate', renderer: 'dateRenderer' },
     { prop: 'rate' }
   ];
 

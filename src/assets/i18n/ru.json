@@ -2193,11 +2193,11 @@
     },
     "currencyRates": {
       "grid": {
-        "fromDateTime": "Дата",
+        "fromDate": "Дата",
         "rate": "Курс"
       },
       "card": {
-        "fromDateTime": "Дата",
+        "fromDate": "Дата",
         "rate": "Курс"
       }
     },
@@ -2825,6 +2825,16 @@
           "name": "Действие"
         },
         "title": "Типы действий"
+      },
+      "contractors": {
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "fullName": "Полное название",
+          "typeCode": "Тип",
+          "comment": "Комментарий"
+        },
+        "title": "Выберите клиентов"
       },
       "fields": {
         "branchCode": "Филиал",
