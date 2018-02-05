@@ -7,8 +7,9 @@ import { DebtStatusModule } from '../../gui-objects/widgets/debt-status/debt-sta
 import { DebtResponsibleModule } from '../../gui-objects/widgets/debt-responsible/debt-responsible.module';
 import { EntityGroupModule } from '../../gui-objects/widgets/entity-group/entity-group.module';
 import { GridModule } from '../grid/grid.module';
+import { Grid2Module } from '../grid2/grid2.module';
 import { MassOpsModule } from '../../gui-objects/widgets/mass-ops/mass-ops.module';
-import { MetadataGridModule } from '../metadata-grid/metadata-grid.module';
+import { MetadataFilterModule } from './filter/metadata-filter.module';
 import { NextCallDateSetModule } from '../../gui-objects/widgets/next-call-date-set/next-call-date-set.module';
 import { PaymentConfirmModule } from '../../gui-objects/widgets/payment-confirm/payment-confirm.module';
 import { PromiseResolveModule } from '../../gui-objects/widgets/promise-resolve/promise-resolve.module';
@@ -30,8 +31,9 @@ import { ActionGridComponent } from './action-grid.component';
     DebtResponsibleModule,
     EntityGroupModule,
     GridModule,
+    Grid2Module,
     MassOpsModule,
-    MetadataGridModule,
+    MetadataFilterModule,
     NextCallDateSetModule,
     OpenDebtCardModule,
     OperatorDetailsModule,

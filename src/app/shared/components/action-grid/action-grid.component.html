@@ -195,10 +195,36 @@
   (onSelect)="onSelect($event)"
 ></app-metadata-grid>
 
+<app-metadata-filter
+  [metadataKey]="metadataKey"
+  (filter)="onFilterHandler()"
+></app-metadata-filter>
+
+<app-grid2
+  #grid
+  *ngIf="isUsingAGGrid; else simpleGrid"
+  [actions]="gridActionsForSelected$ | async"
+  [columnIds]="columnIds"
+  [columns]="columnsDef"
+  [fullHeight]="fullHeight"
+  [ngClass]="ngClass"
+  [persistenceKey]="persistenceKey"
+  [rowCount]="rowCount"
+  [rowIdKey]="rowIdKey"
+  [rows]="rows"
+  (action)="onAction($event)"
+  (onDblClick)="onDblClick($event)"
+  (onFilter)="onFilterHandler()"
+  (onPage)="onPageHandler()"
+  (onPageSize)="onPageSizeHandler()"
+  (onSort)="onSortHandler()"
+  (onSelect)="onSelect($event)"
+></app-grid2>
+
 <ng-template #simpleGrid>
   <app-grid
     #grid
-    [columns]="columns"
+    [columns]="columnsDef"
     [columnTranslationKey]="columnTranslationKey"
     [contextMenuOptions]="contextMenuOptions"
     [rows]="rows"
