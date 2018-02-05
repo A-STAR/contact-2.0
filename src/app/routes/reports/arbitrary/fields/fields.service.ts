@@ -64,7 +64,7 @@ export class FieldsService extends AbstractActionService {
   }
 
   delete(reportId: number, fieldId: number): Observable<any> {
-    return this.dataService.delete(`${this.baseUrl}/{fieldId}`, { fieldId })
+    return this.dataService.delete(`${this.baseUrl}/{fieldId}`, { reportId, fieldId })
       .catch(this.notificationsService.deleteError().entity('entities.fields.gen.singular').dispatchCallback());
   }
 }

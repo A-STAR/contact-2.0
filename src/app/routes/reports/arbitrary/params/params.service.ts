@@ -64,7 +64,7 @@ export class ParamsService extends AbstractActionService {
   }
 
   delete(reportId: number, paramId: number): Observable<any> {
-    return this.dataService.delete(`${this.baseUrl}/{paramId}`, { paramId })
+    return this.dataService.delete(`${this.baseUrl}/{paramId}`, { reportId, paramId })
       .catch(this.notificationsService.deleteError().entity('entities.params.gen.singular').dispatchCallback());
   }
 }
