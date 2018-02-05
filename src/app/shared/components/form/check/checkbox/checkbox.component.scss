@@ -1,6 +1,8 @@
+@import '../../../../styles/app/variables.scss';
+
 :host {
   background-color: #fff;
-  border: 1px solid #dcdae2;
+  border: 1px solid $gray;
   border-radius: 2px;
   cursor: pointer;
   display: inline-block;
@@ -12,12 +14,12 @@
   width: 18px;
 
   &:hover {
-    border-color: #44a1f8;
+    border-color: $link-color;
   }
 
   &.checked {
-    background-color: #44a1f8;
-    border-color: #44a1f8;
+    background-color: $link-color;
+    border-color: $link-color;
 
     &:before,
     &:after {
@@ -42,9 +44,13 @@
   }
 
   &.disabled {
-    background-color: #b5b5b5;
-    border-color: #bbb;
+    background-color: $gray-light;
+    border-color: $gray;
     cursor: default;
+    &:before,
+    &:after {
+      background-color: $gray-dark;
+    }
   }
 }
 
