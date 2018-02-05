@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IFilterDictionary, IFilterGroup, IFilterPortfolio, IFilterUser } from './grid-filters.interface';
+import { IFilterDictionary, IFilterGroup, IFilterPortfolio, IFilterUser, IFilterContractor } from './grid-filters.interface';
 
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -35,5 +35,11 @@ export class GridFiltersService {
     return this.dataService
       .readAll('/filters/groups', {}, { params: { entityTypeIds, isManual } })
       .catch(this.notificationsService.fetchError().entity('entities.groups.gen.plural').dispatchCallback());
+  }
+
+  fetchContractors(): Observable<IFilterContractor[]> {
+    return this.dataService
+      .readAll('/filters/contractors')
+      .catch(this.notificationsService.fetchError().entity('entities.users.gen.plural').dispatchCallback());
   }
 }

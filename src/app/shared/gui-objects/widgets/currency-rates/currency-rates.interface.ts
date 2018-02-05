@@ -1,5 +1,5 @@
 export interface ICurrencyRate {
   id?: number;
-  fromDateTime: string | Date;
+  fromDate: string | Date;
   rate: number;
 }
