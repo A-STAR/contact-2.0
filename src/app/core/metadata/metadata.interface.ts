@@ -39,7 +39,7 @@ export interface IMetadataColumn {
   width?: number;
 }
 
-export type IMetadataFilterType = 'dictionaries' | 'entityGroups' | 'portfolios' | 'users';
+export type IMetadataFilterType = 'dictionaries' | 'entityGroups' | 'portfolios' | 'users' | 'contractors';
 
 export interface IMetadataFilterOption {
   name: string;

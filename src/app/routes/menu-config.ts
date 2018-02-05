@@ -179,7 +179,7 @@ export const menuConfig: IMenuConfig = {
   anyReports: {
     text: 'sidebar.nav.menu.ARBITRARY_REPORTS',
     link: '/reports/arbitrary',
-    icon: 'icon-docs'
+    icon: 'co-action-log'
   },
 
   // Справка

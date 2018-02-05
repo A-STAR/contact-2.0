@@ -519,32 +519,32 @@
           "birthDate": "Дата рождения",
           "personRoleCodes": "Роль",
           "isClosedDebt": "Показывать закрытые долги"
-    }
-  },
-  "debtors": {
-    "grid": {
-      "bankName": "Банк",
-      "branchCode": "Филиал",
-      "contact": "Договор",
-      "creditEndDate": "Дата окончания кредитного срока",
-      "creditName": "Название продукта",
-      "creditStartDate": "Дата выдачи кредита",
-      "creditTypeCode": "Тип продукта",
-      "currencyName": "Валюта",
-      "debtAmount": "Остаток",
-      "debtId": "ID долга",
-      "debtorId": "ID должника",
-      "docNumber": "Номер документа",
-      "fullName": "ФИО/Название",
-      "outPortfolioName": "Название исходящего портфеля",
-      "personId": "ID персоны",
-      "personRole": "Роль персоны",
-      "portfolioName": "Название портфеля",
-      "regionCode": "Регион",
-      "startDate": "Дата выхода на просрочку",
-      "statusCode": "Статус"
-    }
-  },
+        }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Банк",
+          "branchCode": "Филиал",
+          "contact": "Договор",
+          "creditEndDate": "Дата окончания кредитного срока",
+          "creditName": "Название продукта",
+          "creditStartDate": "Дата выдачи кредита",
+          "creditTypeCode": "Тип продукта",
+          "currencyName": "Валюта",
+          "debtAmount": "Остаток",
+          "debtId": "ID долга",
+          "debtorId": "ID должника",
+          "docNumber": "Номер документа",
+          "fullName": "ФИО/Название",
+          "outPortfolioName": "Название исходящего портфеля",
+          "personId": "ID персоны",
+          "personRole": "Роль персоны",
+          "portfolioName": "Название портфеля",
+          "regionCode": "Регион",
+          "startDate": "Дата выхода на просрочку",
+          "statusCode": "Статус"
+        }
+      },
       "debtorCard": {
         "form": {
           "userFullName": "Ответственный",
@@ -554,6 +554,72 @@
           "workPhone": "Рабочий телефон",
           "intPhone": "Внутренний номер",
           "recommendation": "Рекомендация к действию"
+        }
+      }
+    },
+    "reports": {
+      "arbitrary": {
+        "tabs": {
+          "fields": "Описание полей",
+          "params": "Входные параметры"
+        },
+        "remove": {
+          "title": "Удаление отчета",
+          "confirmMessage": "Вы действительно хотите удалить выбранный отчет?"
+        },
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "comment": "Описание"
+        },
+        "card": {
+          "name": "Название",
+          "sql": "SQL",
+          "comment": "Комментарий",
+          "exportUndescribed": "Выгружать неописанные поля"
+        },
+        "fields": {
+          "remove": {
+            "title": "Удаление поля отчета",
+            "confirmMessage": "Вы действительно хотите удалить выбранное поле отчета?"
+          },
+          "grid": {
+            "id": "ID",
+            "name": "Название",
+            "sortOrder": "Порядковый номер",
+            "systemName": "Системное название",
+            "textWidth": "Ширина столбца"
+          },
+          "card": {
+            "name": "Название",
+            "systemName": "Системное название",
+            "sortOrder": "Порядковый номер",
+            "textWidth": "Ширина столбца"
+          }
+        },
+        "params": {
+          "remove": {
+            "title": "Удаление параметра отчета",
+            "confirmMessage": "Вы действительно хотите удалить выбранный параметр отчета?"
+          },
+          "grid": {
+            "id": "ID",
+            "name": "Название",
+            "paramTypeCode": "Тип параметра",
+            "sortOrder": "Порядковый номер",
+            "systemName": "Системное название",
+            "isMandatory": "Обязательность",
+            "multiSelect": "Множенственный выбор"
+          },
+          "card": {
+            "name": "Название",
+            "systemName": "Системное название",
+            "sortOrder": "Порядковый номер",
+            "paramTypeCode": "Тип параметра",
+            "isMandatory": "Обязательность",
+            "multiSelect": "Множенственный выбор",
+            "dictNameCode": "Словарь"
+          }
         }
       }
     }
@@ -2216,11 +2282,11 @@
     },
     "currencyRates": {
       "grid": {
-        "fromDateTime": "Дата",
+        "fromDate": "Дата",
         "rate": "Курс"
       },
       "card": {
-        "fromDateTime": "Дата",
+        "fromDate": "Дата",
         "rate": "Курс"
       }
     },
@@ -2493,6 +2559,15 @@
     },
     "scheduleEventLog": {
       "gen": { "singular": "история запуска мероприятия", "plural": "история запуска мероприятий" }
+    },
+    "reports": {
+      "gen": { "singular": "отчета", "plural": "отчетов" }
+    },
+    "fields": {
+      "gen": { "singular": "поля", "plural": "полей" }
+    },
+    "params": {
+      "gen": { "singular": "параметра", "plural": "параметров" }
     }
   },
   "massOperations": {
@@ -2848,6 +2923,16 @@
           "name": "Действие"
         },
         "title": "Типы действий"
+      },
+      "contractors": {
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "fullName": "Полное название",
+          "typeCode": "Тип",
+          "comment": "Комментарий"
+        },
+        "title": "Выберите клиентов"
       },
       "fields": {
         "branchCode": "Филиал",
