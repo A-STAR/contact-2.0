@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
   OnInit
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, filter, map } from 'rxjs/operators';
@@ -184,6 +185,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return this.grid instanceof Grid2Component
       ? this.grid.getRequestParams()
       : null;
+  }
+
+  getFiltersForm(): FormGroup {
+    return this.filter && this.filter.form && this.filter.form.form;
   }
 
   onAction(gridAction: IAGridAction): void {
