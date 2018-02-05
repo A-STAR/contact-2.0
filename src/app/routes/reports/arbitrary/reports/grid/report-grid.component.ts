@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { IReport } from '../reports.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
-import { ReportsService } from '../reports.service';
 import { DialogFunctions } from '@app/core/dialog';
 import { GridService } from '@app/shared/components/grid/grid.service';
+import { ReportsService } from '../reports.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 import { combineLatestAnd } from '@app/core/utils';
@@ -32,34 +32,38 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
     { prop: 'comment' },
   ];
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.reportsService.canAdd$,
-      action: () => this.onAdd()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedReport$.value),
-      enabled: combineLatestAnd([
-        this.selectedReport$.map(Boolean),
-        this.reportsService.canEdit$
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('remove'),
-      enabled: combineLatestAnd([
-        this.selectedReport$.map(Boolean),
-        this.reportsService.canDelete$
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetch(),
-      enabled: this.reportsService.canView$
-    }
-  ];
+  titlebar: ITitlebar = {
+    // TODO(i.kibisov): i18n
+    title: 'Отчеты',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        enabled: this.reportsService.canAdd$,
+        action: () => this.onAdd()
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.onEdit(this.selectedReport$.value),
+        enabled: combineLatestAnd([
+          this.selectedReport$.map(Boolean),
+          this.reportsService.canEdit$
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        action: () => this.setDialog('remove'),
+        enabled: combineLatestAnd([
+          this.selectedReport$.map(Boolean),
+          this.reportsService.canDelete$
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetch(),
+        enabled: this.reportsService.canView$
+      }
+    ]
+  };
 
   dialog: string;
   reports: IReport[] = [];
