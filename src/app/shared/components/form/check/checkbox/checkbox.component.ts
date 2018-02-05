@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  forwardRef,
+  HostBinding,
+  HostListener,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -15,17 +22,18 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   template: ''
 })
 export class CheckboxComponent {
-  private _value: Boolean;
+  private _value: boolean;
 
   constructor(
     private cdRef: ChangeDetectorRef,
   ) {}
 
-  get value(): Boolean {
+  @HostBinding('class.checked')
+  get value(): boolean {
     return this._value;
   }
 
-  writeValue(value: Boolean): void {
+  writeValue(value: boolean): void {
     this._value = null;
     this.cdRef.markForCheck();
   }
@@ -39,6 +47,7 @@ export class CheckboxComponent {
     // because a click will change its value and mark control as dirty anyway
   }
 
+  @HostListener('click')
   onClick(): void {
     this._value = !this._value;
     this.propagateChange(this._value);
