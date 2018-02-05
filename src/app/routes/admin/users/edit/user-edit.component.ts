@@ -145,7 +145,7 @@ export class UserEditComponent extends DialogFunctions {
       { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !permissions.canEditRole,
           options: roles },
       { label: 'users.edit.position', controlName: 'position', type: 'text' },
-      { label: 'users.edit.startWorkDate', controlName: 'startWorkDate', type: 'datepicker', disabled: true },
+      { label: 'users.edit.startWorkDate', controlName: 'startWorkDate', type: 'datepicker' },
       { label: 'users.edit.endWorkDate', controlName: 'endWorkDate', type: 'datepicker' },
       { label: 'users.edit.branchCode', controlName: 'branchCode', type: 'select', options: branchOptions,
         dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
