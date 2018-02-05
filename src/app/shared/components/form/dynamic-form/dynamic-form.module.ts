@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { CheckModule } from '../check/check.module';
 import { ColorPickerModule } from '../colorpicker/colorpicker.module';
 import { DateTimeModule } from '../datetime/datetime.module';
 import { DebtAmountModule } from '../debt-amount/debt-amount.module';
@@ -26,6 +27,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
 
 @NgModule({
   imports: [
+    CheckModule,
     ColorPickerModule,
     CommonModule,
     DateTimeModule,
@@ -58,4 +60,4 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
   ],
   providers: [],
 })
-export class DynamicFormModule { }
+export class DynamicFormModule {}

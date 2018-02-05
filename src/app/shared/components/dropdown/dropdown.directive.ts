@@ -17,6 +17,7 @@ type IListener = () => void;
 export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
   static OFFSET = -1;
 
+  @Input() disabled = false;
   @Input() fitWidthToContent = false;
 
   @ContentChild('dropdownContent') content: ElementRef;
@@ -51,6 +52,10 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
   }
 
   private expand(): void {
+    if (this.disabled) {
+      return;
+    }
+
     this.isExpanded = true;
     this.renderer.appendChild(document.body, this.contentElement);
     this.setStyles(this.contentElement, {
