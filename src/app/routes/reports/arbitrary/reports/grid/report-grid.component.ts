@@ -23,6 +23,7 @@ import { combineLatestAnd } from '@app/core/utils';
 export class ReportGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 
   private selectedReport$ = new BehaviorSubject<IReport>(null);
+  private canCreate$ = new BehaviorSubject<boolean>(null);
 
   @Output() select = new EventEmitter<IReport>();
 
@@ -55,6 +56,15 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
         enabled: combineLatestAnd([
           this.selectedReport$.map(Boolean),
           this.reportsService.canDelete$
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
+        action: () => this.setDialog('create'),
+        enabled: combineLatestAnd([
+          this.selectedReport$.map(Boolean),
+          this.reportsService.canCreate$,
+          this.canCreate$
         ])
       },
       {
@@ -105,9 +115,17 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
     this.actionSubscription.unsubscribe();
   }
 
+  set canCreate(canCreate: boolean) {
+    this.canCreate$.next(canCreate);
+  }
+
   get selectedReport(): IReport {
     return (this.reports || [])
       .find(report => this.selectedReport$.value && report.id === this.selectedReport$.value.id);
+  }
+
+  get selectedReportId(): number {
+    return this.selectedReport && this.selectedReport.id;
   }
 
   get selection(): Array<IReport> {

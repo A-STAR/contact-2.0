@@ -620,6 +620,11 @@
             "multiSelect": "Multi select",
             "dictNameCode": "Dictionary"
           }
+        },
+        "input": {
+          "dialog": {
+            "title": "Enter parameters"
+          }
         }
       }
     }
