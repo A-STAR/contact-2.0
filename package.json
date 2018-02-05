@@ -2,6 +2,7 @@
   "name": "contact2",
   "version": "0.2.6",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4200",
@@ -12,12 +13,21 @@
     "build:check": "ng build --aot",
     "test": "ng test --browsers Chrome --auto-watch",
     "test:prod": "ng test --browsers ChromeHeadless --single-run",
+    "jest": "jest",
+    "jest:watch": "jest --watch",
+    "jest:ci": "jest --runInBand",
     "lint": "ng lint --type-check",
     "e2e": "ng e2e",
     "ng-update": "npm up @angular/animations @angular/common @angular/compiler @angular/compiler-cli @angular/core @angular/forms @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/cli",
     "wm-update": "node node_modules/protractor/bin/webdriver-manager update"
   },
-  "private": true,
+  "jest": {
+    "preset": "jest-preset-angular",
+    "setupTestFrameworkScriptFile": "<rootDir>/src/jest.ts",
+    "moduleNameMapper": {
+      "^@app/(.*)$": "<rootDir>/src/app/$1.ts"
+    }
+  },
   "dependencies": {
     "@angular/animations": "^5.2.1",
     "@angular/cli": "^1.6.5",
@@ -73,12 +83,14 @@
   "devDependencies": {
     "@angular-devkit/schematics": "^0.0.46",
     "@types/faker": "^4.1.2",
-    "@types/jasmine": "^2.8.5",
+    "@types/jest": "^22.1.1",
     "@types/node": "^9.3.0",
     "@types/ramda": "^0.25.16",
     "faker": "^4.1.0",
     "jasmine-core": "^2.8.0",
     "jasmine-spec-reporter": "^4.2.1",
+    "jest": "^22.1.4",
+    "jest-preset-angular": "^5.0.0",
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "~1.0.1",
