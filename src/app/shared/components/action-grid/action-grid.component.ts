@@ -16,7 +16,7 @@ import { GridOptions } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
 
 import { IActionGridDialogData, ICloseAction } from './action-grid.interface';
-import { IAGridAction, IAGridRequestParams, IAGridSelected, IAGridSortModel, IAGridColumn } from '../grid2/grid2.interface';
+import { IAGridAction, IAGridRequestParams, IAGridSelected, IAGridColumn } from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 import { IMetadataSortedActions, IMetadataAction, IMetadataActionPermissions } from '@app/core/metadata/metadata.interface';
