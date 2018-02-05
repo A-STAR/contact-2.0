@@ -24,12 +24,17 @@ export class DatePickerComponent implements ControlValueAccessor {
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
+  private _disabled = false;
   private _value: Date;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
   ) {}
+
+  get disabled(): boolean {
+    return this._disabled;
+  }
 
   get value(): Date {
     return this._value;
@@ -52,6 +57,10 @@ export class DatePickerComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: Function): void {
     this.propagateTouch = fn;
+  }
+
+  setDisabledState(disabled: boolean): void {
+    this._disabled = disabled;
   }
 
   onTouch(): void {
