@@ -12,7 +12,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
-import { LongDateFormatKey, DurationInputArg2 } from 'moment';
+import { LongDateFormatKey } from 'moment';
 
 import { DateTimeService } from '../datetime.service';
 
