@@ -20,12 +20,20 @@ type IModifier = 'h' | 'm' | 's';
 export class TimeComponent implements ControlValueAccessor {
   @Input() minTime: Date;
   @Input() maxTime: Date;
+  @Input() set displaySeconds(displaySeconds: boolean) {
+    this._displaySeconds = displaySeconds === undefined ? true : displaySeconds;
+  }
 
+  private _displaySeconds: boolean;
   private _value: Date;
 
   constructor(
     private cdRef: ChangeDetectorRef,
   ) {}
+
+  get displaySeconds(): boolean {
+    return this._displaySeconds;
+  }
 
   get value(): Date {
     return this._value;
@@ -46,7 +54,7 @@ export class TimeComponent implements ControlValueAccessor {
 
   getFormattedValue(modifier: IModifier, delta: number): string {
     const format = { h: 'HH', m: 'mm', s: 'ss' }[modifier] || '';
-    return moment(this._value || new Date()).clone().add(delta, modifier).format(format);
+    return moment(this._value || this.minTime || new Date()).clone().add(delta, modifier).format(format);
   }
 
   onUp(modifier: IModifier): void {
@@ -63,7 +71,7 @@ export class TimeComponent implements ControlValueAccessor {
   }
 
   private update(delta: number, modifier: IModifier): void {
-    this._value = moment(this._value || new Date()).clone().add(delta, modifier).toDate();
+    this._value = moment(this._value || this.minTime || new Date()).clone().add(delta, modifier).toDate();
     this.propagateChange(this._value);
     this.cdRef.markForCheck();
   }

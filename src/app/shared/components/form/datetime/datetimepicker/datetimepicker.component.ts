@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Inpu
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 
-import { DateTimeService } from '../datetime.service';
+import { DateTimeService } from '@app/shared/components/form/datetime/datetime.service';
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 @Component({
@@ -21,9 +21,15 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
 export class DateTimePickerComponent implements ControlValueAccessor {
   @Input() minDateTime: Date;
   @Input() maxDateTime: Date;
+  @Input() set displaySeconds(displaySeconds: boolean) {
+    this._displaySeconds = displaySeconds === undefined ? true : displaySeconds;
+    this.dateTimeFormat = this._displaySeconds ? 'MM/DD/YYYY HH:mm:ss' : 'MM/DD/YYYY HH:mm';
+  }
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
+  dateTimeFormat: string;
+  private _displaySeconds: boolean;
   private _disabled = false;
   private _value: Date;
 
@@ -38,6 +44,10 @@ export class DateTimePickerComponent implements ControlValueAccessor {
 
   get value(): Date {
     return this._value;
+  }
+
+  get displaySeconds(): boolean {
+    return this._displaySeconds;
   }
 
   writeValue(value: Date | string): void {

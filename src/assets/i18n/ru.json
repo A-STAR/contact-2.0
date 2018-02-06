@@ -3030,9 +3030,11 @@
       },
       "format": {
         "dateTime": "DD.MM.YYYY HH:mm:ss",
+        "dateTimeWithoutSeconds": "DD.MM.YYYY HH:mm",
         "date": "DD.MM.YYYY",
         "dateISO": "YYYY-MM-DD",
-        "time": "HH:mm:ss"
+        "time": "HH:mm:ss",
+        "timeWithoutSeconds": "HH:mm"
       },
       "placeholders": {
         "datepicker": "Введите дату",

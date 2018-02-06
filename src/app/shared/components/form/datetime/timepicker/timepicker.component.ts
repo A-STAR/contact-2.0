@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Inpu
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 
-import { DateTimeService } from '../datetime.service';
+import { DateTimeService } from '@app/shared/components/form/datetime/datetime.service';
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 @Component({
@@ -21,9 +21,15 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
 export class TimePickerComponent implements ControlValueAccessor {
   @Input() minTime: Date;
   @Input() maxTime: Date;
+  @Input() set displaySeconds(displaySeconds: boolean) {
+    this._displaySeconds = displaySeconds === undefined ? true : displaySeconds;
+    this.timeFormat = this._displaySeconds ? 'HH:mm:ss' : 'HH:mm';
+  }
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
+  timeFormat: string;
+  private _displaySeconds: boolean;
   private _disabled = false;
   private _value: Date;
 
@@ -31,6 +37,10 @@ export class TimePickerComponent implements ControlValueAccessor {
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
   ) {}
+
+  get displaySeconds(): boolean {
+    return this._displaySeconds;
+  }
 
   get disabled(): boolean {
     return this._disabled;
@@ -44,7 +54,7 @@ export class TimePickerComponent implements ControlValueAccessor {
     if (value) {
       this._value = value instanceof Date
         ? value
-        : moment(value, 'HH:mm:ss').toDate();
+        : moment(value, this.timeFormat).toDate();
     } else {
       this._value = null;
     }
