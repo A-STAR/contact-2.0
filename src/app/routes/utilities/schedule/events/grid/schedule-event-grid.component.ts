@@ -24,6 +24,7 @@ import { GridComponent } from '@app/shared/components/grid/grid.component';
 
 import { combineLatestAnd } from '@app/core/utils/helpers';
 import { DialogFunctions } from '@app/core/dialog';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-schedule-event-grid',
@@ -38,7 +39,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
 
   @Output() select = new EventEmitter<IScheduleEvent[]>();
 
-  dialog: any;
+  dialog: string;
 
   columns: Array<IGridColumn> = [
     { prop: 'id', width: 70 },
@@ -71,9 +72,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: combineLatestAnd([
         this.scheduleEventService.canEdit$,
-        this.selectedEvents$.map(
-          selected => selected && this.grid.selected.length === 1,
-        ),
+        this.hasSingleSelection$,
       ]),
       action: () => this.onEdit(),
     },
@@ -81,9 +80,7 @@ export class ScheduleEventGridComponent extends DialogFunctions
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: combineLatestAnd([
         this.scheduleEventService.canDelete$,
-        this.selectedEvents$.map(
-          selected => selected && this.grid.selected.length === 1,
-        ),
+        this.hasSingleSelection$,
       ]),
       action: () => this.onDelete(),
     },
@@ -110,6 +107,12 @@ export class ScheduleEventGridComponent extends DialogFunctions
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: this.scheduleEventService.canView$,
       action: () => this.fetch(),
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_INFO,
+      label: 'utilities.schedule.log.buttons.history',
+      enabled: this.canViewLog$,
+      action: () => this.setDialog('scheduleLogView'),
     },
   ];
 
@@ -161,6 +164,19 @@ export class ScheduleEventGridComponent extends DialogFunctions
     return this.selectedEvents && this.selectedEvents[0].id;
   }
 
+  get canViewLog$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.scheduleEventService.canViewLog$,
+      this.hasSingleSelection$
+    ]);
+  }
+
+  get hasSingleSelection$(): Observable<boolean> {
+    return this.selectedEvents$.map(
+      selected => selected && this.grid.selected.length === 1,
+    );
+  }
+
   onSelect(events: IScheduleEvent[]): void {
     this.selectedEvents$.next(events);
   }
@@ -200,9 +216,11 @@ export class ScheduleEventGridComponent extends DialogFunctions
   }
 
   private fetch(): void {
-    this.scheduleEventService.fetchAll().subscribe(events => {
-      this.events = events;
-      this.cdRef.markForCheck();
-    });
+    this.scheduleEventService.fetchAll()
+      .subscribe(events => {
+        this.events = events;
+        this.selectedEvents$.next(null);
+        this.cdRef.markForCheck();
+      });
   }
 }

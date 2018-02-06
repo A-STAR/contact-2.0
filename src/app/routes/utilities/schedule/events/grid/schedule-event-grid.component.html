@@ -19,6 +19,12 @@
   (cancel)="onCloseDialog()"
 ></app-dialog-action>
 
+<app-schedule-log-view-dialog
+  *ngIf="isDialog('scheduleLogView')"
+  [eventId]="selectedEventId"
+  (close)="closeDialog()"
+></app-schedule-log-view-dialog>
+
 <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid

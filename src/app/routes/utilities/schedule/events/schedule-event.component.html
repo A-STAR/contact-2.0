@@ -1,20 +1,37 @@
+<app-schedule-event-dialog
+  *ngIf="isDialog('add')"
+  (close)="closeDialog()"
+></app-schedule-event-dialog>
+
+<app-schedule-event-dialog
+  *ngIf="isDialog('edit')"
+  [eventId]="selectedEventId"
+  (close)="closeDialog()"
+></app-schedule-event-dialog>
+
+<app-dialog-action
+  *ngIf="isDialog('delete')"
+  titleTranslationKey="widgets.scheduleEvents.dialog.remove.title"
+  actionTranslationKey="widgets.scheduleEvents.dialog.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  (action)="onRemoveSubmit()"
+  (cancel)="onCloseDialog()"
+></app-dialog-action>
+
 <app-schedule-log-view-dialog
   *ngIf="isDialog('scheduleLogView')"
-  [eventId]="eventId"
+  [eventId]="selectedEventId"
   (close)="closeDialog()"
 ></app-schedule-log-view-dialog>
 
-<div class="pt-lg">
-  <app-button
-    [disabled]="!(canViewLog$ | async)"
-    [icon]="'icon-info'"
-    [label]="'utilities.schedule.log.buttons.history' | translate"
-    (click)="setDialog('scheduleLogView')"
-  ></app-button>
-</div>
+<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
-<div class="pt-lg">
-  <app-schedule-event-grid
-    (select)="onSelect($event)"
-  ></app-schedule-event-grid>
-</div>
+<app-grid
+  columnTranslationKey="widgets.scheduleEvents"
+  [columns]="columns"
+  [footerHeight]="false"
+  [rows]="events"
+  (onSelect)="onSelect($event)"
+  (onDblClick)="onEdit()"
+></app-grid>
