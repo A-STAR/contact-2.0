@@ -4,8 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map, startWith } from 'rxjs/operators';
 
-import { IMenuItem } from '@app/core/gui-objects/gui-objects.interface';
-
 import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';
 import { SettingsService } from '@app/core/settings/settings.service';
 
