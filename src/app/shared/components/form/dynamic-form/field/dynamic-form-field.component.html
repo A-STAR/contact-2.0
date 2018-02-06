@@ -256,18 +256,18 @@
     </app-grid-dropdown>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'dialogmultiselectwrapper'">
+  <ng-container *ngSwitchCase="'dialogmultiselect'">
     <label>
       <span class="form-label">
         {{ control.label | translate }}
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
-    <app-dialog-multi-select-wrapper
+    <app-dialog-multi-select
       [filterType]="control.filterType"
       [filterParams]="control.filterParams"
       [formControlName]="control.controlName"
-    ></app-dialog-multi-select-wrapper>
+    ></app-dialog-multi-select>
   </ng-container>
 
   <ng-container *ngSwitchCase="'password'">
