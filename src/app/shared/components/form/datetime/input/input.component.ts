@@ -1,9 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  forwardRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
-import { LongDateFormatKey } from 'moment';
+import { LongDateFormatKey, DurationInputArg2 } from 'moment';
 
 import { DateTimeService } from '../datetime.service';
 
@@ -25,6 +34,7 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
   private _disabled = false;
   private _value: Date;
 
+  private cachedValue: moment.Moment = null;
   private langSub: Subscription;
 
   constructor(
@@ -85,9 +95,16 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
 
   onWheel(event: WheelEvent): void {
     const target = event.target as HTMLInputElement;
-    const delta = Math.sign(event.deltaY);
-    const start = target.selectionStart;
-    console.log(delta, start);
+    const delta = -Math.sign(event.deltaY);
+    const cursorPosition = target.selectionStart;
+    const char = this.formatString[cursorPosition];
+    const letter = char && /\w/.test(char) ? char : this.formatString[cursorPosition - 1];
+    const modifier = this.dateTimeService.getModifierFromMomentFormatLetter(letter);
+    this.cachedValue = moment(this.cachedValue || this._value || new Date()).clone().add(delta, modifier);
+    const value = this.cachedValue.format(this.formatString);
+    target.value = value;
+    target.setSelectionRange(cursorPosition, cursorPosition);
+    this.propagateChange(this.cachedValue.toDate());
   }
 
   onChange(event: Event): void {
@@ -95,6 +112,14 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
     const date = moment(value, this.formatString);
     if (date.isValid()) {
       this.update(date.toDate());
+    }
+  }
+
+  @HostListener('focusout')
+  focusOut(): void {
+    if (this.cachedValue) {
+      this.update(this.cachedValue.toDate());
+      this.cachedValue = null;
     }
   }
 
