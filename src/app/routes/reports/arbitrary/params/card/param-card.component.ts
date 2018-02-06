@@ -1,10 +1,14 @@
-import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, DoCheck } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Validators, FormGroup } from '@angular/forms';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import {
+  IDynamicFormItem, IDynamicFormConfig,
+  IDynamicFormSelectControl
+} from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
 import { IReportParam } from '../params.interface';
 
@@ -19,7 +23,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
   templateUrl: './param-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ParamCardComponent implements OnInit {
+export class ParamCardComponent implements OnInit, DoCheck {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormItem[];
@@ -29,6 +33,8 @@ export class ParamCardComponent implements OnInit {
   param: Partial<IReportParam>;
   reportId: number;
   paramId: number;
+
+  private formGroup: FormGroup;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -56,8 +62,15 @@ export class ParamCardComponent implements OnInit {
       });
   }
 
+  ngDoCheck(): void {
+    if (!this.formGroup && this.form && this.form.form) {
+      this.initControlsAccess();
+      this.formGroup = this.form.form;
+    }
+  }
+
   get canSubmit(): boolean {
-    return this.form && this.form.canSubmit && (this.paramTypeCode !== 7 || !!this.dictCode);
+    return this.form && this.form.canSubmit && (!this.isDictRequired(this.paramTypeCode) || !!this.dictCode);
   }
 
   get paramTypeCode(): number {
@@ -83,29 +96,54 @@ export class ParamCardComponent implements OnInit {
     this.routingService.navigate([ 'reports', 'arbitrary' ]);
   }
 
-  onParamChange(): void {
-    const { value: options } = this.form.getControl('paramTypeCode');
+  private initControlsAccess(): void {
     const isMandatoryControl = this.form.getControl('isMandatory');
     const multiSelectControl = this.form.getControl('multiSelect');
-    const dictControl = this.form.getFlatControls().find(c => c.controlName === 'dictNameCode');
-    multiSelectControl.disable();
-    multiSelectControl.setValue(false);
-    isMandatoryControl.disable();
-    isMandatoryControl.setValue(false);
-    dictControl.required = false;
-    switch (options[0].value) {
-      case 3: case 4: case 5: case 8: case 10:
-        multiSelectControl.enable();
-        break;
-      case 7:
-        multiSelectControl.enable();
-        dictControl.required = true;
-        break;
-      case 9:
-        isMandatoryControl.enable();
-        break;
+    const dictFormControl = this.form.getControl('dictNameCode');
+    const dictControl = this.form.getFlatControls().find(c => c.controlName === 'dictNameCode') as IDynamicFormSelectControl;
+
+    if (this.isMultiSelectEnabled(this.paramTypeCode)) {
+      multiSelectControl.enable();
+    } else {
+      multiSelectControl.disable();
     }
+    multiSelectControl.setValue(false);
+
+    if (this.isMandatoryEnabled(this.paramTypeCode)) {
+      isMandatoryControl.enable();
+    } else {
+      isMandatoryControl.disable();
+    }
+    isMandatoryControl.setValue(false);
+
+    if (this.isDictRequired(this.paramTypeCode)) {
+      dictControl.required = true;
+      dictFormControl.clearValidators();
+    } else {
+      dictControl.required = false;
+      dictFormControl.setValidators([ Validators.required ]);
+      dictFormControl.patchValue(1);
+    }
+    dictControl.options = [].concat(dictControl.options);
+
     this.cdRef.markForCheck();
+  }
+
+  private isMultiSelectEnabled(paramTypeCode: number): boolean {
+    switch (paramTypeCode) {
+      case 3: case 4: case 5: case 7: case 8: case 10:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  private isDictRequired(paramTypeCode: number): boolean {
+    return paramTypeCode === 7;
+  }
+
+  private isMandatoryEnabled(paramTypeCode: number): boolean {
+    return paramTypeCode !== 9;
   }
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {
@@ -126,7 +164,7 @@ export class ParamCardComponent implements OnInit {
         controlName: 'paramTypeCode',
         type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_REPORT_PARAM_TYPE_CODE,
-        onChange: () => this.onParamChange(),
+        onChange: () => this.initControlsAccess(),
         required: true
       },
       { controlName: 'isMandatory', type: 'checkbox', disabled: true },
