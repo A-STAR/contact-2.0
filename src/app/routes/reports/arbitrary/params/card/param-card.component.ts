@@ -107,15 +107,15 @@ export class ParamCardComponent implements OnInit, DoCheck {
       multiSelectControl.enable();
     } else {
       multiSelectControl.disable();
+      multiSelectControl.setValue(false);
     }
-    multiSelectControl.setValue(false);
 
     if (this.isMandatoryEnabled(this.paramTypeCode)) {
       isMandatoryControl.enable();
     } else {
       isMandatoryControl.disable();
+      isMandatoryControl.setValue(false); 
     }
-    isMandatoryControl.setValue(false);
 
     if (this.isDictRequired(this.paramTypeCode)) {
       dictControl.required = true;

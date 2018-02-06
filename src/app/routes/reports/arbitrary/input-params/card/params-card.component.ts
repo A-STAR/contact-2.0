@@ -10,6 +10,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 @Component({
   selector: 'app-arbitrary-input-params-card',
   templateUrl: './params-card.component.html',
+  styleUrls: [ './params-card.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputParamsCardComponent implements OnInit {
