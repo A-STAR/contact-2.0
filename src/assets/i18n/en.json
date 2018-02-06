@@ -276,7 +276,8 @@
         "editCell": "Error when trying to edit cell",
         "getErrors": "Error when trying to get error log file",
         "errorFile": "errors",
-        "defaultError": "Unknown error has been occurred"
+        "defaultError": "Unknown error has been occurred",
+        "notAvailable": "No data upload formats are available"
       }
     },
     "payments": {
