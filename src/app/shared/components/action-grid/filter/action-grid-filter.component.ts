@@ -12,14 +12,13 @@ import { Store } from '@ngrx/store';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { FilterObject, FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
+import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 import { IAppState } from '@app/core/state/state.interface';
-import { IDynamicFormControl, IFilterControl } from '../../form/dynamic-form/dynamic-form.interface';
-import { IMetadataColumn } from '@app/core/metadata/metadata.interface';
+import { IDynamicFormControl } from '../../form/dynamic-form/dynamic-form.interface';
+import { IMetadataColumn, IMetadataFilter, IMetadataFilterOperator } from '@app/core/metadata/metadata.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
-import { ActionGridFilterService } from './action-grid-filter.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -36,18 +35,16 @@ export class ActionGridFilterComponent implements OnInit {
   @Output() filter = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
-  filterControls: IFilterControl[];
   formControls: IDynamicFormControl[];
 
+  private operators: IMetadataFilterOperator[] = [];
   private columnsMetadata: IMetadataColumn[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private entityAttributesService: EntityAttributesService,
     private store: Store<IAppState>,
-    private valueConverterService: ValueConverterService,
-    private metadataFilterService: ActionGridFilterService
+    private valueConverterService: ValueConverterService
   ) {}
 
   ngOnInit(): void {
@@ -60,8 +57,8 @@ export class ActionGridFilterComponent implements OnInit {
     .pipe(first())
     .filter(([attributes, metadata]) => metadata.columns && metadata.filters)
     .subscribe(([attributes, metadata]) => {
-      this.filterControls = this.metadataFilterService.createFilterControls(metadata.filters);
-      this.formControls = this.buildFormControls(this.filterControls);
+      this.formControls = this.buildFormControls(metadata.filters);
+      this.operators = metadata.filters.operators;
       this.columnsMetadata = metadata.columns;
       this.cdRef.markForCheck();
     });
@@ -70,13 +67,14 @@ export class ActionGridFilterComponent implements OnInit {
   get filters(): FilterObject {
     const filter = FilterObject.create().and();
     const data = this.form && this.form.serializedValue || {};
-    Object.keys(data).forEach(key => {
-      if (data[key]) {
+
+    this.operators.forEach(operator => {
+      if (this.hasControlValues(data, operator.controls)) {
         const f = FilterObject
-          .create()
-          .setName(key)
-          .setOperator(this.getOperatorForControl(key))
-          .setValues(this.transformFilterValue(key, data[key]));
+        .create()
+        .setName(operator.columnName)
+        .setOperator(operator.type)
+        .setValues(this.setFilterValues(data, operator));
         filter.addFilter(f);
       }
     });
@@ -87,9 +85,18 @@ export class ActionGridFilterComponent implements OnInit {
     this.filter.emit();
   }
 
-  private buildFormControls(filterControls: IFilterControl[]): IDynamicFormControl[] {
+
+  private buildFormControls(metadata: IMetadataFilter): IDynamicFormControl[] {
     return [
-      ...filterControls,
+      ...metadata.controls.map(controlData => {
+        const operatorConfig = metadata.operators.find(operator => operator.controls.includes(controlData.controlName));
+        return {
+          ...controlData,
+          // TODO(i.lobanov): label temporary retrieved from columnName
+          label: `default.filters.fields.${operatorConfig ? operatorConfig.columnName
+            : (controlData.label || controlData.controlName)}`,
+          };
+        }),
       {
         label: 'default.buttons.search',
         controlName: 'searchBtn',
@@ -98,21 +105,28 @@ export class ActionGridFilterComponent implements OnInit {
         width: 3,
         action: () => this.onFilter()
       }
-    ] as IDynamicFormControl[];
+    ];
   }
 
-  private getOperatorForControl(controlName: string): FilterOperatorType {
-    const control = this.filterControls.find(c => c.controlName === controlName);
-    return (control && control.operator) || '==';
+  private pickControlValues(data: any, props: any[]): any[] {
+    return props.filter(prop => data[prop] != null).map(prop => data[prop]);
   }
 
-  private transformFilterValue(key: string, value: any): any {
-    const columnMetadata = this.columnsMetadata.find(column => column.name === key);
+  private hasControlValues(data: any, props: any[]): boolean {
+    return props.some(prop => data[prop] != null);
+  }
+  private setFilterValues(data: any, operator: IMetadataFilterOperator): any[] {
+    return this.transformFilterValue(this.pickControlValues(data, operator.controls), operator);
+  }
+
+  private transformFilterValue(values: any[], operator: IMetadataFilterOperator): any[] {
+    const columnMetadata = this.columnsMetadata.find(column => column.name === operator.columnName);
     switch (columnMetadata.dataType) {
       case TYPE_CODES.DATETIME:
-        return this.valueConverterService.makeRangeFromLocalDate(value);
+        return values.length === 1 ? this.valueConverterService.makeRangeFromLocalDate(values[0]) :
+        [...values.map(this.valueConverterService.toISO)];
       default:
-        return value;
+        return values;
     }
   }
 }

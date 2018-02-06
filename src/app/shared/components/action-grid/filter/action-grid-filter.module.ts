@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { DynamicFormModule } from '../../form/dynamic-form/dynamic-form.module';
 
-import { ActionGridFilterService } from './action-grid-filter.service';
-
 import { ActionGridFilterComponent } from './action-grid-filter.component';
 
 @NgModule({
@@ -17,9 +15,6 @@ import { ActionGridFilterComponent } from './action-grid-filter.component';
   ],
   declarations: [
     ActionGridFilterComponent,
-  ],
-  providers: [
-    ActionGridFilterService
   ]
 })
 export class ActionGridFilterModule { }

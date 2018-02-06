@@ -1,3 +1,6 @@
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
+
 export type MetadataAggregateType = 'sum' | 'average' | 'max' | 'min';
 
 export interface IMetadataActionOption {
@@ -47,9 +50,14 @@ export interface IMetadataFilterOption {
 }
 
 export interface IMetadataFilter {
-  type: IMetadataFilterType;
-  column: string;
-  addOptions?: IMetadataFilterOption[];
+  controls: IDynamicFormControl[];
+  operators: IMetadataFilterOperator[];
+}
+
+export interface IMetadataFilterOperator {
+  type: FilterOperatorType;
+  columnName: string;
+  controls: string[];
 }
 
 export interface IMetadataResponse {
