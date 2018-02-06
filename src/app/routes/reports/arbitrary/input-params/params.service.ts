@@ -15,7 +15,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 export class ParamsService extends AbstractActionService {
   static MESSAGE_PARAM_SAVED = 'MESSAGE_PARAM_SAVED';
 
-  private baseUrl = '/reports/{reportId}/params';
+  private baseUrl = '/reports/{reportId}';
 
   constructor(
     protected actions: Actions,
@@ -27,13 +27,8 @@ export class ParamsService extends AbstractActionService {
   }
 
   fetchAll(reportId: number): Observable<IReportInputParam[]> {
-    return this.dataService.readAll(this.baseUrl, { reportId })
+    return this.dataService.readAll(`${this.baseUrl}/params`, { reportId })
       .catch(this.notificationsService.fetchError().entity('entities.params.gen.plural').dispatchCallback());
-  }
-
-  create(reportId: number, param: IReportParamValue[]): Observable<any> {
-    return this.dataService.create(this.baseUrl, { reportId }, param)
-      .catch(this.notificationsService.createError().entity('entities.reports.gen.singular').dispatchCallback());
   }
 
   createInputParamControl(inputParam: IReportInputParam): IDynamicFormControl {
