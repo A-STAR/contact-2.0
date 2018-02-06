@@ -10,6 +10,10 @@ import { IReportInputParam, IReportParamValue } from './params.interface';
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class ParamsService extends AbstractActionService {
@@ -21,6 +25,7 @@ export class ParamsService extends AbstractActionService {
     protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    private userDictionariesService: UserDictionariesService,
     protected store: Store<IAppState>,
   ) {
     super();
@@ -29,6 +34,17 @@ export class ParamsService extends AbstractActionService {
   fetchAll(reportId: number): Observable<IReportInputParam[]> {
     return this.dataService.readAll(`${this.baseUrl}/params`, { reportId })
       .catch(this.notificationsService.fetchError().entity('entities.params.gen.plural').dispatchCallback());
+  }
+
+  createInputParamControls(inputParams: IReportInputParam[]): Observable<IDynamicFormControl[]> {
+    return combineLatest(inputParams
+      .map(inputParam => this.createInputParamControl(inputParam) as any)
+      .map(control => control.dictCode
+        ? this.userDictionariesService.getDictionaryAsOptions((<any>control).dictCode)
+          .map(options => ({ ...control, options }))
+        : of(control)
+      )
+    );
   }
 
   createInputParamControl(inputParam: IReportInputParam): IDynamicFormControl {

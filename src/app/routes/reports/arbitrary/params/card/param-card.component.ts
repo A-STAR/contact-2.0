@@ -114,7 +114,7 @@ export class ParamCardComponent implements OnInit, DoCheck {
       isMandatoryControl.enable();
     } else {
       isMandatoryControl.disable();
-      isMandatoryControl.setValue(false); 
+      isMandatoryControl.setValue(false);
     }
 
     if (this.isDictRequired(this.paramTypeCode)) {

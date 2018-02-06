@@ -7,6 +7,8 @@ import { ParamsService } from '../params.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
+import { first } from 'rxjs/operators';
+
 @Component({
   selector: 'app-arbitrary-input-params-card',
   templateUrl: './params-card.component.html',
@@ -27,9 +29,10 @@ export class InputParamsCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.paramsService.fetchAll(this.reportId)
-      .subscribe(inputParams => {
-        this.controls = inputParams
-          .map(param => this.paramsService.createInputParamControl(param));
+      .flatMap(inputParams => this.paramsService.createInputParamControls(inputParams))
+      .pipe(first())
+      .subscribe(controls => {
+        this.controls = controls;
         this.cdRef.markForCheck();
       });
   }
