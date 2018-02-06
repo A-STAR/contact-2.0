@@ -6,7 +6,7 @@ nav {
   background-color: $brand-primary-light;
   border-right: 1px solid #ddd;
   width: $layout-sidebar-width;
-  transition: width 0.1s;
+  transition: width 0.2s;
 
   ul {
     list-style-type: none;
@@ -17,7 +17,7 @@ nav {
       border-left: $menu-item-border-width solid transparent;
       color: $brand-white;
       cursor: pointer;
-      padding: 10px 18px;
+      padding: 12px 14px;
 
       &.active,
       &:hover {
@@ -26,10 +26,32 @@ nav {
         color: #fff;
       }
 
-      i {
-        font-size: 20px;
-        line-height: 1;
-        padding-right: 16px;
+      .menu-item {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+
+        .icon-container {
+          display: flex;
+          margin-right: 10px;
+
+          i {
+            font-size: 30px;
+            line-height: 1;
+            width: 30px;
+            height: 30px;
+          }
+        }
+
+        .menu-item-title {
+          // flex: 1 1 0px;
+          display: none;
+          overflow-x: hidden;
+          &.showTitle {
+            display: block;
+            animation: showTitle 0.1s;
+          }
+        }
       }
     }
   }
@@ -38,7 +60,7 @@ nav {
     width: $layout-sidebar-width-collapsed;
 
     ul li {
-      padding: 12px 0;
+      padding: 12px 0 12px 14px;
       justify-content: center;
 
       i {
@@ -51,11 +73,28 @@ nav {
   .sidebar-collapse {
     color: $brand-white;
     cursor: pointer;
-    display: block;
-    padding: 10px 18px;
+    padding: 12px 14px;
+
+    .toggle-title {
+      display: none;
+      overflow-x: hidden;
+      &.showTitle {
+        display: inline;
+        animation: showTitle 0.1s;
+      }
+    }
 
     &:hover {
       color: #fff;
     }
+  }
+}
+
+@keyframes showTitle {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

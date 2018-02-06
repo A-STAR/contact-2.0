@@ -28,8 +28,8 @@
           ></app-dynamic-form>
         </div>
         <div class="p0">
-          <app-button type="add" [label]="false" (click)="onDateAdd()"></app-button> 
-          <app-button type="delete" [label]="false" (click)="onDateDelete()"></app-button>           
+          <app-button type="add" [label]="false" (click)="onDateAdd()" [disabled]="!canEdit"></app-button> 
+          <app-button type="delete" [label]="false" (click)="onDateDelete()" [disabled]="!canEdit"></app-button>           
         </div>
       </div>
       <app-grid

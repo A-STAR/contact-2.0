@@ -27,6 +27,11 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   @Input() rows: Array<T>;
   @Input() translationKey: string;
 
+  @Input()
+  set controlDisabled(value: boolean) {
+    this.setDisabledState(value);
+  }
+
   @Output() select = new EventEmitter<T>();
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
