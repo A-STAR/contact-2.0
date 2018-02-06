@@ -34,8 +34,11 @@ export class TreeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.nodesSub = this.contactRegistrationService.params$
       .pipe(
-        filter(Boolean),
-        mergeMap(params => this.workplacesService.fetchContactTree(params.debtId, params.contactType)),
+        mergeMap(params => {
+          return params
+            ? this.workplacesService.fetchContactTree(params.debtId, params.contactType)
+            : of([]);
+        })
       )
       .subscribe(nodes => {
         this.nodes = nodes;
@@ -47,19 +50,26 @@ export class TreeComponent implements OnInit, OnDestroy {
     this.nodesSub.unsubscribe();
   }
 
-  get scenarioText(): SafeHtml {
+  get scenarioText(): { text: SafeHtml, translate: boolean } {
     if (!this.selectedNode) {
-      // TODO(d.maltsev): i18n
-      return 'Выберите исход';
+      return {
+        text: 'modules.contactRegistration.tree.selectOutcome',
+        translate: true,
+      };
     }
 
     if (!this.scenario) {
-      // TODO(d.maltsev): i18n
-      return 'Пустой сценарий';
+      return {
+        text: 'modules.contactRegistration.tree.emptyScenario',
+        translate: true,
+      };
     }
 
     // TODO(d.maltsev): double check for xss vulnerabilities
-    return this.domSanitizer.bypassSecurityTrustHtml(this.scenario);
+    return {
+      text: this.domSanitizer.bypassSecurityTrustHtml(this.scenario),
+      translate: false,
+    };
   }
 
   onNodeSelect(event: any): void {

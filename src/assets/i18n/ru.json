@@ -376,6 +376,10 @@
       }
     },
     "contactRegistration": {
+      "tree": {
+        "selectOutcome": "Выберите исход",
+        "emptyScenario": "Пустой сценарий"
+      },
       "contact": {
         "title": "Изменение контактного лица"
       },
