@@ -28,6 +28,7 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 import { DataUploadService } from './data-upload.service';
 import { GridService } from '../../../shared/components/grid/grid.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { CellRendererComponent } from './cell-renderer.component';
@@ -66,6 +67,7 @@ export class DataUploadComponent extends DialogFunctions
 
   dialog: 'cancel' | 'errorLogPrompt';
   isCurrencySelected: boolean;
+  hasAccess = true;
 
   rows: any[];
   rowCount = 0;
@@ -80,6 +82,7 @@ export class DataUploadComponent extends DialogFunctions
     private dataUploadService: DataUploadService,
     private gridService: GridService,
     private lookupService: LookupService,
+    private notificationsService: NotificationsService,
     private userDictionariesService: UserDictionariesService,
   ) {
     super();
@@ -92,15 +95,20 @@ export class DataUploadComponent extends DialogFunctions
         DataUploadComponent.FORMAT_PERMISSION
       )
       .subscribe(options => {
-        // this will create corresponding uploader
-        this.dataUploadService.format = options[0].value as DataUploaders;
+        this.hasAccess = options && !!options.length;
+        if (this.hasAccess) {
+          // this will create corresponding uploader
+          this.dataUploadService.format = options[0].value as DataUploaders;
+          this.uploaders = options;
+        } else {
+          this.notificationsService.error('modules.dataUpload.errors.notAvailable').dispatch();
+        }
         // reset previous loaded file
         this.resetFile();
         if (this.columns) {
           // reset previous grid
           this.resetGrid();
         }
-        this.uploaders = options;
         this.cdRef.markForCheck();
     });
 
