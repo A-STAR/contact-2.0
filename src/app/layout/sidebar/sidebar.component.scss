@@ -29,31 +29,27 @@ nav {
       .menu-item {
         display: flex;
         align-items: center;
-        // line-height: 30px;
         overflow: hidden;
-        transition: padding 0.2s;
 
         .icon-container {
           display: flex;
-          margin-right: 8px;
+          margin-right: 10px;
 
           i {
             font-size: 30px;
             line-height: 1;
             width: 30px;
             height: 30px;
-            // padding-right: 16px;
           }
         }
 
         .menu-item-title {
-          flex: 1 1 0%;
-          // animation-delay: 0.2s;
-          transition: display 0.2s linear;
-          transition-delay: 0.2s;
-          &.collapsed {
-            overflow-x: hidden;
-            display: none;
+          // flex: 1 1 0px;
+          display: none;
+          overflow-x: hidden;
+          &.showTitle {
+            display: block;
+            animation: showTitle 0.1s;
           }
         }
       }
@@ -77,8 +73,16 @@ nav {
   .sidebar-collapse {
     color: $brand-white;
     cursor: pointer;
-    display: block;
     padding: 12px 14px;
+
+    .toggle-title {
+      display: none;
+      overflow-x: hidden;
+      &.showTitle {
+        display: inline;
+        animation: showTitle 0.1s;
+      }
+    }
 
     &:hover {
       color: #fff;
@@ -86,18 +90,11 @@ nav {
   }
 }
 
-.showItem {
-  animation-name: showItem;
-  animation-duration: 0.1s;
-  animation-delay: 0.5s;
-}
-
-@keyframes showItem {
+@keyframes showTitle {
   0% {
-    display: none;
+    opacity: 0;
   }
-
   100% {
-    display: block;
+    opacity: 1;
   }
 }

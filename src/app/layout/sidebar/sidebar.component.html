@@ -1,12 +1,12 @@
-<nav class="flex vertical" [ngClass]="{ collapsed: isCollapsed }">
+<nav class="flex vertical" [ngClass]="{ collapsed: isCollapsed }" (transitionend)="onTransitionEnd($event)">
   <!-- Menu -->
   <ul class="flex-item grow">
-    <li *ngFor="let item of menuItems$ | async" class="" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
+    <li *ngFor="let item of menuItems$ | async" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
       <div class="menu-item">
         <div class="icon-container">
-          <i *ngIf="item.icon" class="" [ngClass]="item.icon"></i>
+          <i *ngIf="item.icon" [ngClass]="item.icon"></i>
         </div>
-        <div class="menu-item-title" [ngClass]="{ 'collapsed': isCollapsed }">{{ item.text | translate }}</div>
+        <div class="menu-item-title" [ngClass]="{ showTitle: showTitle }">{{ item.text | translate }}</div>
       </div>
     </li>
   </ul>
@@ -19,7 +19,10 @@
         <i class="fa fa-angle-double-right"></i>
       </ng-container>
       <ng-template #collapse>
-        <i class="fa fa-angle-double-left"></i> {{ 'sidebar.nav.hide' | translate }}
+        <i class="fa fa-angle-double-left"></i>
+        <span class="toggle-title" [ngClass]="{ showTitle: showTitle }">
+          {{ 'sidebar.nav.hide' | translate }}
+        </span>
       </ng-template>
 
     </div>

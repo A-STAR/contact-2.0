@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -15,22 +15,10 @@ import { SettingsService } from '@app/core/settings/settings.service';
   styleUrls: [ './sidebar.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarComponent {
-  private _menuItems$ = combineLatest(
-    this.menuService.menuItems,
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      startWith(null),
-    ),
-    items => items
-  ).pipe(
-    map(items => {
-      const url = '/' + this.router.url.split('/').filter(Boolean)[0];
-      const item = items.find(i => i.link === url);
-      return item && item.children || [ item ];
-    }),
-    map(items => items.filter(item => item && item.text)),
-  );
+export class SidebarComponent implements OnInit {
+
+  menuItems$: Observable<any>;
+  showTitle = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -39,8 +27,25 @@ export class SidebarComponent {
     private settingsService: SettingsService,
   ) {}
 
-  get menuItems$(): Observable<IMenuItem[]> {
-    return this._menuItems$;
+  ngOnInit(): void {
+    this.showTitle = !this.isCollapsed;
+
+    this.menuItems$ = combineLatest(
+      this.menuService.menuItems,
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd),
+        startWith(null),
+      ),
+      items => items
+    )
+    .pipe(
+      map(items => {
+        const url = '/' + this.router.url.split('/').filter(Boolean)[0];
+        const item = items.find(i => i.link === url);
+        return item && item.children || [ item ];
+      }),
+      map(items => items.filter(item => item && item.text)),
+    );
   }
 
   get isCollapsed(): boolean {
@@ -49,6 +54,15 @@ export class SidebarComponent {
 
   onSidebarToggle(): void {
     this.settingsService.toggleLayoutSetting('isCollapsed');
+    if (this.isCollapsed) {
+      this.showTitle = false;
+    }
     this.cdRef.markForCheck();
+  }
+
+  onTransitionEnd(e: TransitionEvent): void {
+    if (!(<HTMLElement>e.target).classList.contains('collapsed')) {
+      this.showTitle = true;
+    }
   }
 }
