@@ -21,9 +21,10 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
 export class DateTimePickerComponent implements ControlValueAccessor {
   @Input() minDateTime: Date;
   @Input() maxDateTime: Date;
+
   @Input() set displaySeconds(displaySeconds: boolean) {
     this._displaySeconds = displaySeconds === undefined ? true : displaySeconds;
-    this.dateTimeFormat = this._displaySeconds ? 'MM/DD/YYYY HH:mm:ss' : 'MM/DD/YYYY HH:mm';
+    this.dateTimeFormat = this._displaySeconds ? 'L HH:mm:ss' : 'L HH:mm';
   }
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;

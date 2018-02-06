@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component,
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-import * as moment from 'moment';
 
 import { NextCallDateSetService } from '@app/shared/gui-objects/widgets/next-call-date-set/next-call-date-set.service';
 import { makeKey } from '@app/core/utils';
@@ -33,7 +32,6 @@ export class NextCallDateSetDialogComponent  {
       controlName: 'nextCallDate',
       type: 'datetimepicker',
       displaySeconds: false,
-      minDateTime: moment().set({ hour: 0, minute: 0, second: 0 }).toDate(),
       width: 5,
     }
   ];

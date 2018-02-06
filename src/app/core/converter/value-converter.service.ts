@@ -99,13 +99,13 @@ export class ValueConverterService {
     return date ? date.toISOString() : null;
   }
 
-  toLocalDateTime(date: Date, withoutSeconds?: boolean): string {
-    return this.toLocal(date, withoutSeconds ? this.formats.dateTimeWithoutSeconds : this.formats.dateTime);
+  toLocalDateTime(date: Date): string {
+    return this.toLocal(date, this.formats.dateTime);
   }
 
-  toLocalTime(date: Date, withoutSeconds?: boolean): string {
+  toLocalTime(date: Date): string {
     return moment(date).isValid()
-      ? moment(date, this.formats.dateISO).format(withoutSeconds ? this.formats.timeWithoutSeconds : this.formats.time)
+      ? moment(date, this.formats.dateISO).format(this.formats.time)
       : null;
   }
 
@@ -121,16 +121,16 @@ export class ValueConverterService {
     return value ? new Date(value) : null;
   }
 
-  fromLocalDateTime(value: string, withoutSeconds?: boolean): Date | false {
-    return this.fromLocal(value, withoutSeconds ? this.formats.dateTimeWithoutSeconds : this.formats.dateTime);
+  fromLocalDateTime(value: string): Date | false {
+    return this.fromLocal(value, this.formats.dateTime);
   }
 
   fromLocalDate(value: string): Date | false {
     return this.fromLocal(value, this.formats.date);
   }
 
-  fromLocalTime(value: string, withoutSeconds?: boolean): Date | false {
-    return this.fromLocal(value, withoutSeconds ? this.formats.timeWithoutSeconds : this.formats.time);
+  fromLocalTime(value: string): Date | false {
+    return this.fromLocal(value, this.formats.time);
   }
 
   dateStringToISO(date: string): string {

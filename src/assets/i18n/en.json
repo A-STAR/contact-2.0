@@ -3036,11 +3036,9 @@
       },
       "format": {
         "dateTime": "MM/DD/YYYY HH:mm:ss",
-        "dateTimeWithoutSeconds": "MM/DD/YYYY HH:mm",
         "date": "MM/DD/YYYY",
         "dateISO": "YYYY-MM-DD",
-        "time": "HH:mm:ss",
-        "timeWithoutSeconds": "HH:mm"
+        "time": "HH:mm:ss"
       },
       "placeholders": {
         "datepicker": "Enter a date",

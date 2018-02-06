@@ -1,7 +1,7 @@
 <div appDropdown [disabled]="disabled" [fitWidthToContent]="true" style="position: relative;">
   <div #dropdownParent>
     <app-datetime-input
-      format="L HH:mm:ss"
+      [format]="dateTimeFormat"
       [disabled]="disabled"
       [ngModel]="value"
       (ngModelChange)="onChange($event)"
