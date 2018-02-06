@@ -14,6 +14,7 @@ export enum ToolbarItemTypeEnum {
   BUTTON_EDIT,
   BUTTON_EMAIL,
   BUTTON_EXCEL_LOAD,
+  BUTTON_INFO,
   BUTTON_MOVE,
   BUTTON_NEXT,
   BUTTON_OK,
@@ -38,7 +39,7 @@ export interface IToolbarElement {
   enabled?: Observable<boolean>;
   label?: string;
   align?: 'right';
-  // TODO:(i.lobanov) move it to some type which would work with IToolbarItem
+  // TODO(i.lobanov): move it to some type which would work with IToolbarItem
   closeOnClick?: boolean;
 }
 
