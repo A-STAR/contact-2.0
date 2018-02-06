@@ -1,26 +1,28 @@
 <div appDropdown>
   <div #dropdownTrigger>
-    <span [ngClass]="controlClass" [ngStyle]="{ position: 'relative' }">
+    <span [ngClass]="controlClass" [ngStyle]="{ position: 'relative' }" [attr.disabled]="isDisabled || undefined">
       {{ label }}
       <i class="caret"></i>
     </span>
     <input type="hidden" [ngModel]="value">
   </div>
   <div #dropdownContent class="dropdown">
-    <app-grid
-      [columns]="columns"
-      [footerHeight]="false"
-      [rows]="rows"
-      [columnTranslationKey]="translationKey"
-      [selection]="selection"
-      [selectionType]="'single'"
-      [styles]="{ height: '200px', border: 'none' }"
-      (onSelect)="onSelect($event)">
-    </app-grid>
-    <div class="panel-footer text-right">
-      <button class="btn btn-xs btn-default" [disabled]="!value" (click)="onClearClick()">
-        {{ 'default.buttons.clear' | translate }}
-      </button>
-    </div>
+    <ng-container *ngIf="!isDisabled">
+      <app-grid
+        [columns]="columns"
+        [footerHeight]="false"
+        [rows]="rows"
+        [columnTranslationKey]="translationKey"
+        [selection]="selection"
+        [selectionType]="'single'"
+        [styles]="{ height: '200px', border: 'none' }"
+        (onSelect)="onSelect($event)">
+      </app-grid>
+      <div class="panel-footer text-right">
+        <button class="btn btn-xs btn-default" [disabled]="!value" (click)="onClearClick()">
+          {{ 'default.buttons.clear' | translate }}
+        </button>
+      </div>
+    </ng-container>
   </div>
 </div>
