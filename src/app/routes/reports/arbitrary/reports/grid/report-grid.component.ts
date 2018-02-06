@@ -34,8 +34,7 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
   ];
 
   titlebar: ITitlebar = {
-    // TODO(i.kibisov): i18n
-    title: 'Отчеты',
+    title: 'modules.reports.arbitrary.title',
     items: [
       {
         type: TitlebarItemTypeEnum.BUTTON_ADD,
