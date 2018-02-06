@@ -24,14 +24,26 @@ type IMultiSelectValue = Array<number|string>;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MultiSelectComponent implements ControlValueAccessor {
+  private _list: MultiListComponent<IOption>;
+
   @Input() nullable = false;
   @Input() options: IOption[] = [];
 
+  @Input()
+  set controlDisabled(value: boolean) {
+    this.setDisabledState(value);
+  }
+
   @Output() select = new EventEmitter<IMultiSelectValue>();
 
-  @ViewChild(MultiListComponent) list: MultiListComponent<IOption>;
+  @ViewChild(MultiListComponent) set list(list: MultiListComponent<IOption>) {
+    this._list = list;
+    this.selection = this._selection;
+    this.cdRef.detectChanges();
+  }
 
   private _isDisabled = false;
+  private _selection: IMultiSelectValue;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
@@ -42,6 +54,10 @@ export class MultiSelectComponent implements ControlValueAccessor {
   get label(): string {
     const option = this.options.find(o => o.value === this.selection[0]);
     return option ? option.label : null;
+  }
+
+  get isDisabled(): boolean {
+    return this._isDisabled;
   }
 
   getId = (option: IOption) => option.value;
@@ -68,11 +84,17 @@ export class MultiSelectComponent implements ControlValueAccessor {
   }
 
   private get selection(): IMultiSelectValue {
-    return this.list.selection.map(Number);
+    if (this._list) {
+      this._selection = this._list.selection.map(Number);
+    }
+    return this._selection;
   }
 
   private set selection(selection: IMultiSelectValue) {
-    this.list.selection = selection.map(Number);
+    this._selection = selection.map(Number);
+    if (this._list) {
+      this._list.selection = this._selection;
+    }
   }
 
   private set value(value: IMultiSelectValue) {
