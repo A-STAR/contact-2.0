@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
+import { DurationInputArg2 } from 'moment';
 
-/**
- * |              | Moment | Mask |
- * |-------------:|:------:|:----:|
- * | Day          | DD     | dd   |
- * | Month        | MM     | mm   |
- * | Year         | YYYY   | yyyy |
- * | Hour         | HH     | HH   |
- * | Minute       | mm     | MM   |
- * | Second       | SS     | SS   |
- */
 @Injectable()
 export class DateTimeService {
+  /**
+   * |              | Moment | Mask |
+   * |-------------:|:------:|:----:|
+   * | Day          | DD     | dd   |
+   * | Month        | MM     | mm   |
+   * | Year         | YYYY   | yyyy |
+   * | Hour         | HH     | HH   |
+   * | Minute       | mm     | MM   |
+   * | Second       | SS     | SS   |
+   */
   private formatMap = {
     DD:   'dd',
     MM:   'mm',
@@ -21,6 +22,29 @@ export class DateTimeService {
     mm:   'MM',
     ss:   'SS',
   };
+
+  /**
+   * |              | Moment | Modifier |
+   * |-------------:|:------:|:--------:|
+   * | Day          | D      | d        |
+   * | Month        | M      | m        |
+   * | Year         | Y      | y        |
+   * | Hour         | H      | h        |
+   * | Minute       | m      | m        |
+   * | Second       | S      | s        |
+   */
+  private modifierMap = {
+    D: 'd',
+    M: 'M',
+    Y: 'y',
+    H: 'h',
+    m: 'm',
+    s: 's',
+  };
+
+  getModifierFromMomentFormatLetter(format: string): DurationInputArg2 {
+    return this.modifierMap[format];
+  }
 
   getMaskParamsFromMomentFormat(format: string): any {
     const maskFormat = format.match(/(.)\1*/g).map(chunk => this.formatMap[chunk] || chunk).join('');

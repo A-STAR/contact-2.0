@@ -14,7 +14,7 @@ export class MultiListComponent<T> {
   @Output() select = new EventEmitter<T[]>();
 
   private _search = '';
-  private _selection: (number|string)[] = null;
+  private _selection: (number|string)[] = [];
 
   constructor(private cdRef: ChangeDetectorRef) {}
 

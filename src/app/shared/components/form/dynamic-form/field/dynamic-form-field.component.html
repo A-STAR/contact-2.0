@@ -127,6 +127,7 @@
       <app-multi-select
         [formControlName]="control.controlName"
         [options]="control.options"
+        [controlDisabled]="control.disabled"
         (select)="selectHandler({ control: control, items: $event})"
       ></app-multi-select>
     </label>
@@ -246,6 +247,7 @@
     <app-grid-dropdown
       [columns]="control.gridColumns"
       [formControlName]="control.controlName"
+      [controlDisabled]="control.disabled"
       [rows]="control.gridRows"
       [labelGetter]="control.gridLabelGetter"
       [valueGetter]="control.gridValueGetter"
