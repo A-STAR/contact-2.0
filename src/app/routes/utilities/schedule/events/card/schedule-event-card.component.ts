@@ -37,7 +37,7 @@ export class ScheduleEventCardComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest(
-      this.scheduleEventService.canView$,
+      this.eventId ? this.scheduleEventService.canEdit$ : this.scheduleEventService.canView$,
       this.eventId ? this.scheduleEventService.fetch(this.eventId) : of(this.getFormData()),
     )
     .pipe(first())

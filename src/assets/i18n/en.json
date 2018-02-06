@@ -2321,6 +2321,7 @@
         "stage": "Stage",
         "userId": "Operator",
         "modeCode": "Mode",
+        "inactiveReasonCode": "Reason for blocking",
         "changeGroupId": {
           "grid": {
             "id": "ID",
