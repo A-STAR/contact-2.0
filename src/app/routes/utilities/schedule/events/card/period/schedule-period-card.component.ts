@@ -58,6 +58,8 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   selectedPeriod: ISchedulePeriod;
 
+  canEdit: boolean;
+
   private selectedPeriodTypeCode$ = new BehaviorSubject<number>(null);
 
   constructor(
@@ -79,6 +81,7 @@ export class SchedulePeriodCardComponent implements OnInit {
     (this.eventId ? this.scheduleEventService.canEdit$ : this.scheduleEventService.canView$)
       .pipe(first())
       .subscribe(canEdit => {
+        this.canEdit = canEdit;
         this.initPeriodControls(canEdit);
 
         this.selectedPeriodTypeCode$.next(this.period.periodTypeCode);
@@ -180,6 +183,7 @@ export class SchedulePeriodCardComponent implements OnInit {
         dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE,
         required: true,
         markAsDirty: !this.eventId,
+        disabled: !canEdit,
         onChange: () => this.onPeriodSelect()
       },
     ] as Partial<IDynamicFormItem>[];
@@ -206,8 +210,8 @@ export class SchedulePeriodCardComponent implements OnInit {
           }))
       ],
       [
-        { controlName: 'date', type: 'datepicker', minDate: new Date() },
-        { controlName: 'dates', type: 'multiselect', required: true, display: false },
+        { controlName: 'date', type: 'datepicker', minDate: new Date(), disabled: !canEdit },
+        { controlName: 'dates', type: 'multiselect', required: true, display: false, disabled: !canEdit },
       ]
     ] as Array<Partial<IDynamicFormControl>[]>;
 

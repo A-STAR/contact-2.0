@@ -123,7 +123,7 @@ export class ScheduleEventService extends AbstractActionService {
 
   fetchUsers(): Observable<IScheduleUser[]> {
     return this.dataService
-      .readAll('/filters/users', {}, {})
+      .readAll('/filters/users?isInactive=0', {}, {})
       .catch(this.notificationsService.fetchError().entity('entities.users.gen.plural').dispatchCallback());
   }
 

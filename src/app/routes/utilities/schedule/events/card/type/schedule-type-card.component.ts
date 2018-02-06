@@ -364,7 +364,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   private createBlockTypeControls(canEdit: boolean, groups: IScheduleGroup[], dictCode: number): Partial<IDynamicFormControl>[] {
     return this.createFormControls({
       groupId: { gridRows: groups, disabled: !canEdit },
-      modeCode: {
+      inactiveReasonCode: {
         disabled: !canEdit,
         dictCode: dictCode,
         markAsDirty: !this.eventId
