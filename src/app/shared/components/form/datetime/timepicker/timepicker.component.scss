@@ -11,6 +11,13 @@
   &:hover {
     color: $link-color;
   }
+
+  &.disabled {
+    cursor: default;
+    &, &:hover {
+      color: $gray-dark;
+    }
+  }
 }
 
 .datetimepicker-container {

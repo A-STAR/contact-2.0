@@ -1,12 +1,13 @@
-<div appDropdown [fitWidthToContent]="true" style="position: relative;">
+<div appDropdown [disabled]="disabled" [fitWidthToContent]="true" style="position: relative;">
   <div #dropdownParent>
     <app-datetime-input
       format="MM/DD/YYYY"
+      [disabled]="disabled"
       [ngModel]="value"
       (ngModelChange)="onChange($event)"
     ></app-datetime-input>
   </div>
-  <span class="toggle" #dropdownTrigger (click)="onTouch()">
+  <span [ngClass]="{ toggle: true, disabled: disabled }" #dropdownTrigger (click)="onTouch()">
     <i class="fa fa-calendar"></i>
   </span>
   <div #dropdownContent class="datetimepicker-container">

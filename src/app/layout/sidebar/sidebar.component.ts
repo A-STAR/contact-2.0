@@ -29,7 +29,7 @@ export class SidebarComponent {
       const item = items.find(i => i.link === url);
       return item && item.children || [ item ];
     }),
-    map(items => items.filter(item => item.text)),
+    map(items => items.filter(item => item && item.text)),
   );
 
   constructor(
