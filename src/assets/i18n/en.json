@@ -15,6 +15,11 @@
     },
     "account": {
       "title": "Account",
+      "dialogs": {
+        "phoneExtension": {
+          "intPhone": "Extension"
+        }
+      },
       "editPhoneExtension": "Edit Phone Extension",
       "reset": "Reset Settings",
       "logout": "Logout"

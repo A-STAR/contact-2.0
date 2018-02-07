@@ -3,10 +3,10 @@
     <h3>{{ 'header.account.editPhoneExtension' | translate }}</h3>
   </div>
 
-  FORM GOES HERE
+  <app-dynamic-form [controls]="controls"></app-dynamic-form>
 
   <div dialog-footer>
-    <app-button type="ok" (click)="onPhoneExtensionSubmit()"></app-button>
+    <app-button type="ok" [disabled]="!canSubmitPhoneExtension" (click)="onPhoneExtensionSubmit()"></app-button>
     <app-button type="cancel" (click)="onCloseDialog()"></app-button>
   </div>
 </app-dialog>

@@ -35,6 +35,6 @@ export class CallEffects {
   ) {}
 
   private read(): Observable<ICallSettings> {
-    return this.dataService.read('pbx/settings');
+    return this.dataService.read('/pbx/settings');
   }
 }

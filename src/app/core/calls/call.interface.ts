@@ -19,3 +19,7 @@ export enum CallStateStatusEnum {
   LOADED,
   ERROR,
 }
+
+export interface IPBXParams {
+  intPhone: string;
+}
