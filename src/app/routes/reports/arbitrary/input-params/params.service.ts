@@ -58,18 +58,18 @@ export class ParamsService extends AbstractActionService {
       case 2: return { ...control, type: 'number' };
       case 3: case 8: return {
         ...control,
-        type: 'dialogmultiselectwrapper',
+        type: 'dialogmultiselect',
         filterType: 'portfolios',
         filterParams: { directionCodes: [ 1 ] },
       };
       case 4: return {
         ...control,
-        type: 'dialogmultiselectwrapper',
+        type: 'dialogmultiselect',
         filterType: 'users'
       };
       case 5: return {
         ...control,
-        type: 'dialogmultiselectwrapper',
+        type: 'dialogmultiselect',
         filterType: 'contractors'
       };
       case 6: return { ...control, type: 'text' };
