@@ -615,7 +615,7 @@
             "sortOrder": "Порядковый номер",
             "systemName": "Системное название",
             "isMandatory": "Обязательность",
-            "multiSelect": "Множенственный выбор"
+            "multiSelect": "Множественный выбор"
           },
           "card": {
             "name": "Название",
@@ -623,7 +623,7 @@
             "sortOrder": "Порядковый номер",
             "paramTypeCode": "Тип параметра",
             "isMandatory": "Обязательность",
-            "multiSelect": "Множенственный выбор",
+            "multiSelect": "Множественный выбор",
             "dictNameCode": "Словарь"
           }
         },
