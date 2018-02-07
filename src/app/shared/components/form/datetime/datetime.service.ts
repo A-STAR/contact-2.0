@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 import { DurationInputArg2 } from 'moment';
+import * as moment from 'moment';
 
 @Injectable()
 export class DateTimeService {
@@ -62,7 +63,7 @@ export class DateTimeService {
    * @param date date that holds year, month and day to set to base value
    */
   setDate(value: Date, date: Date): Date {
-    const result = new Date();
+    const result = moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate();
     if (value) {
       result.setTime(value.getTime());
     }

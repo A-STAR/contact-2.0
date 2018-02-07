@@ -1,7 +1,7 @@
 <div appDropdown [disabled]="disabled" [fitWidthToContent]="true" style="position: relative;">
   <div #dropdownParent>
     <app-datetime-input
-      format="L HH:mm:ss"
+      [format]="dateTimeFormat"
       [disabled]="disabled"
       [ngModel]="value"
       (ngModelChange)="onChange($event)"
@@ -12,8 +12,17 @@
   </span>
   <div #dropdownContent class="datetimepicker-container">
     <div class="datetimepicker">
-      <app-date [minDate]="minDateTime" [maxDate]="maxDateTime" [ngModel]="value" (ngModelChange)="onDateChange($event)"></app-date>
-      <app-time [minTime]="minDateTime" [maxTime]="maxDateTime" [ngModel]="value" (ngModelChange)="onTimeChange($event)"></app-time>
+      <app-date
+        [minDate]="minDateTime"
+        [maxDate]="maxDateTime"
+        [ngModel]="value"
+        (ngModelChange)="onDateChange($event)"></app-date>
+      <app-time
+        [minTime]="minDateTime"
+        [maxTime]="maxDateTime"
+        [ngModel]="value"
+        [displaySeconds]="displaySeconds"
+        (ngModelChange)="onTimeChange($event)"></app-time>
       <footer>
         <span (click)="setCurrentTime()">{{ 'default.buttons.now' | translate }}</span>
         <span (click)="dropdown.close()">{{ 'default.buttons.ok' | translate }}</span>

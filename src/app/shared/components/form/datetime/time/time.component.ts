@@ -20,19 +20,16 @@ type IModifier = 'h' | 'm' | 's';
 export class TimeComponent implements ControlValueAccessor {
   @Input() minTime: Date;
   @Input() maxTime: Date;
+  @Input() displaySeconds = true;
 
-  private _value: Date;
+  value: Date;
 
   constructor(
     private cdRef: ChangeDetectorRef,
   ) {}
 
-  get value(): Date {
-    return this._value;
-  }
-
   writeValue(value: Date): void {
-    this._value = value;
+    this.value = value;
     this.cdRef.markForCheck();
   }
 
@@ -46,7 +43,9 @@ export class TimeComponent implements ControlValueAccessor {
 
   getFormattedValue(modifier: IModifier, delta: number): string {
     const format = { h: 'HH', m: 'mm', s: 'ss' }[modifier] || '';
-    return moment(this._value || new Date()).clone().set({ h: 0, m: 0, s: 0, ms: 0 }).add(delta, modifier).format(format);
+    return moment(this.value || moment()
+      .set({ h: 0, m: 0, s: 0, ms: 0 }).toDate())
+      .clone().add(delta, modifier).format(format);
   }
 
   onUp(modifier: IModifier): void {
@@ -63,8 +62,10 @@ export class TimeComponent implements ControlValueAccessor {
   }
 
   private update(delta: number, modifier: IModifier): void {
-    this._value = moment(this._value || new Date()).clone().add(delta, modifier).toDate();
-    this.propagateChange(this._value);
+    this.value = moment(this.value || moment()
+      .set({ h: 0, m: 0, s: 0, ms: 0 }).toDate())
+      .clone().add(delta, modifier).toDate();
+    this.propagateChange(this.value);
     this.cdRef.markForCheck();
   }
 
