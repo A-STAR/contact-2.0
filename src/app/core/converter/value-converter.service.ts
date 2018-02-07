@@ -104,7 +104,9 @@ export class ValueConverterService {
   }
 
   toLocalTime(date: Date): string {
-    return moment(date).isValid() ? moment(date, this.formats.dateISO).format(this.formats.time) : null;
+    return moment(date).isValid()
+      ? moment(date, this.formats.dateISO).format(this.formats.time)
+      : null;
   }
 
   toLocalDate(date: Date): string {

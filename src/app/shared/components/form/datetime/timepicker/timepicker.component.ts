@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Inpu
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 
-import { DateTimeService } from '../datetime.service';
+import { DateTimeService } from '@app/shared/components/form/datetime/datetime.service';
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 @Component({
@@ -22,32 +22,40 @@ export class TimePickerComponent implements ControlValueAccessor {
   @Input() minTime: Date;
   @Input() maxTime: Date;
 
+  @Input() set displaySeconds(displaySeconds: boolean) {
+    this._displaySeconds = displaySeconds === undefined ? true : displaySeconds;
+    this.timeFormat = this._displaySeconds ? 'HH:mm:ss' : 'HH:mm';
+  }
+
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
-  private _disabled = false;
-  private _value: Date;
+  disabled = false;
+
+  timeFormat = 'HH:mm:ss';
+
+  value: Date;
+  tempValue: Date;
+
+  private _displaySeconds: boolean;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
   ) {}
 
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
-  get value(): Date {
-    return this._value;
+  get displaySeconds(): boolean {
+    return this._displaySeconds;
   }
 
   writeValue(value: Date | string): void {
     if (value) {
-      this._value = value instanceof Date
+      this.value = value instanceof Date
         ? value
-        : moment(value, 'HH:mm:ss').toDate();
+        : moment(value, this.timeFormat).toDate();
     } else {
-      this._value = null;
+      this.value = null;
     }
+    this.tempValue = this.value;
     this.cdRef.markForCheck();
   }
 
@@ -60,7 +68,7 @@ export class TimePickerComponent implements ControlValueAccessor {
   }
 
   setDisabledState(disabled: boolean): void {
-    this._disabled = disabled;
+    this.disabled = disabled;
   }
 
   onTouch(): void {
@@ -71,6 +79,11 @@ export class TimePickerComponent implements ControlValueAccessor {
     this.update(date);
   }
 
+  onOkClick(): void {
+    this.update(this.tempValue);
+    this.dropdown.close();
+  }
+
   setCurrentTime(): void {
     const value = new Date();
     this.update(value);
@@ -78,12 +91,13 @@ export class TimePickerComponent implements ControlValueAccessor {
   }
 
   onTimeChange(time: Date): void {
-    const value = this.dateTimeService.setTime(this._value, time);
-    this.update(value);
+    this.tempValue = this.dateTimeService.setTime(this.tempValue, time);
+    this.cdRef.markForCheck();
   }
 
   private update(value: Date): void {
-    this._value = value;
+    this.value = value;
+    this.tempValue = value;
     this.propagateChange(value);
     this.cdRef.markForCheck();
   }
