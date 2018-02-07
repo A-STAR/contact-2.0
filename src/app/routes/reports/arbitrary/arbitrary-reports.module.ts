@@ -77,7 +77,5 @@ const routes: Routes = [
   declarations: [
     ArbitraryReportsComponent,
   ],
-  providers: [
-  ]
 })
 export class ArbitraryReportsModule {}

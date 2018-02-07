@@ -572,6 +572,7 @@
     },
     "reports": {
       "arbitrary": {
+        "title": "Отчеты",
         "tabs": {
           "fields": "Описание полей",
           "params": "Входные параметры"
@@ -632,6 +633,11 @@
             "isMandatory": "Обязательность",
             "multiSelect": "Множенственный выбор",
             "dictNameCode": "Словарь"
+          }
+        },
+        "input": {
+          "dialog": {
+            "title": "Введите параметры"
           }
         }
       }

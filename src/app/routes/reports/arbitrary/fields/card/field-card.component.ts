@@ -66,6 +66,7 @@ export class FieldCardComponent implements OnInit {
 
     action.subscribe(() => {
       this.fieldsService.dispatchAction(FieldsService.MESSAGE_FIELD_SAVED);
+      this.form.markAsPristine();
       this.onBack();
     });
   }

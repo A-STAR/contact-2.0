@@ -52,10 +52,10 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
   @ViewChild('gridTo') gridTo: GridComponent;
 
   dialog: string;
+  isDisabled = false;
 
   private _columnsToTranslationKey: string;
   private _columnsFromTranslationKey: string;
-  private isDisabled = false;
   private isInitialised = false;
   private _labelGetter: (row: T) => string;
   private _valueGetter: (row: T) => IDialogMultiSelectValue;

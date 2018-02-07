@@ -8,8 +8,13 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
+<app-arbitrary-input-params-dialog
+  *ngIf="isDialog('create')"
+  [reportId]="selectedReportId"
+  (close)="onCloseDialog()"
+></app-arbitrary-input-params-dialog>
 
+<app-titlebar [titlebar]="titlebar"></app-titlebar>
 <app-grid
   columnTranslationKey="modules.reports.arbitrary"
   selectionType="single"

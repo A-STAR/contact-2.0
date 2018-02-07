@@ -1,0 +1,20 @@
+<app-downloader
+  entityTranslationKey="entities.reports.gen.plural"
+  name="report.xlsx"
+  [url]="exportUrl"
+></app-downloader>
+
+<app-dialog (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'modules.reports.arbitrary.input.dialog.title' | translate }}</h3>
+  </div>
+
+  <app-arbitrary-input-params-card
+    [reportId]="reportId"
+  ></app-arbitrary-input-params-card>
+
+  <div dialog-footer>
+    <app-button color="primary" type="exportToExcel" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+    <app-button type="close" (click)="onClose()"></app-button>
+  </div>
+</app-dialog>
