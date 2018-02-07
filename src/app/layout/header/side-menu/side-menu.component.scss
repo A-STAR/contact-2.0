@@ -2,13 +2,13 @@
 
 .dropdown-content {
   background-color: #fff;
-  padding: 5px 0;
+  padding: 8px 0;
 
   .list-group-item {
     border: none;
-    color: $link-color;
+    color: $gray-dark;
     cursor: pointer;
-    padding: 5px 20px;
+    padding: 8px 20px;
     white-space: nowrap;
 
     &:hover {

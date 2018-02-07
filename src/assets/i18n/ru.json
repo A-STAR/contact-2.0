@@ -15,8 +15,9 @@
     },
     "account": {
       "title": "Аккаунт",
-      "logout": "Выйти",
-      "reset": "Сбросить настройки"
+      "editPhoneExtension": "Изменить внутренний номер",
+      "reset": "Сбросить настройки",
+      "logout": "Выйти"
     }
   },
   "offsidebar": {

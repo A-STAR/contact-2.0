@@ -56,6 +56,11 @@ export class SideMenuComponent {
     this.translateService.use(lang).pipe(first()).subscribe();
   }
 
+  editPhoneExtension(): void {
+    console.log('111');
+    this.accountDropdown.close();
+  }
+
   resetSettings(event: UIEvent): void {
     event.preventDefault();
     this.persistenceService.clear();

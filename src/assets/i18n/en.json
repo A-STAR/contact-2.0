@@ -15,8 +15,9 @@
     },
     "account": {
       "title": "Account",
-      "logout": "Logout",
-      "reset": "Reset Settings"
+      "editPhoneExtension": "Edit Phone Extension",
+      "reset": "Reset Settings",
+      "logout": "Logout"
     }
   },
   "offsidebar": {
