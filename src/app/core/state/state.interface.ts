@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 
 import { IAuthState } from '../auth/auth.interface';
+import { ICallState } from '@app/core/calls/call.interface';
 import { ICampaignsState } from '../../routes/utilities/campaigns/campaigns.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
 import { IContractorsAndPortfoliosState } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
@@ -22,6 +23,7 @@ import { IUsersState } from '../../routes/admin/users/users.interface';
 
 export interface IAppState {
   readonly auth: IAuthState;
+  readonly calls: ICallState;
   readonly constants: IConstantsState;
   readonly contractorsAndPortfolios: IContractorsAndPortfoliosState;
   readonly debtorCard: IDebtorCardState;

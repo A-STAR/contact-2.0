@@ -15,8 +15,14 @@
     },
     "account": {
       "title": "Аккаунт",
-      "logout": "Выйти",
-      "reset": "Сбросить настройки"
+      "dialogs": {
+        "phoneExtension": {
+          "intPhone": "Внутренний номер"
+        }
+      },
+      "editPhoneExtension": "Изменить внутренний номер",
+      "reset": "Сбросить настройки",
+      "logout": "Выйти"
     }
   },
   "offsidebar": {
@@ -2557,6 +2563,9 @@
     },
     "params": {
       "gen": { "singular": "параметра", "plural": "параметров" }
+    },
+    "callSettings": {
+      "gen": { "singular": "настроек телефонии", "plural": "настроек телефонии" }
     }
   },
   "massOperations": {
