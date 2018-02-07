@@ -77,8 +77,8 @@ export class TermEditComponent implements OnInit {
         disabled,
       },
       {
-        controlName: 'name',
-        type: this.term ? 'multilanguage' : 'text',
+        controlName: 'names',
+        type: 'multilanguage',
         required: true,
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_TERM_NAME,

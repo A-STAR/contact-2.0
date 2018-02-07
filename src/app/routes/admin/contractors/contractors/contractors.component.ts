@@ -152,6 +152,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
   }
 
   onSelect(contractor: IContractor): void {
+    console.log(contractor);
     this.contractorsAndPortfoliosService.selectContractor(contractor);
   }
 

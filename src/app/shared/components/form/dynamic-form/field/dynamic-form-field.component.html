@@ -6,13 +6,14 @@
         {{ control.label | translate }}
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
-      <input type="number"
-             class="form-control"
-             [attr.min]="control.min"
-             [attr.max]="control.max"
-             [attr.placeholder]="(control.placeholder || '') | translate"
-             [formControlName]="control.controlName"
-             (input)="control.onChange ? control.onChange($event) : undefined">
+      <input
+        type="number"
+        class="form-control"
+        [attr.min]="control.min"
+        [attr.max]="control.max"
+        [attr.placeholder]="(control.placeholder || '') | translate"
+        [formControlName]="control.controlName"
+        (input)="control.onChange ? control.onChange($event) : undefined">
     </label>
   </ng-container>
 
@@ -22,10 +23,11 @@
         {{ control.label | translate }}
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
-      <input type="text"
-             class="form-control"
-             [attr.placeholder]="(control.placeholder || '') | translate"
-             [formControlName]="control.controlName">
+      <input
+        type="text"
+        class="form-control"
+        [attr.placeholder]="(control.placeholder || '') | translate"
+        [formControlName]="control.controlName">
     </label>
   </ng-container>
 
@@ -373,8 +375,9 @@
       <app-multilanguage-input
         [formControlName]="control.controlName"
         [langOptions]="control.langOptions"
-        [controlDisabled]="control.disabled">
-      </app-multilanguage-input>
+        [controlDisabled]="control.disabled"
+        [placeholder]="control.placeholder"
+      ></app-multilanguage-input>
     </label>
   </ng-container>
 

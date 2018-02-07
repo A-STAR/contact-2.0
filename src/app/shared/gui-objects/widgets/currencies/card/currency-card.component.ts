@@ -79,8 +79,8 @@ export class CurrencyCardComponent implements OnInit {
         disabled: !canEdit
       },
       {
-        controlName: 'name',
-        type: this.currencyId ? 'multilanguage' : 'text',
+        controlName: 'names',
+        type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_CURRENCY_NAME,
           entityId: this.currency && this.currency.id
@@ -89,7 +89,7 @@ export class CurrencyCardComponent implements OnInit {
         required: true
       },
       {
-        controlName: 'shortName',
+        controlName: 'shortNames',
         type: this.currencyId ? 'multilanguage' : 'text',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_CURRENCY_SHORT_NAME,

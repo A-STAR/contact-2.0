@@ -77,8 +77,8 @@ export class DictEditComponent implements OnInit {
         disabled,
       },
       {
-        controlName: 'name',
-        type: this.dictionary ? 'multilanguage' : 'text',
+        controlName: 'names',
+        type: 'multilanguage',
         required: true,
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_DICT_NAME,
