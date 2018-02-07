@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ElementRef } from '@angular/core';
 import { ChartOptions, Chart, ChartType, ChartData } from 'chart.js';
 
 @Component({
@@ -8,7 +8,7 @@ import { ChartOptions, Chart, ChartType, ChartData } from 'chart.js';
 })
 export class ChartComponent implements OnInit {
 
-  @ViewChild('canvas') canvasEl: HTMLCanvasElement;
+  @ViewChild('canvas') canvasEl: ElementRef;
   @Input() data: ChartData;
   @Input() options: ChartOptions;
   @Input() type: ChartType;
@@ -19,7 +19,7 @@ export class ChartComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.ctx = this.canvasEl.getContext('2d');
+    this.ctx = this.canvasEl.nativeElement.getContext('2d');
     this.chart = new Chart(this.ctx, {
       data: this.data,
       type: this.type,

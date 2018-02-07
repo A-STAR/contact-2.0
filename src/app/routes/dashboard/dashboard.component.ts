@@ -22,8 +22,8 @@ export class DashboardComponent implements OnInit {
   promiseCount$: Observable<ChartData>;
   promiseCountStatus$: Observable<ChartData>;
   promiseCover$: Observable<ChartData>;
-  contactsDayPlan: ChartData;
   contactsDay: ChartData;
+  contactsDayPlan: ChartData;
 
   constructor(
     private dashboardService: DashboardService
@@ -37,14 +37,17 @@ export class DashboardComponent implements OnInit {
       .pipe(
         map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_AMOUNT, data))
       );
+
     this.promiseCount$ = this.dashboardService.getPromiseCount()
       .pipe(
         map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COUNT, data))
       );
+
     this.promiseCover$ = this.dashboardService.getPromiseCover()
       .pipe(
         map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COVER, data))
       );
+
     this.promiseCountStatus$ = this.dashboardService.getPromiseCountStatus()
       .pipe(
         map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COUNT_STATUS, data))
