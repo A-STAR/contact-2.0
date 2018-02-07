@@ -20,6 +20,11 @@ import {
 
 import { GridTreeService } from './gridtree.service';
 
+
+/**
+ * @deprecated
+ * Use app-gridtree2 instead
+ */
 @Component({
   selector: 'app-gridtree',
   templateUrl: './gridtree.component.html',

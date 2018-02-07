@@ -44,6 +44,8 @@ import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
 import { GridTreeModule } from './components/gridtree/gridtree.module';
 import { GridTreeWrapperModule } from './components/gridtree-wrapper/gridtree-wrapper.module';
+import { GridTree2Module } from './components/gridtree2/gridtree2.module';
+import { GridTree2WrapperModule } from './components/gridtree2-wrapper/gridtree2-wrapper.module';
 import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
 import { HtmlTextareaModule } from './components/form/html-textarea/html-textarea.module';
@@ -109,7 +111,9 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridModule,
     Grid2Module,
     GridTreeModule,
+    GridTree2Module,
     GridTreeWrapperModule,
+    GridTree2WrapperModule,
     GuiObjectsModule,
     HDividerModule,
     HtmlTextareaModule,
@@ -196,7 +200,9 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridModule,
     Grid2Module,
     GridTreeModule,
+    GridTree2Module,
     GridTreeWrapperModule,
+    GridTree2WrapperModule,
     GuiObjectsModule,
     HDividerModule,
     HtmlTextareaModule,

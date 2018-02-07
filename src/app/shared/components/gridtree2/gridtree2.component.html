@@ -1,0 +1,15 @@
+<ag-grid-angular
+  *ngIf="columns"
+  class="ag-theme-material"
+  style="height: 500px;"
+  [columnDefs]="columns"
+  [rowData]="rows"
+  [treeData]="true"
+  [animateRows]="true"
+  [groupDefaultExpanded]="groupDefaultExpanded"
+  [getDataPath]="getDataPath"
+  [autoGroupColumnDef]="autoGroupColumnDef"
+  [rowSelection]="rowSelection"
+  (gridReady)="onGridReady($event)"
+  (selectionChanged)="onSelect($event)"
+></ag-grid-angular>
