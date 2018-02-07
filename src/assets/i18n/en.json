@@ -109,6 +109,14 @@
     "TITLE": "Dashboard",
     "messages": {
       "chartLoadError": "Could not load chart data"
+    },
+    "errors": {
+      "params": "Error has been occured when fetching dashboard parameters",
+      "promiseAmount": "Error has been occured when fetching promise amount for the last 30 days",
+      "promiseCount": "Error has been occured when fetching promises count for the last 30 days",
+      "promiseCountStatus": "Error has been occured when fetching promise statuses for the last 30 days",
+      "promiseCover": "Error has been occured when fetching promise coverage for the last 30 days",
+      "contactDay": "Error has been occured when fetching successfull contacts for the last day"
     }
   },
   "validation": {
