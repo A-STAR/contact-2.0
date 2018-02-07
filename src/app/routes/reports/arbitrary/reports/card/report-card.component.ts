@@ -68,7 +68,7 @@ export class ReportCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ 'reports', 'arbitrary' ]);
+    this.routingService.navigate([ 'reports' ]);
   }
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {

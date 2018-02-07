@@ -94,7 +94,7 @@ export class ParamCardComponent implements OnInit, DoCheck {
   }
 
   onBack(): void {
-    this.routingService.navigate([ 'reports', 'arbitrary' ]);
+    this.routingService.navigate([ 'reports' ]);
   }
 
   private initControlsAccess(): void {
