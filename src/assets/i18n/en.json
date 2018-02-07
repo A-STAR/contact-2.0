@@ -276,7 +276,8 @@
         "editCell": "Error when trying to edit cell",
         "getErrors": "Error when trying to get error log file",
         "errorFile": "errors",
-        "defaultError": "Unknown error has been occurred"
+        "defaultError": "Unknown error has been occurred",
+        "notAvailable": "No data upload formats are available"
       }
     },
     "payments": {
@@ -376,6 +377,10 @@
       }
     },
     "contactRegistration": {
+      "tree": {
+        "selectOutcome": "Select Outcome",
+        "emptyScenario": "Empty Scenario"
+      },
       "contact": {
         "title": "Change Contact Person"
       },
@@ -2327,6 +2332,7 @@
         "stage": "Stage",
         "userId": "Operator",
         "modeCode": "Mode",
+        "inactiveReasonCode": "Reason for blocking",
         "changeGroupId": {
           "grid": {
             "id": "ID",
