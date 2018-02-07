@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
@@ -25,6 +26,7 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
 
   private selectedParam$ = new BehaviorSubject<IReportParam>(null);
   private reportId$ = new BehaviorSubject<number>(null);
+  private params$ = new BehaviorSubject<IReportParam[]>([]);
 
   @Input() set reportId(id: number) {
     this.reportId$.next(id);
@@ -76,7 +78,6 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
   ];
 
   dialog: string;
-  params: IReportParam[] = [];
 
   private actionSubscription: Subscription;
 
@@ -112,12 +113,20 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
     this.actionSubscription.unsubscribe();
   }
 
+  get rows$(): Observable<IReportParam[]> {
+    return this.params$;
+  }
+
   get reportId(): number {
     return this.reportId$.value;
   }
 
+  get params(): IReportParam[] {
+    return this.params$.value;
+  }
+
   get selectedParam(): IReportParam {
-    return (this.params || [])
+    return (this.params$.value || [])
       .find(param => this.selectedParam$.value && param.id === this.selectedParam$.value.id);
   }
 
@@ -150,13 +159,13 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
 
   private fetch(): void {
     this.paramsService.fetchAll(this.reportId).subscribe(params => {
-      this.params = params;
+      this.params$.next(params);
       this.cdRef.markForCheck();
     });
   }
 
   private clear(): void {
-    this.params = [];
+    this.params$.next([]);
     this.cdRef.markForCheck();
   }
 }

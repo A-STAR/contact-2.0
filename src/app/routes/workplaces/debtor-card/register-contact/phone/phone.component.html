@@ -4,9 +4,10 @@
   <app-grid
     columnTranslationKey="debtor.information.phone"
     selectionType="single"
-    [styles]="{ height: '200px' }"
     [columns]="columns"
+    [footerHeight]="false"
     [rows]="phones"
+    [styles]="{ height: '200px' }"
     (onSelect)="onSelect($event)"
     (onDblClick)="onDoubleClick($event)"
   ></app-grid>
