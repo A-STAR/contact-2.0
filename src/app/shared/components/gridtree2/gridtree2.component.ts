@@ -4,7 +4,7 @@ import {
   ChangeDetectorRef,
   EventEmitter,
   ViewEncapsulation,
-  Input, OnInit, Output
+  Input, OnInit, Output, OnChanges, SimpleChanges
 } from '@angular/core';
 
 import 'ag-grid-enterprise';
@@ -19,7 +19,7 @@ import { IGridTreeRow } from '@app/shared/components/gridtree2/gridtree2.interfa
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class GridTree2Component<T> implements OnInit {
+export class GridTree2Component<T> implements OnInit, OnChanges {
   @Input() rows: IGridTreeRow<T>[];
   @Input() columns: ColDef[];
   @Input() translateColumnLabels: boolean;
@@ -42,6 +42,14 @@ export class GridTree2Component<T> implements OnInit {
     this.groupDefaultExpanded = -1;
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    const { rows } = changes;
+
+    if (rows && rows.currentValue && !rows.firstChange) {
+      this.gridApi.redrawRows();
+    }
+  }
+
   onGridReady(params: any): void {
     this.gridApi = params.api;
     this.gridApi.sizeColumnsToFit();
@@ -52,7 +60,7 @@ export class GridTree2Component<T> implements OnInit {
     this.select.emit(this.gridApi.getSelectedRows()[0]);
   }
 
-  onDblSelect(event: RowEvent): void {
+  onDblClick(event: RowEvent): void {
     this.dblclick.emit(event.data);
   }
 }

@@ -5,7 +5,6 @@ import {
   Input,
   OnInit,
   OnDestroy,
-  ViewChild,
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -24,8 +23,6 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { GridTree2WrapperComponent } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.component';
-
 import { combineLatestAnd } from '@app/core/utils/helpers';
 import { DialogFunctions } from '@app/core/dialog';
 import {makeKey, TYPE_CODES} from '@app/core/utils';
@@ -40,8 +37,6 @@ const label = makeKey('widgets.attribute.grid');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
-  @ViewChild(GridTree2WrapperComponent) grid: GridTree2WrapperComponent<IAttribute>;
-
   @Input('entityTypeId') set entityTypeId(entityTypeId: number) {
     this._entityTypeId = entityTypeId;
     this.entityTypeId$.next(entityTypeId);
@@ -132,19 +127,21 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     return this.selectedAttribute$.map(attribute => attribute.code);
   }
 
-  onRowDblClick(attribute: IAttribute): void {
-    this.selectedAttribute$.next(attribute);
-    this.canEdit$
-      .pipe(first())
-      .filter(Boolean)
-      .subscribe(() => {
-        this.setDialog('edit');
-        this.cdRef.markForCheck();
-      });
+  onRowDblClick(row: IGridTreeRow<IAttribute>): void {
+    if (row && row.data) {
+      this.selectedAttribute$.next(row.data);
+      this.canEdit$
+        .pipe(first())
+        .filter(Boolean)
+        .subscribe(() => {
+          this.setDialog('edit');
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
-  onRowSelect(attribute: IAttribute): void {
-    this.selectedAttribute$.next(attribute);
+  onRowSelect(row: IGridTreeRow<IAttribute>): void {
+    this.selectedAttribute$.next(row.data);
   }
 
   onEditDialogSubmit(attribute: Partial<IAttribute>): void {
@@ -217,7 +214,6 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   private removeSelection(): void {
-    // this.grid.gridTree.gridTreeService.removeSelection();
     this.selectedAttribute$.next(null);
   }
 

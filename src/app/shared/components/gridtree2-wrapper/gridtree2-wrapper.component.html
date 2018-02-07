@@ -2,7 +2,7 @@
   *ngIf="convertedRows && convertedRows.length > 0"
   [translateColumnLabels]="translateColumnLabels"
   [rows]="convertedRows"
-  [columns]="convertedCols"
+  [columns]="convertedColsDef"
   [getDataPath]="getDataPath"
   [autoGroupColumnDef]="autoGroupColumnDef"
   (select)="onSelect($event)"
