@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-indicator',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./indicator.component.scss']
 })
 export class IndicatorComponent implements OnInit {
+  @Input() data: any;
 
   constructor() { }
 

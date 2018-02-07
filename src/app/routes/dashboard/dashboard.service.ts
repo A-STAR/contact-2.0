@@ -77,6 +77,10 @@ export class DashboardService {
         return this.prepareContactDayChart(
           data as IDashboardContactsDay,
         );
+      case DashboardChartType.CONTACT_DAY_PLAN:
+        return this.prepareContactDayPlanChart(
+          data as IDashboardContactsDay,
+        );
       default:
         return data;
     }
@@ -128,14 +132,30 @@ export class DashboardService {
     };
   }
 
-  private prepareContactDayChart(data: IDashboardContactsDay): ChartData {
+  private prepareContactDayPlanChart(data: IDashboardContactsDay): ChartData {
     return {
       // TODO(i.lobanov): translate
       labels: ['Fullfilled', 'Remaining'],
       datasets: [
         {
-          // TODO(i.lobanov): what about rest data parameters?
           data: [data.debtorSuccessContact, data.debtorSuccessContactPlan]
+        }
+      ]
+    };
+  }
+
+  private prepareContactDayChart(data: IDashboardContactsDay): ChartData {
+    return {
+      // TODO(i.lobanov): translate
+      labels: ['debtorSuccessContact', 'guarantorSuccessContact', 'pledgorSuccessContact', 'thirdPersonSuccessContact'],
+      datasets: [
+        {
+          data: [
+            data.debtorSuccessContact,
+            data.guarantorSuccessContact,
+            data.pledgorSuccessContact,
+            data.thirdPersonSuccessContact
+          ]
         }
       ]
     };

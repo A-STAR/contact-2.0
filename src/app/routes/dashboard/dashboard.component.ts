@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { ChartData } from 'chart.js';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 
-import { ColorsService } from '@app/shared/colors/colors.service';
-import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { first } from 'rxjs/operators';
+import {
+  IDashboardParams,
+  DashboardChartType,
+} from './dashboard.interface';
+
+import { DashboardService } from './dashboard.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -11,100 +16,45 @@ import { first } from 'rxjs/operators';
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  easyPiePercent = 70;
-  pieOptions = {
-    animate: {
-      duration: 800,
-      enabled: true
-    },
-    barColor: this.colors.byName('info'),
-    trackColor: 'rgba(200,200,200,0.4)',
-    scaleColor: false,
-    lineWidth: 10,
-    lineCap: 'round',
-    size: 145
-  };
 
-  sparkOptions1 = {
-    barColor: this.colors.byName('info'),
-    height: 30,
-    barWidth: '5',
-    barSpacing: '2'
-  };
-
-  sparkOptions2 = {
-    type: 'line',
-    height: 80,
-    width: '95%',
-    lineWidth: 2,
-    lineColor: this.colors.byName('purple'),
-    spotColor: '#888',
-    minSpotColor: this.colors.byName('purple'),
-    maxSpotColor: this.colors.byName('purple'),
-    fillColor: '',
-    highlightLineColor: '#fff',
-    spotRadius: 3,
-    resize: true
-  };
-
-  splineHeight = 280;
-  splineData: any;
-  splineOptions = {
-    series: {
-      lines: {
-        show: false
-      },
-      points: {
-        show: true,
-        radius: 4
-      },
-      splines: {
-        show: true,
-        tension: 0.4,
-        lineWidth: 1,
-        fill: 0.5
-      }
-    },
-    grid: {
-      borderColor: '#eee',
-      borderWidth: 1,
-      hoverable: true,
-      backgroundColor: '#fcfcfc'
-    },
-    tooltip: true,
-    tooltipOpts: {
-      content: (label, x, y) => { return x + ' : ' + y; }
-    },
-    xaxis: {
-      tickColor: '#fcfcfc',
-      mode: 'categories'
-    },
-    yaxis: {
-      min: 0,
-      max: 150,
-      tickColor: '#eee',
-      // position: ($scope.app.layout.isRTL ? 'right' : 'left'),
-      tickFormatter: v => v
-    },
-    shadowSize: 0
-  };
+  indicators$: Observable<IDashboardParams>;
+  promiseAmount$: Observable<ChartData>;
+  promiseCount$: Observable<ChartData>;
+  promiseCountStatus$: Observable<ChartData>;
+  promiseCover$: Observable<ChartData>;
+  contactsDayPlan: ChartData;
+  contactsDay: ChartData;
 
   constructor(
-    private colors: ColorsService,
-    private http: HttpClient,
-    private notificationsService: NotificationsService,
+    private dashboardService: DashboardService
   ) { }
 
   ngOnInit(): void {
-    this.http.get('assets/server/chart/spline.json')
-      .pipe(first())
-      .subscribe(
-        data => this.splineData = data,
-        () => this.notificationsService.error('dashboard.messages.chartLoadError').dispatch()
-      );
-  }
 
-  colorByName(name: string): string {
-    return this.colors.byName(name);
+    this.indicators$ = this.dashboardService.getParams();
+
+    this.promiseAmount$ = this.dashboardService.getPromiseAmount()
+      .pipe(
+        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_AMOUNT, data))
+      );
+    this.promiseCount$ = this.dashboardService.getPromiseCount()
+      .pipe(
+        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COUNT, data))
+      );
+    this.promiseCover$ = this.dashboardService.getPromiseCover()
+      .pipe(
+        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COVER, data))
+      );
+    this.promiseCountStatus$ = this.dashboardService.getPromiseCountStatus()
+      .pipe(
+        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COUNT_STATUS, data))
+      );
+
+    this.dashboardService.getContactsDay()
+      .subscribe(data => {
+        this.contactsDay = this.dashboardService.prepareChartData(DashboardChartType.CONTACT_DAY, data);
+        this.contactsDayPlan = this.dashboardService.prepareChartData(DashboardChartType.CONTACT_DAY_PLAN, data);
+      });
+
   }
 }

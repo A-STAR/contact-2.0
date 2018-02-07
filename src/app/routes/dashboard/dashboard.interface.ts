@@ -41,6 +41,7 @@ export enum DashboardChartType {
   PROMISE_COUNT_STATUS,
   PROMISE_COVER,
   CONTACT_DAY,
+  CONTACT_DAY_PLAN,
 }
 
 
