@@ -21,6 +21,7 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
 export class TimePickerComponent implements ControlValueAccessor {
   @Input() minTime: Date;
   @Input() maxTime: Date;
+
   @Input() set displaySeconds(displaySeconds: boolean) {
     this._displaySeconds = displaySeconds === undefined ? true : displaySeconds;
     this.timeFormat = this._displaySeconds ? 'HH:mm:ss' : 'HH:mm';
@@ -28,9 +29,12 @@ export class TimePickerComponent implements ControlValueAccessor {
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
-  timeFormat = 'HH:mm:ss';
   disabled = false;
+
+  timeFormat = 'HH:mm:ss';
+
   value: Date;
+  tempValue: Date;
 
   private _displaySeconds: boolean;
 
@@ -51,6 +55,7 @@ export class TimePickerComponent implements ControlValueAccessor {
     } else {
       this.value = null;
     }
+    this.tempValue = this.value;
     this.cdRef.markForCheck();
   }
 
@@ -74,6 +79,11 @@ export class TimePickerComponent implements ControlValueAccessor {
     this.update(date);
   }
 
+  onOkClick(): void {
+    this.update(this.tempValue);
+    this.dropdown.close();
+  }
+
   setCurrentTime(): void {
     const value = new Date();
     this.update(value);
@@ -81,12 +91,13 @@ export class TimePickerComponent implements ControlValueAccessor {
   }
 
   onTimeChange(time: Date): void {
-    const value = this.dateTimeService.setTime(this.value, time);
-    this.update(value);
+    this.tempValue = this.dateTimeService.setTime(this.tempValue, time);
+    this.cdRef.markForCheck();
   }
 
   private update(value: Date): void {
     this.value = value;
+    this.tempValue = value;
     this.propagateChange(value);
     this.cdRef.markForCheck();
   }
