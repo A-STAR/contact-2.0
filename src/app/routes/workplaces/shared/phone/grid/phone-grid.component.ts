@@ -22,6 +22,7 @@ import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
+import { CallService } from '@app/core/calls/call.service';
 import { DebtService } from '@app/core/debt/debt.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -67,7 +68,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   selectedPhoneId$ = new BehaviorSubject<number>(null);
 
-  toolbarItems: Array<IToolbarItem> = [
+  gridToolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
@@ -105,8 +106,16 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.canView$,
+      enabled: this.canCall$,
       action: () => this.fetch()
+    },
+  ];
+
+  callToolbarItems: Array<IToolbarItem> = [
+    {
+      type: ToolbarItemTypeEnum.BUTTON_START,
+      enabled: this.canCall$,
+      action: () => this.onCallStart()
     },
   ];
 
@@ -146,6 +155,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private callService: CallService,
     private debtService: DebtService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
@@ -327,6 +337,15 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     ]);
   }
 
+  get canCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('PBX_PREVIEW'),
+      this.callService.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
+      this.selectedPhone$.map(phone => phone && !phone.isInactive)
+    ]);
+  }
+
   private get isDebtOpen(): boolean {
     return this.debt && ![6, 7, 8, 17].includes(this.debt.statusCode);
   }
@@ -344,6 +363,17 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private onSubmitSuccess(): void {
     this.fetch();
     this.setDialog();
+  }
+
+  private onCallStart(): void {
+    this.selectedPhone$
+      .pipe(first())
+      .flatMap(phone => this.callService.makeCall(phone.id, this._debtId$.value, this._personId$.value, this.personRole))
+      .flatMap(() => combineLatestAnd([
+        this.callService.settings$.map(settings => !!settings.previewShowRegContact),
+        this.canRegisterContact$
+      ]))
+      .subscribe(showRegistration => this.registerContact());
   }
 
   private fetch(): void {

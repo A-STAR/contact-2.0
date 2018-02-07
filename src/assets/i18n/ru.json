@@ -2560,6 +2560,9 @@
     },
     "callSettings": {
       "gen": { "singular": "настроек телефонии", "plural": "настроек телефонии" }
+    },
+    "calls": {
+      "gen": { "singular": "звонка", "plural": "звонков" }
     }
   },
   "massOperations": {
