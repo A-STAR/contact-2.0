@@ -23,7 +23,11 @@ export class ChartComponent implements OnInit {
     this.chart = new Chart(this.ctx, {
       data: this.data,
       type: this.type,
-      options: this.options
+      options: {
+          ...this.options,
+          maintainAspectRatio: true,
+          responsive: true
+      }
     });
   }
 

@@ -14,6 +14,7 @@ import {
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class DashboardService {
@@ -31,28 +32,52 @@ export class DashboardService {
   }
 
   getPromiseAmount(): Observable<IDashboardPromiseAmount> {
-    return this.dataService.read(`${this.baseUrl}/promiseAmount`)
-      .catch(this.notificationsService.fetchError('dashboard.errors.promiseAmount').dispatchCallback());
+    // return this.dataService.read(`${this.baseUrl}/promiseAmount`)
+    //   .catch(this.notificationsService.fetchError('dashboard.errors.promiseAmount').dispatchCallback());
+    return of({
+      promiseDateList: ['01.01.2018', '02.01.2018', '03.01.2018', '04.01.2018', '05.01.2018'],
+      promiseAmountList: [145, 120, 99, 45, 101]
+    });
   }
 
   getPromiseCount(): Observable<IDashboardPromiseCount> {
-    return this.dataService.read(`${this.baseUrl}/promiseCount`)
-      .catch(this.notificationsService.fetchError('dashboard.errors.promiseCount').dispatchCallback());
+    // return this.dataService.read(`${this.baseUrl}/promiseCount`)
+    //   .catch(this.notificationsService.fetchError('dashboard.errors.promiseCount').dispatchCallback());
+    return of({
+      promiseDateList: ['01.01.2018', '02.01.2018', '03.01.2018', '04.01.2018', '05.01.2018'],
+      promiseCountList: [10, 25, 4, 33, 45]
+    });
   }
 
   getPromiseCountStatus(): Observable<IDashboardPromiseCountStatus> {
-    return this.dataService.read(`${this.baseUrl}/promiseCountStatus`)
-      .catch(this.notificationsService.fetchError('dashboard.errors.promiseCountStatus').dispatchCallback());
+    // return this.dataService.read(`${this.baseUrl}/promiseCountStatus`)
+    //   .catch(this.notificationsService.fetchError('dashboard.errors.promiseCountStatus').dispatchCallback());
+    return of({
+      monthPromiseFulfilled: 13,
+      monthPromiseOverdue: 15,
+      monthPromiseWaiting: 4
+    });
   }
 
   getPromiseCover(): Observable<IDashboardPromiseCoverage> {
-    return this.dataService.read(`${this.baseUrl}/promiseCover`)
-      .catch(this.notificationsService.fetchError('dashboard.errors.promiseCover').dispatchCallback());
+    // return this.dataService.read(`${this.baseUrl}/promiseCover`)
+    //   .catch(this.notificationsService.fetchError('dashboard.errors.promiseCover').dispatchCallback());
+    return of({
+      monthPromiseAmountCover: 33,
+      monthPromiseAmountRest: 15,
+    });
   }
 
   getContactsDay(): Observable<IDashboardContactsDay> {
-    return this.dataService.read(`${this.baseUrl}/contactDay`)
-      .catch(this.notificationsService.fetchError('dashboard.errors.contactDay').dispatchCallback());
+    // return this.dataService.read(`${this.baseUrl}/contactDay`)
+    //   .catch(this.notificationsService.fetchError('dashboard.errors.contactDay').dispatchCallback());
+    return of({
+      debtorSuccessContact: 101,
+      guarantorSuccessContact: 13,
+      pledgorSuccessContact: 27,
+      thirdPersonSuccessContact: 61,
+      debtorSuccessContactPlan: 34
+    });
   }
 
   prepareChartData(type: DashboardChartType, data: any): ChartData {
@@ -89,10 +114,11 @@ export class DashboardService {
   private preparePromiseCountStatusChart(data: IDashboardPromiseCountStatus): ChartData {
     return {
       // TODO(i.lobanov): translate
-      labels: [ 'monthPromiseFulfilled', 'monthPromiseOverdue', 'monthPromiseWaiting' ],
+      labels: [ 'Выполнено', 'Просрочено', 'Ожидание' ],
       datasets: [
         {
-          data: [data.monthPromiseFulfilled, data.monthPromiseOverdue, data.monthPromiseWaiting]
+          data: [data.monthPromiseFulfilled, data.monthPromiseOverdue, data.monthPromiseWaiting],
+          backgroundColor: ['#37bc9b', '#23b7e5', '#131e26'],
         }
       ]
     };
@@ -103,7 +129,9 @@ export class DashboardService {
       labels: data.promiseDateList,
       datasets: [
         {
-          data: data.promiseCountList
+          data: data.promiseCountList,
+          label: 'Кол-во обещаний',
+          backgroundColor: '#23b7e5'
         }
       ]
     };
@@ -114,7 +142,9 @@ export class DashboardService {
       labels: data.promiseDateList,
       datasets: [
         {
-          data: data.promiseAmountList
+          data: data.promiseAmountList,
+          label: 'Сумма',
+          backgroundColor: '#23b7e5'
         }
       ]
     };
@@ -123,10 +153,11 @@ export class DashboardService {
   private preparePromiseCoverChart(data: IDashboardPromiseCoverage): ChartData {
     return {
       // TODO(i.lobanov): translate
-      labels: ['Covered', 'Remaining'],
+      labels: ['Покрыто', 'Осталось'],
       datasets: [
         {
-          data: [data.monthPromiseAmountCover, data.monthPromiseAmountRest]
+          data: [data.monthPromiseAmountCover, data.monthPromiseAmountRest],
+          backgroundColor: ['#37bc9b', '#131e26'],
         }
       ]
     };
@@ -135,10 +166,11 @@ export class DashboardService {
   private prepareContactDayPlanChart(data: IDashboardContactsDay): ChartData {
     return {
       // TODO(i.lobanov): translate
-      labels: ['Fullfilled', 'Remaining'],
+      labels: ['Выполнено', 'Осталось'],
       datasets: [
         {
-          data: [data.debtorSuccessContact, data.debtorSuccessContactPlan]
+          data: [data.debtorSuccessContact, data.debtorSuccessContactPlan],
+          backgroundColor: ['#37bc9b', '#131e26'],
         }
       ]
     };
@@ -147,7 +179,7 @@ export class DashboardService {
   private prepareContactDayChart(data: IDashboardContactsDay): ChartData {
     return {
       // TODO(i.lobanov): translate
-      labels: ['debtorSuccessContact', 'guarantorSuccessContact', 'pledgorSuccessContact', 'thirdPersonSuccessContact'],
+      labels: ['Должник', 'Поручитель', 'Залогодатель', 'Третье лицо'],
       datasets: [
         {
           data: [
@@ -155,7 +187,8 @@ export class DashboardService {
             data.guarantorSuccessContact,
             data.pledgorSuccessContact,
             data.thirdPersonSuccessContact
-          ]
+          ],
+          backgroundColor: ['#37bc9b', '#23b7e5', '#131e26', '#7266ba'],
         }
       ]
     };

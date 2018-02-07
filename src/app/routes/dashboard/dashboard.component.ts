@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartData } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
@@ -24,6 +24,94 @@ export class DashboardComponent implements OnInit {
   promiseCover$: Observable<ChartData>;
   contactsDay: ChartData;
   contactsDayPlan: ChartData;
+
+  promiseCountStatusOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: 'Обещания за последние 30 дней',
+      display: true
+    },
+    legend: {
+      position: 'left',
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
+  promiseCountOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: 'Количество полученных обещаний за 30 дней',
+      display: true
+    },
+    legend: {
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
+  promiseAmountOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: 'Сумма полученных обещаний за 30 дней',
+      display: true
+    },
+    legend: {
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
+  promiseCoverOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: 'Покрытие обещаний за последние 30 дней',
+      display: true
+    },
+    legend: {
+      position: 'left',
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
+  contactsDayPlanOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: 'Количество контактов за текущий день с должником',
+      display: true
+    },
+    legend: {
+      position: 'right',
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
+  contactsDayOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: 'Успешные контакты за день',
+      display: true
+    },
+    legend: {
+      position: 'right',
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
 
   constructor(
     private dashboardService: DashboardService
