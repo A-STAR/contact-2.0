@@ -7,10 +7,9 @@ import { ButtonModule } from '../../button/button.module';
 import { DialogModule } from '../../dialog/dialog.module';
 import { GridModule } from '../../grid/grid.module';
 
-import { DialogMultiSelectWrapperService } from './dialog-multi-select-wrapper.service';
+import { DialogMultiSelectService } from './dialog-multi-select.service';
 
 import { DialogMultiSelectComponent } from './dialog-multi-select.component';
-import { DialogMultiSelectWrapperComponent } from './dialog-multi-select-wrapper.component';
 
 @NgModule({
   imports: [
@@ -23,14 +22,12 @@ import { DialogMultiSelectWrapperComponent } from './dialog-multi-select-wrapper
   ],
   exports: [
     DialogMultiSelectComponent,
-    DialogMultiSelectWrapperComponent,
   ],
   declarations: [
     DialogMultiSelectComponent,
-    DialogMultiSelectWrapperComponent,
   ],
   providers: [
-    DialogMultiSelectWrapperService,
+    DialogMultiSelectService,
   ]
 })
 export class DialogMultiSelectModule { }

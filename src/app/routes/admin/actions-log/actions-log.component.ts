@@ -138,7 +138,7 @@ export class ActionsLogComponent implements  OnDestroy, OnInit, AfterViewInit {
             label: 'actionsLog.filter.employees.title',
             placeholder: 'actionsLog.filter.employees.placeholder',
             filterType: 'users',
-            type: 'dialogmultiselectwrapper',
+            type: 'dialogmultiselect',
             width: 6,
           },
           {
@@ -146,7 +146,7 @@ export class ActionsLogComponent implements  OnDestroy, OnInit, AfterViewInit {
             label: 'actionsLog.filter.actionsTypes.title',
             placeholder: 'actionsLog.filter.actionsTypes.placeholder',
             filterType: 'actions',
-            type: 'dialogmultiselectwrapper',
+            type: 'dialogmultiselect',
             width: 6,
           },
         ],
