@@ -150,7 +150,7 @@ export class ParamCardComponent implements OnInit, DoCheck {
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
       {
-        controlName: 'name',
+        controlName: 'names',
         type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_PARAM_NAME,
