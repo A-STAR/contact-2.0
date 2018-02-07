@@ -40,46 +40,46 @@ export class ParamsService extends AbstractActionService {
     return combineLatest(inputParams
       .map(inputParam => this.createInputParamControl(inputParam) as any)
       .map(control => control.dictCode
-        ? this.userDictionariesService.getDictionaryAsOptions((<any>control).dictCode)
+        ? this.userDictionariesService.getDictionaryAsOptions(control.dictCode)
           .map(options => ({ ...control, options }))
         : of(control)
       )
     );
   }
 
-  createInputParamControl(inputParam: IReportInputParam): IDynamicFormControl {
+  createInputParamControl(inputParam: IReportInputParam): Partial<IDynamicFormControl> {
     const control = {
       label: inputParam.name,
       controlName: inputParam.systemName,
       required: !!inputParam.isMandatory,
     };
     switch (inputParam.paramTypeCode) {
-      case 1: return { ...control, type: 'datepicker' } as IDynamicFormControl;
-      case 2: return { ...control, type: 'number' } as IDynamicFormControl;
+      case 1: return { ...control, type: 'datepicker' };
+      case 2: return { ...control, type: 'number' };
       case 3: case 8: return {
         ...control,
         type: 'dialogmultiselectwrapper',
         filterType: 'portfolios',
         filterParams: { directionCodes: [ 1 ] },
-      } as IDynamicFormControl;
+      };
       case 4: return {
         ...control,
         type: 'dialogmultiselectwrapper',
         filterType: 'users'
-      } as IDynamicFormControl;
+      };
       case 5: return {
         ...control,
         type: 'dialogmultiselectwrapper',
         filterType: 'contractors'
-      } as IDynamicFormControl;
-      case 6: return { ...control, type: 'text' } as IDynamicFormControl;
+      };
+      case 6: return { ...control, type: 'text' };
       case 7: return {
         ...control,
         type: inputParam.multiSelect ? 'multiselect' : 'select',
         dictCode: inputParam.dictNameCode
-      } as IDynamicFormControl;
-      case 9: return { ...control, type: 'checkbox' } as IDynamicFormControl;
-      case 10: return { ...control, type: 'datetimepicker' } as IDynamicFormControl;
+      };
+      case 9: return { ...control, type: 'checkbox' };
+      case 10: return { ...control, type: 'datetimepicker' };
     }
   }
 
