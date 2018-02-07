@@ -5,8 +5,6 @@ import { ColDef } from 'ag-grid';
 import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
 import { IGridTreeRow } from '@app/shared/components/gridtree2/gridtree2.interface';
 
-import { flattenArray } from '@app/core/utils';
-
 @Injectable()
 export class GridTree2WrapperService<T> {
 
@@ -18,38 +16,36 @@ export class GridTree2WrapperService<T> {
       .map((column: IAGridWrapperTreeColumn) => {
         return {
           column: {
-            valueGetter: column.valueGetter,
             colId: column.colId,
             editable: column.editable,
-            field: column.colId,
+            field: column.name,
             headerName: translateColumnLabels ? this.translate.instant(column.label) : column.label,
             hide: !!column.hidden,
             maxWidth: column.maxWidth,
             minWidth: column.minWidth,
             width: column.width || column.minWidth || column.maxWidth,
+            valueGetter: column.valueGetter,
+            valueFormatter: column.valueFormatter,
           } as ColDef, isDataPath: column.isDataPath
         };
       });
   }
 
   mapRows(sourceRows: IGridTreeRow<T>[], columns: any[]): any[] {
+    const dataPathField = columns.find(column => column.isDataPath).column.field;
     const destinationRows = [];
     let uniqueId = 1;
 
-    const fillRow = (sourceRow: IGridTreeRow<T>, destinationRow: any, column: any, isChildRow: boolean) => {
-      if (isChildRow) {
+    const fillRow = (sourceRow: IGridTreeRow<T>, destinationRow: any, column: any, parentDataPathValue?: any) => {
+      if (parentDataPathValue) {
         destinationRow['uniqueId'] = uniqueId;
         sourceRow.uniqueId = uniqueId++;
       }
 
       if (column.isDataPath) {
-        destinationRow[column.column.field] = isChildRow
+        destinationRow[column.column.field] = parentDataPathValue
           ? [
-            ...Array.from(
-              new Set(
-                [ ...flattenArray(destinationRows.map((dstRow: any) => dstRow[column.column.field])),
-                  sourceRow.data[column.column.field]
-                ]))
+            ...Array.from(new Set([ parentDataPathValue, sourceRow.data[column.column.field] ]))
           ]
           : [ sourceRow.data[column.column.field] ];
       } else {
@@ -59,14 +55,14 @@ export class GridTree2WrapperService<T> {
       }
     };
 
-    const walkTree = (rows: IGridTreeRow<T>[]) => {
+    const walkChildren = (rows: IGridTreeRow<T>[], parentDataPathValue: any) => {
       if (rows) {
         rows.forEach((rowChild: any) => {
           const dstChildRow = {};
-          columns.forEach(column => fillRow(rowChild, dstChildRow, column, true));
+          columns.forEach(column => fillRow(rowChild, dstChildRow, column, parentDataPathValue));
 
           destinationRows.push(dstChildRow);
-          walkTree(rowChild.children);
+          walkChildren(rowChild.children, parentDataPathValue);
         });
       }
     };
@@ -75,17 +71,28 @@ export class GridTree2WrapperService<T> {
       const dstRow = { 'uniqueId': uniqueId };
       row.uniqueId = uniqueId++;
 
-      columns.forEach(column => fillRow(row, dstRow, column, false));
+      columns.forEach(column => fillRow(row, dstRow, column));
 
       destinationRows.push(dstRow);
-      walkTree(row.children);
+      walkChildren(row.children, row.data[dataPathField]);
     });
 
     return destinationRows;
   }
 
-  findSrcRowByUniqueId(sourceRows: IGridTreeRow<T>[], uniqueId: number): any {
-    // TODO
-    return {};
+  findSrcRowByUniqueId(sourceRows: IGridTreeRow<T>[], uniqueId: number): IGridTreeRow<T> | null {
+    let found = null;
+
+    const walkChildren = (srcRowChild) => {
+      if (srcRowChild.uniqueId === uniqueId) {
+        found = srcRowChild;
+        return true;
+      }
+      return srcRowChild.children && srcRowChild.children.some(walkChildren);
+    };
+
+    sourceRows.some(walkChildren);
+
+    return found;
   }
 }

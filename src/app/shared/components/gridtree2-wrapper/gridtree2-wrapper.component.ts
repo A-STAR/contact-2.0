@@ -20,7 +20,8 @@ export class GridTree2WrapperComponent<T> implements OnInit {
   @Input() translateColumnLabels: boolean;
   @Input() dnd: boolean;
 
-  @Output() select = new EventEmitter<IGridTreeRow<T>>();
+  @Output() select = new EventEmitter<IGridTreeRow<T> | null>();
+  @Output() dblclick = new EventEmitter<IGridTreeRow<T> | null>();
 
   convertedRows: any[];
   convertedCols: ColDef[];
@@ -42,6 +43,10 @@ export class GridTree2WrapperComponent<T> implements OnInit {
 
   onSelect(row: any): void {
     this.select.emit(this.gridTree2WrapperService.findSrcRowByUniqueId(this.rows, row.uniqueId));
+  }
+
+  onDblClick(row: any): void {
+    this.dblclick.emit(this.gridTree2WrapperService.findSrcRowByUniqueId(this.rows, row.uniqueId));
   }
 
 }

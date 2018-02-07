@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 
 import 'ag-grid-enterprise';
-import { ColDef, GridApi } from 'ag-grid';
+import { ColDef, GridApi, RowEvent } from 'ag-grid';
 
 import { IGridTreeRow } from '@app/shared/components/gridtree2/gridtree2.interface';
 
@@ -29,6 +29,7 @@ export class GridTree2Component<T> implements OnInit {
   @Input() dnd: boolean;
 
   @Output() select = new EventEmitter<IGridTreeRow<T>>();
+  @Output() dblclick = new EventEmitter<IGridTreeRow<T>>();
 
   gridApi: GridApi;
   groupDefaultExpanded: number;
@@ -49,5 +50,9 @@ export class GridTree2Component<T> implements OnInit {
 
   onSelect(): void {
     this.select.emit(this.gridApi.getSelectedRows()[0]);
+  }
+
+  onDblSelect(event: RowEvent): void {
+    this.dblclick.emit(event.data);
   }
 }

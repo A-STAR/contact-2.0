@@ -15,8 +15,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute } from '@app/shared/gui-objects/widgets/entity-attribute/attribute.interface';
-import { IGridWrapperTreeColumn } from '@app/shared/components/gridtree-wrapper/gridtree-wrapper.interface';
-import { IGridTreeColumn, IGridTreeRow } from '@app/shared/components/gridtree/gridtree.interface';
+import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
+import { IGridTreeRow } from '@app/shared/components/gridtree/gridtree.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '@app/shared/gui-objects/widgets/entity-attribute/attribute.service';
@@ -24,12 +24,13 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { GridTreeWrapperComponent } from '@app/shared/components/gridtree-wrapper/gridtree-wrapper.component';
+import { GridTree2WrapperComponent } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.component';
 
 import { combineLatestAnd } from '@app/core/utils/helpers';
 import { DialogFunctions } from '@app/core/dialog';
-import { makeKey } from '@app/core/utils';
+import {makeKey, TYPE_CODES} from '@app/core/utils';
 import { of } from 'rxjs/observable/of';
+
 
 const label = makeKey('widgets.attribute.grid');
 
@@ -39,7 +40,7 @@ const label = makeKey('widgets.attribute.grid');
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
-  @ViewChild(GridTreeWrapperComponent) grid: GridTreeWrapperComponent<IAttribute>;
+  @ViewChild(GridTree2WrapperComponent) grid: GridTree2WrapperComponent<IAttribute>;
 
   @Input('entityTypeId') set entityTypeId(entityTypeId: number) {
     this._entityTypeId = entityTypeId;
@@ -57,33 +58,28 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   private entityId$ = new BehaviorSubject<number>(null);
   private entitySubscription: Subscription;
 
-  private _columns: Array<IGridWrapperTreeColumn<IAttribute>> = [
+  private _columns: Array<IAGridWrapperTreeColumn> = [
     {
-      label: label('code'),
-      prop: 'code',
+      dataType: TYPE_CODES.STRING, name: 'code', isDataPath: true,
     },
     {
-      label: label('name'),
-      prop: 'name'
+      dataType: TYPE_CODES.STRING, name: 'name',
     },
     {
-      label: label('value'),
-      valueGetter: (_, data) => this.valueConverterService.deserialize(data).value,
+      dataType: TYPE_CODES.STRING, name: 'value',
+      valueGetter: (data) => this.valueConverterService.deserialize(data).value,
     },
     {
-      label: label('userFullName'),
-      prop: 'userFullName',
+      dataType: TYPE_CODES.STRING, name: 'userFullName',
     },
     {
-      label: label('changeDateTime'),
-      prop: 'changeDateTime',
+      dataType: TYPE_CODES.STRING, name: 'changeDateTime',
       valueFormatter: value => this.valueConverterService.ISOToLocalDateTime(value as string) || '',
     },
     {
-      label: label('comment'),
-      prop: 'comment',
+      dataType: TYPE_CODES.STRING, name: 'comment',
     },
-  ];
+  ].map(col => ({ ...col, label: label(col.name)}));
 
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
 
@@ -128,7 +124,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     this.entitySubscription.unsubscribe();
   }
 
-  get columns(): IGridTreeColumn<IAttribute>[] {
+  get columns(): IAGridWrapperTreeColumn[] {
     return this._columns;
   }
 
@@ -169,8 +165,6 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   onVersionClick(): void {
     this.routingService.navigate([ `${this.selectedAttribute$.value.code}/versions` ], this.route);
   }
-
-  idGetter = (row: IGridTreeRow<IAttribute>) => row.data.code;
 
   private get canEdit$(): Observable<boolean> {
     return  this.entityTypeId$.switchMap(entityTypeId =>
@@ -223,7 +217,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   private removeSelection(): void {
-    this.grid.gridTree.gridTreeService.removeSelection();
+    // this.grid.gridTree.gridTreeService.removeSelection();
     this.selectedAttribute$.next(null);
   }
 

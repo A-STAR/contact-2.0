@@ -1,5 +1,5 @@
 export interface IAGridWrapperTreeColumn {
-  colId: string;
+  colId?: string;
   name: string;
   label?: string;
   dataType: number;
