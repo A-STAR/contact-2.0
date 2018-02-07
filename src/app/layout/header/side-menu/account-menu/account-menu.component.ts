@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angul
 import { AuthService } from '@app/core/auth/auth.service';
 import { PersistenceService } from '@app/core/persistence/persistence.service';
 
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -10,17 +11,26 @@ import { PersistenceService } from '@app/core/persistence/persistence.service';
   styleUrls: [ './account-menu.component.scss' ],
   templateUrl: './account-menu.component.html'
 })
-export class AccountMenuComponent {
+export class AccountMenuComponent extends DialogFunctions {
   @Output() close = new EventEmitter<void>();
+
+  dialog: 'ext';
 
   constructor(
     private authService: AuthService,
     private persistenceService: PersistenceService,
-  ) {}
+  ) {
+    super();
+  }
 
-  editPhoneExtension(event: UIEvent): void {
+  showPhoneExtensionDialog(event: UIEvent): void {
     this.onClick(event);
-    console.log('111');
+    this.setDialog('ext');
+  }
+
+  onPhoneExtensionSubmit(): void {
+    console.log('Submitting phone extension...');
+    this.setDialog(null);
   }
 
   resetSettings(event: UIEvent): void {

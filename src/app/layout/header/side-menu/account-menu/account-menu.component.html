@@ -1,5 +1,18 @@
+<app-dialog *ngIf="isDialog('ext')" (close)="onCloseDialog()">
+  <div dialog-header>
+    <h3>{{ 'header.account.editPhoneExtension' | translate }}</h3>
+  </div>
+
+  FORM GOES HERE
+
+  <div dialog-footer>
+    <app-button type="ok" (click)="onPhoneExtensionSubmit()"></app-button>
+    <app-button type="cancel" (click)="onCloseDialog()"></app-button>
+  </div>
+</app-dialog>
+
 <ul class="list-group mb0">
-  <li class="list-group-item" (click)="editPhoneExtension($event)">
+  <li class="list-group-item" (click)="showPhoneExtensionDialog($event)">
     <i class="icon-phone"></i> {{ 'header.account.editPhoneExtension' | translate }}
   </li>
   <li class="list-group-item" (click)="resetSettings($event)">
