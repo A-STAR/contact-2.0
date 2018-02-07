@@ -1,8 +1,5 @@
 @import '../../../../styles/app/variables.scss';
 
-$size: 18px;
-$dotSize: 10px;
-
 input {
   left: -10000px;
   position: absolute;
@@ -14,12 +11,12 @@ input {
     border-radius: 50%;
     cursor: pointer;
     display: inline-block;
-    height: $size;
+    height: $radioButtonSize;
     margin: 0;
     position: relative;
     transition: background-color 0.2s ease, border-color 0.2s ease;
     vertical-align: bottom;
-    width: $size;
+    width: $radioButtonSize;
 
     &.disabled {
       background-color: $gray-light;
@@ -41,13 +38,13 @@ input {
       background-color: $link-color;
       border-radius: 50%;
       content: ' ';
-      height: $dotSize;
+      height: $radioButtonDotSize;
       left: 50%;
-      margin-left: -$dotSize / 2;
-      margin-top: -$dotSize / 2;
+      margin-left: -$radioButtonDotSize / 2;
+      margin-top: -$radioButtonDotSize / 2;
       position: absolute;
       top: 50%;
-      width: $dotSize;
+      width: $radioButtonDotSize;
     }
 
     &.disabled {
