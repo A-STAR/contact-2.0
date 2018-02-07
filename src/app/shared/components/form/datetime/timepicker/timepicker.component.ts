@@ -28,7 +28,7 @@ export class TimePickerComponent implements ControlValueAccessor {
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
-  timeFormat: string;
+  timeFormat = 'HH:mm:ss';
   disabled = false;
   value: Date;
 

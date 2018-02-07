@@ -29,7 +29,7 @@ export class DateTimePickerComponent implements ControlValueAccessor {
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
-  dateTimeFormat: string;
+  dateTimeFormat = 'L HH:mm:ss';
   private _displaySeconds: boolean;
   private _disabled = false;
   private _value: Date;
