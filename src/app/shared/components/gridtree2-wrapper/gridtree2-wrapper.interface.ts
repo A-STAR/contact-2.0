@@ -1,5 +1,6 @@
-export interface IAGridWrapperTreeColumn {
-  colId?: string;
+type IDataToValue<T, R> = (value: any, data: T) => R;
+
+export interface IAGridWrapperTreeColumn<T> {
   name: string;
   label?: string;
   dataType: number;
@@ -7,11 +8,7 @@ export interface IAGridWrapperTreeColumn {
   width?: number;
   maxWidth?: number;
   minWidth?: number;
-  disabled?: boolean;
-  editable?: boolean;
-  hidden?: boolean;
   isDataPath?: boolean;
-  renderer?: Function;
-  valueGetter?: Function;
-  valueFormatter?: Function;
+  valueGetter?: IDataToValue<T, any>;
+  valueFormatter?: IDataToValue<T, string>;
 }

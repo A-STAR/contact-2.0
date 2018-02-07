@@ -58,7 +58,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   private entityId$ = new BehaviorSubject<number>(null);
   private entitySubscription: Subscription;
 
-  private _columns: Array<IAGridWrapperTreeColumn> = [
+  private _columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
     {
       dataType: TYPE_CODES.STRING, name: 'code', isDataPath: true,
     },
@@ -67,14 +67,14 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     },
     {
       dataType: TYPE_CODES.STRING, name: 'value',
-      valueGetter: (data) => this.valueConverterService.deserialize(data).value,
+      valueGetter: row => this.valueConverterService.deserialize(row.data).value,
     },
     {
       dataType: TYPE_CODES.STRING, name: 'userFullName',
     },
     {
       dataType: TYPE_CODES.STRING, name: 'changeDateTime',
-      valueFormatter: value => this.valueConverterService.ISOToLocalDateTime(value as string) || '',
+      valueFormatter: row => this.valueConverterService.ISOToLocalDateTime(row.value) || '',
     },
     {
       dataType: TYPE_CODES.STRING, name: 'comment',
@@ -124,7 +124,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     this.entitySubscription.unsubscribe();
   }
 
-  get columns(): IAGridWrapperTreeColumn[] {
+  get columns(): IAGridWrapperTreeColumn<IAttribute>[] {
     return this._columns;
   }
 

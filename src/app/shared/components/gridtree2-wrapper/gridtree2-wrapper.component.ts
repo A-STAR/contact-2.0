@@ -16,7 +16,7 @@ import { GridTree2WrapperService } from '@app/shared/components/gridtree2-wrappe
 })
 export class GridTree2WrapperComponent<T> implements OnInit {
   @Input() rows: IGridTreeRow<T>[];
-  @Input() columns: IAGridWrapperTreeColumn[];
+  @Input() columns: IAGridWrapperTreeColumn<T>[];
   @Input() translateColumnLabels: boolean;
   @Input() dnd: boolean;
 

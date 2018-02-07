@@ -8,19 +8,24 @@ import { IGridTreeRow } from '@app/shared/components/gridtree2/gridtree2.interfa
 @Injectable()
 export class GridTree2WrapperService<T> {
 
+  private static readonly EXTRA_COLUMNS = [
+    { column: { field: 'typeCode' } },
+    { column: { field: 'valueB' } },
+    { column: { field: 'valueS' } },
+    { column: { field: 'valueN' } },
+    { column: { field: 'valueD' } }
+  ];
+
   constructor(private translate: TranslateService) { }
 
-  mapColumns(columns: IAGridWrapperTreeColumn[], translateColumnLabels?: boolean): any[] {
+  mapColumns(columns: IAGridWrapperTreeColumn<T>[], translateColumnLabels?: boolean): any[] {
     return columns
       .filter(column => !!column.label)
-      .map((column: IAGridWrapperTreeColumn) => {
+      .map((column: IAGridWrapperTreeColumn<T>) => {
         return {
           column: {
-            colId: column.colId,
-            editable: column.editable,
             field: column.name,
             headerName: translateColumnLabels ? this.translate.instant(column.label) : column.label,
-            hide: !!column.hidden,
             maxWidth: column.maxWidth,
             minWidth: column.minWidth,
             width: column.width || column.minWidth || column.maxWidth,
@@ -44,14 +49,10 @@ export class GridTree2WrapperService<T> {
 
       if (column.isDataPath) {
         destinationRow[column.column.field] = parentDataPathValue
-          ? [
-            ...Array.from(new Set([ ...parentDataPathValue, sourceRow.data[column.column.field] ]))
-          ]
+          ? [ ...Array.from(new Set([ ...parentDataPathValue, sourceRow.data[column.column.field] ])) ]
           : [ sourceRow.data[column.column.field] ];
       } else {
-        destinationRow[column.column.field] = column.column.valueGetter
-          ? column.column.valueGetter(sourceRow)
-          : sourceRow.data[column.column.field];
+        destinationRow[column.column.field] = sourceRow.data[column.column.field];
       }
     };
 
@@ -60,6 +61,7 @@ export class GridTree2WrapperService<T> {
         rows.forEach((rowChild: any) => {
           const dstChildRow = {};
           columns.forEach(column => fillRow(rowChild, dstChildRow, column, parentDataPathValue));
+          GridTree2WrapperService.EXTRA_COLUMNS.forEach(column => fillRow(rowChild, dstChildRow, column, parentDataPathValue));
 
           destinationRows.push(dstChildRow);
           walkChildren(rowChild.children, rowChild.children
@@ -74,6 +76,7 @@ export class GridTree2WrapperService<T> {
       row.uniqueId = uniqueId++;
 
       columns.forEach(column => fillRow(row, dstRow, column));
+      GridTree2WrapperService.EXTRA_COLUMNS.forEach(column => fillRow(row, dstRow, column));
 
       destinationRows.push(dstRow);
       walkChildren(row.children, [ row.data[dataPathField] ]);

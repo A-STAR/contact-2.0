@@ -9,9 +9,12 @@ import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.int
 import { AttributesService } from '@app/routes/workplaces/shared/contact-registration/edit/attributes/attributes.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { flatten, makeKey, TYPE_CODES } from '@app/core/utils';
 import { getRawValue, getValue } from '@app/core/utils/value';
+import {IAGridWrapperTreeColumn} from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
+import {IAttribute} from '@app/shared/gui-objects/widgets/entity-attribute/attribute.interface';
 
 const label = makeKey('modules.contactRegistration');
 
@@ -29,14 +32,15 @@ export class ContactRegistrationAttributesComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
     private gridService: GridService,
+    private valueConverterService: ValueConverterService,
   ) {}
 
   ngOnInit(): void {
-    const attrGridColumns: any[] = [
+    const attrGridColumns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
       { dataType: TYPE_CODES.STRING, name: 'code', isDataPath: true },
       { dataType: TYPE_CODES.STRING, name: 'name' },
       { dataType: TYPE_CODES.STRING, name: 'value',
-        valueGetter: (row: any) => row.data.value || row.data.valueN || row.data.valueD },
+        valueGetter: row => this.valueConverterService.deserialize(row.data).value },
       { dataType: TYPE_CODES.BOOLEAN, name: 'mandatory' },
     ].map(col => ({ ...col, label: label(`attributes.grid.${col.name}`)}));
 
