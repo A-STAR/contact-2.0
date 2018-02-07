@@ -564,6 +564,7 @@
     },
     "reports": {
       "arbitrary": {
+        "title": "Reports",
         "tabs": {
           "fields": "Fields",
           "params": "Paramerers"
@@ -624,6 +625,11 @@
             "isMandatory": "Is mandatory",
             "multiSelect": "Multi select",
             "dictNameCode": "Dictionary"
+          }
+        },
+        "input": {
+          "dialog": {
+            "title": "Enter parameters"
           }
         }
       }
