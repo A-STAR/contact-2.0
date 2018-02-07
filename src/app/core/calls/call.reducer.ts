@@ -10,6 +10,11 @@ export const defaultState: ICallState = {
 
 export function reducer(state: ICallState = defaultState, action: UnsafeAction): ICallState {
   switch (action.type) {
+    case CallService.CALL_SETTINGS_FETCH:
+      return {
+        ...state,
+        status: CallStateStatusEnum.PENDING,
+      };
     case CallService.CALL_SETTINGS_FETCH_SUCCESS:
       return {
         status: CallStateStatusEnum.LOADED,

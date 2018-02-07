@@ -20,12 +20,12 @@ export class CallService {
 
   get settings$(): Observable<ICallSettings> {
     const status = this.state && this.state.status;
-    if (!status || status === CallStateStatusEnum.ERROR) {
+    if (status !== CallStateStatusEnum.LOADED && status !== CallStateStatusEnum.PENDING) {
       this.refresh();
     }
     return this.state$
       .pipe(
-        filter(state => state.status === CallStateStatusEnum.LOADED),
+        filter(state => state.status !== CallStateStatusEnum.PENDING),
         map(state => state.settings)
       );
   }
@@ -39,7 +39,6 @@ export class CallService {
   private get state$(): Observable<ICallState> {
     return this.store.select(state => state.calls)
       .pipe(
-        filter(Boolean),
         distinctUntilChanged()
       );
   }
