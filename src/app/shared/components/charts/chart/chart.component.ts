@@ -25,7 +25,7 @@ export class ChartComponent implements OnInit {
       type: this.type,
       options: {
           ...this.options,
-          maintainAspectRatio: true,
+          maintainAspectRatio: false,
           responsive: true
       }
     });

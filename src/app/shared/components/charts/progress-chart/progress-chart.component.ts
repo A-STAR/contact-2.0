@@ -19,6 +19,11 @@ export class ProgressChartComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.options = {
+      ...this.options,
+      rotation: 1 * Math.PI,
+      circumference: 1 * Math.PI
+    };
   }
 
 }
