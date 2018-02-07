@@ -3,6 +3,7 @@ import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AppModulesModule } from './app-modules/app-modules.module';
+import { CallModule } from './calls/call.module';
 import { DebtModule } from './debt/debt.module';
 import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
@@ -29,6 +30,7 @@ import { environment } from '../../environments/environment';
 @NgModule({
   imports: [
     AppModulesModule,
+    CallModule,
     DebtModule,
     RoutingModule,
     UserModule,

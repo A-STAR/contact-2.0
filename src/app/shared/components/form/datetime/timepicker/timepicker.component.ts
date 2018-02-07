@@ -80,7 +80,8 @@ export class TimePickerComponent implements ControlValueAccessor {
   }
 
   onOkClick(): void {
-    this.update(this.tempValue);
+    const value = this.tempValue || moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate();
+    this.update(value);
     this.dropdown.close();
   }
 

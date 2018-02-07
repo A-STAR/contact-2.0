@@ -15,8 +15,14 @@
     },
     "account": {
       "title": "Account",
-      "logout": "Logout",
-      "reset": "Reset Settings"
+      "dialogs": {
+        "phoneExtension": {
+          "intPhone": "Extension"
+        }
+      },
+      "editPhoneExtension": "Edit Phone Extension",
+      "reset": "Reset Settings",
+      "logout": "Logout"
     }
   },
   "offsidebar": {
@@ -2565,6 +2571,9 @@
     },
     "params": {
       "gen": { "singular": "parameter", "plural": "parameters" }
+    },
+    "callSettings": {
+      "gen": { "singular": "telephone settings", "plural": "telephone settings" }
     }
   },
   "massOperations": {
