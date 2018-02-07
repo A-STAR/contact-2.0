@@ -29,9 +29,10 @@ export class TimePickerComponent implements ControlValueAccessor {
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
   timeFormat: string;
+  disabled = false;
+  value: Date;
+
   private _displaySeconds: boolean;
-  private _disabled = false;
-  private _value: Date;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -42,21 +43,13 @@ export class TimePickerComponent implements ControlValueAccessor {
     return this._displaySeconds;
   }
 
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
-  get value(): Date {
-    return this._value;
-  }
-
   writeValue(value: Date | string): void {
     if (value) {
-      this._value = value instanceof Date
+      this.value = value instanceof Date
         ? value
         : moment(value, this.timeFormat).toDate();
     } else {
-      this._value = null;
+      this.value = null;
     }
     this.cdRef.markForCheck();
   }
@@ -70,7 +63,7 @@ export class TimePickerComponent implements ControlValueAccessor {
   }
 
   setDisabledState(disabled: boolean): void {
-    this._disabled = disabled;
+    this.disabled = disabled;
   }
 
   onTouch(): void {
@@ -88,12 +81,12 @@ export class TimePickerComponent implements ControlValueAccessor {
   }
 
   onTimeChange(time: Date): void {
-    const value = this.dateTimeService.setTime(this._value, time);
+    const value = this.dateTimeService.setTime(this.value, time);
     this.update(value);
   }
 
   private update(value: Date): void {
-    this._value = value;
+    this.value = value;
     this.propagateChange(value);
     this.cdRef.markForCheck();
   }
