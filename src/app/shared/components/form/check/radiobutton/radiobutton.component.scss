@@ -26,6 +26,10 @@ input {
       border-color: $gray;
       cursor: default;
     }
+
+    &:not(.disabled):hover {
+      border-color: $link-color;
+    }
   }
 
   &:checked + span {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IRadioGroupOption } from './radio-group.interface';
@@ -15,12 +15,20 @@ import { IRadioGroupOption } from './radio-group.interface';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RadioGroupComponent implements ControlValueAccessor {
+export class RadioGroupComponent implements ControlValueAccessor, OnInit {
+  @Input() formControlName: string;
+  @Input() name: string;
   @Input() options: Array<IRadioGroupOption>;
 
   private _value: string;
 
   constructor(private cdRef: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    if (this.name && this.formControlName) {
+      throw new Error('RadioGroup must have either "formControlName" of "name".');
+    }
+  }
 
   writeValue(value: string): void {
     this._value = value;
