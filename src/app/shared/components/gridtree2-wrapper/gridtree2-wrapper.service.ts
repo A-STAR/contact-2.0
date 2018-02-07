@@ -36,7 +36,7 @@ export class GridTree2WrapperService<T> {
     const destinationRows = [];
     let uniqueId = 1;
 
-    const fillRow = (sourceRow: IGridTreeRow<T>, destinationRow: any, column: any, parentDataPathValue?: any) => {
+    const fillRow = (sourceRow: IGridTreeRow<T>, destinationRow: any, column: any, parentDataPathValue?: any[]) => {
       if (parentDataPathValue) {
         destinationRow['uniqueId'] = uniqueId;
         sourceRow.uniqueId = uniqueId++;
@@ -45,7 +45,7 @@ export class GridTree2WrapperService<T> {
       if (column.isDataPath) {
         destinationRow[column.column.field] = parentDataPathValue
           ? [
-            ...Array.from(new Set([ parentDataPathValue, sourceRow.data[column.column.field] ]))
+            ...Array.from(new Set([ ...parentDataPathValue, sourceRow.data[column.column.field] ]))
           ]
           : [ sourceRow.data[column.column.field] ];
       } else {
@@ -55,14 +55,16 @@ export class GridTree2WrapperService<T> {
       }
     };
 
-    const walkChildren = (rows: IGridTreeRow<T>[], parentDataPathValue: any) => {
+    const walkChildren = (rows: IGridTreeRow<T>[], parentDataPathValue: any[]) => {
       if (rows) {
         rows.forEach((rowChild: any) => {
           const dstChildRow = {};
           columns.forEach(column => fillRow(rowChild, dstChildRow, column, parentDataPathValue));
 
           destinationRows.push(dstChildRow);
-          walkChildren(rowChild.children, parentDataPathValue);
+          walkChildren(rowChild.children, rowChild.children
+            ? [ ...parentDataPathValue, rowChild.data[dataPathField] ]
+            : parentDataPathValue);
         });
       }
     };
@@ -74,7 +76,7 @@ export class GridTree2WrapperService<T> {
       columns.forEach(column => fillRow(row, dstRow, column));
 
       destinationRows.push(dstRow);
-      walkChildren(row.children, row.data[dataPathField]);
+      walkChildren(row.children, [ row.data[dataPathField] ]);
     });
 
     return destinationRows;
