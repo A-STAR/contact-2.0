@@ -8,7 +8,7 @@ import { GridFiltersService } from '@app/core/filters/grid-filters.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Injectable()
-export class DialogMultiSelectWrapperService {
+export class DialogMultiSelectService {
   private config = {
     portfolios: {
       columnsFrom: [

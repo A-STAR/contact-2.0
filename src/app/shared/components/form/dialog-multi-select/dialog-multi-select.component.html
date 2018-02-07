@@ -57,7 +57,7 @@
     </ng-container>
   </span>
   <span class="input-group-btn">
-    <button class="btn btn-default" type="button" (click)="onShowDialog()">
+    <button class="btn btn-default" type="button" [disabled]="isDisabled" (click)="onShowDialog()">
       <i class="fa fa-ellipsis-h"></i>
     </button>
   </span>

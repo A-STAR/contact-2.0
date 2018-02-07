@@ -17,7 +17,7 @@ nav {
       border-left: $menu-item-border-width solid transparent;
       color: $brand-white;
       cursor: pointer;
-      padding: 12px 14px;
+      padding: 10px 14px;
 
       &.active,
       &:hover {
@@ -33,13 +33,11 @@ nav {
 
         .icon-container {
           display: flex;
+          height: 38px;
           margin-right: 10px;
 
           i {
             font-size: 30px;
-            line-height: 1;
-            width: 30px;
-            height: 30px;
           }
         }
 
@@ -59,12 +57,12 @@ nav {
   &.collapsed {
     width: $layout-sidebar-width-collapsed;
 
-    ul li {
-      padding: 12px 0 12px 14px;
+    ul > li {
+      padding-right: 0;
       justify-content: center;
 
       i {
-        font-size: 30px;
+        // font-size: 30px;
         padding-right: $menu-item-border-width;
       }
     }
