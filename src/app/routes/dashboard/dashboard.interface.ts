@@ -13,7 +13,7 @@ export interface IDashboardPromiseAmount {
 
 export interface IDashboardPromiseCount {
   promiseDateList: string[];
-  promiseAmountList: number[];
+  promiseCountList: number[];
 }
 
 export interface IDashboardPromiseCountStatus {
@@ -33,6 +33,14 @@ export interface IDashboardContactsDay {
   pledgorSuccessContact: number;
   thirdPersonSuccessContact: number;
   debtorSuccessContactPlan: number;
+}
+
+export enum DashboardChartType {
+  PROMISE_COUNT,
+  PROMISE_AMOUNT,
+  PROMISE_COUNT_STATUS,
+  PROMISE_COVER,
+  CONTACT_DAY,
 }
 
 

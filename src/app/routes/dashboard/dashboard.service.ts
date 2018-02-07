@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { ChartData } from 'chart.js';
 
 import {
+  DashboardChartType,
   IDashboardParams,
   IDashboardPromiseAmount,
   IDashboardPromiseCount,
@@ -51,6 +53,92 @@ export class DashboardService {
   getContactsDay(): Observable<IDashboardContactsDay> {
     return this.dataService.read(`${this.baseUrl}/contactDay`)
       .catch(this.notificationsService.fetchError('dashboard.errors.contactDay').dispatchCallback());
+  }
+
+  prepareChartData(type: DashboardChartType, data: any): ChartData {
+    switch (type) {
+      case DashboardChartType.PROMISE_AMOUNT:
+        return this.preparePromiseAmountChart(
+          data as IDashboardPromiseAmount,
+        );
+      case DashboardChartType.PROMISE_COUNT:
+        return this.preparePromiseCountChart(
+          data as IDashboardPromiseCount,
+        );
+      case DashboardChartType.PROMISE_COUNT_STATUS:
+        return this.preparePromiseCountStatusChart(
+          data as IDashboardPromiseCountStatus,
+        );
+      case DashboardChartType.PROMISE_COVER:
+        return this.preparePromiseCoverChart(
+          data as IDashboardPromiseCoverage,
+        );
+      case DashboardChartType.CONTACT_DAY:
+        return this.prepareContactDayChart(
+          data as IDashboardContactsDay,
+        );
+      default:
+        return data;
+    }
+  }
+
+  private preparePromiseCountStatusChart(data: IDashboardPromiseCountStatus): ChartData {
+    return {
+      // TODO(i.lobanov): translate
+      labels: [ 'monthPromiseFulfilled', 'monthPromiseOverdue', 'monthPromiseWaiting' ],
+      datasets: [
+        {
+          data: [data.monthPromiseFulfilled, data.monthPromiseOverdue, data.monthPromiseWaiting]
+        }
+      ]
+    };
+  }
+
+  private preparePromiseCountChart(data: IDashboardPromiseCount): ChartData {
+    return {
+      labels: data.promiseDateList,
+      datasets: [
+        {
+          data: data.promiseCountList
+        }
+      ]
+    };
+  }
+
+  private preparePromiseAmountChart(data: IDashboardPromiseAmount): ChartData {
+    return {
+      labels: data.promiseDateList,
+      datasets: [
+        {
+          data: data.promiseAmountList
+        }
+      ]
+    };
+  }
+
+  private preparePromiseCoverChart(data: IDashboardPromiseCoverage): ChartData {
+    return {
+      // TODO(i.lobanov): translate
+      labels: ['Covered', 'Remaining'],
+      datasets: [
+        {
+          data: [data.monthPromiseAmountCover, data.monthPromiseAmountRest]
+        }
+      ]
+    };
+  }
+
+  private prepareContactDayChart(data: IDashboardContactsDay): ChartData {
+    return {
+      // TODO(i.lobanov): translate
+      labels: ['Fullfilled', 'Remaining'],
+      datasets: [
+        {
+          // TODO(i.lobanov): what about rest data parameters?
+          data: [data.debtorSuccessContact, data.debtorSuccessContactPlan]
+        }
+      ]
+    };
   }
 
 }
