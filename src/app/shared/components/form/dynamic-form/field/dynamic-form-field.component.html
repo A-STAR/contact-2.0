@@ -34,12 +34,12 @@
       <b>{{ control.label | translate }}</b>
       <b *ngIf="control.required" class="text-danger">*</b>
     </span>
-    <label class="radio-inline">
-      <input type="radio" [formControlName]="control.controlName" value="1">
+    <label class="inline-label">
+      <app-radiobutton [formControlName]="control.controlName" value="1"></app-radiobutton>
       {{'default.boolean.TRUE' | translate}}
     </label>
-    <label class="radio-inline">
-      <input type="radio" [formControlName]="control.controlName" value="0">
+    <label class="inline-label">
+      <app-radiobutton [formControlName]="control.controlName" value="0"></app-radiobutton>
       {{'default.boolean.FALSE' | translate}}
     </label>
   </ng-container>
@@ -436,12 +436,12 @@
           {{ control.label | translate }}
           <b *ngIf="control.required" class="text-danger">*</b>
         </span>
-        <label class="radio-inline">
-          <input type="radio" [formControlName]="control.controlName" value="1">
+        <label class="inline-label">
+          <app-radiobutton [formControlName]="control.controlName" value="1"></app-radiobutton>
           {{'default.boolean.TRUE' | translate}}
         </label>
-        <label class="radio-inline">
-          <input type="radio" [formControlName]="control.controlName" value="0">
+        <label class="inline-label">
+          <app-radiobutton [formControlName]="control.controlName" value="0"></app-radiobutton>
           {{'default.boolean.FALSE' | translate}}
         </label>
       </ng-container>

@@ -1,0 +1,56 @@
+@import '../../../../styles/app/variables.scss';
+
+input {
+  left: -10000px;
+  position: absolute;
+  visibility: hidden;
+
+  & + span {
+    background-color: #fff;
+    border: 1px solid $gray;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-block;
+    height: $radioButtonSize;
+    margin: 0;
+    position: relative;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    vertical-align: bottom;
+    width: $radioButtonSize;
+
+    &.disabled {
+      background-color: $gray-light;
+      border-color: $gray;
+      cursor: default;
+    }
+
+    &:not(.disabled):hover {
+      border-color: $link-color;
+    }
+  }
+
+  &:checked + span {
+    &:not(.disabled) {
+      border-color: $link-color;
+    }
+
+    &:before {
+      background-color: $link-color;
+      border-radius: 50%;
+      content: ' ';
+      height: $radioButtonDotSize;
+      left: 50%;
+      margin-left: -$radioButtonDotSize / 2;
+      margin-top: -$radioButtonDotSize / 2;
+      position: absolute;
+      top: 50%;
+      width: $radioButtonDotSize;
+    }
+
+    &.disabled {
+      &:before {
+        background-color: darken(grayscale($gray), 25%);
+      }
+    }
+  }
+}

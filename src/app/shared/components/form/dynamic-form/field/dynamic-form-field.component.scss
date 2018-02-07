@@ -1,6 +1,15 @@
 label {
   margin: 0;
   vertical-align: baseline;
+
+  &.inline-label {
+    display: inline-block;
+    width: auto;
+
+    & + &.inline-label {
+      padding-left: 10px;
+    }
+  }
 }
 
 .form-label {
