@@ -1,9 +1,15 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 
 import { AuthService } from '@app/core/auth/auth.service';
+import { CallService } from '@app/core/calls/call.service';
 import { PersistenceService } from '@app/core/persistence/persistence.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DialogFunctions } from '@app/core/dialog';
+
+import { combineLatestAnd } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,9 +24,20 @@ export class AccountMenuComponent extends DialogFunctions {
 
   constructor(
     private authService: AuthService,
+    private callService: CallService,
     private persistenceService: PersistenceService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
+
+  get canEditPhoneExtension$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('PBX_PARAM_AFTER_LOGIN_EDIT'),
+      this.callService.settings$.pipe(
+        map(params => params.useIntPhone === 1),
+      ),
+    ]);
   }
 
   showPhoneExtensionDialog(event: UIEvent): void {

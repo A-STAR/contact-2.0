@@ -12,7 +12,7 @@
 </app-dialog>
 
 <ul class="list-group mb0">
-  <li class="list-group-item" (click)="showPhoneExtensionDialog($event)">
+  <li *ngIf="canEditPhoneExtension$ | async" class="list-group-item" (click)="showPhoneExtensionDialog($event)">
     <i class="icon-phone"></i> {{ 'header.account.editPhoneExtension' | translate }}
   </li>
   <li class="list-group-item" (click)="resetSettings($event)">
