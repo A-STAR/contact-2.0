@@ -84,7 +84,8 @@ export class GridTree2WrapperService<T> {
     return destinationRows;
   }
 
-  findSrcRowByUniqueId(sourceRows: IGridTreeRow<T>[], uniqueId: number): IGridTreeRow<T> {
+  findSrcRowByUniqueId(sourceRows: IGridTreeRow<T>[], uniqueId: number): any {
     // TODO
+    return {};
   }
 }
