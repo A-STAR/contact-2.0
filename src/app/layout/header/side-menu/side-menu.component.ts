@@ -1,13 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
-
-import { AuthService } from '../../../core/auth/auth.service';
-import { PersistenceService } from '../../../core/persistence/persistence.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
-
-import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { first, map } from 'rxjs/operators';
+
+import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,15 +12,11 @@ import { first, map } from 'rxjs/operators';
   templateUrl: './side-menu.component.html',
 })
 export class SideMenuComponent {
-  @ViewChild('accountDropdown') accountDropdown: DropdownComponent;
-
   private _isSearchVisible = false;
 
   constructor(
-    private authService: AuthService,
     private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private persistenceService: PersistenceService,
     private translateService: TranslateService,
   ) {}
 
@@ -54,21 +46,5 @@ export class SideMenuComponent {
     // STUB: to test the language switching options
     const lang = this.translateService.currentLang === 'ru' ? 'en' : 'ru';
     this.translateService.use(lang).pipe(first()).subscribe();
-  }
-
-  editPhoneExtension(): void {
-    console.log('111');
-    this.accountDropdown.close();
-  }
-
-  resetSettings(event: UIEvent): void {
-    event.preventDefault();
-    this.persistenceService.clear();
-    this.accountDropdown.close();
-  }
-
-  logout(event: UIEvent): void {
-    event.preventDefault();
-    this.authService.dispatchLogoutAction();
   }
 }
