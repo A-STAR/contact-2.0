@@ -2557,6 +2557,9 @@
     },
     "params": {
       "gen": { "singular": "параметра", "plural": "параметров" }
+    },
+    "callSettings": {
+      "gen": { "singular": "настроек телефонии", "plural": "настроек телефонии" }
     }
   },
   "massOperations": {
