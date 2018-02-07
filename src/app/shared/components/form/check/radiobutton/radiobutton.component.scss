@@ -3,60 +3,53 @@
 $size: 18px;
 $dotSize: 10px;
 
-@mixin disabledRadioButton() {
-  background-color: $gray-light;
-  border-color: $gray;
-  cursor: default;
-  &:before {
-    background-color: darken(grayscale($gray), 25%);
-  }
-}
-
 input {
   left: -10000px;
   position: absolute;
   visibility: hidden;
-}
 
-span {
-  background-color: #fff;
-  border: 1px solid $gray;
-  border-radius: 50%;
-  cursor: pointer;
-  display: inline-block;
-  height: $size;
-  margin: 0;
-  position: relative;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-  vertical-align: bottom;
-  width: $size;
-
-  &:hover {
-    border-color: $link-color;
-  }
-
-  &.disabled {
-    @include disabledRadioButton();
-  }
-}
-
-input:checked + span {
-  border-color: $link-color;
-
-  &:before {
-    background-color: $link-color;
+  & + span {
+    background-color: #fff;
+    border: 1px solid $gray;
     border-radius: 50%;
-    content: ' ';
-    height: $dotSize;
-    left: 50%;
-    margin-left: -$dotSize / 2;
-    margin-top: -$dotSize / 2;
-    position: absolute;
-    top: 50%;
-    width: $dotSize;
+    cursor: pointer;
+    display: inline-block;
+    height: $size;
+    margin: 0;
+    position: relative;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    vertical-align: bottom;
+    width: $size;
+
+    &.disabled {
+      background-color: $gray-light;
+      border-color: $gray;
+      cursor: default;
+    }
   }
 
-  &.disabled {
-    @include disabledRadioButton();
+  &:checked + span {
+    &:not(.disabled) {
+      border-color: $link-color;
+    }
+
+    &:before {
+      background-color: $link-color;
+      border-radius: 50%;
+      content: ' ';
+      height: $dotSize;
+      left: 50%;
+      margin-left: -$dotSize / 2;
+      margin-top: -$dotSize / 2;
+      position: absolute;
+      top: 50%;
+      width: $dotSize;
+    }
+
+    &.disabled {
+      &:before {
+        background-color: darken(grayscale($gray), 25%);
+      }
+    }
   }
 }
