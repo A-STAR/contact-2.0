@@ -12,8 +12,11 @@ export class UIComponent {
   formGroup = new FormGroup({
     text1: new FormControl(''),
     text2: new FormControl('I am a text field'),
-    text3: new FormControl({ value: '', disabled: true }),
-    text4: new FormControl({ value: 'I am a text field', disabled: true }),
+    text3: new FormControl({ value: 'I am a text field', disabled: true }),
+    textarea1: new FormControl(''),
+    textarea2: new FormControl('I am a textarea.\nHi there!'),
+    textarea3: new FormControl({ value: 'I am a textarea.\nHi there!', disabled: true }),
+    textarea4: new FormControl('I am a textarea.\nHi there!'),
     checkbox1: new FormControl(false),
     checkbox2: new FormControl(true),
     checkbox3: new FormControl({ value: false, disabled: true }),

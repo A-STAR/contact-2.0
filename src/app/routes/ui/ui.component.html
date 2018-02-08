@@ -14,13 +14,30 @@
   </div>
 
   <div class="form-group">
-    <label>Empty & disabled</label>
+    <label>Disabled</label>
     <app-text formControlName="text3"></app-text>
   </div>
 
+  <h2>Textarea</h2>
+
   <div class="form-group">
-    <label>Not empty & disabled</label>
-    <app-text formControlName="text4"></app-text>
+    <label>Empty</label>
+    <app-textarea formControlName="textarea1"></app-textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Not empty</label>
+    <app-textarea formControlName="textarea2"></app-textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Disabled</label>
+    <app-textarea formControlName="textarea3"></app-textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Custom height</label>
+    <app-textarea formControlName="textarea4" rows="5"></app-textarea>
   </div>
 
   <h1>Check Module</h1>
