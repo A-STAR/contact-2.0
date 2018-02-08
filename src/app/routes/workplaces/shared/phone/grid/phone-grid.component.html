@@ -39,11 +39,16 @@
   (cancel)="onDialogClose()">
 </app-dialog-action>
 
+<app-phone-operator-dialog
+  *ngIf="isDialog('operator')"
+  (select)="onPhoneOperatorSelect($event)"
+  (close)="onDialogClose()"
+></app-phone-operator-dialog>
+
 <div class="row">
   <app-toolbar-2 class="bh col-md-6" [items]="gridToolbarItems"></app-toolbar-2>
   <app-toolbar-2 class="bh col-md-6 text-right" [items]="callToolbarItems"></app-toolbar-2>
 </div>
-
 
 <app-grid
   *ngIf="canDisplayGrid"

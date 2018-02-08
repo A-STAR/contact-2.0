@@ -6,6 +6,7 @@ import { DialogActionModule } from '@app/shared/components/dialog-action/dialog-
 import { GridModule } from '@app/shared/components/grid/grid.module';
 import { PhoneGridScheduleModule } from './schedule/phone-grid-schedule.module';
 import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
+import { OperatorModule } from '../operator/operator.module';
 
 import { PhoneGridComponent } from './phone-grid.component';
 
@@ -17,6 +18,7 @@ import { PhoneGridComponent } from './phone-grid.component';
     GridModule,
     PhoneGridScheduleModule,
     Toolbar2Module,
+    OperatorModule,
   ],
   exports: [
     PhoneGridComponent,
