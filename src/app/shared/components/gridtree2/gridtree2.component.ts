@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 
 import 'ag-grid-enterprise';
-import {ColDef, GridApi, RowDragEndEvent, RowEvent} from 'ag-grid';
+import { ColDef, GridApi, GridOptions, RowDragEndEvent, RowEvent } from 'ag-grid';
 
 import { IGridTreeRow } from '@app/shared/components/gridtree2/gridtree2.interface';
 
@@ -30,12 +30,14 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
   @Input() rowSelection = 'single';
   @Input() getDataPath: Function;
   @Input() dnd: boolean;
+  @Input() rowHeight: number;
 
   @Output() select = new EventEmitter<IGridTreeRow<T>>();
   @Output() move = new EventEmitter<IGridTreeRow<T> | null>();
   @Output() dblclick = new EventEmitter<IGridTreeRow<T>>();
 
   gridApi: GridApi;
+  gridOptions: GridOptions;
   groupDefaultExpanded: number;
 
   constructor(
@@ -45,6 +47,9 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.groupDefaultExpanded = -1;
+    this.gridOptions = {
+      rowHeight: this.rowHeight,
+    };
   }
 
   ngOnChanges(changes: SimpleChanges): void {

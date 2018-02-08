@@ -19,6 +19,7 @@ export class GridTree2WrapperComponent<T> implements OnInit, OnChanges {
   @Input() columns: IAGridWrapperTreeColumn<T>[];
   @Input() translateColumnLabels: boolean;
   @Input() dnd: boolean;
+  @Input() rowHeight = 36;
 
   @Output() select = new EventEmitter<IGridTreeRow<T> | null>();
   @Output() move = new EventEmitter<IGridTreeRow<T> | null>();
@@ -39,7 +40,11 @@ export class GridTree2WrapperComponent<T> implements OnInit, OnChanges {
 
     this.convertedColsDef = this.convertedCols.filter(column => !column.isDataPath).map(column => column.column);
     this.getDataPath = data => data[this.convertedCols.find(column => column.isDataPath).column.field];
-    this.autoGroupColumnDef = { rowDrag: this.dnd, ...this.convertedCols.find(column => column.isDataPath).column };
+    this.autoGroupColumnDef = {
+      rowDrag: this.dnd,
+      cellRendererParams: { suppressCount: true },
+      ...this.convertedCols.find(column => column.isDataPath).column,
+    };
 
     this.mapRows();
   }

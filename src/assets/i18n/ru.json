@@ -1589,8 +1589,8 @@
           "attributes": {
             "code": "Код",
             "name": "Название",
-            "display": "Отображать",
-            "mandatory": "Обязательно к заполнению"
+            "isDisplayed": "Отображать",
+            "isMandatory": "Обязательно к заполнению"
           }
         },
         "delete": {

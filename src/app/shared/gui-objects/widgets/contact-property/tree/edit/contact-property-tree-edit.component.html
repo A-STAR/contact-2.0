@@ -19,21 +19,12 @@
 
       <app-tabview-tab [title]="'widgets.contactProperty.dialogs.edit.attributesSettings'">
         <div class="mt" *ngIf="tabs[1].isInitialised">
-          <!-- TODO(d.topheenko): get rid of primeNg tree table (use app-gridtree2-wrapper instead) -->
-          <p-treeTable selectionMode="none" [value]="attributeTypes">
-            <p-column field="code" [header]="'widgets.contactProperty.dialogs.edit.attributes.code' | translate"></p-column>
-            <p-column field="name" [header]="'widgets.contactProperty.dialogs.edit.attributes.name' | translate"></p-column>
-            <p-column field="isDisplayed" [header]="'widgets.contactProperty.dialogs.edit.attributes.display' | translate">
-              <ng-template let-node="rowData" pTemplate="body">
-                <app-checkbox [ngModel]="node.data.isDisplayed" (ngModelChange)="onIsDisplayedChange($event, node)"></app-checkbox>
-              </ng-template>
-            </p-column>
-            <p-column field="isMandatory" [header]="'widgets.contactProperty.dialogs.edit.attributes.mandatory' | translate">
-              <ng-template let-node="rowData" pTemplate="body">
-                  <app-checkbox [ngModel]="node.data.isMandatory" (ngModelChange)="onIsMandatoryChange($event, node)"></app-checkbox>
-              </ng-template>
-            </p-column>
-          </p-treeTable>
+          <app-gridtree2-wrapper
+            *ngIf="attributeTypes && attributeTypes.length > 0"
+            [translateColumnLabels]="true"
+            [columns]="columns"
+            [rows]="attributeTypes">
+          </app-gridtree2-wrapper>
         </div>
       </app-tabview-tab>
 

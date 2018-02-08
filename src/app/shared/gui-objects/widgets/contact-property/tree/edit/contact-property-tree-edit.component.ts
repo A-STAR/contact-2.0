@@ -13,23 +13,27 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Validators } from '@angular/forms';
 
+import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
+import { IAttribute } from '@app/shared/gui-objects/widgets/attribute/attribute.interface';
 import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
-import { IContactTreeAttribute } from '../../contact-property.interface';
-import { IDynamicFormItem, IDynamicFormConfig } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IContactTreeAttribute } from '@app/shared/gui-objects/widgets/contact-property/contact-property.interface';
+import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
-import { ITreeNode } from '../../../../../components/flowtree/treenode/treenode.interface';
+import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 import { IUserAttributeType } from '@app/core/user/attribute-types/user-attribute-types.interface';
 
-import { ContactPropertyService } from '../../contact-property.service';
+import { ContactPropertyService } from '@app/shared/gui-objects/widgets/contact-property/contact-property.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { UserAttributeTypesService } from '@app/core/user/attribute-types/user-attribute-types.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
-import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { flatten, isEmpty, range, valuesToOptions } from '@app/core/utils';
+import { flatten, isEmpty, makeKey, range, TYPE_CODES, valuesToOptions } from '@app/core/utils';
+
+const label = makeKey('widgets.contactProperty.dialogs.edit.attributes');
 
 @Component({
   selector: 'app-contact-property-tree-edit',
@@ -57,6 +61,13 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     { isInitialised: true },
     { isInitialised: false },
   ];
+
+  columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
+    { dataType: TYPE_CODES.STRING, name: 'code', isDataPath: true },
+    { dataType: TYPE_CODES.STRING, name: 'name' },
+    { dataType: TYPE_CODES.BOOLEAN, name: 'isDisplayed' },
+    { dataType: TYPE_CODES.BOOLEAN, name: 'isMandatory' },
+  ].map(col => ({ ...col, label: label(col.name)}));
 
   private attributeTypesChanged = false;
 
@@ -145,6 +156,9 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     this.cancel.emit();
   }
 
+  /**
+   * @deprecated
+   */
   onIsDisplayedChange(value: boolean, node: ITreeNode, traverseUp: boolean = true, traverseDown: boolean = true): void {
     this.attributeTypesChanged = true;
     node.data.isDisplayed = value;
@@ -163,6 +177,9 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     }
   }
 
+  /**
+   * @deprecated
+   */
   onIsMandatoryChange(value: boolean, node: ITreeNode): void {
     this.attributeTypesChanged = true;
     node.data.isMandatory = value;
