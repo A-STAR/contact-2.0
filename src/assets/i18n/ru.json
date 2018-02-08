@@ -100,7 +100,6 @@
         "SEARCH_GROUPS": "Группы свободного поиска",
         "MAIL": "Почта",
         "REPORTS": "Отчеты",
-        "ARBITRARY_REPORTS": "Произвольные отчеты",
         "HELP": "Помощь",
         "INCOMING_CALL": "Входящий звонок",
         "CURRENCY_RATE_EDIT": "Валютный Курс"
@@ -621,7 +620,7 @@
             "sortOrder": "Порядковый номер",
             "systemName": "Системное название",
             "isMandatory": "Обязательность",
-            "multiSelect": "Множенственный выбор"
+            "multiSelect": "Множественный выбор"
           },
           "card": {
             "names": "Название",
@@ -629,7 +628,7 @@
             "sortOrder": "Порядковый номер",
             "paramTypeCode": "Тип параметра",
             "isMandatory": "Обязательность",
-            "multiSelect": "Множенственный выбор",
+            "multiSelect": "Множественный выбор",
             "dictNameCode": "Словарь"
           }
         },
