@@ -3,6 +3,10 @@ stages:
   - build
   - deploy
 
+cache:
+  paths:
+    - node_modules/
+
 job_test:
   stage: test
   script:
@@ -10,7 +14,7 @@ job_test:
     - echo $CI_PROJECT_DIR
     - node -v && npm -v
     - npm install
-    - npm run lint && npm run test:prod
+    - npm run lint && npm run test:ci && npm run build
   except:
     - dev
 

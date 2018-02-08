@@ -1,7 +1,5 @@
 import { async as Async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { random } from 'faker';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
@@ -11,21 +9,17 @@ import { ButtonService } from './button.service';
 
 import { ButtonComponent } from './button.component';
 
-const defaultButtonClass = random.uuid();
-const defaultIconClass = random.uuid();
-const defaultLabel = random.word();
-
 class ButtonServiceMock {
   getIcon(type: IButtonType): string {
-    return defaultIconClass;
+    return 'default-icon-class';
   }
 
   getLabel(type: IButtonType): string {
-    return defaultLabel;
+    return 'default-label';
   }
 
   getClass(style: IButtonStyle): string {
-    return defaultButtonClass;
+    return 'default-button-class';
   }
 }
 
@@ -68,41 +62,24 @@ describe('ButtonComponent', () => {
 
   it('should render button', () => {
     fixture.detectChanges();
-    expect(fixture.nativeElement).toBeTruthy();
-  });
-
-  it('should render button with default css class', () => {
-    fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('button')).nativeElement.classList).toContain(defaultButtonClass);
-  });
-
-  it('should render button with default icon class', () => {
-    fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('button > i')).nativeElement.classList).toContain(defaultIconClass);
-  });
-
-  it('should render button with default label', () => {
-    fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain(defaultLabel);
+    expect(fixture.nativeElement).toMatchSnapshot();
   });
 
   it('should render button with custom icon class', () => {
-    const customIconClass = random.uuid();
-    fixture.componentInstance.icon = customIconClass;
+    fixture.componentInstance.icon = 'custom-icon-class';
     fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('button > i')).nativeElement.classList).toContain(customIconClass);
+    expect(fixture.nativeElement).toMatchSnapshot();
   });
 
   it('should render button with no label', () => {
     fixture.componentInstance.label = false;
     fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('button > span'))).toBeFalsy();
+    expect(fixture.nativeElement).toMatchSnapshot();
   });
 
   it('should render button with custom label', () => {
-    const customLabel = random.word();
-    fixture.componentInstance.label = customLabel;
+    fixture.componentInstance.label = 'Custom Label';
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain(customLabel);
+    expect(fixture.nativeElement).toMatchSnapshot();
   });
 });
