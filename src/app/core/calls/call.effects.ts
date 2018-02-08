@@ -111,6 +111,27 @@ export class CallEffects {
         });
     });
 
+  @Effect()
+  transferCall$ = this.actions
+    .ofType(CallService.CALL_TRANSFER)
+    .mergeMap((action: UnsafeAction) => {
+      const { userId, debtId, personId, personRole } = action.payload;
+      return this.transfer(userId, debtId, personId, personRole)
+        .map(call => ({
+          type: CallService.CALL_TRANSFER_SUCCESS,
+        }))
+        .catch(error => {
+          return [
+            { type: CallService.CALL_TRANSFER_FAILURE },
+            this.notificationService
+              .error('widgets.phone.errors.transfer')
+              .entity('entities.calls.gen.singular')
+              .response(error)
+              .action()
+          ];
+        });
+    });
+
   constructor(
     private actions: Actions,
     private dataService: DataService,
@@ -152,5 +173,10 @@ export class CallEffects {
   private retrieve(debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
       .create('pbx/call/retrive', {}, { debtId, personId, personRole });
+  }
+
+  private transfer(userId: number, debtId: number, personId: number, personRole: number): Observable<void> {
+    return this.dataService
+      .create('pbx/call/transfer', {}, { userId, debtId, personId, personRole });
   }
 }

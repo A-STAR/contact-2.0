@@ -16,7 +16,7 @@ export class OperatorDialogComponent implements OnInit {
   @ViewChild(GridComponent) grid: GridComponent;
 
   @Output() close = new EventEmitter<null>();
-  @Output() select = new EventEmitter<IOperator>();
+  @Output() select = new EventEmitter<number>();
 
   columns: Array<IGridColumn> = [
     { prop: 'id', width: 50 },
@@ -45,7 +45,7 @@ export class OperatorDialogComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.select.emit(this.selectedOperator);
+    this.select.emit(this.selectedOperator.id);
   }
 
   onClose(): void {

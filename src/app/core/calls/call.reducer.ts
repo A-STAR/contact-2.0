@@ -58,6 +58,11 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
         ...state,
         call: { ...(state.call || {}), onHold: false }
       };
+    case CallService.CALL_TRANSFER_SUCCESS:
+      return {
+        ...state,
+        call: null
+      };
     default:
       return state;
   }

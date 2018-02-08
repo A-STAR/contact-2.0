@@ -1870,6 +1870,9 @@
         },
         "retrieve": {
           "*": "Could not retrieve {{ entity }}"
+        },
+        "transfer": {
+          "*": "Could not transfer {{ entity }}"
         }
       }
     },

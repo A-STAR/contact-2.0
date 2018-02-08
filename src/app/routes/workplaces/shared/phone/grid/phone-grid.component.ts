@@ -132,6 +132,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       enabled: this.canRetrieveCall$,
       action: () => this.onRetrieveCall()
     },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
+      enabled: this.canTransferCall$,
+      action: () => this.setDialog('operator')
+    },
   ];
 
   contextMenuOptions: IContextMenuItem[] = [
@@ -293,6 +298,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .subscribe(() => this.onSubmitSuccess());
   }
 
+  onPhoneOperatorSelect(operatorId: number): void {
+    this.callService.transferCall(operatorId, this._debtId$.value, this._personId$.value, this.personRole);
+  }
+
   onDialogClose(): void {
     this.setDialog();
   }
@@ -394,6 +403,14 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       // this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useRetriveCall),
+    ]);
+  }
+
+  get canTransferCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.callService.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall),
     ]);
   }
 

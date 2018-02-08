@@ -23,6 +23,9 @@ export class CallService {
   static CALL_RETRIEVE = 'CALL_RETRIEVE';
   static CALL_RETRIEVE_SUCCESS = 'CALL_RETRIEVE_SUCCESS';
   static CALL_RETRIEVE_FAILURE = 'CALL_RETRIEVE_FAILURE';
+  static CALL_TRANSFER = 'CALL_TRANSFER';
+  static CALL_TRANSFER_SUCCESS = 'CALL_TRANSFER_SUCCESS';
+  static CALL_TRANSFER_FAILURE = 'CALL_TRANSFER_FAILURE';
 
   private state: ICallState;
 
@@ -79,6 +82,13 @@ export class CallService {
     this.store.dispatch({
       type: CallService.CALL_RETRIEVE,
       payload: { debtId, personId, personRole }
+    });
+  }
+
+  transferCall(userId: number, debtId: number, personId: number, personRole: number): void {
+    this.store.dispatch({
+      type: CallService.CALL_TRANSFER,
+      payload: { userId, debtId, personId, personRole }
     });
   }
 
