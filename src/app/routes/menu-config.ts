@@ -177,8 +177,8 @@ export const menuConfig: IMenuConfig = {
     icon: ''
   },
   anyReports: {
-    text: 'sidebar.nav.menu.ARBITRARY_REPORTS',
-    link: '/reports/arbitrary',
+    text: 'sidebar.nav.menu.REPORTS',
+    link: '/reports',
     icon: 'co-action-log'
   },
 

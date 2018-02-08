@@ -13,11 +13,6 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        pathMatch: 'full',
-        redirectTo: 'arbitrary',
-      },
-      {
-        path: 'arbitrary',
         loadChildren: './arbitrary/arbitrary-reports.module#ArbitraryReportsModule',
       },
       {

@@ -27,6 +27,8 @@ import { ActionGridModule } from './components/action-grid/action-grid.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
 import { ButtonModule } from './components/button/button.module';
 import { CapitalizeModule } from './pipes/capitalize/capitalize.module';
+import { ChartsModule } from './components/charts/charts.module';
+import { CheckModule } from './components/form/check/check.module';
 import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
 import { DateTimeModule } from './components/form/datetime/datetime.module';
 import { DebtAmountModule } from './components/form/debt-amount/debt-amount.module';
@@ -93,6 +95,8 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     BlockDialogModule,
     ButtonModule,
     CapitalizeModule,
+    ChartsModule,
+    CheckModule,
     ColorPickerModule,
     DateTimeModule,
     DebtAmountModule,
@@ -178,6 +182,8 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     BlockDialogModule,
     ButtonModule,
     CapitalizeModule,
+    ChartsModule,
+    CheckModule,
     ColorPickerModule,
     DateTimeModule,
     DebtAmountModule,

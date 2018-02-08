@@ -66,18 +66,19 @@ export class FieldCardComponent implements OnInit {
 
     action.subscribe(() => {
       this.fieldsService.dispatchAction(FieldsService.MESSAGE_FIELD_SAVED);
+      this.form.markAsPristine();
       this.onBack();
     });
   }
 
   onBack(): void {
-    this.routingService.navigate([ 'reports', 'arbitrary' ]);
+    this.routingService.navigate([ 'reports' ]);
   }
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
       {
-        controlName: 'name',
+        controlName: 'names',
         type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_FIELD_NAME,

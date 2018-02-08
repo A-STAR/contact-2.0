@@ -9,7 +9,7 @@
     </p-column>
     <p-column field="mandatory" [header]="'modules.contactRegistration.attributes.grid.mandatory' | translate">
       <ng-template let-node="rowData" pTemplate="body">
-        <input type="checkbox" [ngModel]="node.data.mandatory" [disabled]="true">
+        <app-checkbox [ngModel]="node.data.mandatory" [disabled]="true"></app-checkbox>
       </ng-template>
     </p-column>
   </p-treeTable>

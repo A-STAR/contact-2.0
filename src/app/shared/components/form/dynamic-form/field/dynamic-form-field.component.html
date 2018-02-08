@@ -6,13 +6,14 @@
         {{ control.label | translate }}
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
-      <input type="number"
-             class="form-control"
-             [attr.min]="control.min"
-             [attr.max]="control.max"
-             [attr.placeholder]="(control.placeholder || '') | translate"
-             [formControlName]="control.controlName"
-             (input)="control.onChange ? control.onChange($event) : undefined">
+      <input
+        type="number"
+        class="form-control"
+        [attr.min]="control.min"
+        [attr.max]="control.max"
+        [attr.placeholder]="(control.placeholder || '') | translate"
+        [formControlName]="control.controlName"
+        (input)="control.onChange ? control.onChange($event) : undefined">
     </label>
   </ng-container>
 
@@ -22,10 +23,11 @@
         {{ control.label | translate }}
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
-      <input type="text"
-             class="form-control"
-             [attr.placeholder]="(control.placeholder || '') | translate"
-             [formControlName]="control.controlName">
+      <input
+        type="text"
+        class="form-control"
+        [attr.placeholder]="(control.placeholder || '') | translate"
+        [formControlName]="control.controlName">
     </label>
   </ng-container>
 
@@ -34,24 +36,22 @@
       <b>{{ control.label | translate }}</b>
       <b *ngIf="control.required" class="text-danger">*</b>
     </span>
-    <label class="radio-inline">
-      <input type="radio" [formControlName]="control.controlName" value="1">
+    <label class="inline-label">
+      <app-radiobutton [formControlName]="control.controlName" value="1"></app-radiobutton>
       {{'default.boolean.TRUE' | translate}}
     </label>
-    <label class="radio-inline">
-      <input type="radio" [formControlName]="control.controlName" value="0">
+    <label class="inline-label">
+      <app-radiobutton [formControlName]="control.controlName" value="0"></app-radiobutton>
       {{'default.boolean.FALSE' | translate}}
     </label>
   </ng-container>
 
   <ng-container *ngSwitchCase="'checkbox'">
-    <div class="checkbox mt0 mb0">
-      <label>
-        <input type="checkbox" [formControlName]="control.controlName"/>
-        {{ control.label | translate}}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </label>
-    </div>
+    <label>
+      <app-checkbox [formControlName]="control.controlName"></app-checkbox>
+      {{ control.label | translate }}
+      <b *ngIf="control.required" class="text-danger">*</b>
+    </label>
   </ng-container>
 
   <ng-container *ngSwitchCase="'select'">
@@ -129,6 +129,7 @@
       <app-multi-select
         [formControlName]="control.controlName"
         [options]="control.options"
+        [controlDisabled]="control.disabled"
         (select)="selectHandler({ control: control, items: $event})"
       ></app-multi-select>
     </label>
@@ -168,6 +169,7 @@
     </label>
     <app-datetimepicker
       [formControlName]="control.controlName"
+      [displaySeconds]="control.displaySeconds"
       [minDateTime]="control.minDateTime"
       [maxDateTime]="control.maxDateTime"
       [required]="control.required"
@@ -198,6 +200,7 @@
     </label>
     <app-timepicker
       [formControlName]="control.controlName"
+      [displaySeconds]="control.displaySeconds"
       [minTime]="control.minTime"
       [maxTime]="control.maxTime"
       [required]="control.required"
@@ -248,6 +251,7 @@
     <app-grid-dropdown
       [columns]="control.gridColumns"
       [formControlName]="control.controlName"
+      [controlDisabled]="control.disabled"
       [rows]="control.gridRows"
       [labelGetter]="control.gridLabelGetter"
       [valueGetter]="control.gridValueGetter"
@@ -256,18 +260,18 @@
     </app-grid-dropdown>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'dialogmultiselectwrapper'">
+  <ng-container *ngSwitchCase="'dialogmultiselect'">
     <label>
       <span class="form-label">
         {{ control.label | translate }}
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
     </label>
-    <app-dialog-multi-select-wrapper
+    <app-dialog-multi-select
       [filterType]="control.filterType"
       [filterParams]="control.filterParams"
       [formControlName]="control.controlName"
-    ></app-dialog-multi-select-wrapper>
+    ></app-dialog-multi-select>
   </ng-container>
 
   <ng-container *ngSwitchCase="'password'">
@@ -371,8 +375,9 @@
       <app-multilanguage-input
         [formControlName]="control.controlName"
         [langOptions]="control.langOptions"
-        [controlDisabled]="control.disabled">
-      </app-multilanguage-input>
+        [controlDisabled]="control.disabled"
+        [placeholder]="control.placeholder"
+      ></app-multilanguage-input>
     </label>
   </ng-container>
 
@@ -434,12 +439,12 @@
           {{ control.label | translate }}
           <b *ngIf="control.required" class="text-danger">*</b>
         </span>
-        <label class="radio-inline">
-          <input type="radio" [formControlName]="control.controlName" value="1">
+        <label class="inline-label">
+          <app-radiobutton [formControlName]="control.controlName" value="1"></app-radiobutton>
           {{'default.boolean.TRUE' | translate}}
         </label>
-        <label class="radio-inline">
-          <input type="radio" [formControlName]="control.controlName" value="0">
+        <label class="inline-label">
+          <app-radiobutton [formControlName]="control.controlName" value="0"></app-radiobutton>
           {{'default.boolean.FALSE' | translate}}
         </label>
       </ng-container>

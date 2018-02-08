@@ -24,14 +24,7 @@
         <i class="fa fa-user"></i>
       </span>
       <div class="dropdown-content">
-        <ul class="list-group mb0">
-          <li class="list-group-item" (click)="resetSettings($event)">
-            <i class="icon-settings"></i> {{ 'header.account.reset' | translate }}
-          </li>
-          <li class="list-group-item" (click)="logout($event)">
-            <i class="icon-lock"></i> {{ 'header.account.logout' | translate }}
-          </li>
-        </ul>
+        <app-account-menu (close)="accountDropdown.close()"></app-account-menu>
       </div>
     </app-dropdown>
   </li>

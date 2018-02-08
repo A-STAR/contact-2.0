@@ -13,6 +13,7 @@ import { ToasterModule } from 'angular2-toaster';
 import * as R from 'ramda';
 
 import { AuthEffects } from './core/auth/auth.effects';
+import { CallEffects } from './core/calls/call.effects';
 import { DictionariesEffects } from './routes/admin/dictionaries/dictionaries.effects';
 import { EntityAttributesEffects } from './core/entity/attributes/entity-attributes.effects';
 import { GuiObjectsEffects } from './core/gui-objects/gui-objects.effects';
@@ -62,6 +63,7 @@ export function reset(nextReducer: any): any {
     CoreModule,
     EffectsModule.forRoot([
       AuthEffects,
+      CallEffects,
       DictionariesEffects,
       EntityAttributesEffects,
       GuiObjectsEffects,

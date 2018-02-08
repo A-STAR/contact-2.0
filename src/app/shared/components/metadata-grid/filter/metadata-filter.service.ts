@@ -25,7 +25,7 @@ export class MetadataFilterService {
   getFilterControlType(filterType: string, operator: FilterOperatorType): TControlTypes {
     switch (operator) {
       case 'IN':
-        return 'dialogmultiselectwrapper';
+        return 'dialogmultiselect';
       case 'BETWEEN':
         return filterType === 'dates' ? 'datepicker' : 'selectwrapper';
       default:

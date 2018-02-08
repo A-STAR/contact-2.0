@@ -1,0 +1,95 @@
+<section [formGroup]="formGroup">
+  <h1>Check Module</h1>
+
+  <h2>Checkbox</h2>
+
+  <div class="form-group">
+    <label class="label">
+      <app-checkbox formControlName="checkbox1"></app-checkbox>
+      Not Checked
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="label">
+      <app-checkbox formControlName="checkbox2"></app-checkbox>
+      Checked
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="label">
+      <app-checkbox formControlName="checkbox3"></app-checkbox>
+      Disabled & Not Checked
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="label">
+      <app-checkbox formControlName="checkbox4"></app-checkbox>
+      Disabled & Checked
+    </label>
+  </div>
+
+  <h2>Radiobutton</h2>
+
+  <div class="form-group">
+    <label class="label">
+      <app-radiobutton formControlName="radioGroup1" [value]="false"></app-radiobutton>
+      Not Checked
+    </label>
+    <label class="label">
+      <app-radiobutton formControlName="radioGroup1" [value]="true"></app-radiobutton>
+      Checked
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="label">
+      <app-radiobutton formControlName="radioGroup2" [value]="false"></app-radiobutton>
+      Disabled & Not Checked
+    </label>
+    <label class="label">
+      <app-radiobutton formControlName="radioGroup2" [value]="true"></app-radiobutton>
+      Disabled & Checked
+    </label>
+  </div>
+
+  <h1>Date/Time</h1>
+
+  <h2>DateTimePicker Module</h2>
+
+  <div class="form-group">
+    <label class="label">Empty value</label>
+    <app-datetimepicker formControlName="datetime1"></app-datetimepicker>
+  </div>
+
+  <div class="form-group">
+    <label class="label">Now</label>
+    <app-datetimepicker formControlName="datetime2"></app-datetimepicker>
+  </div>
+
+  <h2>DatePicker</h2>
+
+  <div class="form-group">
+    <label class="label">Empty value</label>
+    <app-datepicker formControlName="date1"></app-datepicker>
+  </div>
+
+  <div class="form-group">
+    <label class="label">Now</label>
+    <app-datepicker formControlName="date2"></app-datepicker>
+  </div>
+
+  <h2>TimePicker</h2>
+
+  <div class="form-group">
+    <label class="label">Empty value</label>
+    <app-timepicker formControlName="time1"></app-timepicker>
+  </div>
+
+  <div class="form-group">
+    <label class="label">Now</label>
+    <app-timepicker formControlName="time2"></app-timepicker>
+  </div>
+</section>

@@ -87,6 +87,7 @@ export interface IDynamicFormButtonControl extends IDynamicFormBaseControl {
 export interface IDynamicFormDateTimeControl extends IDynamicFormBaseControl {
   // options for datetime controls
   type: 'datetimepicker';
+  displaySeconds?: boolean;
   minDateTime?: Date;
   maxDateTime?: Date;
 }
@@ -102,6 +103,7 @@ export interface IDynamicFormDateControl extends IDynamicFormBaseControl {
 export interface IDynamicFormTimeControl extends IDynamicFormBaseControl {
   // options for time controls
   type: 'timepicker';
+  displaySeconds?: boolean;
   minTime?: Date;
   maxTime?: Date;
 }
@@ -141,12 +143,11 @@ export interface IDynamicFormLanguageControl extends IDynamicFormBaseControl {
 }
 
 export interface IDynamicFormDialogMultiSelectControl extends IDynamicFormBaseControl {
-  type: 'dialogmultiselect' | 'dialogmultiselectwrapper';
+  type: 'dialogmultiselect';
   // options for dialog multiselect
   filterType?: IDialogMultiSelectFilterType;
   filterParams?: IFilterParam;
   placeholder?: string;
-  dependsOn?: string;
 }
 
 export interface IDynamicFormNumberControl extends IDynamicFormBaseControl {
@@ -312,7 +313,6 @@ export type TControlTypes =
   | 'debt-amount'
   | 'dialog'
   | 'dialogmultiselect'
-  | 'dialogmultiselectwrapper'
   | 'dynamic'
   | 'file'
   | 'gridselect'

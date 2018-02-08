@@ -25,6 +25,7 @@ export class MultiLanguageComponent implements ControlValueAccessor {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   @Input() controlDisabled = false;
+  @Input() placeholder = 'Enter translation value';
 
   @Input('langOptions')
   set langOptions(options: IMultiLanguageOption[]) {
@@ -39,10 +40,6 @@ export class MultiLanguageComponent implements ControlValueAccessor {
     return this._langOptions;
   }
 
-  onHoverChange(e: MouseEvent): void {
-    this.isHovering = e.type === 'mouseenter';
-  }
-
   writeValue(values: IMultiLanguageOption[]): void {
     this.cdRef.markForCheck();
   }
@@ -54,7 +51,7 @@ export class MultiLanguageComponent implements ControlValueAccessor {
   registerOnTouched(fn: Function): void {
   }
 
-  get model(): string {
+  get value(): string {
     const option = (this.langOptions || []).find((v, i) => i === this.selectedId);
     return option ? option.value : null;
   }
