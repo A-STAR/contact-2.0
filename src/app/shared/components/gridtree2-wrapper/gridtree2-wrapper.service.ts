@@ -22,6 +22,7 @@ export class GridTree2WrapperService<T> {
     return columns
       .filter(column => !!column.label)
       .map((column: IAGridWrapperTreeColumn<T>) => {
+        // TODO(d.topheenko): model
         return {
           column: {
             field: column.name,
@@ -31,7 +32,7 @@ export class GridTree2WrapperService<T> {
             width: column.width || column.minWidth || column.maxWidth,
             valueGetter: column.valueGetter,
             valueFormatter: column.valueFormatter,
-          } as ColDef, isDataPath: column.isDataPath
+          } as ColDef, isDataPath: column.isDataPath, dictCode: column.dictCode
         };
       });
   }

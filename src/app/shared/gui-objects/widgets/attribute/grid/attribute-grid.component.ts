@@ -44,7 +44,8 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
     { dataType: TYPE_CODES.STRING, name: 'name', isDataPath: true },
     { dataType: TYPE_CODES.STRING, name: 'code' },
-    { dataType: TYPE_CODES.STRING, name: 'typeCode' }, // TODO(d.topheenko): dictCode
+    { dataType: TYPE_CODES.DICT, name: 'typeCode',
+      dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE, },
   ].map(col => ({ ...col, label: labelKey(col.name)}));
 
   attributes: IGridTreeRow<IAttribute>[] = [];

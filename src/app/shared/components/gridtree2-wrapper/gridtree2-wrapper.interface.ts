@@ -1,4 +1,4 @@
-type IDataToValue<T, R> = (value: any, data: T) => R;
+export type IDataToValue<T, R> = (value: any, data: T) => R;
 
 export interface IAGridWrapperTreeColumn<T> {
   name: string;

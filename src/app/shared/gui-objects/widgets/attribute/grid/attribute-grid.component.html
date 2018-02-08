@@ -57,6 +57,7 @@
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
 <app-gridtree2-wrapper
+  *ngIf="attributes && attributes.length > 0"
   [columns]="columns"
   [dnd]="canEdit$ | async"
   [rows]="attributes"
