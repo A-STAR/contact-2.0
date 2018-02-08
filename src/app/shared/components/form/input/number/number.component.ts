@@ -71,19 +71,25 @@ export class NumberComponent implements ControlValueAccessor {
   }
 
   onWheel(event: WheelEvent): void {
-    event.preventDefault();
-    const value = (this.value || 0) - this._step * Math.sign(event.deltaY);
-    this.update(value);
+    if (!this.disabled) {
+      event.preventDefault();
+      const value = (this.value || 0) - this._step * Math.sign(event.deltaY);
+      this.update(value);
+    }
   }
 
   onIncrementClick(): void {
-    const value = (this.value || 0) + this._step;
-    this.update(value);
+    if (!this.disabled) {
+      const value = (this.value || 0) + this._step;
+      this.update(value);
+    }
   }
 
   onDecrementClick(): void {
-    const value = (this.value || 0) - this._step;
-    this.update(value);
+    if (!this.disabled) {
+      const value = (this.value || 0) - this._step;
+      this.update(value);
+    }
   }
 
   private update(value: number): void {
