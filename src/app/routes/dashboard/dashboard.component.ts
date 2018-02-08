@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
-import {
-  IDashboardParams,
-  DashboardChartType,
-} from './dashboard.interface';
+import { DashboardChartType } from './dashboard.interface';
+import { IIndicator } from '@app/shared/components/charts/charts.interface';
+import { ICurrency } from '@app/shared/gui-objects/widgets/currencies/currencies.interface';
 
 import { DashboardService } from './dashboard.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -17,7 +18,7 @@ import { DashboardService } from './dashboard.service';
 })
 export class DashboardComponent implements OnInit {
 
-  indicators$: Observable<IDashboardParams>;
+  indicators$: Observable<IIndicator[]>;
   promiseAmount$: Observable<ChartData>;
   promiseCount$: Observable<ChartData>;
   promiseCountStatus$: Observable<ChartData>;
@@ -32,7 +33,15 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.indicators$ = this.dashboardService.getParams();
+    this.indicators$ = combineLatest(
+        this.dashboardService.getParams(),
+        this.lookupService.lookup<ICurrency>('currencies')
+      )
+      .map(([ params, currencies]) => {
+        const prepareFn = this.dashboardService.prepareIndicators(params);
+        const currentCurrency = currencies.find(currency => currency.code === '1');
+        return currentCurrency && currentCurrency.shortName ? prepareFn(currentCurrency.shortName) : prepareFn('руб.');
+      });
 
     this.promiseAmount$ = this.dashboardService.getPromiseAmount()
       .pipe(

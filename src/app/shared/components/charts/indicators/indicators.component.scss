@@ -1,0 +1,19 @@
+@import "../../../styles/app/variables.scss";
+
+.indicator {
+  text-align: center;
+}
+.indicator-badge {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 6px;
+}
+.indicator-text {
+  color: $brand-white;
+  font-size: 20px;
+  font-weight: bold;
+}
+.indicator-label {
+  color: $text;
+}

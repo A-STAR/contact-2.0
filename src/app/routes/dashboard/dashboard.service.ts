@@ -130,8 +130,15 @@ export class DashboardService {
   ) { }
 
   getParams(): Observable<IDashboardParams> {
-    return this.dataService.read(`${this.baseUrl}/params`)
-      .catch(this.notificationsService.fetchError('dashboard.errors.params').dispatchCallback());
+    // return this.dataService.read(`${this.baseUrl}/params`)
+    //   .catch(this.notificationsService.fetchError('dashboard.errors.params').dispatchCallback());
+    return of({
+      debtActiveCnt: 180,
+      debtNeedCallCnt: 23,
+      monthPaymentCnt: 69,
+      monthPaymentAmount: 550350,
+      monthPaymentCommission: 20530
+    });
   }
 
   getPromiseAmount(): Observable<IDashboardPromiseAmount> {
@@ -214,6 +221,16 @@ export class DashboardService {
     }
   }
 
+  prepareIndicators(data: IDashboardParams): (currencyName: string) => IIndicator[] {
+    const currencyIndicators = ['monthPaymentAmount', 'monthPaymentCommission'];
+    return (currencyName: string) =>
+      Object.keys(data)
+        .map((key: keyof IDashboardParams) => ({
+          text: currencyIndicators.includes(key) ? `${data[key]} ${currencyName}` : `${data[key]}`,
+          label: this.translate(`indicators.${key}`),
+          color: this.indicatorColors[key]
+        }));
+  }
 
   private translate(path: string): string {
     return this.translateService.instant(label(path));

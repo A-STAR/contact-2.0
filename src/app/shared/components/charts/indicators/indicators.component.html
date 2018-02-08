@@ -1,0 +1,11 @@
+<div
+  *ngFor="let item of data"
+  class="col-lg-2 col-md-4 col-sm-8"
+>
+  <div class="indicator">
+    <div class="indicator-badge" [style.background-color]="item.color">
+        <span class="indicator-text">{{ item.text | translate }}</span>
+    </div>
+    <span class="indicator-label">{{ item.label | translate }}</span>
+  </div>
+</div>
