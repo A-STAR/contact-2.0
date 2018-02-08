@@ -18,8 +18,7 @@
             {{ notification.message | translate }}
           </p>
           <p class="m0 text-right text-muted">
-            <!-- TODO: translate -->
-            <small>{{ displayDate(notification.created) }}</small>
+            <small>{{ notification.created | momentFormat:'LLL' }}</small>
           </p>
         </li>
       </ng-container>
