@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IFilters, INotification, NotificationTypeEnum } from '../../../../core/notifications/notifications.interface';
+import { IFilters, INotification, NotificationTypeEnum } from '@app/core/notifications/notifications.interface';
 
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Component({
   selector: 'app-notifications',
