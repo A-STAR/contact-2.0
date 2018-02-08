@@ -90,6 +90,27 @@ export class CallEffects {
         });
     });
 
+  @Effect()
+  retrieveCall$ = this.actions
+    .ofType(CallService.CALL_RETRIEVE)
+    .mergeMap((action: UnsafeAction) => {
+      const { debtId, personId, personRole } = action.payload;
+      return this.retrieve(debtId, personId, personRole)
+        .map(call => ({
+          type: CallService.CALL_RETRIEVE_SUCCESS,
+        }))
+        .catch(error => {
+          return [
+            { type: CallService.CALL_RETRIEVE_FAILURE },
+            this.notificationService
+              .error('widgets.phone.errors.retrieve')
+              .entity('entities.calls.gen.singular')
+              .response(error)
+              .action()
+          ];
+        });
+    });
+
   constructor(
     private actions: Actions,
     private dataService: DataService,
@@ -126,5 +147,10 @@ export class CallEffects {
   private hold(debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
       .create('pbx/call/hold', {}, { debtId, personId, personRole });
+  }
+
+  private retrieve(debtId: number, personId: number, personRole: number): Observable<void> {
+    return this.dataService
+      .create('pbx/call/retrive', {}, { debtId, personId, personRole });
   }
 }

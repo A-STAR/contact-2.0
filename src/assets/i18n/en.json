@@ -1867,6 +1867,9 @@
         },
         "hold": {
           "*": "Could not hold {{ entity }}"
+        },
+        "retrieve": {
+          "*": "Could not retrieve {{ entity }}"
         }
       }
     },

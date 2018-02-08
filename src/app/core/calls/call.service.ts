@@ -20,6 +20,9 @@ export class CallService {
   static CALL_HOLD = 'CALL_HOLD';
   static CALL_HOLD_SUCCESS = 'CALL_HOLD_SUCCESS';
   static CALL_HOLD_FAILURE = 'CALL_HOLD_FAILURE';
+  static CALL_RETRIEVE = 'CALL_RETRIEVE';
+  static CALL_RETRIEVE_SUCCESS = 'CALL_RETRIEVE_SUCCESS';
+  static CALL_RETRIEVE_FAILURE = 'CALL_RETRIEVE_FAILURE';
 
   private state: ICallState;
 
@@ -68,6 +71,13 @@ export class CallService {
   holdCall(debtId: number, personId: number, personRole: number): void {
     this.store.dispatch({
       type: CallService.CALL_HOLD,
+      payload: { debtId, personId, personRole }
+    });
+  }
+
+  retrieveCall(debtId: number, personId: number, personRole: number): void {
+    this.store.dispatch({
+      type: CallService.CALL_RETRIEVE,
       payload: { debtId, personId, personRole }
     });
   }

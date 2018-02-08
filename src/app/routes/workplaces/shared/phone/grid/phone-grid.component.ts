@@ -127,6 +127,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       enabled: this.canHoldCall$,
       action: () => this.onHoldCall()
     },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      enabled: this.canRetrieveCall$,
+      action: () => this.onRetrieveCall()
+    },
   ];
 
   contextMenuOptions: IContextMenuItem[] = [
@@ -384,6 +389,14 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     ]);
   }
 
+  get canRetrieveCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.callService.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useRetriveCall),
+    ]);
+  }
+
   private get isDebtOpen(): boolean {
     return this.debt && ![6, 7, 8, 17].includes(this.debt.statusCode);
   }
@@ -415,6 +428,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   private onHoldCall(): void {
     this.callService.holdCall(this._debtId$.value, this._personId$.value, this.personRole);
+  }
+
+  private onRetrieveCall(): void {
+    this.callService.retrieveCall(this._debtId$.value, this._personId$.value, this.personRole);
   }
 
   private fetch(): void {
