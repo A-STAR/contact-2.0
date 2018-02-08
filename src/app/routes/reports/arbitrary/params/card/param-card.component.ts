@@ -94,7 +94,7 @@ export class ParamCardComponent implements OnInit, DoCheck {
   }
 
   onBack(): void {
-    this.routingService.navigate([ 'reports', 'arbitrary' ]);
+    this.routingService.navigate([ 'reports' ]);
   }
 
   private initControlsAccess(): void {
@@ -132,7 +132,12 @@ export class ParamCardComponent implements OnInit, DoCheck {
 
   private isMultiSelectEnabled(paramTypeCode: number): boolean {
     switch (paramTypeCode) {
-      case 3: case 4: case 5: case 7: case 8: case 10:
+      case 3:
+      case 4:
+      case 5:
+      case 7:
+      case 8:
+      case 10:
         return true;
       default:
         return false;
@@ -150,7 +155,7 @@ export class ParamCardComponent implements OnInit, DoCheck {
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
       {
-        controlName: 'name',
+        controlName: 'names',
         type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_PARAM_NAME,

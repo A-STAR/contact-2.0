@@ -45,11 +45,11 @@ export class ContactPropertyTreeEditComponent implements OnInit {
 
   @Input() contactType: number;
   @Input() isEditing: boolean;
-  @Input() treeType: number;
   @Input() selectedId: number;
+  @Input() treeType: number;
 
-  @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
+  @Output() submit = new EventEmitter<any>();
 
   config: IDynamicFormConfig = {
     labelKey: 'widgets.contactProperty.edit',
@@ -222,8 +222,8 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     return [
       { controlName: 'code', type: 'text', width: 6, disabled: this.isEditing },
       {
-        controlName: 'name',
-        type: this.isEditing ? 'multilanguage' : 'text',
+        controlName: 'names',
+        type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_CONTACT_TREE_NAME,
           entityId: this.selectedId
