@@ -11,6 +11,7 @@ export interface ICallSettings {
 
 export interface ICall {
   id?: number;
+  onHold?: boolean;
 }
 
 export interface ICallState {

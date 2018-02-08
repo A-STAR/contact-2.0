@@ -1863,8 +1863,10 @@
       },
       "errors": {
         "drop": {
-          "403": "You don't have permissions to drop {{ entity }}",
           "*": "Could not drop {{ entity }}"
+        },
+        "hold": {
+          "*": "Could not hold {{ entity }}"
         }
       }
     },

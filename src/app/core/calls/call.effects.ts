@@ -69,6 +69,27 @@ export class CallEffects {
         });
     });
 
+  @Effect()
+  holdCall$ = this.actions
+    .ofType(CallService.CALL_HOLD)
+    .mergeMap((action: UnsafeAction) => {
+      const { debtId, personId, personRole } = action.payload;
+      return this.hold(debtId, personId, personRole)
+        .map(call => ({
+          type: CallService.CALL_HOLD_SUCCESS,
+        }))
+        .catch(error => {
+          return [
+            { type: CallService.CALL_HOLD_FAILURE },
+            this.notificationService
+              .error('widgets.phone.errors.hold')
+              .entity('entities.calls.gen.singular')
+              .response(error)
+              .action()
+          ];
+        });
+    });
+
   constructor(
     private actions: Actions,
     private dataService: DataService,
@@ -100,5 +121,10 @@ export class CallEffects {
   private drop(debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
       .create('pbx/call/drop', {}, { debtId, personId, personRole });
+  }
+
+  private hold(debtId: number, personId: number, personRole: number): Observable<void> {
+    return this.dataService
+      .create('pbx/call/hold', {}, { debtId, personId, personRole });
   }
 }
