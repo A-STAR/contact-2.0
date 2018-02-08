@@ -25,16 +25,21 @@
  */
 .titlebar-zone {
   order: 0;
-  flex: 1 0 0px;
+  flex: 1 0 40%;
   align-self: auto;
+  overflow: hidden;
+  // The title itself
+  // &.right {
+  //   flex: 1 0 40%;
+  // }
   // The middle part should shrink
   &.center {
-    flex: 0 1 20%;
+    flex: 1 1 0%;
   }
   // The toolbar with buttons
-  &.right {
-    flex: 1 0 0px;
-  }
+  // &.right {
+  //   flex: 1 0 40%;
+  // }
 
   color: $form-toolbar-title-color;
   height: 30px;
