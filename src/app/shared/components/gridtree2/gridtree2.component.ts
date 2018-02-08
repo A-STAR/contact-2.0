@@ -1,7 +1,6 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   EventEmitter,
   ViewEncapsulation,
   Input, OnInit, Output, OnChanges, SimpleChanges
@@ -42,7 +41,6 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
   groupDefaultExpanded: number;
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private gridTree2Service: GridTree2Service,
   ) {}
 
@@ -64,7 +62,6 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
   onGridReady(params: any): void {
     this.gridApi = params.api;
     this.gridApi.sizeColumnsToFit();
-    this.cdRef.markForCheck();
   }
 
   onSelect(): void {
@@ -79,8 +76,7 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
     const overNode = event.overNode;
 
     if (overNode) {
-      const isParent = overNode.data[this.autoGroupColumnDef.field].length === 1;
-      const placeToDrop = isParent ? overNode : overNode.parent;
+      const placeToDrop = overNode.data.isParent ? overNode : overNode.parent;
       const movingData = event.node.data;
       const newParentPath = placeToDrop.data ? placeToDrop.data[this.autoGroupColumnDef.field] : [];
       const needToChangeParent = !this.gridTree2Service.arePathsEqual(newParentPath, movingData[this.autoGroupColumnDef.field]);

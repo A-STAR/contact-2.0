@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '@ngx-translate/core';
 import { ColDef } from 'ag-grid';
 
-import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
+import { IAGridWrapperTreeColumn, IDataToValue } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
 import { IGridTreeRow } from '@app/shared/components/gridtree2/gridtree2.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
+import { IUserDictionaryOptions } from '@app/core/user/dictionaries/user-dictionaries.interface';
+
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Injectable()
 export class GridTree2WrapperService<T> {
@@ -16,7 +21,10 @@ export class GridTree2WrapperService<T> {
     { column: { field: 'valueD' } }
   ];
 
-  constructor(private translate: TranslateService) { }
+  constructor(
+    private translate: TranslateService,
+    private userDictionariesService: UserDictionariesService,
+  ) { }
 
   mapColumns(columns: IAGridWrapperTreeColumn<T>[], translateColumnLabels?: boolean): any[] {
     return columns
@@ -43,11 +51,6 @@ export class GridTree2WrapperService<T> {
     let uniqueId = 1;
 
     const fillRow = (sourceRow: IGridTreeRow<T>, destinationRow: any, column: any, parentDataPathValue?: any[]) => {
-      if (parentDataPathValue) {
-        destinationRow['uniqueId'] = uniqueId;
-        sourceRow.uniqueId = uniqueId++;
-      }
-
       if (column.isDataPath) {
         destinationRow[column.column.field] = parentDataPathValue
           ? [ ...Array.from(new Set([ ...parentDataPathValue, sourceRow.data[column.column.field] ])) ]
@@ -59,8 +62,10 @@ export class GridTree2WrapperService<T> {
 
     const walkChildren = (rows: IGridTreeRow<T>[], parentDataPathValue: any[]) => {
       if (rows) {
-        rows.forEach((rowChild: any) => {
-          const dstChildRow = {};
+        rows.forEach((rowChild: IGridTreeRow<T>) => {
+          const dstChildRow = { 'uniqueId': uniqueId, 'isParent': !!rowChild.children };
+          rowChild.uniqueId = uniqueId++;
+
           columns.forEach(column => fillRow(rowChild, dstChildRow, column, parentDataPathValue));
           GridTree2WrapperService.EXTRA_COLUMNS.forEach(column => fillRow(rowChild, dstChildRow, column, parentDataPathValue));
 
@@ -73,7 +78,7 @@ export class GridTree2WrapperService<T> {
     };
 
     sourceRows.forEach((row: IGridTreeRow<T>) => {
-      const dstRow = { 'uniqueId': uniqueId };
+      const dstRow = { 'uniqueId': uniqueId, 'isParent': true };
       row.uniqueId = uniqueId++;
 
       columns.forEach(column => fillRow(row, dstRow, column));
@@ -87,18 +92,43 @@ export class GridTree2WrapperService<T> {
   }
 
   findSrcRowByUniqueId(sourceRows: IGridTreeRow<T>[], uniqueId: number): IGridTreeRow<T> | null {
-    let found = null;
+    const found = sourceRows.find(srcRow => srcRow.uniqueId === uniqueId);
+    if (found) {
+      return found;
+    }
 
-    const walkChildren = (srcRowChild) => {
-      if (srcRowChild.uniqueId === uniqueId) {
-        found = srcRowChild;
-        return true;
+    return sourceRows.reduce((acc, srcRow) => acc || (srcRow.children
+        ? this.findSrcRowByUniqueId(srcRow.children, uniqueId)
+        : null), null);
+  }
+
+  loadDictionaries(columns: IAGridWrapperTreeColumn<T>[], rows: IGridTreeRow<T>[]): Observable<IUserDictionaryOptions> {
+    const dictCodes = columns
+      .map(column => column.dictCode)
+      .filter(Boolean)
+      .reduce((acc, dictCode) => [ ...acc, ...this.getRowDictCodes(dictCode, rows) ], [])
+      .reduce((acc, dictCode) => acc.includes(dictCode) ? acc : [ ...acc, dictCode ], []);
+
+    return this.userDictionariesService.getDictionariesAsOptions(dictCodes);
+  }
+
+  getRowDictCodes(dictCode: any, rows: IGridTreeRow<T>[] = []): number[] {
+    return dictCode instanceof Function
+      ? rows
+        .reduce((acc, row) => [ ...acc, ...this.getRowDictCodes(dictCode, row.children), dictCode(row.data) ], [])
+        .filter(Boolean)
+      : [ dictCode ];
+  }
+
+  dictCodeFormatter(dicts: { [key: number]: IOption[] }, dictCode: number, valueFormatter: IDataToValue<T, string>): Function {
+    return param => {
+      const dictionary = dicts[dictCode];
+      if (!dictionary) {
+        return valueFormatter;
       }
-      return srcRowChild.children && srcRowChild.children.some(walkChildren);
+
+      const option = dictionary.find(dict => String(dict.value) === String(param.value));
+      return option ? option.label : param.value;
     };
-
-    sourceRows.some(walkChildren);
-
-    return found;
   }
 }

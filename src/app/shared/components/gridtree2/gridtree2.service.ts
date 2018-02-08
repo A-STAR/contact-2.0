@@ -28,7 +28,7 @@ export class GridTree2Service {
   }
 
   arePathsEqual(path1: any[], path2: any[]): boolean {
-    return path1.length === path2.length && path1.some((item, index) => path2[index] === item);
+    return path1.length === path2.length && path1.every((item, index) => path2[index] === item);
   }
 
 }
