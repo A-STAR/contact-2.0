@@ -14,6 +14,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   templateUrl: 'textarea.component.html'
 })
 export class TextareaComponent implements ControlValueAccessor {
+  @Input() resizable = true;
   @Input() rows = 2;
 
   disabled = false;
@@ -22,6 +23,10 @@ export class TextareaComponent implements ControlValueAccessor {
   constructor(
     private cdRef: ChangeDetectorRef,
   ) {}
+
+  get style(): Partial<CSSStyleDeclaration> {
+    return this.resizable ? {} : { resize: 'none' };
+  }
 
   writeValue(value: string): void {
     this.value = value;
