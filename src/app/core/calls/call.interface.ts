@@ -9,9 +9,14 @@ export interface ICallSettings {
   useTransferCall?: number;
 }
 
+export interface ICall {
+  id?: number;
+}
+
 export interface ICallState {
   status: CallStateStatusEnum;
   settings: ICallSettings;
+  call: ICall;
 }
 
 export enum CallStateStatusEnum {

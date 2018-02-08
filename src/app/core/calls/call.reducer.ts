@@ -6,6 +6,7 @@ import { CallService } from './call.service';
 export const defaultState: ICallState = {
   status: null,
   settings: null,
+  call: null
 };
 
 export function reducer(state: ICallState = defaultState, action: UnsafeAction): ICallState {
@@ -17,13 +18,25 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
       };
     case CallService.CALL_SETTINGS_FETCH_SUCCESS:
       return {
+        ...state,
         status: CallStateStatusEnum.LOADED,
         settings: action.payload
       };
     case CallService.CALL_SETTINGS_FETCH_FAILURE:
       return {
+        ...state,
         status: CallStateStatusEnum.ERROR,
         settings: null
+      };
+    case CallService.CALL_START_SUCCESS:
+      return {
+        ...state,
+        call: action.payload
+      };
+    case CallService.CALL_START_FAILURE:
+      return {
+        ...state,
+        call: null
       };
     default:
       return state;

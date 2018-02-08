@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 
-import { ICallSettings } from './call.interface';
+import { ICallSettings, ICall } from './call.interface';
+import { UnsafeAction } from '@app/core/state/state.interface';
 
 import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
@@ -28,6 +29,24 @@ export class CallEffects {
         });
     });
 
+  @Effect()
+  makeCall$ = this.actions
+    .ofType(CallService.CALL_START)
+    .mergeMap((action: UnsafeAction) => {
+      const { phoneId, debtId, personId, personRole } = action.payload;
+      return this.call(phoneId, debtId, personId, personRole)
+        .map(call => ({
+          type: CallService.CALL_START_SUCCESS,
+          payload: call
+        }))
+        .catch(error => {
+          return [
+            { type: CallService.CALL_START_FAILURE },
+            this.notificationService.createError().entity('entities.calls.gen.singular').response(error).action()
+          ];
+        });
+    });
+
   constructor(
     private actions: Actions,
     private dataService: DataService,
@@ -36,5 +55,10 @@ export class CallEffects {
 
   private read(): Observable<ICallSettings> {
     return this.dataService.read('pbx/settings');
+  }
+
+  private call(phoneId: number, debtId: number, personId: number, personRole: number): Observable<ICall> {
+    return this.dataService
+      .create('pbx/call/make', { }, { phoneId, debtId, personId, personRole });
   }
 }

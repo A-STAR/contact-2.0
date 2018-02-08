@@ -142,6 +142,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private canViewSubscription: Subscription;
   private debtSubscription: Subscription;
   private busSubscription: Subscription;
+  private callSubscription: Subscription;
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE },
@@ -201,12 +202,22 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.busSubscription = this.phoneService
       .getAction(PhoneService.MESSAGE_PHONE_SAVED)
       .subscribe(() => this.fetch());
+
+    this.callSubscription = this.callService.call$
+      .filter(Boolean)
+      .flatMap(() => combineLatestAnd([
+        this.callService.settings$.map(settings => !!settings.previewShowRegContact),
+        this.canRegisterContact$
+      ]))
+      .filter(Boolean)
+      .subscribe(() => this.registerContact());
   }
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.debtSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
+    this.callSubscription.unsubscribe();
   }
 
   get debtId$(): Observable<number> {
@@ -368,12 +379,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private onCallStart(): void {
     this.selectedPhone$
       .pipe(first())
-      .flatMap(phone => this.callService.makeCall(phone.id, this._debtId$.value, this._personId$.value, this.personRole))
-      .flatMap(() => combineLatestAnd([
-        this.callService.settings$.map(settings => !!settings.previewShowRegContact),
-        this.canRegisterContact$
-      ]))
-      .subscribe(showRegistration => this.registerContact());
+      .subscribe(phone => this.callService.makeCall(phone.id, this._debtId$.value, this._personId$.value, this.personRole));
   }
 
   private fetch(): void {
