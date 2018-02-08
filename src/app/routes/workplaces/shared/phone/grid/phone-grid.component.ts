@@ -350,7 +350,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canCall$(): Observable<boolean> {
     return combineLatestAnd([
-      this.userPermissionsService.has('PBX_PREVIEW'),
+      // this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
       this.selectedPhone$.map(phone => phone && !phone.isInactive)

@@ -8,6 +8,7 @@ import { UnsafeAction } from '@app/core/state/state.interface';
 import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class CallEffects {
@@ -54,11 +55,24 @@ export class CallEffects {
   ) {}
 
   private read(): Observable<ICallSettings> {
-    return this.dataService.read('pbx/settings');
+    // return this.dataService.read('pbx/settings');
+    return of({
+      useIntPhone: 1,
+      usePreview: 1,
+      previewShowRegContact: 1,
+      useMakeCall: 1,
+      useDropCall: 1,
+      useHoldCall: 1,
+      useRetriveCall: 1,
+      useTransferCall: 1
+    });
   }
 
   private call(phoneId: number, debtId: number, personId: number, personRole: number): Observable<ICall> {
-    return this.dataService
-      .create('pbx/call/make', { }, { phoneId, debtId, personId, personRole });
+    // return this.dataService
+      // .create('pbx/call/make', { }, { phoneId, debtId, personId, personRole });
+    return of({
+      id: 1
+    });
   }
 }
