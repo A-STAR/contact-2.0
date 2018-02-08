@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { ChartData } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
+import { of } from 'rxjs/observable/of';
 
 import {
   DashboardChartType,
@@ -11,19 +12,121 @@ import {
   IDashboardPromiseCoverage,
   IDashboardContactsDay,
 } from '@app/routes/dashboard/dashboard.interface';
+import { IIndicator } from '@app/shared/components/charts/charts.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { of } from 'rxjs/observable/of';
+import { TranslateService } from '@ngx-translate/core';
+
+import { makeKey } from '@app/core/utils';
+
+const label = makeKey('dashboard.charts');
 
 @Injectable()
 export class DashboardService {
 
   private baseUrl = '/dashboard';
 
+  private indicatorColors = {
+    debtActiveCnt: '#7266ba',
+    debtNeedCallCnt: '#7266ba',
+    monthPaymentCnt: '#27c24c',
+    monthPaymentAmount: '#27c24c',
+    monthPaymentCommission: '#27c24c',
+  };
+
+  promiseCountStatusOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: this.translate('promiseCountStatus.label'),
+      display: true
+    },
+    legend: {
+      position: 'left',
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
+  promiseCountOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: this.translate('promiseCount.label'),
+      display: true
+    },
+    legend: {
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
+  promiseAmountOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: this.translate('promiseAmount.label'),
+      display: true
+    },
+    legend: {
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
+  promiseCoverOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: this.translate('promiseCover.label'),
+      display: true
+    },
+    legend: {
+      position: 'left',
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
+  contactsDayPlanOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: this.translate('contactsDayPlan.label'),
+      display: true
+    },
+    legend: {
+      position: 'right',
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
+  contactsDayOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      text: this.translate('contactsDay.label'),
+      display: true
+    },
+    legend: {
+      position: 'right',
+      labels: {
+        fontSize: 10
+      }
+    }
+  };
+
   constructor(
     private dataService: DataService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private translateService: TranslateService
   ) { }
 
   getParams(): Observable<IDashboardParams> {
@@ -99,11 +202,11 @@ export class DashboardService {
           data as IDashboardPromiseCoverage,
         );
       case DashboardChartType.CONTACT_DAY:
-        return this.prepareContactDayChart(
+        return this.prepareContactsDayChart(
           data as IDashboardContactsDay,
         );
       case DashboardChartType.CONTACT_DAY_PLAN:
-        return this.prepareContactDayPlanChart(
+        return this.prepareContactsDayPlanChart(
           data as IDashboardContactsDay,
         );
       default:
@@ -111,10 +214,18 @@ export class DashboardService {
     }
   }
 
+
+  private translate(path: string): string {
+    return this.translateService.instant(label(path));
+  }
+
   private preparePromiseCountStatusChart(data: IDashboardPromiseCountStatus): ChartData {
     return {
-      // TODO(i.lobanov): translate
-      labels: [ 'Выполнено', 'Просрочено', 'Ожидание' ],
+      labels: [
+        this.translate(`promiseCountStatus.legend.fullfilled`),
+        this.translate(`promiseCountStatus.legend.overdue`),
+        this.translate(`promiseCountStatus.legend.waiting`),
+      ],
       datasets: [
         {
           data: [data.monthPromiseFulfilled, data.monthPromiseOverdue, data.monthPromiseWaiting],
@@ -130,7 +241,7 @@ export class DashboardService {
       datasets: [
         {
           data: data.promiseCountList,
-          label: 'Кол-во обещаний',
+          label: this.translate('promiseCount.legend.promiseCount'),
           backgroundColor: '#23b7e5'
         }
       ]
@@ -143,7 +254,7 @@ export class DashboardService {
       datasets: [
         {
           data: data.promiseAmountList,
-          label: 'Сумма',
+          label: this.translate('promiseAmount.legend.promiseAmount'),
           backgroundColor: '#23b7e5'
         }
       ]
@@ -152,8 +263,10 @@ export class DashboardService {
 
   private preparePromiseCoverChart(data: IDashboardPromiseCoverage): ChartData {
     return {
-      // TODO(i.lobanov): translate
-      labels: ['Покрыто', 'Осталось'],
+      labels: [
+        this.translate(`promiseCover.legend.covered`),
+        this.translate(`promiseCover.legend.remaining`),
+      ],
       datasets: [
         {
           data: [data.monthPromiseAmountCover, data.monthPromiseAmountRest],
@@ -163,10 +276,12 @@ export class DashboardService {
     };
   }
 
-  private prepareContactDayPlanChart(data: IDashboardContactsDay): ChartData {
+  private prepareContactsDayPlanChart(data: IDashboardContactsDay): ChartData {
     return {
-      // TODO(i.lobanov): translate
-      labels: ['Выполнено', 'Осталось'],
+      labels: [
+        this.translate(`contactsDayPlan.legend.fullfilled`),
+        this.translate(`contactsDayPlan.legend.remaining`),
+      ],
       datasets: [
         {
           data: [data.debtorSuccessContact, data.debtorSuccessContactPlan],
@@ -176,10 +291,14 @@ export class DashboardService {
     };
   }
 
-  private prepareContactDayChart(data: IDashboardContactsDay): ChartData {
+  private prepareContactsDayChart(data: IDashboardContactsDay): ChartData {
     return {
-      // TODO(i.lobanov): translate
-      labels: ['Должник', 'Поручитель', 'Залогодатель', 'Третье лицо'],
+      labels: [
+        this.translate(`contactsDay.legend.debtor`),
+        this.translate(`contactsDay.legend.guarantor`),
+        this.translate(`contactsDay.legend.pledgor`),
+        this.translate(`contactsDay.legend.thirdParty`),
+      ],
       datasets: [
         {
           data: [

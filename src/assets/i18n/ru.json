@@ -122,6 +122,58 @@
       "promiseCountStatus": "Произошла ошибка при попытке получить обещания за последние 30 дней (по статусам)",
       "promiseCover": "Произошла ошибка при попытке получить покрытие обещаний за последние 30 дней",
       "contactDay": "Произошла ошибка при попытке получить успешные контакты за день"
+    },
+    "charts": {
+      "contactsDayPlan": {
+        "label": "Количество контактов за текущий день с должником",
+        "legend": {
+          "fullfilled": "Выполнено",
+          "remaining": "Осталось"
+        }
+      },
+      "contactsDay": {
+        "label": "Успешные контакты за день",
+        "legend": {
+          "debtor": "Должник",
+          "guarantor": "Поручитель",
+          "pledgor": "Залогодатель",
+          "thirdParty": "Третье лицо"
+        }
+      },
+      "indicators": {
+        "debtActiveCnt": "Активные долги",
+        "debtNeedCallCnt": "Необходимо перезвонить",
+        "monthPaymentCnt": "Кол-во платежей (мес.)",
+        "monthPaymentAmount": "Сумма платежей (мес.)",
+        "monthPaymentCommission": "Комиссия"
+      },
+      "promiseAmount": {
+        "label": "Сумма полученных обещаний за последние 30 дней",
+        "legend": {
+          "promiseAmount": "Сумма"
+        }
+      },
+      "promiseCount": {
+        "label": "Количество полученных обещаний за последние 30 дней",
+        "legend": {
+          "promiseCount": "Кол-во обещаний"
+        }
+      },
+      "promiseCountStatus": {
+        "label": "Обещания за последние 30 дней",
+        "legend": {
+          "fullfilled": "Выполненные",
+          "overdue": "Просроченные",
+          "waiting": "Ожидание"
+        }
+      },
+      "promiseCover": {
+        "label": "Покрытие обещаний за последние 30 дней",
+        "legend": {
+          "covered": "Покрыто",
+          "remaining": "Осталось"
+        }
+      }
     }
   },
   "validation": {

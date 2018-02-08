@@ -25,96 +25,9 @@ export class DashboardComponent implements OnInit {
   contactsDay: ChartData;
   contactsDayPlan: ChartData;
 
-  promiseCountStatusOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Обещания за последние 30 дней',
-      display: true
-    },
-    legend: {
-      position: 'left',
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
-  promiseCountOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Количество полученных обещаний за 30 дней',
-      display: true
-    },
-    legend: {
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
-  promiseAmountOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Сумма полученных обещаний за 30 дней',
-      display: true
-    },
-    legend: {
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
-  promiseCoverOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Покрытие обещаний за последние 30 дней',
-      display: true
-    },
-    legend: {
-      position: 'left',
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
-  contactsDayPlanOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Количество контактов за текущий день с должником',
-      display: true
-    },
-    legend: {
-      position: 'right',
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
-  contactsDayOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Успешные контакты за день',
-      display: true
-    },
-    legend: {
-      position: 'right',
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
   constructor(
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private lookupService: LookupService,
   ) { }
 
   ngOnInit(): void {
@@ -148,4 +61,29 @@ export class DashboardComponent implements OnInit {
       });
 
   }
+
+  get contactsDayOptions(): ChartOptions {
+    return this.dashboardService.contactsDayOptions;
+  }
+
+  get contactsDayPlanOptions(): ChartOptions {
+    return this.dashboardService.contactsDayPlanOptions;
+  }
+
+  get promiseCoverOptions(): ChartOptions {
+    return this.dashboardService.promiseCoverOptions;
+  }
+
+  get promiseAmountOptions(): ChartOptions {
+    return this.dashboardService.promiseAmountOptions;
+  }
+
+  get promiseCountOptions(): ChartOptions {
+    return this.dashboardService.promiseCountOptions;
+  }
+
+  get promiseCountStatusOptions(): ChartOptions {
+    return this.dashboardService.contactsDayOptions;
+  }
+
 }

@@ -122,6 +122,58 @@
       "promiseCountStatus": "Error has been occured when fetching promise statuses for the last 30 days",
       "promiseCover": "Error has been occured when fetching promise coverage for the last 30 days",
       "contactDay": "Error has been occured when fetching successfull contacts for the last day"
+    },
+    "charts": {
+      "contactsDayPlan": {
+        "label": "Debtor contacts for the last day",
+        "legend": {
+          "fullfilled": "Fullfilled",
+          "remaining": "Remaining"
+        }
+      },
+      "contactsDay": {
+        "label": "Successful contacts for the last day",
+        "legend": {
+          "debtor": "Debtor",
+          "guarantor": "Guarantor",
+          "pledgor": "Pledgor",
+          "thirdParty": "Third party"
+        }
+      },
+      "indicators": {
+        "debtActiveCnt": "Active debts",
+        "debtNeedCallCnt": "Debts, needed to call back",
+        "monthPaymentCnt": "Payment count per month",
+        "monthPaymentAmount": "Payment amount per month",
+        "monthPaymentCommission": "Commission"
+      },
+      "promiseAmount": {
+        "label": "Promise amount for the last 30 days",
+        "legend": {
+          "promiseAmount": "Promise amount"
+        }
+      },
+      "promiseCount": {
+        "label": "Promise count for the last 30 days",
+        "legend": {
+          "promiseCount": "Promise count"
+        }
+      },
+      "promiseCountStatus": {
+        "label": "Promises for the last 30 days",
+        "legend": {
+          "fullfilled": "Fullfilled",
+          "overdue": "Overdue",
+          "waiting": "Waiting"
+        }
+      },
+      "promiseCover": {
+        "label": "Promise coverage for the last 30 days",
+        "legend": {
+          "covered": "Covered",
+          "remaining": "Remaining"
+        }
+      }
     }
   },
   "validation": {
