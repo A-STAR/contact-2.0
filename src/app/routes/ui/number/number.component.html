@@ -1,0 +1,21 @@
+<section [formGroup]="formGroup">
+  <div class="form-group">
+    <label>Empty</label>
+    <app-number formControlName="number1"></app-number>
+  </div>
+
+  <div class="form-group">
+    <label>Not empty</label>
+    <app-number formControlName="number2"></app-number>
+  </div>
+
+  <div class="form-group">
+    <label>Custom step value</label>
+    <app-number formControlName="number3" step="10"></app-number>
+  </div>
+
+  <div class="form-group">
+    <label>Disabled</label>
+    <app-number formControlName="number4"></app-number>
+  </div>
+</section>
