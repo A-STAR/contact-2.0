@@ -3,6 +3,7 @@
   type="text"
   [disabled]="disabled"
   [ngModel]="value"
+  (focus)="onFocus()"
   (focusout)="onFocusOut()"
   (ngModelChange)="onChange($event)"
 />

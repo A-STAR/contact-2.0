@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, forwardRef, Renderer2 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -16,9 +16,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class NumberComponent implements ControlValueAccessor {
   disabled = false;
   value: number;
+  wheelStep = 1;
+
+  private wheelListenter: () => void;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private elRef: ElementRef,
+    private renderer: Renderer2,
   ) {}
 
   writeValue(value: number): void {
@@ -39,13 +44,28 @@ export class NumberComponent implements ControlValueAccessor {
   }
 
   onChange(value: number): void {
-    this.value = value;
-    this.propagateChange(value);
-    this.cdRef.markForCheck();
+    this.update(value);
+  }
+
+  onFocus(): void {
+    this.wheelListenter = this.renderer.listen(this.elRef.nativeElement, 'wheel', event => this.onWheel(event));
   }
 
   onFocusOut(): void {
+    this.wheelListenter();
     this.propagateTouch();
+  }
+
+  onWheel(event: WheelEvent): void {
+    event.preventDefault();
+    const value = (this.value || 0) - this.wheelStep * Math.sign(event.deltaY);
+    this.update(value);
+  }
+
+  private update(value: number): void {
+    this.value = value;
+    this.propagateChange(value);
+    this.cdRef.markForCheck();
   }
 
   private propagateChange: Function = () => {};
