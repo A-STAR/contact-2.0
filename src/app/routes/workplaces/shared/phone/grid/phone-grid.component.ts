@@ -304,7 +304,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.selectedPhoneCall$
       .pipe(first())
       .filter(Boolean)
-      .subscribe(call => this.callService.transferCall(call.id));
+      .subscribe(call => this.callService.transferCall(call.id, operatorId));
   }
 
   onDialogClose(): void {

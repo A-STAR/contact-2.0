@@ -101,12 +101,12 @@ export class CallService {
       }));
   }
 
-  transferCall(callId: number): void {
+  transferCall(callId: number, userId: number): void {
     this.findCall(callId)
       .pipe(first())
       .subscribe(call => this.store.dispatch({
         type: CallService.CALL_TRANSFER,
-        payload: call
+        payload: { userId, ...call }
       }));
   }
 
