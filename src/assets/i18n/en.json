@@ -1860,6 +1860,12 @@
           "title": "Delete phone number",
           "confirmMessage": "Are you sure you want to delete phone {{ phone }}?"
         }
+      },
+      "errors": {
+        "drop": {
+          "403": "You don't have permissions to drop {{ entity }}",
+          "*": "Could not drop {{ entity }}"
+        }
       }
     },
     "payment": {

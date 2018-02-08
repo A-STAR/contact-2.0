@@ -48,6 +48,27 @@ export class CallEffects {
         });
     });
 
+  @Effect()
+  dropCall$ = this.actions
+    .ofType(CallService.CALL_DROP)
+    .mergeMap((action: UnsafeAction) => {
+      const { debtId, personId, personRole } = action.payload;
+      return this.drop(debtId, personId, personRole)
+        .map(call => ({
+          type: CallService.CALL_DROP_SUCCESS,
+        }))
+        .catch(error => {
+          return [
+            { type: CallService.CALL_DROP_FAILURE },
+            this.notificationService
+              .error('widgets.phone.errors.drop')
+              .entity('entities.calls.gen.singular')
+              .response(error)
+              .action()
+          ];
+        });
+    });
+
   constructor(
     private actions: Actions,
     private dataService: DataService,
@@ -74,5 +95,10 @@ export class CallEffects {
     return of({
       id: 1
     });
+  }
+
+  private drop(debtId: number, personId: number, personRole: number): Observable<void> {
+    return this.dataService
+      .create('pbx/call/drop', {}, { debtId, personId, personRole });
   }
 }

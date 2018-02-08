@@ -14,6 +14,9 @@ export class CallService {
   static CALL_START = 'CALL_START';
   static CALL_START_SUCCESS = 'CALL_START_SUCCESS';
   static CALL_START_FAILURE = 'CALL_START_FAILURE';
+  static CALL_DROP = 'CALL_DROP';
+  static CALL_DROP_SUCCESS = 'CALL_DROP_SUCCESS';
+  static CALL_DROP_FAILURE = 'CALL_DROP_FAILURE';
 
   private state: ICallState;
 
@@ -49,6 +52,13 @@ export class CallService {
     this.store.dispatch({
       type: CallService.CALL_START,
       payload: { phoneId, debtId, personId, personRole }
+    });
+  }
+
+  dropCall(debtId: number, personId: number, personRole: number): void {
+    this.store.dispatch({
+      type: CallService.CALL_DROP,
+      payload: { debtId, personId, personRole }
     });
   }
 

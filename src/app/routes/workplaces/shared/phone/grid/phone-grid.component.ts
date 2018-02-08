@@ -106,7 +106,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.canCall$,
+      enabled: this.canView$,
       action: () => this.fetch()
     },
   ];
@@ -114,8 +114,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   callToolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_START,
-      enabled: this.canCall$,
-      action: () => this.onCallStart()
+      enabled: this.canMakeCall$,
+      action: () => this.onMakeCall()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_STOP,
+      enabled: this.canDropCall$,
+      action: () => this.onDropCall()
     },
   ];
 
@@ -204,11 +209,12 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .subscribe(() => this.fetch());
 
     this.callSubscription = this.callService.call$
-      .filter(Boolean)
-      .flatMap(() => combineLatestAnd([
+      .map(Boolean)
+      .flatMap(hasCall => combineLatestAnd([
+        of(hasCall),
         this.callService.settings$.map(settings => !!settings.previewShowRegContact),
         this.canRegisterContact$
-      ]))
+      ]).pipe(first()))
       .filter(Boolean)
       .subscribe(() => this.registerContact());
   }
@@ -348,12 +354,20 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     ]);
   }
 
-  get canCall$(): Observable<boolean> {
+  get canMakeCall$(): Observable<boolean> {
     return combineLatestAnd([
       // this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
       this.selectedPhone$.map(phone => phone && !phone.isInactive)
+    ]);
+  }
+
+  get canDropCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.callService.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useDropCall),
     ]);
   }
 
@@ -376,10 +390,14 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.setDialog();
   }
 
-  private onCallStart(): void {
+  private onMakeCall(): void {
     this.selectedPhone$
       .pipe(first())
       .subscribe(phone => this.callService.makeCall(phone.id, this._debtId$.value, this._personId$.value, this.personRole));
+  }
+
+  private onDropCall(): void {
+    this.callService.dropCall(this._debtId$.value, this._personId$.value, this.personRole);
   }
 
   private fetch(): void {

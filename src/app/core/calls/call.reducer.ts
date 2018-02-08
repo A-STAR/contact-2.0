@@ -38,6 +38,11 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
         ...state,
         call: null
       };
+    case CallService.CALL_DROP:
+      return {
+        ...state,
+        call: null
+      };
     default:
       return state;
   }
