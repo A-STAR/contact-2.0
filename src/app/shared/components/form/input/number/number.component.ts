@@ -11,12 +11,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ],
   selector: 'app-number',
-  templateUrl: 'number.component.html'
+  styleUrls: [ './number.component.scss' ],
+  templateUrl: './number.component.html'
 })
 export class NumberComponent implements ControlValueAccessor {
   disabled = false;
   value: number;
-  wheelStep = 1;
+  step = 1;
 
   private wheelListenter: () => void;
 
@@ -58,7 +59,17 @@ export class NumberComponent implements ControlValueAccessor {
 
   onWheel(event: WheelEvent): void {
     event.preventDefault();
-    const value = (this.value || 0) - this.wheelStep * Math.sign(event.deltaY);
+    const value = (this.value || 0) - this.step * Math.sign(event.deltaY);
+    this.update(value);
+  }
+
+  onIncrementClick(): void {
+    const value = (this.value || 0) + this.step;
+    this.update(value);
+  }
+
+  onDecrementClick(): void {
+    const value = (this.value || 0) - this.step;
     this.update(value);
   }
 
