@@ -1,0 +1,158 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonComponent should render button 1`] = `
+<div
+  id="root0"
+  ng-version="5.2.4"
+>
+  <div
+    class="inline"
+  >
+    
+  
+    <button
+      class="default-button-class"
+      ng-reflect-ng-class="default-button-class"
+      title="default-label"
+    >
+      
+    
+      
+      <i
+        aria-hidden="true"
+        class="default-icon-class"
+        ng-reflect-ng-class="default-icon-class"
+      />
+      
+    
+      
+      <span>
+        default-label
+      </span>
+      
+  
+    </button>
+    
+
+  </div>
+  
+
+</div>
+`;
+
+exports[`ButtonComponent should render button with custom icon class 1`] = `
+<div
+  id="root1"
+  ng-version="5.2.4"
+>
+  <div
+    class="inline"
+  >
+    
+  
+    <button
+      class="default-button-class"
+      ng-reflect-ng-class="default-button-class"
+      title="default-label"
+    >
+      
+    
+      
+      <i
+        aria-hidden="true"
+        class="custom-icon-class"
+        ng-reflect-ng-class="custom-icon-class"
+      />
+      
+    
+      
+      <span>
+        default-label
+      </span>
+      
+  
+    </button>
+    
+
+  </div>
+  
+
+</div>
+`;
+
+exports[`ButtonComponent should render button with custom label 1`] = `
+<div
+  id="root3"
+  ng-version="5.2.4"
+>
+  <div
+    class="inline"
+  >
+    
+  
+    <button
+      class="default-button-class"
+      ng-reflect-ng-class="default-button-class"
+      title="Custom Label"
+    >
+      
+    
+      
+      <i
+        aria-hidden="true"
+        class="default-icon-class"
+        ng-reflect-ng-class="default-icon-class"
+      />
+      
+    
+      
+      <span>
+        Custom Label
+      </span>
+      
+  
+    </button>
+    
+
+  </div>
+  
+
+</div>
+`;
+
+exports[`ButtonComponent should render button with no label 1`] = `
+<div
+  id="root2"
+  ng-version="5.2.4"
+>
+  <div
+    class="inline"
+  >
+    
+  
+    <button
+      class="default-button-class"
+      ng-reflect-ng-class="default-button-class"
+      title="default-label"
+    >
+      
+    
+      
+      <i
+        aria-hidden="true"
+        class="default-icon-class"
+        ng-reflect-ng-class="default-icon-class"
+      />
+      
+    
+      
+      
+  
+    </button>
+    
+
+  </div>
+  
+
+</div>
+`;
