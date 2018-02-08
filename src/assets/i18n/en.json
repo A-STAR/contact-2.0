@@ -100,7 +100,6 @@
         "SEARCH_GROUPS": "Search groups",
         "MAIL": "Mail",
         "REPORTS": "Reports",
-        "ARBITRARY_REPORTS": "Ad-hoc reports",
         "HELP": "Help",
         "INCOMING_CALL": "Incoming call",
         "CURRENCY_RATE_EDIT": "Currency rate"
@@ -593,7 +592,7 @@
           "comment": "Comment"
         },
         "card": {
-          "name": "Name",
+          "names": "Name",
           "sql": "SQL",
           "comment": "Comment",
           "exportUndescribed": "Export undescribed"
@@ -611,7 +610,7 @@
             "textWidth": "Text width"
           },
           "card": {
-            "name": "Name",
+            "names": "Name",
             "systemName": "System name",
             "sortOrder": "Sort order",
             "textWidth": "Text width"
@@ -632,7 +631,7 @@
             "multiSelect": "Multi select"
           },
           "card": {
-            "name": "Name",
+            "names": "Name",
             "systemName": "System name",
             "sortOrder": "Sort order",
             "paramTypeCode": "Param type",
@@ -794,7 +793,7 @@
     "edit": {
       "title": "Dictionary: {{ code }}",
       "code": "Code",
-      "name": "Name",
+      "names": "Name",
       "typeCode": "Type",
       "parentCode": "Parent dictionary",
       "select": {
@@ -837,7 +836,7 @@
       "title": "Term: {{ code }}",
       "code": "Term code",
       "language": "Language",
-      "name": "Term value",
+      "names": "Term value",
       "typeCode": "Term type",
       "parentCode": "Parent dictionary term",
       "isClosed": "Unused term",
@@ -1341,7 +1340,7 @@
       },
       "edit": {
         "title": "Edit campaign",
-        "name": "Name",
+        "names": "Name",
         "typeCode": "Type code",
         "groupId": "Group",
         "comment": "Comment",
@@ -1559,7 +1558,7 @@
       },
       "grid": {
         "code": "Code",
-        "name": "Name",
+        "names": "Name",
         "value": "Value",
         "userFullName": "Operator",
         "changeDateTime": "Change date/time",
@@ -1614,7 +1613,7 @@
       },
       "edit": {
         "code": "Code",
-        "name": "Name",
+        "names": "Name",
         "boxColor": "Color",
         "commentMode": "Comment Input Mode",
         "autoCommentIds": "Autocomment input",
@@ -2201,7 +2200,7 @@
       },
       "card": {
         "entityTypeCode": "Type",
-        "name": "Name",
+        "names": "Name",
         "comment": "Comment",
         "isManual": "Is manual",
         "isPreCleaned": "Is pre-cleaned",
@@ -2277,8 +2276,8 @@
       "card": {
         "id": "ID",
         "code": "Code",
-        "name": "Name",
-        "shortName": "Short name",
+        "names": "Name",
+        "shortNames": "Short name",
         "isMain": "Is main"
       }
     },

@@ -1,10 +1,10 @@
 <app-arbitrary-report-grid (select)="onReportSelect($event)"></app-arbitrary-report-grid>
 
-<app-tabview>
-  <app-tabview-tab [title]="'modules.reports.arbitrary.tabs.fields'" [closable]="false">
+<app-tabview [noMargin]="true">
+  <app-tabview-tab [title]="'modules.reports.arbitrary.tabs.fields'">
     <app-arbitrary-report-field-grid [reportId]="reportId"></app-arbitrary-report-field-grid>
   </app-tabview-tab>
-  <app-tabview-tab [title]="'modules.reports.arbitrary.tabs.params'" [closable]="false">
+  <app-tabview-tab [title]="'modules.reports.arbitrary.tabs.params'">
     <app-arbitrary-report-param-grid [reportId]="reportId"></app-arbitrary-report-param-grid>
   </app-tabview-tab>
 </app-tabview>

@@ -81,8 +81,8 @@ export class AttributeGridEditComponent implements OnInit {
   private getControls(isDictionary: boolean): IDynamicFormItem[] {
     const controls: IDynamicFormItem[] = [
       {
-        controlName: 'name',
-        type: this.attributeId ? 'multilanguage' : 'text',
+        controlName: 'names',
+        type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_ATTRIBUTE_TYPE_NAME,
           entityId: this.attribute && this.attribute.id
