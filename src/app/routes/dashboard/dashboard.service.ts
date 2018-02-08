@@ -14,9 +14,8 @@ import {
 } from '@app/routes/dashboard/dashboard.interface';
 import { IIndicator } from '@app/shared/components/charts/charts.interface';
 
-import { DataService } from '@app/core/data/data.service';
-import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { TranslateService } from '@ngx-translate/core';
+// import { DataService } from '@app/core/data/data.service';
+// import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 import { makeKey } from '@app/core/utils';
 
@@ -25,7 +24,7 @@ const label = makeKey('dashboard.charts');
 @Injectable()
 export class DashboardService {
 
-  private baseUrl = '/dashboard';
+  // private baseUrl = '/dashboard';
 
   private indicatorColors = {
     debtActiveCnt: '#7266ba',
@@ -39,13 +38,15 @@ export class DashboardService {
     title: {
       position: 'top',
       fontSize: 14,
-      text: this.translate('promiseCountStatus.label'),
+      fontFamily: 'Roboto Condensed',
+      text: label('promiseCountStatus.label'),
       display: true
     },
     legend: {
       position: 'left',
       labels: {
-        fontSize: 10
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
       }
     }
   };
@@ -54,12 +55,14 @@ export class DashboardService {
     title: {
       position: 'top',
       fontSize: 14,
-      text: this.translate('promiseCount.label'),
+      fontFamily: 'Roboto Condensed',
+      text: label('promiseCount.label'),
       display: true
     },
     legend: {
       labels: {
-        fontSize: 10
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
       }
     }
   };
@@ -68,12 +71,14 @@ export class DashboardService {
     title: {
       position: 'top',
       fontSize: 14,
-      text: this.translate('promiseAmount.label'),
+      fontFamily: 'Roboto Condensed',
+      text: label('promiseAmount.label'),
       display: true
     },
     legend: {
       labels: {
-        fontSize: 10
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
       }
     }
   };
@@ -82,13 +87,15 @@ export class DashboardService {
     title: {
       position: 'top',
       fontSize: 14,
-      text: this.translate('promiseCover.label'),
+      fontFamily: 'Roboto Condensed',
+      text: label('promiseCover.label'),
       display: true
     },
     legend: {
       position: 'left',
       labels: {
-        fontSize: 10
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
       }
     }
   };
@@ -97,13 +104,15 @@ export class DashboardService {
     title: {
       position: 'top',
       fontSize: 14,
-      text: this.translate('contactsDayPlan.label'),
+      fontFamily: 'Roboto Condensed',
+      text: label('contactsDayPlan.label'),
       display: true
     },
     legend: {
       position: 'right',
       labels: {
-        fontSize: 10
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
       }
     }
   };
@@ -112,21 +121,22 @@ export class DashboardService {
     title: {
       position: 'top',
       fontSize: 14,
-      text: this.translate('contactsDay.label'),
+      fontFamily: 'Roboto Condensed',
+      text: label('contactsDay.label'),
       display: true
     },
     legend: {
       position: 'right',
       labels: {
-        fontSize: 10
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
       }
     }
   };
 
   constructor(
-    private dataService: DataService,
-    private notificationsService: NotificationsService,
-    private translateService: TranslateService
+    // private dataService: DataService,
+    // private notificationsService: NotificationsService
   ) { }
 
   getParams(): Observable<IDashboardParams> {
@@ -227,21 +237,17 @@ export class DashboardService {
       Object.keys(data)
         .map((key: keyof IDashboardParams) => ({
           text: currencyIndicators.includes(key) ? `${data[key]} ${currencyName}` : `${data[key]}`,
-          label: this.translate(`indicators.${key}`),
+          label: label(`indicators.${key}`),
           color: this.indicatorColors[key]
         }));
-  }
-
-  private translate(path: string): string {
-    return this.translateService.instant(label(path));
   }
 
   private preparePromiseCountStatusChart(data: IDashboardPromiseCountStatus): ChartData {
     return {
       labels: [
-        this.translate(`promiseCountStatus.legend.fullfilled`),
-        this.translate(`promiseCountStatus.legend.overdue`),
-        this.translate(`promiseCountStatus.legend.waiting`),
+        label(`promiseCountStatus.legend.fullfilled`),
+        label(`promiseCountStatus.legend.overdue`),
+        label(`promiseCountStatus.legend.waiting`),
       ],
       datasets: [
         {
@@ -258,7 +264,7 @@ export class DashboardService {
       datasets: [
         {
           data: data.promiseCountList,
-          label: this.translate('promiseCount.legend.promiseCount'),
+          label: label('promiseCount.legend.promiseCount'),
           backgroundColor: '#23b7e5'
         }
       ]
@@ -271,7 +277,7 @@ export class DashboardService {
       datasets: [
         {
           data: data.promiseAmountList,
-          label: this.translate('promiseAmount.legend.promiseAmount'),
+          label: label('promiseAmount.legend.promiseAmount'),
           backgroundColor: '#23b7e5'
         }
       ]
@@ -281,8 +287,8 @@ export class DashboardService {
   private preparePromiseCoverChart(data: IDashboardPromiseCoverage): ChartData {
     return {
       labels: [
-        this.translate(`promiseCover.legend.covered`),
-        this.translate(`promiseCover.legend.remaining`),
+        label(`promiseCover.legend.covered`),
+        label(`promiseCover.legend.remaining`),
       ],
       datasets: [
         {
@@ -296,8 +302,8 @@ export class DashboardService {
   private prepareContactsDayPlanChart(data: IDashboardContactsDay): ChartData {
     return {
       labels: [
-        this.translate(`contactsDayPlan.legend.fullfilled`),
-        this.translate(`contactsDayPlan.legend.remaining`),
+        label(`contactsDayPlan.legend.fullfilled`),
+        label(`contactsDayPlan.legend.remaining`),
       ],
       datasets: [
         {
@@ -311,10 +317,10 @@ export class DashboardService {
   private prepareContactsDayChart(data: IDashboardContactsDay): ChartData {
     return {
       labels: [
-        this.translate(`contactsDay.legend.debtor`),
-        this.translate(`contactsDay.legend.guarantor`),
-        this.translate(`contactsDay.legend.pledgor`),
-        this.translate(`contactsDay.legend.thirdParty`),
+        label(`contactsDay.legend.debtor`),
+        label(`contactsDay.legend.guarantor`),
+        label(`contactsDay.legend.pledgor`),
+        label(`contactsDay.legend.thirdParty`),
       ],
       datasets: [
         {

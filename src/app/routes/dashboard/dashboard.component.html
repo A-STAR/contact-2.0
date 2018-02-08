@@ -30,21 +30,21 @@
   </div>  <!-- END indicators  -->
   <!-- START charts -->
   <div class="row">
-      <div class="col-lg-4 col-md-6 col-sm-12">
+      <div class="col-lg-3 col-md-4 col-sm-12">
         <app-pie-chart
           [data]="promiseCountStatus$ | async"
           [options]="promiseCountStatusOptions"
         >
         </app-pie-chart>
       </div>
-      <div class="col-lg-4 col-md-6 col-sm-12">
+      <div class="col-lg-6 col-md-8 col-sm-12">
         <app-bar-chart
           [data]="promiseCount$ | async"
           [options]="promiseCountOptions"
         >
         </app-bar-chart>
       </div>
-      <div class="col-lg-4 col-md-6 col-sm-12">
+      <div class="col-lg-3 col-md-4 col-sm-12">
         <app-pie-chart
           *ngIf="contactsDay"
           [data]="contactsDay"
@@ -54,21 +54,21 @@
       </div>
   </div>
   <div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="col-lg-3 col-md-4 col-sm-12">
       <app-progress-chart
         [data]="promiseCover$ | async"
         [options]="promiseCoverOptions"
       >
       </app-progress-chart>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="col-lg-6 col-md-8 col-sm-12">
       <app-bar-chart
         [data]="promiseAmount$ | async"
         [options]="promiseAmountOptions"
       >
       </app-bar-chart>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="col-lg-3 col-md-4 col-sm-12">
       <app-progress-chart
         *ngIf="contactsDayPlan"
         [data]="contactsDayPlan"
