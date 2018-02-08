@@ -3,12 +3,17 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-route-ui',
   styleUrls: [ './ui.component.scss' ],
   templateUrl: './ui.component.html'
 })
 export class UIComponent {
   formGroup = new FormGroup({
+    text1: new FormControl(''),
+    text2: new FormControl('I am a text field'),
+    text3: new FormControl({ value: '', disabled: true }),
+    text4: new FormControl({ value: 'I am a text field', disabled: true }),
     checkbox1: new FormControl(false),
     checkbox2: new FormControl(true),
     checkbox3: new FormControl({ value: false, disabled: true }),

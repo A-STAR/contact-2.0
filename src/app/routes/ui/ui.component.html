@@ -1,4 +1,28 @@
 <section [formGroup]="formGroup">
+  <h1>Input Module</h1>
+
+  <h2>Text</h2>
+
+  <div class="form-group">
+    <label>Empty</label>
+    <app-text formControlName="text1"></app-text>
+  </div>
+
+  <div class="form-group">
+    <label>Not so empty</label>
+    <app-text formControlName="text2"></app-text>
+  </div>
+
+  <div class="form-group">
+    <label>Empty & disabled</label>
+    <app-text formControlName="text3"></app-text>
+  </div>
+
+  <div class="form-group">
+    <label>Not empty & disabled</label>
+    <app-text formControlName="text4"></app-text>
+  </div>
+
   <h1>Check Module</h1>
 
   <h2>Checkbox</h2>
@@ -6,7 +30,7 @@
   <div class="form-group">
     <label class="label">
       <app-checkbox formControlName="checkbox1"></app-checkbox>
-      Not Checked
+      Not checked
     </label>
   </div>
 
@@ -20,14 +44,14 @@
   <div class="form-group">
     <label class="label">
       <app-checkbox formControlName="checkbox3"></app-checkbox>
-      Disabled & Not Checked
+      Not checked & disabled
     </label>
   </div>
 
   <div class="form-group">
     <label class="label">
       <app-checkbox formControlName="checkbox4"></app-checkbox>
-      Disabled & Checked
+      Checked & disabled
     </label>
   </div>
 
@@ -36,7 +60,7 @@
   <div class="form-group">
     <label class="label">
       <app-radiobutton formControlName="radioGroup1" [value]="false"></app-radiobutton>
-      Not Checked
+      Not checked
     </label>
     <label class="label">
       <app-radiobutton formControlName="radioGroup1" [value]="true"></app-radiobutton>
@@ -47,11 +71,11 @@
   <div class="form-group">
     <label class="label">
       <app-radiobutton formControlName="radioGroup2" [value]="false"></app-radiobutton>
-      Disabled & Not Checked
+      Not checked & disabled
     </label>
     <label class="label">
       <app-radiobutton formControlName="radioGroup2" [value]="true"></app-radiobutton>
-      Disabled & Checked
+      Checked & disabled
     </label>
   </div>
 

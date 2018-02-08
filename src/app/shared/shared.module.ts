@@ -49,6 +49,7 @@ import { HDividerModule } from './components/hdivider/hdivider.module';
 import { HtmlTextareaModule } from './components/form/html-textarea/html-textarea.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
+import { InputModule } from './components/form/input/input.module';
 import { ListModule } from './components/list/list.module';
 import { MetadataGridModule } from './components/metadata-grid/metadata-grid.module';
 import { MomentModule } from './pipes/moment/moment.module';
@@ -115,6 +116,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     HtmlTextareaModule,
     ImageUploadModule,
     InfoDialogModule,
+    InputModule,
     ListModule,
     MetadataGridModule,
     MomentModule,
@@ -202,6 +204,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     HtmlTextareaModule,
     ImageUploadModule,
     InfoDialogModule,
+    InputModule,
     ListModule,
     MetadataGridModule,
     MomentModule,
