@@ -44,9 +44,9 @@ export class CallService {
     });
   }
 
-  updatePBXParams(userId: number, params: IPBXParams): Observable<void> {
+  updatePBXParams(params: IPBXParams): Observable<void> {
     return this.dataService
-      .update('/pbx/users/{userId}', { userId }, params)
+      .update('/pbx/users', {}, params)
       .pipe(
         catchError(this.notificationService.updateError().entity('entities.callSettings.gen.plural').dispatchCallback()),
       );
