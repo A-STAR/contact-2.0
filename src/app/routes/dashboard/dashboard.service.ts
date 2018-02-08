@@ -29,9 +29,9 @@ export class DashboardService {
   private indicatorColors = {
     debtActiveCnt: '#7266ba',
     debtNeedCallCnt: '#7266ba',
-    monthPaymentCnt: '#27c24c',
-    monthPaymentAmount: '#27c24c',
-    monthPaymentCommission: '#27c24c',
+    monthPaymentCnt: '#37bc9b',
+    monthPaymentAmount: '#37bc9b',
+    monthPaymentCommission: '#37bc9b',
   };
 
   promiseCountStatusOptions: ChartOptions = {

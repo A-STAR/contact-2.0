@@ -49,8 +49,8 @@ export class ChartComponent implements OnInit {
 
   private translateData(data: ChartData): ChartData {
     return compose(
-      this.translateTooltips,
-      this.translateLegend
+      this.translateTooltips.bind(this),
+      this.translateLegend.bind(this)
     )(data);
   }
 
@@ -67,7 +67,7 @@ export class ChartComponent implements OnInit {
       ...data,
       datasets: data.datasets.map(dataset => ({
         ...dataset,
-        label: this.translate(dataset.label),
+        label: dataset.label ? this.translate(dataset.label) : dataset.label,
       }))
     };
   }

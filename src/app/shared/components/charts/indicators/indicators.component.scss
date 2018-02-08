@@ -1,17 +1,25 @@
 @import "../../../styles/app/variables.scss";
-
+.indicator-wrapper {
+  display: flex;
+  flex-basis: auto;
+  flex-direction: row;
+  justify-content: center;
+}
 .indicator {
   text-align: center;
   font-family: 'Roboto Condensed';
+  padding: 0 10px;
+  width: 25%;
 }
 .indicator-badge {
   display: flex;
   justify-content: center;
   flex-direction: column;
   border-radius: 6px;
+  min-height: 65px;
 }
 .indicator-text {
-  color: $brand-white;
+  color: #fff;
   font-size: 16px;
   font-weight: bold;
 }
