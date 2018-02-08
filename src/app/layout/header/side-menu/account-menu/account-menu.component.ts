@@ -62,9 +62,8 @@ export class AccountMenuComponent extends DialogFunctions {
   }
 
   onPhoneExtensionSubmit(): void {
-    // TODO(d.maltsev): pass user id
     this.callService
-      .updatePBXParams(0, this.form.serializedValue)
+      .updatePBXParams(this.form.serializedValue)
       .subscribe(() => this.setDialog(null));
   }
 
