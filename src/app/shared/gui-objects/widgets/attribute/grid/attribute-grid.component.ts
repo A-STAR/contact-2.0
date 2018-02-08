@@ -41,7 +41,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   columns: IGridWrapperTreeColumn<any>[] = [
     {
-      label: labelKey('name'),
+      label: labelKey('names'),
       prop: 'name',
     },
     {
