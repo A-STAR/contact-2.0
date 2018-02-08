@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { map, filter, distinctUntilChanged } from 'rxjs/operators';
+import { map, filter, distinctUntilChanged, first } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
 import { ICallState, CallStateStatusEnum, ICallSettings, ICall } from './call.interface';
@@ -47,8 +47,18 @@ export class CallService {
       );
   }
 
-  get call$(): Observable<ICall> {
-    return this.state$.map(state => state.call);
+  get calls$(): Observable<ICall[]> {
+    return this.state$.map(state => state.calls);
+  }
+
+  findPhoneCall(phoneId: number): Observable<ICall> {
+    return this.calls$
+      .map(calls => calls.find(call => call.phoneId === phoneId));
+  }
+
+  findCall(callId: number): Observable<ICall> {
+    return this.calls$
+      .map(calls => calls.find(call => call.id === callId));
   }
 
   refresh(): void {
@@ -64,32 +74,40 @@ export class CallService {
     });
   }
 
-  dropCall(debtId: number, personId: number, personRole: number): void {
-    this.store.dispatch({
-      type: CallService.CALL_DROP,
-      payload: { debtId, personId, personRole }
-    });
+  dropCall(callId: number): void {
+    this.findCall(callId)
+      .pipe(first())
+      .subscribe(call => this.store.dispatch({
+        type: CallService.CALL_DROP,
+        payload: call
+      }));
   }
 
-  holdCall(debtId: number, personId: number, personRole: number): void {
-    this.store.dispatch({
-      type: CallService.CALL_HOLD,
-      payload: { debtId, personId, personRole }
-    });
+  holdCall(callId: number): void {
+    this.findCall(callId)
+      .pipe(first())
+      .subscribe(call => this.store.dispatch({
+        type: CallService.CALL_HOLD,
+        payload: call
+      }));
   }
 
-  retrieveCall(debtId: number, personId: number, personRole: number): void {
-    this.store.dispatch({
-      type: CallService.CALL_RETRIEVE,
-      payload: { debtId, personId, personRole }
-    });
+  retrieveCall(callId: number): void {
+    this.findCall(callId)
+      .pipe(first())
+      .subscribe(call => this.store.dispatch({
+        type: CallService.CALL_RETRIEVE,
+        payload: call
+      }));
   }
 
-  transferCall(userId: number, debtId: number, personId: number, personRole: number): void {
-    this.store.dispatch({
-      type: CallService.CALL_TRANSFER,
-      payload: { userId, debtId, personId, personRole }
-    });
+  transferCall(callId: number): void {
+    this.findCall(callId)
+      .pipe(first())
+      .subscribe(call => this.store.dispatch({
+        type: CallService.CALL_TRANSFER,
+        payload: call
+      }));
   }
 
   private get state$(): Observable<ICallState> {

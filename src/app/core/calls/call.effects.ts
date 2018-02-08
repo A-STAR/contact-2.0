@@ -56,10 +56,14 @@ export class CallEffects {
       return this.drop(debtId, personId, personRole)
         .map(call => ({
           type: CallService.CALL_DROP_SUCCESS,
+          payload: action.payload
         }))
         .catch(error => {
           return [
-            { type: CallService.CALL_DROP_FAILURE },
+            {
+              type: CallService.CALL_DROP_FAILURE,
+              payload: action.payload
+            },
             this.notificationService
               .error('widgets.phone.errors.drop')
               .entity('entities.calls.gen.singular')
@@ -77,10 +81,14 @@ export class CallEffects {
       return this.hold(debtId, personId, personRole)
         .map(call => ({
           type: CallService.CALL_HOLD_SUCCESS,
+          payload: action.payload
         }))
         .catch(error => {
           return [
-            { type: CallService.CALL_HOLD_FAILURE },
+            {
+              type: CallService.CALL_HOLD_FAILURE,
+              payload: action.payload
+            },
             this.notificationService
               .error('widgets.phone.errors.hold')
               .entity('entities.calls.gen.singular')
@@ -98,10 +106,14 @@ export class CallEffects {
       return this.retrieve(debtId, personId, personRole)
         .map(call => ({
           type: CallService.CALL_RETRIEVE_SUCCESS,
+          payload: action.payload
         }))
         .catch(error => {
           return [
-            { type: CallService.CALL_RETRIEVE_FAILURE },
+            {
+              type: CallService.CALL_RETRIEVE_FAILURE,
+              payload: action.payload
+            },
             this.notificationService
               .error('widgets.phone.errors.retrieve')
               .entity('entities.calls.gen.singular')
@@ -119,10 +131,14 @@ export class CallEffects {
       return this.transfer(userId, debtId, personId, personRole)
         .map(call => ({
           type: CallService.CALL_TRANSFER_SUCCESS,
+          payload: action.payload
         }))
         .catch(error => {
           return [
-            { type: CallService.CALL_TRANSFER_FAILURE },
+            {
+              type: CallService.CALL_TRANSFER_FAILURE,
+              payload: action.payload
+            },
             this.notificationService
               .error('widgets.phone.errors.transfer')
               .entity('entities.calls.gen.singular')
@@ -156,7 +172,11 @@ export class CallEffects {
     // return this.dataService
       // .create('pbx/call/make', { }, { phoneId, debtId, personId, personRole });
     return of({
-      id: 1
+      id: 1,
+      phoneId,
+      debtId,
+      personId,
+      personRole
     });
   }
 

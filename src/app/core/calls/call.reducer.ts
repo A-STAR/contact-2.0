@@ -6,7 +6,7 @@ import { CallService } from './call.service';
 export const defaultState: ICallState = {
   status: null,
   settings: null,
-  call: null
+  calls: []
 };
 
 export function reducer(state: ICallState = defaultState, action: UnsafeAction): ICallState {
@@ -28,41 +28,75 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
         status: CallStateStatusEnum.ERROR,
         settings: null
       };
-    case CallService.CALL_START_SUCCESS:
+    case CallService.CALL_START:
       return {
         ...state,
-        call: action.payload
+        calls: [
+          ...state.calls,
+          { ...action.payload }
+        ]
       };
-    case CallService.CALL_START_FAILURE:
+    case CallService.CALL_START_SUCCESS: {
+      const { id, phoneId } = action.payload;
       return {
         ...state,
-        call: null
+        calls: state.calls.map(call => call.phoneId === phoneId
+          ? { ...call, id }
+          : call
+        )
       };
-    case CallService.CALL_DROP:
+    }
+    case CallService.CALL_START_FAILURE: {
+      const { phoneId } = action.payload;
       return {
         ...state,
-        call: null
+        calls: state.calls.filter(call => call.phoneId !== phoneId)
       };
-    case CallService.CALL_HOLD_SUCCESS:
+    }
+    case CallService.CALL_DROP: {
+      const { id } = action.payload;
       return {
         ...state,
-        call: { ...(state.call || {}), onHold: true }
+        calls: state.calls.filter(call => call.id !== id)
       };
-    case CallService.CALL_HOLD_FAILURE:
+    }
+    case CallService.CALL_HOLD_SUCCESS: {
+      const { id } = action.payload;
       return {
         ...state,
-        call: { ...(state.call || {}), onHold: false }
+        calls: state.calls.map(call => call.id === id
+          ? { ...call, onHold: true }
+          : call
+        )
       };
-    case CallService.CALL_RETRIEVE_SUCCESS:
+    }
+    case CallService.CALL_HOLD_FAILURE: {
+      const { id } = action.payload;
       return {
         ...state,
-        call: { ...(state.call || {}), onHold: false }
+        calls: state.calls.map(call => call.id === id
+          ? { ...call, onHold: false }
+          : call
+        )
       };
-    case CallService.CALL_TRANSFER_SUCCESS:
+    }
+    case CallService.CALL_RETRIEVE_SUCCESS: {
+      const { id } = action.payload;
       return {
         ...state,
-        call: null
+        calls: state.calls.map(call => call.id === id
+          ? { ...call, onHold: false }
+          : call
+        )
       };
+    }
+    case CallService.CALL_TRANSFER_SUCCESS: {
+      const { id } = action.payload;
+      return {
+        ...state,
+        calls: state.calls.filter(call => call.id !== id)
+      };
+    }
     default:
       return state;
   }

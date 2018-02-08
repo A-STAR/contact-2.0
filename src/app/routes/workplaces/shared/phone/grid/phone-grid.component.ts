@@ -16,6 +16,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
+import { ICall } from '@app/core/calls/call.interface';
 import { IDebt } from '@app/core/debt/debt.interface';
 import { IGridColumn, IContextMenuItem } from '@app/shared/components/grid/grid.interface';
 import { IPhone } from '../phone.interface';
@@ -223,8 +224,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .getAction(PhoneService.MESSAGE_PHONE_SAVED)
       .subscribe(() => this.fetch());
 
-    this.callSubscription = this.callService.call$
-      .map(Boolean)
+    this.callSubscription = this.callService.calls$
+      .flatMap(() => this.selectedPhoneCall$.pipe(first()))
+      .map(call => call && !call.id)
       .flatMap(hasCall => combineLatestAnd([
         of(hasCall),
         this.callService.settings$.map(settings => !!settings.previewShowRegContact),
@@ -299,7 +301,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onPhoneOperatorSelect(operatorId: number): void {
-    this.callService.transferCall(operatorId, this._debtId$.value, this._personId$.value, this.personRole);
+    this.selectedPhoneCall$
+      .pipe(first())
+      .filter(Boolean)
+      .subscribe(call => this.callService.transferCall(call.id));
   }
 
   onDialogClose(): void {
@@ -318,6 +323,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get selectedPhone$(): Observable<IPhone> {
     return this.selectedPhoneId$.map(id => this.phones.find(phone => phone.id === id));
+  }
+
+  get selectedPhoneCall$(): Observable<ICall> {
+    return this.selectedPhone$.flatMap(phone => phone
+      ? this.callService.findPhoneCall(phone.id)
+      : of(null)
+    );
   }
 
   get canView$(): Observable<boolean> {
@@ -378,7 +390,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       // this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
-      this.selectedPhone$.map(phone => phone && !phone.isInactive)
+      this.selectedPhone$
+        .flatMap(phone => combineLatestAnd([
+          of(phone && !phone.isInactive),
+          this.selectedPhoneCall$.map(call => !call)
+        ]))
     ]);
   }
 
@@ -387,6 +403,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       // this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useDropCall),
+      this.selectedPhoneCall$.map(Boolean)
     ]);
   }
 
@@ -395,6 +412,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       // this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useHoldCall),
+      this.selectedPhoneCall$.map(Boolean)
     ]);
   }
 
@@ -403,6 +421,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       // this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useRetriveCall),
+      this.selectedPhoneCall$.map(Boolean)
     ]);
   }
 
@@ -411,6 +430,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       // this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall),
+      this.selectedPhoneCall$.map(Boolean)
     ]);
   }
 
@@ -440,15 +460,24 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   private onDropCall(): void {
-    this.callService.dropCall(this._debtId$.value, this._personId$.value, this.personRole);
+    this.selectedPhoneCall$
+      .pipe(first())
+      .filter(Boolean)
+      .subscribe(call => this.callService.dropCall(call.id));
   }
 
   private onHoldCall(): void {
-    this.callService.holdCall(this._debtId$.value, this._personId$.value, this.personRole);
+    this.selectedPhoneCall$
+      .pipe(first())
+      .filter(Boolean)
+      .subscribe(call => this.callService.holdCall(call.id));
   }
 
   private onRetrieveCall(): void {
-    this.callService.retrieveCall(this._debtId$.value, this._personId$.value, this.personRole);
+    this.selectedPhoneCall$
+      .pipe(first())
+      .filter(Boolean)
+      .subscribe(call => this.callService.retrieveCall(call.id));
   }
 
   private fetch(): void {
