@@ -3,12 +3,12 @@ import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AppModulesModule } from './app-modules/app-modules.module';
-import { CallModule } from './calls/call.module';
 import { DebtModule } from './debt/debt.module';
 import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
 
 import { ActionsLogService } from './actions-log/actions-log.service';
+import { CallService } from './calls/call.service';
 import { DataService } from './data/data.service';
 import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
 import { EntityTranslationsService } from './entity/translations/entity-translations.service';
@@ -30,13 +30,13 @@ import { environment } from '../../environments/environment';
 @NgModule({
   imports: [
     AppModulesModule,
-    CallModule,
     DebtModule,
     RoutingModule,
     UserModule,
   ],
   providers: [
     ActionsLogService,
+    CallService,
     EntityAttributesService,
     EntityTranslationsService,
     DatePipe,

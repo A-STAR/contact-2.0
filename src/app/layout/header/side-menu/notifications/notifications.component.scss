@@ -1,13 +1,25 @@
 .notifications {
   margin: 0;
-  width: 380px;
+  width: 400px;
 }
+
 .notifications_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   border-bottom: 1px solid #eee;
   background-color: #fafafa;
+
+  label {
+    display: inline-block;
+    margin: 0;
+    width: auto;
+
+    &:not(:last-child) {
+      margin-right: 5px;
+    }
+  }
 }
+
 .notifications_item {
   position: relative;
   cursor: pointer;
@@ -24,6 +36,7 @@
     border-bottom-width: 0;
   }
 }
+
 .notifications_dismiss {
     display: none;
     position: absolute;
@@ -36,6 +49,7 @@
       color: #000;
     }
 }
+
 .notifications_message {
   overflow: hidden;
   text-overflow: ellipsis;
