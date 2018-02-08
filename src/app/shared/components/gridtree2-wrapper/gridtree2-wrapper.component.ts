@@ -34,8 +34,9 @@ export class GridTree2WrapperComponent<T> implements OnInit, OnChanges {
   convertedCols: any[];
   convertedRows: any[];
   convertedColsDef: ColDef[];
-  getDataPath: Function;
   autoGroupColumnDef: ColDef;
+  getDataPath: Function;
+  getRowNodeId: Function;
 
   private dictionaries: { [key: number]: IOption[] };
 
@@ -48,6 +49,7 @@ export class GridTree2WrapperComponent<T> implements OnInit, OnChanges {
   ngOnInit(): void {
     this.convertedCols = this.gridTree2WrapperService.mapColumns(this.columns, this.translateColumnLabels);
     this.getDataPath = data => data[this.convertedCols.find(column => column.isDataPath).column.field];
+    this.getRowNodeId = data => data.uniqueId;
     this.autoGroupColumnDef = {
       rowDrag: this.dnd,
       cellRendererParams: { suppressCount: true },

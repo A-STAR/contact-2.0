@@ -29,6 +29,7 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
   @Input() autoGroupColumnDef: ColDef;
   @Input() rowSelection = 'single';
   @Input() getDataPath: Function;
+  @Input() getRowNodeId: Function;
   @Input() dnd: boolean;
   @Input() rowHeight: number;
 
