@@ -19,6 +19,7 @@
 
       <app-tabview-tab [title]="'widgets.contactProperty.dialogs.edit.attributesSettings'">
         <div class="mt" *ngIf="tabs[1].isInitialised">
+          <!-- TODO(d.topheenko): get rid of primeNg tree table (use app-gridtree2-wrapper instead) -->
           <p-treeTable selectionMode="none" [value]="attributeTypes">
             <p-column field="code" [header]="'widgets.contactProperty.dialogs.edit.attributes.code' | translate"></p-column>
             <p-column field="name" [header]="'widgets.contactProperty.dialogs.edit.attributes.name' | translate"></p-column>

@@ -56,11 +56,11 @@
 
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
-<app-gridtree-wrapper
+<app-gridtree2-wrapper
   [columns]="columns"
   [dnd]="canEdit$ | async"
   [rows]="attributes"
+  [translateColumnLabels]="true"
   (select)="onSelect($event)"
-  (dblclick)="onEdit($event)"
-  (move)="onMove($event)">
-</app-gridtree-wrapper>
+  (dblclick)="onEdit($event)">
+</app-gridtree2-wrapper>
