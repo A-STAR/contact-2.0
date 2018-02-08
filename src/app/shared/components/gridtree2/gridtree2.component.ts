@@ -8,9 +8,11 @@ import {
 } from '@angular/core';
 
 import 'ag-grid-enterprise';
-import { ColDef, GridApi, RowEvent } from 'ag-grid';
+import {ColDef, GridApi, RowDragEndEvent, RowEvent} from 'ag-grid';
 
 import { IGridTreeRow } from '@app/shared/components/gridtree2/gridtree2.interface';
+
+import { GridTree2Service } from '@app/shared/components/gridtree2/gridtree2.service';
 
 @Component({
   selector: 'app-gridtree2',
@@ -18,6 +20,7 @@ import { IGridTreeRow } from '@app/shared/components/gridtree2/gridtree2.interfa
   styleUrls: [ './gridtree2.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [ GridTree2Service ],
 })
 export class GridTree2Component<T> implements OnInit, OnChanges {
   @Input() rows: IGridTreeRow<T>[];
@@ -29,6 +32,7 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
   @Input() dnd: boolean;
 
   @Output() select = new EventEmitter<IGridTreeRow<T>>();
+  @Output() move = new EventEmitter<IGridTreeRow<T> | null>();
   @Output() dblclick = new EventEmitter<IGridTreeRow<T>>();
 
   gridApi: GridApi;
@@ -36,6 +40,7 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private gridTree2Service: GridTree2Service,
   ) {}
 
   ngOnInit(): void {
@@ -63,4 +68,30 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
   onDblClick(event: RowEvent): void {
     this.dblclick.emit(event.data);
   }
+
+  onDragEnd(event: RowDragEndEvent): void {
+    const overNode = event.overNode;
+
+    if (overNode) {
+      const isParent = overNode.data[this.autoGroupColumnDef.field].length === 1;
+      const placeToDrop = isParent ? overNode : overNode.parent;
+      const movingData = event.node.data;
+      const newParentPath = placeToDrop.data ? placeToDrop.data[this.autoGroupColumnDef.field] : [];
+      const needToChangeParent = !this.gridTree2Service.arePathsEqual(newParentPath, movingData[this.autoGroupColumnDef.field]);
+      const invalidMode = this.gridTree2Service.isSelectionParentOfTarget(event.node, placeToDrop);
+
+      if (invalidMode) {
+        this.move.emit(null);
+      }
+
+      if (needToChangeParent && !invalidMode) {
+        const updatedRows = [];
+        this.gridTree2Service.moveToPath(this.autoGroupColumnDef, newParentPath, event.node, updatedRows);
+        this.gridApi.updateRowData({ update: updatedRows });
+        this.gridApi.clearFocusedCell();
+        this.move.emit(updatedRows[0]);
+      }
+    }
+  }
+
 }

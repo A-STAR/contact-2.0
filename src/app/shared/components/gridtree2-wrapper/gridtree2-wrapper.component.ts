@@ -21,6 +21,7 @@ export class GridTree2WrapperComponent<T> implements OnInit, OnChanges {
   @Input() dnd: boolean;
 
   @Output() select = new EventEmitter<IGridTreeRow<T> | null>();
+  @Output() move = new EventEmitter<IGridTreeRow<T> | null>();
   @Output() dblclick = new EventEmitter<IGridTreeRow<T>>();
 
   convertedCols: any[];
@@ -38,7 +39,7 @@ export class GridTree2WrapperComponent<T> implements OnInit, OnChanges {
 
     this.convertedColsDef = this.convertedCols.filter(column => !column.isDataPath).map(column => column.column);
     this.getDataPath = data => data[this.convertedCols.find(column => column.isDataPath).column.field];
-    this.autoGroupColumnDef = this.convertedCols.find(column => column.isDataPath).column;
+    this.autoGroupColumnDef = { rowDrag: this.dnd, ...this.convertedCols.find(column => column.isDataPath).column };
 
     this.mapRows();
   }
@@ -53,6 +54,10 @@ export class GridTree2WrapperComponent<T> implements OnInit, OnChanges {
 
   onSelect(row: any): void {
     this.select.emit(this.gridTree2WrapperService.findSrcRowByUniqueId(this.rows, row.uniqueId));
+  }
+
+  onMove(row: any): void {
+    this.move.emit(this.gridTree2WrapperService.findSrcRowByUniqueId(this.rows, row.uniqueId));
   }
 
   onDblClick(row: any): void {
