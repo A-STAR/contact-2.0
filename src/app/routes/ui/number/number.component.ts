@@ -11,6 +11,11 @@ export class NumberComponent {
     number1: new FormControl(null),
     number2: new FormControl(42),
     number3: new FormControl(42),
-    number4: new FormControl({ value: 42, disabled: true }),
+    number4: new FormControl(5),
+    number5: new FormControl({ value: 42, disabled: true }),
   });
+
+  get errors(): any {
+    return this.formGroup.get('number4').errors;
+  }
 }

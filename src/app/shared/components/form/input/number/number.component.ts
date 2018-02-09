@@ -7,7 +7,7 @@ import {
   Input,
   Renderer2,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,13 +16,21 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => NumberComponent),
       multi: true,
-    }
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => NumberComponent),
+      multi: true,
+    },
   ],
   selector: 'app-number',
   styleUrls: [ './number.component.scss' ],
   templateUrl: './number.component.html'
 })
-export class NumberComponent implements ControlValueAccessor {
+export class NumberComponent implements ControlValueAccessor, Validator {
+  @Input() min: number;
+  @Input() max: number;
+
   @Input() set step(step: number | string) {
     this._step = Number(step);
   }
@@ -57,8 +65,27 @@ export class NumberComponent implements ControlValueAccessor {
     this.disabled = disabled;
   }
 
-  onChange(value: number): void {
-    this.update(value);
+  validate(c: any): any {
+    switch (true) {
+      case !this.isMinValid(this.value):
+        return { min: { maxValue: this.max } };
+      case !this.isMaxValid(this.value):
+        return { max: { minValue: this.max } };
+      default:
+        return null;
+    }
+  }
+
+  onKeyDown(event: KeyboardEvent): void {
+    const { key } = event;
+    if ((key < '0' || key > '9') && key !== '.' && key !== 'Backspace' && key !== 'Delete' && key !== '-') {
+      event.preventDefault();
+    }
+  }
+
+  onChange(value: string): void {
+    const newValue = Number(value) || null;
+    this.update(newValue);
   }
 
   onFocus(): void {
@@ -74,21 +101,27 @@ export class NumberComponent implements ControlValueAccessor {
     if (!this.disabled) {
       event.preventDefault();
       const value = (this.value || 0) - this._step * Math.sign(event.deltaY);
-      this.update(value);
+      if (this.isMinValid(value) && this.isMaxValid(value)) {
+        this.update(value);
+      }
     }
   }
 
   onIncrementClick(): void {
     if (!this.disabled) {
       const value = (this.value || 0) + this._step;
-      this.update(value);
+      if (this.isMinValid(value) && this.isMaxValid(value)) {
+        this.update(value);
+      }
     }
   }
 
   onDecrementClick(): void {
     if (!this.disabled) {
       const value = (this.value || 0) - this._step;
-      this.update(value);
+      if (this.isMinValid(value) && this.isMaxValid(value)) {
+        this.update(value);
+      }
     }
   }
 
@@ -96,6 +129,14 @@ export class NumberComponent implements ControlValueAccessor {
     this.value = value;
     this.propagateChange(value);
     this.cdRef.markForCheck();
+  }
+
+  private isMinValid(value: number): boolean {
+    return this.value == null || this.min == null || value >= this.min;
+  }
+
+  private isMaxValid(value: number): boolean {
+    return this.value == null || this.max == null || value <= this.max;
   }
 
   private propagateChange: Function = () => {};

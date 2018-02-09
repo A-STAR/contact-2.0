@@ -5,6 +5,7 @@
   [ngModel]="value"
   (focus)="onFocus()"
   (focusout)="onFocusOut()"
+  (keydown)="onKeyDown($event)"
   (ngModelChange)="onChange($event)"
 />
 
