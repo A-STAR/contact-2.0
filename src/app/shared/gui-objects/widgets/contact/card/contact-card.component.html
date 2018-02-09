@@ -46,6 +46,9 @@
   <app-tabview-tab [title]="tabs[2].title" [closable]="false">
     <app-identity-grid
       *ngIf="tabs[2].isInitialised"
+      (add)="onIdentityAdd()"
+      (dblClick)="onIdentityEdit($event)"
+      (edit)="onIdentityEdit($event)"
     ></app-identity-grid>
   </app-tabview-tab>
 

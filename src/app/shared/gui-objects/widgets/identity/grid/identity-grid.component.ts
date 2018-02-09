@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, OnDestroy, OnInit, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component,
+  ViewChild, OnDestroy, OnInit, Input, Output, EventEmitter
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
@@ -12,7 +15,6 @@ import { IIdentityDoc } from '@app/shared/gui-objects/widgets/identity/identity.
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { IdentityService } from '@app/shared/gui-objects/widgets/identity/identity.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -31,6 +33,10 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
 
   private routeParams = this.route.snapshot.paramMap;
   @Input() personId = +this.routeParams.get('contactId') || +this.routeParams.get('personId') || null;
+
+  @Output() add = new EventEmitter<void>();
+  @Output() dblClick = new EventEmitter<IIdentityDoc>();
+  @Output() edit = new EventEmitter<IIdentityDoc>();
 
   private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);
 
@@ -62,7 +68,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
       enabled: combineLatestAnd([this.canEdit$, this.selectedRows$.map(s => !!s.length)]),
-      action: () => this.onEdit(this.identityDoc.id)
+      action: () => this.onEdit(this.identityDoc)
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
@@ -82,7 +88,6 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
     private identityService: IdentityService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
-    private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService
   ) {
     super();
@@ -141,7 +146,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   }
 
   onDoubleClick(doc: IIdentityDoc): void {
-    this.onEdit(doc.id);
+    this.dblClick.emit(doc);
   }
 
   get canView$(): Observable<boolean> {
@@ -161,11 +166,11 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   }
 
   private onAdd(): void {
-    this.routingService.navigate([ 'identity/create' ], this.route);
+    this.add.emit();
   }
 
-  private onEdit(identityId: number): void {
-    this.routingService.navigate([ `identity/${identityId}` ], this.route);
+  private onEdit(doc: IIdentityDoc): void {
+    this.edit.emit(doc);
   }
 
   private clear(): void {

@@ -8,6 +8,7 @@ import { IAddress } from '@app/routes/workplaces/shared/address/address.interfac
 import { IContact } from '@app/shared/gui-objects/widgets/contact/contact.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
+import { IIdentityDoc } from '@app/shared/gui-objects/widgets/identity/identity.interface';
 
 import { ContactService } from '@app/shared/gui-objects/widgets/contact/contact.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -122,6 +123,14 @@ export class ContactCardComponent {
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
+  }
+
+  onIdentityAdd(): void {
+    this.routingService.navigate([ 'identity/create' ], this.route);
+  }
+
+  onIdentityEdit(doc: IIdentityDoc): void {
+    this.routingService.navigate([ `identity/${doc.id}` ], this.route);
   }
 
   onBack(): void {
