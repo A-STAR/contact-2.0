@@ -52,6 +52,7 @@ export class ConstantEditComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Grab the typeCode by hand, 'cause it's not dirty
     const typeCode = this.form.getControl('typeCode').value;
     const data = { ...this.form.serializedUpdates, typeCode };
     this.submit.emit(data);
@@ -70,7 +71,6 @@ export class ConstantEditComponent implements OnInit {
         controlName: 'typeCode',
         type: 'select',
         disabled: true,
-        markAsDirty: true,
         dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE
       },
       { controlName: 'value', ...type, required: true },

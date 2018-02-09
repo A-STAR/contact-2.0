@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IPermissionModel } from '../../../../../routes/admin/roles/permissions.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPermissionModel } from '@app/routes/admin/roles/permissions.interface';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+
+import { getFormControlConfig } from '@app/core/utils';
 
 @Component({
   selector: 'app-edit-permission',
@@ -12,7 +14,7 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 })
 export class EditPermissionComponent implements OnInit {
 
-  @Input() permission: IPermission;
+  @Input() permission: IPermissionModel;
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<null>();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -29,7 +31,6 @@ export class EditPermissionComponent implements OnInit {
     };
   }
 
-
   onCancel(): void {
     this.cancel.emit();
   }
@@ -39,6 +40,8 @@ export class EditPermissionComponent implements OnInit {
   }
 
   private getControls(permission: IPermissionModel): IDynamicFormControl[] {
+    const type = getFormControlConfig(permission);
+
     return [
       {
         label: 'ID',
@@ -64,8 +67,7 @@ export class EditPermissionComponent implements OnInit {
       {
         label: 'roles.permissions.edit.value',
         controlName: 'value',
-        type: 'dynamic',
-        dependsOn: 'typeCode',
+        ...type,
         required: true
       },
       {
@@ -79,7 +81,7 @@ export class EditPermissionComponent implements OnInit {
         controlName: 'comment',
         type: 'textarea'
       }
-    ];
+    ] as IDynamicFormControl[];
   }
 
 }
