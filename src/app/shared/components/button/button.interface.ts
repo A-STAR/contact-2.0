@@ -11,6 +11,7 @@ export type IButtonType =
   'addUser' |
   'back' |
   'block' |
+  'call' |
   'cancel' |
   'change' |
   'changeStatus' |
@@ -19,6 +20,7 @@ export type IButtonType =
   'copy' |
   'delete' |
   'download' |
+  'drop' |
   'edit' |
   'email' |
   'exportToExcel' |
@@ -27,6 +29,8 @@ export type IButtonType =
   'move' |
   'next' |
   'ok' |
+  'pause' |
+  'resume' |
   'refresh' |
   'registerContact' |
   'save' |
@@ -35,6 +39,7 @@ export type IButtonType =
   'sms' |
   'start' |
   'stop' |
+  'transfer' |
   'unblock' |
   'undo' |
   'upload' |

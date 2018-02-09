@@ -114,27 +114,27 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   callToolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_START,
+      type: ToolbarItemTypeEnum.BUTTON_CALL,
       enabled: this.canMakeCall$,
       action: () => this.onMakeCall()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_STOP,
+      type: ToolbarItemTypeEnum.BUTTON_DROP,
       enabled: this.canDropCall$,
       action: () => this.onDropCall()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
+      type: ToolbarItemTypeEnum.BUTTON_PAUSE,
       enabled: this.canHoldCall$,
       action: () => this.onHoldCall()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
+      type: ToolbarItemTypeEnum.BUTTON_RESUME,
       enabled: this.canRetrieveCall$,
       action: () => this.onRetrieveCall()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS,
+      type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
       enabled: this.canTransferCall$,
       action: () => this.setDialog('operator')
     },
@@ -412,7 +412,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       // this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useHoldCall),
-      this.selectedPhoneCall$.map(Boolean)
+      this.selectedPhoneCall$.map(call => call && !call.onHold)
     ]);
   }
 
@@ -421,7 +421,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       // this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useRetriveCall),
-      this.selectedPhoneCall$.map(Boolean)
+      this.selectedPhoneCall$.map(call => call && call.onHold)
     ]);
   }
 

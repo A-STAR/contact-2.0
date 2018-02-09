@@ -45,9 +45,11 @@
   (close)="onDialogClose()"
 ></app-phone-operator-dialog>
 
-<div class="row">
-  <app-toolbar-2 class="bh col-md-6" [items]="gridToolbarItems"></app-toolbar-2>
-  <app-toolbar-2 class="bh col-md-6 text-right" [items]="callToolbarItems"></app-toolbar-2>
+<div class="row m0">
+  <div class="col-md-12 bl br p0">
+    <app-toolbar-2 class="col-md-6" [items]="gridToolbarItems"></app-toolbar-2>
+    <app-toolbar-2 class="col-md-6 text-right" [items]="callToolbarItems"></app-toolbar-2>
+  </div>
 </div>
 
 <app-grid
