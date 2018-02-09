@@ -215,7 +215,8 @@
   "modules": {
     "callCenter": {
       "main": {
-        "title": "Сampaign selection"
+        "title": "Сampaign selection",
+        "nextDebtor": "Next debtor"
       },
       "grid": {
         "name": "Name",
