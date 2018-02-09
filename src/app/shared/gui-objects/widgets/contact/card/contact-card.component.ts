@@ -7,6 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
 import { IContact } from '@app/shared/gui-objects/widgets/contact/contact.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IEmployment } from '@app/shared/gui-objects/widgets/employment/employment.interface';
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 import { IIdentityDoc } from '@app/shared/gui-objects/widgets/identity/identity.interface';
 
@@ -131,6 +132,14 @@ export class ContactCardComponent {
 
   onIdentityEdit(doc: IIdentityDoc): void {
     this.routingService.navigate([ `identity/${doc.id}` ], this.route);
+  }
+
+  onEmploymentAdd(): void {
+    this.routingService.navigate([ 'employment/create' ], this.route);
+  }
+
+  onEmploymentEdit(employment: IEmployment): void {
+    this.routingService.navigate([ `employment/${employment.id}` ], this.route);
   }
 
   onBack(): void {

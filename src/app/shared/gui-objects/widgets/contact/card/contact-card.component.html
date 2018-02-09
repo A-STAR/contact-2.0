@@ -56,6 +56,9 @@
   <app-tabview-tab [title]="tabs[3].title" [closable]="false">
     <app-employment-grid
       *ngIf="tabs[3].isInitialised"
+      (add)="onEmploymentAdd()"
+      (dblClick)="onEmploymentEdit($event)"
+      (edit)="onEmploymentEdit($event)"
     ></app-employment-grid>
   </app-tabview-tab>
 </app-tabview>
