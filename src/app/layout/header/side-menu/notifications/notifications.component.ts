@@ -9,12 +9,10 @@ import {
   OnInit,
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { TranslateService } from '@ngx-translate/core';
 
-import { IFilters, INotification, NotificationTypeEnum } from '../../../../core/notifications/notifications.interface';
+import { IFilters, INotification, NotificationTypeEnum } from '@app/core/notifications/notifications.interface';
 
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Component({
   selector: 'app-notifications',
@@ -32,7 +30,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     NotificationTypeEnum.DEBUG,
   ];
 
-  dateTimeFormat: string;
   filters: IFilters;
   notifications: INotification[];
 
@@ -42,13 +39,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
-    private translateService: TranslateService,
-    private valueConverterService: ValueConverterService,
   ) {}
 
   ngOnInit(): void {
-    this.dateTimeFormat = this.translateService.instant('default.date.format.dateTime');
-
     this.notificationsSub = this.notificationsService.notifications
       .subscribe(notifications => {
         this.notifications = notifications;
@@ -76,10 +69,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     e.stopPropagation();
   }
 
-  displayDate(date: Date): string {
-    return this.valueConverterService.toLocalDateTime(date);
-  }
-
   getIconClass(type: NotificationTypeEnum): string {
     switch (type) {
       case NotificationTypeEnum.DEBUG: return 'fa fa-bug text-danger';
@@ -98,8 +87,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFilterChange(type: NotificationTypeEnum, event: MouseEvent): void {
-    this.notificationsService.filter(type, (event.target as HTMLInputElement).checked);
+  onFilterChange(type: NotificationTypeEnum, value: boolean): void {
+    this.notificationsService.filter(type, value);
   }
 
   onDismiss(index: number): void {

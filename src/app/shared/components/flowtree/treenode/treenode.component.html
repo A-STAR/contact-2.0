@@ -31,7 +31,7 @@
             (contextmenu)="onContextMenu($event)"
             [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
             <span
-                class="app-tree-toggler  fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
+                class="app-tree-toggler fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
                 (click)="toggle($event)"
                 (dblclick)="toggleDbClick($event)">
             </span>
@@ -89,8 +89,7 @@
             >
               <span
                 *ngIf="!isLeaf()"
-                class="app-tree-toggler fa fa-fw"
-                [ngClass]="{ 'fa-plus': !node.expanded, 'fa-minus': node.expanded }"
+                class="app-tree-toggler fa fa-caret-right"
                 (click)="toggle($event)"
                 (dblclick)="toggleDbClick($event)">
               </span>
