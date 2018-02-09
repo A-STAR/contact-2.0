@@ -9,6 +9,7 @@ import { TextComponent } from './text.component';
 
 describe('TextComponent', () => {
   let fixture: ComponentFixture<TextComponent>;
+  let input: HTMLInputElement;
 
   beforeEach(Async(() => {
     TestBed
@@ -25,6 +26,7 @@ describe('TextComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TextComponent);
+    input = fixture.debugElement.query(By.css('input')).nativeElement;
   });
 
   it('should render', () => {
@@ -34,15 +36,17 @@ describe('TextComponent', () => {
 
   it('should handle losing focus', () => {
     fixture.detectChanges();
-    fixture.debugElement.query(By.css('input')).nativeElement.dispatchEvent(new Event('blur'));
+    input.dispatchEvent(new Event('blur'));
     fixture.detectChanges();
     expect(fixture.nativeElement).toMatchSnapshot();
   });
 
-  it('should handle input', () => {
+  it('should handle input', async () => {
     fixture.detectChanges();
-    fixture.debugElement.query(By.css('input')).nativeElement.dispatchEvent(new Event('input'));
+    input.value = 'a';
+    input.dispatchEvent(new Event('input'));
     fixture.detectChanges();
+    await fixture.whenStable();
     expect(fixture.nativeElement).toMatchSnapshot();
   });
 });

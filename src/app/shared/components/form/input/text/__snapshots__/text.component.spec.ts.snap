@@ -8,7 +8,7 @@ exports[`TextComponent should handle input 1`] = `
   <input
     class="form-control ng-untouched ng-valid ng-dirty"
     ng-reflect-is-disabled="false"
-    ng-reflect-model=""
+    ng-reflect-model="a"
     type="text"
   />
   
