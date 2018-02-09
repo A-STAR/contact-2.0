@@ -1,7 +1,5 @@
 import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -118,19 +116,19 @@ export class ContactCardComponent implements OnInit {
   }
 
   onIdentityAdd(): void {
-    this.routingService.navigate([ 'identity/create' ], this.route);
+    this.routingService.navigate([ `${this.contactId}/identity/create` ], this.route);
   }
 
   onIdentityEdit(doc: IIdentityDoc): void {
-    this.routingService.navigate([ `identity/${doc.id}` ], this.route);
+    this.routingService.navigate([ `${this.contactId}/identity/${doc.id}` ], this.route);
   }
 
   onEmploymentAdd(): void {
-    this.routingService.navigate([ 'employment/create' ], this.route);
+    this.routingService.navigate([ `${this.contactId}/employment/create` ], this.route);
   }
 
   onEmploymentEdit(employment: IEmployment): void {
-    this.routingService.navigate([ `employment/${employment.id}` ], this.route);
+    this.routingService.navigate([ `${this.contactId}/employment/${employment.id}` ], this.route);
   }
 
   onContactSelected(contact: IPerson): void {

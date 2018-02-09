@@ -9,6 +9,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 interface IEmploymentCardRouteParams {
   employmentId: number;
   contactId: number;
+  contactPersonId: number;
 }
 
 @Component({
@@ -32,7 +33,7 @@ export class DebtorEmploymentComponent {
    */
   get personId$(): Observable<number> {
     return combineLatest(this.debtorCardService.personId$, this.routeParams$)
-      .map(([ personId, params ]) => params.contactId || personId)
+      .map(([ personId, params ]) => params.contactPersonId || params.contactId || personId)
       .distinctUntilChanged();
       /**
        * This experiment shows that despite the `onPush` mode
@@ -47,11 +48,13 @@ export class DebtorEmploymentComponent {
 
   onClose(): void {
     const contactId = this.route.snapshot.paramMap.get('contactId');
+    const contactPersonId = this.route.snapshot.paramMap.get('contactPersonId');
     this.routingService.navigate([
       '/workplaces',
       'debtor-card',
       this.route.snapshot.paramMap.get('debtId'),
-      ...(contactId ? [ 'contact', contactId ] : [])
+      ...(contactId ? [ 'contact', contactId ] : []),
+      ...(contactPersonId ? [ 'contact', 'create' ] : [])
     ]);
   }
 }

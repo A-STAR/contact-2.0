@@ -10,6 +10,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 interface IIdentityCardRouteParams {
   identityId: number;
   contactId: number;
+  contactPersonId: number;
 }
 
 @Component({
@@ -33,7 +34,7 @@ export class DebtorIdentityComponent {
   get personId$(): Observable<number> {
     return combineLatest(this.debtorCardService.personId$, this.routeParams$)
       .pipe(
-        map(([ personId, params ]) => params.contactId || personId),
+        map(([ personId, params ]) => params.contactPersonId || params.contactId || personId),
         distinctUntilChanged(),
       );
   }
@@ -44,11 +45,13 @@ export class DebtorIdentityComponent {
 
   onClose(): void {
     const contactId = this.route.snapshot.paramMap.get('contactId');
+    const contactPersonId = this.route.snapshot.paramMap.get('contactPersonId');
     this.routingService.navigate([
       '/workplaces',
       'debtor-card',
       this.route.snapshot.paramMap.get('debtId'),
-      ...(contactId ? [ 'contact', contactId ] : [])
+      ...(contactId ? [ 'contact', contactId ] : []),
+      ...(contactPersonId ? [ 'contact', 'create' ] : [])
     ]);
   }
 }
