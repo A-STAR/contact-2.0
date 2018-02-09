@@ -122,6 +122,58 @@
       "promiseCountStatus": "Error has been occured when fetching promise statuses for the last 30 days",
       "promiseCover": "Error has been occured when fetching promise coverage for the last 30 days",
       "contactDay": "Error has been occured when fetching successfull contacts for the last day"
+    },
+    "charts": {
+      "contactsDayPlan": {
+        "label": "Debtor contacts for the last day",
+        "legend": {
+          "fullfilled": "Fullfilled",
+          "remaining": "Remaining"
+        }
+      },
+      "contactsDay": {
+        "label": "Successful contacts for the last day",
+        "legend": {
+          "debtor": "Debtor",
+          "guarantor": "Guarantor",
+          "pledgor": "Pledgor",
+          "thirdParty": "Third party"
+        }
+      },
+      "indicators": {
+        "debtActiveCnt": "Active debts",
+        "debtNeedCallCnt": "Debts, needed to call back",
+        "monthPaymentCnt": "Payment count per month",
+        "monthPaymentAmount": "Payment amount per month",
+        "monthPaymentCommission": "Commission"
+      },
+      "promiseAmount": {
+        "label": "Promise amount for the last 30 days",
+        "legend": {
+          "promiseAmount": "Promise amount"
+        }
+      },
+      "promiseCount": {
+        "label": "Promise count for the last 30 days",
+        "legend": {
+          "promiseCount": "Promise count"
+        }
+      },
+      "promiseCountStatus": {
+        "label": "Promises for the last 30 days",
+        "legend": {
+          "fullfilled": "Fullfilled",
+          "overdue": "Overdue",
+          "waiting": "Waiting"
+        }
+      },
+      "promiseCover": {
+        "label": "Promise coverage for the last 30 days",
+        "legend": {
+          "covered": "Covered",
+          "remaining": "Remaining"
+        }
+      }
     }
   },
   "validation": {
@@ -592,7 +644,7 @@
           "comment": "Comment"
         },
         "card": {
-          "names": "Name",
+          "name": "Name",
           "sql": "SQL",
           "comment": "Comment",
           "exportUndescribed": "Export undescribed"
@@ -610,7 +662,7 @@
             "textWidth": "Text width"
           },
           "card": {
-            "names": "Name",
+            "name": "Name",
             "systemName": "System name",
             "sortOrder": "Sort order",
             "textWidth": "Text width"
@@ -631,7 +683,7 @@
             "multiSelect": "Multi select"
           },
           "card": {
-            "names": "Name",
+            "name": "Name",
             "systemName": "System name",
             "sortOrder": "Sort order",
             "paramTypeCode": "Param type",
@@ -2795,6 +2847,7 @@
       "templateNotFound": "Template not found by ID",
       "thereAreUsersInTheRole": "Cannot delete role {{ $1 }}, which belongs to some users",
       "tokenInvalid": "Invalid session token",
+      "translationInMainLanguageNotFound": "No translation in main language provided",
       "unknownDataType": "Unknown data type {{ $1 }} (not present in dictionary №1)",
       "unknownNotNullValueOperator": "Unknown (unsupported) operator {{ $1 }}",
       "unknownParameterForGrid": "Invalid parameter in custom list request",

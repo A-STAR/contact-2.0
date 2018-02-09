@@ -122,6 +122,58 @@
       "promiseCountStatus": "Произошла ошибка при попытке получить обещания за последние 30 дней (по статусам)",
       "promiseCover": "Произошла ошибка при попытке получить покрытие обещаний за последние 30 дней",
       "contactDay": "Произошла ошибка при попытке получить успешные контакты за день"
+    },
+    "charts": {
+      "contactsDayPlan": {
+        "label": "Количество контактов за текущий день с должником",
+        "legend": {
+          "fullfilled": "Выполнено",
+          "remaining": "Осталось"
+        }
+      },
+      "contactsDay": {
+        "label": "Успешные контакты за день",
+        "legend": {
+          "debtor": "Должник",
+          "guarantor": "Поручитель",
+          "pledgor": "Залогодатель",
+          "thirdParty": "Третье лицо"
+        }
+      },
+      "indicators": {
+        "debtActiveCnt": "Активные долги",
+        "debtNeedCallCnt": "Необходимо перезвонить",
+        "monthPaymentCnt": "Кол-во платежей (мес.)",
+        "monthPaymentAmount": "Сумма платежей (мес.)",
+        "monthPaymentCommission": "Комиссия"
+      },
+      "promiseAmount": {
+        "label": "Сумма полученных обещаний за последние 30 дней",
+        "legend": {
+          "promiseAmount": "Сумма"
+        }
+      },
+      "promiseCount": {
+        "label": "Количество полученных обещаний за последние 30 дней",
+        "legend": {
+          "promiseCount": "Кол-во обещаний"
+        }
+      },
+      "promiseCountStatus": {
+        "label": "Обещания за последние 30 дней",
+        "legend": {
+          "fullfilled": "Выполненные",
+          "overdue": "Просроченные",
+          "waiting": "Ожидание"
+        }
+      },
+      "promiseCover": {
+        "label": "Покрытие обещаний за последние 30 дней",
+        "legend": {
+          "covered": "Покрыто",
+          "remaining": "Осталось"
+        }
+      }
     }
   },
   "validation": {
@@ -592,7 +644,7 @@
           "comment": "Описание"
         },
         "card": {
-          "names": "Название",
+          "name": "Название",
           "sql": "SQL",
           "comment": "Комментарий",
           "exportUndescribed": "Выгружать неописанные поля"
@@ -610,7 +662,7 @@
             "textWidth": "Ширина столбца"
           },
           "card": {
-            "names": "Название",
+            "name": "Название",
             "systemName": "Системное название",
             "sortOrder": "Порядковый номер",
             "textWidth": "Ширина столбца"
@@ -631,7 +683,7 @@
             "multiSelect": "Множественный выбор"
           },
           "card": {
-            "names": "Название",
+            "name": "Название",
             "systemName": "Системное название",
             "sortOrder": "Порядковый номер",
             "paramTypeCode": "Тип параметра",
@@ -2795,6 +2847,7 @@
       "templateNotFound": "Не найден шаблон по ID",
       "thereAreUsersInTheRole": "Невозможно удалить роль {{ $1 }}, в которой есть пользователи",
       "tokenInvalid": "Неверный токен сессии",
+      "translationInMainLanguageNotFound": "Не задан перевод на основном языке системы",
       "unknownDataType": "Неизвестный тип данных {{ $1 }} (нет в словаре №1)",
       "unknownNotNullValueOperator": "Неизвестный (неподдерживаемый) оператор {{ $1 }}",
       "unknownParameterForGrid": "В запросе настраиваемого листа передан параметр (не атрибут), которого нет в этом листе",

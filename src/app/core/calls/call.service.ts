@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { map, filter, distinctUntilChanged, first, tap } from 'rxjs/operators';
+import { distinctUntilChanged, first, tap } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
-import { ICallState, ICallSettings, IPBXParams, ICall } from './call.interface';
+import { ICallSettings, IPBXParams, ICall } from './call.interface';
 
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
