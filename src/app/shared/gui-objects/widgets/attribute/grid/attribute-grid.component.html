@@ -56,11 +56,13 @@
 
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
-<app-gridtree-wrapper
+<app-gridtree2-wrapper
+  *ngIf="attributes && attributes.length > 0"
   [columns]="columns"
   [dnd]="canEdit$ | async"
   [rows]="attributes"
+  [translateColumnLabels]="true"
   (select)="onSelect($event)"
-  (dblclick)="onEdit($event)"
-  (move)="onMove($event)">
-</app-gridtree-wrapper>
+  (move)="onMove($event)"
+  (dblclick)="onEdit($event)">
+</app-gridtree2-wrapper>

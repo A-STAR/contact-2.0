@@ -1651,8 +1651,8 @@
           "attributes": {
             "code": "Code",
             "name": "Name",
-            "display": "Display",
-            "mandatory": "Required"
+            "isDisplayed": "Display",
+            "isMandatory": "Required"
           }
         },
         "edit": {

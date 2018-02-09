@@ -9,10 +9,11 @@
 
 <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
 
-<app-gridtree-wrapper
+<app-gridtree2-wrapper
+  *ngIf="rows && rows.length > 0"
+  [translateColumnLabels]="true"
   [columns]="columns"
-  [idGetter]="idGetter"
   [rows]="rows"
   (dblclick)="onRowDblClick($event)"
   (select)="onRowSelect($event)">
-</app-gridtree-wrapper>
+</app-gridtree2-wrapper>

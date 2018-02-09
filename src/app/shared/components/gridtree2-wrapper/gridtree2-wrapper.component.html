@@ -1,0 +1,13 @@
+<app-gridtree2
+  *ngIf="convertedRows && convertedRows.length > 0"
+  [translateColumnLabels]="translateColumnLabels"
+  [rows]="convertedRows"
+  [columns]="convertedColsDef"
+  [getDataPath]="getDataPath"
+  [getRowNodeId]="getRowNodeId"
+  [autoGroupColumnDef]="autoGroupColumnDef"
+  [rowHeight]="rowHeight"
+  (select)="onSelect($event)"
+  (move)="onMove($event)"
+  (dblclick)="onDblClick($event)"
+></app-gridtree2>
