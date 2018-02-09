@@ -9,15 +9,18 @@ export interface ICallSettings {
   useTransferCall?: number;
 }
 
-export interface ICallState {
-  status: CallStateStatusEnum;
-  settings: ICallSettings;
+export interface ICall {
+  id?: number;
+  phoneId: number;
+  debtId: number;
+  personId: number;
+  personRole: number;
+  onHold?: boolean;
 }
 
-export enum CallStateStatusEnum {
-  PENDING,
-  LOADED,
-  ERROR,
+export interface ICallState {
+  settings: ICallSettings;
+  calls: ICall[];
 }
 
 export interface IPBXParams {
