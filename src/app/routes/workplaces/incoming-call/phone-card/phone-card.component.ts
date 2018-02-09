@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-
-import { IncomingCallService } from '../incoming-call.service';
-import { map } from 'rxjs/operators/map';
+import { map } from 'rxjs/operators';
 
 interface PhoneCardRouteParams {
-  contactId: number;
+  personId: number;
   phoneId: number;
 }
 
@@ -16,7 +14,6 @@ interface PhoneCardRouteParams {
 })
 export class PhoneCardComponent {
   constructor(
-    private incomingCallService: IncomingCallService,
     private route: ActivatedRoute,
   ) {}
 
@@ -25,9 +22,7 @@ export class PhoneCardComponent {
   }
 
   get entityId$(): Observable<number> {
-    return this.incomingCallService.selectedDebtor$.pipe(
-      map(debtor => debtor ? debtor.personId : null),
-    );
+    return this.routeParams$.map(params => params.personId);
   }
 
   get routeParams$(): Observable<PhoneCardRouteParams> {

@@ -18,14 +18,8 @@ const routes: Routes = [
       reuse: true,
     },
   },
-  {
-    path: 'phone',
-    children: [
-      { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', loadChildren: './phone-card/phone-card.module#PhoneCardModule' },
-      { path: ':phoneId', loadChildren: './phone-card/phone-card.module#PhoneCardModule' },
-    ]
-  },
+  { path: ':personId/phones/create', loadChildren: './phone-card/phone-card.module#PhoneCardModule' },
+  { path: ':personId/phones/:phoneId', loadChildren: './phone-card/phone-card.module#PhoneCardModule' },
 ];
 
 @NgModule({

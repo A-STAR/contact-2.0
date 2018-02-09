@@ -96,11 +96,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onPhoneAdd(): void {
-    this.routingService.navigate([ 'phone/create' ], this.route);
+    this.routingService.navigate([ `${this.personId}/phones/create` ], this.route);
   }
 
   onPhoneEdit(phone: IPhone): void {
-    this.routingService.navigate([ `phone/${phone.id}` ], this.route);
+    this.routingService.navigate([ `${this.personId}/phones/${phone.id}` ], this.route);
   }
 
   onPhoneRegister(phone: IPhone): void {
