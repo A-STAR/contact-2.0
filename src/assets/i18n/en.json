@@ -592,7 +592,7 @@
           "comment": "Comment"
         },
         "card": {
-          "names": "Name",
+          "name": "Name",
           "sql": "SQL",
           "comment": "Comment",
           "exportUndescribed": "Export undescribed"
@@ -610,7 +610,7 @@
             "textWidth": "Text width"
           },
           "card": {
-            "names": "Name",
+            "name": "Name",
             "systemName": "System name",
             "sortOrder": "Sort order",
             "textWidth": "Text width"
@@ -631,7 +631,7 @@
             "multiSelect": "Multi select"
           },
           "card": {
-            "names": "Name",
+            "name": "Name",
             "systemName": "System name",
             "sortOrder": "Sort order",
             "paramTypeCode": "Param type",

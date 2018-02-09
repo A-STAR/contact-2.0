@@ -111,6 +111,7 @@ export class ParamsService extends AbstractActionService {
       label: inputParam.name,
       controlName: inputParam.systemName,
       required: !!inputParam.isMandatory,
+      markAsDirty: !inputParam.isMandatory
     };
     switch (inputParam.paramTypeCode) {
       case 1: return { ...control, type: 'datepicker' };
