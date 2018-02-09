@@ -155,7 +155,7 @@ export class CallEffects {
   ) {}
 
   private read(): Observable<ICallSettings> {
-    // return this.dataService.read('pbx/settings');
+    // return this.dataService.read('/pbx/settings');
     return of({
       useIntPhone: 1,
       usePreview: 1,
@@ -170,7 +170,7 @@ export class CallEffects {
 
   private call(phoneId: number, debtId: number, personId: number, personRole: number): Observable<ICall> {
     // return this.dataService
-      // .create('pbx/call/make', { }, { phoneId, debtId, personId, personRole });
+      // .create('/pbx/call/make', { }, { phoneId, debtId, personId, personRole });
     return of({
       id: 1,
       phoneId,
@@ -182,21 +182,21 @@ export class CallEffects {
 
   private drop(debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
-      .create('pbx/call/drop', {}, { debtId, personId, personRole });
+      .create('/pbx/call/drop', {}, { debtId, personId, personRole });
   }
 
   private hold(debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
-      .create('pbx/call/hold', {}, { debtId, personId, personRole });
+      .create('/pbx/call/hold', {}, { debtId, personId, personRole });
   }
 
   private retrieve(debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
-      .create('pbx/call/retrive', {}, { debtId, personId, personRole });
+      .create('/pbx/call/retrive', {}, { debtId, personId, personRole });
   }
 
   private transfer(userId: number, debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
-      .create('pbx/call/transfer', {}, { userId, debtId, personId, personRole });
+      .create('/pbx/call/transfer', {}, { userId, debtId, personId, personRole });
   }
 }

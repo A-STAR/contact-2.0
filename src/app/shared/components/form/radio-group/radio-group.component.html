@@ -1,6 +1,12 @@
 <div *ngFor="let option of options">
-  <label class="radio-inline">
-    <input type="radio" [disabled]="option.disabled" [value]="option.value" [ngModel]="value" (ngModelChange)="onChange($event)">
+  <label>
+    <app-radiobutton
+      [disabled]="option.disabled"
+      [name]="formControlName || name"
+      [ngModel]="value"
+      [value]="option.value"
+      (ngModelChange)="onChange($event)"
+    ></app-radiobutton>
     {{ option.label | translate }}
   </label>
 </div>

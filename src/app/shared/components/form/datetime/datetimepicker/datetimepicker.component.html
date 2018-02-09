@@ -15,17 +15,17 @@
       <app-date
         [minDate]="minDateTime"
         [maxDate]="maxDateTime"
-        [ngModel]="value"
+        [ngModel]="tempValue"
         (ngModelChange)="onDateChange($event)"></app-date>
       <app-time
         [minTime]="minDateTime"
         [maxTime]="maxDateTime"
-        [ngModel]="value"
+        [ngModel]="tempValue"
         [displaySeconds]="displaySeconds"
         (ngModelChange)="onTimeChange($event)"></app-time>
       <footer>
         <span (click)="setCurrentTime()">{{ 'default.buttons.now' | translate }}</span>
-        <span (click)="dropdown.close()">{{ 'default.buttons.ok' | translate }}</span>
+        <span (click)="onOkClick()">{{ 'default.buttons.ok' | translate }}</span>
       </footer>
     </div>
   </div>

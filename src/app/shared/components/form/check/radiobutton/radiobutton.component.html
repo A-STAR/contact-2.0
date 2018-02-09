@@ -1,0 +1,10 @@
+<input
+  type="radio"
+  [disabled]="disabled"
+  [name]="formControlName || name"
+  [value]="value"
+  [ngModel]="model"
+  (ngModelChange)="onModelChange($event)"
+/>
+
+<span [ngClass]="{ disabled: disabled }"></span>

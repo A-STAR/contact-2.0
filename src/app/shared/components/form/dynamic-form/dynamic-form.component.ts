@@ -137,10 +137,17 @@ export class DynamicFormComponent implements OnInit, OnChanges {
                 return combineLatest(
                   multiLanguageCtrls.map((ctrl: IDynamicFormLanguageControl) => {
                     const { langConfig } = ctrl;
-                    if (!langConfig.entityId) {
-                      return new ErrorObservable('The multilanguage config must contain a valid \'langConfig\'');
+                    if (!langConfig.entityAttributeId) {
+                      return new ErrorObservable('The multilanguage config must contain an \'entityAttributeId\'');
                     }
-                    return this.dataService.readTranslations(langConfig.entityId, langConfig.entityAttributeId);
+
+                    const emptyLangValues: IEntityTranslation[] = languages.map(v => (
+                      { languageId: v.id, isMain: v.isMain, value: null }
+                    ));
+
+                    return langConfig.entityId
+                      ? this.dataService.readTranslations(langConfig.entityId, langConfig.entityAttributeId)
+                      : of(emptyLangValues);
                   })
                 )
                 .pipe(

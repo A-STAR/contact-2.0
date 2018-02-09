@@ -29,23 +29,19 @@ export class DateTimePickerComponent implements ControlValueAccessor {
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
-  dateTimeFormat: string;
+  disabled = false;
+
+  dateTimeFormat = 'L HH:mm:ss';
+
+  value: Date;
+  tempValue: Date;
+
   private _displaySeconds: boolean;
-  private _disabled = false;
-  private _value: Date;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
   ) {}
-
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
-  get value(): Date {
-    return this._value;
-  }
 
   get displaySeconds(): boolean {
     return this._displaySeconds;
@@ -53,12 +49,13 @@ export class DateTimePickerComponent implements ControlValueAccessor {
 
   writeValue(value: Date | string): void {
     if (value) {
-      this._value = value instanceof Date
+      this.value = value instanceof Date
         ? value
         : moment(value).toDate();
     } else {
-      this._value = null;
+      this.value = null;
     }
+    this.tempValue = this.value;
     this.cdRef.markForCheck();
   }
 
@@ -71,7 +68,7 @@ export class DateTimePickerComponent implements ControlValueAccessor {
   }
 
   setDisabledState(disabled: boolean): void {
-    this._disabled = disabled;
+    this.disabled = disabled;
   }
 
   onTouch(): void {
@@ -89,17 +86,21 @@ export class DateTimePickerComponent implements ControlValueAccessor {
   }
 
   onDateChange(date: Date): void {
-    const value = this.dateTimeService.setDate(this._value, date);
-    this.update(value);
+    this.tempValue = this.dateTimeService.setDate(this.tempValue, date);
   }
 
   onTimeChange(time: Date): void {
-    const value = this.dateTimeService.setTime(this._value, time);
-    this.update(value);
+    this.tempValue = this.dateTimeService.setTime(this.tempValue, time);
+  }
+
+  onOkClick(): void {
+    this.update(this.tempValue);
+    this.dropdown.close();
   }
 
   private update(value: Date): void {
-    this._value = value;
+    this.value = value;
+    this.tempValue = value;
     this.propagateChange(value);
     this.cdRef.markForCheck();
   }

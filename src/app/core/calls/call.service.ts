@@ -4,7 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import { map, filter, distinctUntilChanged, first } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
-import { ICallState, CallStateStatusEnum, ICallSettings, ICall } from './call.interface';
+import { ICallState, CallStateStatusEnum, ICallSettings, IPBXParams, ICall } from './call.interface';
+
+import { DataService } from '../data/data.service';
+import { NotificationsService } from '../notifications/notifications.service';
+import { catchError } from 'rxjs/operators/catchError';
 
 @Injectable()
 export class CallService {
@@ -30,6 +34,8 @@ export class CallService {
   private state: ICallState;
 
   constructor(
+    private dataService: DataService,
+    private notificationService: NotificationsService,
     private store: Store<IAppState>,
   ) {
     this.state$.subscribe(state => this.state = state);
@@ -65,6 +71,14 @@ export class CallService {
     this.store.dispatch({
       type: CallService.CALL_SETTINGS_FETCH,
     });
+  }
+
+  updatePBXParams(params: IPBXParams): Observable<void> {
+    return this.dataService
+      .update('/pbx/users', {}, params)
+      .pipe(
+        catchError(this.notificationService.updateError().entity('entities.callSettings.gen.plural').dispatchCallback()),
+      );
   }
 
   makeCall(phoneId: number, debtId: number, personId: number, personRole: number): void {
@@ -109,7 +123,6 @@ export class CallService {
         payload: { userId, ...call }
       }));
   }
-
   private get state$(): Observable<ICallState> {
     return this.store.select(state => state.calls)
       .pipe(
