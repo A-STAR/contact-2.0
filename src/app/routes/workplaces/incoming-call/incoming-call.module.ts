@@ -18,6 +18,14 @@ const routes: Routes = [
       reuse: true,
     },
   },
+  {
+    path: 'phone',
+    children: [
+      { path: '', redirectTo: 'create', pathMatch: 'full' },
+      { path: 'create', loadChildren: './phone-card/phone-card.module#PhoneCardModule' },
+      { path: ':phoneId', loadChildren: './phone-card/phone-card.module#PhoneCardModule' },
+    ]
+  },
 ];
 
 @NgModule({
@@ -32,6 +40,9 @@ const routes: Routes = [
   ],
   declarations: [
     IncomingCallComponent,
+  ],
+  exports: [
+    RouterModule,
   ]
 })
 export class IncomingCallModule {}
