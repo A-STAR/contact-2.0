@@ -2830,6 +2830,7 @@
       "templateNotFound": "Template not found by ID",
       "thereAreUsersInTheRole": "Cannot delete role {{ $1 }}, which belongs to some users",
       "tokenInvalid": "Invalid session token",
+      "translationInMainLanguageNotFound": "No translation in main language provided",
       "unknownDataType": "Unknown data type {{ $1 }} (not present in dictionary №1)",
       "unknownNotNullValueOperator": "Unknown (unsupported) operator {{ $1 }}",
       "unknownParameterForGrid": "Invalid parameter in custom list request",

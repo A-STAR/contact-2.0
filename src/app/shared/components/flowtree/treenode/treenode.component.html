@@ -31,9 +31,9 @@
             (contextmenu)="onContextMenu($event)"
             [ngClass]="{'ui-treenode-selectable':tree.selectionMode && node.selectable !== false}">
             <span
-                class="app-tree-toggler fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
-                (click)="toggle($event)"
-                (dblclick)="toggleDbClick($event)">
+              class="app-tree-toggler fa fa-fw" [ngClass]="{'fa-caret-right':!node.expanded,'fa-caret-down':node.expanded}"
+              (click)="toggle($event)"
+              (dblclick)="toggleDbClick($event)">
             </span>
             <div class="ui-chkbox" *ngIf="tree.selectionMode == 'checkbox'">
               <div class="ui-chkbox-box ui-widget ui-corner-all ui-state-default">
