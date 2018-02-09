@@ -42,7 +42,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
 
   columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
-    { dataType: TYPE_CODES.STRING, name: 'name', isDataPath: true },
+    { dataType: TYPE_CODES.STRING, name: 'name', label: 'names', isDataPath: true },
     { dataType: TYPE_CODES.STRING, name: 'code' },
     { dataType: TYPE_CODES.DICT, name: 'typeCode',
       dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE, },
