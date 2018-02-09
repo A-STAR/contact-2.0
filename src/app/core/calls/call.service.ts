@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { map, filter, distinctUntilChanged, first } from 'rxjs/operators';
+import { map, filter, distinctUntilChanged, first, tap } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
-import { ICallState, CallStateStatusEnum, ICallSettings, IPBXParams, ICall } from './call.interface';
+import { ICallState, ICallSettings, IPBXParams, ICall } from './call.interface';
 
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
@@ -31,30 +31,32 @@ export class CallService {
   static CALL_TRANSFER_SUCCESS = 'CALL_TRANSFER_SUCCESS';
   static CALL_TRANSFER_FAILURE = 'CALL_TRANSFER_FAILURE';
 
-  private state: ICallState;
+  private isFetching = false;
 
   constructor(
     private dataService: DataService,
     private notificationService: NotificationsService,
     private store: Store<IAppState>,
-  ) {
-    this.state$.subscribe(state => this.state = state);
-  }
+  ) { }
 
   get settings$(): Observable<ICallSettings> {
-    const status = this.state && this.state.status;
-    if (status !== CallStateStatusEnum.LOADED && status !== CallStateStatusEnum.PENDING) {
-      this.refresh();
-    }
-    return this.state$
+    return this.store
+      .select(state => state.calls.settings)
       .pipe(
-        filter(state => state.status !== CallStateStatusEnum.PENDING),
-        map(state => state.settings)
+        tap(settings => {
+          if (settings) {
+            this.isFetching = false;
+          } else if (!this.isFetching) {
+            this.refresh();
+          }
+        }),
+        distinctUntilChanged(),
       );
   }
 
   get calls$(): Observable<ICall[]> {
-    return this.state$.map(state => state.calls);
+    return this.store
+      .select(state => state.calls.calls);
   }
 
   findPhoneCall(phoneId: number): Observable<ICall> {
@@ -68,6 +70,7 @@ export class CallService {
   }
 
   refresh(): void {
+    this.isFetching = true;
     this.store.dispatch({
       type: CallService.CALL_SETTINGS_FETCH,
     });
@@ -122,11 +125,5 @@ export class CallService {
         type: CallService.CALL_TRANSFER,
         payload: { userId, ...call }
       }));
-  }
-  private get state$(): Observable<ICallState> {
-    return this.store.select(state => state.calls)
-      .pipe(
-        distinctUntilChanged()
-      );
   }
 }

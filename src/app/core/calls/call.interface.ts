@@ -19,15 +19,8 @@ export interface ICall {
 }
 
 export interface ICallState {
-  status: CallStateStatusEnum;
   settings: ICallSettings;
   calls: ICall[];
-}
-
-export enum CallStateStatusEnum {
-  PENDING,
-  LOADED,
-  ERROR,
 }
 
 export interface IPBXParams {

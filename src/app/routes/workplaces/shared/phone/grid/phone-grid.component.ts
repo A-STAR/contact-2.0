@@ -229,7 +229,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .map(call => call && !call.id)
       .flatMap(hasCall => combineLatestAnd([
         of(hasCall),
-        this.callService.settings$.map(settings => !!settings.previewShowRegContact),
+        this.callService.settings$.map(settings => settings && !!settings.previewShowRegContact),
         this.canRegisterContact$
       ]).pipe(first()))
       .filter(Boolean)
