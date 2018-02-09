@@ -48,8 +48,6 @@ export class ContactCardComponent implements OnInit {
     { title: 'debtor.employmentRecordTab.title', isInitialised: false }
   ];
 
-  private _selectedContact$ = new BehaviorSubject<IPerson>(null);
-
   constructor(
     private contactService: ContactService,
     private route: ActivatedRoute,
@@ -78,13 +76,10 @@ export class ContactCardComponent implements OnInit {
       ];
     });
 
-    this.selectedContact$
-      .filter(Boolean)
-      .subscribe(contact => this.selectContact(contact.id));
   }
 
   get canSubmit(): boolean {
-    return !!this._selectedContact$.value || (this.form && this.form.canSubmit) ||
+    return !!this.contactId || (this.form && this.form.canSubmit) ||
       (this.personSelectCard && this.personSelectCard.isValid);
   }
 
@@ -96,34 +91,24 @@ export class ContactCardComponent implements OnInit {
     return this.routeParams.personId;
   }
 
-  get selectedContactId(): number {
-    return this._selectedContact$.value && this._selectedContact$.value.id;
-  }
-
-  get selectedContact$(): Observable<IPerson> {
-    return this.personSelectCard
-      ? this.personSelectCard.submitPerson()
-      : this._selectedContact$;
-  }
-
   get contactPersonId(): number {
-    return this.contactId || this.personId || this.selectedContactId;
+    return this.contactId || this.personId;
   }
 
   onAddressAdd(): void {
-    this.routingService.navigate([ 'address/create' ], this.route);
+    this.routingService.navigate([ `${this.contactId}/address/create` ], this.route);
   }
 
   onAddressEdit(address: IAddress): void {
-    this.routingService.navigate([ `address/${address.id}` ], this.route);
+    this.routingService.navigate([ `${this.contactId}/address/${address.id}` ], this.route);
   }
 
   onPhoneAdd(): void {
-    this.routingService.navigate([ 'phone/create' ], this.route);
+    this.routingService.navigate([ `${this.contactId}/phone/create` ], this.route);
   }
 
   onPhoneEdit(phone: IPhone): void {
-    this.routingService.navigate([ `phone/${phone.id}` ], this.route);
+    this.routingService.navigate([ `${this.contactId}/phone/${phone.id}` ], this.route);
   }
 
   onTabSelect(tabIndex: number): void {
@@ -131,7 +116,7 @@ export class ContactCardComponent implements OnInit {
   }
 
   onContactSelected(contact: IPerson): void {
-    this._selectedContact$.next(contact);
+    this.contactId = contact.id;
   }
 
   onBack(): void {
@@ -143,10 +128,10 @@ export class ContactCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.selectedContact$.subscribe(contact => this.createContact({
-      contactPersonId: contact.id,
+    this.createContact({
+      contactPersonId: this.contactId,
       linkTypeCode: this.form.serializedValue.linkTypeCode
-    }));
+    });
     this.onBack();
   }
 
@@ -164,7 +149,4 @@ export class ContactCardComponent implements OnInit {
     return (this.route.params as any).value;
   }
 
-  private selectContact(contactId: number): void {
-    this.routingService.navigate([ `/workplaces/debtor-card/${this.debtId}/contact/create/${contactId}` ]);
-  }
 }

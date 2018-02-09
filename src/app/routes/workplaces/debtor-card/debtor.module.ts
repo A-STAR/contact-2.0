@@ -98,7 +98,7 @@ const routes: Routes = [
         children: [
           { path: '', component: DebtorContactsComponent, data: {reuse: true} },
           {
-            path: ':contactId',
+            path: ':contactPersonId',
             children: [
               { path: '', component: DebtorContactsComponent },
               {
