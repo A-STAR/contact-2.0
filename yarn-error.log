@@ -1,0 +1,116 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add -D nightmare
+
+PATH: 
+  C:\_opt\cmder\bin;C:\_opt\cmder\vendor\conemu-maximus5\ConEmu\Scripts;C:\_opt\cmder\vendor\conemu-maximus5;C:\_opt\cmder\vendor\conemu-maximus5\ConEmu;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\DTS\Binn\;C:\ProgramData\chocolatey\bin;C:\Program Files (x86)\Yarn\bin;C:\Program Files (x86)\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\ManagementStudio\;C:\Program Files\TortoiseGit\bin;C:\HashiCorp\Vagrant\bin;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files\nodejs\;C:\Users\ru166dmimalt\AppData\Local\Programs\Python\Python36\Scripts\;C:\Users\ru166dmimalt\AppData\Local\Programs\Python\Python36\;C:\Users\ru166dmimalt\AppData\Local\Microsoft\WindowsApps;C:\dev;C:\_opt\nodejs;C:\_opt\maven\bin;C:\_opt\cmder\bin;C:\_opt\cmder\vendor\git-for-windows\bin;C:\Users\ru166dmimalt\AppData\Local\Yarn\.bin;C:\Program Files\Microsoft VS Code\bin;C:\Users\ru166dmimalt\AppData\Roaming\npm;C:\_opt\cmder\vendor\git-for-windows\usr\bin;C:\_opt\cmder\vendor\git-for-windows\usr\share\vim\vim74;C:\_opt\cmder\
+
+Yarn version: 
+  0.23.3
+
+Node version: 
+  8.9.4
+
+Platform: 
+  win32 x64
+
+npm manifest: 
+  {
+    "name": "contact2",
+    "version": "0.2.6",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+      "ng": "ng",
+      "start": "ng serve --port 4200",
+      "start:prod": "ng serve --aot --port 8000",
+      "start:proxy": "npm start -- --proxy-config proxy.conf.json",
+      "start:ext": "ng serve --host 0.0.0.0 --port 9000 --aot --disable-host-check",
+      "build": "ng build",
+      "build:check": "ng build --aot",
+      "test": "jest",
+      "test:watch": "jest --watch",
+      "test:ci": "jest --runInBand",
+      "lint": "ng lint --type-check",
+      "e2e": "ng e2e",
+      "ng-update": "npm up @angular/animations @angular/common @angular/compiler @angular/compiler-cli @angular/core @angular/forms @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/cli",
+      "wm-update": "node node_modules/protractor/bin/webdriver-manager update"
+    },
+    "jest": {
+      "preset": "jest-preset-angular",
+      "setupTestFrameworkScriptFile": "<rootDir>/src/jest.ts",
+      "moduleNameMapper": {
+        "^@app/(.*)$": "<rootDir>/src/app/$1.ts"
+      }
+    },
+    "dependencies": {
+      "@angular/animations": "^5.2.4",
+      "@angular/cli": "^1.6.8",
+      "@angular/common": "^5.2.4",
+      "@angular/compiler": "^5.2.4",
+      "@angular/compiler-cli": "^5.2.4",
+      "@angular/core": "^5.2.4",
+      "@angular/forms": "^5.2.4",
+      "@angular/platform-browser": "^5.2.4",
+      "@angular/platform-browser-dynamic": "^5.2.4",
+      "@angular/router": "^5.2.4",
+      "@auth0/angular-jwt": "^1.0.0-beta.9",
+      "@ngrx/effects": "^5.0.0",
+      "@ngrx/store": "^5.0.0",
+      "@ngrx/store-devtools": "^5.0.0",
+      "@ngx-translate/core": "^9.1.1",
+      "@ngx-translate/http-loader": "^2.0.1",
+      "@swimlane/ngx-datatable": "^11.1.7",
+      "ag-grid": "^16.0.1",
+      "ag-grid-angular": "^16.0.0",
+      "ag-grid-enterprise": "^16.0.1",
+      "angular-split": "^1.0.0-rc.1",
+      "angular2-text-mask": "^8.0.4",
+      "angular2-toaster": "^4.0.1",
+      "bootstrap": "3.3.7",
+      "chart.js": "^2.7.1",
+      "classlist.js": "^1.1.20150312",
+      "codelyzer": "^4.1.0",
+      "core-js": "^2.5.3",
+      "font-awesome": "^4.7.0",
+      "jquery": "^3.2.1",
+      "jquery.browser": "^0.1.0",
+      "moment": "^2.20.1",
+      "ng2-dragula": "^1.5.0",
+      "ng2-validation": "^4.2.0",
+      "ngx-perfect-scrollbar": "^5.3.4",
+      "primeng": "^4.3.0",
+      "ramda": "^0.25.0",
+      "reflect-metadata": "^0.1.12",
+      "rxjs": "^5.5.6",
+      "simple-line-icons": "^2.4.1",
+      "summernote": "^0.8.9",
+      "text-mask-addons": "^3.6.0",
+      "web-animations-js": "^2.3.1",
+      "zone.js": "^0.8.20"
+    },
+    "devDependencies": {
+      "@types/chart.js": "^2.7.6",
+      "@types/faker": "^4.1.2",
+      "@types/jest": "^22.1.1",
+      "@types/node": "^9.4.2",
+      "@types/ramda": "^0.25.17",
+      "faker": "^4.1.0",
+      "jasmine-core": "^2.8.0",
+      "jasmine-spec-reporter": "^4.2.1",
+      "jest": "^22.1.4",
+      "jest-image-snapshot": "^2.3.0",
+      "jest-preset-angular": "^5.0.0",
+      "protractor": "^5.3.0",
+      "ts-node": "~3.3.0",
+      "tslint": "~5.6.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'C:\dev\front-end\node_modules\webdriver-manager\selenium\__chromedriver_2.35.exe'
