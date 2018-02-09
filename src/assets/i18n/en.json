@@ -793,7 +793,10 @@
       "email": "Email",
       "address": "Office address",
       "language": "Language",
-      "comment": "Comments"
+      "comment": "Comments",
+      "agentId": "Agent id",
+      "agentName": "Agent name",
+      "agentPassword": "Agent password"
     },
     "select": {
       "role": {

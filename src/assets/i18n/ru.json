@@ -793,7 +793,10 @@
       "email": "Email",
       "address": "Рабочий адрес",
       "language": "Язык",
-      "comment": "Комментарий"
+      "comment": "Комментарий",
+      "agentId": "ID агента",
+      "agentName": "Имя агента",
+      "agentPassword": "Пароль агента"
     },
     "select": {
       "role": {

@@ -9,6 +9,7 @@ import {
   IDynamicFormItem,
   IDynamicFormControl
 } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IUser, IUserEditPermissions } from '@app/routes/admin/users/users.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
@@ -63,11 +64,12 @@ export class UserEditComponent extends DialogFunctions {
       this.lookupService.lookupAsOptions('languages'),
       this.lookupService.lookupAsOptions('roles'),
       this.userId ? this.usersService.fetchOne(this.userId) : of(null),
+      this.usersService.agentAttributes$,
     )
     .pipe(first())
     .subscribe(([
       canEditUser, canEditRole, canEditLdap, passwordMinLength, passwordComplexity, photoMaxSize,
-        branchOptions, languages, roles, user
+        branchOptions, languages, roles, user, agentAttributes
     ]) => {
       const permissions: IUserEditPermissions = {
         canEditUser: canEditUser,
@@ -78,7 +80,15 @@ export class UserEditComponent extends DialogFunctions {
       const passwordValidator = password(!this.userId, passwordMinLength.valueN, passwordComplexity.valueB);
       const photoValidator = maxFileSize(1e3 * photoMaxSize.valueN);
 
-      this.controls = this.getFormControls(branchOptions, languages, roles, passwordValidator, photoValidator, permissions);
+      this.controls = this.getFormControls(
+        branchOptions,
+        languages,
+        roles,
+        passwordValidator,
+        photoValidator,
+        permissions,
+        agentAttributes
+      );
       this.formData = this.getFormData(user);
       this.cdRef.markForCheck();
     });
@@ -122,10 +132,10 @@ export class UserEditComponent extends DialogFunctions {
     roles: IOption[],
     passwordValidators: ValidatorFn,
     photoValidator: ValidatorFn,
-    permissions: IUserEditPermissions
+    permissions: IUserEditPermissions,
+    agentAttributes: IEntityAttributes
   ): Array<IDynamicFormItem> {
     const photoUrl = this.userId ? `/users/${this.userId}/photo` : null;
-
     const nameBlock = ([
       { label: 'users.edit.lastName', controlName: 'lastName', type: 'text', required: true },
       { label: 'users.edit.firstName', controlName: 'firstName', type: 'text' },
@@ -156,6 +166,29 @@ export class UserEditComponent extends DialogFunctions {
       { label: 'users.edit.address', controlName: 'workAddress', type: 'text' },
       { label: 'users.edit.language', controlName: 'languageId', type: 'select', required: true, options: languages },
       { label: 'users.edit.comment', controlName: 'comment', type: 'textarea', disabled: !permissions.canEditUser },
+      ...[
+        agentAttributes[87].isUsed
+          ? {
+            label: 'users.edit.agentId',
+            controlName: 'agentId',
+            type: 'text',
+            required: agentAttributes[87].isMandatory
+          } : null,
+        agentAttributes[88].isUsed
+          ? {
+            label: 'users.edit.agentName',
+            controlName: 'agentName',
+            type: 'text',
+            required: agentAttributes[88].isMandatory
+          } : null,
+        agentAttributes[89].isUsed
+          ? {
+            label: 'users.edit.agentPassword',
+            controlName: 'agentPassword',
+            type: 'text',
+            required: agentAttributes[89].isMandatory
+          } : null,
+      ].filter(Boolean)
     ] as Array<IDynamicFormControl>).map(control => ({
       ...control,
       disabled: control.hasOwnProperty('disabled') ? control.disabled : !permissions.canEditUser
