@@ -11,20 +11,13 @@
     "start:ext": "ng serve --host 0.0.0.0 --port 9000 --aot --disable-host-check",
     "build": "ng build",
     "build:check": "ng build --aot",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:ci": "jest --runInBand",
+    "test": "jest -c jest.config.json",
+    "test:watch": "jest -c jest.config.json --watch",
+    "test:ci": "jest --c jest.config.json --runInBand",
     "lint": "ng lint --type-check",
     "e2e": "ng e2e",
     "ng-update": "npm up @angular/animations @angular/common @angular/compiler @angular/compiler-cli @angular/core @angular/forms @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/cli",
     "wm-update": "node node_modules/protractor/bin/webdriver-manager update"
-  },
-  "jest": {
-    "preset": "jest-preset-angular",
-    "setupTestFrameworkScriptFile": "<rootDir>/src/jest.ts",
-    "moduleNameMapper": {
-      "^@app/(.*)$": "<rootDir>/src/app/$1.ts"
-    }
   },
   "dependencies": {
     "@angular/animations": "^5.2.4",
