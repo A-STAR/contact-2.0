@@ -12,7 +12,7 @@ import { DynamicFormComponent } from '../../../../../shared/components/form/dyna
 })
 export class EditPermissionComponent implements OnInit {
 
-  @Input() permission: any;
+  @Input() permission: IPermission;
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<null>();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -22,7 +22,7 @@ export class EditPermissionComponent implements OnInit {
   data: IPermissionModel;
 
   ngOnInit(): void {
-    this.controls = this.getControls();
+    this.controls = this.getControls(this.permission);
     this.data = {
       ...this.permission,
       value: String(this.permission.value)
@@ -38,7 +38,7 @@ export class EditPermissionComponent implements OnInit {
     this.save.emit(this.form.value);
   }
 
-  private getControls(): IDynamicFormControl[] {
+  private getControls(permission: IPermissionModel): IDynamicFormControl[] {
     return [
       {
         label: 'ID',

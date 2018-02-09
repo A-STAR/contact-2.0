@@ -6,7 +6,7 @@ import {
   Input, OnInit, Output, OnChanges, SimpleChanges
 } from '@angular/core';
 
-import 'ag-grid-enterprise';
+// import 'ag-grid-enterprise';
 import { ColDef, GridApi, GridOptions, RowDragEndEvent, RowEvent } from 'ag-grid';
 
 import { IGridTreeRow } from '@app/shared/components/gridtree2/gridtree2.interface';

@@ -191,7 +191,6 @@ export interface IDynamicFormSelectControl extends IDynamicFormBaseControl {
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
   placeholder?: string;
   dependsOn?: string;
-  // @deprecated options for select wrappers
   dictCode?: number;
   parentCode?: number;
   lookupKey?: ILookupKey;
