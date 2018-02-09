@@ -49,8 +49,8 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
 
   data: any = {};
   controls: IDynamicFormControl[] = [
-    { label: labelKey('startDate'), controlName: 'startDate', type: 'datepicker', displayTime: true, width: 5 },
-    { label: labelKey('endDate'), controlName: 'endDate', type: 'datepicker', displayTime: true, width: 5 },
+    { label: labelKey('startDate'), controlName: 'startDate', type: 'datetimepicker', width: 5 },
+    { label: labelKey('endDate'), controlName: 'endDate', type: 'datetimepicker', width: 5 },
     {
       label: labelKey('searchBtn'),
       controlName: 'searchBtn',

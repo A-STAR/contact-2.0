@@ -46,7 +46,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   @Input() data: IValue;
   @Input() config: IDynamicFormConfig;
 
-  @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
+  @Output() onSelect = new EventEmitter<ISelectItemsPayload>();
 
   form: FormGroup;
 
@@ -137,10 +137,17 @@ export class DynamicFormComponent implements OnInit, OnChanges {
                 return combineLatest(
                   multiLanguageCtrls.map((ctrl: IDynamicFormLanguageControl) => {
                     const { langConfig } = ctrl;
-                    if (!langConfig.entityId) {
-                      return new ErrorObservable('The multilanguage config must contain a valid \'langConfig\'');
+                    if (!langConfig.entityAttributeId) {
+                      return new ErrorObservable('The multilanguage config must contain an \'entityAttributeId\'');
                     }
-                    return this.dataService.readTranslations(langConfig.entityId, langConfig.entityAttributeId);
+
+                    const emptyLangValues: IEntityTranslation[] = languages.map(v => (
+                      { languageId: v.id, isMain: v.isMain, value: null }
+                    ));
+
+                    return langConfig.entityId
+                      ? this.dataService.readTranslations(langConfig.entityId, langConfig.entityAttributeId)
+                      : of(emptyLangValues);
                   })
                 )
                 .pipe(
@@ -386,9 +393,11 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       case 'datepicker':
         return ['', null].includes(value)
           ? null
-          : control.displayTime
-            ? this.valueConverterService.toISO(value)
-            : this.valueConverterService.toDateOnly(value);
+          : this.valueConverterService.toDateOnly(value);
+      case 'datetimepicker':
+        return ['', null].includes(value)
+          ? null
+          : this.valueConverterService.toISO(value);
       case 'timepicker':
         return ['', null].includes(value)
           ? null

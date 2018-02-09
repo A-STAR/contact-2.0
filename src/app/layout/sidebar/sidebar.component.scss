@@ -6,7 +6,7 @@ nav {
   background-color: $brand-primary-light;
   border-right: 1px solid #ddd;
   width: $layout-sidebar-width;
-  transition: width 0.1s;
+  transition: width 0.2s;
 
   ul {
     list-style-type: none;
@@ -17,7 +17,7 @@ nav {
       border-left: $menu-item-border-width solid transparent;
       color: $brand-white;
       cursor: pointer;
-      padding: 10px 18px;
+      padding: 10px 14px;
 
       &.active,
       &:hover {
@@ -26,22 +26,43 @@ nav {
         color: #fff;
       }
 
-      i {
-        line-height: 20px;
-        padding-right: 16px;
+      .menu-item {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+
+        .icon-container {
+          display: flex;
+          height: 38px;
+          margin-right: 10px;
+
+          i {
+            font-size: 30px;
+          }
+        }
+
+        .menu-item-title {
+          // flex: 1 1 0px;
+          display: none;
+          overflow-x: hidden;
+          &.showTitle {
+            display: block;
+            animation: showTitle 0.1s;
+          }
+        }
       }
     }
   }
 
   &.collapsed {
-    font-size: 20px;
     width: $layout-sidebar-width-collapsed;
 
-    ul li {
-      padding: 16px 0;
+    ul > li {
+      padding-right: 0;
       justify-content: center;
 
       i {
+        // font-size: 30px;
         padding-right: $menu-item-border-width;
       }
     }
@@ -50,11 +71,28 @@ nav {
   .sidebar-collapse {
     color: $brand-white;
     cursor: pointer;
-    display: inline-block;
-    padding: 10px 18px;
+    padding: 12px 14px;
+
+    .toggle-title {
+      display: none;
+      overflow-x: hidden;
+      &.showTitle {
+        display: inline;
+        animation: showTitle 0.1s;
+      }
+    }
 
     &:hover {
       color: #fff;
     }
+  }
+}
+
+@keyframes showTitle {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

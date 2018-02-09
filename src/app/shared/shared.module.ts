@@ -26,8 +26,11 @@ import { ActionDialogModule } from './components/dialog/action/action-dialog.mod
 import { ActionGridModule } from './components/action-grid/action-grid.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
 import { ButtonModule } from './components/button/button.module';
+import { CapitalizeModule } from './pipes/capitalize/capitalize.module';
+import { ChartsModule } from './components/charts/charts.module';
+import { CheckModule } from './components/form/check/check.module';
 import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
-import { DatePickerModule } from './components/form/datepicker/datepicker.module';
+import { DateTimeModule } from './components/form/datetime/datetime.module';
 import { DebtAmountModule } from './components/form/debt-amount/debt-amount.module';
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogMultiSelectModule } from './components/form/dialog-multi-select/dialog-multi-select.module';
@@ -42,6 +45,8 @@ import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
 import { GridTreeModule } from './components/gridtree/gridtree.module';
 import { GridTreeWrapperModule } from './components/gridtree-wrapper/gridtree-wrapper.module';
+import { GridTree2Module } from './components/gridtree2/gridtree2.module';
+import { GridTree2WrapperModule } from './components/gridtree2-wrapper/gridtree2-wrapper.module';
 import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
 import { HtmlTextareaModule } from './components/form/html-textarea/html-textarea.module';
@@ -49,6 +54,7 @@ import { ImageUploadModule } from './components/form/image-upload/image-upload.m
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { ListModule } from './components/list/list.module';
 import { MetadataGridModule } from './components/metadata-grid/metadata-grid.module';
+import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
 import { PasswordModule } from './components/form/password/password.module';
@@ -60,8 +66,7 @@ import { SpinnerModule } from './components/spinner/spinner.module';
 import { TabstripModule } from './components/tabstrip/tabstrip.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TextEditorModule } from './components/form/text-editor/text-editor.module';
-import { TimeModule } from './components/form/time/time.module';
-import { TimePickerModule } from './components/form/timepicker/timepicker.module';
+import { TitlebarModule } from '@app/shared/components/titlebar/titlebar.module';
 import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
@@ -91,8 +96,11 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ActionGridModule,
     BlockDialogModule,
     ButtonModule,
+    CapitalizeModule,
+    ChartsModule,
+    CheckModule,
     ColorPickerModule,
-    DatePickerModule,
+    DateTimeModule,
     DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
@@ -105,7 +113,9 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridModule,
     Grid2Module,
     GridTreeModule,
+    GridTree2Module,
     GridTreeWrapperModule,
+    GridTree2WrapperModule,
     GuiObjectsModule,
     HDividerModule,
     HtmlTextareaModule,
@@ -113,6 +123,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     ListModule,
     MetadataGridModule,
+    MomentModule,
     MultiLanguageModule,
     MultiSelectModule,
     PasswordModule,
@@ -128,8 +139,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ToolbarModule,
     Toolbar2Module,
     TreeModule,
-    TimeModule,
-    TimePickerModule,
+    TitlebarModule,
     ValueInputModule,
     ViewFormModule,
   ],
@@ -175,8 +185,11 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ActionGridModule,
     BlockDialogModule,
     ButtonModule,
+    CapitalizeModule,
+    ChartsModule,
+    CheckModule,
     ColorPickerModule,
-    DatePickerModule,
+    DateTimeModule,
     DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
@@ -190,7 +203,9 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridModule,
     Grid2Module,
     GridTreeModule,
+    GridTree2Module,
     GridTreeWrapperModule,
+    GridTree2WrapperModule,
     GuiObjectsModule,
     HDividerModule,
     HtmlTextareaModule,
@@ -198,6 +213,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     ListModule,
     MetadataGridModule,
+    MomentModule,
     MultiLanguageModule,
     MultiSelectModule,
     NumericInputComponent,
@@ -214,8 +230,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ToolbarModule,
     Toolbar2Module,
     TreeModule,
-    TimeModule,
-    TimePickerModule,
+    TitlebarModule,
     ValueInputModule,
     ViewFormModule,
   ]

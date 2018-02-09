@@ -1,4 +1,4 @@
-import { IDynamicFormControl } from '../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { UserDictionariesService } from '../user/dictionaries/user-dictionaries.service';
 
@@ -11,15 +11,15 @@ export interface IValue {
   valueD: string;
 }
 
-export const TYPE_CODES = {
-  NUMBER:   1,
-  DATE:     2,
-  STRING:   3,
-  BOOLEAN:  4,
-  FLOAT:    5,
-  DICT:     6,
-  DATETIME: 7,
-};
+export enum TYPE_CODES {
+  NUMBER   = 1,
+  DATE     = 2,
+  STRING   = 3,
+  BOOLEAN  = 4,
+  FLOAT    = 5,
+  DICT     = 6,
+  DATETIME = 7
+}
 
 export const getRawValue = <T extends IValue>(value: T): number | string => {
   switch (value.typeCode) {
@@ -56,7 +56,7 @@ export const getFormControlConfig = <T extends IValue>(value: T): Partial<IDynam
     case TYPE_CODES.DATE:
       return { type: 'datepicker' };
     case TYPE_CODES.DATETIME:
-      return { type: 'datepicker', displayTime: true };
+      return { type: 'datetimepicker' };
     case TYPE_CODES.STRING:
       return { type: 'text' };
     case TYPE_CODES.BOOLEAN:

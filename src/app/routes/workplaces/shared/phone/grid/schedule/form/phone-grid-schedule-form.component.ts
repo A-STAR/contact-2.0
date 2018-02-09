@@ -57,7 +57,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
       this.userConstantsService.get('SMS.Sender.Use'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_SMS_SENDER),
       this.useTemplate ?
-        this.userTemplatesService.getTemplates(2, this.personRole, true) :
+        this.userTemplatesService.getTemplatesForDebt(2, this.personRole, true, this.debtId) :
         of(null)
     )
     .pipe(first())
@@ -118,8 +118,7 @@ export class PhoneGridScheduleFormComponent implements OnInit, OnDestroy {
       {
         label: labelKey('startDateTime'),
         controlName: 'startDateTime',
-        type: 'datepicker',
-        displayTime: true,
+        type: 'datetimepicker',
         minDate: new Date(),
         validators: [ minDate(moment().subtract(3, 'd').toDate()) ],
         required: true

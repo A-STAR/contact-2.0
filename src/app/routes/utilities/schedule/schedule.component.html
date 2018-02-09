@@ -1,9 +1,8 @@
-<app-schedule-event-dialog
-  *ngIf="isDialog('schedule')"
-  [eventId]="eventId"
-  (close)="closeDialog('schedule')"
-></app-schedule-event-dialog>
+<div class="flex vertical">
+  <app-tabview-header class="flex-item" [noMargin]="true" [tabs]="tabs"></app-tabview-header>
+  <div class="flex-item grow">
+    <router-outlet></router-outlet>
+  </div>
+</div>
 
-<app-schedule-event-grid
-  (edit)="onEdit($event)"
-></app-schedule-event-grid>
+

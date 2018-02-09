@@ -1,0 +1,9 @@
+<app-grid
+  *ngIf="columns"
+  columnTranslationKey="utilities.schedule.log"
+  [columns]="columns"
+  [footerHeight]="false"
+  [rows]="eventLogs"
+  selectionType="single"
+  [styles]="gridStyles">
+</app-grid>

@@ -1,0 +1,57 @@
+@import '../../../../styles/app/variables.scss';
+
+.toggle {
+  color: $gray-dark;
+  cursor: pointer;
+  position: absolute;
+  right: 7px;
+  top: 2px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $link-color;
+  }
+
+  &.disabled {
+    cursor: default;
+    &, &:hover {
+      color: $gray-dark;
+    }
+  }
+}
+
+.datetimepicker-container {
+  z-index: $zindex-app-datepicker;
+}
+
+.datetimepicker {
+  background-color: #fff;
+  box-shadow: 1px 1px 10px 0 rgba(0, 0, 0, 0.2);
+  margin: 1px 0;
+  padding: 20px;
+  user-select: none;
+  width: 22em;
+
+  app-date,
+  app-time {
+    padding-bottom: 16px;
+  }
+
+  footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 0 auto;
+    width: 80%;
+
+    span {
+      color: $text-light;
+      cursor: pointer;
+      flex: 0 0 auto;
+      transition: color 0.2s ease;
+      &:hover {
+        color: $link-color;
+      }
+    }
+  }
+}

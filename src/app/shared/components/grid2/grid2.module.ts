@@ -7,7 +7,7 @@ import { LicenseManager } from 'ag-grid-enterprise/main';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ActionDialogModule } from '../dialog/action/action-dialog.module';
-import { DatePickerModule } from '../form/datepicker/datepicker.module';
+import { DateTimeModule } from '../form/datetime/datetime.module';
 import { EditorsModule } from './editors/editors.module';
 import { ToolbarModule } from '../toolbar/toolbar.module';
 import { SelectModule } from '../form/select/select.module';
@@ -24,7 +24,7 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
       GridDatePickerComponent
     ]),
     CommonModule,
-    DatePickerModule,
+    DateTimeModule,
     EditorsModule,
     FormsModule,
     SelectModule,
@@ -45,6 +45,6 @@ import { GridDatePickerComponent } from './datepicker/grid-date-picker.component
 export class Grid2Module {
   constructor() {
     // tslint:disable-next-line
-    LicenseManager.setLicenseKey('ag-Grid_Evaluation_License_Not_For_Production_1Devs20_January_2018__MTUxNjQwNjQwMDAwMA==4091ca44a0ac9c86778d044f42c5edc1');
+    LicenseManager.setLicenseKey('ag-Grid_Evaluation_License_Key_Not_for_Production_100Devs2_April_2018__MTUyMjYyMzYwMDAwMA==e8bb27c4f0c9ed34bce6c68b868694f2');
   }
 }

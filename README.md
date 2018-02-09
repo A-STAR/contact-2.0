@@ -12,7 +12,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `ng test:ci` to execute the unit tests via [Jest](https://facebook.github.io/jest).
 
 ## Running end-to-end tests
 
@@ -22,8 +22,9 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ## Run the project locally
 
 ### Prerequisites
-* install [node.js](https://nodejs.org/download/release/v8.1.2/) engine >= v8
+* install [node.js](https://nodejs.org/download/release/v8.6.0/) engine >= v8
 * install git bash or [cmder](http://cmder.net)
+* IDE: [VS Code](https://code.visualstudio.com)
 * clone this repository
 
 ### Clone this repo
@@ -41,7 +42,7 @@ git push -u origin master
  * run `npm install`, ensure there are no errors in the console
 
 ### Building
- * run `npm run build -- --prod` (this will output the compiled bundle to `/dist`)
+ * run `npm run build:prod` (this will output the compiled bundle to `/dist`)
 
 ### Running
 * cd to the `/dist` folder

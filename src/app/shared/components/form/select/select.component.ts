@@ -35,7 +35,6 @@ type SelectInputValueType = number | string | ILabeledValue[];
 export class SelectComponent implements ControlValueAccessor {
 
   @Input() actions: Array<ISelectionAction> = [];
-  @Input() filterEnabled = false;
   @Input() inputClass = 'form-control';
   /**
    * `true` means the control's `required` property is false,

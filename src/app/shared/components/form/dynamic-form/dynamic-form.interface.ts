@@ -28,6 +28,7 @@ export type IDynamicFormControl =
   // IDynamicFormBaseControl
   IDynamicFormButtonControl |
   IDynamicFormDateControl |
+  IDynamicFormDateTimeControl |
   IDynamicFormDebtAmountControl |
   IDynamicFormDialogMultiSelectControl |
   IDynamicFormFileControl |
@@ -83,22 +84,28 @@ export interface IDynamicFormButtonControl extends IDynamicFormBaseControl {
   action?: () => void;
 }
 
+export interface IDynamicFormDateTimeControl extends IDynamicFormBaseControl {
+  // options for datetime controls
+  type: 'datetimepicker';
+  displaySeconds?: boolean;
+  minDateTime?: Date;
+  maxDateTime?: Date;
+}
+
 export interface IDynamicFormDateControl extends IDynamicFormBaseControl {
   // options for date controls
   type: 'datepicker';
-  displayTime?: boolean;
   minDate?: Date;
   maxDate?: Date;
-  placeholder?: string;
   dependsOn?: string;
 }
 
 export interface IDynamicFormTimeControl extends IDynamicFormBaseControl {
   // options for time controls
   type: 'timepicker';
-  placeholder?: string;
-  dependsOn?: string;
-  showSeconds?: boolean;
+  displaySeconds?: boolean;
+  minTime?: Date;
+  maxTime?: Date;
 }
 
 export interface IDynamicFormFileControl extends IDynamicFormBaseControl {
@@ -136,12 +143,11 @@ export interface IDynamicFormLanguageControl extends IDynamicFormBaseControl {
 }
 
 export interface IDynamicFormDialogMultiSelectControl extends IDynamicFormBaseControl {
-  type: 'dialogmultiselect' | 'dialogmultiselectwrapper';
+  type: 'dialogmultiselect';
   // options for dialog multiselect
   filterType?: IDialogMultiSelectFilterType;
   filterParams?: IFilterParam;
   placeholder?: string;
-  dependsOn?: string;
 }
 
 export interface IDynamicFormNumberControl extends IDynamicFormBaseControl {
@@ -234,7 +240,6 @@ export interface IDynamicFormControlOld {
   dependsOn?: string;
   disabled?: boolean;
   display?: boolean;
-  displayTime?: boolean;
   iconCls?: string;
   label: string;
   // markAsDirty if the control is passed a value
@@ -303,11 +308,11 @@ export type TControlTypes =
   | 'checkbox'
   | 'colorpicker'
   | 'datepicker'
+  | 'datetimepicker'
   | 'timepicker'
   | 'debt-amount'
   | 'dialog'
   | 'dialogmultiselect'
-  | 'dialogmultiselectwrapper'
   | 'dynamic'
   | 'file'
   | 'gridselect'

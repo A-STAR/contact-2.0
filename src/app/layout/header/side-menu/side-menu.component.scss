@@ -2,18 +2,5 @@
 
 .dropdown-content {
   background-color: #fff;
-  padding: 5px 0;
-
-  .list-group-item {
-    border: none;
-    color: $link-color;
-    cursor: pointer;
-    padding: 5px 20px;
-    white-space: nowrap;
-
-    &:hover {
-      background-color: $brand-primary-light;
-      color: #fff;
-    }
-  }
+  padding: 8px 0;
 }

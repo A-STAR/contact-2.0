@@ -10,11 +10,11 @@
   />
 
   <!-- Date -->
-  <app-input-datepicker
+  <app-datepicker
     *ngSwitchCase="2"
     [ngModel]="date"
     (ngModelChange)="onDateChange($event)">
-  </app-input-datepicker>
+  </app-datepicker>
 
   <!-- String -->
   <input
@@ -51,10 +51,9 @@
   </app-single-select-wrapper>
 
   <!-- DateTime -->
-  <app-input-datepicker
+  <app-datetimepicker
     *ngSwitchCase="7"
-    [displayTime]="true"
     [ngModel]="date"
     (ngModelChange)="onDateChange($event)">
-  </app-input-datepicker>
+  </app-datetimepicker>
 </ng-container>

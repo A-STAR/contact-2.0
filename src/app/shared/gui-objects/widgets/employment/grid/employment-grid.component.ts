@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
+  OnDestroy, Input, EventEmitter, Output
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -12,7 +15,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolba
 import { EmploymentService } from '../employment.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { combineLatestAnd } from 'app/core/utils/helpers';
@@ -27,6 +29,10 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   private routeParams = this.route.snapshot.paramMap;
   @Input() personId = +this.routeParams.get('contactId') || +this.routeParams.get('personId') || null;
 
+  @Output() add = new EventEmitter<void>();
+  @Output() dblClick = new EventEmitter<IEmployment>();
+  @Output() edit = new EventEmitter<IEmployment>();
+
   private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
 
   toolbarItems: Array<IToolbarItem> = [
@@ -37,7 +43,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(this.selectedEmployment$.value.id),
+      action: () => this.onEdit(this.selectedEmployment$.value),
       enabled: combineLatestAnd([
         this.canEdit$,
         this.selectedEmployment$.map(o => !!o)
@@ -84,7 +90,6 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
-    private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
@@ -118,7 +123,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   }
 
   onDoubleClick(employment: IEmployment): void {
-    this.onEdit(employment.id);
+    this.dblClick.emit(employment);
   }
 
   onSelect(employment: IEmployment): void {
@@ -147,11 +152,11 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   }
 
   private onAdd(): void {
-    this.routingService.navigate([ 'employment/create' ], this.route);
+    this.add.emit();
   }
 
-  private onEdit(employmentId: number): void {
-    this.routingService.navigate([ `employment/${employmentId}` ], this.route);
+  private onEdit(employment: IEmployment): void {
+    this.edit.emit(employment);
   }
 
   get canView$(): Observable<boolean> {

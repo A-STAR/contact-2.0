@@ -51,6 +51,9 @@
   <app-tabview-tab [title]="tabs[2].title" [closable]="false">
     <app-identity-grid
       *ngIf="tabs[2].isInitialised"
+      (add)="onIdentityAdd()"
+      (dblClick)="onIdentityEdit($event)"
+      (edit)="onIdentityEdit($event)"
     ></app-identity-grid>
   </app-tabview-tab>
 
@@ -58,6 +61,9 @@
   <app-tabview-tab [title]="tabs[3].title" [closable]="false">
     <app-employment-grid
       *ngIf="tabs[3].isInitialised"
+      (add)="onEmploymentAdd()"
+      (dblClick)="onEmploymentEdit($event)"
+      (edit)="onEmploymentEdit($event)"
     ></app-employment-grid>
   </app-tabview-tab>
 </app-tabview>

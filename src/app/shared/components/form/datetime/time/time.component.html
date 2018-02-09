@@ -1,0 +1,28 @@
+<ng-container *ngTemplateOutlet="wheel;context:{ modifier: 'h' }"></ng-container>
+<span class="divider">:</span>
+<ng-container *ngTemplateOutlet="wheel;context:{ modifier: 'm' }"></ng-container>
+
+<ng-container *ngIf="displaySeconds">
+  <span class="divider">:</span>
+  <ng-container *ngTemplateOutlet="wheel;context:{ modifier: 's' }"></ng-container>
+</ng-container>
+
+<ng-template #wheel let-modifier="modifier">
+  <div class="wheel" (wheel)="onWheel(modifier, $event)">
+    <span class="arrow" (click)="onUp(modifier)">
+      <i class="fa fa-angle-up"></i>
+    </span>
+    <span>
+      {{ getFormattedValue(modifier, -1) }}
+    </span>
+    <span class="current">
+      {{ getFormattedValue(modifier, 0) }}
+    </span>
+    <span>
+      {{ getFormattedValue(modifier, 1) }}
+    </span>
+    <span class="arrow" (click)="onDown(modifier)">
+      <i class="fa fa-angle-down"></i>
+    </span>
+  </div>
+</ng-template>

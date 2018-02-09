@@ -35,5 +35,8 @@ export interface IOptionSet {
 export interface IDateFormats {
   date: string;
   dateTime: string;
+  dateTimeWithoutSeconds: string;
+  dateISO: string;
   time?: string;
+  timeWithoutSeconds?: string;
 }

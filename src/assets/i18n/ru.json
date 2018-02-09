@@ -15,8 +15,14 @@
     },
     "account": {
       "title": "Аккаунт",
-      "logout": "Выйти",
-      "reset": "Сбросить настройки"
+      "dialogs": {
+        "phoneExtension": {
+          "intPhone": "Внутренний номер"
+        }
+      },
+      "editPhoneExtension": "Изменить внутренний номер",
+      "reset": "Сбросить настройки",
+      "logout": "Выйти"
     }
   },
   "offsidebar": {
@@ -31,7 +37,6 @@
     "nav": {
       "menu": {
         "HOME": "Главная",
-        "WORKFLOW": "Процесс",
         "QUERY_BUILDER": "Построитель запросов",
         "ADMIN_PANEL": "Администрирование",
         "ROLES_AND_PERMISSIONS": "Роли и доступы",
@@ -60,7 +65,6 @@
         "CONTACT_TREES": "Дерево контактов",
         "CONTACT_REGISTRATION": "Регистрация контакта",
         "MESSAGE_SCENARIOS": "Сценарии сообщений",
-        "GROUPS": "Группы",
         "GROUP_EDIT": "Группа",
         "CAMPAIGNS": "Кампании обзвона",
         "SCHEDULE": "Расписание",
@@ -96,7 +100,6 @@
         "SEARCH_GROUPS": "Группы свободного поиска",
         "MAIL": "Почта",
         "REPORTS": "Отчеты",
-        "ARBITRARY_REPORTS": "Произвольные отчеты",
         "HELP": "Помощь",
         "INCOMING_CALL": "Входящий звонок",
         "CURRENCY_RATE_EDIT": "Валютный Курс"
@@ -111,6 +114,66 @@
     "TITLE": "Панель управления",
     "messages": {
       "chartLoadError": "При загрузке данных для графика произошла ошибка"
+    },
+    "errors": {
+      "params": "Произошла ошибка при попытке получить параметры для дашбоарда",
+      "promiseAmount": "Произошла ошибка при попытке получить сумму полученных обещаний за последние 30 дней",
+      "promiseCount": "Произошла ошибка при попытке получить количество полученных обещаний за последние 30 дней",
+      "promiseCountStatus": "Произошла ошибка при попытке получить обещания за последние 30 дней (по статусам)",
+      "promiseCover": "Произошла ошибка при попытке получить покрытие обещаний за последние 30 дней",
+      "contactDay": "Произошла ошибка при попытке получить успешные контакты за день"
+    },
+    "charts": {
+      "contactsDayPlan": {
+        "label": "Количество контактов за текущий день с должником",
+        "legend": {
+          "fullfilled": "Выполнено",
+          "remaining": "Осталось"
+        }
+      },
+      "contactsDay": {
+        "label": "Успешные контакты за день",
+        "legend": {
+          "debtor": "Должник",
+          "guarantor": "Поручитель",
+          "pledgor": "Залогодатель",
+          "thirdParty": "Третье лицо"
+        }
+      },
+      "indicators": {
+        "debtActiveCnt": "Активные долги",
+        "debtNeedCallCnt": "Необходимо перезвонить",
+        "monthPaymentCnt": "Кол-во платежей (мес.)",
+        "monthPaymentAmount": "Сумма платежей (мес.)",
+        "monthPaymentCommission": "Комиссия"
+      },
+      "promiseAmount": {
+        "label": "Сумма полученных обещаний за последние 30 дней",
+        "legend": {
+          "promiseAmount": "Сумма"
+        }
+      },
+      "promiseCount": {
+        "label": "Количество полученных обещаний за последние 30 дней",
+        "legend": {
+          "promiseCount": "Кол-во обещаний"
+        }
+      },
+      "promiseCountStatus": {
+        "label": "Обещания за последние 30 дней",
+        "legend": {
+          "fullfilled": "Выполненные",
+          "overdue": "Просроченные",
+          "waiting": "Ожидание"
+        }
+      },
+      "promiseCover": {
+        "label": "Покрытие обещаний за последние 30 дней",
+        "legend": {
+          "covered": "Покрыто",
+          "remaining": "Осталось"
+        }
+      }
     }
   },
   "validation": {
@@ -276,7 +339,10 @@
         "cancel": "Ошибка при отмене загрузки файла",
         "save": "Ошибка при попытке сохранить данные в БД",
         "editCell": "Ошибка при попытке отредактировать ячейку",
-        "getErrors": "Ошибка при попытке получить файл с описанием ошибок"
+        "getErrors": "Ошибка при попытке получить файл с описанием ошибок",
+        "errorFile": "ошибки",
+        "defaultError": "Произошла неизвестная ошибка",
+        "notAvailable": "Отсутствуют доступные форматы для загрузки данных"
       }
     },
     "payments": {
@@ -376,6 +442,10 @@
       }
     },
     "contactRegistration": {
+      "tree": {
+        "selectOutcome": "Выберите исход",
+        "emptyScenario": "Пустой сценарий"
+      },
       "contact": {
         "title": "Изменение контактного лица"
       },
@@ -519,32 +589,32 @@
           "birthDate": "Дата рождения",
           "personRoleCodes": "Роль",
           "isClosedDebt": "Показывать закрытые долги"
-    }
-  },
-  "debtors": {
-    "grid": {
-      "bankName": "Банк",
-      "branchCode": "Филиал",
-      "contact": "Договор",
-      "creditEndDate": "Дата окончания кредитного срока",
-      "creditName": "Название продукта",
-      "creditStartDate": "Дата выдачи кредита",
-      "creditTypeCode": "Тип продукта",
-      "currencyName": "Валюта",
-      "debtAmount": "Остаток",
-      "debtId": "ID долга",
-      "debtorId": "ID должника",
-      "docNumber": "Номер документа",
-      "fullName": "ФИО/Название",
-      "outPortfolioName": "Название исходящего портфеля",
-      "personId": "ID персоны",
-      "personRole": "Роль персоны",
-      "portfolioName": "Название портфеля",
-      "regionCode": "Регион",
-      "startDate": "Дата выхода на просрочку",
-      "statusCode": "Статус"
-    }
-  },
+        }
+      },
+      "debtors": {
+        "grid": {
+          "bankName": "Банк",
+          "branchCode": "Филиал",
+          "contact": "Договор",
+          "creditEndDate": "Дата окончания кредитного срока",
+          "creditName": "Название продукта",
+          "creditStartDate": "Дата выдачи кредита",
+          "creditTypeCode": "Тип продукта",
+          "currencyName": "Валюта",
+          "debtAmount": "Остаток",
+          "debtId": "ID долга",
+          "debtorId": "ID должника",
+          "docNumber": "Номер документа",
+          "fullName": "ФИО/Название",
+          "outPortfolioName": "Название исходящего портфеля",
+          "personId": "ID персоны",
+          "personRole": "Роль персоны",
+          "portfolioName": "Название портфеля",
+          "regionCode": "Регион",
+          "startDate": "Дата выхода на просрочку",
+          "statusCode": "Статус"
+        }
+      },
       "debtorCard": {
         "form": {
           "userFullName": "Ответственный",
@@ -554,6 +624,78 @@
           "workPhone": "Рабочий телефон",
           "intPhone": "Внутренний номер",
           "recommendation": "Рекомендация к действию"
+        }
+      }
+    },
+    "reports": {
+      "arbitrary": {
+        "title": "Отчеты",
+        "tabs": {
+          "fields": "Описание полей",
+          "params": "Входные параметры"
+        },
+        "remove": {
+          "title": "Удаление отчета",
+          "confirmMessage": "Вы действительно хотите удалить выбранный отчет?"
+        },
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "comment": "Описание"
+        },
+        "card": {
+          "name": "Название",
+          "sql": "SQL",
+          "comment": "Комментарий",
+          "exportUndescribed": "Выгружать неописанные поля"
+        },
+        "fields": {
+          "remove": {
+            "title": "Удаление поля отчета",
+            "confirmMessage": "Вы действительно хотите удалить выбранное поле отчета?"
+          },
+          "grid": {
+            "id": "ID",
+            "name": "Название",
+            "sortOrder": "Порядковый номер",
+            "systemName": "Системное название",
+            "textWidth": "Ширина столбца"
+          },
+          "card": {
+            "name": "Название",
+            "systemName": "Системное название",
+            "sortOrder": "Порядковый номер",
+            "textWidth": "Ширина столбца"
+          }
+        },
+        "params": {
+          "remove": {
+            "title": "Удаление параметра отчета",
+            "confirmMessage": "Вы действительно хотите удалить выбранный параметр отчета?"
+          },
+          "grid": {
+            "id": "ID",
+            "name": "Название",
+            "paramTypeCode": "Тип параметра",
+            "sortOrder": "Порядковый номер",
+            "systemName": "Системное название",
+            "isMandatory": "Обязательность",
+            "multiSelect": "Множественный выбор"
+          },
+          "card": {
+            "name": "Название",
+            "systemName": "Системное название",
+            "sortOrder": "Порядковый номер",
+            "paramTypeCode": "Тип параметра",
+            "isMandatory": "Обязательность",
+            "multiSelect": "Множественный выбор",
+            "dictNameCode": "Словарь"
+          }
+        },
+        "input": {
+          "dialog": {
+            "title": "Введите параметры"
+          }
         }
       }
     }
@@ -703,7 +845,7 @@
     "edit": {
       "title": "Словарь: {{ code }}",
       "code": "Код словаря",
-      "name": "Название словаря",
+      "names": "Название словаря",
       "typeCode": "Тип словаря",
       "parentCode": "Родительский словарь",
       "select": {
@@ -741,11 +883,12 @@
     }
   },
   "terms": {
+    "title": "Словарные термины",
     "edit": {
       "title": "Словарный термин: {{ code }}",
       "code": "Код термина",
       "language": "Язык",
-      "name": "Значение термина",
+      "names": "Значение термина",
       "typeCode": "Тип термина",
       "parentCode": "Термин родительского словаря",
       "isClosed": "Термин не используется",
@@ -773,6 +916,7 @@
   },
   "roles": {
     "roles": {
+      "title": "Роли",
       "copy": {
         "title": "Копировать роль",
         "originalRoleName": "Название оригинальной роли",
@@ -1083,6 +1227,7 @@
       }
     },
     "employees": {
+      "title": "Сотрудники",
       "add": {
         "title": "Выберите сотрудника",
         "grid": {
@@ -1113,6 +1258,7 @@
     }
   },
   "contractors": {
+    "title": "Клиенты",
     "managers": {
       "remove": {
         "title": "Удаление менеджера",
@@ -1163,6 +1309,7 @@
     }
   },
   "portfolios": {
+    "title": "Портфели",
     "grid": {
       "id": "ID",
       "name": "Название",
@@ -1245,7 +1392,7 @@
       },
       "edit": {
         "title": "Редактировать кампанию обзвона",
-        "name": "Название",
+        "names": "Название",
         "typeCode": "Тип",
         "groupId": "Группа",
         "comment": "Комментарий",
@@ -1325,6 +1472,22 @@
     },
     "currencyRatesTab": {
       "title": "Курсы"
+    },
+    "schedule": {
+      "log": {
+        "grid": {
+          "startDateTime": "Запуск",
+          "endDateTime": "Остановка",
+          "startType": "Режим запуска",
+          "userFullName": "Пользователь"
+        },
+        "dialog": {
+          "title": "История запусков"
+        },
+        "buttons": {
+          "history": "История"
+        }
+      }
     }
   },
   "notifications": {
@@ -1447,7 +1610,7 @@
       },
       "grid": {
         "code": "Код",
-        "name": "Название",
+        "names": "Название",
         "value": "Значение",
         "userFullName": "Оператор",
         "changeDateTime": "Дата/время изменения",
@@ -1491,8 +1654,8 @@
           "attributes": {
             "code": "Код",
             "name": "Название",
-            "display": "Отображать",
-            "mandatory": "Обязательно к заполнению"
+            "isDisplayed": "Отображать",
+            "isMandatory": "Обязательно к заполнению"
           }
         },
         "delete": {
@@ -1502,7 +1665,7 @@
       },
       "edit": {
         "code": "Код",
-        "name": "Название",
+        "names": "Название",
         "boxColor": "Цвет",
         "commentMode": "Ввод комментария",
         "autoCommentIds": "Ввод автокомментария",
@@ -1761,6 +1924,20 @@
         "delete": {
           "title": "Удалить телефон",
           "confirmMessage": "Вы действительно хотите удалить телефон {{ phone }}?"
+        }
+      },
+      "errors": {
+        "drop": {
+          "*": "При сбросе {{ entity }} произошла ошибка"
+        },
+        "hold": {
+          "*": "При удержании {{ entity }} произошла ошибка"
+        },
+        "retrieve": {
+          "*": "При возобновлении {{ entity }} произошла ошибка"
+        },
+        "transfer": {
+          "*": "При переводе {{ entity }} произошла ошибка"
         }
       }
     },
@@ -2089,7 +2266,7 @@
       },
       "card": {
         "entityTypeCode": "Тип",
-        "name": "Название",
+        "names": "Название",
         "comment": "Комментарий",
         "isManual": "Ручное наполнение",
         "isPreCleaned": "Очищать предыдущие данные",
@@ -2133,7 +2310,8 @@
       },
       "tabs": {
         "all": "Группы",
-        "debtsInGroup": "Долги в группе"
+        "debtsInGroup": "Долги в группе",
+        "scheduleEvents": "Мероприятия"
       }
     },
     "visit": {
@@ -2164,18 +2342,18 @@
       "card":  {
         "id": "ИД",
         "code": "Код",
-        "name": "Название",
-        "shortName": "Краткое наименование",
+        "names": "Название",
+        "shortNames": "Краткое наименование",
         "isMain": "Основная валюта"
       }
     },
     "currencyRates": {
       "grid": {
-        "fromDateTime": "Дата",
+        "fromDate": "Дата",
         "rate": "Курс"
       },
       "card": {
-        "fromDateTime": "Дата",
+        "fromDate": "Дата",
         "rate": "Курс"
       }
     },
@@ -2208,7 +2386,7 @@
         "periodTypeCode": "Период",
         "startTime": "Запуск",
         "executeDateTime": "Последний запуск",
-        "isExecuted": "Выполняется",
+        "isExecuting": "Выполняется",
         "startDate": "Начало",
         "endDate": "Окончание",
         "isInactive": "Выключено",
@@ -2227,6 +2405,7 @@
         "checkGroup": "Проверка переформирования группы",
         "delay": "Задержка отправки (ч.)",
         "phoneTypes": "Тип телефона",
+        "emailTypes": "Тип адреса",
         "personRoles": "Получатель",
         "templateId": "Сценарий",
         "senderCode": "Отправитель",
@@ -2237,6 +2416,7 @@
         "stage": "Стадия",
         "userId": "Оператор",
         "modeCode": "Режим",
+        "inactiveReasonCode": "Причина блокировки",
         "changeGroupId": {
           "grid": {
             "id": "ID",
@@ -2449,6 +2629,24 @@
     },
     "scheduleEvents": {
       "gen": { "singular": "мероприятия", "plural": "списка мероприятий" }
+    },
+    "scheduleEventLog": {
+      "gen": { "singular": "история запуска мероприятия", "plural": "история запуска мероприятий" }
+    },
+    "reports": {
+      "gen": { "singular": "отчета", "plural": "отчетов" }
+    },
+    "fields": {
+      "gen": { "singular": "поля", "plural": "полей" }
+    },
+    "params": {
+      "gen": { "singular": "параметра", "plural": "параметров" }
+    },
+    "callSettings": {
+      "gen": { "singular": "настроек телефонии", "plural": "настроек телефонии" }
+    },
+    "calls": {
+      "gen": { "singular": "звонка", "plural": "звонков" }
     }
   },
   "massOperations": {
@@ -2654,6 +2852,7 @@
       "templateNotFound": "Не найден шаблон по ID",
       "thereAreUsersInTheRole": "Невозможно удалить роль {{ $1 }}, в которой есть пользователи",
       "tokenInvalid": "Неверный токен сессии",
+      "translationInMainLanguageNotFound": "Не задан перевод на основном языке системы",
       "unknownDataType": "Неизвестный тип данных {{ $1 }} (нет в словаре №1)",
       "unknownNotNullValueOperator": "Неизвестный (неподдерживаемый) оператор {{ $1 }}",
       "unknownParameterForGrid": "В запросе настраиваемого листа передан параметр (не атрибут), которого нет в этом листе",
@@ -2730,6 +2929,7 @@
       "addUser": "Добавить пользователя",
       "back": "Назад",
       "block": "Блокировать",
+      "call": "Позвонить",
       "cancel": "Отменить",
       "change": "Изменить",
       "changeStatus": "",
@@ -2738,6 +2938,7 @@
       "copy": "Копировать",
       "delete": "Удалить",
       "download": "Скачать",
+      "drop": "Сброс",
       "edit": "Редактировать",
       "email": "Email",
       "exportToExcel": "Выгрузка",
@@ -2745,14 +2946,19 @@
       "loadFromExcel": "Загрузить из Excel",
       "move": "Переместить",
       "next": "Далее",
+      "now": "Сейчас",
       "ok": "OK",
+      "pause": "Удержание",
       "refresh": "Перезагрузить",
       "registerContact": "Зарегистрировать контакт",
       "remove": "Удалить",
+      "resume": "Возобновить",
       "save": "Сохранить",
       "search": "Искать",
       "select": "Выбрать",
       "sms": "СМС",
+      "transfer": "Перевод",
+      "today": "Сегодня",
       "unblock": "Разблокировать",
       "undo": "Отменить",
       "upload": "Загрузить",
@@ -2802,6 +3008,16 @@
           "name": "Действие"
         },
         "title": "Типы действий"
+      },
+      "contractors": {
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "fullName": "Полное название",
+          "typeCode": "Тип",
+          "comment": "Комментарий"
+        },
+        "title": "Выберите клиентов"
       },
       "fields": {
         "branchCode": "Филиал",
@@ -2923,6 +3139,7 @@
       "format": {
         "dateTime": "DD.MM.YYYY HH:mm:ss",
         "date": "DD.MM.YYYY",
+        "dateISO": "YYYY-MM-DD",
         "time": "HH:mm:ss"
       },
       "placeholders": {

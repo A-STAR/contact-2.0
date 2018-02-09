@@ -1,19 +1,31 @@
-<nav class="flex vertical" [ngClass]="{ collapsed: isCollapsed }">
+<nav class="flex vertical" [ngClass]="{ collapsed: isCollapsed }" (transitionend)="onTransitionEnd($event)">
+  <!-- Menu -->
   <ul class="flex-item grow">
-    <li *ngFor="let item of menuItems$ | async" class="flex horizontal" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
-      <i *ngIf="item.icon" class="flex-item" [ngClass]="item.icon"></i>
-      <span *ngIf="!isCollapsed" class="flex-item grow">{{ item.text | translate }}</span>
+    <li *ngFor="let item of menuItems$ | async" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
+      <div class="menu-item">
+        <div class="icon-container">
+          <i *ngIf="item.icon" [ngClass]="item.icon"></i>
+        </div>
+        <div class="menu-item-title" [ngClass]="{ showTitle: showTitle }">{{ item.text | translate }}</div>
+      </div>
     </li>
   </ul>
+  <!-- Menu -->
+  <!-- Collapse button -->
   <div class="flex-item">
-    <span class="sidebar-collapse" (click)="onSidebarToggle()">
+    <div class="sidebar-collapse text-center" (click)="onSidebarToggle()">
+
       <ng-container *ngIf="isCollapsed; else collapse">
         <i class="fa fa-angle-double-right"></i>
       </ng-container>
-    </span>
-  </div>
-</nav>
+      <ng-template #collapse>
+        <i class="fa fa-angle-double-left"></i>
+        <span class="toggle-title" [ngClass]="{ showTitle: showTitle }">
+          {{ 'sidebar.nav.hide' | translate }}
+        </span>
+      </ng-template>
 
-<ng-template #collapse>
-  <i class="fa fa-angle-double-left"></i> {{ 'sidebar.nav.hide' | translate }}
-</ng-template>
+    </div>
+  </div>
+  <!-- Collapse button -->
+</nav>

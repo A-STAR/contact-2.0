@@ -1,1 +1,31 @@
-<app-view-form-group [controls]="controls" [data]="data"></app-view-form-group>
+<div class="flex horizontal wrap">
+  <ng-template #loading>
+    <div class="form-loading">
+        Loading form <i class="fa fa-spinner fa-3x"></i>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="!isLoading; else loading">
+    <div
+      *ngFor="let item of items"
+      class="flex horizontal wrap flex-item"
+      [ngStyle]="getStyle(item.control)"
+    >
+
+      <app-view-form
+        *ngIf="item.control.children; else field"
+        [controls]="item.control.children"
+        [data]="data"
+      ></app-view-form>
+
+      <ng-template #field>
+        <div class="field">
+          <div class="field-label">{{ item.control.label | translate }}</div>
+          <div class="field-value" [ngClass]="{ 'empty': item.value == null }">{{ item.value || '&nbsp;' }}</div>
+        </div>
+      </ng-template>
+
+    </div>
+  </ng-container>
+
+</div>

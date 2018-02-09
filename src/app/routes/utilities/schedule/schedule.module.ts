@@ -2,10 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
-import { ScheduleEditModule } from './edit/edit.module';
 
 import { ScheduleComponent } from './schedule.component';
-import { ScheduleEditComponent } from './edit/edit.component';
 
 const routes: Routes = [
   {
@@ -14,15 +12,43 @@ const routes: Routes = [
     data: {
       reuse: true,
     },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'all'
+      },
+      {
+        path: 'all',
+        loadChildren: './groups/groups.module#GroupsModule'
+      },
+      {
+        path: 'debts',
+        loadChildren: './group-debts/group-debts.module#GroupDebtsModule',
+      },
+      {
+        path: 'events',
+        loadChildren: './events/schedule-event.module#ScheduleEventModule',
+      }
+    ],
   },
-  { path: 'create', component: ScheduleEditComponent },
+  {
+    path: 'all/create',
+    loadChildren: './groups/card/group-card.module#GroupCardModule',
+  },
+  {
+    path: 'all/:groupId',
+    loadChildren: './groups/card/group-card.module#GroupCardModule',
+  },
 ];
 
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
-    SharedModule,
-    ScheduleEditModule,
+    SharedModule
+  ],
+  exports: [
+    RouterModule,
   ],
   declarations: [
     ScheduleComponent,

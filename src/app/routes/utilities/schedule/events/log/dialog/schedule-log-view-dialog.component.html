@@ -1,0 +1,11 @@
+<app-dialog (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'utilities.schedule.log.dialog.title' | translate }}</h3>
+  </div>
+
+  <app-schedule-log-view-grid [eventId]="eventId"></app-schedule-log-view-grid>
+
+  <div dialog-footer>
+    <app-button type="cancel" (click)="onClose()"></app-button>
+  </div>
+</app-dialog>

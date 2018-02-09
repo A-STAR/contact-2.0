@@ -58,7 +58,7 @@ export class FormComponent implements OnInit, OnDestroy {
       this.userConstantsService.get('Email.Sender.Use'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_SENDER),
       this.useTemplate ?
-        this.userTemplatesService.getTemplates(3, this.personRole, true) :
+        this.userTemplatesService.getTemplatesForDebt(3, this.personRole, true, this.debtId) :
         of(null)
     )
     .pipe(first())
@@ -119,8 +119,7 @@ export class FormComponent implements OnInit, OnDestroy {
       {
         label: labelKey('startDateTime'),
         controlName: 'startDateTime',
-        type: 'datepicker',
-        displayTime: true,
+        type: 'datetimepicker',
         minDate: new Date(),
         validators: [ minDate(moment().subtract(3, 'd').toDate()) ],
         required: true

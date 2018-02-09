@@ -202,7 +202,7 @@ export class MetadataGridComponent<T> implements OnInit {
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
         return selection.length
           && constants.has('Email.Use')
-          && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+          && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
       },
       // TODO(d.maltsev, i.kibisov): pass entityTypeId
       objectAddToGroup: selection => selection.length && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
@@ -211,13 +211,13 @@ export class MetadataGridComponent<T> implements OnInit {
       paymentsConfirm: selection => selection.length && permissions.has('PAYMENT_CONFIRM'),
       prepareVisit: selection => selection.length && permissions.has('VISIT_PREPARE'),
       rejectPaymentsOperator: selection => selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
-      showContactHistory: (selection, row) => row && row.userId && permissions.has('CONTACT_LOG_VIEW'),
+      showContactHistory: (selection, row) => row && row.personId && permissions.has('CONTACT_LOG_VIEW'),
       smsCreate: selection => {
         const action = actions.find(a => a.action === 'smsCreate');
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
         return selection.length
           && constants.has('SMS.Use')
-          && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', personRole);
+          && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
       },
     };
   }

@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IAppState } from '@app/core/state/state.interface';
 import { IContractor, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
@@ -29,37 +29,39 @@ import { combineLatestAnd } from '@app/core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorsComponent extends DialogFunctions implements OnInit, OnDestroy {
-
   @ViewChild(GridComponent) grid: GridComponent;
 
-  toolbarItems: Array<IToolbarItem> = [
-    {
-      type: ToolbarItemTypeEnum.BUTTON_ADD,
-      action: () => this.onAdd(),
-      enabled: this.canAdd$
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_EDIT,
-      action: () => this.onEdit(),
-      enabled: combineLatestAnd([
-        this.canEdit$,
-        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o)
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DELETE,
-      action: () => this.setDialog('delete'),
-      enabled: combineLatestAnd([
-        this.canDelete$,
-        this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
-      ])
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      action: () => this.fetchContractors(),
-      enabled: this.canView$
-    }
-  ];
+  titlebar: ITitlebar = {
+    title: 'contractors.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_ADD,
+        action: () => this.onAdd(),
+        enabled: this.canAdd$
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.onEdit(),
+        enabled: combineLatestAnd([
+          this.canEdit$,
+          this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o)
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_DELETE,
+        action: () => this.setDialog('delete'),
+        enabled: combineLatestAnd([
+          this.canDelete$,
+          this.store.select(state => state.contractorsAndPortfolios.selectedContractor).map(o => !!o),
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.fetchContractors(),
+        enabled: this.canView$
+      }
+    ]
+  };
 
   columns: Array<IGridColumn> = [
     { prop: 'id', minWidth: 50, maxWidth: 50 },
@@ -150,6 +152,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
   }
 
   onSelect(contractor: IContractor): void {
+    console.log(contractor);
     this.contractorsAndPortfoliosService.selectContractor(contractor);
   }
 

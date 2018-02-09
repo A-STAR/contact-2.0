@@ -23,7 +23,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { TYPE_CODES } from '@app/core/utils/value';
+import { TYPE_CODES } from '@app/core/utils';
 
 @Component({
   selector: 'app-attribute-grid-edit',
@@ -81,8 +81,8 @@ export class AttributeGridEditComponent implements OnInit {
   private getControls(isDictionary: boolean): IDynamicFormItem[] {
     const controls: IDynamicFormItem[] = [
       {
-        controlName: 'name',
-        type: this.attributeId ? 'multilanguage' : 'text',
+        controlName: 'names',
+        type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_ATTRIBUTE_TYPE_NAME,
           entityId: this.attribute && this.attribute.id

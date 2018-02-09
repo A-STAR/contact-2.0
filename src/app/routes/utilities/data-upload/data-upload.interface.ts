@@ -1,8 +1,10 @@
+export type ICellValue = string | number | Date | boolean | null;
+
 export interface ICell {
   columnId: string;
   errorMsg: string;
   statusCode: number;
-  value: number | string;
+  value: ICellValue;
 }
 
 export interface IRow {
@@ -30,7 +32,7 @@ export interface IDataResponse {
 export interface ICellPayload {
   rowId: number;
   columnId: string;
-  value: string;
+  value: ICellValue;
 }
 
 export interface IErrorsResponse {
@@ -46,7 +48,6 @@ export enum DataUploaders {
   SET_OPERATOR,
   DEBTS,
   CONTACT_HISTORY,
-  // not fetched from the server
   CURRENCY_RATE,
 }
 

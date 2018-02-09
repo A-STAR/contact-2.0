@@ -1,5 +1,5 @@
 <div appDropdown>
-  <div #dropdownTrigger class="form-control clickable">
+  <div #dropdownTrigger class="form-control clickable" [attr.disabled]="isDisabled || undefined">
     <span [ngSwitch]="selectionLength">
       <ng-container *ngSwitchCase="0"></ng-container>
       <ng-container *ngSwitchCase="1">{{ label }}</ng-container>
@@ -9,6 +9,7 @@
   </div>
   <div #dropdownContent style="z-index: 10000;">
     <app-multi-list
+      *ngIf="!isDisabled"
       [hideSearchBar]="true"
       [getId]="getId"
       [getName]="getName"

@@ -1,0 +1,27 @@
+<div appDropdown [disabled]="disabled" [fitWidthToContent]="true" style="position: relative;">
+  <div #dropdownParent>
+    <app-datetime-input
+      [format]="timeFormat"
+      [disabled]="disabled"
+      [ngModel]="value"
+      (ngModelChange)="onChange($event)"
+    ></app-datetime-input>
+  </div>
+  <span [ngClass]="{ toggle: true, disabled: disabled }" #dropdownTrigger (click)="onTouch()">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <div #dropdownContent class="datetimepicker-container">
+    <div class="datetimepicker">
+      <app-time
+        [minTime]="minTime"
+        [maxTime]="maxTime"
+        [ngModel]="tempValue"
+        [displaySeconds]="displaySeconds"
+        (ngModelChange)="onTimeChange($event)"></app-time>
+      <footer>
+        <span (click)="setCurrentTime()">{{ 'default.buttons.now' | translate }}</span>
+        <span (click)="onOkClick()">{{ 'default.buttons.ok' | translate }}</span>
+      </footer>
+    </div>
+  </div>
+</div>
