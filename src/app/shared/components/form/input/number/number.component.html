@@ -1,0 +1,13 @@
+<input
+  class="form-control"
+  type="text"
+  [disabled]="disabled"
+  [ngModel]="value"
+  (focus)="onFocus()"
+  (focusout)="onFocusOut()"
+  (keydown)="onKeyDown($event)"
+  (ngModelChange)="onChange($event)"
+/>
+
+<i class="fa fa-angle-up" (click)="onIncrementClick()"></i>
+<i class="fa fa-angle-down" (click)="onDecrementClick()"></i>
