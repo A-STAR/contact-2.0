@@ -1,5 +1,5 @@
 <app-gridtree2-wrapper
-  *ngIf="attributes && attributes.length > 0"
+  *ngIf="attributes?.length"
   [translateColumnLabels]="true"
   [rows]="attributes"
   [columns]="columns$ | async"
