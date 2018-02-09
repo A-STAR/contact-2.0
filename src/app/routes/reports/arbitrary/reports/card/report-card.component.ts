@@ -74,7 +74,7 @@ export class ReportCardComponent implements OnInit {
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
       {
-        controlName: 'names',
+        controlName: 'name',
         type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_NAME,

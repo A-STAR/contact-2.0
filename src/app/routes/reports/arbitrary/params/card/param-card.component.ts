@@ -155,7 +155,7 @@ export class ParamCardComponent implements OnInit, DoCheck {
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
       {
-        controlName: 'names',
+        controlName: 'name',
         type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_PARAM_NAME,
@@ -171,6 +171,7 @@ export class ParamCardComponent implements OnInit, DoCheck {
         type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_REPORT_PARAM_TYPE_CODE,
         onChange: () => this.initControlsAccess(),
+        markAsDirty: !this.paramId,
         required: true
       },
       { controlName: 'isMandatory', type: 'checkbox', disabled: true },
