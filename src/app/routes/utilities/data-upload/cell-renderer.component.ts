@@ -25,7 +25,7 @@ export class CellRendererComponent implements ICellRendererAngularComp {
   }
 
   get value(): number {
-    return this.params.valueFormatted === null ? '' : this.params.valueFormatted;
+    return this.params.value;
   }
 
   get error(): string {

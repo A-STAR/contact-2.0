@@ -10,6 +10,11 @@ import { UserDictionariesService } from '../../../core/user/dictionaries/user-di
 
 import { GridTreeComponent } from '../gridtree/gridtree.component';
 
+
+/**
+ * @deprecated
+ * Use app-gridtree2-wrapper instead
+ */
 @Component({
   selector: 'app-gridtree-wrapper',
   templateUrl: './gridtree-wrapper.component.html',

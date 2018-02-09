@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { ChartData } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
+import { of } from 'rxjs/observable/of';
 
 import {
   DashboardChartType,
@@ -11,24 +12,143 @@ import {
   IDashboardPromiseCoverage,
   IDashboardContactsDay,
 } from '@app/routes/dashboard/dashboard.interface';
+import { IIndicator } from '@app/shared/components/charts/charts.interface';
 
-import { DataService } from '@app/core/data/data.service';
-import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { of } from 'rxjs/observable/of';
+// import { DataService } from '@app/core/data/data.service';
+// import { NotificationsService } from '@app/core/notifications/notifications.service';
+
+import { makeKey } from '@app/core/utils';
+
+const label = makeKey('dashboard.charts');
 
 @Injectable()
 export class DashboardService {
 
-  private baseUrl = '/dashboard';
+  // private baseUrl = '/dashboard';
+
+  private indicatorColors = {
+    debtActiveCnt: '#7266ba',
+    debtNeedCallCnt: '#7266ba',
+    monthPaymentCnt: '#37bc9b',
+    monthPaymentAmount: '#37bc9b',
+    monthPaymentCommission: '#37bc9b',
+  };
+
+  promiseCountStatusOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      fontFamily: 'Roboto Condensed',
+      text: label('promiseCountStatus.label'),
+      display: true
+    },
+    legend: {
+      position: 'left',
+      labels: {
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
+      }
+    }
+  };
+
+  promiseCountOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      fontFamily: 'Roboto Condensed',
+      text: label('promiseCount.label'),
+      display: true
+    },
+    legend: {
+      labels: {
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
+      }
+    }
+  };
+
+  promiseAmountOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      fontFamily: 'Roboto Condensed',
+      text: label('promiseAmount.label'),
+      display: true
+    },
+    legend: {
+      labels: {
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
+      }
+    }
+  };
+
+  promiseCoverOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      fontFamily: 'Roboto Condensed',
+      text: label('promiseCover.label'),
+      display: true
+    },
+    legend: {
+      position: 'left',
+      labels: {
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
+      }
+    }
+  };
+
+  contactsDayPlanOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      fontFamily: 'Roboto Condensed',
+      text: label('contactsDayPlan.label'),
+      display: true
+    },
+    legend: {
+      position: 'right',
+      labels: {
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
+      }
+    }
+  };
+
+  contactsDayOptions: ChartOptions = {
+    title: {
+      position: 'top',
+      fontSize: 14,
+      fontFamily: 'Roboto Condensed',
+      text: label('contactsDay.label'),
+      display: true
+    },
+    legend: {
+      position: 'right',
+      labels: {
+        fontSize: 10,
+        fontFamily: 'Roboto Condensed',
+      }
+    }
+  };
 
   constructor(
-    private dataService: DataService,
-    private notificationsService: NotificationsService
+    // private dataService: DataService,
+    // private notificationsService: NotificationsService
   ) { }
 
   getParams(): Observable<IDashboardParams> {
-    return this.dataService.read(`${this.baseUrl}/params`)
-      .catch(this.notificationsService.fetchError('dashboard.errors.params').dispatchCallback());
+    // return this.dataService.read(`${this.baseUrl}/params`)
+    //   .catch(this.notificationsService.fetchError('dashboard.errors.params').dispatchCallback());
+    return of({
+      debtActiveCnt: 180,
+      debtNeedCallCnt: 23,
+      monthPaymentCnt: 69,
+      monthPaymentAmount: 550350,
+      monthPaymentCommission: 20530
+    });
   }
 
   getPromiseAmount(): Observable<IDashboardPromiseAmount> {
@@ -99,11 +219,11 @@ export class DashboardService {
           data as IDashboardPromiseCoverage,
         );
       case DashboardChartType.CONTACT_DAY:
-        return this.prepareContactDayChart(
+        return this.prepareContactsDayChart(
           data as IDashboardContactsDay,
         );
       case DashboardChartType.CONTACT_DAY_PLAN:
-        return this.prepareContactDayPlanChart(
+        return this.prepareContactsDayPlanChart(
           data as IDashboardContactsDay,
         );
       default:
@@ -111,10 +231,24 @@ export class DashboardService {
     }
   }
 
+  prepareIndicators(data: IDashboardParams): (currencyName: string) => IIndicator[] {
+    const currencyIndicators = ['monthPaymentAmount', 'monthPaymentCommission'];
+    return (currencyName: string) =>
+      Object.keys(data)
+        .map((key: keyof IDashboardParams) => ({
+          text: currencyIndicators.includes(key) ? `${data[key]} ${currencyName}` : `${data[key]}`,
+          label: label(`indicators.${key}`),
+          color: this.indicatorColors[key]
+        }));
+  }
+
   private preparePromiseCountStatusChart(data: IDashboardPromiseCountStatus): ChartData {
     return {
-      // TODO(i.lobanov): translate
-      labels: [ 'Выполнено', 'Просрочено', 'Ожидание' ],
+      labels: [
+        label(`promiseCountStatus.legend.fullfilled`),
+        label(`promiseCountStatus.legend.overdue`),
+        label(`promiseCountStatus.legend.waiting`),
+      ],
       datasets: [
         {
           data: [data.monthPromiseFulfilled, data.monthPromiseOverdue, data.monthPromiseWaiting],
@@ -130,7 +264,7 @@ export class DashboardService {
       datasets: [
         {
           data: data.promiseCountList,
-          label: 'Кол-во обещаний',
+          label: label('promiseCount.legend.promiseCount'),
           backgroundColor: '#23b7e5'
         }
       ]
@@ -143,7 +277,7 @@ export class DashboardService {
       datasets: [
         {
           data: data.promiseAmountList,
-          label: 'Сумма',
+          label: label('promiseAmount.legend.promiseAmount'),
           backgroundColor: '#23b7e5'
         }
       ]
@@ -152,8 +286,10 @@ export class DashboardService {
 
   private preparePromiseCoverChart(data: IDashboardPromiseCoverage): ChartData {
     return {
-      // TODO(i.lobanov): translate
-      labels: ['Покрыто', 'Осталось'],
+      labels: [
+        label(`promiseCover.legend.covered`),
+        label(`promiseCover.legend.remaining`),
+      ],
       datasets: [
         {
           data: [data.monthPromiseAmountCover, data.monthPromiseAmountRest],
@@ -163,10 +299,12 @@ export class DashboardService {
     };
   }
 
-  private prepareContactDayPlanChart(data: IDashboardContactsDay): ChartData {
+  private prepareContactsDayPlanChart(data: IDashboardContactsDay): ChartData {
     return {
-      // TODO(i.lobanov): translate
-      labels: ['Выполнено', 'Осталось'],
+      labels: [
+        label(`contactsDayPlan.legend.fullfilled`),
+        label(`contactsDayPlan.legend.remaining`),
+      ],
       datasets: [
         {
           data: [data.debtorSuccessContact, data.debtorSuccessContactPlan],
@@ -176,10 +314,14 @@ export class DashboardService {
     };
   }
 
-  private prepareContactDayChart(data: IDashboardContactsDay): ChartData {
+  private prepareContactsDayChart(data: IDashboardContactsDay): ChartData {
     return {
-      // TODO(i.lobanov): translate
-      labels: ['Должник', 'Поручитель', 'Залогодатель', 'Третье лицо'],
+      labels: [
+        label(`contactsDay.legend.debtor`),
+        label(`contactsDay.legend.guarantor`),
+        label(`contactsDay.legend.pledgor`),
+        label(`contactsDay.legend.thirdParty`),
+      ],
       datasets: [
         {
           data: [

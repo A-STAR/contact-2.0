@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
-import {
-  IDashboardParams,
-  DashboardChartType,
-} from './dashboard.interface';
+import { DashboardChartType } from './dashboard.interface';
+import { IIndicator } from '@app/shared/components/charts/charts.interface';
+import { ICurrency } from '@app/shared/gui-objects/widgets/currencies/currencies.interface';
 
 import { DashboardService } from './dashboard.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -17,7 +18,7 @@ import { DashboardService } from './dashboard.service';
 })
 export class DashboardComponent implements OnInit {
 
-  indicators$: Observable<IDashboardParams>;
+  indicators$: Observable<IIndicator[]>;
   promiseAmount$: Observable<ChartData>;
   promiseCount$: Observable<ChartData>;
   promiseCountStatus$: Observable<ChartData>;
@@ -25,101 +26,22 @@ export class DashboardComponent implements OnInit {
   contactsDay: ChartData;
   contactsDayPlan: ChartData;
 
-  promiseCountStatusOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Обещания за последние 30 дней',
-      display: true
-    },
-    legend: {
-      position: 'left',
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
-  promiseCountOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Количество полученных обещаний за 30 дней',
-      display: true
-    },
-    legend: {
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
-  promiseAmountOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Сумма полученных обещаний за 30 дней',
-      display: true
-    },
-    legend: {
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
-  promiseCoverOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Покрытие обещаний за последние 30 дней',
-      display: true
-    },
-    legend: {
-      position: 'left',
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
-  contactsDayPlanOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Количество контактов за текущий день с должником',
-      display: true
-    },
-    legend: {
-      position: 'right',
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
-  contactsDayOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      text: 'Успешные контакты за день',
-      display: true
-    },
-    legend: {
-      position: 'right',
-      labels: {
-        fontSize: 10
-      }
-    }
-  };
-
   constructor(
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private lookupService: LookupService,
   ) { }
 
   ngOnInit(): void {
 
-    this.indicators$ = this.dashboardService.getParams();
+    this.indicators$ = combineLatest(
+        this.dashboardService.getParams(),
+        this.lookupService.lookup<ICurrency>('currencies')
+      )
+      .map(([ params, currencies]) => {
+        const prepareFn = this.dashboardService.prepareIndicators(params);
+        const currentCurrency = currencies.find(currency => currency.code === '1');
+        return currentCurrency && currentCurrency.shortName ? prepareFn(currentCurrency.shortName) : prepareFn('руб.');
+      });
 
     this.promiseAmount$ = this.dashboardService.getPromiseAmount()
       .pipe(
@@ -148,4 +70,29 @@ export class DashboardComponent implements OnInit {
       });
 
   }
+
+  get contactsDayOptions(): ChartOptions {
+    return this.dashboardService.contactsDayOptions;
+  }
+
+  get contactsDayPlanOptions(): ChartOptions {
+    return this.dashboardService.contactsDayPlanOptions;
+  }
+
+  get promiseCoverOptions(): ChartOptions {
+    return this.dashboardService.promiseCoverOptions;
+  }
+
+  get promiseAmountOptions(): ChartOptions {
+    return this.dashboardService.promiseAmountOptions;
+  }
+
+  get promiseCountOptions(): ChartOptions {
+    return this.dashboardService.promiseCountOptions;
+  }
+
+  get promiseCountStatusOptions(): ChartOptions {
+    return this.dashboardService.contactsDayOptions;
+  }
+
 }
