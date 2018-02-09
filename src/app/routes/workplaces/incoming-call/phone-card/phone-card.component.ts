@@ -18,11 +18,11 @@ export class PhoneCardComponent {
   ) {}
 
   get phoneId$(): Observable<number> {
-    return this.routeParams$.map(params => params.phoneId);
+    return this.routeParams$.pipe(map(params => params.phoneId));
   }
 
   get entityId$(): Observable<number> {
-    return this.routeParams$.map(params => params.personId);
+    return this.routeParams$.pipe(map(params => params.personId));
   }
 
   get routeParams$(): Observable<PhoneCardRouteParams> {
