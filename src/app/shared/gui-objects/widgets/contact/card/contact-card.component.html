@@ -13,7 +13,7 @@
 
 <div class="pb-lg">
   <app-person-select-grid *ngIf="contact === null" (select)="onContactSelected($event)"></app-person-select-grid>
-  <app-person-select-card *ngIf="contact" [person]="contact"></app-person-select-card>
+  <app-person-select-card *ngIf="contact" [personId]="contact.id"></app-person-select-card>
 </div>
 
 <app-tabview [noMargin]="true" (select)="onTabSelect($event)">

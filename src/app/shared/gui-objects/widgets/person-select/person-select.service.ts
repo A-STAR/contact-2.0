@@ -25,6 +25,11 @@ export class PersonSelectService {
       .catch(this.notificationsService.fetchError().entity('entities.persons.gen.plural').dispatchCallback());
   }
 
+  fetch(personId: number): Observable<IPerson> {
+    return this.dataService.read('/persons/{personId}', { personId })
+      .catch(this.notificationsService.fetchError().entity('entities.persons.gen.singular').dispatchCallback());
+  }
+
   create(person: IPerson): Observable<number> {
     return this.dataService
       .create('/persons', { }, person)

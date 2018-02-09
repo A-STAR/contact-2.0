@@ -2374,7 +2374,7 @@
     },
     "personSelect": {
       "dialog": {
-        "title": "Add person"
+        "title": "Select person"
       }
     },
     "scheduleEvents": {
@@ -3193,8 +3193,12 @@
           "middleName": "Middle Name",
           "typeCode": "Debtor Type",
           "birthDate": "Date of Birth",
+          "birthPlace": "Place of birth",
+          "familyStatusCode": "Family status",
+          "educationCode": "Education",
           "genderCode": "Gender",
           "passportNumber": "Passport Number",
+          "comment": "Comment",
           "stringValue1": "String Attribute 1",
           "stringValue2": "String Attribute 2",
           "stringValue3": "String Attribute 3",

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewChild, Input, OnInit, ChangeDet
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IUserConstant } from 'app/core/user/constants/user-constants.interface';
@@ -25,11 +26,13 @@ const labelKey = makeKey('common.entities.person.fields');
 })
 export class PersonSelectCardComponent implements OnInit {
 
-  @Input() person: IPerson;
+  @Input() personId: number;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[];
+
+  person: IPerson;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -40,13 +43,15 @@ export class PersonSelectCardComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest(
-      this.person
+      this.personId
         ? this.userPermissionsService.has('CONTACT_PERSON_EDIT')
         : this.userPermissionsService.has('CONTACT_PERSON_ADD'),
-      this.userContantsService.get('Person.Individual.AdditionalAttribute.List')
+      this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
+      this.personId ? this.personSelectService.fetch(this.personId) : of(this.formData)
     )
     .pipe(first())
-    .subscribe(([ canEdit, attributeList ]) => {
+    .subscribe(([ canEdit, attributeList, person ]) => {
+      this.person = person;
       this.controls = [
         { controlName: 'lastName', type: 'text', width: 4, required: true, disabled: !canEdit },
         { controlName: 'firstName', type: 'text', width: 4, disabled: !canEdit },
@@ -77,7 +82,7 @@ export class PersonSelectCardComponent implements OnInit {
         {
           controlName: 'typeCode',
           dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
-          markAsDirty: !this.person,
+          markAsDirty: !this.personId,
           required: true,
           type: 'selectwrapper',
           disabled: !canEdit
@@ -95,16 +100,16 @@ export class PersonSelectCardComponent implements OnInit {
   }
 
   get formData(): any {
-    return this.person || { typeCode: 1 };
+    return { typeCode: 1 };
   }
 
   submitPerson(): Observable<IPerson> {
-    const action = this.person
-      ? this.personSelectService.update(this.person.id, this.form.serializedUpdates)
+    const action = this.personId
+      ? this.personSelectService.update(this.personId, this.form.serializedUpdates)
       : this.personSelectService.create(this.form.serializedUpdates);
 
     return action.map(personId => ({
-      id: this.person ? this.person.id : personId,
+      id: this.personId ? this.personId : personId,
       ...this.form.serializedValue
     }));
   }

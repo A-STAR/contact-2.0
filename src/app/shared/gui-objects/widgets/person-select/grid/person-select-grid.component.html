@@ -4,6 +4,13 @@
   (close)="closeDialog()"
 ></app-person-select-dialog>
 
+<app-person-select-dialog
+  *ngIf="isDialog('edit')"
+  [personId]="selectedPersonId"
+  (select)="onPersonCreated($event)"
+  (close)="closeDialog()"
+></app-person-select-dialog>
+
 <app-toolbar-2 *ngIf="toolbarItems" [items]="toolbarItems"></app-toolbar-2>
 
 <app-grid2

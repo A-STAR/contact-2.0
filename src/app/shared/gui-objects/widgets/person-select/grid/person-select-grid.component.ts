@@ -68,6 +68,10 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
           {
             type: ToolbarItemTypeEnum.BUTTON_ADD,
             action: () => this.setDialog('create')
+          },
+          {
+            type: ToolbarItemTypeEnum.BUTTON_EDIT,
+            action: () => this.setDialog('edit')
           }
         ];
       });
@@ -79,6 +83,10 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
 
   get selectedPerson(): IPerson {
     return this.grid && this.grid.selected && this.grid.selected[0] as any;
+  }
+
+  get selectedPersonId(): number {
+    return this.selectedPerson && this.selectedPerson.id;
   }
 
   onSelect(): void {

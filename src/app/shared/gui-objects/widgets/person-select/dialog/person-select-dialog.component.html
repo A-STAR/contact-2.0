@@ -2,11 +2,11 @@
   <div dialog-header>
     <h3>{{ 'widgets.personSelect.dialog.title' | translate }}</h3>
   </div>
-  
-  <app-person-select-card></app-person-select-card>
-  
+
+  <app-person-select-card [personId]="personId"></app-person-select-card>
+
   <div dialog-footer>
-    <app-button color="primary" type="select" (click)="onSelect()" [disabled]="!canSelect"></app-button>
+    <app-button color="primary" type="save" (click)="onSave()" [disabled]="!canSave"></app-button>
     <app-button type="cancel" (click)="onClose()"></app-button>
   </div>
 </app-dialog>

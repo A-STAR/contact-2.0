@@ -1,6 +1,6 @@
 import {
   ChangeDetectionStrategy, Component, EventEmitter,
-  Output, ViewChild
+  Output, ViewChild, Input
 } from '@angular/core';
 
 import { IPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
@@ -16,14 +16,16 @@ export class PersonSelectDialogComponent {
 
   @ViewChild(PersonSelectCardComponent) card: PersonSelectCardComponent;
 
+  @Input() personId: number;
+
   @Output() close = new EventEmitter<null>();
   @Output() select = new EventEmitter<IPerson>();
 
-  get canSelect(): boolean {
-    return !!this.card.isValid;
+  get canSave(): boolean {
+    return this.card && !!this.card.isValid;
   }
 
-  onSelect(): void {
+  onSave(): void {
     this.card.submitPerson().subscribe(person => this.select.emit(person));
   }
 
