@@ -1651,8 +1651,8 @@
           "attributes": {
             "code": "Code",
             "name": "Name",
-            "display": "Display",
-            "mandatory": "Required"
+            "isDisplayed": "Display",
+            "isMandatory": "Required"
           }
         },
         "edit": {
@@ -1924,6 +1924,20 @@
         "delete": {
           "title": "Delete phone number",
           "confirmMessage": "Are you sure you want to delete phone {{ phone }}?"
+        }
+      },
+      "errors": {
+        "drop": {
+          "*": "Could not drop {{ entity }}"
+        },
+        "hold": {
+          "*": "Could not hold {{ entity }}"
+        },
+        "retrieve": {
+          "*": "Could not retrieve {{ entity }}"
+        },
+        "transfer": {
+          "*": "Could not transfer {{ entity }}"
         }
       }
     },
@@ -2625,6 +2639,9 @@
     },
     "callSettings": {
       "gen": { "singular": "telephone settings", "plural": "telephone settings" }
+    },
+    "calls": {
+      "gen": { "singular": "call", "plural": "calls" }
     }
   },
   "massOperations": {
@@ -2830,6 +2847,7 @@
       "templateNotFound": "Template not found by ID",
       "thereAreUsersInTheRole": "Cannot delete role {{ $1 }}, which belongs to some users",
       "tokenInvalid": "Invalid session token",
+      "translationInMainLanguageNotFound": "No translation in main language provided",
       "unknownDataType": "Unknown data type {{ $1 }} (not present in dictionary №1)",
       "unknownNotNullValueOperator": "Unknown (unsupported) operator {{ $1 }}",
       "unknownParameterForGrid": "Invalid parameter in custom list request",
@@ -2906,6 +2924,7 @@
       "addUser": "Add user",
       "back": "Back",
       "block": "Block",
+      "call": "Call",
       "cancel": "Cancel",
       "change": "Change",
       "changeStatus": "",
@@ -2914,6 +2933,7 @@
       "copy": "Copy",
       "delete": "Delete",
       "download": "Download",
+      "drop": "Drop",
       "edit": "Edit",
       "email": "Email",
       "exportToExcel": "Export",
@@ -2923,13 +2943,16 @@
       "next": "Next",
       "now": "Now",
       "ok": "OK",
+      "pause": "Hold",
       "refresh": "Refresh",
       "registerContact": "Register Contact",
       "remove": "Delete",
+      "resume": "Resume",
       "save": "Save",
       "search": "Search",
       "select": "Select",
       "sms": "SMS",
+      "transfer": "Transfer",
       "today": "Today",
       "unblock": "Unblock",
       "undo": "Undo",
