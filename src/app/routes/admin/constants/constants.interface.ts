@@ -5,7 +5,7 @@ export interface IConstant {
   name: string;
   dsc: string;
   typeCode: number;
-  valueB: boolean;
+  valueB: number;
   valueD: string;
   valueN: number;
   valueS: string;
