@@ -164,9 +164,10 @@ export class ParamsService extends AbstractActionService {
     return Object.keys(controls)
       .map(paramName => ({
         name: paramName,
-        values: Array.isArray(controls[paramName])
-          ? controls[paramName].map(v => String(v))
-          : [ String(controls[paramName]) ]
+        values: (Array.isArray(controls[paramName])
+          ? controls[paramName]
+          : [ controls[paramName] ]
+        ).filter(Boolean).map(v => String(v))
       }));
   }
 }
