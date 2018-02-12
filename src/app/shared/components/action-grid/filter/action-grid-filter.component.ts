@@ -14,7 +14,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 import { IAppState } from '@app/core/state/state.interface';
-import { IDynamicFormControl } from '../../form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl, IDynamicFormConfig } from '../../form/dynamic-form/dynamic-form.interface';
 import { IMetadataColumn, IMetadataFilter, IMetadataFilterOperator } from '@app/core/metadata/metadata.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
@@ -66,7 +66,7 @@ export class ActionGridFilterComponent implements OnInit {
 
   get filters(): FilterObject {
     const filter = FilterObject.create().and();
-    const data = this.form && this.form.serializedValue || {};
+    const data = this.form && this.form.serializedUpdates || {};
 
     this.operators.forEach(operator => {
       if (this.hasControlValues(data, operator.controls)) {
@@ -88,15 +88,7 @@ export class ActionGridFilterComponent implements OnInit {
 
   private buildFormControls(metadata: IMetadataFilter): IDynamicFormControl[] {
     return [
-      ...metadata.controls.map(controlData => {
-        const operatorConfig = metadata.operators.find(operator => operator.controls.includes(controlData.controlName));
-        return {
-          ...controlData,
-          // TODO(i.lobanov): label temporary retrieved from columnName
-          label: `default.filters.fields.${operatorConfig ? operatorConfig.columnName
-            : (controlData.label || controlData.controlName)}`,
-          };
-        }),
+      ...metadata.controls,
       {
         label: 'default.buttons.search',
         controlName: 'searchBtn',
