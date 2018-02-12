@@ -186,6 +186,6 @@ export const menuConfig: IMenuConfig = {
   help: {
     text: 'sidebar.nav.menu.HELP',
     link: '/help',
-    icon: 'icon-support'
+    icon: 'co-help'
   }
 };
