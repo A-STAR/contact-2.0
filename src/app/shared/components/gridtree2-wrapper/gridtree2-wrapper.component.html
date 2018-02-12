@@ -7,6 +7,7 @@
   [getRowNodeId]="getRowNodeId"
   [autoGroupColumnDef]="autoGroupColumnDef"
   [rowHeight]="rowHeight"
+  (cellValueChanged)="onCellValueChanged($event)"
   (select)="onSelect($event)"
   (move)="onMove($event)"
   (dblclick)="onDblClick($event)"
