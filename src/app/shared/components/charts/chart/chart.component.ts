@@ -3,6 +3,7 @@ import { ChartOptions, Chart, ChartType, ChartData } from 'chart.js';
 import { TranslateService } from '@ngx-translate/core';
 
 import { compose } from 'ramda';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-chart',
@@ -11,10 +12,13 @@ import { compose } from 'ramda';
 })
 export class ChartComponent implements OnInit {
 
+
+
   @ViewChild('canvas') canvasEl: ElementRef;
   @Input() data: ChartData;
   @Input() options: ChartOptions;
   @Input() type: ChartType;
+  @Input() translationKey: string;
 
   ctx: CanvasRenderingContext2D;
   chart: Chart;
@@ -73,7 +77,11 @@ export class ChartComponent implements OnInit {
   }
 
   private translate(path: string): string {
-    return this.translateService.instant(path);
+    return this.isDate(path) ? path : this.translateService.instant(`${(this.translationKey || '')}.${path}`);
+  }
+
+  private isDate(path: string): boolean {
+    return moment(path, 'YYYY-MM-DD').isValid();
   }
 
 }

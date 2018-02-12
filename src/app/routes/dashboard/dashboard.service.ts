@@ -14,8 +14,8 @@ import {
 } from '@app/routes/dashboard/dashboard.interface';
 import { IIndicator } from '@app/shared/components/charts/charts.interface';
 
-// import { DataService } from '@app/core/data/data.service';
-// import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 import { makeKey } from '@app/core/utils';
 
@@ -24,7 +24,7 @@ const label = makeKey('dashboard.charts');
 @Injectable()
 export class DashboardService {
 
-  // private baseUrl = '/dashboard';
+  private baseUrl = '/dashboard';
 
   private indicatorColors = {
     debtActiveCnt: '#7266ba',
@@ -39,11 +39,11 @@ export class DashboardService {
       position: 'top',
       fontSize: 14,
       fontFamily: 'Roboto Condensed',
-      text: label('promiseCountStatus.label'),
+      text: 'promiseCountStatus.label',
       display: true
     },
     legend: {
-      position: 'left',
+      position: 'right',
       labels: {
         fontSize: 10,
         fontFamily: 'Roboto Condensed',
@@ -56,7 +56,7 @@ export class DashboardService {
       position: 'top',
       fontSize: 14,
       fontFamily: 'Roboto Condensed',
-      text: label('promiseCount.label'),
+      text: 'promiseCount.label',
       display: true
     },
     legend: {
@@ -72,7 +72,7 @@ export class DashboardService {
       position: 'top',
       fontSize: 14,
       fontFamily: 'Roboto Condensed',
-      text: label('promiseAmount.label'),
+      text: 'promiseAmount.label',
       display: true
     },
     legend: {
@@ -88,11 +88,11 @@ export class DashboardService {
       position: 'top',
       fontSize: 14,
       fontFamily: 'Roboto Condensed',
-      text: label('promiseCover.label'),
+      text: 'promiseCover.label',
       display: true
     },
     legend: {
-      position: 'left',
+      position: 'right',
       labels: {
         fontSize: 10,
         fontFamily: 'Roboto Condensed',
@@ -105,7 +105,7 @@ export class DashboardService {
       position: 'top',
       fontSize: 14,
       fontFamily: 'Roboto Condensed',
-      text: label('contactsDayPlan.label'),
+      text: 'contactsDayPlan.label',
       display: true
     },
     legend: {
@@ -122,7 +122,7 @@ export class DashboardService {
       position: 'top',
       fontSize: 14,
       fontFamily: 'Roboto Condensed',
-      text: label('contactsDay.label'),
+      text: 'contactsDay.label',
       display: true
     },
     legend: {
@@ -135,57 +135,33 @@ export class DashboardService {
   };
 
   constructor(
-    // private dataService: DataService,
-    // private notificationsService: NotificationsService
+    private dataService: DataService,
+    private notificationsService: NotificationsService
   ) { }
 
   getParams(): Observable<IDashboardParams> {
-    // return this.dataService.read(`${this.baseUrl}/params`)
-    //   .catch(this.notificationsService.fetchError('dashboard.errors.params').dispatchCallback());
-    return of({
-      debtActiveCnt: 180,
-      debtNeedCallCnt: 23,
-      monthPaymentCnt: 69,
-      monthPaymentAmount: 550350,
-      monthPaymentCommission: 20530
-    });
+    return this.dataService.read(`${this.baseUrl}/params`)
+      .catch(this.notificationsService.fetchError('dashboard.errors.params').dispatchCallback());
   }
 
   getPromiseAmount(): Observable<IDashboardPromiseAmount> {
-    // return this.dataService.read(`${this.baseUrl}/promiseAmount`)
-    //   .catch(this.notificationsService.fetchError('dashboard.errors.promiseAmount').dispatchCallback());
-    return of({
-      promiseDateList: ['01.01.2018', '02.01.2018', '03.01.2018', '04.01.2018', '05.01.2018'],
-      promiseAmountList: [145, 120, 99, 45, 101]
-    });
+    return this.dataService.read(`${this.baseUrl}/promiseAmount`)
+      .catch(this.notificationsService.fetchError('dashboard.errors.promiseAmount').dispatchCallback());
   }
 
   getPromiseCount(): Observable<IDashboardPromiseCount> {
-    // return this.dataService.read(`${this.baseUrl}/promiseCount`)
-    //   .catch(this.notificationsService.fetchError('dashboard.errors.promiseCount').dispatchCallback());
-    return of({
-      promiseDateList: ['01.01.2018', '02.01.2018', '03.01.2018', '04.01.2018', '05.01.2018'],
-      promiseCountList: [10, 25, 4, 33, 45]
-    });
+    return this.dataService.read(`${this.baseUrl}/promiseCount`)
+      .catch(this.notificationsService.fetchError('dashboard.errors.promiseCount').dispatchCallback());
   }
 
   getPromiseCountStatus(): Observable<IDashboardPromiseCountStatus> {
-    // return this.dataService.read(`${this.baseUrl}/promiseCountStatus`)
-    //   .catch(this.notificationsService.fetchError('dashboard.errors.promiseCountStatus').dispatchCallback());
-    return of({
-      monthPromiseFulfilled: 13,
-      monthPromiseOverdue: 15,
-      monthPromiseWaiting: 4
-    });
+    return this.dataService.read(`${this.baseUrl}/promiseCountStatus`)
+      .catch(this.notificationsService.fetchError('dashboard.errors.promiseCountStatus').dispatchCallback());
   }
 
   getPromiseCover(): Observable<IDashboardPromiseCoverage> {
-    // return this.dataService.read(`${this.baseUrl}/promiseCover`)
-    //   .catch(this.notificationsService.fetchError('dashboard.errors.promiseCover').dispatchCallback());
-    return of({
-      monthPromiseAmountCover: 33,
-      monthPromiseAmountRest: 15,
-    });
+    return this.dataService.read(`${this.baseUrl}/promiseCover`)
+      .catch(this.notificationsService.fetchError('dashboard.errors.promiseCover').dispatchCallback());
   }
 
   getContactsDay(): Observable<IDashboardContactsDay> {
@@ -245,9 +221,9 @@ export class DashboardService {
   private preparePromiseCountStatusChart(data: IDashboardPromiseCountStatus): ChartData {
     return {
       labels: [
-        label(`promiseCountStatus.legend.fullfilled`),
-        label(`promiseCountStatus.legend.overdue`),
-        label(`promiseCountStatus.legend.waiting`),
+        `promiseCountStatus.legend.fullfilled`,
+        `promiseCountStatus.legend.overdue`,
+        `promiseCountStatus.legend.waiting`,
       ],
       datasets: [
         {
@@ -264,7 +240,7 @@ export class DashboardService {
       datasets: [
         {
           data: data.promiseCountList,
-          label: label('promiseCount.legend.promiseCount'),
+          label: 'promiseCount.legend.promiseCount',
           backgroundColor: '#23b7e5'
         }
       ]
@@ -277,7 +253,7 @@ export class DashboardService {
       datasets: [
         {
           data: data.promiseAmountList,
-          label: label('promiseAmount.legend.promiseAmount'),
+          label: 'promiseAmount.legend.promiseAmount',
           backgroundColor: '#23b7e5'
         }
       ]
@@ -287,8 +263,8 @@ export class DashboardService {
   private preparePromiseCoverChart(data: IDashboardPromiseCoverage): ChartData {
     return {
       labels: [
-        label(`promiseCover.legend.covered`),
-        label(`promiseCover.legend.remaining`),
+        `promiseCover.legend.covered`,
+        `promiseCover.legend.remaining`,
       ],
       datasets: [
         {
@@ -302,8 +278,8 @@ export class DashboardService {
   private prepareContactsDayPlanChart(data: IDashboardContactsDay): ChartData {
     return {
       labels: [
-        label(`contactsDayPlan.legend.fullfilled`),
-        label(`contactsDayPlan.legend.remaining`),
+        `contactsDayPlan.legend.fullfilled`,
+        `contactsDayPlan.legend.remaining`,
       ],
       datasets: [
         {
@@ -317,10 +293,10 @@ export class DashboardService {
   private prepareContactsDayChart(data: IDashboardContactsDay): ChartData {
     return {
       labels: [
-        label(`contactsDay.legend.debtor`),
-        label(`contactsDay.legend.guarantor`),
-        label(`contactsDay.legend.pledgor`),
-        label(`contactsDay.legend.thirdParty`),
+        `contactsDay.legend.debtor`,
+        `contactsDay.legend.guarantor`,
+        `contactsDay.legend.pledgor`,
+        `contactsDay.legend.thirdParty`,
       ],
       datasets: [
         {

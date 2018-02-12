@@ -1,5 +1,7 @@
 <app-chart
   #chart
+  *ngIf="data"
+  [translationKey]="translationKey"
   [data]="data"
   type="bar"
   [options]="options"
