@@ -68,7 +68,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       action: () => this.fetch(),
-      enabled: this.canView$
+      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
     },
   ];
 

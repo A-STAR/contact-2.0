@@ -85,7 +85,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.canView$,
+      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },
   ];
