@@ -175,6 +175,11 @@
   (close)="onCloseAction($event)"
 ></app-outsourcing-return>
 
+<app-titlebar
+  *ngIf="gridActionsForAll$ | async"
+  [titlebar]="gridActionsForAll$ | async"
+></app-titlebar>
+
 <app-action-grid-filter
   [metadataKey]="metadataKey"
   (filter)="onFilterHandler()"
