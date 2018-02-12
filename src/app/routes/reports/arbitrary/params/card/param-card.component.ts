@@ -90,7 +90,6 @@ export class ParamCardComponent implements OnInit, DoCheck {
 
     action.subscribe(() => {
       this.paramsService.dispatchAction(ParamsService.MESSAGE_PARAM_SAVED);
-      this.form.markAsPristine();
       this.onBack();
     });
   }
