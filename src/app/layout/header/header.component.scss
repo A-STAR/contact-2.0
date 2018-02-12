@@ -28,6 +28,7 @@ nav {
       line-height: $layout-top-menu-height;
       padding: 0 12px;
       white-space: nowrap;
+      text-decoration: none;
 
       &.active,
       &:hover {

@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
-import { IMenuItem } from '../../../core/gui-objects/gui-objects.interface';
+import { IMenuItem } from '@app/core/gui-objects/gui-objects.interface';
 
-import { GuiObjectsService } from '../../../core/gui-objects/gui-objects.service';
+import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';
 
 @Component({
   selector: 'app-header-main-menu',
@@ -20,7 +20,7 @@ export class MainMenuComponent {
 
   get menuItems$(): Observable<IMenuItem[]> {
     return this._menuItems$.pipe(
-      map(items => items.filter(item => item.text)),
+      map(items => items.filter(item => !item.link.endsWith('help'))),
     );
   }
 }
