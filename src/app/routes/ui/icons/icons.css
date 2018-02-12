@@ -4,9 +4,9 @@
   font-family: "contact";
   src:url("fonts/contact.eot");
   src:url("fonts/contact.eot?#iefix") format("embedded-opentype"),
-    url("fonts/contact.woff") format("woff"),
-    url("fonts/contact.ttf") format("truetype"),
-    url("fonts/contact.svg#contact") format("svg");
+  url("fonts/contact.woff") format("woff"),
+  url("fonts/contact.ttf") format("truetype"),
+  url("fonts/contact.svg#contact") format("svg");
   font-weight: normal;
   font-style: normal;
 
@@ -41,192 +41,210 @@
 .co-action-log:before {
   content: "\e000";
 }
-.co-attributes:before {
+.co-add:before {
   content: "\e001";
 }
-.co-attributes-sm:before {
+.co-attributes:before {
   content: "\e002";
 }
-.co-call-campaigns:before {
+.co-attributes-sm:before {
   content: "\e003";
 }
-.co-call-cancel:before {
+.co-calendar:before {
   content: "\e004";
 }
-.co-call-center:before {
+.co-call-campaigns:before {
   content: "\e005";
 }
-.co-call-incoming:before {
+.co-call-cancel:before {
   content: "\e006";
 }
-.co-call-transfer:before {
+.co-call-center:before {
   content: "\e007";
 }
-.co-call-unpause:before {
+.co-call-incoming:before {
   content: "\e008";
 }
-.co-change-status:before {
+.co-call-transfer:before {
   content: "\e009";
 }
-.co-checkbox-mark:before {
+.co-call-unpause:before {
   content: "\e00a";
 }
-.co-communication-out:before {
+.co-change-status:before {
   content: "\e00b";
 }
-.co-confirm:before {
+.co-checkbox-mark:before {
   content: "\e00c";
 }
-.co-constants:before {
+.co-close:before {
   content: "\e00d";
 }
-.co-contact-log:before {
+.co-communication-out:before {
   content: "\e00e";
 }
-.co-contact-registration:before {
+.co-confirm:before {
   content: "\e00f";
 }
-.co-contact-tree:before {
+.co-constants:before {
   content: "\e010";
 }
-.co-court:before {
+.co-contact-log:before {
   content: "\e011";
 }
-.co-currencies:before {
+.co-contact-registration:before {
   content: "\e012";
 }
-.co-data-upload:before {
+.co-contact-tree:before {
   content: "\e013";
 }
-.co-debt-list:before {
+.co-copy:before {
   content: "\e014";
 }
-.co-debt-processing:before {
+.co-court:before {
   content: "\e015";
 }
-.co-delete:before {
+.co-currencies:before {
   content: "\e016";
 }
-.co-dialog-exclamation:before {
+.co-data-upload:before {
   content: "\e017";
 }
-.co-dialog-info:before {
+.co-debt-list:before {
   content: "\e018";
 }
-.co-dialog-question:before {
+.co-debt-processing:before {
   content: "\e019";
 }
-.co-dictionaries:before {
+.co-delete:before {
   content: "\e01a";
 }
-.co-download:before {
+.co-dialog-exclamation:before {
   content: "\e01b";
 }
-.co-download-excel:before {
+.co-dialog-info:before {
   content: "\e01c";
 }
-.co-email:before {
+.co-dialog-question:before {
   content: "\e01d";
 }
-.co-filter:before {
+.co-dictionaries:before {
   content: "\e01e";
 }
-.co-filter-params:before {
+.co-download:before {
   content: "\e01f";
 }
-.co-formulae:before {
+.co-download-excel:before {
   content: "\e020";
 }
-.co-groups:before {
+.co-edit:before {
   content: "\e021";
 }
-.co-help:before {
+.co-email:before {
   content: "\e022";
 }
-.co-home:before {
+.co-filter:before {
   content: "\e023";
 }
-.co-legal:before {
+.co-filter-params:before {
   content: "\e024";
 }
-.co-load-templates:before {
+.co-formulae:before {
   content: "\e025";
 }
-.co-lock:before {
+.co-groups:before {
   content: "\e026";
 }
-.co-mail:before {
+.co-help:before {
   content: "\e027";
 }
-.co-managers:before {
+.co-home:before {
   content: "\e028";
 }
-.co-message-scenarios:before {
+.co-legal:before {
   content: "\e029";
 }
-.co-move:before {
+.co-load-templates:before {
   content: "\e02a";
 }
-.co-org-structure:before {
+.co-lock:before {
   content: "\e02b";
 }
-.co-payments:before {
+.co-mail:before {
   content: "\e02c";
 }
-.co-picture:before {
+.co-managers:before {
   content: "\e02d";
 }
-.co-portfolios:before {
+.co-menu-v:before {
   content: "\e02e";
 }
-.co-refresh:before {
+.co-message-scenarios:before {
   content: "\e02f";
 }
-.co-reports:before {
+.co-move:before {
   content: "\e030";
 }
-.co-roles:before {
+.co-org-structure:before {
   content: "\e031";
 }
-.co-save:before {
+.co-payments:before {
   content: "\e032";
 }
-.co-schedule:before {
+.co-picture:before {
   content: "\e033";
 }
-.co-search:before {
+.co-portfolios:before {
   content: "\e034";
 }
-.co-search-groups:before {
+.co-refresh:before {
   content: "\e035";
 }
-.co-settings:before {
+.co-reports:before {
   content: "\e036";
 }
-.co-sms:before {
+.co-roles:before {
   content: "\e037";
 }
-.co-tasks:before {
+.co-save:before {
   content: "\e038";
 }
-.co-template:before {
+.co-schedule:before {
   content: "\e039";
 }
-.co-time:before {
+.co-search:before {
   content: "\e03a";
 }
-.co-unlock:before {
+.co-search-groups:before {
   content: "\e03b";
 }
-.co-upload:before {
+.co-settings:before {
   content: "\e03c";
 }
-.co-users:before {
+.co-sms:before {
   content: "\e03d";
 }
-.co-version-history:before {
+.co-tasks:before {
   content: "\e03e";
 }
-.co-visit:before {
+.co-template:before {
   content: "\e03f";
+}
+.co-time:before {
+  content: "\e040";
+}
+.co-unlock:before {
+  content: "\e041";
+}
+.co-upload:before {
+  content: "\e042";
+}
+.co-users:before {
+  content: "\e043";
+}
+.co-version-history:before {
+  content: "\e044";
+}
+.co-visit:before {
+  content: "\e045";
 }
