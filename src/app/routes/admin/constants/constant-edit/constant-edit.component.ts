@@ -10,6 +10,8 @@ import { UserDictionariesService } from 'app/core/user/dictionaries/user-diction
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 
+import { getFormControlConfig } from '@app/core/utils';
+
 @Component({
   selector: 'app-constant-edit',
   templateUrl: './constant-edit.component.html',
@@ -17,7 +19,9 @@ import { DynamicFormComponent } from '../../../../shared/components/form/dynamic
 })
 export class ConstantEditComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
   @Input() constant: IConstant;
+
   @Output() submit = new EventEmitter<IConstant>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -37,7 +41,7 @@ export class ConstantEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.controls = this.getControls();
+    this.controls = this.getControls(this.constant);
     this.data = {
       ...this.constant,
       value: this.constant.typeCode === 2
@@ -48,6 +52,7 @@ export class ConstantEditComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Grab the typeCode by hand, 'cause it's not dirty
     const typeCode = this.form.getControl('typeCode').value;
     const data = { ...this.form.serializedUpdates, typeCode };
     this.submit.emit(data);
@@ -57,7 +62,9 @@ export class ConstantEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private getControls(): IDynamicFormItem[] {
+  private getControls(data: IConstant): IDynamicFormItem[] {
+    const type = getFormControlConfig(data);
+
     return [
       { controlName: 'name', type: 'text', disabled: true },
       {
@@ -66,7 +73,7 @@ export class ConstantEditComponent implements OnInit {
         disabled: true,
         dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE
       },
-      { controlName: 'value', type: 'dynamic', dependsOn: 'typeCode', required: true },
+      { controlName: 'value', ...type, required: true },
       { controlName: 'dsc', type: 'textarea', disabled: true },
     ] as IDynamicFormItem[];
   }

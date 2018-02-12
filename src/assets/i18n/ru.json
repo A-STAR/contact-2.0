@@ -215,7 +215,8 @@
   "modules": {
     "callCenter": {
       "main": {
-        "title": "Выбор кампании"
+        "title": "Выбор кампании",
+        "nextDebtor": "Перейти к следующему должнику"
       },
       "grid": {
         "name": "Название",
@@ -793,7 +794,10 @@
       "email": "Email",
       "address": "Рабочий адрес",
       "language": "Язык",
-      "comment": "Комментарий"
+      "comment": "Комментарий",
+      "agentId": "ID агента",
+      "agentName": "Имя агента",
+      "agentPassword": "Пароль агента"
     },
     "select": {
       "role": {

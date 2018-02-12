@@ -1,14 +1,10 @@
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IValueEntity } from '@app/core/converter/value-converter.interface';
 
 import { UserDictionariesService } from '../user/dictionaries/user-dictionaries.service';
 
-export interface IValue {
+export interface IValue extends IValueEntity {
   dictNameCode?: number;
-  typeCode: number;
-  valueN: number;
-  valueB: number;
-  valueS: string;
-  valueD: string;
 }
 
 export enum TYPE_CODES {

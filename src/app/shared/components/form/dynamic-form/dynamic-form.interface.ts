@@ -97,7 +97,6 @@ export interface IDynamicFormDateControl extends IDynamicFormBaseControl {
   type: 'datepicker';
   minDate?: Date;
   maxDate?: Date;
-  dependsOn?: string;
 }
 
 export interface IDynamicFormTimeControl extends IDynamicFormBaseControl {
@@ -156,14 +155,12 @@ export interface IDynamicFormNumberControl extends IDynamicFormBaseControl {
   min?: number;
   max?: number;
   placeholder?: string;
-  dependsOn?: string;
 }
 
 export interface IDynamicFormRadioControl extends IDynamicFormBaseControl {
   type: 'radio' | 'boolean';
   // options for radio group
   radioOptions?: Array<IRadioGroupOption>;
-  dependsOn?: string;
 }
 
 export interface IDynamicFormRichTextControl extends IDynamicFormBaseControl {
@@ -190,17 +187,14 @@ export interface IDynamicFormSelectControl extends IDynamicFormBaseControl {
   optionsActions?: Array<ISelectionAction>;
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
   placeholder?: string;
-  dependsOn?: string;
-  // @deprecated options for select wrappers
   dictCode?: number;
   parentCode?: number;
   lookupKey?: ILookupKey;
 }
 
 export interface IDynamicFormTextControl extends IDynamicFormBaseControl {
-  type: 'text' | 'password' | 'htmltextarea' | 'checkbox' | 'colorpicker' | 'dynamic';
+  type: 'text' | 'password' | 'htmltextarea' | 'checkbox' | 'colorpicker';
   placeholder?: string;
-  dependsOn?: string;
 }
 
 export interface IDynamicFormTextareaControl extends IDynamicFormBaseControl {
@@ -208,7 +202,6 @@ export interface IDynamicFormTextareaControl extends IDynamicFormBaseControl {
   // number of rows for textarea, defaults to 2
   rows?: number;
   placeholder?: string;
-  dependsOn?: string;
 }
 
 export interface IDynamicFormDebtAmountControl extends IDynamicFormBaseControl {
@@ -237,7 +230,6 @@ export interface IDynamicFormControlOld {
   // type: TControlTypes;
   children?: IDynamicFormControl[];
   controlName?: string;
-  dependsOn?: string;
   disabled?: boolean;
   display?: boolean;
   iconCls?: string;
@@ -313,7 +305,6 @@ export type TControlTypes =
   | 'debt-amount'
   | 'dialog'
   | 'dialogmultiselect'
-  | 'dynamic'
   | 'file'
   | 'gridselect'
   | 'htmltextarea'
