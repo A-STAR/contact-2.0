@@ -1,4 +1,3 @@
-import * as Puppeteer from 'puppeteer';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 jest.setTimeout(32000);
