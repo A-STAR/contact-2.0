@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
+import { LayoutService } from '@app/layout/layout.service';
 
 @Component({
   host: { class: 'full-height' },
@@ -6,4 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: [ './layout.component.scss' ],
   templateUrl: './layout.component.html',
 })
-export class LayoutComponent {}
+export class LayoutComponent {
+
+  constructor(private layoutService: LayoutService) {}
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.layoutService.triggerDimensionChange();
+  }
+}

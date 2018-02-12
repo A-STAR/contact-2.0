@@ -6,6 +6,7 @@ import { filter, map, startWith } from 'rxjs/operators';
 
 import { GuiObjectsService } from '@app/core/gui-objects/gui-objects.service';
 import { SettingsService } from '@app/core/settings/settings.service';
+import { LayoutService } from '@app/layout/layout.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,6 +24,7 @@ export class SidebarComponent implements OnInit {
     private menuService: GuiObjectsService,
     private router: Router,
     private settingsService: SettingsService,
+    private layoutService: LayoutService
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +61,7 @@ export class SidebarComponent implements OnInit {
   }
 
   onTransitionEnd(e: TransitionEvent): void {
+    this.layoutService.triggerDimensionChange();
     if (!(<HTMLElement>e.target).classList.contains('collapsed')) {
       this.showTitle = true;
     }
