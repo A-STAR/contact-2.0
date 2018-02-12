@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
@@ -15,6 +16,8 @@ import { ContactSelectComponent } from '../contact-select/contact-select.compone
   templateUrl: 'phone.component.html'
 })
 export class ContactRegistrationPhoneComponent {
+  @Input() formGroup: FormGroup;
+
   @ViewChild(ContactSelectComponent) contactForPhone: ContactSelectComponent;
 
   phoneTypeDictCode = UserDictionariesService.DICTIONARY_PHONE_TYPE;

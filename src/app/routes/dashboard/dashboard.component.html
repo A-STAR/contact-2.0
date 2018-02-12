@@ -3,6 +3,7 @@
   <div class="row mb-xl">
     <div class="col-lg-10 col-md-8 col-sm-12">
       <app-indicators
+        *ngIf="indicators$ | async"
         [data]="indicators$ | async"
       >
       </app-indicators>
@@ -32,6 +33,8 @@
   <div class="row mb-xl">
       <div class="col-lg-3 col-md-4 col-sm-12">
         <app-pie-chart
+          *ngIf="promiseCountStatus$ | async"
+          translationKey="dashboard.charts"
           [data]="promiseCountStatus$ | async"
           [options]="promiseCountStatusOptions"
         >
@@ -39,6 +42,8 @@
       </div>
       <div class="col-lg-6 col-md-8 col-sm-12">
         <app-bar-chart
+          *ngIf="promiseCount$ | async"
+          translationKey="dashboard.charts"
           [data]="promiseCount$ | async"
           [options]="promiseCountOptions"
         >
@@ -47,6 +52,7 @@
       <div class="col-lg-3 col-md-4 col-sm-12">
         <app-pie-chart
           *ngIf="contactsDay"
+          translationKey="dashboard.charts"
           [data]="contactsDay"
           [options]="contactsDayOptions"
         >
@@ -56,6 +62,8 @@
   <div class="row">
     <div class="col-lg-3 col-md-4 col-sm-12">
       <app-progress-chart
+        *ngIf="promiseCover$ | async"
+        translationKey="dashboard.charts"
         [data]="promiseCover$ | async"
         [options]="promiseCoverOptions"
       >
@@ -63,6 +71,8 @@
     </div>
     <div class="col-lg-6 col-md-8 col-sm-12">
       <app-bar-chart
+        *ngIf="promiseAmount$ | async"
+        translationKey="dashboard.charts"
         [data]="promiseAmount$ | async"
         [options]="promiseAmountOptions"
       >
@@ -71,6 +81,7 @@
     <div class="col-lg-3 col-md-4 col-sm-12">
       <app-progress-chart
         *ngIf="contactsDayPlan"
+        translationKey="dashboard.charts"
         [data]="contactsDayPlan"
         [options]="contactsDayPlanOptions"
       >

@@ -122,7 +122,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
       if (canView) {
         this.fetch();
       } else {
-        this.notificationsService.error('errors.default.read.403').entity('entities.identityDocs.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.identityDocs.gen.plural').dispatch();
         this.clear();
       }
     });

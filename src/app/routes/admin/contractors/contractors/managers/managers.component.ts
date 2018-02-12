@@ -104,7 +104,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
         this.fetchAll();
       } else {
         this.clearManagers();
-        this.notificationsService.error('errors.default.read.403').entity('entities.managers.gen.plural').dispatch();
+        this.notificationsService.permissionError().entity('entities.managers.gen.plural').dispatch();
       }
     });
 

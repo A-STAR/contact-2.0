@@ -105,7 +105,7 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
           this.fetch();
         } else {
           this.clear();
-          this.notificationsService.error('errors.default.read.403').entity('entities.pledgeContract.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.pledgeContract.gen.plural').dispatch();
         }
       });
 

@@ -70,7 +70,7 @@ export class PledgorGridComponent extends DialogFunctions implements OnInit, OnD
         if (hasPermission) {
           this.fetch(this.searchParams);
         } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.pledgors.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.pledgors.gen.plural').dispatch();
           this.clear();
         }
       });

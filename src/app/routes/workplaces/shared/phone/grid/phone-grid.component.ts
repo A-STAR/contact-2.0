@@ -109,31 +109,34 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },
-  ];
-
-  callToolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_CALL,
+      align: 'right',
       enabled: this.canMakeCall$,
       action: () => this.onMakeCall()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DROP,
+      align: 'right',
       enabled: this.canDropCall$,
       action: () => this.onDropCall()
     },
+
     {
       type: ToolbarItemTypeEnum.BUTTON_PAUSE,
+      align: 'right',
       enabled: this.canHoldCall$,
       action: () => this.onHoldCall()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_RESUME,
+      align: 'right',
       enabled: this.canRetrieveCall$,
       action: () => this.onRetrieveCall()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
+      align: 'right',
       enabled: this.canTransferCall$,
       action: () => this.setDialog('operator')
     },
@@ -196,7 +199,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription = combineLatest(this.canView$, this._personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
-          this.notificationsService.error('errors.default.read.403').entity('entities.phones.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.phones.gen.plural').dispatch();
           this.clear();
         } else if (personId) {
           this.fetch();
