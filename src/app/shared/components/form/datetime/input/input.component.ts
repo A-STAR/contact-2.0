@@ -112,7 +112,7 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
   onChange(event: Event): void {
     const target = event.target as HTMLInputElement;
 
-    const date = moment(target.value, this.formatString);
+    let date = moment(target.value, this.formatString);
     if (this.minDateTime && moment(date.toDate()).isBefore(this.minDateTime)) {
       date = moment(this.minDateTime, this.formatString);
     }
