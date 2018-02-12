@@ -1,3 +1,5 @@
+import { ICellRendererAngularComp } from 'ag-grid-angular';
+
 export type IDataToValue<T, R> = (value: any, data: T) => R;
 
 export interface IAGridWrapperTreeColumn<T> {
@@ -11,4 +13,7 @@ export interface IAGridWrapperTreeColumn<T> {
   isDataPath?: boolean;
   valueGetter?: IDataToValue<T, any>;
   valueFormatter?: IDataToValue<T, string>;
+  cellRendererFramework?: {
+    new(): ICellRendererAngularComp;
+  };
 }
