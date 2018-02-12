@@ -21,11 +21,11 @@ export class TitlebarComponent implements OnInit {
   borderCls: object;
   items: ITitlebarItem[] = [];
   props: { [key: string]: Partial<ITitlebarButton> } = {
-    [TitlebarItemTypeEnum.BUTTON_ADD]: { iconCls: 'fa fa-plus', title: 'Добавить' },
-    [TitlebarItemTypeEnum.BUTTON_COPY]: { iconCls: 'fa fa-copy', title: 'Копировать' },
+    [TitlebarItemTypeEnum.BUTTON_ADD]: { iconCls: 'co-add', title: 'Добавить' },
+    [TitlebarItemTypeEnum.BUTTON_COPY]: { iconCls: 'co-copy', title: 'Копировать' },
     [TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS]: { iconCls: 'co-change-status', title: 'Изменить статус' },
     [TitlebarItemTypeEnum.BUTTON_DELETE]: { iconCls: 'co-delete', title: 'Удалить' },
-    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'co-checkbox-mark', title: 'Редактировать' },
+    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
     [TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL]: { iconCls: 'co-download-excel', title: 'Выгрузить в Excel' },
     [TitlebarItemTypeEnum.BUTTON_MOVE]: { iconCls: 'co-move', title: 'Переместить' },
     [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'co-refresh', title: 'Обновить' },

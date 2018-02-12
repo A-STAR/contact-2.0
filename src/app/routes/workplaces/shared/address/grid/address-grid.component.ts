@@ -189,7 +189,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription = combineLatest(this.canView$, this._personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
-          this.notificationsService.error('errors.default.read.403').entity('entities.addresses.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.addresses.gen.plural').dispatch();
           this.clear();
         } else if (personId) {
           this.fetch();
