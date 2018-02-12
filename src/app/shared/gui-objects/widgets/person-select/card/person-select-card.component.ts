@@ -96,6 +96,10 @@ export class PersonSelectCardComponent implements OnInit {
   }
 
   get isValid(): boolean {
+    return this.form && this.form.isValid;
+  }
+
+  get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 

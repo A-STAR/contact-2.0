@@ -20,8 +20,7 @@ export class DebtorContactsComponent {
 
   get contactId$(): Observable<number> {
     return this.routeParams$
-      .map(params => params.contactId)
-      .filter(Number.isInteger);
+      .map(params => Number(params.contactId));
   }
 
   get personId$(): Observable<number> {

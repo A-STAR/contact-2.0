@@ -3191,6 +3191,7 @@
           "lastName": "Фамилия",
           "firstName": "Имя",
           "middleName": "Отчество",
+          "personFullName": "ФИО",
           "typeCode": "Тип должника",
           "birthDate": "Дата рождения",
           "birthPlace": "Место рождения",

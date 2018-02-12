@@ -11,20 +11,23 @@
   (close)="closeDialog()"
 ></app-person-select-dialog>
 
-<app-toolbar-2 *ngIf="toolbarItems" [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2 class="bh bt" *ngIf="toolbarItems" [items]="toolbarItems"></app-toolbar-2>
 
-<app-grid2
-  *ngIf="columns$ | async"
-  [columns]="columns$ | async"
-  [persistenceKey]="'person-search-grid'"
-  [rowIdKey]="rowIdKey"
-  [rows]="rows"
-  [rowCount]="rowCount"
-  [styles]="{ height: '320px' }"
-  [translateColumnLabels]="true"
-  (onFilter)="onRequest()"
-  (onPage)="onRequest()"
-  (onPageSize)="onRequest()"
-  (onSort)="onRequest()"
-  (onSelect)="onSelect()"
-></app-grid2>
+<div class="b pb">
+  <app-grid2
+    *ngIf="columns$ | async"
+    [columns]="columns$ | async"
+    [persistenceKey]="'person-search-grid'"
+    [rowIdKey]="rowIdKey"
+    [rows]="rows"
+    [rowCount]="rowCount"
+    [styles]="{ height: '320px' }"
+    [translateColumnLabels]="true"
+    (onFilter)="onRequest()"
+    (onPage)="onRequest()"
+    (onPageSize)="onRequest()"
+    (onSort)="onRequest()"
+    (onSelect)="onSelect()"
+    (onDblClick)="onEdit()"
+  ></app-grid2>
+</div>

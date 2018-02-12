@@ -79,8 +79,9 @@ export class ContactCardComponent implements OnInit {
   }
 
   get canSubmit(): boolean {
-    return !!this.contactId || (this.form && this.form.canSubmit) ||
-      (this.personSelectCard && this.personSelectCard.isValid);
+    const forms = [ this.form, this.personSelectGrid, this.personSelectCard ].filter(Boolean);
+    return !!this.contactId && forms.find(form => form.canSubmit)
+      && forms.every(form => form.isValid);
   }
 
   get debtId(): number {
@@ -152,8 +153,9 @@ export class ContactCardComponent implements OnInit {
   }
 
   private createContact(contactLink: IContactLink): void {
-    const action = this.contactId
-      ? this.contactService.update(this.personId, this.contactId, contactLink)
+    const action = this.contact
+      ? this.personSelectCard.submitPerson()
+        .flatMap(() => this.contactService.update(this.personId, this.contactId, contactLink))
       : this.contactService.create(this.personId, contactLink);
 
     action.subscribe(() => {

@@ -3191,6 +3191,7 @@
           "lastName": "Last Name",
           "firstName": "First Name",
           "middleName": "Middle Name",
+          "personFullName": "Full Name",
           "typeCode": "Debtor Type",
           "birthDate": "Date of Birth",
           "birthPlace": "Place of birth",

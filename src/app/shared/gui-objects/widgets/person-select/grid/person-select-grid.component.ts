@@ -36,9 +36,7 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
 
   columns$ = this.gridService.getColumns([
     { dataType: 1, name: 'id' },
-    { dataType: 3, name: 'lastName' },
-    { dataType: 3, name: 'firstName' },
-    { dataType: 3, name: 'middleName' },
+    { dataType: 3, name: 'personFullName' },
     { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, name: 'typeCode' },
     { dataType: 2, name: 'birthDate' },
     { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_GENDER, name: 'genderCode' },
@@ -71,13 +69,17 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
           },
           {
             type: ToolbarItemTypeEnum.BUTTON_EDIT,
-            action: () => this.setDialog('edit')
+            action: () => this.setDialog('edit'),
           }
         ];
       });
   }
 
   get isValid(): boolean {
+    return !isEmpty(this.grid && this.grid.selected);
+  }
+
+  get canSubmit(): boolean {
     return !isEmpty(this.grid && this.grid.selected);
   }
 
@@ -91,6 +93,10 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
 
   onSelect(): void {
     this.select.emit(this.selectedPerson);
+  }
+
+  onEdit(): void {
+    this.setDialog('edit');
   }
 
   onRequest(): void {
