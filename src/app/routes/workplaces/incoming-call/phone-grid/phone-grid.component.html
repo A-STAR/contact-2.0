@@ -1,48 +1,48 @@
-<div class="bb pb">
-  <b>Должник:</b> {{ fullName$ | async }}
+<div>
+  <b>Должник</b> {{ fullName$ | async }}
 </div>
 
-<div class="mb">
-  <app-phone-grid
-    [contactType]="contactType"
-    [debtId]="debtId"
-    [personId]="personId"
-    [personRole]="personRole"
-    [styles]="{ height: '420px' }"
-    (add)="onPhoneAdd()"
-    (dblClick)="onPhoneEdit($event)"
-    (edit)="onPhoneEdit($event)"
-    (register)="onPhoneRegister($event)"
-    (select)="onSelect($event)"
-  ></app-phone-grid>
+<div class="row">
+  <div class="col-sm-12">
+    <app-phone-grid
+      [contactType]="contactType"
+      [debtId]="debtId"
+      [personId]="personId"
+      [personRole]="personRole"
+      [styles]="{ height: '420px' }"
+      (add)="onPhoneAdd()"
+      (dblClick)="onPhoneEdit($event)"
+      (edit)="onPhoneEdit($event)"
+      (register)="onPhoneRegister($event)"
+      (select)="onSelect($event)"
+    ></app-phone-grid>
+  </div>
 </div>
 
-<div class="mb">
-  <app-button
-    color="secondary"
-    type="registerContact"
-    label="Регистрация контакта"
-    [disabled]="contactButtonDisabled"
-    (click)="onRegisterContact()"
-  ></app-button>
-</div>
+<div class="row mt">
+  <div class="col-sm-12">
+    <app-button
+      color="secondary"
+      type="registerContact"
+      label="Регистрация контакта"
+      [disabled]="contactButtonDisabled"
+      (click)="onRegisterContact()"
+    ></app-button>
 
-<div class="mb">
-  <app-button
-    color="secondary"
-    type="registerContact"
-    label="Регистрация контакта по неопределенному номеру"
-    [disabled]="unidentifiedContactButtonDisabled$ | async"
-    (click)="onRegisterUnidentifiedContact()"
-  ></app-button>
-</div>
+    <app-button
+      color="secondary"
+      type="registerContact"
+      label="Регистрация контакта по неопределенному номеру"
+      [disabled]="unidentifiedContactButtonDisabled$ | async"
+      (click)="onRegisterUnidentifiedContact()"
+    ></app-button>
 
-<div class="mb">
-  <app-button
-    color="secondary"
-    type="registerContact"
-    label="Регистрация визита в офис"
-    [disabled]="officeVisitButtonDisabled$ | async"
-    (click)="onRegisterOfficeVisit()"
-  ></app-button>
+    <app-button
+      color="secondary"
+      type="registerContact"
+      label="Регистрация визита в офис"
+      [disabled]="officeVisitButtonDisabled$ | async"
+      (click)="onRegisterOfficeVisit()"
+    ></app-button>
+  </div>
 </div>

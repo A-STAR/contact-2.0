@@ -110,7 +110,7 @@ export class DebtComponentGridComponent implements OnDestroy {
     )
     .subscribe(([ canView, personId ]) => {
       if (!canView) {
-        this.notificationsService.error('errors.default.read.403').entity('entities.debtComponents.gen.plural').dispatch();
+        this.notificationsService.permissionError().entity('entities.debtComponents.gen.plural').dispatch();
         this.clear();
       } else if (personId) {
         this.fetch();

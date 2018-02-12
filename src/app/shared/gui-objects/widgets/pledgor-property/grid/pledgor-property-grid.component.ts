@@ -72,7 +72,7 @@ export class PledgorPropertyGridComponent extends DialogFunctions implements OnI
       if (hasPermission) {
         this.fetch();
       } else {
-        this.notificationsService.error('errors.default.read.403').entity('entities.property.gen.plural').dispatch();
+        this.notificationsService.permissionError().entity('entities.property.gen.plural').dispatch();
         this.clear();
       }
     });

@@ -13,6 +13,7 @@ export class ProgressChartComponent implements OnInit {
 
   @Input() data: ChartData;
   @Input() options: ChartOptions;
+  @Input() translationKey: string;
 
   chart: ChartComponent;
 

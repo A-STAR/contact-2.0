@@ -145,7 +145,7 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
         if (hasPermission) {
           this.fetch();
         } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.emails.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.emails.gen.plural').dispatch();
           this.clear();
         }
       });
