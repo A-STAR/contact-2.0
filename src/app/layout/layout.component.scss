@@ -6,8 +6,7 @@
   background-color: $layout-content-background-color;
   overflow: auto;
   .content {
-    display: block;
-    overflow: auto;
+    overflow-y: auto;
     height: 100%;
     padding: $layout-content-padding;
     background-color: white;
