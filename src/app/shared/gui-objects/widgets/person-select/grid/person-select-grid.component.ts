@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component,
   ViewChild, Output, EventEmitter, OnInit
 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
@@ -48,6 +49,8 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
   rowCount = 0;
   rowIdKey = 'id';
 
+  private selectedPerson$ = new BehaviorSubject<IPerson>(null);
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private personSelectService: PersonSelectService,
@@ -70,6 +73,7 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
           {
             type: ToolbarItemTypeEnum.BUTTON_EDIT,
             action: () => this.setDialog('edit'),
+            enabled: this.selectedPerson$.map(Boolean)
           }
         ];
       });
@@ -84,14 +88,15 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
   }
 
   get selectedPerson(): IPerson {
-    return this.grid && this.grid.selected && this.grid.selected[0] as any;
+    return this.selectedPerson$.value;
   }
 
   get selectedPersonId(): number {
     return this.selectedPerson && this.selectedPerson.id;
   }
 
-  onSelect(): void {
+  onSelect(persons: IPerson[]): void {
+    this.selectedPerson$.next(this.grid.selected && this.grid.selected[0] as any);
     this.select.emit(this.selectedPerson);
   }
 
