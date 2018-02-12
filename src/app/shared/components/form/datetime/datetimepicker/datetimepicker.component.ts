@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit,
+  ViewChild
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment from 'moment';
 
@@ -18,7 +21,7 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
   styleUrls: [ './datetimepicker.component.scss' ],
   templateUrl: './datetimepicker.component.html'
 })
-export class DateTimePickerComponent implements ControlValueAccessor {
+export class DateTimePickerComponent implements OnInit, ControlValueAccessor {
   @Input() minDateTime: Date;
   @Input() maxDateTime: Date;
 
@@ -42,6 +45,13 @@ export class DateTimePickerComponent implements ControlValueAccessor {
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
   ) {}
+
+  ngOnInit(): void {
+    if (this.minDateTime) {
+      // TODO(d.topheenko): this is horrible, but nothing else seems to work
+      setTimeout(() => this.update(this.minDateTime), 0);
+    }
+  }
 
   get displaySeconds(): boolean {
     return this._displaySeconds;

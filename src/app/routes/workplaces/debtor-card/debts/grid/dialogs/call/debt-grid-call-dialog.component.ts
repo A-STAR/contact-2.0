@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import * as moment from 'moment';
 
-import { IDebt } from '../../../../../../../core/debt/debt.interface';
-import { IDynamicFormControl } from '../../../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDebt } from '@app/core/debt/debt.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtService } from '../../../../../../../core/debt/debt.service';
+import { DebtService } from '@app/core/debt/debt.service';
 
-import { DynamicFormComponent } from '../../../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
   selector: 'app-debt-grid-call-dialog',
@@ -19,7 +20,12 @@ export class DebtGridCallDialogComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormControl> = [
-    { controlName: 'nextCallDateTime', type: 'datetimepicker' },
+    {
+      controlName: 'nextCallDateTime',
+      type: 'datetimepicker',
+      minDateTime: moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate(),
+      displaySeconds: false,
+    },
     { controlName: 'forAllDebts', type: 'checkbox' },
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.nextCall.${control.controlName}` }) as IDynamicFormControl);
 

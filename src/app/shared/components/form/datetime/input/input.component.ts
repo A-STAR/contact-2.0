@@ -26,10 +26,12 @@ import { DateTimeService } from '../datetime.service';
     }
   ],
   selector: 'app-datetime-input',
-  templateUrl: './input.component.html'
+  templateUrl: './input.component.html',
 })
 export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() format: string;
+  @Input() minDateTime: Date;
+  @Input() maxDateTime: Date;
 
   private _disabled = false;
   private _value: Date;
@@ -108,10 +110,16 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
   }
 
   onChange(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const date = moment(value, this.formatString);
+    const target = event.target as HTMLInputElement;
+
+    const date = moment(target.value, this.formatString);
+    if (this.minDateTime && moment(date.toDate()).isBefore(this.minDateTime)) {
+      date = moment(this.minDateTime, this.formatString);
+    }
+
     if (date.isValid()) {
       this.update(date.toDate());
+      target.value = date.format(this.formatString);
     }
   }
 

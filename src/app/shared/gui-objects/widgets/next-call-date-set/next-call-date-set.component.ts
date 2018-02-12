@@ -6,6 +6,7 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
+import * as moment from 'moment';
 
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -22,7 +23,7 @@ const labelKey = makeKey('widgets.nextCallDateSet.dialog');
   styleUrls: ['./next-call-date-set.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NextCallDateSetDialogComponent  {
+export class NextCallDateSetDialogComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Input() debts: number[];
   @Output() close = new EventEmitter<ICloseAction>();
@@ -36,6 +37,7 @@ export class NextCallDateSetDialogComponent  {
       label: labelKey('nextCallDate'),
       controlName: 'nextCallDate',
       type: 'datetimepicker',
+      minDateTime: moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate(),
       displaySeconds: false,
     }
   ];
