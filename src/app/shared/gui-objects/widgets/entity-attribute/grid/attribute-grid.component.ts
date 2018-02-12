@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute } from '@app/shared/gui-objects/widgets/entity-attribute/attribute.interface';
 import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
-import { IGridTreeRow } from '@app/shared/components/gridtree/gridtree.interface';
+import { IGridTreeRow } from './gridtree.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '@app/shared/gui-objects/widgets/entity-attribute/attribute.service';
@@ -23,11 +23,9 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
 import { DialogFunctions } from '@app/core/dialog';
-import {makeKey, TYPE_CODES} from '@app/core/utils';
+import { makeKey, combineLatestAnd, TYPE_CODES } from '@app/core/utils';
 import { of } from 'rxjs/observable/of';
-
 
 const label = makeKey('widgets.attribute.grid');
 

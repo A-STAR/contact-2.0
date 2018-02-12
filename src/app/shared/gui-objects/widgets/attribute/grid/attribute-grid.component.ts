@@ -7,7 +7,7 @@ import { first } from 'rxjs/operators';
 import { IAttribute } from '@app/shared/gui-objects/widgets/attribute/attribute.interface';
 import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
-import { IGridTreeRow } from '@app/shared/components/gridtree/gridtree.interface';
+import { IGridTreeRow } from './gridtree.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
