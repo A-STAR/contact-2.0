@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-route-ui-icons',
   templateUrl: './icons.component.html',
-  styleUrls: [ 'style.css', 'icons.css' ],
+  styleUrls: [ './icons.scss' ],
 })
 export class IconsComponent {
 
