@@ -146,10 +146,12 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private fetch(): void {
-    this.fieldsService.fetchAll(this.reportId).subscribe(fields => {
-      this.fields = fields;
-      this.cdRef.markForCheck();
-    });
+    this.fieldsService.fetchAll(this.reportId)
+      .map(fields => fields.sort((f1, f2) => f1.sortOrder - f2.sortOrder))
+      .subscribe(fields => {
+        this.fields = fields;
+        this.cdRef.markForCheck();
+      });
   }
 
   private clear(): void {

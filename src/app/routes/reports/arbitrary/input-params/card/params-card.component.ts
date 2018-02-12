@@ -29,6 +29,7 @@ export class InputParamsCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.paramsService.fetchAll(this.reportId)
+      .map(inputParams => inputParams.sort((p1, p2) => p1.sortOrder - p2.sortOrder))
       .flatMap(inputParams => this.paramsService.createInputParamControls(inputParams))
       .pipe(first())
       .subscribe(controls => {

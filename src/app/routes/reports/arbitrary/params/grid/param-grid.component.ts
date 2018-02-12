@@ -158,10 +158,12 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private fetch(): void {
-    this.paramsService.fetchAll(this.reportId).subscribe(params => {
-      this.params$.next(params);
-      this.cdRef.markForCheck();
-    });
+    this.paramsService.fetchAll(this.reportId)
+      .map(params => params.sort((p1, p2) => p1.sortOrder - p2.sortOrder))
+      .subscribe(params => {
+        this.params$.next(params);
+        this.cdRef.markForCheck();
+      });
   }
 
   private clear(): void {
