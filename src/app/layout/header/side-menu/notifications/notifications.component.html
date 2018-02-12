@@ -1,7 +1,7 @@
 <div class="panel notifications">
-  <div  *ngIf="hasFilters()" class="panel-heading notifications_heading">
+  <div *ngIf="hasFilters()" class="panel-heading notifications_heading">
     <ng-container *ngFor="let filterType of filterTypes">
-      <label class="checkbox-inline">
+      <label>
         <app-checkbox [ngModel]="filters[filterType]" (ngModelChange)="onFilterChange(filterType, $event)"></app-checkbox>
         {{ getTranslationKey(filterType) | translate }}
       </label>
@@ -18,8 +18,7 @@
             {{ notification.message | translate }}
           </p>
           <p class="m0 text-right text-muted">
-            <!-- TODO: translate -->
-            <small>{{ displayDate(notification.created) }}</small>
+            <small>{{ notification.created | momentFormat:'LLL' }}</small>
           </p>
         </li>
       </ng-container>

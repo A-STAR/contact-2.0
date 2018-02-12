@@ -1,9 +1,3 @@
-::ng-deep app-sidebar + .wrapper {
-  .content {
-    padding: 0 !important;
-  }
-}
-
-split-area {
+:host ::ng-deep split-gutter {
   padding: 10px;
 }

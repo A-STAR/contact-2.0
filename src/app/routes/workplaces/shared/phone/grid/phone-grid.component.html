@@ -39,17 +39,24 @@
   (cancel)="onDialogClose()">
 </app-dialog-action>
 
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+<app-phone-operator-dialog
+  *ngIf="isDialog('operator')"
+  (select)="onPhoneOperatorSelect($event)"
+  (close)="onDialogClose()"
+></app-phone-operator-dialog>
+
+<app-toolbar-2 class="bordered" [items]="gridToolbarItems"></app-toolbar-2>
 
 <app-grid
   *ngIf="canDisplayGrid"
   columnTranslationKey="debtor.information.phone"
   [contextMenuOptions]="contextMenuOptions"
-  selectionType="single"
-  [styles]="styles"
   [columns]="columns"
+  [footerHeight]="false"
   [rowClass]="getRowClass()"
   [rows]="phones"
+  selectionType="single"
+  [styles]="styles"
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)">
 </app-grid>

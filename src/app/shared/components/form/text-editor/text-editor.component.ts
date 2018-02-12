@@ -102,6 +102,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
         onInit: () => this.onInit(),
         onFocus: () => this.propagateTouch(),
         onChange: () => this.onChange(),
+        onBlur: () => this.summernote('saveRange'),
       }
     });
     this.summernote(this.isDisabled ? 'disable' : 'enable');

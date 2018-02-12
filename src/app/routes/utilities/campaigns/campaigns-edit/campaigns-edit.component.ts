@@ -74,8 +74,8 @@ export class CampaignsEditComponent implements OnInit {
   private getControls(groupNames: Array<IOption>): IDynamicFormItem[] {
     const controls = [
       {
-        controlName: 'name',
-        type: this.campaign ? 'multilanguage' : 'text',
+        controlName: 'names',
+        type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_CAMPAIGN_NAME,
           entityId: this.campaign && this.campaign.id

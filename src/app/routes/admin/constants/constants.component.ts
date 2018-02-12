@@ -18,7 +18,7 @@ import { ValueConverterService } from '@app/core/converter/value-converter.servi
 
 import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
+import { combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '@app/core/dialog';
 
 @Component({

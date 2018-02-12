@@ -4,7 +4,7 @@
   actionTranslationKey="contractors.remove.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selection[0]"
+  [messageParams]="grid.selection[0]"
   (action)="onRemove($event)"
   (cancel)="onCloseDialog()">
 </app-dialog-action>

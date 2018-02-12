@@ -134,7 +134,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription = combineLatest(this.canView$, this.debtId$)
       .subscribe(([ hasPermission, debtId ]) => {
         if (!hasPermission) {
-          this.notificationsService.error('errors.default.read.403').entity('entities.payments.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.payments.gen.plural').dispatch();
           this.clear();
         } else if (debtId) {
           this.fetch();

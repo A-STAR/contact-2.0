@@ -25,9 +25,9 @@ export class LoginComponent {
     const remember = !!login;
 
     this.form = this.fb.group({
-      'login': [ login, Validators.compose([ Validators.required, Validators.minLength(2) ]) ],
-      'password': [ null, Validators.required ],
-      'remember_login': [remember],
+      login: [ login, Validators.compose([ Validators.required, Validators.minLength(2) ]) ],
+      password: [ null, Validators.required ],
+      remember_login: [ remember ],
     });
   }
 

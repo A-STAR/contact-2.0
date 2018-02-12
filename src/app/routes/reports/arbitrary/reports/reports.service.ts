@@ -35,6 +35,10 @@ export class ReportsService extends AbstractActionService {
     return this.userPermissionsService.has('REPORT_ADD');
   }
 
+  get canCreate$(): Observable<boolean> {
+    return this.userPermissionsService.has('REPORT_FORM');
+  }
+
   get canEdit$(): Observable<boolean> {
     return this.userPermissionsService.has('REPORT_EDIT');
   }

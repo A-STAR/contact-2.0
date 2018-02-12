@@ -54,6 +54,20 @@ export class UserTemplatesService {
   }
 
   /**
+   * There is no point in caching templates for any given debt id because templates and debts
+   * have many-to-many relation and we'd have to invalidate cache on every update of debt or any entities related to it.
+   */
+  getTemplatesForDebt(
+    typeCode: number,
+    recipientTypeCode: number,
+    isSingleSending: boolean,
+    debtId: number,
+  ): Observable<IUserTemplate[]> {
+    const url = '/lookup/templates/typeCode/{typeCode}/recipientsTypeCode/{recipientTypeCode}';
+    return this.dataService.readAll(url, { typeCode, recipientTypeCode }, { params: { isSingleSending, debtId } });
+  }
+
+  /**
    * Fetches evaluated template for given debt and person
    *
    * See http://confluence.luxbase.int:8090/display/WEB20/Debt+Template+Text

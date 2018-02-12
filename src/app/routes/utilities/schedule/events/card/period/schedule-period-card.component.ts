@@ -202,11 +202,11 @@ export class SchedulePeriodCardComponent implements OnInit {
       [
         ...Object.keys(this.scheduleEventService.monthDays)
           .map((day, i) => ({
-            label: i !== 31 ? `${++i}` : 'default.date.lastMonthDay',
+            label: i === 31 ? 'default.date.lastMonthDay' : `${i + 1}`,
             controlName: day,
             type: 'checkbox',
             disabled: !canEdit,
-            width: 1
+            width: i === 31 ? 3 : 1
           }))
       ],
       [

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -36,6 +36,7 @@ export class PhoneCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private phoneService: PhoneService,
     private route: ActivatedRoute,
+    private router: Router,
     private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
@@ -74,6 +75,15 @@ export class PhoneCardComponent implements OnInit {
   }
 
   onBack(): void {
+    // TODO(d.maltsev):
+    // This is a temporary solution
+    // Phone card should probably have an `@Output() back = new EventEmitter<void>()`
+    // Then we could handle click on back button separately in each container component
+    if (this.router.url.includes('incoming-call')) {
+      this.router.navigate([ '/workplaces/incoming-call' ]);
+      return;
+    }
+
     const contactSegments = this.route.snapshot.paramMap.get('contactId')
       ? [ 'contact', this.route.snapshot.paramMap.get('contactId') ]
       : [];

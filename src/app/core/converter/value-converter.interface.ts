@@ -2,10 +2,10 @@ export type ValueType = string | number | boolean;
 
 export interface IValueEntity {
   typeCode?: number;
-  valueB?: number | boolean;
-  valueS?: string;
-  valueN?: number;
+  valueB?: number;
   valueD?: string;
+  valueN?: number;
+  valueS?: string;
   value?: ValueType;
 }
 
@@ -35,6 +35,8 @@ export interface IOptionSet {
 export interface IDateFormats {
   date: string;
   dateTime: string;
+  dateTimeWithoutSeconds: string;
   dateISO: string;
   time?: string;
+  timeWithoutSeconds?: string;
 }

@@ -15,8 +15,14 @@
     },
     "account": {
       "title": "Account",
-      "logout": "Logout",
-      "reset": "Reset Settings"
+      "dialogs": {
+        "phoneExtension": {
+          "intPhone": "Extension"
+        }
+      },
+      "editPhoneExtension": "Edit Phone Extension",
+      "reset": "Reset Settings",
+      "logout": "Logout"
     }
   },
   "offsidebar": {
@@ -94,7 +100,6 @@
         "SEARCH_GROUPS": "Search groups",
         "MAIL": "Mail",
         "REPORTS": "Reports",
-        "ARBITRARY_REPORTS": "Ad-hoc reports",
         "HELP": "Help",
         "INCOMING_CALL": "Incoming call",
         "CURRENCY_RATE_EDIT": "Currency rate"
@@ -109,6 +114,66 @@
     "TITLE": "Dashboard",
     "messages": {
       "chartLoadError": "Could not load chart data"
+    },
+    "errors": {
+      "params": "Error has been occured when fetching dashboard parameters",
+      "promiseAmount": "Error has been occured when fetching promise amount for the last 30 days",
+      "promiseCount": "Error has been occured when fetching promises count for the last 30 days",
+      "promiseCountStatus": "Error has been occured when fetching promise statuses for the last 30 days",
+      "promiseCover": "Error has been occured when fetching promise coverage for the last 30 days",
+      "contactDay": "Error has been occured when fetching successfull contacts for the last day"
+    },
+    "charts": {
+      "contactsDayPlan": {
+        "label": "Debtor contacts for the last day",
+        "legend": {
+          "fullfilled": "Fullfilled",
+          "remaining": "Remaining"
+        }
+      },
+      "contactsDay": {
+        "label": "Successful contacts for the last day",
+        "legend": {
+          "debtor": "Debtor",
+          "guarantor": "Guarantor",
+          "pledgor": "Pledgor",
+          "thirdParty": "Third party"
+        }
+      },
+      "indicators": {
+        "debtActiveCnt": "Active debts",
+        "debtNeedCallCnt": "Debts, needed to call back",
+        "monthPaymentCnt": "Payment count per month",
+        "monthPaymentAmount": "Payment amount per month",
+        "monthPaymentCommission": "Commission"
+      },
+      "promiseAmount": {
+        "label": "Promise amount for the last 30 days",
+        "legend": {
+          "promiseAmount": "Promise amount"
+        }
+      },
+      "promiseCount": {
+        "label": "Promise count for the last 30 days",
+        "legend": {
+          "promiseCount": "Promise count"
+        }
+      },
+      "promiseCountStatus": {
+        "label": "Promises for the last 30 days",
+        "legend": {
+          "fullfilled": "Fullfilled",
+          "overdue": "Overdue",
+          "waiting": "Waiting"
+        }
+      },
+      "promiseCover": {
+        "label": "Promise coverage for the last 30 days",
+        "legend": {
+          "covered": "Covered",
+          "remaining": "Remaining"
+        }
+      }
     }
   },
   "validation": {
@@ -150,7 +215,8 @@
   "modules": {
     "callCenter": {
       "main": {
-        "title": "Сampaign selection"
+        "title": "Сampaign selection",
+        "nextDebtor": "Next debtor"
       },
       "grid": {
         "name": "Name",
@@ -564,6 +630,7 @@
     },
     "reports": {
       "arbitrary": {
+        "title": "Reports",
         "tabs": {
           "fields": "Fields",
           "params": "Paramerers"
@@ -578,7 +645,7 @@
           "comment": "Comment"
         },
         "card": {
-          "name": "Name",
+          "names": "Name",
           "sql": "SQL",
           "comment": "Comment",
           "exportUndescribed": "Export undescribed"
@@ -596,7 +663,7 @@
             "textWidth": "Text width"
           },
           "card": {
-            "name": "Name",
+            "names": "Name",
             "systemName": "System name",
             "sortOrder": "Sort order",
             "textWidth": "Text width"
@@ -617,13 +684,18 @@
             "multiSelect": "Multi select"
           },
           "card": {
-            "name": "Name",
+            "names": "Name",
             "systemName": "System name",
             "sortOrder": "Sort order",
             "paramTypeCode": "Param type",
             "isMandatory": "Is mandatory",
             "multiSelect": "Multi select",
             "dictNameCode": "Dictionary"
+          }
+        },
+        "input": {
+          "dialog": {
+            "title": "Enter parameters"
           }
         }
       }
@@ -722,7 +794,10 @@
       "email": "Email",
       "address": "Office address",
       "language": "Language",
-      "comment": "Comments"
+      "comment": "Comments",
+      "agentId": "Agent id",
+      "agentName": "Agent name",
+      "agentPassword": "Agent password"
     },
     "select": {
       "role": {
@@ -774,7 +849,7 @@
     "edit": {
       "title": "Dictionary: {{ code }}",
       "code": "Code",
-      "name": "Name",
+      "names": "Name",
       "typeCode": "Type",
       "parentCode": "Parent dictionary",
       "select": {
@@ -817,7 +892,7 @@
       "title": "Term: {{ code }}",
       "code": "Term code",
       "language": "Language",
-      "name": "Term value",
+      "names": "Term value",
       "typeCode": "Term type",
       "parentCode": "Parent dictionary term",
       "isClosed": "Unused term",
@@ -1321,7 +1396,7 @@
       },
       "edit": {
         "title": "Edit campaign",
-        "name": "Name",
+        "names": "Name",
         "typeCode": "Type code",
         "groupId": "Group",
         "comment": "Comment",
@@ -1539,7 +1614,7 @@
       },
       "grid": {
         "code": "Code",
-        "name": "Name",
+        "names": "Name",
         "value": "Value",
         "userFullName": "Operator",
         "changeDateTime": "Change date/time",
@@ -1580,8 +1655,8 @@
           "attributes": {
             "code": "Code",
             "name": "Name",
-            "display": "Display",
-            "mandatory": "Required"
+            "isDisplayed": "Display",
+            "isMandatory": "Required"
           }
         },
         "edit": {
@@ -1594,7 +1669,7 @@
       },
       "edit": {
         "code": "Code",
-        "name": "Name",
+        "names": "Name",
         "boxColor": "Color",
         "commentMode": "Comment Input Mode",
         "autoCommentIds": "Autocomment input",
@@ -1876,6 +1951,20 @@
         "delete": {
           "title": "Delete phone number",
           "confirmMessage": "Are you sure you want to delete phone {{ phone }}?"
+        }
+      },
+      "errors": {
+        "drop": {
+          "*": "Could not drop {{ entity }}"
+        },
+        "hold": {
+          "*": "Could not hold {{ entity }}"
+        },
+        "retrieve": {
+          "*": "Could not retrieve {{ entity }}"
+        },
+        "transfer": {
+          "*": "Could not transfer {{ entity }}"
         }
       }
     },
@@ -2204,7 +2293,7 @@
       },
       "card": {
         "entityTypeCode": "Type",
-        "name": "Name",
+        "names": "Name",
         "comment": "Comment",
         "isManual": "Is manual",
         "isPreCleaned": "Is pre-cleaned",
@@ -2280,8 +2369,8 @@
       "card": {
         "id": "ID",
         "code": "Code",
-        "name": "Name",
-        "shortName": "Short name",
+        "names": "Name",
+        "shortNames": "Short name",
         "isMain": "Is main"
       }
     },
@@ -2574,6 +2663,12 @@
     },
     "params": {
       "gen": { "singular": "parameter", "plural": "parameters" }
+    },
+    "callSettings": {
+      "gen": { "singular": "telephone settings", "plural": "telephone settings" }
+    },
+    "calls": {
+      "gen": { "singular": "call", "plural": "calls" }
     }
   },
   "massOperations": {
@@ -2779,6 +2874,7 @@
       "templateNotFound": "Template not found by ID",
       "thereAreUsersInTheRole": "Cannot delete role {{ $1 }}, which belongs to some users",
       "tokenInvalid": "Invalid session token",
+      "translationInMainLanguageNotFound": "No translation in main language provided",
       "unknownDataType": "Unknown data type {{ $1 }} (not present in dictionary №1)",
       "unknownNotNullValueOperator": "Unknown (unsupported) operator {{ $1 }}",
       "unknownParameterForGrid": "Invalid parameter in custom list request",
@@ -2855,6 +2951,7 @@
       "addUser": "Add user",
       "back": "Back",
       "block": "Block",
+      "call": "Call",
       "cancel": "Cancel",
       "change": "Change",
       "changeStatus": "",
@@ -2863,6 +2960,7 @@
       "copy": "Copy",
       "delete": "Delete",
       "download": "Download",
+      "drop": "Drop",
       "edit": "Edit",
       "email": "Email",
       "exportToExcel": "Export",
@@ -2872,13 +2970,16 @@
       "next": "Next",
       "now": "Now",
       "ok": "OK",
+      "pause": "Hold",
       "refresh": "Refresh",
       "registerContact": "Register Contact",
       "remove": "Delete",
+      "resume": "Resume",
       "save": "Save",
       "search": "Search",
       "select": "Select",
       "sms": "SMS",
+      "transfer": "Transfer",
       "today": "Today",
       "unblock": "Unblock",
       "undo": "Undo",

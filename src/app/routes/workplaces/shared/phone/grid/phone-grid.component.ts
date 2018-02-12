@@ -8,7 +8,6 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
-// import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -16,12 +15,14 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
+import { ICall } from '@app/core/calls/call.interface';
 import { IDebt } from '@app/core/debt/debt.interface';
 import { IGridColumn, IContextMenuItem } from '@app/shared/components/grid/grid.interface';
 import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
+import { CallService } from '@app/core/calls/call.service';
 import { DebtService } from '@app/core/debt/debt.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -67,7 +68,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   selectedPhoneId$ = new BehaviorSubject<number>(null);
 
-  toolbarItems: Array<IToolbarItem> = [
+  gridToolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
@@ -108,6 +109,37 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       enabled: this.canView$,
       action: () => this.fetch()
     },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_CALL,
+      align: 'right',
+      enabled: this.canMakeCall$,
+      action: () => this.onMakeCall()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DROP,
+      align: 'right',
+      enabled: this.canDropCall$,
+      action: () => this.onDropCall()
+    },
+
+    {
+      type: ToolbarItemTypeEnum.BUTTON_PAUSE,
+      align: 'right',
+      enabled: this.canHoldCall$,
+      action: () => this.onHoldCall()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_RESUME,
+      align: 'right',
+      enabled: this.canRetrieveCall$,
+      action: () => this.onRetrieveCall()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
+      align: 'right',
+      enabled: this.canTransferCall$,
+      action: () => this.setDialog('operator')
+    },
   ];
 
   contextMenuOptions: IContextMenuItem[] = [
@@ -133,6 +165,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private canViewSubscription: Subscription;
   private debtSubscription: Subscription;
   private busSubscription: Subscription;
+  private callSubscription: Subscription;
 
   private _columns: Array<IGridColumn> = [
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE },
@@ -146,11 +179,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private callService: CallService,
     private debtService: DebtService,
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
-    // private router: Router,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -166,7 +199,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription = combineLatest(this.canView$, this._personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
-          this.notificationsService.error('errors.default.read.403').entity('entities.phones.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.phones.gen.plural').dispatch();
           this.clear();
         } else if (personId) {
           this.fetch();
@@ -191,12 +224,24 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.busSubscription = this.phoneService
       .getAction(PhoneService.MESSAGE_PHONE_SAVED)
       .subscribe(() => this.fetch());
+
+    this.callSubscription = this.callService.calls$
+      .flatMap(() => this.selectedPhoneCall$.pipe(first()))
+      .map(call => call && !call.id)
+      .flatMap(hasCall => combineLatestAnd([
+        of(hasCall),
+        this.callService.settings$.map(settings => settings && !!settings.previewShowRegContact),
+        this.canRegisterContact$
+      ]).pipe(first()))
+      .filter(Boolean)
+      .subscribe(() => this.registerContact());
   }
 
   ngOnDestroy(): void {
     this.canViewSubscription.unsubscribe();
     this.debtSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
+    this.callSubscription.unsubscribe();
   }
 
   get debtId$(): Observable<number> {
@@ -256,6 +301,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .subscribe(() => this.onSubmitSuccess());
   }
 
+  onPhoneOperatorSelect(operatorId: number): void {
+    this.selectedPhoneCall$
+      .pipe(first())
+      .filter(Boolean)
+      .subscribe(call => this.callService.transferCall(call.id, operatorId));
+  }
+
   onDialogClose(): void {
     this.setDialog();
   }
@@ -272,6 +324,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get selectedPhone$(): Observable<IPhone> {
     return this.selectedPhoneId$.map(id => this.phones.find(phone => phone.id === id));
+  }
+
+  get selectedPhoneCall$(): Observable<ICall> {
+    return this.selectedPhone$.flatMap(phone => phone
+      ? this.callService.findPhoneCall(phone.id)
+      : of(null)
+    );
   }
 
   get canView$(): Observable<boolean> {
@@ -327,6 +386,55 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     ]);
   }
 
+  get canMakeCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.callService.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
+      this.selectedPhone$
+        .flatMap(phone => combineLatestAnd([
+          of(phone && !phone.isInactive),
+          this.selectedPhoneCall$.map(call => !call)
+        ]))
+    ]);
+  }
+
+  get canDropCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.callService.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useDropCall),
+      this.selectedPhoneCall$.map(Boolean)
+    ]);
+  }
+
+  get canHoldCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.callService.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useHoldCall),
+      this.selectedPhoneCall$.map(call => call && !call.onHold)
+    ]);
+  }
+
+  get canRetrieveCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.callService.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useRetriveCall),
+      this.selectedPhoneCall$.map(call => call && call.onHold)
+    ]);
+  }
+
+  get canTransferCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.callService.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall),
+      this.selectedPhoneCall$.map(Boolean)
+    ]);
+  }
+
   private get isDebtOpen(): boolean {
     return this.debt && ![6, 7, 8, 17].includes(this.debt.statusCode);
   }
@@ -344,6 +452,33 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private onSubmitSuccess(): void {
     this.fetch();
     this.setDialog();
+  }
+
+  private onMakeCall(): void {
+    this.selectedPhone$
+      .pipe(first())
+      .subscribe(phone => this.callService.makeCall(phone.id, this._debtId$.value, this._personId$.value, this.personRole));
+  }
+
+  private onDropCall(): void {
+    this.selectedPhoneCall$
+      .pipe(first())
+      .filter(Boolean)
+      .subscribe(call => this.callService.dropCall(call.id));
+  }
+
+  private onHoldCall(): void {
+    this.selectedPhoneCall$
+      .pipe(first())
+      .filter(Boolean)
+      .subscribe(call => this.callService.holdCall(call.id));
+  }
+
+  private onRetrieveCall(): void {
+    this.selectedPhoneCall$
+      .pipe(first())
+      .filter(Boolean)
+      .subscribe(call => this.callService.retrieveCall(call.id));
   }
 
   private fetch(): void {

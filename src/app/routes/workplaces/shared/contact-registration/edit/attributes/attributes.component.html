@@ -1,16 +1,6 @@
-<div *ngIf="attributes && attributes.length > 0">
-  <p-treeTable selectionMode="none" [value]="attributes">
-    <p-column field="code" [header]="'modules.contactRegistration.attributes.grid.code' | translate"></p-column>
-    <p-column field="name" [header]="'modules.contactRegistration.attributes.grid.name' | translate"></p-column>
-    <p-column field="value" [header]="'modules.contactRegistration.attributes.grid.value' | translate">
-      <ng-template let-node="rowData" pTemplate="body">
-        <app-value-input [(ngModel)]="node.data"></app-value-input>
-      </ng-template>
-    </p-column>
-    <p-column field="mandatory" [header]="'modules.contactRegistration.attributes.grid.mandatory' | translate">
-      <ng-template let-node="rowData" pTemplate="body">
-        <app-checkbox [ngModel]="node.data.mandatory" [disabled]="true"></app-checkbox>
-      </ng-template>
-    </p-column>
-  </p-treeTable>
-</div>
+<app-gridtree2-wrapper
+  *ngIf="attributes?.length"
+  [translateColumnLabels]="true"
+  [rows]="attributes"
+  [columns]="columns$ | async"
+></app-gridtree2-wrapper>

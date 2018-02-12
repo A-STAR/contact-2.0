@@ -83,8 +83,8 @@ export class GroupCardComponent implements OnInit {
   ): IDynamicFormItem[] {
     const controls = [
       {
-        controlName: 'name',
-        type: this.groupId ? 'multilanguage' : 'text',
+        controlName: 'names',
+        type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_GROUP_NAME,
           entityId: this.groupId

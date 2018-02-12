@@ -107,7 +107,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
         this.fetchContractors();
       } else {
         this.clearSelection();
-        this.notificationsService.error('errors.default.read.403').entity('entities.contractors.gen.plural').dispatch();
+        this.notificationsService.permissionError().entity('entities.contractors.gen.plural').dispatch();
       }
     });
 
@@ -152,6 +152,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
   }
 
   onSelect(contractor: IContractor): void {
+    console.log(contractor);
     this.contractorsAndPortfoliosService.selectContractor(contractor);
   }
 

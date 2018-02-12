@@ -1,6 +1,7 @@
 import { IAppState } from './state.interface';
 
 import * as auth from '../auth/auth.reducer';
+import * as calls from '../calls/call.reducer';
 import * as campaigns from '../../routes/utilities/campaigns/campaigns.reducer';
 import * as constants from '../../routes/admin/constants/constants.reducer';
 import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
@@ -22,6 +23,7 @@ import * as users from '../../routes/admin/users/users.reducer';
 
 export const reducers = {
   auth: auth.reducer,
+  calls: calls.reducer,
   campaigns: campaigns.reducer,
   contractorsAndPortfolios: contractorsAndPortfolios.reducer,
   constants: constants.reducer,
@@ -43,6 +45,7 @@ export const reducers = {
 };
 
 export const initialState: Partial<IAppState> = {
+  calls: calls.defaultState,
   campaigns: campaigns.defaultState,
   contractorsAndPortfolios: contractorsAndPortfolios.defaultState,
   constants: constants.defaultState,

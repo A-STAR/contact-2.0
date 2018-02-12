@@ -41,90 +41,210 @@
 .co-action-log:before {
   content: "\e000";
 }
-.co-attributes:before {
+.co-add:before {
   content: "\e001";
 }
-.co-call-campaigns:before {
+.co-attributes:before {
   content: "\e002";
 }
-.co-call-center:before {
+.co-attributes-sm:before {
   content: "\e003";
 }
-.co-call-incoming:before {
+.co-calendar:before {
   content: "\e004";
 }
-.co-communication-out:before {
+.co-call-campaigns:before {
   content: "\e005";
 }
-.co-constants:before {
+.co-call-cancel:before {
   content: "\e006";
 }
-.co-contact-log:before {
+.co-call-center:before {
   content: "\e007";
 }
-.co-contact-tree:before {
+.co-call-incoming:before {
   content: "\e008";
 }
-.co-court:before {
+.co-call-transfer:before {
   content: "\e009";
 }
-.co-currencies:before {
+.co-call-unpause:before {
   content: "\e00a";
 }
-.co-data-upload:before {
+.co-change-status:before {
   content: "\e00b";
 }
-.co-debt-list:before {
+.co-checkbox-mark:before {
   content: "\e00c";
 }
-.co-debt-processing:before {
+.co-close:before {
   content: "\e00d";
 }
-.co-dictionaries:before {
+.co-communication-out:before {
   content: "\e00e";
 }
-.co-formulae:before {
+.co-confirm:before {
   content: "\e00f";
 }
-.co-groups:before {
+.co-constants:before {
   content: "\e010";
 }
-.co-home:before {
+.co-contact-log:before {
   content: "\e011";
 }
-.co-legal:before {
+.co-contact-registration:before {
   content: "\e012";
 }
-.co-load-templates:before {
+.co-contact-tree:before {
   content: "\e013";
 }
-.co-mail:before {
+.co-copy:before {
   content: "\e014";
 }
-.co-message-scenarios:before {
+.co-court:before {
   content: "\e015";
 }
-.co-org-structure:before {
+.co-currencies:before {
   content: "\e016";
 }
-.co-payments:before {
+.co-data-upload:before {
   content: "\e017";
 }
-.co-portfolios:before {
+.co-debt-list:before {
   content: "\e018";
 }
-.co-roles:before {
+.co-debt-processing:before {
   content: "\e019";
 }
-.co-schedule:before {
+.co-delete:before {
   content: "\e01a";
 }
-.co-search-groups:before {
+.co-dialog-exclamation:before {
   content: "\e01b";
 }
-.co-tasks:before {
+.co-dialog-info:before {
   content: "\e01c";
 }
-.co-users:before {
+.co-dialog-question:before {
   content: "\e01d";
+}
+.co-dictionaries:before {
+  content: "\e01e";
+}
+.co-download:before {
+  content: "\e01f";
+}
+.co-download-excel:before {
+  content: "\e020";
+}
+.co-edit:before {
+  content: "\e021";
+}
+.co-email:before {
+  content: "\e022";
+}
+.co-filter:before {
+  content: "\e023";
+}
+.co-filter-params:before {
+  content: "\e024";
+}
+.co-formulae:before {
+  content: "\e025";
+}
+.co-groups:before {
+  content: "\e026";
+}
+.co-help:before {
+  content: "\e027";
+}
+.co-home:before {
+  content: "\e028";
+}
+.co-legal:before {
+  content: "\e029";
+}
+.co-load-templates:before {
+  content: "\e02a";
+}
+.co-lock:before {
+  content: "\e02b";
+}
+.co-mail:before {
+  content: "\e02c";
+}
+.co-managers:before {
+  content: "\e02d";
+}
+.co-menu-v:before {
+  content: "\e02e";
+}
+.co-message-scenarios:before {
+  content: "\e02f";
+}
+.co-move:before {
+  content: "\e030";
+}
+.co-org-structure:before {
+  content: "\e031";
+}
+.co-payments:before {
+  content: "\e032";
+}
+.co-picture:before {
+  content: "\e033";
+}
+.co-portfolios:before {
+  content: "\e034";
+}
+.co-refresh:before {
+  content: "\e035";
+}
+.co-reports:before {
+  content: "\e036";
+}
+.co-roles:before {
+  content: "\e037";
+}
+.co-save:before {
+  content: "\e038";
+}
+.co-schedule:before {
+  content: "\e039";
+}
+.co-search:before {
+  content: "\e03a";
+}
+.co-search-groups:before {
+  content: "\e03b";
+}
+.co-settings:before {
+  content: "\e03c";
+}
+.co-sms:before {
+  content: "\e03d";
+}
+.co-tasks:before {
+  content: "\e03e";
+}
+.co-template:before {
+  content: "\e03f";
+}
+.co-time:before {
+  content: "\e040";
+}
+.co-unlock:before {
+  content: "\e041";
+}
+.co-upload:before {
+  content: "\e042";
+}
+.co-users:before {
+  content: "\e043";
+}
+.co-version-history:before {
+  content: "\e044";
+}
+.co-visit:before {
+  content: "\e045";
 }

@@ -2,7 +2,15 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
+import { CheckboxModule } from './checkbox/checkbox.module';
+import { DatePickerModule } from './datepicker/datepicker.module';
+import { DateTimePickerModule } from './datetimepicker/datetimepicker.module';
+import { NumberModule } from './number/number.module';
+import { RadioButtonModule } from './radiobutton/radiobutton.module';
 import { SharedModule } from '@app/shared/shared.module';
+import { TextModule } from './text/text.module';
+import { TextareaModule } from './textarea/textarea.module';
+import { TimePickerModule } from './timepicker/timepicker.module';
 
 import { UIComponent } from './ui.component';
 
@@ -15,9 +23,17 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    CheckboxModule,
+    DatePickerModule,
+    DateTimePickerModule,
     FormsModule,
+    NumberModule,
+    RadioButtonModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TextModule,
+    TextareaModule,
+    TimePickerModule,
   ],
   exports: [
     RouterModule,

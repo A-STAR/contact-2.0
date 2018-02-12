@@ -97,6 +97,12 @@ export class EditComponent extends DialogFunctions {
     return this.form.valid;
   }
 
+  get minAmountPercentMessageParams$(): Observable<{ percent: number }> {
+    return this.contactRegistrationService.limit$.pipe(
+      map(limit => ({ percent: limit && limit.minAmountPercent })),
+    );
+  }
+
   onSubmit(): void {
     combineLatest(
       this.contactRegistrationService.canSetInsufficientPromiseAmount$,

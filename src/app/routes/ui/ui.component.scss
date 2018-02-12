@@ -1,18 +1,32 @@
-.form-group {
-  margin: 0;
+::ng-deep {
+  .wrapper > .content {
+    overflow-y: scroll;
+  }
+
+  .label {
+    color: #333;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    margin-bottom: 0 0 5px;
+    padding: 0;
+    text-align: left;
+    width: auto;
+  }
+
+  .form-group {
+    margin: 0;
+  }
+
+  .form-group + .form-group {
+    margin-top: 10px;
+  }
 }
 
-.form-group + .form-group {
-  margin-top: 10px;
+h1 {
+  font-size: 36px;
 }
 
-.label {
-  color: #333;
-  display: inline-block;
-  font-size: 14px;
-  font-weight: normal;
-  margin-bottom: 5px;
-  padding: 0;
-  text-align: left;
-  width: auto;
+h2 {
+  font-size: 18px;
 }

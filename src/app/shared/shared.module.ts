@@ -6,19 +6,13 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { AngularSplitModule } from 'angular-split';
 
-// Angle modules
-import { TranslateModule } from '@ngx-translate/core';
+// Third-party modules
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
+import { TranslateModule } from '@ngx-translate/core';
 
 // Angle directives
-import { FlotDirective } from './directives/flot/flot.directive';
-import { SparklineDirective } from './directives/sparkline/sparkline.directive';
-import { EasypiechartDirective } from './directives/easypiechart/easypiechart.directive';
 import { ColorsService } from './colors/colors.service';
-import { CheckallDirective } from './directives/checkall/checkall.directive';
-import { VectormapDirective } from './directives/vectormap/vectormap.directive';
 import { NowDirective } from './directives/now/now.directive';
-import { ScrollableDirective } from './directives/scrollable/scrollable.directive';
 
 // App modules
 import { AccordionModule } from './components/accordion/accordion.module';
@@ -27,6 +21,7 @@ import { ActionGridModule } from './components/action-grid/action-grid.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
 import { ButtonModule } from './components/button/button.module';
 import { CapitalizeModule } from './pipes/capitalize/capitalize.module';
+import { ChartsModule } from './components/charts/charts.module';
 import { CheckModule } from './components/form/check/check.module';
 import { ColorPickerModule } from './components/form/colorpicker/colorpicker.module';
 import { DateTimeModule } from './components/form/datetime/datetime.module';
@@ -42,13 +37,14 @@ import { DynamicForm2Module } from './components/form/dynamic-form-2/dynamic-for
 import { FileUploadModule } from './components/form/file-upload/file-upload.module';
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
-import { GridTreeModule } from './components/gridtree/gridtree.module';
-import { GridTreeWrapperModule } from './components/gridtree-wrapper/gridtree-wrapper.module';
+import { GridTree2Module } from './components/gridtree2/gridtree2.module';
+import { GridTree2WrapperModule } from './components/gridtree2-wrapper/gridtree2-wrapper.module';
 import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
 import { HtmlTextareaModule } from './components/form/html-textarea/html-textarea.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
+import { InputModule } from './components/form/input/input.module';
 import { ListModule } from './components/list/list.module';
 import { MenuModule } from './components/form/menu/menu.module';
 import { MomentModule } from './pipes/moment/moment.module';
@@ -84,9 +80,10 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ReactiveFormsModule,
     // Third Party Modules
     AngularSplitModule,
-    TranslateModule,
-    TextMaskModule,
     PerfectScrollbarModule,
+    TextMaskModule,
+    ToasterModule,
+    TranslateModule,
     // App Modules
     AccordionModule,
     ActionDialogModule,
@@ -94,6 +91,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     BlockDialogModule,
     ButtonModule,
     CapitalizeModule,
+    ChartsModule,
     CheckModule,
     ColorPickerModule,
     DateTimeModule,
@@ -108,13 +106,14 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     FileUploadModule,
     GridModule,
     Grid2Module,
-    GridTreeModule,
-    GridTreeWrapperModule,
+    GridTree2Module,
+    GridTree2WrapperModule,
     GuiObjectsModule,
     HDividerModule,
     HtmlTextareaModule,
     ImageUploadModule,
     InfoDialogModule,
+    InputModule,
     ListModule,
     MenuModule,
     MomentModule,
@@ -129,7 +128,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     TabstripModule,
     TabViewModule,
     TextEditorModule,
-    ToasterModule,
     ToolbarModule,
     Toolbar2Module,
     TreeModule,
@@ -142,13 +140,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     QBuilderService
   ],
   declarations: [
-    FlotDirective,
-    SparklineDirective,
-    EasypiechartDirective,
-    CheckallDirective,
-    VectormapDirective,
     NowDirective,
-    ScrollableDirective,
     // App Components
     NumericInputComponent,
     QBuilderComponent,
@@ -161,18 +153,12 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     RouterModule,
     // Third Party Modules
     AngularSplitModule,
+    PerfectScrollbarModule,
+    TextMaskModule,
+    ToasterModule,
     TranslateModule,
     // Angle exports
-    TextMaskModule,
-    CheckallDirective,
-    EasypiechartDirective,
-    FlotDirective,
     NowDirective,
-    PerfectScrollbarModule,
-    ScrollableDirective,
-    SparklineDirective,
-    ToasterModule,
-    VectormapDirective,
     // App exports
     AccordionModule,
     ActionDialogModule,
@@ -180,6 +166,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     BlockDialogModule,
     ButtonModule,
     CapitalizeModule,
+    ChartsModule,
     CheckModule,
     ColorPickerModule,
     DateTimeModule,
@@ -195,13 +182,14 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     FileUploadModule,
     GridModule,
     Grid2Module,
-    GridTreeModule,
-    GridTreeWrapperModule,
+    GridTree2Module,
+    GridTree2WrapperModule,
     GuiObjectsModule,
     HDividerModule,
     HtmlTextareaModule,
     ImageUploadModule,
     InfoDialogModule,
+    InputModule,
     ListModule,
     MenuModule,
     MomentModule,

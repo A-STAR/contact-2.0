@@ -62,18 +62,19 @@ export class ReportCardComponent implements OnInit {
 
     action.subscribe(() => {
       this.reportsService.dispatchAction(ReportsService.MESSAGE_REPORT_SAVED);
+      this.form.markAsPristine();
       this.onBack();
     });
   }
 
   onBack(): void {
-    this.routingService.navigate([ 'reports', 'arbitrary' ]);
+    this.routingService.navigate([ 'reports' ]);
   }
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
       {
-        controlName: 'name',
+        controlName: 'names',
         type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_NAME,

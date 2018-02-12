@@ -113,7 +113,7 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
         if (hasPermission) {
           this.fetch();
         } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.employment.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.employment.gen.plural').dispatch();
           this.clear();
         }
       });

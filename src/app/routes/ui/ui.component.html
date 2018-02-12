@@ -1,71 +1,31 @@
-<section>
-  <h1>Check Module</h1>
+<h1>Input Module</h1>
 
-  <h2>Checkbox</h2>
+<h2>Text</h2>
+<app-route-ui-text></app-route-ui-text>
 
-  <div class="form-group">
-    <label class="label">
-      <app-checkbox [ngModel]="null"></app-checkbox>
-      Empty value
-    </label>
-  </div>
+<h2>Textarea</h2>
+<app-route-ui-textarea></app-route-ui-textarea>
 
-  <div class="form-group">
-    <label class="label">
-      <app-checkbox [ngModel]="true"></app-checkbox>
-      Checked
-    </label>
-  </div>
+<h2>Number</h2>
+<app-route-ui-number></app-route-ui-number>
 
-  <div class="form-group">
-    <label class="label">
-      <app-checkbox [ngModel]="null" [disabled]="true"></app-checkbox>
-      Disabled
-    </label>
-  </div>
+<h1>Check Module</h1>
 
-  <div class="form-group">
-    <label class="label">
-      <app-checkbox [ngModel]="true" [disabled]="true"></app-checkbox>
-      Disabled & Checked
-    </label>
-  </div>
+<h2>Checkbox</h2>
+<app-route-ui-checkbox></app-route-ui-checkbox>
 
-  <h1>Date/Time</h1>
+<h2>Radiobutton</h2>
+<app-route-ui-radiobutton></app-route-ui-radiobutton>
 
-  <h2>DateTimePicker Module</h2>
+<h1>Date/Time Module</h1>
 
-  <div class="form-group">
-    <label class="label">Empty value</label>
-    <app-datetimepicker [ngModel]="null"></app-datetimepicker>
-  </div>
+<h2>DateTimePicker Module</h2>
+<app-route-ui-datetimepicker></app-route-ui-datetimepicker>
 
-  <div class="form-group">
-    <label class="label">Now</label>
-    <app-datetimepicker [ngModel]="now"></app-datetimepicker>
-  </div>
+<h2>DatePicker</h2>
+<app-route-ui-datepicker></app-route-ui-datepicker>
 
-  <h2>DatePicker</h2>
+<h2>TimePicker</h2>
+<app-route-ui-timepicker></app-route-ui-timepicker>
 
-  <div class="form-group">
-    <label class="label">Empty value</label>
-    <app-datepicker [ngModel]="null"></app-datepicker>
-  </div>
-
-  <div class="form-group">
-    <label class="label">Now</label>
-    <app-datepicker [ngModel]="now"></app-datepicker>
-  </div>
-
-  <h2>TimePicker</h2>
-
-  <div class="form-group">
-    <label class="label">Empty value</label>
-    <app-timepicker [ngModel]="null"></app-timepicker>
-  </div>
-
-  <div class="form-group">
-    <label class="label">Now</label>
-    <app-timepicker [ngModel]="now"></app-timepicker>
-  </div>
-</section>
+<br>
