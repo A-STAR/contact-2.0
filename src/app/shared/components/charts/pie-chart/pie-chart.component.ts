@@ -16,6 +16,4 @@ export class PieChartComponent {
 
   chart: ChartComponent;
 
-  constructor() { }
-
 }
