@@ -1,0 +1,232 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "contact";
+  src:url("fonts/contact.eot");
+  src:url("fonts/contact.eot?#iefix") format("embedded-opentype"),
+    url("fonts/contact.woff") format("woff"),
+    url("fonts/contact.ttf") format("truetype"),
+    url("fonts/contact.svg#contact") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "contact" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="co-"]:before,
+[class*=" co-"]:before {
+  font-family: "contact" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.co-action-log:before {
+  content: "\e000";
+}
+.co-attributes:before {
+  content: "\e001";
+}
+.co-attributes-sm:before {
+  content: "\e002";
+}
+.co-call-campaigns:before {
+  content: "\e003";
+}
+.co-call-cancel:before {
+  content: "\e004";
+}
+.co-call-center:before {
+  content: "\e005";
+}
+.co-call-incoming:before {
+  content: "\e006";
+}
+.co-call-transfer:before {
+  content: "\e007";
+}
+.co-call-unpause:before {
+  content: "\e008";
+}
+.co-change-status:before {
+  content: "\e009";
+}
+.co-checkbox-mark:before {
+  content: "\e00a";
+}
+.co-communication-out:before {
+  content: "\e00b";
+}
+.co-confirm:before {
+  content: "\e00c";
+}
+.co-constants:before {
+  content: "\e00d";
+}
+.co-contact-log:before {
+  content: "\e00e";
+}
+.co-contact-registration:before {
+  content: "\e00f";
+}
+.co-contact-tree:before {
+  content: "\e010";
+}
+.co-court:before {
+  content: "\e011";
+}
+.co-currencies:before {
+  content: "\e012";
+}
+.co-data-upload:before {
+  content: "\e013";
+}
+.co-debt-list:before {
+  content: "\e014";
+}
+.co-debt-processing:before {
+  content: "\e015";
+}
+.co-delete:before {
+  content: "\e016";
+}
+.co-dialog-exclamation:before {
+  content: "\e017";
+}
+.co-dialog-info:before {
+  content: "\e018";
+}
+.co-dialog-question:before {
+  content: "\e019";
+}
+.co-dictionaries:before {
+  content: "\e01a";
+}
+.co-download:before {
+  content: "\e01b";
+}
+.co-download-excel:before {
+  content: "\e01c";
+}
+.co-email:before {
+  content: "\e01d";
+}
+.co-filter:before {
+  content: "\e01e";
+}
+.co-filter-params:before {
+  content: "\e01f";
+}
+.co-formulae:before {
+  content: "\e020";
+}
+.co-groups:before {
+  content: "\e021";
+}
+.co-help:before {
+  content: "\e022";
+}
+.co-home:before {
+  content: "\e023";
+}
+.co-legal:before {
+  content: "\e024";
+}
+.co-load-templates:before {
+  content: "\e025";
+}
+.co-lock:before {
+  content: "\e026";
+}
+.co-mail:before {
+  content: "\e027";
+}
+.co-managers:before {
+  content: "\e028";
+}
+.co-message-scenarios:before {
+  content: "\e029";
+}
+.co-move:before {
+  content: "\e02a";
+}
+.co-org-structure:before {
+  content: "\e02b";
+}
+.co-payments:before {
+  content: "\e02c";
+}
+.co-picture:before {
+  content: "\e02d";
+}
+.co-portfolios:before {
+  content: "\e02e";
+}
+.co-refresh:before {
+  content: "\e02f";
+}
+.co-reports:before {
+  content: "\e030";
+}
+.co-roles:before {
+  content: "\e031";
+}
+.co-save:before {
+  content: "\e032";
+}
+.co-schedule:before {
+  content: "\e033";
+}
+.co-search:before {
+  content: "\e034";
+}
+.co-search-groups:before {
+  content: "\e035";
+}
+.co-settings:before {
+  content: "\e036";
+}
+.co-sms:before {
+  content: "\e037";
+}
+.co-tasks:before {
+  content: "\e038";
+}
+.co-template:before {
+  content: "\e039";
+}
+.co-time:before {
+  content: "\e03a";
+}
+.co-unlock:before {
+  content: "\e03b";
+}
+.co-upload:before {
+  content: "\e03c";
+}
+.co-users:before {
+  content: "\e03d";
+}
+.co-version-history:before {
+  content: "\e03e";
+}
+.co-visit:before {
+  content: "\e03f";
+}

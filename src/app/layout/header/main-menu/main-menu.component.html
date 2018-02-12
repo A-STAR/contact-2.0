@@ -2,8 +2,4 @@
   <li *ngFor="let item of menuItems$ | async" class="flex-item menu-item" [routerLink]="item.link" routerLinkActive="active" [title]="item.text | translate">
     {{ item.text | translate }}
   </li>
-
-  <a class="flex-item menu-item" href="/assets/icons/icons-reference.html" [title]="'sidebar.nav.menu.HELP' | translate">
-    {{ 'sidebar.nav.menu.HELP' | translate }}
-  </a>
 </ul>

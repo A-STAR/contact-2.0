@@ -20,7 +20,7 @@ export class MainMenuComponent {
 
   get menuItems$(): Observable<IMenuItem[]> {
     return this._menuItems$.pipe(
-      map(items => items.filter(item => !item.link.endsWith('help'))),
+      map(items => items.filter(item => item.text)),
     );
   }
 }
