@@ -42,7 +42,7 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: combineLatestAnd([
         this.reportId$.map(Boolean),
-        this.fieldsService.canAdd$
+        this.fieldsService.canEdit$
       ]),
       action: () => this.onAdd()
     },
@@ -59,7 +59,7 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.setDialog('remove'),
       enabled: combineLatestAnd([
         this.selectedField$.map(Boolean),
-        this.fieldsService.canDelete$
+        this.fieldsService.canEdit$
       ])
     },
     {
@@ -67,7 +67,7 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.fetch(),
       enabled: combineLatestAnd([
         this.reportId$.map(Boolean),
-        this.fieldsService.canView$
+        this.fieldsService.canEdit$
       ])
     }
   ];
