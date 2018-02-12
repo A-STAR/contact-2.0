@@ -92,44 +92,72 @@ export class ContactCardComponent implements OnInit {
     return this.routeParams.personId;
   }
 
-  get contactPersonId(): number {
-    return this.contactId || this.personId;
-  }
-
   onAddressAdd(): void {
-    this.routingService.navigate([ `${this.contactId}/address/create` ], this.route);
+    this.routingService.navigate([
+      this.contact
+        ? 'address/create'
+        : `${this.contactId}/address/create`
+    ], this.route);
   }
 
   onAddressEdit(address: IAddress): void {
-    this.routingService.navigate([ `${this.contactId}/address/${address.id}` ], this.route);
+    this.routingService.navigate([
+      this.contact
+        ? `address/${address.id}`
+        : `${this.contactId}/address/${address.id}`
+    ], this.route);
   }
 
   onPhoneAdd(): void {
-    this.routingService.navigate([ `${this.contactId}/phone/create` ], this.route);
+    this.routingService.navigate([
+      this.contact
+        ? 'phone/create'
+        : `${this.contactId}/phone/create`
+    ], this.route);
   }
 
   onPhoneEdit(phone: IPhone): void {
-    this.routingService.navigate([ `${this.contactId}/phone/${phone.id}` ], this.route);
+    this.routingService.navigate([
+      this.contact
+        ? `phone/${phone.id}`
+        : `${this.contactId}/phone/${phone.id}`
+    ], this.route);
+  }
+
+  onIdentityAdd(): void {
+    this.routingService.navigate([
+      this.contact
+        ? 'identity/create'
+        : `${this.contactId}/identity/create`
+    ], this.route);
+  }
+
+  onIdentityEdit(doc: IIdentityDoc): void {
+    this.routingService.navigate([
+      this.contact
+        ? `identity/${doc.id}`
+        : `${this.contactId}/identity/${doc.id}`
+    ], this.route);
+  }
+
+  onEmploymentAdd(): void {
+    this.routingService.navigate([
+      this.contact
+        ? 'employment/create'
+        : `${this.contactId}/employment/create`
+    ], this.route);
+  }
+
+  onEmploymentEdit(employment: IEmployment): void {
+    this.routingService.navigate([
+      this.contact
+        ? `employment/${employment.id}`
+        : `${this.contactId}/employment/${employment.id}`
+    ], this.route);
   }
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
-  }
-
-  onIdentityAdd(): void {
-    this.routingService.navigate([ `${this.contactId}/identity/create` ], this.route);
-  }
-
-  onIdentityEdit(doc: IIdentityDoc): void {
-    this.routingService.navigate([ `${this.contactId}/identity/${doc.id}` ], this.route);
-  }
-
-  onEmploymentAdd(): void {
-    this.routingService.navigate([ `${this.contactId}/employment/create` ], this.route);
-  }
-
-  onEmploymentEdit(employment: IEmployment): void {
-    this.routingService.navigate([ `${this.contactId}/employment/${employment.id}` ], this.route);
   }
 
   onContactSelected(contact: IPerson): void {

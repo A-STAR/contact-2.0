@@ -5,6 +5,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -32,11 +33,18 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   @ViewChild(GridComponent) grid: GridComponent;
 
   private routeParams = this.route.snapshot.paramMap;
-  @Input() personId = +this.routeParams.get('contactId') || +this.routeParams.get('personId') || null;
+
+  @Input()
+  set personId(personId: number) {
+    this._personId$.next(personId);
+    this.cdRef.markForCheck();
+  }
 
   @Output() add = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<IIdentityDoc>();
   @Output() edit = new EventEmitter<IIdentityDoc>();
+
+  private _personId$ = new BehaviorSubject<number>(null);
 
   private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);
 
@@ -62,7 +70,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
+      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd()
     },
     {
@@ -106,15 +114,18 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
       .getAction(IdentityService.DEBTOR_IDENTITY_SAVED)
       .subscribe(() => this.fetch());
 
-    this.canViewSubscription = this.canView$
-      .subscribe(canView => {
-        if (canView) {
-          this.fetch();
-        } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.identityDocs.gen.plural').dispatch();
-          this.clear();
-        }
-      });
+    this.canViewSubscription = combineLatest(
+      this.canView$,
+      this._personId$.filter(Boolean)
+    )
+    .subscribe(([ canView ]) => {
+      if (canView) {
+        this.fetch();
+      } else {
+        this.notificationsService.error('errors.default.read.403').entity('entities.identityDocs.gen.plural').dispatch();
+        this.clear();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -124,9 +135,9 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   }
 
   fetch(): void {
-    if (this.personId) {
+    if (this._personId$.value) {
       this.identityService
-        .fetchAll(this.personId)
+        .fetchAll(this._personId$.value)
         .subscribe(identities => {
           this.rows = [...identities];
           this.selectedRows$.next([]);
@@ -136,7 +147,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   }
 
   onRemove(): void {
-    this.identityService.delete(this.personId, this.grid.selected[0].id)
+    this.identityService.delete(this._personId$.value, this.grid.selected[0].id)
       .subscribe(this.onSubmitSuccess);
   }
 

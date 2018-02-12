@@ -24,7 +24,7 @@
       action="edit"
       [contactType]="1"
       [debtId]="debtId"
-      [personId]="contactPersonId"
+      [personId]="contactId"
       [personRole]="4"
       (add)="onPhoneAdd()"
       (dblClick)="onPhoneEdit($event)"
@@ -39,7 +39,7 @@
       action="edit"
       [debtId]="debtId"
       [debtorId]="debtorId"
-      [personId]="contactPersonId"
+      [personId]="contactId"
       [personRole]="4"
       (add)="onAddressAdd()"
       (dblClick)="onAddressEdit($event)"
@@ -51,7 +51,7 @@
   <app-tabview-tab [title]="tabs[2].title" [closable]="false">
     <app-identity-grid
       *ngIf="tabs[2].isInitialised"
-      [personId]="contactPersonId"
+      [personId]="contactId"
       (add)="onIdentityAdd()"
       (dblClick)="onIdentityEdit($event)"
       (edit)="onIdentityEdit($event)"
@@ -62,7 +62,7 @@
   <app-tabview-tab [title]="tabs[3].title" [closable]="false">
     <app-employment-grid
       *ngIf="tabs[3].isInitialised"
-      [personId]="contactPersonId"
+      [personId]="contactId"
       (add)="onEmploymentAdd()"
       (dblClick)="onEmploymentEdit($event)"
       (edit)="onEmploymentEdit($event)"

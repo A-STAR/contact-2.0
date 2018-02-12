@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IEmployment } from '@app/shared/gui-objects/widgets/employment/employment.interface';
@@ -27,18 +28,25 @@ import { combineLatestAnd } from 'app/core/utils/helpers';
 export class EmploymentGridComponent implements OnInit, OnDestroy {
   // TODO(d.maltsev): always pass personId as input
   private routeParams = this.route.snapshot.paramMap;
-  @Input() personId = +this.routeParams.get('contactId') || +this.routeParams.get('personId') || null;
+
+  @Input()
+  set personId(personId: number) {
+    this._personId$.next(personId);
+    this.cdRef.markForCheck();
+  }
 
   @Output() add = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<IEmployment>();
   @Output() edit = new EventEmitter<IEmployment>();
+
+  private _personId$ = new BehaviorSubject<number>(null);
 
   private selectedEmployment$ = new BehaviorSubject<IEmployment>(null);
 
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
+      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd()
     },
     {
@@ -101,15 +109,18 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    this.canViewSubscription = this.canView$
-      .subscribe(hasPermission => {
-        if (hasPermission) {
-          this.fetch();
-        } else {
-          this.notificationsService.error('errors.default.read.403').entity('entities.employment.gen.plural').dispatch();
-          this.clear();
-        }
-      });
+    this.canViewSubscription = combineLatest(
+      this.canView$,
+      this._personId$.filter(Boolean)
+    )
+    .subscribe(([ hasPermission ]) => {
+      if (hasPermission) {
+        this.fetch();
+      } else {
+        this.notificationsService.error('errors.default.read.403').entity('entities.employment.gen.plural').dispatch();
+        this.clear();
+      }
+    });
 
     this.onSaveSubscription = this.employmentService
       .getAction(EmploymentService.MESSAGE_EMPLOYMENT_SAVED)
@@ -132,7 +143,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
 
   onRemove(): void {
     const { id: employmentId } = this.selectedEmployment$.value;
-    this.employmentService.delete(this.personId, employmentId)
+    this.employmentService.delete(this._personId$.value, employmentId)
       .subscribe(() => {
         this.setDialog(null);
         this.fetch();
@@ -176,7 +187,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.employmentService.fetchAll(this.personId)
+    this.employmentService.fetchAll(this._personId$.value)
       .subscribe(employments => {
         this.employments = [].concat(employments);
         this.selectedEmployment$.next(null);
