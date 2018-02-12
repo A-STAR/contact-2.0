@@ -7,7 +7,7 @@ import { DataService } from '@app/core/data/data.service';
 
 @Injectable()
 export class AttachmentService {
-  private baseUrl = '/debts/{debtId}/contactRequest/{guid}/fileattachments';
+  private baseUrl = '/debts/{debtId}/contactRegistration/{guid}/fileattachments';
 
   constructor(
     private dataService: DataService,

@@ -1,0 +1,9 @@
+<textarea
+  class="form-control"
+  [disabled]="disabled"
+  [ngModel]="value"
+  [ngStyle]="style"
+  [rows]="rows"
+  (focusout)="onFocusOut()"
+  (ngModelChange)="onChange($event)"
+></textarea>

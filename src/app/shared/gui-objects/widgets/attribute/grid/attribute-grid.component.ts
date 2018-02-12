@@ -4,22 +4,24 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
-import { IAttribute } from '../attribute.interface';
-import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
-import { IGridTreeRow } from '../../../../components/gridtree/gridtree.interface';
-import { IGridWrapperTreeColumn } from '../../../../components/gridtree-wrapper/gridtree-wrapper.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
+import { IAttribute } from '@app/shared/gui-objects/widgets/attribute/attribute.interface';
+import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
+import { IGridTreeRow } from '@app/shared/components/gridtree/gridtree.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { AttributeService } from '../attribute.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { AttributeService } from '@app/shared/gui-objects/widgets/attribute/attribute.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
+import { DialogFunctions } from '@app/core/dialog';
 
-import { makeKey } from '../../../../../core/utils';
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { makeKey } from '@app/core/utils';
+import { combineLatestAnd } from '@app/core/utils';
+
+import { TYPE_CODES } from '@app/core/utils';
 
 const labelKey = makeKey('widgets.attribute.grid');
 
@@ -39,22 +41,13 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
 
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
 
-  columns: IGridWrapperTreeColumn<any>[] = [
-    {
-      label: labelKey('name'),
-      prop: 'name',
-    },
-    {
-      label: labelKey('code'),
-      prop: 'code',
-    },
-    {
-      label: labelKey('typeCode'),
-      prop: 'typeCode',
-      // FIXME(d.maltsev): pass number instead of function
-      dictCode: () => 1,
-    },
+  columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
+    { dataType: TYPE_CODES.STRING, name: 'name', label: labelKey('names'), isDataPath: true },
+    { dataType: TYPE_CODES.STRING, name: 'code', label: labelKey('code') },
+    { dataType: TYPE_CODES.DICT, name: 'typeCode', label: labelKey('typeCode'),
+      dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE, },
   ];
+
   attributes: IGridTreeRow<IAttribute>[] = [];
 
   toolbarItems: IToolbarItem[] = [
@@ -142,19 +135,21 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     this.fetch();
   }
 
-  onSelect(attribute: IAttribute): void {
-    this.selectedAttribute$.next(attribute);
+  onSelect(row: IGridTreeRow<IAttribute>): void {
+    this.selectedAttribute$.next(row.data);
   }
 
-  onEdit(attribute: IAttribute): void {
-    this.selectedAttribute$.next(attribute);
-    this.canEdit$
-      .pipe(first())
-      .filter(Boolean)
-      .subscribe(() => {
-        this.setDialog('edit');
-        this.cdRef.markForCheck();
-      });
+  onEdit(row: IGridTreeRow<IAttribute>): void {
+    if (row && row.data) {
+      this.selectedAttribute$.next(row.data);
+      this.canEdit$
+        .pipe(first())
+        .filter(Boolean)
+        .subscribe(() => {
+          this.setDialog('edit');
+          this.cdRef.markForCheck();
+        });
+    }
   }
 
   onMove(row: IGridTreeRow<IAttribute>): void {
