@@ -109,11 +109,11 @@ export class ActionGridFilterComponent implements OnInit {
   }
 
   private pickControlValues(data: any, props: any[]): any[] {
-    return props.filter(prop => data[prop] != null).map(prop => data[prop]);
+    return props.filter(prop => !!data[prop]).map(prop => data[prop]);
   }
 
   private hasControlValues(data: any, props: any[]): boolean {
-    return props.some(prop => data[prop] != null);
+    return props.some(prop => !!data[prop]);
   }
   private setFilterValues(data: any, operator: IMetadataFilterOperator): any[] {
     return this.transformFilterValue(this.pickControlValues(data, operator.controls), operator);
