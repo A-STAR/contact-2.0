@@ -68,7 +68,6 @@ export class GroupEventsComponent extends DialogFunctions implements OnInit, OnD
       enabled: combineLatestAnd([
         this.groupId$.map(Boolean),
         this.scheduleEventService.canView$,
-        this.hasSingleSelection$,
       ]),
       action: () => this.onAdd(),
     },

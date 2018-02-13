@@ -3,7 +3,7 @@
     <h3>{{ 'widgets.scheduleEvents.dialog.title' | translate }}</h3>
   </div>
 
-  <app-schedule-event-card [eventId]="eventId"></app-schedule-event-card>
+  <app-schedule-event-card [groupId]="groupId" [eventId]="eventId"></app-schedule-event-card>
 
   <div dialog-footer>
     <app-button color="primary" type="save" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>

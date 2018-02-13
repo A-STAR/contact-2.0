@@ -1,10 +1,12 @@
 <app-schedule-event-dialog
   *ngIf="isDialog('add')"
+  [groupId]="groupId"
   (close)="closeDialog()"
 ></app-schedule-event-dialog>
 
 <app-schedule-event-dialog
   *ngIf="isDialog('edit')"
+  [groupId]="groupId"
   [eventId]="selectedEventId"
   (close)="closeDialog()"
 ></app-schedule-event-dialog>
