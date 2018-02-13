@@ -7,8 +7,13 @@
   </button>
 </div>
 
+<div class="mb">
+  <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="contact"></app-dynamic-form>
+</div>
+
 <div class="pb-lg">
-  <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="contact"></app-dynamic-form>
+  <app-person-select-grid *ngIf="contact === null" (select)="onContactSelected($event)"></app-person-select-grid>
+  <app-person-select-card *ngIf="contact" [personId]="contact.id"></app-person-select-card>
 </div>
 
 <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
@@ -19,7 +24,7 @@
       action="edit"
       [contactType]="1"
       [debtId]="debtId"
-      [personId]="contactPersonId"
+      [personId]="contactId"
       [personRole]="4"
       (add)="onPhoneAdd()"
       (dblClick)="onPhoneEdit($event)"
@@ -34,7 +39,7 @@
       action="edit"
       [debtId]="debtId"
       [debtorId]="debtorId"
-      [personId]="contactPersonId"
+      [personId]="contactId"
       [personRole]="4"
       (add)="onAddressAdd()"
       (dblClick)="onAddressEdit($event)"
@@ -46,6 +51,10 @@
   <app-tabview-tab [title]="tabs[2].title" [closable]="false">
     <app-identity-grid
       *ngIf="tabs[2].isInitialised"
+      [personId]="contactId"
+      (add)="onIdentityAdd()"
+      (dblClick)="onIdentityEdit($event)"
+      (edit)="onIdentityEdit($event)"
     ></app-identity-grid>
   </app-tabview-tab>
 
@@ -53,6 +62,10 @@
   <app-tabview-tab [title]="tabs[3].title" [closable]="false">
     <app-employment-grid
       *ngIf="tabs[3].isInitialised"
+      [personId]="contactId"
+      (add)="onEmploymentAdd()"
+      (dblClick)="onEmploymentEdit($event)"
+      (edit)="onEmploymentEdit($event)"
     ></app-employment-grid>
   </app-tabview-tab>
 </app-tabview>

@@ -71,7 +71,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   gridToolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
+      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd()
     },
     {
@@ -106,7 +106,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.canView$,
+      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },
     {
@@ -266,7 +266,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   onDoubleClick(phone: IPhone): void {
     this.dblClick.emit(phone);
-  }
+    }
 
   onSelect(phone: IPhone): void {
     this.select.emit(phone);

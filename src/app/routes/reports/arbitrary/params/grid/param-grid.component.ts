@@ -47,7 +47,7 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: combineLatestAnd([
         this.reportId$.map(Boolean),
-        this.paramsService.canAdd$
+        this.paramsService.canEdit$
       ]),
       action: () => this.onAdd()
     },
@@ -64,7 +64,7 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.setDialog('remove'),
       enabled: combineLatestAnd([
         this.selectedParam$.map(Boolean),
-        this.paramsService.canDelete$
+        this.paramsService.canEdit$
       ])
     },
     {
@@ -72,7 +72,7 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.fetch(),
       enabled: combineLatestAnd([
         this.reportId$.map(Boolean),
-        this.paramsService.canView$
+        this.paramsService.canEdit$
       ])
     }
   ];
@@ -158,10 +158,12 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   private fetch(): void {
-    this.paramsService.fetchAll(this.reportId).subscribe(params => {
-      this.params$.next(params);
-      this.cdRef.markForCheck();
-    });
+    this.paramsService.fetchAll(this.reportId)
+      .map(params => params.sort((p1, p2) => p1.sortOrder - p2.sortOrder))
+      .subscribe(params => {
+        this.params$.next(params);
+        this.cdRef.markForCheck();
+      });
   }
 
   private clear(): void {

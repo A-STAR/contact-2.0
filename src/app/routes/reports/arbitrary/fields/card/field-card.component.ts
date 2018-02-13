@@ -44,7 +44,7 @@ export class FieldCardComponent implements OnInit {
         this.fieldId = fieldId;
       })
       .switchMap(() => combineLatest(
-        this.fieldId ? this.fieldsService.canEdit$ : this.fieldsService.canAdd$,
+        this.fieldsService.canEdit$,
         this.fieldId ? this.fieldsService.fetch(this.reportId, this.fieldId) : of({}),
       ))
       .pipe(first())
@@ -66,7 +66,6 @@ export class FieldCardComponent implements OnInit {
 
     action.subscribe(() => {
       this.fieldsService.dispatchAction(FieldsService.MESSAGE_FIELD_SAVED);
-      this.form.markAsPristine();
       this.onBack();
     });
   }

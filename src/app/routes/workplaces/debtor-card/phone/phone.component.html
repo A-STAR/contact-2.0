@@ -1,4 +1,5 @@
 <app-phone-card
   [entityId]="entityId$ | async"
   [phoneId]="phoneId$ | async"
+  (close)="onClose()"
 ></app-phone-card>
