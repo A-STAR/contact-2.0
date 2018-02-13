@@ -65,15 +65,15 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private dialogMultiSelectWrapperService: DialogMultiSelectService,
+    private dialogMultiSelectService: DialogMultiSelectService,
     private gridService: GridService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    const columnsFrom = this.dialogMultiSelectWrapperService.getColumnsFrom(this.filterType);
-    const columnsTo = this.dialogMultiSelectWrapperService.getColumnsTo(this.filterType);
+    const columnsFrom = this.dialogMultiSelectService.getColumnsFrom(this.filterType);
+    const columnsTo = this.dialogMultiSelectService.getColumnsTo(this.filterType);
     this.gridService.setDictionaryRenderers([ ...columnsFrom, ...columnsTo ])
       .pipe(first())
       .subscribe(columns => {
@@ -88,7 +88,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
   }
 
   get columnsToTranslationKey(): string {
-    return this._columnsToTranslationKey || this.dialogMultiSelectWrapperService.getColumnsToTranslationKey(this.filterType);
+    return this._columnsToTranslationKey || this.dialogMultiSelectService.getColumnsToTranslationKey(this.filterType);
   }
 
   @Input('columnsFromTranslationKey')
@@ -97,11 +97,11 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
   }
 
   get columnsFromTranslationKey(): string {
-    return this._columnsFromTranslationKey || this.dialogMultiSelectWrapperService.getColumnsFromTranslationKey(this.filterType);
+    return this._columnsFromTranslationKey || this.dialogMultiSelectService.getColumnsFromTranslationKey(this.filterType);
   }
 
   get fetch(): (filterParams: any) => Observable<any> {
-    return this.dialogMultiSelectWrapperService.getFetchCallback(this.filterType);
+    return this.dialogMultiSelectService.getFetchCallback(this.filterType);
   }
 
   @Input('labelGetter')
@@ -110,7 +110,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
   }
 
   get labelGetter(): (row: T) => string {
-    return this._labelGetter || this.dialogMultiSelectWrapperService.getLabelGetter(this.filterType);
+    return this._labelGetter || this.dialogMultiSelectService.getLabelGetter(this.filterType);
   }
 
   @Input('valueGetter')
@@ -119,7 +119,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
   }
 
   get valueGetter(): (row: T) => IDialogMultiSelectValue {
-    return this.dialogMultiSelectWrapperService.getValueGetter(this.filterType);
+    return this.dialogMultiSelectService.getValueGetter(this.filterType);
   }
 
   @Input('title')
@@ -128,7 +128,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
   }
 
   get title(): string {
-    return this._title || this.dialogMultiSelectWrapperService.getTitle(this.filterType);
+    return this._title || this.dialogMultiSelectService.getTitle(this.filterType);
   }
 
   get selectionLength(): number {
