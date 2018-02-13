@@ -13,7 +13,7 @@
     "build:check": "ng build --aot",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:ci": "jest --runInBand",
+    "test:ci": "jest --coverage --runInBand",
     "lint": "ng lint --type-check",
     "e2e": "ng e2e",
     "ng-update": "npm up @angular/animations @angular/common @angular/compiler @angular/compiler-cli @angular/core @angular/forms @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/cli",

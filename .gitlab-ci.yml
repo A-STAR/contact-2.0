@@ -15,6 +15,9 @@ job_test:
     - node -v && npm -v
     - npm install
     - npm run lint && npm run test:ci && npm run build
+  artifacts:
+    paths:
+      - coverage
   except:
     - dev
 
