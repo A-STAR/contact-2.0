@@ -165,15 +165,8 @@ export class DashboardService {
   }
 
   getContactsDay(): Observable<IDashboardContactsDay> {
-    // return this.dataService.read(`${this.baseUrl}/contactDay`)
-    //   .catch(this.notificationsService.fetchError('dashboard.errors.contactDay').dispatchCallback());
-    return of({
-      debtorSuccessContact: 101,
-      guarantorSuccessContact: 13,
-      pledgorSuccessContact: 27,
-      thirdPersonSuccessContact: 61,
-      debtorSuccessContactPlan: 34
-    });
+    return this.dataService.read(`${this.baseUrl}/contactDay`)
+      .catch(this.notificationsService.fetchError('dashboard.errors.contactDay').dispatchCallback());
   }
 
   prepareChartData(type: DashboardChartType, data: any): ChartData {
