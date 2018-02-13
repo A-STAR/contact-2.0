@@ -37,6 +37,7 @@ import { DynamicForm2Module } from './components/form/dynamic-form-2/dynamic-for
 import { FileUploadModule } from './components/form/file-upload/file-upload.module';
 import { GridModule } from './components/grid/grid.module';
 import { Grid2Module } from './components/grid2/grid2.module';
+import { GridsModule } from './components/grids/grids.module';
 import { GridTree2Module } from './components/gridtree2/gridtree2.module';
 import { GridTree2WrapperModule } from './components/gridtree2-wrapper/gridtree2-wrapper.module';
 import { GuiObjectsModule } from './gui-objects/gui-objects.module';
@@ -106,6 +107,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     FileUploadModule,
     GridModule,
     Grid2Module,
+    GridsModule,
     GridTree2Module,
     GridTree2WrapperModule,
     GuiObjectsModule,
@@ -182,6 +184,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     FileUploadModule,
     GridModule,
     Grid2Module,
+    GridsModule,
     GridTree2Module,
     GridTree2WrapperModule,
     GuiObjectsModule,
