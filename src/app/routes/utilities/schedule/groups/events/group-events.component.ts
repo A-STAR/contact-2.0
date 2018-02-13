@@ -65,7 +65,11 @@ export class GroupEventsComponent extends DialogFunctions implements OnInit, OnD
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.scheduleEventService.canView$,
+      enabled: combineLatestAnd([
+        this.groupId$.map(Boolean),
+        this.scheduleEventService.canView$,
+        this.hasSingleSelection$,
+      ]),
       action: () => this.onAdd(),
     },
     {
@@ -105,13 +109,17 @@ export class GroupEventsComponent extends DialogFunctions implements OnInit, OnD
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.scheduleEventService.canView$,
+      enabled: combineLatestAnd([
+        this.groupId$.map(Boolean),
+        this.scheduleEventService.canView$
+      ]),
       action: () => this.fetch(),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_INFO,
       label: 'utilities.schedule.log.buttons.history',
       enabled: combineLatestAnd([
+        this.groupId$.map(Boolean),
         this.scheduleEventService.canViewLog$,
         this.hasSingleSelection$
       ]),

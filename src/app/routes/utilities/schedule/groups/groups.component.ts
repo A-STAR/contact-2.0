@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-groups',
@@ -6,4 +6,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupsComponent {
+
+  groupId: number;
+
+  constructor(private cdRef: ChangeDetectorRef) {}
+
+  onGroupSelect(groupId: number): void {
+    this.groupId = groupId;
+    this.cdRef.markForCheck();
+  }
 }

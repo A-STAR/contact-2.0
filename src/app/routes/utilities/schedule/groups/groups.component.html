@@ -1,7 +1,7 @@
-<app-group-grid></app-group-grid>
+<app-group-grid (select)="onGroupSelect($event)"></app-group-grid>
 
 <app-tabview [noMargin]="true">
   <app-tabview-tab [title]="'widgets.groups.tabs.scheduleEvents'">
-    <app-group-events></app-group-events>
+    <app-group-events [groupId]="groupId"></app-group-events>
   </app-tabview-tab>
 </app-tabview>
