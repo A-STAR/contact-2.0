@@ -35,6 +35,11 @@ import { DictRendererComponent } from './renderers/dict/dict.component';
     DictRendererComponent,
     SimpleGridComponent,
   ],
+  // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
+  entryComponents: [
+    CheckboxCellRendererComponent,
+    DictRendererComponent,
+  ],
   providers: [
     GridsService,
   ]
