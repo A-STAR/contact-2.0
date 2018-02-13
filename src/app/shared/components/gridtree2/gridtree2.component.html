@@ -13,6 +13,7 @@
   [autoGroupColumnDef]="autoGroupColumnDef"
   [rowSelection]="rowSelection"
   [gridOptions]="gridOptions"
+  (cellValueChanged)="onCellValueChanged($event)"
   (gridReady)="onGridReady($event)"
   (selectionChanged)="onSelect($event)"
   (rowDoubleClicked)="onDblClick($event)"

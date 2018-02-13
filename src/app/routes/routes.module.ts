@@ -25,7 +25,7 @@ const routes: Route[] = [
       { path: 'workplaces', loadChildren: './workplaces/workplaces.module#WorkplacesModule' },
       { path: 'utilities', loadChildren: './utilities/utilities.module#UtilitiesModule' },
       { path: 'reports', loadChildren: './reports/reports.module#ReportsModule' },
-      { path: 'ui', loadChildren: './ui/ui.module#UIModule' },
+      { path: 'help', loadChildren: './ui/ui.module#UIModule' },
     ]
   },
   { path: 'login', component: LoginComponent },

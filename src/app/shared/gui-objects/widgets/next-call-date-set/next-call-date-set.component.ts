@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component,
-  EventEmitter, Output, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  Input,
+  ViewChild,
+} from '@angular/core';
 
 import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -15,7 +21,6 @@ const labelKey = makeKey('widgets.nextCallDateSet.dialog');
   templateUrl: './next-call-date-set.component.html',
   styleUrls: ['./next-call-date-set.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
 })
 export class NextCallDateSetDialogComponent  {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -32,7 +37,6 @@ export class NextCallDateSetDialogComponent  {
       controlName: 'nextCallDate',
       type: 'datetimepicker',
       displaySeconds: false,
-      width: 5,
     }
   ];
 

@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { DatePickerModule } from './datepicker/datepicker.module';
 import { DateTimePickerModule } from './datetimepicker/datetimepicker.module';
+import { IconsModule } from '@app/routes/ui/icons/icons.module';
 import { NumberModule } from './number/number.module';
 import { RadioButtonModule } from './radiobutton/radiobutton.module';
 import { SharedModule } from '@app/shared/shared.module';
@@ -34,6 +35,7 @@ const routes: Routes = [
     TextModule,
     TextareaModule,
     TimePickerModule,
+    IconsModule,
   ],
   exports: [
     RouterModule,
