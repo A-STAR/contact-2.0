@@ -101,7 +101,7 @@ export class ActionGridFilterComponent implements OnInit {
   }
 
   private pickControlValues(data: any, props: any[]): any[] {
-    return props.filter(prop => !!data[prop]).map(prop => data[prop]);
+    return props.filter(prop => !!data[prop]).reduce((acc, prop) => [...acc, ...data[prop]], []);
   }
 
   private hasControlValues(data: any, props: any[]): boolean {
