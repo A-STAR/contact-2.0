@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ChartData, ChartOptions } from 'chart.js';
-import { of } from 'rxjs/observable/of';
 
 import {
   DashboardChartType,
@@ -165,15 +164,8 @@ export class DashboardService {
   }
 
   getContactsDay(): Observable<IDashboardContactsDay> {
-    // return this.dataService.read(`${this.baseUrl}/contactDay`)
-    //   .catch(this.notificationsService.fetchError('dashboard.errors.contactDay').dispatchCallback());
-    return of({
-      debtorSuccessContact: 101,
-      guarantorSuccessContact: 13,
-      pledgorSuccessContact: 27,
-      thirdPersonSuccessContact: 61,
-      debtorSuccessContactPlan: 34
-    });
+    return this.dataService.read(`${this.baseUrl}/contactDay`)
+      .catch(this.notificationsService.fetchError('dashboard.errors.contactDay').dispatchCallback());
   }
 
   prepareChartData(type: DashboardChartType, data: any): ChartData {
