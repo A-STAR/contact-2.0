@@ -110,9 +110,7 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
   onChange(event: Event): void {
     const { value } = event.target as HTMLInputElement;
     const date = moment(value, this.formatString);
-    if (date.isValid()) {
-      this.update(date.toDate());
-    }
+    this.update(date.isValid() ? date.toDate() : null);
   }
 
   @HostListener('focusout')
@@ -123,7 +121,7 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
     }
   }
 
-  private update(value: Date): void {
+  private update(value: Date | null): void {
     this._value = value;
     this.propagateChange(value);
     this.cdRef.markForCheck();
