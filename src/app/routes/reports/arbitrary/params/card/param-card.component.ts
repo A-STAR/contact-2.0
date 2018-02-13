@@ -120,11 +120,14 @@ export class ParamCardComponent implements OnInit, DoCheck {
 
     if (this.isDictRequired(this.paramTypeCode)) {
       dictControl.required = true;
-      dictFormControl.clearValidators();
-    } else {
-      dictControl.required = false;
+      dictControl.display = true;
       dictFormControl.setValidators([ Validators.required ]);
       dictFormControl.patchValue(1);
+    } else {
+      dictControl.required = false;
+      dictControl.display = false;
+      dictFormControl.clearValidators();
+      dictFormControl.patchValue(null);
     }
     dictControl.options = [].concat(dictControl.options);
 
