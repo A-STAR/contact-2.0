@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckboxCellRendererComponent should render checkbox renderer 1`] = `
+<div
+  id="root0"
+  ng-version="5.2.4"
+>
+  
+      
+  <label>
+    
+        
+    <app-checkbox
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-model="false"
+    >
+      <input
+        type="checkbox"
+      />
+      
+
+    </app-checkbox>
+    
+      
+  </label>
+  
+    
+</div>
+`;
