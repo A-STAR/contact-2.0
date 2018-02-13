@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ColDef } from 'ag-grid';
 
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 

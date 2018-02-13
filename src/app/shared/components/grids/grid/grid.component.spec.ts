@@ -8,7 +8,6 @@ import { of } from 'rxjs/observable/of';
 import { IGridColumn } from '../grids.interface';
 
 import { GridsService } from '../grids.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { SimpleGridComponent } from './grid.component';
 
