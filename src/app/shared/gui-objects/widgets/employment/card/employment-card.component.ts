@@ -1,5 +1,4 @@
-import { Component, ViewChild, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ViewChild, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -9,7 +8,6 @@ import { IEmployment } from '@app/shared/gui-objects/widgets/employment/employme
 
 import { EmploymentService } from '@app/shared/gui-objects/widgets/employment/employment.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -28,6 +26,8 @@ export class EmploymentCardComponent implements OnInit {
   @Input() personId: number;
   @Input() employmentId: number;
 
+  @Output() close = new EventEmitter<void>();
+
   controls: IDynamicFormControl[] = null;
   employment: IEmployment;
 
@@ -35,8 +35,6 @@ export class EmploymentCardComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,
     private lookupService: LookupService,
-    private route: ActivatedRoute,
-    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
@@ -73,15 +71,7 @@ export class EmploymentCardComponent implements OnInit {
   }
 
   onBack(): void {
-    const contactSegments = this.route.snapshot.paramMap.get('contactId')
-      ? [ 'contact', this.route.snapshot.paramMap.get('contactId') ]
-      : [];
-    this.routingService.navigate([
-      '/workplaces',
-      'debtor-card',
-      this.route.snapshot.paramMap.get('debtId'),
-      ...contactSegments
-    ]);
+    this.close.emit();
   }
 
   onSubmit(): void {

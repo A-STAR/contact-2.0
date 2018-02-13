@@ -27,6 +27,7 @@ import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.m
 import { OperatorDetailsModule } from './operator-details/operator-details.module';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
+import { PersonSelectModule } from './person-select/person-select.module';
 import { PledgeModule } from './pledge/pledge.module';
 import { PledgorModule } from './pledgor/pledgor.module';
 import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
@@ -65,6 +66,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     OperatorDetailsModule,
     PaymentModule,
     PaymentOperatorModule,
+    PersonSelectModule,
     PledgeModule,
     PledgorModule,
     PledgorPropertyModule,
@@ -101,6 +103,7 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     OperatorDetailsModule,
     PaymentModule,
     PaymentOperatorModule,
+    PersonSelectModule,
     PledgeModule,
     PledgorModule,
     PledgorPropertyModule,

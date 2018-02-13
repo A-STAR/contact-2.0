@@ -2376,6 +2376,11 @@
         "name": "Название"
       }
     },
+    "personSelect": {
+      "dialog": {
+        "title": "Выбор персоны"
+      }
+    },
     "scheduleEvents": {
       "grid": {
         "id": "ID",
@@ -3190,10 +3195,15 @@
           "lastName": "Фамилия",
           "firstName": "Имя",
           "middleName": "Отчество",
+          "personFullName": "ФИО",
           "typeCode": "Тип должника",
           "birthDate": "Дата рождения",
+          "birthPlace": "Место рождения",
+          "familyStatusCode": "Семейное положение",
+          "educationCode": "Образование",
           "genderCode": "Пол",
           "passportNumber": "Серия и номер паспорта",
+          "comment": "Комментарий",
           "stringValue1": "Строковый атрибут 1",
           "stringValue2": "Строковый атрибут 2",
           "stringValue3": "Строковый атрибут 3",
