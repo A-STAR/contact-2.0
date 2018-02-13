@@ -49,12 +49,21 @@ export class SimpleGridComponent<T> {
         'columnsMenuTab',
       ],
     },
+    enableColResize: true,
     enableFilter: true,
+    enableRangeSelection: true,
     enableSorting: true,
     headerHeight: 28,
     pagination: true,
     paginationPageSize: 25,
     rowHeight: 28,
+    showToolPanel: false,
+    suppressPaginationPanel: true,
+    suppressScrollOnNewData: true,
+    toolPanelSuppressPivotMode: true,
+    toolPanelSuppressPivots: true,
+    toolPanelSuppressRowGroups: true,
+    toolPanelSuppressValues: true,
   };
 
   private gridApi: GridApi;
