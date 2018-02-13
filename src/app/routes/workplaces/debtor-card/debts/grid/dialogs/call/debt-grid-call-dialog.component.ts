@@ -19,15 +19,22 @@ export class DebtGridCallDialogComponent {
   @Output() submit = new EventEmitter<void>();
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
+  private static readonly NEXT_CALL_CONTROL = 'nextCallDateTime';
+  private static readonly MIN_DATE_TIME = moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate();
+
   controls: Array<IDynamicFormControl> = [
     {
-      controlName: 'nextCallDateTime',
+      controlName: DebtGridCallDialogComponent.NEXT_CALL_CONTROL,
       type: 'datetimepicker',
-      minDateTime: moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate(),
+      minDateTime: DebtGridCallDialogComponent.MIN_DATE_TIME,
       displaySeconds: false,
     },
     { controlName: 'forAllDebts', type: 'checkbox' },
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.nextCall.${control.controlName}` }) as IDynamicFormControl);
+
+  data: any = {
+    [DebtGridCallDialogComponent.NEXT_CALL_CONTROL]: DebtGridCallDialogComponent.MIN_DATE_TIME,
+  };
 
   constructor(private debtService: DebtService) {}
 

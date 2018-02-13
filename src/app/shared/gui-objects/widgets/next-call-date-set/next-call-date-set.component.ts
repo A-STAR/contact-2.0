@@ -28,19 +28,26 @@ export class NextCallDateSetDialogComponent {
   @Input() debts: number[];
   @Output() close = new EventEmitter<ICloseAction>();
 
+  private static readonly NEXT_CALL_CONTROL = 'nextCallDate';
+  private static readonly MIN_DATE_TIME = moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate();
+
   constructor(
     private nextCallDateSetService: NextCallDateSetService,
   ) {}
 
   controls: IDynamicFormControl[] = [
     {
-      label: labelKey('nextCallDate'),
-      controlName: 'nextCallDate',
+      label: labelKey(NextCallDateSetDialogComponent.NEXT_CALL_CONTROL),
+      controlName: NextCallDateSetDialogComponent.NEXT_CALL_CONTROL,
       type: 'datetimepicker',
-      minDateTime: moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate(),
+      minDateTime: NextCallDateSetDialogComponent.MIN_DATE_TIME,
       displaySeconds: false,
     }
   ];
+
+  data: any = {
+    [NextCallDateSetDialogComponent.NEXT_CALL_CONTROL]: NextCallDateSetDialogComponent.MIN_DATE_TIME,
+  };
 
   get canSubmit(): boolean {
     return this.form.canSubmit;
