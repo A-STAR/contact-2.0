@@ -1,16 +1,30 @@
 import { async as Async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { ColDef } from 'ag-grid';
+import { AgGridModule } from 'ag-grid-angular/main';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { AgGridModule } from 'ag-grid-angular/main';
+
+import { IGridColumn } from '../grids.interface';
 
 import { GridsService } from '../grids.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { SimpleGridComponent } from './grid.component';
 
 class TranslateLoaderMock {
   getTranslation(language: string): Observable<any> {
     return of([]);
+  }
+}
+
+class GridsServiceMock {
+  convertColumnsToColDefs<T>(columns: IGridColumn<T>[]): Observable<ColDef[]> {
+    const colDefs = columns.map(column => ({
+      field: column.prop,
+      headerName: column.label,
+    }));
+    return of(colDefs);
   }
 }
 
@@ -34,7 +48,10 @@ describe('SimpleGridComponent', () => {
         ],
         providers: [
           // TODO(d.maltsev): mock?
-          GridsService,
+          {
+            provide: GridsService,
+            useClass: GridsServiceMock,
+          }
         ]
       })
       .compileComponents();

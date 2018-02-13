@@ -12,8 +12,8 @@ import { GridsService } from './grids.service';
 import { SimpleGridComponent } from './grid/grid.component';
 
 // Auxiliary Components
-import { CheckboxCellRendererComponent } from './renderers/checkbox.component';
-import { DictRendererComponent } from './renderers/dict.component';
+import { CheckboxCellRendererComponent } from './renderers/checkbox/checkbox.component';
+import { DictRendererComponent } from './renderers/dict/dict.component';
 
 @NgModule({
   imports: [

@@ -9,7 +9,7 @@ import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DictRendererComponent } from './renderers/dict.component';
+import { DictRendererComponent } from './renderers/dict/dict.component';
 
 @Injectable()
 export class GridsService {

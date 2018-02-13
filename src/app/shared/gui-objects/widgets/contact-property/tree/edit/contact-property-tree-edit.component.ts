@@ -31,7 +31,7 @@ import { UserTemplatesService } from '@app/core/user/templates/user-templates.se
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { CheckboxCellRendererComponent } from '@app/shared/components/grids/renderers/checkbox.component';
+import { CheckboxCellRendererComponent } from '@app/shared/components/grids/renderers/checkbox/checkbox.component';
 
 import { flatten, isEmpty, makeKey, range, TYPE_CODES, valuesToOptions } from '@app/core/utils';
 
