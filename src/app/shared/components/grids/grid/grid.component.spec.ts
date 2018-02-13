@@ -47,7 +47,6 @@ describe('SimpleGridComponent', () => {
           }),
         ],
         providers: [
-          // TODO(d.maltsev): mock?
           {
             provide: GridsService,
             useClass: GridsServiceMock,
