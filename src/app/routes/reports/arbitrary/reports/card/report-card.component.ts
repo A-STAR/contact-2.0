@@ -62,7 +62,6 @@ export class ReportCardComponent implements OnInit {
 
     action.subscribe(() => {
       this.reportsService.dispatchAction(ReportsService.MESSAGE_REPORT_SAVED);
-      this.form.markAsPristine();
       this.onBack();
     });
   }
