@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { ISimpleGridColumn } from './grid.interface';
 
 import { GridsService } from '../grids.service';
+import { GridOptions } from 'ag-grid/dist/lib/entities/gridOptions';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,6 +33,23 @@ export class SimpleGridComponent<T> {
     this._rows = rows;
     this.updateRows();
   }
+
+  gridOptions: GridOptions = {
+    defaultColDef: {
+      enableRowGroup: false,
+      filterParams: {
+        newRowsAction: 'keep',
+      },
+      headerComponentParams: {
+        // headerHeight: this.headerHeight,
+        enableMenu: true,
+      },
+      menuTabs: [
+        'filterMenuTab',
+        'columnsMenuTab',
+      ],
+    },
+  };
 
   private gridApi: GridApi;
 

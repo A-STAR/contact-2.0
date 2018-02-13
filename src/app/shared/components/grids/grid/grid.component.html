@@ -3,6 +3,8 @@
   class="ag-theme-material"
   style="width: 100%; height: 500px;"
   [columnDefs]="colDefs"
+  [enableFilter]="true"
+  [gridOptions]="gridOptions"
   [rowData]="rows"
   (gridReady)="onGridReady($event)"
 ></ag-grid-angular>

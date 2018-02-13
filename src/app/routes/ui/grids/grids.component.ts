@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { IGridFilterType } from '@app/shared/components/grids/grids.interface';
 
 interface IRow {
   id: number;
@@ -19,14 +20,17 @@ export class GridsComponent {
     {
       label: 'ID',
       prop: 'id',
+      filter: IGridFilterType.NUMBER,
     },
     {
       label: 'Foo',
       prop: 'foo',
+      filter: IGridFilterType.TEXT,
     },
     {
       label: 'Bar',
       prop: 'bar',
+      filter: IGridFilterType.TEXT,
     },
     {
       label: 'Dict',

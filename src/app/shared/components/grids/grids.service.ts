@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { mapTo } from 'rxjs/operators';
 import { ColDef } from 'ag-grid';
 
-import { IGridColumn } from './grids.interface';
+import { IGridColumn, IGridFilterType } from './grids.interface';
 import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -20,6 +20,7 @@ export class GridsService {
     const colDefs = columns.map(column => ({
       field: column.prop,
       headerName: column.label,
+      ...this.getFilterOptions(column),
       ...this.getCellRendererOptions(column),
     }));
 
@@ -44,5 +45,18 @@ export class GridsService {
           cellRendererParams: { dictCode },
         }
       : {};
+  }
+
+  private getFilterOptions<T>(column: IGridColumn<T>): Partial<ColDef> {
+    switch (column.filter) {
+      case IGridFilterType.NUMBER:
+        return { filter: 'agNumberColumnFilter' };
+      case IGridFilterType.TEXT:
+        return { filter: 'agTextColumnFilter' };
+      case IGridFilterType.DATE:
+        return { filter: 'agDateColumnFilter' };
+      default:
+        return { suppressFilter: true };
+    }
   }
 }
