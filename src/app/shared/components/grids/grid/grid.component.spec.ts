@@ -4,10 +4,9 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { AgGridModule } from 'ag-grid-angular/main';
 
-import { range } from '@app/core/utils/index';
+import { GridsService } from '../grids.service';
 
 import { SimpleGridComponent } from './grid.component';
-import { setTimeout } from 'timers';
 
 class TranslateLoaderMock {
   getTranslation(language: string): Observable<any> {
@@ -33,6 +32,10 @@ describe('SimpleGridComponent', () => {
             },
           }),
         ],
+        providers: [
+          // TODO(d.maltsev): mock?
+          GridsService,
+        ]
       })
       .compileComponents();
   }));

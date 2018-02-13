@@ -1,8 +1,8 @@
 <ag-grid-angular
-  *ngIf="columns"
+  *ngIf="colDefs"
   class="ag-theme-material"
   style="width: 100%; height: 500px;"
-  [columnDefs]="columns"
+  [columnDefs]="colDefs"
   [rowData]="rows"
   (gridReady)="onGridReady($event)"
 ></ag-grid-angular>

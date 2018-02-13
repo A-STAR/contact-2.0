@@ -1,5 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-import { GridApi } from 'ag-grid';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ColDef, GridApi } from 'ag-grid';
+import { first } from 'rxjs/operators';
+
+import { ISimpleGridColumn } from './grid.interface';
+
+import { GridsService } from '../grids.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -9,16 +14,38 @@ import { GridApi } from 'ag-grid';
   templateUrl: './grid.component.html'
 })
 export class SimpleGridComponent<T> {
-  @Input() columns;
+  @Input()
+  set columns(columns: ISimpleGridColumn<T>[]) {
+    this.gridsService
+      .convertColumnsToColDefs(columns)
+      .pipe(
+        first(),
+      )
+      .subscribe(colDefs => {
+        this._colDefs = colDefs;
+        this.updateColumns();
+      });
+  }
 
-  @Input('rows') set rows(rows: T[]) {
+  @Input()
+  set rows(rows: T[]) {
     this._rows = rows;
     this.updateRows();
   }
 
   private gridApi: GridApi;
 
+  private _colDefs: ColDef[];
   private _rows: T[];
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private gridsService: GridsService,
+  ) {}
+
+  get colDefs(): ColDef[] {
+    return this._colDefs;
+  }
 
   get rows(): T[] {
     return this._rows;
@@ -26,13 +53,21 @@ export class SimpleGridComponent<T> {
 
   onGridReady(params: any): void {
     this.gridApi = params.api;
-    this.gridApi.sizeColumnsToFit();
+    this.updateColumns();
     this.updateRows();
   }
 
+  private updateColumns(): void {
+    if (this.gridApi && this._colDefs) {
+      this.gridApi.sizeColumnsToFit();
+    }
+    this.cdRef.markForCheck();
+  }
+
   private updateRows(): void {
-    if (this.gridApi && this.rows) {
+    if (this.gridApi && this._rows) {
       this.gridApi.redrawRows();
     }
+    this.cdRef.markForCheck();
   }
 }

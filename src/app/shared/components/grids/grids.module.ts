@@ -6,31 +6,37 @@ import { LicenseManager } from 'ag-grid-enterprise/main';
 
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 
+import { GridsService } from './grids.service';
+
 // Grids
 import { SimpleGridComponent } from './grid/grid.component';
 
 // Auxiliary Components
 import { CheckboxCellRendererComponent } from './renderers/checkbox.component';
+import { DictRendererComponent } from './renderers/dict.component';
 
 @NgModule({
   imports: [
-    // TODO(d.maltsev): list components here?
-    AgGridModule.withComponents([]),
+    AgGridModule.withComponents([
+      CheckboxCellRendererComponent,
+      DictRendererComponent,
+    ]),
     CheckModule,
     CommonModule,
     FormsModule,
   ],
   exports: [
     CheckboxCellRendererComponent,
+    DictRendererComponent,
     SimpleGridComponent,
   ],
   declarations: [
     CheckboxCellRendererComponent,
+    DictRendererComponent,
     SimpleGridComponent,
   ],
-  // Only auxiliary components created by ag-grid in runtime
-  entryComponents: [
-    CheckboxCellRendererComponent,
+  providers: [
+    GridsService,
   ]
 })
 export class GridsModule {
