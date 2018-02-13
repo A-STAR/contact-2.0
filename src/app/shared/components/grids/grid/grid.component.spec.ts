@@ -9,6 +9,7 @@ import { IGridColumn } from '../grids.interface';
 
 import { GridsService } from '../grids.service';
 
+import { GridToolbarComponent } from '../toolbar/toolbar.component';
 import { SimpleGridComponent } from './grid.component';
 
 class TranslateLoaderMock {
@@ -34,6 +35,7 @@ describe('SimpleGridComponent', () => {
     TestBed
       .configureTestingModule({
         declarations: [
+          GridToolbarComponent,
           SimpleGridComponent,
         ],
         imports: [

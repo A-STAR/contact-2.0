@@ -11,9 +11,12 @@ import { GridsService } from './grids.service';
 // Grids
 import { SimpleGridComponent } from './grid/grid.component';
 
-// Auxiliary Components
+// Renderers
 import { CheckboxCellRendererComponent } from './renderers/checkbox/checkbox.component';
 import { DictRendererComponent } from './renderers/dict/dict.component';
+
+// Misc Components
+import { GridToolbarComponent } from './toolbar/toolbar.component';
 
 @NgModule({
   imports: [
@@ -33,6 +36,7 @@ import { DictRendererComponent } from './renderers/dict/dict.component';
   declarations: [
     CheckboxCellRendererComponent,
     DictRendererComponent,
+    GridToolbarComponent,
     SimpleGridComponent,
   ],
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule

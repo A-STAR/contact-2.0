@@ -9,6 +9,18 @@ exports[`SimpleGridComponent should render empty grid 1`] = `
   
 
 
+  <app-grid-toolbar>
+    <div>
+      
+  I am grid toolbar
+
+    </div>
+    
+
+  </app-grid-toolbar>
+  
+
+
   
 
 </div>
