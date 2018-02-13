@@ -19,7 +19,8 @@ export class DebtorContactsComponent {
   ) {}
 
   get contactId$(): Observable<number> {
-    return this.routeParams$.map(params => params.contactId);
+    return this.routeParams$
+      .map(params => Number(params.contactId));
   }
 
   get personId$(): Observable<number> {

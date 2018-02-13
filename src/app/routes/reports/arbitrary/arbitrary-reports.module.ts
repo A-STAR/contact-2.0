@@ -19,48 +19,12 @@ const routes: Routes = [
       reuse: true,
     },
   },
-  {
-    path: 'create',
-    component: ReportCardComponent,
-    data: {
-      reuse: true,
-    },
-  },
-  {
-    path: ':reportId',
-    component: ReportCardComponent,
-    data: {
-      reuse: true,
-    },
-  },
-  {
-    path: ':reportId/fields/create',
-    component: FieldCardComponent,
-    data: {
-      reuse: true,
-    },
-  },
-  {
-    path: ':reportId/fields/:fieldId',
-    component: FieldCardComponent,
-    data: {
-      reuse: true,
-    },
-  },
-  {
-    path: ':reportId/params/create',
-    component: ParamCardComponent,
-    data: {
-      reuse: true,
-    },
-  },
-  {
-    path: ':reportId/params/:paramId',
-    component: ParamCardComponent,
-    data: {
-      reuse: true,
-    },
-  },
+  { path: 'create', component: ReportCardComponent },
+  { path: ':reportId', component: ReportCardComponent },
+  { path: ':reportId/fields/create', component: FieldCardComponent },
+  { path: ':reportId/fields/:fieldId', component: FieldCardComponent },
+  { path: ':reportId/params/create', component: ParamCardComponent },
+  { path: ':reportId/params/:paramId', component: ParamCardComponent },
 ];
 
 @NgModule({

@@ -2399,6 +2399,11 @@
         "name": "Name"
       }
     },
+    "personSelect": {
+      "dialog": {
+        "title": "Select person"
+      }
+    },
     "scheduleEvents": {
       "grid": {
         "id": "ID",
@@ -3216,10 +3221,15 @@
           "lastName": "Last Name",
           "firstName": "First Name",
           "middleName": "Middle Name",
+          "personFullName": "Full Name",
           "typeCode": "Debtor Type",
           "birthDate": "Date of Birth",
+          "birthPlace": "Place of birth",
+          "familyStatusCode": "Family status",
+          "educationCode": "Education",
           "genderCode": "Gender",
           "passportNumber": "Passport Number",
+          "comment": "Comment",
           "stringValue1": "String Attribute 1",
           "stringValue2": "String Attribute 2",
           "stringValue3": "String Attribute 3",

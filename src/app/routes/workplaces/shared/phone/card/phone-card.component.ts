@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
+  OnInit, ViewChild, Output, EventEmitter
+} from '@angular/core';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 
 import { PhoneService } from '@app/routes/workplaces/shared/phone/phone.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -27,6 +28,8 @@ export class PhoneCardComponent implements OnInit {
   @Input() entityId: number;
   @Input() phoneId: number;
 
+  @Output() close = new EventEmitter<void>();
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormItem[] = null;
@@ -35,9 +38,6 @@ export class PhoneCardComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private phoneService: PhoneService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
@@ -75,31 +75,7 @@ export class PhoneCardComponent implements OnInit {
   }
 
   onBack(): void {
-    // TODO(d.maltsev):
-    // This is a temporary solution
-    // Phone card should probably have an `@Output() back = new EventEmitter<void>()`
-    // Then we could handle click on back button separately in each container component
-    if (this.router.url.includes('incoming-call')) {
-      this.router.navigate([ '/workplaces/incoming-call' ]);
-      return;
-    }
-
-    const contactSegments = this.route.snapshot.paramMap.get('contactId')
-      ? [ 'contact', this.route.snapshot.paramMap.get('contactId') ]
-      : [];
-    const url = this.callCenter
-      ? [
-        '/workplaces',
-        'call-center',
-        this.route.snapshot.paramMap.get('campaignId')
-      ]
-      : [
-        '/workplaces',
-        'debtor-card',
-        this.route.snapshot.paramMap.get('debtId'),
-        ...contactSegments
-      ];
-    this.routingService.navigate(url);
+    this.close.emit();
   }
 
   get canSubmit(): boolean {

@@ -93,7 +93,50 @@ const routes: Routes = [
     path: 'contact',
     children: [
       { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorContactsComponent },
+      {
+        path: 'create',
+        children: [
+          { path: '', component: DebtorContactsComponent, data: {reuse: true} },
+          {
+            path: ':contactPersonId',
+            children: [
+              { path: '', component: DebtorContactsComponent },
+              {
+                path: 'phone',
+                children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorPhoneComponent },
+                  { path: ':phoneId', component: DebtorPhoneComponent },
+                ]
+              },
+              {
+                path: 'address',
+                children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorAddressComponent },
+                  { path: ':addressId', component: DebtorAddressComponent },
+                ]
+              },
+              {
+                path: 'identity',
+                children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorIdentityComponent },
+                  { path: ':identityId', component: DebtorIdentityComponent },
+                ]
+              },
+              {
+                path: 'employment',
+                children: [
+                  { path: '', redirectTo: 'create', pathMatch: 'full' },
+                  { path: 'create', component: DebtorEmploymentComponent },
+                  { path: ':employmentId', component: DebtorEmploymentComponent },
+                ]
+              },
+            ]
+          }
+        ]
+      },
       {
         path: ':contactId',
         children: [
