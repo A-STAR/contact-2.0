@@ -1,1 +1,32 @@
-I am a grid.
+<ag-grid-angular
+  *ngIf="columns"
+  class="ag-theme-material"
+  style="width: 100%; height: 500px;"
+  [columnDefs]="columns"
+  [rowData]="rows"
+  (gridReady)="onGridReady($event)"
+></ag-grid-angular>
+
+<!--
+<ag-grid-angular
+  *ngIf="columns"
+  class="ag-theme-material"
+  style="height: 500px;"
+  [columnDefs]="columns"
+  [rowData]="rows"
+  [deltaRowDataMode]="true"
+  [treeData]="true"
+  [animateRows]="true"
+  [groupDefaultExpanded]="groupDefaultExpanded"
+  [getDataPath]="getDataPath"
+  [getRowNodeId]="getRowNodeId"
+  [autoGroupColumnDef]="autoGroupColumnDef"
+  [rowSelection]="rowSelection"
+  [gridOptions]="gridOptions"
+  (cellValueChanged)="onCellValueChanged($event)"
+  (gridReady)="onGridReady($event)"
+  (selectionChanged)="onSelect($event)"
+  (rowDoubleClicked)="onDblClick($event)"
+  (rowDragEnd)="onDragEnd($event)"
+></ag-grid-angular>
+-->
