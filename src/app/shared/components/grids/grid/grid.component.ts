@@ -4,12 +4,11 @@ import { GridApi } from 'ag-grid';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  // TODO(d.maltsev): rename to `app-simple-grid`
   selector: 'app-simple-grid',
   styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html'
 })
-export class GridComponent<T> {
+export class SimpleGridComponent<T> {
   @Input() columns;
 
   @Input('rows') set rows(rows: T[]) {

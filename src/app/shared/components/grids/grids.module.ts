@@ -7,7 +7,7 @@ import { LicenseManager } from 'ag-grid-enterprise/main';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 
 // Grids
-import { GridComponent } from './grid/grid.component';
+import { SimpleGridComponent } from './grid/grid.component';
 
 // Auxiliary Components
 import { CheckboxCellRendererComponent } from './renderers/checkbox.component';
@@ -22,11 +22,11 @@ import { CheckboxCellRendererComponent } from './renderers/checkbox.component';
   ],
   exports: [
     CheckboxCellRendererComponent,
-    GridComponent,
+    SimpleGridComponent,
   ],
   declarations: [
     CheckboxCellRendererComponent,
-    GridComponent,
+    SimpleGridComponent,
   ],
   // Only auxiliary components created by ag-grid in runtime
   entryComponents: [
