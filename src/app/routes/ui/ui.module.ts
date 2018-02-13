@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { DatePickerModule } from './datepicker/datepicker.module';
 import { DateTimePickerModule } from './datetimepicker/datetimepicker.module';
+import { GridsModule } from './grids/grids.module';
 import { IconsModule } from '@app/routes/ui/icons/icons.module';
 import { NumberModule } from './number/number.module';
 import { RadioButtonModule } from './radiobutton/radiobutton.module';
@@ -28,6 +29,8 @@ const routes: Routes = [
     DatePickerModule,
     DateTimePickerModule,
     FormsModule,
+    GridsModule,
+    IconsModule,
     NumberModule,
     RadioButtonModule,
     RouterModule.forChild(routes),
@@ -35,7 +38,6 @@ const routes: Routes = [
     TextModule,
     TextareaModule,
     TimePickerModule,
-    IconsModule,
   ],
   exports: [
     RouterModule,

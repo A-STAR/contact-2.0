@@ -13,7 +13,18 @@ import { ProgressChartComponent } from './progress-chart/progress-chart.componen
     CommonModule,
     TranslateModule,
   ],
-  declarations: [ BarChartComponent, IndicatorsComponent, PieChartComponent, ProgressChartComponent, ChartComponent ],
-  exports: [ BarChartComponent, IndicatorsComponent, PieChartComponent, ProgressChartComponent, ChartComponent ]
+  declarations: [
+    BarChartComponent,
+    IndicatorsComponent,
+    PieChartComponent,
+    ProgressChartComponent,
+    ChartComponent,
+  ],
+  exports: [
+    BarChartComponent, IndicatorsComponent,
+    PieChartComponent,
+    ProgressChartComponent,
+    ChartComponent,
+  ],
 })
-export class ChartsModule { }
+export class ChartsModule {}
