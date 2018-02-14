@@ -794,13 +794,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     : [ MenuItemDef[], MenuItemDef[]] {
     return actions.reduce((acc, action) => {
 
-      const menuDef = action.applyTo ? this.getNonSingleAction(action, params) : this.getSingleAction(action, params);
-      const arr = action.applyTo ? acc[0] : acc[1];
+      const menuDef = action.applyTo ?
+      this.getNonSingleAction(action, params) :
+      action.children ?
+        {
+          ...this.getActionWithChildren(action, params),
+          subMenu: this.getMetadataMenuItems(action.children, params, true)
+        } :
+        this.getSingleAction(action, params);
+      const arr = (action.applyTo || action.children) ? acc[0] : acc[1];
 
-      arr.push({
-        ...menuDef,
-        subMenu: action.children ? this.getMetadataMenuItems(action.children, params, true) : menuDef.subMenu
-      });
+      arr.push(menuDef);
       return acc;
     }, [[], []] as [ MenuItemDef[], MenuItemDef[] ]);
   }
@@ -816,7 +820,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         params
       }),
       disabled: action.enabled
-        ? !action.enabled.call(null, this.selected, params.node.data)
+        ? !action.enabled.call(null, MetadataActionType.SINGLE, this.selected, params.node.data)
+        : false,
+    };
+  }
+
+  private getActionWithChildren(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
+    return {
+      name: this.translate.instant(`default.grid.actions.${action.action}`),
+      disabled: action.enabled
+        ? !action.enabled.call(null, MetadataActionType.ALL, this.selected, params.node.data)
         : false,
     };
   }
@@ -842,7 +855,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private getActionForSelectedSubmenu(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
     return {
       name: this.translate.instant(`default.grid.actions.actionForSelection`),
-      disabled: action.enabled ? !action.enabled.call(null, this.selected, params.node.data) : false,
+      disabled: action.enabled ? !action.enabled.call(null, MetadataActionType.SELECTED, this.selected, params.node.data) : false,
       action: () => this.action.emit({
         metadataAction: {
           ...action,
@@ -856,8 +869,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private getActionForAllSubmenu(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
     return {
       name: this.translate.instant(`default.grid.actions.actionForAll`),
-      // TODO(i.lobanov): looks like mass operation for all items needs separate enabled fn
-      disabled: false,
+      disabled: action.enabled ? !action.enabled.call(null, MetadataActionType.ALL, this.selected, params.node.data) : false,
       action: () => this.action.emit({
         metadataAction: {
           ...action,
