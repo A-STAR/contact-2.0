@@ -24,11 +24,13 @@ cache:
 pages:
   stage: test
   script:
-    - mkdir public
-    - echo 'Welcome to GitLab Pages yo' > public/index.html
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
+    # - echo 'Welcome to GitLab Pages yo' > public/index.html
   artifacts:
     paths:
-      - public
+      - coverage
 
 job_build:
   stage: build
