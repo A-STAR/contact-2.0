@@ -7,7 +7,6 @@ import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IUser, IUsersState } from '@app/routes/admin/users/users.interface';
 
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -85,7 +84,6 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
