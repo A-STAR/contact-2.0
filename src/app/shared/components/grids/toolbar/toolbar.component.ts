@@ -9,6 +9,7 @@ import { GridApi } from 'ag-grid';
 })
 export class GridToolbarComponent implements OnInit {
   @Input() gridApi: GridApi;
+  @Input() pagination = false;
 
   pageSizeOptions = [ 100, 250, 500, 1000 ].map(value => ({ value, label: String(value) }));
 
