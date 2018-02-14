@@ -17,9 +17,10 @@ import { UsersService } from '@app/routes/admin/users/users.service';
 import { combineLatestAnd } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-users',
   templateUrl: 'users.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersComponent implements OnInit, OnDestroy {
   private _users: Array<IUser> = [];

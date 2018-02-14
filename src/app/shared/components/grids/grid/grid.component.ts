@@ -11,6 +11,7 @@ import { GridToolbarComponent } from '../toolbar/toolbar.component';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height' },
   selector: 'app-simple-grid',
   styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html'

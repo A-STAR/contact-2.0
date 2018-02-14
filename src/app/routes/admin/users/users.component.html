@@ -1,4 +1,13 @@
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
+<div class="flex vertical">
+  <app-titlebar class="flex-item" [titlebar]="titlebar"></app-titlebar>
+
+  <div class="flex-item grow">
+    <app-simple-grid
+      [columns]="columns"
+      [rows]="users"
+    ></app-simple-grid>
+  </div>
+</div>
 
 <!-- <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2> -->
 
@@ -15,8 +24,3 @@
   (onSelect)="onSelect($event)">
 </app-grid>
 -->
-
-<app-simple-grid
-  [columns]="columns"
-  [rows]="users"
-></app-simple-grid>
