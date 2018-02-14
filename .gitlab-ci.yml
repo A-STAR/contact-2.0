@@ -19,7 +19,7 @@ job_test:
     - dev
 
 job_coverage:
-  state: build
+  stage: build
   script:
     - npm run test:ci -- --coverage
   coverage: /Statements\s*:\s*([\d\.]+)%/
