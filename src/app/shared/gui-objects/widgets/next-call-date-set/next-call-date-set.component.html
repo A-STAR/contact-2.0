@@ -3,7 +3,7 @@
     <h3>{{ 'widgets.nextCallDateSet.dialog.title' | translate }}</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls"></app-dynamic-form>
+  <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
 
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
