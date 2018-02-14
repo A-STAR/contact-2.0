@@ -14,7 +14,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 import { IAppState } from '@app/core/state/state.interface';
-import { IDynamicFormControl, IDynamicFormConfig } from '../../form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl } from '../../form/dynamic-form/dynamic-form.interface';
 import { IMetadataColumn, IMetadataFilter, IMetadataFilterOperator } from '@app/core/metadata/metadata.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';

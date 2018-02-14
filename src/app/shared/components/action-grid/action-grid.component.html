@@ -191,7 +191,7 @@
   <app-grid2
     #grid
     *ngIf="initialized"
-    [actions]="gridActionsForSelected$ | async"
+    [actions]="gridActions$ | async"
     [columnIds]="columnIds"
     [columns]="columnsDef"
     [fullHeight]="fullHeight"

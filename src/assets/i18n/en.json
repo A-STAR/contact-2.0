@@ -3101,6 +3101,8 @@
         "filterOoo": "filter..."
       },
       "actions": {
+        "actionForSelection": "for selection",
+        "actionForAll": "for all",
         "addVisit": "Add a visit",
         "cancelVisit": "Cancel a visit",
         "confirmPaymentsOperator": "Confirm change operator",

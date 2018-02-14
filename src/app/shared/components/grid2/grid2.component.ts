@@ -30,7 +30,7 @@ import {
   RefreshCellsParams,
 } from 'ag-grid/main';
 
-import { IMetadataAction } from '@app/core/metadata/metadata.interface';
+import { IMetadataAction, MetadataActionType } from '@app/core/metadata/metadata.interface';
 import {
   IToolbarAction,
   IToolbarActionSelect,
@@ -779,25 +779,94 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
-  private getMetadataMenuItems(actions: IMetadataAction[], params: GetContextMenuItemsParams): MenuItemDef[] {
-    // TODO(m.bobryshev): remove once the BE returns this action
-    // const visitAdd = {
-    //   action: 'visitAdd',
-    //   addOptions: null,
-    //   params: ['debtId', 'personId', 'regionCode']
-    // };
+  private getMetadataMenuItems(actions: IMetadataAction[], params: GetContextMenuItemsParams): Array<MenuItemDef | string> {
+    const metadataActions = this.getMetadataActions(actions, params);
+    const shouldSeparate = !!metadataActions.nonSingle.length;
+    return shouldSeparate ? [
+      ...metadataActions.nonSingle,
+      'separator',
+      ...metadataActions.single
+    ] : [
+      ...metadataActions.nonSingle,
+      ...metadataActions.single
+    ];
+  }
 
-    // const found = this.actions.find(action => action.action === 'visitAdd');
-    // this.actions = found ? this.actions : this.actions.concat(visitAdd);
+  private getMetadataActions(actions: IMetadataAction[], params: GetContextMenuItemsParams)
+    : { [key: string]: MenuItemDef[] } {
+    return actions.reduce((acc, action) => {
 
-    return actions.map(action => ({
+      const menuDef = action.applyTo ? this.getNonSingleAction(action, params) : this.getSingleAction(action, params);
+      const arr = action.applyTo ? acc.nonSingle : acc.single;
+
+      arr.push({
+        ...menuDef,
+        subMenu: action.children ? this.getMetadataMenuItems(action.children, params) : menuDef.subMenu
+      });
+      return acc;
+    }, { nonSingle: [], single: [] });
+  }
+
+  private getSingleAction(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
+    return {
       name: this.translate.instant(`default.grid.actions.${action.action}`),
-      action: () => this.action.emit({ metadataAction: action, params }),
+      action: () => this.action.emit({
+        metadataAction: {
+          ...action,
+          type: MetadataActionType.SINGLE
+        },
+        params
+      }),
       disabled: action.enabled
         ? !action.enabled.call(null, this.selected, params.node.data)
         : false,
-      subMenu: action.children ? this.getMetadataMenuItems(action.children, params) : undefined
-    }));
+    };
+  }
+
+  private getNonSingleAction(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
+    const subMenu = [];
+    if (action.applyTo.all) {
+      subMenu.push(
+        this.getActionForAllSubmenu(action, params)
+      );
+    }
+    if (action.applyTo.selected) {
+      subMenu.push(
+        this.getActionForSelectedSubmenu(action, params)
+      );
+    }
+    return {
+      name: this.translate.instant(`default.grid.actions.${action.action}`),
+      subMenu: subMenu.length ? subMenu : undefined
+    };
+  }
+
+  private getActionForSelectedSubmenu(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
+    return {
+      name: this.translate.instant(`default.grid.actions.actionForSelected`),
+      disabled: action.enabled ? !action.enabled.call(null, this.selected, params.node.data) : false,
+      action: () => this.action.emit({
+        metadataAction: {
+          ...action,
+          type: MetadataActionType.SELECTED
+        },
+        params
+      }),
+    };
+  }
+
+  private getActionForAllSubmenu(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
+    return {
+      name: this.translate.instant(`default.grid.actions.actionForAll`),
+      disabled: false,
+      action: () => this.action.emit({
+        metadataAction: {
+          ...action,
+          type: MetadataActionType.ALL
+        },
+        params
+      }),
+    };
   }
 
   private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {

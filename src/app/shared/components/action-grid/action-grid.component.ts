@@ -20,7 +20,7 @@ import { IActionGridDialogData, ICloseAction } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected, IAGridColumn } from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
-import { IMetadataSortedActions, IMetadataAction, IMetadataActionPermissions } from '@app/core/metadata/metadata.interface';
+import { IMetadataAction, IMetadataActionPermissions } from '@app/core/metadata/metadata.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
@@ -68,12 +68,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private _initialized = false;
 
   private actions$ = new BehaviorSubject<any[]>(null);
-  private actionsWithPermissions$: Observable<IMetadataSortedActions>;
-  private actionsWithPermissionsForAll$: Observable<IMetadataAction[]>;
-  private actionsWithPermissionsForSelected$: Observable<IMetadataAction[]>;
 
   dialog: string;
   dialogData: IActionGridDialogData;
+  gridActions$: Observable<IMetadataAction[]>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -98,7 +96,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         });
     }
 
-     this.actionsWithPermissions$ = combineLatest(
+     this.gridActions$ = combineLatest(
         this.actions$.pipe(filter(Boolean)),
         this.userConstantsService.bag(),
         this.userPermissionsService.bag(),
@@ -109,9 +107,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
           return this.addPermissions(actions, constants, permissions, entityPermissions);
         })
       );
-
-      this.actionsWithPermissionsForAll$ = this.actionsWithPermissions$.map(sortedActions => sortedActions.all);
-      this.actionsWithPermissionsForSelected$ = this.actionsWithPermissions$.map(sortedActions => sortedActions.selected);
   }
 
   get selection(): T[] {
@@ -258,18 +253,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return this.grid && this.grid.selected || [] as any[];
   }
 
-  get gridActions$(): Observable<IMetadataSortedActions> {
-    return this.actionsWithPermissions$;
-  }
-
-  get gridActionsForSelected$(): Observable<IMetadataAction[]> {
-    return this.actionsWithPermissionsForSelected$;
-  }
-
-  get gridActionsForAll$(): Observable<IMetadataAction[]> {
-    return this.actionsWithPermissionsForAll$;
-  }
-
   get gridOptions(): GridOptions {
     return this.grid && this.gridOptions;
   }
@@ -286,20 +269,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return filters;
   }
 
-  private filterActions(actions: IMetadataAction[]): IMetadataSortedActions  {
-    return actions.reduce((acc, action: IMetadataAction) => {
-      const arr = action.applyTo && action.applyTo.all ? acc.all : acc.selected;
-      arr.push(action);
-      return acc;
-    }, { all: [], selected: [] });
-  }
-
   private addPermissions(actions: IMetadataAction[], constants: ValueBag, permissions: ValueBag,
-      entityPerms: IEntityAttributes): IMetadataSortedActions {
+      entityPerms: IEntityAttributes): IMetadataAction[] {
 
     const actionPermissions = this.buildPermissions(actions, constants, permissions, entityPerms);
 
-    return this.filterActions(this.attachPermissions(actions, actionPermissions));
+    return this.attachPermissions(actions, actionPermissions);
   }
 
   private attachPermissions(actions: IMetadataAction[], actionPermissions: IMetadataActionPermissions): IMetadataAction[] {

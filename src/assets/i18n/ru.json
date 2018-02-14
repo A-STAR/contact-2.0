@@ -3101,6 +3101,8 @@
         "filterOoo": "фильтр..."
       },
       "actions": {
+        "actionForSelection": "для выбранных",
+        "actionForAll": "для всех",
         "addVisit": "Отметить необходимость",
         "cancelVisit": "Отменить выезд",
         "confirmPaymentsOperator": "Подтвердить изменение оператора",
