@@ -17,6 +17,7 @@ import { SimpleGridComponent } from './grid/grid.component';
 // Renderers
 import { CheckboxCellRendererComponent } from './renderers/checkbox/checkbox.component';
 import { DictRendererComponent } from './renderers/dict/dict.component';
+import { LookupRendererComponent } from './renderers/lookup/lookup.component';
 
 // Misc Components
 import { GridToolbarComponent } from './toolbar/toolbar.component';
@@ -26,6 +27,7 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
     AgGridModule.withComponents([
       CheckboxCellRendererComponent,
       DictRendererComponent,
+      LookupRendererComponent,
     ]),
     ButtonModule,
     CheckModule,
@@ -36,19 +38,18 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
   ],
   exports: [
     CheckboxCellRendererComponent,
-    DictRendererComponent,
     SimpleGridComponent,
   ],
   declarations: [
     CheckboxCellRendererComponent,
     DictRendererComponent,
     GridToolbarComponent,
+    LookupRendererComponent,
     SimpleGridComponent,
   ],
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
   entryComponents: [
     CheckboxCellRendererComponent,
-    DictRendererComponent,
   ],
   providers: [
     GridsService,

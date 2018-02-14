@@ -18,6 +18,7 @@ export interface IGridColumn<T> {
   // Optional Fields
   dictCode?: number;
   filter?: IGridFilterType;
+  lookupKey?: string;
   minWidth?: number;
   maxWidth?: number;
 }

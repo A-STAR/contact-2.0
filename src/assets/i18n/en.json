@@ -3,7 +3,26 @@
 
   },
   "routes": {
-
+    "admin": {
+      "users": {
+        "grid": {
+          "branchCode": "Branch",
+          "email": "Email",
+          "firstName": "Name",
+          "id": "ID",
+          "intPhone": "Extension",
+          "isInactive": "Inactive",
+          "languageId": "Language",
+          "lastName": "Family name",
+          "login": "Login",
+          "middleName": "Middle name",
+          "mobPhone": "Mobile",
+          "position": "Position",
+          "roleId": "Role",
+          "workPhone": "Work phone"
+        }
+      }
+    }
   },
   "shared": {
     "components": {
@@ -825,22 +844,6 @@
     },
     "create": {
       "title": "New user"
-    },
-    "grid": {
-      "id": "ID",
-      "branchCode": "Branch",
-      "login": "Login",
-      "lastName": "Family name",
-      "firstName": "Name",
-      "middleName": "Middle name",
-      "position": "Position",
-      "roleId": "Role",
-      "isInactive": "Inactive",
-      "mobPhone": "Mobile",
-      "workPhone": "Work phone",
-      "intPhone": "Extension",
-      "email": "Email",
-      "languageId": "Language"
     },
     "ldap": {
       "title": "Domain users",
