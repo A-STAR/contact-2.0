@@ -3,8 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+// import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IUser, IUsersState } from '@app/routes/admin/users/users.interface';
 
 import { GridService } from '@app/shared/components/grid/grid.service';
@@ -24,22 +25,59 @@ export class UsersComponent implements OnInit, OnDestroy {
   private _users: Array<IUser> = [];
   private selectedUserId: number;
 
-  columns: Array<IGridColumn> = [
-    { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
+  columns: ISimpleGridColumn<IUser>[] = [
+    { prop: 'id', minWidth: 50, maxWidth: 70 /*, disabled: true */ },
     { prop: 'login', minWidth: 120 },
     { prop: 'lastName', minWidth: 120 },
     { prop: 'firstName', minWidth: 120 },
     { prop: 'middleName', minWidth: 120 },
     { prop: 'position', minWidth: 120 },
-    { prop: 'roleId', minWidth: 100, lookupKey: 'roles' },
-    { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
+    { prop: 'roleId', minWidth: 100 /*, lookupKey: 'roles' */ },
+    { prop: 'isInactive', minWidth: 100 /*, renderer: 'checkboxRenderer' */ },
     { prop: 'mobPhone', minWidth: 140 },
     { prop: 'workPhone', minWidth: 140 },
     { prop: 'intPhone', minWidth: 140 },
     { prop: 'email', minWidth: 120 },
-    { prop: 'languageId', minWidth: 120, lookupKey: 'languages' },
+    { prop: 'languageId', minWidth: 120 /* , lookupKey: 'languages' */ },
     { prop: 'branchCode', minWidth: 120, dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
-  ];
+    // {
+    //   label: 'ID',
+    //   prop: 'id',
+    //   filter: IGridFilterType.NUMBER,
+    // },
+    // {
+    //   label: 'Foo',
+    //   prop: 'foo',
+    //   filter: IGridFilterType.TEXT,
+    // },
+    // {
+    //   label: 'Bar',
+    //   prop: 'bar',
+    //   filter: IGridFilterType.TEXT,
+    // },
+    // {
+    //   label: 'Dict',
+    //   prop: 'dict',
+    //   dictCode: 1,
+    // }
+  ].map(c => ({ ...c, label: c.prop } as ISimpleGridColumn<IUser>));
+
+  // columns: Array<IGridColumn> = [
+  //   { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
+  //   { prop: 'login', minWidth: 120 },
+  //   { prop: 'lastName', minWidth: 120 },
+  //   { prop: 'firstName', minWidth: 120 },
+  //   { prop: 'middleName', minWidth: 120 },
+  //   { prop: 'position', minWidth: 120 },
+  //   { prop: 'roleId', minWidth: 100, lookupKey: 'roles' },
+  //   { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
+  //   { prop: 'mobPhone', minWidth: 140 },
+  //   { prop: 'workPhone', minWidth: 140 },
+  //   { prop: 'intPhone', minWidth: 140 },
+  //   { prop: 'email', minWidth: 120 },
+  //   { prop: 'languageId', minWidth: 120, lookupKey: 'languages' },
+  //   { prop: 'branchCode', minWidth: 120, dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
+  // ];
 
   displayInactiveUsers: boolean;
 

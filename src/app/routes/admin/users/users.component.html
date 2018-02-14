@@ -2,6 +2,7 @@
 
 <!-- <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2> -->
 
+<!--
 <app-grid
   selectionType="single"
   [columns]="columns"
@@ -13,3 +14,9 @@
   (onDblClick)="onEdit()"
   (onSelect)="onSelect($event)">
 </app-grid>
+-->
+
+<app-simple-grid
+  [columns]="columns"
+  [rows]="users"
+></app-simple-grid>

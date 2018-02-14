@@ -17,6 +17,7 @@ export interface IGridColumn<T> {
 
   // Optional Fields
   dictCode?: number;
-  // TODO(d.maltsev): filter type
   filter?: IGridFilterType;
+  minWidth?: number;
+  maxWidth?: number;
 }

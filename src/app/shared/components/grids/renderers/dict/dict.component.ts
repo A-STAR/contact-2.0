@@ -26,10 +26,11 @@ export class DictRendererComponent implements ICellRendererAngularComp {
   }
 
   get value$(): Observable<string> {
+    const { value } = this.params;
     return this.userDictionariesService
       .getDictionary(this.params['dictCode'])
       .pipe(
-        map(dict => dict[this.params.value].name),
+        map(dict => dict[value] ? dict[value].name : value),
       );
   }
 }
