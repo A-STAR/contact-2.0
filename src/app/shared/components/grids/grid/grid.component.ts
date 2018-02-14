@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
-import { ColDef, GridApi } from 'ag-grid';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ColDef, GridApi, GridOptions } from 'ag-grid';
 import { first } from 'rxjs/operators';
 
 import { ISimpleGridColumn } from './grid.interface';
 
 import { GridsService } from '../grids.service';
-import { GridOptions } from 'ag-grid/dist/lib/entities/gridOptions';
+
+import { GridToolbarComponent } from '../toolbar/toolbar.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +16,8 @@ import { GridOptions } from 'ag-grid/dist/lib/entities/gridOptions';
   templateUrl: './grid.component.html'
 })
 export class SimpleGridComponent<T> {
+  @ViewChild(GridToolbarComponent) toolbar: GridToolbarComponent;
+
   @Input()
   set columns(columns: ISimpleGridColumn<T>[]) {
     this.gridsService
@@ -54,9 +57,11 @@ export class SimpleGridComponent<T> {
     enableRangeSelection: true,
     enableSorting: true,
     headerHeight: 28,
+    onSelectionChanged: () => this.toolbar.update(),
     pagination: true,
     paginationPageSize: 25,
     rowHeight: 28,
+    rowSelection: 'multiple',
     showToolPanel: false,
     suppressPaginationPanel: true,
     suppressScrollOnNewData: true,
@@ -66,7 +71,7 @@ export class SimpleGridComponent<T> {
     toolPanelSuppressValues: true,
   };
 
-  private gridApi: GridApi;
+  gridApi: GridApi;
 
   private _colDefs: ColDef[];
   private _rows: T[];

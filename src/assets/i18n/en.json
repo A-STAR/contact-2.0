@@ -1,4 +1,23 @@
 {
+  "layout": {
+
+  },
+  "routes": {
+
+  },
+  "shared": {
+    "components": {
+      "grids": {
+        "toolbar": {
+          "rowsSelected": "selected",
+          "rowsTotal": "total"
+        }
+      }
+    }
+  },
+  "system": {
+
+  },
   "header": {
     "language": "Language",
     "notifications": "Notifications",

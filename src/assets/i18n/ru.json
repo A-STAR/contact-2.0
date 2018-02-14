@@ -1,4 +1,23 @@
 {
+  "layout": {
+
+  },
+  "routes": {
+
+  },
+  "shared": {
+    "components": {
+      "grids": {
+        "toolbar": {
+          "rowsSelected": "выбрано",
+          "rowsTotal": "всего"
+        }
+      }
+    }
+  },
+  "system": {
+
+  },
   "header": {
     "language": "Язык",
     "notifications": "Сообщения",

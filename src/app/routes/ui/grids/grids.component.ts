@@ -39,10 +39,10 @@ export class GridsComponent {
     }
   ];
 
-  rows: IRow[] = Array(100).fill(null).map((_, i) => i + 1).map(id => ({
+  rows: IRow[] = Array(900).fill(null).map((_, i) => i + 1).map(id => ({
     id,
     foo: `Foo ${id}`,
     bar: `Bar ${id}`,
-    dict: id % 2 + 1,
+    dict: id % 4 + 1,
   }));
 }

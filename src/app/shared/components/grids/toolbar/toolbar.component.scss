@@ -1,0 +1,19 @@
+ul {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    flex: 0 0 auto;
+
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+
+  span {
+    line-height: 25px;
+  }
+}

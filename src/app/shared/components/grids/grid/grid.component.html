@@ -8,7 +8,7 @@
   (gridReady)="onGridReady($event)"
 ></ag-grid-angular>
 
-<app-grid-toolbar></app-grid-toolbar>
+<app-grid-toolbar *ngIf="gridApi" [gridApi]="gridApi"></app-grid-toolbar>
 
 <!--
 <ag-grid-angular
