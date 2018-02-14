@@ -1,9 +1,14 @@
 import { async as Async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ColDef } from 'ag-grid';
 import { AgGridModule } from 'ag-grid-angular/main';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+
+import { ButtonModule } from '@app/shared/components/button/button.module';
+import { CheckModule } from '@app/shared/components/form/check/check.module';
+import { SelectModule } from '@app/shared/components/form/select/select.module';
 
 import { IGridColumn } from '../grids.interface';
 
@@ -40,6 +45,10 @@ describe('SimpleGridComponent', () => {
         ],
         imports: [
           AgGridModule.withComponents({}),
+          ButtonModule,
+          CheckModule,
+          FormsModule,
+          SelectModule,
           TranslateModule.forRoot({
             loader: {
               provide: TranslateLoader,
