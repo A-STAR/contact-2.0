@@ -20,7 +20,7 @@ import { IActionGridDialogData, ICloseAction } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected, IAGridColumn } from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
-import { IMetadataAction, IMetadataActionPermissions } from '@app/core/metadata/metadata.interface';
+import { IMetadataAction, IMetadataActionPermissions, MetadataActionType } from '@app/core/metadata/metadata.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
@@ -288,56 +288,88 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private buildPermissions(actions: IMetadataAction[], constants: ValueBag,
     permissions: ValueBag, entityPerms: IEntityAttributes): IMetadataActionPermissions {
     return {
-      addVisit: selection => selection.length && permissions.has('ADDRESS_VISIT_ADD'),
-      cancelVisit: selection => selection.length && permissions.has('VISIT_CANCEL'),
-      changePortfolioAttr: selection => selection.length && permissions.has('DEBT_PORTFOLIO_EDIT'),
-      changeRegionAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
-      changeDict1Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT1_EDIT_LIST') &&
-        entityPerms[EntityAttributesService.DICT_VALUE_1].isUsed,
-      changeDict2Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT2_EDIT_LIST') &&
-      entityPerms[EntityAttributesService.DICT_VALUE_2].isUsed,
-      changeDict3Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT3_EDIT_LIST') &&
-      entityPerms[EntityAttributesService.DICT_VALUE_3].isUsed,
-      changeDict4Attr: selection => selection.length && permissions.notEmpty('DEBT_DICT4_EDIT_LIST') &&
-      entityPerms[EntityAttributesService.DICT_VALUE_4].isUsed,
-      changeCreditTypeAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
-      changeBranchAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
-      changeTimezoneAttr: selection => selection.length && permissions.has('DEBT_EDIT'),
-      confirmPaymentsOperator: selection => selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
-      confirmPromise: selection => selection.length && permissions.has('PROMISE_CONFIRM'),
-      debtClearResponsible: selection => selection.length && permissions.has('DEBT_RESPONSIBLE_CLEAR'),
-      debtNextCallDate: selection => selection.length && permissions.has('DEBT_NEXT_CALL_DATE_SET'),
-      debtSetResponsible: selection => selection.length && permissions.hasOneOf([
-        'DEBT_RESPONSIBLE_SET',
-        'DEBT_RESPONSIBLE_RESET',
-      ]),
-      deletePromise: selection => selection.length && permissions.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]),
-      deleteSMS: selection => selection.length && permissions.notEmpty('SMS_DELETE_STATUS_LIST'),
-      emailCreate: selection => {
+      addVisit: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('ADDRESS_VISIT_ADD') : selection.length && permissions.has('ADDRESS_VISIT_ADD'),
+      cancelVisit: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('VISIT_CANCEL') : selection.length && permissions.has('VISIT_CANCEL'),
+      changePortfolioAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_PORTFOLIO_EDIT') : selection.length && permissions.has('DEBT_PORTFOLIO_EDIT'),
+      changeRegionAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
+      changeDict1Attr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.notEmpty('DEBT_DICT1_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_1].isUsed :
+        selection.length && permissions.notEmpty('DEBT_DICT1_EDIT_LIST')
+          && entityPerms[EntityAttributesService.DICT_VALUE_1].isUsed,
+      changeDict2Attr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.notEmpty('DEBT_DICT2_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_2].isUsed :
+        selection.length
+          && permissions.notEmpty('DEBT_DICT2_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_2].isUsed,
+      changeDict3Attr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.notEmpty('DEBT_DICT3_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_3].isUsed :
+        selection.length && permissions.notEmpty('DEBT_DICT3_EDIT_LIST')
+          && entityPerms[EntityAttributesService.DICT_VALUE_3].isUsed,
+      changeDict4Attr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.notEmpty('DEBT_DICT4_EDIT_LIST') && entityPerms[EntityAttributesService.DICT_VALUE_4].isUsed :
+        selection.length && permissions.notEmpty('DEBT_DICT4_EDIT_LIST')
+          && entityPerms[EntityAttributesService.DICT_VALUE_4].isUsed,
+      changeCreditTypeAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
+      changeBranchAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
+      changeTimezoneAttr: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_EDIT') : selection.length && permissions.has('DEBT_EDIT'),
+      confirmPaymentsOperator: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('PAYMENTS_OPERATOR_CHANGE') : selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
+      confirmPromise: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('PROMISE_CONFIRM') : selection.length && permissions.has('PROMISE_CONFIRM'),
+      debtClearResponsible: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_RESPONSIBLE_CLEAR') : selection.length && permissions.has('DEBT_RESPONSIBLE_CLEAR'),
+      debtNextCallDate: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_NEXT_CALL_DATE_SET') : selection.length && permissions.has('DEBT_NEXT_CALL_DATE_SET'),
+      debtSetResponsible: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.hasOneOf(['DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET', ]) : selection.length
+          && permissions.hasOneOf(['DEBT_RESPONSIBLE_SET', 'DEBT_RESPONSIBLE_RESET', ]),
+      deletePromise: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]) : selection.length
+          && permissions.hasOneOf([ 'PROMISE_DELETE', 'PROMISE_CONFIRM' ]),
+      deleteSMS: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.notEmpty('SMS_DELETE_STATUS_LIST') : selection.length && permissions.notEmpty('SMS_DELETE_STATUS_LIST'),
+      emailCreate: (actionType: MetadataActionType, selection) => {
         const action = actions.find(a => a.action === 'emailCreate');
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
-        return selection.length
-          && constants.has('Email.Use')
-          && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
+        return actionType === MetadataActionType.ALL ? constants.has('Email.Use')
+          && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole)) :
+          selection.length && constants.has('Email.Use')
+            && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
       },
       // TODO(d.maltsev, i.kibisov): pass entityTypeId
-      objectAddToGroup: selection => selection.length && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
+      objectAddToGroup: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19) : selection.length
+          && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
       openUserDetail: (selection, row) => row && row.userId && permissions.has('OPERATOR_DETAIL_VIEW'),
-      paymentsCancel: selection => selection.length && permissions.has('PAYMENT_CANCEL'),
-      paymentsConfirm: selection => selection.length && permissions.has('PAYMENT_CONFIRM'),
-      prepareVisit: selection => selection.length && permissions.has('VISIT_PREPARE'),
-      rejectPaymentsOperator: selection => selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
+      paymentsCancel: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('PAYMENT_CANCEL') : selection.length && permissions.has('PAYMENT_CANCEL'),
+      paymentsConfirm: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('PAYMENT_CONFIRM') : selection.length && permissions.has('PAYMENT_CONFIRM'),
+      prepareVisit: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('VISIT_PREPARE') : selection.length && permissions.has('VISIT_PREPARE'),
+      rejectPaymentsOperator: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+      permissions.has('PAYMENTS_OPERATOR_CHANGE') : selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
       showContactHistory: (selection, row) => row && row.personId && permissions.has('CONTACT_LOG_VIEW'),
-      smsCreate: selection => {
+      smsCreate: (actionType: MetadataActionType, selection) => {
         const action = actions.find(a => a.action === 'smsCreate');
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
-        return selection.length
-          && constants.has('SMS.Use')
-          && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
+        return actionType === MetadataActionType.ALL ? constants.has('SMS.Use')
+          && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole)) :
+          selection.length && constants.has('SMS.Use')
+            && permissions.contains('SMS_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
       },
-      debtOutsourcingSend: selection => selection.length && permissions.has('DEBT_OUTSOURCING_SEND'),
-      debtOutsourcingExclude: selection => selection.length && permissions.has('DEBT_OUTSOURCING_EXCLUDE'),
-      debtOutsourcingReturn: selection => selection.length && permissions.has('DEBT_OUTSOURCING_RETURN'),
+      debtOutsourcingSend: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_OUTSOURCING_SEND') : selection.length && permissions.has('DEBT_OUTSOURCING_SEND'),
+      debtOutsourcingExclude: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_OUTSOURCING_EXCLUDE') : selection.length && permissions.has('DEBT_OUTSOURCING_EXCLUDE'),
+      debtOutsourcingReturn: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        permissions.has('DEBT_OUTSOURCING_RETURN') : selection.length && permissions.has('DEBT_OUTSOURCING_RETURN'),
     };
   }
 

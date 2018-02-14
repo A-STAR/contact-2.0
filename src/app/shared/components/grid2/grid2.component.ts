@@ -870,34 +870,10 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
     return [
-      // {
-      //   name: 'Alert value',
-      //   action: () => { window.alert('Alerting about ' + params.value); },
-      // },
-      // {
-      //   name: 'Always disabled',
-      //   disabled: true,
-      //   tooltip: 'Just to test what the tooltip can show'
-      // },
-      // 'separator',
       ...this.getMetadataMenuItems(this.actions, params),
-      // {
-      //   name: 'Person',
-      //   subMenu: [
-      //     {name: 'Niall', action: () => {log('Niall was pressed'); } },
-      //     {name: 'Sean', action: () => {log('Sean was pressed'); } },
-      //     {name: 'Lola', action: () => {log('Lola was pressed'); } },
-      //   ]
-      // },
-      // {
-      //   name: 'Checked',
-      //   checked: true,
-      //   action: () => { log('Checked Selected'); }
-      // },
       'copy',
       'copyWithHeaders',
       'separator',
-      // 'resetColumns',
       {
         name: this.translate.instant('default.grid.localeText.resetColumns'),
         action: () => this.resetGridSettings(),
