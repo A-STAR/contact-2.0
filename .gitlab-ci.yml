@@ -26,6 +26,9 @@ pages:
   script:
     - mkdir public
     - echo 'Welcome to GitLab Pages yo' > public/index.html
+  artifacts:
+    paths:
+      - public
 
 job_build:
   stage: build
