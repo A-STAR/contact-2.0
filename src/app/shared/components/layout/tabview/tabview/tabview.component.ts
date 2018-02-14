@@ -13,10 +13,9 @@ import {
   ChangeDetectorRef,
   OnInit,
   OnDestroy,
+  AfterViewInit,
 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { ILayoutDimension } from '@app/layout/layout.interface';
 import { LayoutService } from '@app/layout/layout.service';
@@ -30,14 +29,9 @@ import { TabViewTabComponent } from '../tab/tab.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy {
+export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, AfterViewInit {
 
-  @ViewChildren('tabHeader') set tabHeaders (tabHeaders: QueryList<ElementRef>) {
-    this.tabHeaders$.next(tabHeaders.map(tabHeader => ({
-      left: tabHeader.nativeElement.offsetLeft,
-      width: tabHeader.nativeElement.clientWidth,
-    })));
-  }
+  @ViewChildren('tabHeader') tabHeaders: QueryList<ElementRef>;
 
   @ContentChildren(TabViewTabComponent) tabs: QueryList<TabViewTabComponent>;
 
@@ -45,7 +39,7 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy {
 
   @Output() select = new EventEmitter<number>();
 
-  private tabHeaders$ = new BehaviorSubject<Partial<ILayoutDimension>[]>([]);
+  private tabHeaderDimensions: Partial<ILayoutDimension>[] = [];
 
   private layoutSubscription: Subscription;
 
@@ -57,11 +51,9 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.layoutSubscription = combineLatest(
-      this.tabHeaders$.filter(Boolean),
-      this.layoutService.contentDimension$.filter(Boolean)
-    )
-    .subscribe(() => this.cdRef.markForCheck());
+    this.layoutSubscription = this.layoutService.contentDimension$
+      .filter(Boolean)
+      .subscribe(() => this.cdRef.markForCheck());
   }
 
   ngAfterContentInit(): void {
@@ -73,12 +65,27 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy {
     }
   }
 
+  ngAfterViewInit(): void {
+    this.tabHeaderDimensions = this.tabHeaders.map(tabHeader => ({
+      left: tabHeader.nativeElement.offsetLeft,
+      width: tabHeader.nativeElement.clientWidth,
+    }));
+  }
+
   ngOnDestroy(): void {
     this.layoutSubscription.unsubscribe();
   }
 
-  isTabHeaderVisible(tabIndex: number): boolean {
-    const tabHeader = this.tabHeaders$.value[tabIndex];
+  get visibleTabs(): TabViewTabComponent[] {
+    return this.tabs.filter((tab, index) => this.isHeaderTabVisible(index));
+  }
+
+  get hiddenTabs(): TabViewTabComponent[] {
+    return this.tabs.filter((tab, index) => !this.isHeaderTabVisible(index));
+  }
+
+  isHeaderTabVisible(tabIndex: number): boolean {
+    const tabHeader = this.tabHeaderDimensions[tabIndex];
     return !tabHeader || (tabHeader.left + tabHeader.width) < this.tabHeaderWidth;
   }
 
@@ -137,7 +144,7 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   private get tabHeaderWidth(): any {
-    return this.el.nativeElement.querySelector('ul').clientWidth;
+    return this.el.nativeElement.querySelector('ul').clientWidth - 50;
   }
 
   private getTabIndex(tab: TabViewTabComponent): number {

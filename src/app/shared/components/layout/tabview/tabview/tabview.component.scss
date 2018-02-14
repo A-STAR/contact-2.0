@@ -47,6 +47,14 @@
   }
   &[menu] {
     overflow: visible;
+    flex-grow: 3;
+    text-align: right;
+    ul {
+      text-align: center;
+      li {
+        white-space: nowrap;
+      }
+    }
   }
   a {
     color: $text-color;
