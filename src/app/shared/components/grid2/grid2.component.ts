@@ -779,32 +779,30 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
-  private getMetadataMenuItems(actions: IMetadataAction[], params: GetContextMenuItemsParams): Array<MenuItemDef | string> {
-    const metadataActions = this.getMetadataActions(actions, params);
-    const shouldSeparate = !!metadataActions.nonSingle.length;
-    return shouldSeparate ? [
-      ...metadataActions.nonSingle,
-      'separator',
-      ...metadataActions.single
-    ] : [
-      ...metadataActions.nonSingle,
-      ...metadataActions.single
-    ];
+  private getMetadataMenuItems(
+    actions: IMetadataAction[],
+    params: GetContextMenuItemsParams,
+    isSubMenu: boolean = false): Array<MenuItemDef | string> {
+
+    return [].concat(
+      ...this.getMetadataActions(actions, params)
+      .map(mDefs => mDefs.length && !isSubMenu ? [...mDefs, 'separator'] : [...mDefs])
+    );
   }
 
   private getMetadataActions(actions: IMetadataAction[], params: GetContextMenuItemsParams)
-    : { [key: string]: MenuItemDef[] } {
+    : [ MenuItemDef[], MenuItemDef[]] {
     return actions.reduce((acc, action) => {
 
       const menuDef = action.applyTo ? this.getNonSingleAction(action, params) : this.getSingleAction(action, params);
-      const arr = action.applyTo ? acc.nonSingle : acc.single;
+      const arr = action.applyTo ? acc[0] : acc[1];
 
       arr.push({
         ...menuDef,
-        subMenu: action.children ? this.getMetadataMenuItems(action.children, params) : menuDef.subMenu
+        subMenu: action.children ? this.getMetadataMenuItems(action.children, params, true) : menuDef.subMenu
       });
       return acc;
-    }, { nonSingle: [], single: [] });
+    }, [[], []] as [ MenuItemDef[], MenuItemDef[] ]);
   }
 
   private getSingleAction(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
@@ -843,7 +841,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private getActionForSelectedSubmenu(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
     return {
-      name: this.translate.instant(`default.grid.actions.actionForSelected`),
+      name: this.translate.instant(`default.grid.actions.actionForSelection`),
       disabled: action.enabled ? !action.enabled.call(null, this.selected, params.node.data) : false,
       action: () => this.action.emit({
         metadataAction: {
@@ -858,6 +856,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private getActionForAllSubmenu(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
     return {
       name: this.translate.instant(`default.grid.actions.actionForAll`),
+      // TODO(i.lobanov): looks like mass operation for all items needs separate enabled fn
       disabled: false,
       action: () => this.action.emit({
         metadataAction: {
@@ -890,7 +889,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       //     {name: 'Lola', action: () => {log('Lola was pressed'); } },
       //   ]
       // },
-      'separator',
       // {
       //   name: 'Checked',
       //   checked: true,
