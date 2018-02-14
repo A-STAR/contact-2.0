@@ -1,4 +1,42 @@
 {
+  "layout": {
+
+  },
+  "routes": {
+    "admin": {
+      "users": {
+        "grid": {
+          "branchCode": "Филиал",
+          "email": "Эл. почта",
+          "firstName": "Имя",
+          "id": "ID",
+          "intPhone": "Внутренний номер",
+          "isInactive": "Блокирован",
+          "languageId": "Язык",
+          "lastName": "Фамилия",
+          "login": "Логин",
+          "middleName": "Отчество",
+          "mobPhone": "Мобильный телефон",
+          "position": "Должность",
+          "roleId": "Роль",
+          "workPhone": "Рабочий телефон"
+        }
+      }
+    }
+  },
+  "shared": {
+    "components": {
+      "grids": {
+        "toolbar": {
+          "rowsSelected": "выбрано",
+          "rowsTotal": "всего"
+        }
+      }
+    }
+  },
+  "system": {
+
+  },
   "header": {
     "language": "Язык",
     "notifications": "Сообщения",
@@ -806,22 +844,6 @@
     },
     "create": {
       "title": "Новый пользователь"
-    },
-    "grid": {
-      "id": "ID",
-      "branchCode": "Филиал",
-      "login": "Логин",
-      "lastName": "Фамилия",
-      "firstName": "Имя",
-      "middleName": "Отчество",
-      "position": "Должность",
-      "roleId": "Роль",
-      "isInactive": "Блокирован",
-      "mobPhone": "Мобильный телефон",
-      "workPhone": "Рабочий телефон",
-      "intPhone": "Внутренний номер",
-      "email": "Эл. почта",
-      "languageId": "Язык"
     },
     "ldap": {
       "title": "Пользователи домена",

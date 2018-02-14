@@ -1,3 +1,9 @@
+export enum IGridFilterType {
+  TEXT,
+  NUMBER,
+  DATE,
+}
+
 /**
  * Base grid column interface for `ISimpleGridColumn` and others to extend
  *
@@ -11,4 +17,8 @@ export interface IGridColumn<T> {
 
   // Optional Fields
   dictCode?: number;
+  filter?: IGridFilterType;
+  lookupKey?: string;
+  minWidth?: number;
+  maxWidth?: number;
 }
