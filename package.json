@@ -13,13 +13,19 @@
     "build:check": "ng build --aot",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:ci": "jest --coverage --runInBand",
+    "test:ci": "jest --runInBand",
     "lint": "ng lint --type-check",
     "e2e": "ng e2e",
     "ng-update": "npm up @angular/animations @angular/common @angular/compiler @angular/compiler-cli @angular/core @angular/forms @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/cli",
     "wm-update": "node node_modules/protractor/bin/webdriver-manager update"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "src/app/**/*.ts"
+    ],
+    "coverageReporters": [
+      "text-summary"
+    ],
     "preset": "jest-preset-angular",
     "setupTestFrameworkScriptFile": "<rootDir>/src/jest.ts",
     "moduleNameMapper": {

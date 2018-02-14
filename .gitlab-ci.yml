@@ -7,30 +7,24 @@ cache:
   paths:
     - node_modules/
 
-# job_test:
-#   stage: test
-#   script:
-#     - cd $CI_PROJECT_DIR
-#     - echo $CI_PROJECT_DIR
-#     - node -v && npm -v
-#     - npm install
-#     - npm run lint && npm run test:ci && npm run build
-#   artifacts:
-#     paths:
-#       - coverage
-#   except:
-#     - dev
-
-pages:
+job_test:
   stage: test
   script:
-    - mkdir .public
-    - cp -r * .public
-    - mv .public public
-    # - echo 'Welcome to GitLab Pages yo' > public/index.html
-  artifacts:
-    paths:
-      - coverage
+    - cd $CI_PROJECT_DIR
+    - echo $CI_PROJECT_DIR
+    - node -v && npm -v
+    - npm install
+    - npm run lint && npm run test:ci && npm run build
+  except:
+    - dev
+
+job_coverage:
+  state: build
+  script:
+    - npm run test:ci -- --coverage
+  coverage: /Statements\s*:\s*([\d\.]+)%/
+  only:
+    - dev
 
 job_build:
   stage: build
