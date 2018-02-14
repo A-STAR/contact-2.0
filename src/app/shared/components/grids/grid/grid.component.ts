@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ColDef, GridApi, GridOptions } from 'ag-grid';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import { ColDef, GridApi, GridOptions, RowDoubleClickedEvent } from 'ag-grid';
 import { first } from 'rxjs/operators';
 
 import { ISimpleGridColumn } from './grid.interface';
@@ -38,6 +47,9 @@ export class SimpleGridComponent<T> {
     this.updateRows();
   }
 
+  @Output() select = new EventEmitter<T[]>();
+  @Output() dblClick = new EventEmitter<T>();
+
   gridOptions: GridOptions = {
     defaultColDef: {
       enableRowGroup: false,
@@ -58,9 +70,8 @@ export class SimpleGridComponent<T> {
     enableRangeSelection: true,
     enableSorting: true,
     headerHeight: 28,
-    onSelectionChanged: () => this.toolbar.update(),
-    // pagination: true,
-    // paginationPageSize: 25,
+    onSelectionChanged: () => this.onSelectionChanged(),
+    onRowDoubleClicked: event => this.onRowDoubleClicked(event),
     rowHeight: 28,
     rowSelection: 'multiple',
     showToolPanel: false,
@@ -94,11 +105,13 @@ export class SimpleGridComponent<T> {
     this.gridApi = params.api;
     this.updateColumns();
     this.updateRows();
+    this.updateToolbar();
   }
 
   private updateColumns(): void {
     if (this.gridApi && this._colDefs) {
       this.gridApi.sizeColumnsToFit();
+      this.updateToolbar();
     }
     this.cdRef.markForCheck();
   }
@@ -106,7 +119,24 @@ export class SimpleGridComponent<T> {
   private updateRows(): void {
     if (this.gridApi && this._rows) {
       this.gridApi.redrawRows();
+      this.updateToolbar();
     }
     this.cdRef.markForCheck();
+  }
+
+  private onSelectionChanged(): void {
+    const selection = this.gridApi.getSelectedRows();
+    this.select.emit(selection);
+    this.updateToolbar();
+  }
+
+  private onRowDoubleClicked(event: RowDoubleClickedEvent): void {
+    this.dblClick.emit(event.data);
+  }
+
+  private updateToolbar(): void {
+    if (this.toolbar) {
+      this.toolbar.update();
+    }
   }
 }

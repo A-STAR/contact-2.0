@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-// import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IUser, IUsersState } from '@app/routes/admin/users/users.interface';
@@ -14,7 +13,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { UsersService } from '@app/routes/admin/users/users.service';
 
-import { combineLatestAnd } from '@app/core/utils';
+import { combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,44 +40,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     { prop: 'email', minWidth: 120 },
     { prop: 'languageId', minWidth: 120 /* , lookupKey: 'languages' */ },
     { prop: 'branchCode', minWidth: 120, dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
-    // {
-    //   label: 'ID',
-    //   prop: 'id',
-    //   filter: IGridFilterType.NUMBER,
-    // },
-    // {
-    //   label: 'Foo',
-    //   prop: 'foo',
-    //   filter: IGridFilterType.TEXT,
-    // },
-    // {
-    //   label: 'Bar',
-    //   prop: 'bar',
-    //   filter: IGridFilterType.TEXT,
-    // },
-    // {
-    //   label: 'Dict',
-    //   prop: 'dict',
-    //   dictCode: 1,
-    // }
   ].map(c => ({ ...c, label: c.prop } as ISimpleGridColumn<IUser>));
-
-  // columns: Array<IGridColumn> = [
-  //   { prop: 'id', minWidth: 50, maxWidth: 70, disabled: true },
-  //   { prop: 'login', minWidth: 120 },
-  //   { prop: 'lastName', minWidth: 120 },
-  //   { prop: 'firstName', minWidth: 120 },
-  //   { prop: 'middleName', minWidth: 120 },
-  //   { prop: 'position', minWidth: 120 },
-  //   { prop: 'roleId', minWidth: 100, lookupKey: 'roles' },
-  //   { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
-  //   { prop: 'mobPhone', minWidth: 140 },
-  //   { prop: 'workPhone', minWidth: 140 },
-  //   { prop: 'intPhone', minWidth: 140 },
-  //   { prop: 'email', minWidth: 120 },
-  //   { prop: 'languageId', minWidth: 120, lookupKey: 'languages' },
-  //   { prop: 'branchCode', minWidth: 120, dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
-  // ];
 
   displayInactiveUsers: boolean;
 
@@ -92,7 +54,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       },
       {
         type: TitlebarItemTypeEnum.BUTTON_EDIT,
-        action: () => this.onEdit(),
+        action: () => this.onEdit({ id: this.selectedUserId } as any),
         enabled: combineLatestAnd([
           this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
           this.usersService.state.map(state => !!state.selectedUserId)
@@ -131,11 +93,6 @@ export class UsersComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .subscribe(columns => {
-        this.columns = [ ...columns ];
-      });
-
     this.filter = this.filter.bind(this);
 
     this.selectedUserSubscription = this.state
@@ -204,13 +161,13 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.routingService.navigate([ 'create' ], this.route);
   }
 
-  onEdit(): void {
-    this.routingService.navigate([ String(this.editedUser.id) ], this.route);
+  onEdit(user: IUser): void {
+    this.routingService.navigate([ String(user.id) ], this.route);
   }
 
-  onSelect(user: IUser): void {
-    if (user) {
-      this.usersService.select(user.id);
+  onSelect(users: IUser[]): void {
+    if (!isEmpty(users)) {
+      this.usersService.select(users[0].id);
     }
   }
 

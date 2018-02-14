@@ -5,6 +5,8 @@
     <app-simple-grid
       [columns]="columns"
       [rows]="users"
+      (select)="onSelect($event)"
+      (dblClick)="onEdit($event)"
     ></app-simple-grid>
   </div>
 </div>
