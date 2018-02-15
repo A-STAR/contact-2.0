@@ -2,11 +2,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  forwardRef,
+  ElementRef,
   HostListener,
   Input,
   OnDestroy,
   OnInit,
+  Renderer2,
+  forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,9 +41,13 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
   private cachedValue: moment.Moment = null;
   private langSub: Subscription;
 
+  private wheelListenter: () => void;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
+    private elRef: ElementRef,
+    private renderer: Renderer2,
     private translateService: TranslateService,
   ) {}
 
@@ -91,22 +97,8 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
     this._disabled = disabled;
   }
 
-  onBlur(): void {
-    this.propagateTouch();
-  }
-
-  onWheel(event: WheelEvent): void {
-    const target = event.target as HTMLInputElement;
-    const delta = -Math.sign(event.deltaY);
-    const cursorPosition = target.selectionStart;
-    const char = this.formatString[cursorPosition];
-    const letter = char && /\w/.test(char) ? char : this.formatString[cursorPosition - 1];
-    const modifier = this.dateTimeService.getModifierFromMomentFormatLetter(letter);
-    this.cachedValue = moment(this.cachedValue || this._value || new Date()).clone().add(delta, modifier);
-    const value = this.cachedValue.format(this.formatString);
-    target.value = value;
-    target.setSelectionRange(cursorPosition, cursorPosition);
-    this.propagateChange(this.cachedValue.toDate());
+  onFocus(): void {
+    this.wheelListenter = this.renderer.listen(this.elRef.nativeElement, 'wheel', event => this.onWheel(event));
   }
 
   onChange(event: Event): void {
@@ -125,10 +117,30 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
 
   @HostListener('focusout')
   focusOut(): void {
+    this.wheelListenter();
     if (this.cachedValue) {
       this.update(this.cachedValue.toDate());
       this.cachedValue = null;
     }
+    this.propagateTouch();
+  }
+
+  private onWheel(event: WheelEvent): void {
+    if (this.disabled) {
+      return;
+    }
+    event.preventDefault();
+    const target = event.target as HTMLInputElement;
+    const delta = -Math.sign(event.deltaY);
+    const cursorPosition = target.selectionStart;
+    const char = this.formatString[cursorPosition];
+    const letter = char && /\w/.test(char) ? char : this.formatString[cursorPosition - 1];
+    const modifier = this.dateTimeService.getModifierFromMomentFormatLetter(letter);
+    this.cachedValue = moment(this.cachedValue || this._value || new Date()).clone().add(delta, modifier);
+    const value = this.cachedValue.format(this.formatString);
+    target.value = value;
+    target.setSelectionRange(cursorPosition, cursorPosition);
+    this.propagateChange(this.cachedValue.toDate());
   }
 
   private update(value: Date): void {
