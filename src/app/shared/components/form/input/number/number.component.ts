@@ -8,6 +8,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { range } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +29,18 @@ import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } fro
   templateUrl: './number.component.html'
 })
 export class NumberComponent implements ControlValueAccessor, Validator {
+  private static readonly ALLOWED_KEYS = [
+    ...range(0, 9).map(String),
+    '.',
+    '-',
+    'Backspace',
+    'Delete',
+    'ArrowLeft',
+    'ArrowRight',
+    'Home',
+    'End',
+  ];
+
   @Input() min: number;
   @Input() max: number;
 
@@ -77,8 +90,8 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    const { key } = event;
-    if ((key < '0' || key > '9') && key !== '.' && key !== 'Backspace' && key !== 'Delete' && key !== '-') {
+    const { ctrlKey, key } = event;
+    if (!NumberComponent.ALLOWED_KEYS.includes(key) && !ctrlKey) {
       event.preventDefault();
     }
   }
