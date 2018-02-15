@@ -87,8 +87,13 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
   }
 
   isHeaderTabVisible(tabIndex: number): boolean {
-    const tabHeader = this.tabHeaderDimensions[tabIndex];
-    return !tabHeader || (tabHeader.left + tabHeader.width) < this.tabHeaderWidth;
+    const activeIndex = this.tabs.toArray().findIndex(el => el.active);
+    const activeTabHeader = this.tabHeaderDimensions[activeIndex];
+    const tabHeader = this.tabHeaderDimensions[tabIndex] || {};
+    const feetsInView = activeIndex > tabIndex
+      ? tabHeader.left + tabHeader.width < this.tabHeaderWidth - activeTabHeader.width
+      : tabHeader.left + tabHeader.width < this.tabHeaderWidth;
+    return !tabHeader.width || activeIndex === tabIndex || feetsInView;
   }
 
   selectTab(event: MouseEvent, tab: TabViewTabComponent): void {
