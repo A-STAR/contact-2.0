@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { map, scan } from 'rxjs/operators';
 
 import { WSService } from './ws.service';
 
@@ -16,7 +17,10 @@ export class WSComponent {
   ) {}
 
   get response$(): Observable<string> {
-    return this.wsService.listener$;
+    return this.wsService.listener$.pipe(
+      scan((acc, message: string) => [ ...acc, message ], []),
+      map(messages => messages.join('\n')),
+    );
   }
 
   onSendClick(): void {
