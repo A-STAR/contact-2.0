@@ -13,4 +13,33 @@
       (ngModelChange)="onChange($event)"
     />
   </div>
+  <div>
+    <span *ngIf="errors">{{ errors | json }}</span>
+  </div>
 </label>
+
+<!--
+
+<div *ngIf="displayControlErrors(control)" class="error-messages">
+    <ul class="alert alert-danger">
+      <li *ngFor="let error of getControlErrors(control)">
+        {{ error.message | translate:error.data }}
+      </li>
+    </ul>
+  </div>
+
+  displayControlErrors(control: IDynamicFormControl): boolean {
+    const formControl = this.form.controls[control.controlName];
+    return formControl && formControl.errors && (formControl.dirty || formControl.touched);
+  }
+
+  getControlErrors(control: IDynamicFormControl): Array<any> {
+    const errors = this.form.controls[control.controlName].errors;
+    return Object.keys(errors).map(key => ({
+      message: control.validationMessages
+        && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
+      data: errors[key]
+    }));
+  }
+
+-->

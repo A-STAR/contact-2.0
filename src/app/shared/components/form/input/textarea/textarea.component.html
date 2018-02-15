@@ -14,4 +14,7 @@
       (ngModelChange)="onChange($event)"
     ></textarea>
   </div>
+  <div>
+    <span *ngIf="errors">{{ errors | json }}</span>
+  </div>
 </label>

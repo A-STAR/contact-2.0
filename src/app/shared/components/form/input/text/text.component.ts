@@ -19,6 +19,7 @@ import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } fro
   templateUrl: 'text.component.html'
 })
 export class TextComponent implements ControlValueAccessor, Validator {
+  @Input() errors: any;
   @Input() label: string;
   @Input() minLength: number;
   @Input() maxLength: number;

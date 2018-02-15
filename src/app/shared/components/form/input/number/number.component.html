@@ -17,4 +17,7 @@
     <i class="fa fa-angle-up" (click)="onIncrementClick()"></i>
     <i class="fa fa-angle-down" (click)="onDecrementClick()"></i>
   </div>
+  <div>
+    <span *ngIf="errors">{{ errors | json }}</span>
+  </div>
 </label>

@@ -19,6 +19,7 @@ import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } fro
   templateUrl: 'textarea.component.html',
 })
 export class TextareaComponent implements ControlValueAccessor, Validator {
+  @Input() errors: any;
   @Input() label: string;
   @Input() required = false;
   @Input() resizable = true;

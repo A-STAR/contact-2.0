@@ -40,12 +40,9 @@
     <app-textarea
       formControlName="textarea6"
       label="Validation (required)"
+      [errors]="errors.textarea6"
       [required]="true"
     ></app-textarea>
-    <div class="mv-sm">
-      <em>Validation errors:</em>
-      <pre>{{ errors.textarea6 | json }}</pre>
-    </div>
   </div>
 
   <div class="form-group">

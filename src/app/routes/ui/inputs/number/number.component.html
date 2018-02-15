@@ -25,12 +25,9 @@
     <app-number
       formControlName="number4"
       label="Validation (required)"
+      [errors]="errors.number4"
       [required]="true"
     ></app-number>
-    <div class="mv-sm">
-      <em>Validation errors:</em>
-      <pre>{{ errors.number4 | json }}</pre>
-    </div>
   </div>
 
   <div class="form-group">
@@ -39,11 +36,8 @@
       label="Validation (min = 5, max = 15)"
       min="5"
       max="15"
+      [errors]="errors.number5"
     ></app-number>
-    <div class="mv-sm">
-      <em>Validation errors:</em>
-      <pre>{{ errors.number5 | json }}</pre>
-    </div>
   </div>
 
   <div class="form-group">

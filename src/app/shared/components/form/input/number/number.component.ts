@@ -41,6 +41,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
     'End',
   ];
 
+  @Input() errors: any;
   @Input() label: string;
   @Input() min: number;
   @Input() max: number;
