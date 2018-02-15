@@ -1,13 +1,11 @@
 <div class="panel notifications">
   <div *ngIf="hasFilters()" class="panel-heading notifications_heading">
     <ng-container *ngFor="let filterType of filterTypes">
-      <label>
-        <app-checkbox
-          [label]="getTranslationKey(filterType)"
-          [ngModel]="filters[filterType]"
-          (ngModelChange)="onFilterChange(filterType, $event)"
-        ></app-checkbox>
-      </label>
+      <app-checkbox
+        [label]="getTranslationKey(filterType)"
+        [ngModel]="filters[filterType]"
+        (ngModelChange)="onFilterChange(filterType, $event)"
+      ></app-checkbox>
     </ng-container>
   </div>
 
