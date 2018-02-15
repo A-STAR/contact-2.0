@@ -14,18 +14,13 @@
     [required]="control.required"
   ></app-text>
 
-  <ng-container *ngSwitchCase="'textarea'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-textarea
-        [formControlName]="control.controlName"
-        [rows]="control.rows"
-      ></app-textarea>
-    </label>
-  </ng-container>
+  <app-textarea
+    *ngSwitchCase="'textarea'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [required]="control.required"
+    [rows]="control.rows"
+  ></app-textarea>
 
   <app-number
     *ngSwitchCase="'number'"
@@ -36,8 +31,9 @@
     [required]="control.required"
   ></app-number>
 
-
-  <!-- Below are old controls. -->
+  <!--
+    Below are old controls.
+  -->
 
   <ng-container *ngSwitchCase="'boolean'">
     <span class="form-label">

@@ -13,6 +13,13 @@ export class TextareaComponent {
     textarea3: new FormControl('Hi there!\nI am a textarea.'),
     textarea4: new FormControl('Hi there!\nI am a textarea.\nIt\'s good to have you here.\nYou\'re a nice person.'),
     textarea5: new FormControl('Hi there!\nI am a textarea.'),
-    textarea6: new FormControl({ value: 'Hi there!\nI am a textarea.', disabled: true }),
+    textarea6: new FormControl(''),
+    textarea7: new FormControl({ value: 'Hi there!\nI am a textarea.', disabled: true }),
   });
+
+  get errors(): any {
+    return {
+      textarea6: this.formGroup.get('textarea6').errors;
+    };
+  }
 }
