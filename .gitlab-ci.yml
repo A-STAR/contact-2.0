@@ -24,7 +24,9 @@ job_build:
     - cd $CI_PROJECT_DIR
     - echo $CI_PROJECT_DIR
     - node -v && npm -v && npm install
+    - npm run test:ci -- --coverage
     - npm run build -- --aot --progress=false
+  coverage: /Statements\s*:\s*([\d\.]+)%/
   artifacts:
     name: "frontend_default_build"
     paths:
