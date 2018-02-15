@@ -135,19 +135,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     ].includes(this.dialog);
   }
 
-  getAddOptions(name: string): (number|string)[] {
-    // TODO(d.maltsev): not optimized; better to convert to key: value object on initialization
-    const found = this.dialogData.addOptions.find(option => option.name === name);
-    return found ? found.value : null;
-  }
-
-  getAddOption(name: string, index: number): number|string {
-    const options = this.getAddOptions(name);
-    if (options && options.length > index) {
-      return options[index];
-    }
-  }
-
   getFilters(): FilterObject {
     return this.grid instanceof Grid2Component
       ? this.getGridFilters()
