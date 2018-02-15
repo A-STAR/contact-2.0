@@ -1,10 +1,5 @@
-import * as R from 'ramda';
-
 import { IPermissionAction, IPermissionsState } from './permissions.interface';
 import { PermissionsService } from './permissions.service';
-
-// TODO(a.tymchuk): separate service for persisting global state?
-const savedState = localStorage.getItem(PermissionsService.STORAGE_KEY);
 
 export const defaultState: IPermissionsState = {
   currentPermission: null,
@@ -13,12 +8,13 @@ export const defaultState: IPermissionsState = {
   roles: []
 };
 
-export function reducer(
-  state: IPermissionsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
-  action: IPermissionAction
-): IPermissionsState {
-
+export function reducer(state: IPermissionsState = defaultState, action: IPermissionAction): IPermissionsState {
   switch (action.type) {
+    case PermissionsService.ROLE_INIT:
+      return {
+        ...state,
+        ...action.payload
+      };
     case PermissionsService.ROLE_FETCH_SUCCESS:
       const cr = state.currentRole;
       const isThere = cr && action.payload.some(role => cr.id === role.id);
