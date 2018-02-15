@@ -30,19 +30,19 @@
 
 <app-sms-delete-dialog
   *ngIf="isDialog('deleteSMS')"
-  [smsId]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-sms-delete-dialog>
 
 <app-payments-cancel-dialog
   *ngIf="isDialog('paymentsCancel')"
-  [paymentsIds]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-payments-cancel-dialog>
 
 <app-payments-confirm-dialog
   *ngIf="isDialog('paymentsConfirm')"
-  [paymentsIds]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-payments-confirm-dialog>
 

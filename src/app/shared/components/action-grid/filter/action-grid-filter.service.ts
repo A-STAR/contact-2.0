@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { IAGridAction } from '@app/shared/components/grid2/grid2.interface';
-import { IActionGridDialogFilterParams, IGridActionPayload,  } from '../action-grid.interface';
+import { IActionGridDialogFilterParams, IGridActionPayload, ISelectionIds, } from '../action-grid.interface';
 import { MetadataActionType } from '@app/core/metadata/metadata.interface';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
@@ -38,7 +38,11 @@ export class ActionGridFilterService {
     return action.metadataAction.params.reduce((acc, param) => ({ ...acc, [param]: selection[param] }), {});
   }
 
-  private getFilters(filters?: FilterObject): any {
+  getSelectionCount(actionData: IGridActionPayload): number | null {
+    return actionData.type === MetadataActionType.SELECTED ? (actionData as ISelectionIds).data.length : null;
+  }
+
+  private getFilters(filters?: FilterObject): { filtering: FilterObject | null } {
     return {
       filtering: filters && (filters.hasFilter() || filters.hasValues()) ? filters : null
     };
