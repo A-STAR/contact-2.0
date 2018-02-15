@@ -1,1 +1,11 @@
-WebSocket demo will live here
+<label>
+  <span>Request</span>
+  <app-text [(ngModel)]="request"></app-text>
+</label>
+
+<app-button label="Send" (click)="onSendClick()"></app-button>
+
+<label>
+  <span>Response</span>
+  <app-textarea rows="5" [disabled]="true" [ngModel]="response$ | async"></app-textarea>
+</label>
