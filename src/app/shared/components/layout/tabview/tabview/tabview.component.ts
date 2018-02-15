@@ -30,6 +30,7 @@ import { TabViewTabComponent } from '../tab/tab.component';
 })
 
 export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, AfterViewInit {
+  private static MENU_BTN_SPACE = 50;
 
   @ViewChildren('tabHeader') tabHeaders: QueryList<ElementRef>;
 
@@ -145,7 +146,7 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
   }
 
   private get tabHeaderWidth(): any {
-    return this.el.nativeElement.querySelector('ul').clientWidth - 50;
+    return this.el.nativeElement.querySelector('ul').clientWidth - TabViewComponent.MENU_BTN_SPACE;
   }
 
   private getTabIndex(tab: TabViewTabComponent): number {
