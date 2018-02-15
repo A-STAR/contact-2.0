@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ICloseAction } from '../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridActionParams } from '../../../components/action-grid/action-grid.interface';
 
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { DebtService } from '../../../../core/debt/debt.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
@@ -13,12 +14,13 @@ import { DialogFunctions } from '../../../../core/dialog';
   templateUrl: './debt-open-incoming-call.component.html'
 })
 export class DebtOpenIncomingCallComponent extends DialogFunctions implements OnInit {
-  @Input() debts: number[];
+  @Input() actionData: IGridActionParams;
   @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;
 
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private router: Router,
     private notificationsService: NotificationsService,
     private debtService: DebtService
@@ -27,11 +29,6 @@ export class DebtOpenIncomingCallComponent extends DialogFunctions implements On
   }
 
   ngOnInit(): void {
-    if (!this.debts) {
-      this.notificationsService.warning('header.noDebts.title').dispatch();
-      this.close.emit();
-      return;
-    }
     this.openIncomingCall();
   }
 
@@ -42,8 +39,7 @@ export class DebtOpenIncomingCallComponent extends DialogFunctions implements On
 
   openIncomingCall(): void {
     this.router.navigate(['workplaces/incoming-call']).then(() => {
-      const debtId = this.debts && this.debts.length ? this.debts[0] : null;
-      this.debtService.incomingCallSearchParams = { debtId };
+      this.debtService.incomingCallSearchParams = this.actionGridFilterService.buildRequest(this.actionData.payload);
       this.onClose();
     });
   }

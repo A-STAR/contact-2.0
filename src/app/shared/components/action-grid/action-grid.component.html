@@ -6,19 +6,19 @@
 
 <app-open-debt-card-by-debtor
   *ngIf="isDialog('openDebtCardByDebtor')"
-  [personId]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-open-debt-card-by-debtor>
 
 <app-open-debt-card-by-debt
   *ngIf="isDialog('openDebtCard')"
-  [debtId]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-open-debt-card-by-debt>
 
 <app-debt-open-incoming-call
   *ngIf="isDialog('openIncomingCall')"
-  [debts]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-debt-open-incoming-call>
 

@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 
-import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
+import { ICloseAction, IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 import { DialogFunctions } from '@app/core/dialog';
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 
 @Component({
   selector: 'app-open-debt-card-by-debt',
@@ -13,12 +14,13 @@ import { DialogFunctions } from '@app/core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtCardOpenByDebtComponent extends DialogFunctions implements OnInit {
-  @Input() debtId: number[];
+  @Input() actionData: IGridActionParams;
   @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;
 
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private notificationsService: NotificationsService,
@@ -27,14 +29,9 @@ export class DebtCardOpenByDebtComponent extends DialogFunctions implements OnIn
   }
 
   ngOnInit(): void {
-    if (!this.debtId[0]) {
-      this.notificationsService.warning('header.noDebts.title').dispatch();
-      this.close.emit();
-      this.cdRef.markForCheck();
-      return;
-    }
     this.close.emit();
-    this.debtorCardService.openByDebtId(this.debtId[0]);
+    const { debtId } = this.actionGridFilterService.buildRequest(this.actionData.payload);
+    this.debtorCardService.openByDebtId(debtId);
   }
 
   onClose(): void {
