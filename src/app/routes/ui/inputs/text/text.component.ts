@@ -10,6 +10,11 @@ export class TextComponent {
   formGroup = new FormGroup({
     text1: new FormControl(''),
     text2: new FormControl('I am a text field'),
-    text3: new FormControl({ value: 'I am a text field', disabled: true }),
+    text3: new FormControl(''),
+    text4: new FormControl({ value: 'I am a text field', disabled: true }),
   });
+
+  get errors(): any {
+    return this.formGroup.get('text3').errors;
+  }
 }

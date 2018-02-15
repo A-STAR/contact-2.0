@@ -65,12 +65,12 @@ export class NumberComponent implements ControlValueAccessor, Validator {
     this.disabled = disabled;
   }
 
-  validate(c: any): any {
+  validate(): any {
     switch (true) {
       case !this.isMinValid(this.value):
-        return { min: { maxValue: this.max } };
+        return { min: { minValue: this.min } };
       case !this.isMaxValid(this.value):
-        return { max: { minValue: this.max } };
+        return { max: { maxValue: this.max } };
       default:
         return null;
     }

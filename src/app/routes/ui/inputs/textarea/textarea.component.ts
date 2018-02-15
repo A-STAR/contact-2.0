@@ -12,7 +12,7 @@ export class TextareaComponent {
     textarea2: new FormControl('Hi there!\nI am a textarea.'),
     textarea3: new FormControl('Hi there!\nI am a textarea.'),
     textarea4: new FormControl('Hi there!\nI am a textarea.\nIt\'s good to have you here.\nYou\'re a nice person.'),
-    textarea5: new FormControl('I am a textarea.\nHi there!'),
-    textarea6: new FormControl({ value: 'I am a textarea.\nHi there!', disabled: true }),
+    textarea5: new FormControl('Hi there!\nI am a textarea.'),
+    textarea6: new FormControl({ value: 'Hi there!\nI am a textarea.', disabled: true }),
   });
 }
