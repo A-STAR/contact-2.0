@@ -1,21 +1,6 @@
 <div [ngSwitch]="control.type" [formGroup]="form" [hidden]="isHidden">
 
-  <ng-container *ngSwitchCase="'number'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <input
-        type="number"
-        class="form-control"
-        [attr.min]="control.min"
-        [attr.max]="control.max"
-        [attr.placeholder]="(control.placeholder || '') | translate"
-        [formControlName]="control.controlName"
-        (input)="control.onChange ? control.onChange($event) : undefined">
-    </label>
-  </ng-container>
+  <!-- Below are controls that can render their labels. This is now the preferred way. -->
 
   <ng-container *ngSwitchCase="'text'">
     <label>
@@ -23,13 +8,38 @@
         {{ control.label | translate }}
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
-      <input
-        type="text"
-        class="form-control"
-        [attr.placeholder]="(control.placeholder || '') | translate"
-        [formControlName]="control.controlName">
+      <app-text
+        [formControlName]="control.controlName"
+        [minLength]="minLength"
+        [maxLength]="maxLength"
+      ></app-text>
     </label>
   </ng-container>
+
+  <ng-container *ngSwitchCase="'textarea'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+      <app-textarea
+        [formControlName]="control.controlName"
+        [rows]="control.rows"
+      ></app-textarea>
+    </label>
+  </ng-container>
+
+  <app-number
+    *ngSwitchCase="'number'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [min]="control.min"
+    [max]="control.max"
+    [required]="control.required"
+  ></app-number>
+
+
+  <!-- Below are controls that can NOT render their labels. -->
 
   <ng-container *ngSwitchCase="'boolean'">
     <span class="form-label">
@@ -132,21 +142,6 @@
         [controlDisabled]="control.disabled"
         (select)="selectHandler({ control: control, items: $event})"
       ></app-multi-select>
-    </label>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'textarea'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <textarea
-        [attr.placeholder]="(control.placeholder || '') | translate"
-        [formControlName]="control.controlName"
-        class="form-control"
-        [rows]="control.rows || 2"
-      ></textarea>
     </label>
   </ng-container>
 

@@ -7,7 +7,7 @@ import {
   Input,
   Renderer2,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { range } from '@app/core/utils';
 
 @Component({
@@ -41,8 +41,10 @@ export class NumberComponent implements ControlValueAccessor, Validator {
     'End',
   ];
 
+  @Input() label: string;
   @Input() min: number;
   @Input() max: number;
+  @Input() required = false;
 
   @Input() set step(step: number | string) {
     this._step = Number(step);
@@ -78,8 +80,10 @@ export class NumberComponent implements ControlValueAccessor, Validator {
     this.disabled = disabled;
   }
 
-  validate(): any {
+  validate(control: FormControl): any {
     switch (true) {
+      case this.value == null && this.required:
+        return { required: true };
       case !this.isMinValid(this.value):
         return { min: { minValue: this.min } };
       case !this.isMaxValid(this.value):

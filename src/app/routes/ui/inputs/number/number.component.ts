@@ -12,10 +12,14 @@ export class NumberComponent {
     number2: new FormControl(42),
     number3: new FormControl(42),
     number4: new FormControl(10),
-    number5: new FormControl({ value: 42, disabled: true }),
+    number5: new FormControl(10),
+    number6: new FormControl({ value: 42, disabled: true }),
   });
 
   get errors(): any {
-    return this.formGroup.get('number4').errors;
+    return {
+      number4: this.formGroup.get('number4').errors,
+      number5: this.formGroup.get('number5').errors,
+    };
   }
 }
