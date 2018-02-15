@@ -19,8 +19,10 @@ import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } fro
   templateUrl: 'text.component.html'
 })
 export class TextComponent implements ControlValueAccessor, Validator {
+  @Input() label: string;
   @Input() minLength: number;
   @Input() maxLength: number;
+  @Input() required = false;
 
   disabled = false;
   value: string;
@@ -48,6 +50,8 @@ export class TextComponent implements ControlValueAccessor, Validator {
 
   validate(): any {
     switch (true) {
+      case this.value == null && this.required:
+        return { required: true };
       case this.minLength && this.value && this.value.length < this.minLength:
         return { min: { minLength: this.minLength } };
       case this.maxLength && this.value && this.value.length > this.maxLength:

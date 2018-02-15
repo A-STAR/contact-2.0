@@ -1,23 +1,47 @@
 <section [formGroup]="formGroup">
   <div class="form-group">
-    <label>Empty</label>
-    <app-text formControlName="text1"></app-text>
+    <app-text
+      formControlName="text1"
+      label="Empty"
+    ></app-text>
   </div>
 
   <div class="form-group">
-    <label>Not so empty</label>
-    <app-text formControlName="text2"></app-text>
+    <app-text
+      formControlName="text2"
+      label="Not so empty"
+    ></app-text>
   </div>
 
   <div class="form-group">
-    <label>Validation (min length = 5, max length = 10)</label>
-    <app-text formControlName="text3" minLength="5" maxLength="10"></app-text>
-    <div class="mv-sm"><em>Validation errors:</em></div>
-    <pre>{{ errors | json }}</pre>
+    <app-text
+      formControlName="text3"
+      label="Validation (required)"
+      [required]="true"
+    ></app-text>
+    <div class="mv-sm">
+      <em>Validation errors:</em>
+      <pre>{{ errors.text3 | json }}</pre>
+    </div>
   </div>
 
   <div class="form-group">
-    <label>Disabled</label>
-    <app-text formControlName="text4"></app-text>
+    <app-text
+      formControlName="text4"
+      label="Validation (min length = 5, max length = 10)"
+      minLength="5"
+      maxLength="10"
+    ></app-text>
+    <div class="mv-sm">
+      <em>Validation errors:</em>
+      <pre>{{ errors.text4 | json }}</pre>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <app-text
+      formControlName="text5"
+      label="Disabled"
+    ></app-text>
   </div>
 </section>

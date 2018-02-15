@@ -1,20 +1,18 @@
 <div [ngSwitch]="control.type" [formGroup]="form" [hidden]="isHidden">
 
-  <!-- Below are controls that can render their labels. This is now the preferred way. -->
+  <!--
+    Below are controls that can render their labels and validate themselves.
+    This is now the preferred way.
+  -->
 
-  <ng-container *ngSwitchCase="'text'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-text
-        [formControlName]="control.controlName"
-        [minLength]="minLength"
-        [maxLength]="maxLength"
-      ></app-text>
-    </label>
-  </ng-container>
+  <app-text
+    *ngSwitchCase="'text'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [minLength]="minLength"
+    [maxLength]="maxLength"
+    [required]="control.required"
+  ></app-text>
 
   <ng-container *ngSwitchCase="'textarea'">
     <label>
@@ -39,7 +37,7 @@
   ></app-number>
 
 
-  <!-- Below are controls that can NOT render their labels. -->
+  <!-- Below are old controls. -->
 
   <ng-container *ngSwitchCase="'boolean'">
     <span class="form-label">

@@ -1,8 +1,16 @@
-<input
-  class="form-control"
-  type="text"
-  [disabled]="disabled"
-  [ngModel]="value"
-  (focusout)="onFocusOut()"
-  (ngModelChange)="onChange($event)"
-/>
+<label>
+  <div *ngIf="label" class="form-label">
+    {{ label | translate }}
+    <b *ngIf="required" class="text-danger">*</b>
+  </div>
+  <div>
+    <input
+      class="form-control"
+      type="text"
+      [disabled]="disabled"
+      [ngModel]="value"
+      (focusout)="onFocusOut()"
+      (ngModelChange)="onChange($event)"
+    />
+  </div>
+</label>
