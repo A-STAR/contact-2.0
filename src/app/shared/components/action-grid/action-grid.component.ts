@@ -16,7 +16,7 @@ import { first, filter, map } from 'rxjs/operators';
 import { GridOptions } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
 
-import { IActionGridDialogData, ICloseAction, IGridActionParams } from './action-grid.interface';
+import { IActionGridDialogData, ICloseAction, IGridActionParams, ActionGridPayloadType, IGridActionPayload } from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected, IAGridColumn } from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
@@ -70,7 +70,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private actions$ = new BehaviorSubject<any[]>(null);
 
   dialog: string;
-  dialogData: IGridActionParams<T>;
+  dialogData: IGridActionParams;
   gridActions$: Observable<IMetadataAction[]>;
 
   constructor(
@@ -187,17 +187,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onAction(gridAction: IAGridAction): void {
-    const { metadataAction, params } = gridAction;
+    const { metadataAction, selection } = gridAction;
     this.dialog = metadataAction.action;
     this.dialogData = {
       addOptions: metadataAction.addOptions,
-      params: metadataAction.params.reduce((acc, param, i) => ({
+      payload: this.getActionPayload(metadataAction.type, gridAction),
+      current: metadataAction.params.reduce((acc, param, i) => ({
         ...acc,
-        [i]: params.node.data[param]
-      }), {}),
-      selection: metadataAction.params.reduce((acc, param, i) => ({
-        ...acc,
-        [i]: this.selection.map(item => item[param])
+        [i]: selection.node.data[param]
       }), {}),
     };
     this.cdRef.markForCheck();
@@ -207,11 +204,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.dialog = metadataAction.action;
     this.dialogData = {
       addOptions: metadataAction.addOptions,
-      params: metadataAction.params.reduce((acc, param, i) => ({
-        ...acc,
-        [i]: this.selection[0][param]
-      }), {}),
-      selection: metadataAction.params.reduce((acc, param, i) => ({
+      payload: this.getActionPayload(metadataAction.type, metadataAction),
+      // params: metadataAction.params.reduce((acc, param, i) => ({
+      //   ...acc,
+      //   [i]: this.selection[0][param]
+      // }), {}),
+      current: metadataAction.params.reduce((acc, param, i) => ({
         ...acc,
         [i]: this.selection.map(item => item[param])
       }), {}),
@@ -259,6 +257,38 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   get columnsDef(): IAGridColumn[] {
     return this._columns || [];
+  }
+
+  private getActionPayload(payloadType: MetadataActionType, action: IAGridAction): IGridActionPayload {
+    switch (payloadType) {
+      case MetadataActionType.ALL:
+        return this.getActionFilterPayload(action);
+      case MetadataActionType.SELECTED:
+      case MetadataActionType.SINGLE:
+      default:
+        return this.getActionSelectionPayload(action);
+    }
+  }
+
+  private getActionSelectionPayload(action: IAGridAction): IGridActionPayload {
+    return {
+      type: action.metadataAction.type,
+      data: action.metadataAction.params.reduce((acc, param, i) => ({
+        ...acc,
+        [i]: this.selection.map(item => item[param])
+      }), {})
+    };
+  }
+
+  private getActionFilterPayload(action: IAGridAction): IGridActionPayload {
+    return {
+      type: action.metadataAction.type,
+      data: {
+        // TODO(i.lobanov): make filter from action
+        filter: this.getGridFilters(),
+        gridName: this.metadataKey
+      }
+    };
   }
 
   private getGridFilters(): FilterObject {

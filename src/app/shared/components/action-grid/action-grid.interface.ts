@@ -1,4 +1,6 @@
-import { IAGridFilterRequest } from '@app/shared/components/grid2/grid2.interface';
+import { MetadataActionType } from '@app/core/metadata/metadata.interface';
+
+import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
 export interface IActionGridDialogNodeParams {
   [key: string]: number | string;
@@ -24,25 +26,20 @@ export interface ICloseAction {
   deselectAll?: boolean;
 }
 
-export enum ActionGridPayloadType {
-  SELECTION,
-  FILTER
-}
-
 export interface ISelectionIds {
   data: IActionGridDialogSelectionParams;
-  type: ActionGridPayloadType;
+  type: MetadataActionType;
 }
 
 export interface ISelectionFilter {
-  data: IAGridFilterRequest;
-  type: ActionGridPayloadType;
+  data: { filter: FilterObject, gridName: string };
+  type: MetadataActionType;
 }
 
-type IGridActionPayload = ISelectionIds | ISelectionFilter;
+export type IGridActionPayload = ISelectionIds | ISelectionFilter;
 
-export interface IGridActionParams<T> {
+export interface IGridActionParams {
   addOptions: IAddOption[];
   payload?: IGridActionPayload;
-  current: T;
+  current: IActionGridDialogNodeParams;
 }
