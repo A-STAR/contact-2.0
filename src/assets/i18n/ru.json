@@ -1652,15 +1652,9 @@
     "contact": {
       "grid": {
         "fullName": "ФИО",
-        "firstName": "Имя",
-        "middleName": "Отчество",
-        "lastName": "Фамилия",
-        "birthDate": "Дата рождения",
-        "birthPlace": "Место рождения",
+        "typeCode": "Тип",
         "genderCode": "Пол",
-        "familyStatusCode": "Семейное положение",
-        "educationCode": "Образование",
-        "linkTypeCode": "Тип",
+        "linkTypeCode": "Тип связи",
         "comment": "Комментарий"
       }
     },

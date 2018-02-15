@@ -1652,15 +1652,10 @@
     "contact": {
       "grid": {
         "fullName": "Full name",
-        "firstName": "First name",
-        "middleName": "Middle name",
-        "lastName": "Last name",
-        "birthDate": "Date of birth",
-        "birthPlace": "Place of birth",
+        "typeCode": "Type",
         "genderCode": "Gender",
-        "familyStatusCode": "Family status",
         "educationCode": "Education",
-        "linkTypeCode": "Type",
+        "linkTypeCode": "Link Type",
         "comment": "Comment"
       }
     },
