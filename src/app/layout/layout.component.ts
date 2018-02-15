@@ -13,6 +13,6 @@ export class LayoutComponent {
 
   @HostListener('window:resize')
   onWindowResize(): void {
-    this.layoutService.triggerDimensionChange();
+    this.layoutService.triggerContentDimensionChange();
   }
 }

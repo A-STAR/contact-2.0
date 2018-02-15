@@ -13,9 +13,10 @@ export class LayoutService {
     return this._contentDimension$.asObservable();
   }
 
-  triggerDimensionChange(): void {
+  triggerContentDimensionChange(): void {
     this._contentDimension$.next({
       width: this.content.width(),
+      height: this.content.height()
     });
   }
 

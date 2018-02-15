@@ -61,7 +61,7 @@ export class SidebarComponent implements OnInit {
   }
 
   onTransitionEnd(e: TransitionEvent): void {
-    this.layoutService.triggerDimensionChange();
+    this.layoutService.triggerContentDimensionChange();
     if (!(<HTMLElement>e.target).classList.contains('collapsed')) {
       this.showTitle = true;
     }
