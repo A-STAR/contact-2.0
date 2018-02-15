@@ -11,6 +11,7 @@ import { ScheduleEventCardComponent } from '../card/schedule-event-card.componen
 })
 export class ScheduleEventDialogComponent {
 
+  @Input() groupId: number;
   @Input() eventId: number;
 
   @Output() close = new EventEmitter<boolean>();
