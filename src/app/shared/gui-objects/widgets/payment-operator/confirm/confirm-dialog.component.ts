@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 
-import { ICloseAction } from '../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridActionParams } from '../../../../components/action-grid/action-grid.interface';
 
 import { PaymentOperatorService } from '../payment-operator.service';
 
@@ -11,7 +11,7 @@ import { PaymentOperatorService } from '../payment-operator.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorConfirmDialogComponent  {
-  @Input() payments: number[];
+  @Input() actionData: IGridActionParams;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
@@ -19,7 +19,7 @@ export class OperatorConfirmDialogComponent  {
 
   onConfirm(): void {
 
-    this.paymentOperatorService.confirm(this.payments)
+    this.paymentOperatorService.confirm(this.actionData.payload)
       .subscribe(res => {
         const refresh = res.massInfo && !!res.massInfo.processed;
         this.close.emit({ refresh });

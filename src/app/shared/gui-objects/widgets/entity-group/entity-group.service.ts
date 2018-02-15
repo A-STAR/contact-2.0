@@ -4,9 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
+import { IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
 import { IEntityGroup } from '../entity-group/entity-group.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
@@ -20,6 +22,7 @@ export class EntityGroupService extends AbstractActionService {
 
   constructor(
     protected actions: Actions,
+    private actionGridFilterService: ActionGridFilterService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
@@ -38,10 +41,17 @@ export class EntityGroupService extends AbstractActionService {
       .catch(this.notificationsService.fetchError().entity('entities.entityGroup.gen.plural').dispatchCallback());
   }
 
-  addToGroup(entityTypeId: number, groupId: number, debts: number[]): Observable<any> {
-    const ids = debts.map(debtId => [ debtId ]);
+  addToGroup(actionParams: IGridActionParams, groupId: number): Observable<any> {
     return this.dataService
-      .create(`/mass/entityType/{entityTypeId}/groups/{groupId}/add`, { entityTypeId, groupId }, { idData: { ids } })
+      .create(`/mass/entityType/{entityTypeId}/groups/{groupId}/add`,
+        {
+          entityTypeId: this.getEntityTypeId(actionParams),
+          groupId
+        },
+        {
+          idData: this.actionGridFilterService.buildRequest(actionParams.payload)
+        }
+      )
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
@@ -50,5 +60,9 @@ export class EntityGroupService extends AbstractActionService {
         }
       })
       .catch(this.notificationsService.updateError().entity('entities.entityGroup.gen.singular').dispatchCallback());
+  }
+
+  getEntityTypeId(actionParams: IGridActionParams): number {
+    return this.actionGridFilterService.getAddOption(actionParams, 'entityTypeId', 0) as number;
   }
 }

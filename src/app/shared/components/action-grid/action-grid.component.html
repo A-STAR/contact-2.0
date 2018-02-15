@@ -72,32 +72,31 @@
 
 <app-entity-group-add
   *ngIf="isDialog('objectAddToGroup')"
-  [debts]="getSelectionParam(0)"
-  [entityTypeId]="getAddOption('entityTypeId', 0)"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-entity-group-add>
 
 <app-promise-confirm-dialog
   *ngIf="isDialog('confirmPromise')"
-  [promises]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-promise-confirm-dialog>
 
 <app-promise-remove-dialog
   *ngIf="isDialog('deletePromise')"
-  [promises]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-promise-remove-dialog>
 
 <app-payment-operator-confirm-dialog
   *ngIf="isDialog('confirmPaymentsOperator')"
-  [payments]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-payment-operator-confirm-dialog>
 
 <app-payment-operator-reject-dialog
   *ngIf="isDialog('rejectPaymentsOperator')"
-  [payments]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-payment-operator-reject-dialog>
 

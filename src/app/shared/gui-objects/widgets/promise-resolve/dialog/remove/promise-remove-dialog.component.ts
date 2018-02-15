@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input } from '@angular/core';
 
+import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
+
 import { PromiseResolveService } from '../../promise-resolve.service';
-import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
 
 @Component({
   selector: 'app-promise-remove-dialog',
@@ -10,7 +11,7 @@ import { ICloseAction } from '../../../../../components/action-grid/action-grid.
 })
 export class PromiseRemoveDialogComponent {
 
-  @Input() promises: number[];
+  @Input() actionData: IGridActionParams;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
@@ -23,7 +24,7 @@ export class PromiseRemoveDialogComponent {
 
 
   onConfirm(): void {
-    this.promiseResolveService.remove(this.promises)
+    this.promiseResolveService.remove(this.actionData.payload)
       .subscribe(result => {
         this.close.emit({ refresh: true });
         this.cdRef.markForCheck();
