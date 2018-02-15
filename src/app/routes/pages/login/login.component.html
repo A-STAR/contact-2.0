@@ -30,10 +30,7 @@
           </div>
           <div class="clearfix">
             <div class="pull-left mt0">
-              <label>
-                <app-checkbox formControlName="remember_login"></app-checkbox>
-                {{ 'login.remember_me' | translate }}
-              </label>
+              <app-checkbox formControlName="remember_login" label="login.remember_me"></app-checkbox>
             </div>
           </div>
           <button class="btn btn-block btn-primary mt-lg" type="submit" [disabled]="!form.valid">

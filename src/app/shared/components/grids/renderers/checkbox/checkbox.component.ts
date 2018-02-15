@@ -4,14 +4,7 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 
 @Component({
     selector: 'app-checkbox-cell-renderer',
-    template: `
-      <label>
-        <app-checkbox
-          [ngModel]="value"
-          (ngModelChange)="onChange($event)"
-        ></app-checkbox>
-      </label>
-    `,
+    template: `<app-checkbox [ngModel]="value" (ngModelChange)="onChange($event)"></app-checkbox>`,
 })
 export class CheckboxCellRendererComponent implements ICellRendererAngularComp {
   private params: ICellRendererParams;
