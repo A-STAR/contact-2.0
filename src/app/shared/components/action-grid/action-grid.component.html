@@ -48,7 +48,7 @@
 
 <app-contact-log-dialog
   *ngIf="isDialog('showContactHistory')"
-  [personId]="getDialogParam(0)"
+  [actionData]="dialogData"
   (close)="closeDialog()"
 ></app-contact-log-dialog>
 

@@ -351,7 +351,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       objectAddToGroup: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19) : selection.length
           && permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19),
-      openUserDetail: (selection, row) => row && row.userId && permissions.has('OPERATOR_DETAIL_VIEW'),
+      openUserDetail: (actionType: MetadataActionType, selection, row) => row && row.userId
+        && permissions.has('OPERATOR_DETAIL_VIEW'),
       paymentsCancel: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.has('PAYMENT_CANCEL') : selection.length && permissions.has('PAYMENT_CANCEL'),
       paymentsConfirm: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
@@ -360,7 +361,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         permissions.has('VISIT_PREPARE') : selection.length && permissions.has('VISIT_PREPARE'),
       rejectPaymentsOperator: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
       permissions.has('PAYMENTS_OPERATOR_CHANGE') : selection.length && permissions.has('PAYMENTS_OPERATOR_CHANGE'),
-      showContactHistory: (selection, row) => row && row.personId && permissions.has('CONTACT_LOG_VIEW'),
+      showContactHistory: (actionType: MetadataActionType, selection, row) => row && row.personId
+        && permissions.has('CONTACT_LOG_VIEW'),
       smsCreate: (actionType: MetadataActionType, selection) => {
         const action = actions.find(a => a.action === 'smsCreate');
         const personRole = action.addOptions.find(option => option.name === 'personRole').value[0];
