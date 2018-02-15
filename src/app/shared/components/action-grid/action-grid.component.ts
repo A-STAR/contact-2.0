@@ -27,6 +27,7 @@ import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 import { IMetadataAction, IMetadataActionPermissions, MetadataActionType } from '@app/core/metadata/metadata.interface';
 
+import { ActionGridFilterService } from './filter/action-grid-filter.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -44,7 +45,8 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
   selector: 'app-action-grid',
   templateUrl: 'action-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  providers: [ ActionGridFilterService ]
 })
 export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
@@ -64,7 +66,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
-  @Output() action = new EventEmitter<IActionGridDialogData>();
 
   @ViewChild(ActionGridFilterComponent) filter: ActionGridFilterComponent;
   @ViewChild('grid') grid: GridComponent | Grid2Component;
@@ -79,6 +80,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   gridActions$: Observable<IMetadataAction[]>;
 
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private cdRef: ChangeDetectorRef,
     private entityAttributesService: EntityAttributesService,
     private gridService: GridService,
@@ -147,34 +149,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     }
   }
 
-  getSelectionParam(key: number): any[] {
-    return this.dialogData.selection[key];
-  }
-
-  getConfiguredParams(paramName: string): any[] {
-    if (!(this.grid as Grid2Component).actions) {
-      // NOTE: this function is not available on grid1
-      return;
-    }
-
-    const idNames = (this.grid as  Grid2Component).actions
-      .filter(a => a.action === paramName)[0].params;
-
-    const { selection } = this.dialogData;
-    const container = Array.from(Array(selection[0].length), () => ({}));
-
-    return idNames.reduce((acc, idName, idNum) => {
-      selection[idNum].forEach((current, ind) => {
-        acc[ind][idName] = current;
-      });
-      return acc;
-    }, container);
-  }
-
-  getDialogParam(key: number): number | string {
-    return this.dialogData.params[key];
-  }
-
   getFilters(): FilterObject {
     return this.grid instanceof Grid2Component
       ? this.getGridFilters()
@@ -192,32 +166,25 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onAction(gridAction: IAGridAction): void {
+    // TODO(i.lobanov): move to service
     const { metadataAction, selection } = gridAction;
     this.dialog = metadataAction.action;
     this.dialogData = {
       addOptions: metadataAction.addOptions,
       payload: this.getActionPayload(metadataAction.type, gridAction),
-      current: metadataAction.params.reduce((acc, param, i) => ({
-        ...acc,
-        [i]: selection.node.data[param]
-      }), {}),
+      current: this.actionGridFilterService.getSelection(gridAction, [ selection ])
     };
     this.cdRef.markForCheck();
   }
 
   onSimpleGridAction(metadataAction: any): void {
+    // TODO(i.lobanov): move to service
     this.dialog = metadataAction.action;
     this.dialogData = {
       addOptions: metadataAction.addOptions,
       payload: this.getActionPayload(metadataAction.type, metadataAction),
-      // params: metadataAction.params.reduce((acc, param, i) => ({
-      //   ...acc,
-      //   [i]: this.selection[0][param]
-      // }), {}),
-      current: metadataAction.params.reduce((acc, param, i) => ({
-        ...acc,
-        [i]: this.selection.map(item => item[param])
-      }), {}),
+      // TODO(i.lobanov): check later if it actually works
+      current: this.actionGridFilterService.getSelection(metadataAction, [this.selection[0]])
     };
     this.cdRef.markForCheck();
   }
@@ -265,11 +232,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   private getActionPayload(payloadType: MetadataActionType, action: IAGridAction): IGridActionPayload {
+    // TODO(i.lobanov): move to service
     switch (payloadType) {
       case MetadataActionType.ALL:
         return this.getActionFilterPayload(action);
-      case MetadataActionType.SELECTED:
       case MetadataActionType.SINGLE:
+        return this.getActionSingleSelectionPayload(action);
+      case MetadataActionType.SELECTED:
+        return this.getActionSelectionPayload(action);
       default:
         return this.getActionSelectionPayload(action);
     }
@@ -278,10 +248,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private getActionSelectionPayload(action: IAGridAction): IGridActionPayload {
     return {
       type: action.metadataAction.type,
-      data: action.metadataAction.params.reduce((acc, param, i) => ({
-        ...acc,
-        [i]: this.selection.map(item => item[param])
-      }), {})
+      data: this.actionGridFilterService.getSelection(action, this.selection)
+    };
+  }
+
+  private getActionSingleSelectionPayload(action: IAGridAction): IGridActionPayload {
+    return {
+      type: action.metadataAction.type,
+      data: this.actionGridFilterService.getSelection(action, [ action.selection ])
     };
   }
 
@@ -289,9 +263,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return {
       type: action.metadataAction.type,
       data: {
-        // TODO(i.lobanov): make filter from action
-        filter: this.getGridFilters(),
-        gridName: this.metadataKey
+        filtering: this.getGridFilters(),
+        gridName: this.metadataKey,
+        columnNames: action.metadataAction.params
       }
     };
   }

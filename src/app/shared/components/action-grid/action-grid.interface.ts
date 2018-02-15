@@ -2,12 +2,10 @@ import { MetadataActionType } from '@app/core/metadata/metadata.interface';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
-export interface IActionGridDialogNodeParams {
-  [key: string]: number | string;
-}
-
-export interface IActionGridDialogSelectionParams {
-  [key: string]: Array<number | string>;
+export interface IActionGridDialogFilterParams {
+  filtering: FilterObject;
+  gridName: string;
+  columnNames: string[];
 }
 
 export interface IAddOption {
@@ -17,8 +15,8 @@ export interface IAddOption {
 
 export interface IActionGridDialogData {
   addOptions: IAddOption[];
-  params: IActionGridDialogNodeParams;
-  selection: IActionGridDialogSelectionParams;
+  params: string[];
+  selection: number[][];
 }
 
 export interface ICloseAction {
@@ -27,12 +25,12 @@ export interface ICloseAction {
 }
 
 export interface ISelectionIds {
-  data: IActionGridDialogSelectionParams;
+  data: number[][];
   type: MetadataActionType;
 }
 
 export interface ISelectionFilter {
-  data: { filter: FilterObject, gridName: string };
+  data: IActionGridDialogFilterParams;
   type: MetadataActionType;
 }
 
@@ -41,5 +39,5 @@ export type IGridActionPayload = ISelectionIds | ISelectionFilter;
 export interface IGridActionParams {
   addOptions: IAddOption[];
   payload?: IGridActionPayload;
-  current: IActionGridDialogNodeParams;
+  current: number[][];
 }
