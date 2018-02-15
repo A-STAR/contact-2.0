@@ -47,7 +47,7 @@ export class NextCallDateSetDialogComponent  {
   onSubmit(): void {
     const typeCode = this.form.getControl('nextCallDate').value;
     const data = Object.assign({}, this.form.serializedUpdates, { typeCode });
-    this.nextCallDateSetService.setNextCall(this.debts, data.nextCallDate)
+    this.nextCallDateSetService.setNextCall(this.actionData.payload, data.nextCallDate)
       .subscribe((result) => this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed }));
   }
 

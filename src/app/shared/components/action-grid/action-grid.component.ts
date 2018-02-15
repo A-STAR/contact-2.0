@@ -16,7 +16,12 @@ import { first, filter, map } from 'rxjs/operators';
 import { GridOptions } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
 
-import { IActionGridDialogData, ICloseAction, IGridActionParams, ActionGridPayloadType, IGridActionPayload } from './action-grid.interface';
+import {
+  IActionGridDialogData,
+  ICloseAction,
+  IGridActionParams,
+  IGridActionPayload,
+} from './action-grid.interface';
 import { IAGridAction, IAGridRequestParams, IAGridSelected, IAGridColumn } from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
