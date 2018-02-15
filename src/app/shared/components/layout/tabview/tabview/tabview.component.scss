@@ -50,8 +50,9 @@
     flex-grow: 3;
     text-align: right;
     ul {
-      text-align: center;
+      text-align: left;
       li {
+        padding: 15px 25px;
         white-space: nowrap;
       }
     }
