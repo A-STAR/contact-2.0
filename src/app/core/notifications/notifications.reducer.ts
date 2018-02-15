@@ -1,10 +1,4 @@
-import * as R from 'ramda';
 import { INotificationAction, INotificationsState, NotificationTypeEnum } from './notifications.interface';
-
-import { NotificationsService } from './notifications.service';
-
-// TODO(a.tymchuk): take this to a separate service for persisting global state
-const savedState = localStorage.getItem(NotificationsService.STORAGE_KEY);
 
 export const defaultState: INotificationsState = {
   notifications: [],
@@ -16,11 +10,13 @@ export const defaultState: INotificationsState = {
   }
 };
 
-export function reducer(
-  state: INotificationsState = R.tryCatch(JSON.parse, () => defaultState)(savedState || undefined),
-  action: INotificationAction
-): INotificationsState {
+export function reducer(state: INotificationsState = defaultState, action: INotificationAction): INotificationsState {
   switch (action.type) {
+    case 'NOTIFICATION_INIT':
+      return {
+        ...state,
+        ...action.payload
+      } as INotificationsState;
     case 'NOTIFICATION_PUSH':
       return {
         ...state,
