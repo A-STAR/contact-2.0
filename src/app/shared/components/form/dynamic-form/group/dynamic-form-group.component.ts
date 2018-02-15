@@ -31,6 +31,7 @@ export class DynamicFormGroupComponent {
     hasdigits: 'validation.fieldDigits',
     haslowercasechars: 'validation.fieldLowerCase',
     hasuppercasechars: 'validation.fieldUpperCase',
+    multilanguageRequired: 'validation.multilanguageRequired',
     maxsize: 'validation.fieldMaxSize',
     oneofgrouprequired: 'validation.oneOfGroupRequired',
     datepicker: 'validation.datepicker',

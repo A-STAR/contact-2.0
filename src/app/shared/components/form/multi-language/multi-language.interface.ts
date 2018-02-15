@@ -3,7 +3,6 @@ export interface IMultiLanguageOption {
   label: string;
   languageId: number;
   isMain?: number;
-  isRemoved?: boolean;
   isUpdated?: boolean;
   value: string;
 }

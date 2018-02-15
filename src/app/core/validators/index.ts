@@ -7,6 +7,7 @@ import { maxDate } from './maxDate';
 import { maxFileSize } from './maxFileSize';
 import { min, minStrict } from './min';
 import { minDate, minDateThreeDaysAgo } from './minDate';
+import { multilanguageRequired } from './multilanguageRequired';
 import { oneOfGroupRequired } from './oneOfGroupRequired';
 import { password } from './password';
 
@@ -23,6 +24,7 @@ export {
   minDate,
   minDateThreeDaysAgo,
   minStrict,
+  multilanguageRequired,
   oneOfGroupRequired,
   password,
 };

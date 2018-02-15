@@ -1,38 +1,57 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  ElementRef,
+  forwardRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Renderer2 } from '@angular/core';
 
 import { IMultiLanguageOption } from './multi-language.interface';
+
+import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 @Component({
   selector: 'app-multilanguage-input',
   templateUrl: './multi-language.component.html',
-  styleUrls: [ './multi-language.component.scss' ],
+  styleUrls: ['./multi-language.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => MultiLanguageComponent),
-      multi: true
-    }
+      multi: true,
+    },
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiLanguageComponent implements ControlValueAccessor {
-  isHovering = false;
+  @ContentChild('input') input: ElementRef;
+  @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
   private _langOptions: IMultiLanguageOption[] = [];
   private selectedId: number;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(private cdRef: ChangeDetectorRef, private renderer: Renderer2) {}
 
-  @Input() controlDisabled = false;
+  @Input() disabled = false;
+  @Input() label = '';
   @Input() placeholder = 'Enter translation value';
+  @Input() required = false;
 
   @Input('langOptions')
   set langOptions(options: IMultiLanguageOption[]) {
-    this._langOptions = options.map(option => ({ ...option, active: !!option.isMain }));
+    this._langOptions = options.map(option => ({
+      ...option,
+      active: !!option.isMain,
+    }));
     if (options.length > 0) {
       this.selectedId = options.length ? 0 : null;
     }
+    this.propagateChange(this._langOptions);
     this.cdRef.markForCheck();
   }
 
@@ -40,7 +59,12 @@ export class MultiLanguageComponent implements ControlValueAccessor {
     return this._langOptions;
   }
 
-  writeValue(values: IMultiLanguageOption[]): void {
+  // NOTE: need this for the validator interface
+  get value(): IMultiLanguageOption[] {
+    return this._langOptions;
+  }
+
+  writeValue(value: string): void {
     this.cdRef.markForCheck();
   }
 
@@ -48,21 +72,27 @@ export class MultiLanguageComponent implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
-  }
+  registerOnTouched(fn: Function): void {}
 
-  get value(): string {
-    const option = (this.langOptions || []).find((v, i) => i === this.selectedId);
+  get translation(): string {
+    const option = (this.langOptions || []).find(
+      (v, i) => i === this.selectedId,
+    );
     return option ? option.value : null;
   }
 
-  get label(): string {
-    const option = (this.langOptions || []).find((v, i) => i === this.selectedId);
+  get buttonText(): string {
+    const option = (this.langOptions || []).find(
+      (v, i) => i === this.selectedId,
+    );
     return option ? option.label : '';
   }
 
   onLanguageChange(option: IMultiLanguageOption): void {
-    this.selectedId = this.langOptions.findIndex(v => v.languageId === option.languageId);
+    this.selectedId = this.langOptions.findIndex(
+      v => v.languageId === option.languageId,
+    );
+    this.dropdown.close();
     this.cdRef.markForCheck();
   }
 
@@ -77,6 +107,10 @@ export class MultiLanguageComponent implements ControlValueAccessor {
 
   onClear(): void {
     this.onValueChange(null);
+  }
+
+  setDisabledState(disabled: boolean): void {
+    this.renderer.setProperty(this.input.nativeElement, 'disabled', disabled);
   }
 
   private propagateChange: Function = () => {};
