@@ -54,19 +54,19 @@
 
 <app-debt-status
   *ngIf="isDialog('debtChangeStatus')"
-  [debts]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-debt-status>
 
 <app-debt-responsible-set
   *ngIf="isDialog('debtSetResponsible')"
-  [debts]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-debt-responsible-set>
 
 <app-debt-responsible-clear
   *ngIf="isDialog('debtClearResponsible')"
-  [debts]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-debt-responsible-clear>
 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 
-import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
 import { IOperator } from '../../../operator/operator.interface';
 import { IOperationResult } from '../../debt-responsible.interface';
 
@@ -13,7 +13,7 @@ import { DebtResponsibleService } from '../../debt-responsible.service';
 })
 export class DebtResponsibleSetComponent {
 
-  @Input() debts: number[];
+  @Input() actionData: IGridActionParams;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
@@ -22,7 +22,7 @@ export class DebtResponsibleSetComponent {
   ) { }
 
   onSelect(operator: IOperator): void {
-    this.debtResponsibleService.setResponsible(this.debts, operator)
+    this.debtResponsibleService.setResponsible(this.actionData.payload, operator)
       .subscribe(result => this.onOperationResult(result));
   }
 

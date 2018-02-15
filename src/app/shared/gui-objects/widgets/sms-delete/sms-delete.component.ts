@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+} from '@angular/core';
 
 import { ICloseAction, IGridActionParams } from '../../../components/action-grid/action-grid.interface';
 

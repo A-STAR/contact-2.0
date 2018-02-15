@@ -166,7 +166,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   onAction(gridAction: IAGridAction): void {
     // TODO(i.lobanov): move to service
-    const { metadataAction, selection } = gridAction;
+    const { metadataAction } = gridAction;
     this.dialog = metadataAction.action;
     this.dialogData = {
       addOptions: metadataAction.addOptions,

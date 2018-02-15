@@ -5,7 +5,6 @@ import { ICloseAction, IGridActionParams } from '../../../components/action-grid
 
 import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { DebtService } from '../../../../core/debt/debt.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 import { DialogFunctions } from '../../../../core/dialog';
 
@@ -22,7 +21,6 @@ export class DebtOpenIncomingCallComponent extends DialogFunctions implements On
   constructor(
     private actionGridFilterService: ActionGridFilterService,
     private router: Router,
-    private notificationsService: NotificationsService,
     private debtService: DebtService
   ) {
     super();
