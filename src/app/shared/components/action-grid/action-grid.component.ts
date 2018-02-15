@@ -17,7 +17,6 @@ import { GridOptions } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
 
 import {
-  IActionGridDialogData,
   ICloseAction,
   IGridActionParams,
   IGridActionPayload,
