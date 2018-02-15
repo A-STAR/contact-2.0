@@ -55,6 +55,9 @@
         white-space: nowrap;
       }
     }
+    /deep/ .dropdown.right {
+      margin-right: 10%;
+    }
   }
   a {
     color: $text-color;

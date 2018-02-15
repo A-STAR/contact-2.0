@@ -70,6 +70,7 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
       left: tabHeader.nativeElement.offsetLeft,
       width: tabHeader.nativeElement.clientWidth,
     }));
+    this.cdRef.markForCheck();
   }
 
   ngOnDestroy(): void {
