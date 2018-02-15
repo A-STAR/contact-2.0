@@ -4,6 +4,7 @@ import {
   Component,
   forwardRef,
   HostBinding,
+  Input,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -21,6 +22,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   templateUrl: './checkbox.component.html'
 })
 export class CheckboxComponent implements ControlValueAccessor {
+  @Input() label: string;
+
   private _disabled: boolean;
   private _value: boolean;
 
@@ -28,13 +31,11 @@ export class CheckboxComponent implements ControlValueAccessor {
     private cdRef: ChangeDetectorRef,
   ) {}
 
-  @HostBinding('class.disabled')
   get disabled(): boolean {
     return this._disabled;
   }
 
-  @HostBinding('class.checked')
-  get value(): boolean {
+  get checked(): boolean {
     return this._value;
   }
 

@@ -46,13 +46,11 @@
     </label>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'checkbox'">
-    <label>
-      <app-checkbox [formControlName]="control.controlName"></app-checkbox>
-      {{ control.label | translate }}
-      <b *ngIf="control.required" class="text-danger">*</b>
-    </label>
-  </ng-container>
+  <app-checkbox
+    *ngSwitchCase="'checkbox'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+  ></app-checkbox>
 
   <ng-container *ngSwitchCase="'select'">
     <label>
