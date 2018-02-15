@@ -19,7 +19,7 @@ export class TextareaComponent {
 
   get errors(): any {
     return {
-      textarea6: this.formGroup.get('textarea6').errors;
+      textarea6: this.formGroup.get('textarea6').errors,
     };
   }
 }
