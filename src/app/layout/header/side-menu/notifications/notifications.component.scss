@@ -10,11 +10,8 @@
   padding-bottom: 8px;
   padding-top: 8px;
 
-  label {
+  app-checkbox {
     display: inline-block;
-    margin: 0;
-    width: auto;
-
     &:not(:last-child) {
       margin-right: 5px;
     }

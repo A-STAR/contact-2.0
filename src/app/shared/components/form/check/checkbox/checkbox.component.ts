@@ -25,7 +25,7 @@ export class CheckboxComponent implements ControlValueAccessor {
   @Input() label: string;
 
   private _disabled: boolean;
-  private _value: boolean;
+  private _value = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
