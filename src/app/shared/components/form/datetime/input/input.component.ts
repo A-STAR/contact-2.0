@@ -133,7 +133,7 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
     }
   }
 
-  private update(value: Date | null): void {
+  private update(value: Date): void {
     this._value = value;
     this.propagateChange(value);
     this.cdRef.markForCheck();
