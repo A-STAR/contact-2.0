@@ -225,6 +225,7 @@
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
     "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
+    "multilanguageRequired": "The field in main language is required",
     "oneOfGroupRequired": "At least one group field must not be empty",
     "timepicker": "Invalid time format"
   },

@@ -364,19 +364,14 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'multilanguage'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <i class="fa fa-language"></i>
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-multilanguage-input
-        [formControlName]="control.controlName"
-        [langOptions]="control.langOptions"
-        [controlDisabled]="control.disabled"
-        [placeholder]="control.placeholder"
-      ></app-multilanguage-input>
-    </label>
+    <app-multilanguage-input
+      [disabled]="control.disabled"
+      [formControlName]="control.controlName"
+      [label]="control.label"
+      [langOptions]="control.langOptions"
+      [placeholderKey]="control.placeholder"
+      [required]="control.required"
+    ></app-multilanguage-input>
   </ng-container>
 
   <ng-container *ngSwitchCase="'colorpicker'">
