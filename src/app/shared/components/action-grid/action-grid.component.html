@@ -1,6 +1,6 @@
 <app-next-call-date-set
   *ngIf="isDialog('debtNextCallDate')"
-  [debts]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-next-call-date-set>
 

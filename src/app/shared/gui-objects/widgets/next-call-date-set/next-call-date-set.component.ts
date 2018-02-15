@@ -7,7 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
+import { ICloseAction, IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -24,7 +24,7 @@ const labelKey = makeKey('widgets.nextCallDateSet.dialog');
 })
 export class NextCallDateSetDialogComponent  {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-  @Input() debts: number[];
+  @Input() actionData: IGridActionParams;
   @Output() close = new EventEmitter<ICloseAction>();
 
   constructor(
