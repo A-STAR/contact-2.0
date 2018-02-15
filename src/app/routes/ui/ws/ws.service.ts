@@ -2,9 +2,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 
+import { AuthService } from '@app/core/auth/auth.service';
+
+const jwt = localStorage.getItem(AuthService.TOKEN_NAME);
+console.log(jwt);
+
 @Injectable()
 export class WSService {
-  private socket = new WebSocket('ws://localhost:9999');
+  private socket = new WebSocket('ws://localhost:8080/api/pbx/events');
 
   private _listener$ = Observable.create((observer: Observer<string>) => {
     this.socket.addEventListener('message', event => {
