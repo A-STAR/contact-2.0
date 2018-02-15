@@ -4,17 +4,17 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
 
 @Component({
-    selector: 'app-dict-cell-renderer',
+    selector: 'app-lookup-cell-renderer',
     template: `{{ value$ | async }}`,
 })
-export class DictRendererComponent implements ICellRendererAngularComp {
+export class LookupRendererComponent implements ICellRendererAngularComp {
   private params: ICellRendererParams;
 
   constructor(
-    private userDictionariesService: UserDictionariesService,
+    private lookupService: LookupService,
   ) {}
 
   agInit(params: ICellRendererParams): void {
@@ -27,10 +27,10 @@ export class DictRendererComponent implements ICellRendererAngularComp {
 
   get value$(): Observable<string> {
     const { value } = this.params;
-    return this.userDictionariesService
-      .getDictionary(this.params['dictCode'])
+    return this.lookupService
+      .lookup(this.params['lookupKey'])
       .pipe(
-        map(dict => dict[value] ? dict[value].name : value),
+        map(lookup => lookup.find(l => l['id'] === value)['name']),
       );
   }
 }

@@ -1,0 +1,37 @@
+<ul>
+  <li>
+    <span>
+      {{ selectedRows }} {{ 'shared.components.grids.toolbar.rowsSelected' | translate }} /
+      {{ totalRows }} {{ 'shared.components.grids.toolbar.rowsTotal' | translate }}
+    </span>
+  </li>
+  <ng-container *ngIf="pagination">
+    <li>
+      <app-button label="First Page" (click)="onFirstPageClick()"></app-button>
+    </li>
+    <li>
+      <app-button label="Previous Page" (click)="onPreviousPageClick()"></app-button>
+    </li>
+    <li>
+      <span>{{ currentPage }} / {{ totalPages }}</span>
+    </li>
+    <li>
+      <app-button label="Next Page" (click)="onNextPageClick()"></app-button>
+    </li>
+    <li>
+      <app-button label="Last Page" (click)="onLastPageClick()"></app-button>
+    </li>
+    <li style="width: 64px;">
+      <app-single-select
+        [ngModel]="pageSize"
+        [options]="pageSizeOptions"
+        (ngModelChange)="onPageSizeChange($event)"
+      ></app-single-select>
+    </li>
+  </ng-container>
+  <!--
+  <li>
+    <app-button label="Refresh" (click)="onRefreshPageClick()"></app-button>
+  </li>
+  -->
+</ul>

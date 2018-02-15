@@ -1,11 +1,22 @@
-<ag-grid-angular
-  *ngIf="colDefs"
-  class="ag-theme-material"
-  style="width: 100%; height: 500px;"
-  [columnDefs]="colDefs"
-  [rowData]="rows"
-  (gridReady)="onGridReady($event)"
-></ag-grid-angular>
+<div class="flex vertical">
+  <div class="flex-item grow">
+    <ag-grid-angular
+      *ngIf="colDefs"
+      class="ag-theme-material"
+      style="width: 100%; height: 100%;"
+      [columnDefs]="colDefs"
+      [gridOptions]="gridOptions"
+      [rowData]="rows"
+      (gridReady)="onGridReady($event)"
+    ></ag-grid-angular>
+  </div>
+
+  <app-grid-toolbar
+    *ngIf="gridApi"
+    class="flex-item"
+    [gridApi]="gridApi"
+  ></app-grid-toolbar>
+</div>
 
 <!--
 <ag-grid-angular

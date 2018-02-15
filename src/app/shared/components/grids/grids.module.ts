@@ -1,44 +1,55 @@
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AgGridModule } from 'ag-grid-angular/main';
 import { LicenseManager } from 'ag-grid-enterprise/main';
 
+import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
+import { SelectModule } from '@app/shared/components/form/select/select.module';
 
 import { GridsService } from './grids.service';
 
 // Grids
 import { SimpleGridComponent } from './grid/grid.component';
 
-// Auxiliary Components
+// Renderers
 import { CheckboxCellRendererComponent } from './renderers/checkbox/checkbox.component';
 import { DictRendererComponent } from './renderers/dict/dict.component';
+import { LookupRendererComponent } from './renderers/lookup/lookup.component';
+
+// Misc Components
+import { GridToolbarComponent } from './toolbar/toolbar.component';
 
 @NgModule({
   imports: [
     AgGridModule.withComponents([
       CheckboxCellRendererComponent,
       DictRendererComponent,
+      LookupRendererComponent,
     ]),
+    ButtonModule,
     CheckModule,
     CommonModule,
     FormsModule,
+    SelectModule,
+    TranslateModule,
   ],
   exports: [
     CheckboxCellRendererComponent,
-    DictRendererComponent,
     SimpleGridComponent,
   ],
   declarations: [
     CheckboxCellRendererComponent,
     DictRendererComponent,
+    GridToolbarComponent,
+    LookupRendererComponent,
     SimpleGridComponent,
   ],
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
   entryComponents: [
     CheckboxCellRendererComponent,
-    DictRendererComponent,
   ],
   providers: [
     GridsService,
