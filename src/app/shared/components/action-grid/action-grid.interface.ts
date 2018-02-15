@@ -8,6 +8,11 @@ export interface IActionGridDialogFilterParams {
   columnNames: string[];
 }
 
+export interface ISingleSelection {
+  data: { [key: string]: any };
+  type: MetadataActionType;
+}
+
 export interface IAddOption {
   name: string;
   value: (string | number)[];
@@ -34,10 +39,9 @@ export interface ISelectionFilter {
   type: MetadataActionType;
 }
 
-export type IGridActionPayload = ISelectionIds | ISelectionFilter;
+export type IGridActionPayload = ISelectionIds | ISelectionFilter | ISingleSelection;
 
 export interface IGridActionParams {
   addOptions: IAddOption[];
-  payload?: IGridActionPayload;
-  current: number[][];
+  payload: IGridActionPayload;
 }

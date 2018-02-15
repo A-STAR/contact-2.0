@@ -171,7 +171,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.dialogData = {
       addOptions: metadataAction.addOptions,
       payload: this.getActionPayload(metadataAction.type, gridAction),
-      current: this.actionGridFilterService.getSelection(gridAction, [ selection ])
     };
     this.cdRef.markForCheck();
   }
@@ -182,8 +181,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.dialogData = {
       addOptions: metadataAction.addOptions,
       payload: this.getActionPayload(metadataAction.type, metadataAction),
-      // TODO(i.lobanov): check later if it actually works
-      current: this.actionGridFilterService.getSelection(metadataAction, [this.selection[0]])
     };
     this.cdRef.markForCheck();
   }
@@ -254,7 +251,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private getActionSingleSelectionPayload(action: IAGridAction): IGridActionPayload {
     return {
       type: action.metadataAction.type,
-      data: this.actionGridFilterService.getSelection(action, [ action.selection ])
+      data: this.actionGridFilterService.getSingleSelection(action, action.selection.node.data)
     };
   }
 
