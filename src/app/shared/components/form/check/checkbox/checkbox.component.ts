@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Component,
   forwardRef,
-  HostBinding,
   Input,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
