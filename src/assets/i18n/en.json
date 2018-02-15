@@ -1414,6 +1414,9 @@
       }
     },
     "campaigns": {
+      "titlebar": {
+        "title": "Campaigns"
+      },
       "create": {
         "title": "New campaign"
       },
