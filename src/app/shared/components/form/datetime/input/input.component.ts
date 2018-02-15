@@ -120,6 +120,8 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
     if (date.isValid()) {
       this.update(date.toDate());
       target.value = date.format(this.formatString);
+    } else {
+      this.update(null);
     }
   }
 
