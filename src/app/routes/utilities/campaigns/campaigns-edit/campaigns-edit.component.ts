@@ -67,7 +67,7 @@ export class CampaignsEditComponent implements OnInit {
     this.onCancel();
   }
 
-  canSubmit(): boolean {
+  get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 

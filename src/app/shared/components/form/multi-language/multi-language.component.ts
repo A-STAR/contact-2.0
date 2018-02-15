@@ -39,7 +39,7 @@ export class MultiLanguageComponent implements ControlValueAccessor {
 
   @Input() disabled = false;
   @Input() label = '';
-  @Input() placeholder = 'Enter translation value';
+  @Input() placeholderKey = 'Enter translation value';
   @Input() required = false;
 
   @Input('langOptions')
@@ -48,10 +48,10 @@ export class MultiLanguageComponent implements ControlValueAccessor {
       ...option,
       active: !!option.isMain,
     }));
-    if (options.length > 0) {
-      this.selectedId = options.length ? 0 : null;
-    }
-    this.propagateChange(this._langOptions);
+
+    this.selectedId = options.length ? 0 : null;
+    const value = this.selectedId !== null ? this._langOptions[this.selectedId].value : null;
+    this.onValueChange(value);
     this.cdRef.markForCheck();
   }
 
@@ -68,11 +68,13 @@ export class MultiLanguageComponent implements ControlValueAccessor {
     this.cdRef.markForCheck();
   }
 
-  registerOnChange(fn: Function): void {
+  registerOnChange(fn: () => void): void {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {}
+  registerOnTouched(fn: () => void): void {
+    this.propagateTouched = fn;
+  }
 
   get translation(): string {
     const option = (this.langOptions || []).find(
@@ -105,8 +107,17 @@ export class MultiLanguageComponent implements ControlValueAccessor {
     }
   }
 
-  onClear(): void {
+  onClear(event: MouseEvent): void {
+    event.preventDefault();
     this.onValueChange(null);
+  }
+
+  onLabelClick(event: MouseEvent): void {
+    event.preventDefault();
+  }
+
+  onFocusOut(): void {
+    this.propagateTouched();
   }
 
   setDisabledState(disabled: boolean): void {
@@ -114,4 +125,7 @@ export class MultiLanguageComponent implements ControlValueAccessor {
   }
 
   private propagateChange: Function = () => {};
+
+  private propagateTouched: Function = () => {};
+
 }

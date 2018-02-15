@@ -1,4 +1,4 @@
-<label>
+<label (click)="onLabelClick($event)">
   <span *ngIf="label" class="form-label">
     {{ label | translate }}
     <i class="fa fa-language"></i>
@@ -10,8 +10,8 @@
     <div class="input-group-btn">
 
       <button type="button" class="btn btn-default" #dropdownTrigger>
-        <span class="label">{{ buttonText | translate }}</span>
-        <span class="caret"></span>
+        <span class="button-label">{{ buttonText | translate }}</span>
+        <i class="caret"></i>
       </button>
 
       <ul class="list-group m0" #dropdownContent>
@@ -25,7 +25,7 @@
         </li>
       </ul>
 
-    </div>
+    </div><!-- input-group-btn -->
 
     <div class="input-wrapper">
       <input
@@ -33,11 +33,12 @@
         class="form-control"
         type="text"
         [ngModel]="translation"
-        [attr.placeholder]="placeholder | translate "
+        [attr.placeholder]="placeholderKey | translate "
         (ngModelChange)="onValueChange($event)"
+        (focusout)="onFocusOut()"
       >
-      <i *ngIf="translation != null" class="co co-close clear-btn" (click)="onClear()"></i>
-    </div>
+      <i *ngIf="translation != null" class="co co-close clear-btn" (click)="onClear($event)"></i>
+    </div><!-- input-wrapper -->
 
   </div><!-- input-group -->
 </label>

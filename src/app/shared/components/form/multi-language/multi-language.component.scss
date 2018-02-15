@@ -1,5 +1,9 @@
 @import '../../../styles/app/variables';
 
+label {
+  margin-bottom: 0;
+}
+
 .input-wrapper {
   position: relative;
 
@@ -8,25 +12,51 @@
     &:hover {
       display: inline-block;
       position: absolute;
-      top: 0.5em;
-      right: 0.5em;
+      top: 0.6em;
+      right: 0.6em;
+      font-size: smaller;
       cursor: pointer;
       z-index: 2;
     }
   }
 
-  input:hover + i {
+  input:hover + i,
+  input:focus + i {
     display: inline-block;
     position: absolute;
-    top: 0.5em;
-    right: 0.5em;
+    top: 0.6em;
+    right: 0.6em;
+    font-size: smaller;
     cursor: pointer;
-    z-index: 2;
+    z-index: 3;
   }
 }
 
 .input-group-btn {
   font-size: inherit;
+}
+
+button {
+  width: 120px;
+  text-align: left;
+  position: relative;
+  .caret {
+    position: absolute;
+    right: 10px;
+    top: 45%;
+  }
+}
+
+.list-group {
+  border: 1px solid $input-border;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: $zindex-app-dialog;
+  & > li {
+    padding: 6px 10px 6px 8px;
+    &:hover {
+      background-color: rgb(231, 231, 231);
+    }
+  }
 }
 
 .main-language {
