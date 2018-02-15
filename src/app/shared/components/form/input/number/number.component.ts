@@ -3,9 +3,9 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  forwardRef,
   Input,
   Renderer2,
+  forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 

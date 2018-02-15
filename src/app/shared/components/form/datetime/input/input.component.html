@@ -4,7 +4,6 @@
   [disabled]="disabled"
   [ngModel]="momentValue | momentFormat:format"
   [textMask]="mask"
-  (blur)="onBlur()"
   (change)="onChange($event)"
-  (wheel)="onWheel($event)"
+  (focus)="onFocus()"
 />
