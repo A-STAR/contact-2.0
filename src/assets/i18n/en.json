@@ -634,7 +634,7 @@
         "grid": {
           "bankName": "Bank",
           "branchCode": "Branch",
-          "contact": "Contract",
+          "contract": "Contract",
           "creditEndDate": "Credit End Date",
           "creditName": "Credit Name",
           "creditStartDate": "Credit Start Date",

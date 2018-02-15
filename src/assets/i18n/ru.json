@@ -634,7 +634,7 @@
         "grid": {
           "bankName": "Банк",
           "branchCode": "Филиал",
-          "contact": "Договор",
+          "contract": "Договор",
           "creditEndDate": "Дата окончания кредитного срока",
           "creditName": "Название продукта",
           "creditStartDate": "Дата выдачи кредита",
