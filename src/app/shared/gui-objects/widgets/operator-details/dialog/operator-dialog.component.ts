@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { first } from 'rxjs/operators';
 
+import { IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
 import { IOperator } from '../operator-details.interface';
 
 import { OperatorDetailsService } from '../operator-details.service';
@@ -12,7 +13,7 @@ import { OperatorDetailsService } from '../operator-details.service';
 })
 export class OperatorDialogComponent implements OnInit {
 
-  @Input() userId: number;
+  @Input() actionData: IGridActionParams;
 
   @Output() close = new EventEmitter<null>();
 
@@ -24,7 +25,7 @@ export class OperatorDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.operatorDetailsService.fetch(this.userId)
+    this.operatorDetailsService.fetch(this.actionData.payload)
       .pipe(first())
       .subscribe(operator => {
         this.operator = operator;
