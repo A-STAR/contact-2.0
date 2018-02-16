@@ -12,6 +12,9 @@ const routes: Routes = [
   {
     path: '',
     component: WSComponent,
+    data: {
+      reuse: true,
+    },
   },
 ];
 
