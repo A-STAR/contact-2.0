@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
@@ -27,17 +27,16 @@ const label = makeKey('widgets.property.card');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-property-card',
+  selector: 'app-debtor-property-card',
   templateUrl: './property-card.component.html',
 })
-export class PropertyCardComponent implements OnInit {
+export class DebtorPropertyCardComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
-  @Input() personId: number;
-  @Input() propertyId: number;
 
   controls: Array<IDynamicFormItem> = null;
   property: IProperty;
+
+  private propertyId = Number(this.route.snapshot.paramMap.get('propertyId'));
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -51,7 +50,9 @@ export class PropertyCardComponent implements OnInit {
   ngOnInit(): void {
     combineLatest(
       this.propertyId ? this.propertyService.canEdit$ : this.propertyService.canAdd$,
-      this.propertyId ? this.propertyService.fetch(this.personId, this.propertyId) : of(this.getFormData()),
+      this.propertyId
+        ? this.debtorCardService.personId$.flatMap(personId => this.propertyService.fetch(personId, this.propertyId))
+        : of(this.getFormData()),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PROPERTY_TYPE),
     )
     .pipe(first())
@@ -83,9 +84,10 @@ export class PropertyCardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const action = this.propertyId
-      ? this.propertyService.update(this.personId, this.propertyId, this.form.serializedUpdates)
-      : this.propertyService.create(this.personId, this.form.serializedUpdates);
+    const action = this.debtorCardService.personId$.flatMap(personId => this.propertyId
+      ? this.propertyService.update(personId, this.propertyId, this.form.serializedUpdates)
+      : this.propertyService.create(personId, this.form.serializedUpdates)
+    );
 
     action.subscribe(() => {
       this.propertyService.dispatchAction(PropertyService.MESSAGE_PROPERTY_SAVED);

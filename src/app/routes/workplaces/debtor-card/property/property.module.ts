@@ -7,8 +7,6 @@ import { PropertyGridModule } from './grid/property-grid.module';
 
 import { PropertyService } from './property.service';
 
-import { DebtorPropertyComponent } from './property.component';
-
 @NgModule({
   imports: [
     CommonModule,
@@ -19,9 +17,6 @@ import { DebtorPropertyComponent } from './property.component';
   exports: [
     PropertyCardModule,
     PropertyGridModule
-  ],
-  declarations: [
-    DebtorPropertyComponent
   ],
   providers: [
     PropertyService

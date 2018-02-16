@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '../../../../../shared/shared.module';
 
-import { PropertyCardComponent } from './property-card.component';
+import { DebtorPropertyCardComponent } from './property-card.component';
 
 @NgModule({
   imports: [
@@ -13,10 +13,10 @@ import { PropertyCardComponent } from './property-card.component';
     SharedModule
   ],
   exports: [
-    PropertyCardComponent,
+    DebtorPropertyCardComponent,
   ],
   declarations: [
-    PropertyCardComponent,
+    DebtorPropertyCardComponent,
   ]
 })
 export class PropertyCardModule { }
