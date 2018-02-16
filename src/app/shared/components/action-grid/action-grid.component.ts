@@ -15,13 +15,21 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, filter, map } from 'rxjs/operators';
 import { GridOptions } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
+import { never } from 'rxjs/observable/never';
+import { of } from 'rxjs/observable/of';
 
 import {
   ICloseAction,
   IGridActionParams,
   IGridActionPayload,
 } from './action-grid.interface';
-import { IAGridAction, IAGridRequestParams, IAGridSelected, IAGridColumn } from '../grid2/grid2.interface';
+import {
+  IAGridAction,
+  IAGridRequestParams,
+  IAGridSelected,
+  IAGridColumn,
+  IAGridExportableColumn,
+} from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 import { IMetadataAction, IMetadataActionPermissions, MetadataActionType } from '@app/core/metadata/metadata.interface';
@@ -30,6 +38,7 @@ import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 import { ActionGridFilterService } from './filter/action-grid-filter.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -56,6 +65,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() metadataKey: string;
   @Input() ngClass: string;
   @Input() persistenceKey: string;
+  @Input() permissionKey: string;
   @Input() rowCount: number;
   @Input() rowIdKey: string;
   @Input() rows: T[] = [];
@@ -87,6 +97,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     private cdRef: ChangeDetectorRef,
     private entityAttributesService: EntityAttributesService,
     private gridService: GridService,
+    private notificationsService: NotificationsService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -96,7 +107,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   ngOnInit(): void {
 
     if (this.metadataKey) {
-      this.gridService.getMetadata(this.metadataKey, {})
+      this.permissionKey ? this.userPermissionsService.has(this.permissionKey) : of(true)
+        .switchMap(isAllowed => {
+          if (isAllowed) {
+            return this.gridService.getMetadata(this.metadataKey, {});
+          }
+          this.notificationsService.permissionError().entity(`entities.${this.metadataKey}.gen.plural`).dispatch();
+          return never();
+        })
         .pipe(first())
         .subscribe(({ actions, columns }) => {
           this.actions$.next(actions);
@@ -173,6 +191,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.dialogData = {
       addOptions: metadataAction.addOptions,
       payload: this.getActionPayload(metadataAction.type, metadataAction),
+      selection: this.actionGridFilterService.getGridSelection(metadataAction, this.selection)
     };
     this.cdRef.markForCheck();
   }
@@ -201,6 +220,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   onSelect(selected: number[]): void {
     this.select.emit(selected);
+  }
+
+  getExportableColumns(): IAGridExportableColumn[] {
+    return this.grid instanceof Grid2Component
+      ? this.grid.getExportableColumns()
+      : null;
   }
 
   get initialized(): boolean {
