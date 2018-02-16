@@ -2,8 +2,8 @@
   <div>
     <label>
       <span class="form-label">
-        <!-- TODO(d.maltsev): i18n -->
-        Причина звонка должника <b *ngIf="isCallReasonRequired$ | async" class="text-danger">*</b>
+        {{ 'routes.workplaces.shared.contactRegistration.edit.form.callReason.form.callReason' | translate }}
+        <b *ngIf="isCallReasonRequired$ | async" class="text-danger">*</b>
       </span>
       <app-select-wrapper
         formControlName="callReasonCode"
