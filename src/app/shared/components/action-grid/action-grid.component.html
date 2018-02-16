@@ -24,7 +24,7 @@
 
 <app-visit-add-dialog
   *ngIf="isDialog('addVisit')"
-  [visitParams]="getConfiguredParams('addVisit')"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-visit-add-dialog>
 
