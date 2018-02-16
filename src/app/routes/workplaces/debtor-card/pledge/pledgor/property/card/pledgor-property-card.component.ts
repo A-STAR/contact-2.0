@@ -7,22 +7,22 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormGroup } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IPledgor } from '../../pledgor/pledgor.interface';
-import { IPledgeContract } from '../../pledge/pledge.interface';
+import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPledgor } from '../../pledgor.interface';
+import { IPledgeContract } from '../../../pledge.interface';
 import { IPledgorProperty } from '../pledgor-property.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { PledgeService } from '../../pledge/pledge.service';
-import { PledgorService } from '../../pledgor/pledgor.service';
-import { PledgorPropertyService } from '../../pledgor-property/pledgor-property.service';
-import { LookupService } from '../../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { PledgeService } from '../../../../pledge/pledge.service';
+import { PledgorService } from '../../../pledgor/pledgor.service';
+import { PledgorPropertyService } from '../pledgor-property.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { DialogFunctions } from '../../../../../core/dialog';
-import { makeKey } from '../../../../../core/utils';
+import { DialogFunctions } from '@app/core/dialog';
+import { makeKey } from '@app/core/utils';
 
 const label = makeKey('widgets.pledgorProperty.grid');
 

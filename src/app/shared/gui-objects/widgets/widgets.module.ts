@@ -28,9 +28,6 @@ import { OperatorDetailsModule } from './operator-details/operator-details.modul
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
 import { PersonSelectModule } from './person-select/person-select.module';
-import { PledgeModule } from './pledge/pledge.module';
-import { PledgorModule } from './pledgor/pledgor.module';
-import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
 import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
 import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
@@ -66,9 +63,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PaymentModule,
     PaymentOperatorModule,
     PersonSelectModule,
-    PledgeModule,
-    PledgorModule,
-    PledgorPropertyModule,
     PortfolioLogModule,
     PromiseModule,
     PromiseResolveModule,
@@ -102,9 +96,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PaymentModule,
     PaymentOperatorModule,
     PersonSelectModule,
-    PledgeModule,
-    PledgorModule,
-    PledgorPropertyModule,
     PortfolioLogModule,
     PromiseModule,
     PromiseResolveModule,

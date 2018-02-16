@@ -5,14 +5,14 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IPledgeContract } from '@app/shared/gui-objects/widgets/pledge/pledge.interface';
-import { IPledgor } from '@app/shared/gui-objects/widgets/pledgor/pledgor.interface';
-import { IPledgorProperty } from '@app/shared/gui-objects/widgets/pledgor-property/pledgor-property.interface';
+import { IPledgeContract } from '../pledge.interface';
+import { IPledgor } from '../pledgor/pledgor.interface';
+import { IPledgorProperty } from '../pledgor/property/pledgor-property.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { PledgeService } from '@app/shared/gui-objects/widgets/pledge/pledge.service';
-import { PledgorService } from '@app/shared/gui-objects/widgets/pledgor/pledgor.service';
-import { PledgorPropertyService } from '@app/shared/gui-objects/widgets/pledgor-property/pledgor-property.service';
+import { PledgeService } from '../pledge.service';
+import { PledgorService } from '../pledgor/pledgor.service';
+import { PledgorPropertyService } from '../pledgor/property/pledgor-property.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
@@ -25,10 +25,10 @@ import { of } from 'rxjs/observable/of';
 const label = makeKey('widgets.pledgeContract.card');
 
 @Component({
-  selector: 'app-pledge-card',
+  selector: 'app-debtor-pledge-card',
   templateUrl: './pledge-card.component.html'
 })
-export class PledgeCardComponent implements OnInit, OnDestroy {
+export class DebtorPledgeCardComponent implements OnInit, OnDestroy {
 
   @ViewChild(DynamicFormComponent) set form(pledgeForm: DynamicFormComponent) {
     this._form = pledgeForm;

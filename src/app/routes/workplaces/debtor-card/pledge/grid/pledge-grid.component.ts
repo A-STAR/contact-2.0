@@ -8,7 +8,7 @@ import { IPledgeContract } from '../pledge.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { PledgeService } from '@app/shared/gui-objects/widgets/pledge/pledge.service';
+import { PledgeService } from '../pledge.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
