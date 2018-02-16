@@ -12,6 +12,8 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { UsersService } from '@app/routes/admin/users/users.service';
 
+import { TickRendererComponent } from '@app/shared/components/grids/renderers/tick/tick.component';
+
 import { combineLatestAnd, isEmpty, addGridLabel } from '@app/core/utils';
 
 @Component({
@@ -32,7 +34,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     { prop: 'middleName', minWidth: 120 },
     { prop: 'position', minWidth: 120 },
     { prop: 'roleId', minWidth: 100, lookupKey: 'roles' },
-    { prop: 'isInactive', minWidth: 100 /*, renderer: 'checkboxRenderer' */ },
+    { prop: 'isInactive', minWidth: 100, renderer: TickRendererComponent },
     { prop: 'mobPhone', minWidth: 140 },
     { prop: 'workPhone', minWidth: 140 },
     { prop: 'intPhone', minWidth: 140 },

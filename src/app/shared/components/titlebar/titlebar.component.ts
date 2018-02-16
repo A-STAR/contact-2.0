@@ -31,6 +31,8 @@ export class TitlebarComponent implements OnInit {
     [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'co-refresh', title: 'Обновить' },
     [TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT]: { iconCls: 'co-contact-registration', title: 'Зарегистрировать контакт' },
     [TitlebarItemTypeEnum.BUTTON_SEARCH]: { iconCls: 'co-search', title: 'Поиск' },
+    [TitlebarItemTypeEnum.BUTTON_START]: { iconCls: 'fa fa-play', title: 'Запустить' },
+    [TitlebarItemTypeEnum.BUTTON_STOP]: { iconCls: 'fa fa-stop', title: 'Остановить' },
   };
   suppressCenterZone: boolean;
   title: string;

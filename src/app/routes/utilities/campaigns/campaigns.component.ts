@@ -9,22 +9,22 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, switchMap } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
 
 import { ICampaign, CampaignStatus } from './campaigns.interface';
-import { IGridColumn } from '../../../shared/components/grid/grid.interface';
-import { ToolbarItemTypeEnum, IToolbarItem } from '../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ToolbarItemTypeEnum, IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CampaignsService } from './campaigns.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
-import { ValueConverterService } from '../../../core/converter/value-converter.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { GridComponent } from '../../../shared/components/grid/grid.component';
+import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { DialogFunctions } from '../../../core/dialog';
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   selector: 'app-campaigns',
@@ -53,6 +53,34 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     { isInitialised: true, },
     { isInitialised: false, },
   ];
+
+  titlebar: ITitlebar = {
+    title: 'utilities.campaigns.titlebar.title',
+    items: [
+      {
+        type: TitlebarItemTypeEnum.BUTTON_START,
+        action: () => this.onStart(),
+        title: 'default.buttons.start',
+        enabled: combineLatest(
+          this.userPermissionsService.has('CAMPAIGN_EDIT'),
+          this.selectedCampaign
+        )
+          .map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
+            && selectedCampaign.statusCode !== CampaignStatus.STARTED)
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_STOP,
+        action: () => this.onStop(),
+        title: 'default.buttons.stop',
+        enabled: combineLatest(
+          this.userPermissionsService.has('CAMPAIGN_EDIT'),
+          this.selectedCampaign
+        )
+          .map(([canEdit, selectedCampaign]) => canEdit && !!selectedCampaign
+            && selectedCampaign.statusCode === CampaignStatus.STARTED)
+      },
+    ]
+  };
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -83,30 +111,6 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
       action: () => this.fetchCampaigns().subscribe(campaigns => this.onCampaignsFetch(campaigns)),
       enabled: this.userPermissionsService.has('CAMPAIGN_VIEW')
     },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_STOP,
-      action: () => this.onStop(),
-      label: this.translateService.instant('default.buttons.stop'),
-      align: 'right',
-      enabled: combineLatest(
-        this.userPermissionsService.has('CAMPAIGN_EDIT'),
-        this.selectedCampaign
-      )
-        .map(([canEdit, selectedCampaign]) => canEdit && !!selectedCampaign
-          && selectedCampaign.statusCode === CampaignStatus.STARTED)
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_START,
-      action: () => this.onStart(),
-      label: this.translateService.instant('default.buttons.start'),
-      align: 'right',
-      enabled: combineLatest(
-        this.userPermissionsService.has('CAMPAIGN_EDIT'),
-        this.selectedCampaign
-      )
-        .map(([hasPermissions, selectedCampaign]) => hasPermissions && !!selectedCampaign
-          && selectedCampaign.statusCode !== CampaignStatus.STARTED)
-    },
   ];
 
   constructor(
@@ -114,7 +118,6 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
     private notificationsService: NotificationsService,
-    private translateService: TranslateService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
   ) {

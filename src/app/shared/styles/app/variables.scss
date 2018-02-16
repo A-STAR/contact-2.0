@@ -6,6 +6,7 @@ $layout-top-menu-font-size:        15px;
 $layout-sidebar-width:            220px;
 $layout-sidebar-width-collapsed:   64px;
 $layout-content-padding:           10px;
+$layout-content-border-width:       7px;
 $layout-logo-height:               39px;
 
 // Colors
@@ -17,15 +18,15 @@ $brand-primary-light: #58526e;
 $brand-white:         #d8d5e2;
 $brand-secondary:     #9bec00;
 
-$link-color: #46a2f9;
+$link-color:          #46a2f9;
 
 $layout-content-background-color: #dcdae2;
 
-$gray-darker:  #232735;
-$gray-dark:    #3a3f51;
-$gray:         #dde6e9;
-$gray-light:   #e4eaec;
-$gray-lighter: #edf1f2;
+$gray-darker:         #232735;
+$gray-dark:           #3a3f51;
+$gray:                #dde6e9;
+$gray-light:          #e4eaec;
+$gray-lighter:        #edf1f2;
 
 $radioButtonSize: 18px;
 $radioButtonDotSize: 10px;

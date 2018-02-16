@@ -89,7 +89,7 @@ export class PaymentCardComponent {
         { label: 'widgets.payment.grid.comment', controlName: 'comment', type: 'textarea', disabled: !canEdit, width: 12 },
         {
           label: 'widgets.payment.grid.isConfirmed', controlName: 'isConfirmed', disabled: !canConfirm,
-          type: 'checkbox', required: true, width: 12
+          type: 'checkbox', width: 12
         },
       ].map(item => ({ ...item, disabled: this.readOnly } as IDynamicFormControl));
 

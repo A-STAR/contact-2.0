@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid/main';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { Observable } from 'rxjs/Observable';
@@ -7,8 +7,9 @@ import { map } from 'rxjs/operators';
 import { LookupService } from '@app/core/lookup/lookup.service';
 
 @Component({
-    selector: 'app-lookup-cell-renderer',
-    template: `{{ value$ | async }}`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-grid-lookup-renderer',
+  template: `{{ value$ | async }}`,
 })
 export class LookupRendererComponent implements ICellRendererAngularComp {
   private params: ICellRendererParams;

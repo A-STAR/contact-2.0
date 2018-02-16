@@ -9,7 +9,16 @@ import {
   Output,
   Renderer2,
   QueryList,
+  ViewChildren,
+  ChangeDetectorRef,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
 } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+
+import { ILayoutDimension } from '@app/layout/layout.interface';
+import { LayoutService } from '@app/layout/layout.service';
 
 import { TabViewTabComponent } from '../tab/tab.component';
 
@@ -20,17 +29,33 @@ import { TabViewTabComponent } from '../tab/tab.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class TabViewComponent implements AfterContentInit {
+export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, AfterViewInit {
+  private static MENU_BTN_SPACE = 50;
+
+  @ViewChildren('tabHeader') tabHeaders: QueryList<ElementRef>;
+
   @ContentChildren(TabViewTabComponent) tabs: QueryList<TabViewTabComponent>;
 
   @Input() noMargin = false;
 
   @Output() select = new EventEmitter<number>();
 
+  private tabHeaderDimensions: Partial<ILayoutDimension>[] = [];
+
+  private layoutSubscription: Subscription;
+
   constructor(
+    private cdRef: ChangeDetectorRef,
     private el: ElementRef,
     private renderer: Renderer2,
+    private layoutService: LayoutService
   ) { }
+
+  ngOnInit(): void {
+    this.layoutSubscription = this.layoutService.contentDimension$
+      .filter(Boolean)
+      .subscribe(() => this.cdRef.markForCheck());
+  }
 
   ngAfterContentInit(): void {
     const activeTabs = this.tabs.filter(tab => tab.active);
@@ -39,6 +64,36 @@ export class TabViewComponent implements AfterContentInit {
     if (!activeTabs.length) {
       this.selectTab(null, this.tabs.filter(tab => !tab.disabled)[0]);
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.tabHeaderDimensions = this.tabHeaders.map(tabHeader => ({
+      left: tabHeader.nativeElement.offsetLeft,
+      width: tabHeader.nativeElement.clientWidth,
+    }));
+    this.cdRef.markForCheck();
+  }
+
+  ngOnDestroy(): void {
+    this.layoutSubscription.unsubscribe();
+  }
+
+  get visibleTabs(): TabViewTabComponent[] {
+    return this.tabs.filter((tab, index) => this.isHeaderTabVisible(index));
+  }
+
+  get hiddenTabs(): TabViewTabComponent[] {
+    return this.tabs.filter((tab, index) => !this.isHeaderTabVisible(index));
+  }
+
+  isHeaderTabVisible(tabIndex: number): boolean {
+    const activeIndex = this.tabs.toArray().findIndex(el => el.active);
+    const activeTabHeader = this.tabHeaderDimensions[activeIndex];
+    const tabHeader = this.tabHeaderDimensions[tabIndex] || {};
+    const feetsInView = activeIndex > tabIndex
+      ? tabHeader.left + tabHeader.width < this.tabHeaderWidth - activeTabHeader.width
+      : tabHeader.left + tabHeader.width < this.tabHeaderWidth;
+    return !tabHeader.width || activeIndex === tabIndex || feetsInView;
   }
 
   selectTab(event: MouseEvent, tab: TabViewTabComponent): void {
@@ -93,6 +148,10 @@ export class TabViewComponent implements AfterContentInit {
         left: x + 'px'
       })
       .addClass('rippleEffect');
+  }
+
+  private get tabHeaderWidth(): any {
+    return this.el.nativeElement.querySelector('ul').clientWidth - TabViewComponent.MENU_BTN_SPACE;
   }
 
   private getTabIndex(tab: TabViewTabComponent): number {

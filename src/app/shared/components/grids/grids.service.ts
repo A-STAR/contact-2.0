@@ -43,8 +43,12 @@ export class GridsService {
   }
 
   private getCellRendererOptions<T>(column: IGridColumn<T>): Partial<ColDef> {
-    const { dictCode, lookupKey } = column;
+    const { dictCode, lookupKey, renderer } = column;
     switch (true) {
+      case Boolean(renderer):
+        return {
+          cellRendererFramework: renderer,
+        };
       case Boolean(dictCode):
         return {
           cellRendererFramework: DictRendererComponent,
