@@ -1,20 +1,27 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
 
 import { GridsComponent } from './grids.component';
 
+const routes: Routes = [
+  {
+    path: '',
+    component: GridsComponent,
+  },
+];
+
 @NgModule({
   imports: [
-    FormsModule,
+    RouterModule.forChild(routes),
     SharedModule,
   ],
   declarations: [
     GridsComponent,
   ],
   exports: [
-    GridsComponent,
+    RouterModule,
   ]
 })
 export class GridsModule {}

@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component,
+  OnInit, OnDestroy, Output, EventEmitter
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -25,6 +28,8 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   private selectedGroup$ = new BehaviorSubject<IGroup>(null);
 
   private forCurrentUser = false;
+
+  @Output() select = new EventEmitter<number>();
 
   columns: Array<IGridColumn> = [
     { prop: 'id', width: 70 },
@@ -78,6 +83,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   groups: IGroup[] = [];
 
   private actionSubscription: Subscription;
+  private groupSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -104,9 +110,14 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
         this.fetch();
         this.selectedGroup$.next(this.selectedGroup);
       });
+
+    this.groupSubscription = this.selectedGroup$
+      .filter(Boolean)
+      .subscribe(group => this.select.emit(group.id));
   }
 
   ngOnDestroy(): void {
+    this.groupSubscription.unsubscribe();
     this.actionSubscription.unsubscribe();
   }
 

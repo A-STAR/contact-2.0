@@ -1,5 +1,15 @@
 # Contact2.0
 
+Dev:
+
+[![pipeline status](http://repository2.luxbase.int/Contact-2.0/front-end/badges/dev/pipeline.svg)](http://repository2.luxbase.int/Contact-2.0/front-end/commits/dev)
+[![coverage report](http://repository2.luxbase.int/Contact-2.0/front-end/badges/dev/coverage.svg)](http://repository2.luxbase.int/Contact-2.0/front-end/commits/dev)
+
+Master:
+
+[![pipeline status](http://repository2.luxbase.int/Contact-2.0/front-end/badges/master/pipeline.svg)](http://repository2.luxbase.int/Contact-2.0/front-end/commits/master)
+[![coverage report](http://repository2.luxbase.int/Contact-2.0/front-end/badges/master/coverage.svg)](http://repository2.luxbase.int/Contact-2.0/front-end/commits/master)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 4.3.0.
 
 ## Development server

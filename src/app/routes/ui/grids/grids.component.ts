@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { IGridFilterType } from '@app/shared/components/grids/grids.interface';
 
 interface IRow {
   id: number;
@@ -11,6 +12,7 @@ interface IRow {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-route-ui-grids',
   templateUrl: './grids.component.html'
 })
@@ -19,14 +21,17 @@ export class GridsComponent {
     {
       label: 'ID',
       prop: 'id',
+      filter: IGridFilterType.NUMBER,
     },
     {
       label: 'Foo',
       prop: 'foo',
+      filter: IGridFilterType.TEXT,
     },
     {
       label: 'Bar',
       prop: 'bar',
+      filter: IGridFilterType.TEXT,
     },
     {
       label: 'Dict',
@@ -35,10 +40,10 @@ export class GridsComponent {
     }
   ];
 
-  rows: IRow[] = Array(100).fill(null).map((_, i) => i + 1).map(id => ({
+  rows: IRow[] = Array(900).fill(null).map((_, i) => i + 1).map(id => ({
     id,
     foo: `Foo ${id}`,
     bar: `Bar ${id}`,
-    dict: id % 2 + 1,
+    dict: id % 4 + 1,
   }));
 }

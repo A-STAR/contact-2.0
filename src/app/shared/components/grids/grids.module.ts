@@ -1,44 +1,58 @@
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AgGridModule } from 'ag-grid-angular/main';
 import { LicenseManager } from 'ag-grid-enterprise/main';
 
+import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
+import { SelectModule } from '@app/shared/components/form/select/select.module';
 
 import { GridsService } from './grids.service';
 
 // Grids
 import { SimpleGridComponent } from './grid/grid.component';
 
-// Auxiliary Components
-import { CheckboxCellRendererComponent } from './renderers/checkbox/checkbox.component';
+// Renderers
+import { CheckboxRendererComponent } from './renderers/checkbox/checkbox.component';
 import { DictRendererComponent } from './renderers/dict/dict.component';
+import { LookupRendererComponent } from './renderers/lookup/lookup.component';
+import { TickRendererComponent } from './renderers/tick/tick.component';
+
+// Misc Components
+import { GridToolbarComponent } from './toolbar/toolbar.component';
 
 @NgModule({
   imports: [
     AgGridModule.withComponents([
-      CheckboxCellRendererComponent,
+      CheckboxRendererComponent,
       DictRendererComponent,
+      LookupRendererComponent,
+      TickRendererComponent,
     ]),
+    ButtonModule,
     CheckModule,
     CommonModule,
     FormsModule,
+    SelectModule,
+    TranslateModule,
   ],
   exports: [
-    CheckboxCellRendererComponent,
-    DictRendererComponent,
+    CheckboxRendererComponent,
     SimpleGridComponent,
   ],
   declarations: [
-    CheckboxCellRendererComponent,
+    CheckboxRendererComponent,
     DictRendererComponent,
+    GridToolbarComponent,
+    LookupRendererComponent,
     SimpleGridComponent,
+    TickRendererComponent,
   ],
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
   entryComponents: [
-    CheckboxCellRendererComponent,
-    DictRendererComponent,
+    CheckboxRendererComponent,
   ],
   providers: [
     GridsService,

@@ -2,11 +2,13 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  forwardRef,
+  ElementRef,
   HostListener,
   Input,
   OnDestroy,
   OnInit,
+  Renderer2,
+  forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,10 +28,12 @@ import { DateTimeService } from '../datetime.service';
     }
   ],
   selector: 'app-datetime-input',
-  templateUrl: './input.component.html'
+  templateUrl: './input.component.html',
 })
 export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() format: string;
+  @Input() minDateTime: Date;
+  @Input() maxDateTime: Date;
 
   private _disabled = false;
   private _value: Date;
@@ -37,9 +41,13 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
   private cachedValue: moment.Moment = null;
   private langSub: Subscription;
 
+  private wheelListenter: () => void;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private dateTimeService: DateTimeService,
+    private elRef: ElementRef,
+    private renderer: Renderer2,
     private translateService: TranslateService,
   ) {}
 
@@ -89,11 +97,41 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
     this._disabled = disabled;
   }
 
-  onBlur(): void {
+  onFocus(): void {
+    this.wheelListenter = this.renderer.listen(this.elRef.nativeElement, 'wheel', event => this.onWheel(event));
+  }
+
+  onChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+
+    let date = moment(target.value, this.formatString);
+    if (this.minDateTime && moment(date.toDate()).isBefore(this.minDateTime)) {
+      date = moment(this.minDateTime, this.formatString);
+    }
+
+    if (date.isValid()) {
+      this.update(date.toDate());
+      target.value = date.format(this.formatString);
+    } else {
+      this.update(null);
+    }
+  }
+
+  @HostListener('focusout')
+  focusOut(): void {
+    this.wheelListenter();
+    if (this.cachedValue) {
+      this.update(this.cachedValue.toDate());
+      this.cachedValue = null;
+    }
     this.propagateTouch();
   }
 
-  onWheel(event: WheelEvent): void {
+  private onWheel(event: WheelEvent): void {
+    if (this.disabled) {
+      return;
+    }
+    event.preventDefault();
     const target = event.target as HTMLInputElement;
     const delta = -Math.sign(event.deltaY);
     const cursorPosition = target.selectionStart;
@@ -105,22 +143,6 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
     target.value = value;
     target.setSelectionRange(cursorPosition, cursorPosition);
     this.propagateChange(this.cachedValue.toDate());
-  }
-
-  onChange(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const date = moment(value, this.formatString);
-    if (date.isValid()) {
-      this.update(date.toDate());
-    }
-  }
-
-  @HostListener('focusout')
-  focusOut(): void {
-    if (this.cachedValue) {
-      this.update(this.cachedValue.toDate());
-      this.cachedValue = null;
-    }
   }
 
   private update(value: Date): void {

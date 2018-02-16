@@ -1,6 +1,11 @@
-<section>
-  <app-simple-grid
-    [columns]="columns"
-    [rows]="rows"
-  ></app-simple-grid>
+<section class="flex vertical">
+  <div class="flex-item">
+    <h1>Simple Grid</h1>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      [columns]="columns"
+      [rows]="rows"
+    ></app-simple-grid>
+  </div>
 </section>

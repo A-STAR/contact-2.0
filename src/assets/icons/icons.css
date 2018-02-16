@@ -50,201 +50,228 @@
 .co-attributes-sm:before {
   content: "\e003";
 }
-.co-calendar:before {
+.co-back:before {
   content: "\e004";
 }
-.co-call-campaigns:before {
+.co-calendar:before {
   content: "\e005";
 }
-.co-call-cancel:before {
+.co-call-campaigns:before {
   content: "\e006";
 }
-.co-call-center:before {
+.co-call-cancel:before {
   content: "\e007";
 }
-.co-call-incoming:before {
+.co-call-center:before {
   content: "\e008";
 }
-.co-call-transfer:before {
+.co-call-incoming:before {
   content: "\e009";
 }
-.co-call-unpause:before {
+.co-call-transfer:before {
   content: "\e00a";
 }
-.co-change-status:before {
+.co-call-unpause:before {
   content: "\e00b";
 }
-.co-checkbox-mark:before {
+.co-change-status:before {
   content: "\e00c";
 }
-.co-close:before {
+.co-checkbox-mark:before {
   content: "\e00d";
 }
-.co-communication-out:before {
+.co-clear:before {
   content: "\e00e";
 }
-.co-confirm:before {
+.co-close:before {
   content: "\e00f";
 }
-.co-constants:before {
+.co-communication-out:before {
   content: "\e010";
 }
-.co-contact-log:before {
+.co-confirm:before {
   content: "\e011";
 }
-.co-contact-registration:before {
+.co-constants:before {
   content: "\e012";
 }
-.co-contact-tree:before {
+.co-contact-log:before {
   content: "\e013";
 }
-.co-copy:before {
+.co-contact-registration:before {
   content: "\e014";
 }
-.co-court:before {
+.co-contact-tree:before {
   content: "\e015";
 }
-.co-currencies:before {
+.co-copy:before {
   content: "\e016";
 }
-.co-data-upload:before {
+.co-court:before {
   content: "\e017";
 }
-.co-debt-list:before {
+.co-currencies:before {
   content: "\e018";
 }
-.co-debt-processing:before {
+.co-data-upload:before {
   content: "\e019";
 }
-.co-delete:before {
+.co-debt-list:before {
   content: "\e01a";
 }
-.co-dialog-exclamation:before {
+.co-debt-processing:before {
   content: "\e01b";
 }
-.co-dialog-info:before {
+.co-delete:before {
   content: "\e01c";
 }
-.co-dialog-question:before {
+.co-dialog-exclamation:before {
   content: "\e01d";
 }
-.co-dictionaries:before {
+.co-dialog-info:before {
   content: "\e01e";
 }
-.co-download:before {
+.co-dialog-question:before {
   content: "\e01f";
 }
-.co-download-excel:before {
+.co-dictionaries:before {
   content: "\e020";
 }
-.co-edit:before {
+.co-download:before {
   content: "\e021";
 }
-.co-email:before {
+.co-download-excel:before {
   content: "\e022";
 }
-.co-filter:before {
+.co-edit:before {
   content: "\e023";
 }
-.co-filter-params:before {
+.co-email:before {
   content: "\e024";
 }
-.co-formulae:before {
+.co-exclamation-o:before {
   content: "\e025";
 }
-.co-groups:before {
+.co-filter:before {
   content: "\e026";
 }
-.co-help:before {
+.co-filter-params:before {
   content: "\e027";
 }
-.co-home:before {
+.co-formulae:before {
   content: "\e028";
 }
-.co-legal:before {
+.co-groups:before {
   content: "\e029";
 }
-.co-load-templates:before {
+.co-help:before {
   content: "\e02a";
 }
-.co-lock:before {
+.co-history:before {
   content: "\e02b";
 }
-.co-mail:before {
+.co-home:before {
   content: "\e02c";
 }
-.co-managers:before {
+.co-info-o:before {
   content: "\e02d";
 }
-.co-menu-v:before {
+.co-legal:before {
   content: "\e02e";
 }
-.co-message-scenarios:before {
+.co-load-templates:before {
   content: "\e02f";
 }
-.co-move:before {
+.co-lock:before {
   content: "\e030";
 }
-.co-org-structure:before {
+.co-mail:before {
   content: "\e031";
 }
-.co-payments:before {
+.co-managers:before {
   content: "\e032";
 }
-.co-picture:before {
+.co-menu-v:before {
   content: "\e033";
 }
-.co-portfolios:before {
+.co-message-scenarios:before {
   content: "\e034";
 }
-.co-refresh:before {
+.co-move:before {
   content: "\e035";
 }
-.co-reports:before {
+.co-org-structure:before {
   content: "\e036";
 }
-.co-roles:before {
+.co-pause:before {
   content: "\e037";
 }
-.co-save:before {
+.co-payments:before {
   content: "\e038";
 }
-.co-schedule:before {
+.co-picture:before {
   content: "\e039";
 }
-.co-search:before {
+.co-portfolios:before {
   content: "\e03a";
 }
-.co-search-groups:before {
+.co-refresh:before {
   content: "\e03b";
 }
-.co-settings:before {
+.co-reports:before {
   content: "\e03c";
 }
-.co-sms:before {
+.co-roles:before {
   content: "\e03d";
 }
-.co-tasks:before {
+.co-save:before {
   content: "\e03e";
 }
-.co-template:before {
+.co-schedule:before {
   content: "\e03f";
 }
-.co-time:before {
+.co-search:before {
   content: "\e040";
 }
-.co-unlock:before {
+.co-search-groups:before {
   content: "\e041";
 }
-.co-upload:before {
+.co-settings:before {
   content: "\e042";
 }
-.co-users:before {
+.co-sms:before {
   content: "\e043";
 }
-.co-version-history:before {
+.co-start:before {
   content: "\e044";
 }
-.co-visit:before {
+.co-stop:before {
   content: "\e045";
+}
+.co-tasks:before {
+  content: "\e046";
+}
+.co-template:before {
+  content: "\e047";
+}
+.co-time:before {
+  content: "\e048";
+}
+.co-undo:before {
+  content: "\e049";
+}
+.co-unlock:before {
+  content: "\e04a";
+}
+.co-upload:before {
+  content: "\e04b";
+}
+.co-users:before {
+  content: "\e04c";
+}
+.co-version-history:before {
+  content: "\e04d";
+}
+.co-visit:before {
+  content: "\e04e";
 }

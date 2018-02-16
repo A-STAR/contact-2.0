@@ -9,6 +9,7 @@ export enum TitlebarItemTypeEnum {
   BUTTON_CLOSE            = 'close',
   BUTTON_COPY             = 'copy',
   BUTTON_DELETE           = 'delete',
+  BUTTON_DEBT_CARD        = 'debtCard',
   BUTTON_DOWNLOAD         = 'download',
   BUTTON_EDIT             = 'edit',
   BUTTON_EMAIL            = 'email',
@@ -44,7 +45,7 @@ export interface ITitlebarElement {
 
 export interface ITitlebarButton extends ITitlebarElement {
   type: TitlebarItemTypeEnum;
-  children?: Array<ITitlebarElement>;
+  children?: ITitlebarElement[];
   iconCls?: string;
 }
 
@@ -57,7 +58,7 @@ export type ITitlebarItem = ITitlebarButton | ITitlebarCheckbox;
 
 export interface ITitlebar {
   noBorder?: boolean;
-  items?: Array<ITitlebarItem>;
+  items?: ITitlebarItem[];
   title?: string;
   // false by default
   suppressCenterZone?: boolean;

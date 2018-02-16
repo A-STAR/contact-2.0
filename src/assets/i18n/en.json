@@ -1,4 +1,42 @@
 {
+  "layout": {
+
+  },
+  "routes": {
+    "admin": {
+      "users": {
+        "grid": {
+          "branchCode": "Branch",
+          "email": "Email",
+          "firstName": "Name",
+          "id": "ID",
+          "intPhone": "Extension",
+          "isInactive": "Inactive",
+          "languageId": "Language",
+          "lastName": "Family name",
+          "login": "Login",
+          "middleName": "Middle name",
+          "mobPhone": "Mobile",
+          "position": "Position",
+          "roleId": "Role",
+          "workPhone": "Work phone"
+        }
+      }
+    }
+  },
+  "shared": {
+    "components": {
+      "grids": {
+        "toolbar": {
+          "rowsSelected": "selected",
+          "rowsTotal": "total"
+        }
+      }
+    }
+  },
+  "system": {
+
+  },
   "header": {
     "language": "Language",
     "notifications": "Notifications",
@@ -187,6 +225,7 @@
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
     "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
+    "multilanguageRequired": "The field in main language is required",
     "oneOfGroupRequired": "At least one group field must not be empty",
     "timepicker": "Invalid time format"
   },
@@ -227,8 +266,8 @@
       },
       "overview": {
         "info": {
-          "title": "Overview",
-          "shortInfo": "Overview"
+          "title": "Debt information",
+          "shortInfo": "Debt info"
         },
         "debtor": {
           "title": "Debtor",
@@ -596,7 +635,7 @@
         "grid": {
           "bankName": "Bank",
           "branchCode": "Branch",
-          "contact": "Contract",
+          "contract": "Contract",
           "creditEndDate": "Credit End Date",
           "creditName": "Credit Name",
           "creditStartDate": "Credit Start Date",
@@ -806,22 +845,6 @@
     },
     "create": {
       "title": "New user"
-    },
-    "grid": {
-      "id": "ID",
-      "branchCode": "Branch",
-      "login": "Login",
-      "lastName": "Family name",
-      "firstName": "Name",
-      "middleName": "Middle name",
-      "position": "Position",
-      "roleId": "Role",
-      "isInactive": "Inactive",
-      "mobPhone": "Mobile",
-      "workPhone": "Work phone",
-      "intPhone": "Extension",
-      "email": "Email",
-      "languageId": "Language"
     },
     "ldap": {
       "title": "Domain users",
@@ -1391,6 +1414,9 @@
       }
     },
     "campaigns": {
+      "titlebar": {
+        "title": "Campaigns"
+      },
       "create": {
         "title": "New campaign"
       },
@@ -2963,6 +2989,7 @@
       "clear": "Clear",
       "close": "Close",
       "copy": "Copy",
+      "debtCard": "Debtor card",
       "delete": "Delete",
       "download": "Download",
       "drop": "Drop",

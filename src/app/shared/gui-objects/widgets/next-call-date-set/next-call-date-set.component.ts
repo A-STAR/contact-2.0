@@ -6,6 +6,7 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
+import * as moment from 'moment';
 
 import { ICloseAction, IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -22,10 +23,13 @@ const labelKey = makeKey('widgets.nextCallDateSet.dialog');
   styleUrls: ['./next-call-date-set.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NextCallDateSetDialogComponent  {
+export class NextCallDateSetDialogComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @Input() actionData: IGridActionParams;
   @Output() close = new EventEmitter<ICloseAction>();
+
+  private static readonly NEXT_CALL_CONTROL = 'nextCallDate';
+  private static readonly MIN_DATE_TIME = moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate();
 
   constructor(
     private nextCallDateSetService: NextCallDateSetService,
@@ -33,12 +37,17 @@ export class NextCallDateSetDialogComponent  {
 
   controls: IDynamicFormControl[] = [
     {
-      label: labelKey('nextCallDate'),
-      controlName: 'nextCallDate',
+      label: labelKey(NextCallDateSetDialogComponent.NEXT_CALL_CONTROL),
+      controlName: NextCallDateSetDialogComponent.NEXT_CALL_CONTROL,
       type: 'datetimepicker',
+      minDateTime: NextCallDateSetDialogComponent.MIN_DATE_TIME,
       displaySeconds: false,
     }
   ];
+
+  data: any = {
+    [NextCallDateSetDialogComponent.NEXT_CALL_CONTROL]: NextCallDateSetDialogComponent.MIN_DATE_TIME,
+  };
 
   get canSubmit(): boolean {
     return this.form.canSubmit;

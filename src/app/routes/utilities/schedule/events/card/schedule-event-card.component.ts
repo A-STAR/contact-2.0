@@ -22,6 +22,7 @@ export class ScheduleEventCardComponent implements OnInit {
   @ViewChild(SchedulePeriodCardComponent) periodCard: SchedulePeriodCardComponent;
   @ViewChild(ScheduleTypeCardComponent) typeCard: ScheduleTypeCardComponent;
 
+  @Input() groupId: number;
   @Input() eventId: number;
 
   controls: IDynamicFormItem[];

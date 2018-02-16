@@ -1,4 +1,42 @@
 {
+  "layout": {
+
+  },
+  "routes": {
+    "admin": {
+      "users": {
+        "grid": {
+          "branchCode": "Филиал",
+          "email": "Эл. почта",
+          "firstName": "Имя",
+          "id": "ID",
+          "intPhone": "Внутренний номер",
+          "isInactive": "Блокирован",
+          "languageId": "Язык",
+          "lastName": "Фамилия",
+          "login": "Логин",
+          "middleName": "Отчество",
+          "mobPhone": "Мобильный телефон",
+          "position": "Должность",
+          "roleId": "Роль",
+          "workPhone": "Рабочий телефон"
+        }
+      }
+    }
+  },
+  "shared": {
+    "components": {
+      "grids": {
+        "toolbar": {
+          "rowsSelected": "выбрано",
+          "rowsTotal": "всего"
+        }
+      }
+    }
+  },
+  "system": {
+
+  },
   "header": {
     "language": "Язык",
     "notifications": "Сообщения",
@@ -187,6 +225,7 @@
     "fieldLowerCase": "Это поле должно содержать хотя бы один символ в нижнем регистре",
     "fieldUpperCase": "Это поле должно содержать хотя бы один символ в верхнем регистре",
     "fieldMaxSize": "Размер файла не должен превышать {{ requiredSize }}",
+    "multilanguageRequired": "Значение поля на основном языке обязательно",
     "oneOfGroupRequired": "Хотя бы одно из полей должно быть заполнено",
     "timepicker": "Неверный формат времени"
   },
@@ -227,8 +266,8 @@
       },
       "overview": {
         "info": {
-          "title": "Краткая информация",
-          "shortInfo": "Краткая информация"
+          "title": "Информация о долге",
+          "shortInfo": "Информация о долге"
         },
         "debtor": {
           "title": "Должник",
@@ -596,7 +635,7 @@
         "grid": {
           "bankName": "Банк",
           "branchCode": "Филиал",
-          "contact": "Договор",
+          "contract": "Договор",
           "creditEndDate": "Дата окончания кредитного срока",
           "creditName": "Название продукта",
           "creditStartDate": "Дата выдачи кредита",
@@ -806,22 +845,6 @@
     },
     "create": {
       "title": "Новый пользователь"
-    },
-    "grid": {
-      "id": "ID",
-      "branchCode": "Филиал",
-      "login": "Логин",
-      "lastName": "Фамилия",
-      "firstName": "Имя",
-      "middleName": "Отчество",
-      "position": "Должность",
-      "roleId": "Роль",
-      "isInactive": "Блокирован",
-      "mobPhone": "Мобильный телефон",
-      "workPhone": "Рабочий телефон",
-      "intPhone": "Внутренний номер",
-      "email": "Эл. почта",
-      "languageId": "Язык"
     },
     "ldap": {
       "title": "Пользователи домена",
@@ -1391,6 +1414,9 @@
       }
     },
     "campaigns": {
+      "titlebar": {
+        "title": "Кампании обзвона"
+      },
       "create": {
         "title": "Новая кампания обзвона"
       },
@@ -2963,6 +2989,7 @@
       "clear": "Очистить",
       "close": "Закрыть",
       "copy": "Копировать",
+      "debtCard": "Карточка должника",
       "delete": "Удалить",
       "download": "Скачать",
       "drop": "Сброс",

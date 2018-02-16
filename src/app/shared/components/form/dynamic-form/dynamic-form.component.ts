@@ -23,14 +23,16 @@ import {
   ISelectItemsPayload,
   IValue,
 } from './dynamic-form.interface';
-import { ILookupLanguage } from '../../../../core/lookup/lookup.interface';
+import { ILookupLanguage } from '@app/core/lookup/lookup.interface';
 
-import { DataService } from '../../../../core/data/data.service';
-import { LookupService } from '../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+import { DataService } from '@app/core/data/data.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { makeKey, getTranslations } from '../../../../core/utils';
+import { makeKey, getTranslations } from '@app/core/utils';
+import { multilanguageRequired } from '@app/core/validators';
+
 import {
   IDynamicFormSelectControl,
   IDynamicFormLanguageControl
@@ -273,8 +275,16 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       disabled: control.disabled,
       value: control.type === 'checkbox' ? false : '',
     };
+    const isMultilanguageRequired = control.type === 'multilanguage' && control.required;
+
+    // TODO(d.maltsev): need to refactor this in favor of built-in control validators
     const validators = control.required
-      ? Validators.compose([ ...control.validators || [], Validators.required ])
+      ? Validators.compose([
+          ...control.validators || [],
+          isMultilanguageRequired
+            ? multilanguageRequired
+            : Validators.required
+        ])
       : control.validators;
 
     return new FormControl(options, validators);
