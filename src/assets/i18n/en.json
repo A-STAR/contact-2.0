@@ -2397,6 +2397,9 @@
       }
     },
     "currencies": {
+      "titlebar": {
+        "title": "Currencies"
+      },
       "grid": {
         "id": "ID",
         "code": "Code",
