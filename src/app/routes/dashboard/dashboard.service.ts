@@ -25,24 +25,13 @@ export class DashboardService {
 
   private baseUrl = '/dashboard';
 
-  private indicatorColors = {
-    debtActiveCnt: '#7266ba',
-    debtNeedCallCnt: '#7266ba',
-    monthPaymentCnt: '#37bc9b',
-    monthPaymentAmount: '#37bc9b',
-    monthPaymentCommission: '#37bc9b',
-  };
+  private static readonly PRIMARY_COLOR = '#4a445f';
+  private static readonly PRIMARY_COLOR_LIGHT = '#4a445fa1';
+  private static readonly GREEN_COLOR = '#80da00';
 
   promiseCountStatusOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      fontFamily: 'Roboto Condensed',
-      text: 'promiseCountStatus.label',
-      display: true
-    },
     legend: {
-      position: 'right',
+      position: 'bottom',
       labels: {
         fontSize: 10,
         fontFamily: 'Roboto Condensed',
@@ -51,13 +40,6 @@ export class DashboardService {
   };
 
   promiseCountOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      fontFamily: 'Roboto Condensed',
-      text: 'promiseCount.label',
-      display: true
-    },
     legend: {
       labels: {
         fontSize: 10,
@@ -67,13 +49,6 @@ export class DashboardService {
   };
 
   promiseAmountOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      fontFamily: 'Roboto Condensed',
-      text: 'promiseAmount.label',
-      display: true
-    },
     legend: {
       labels: {
         fontSize: 10,
@@ -83,15 +58,8 @@ export class DashboardService {
   };
 
   promiseCoverOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      fontFamily: 'Roboto Condensed',
-      text: 'promiseCover.label',
-      display: true
-    },
     legend: {
-      position: 'right',
+      position: 'bottom',
       labels: {
         fontSize: 10,
         fontFamily: 'Roboto Condensed',
@@ -100,15 +68,8 @@ export class DashboardService {
   };
 
   contactsDayPlanOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      fontFamily: 'Roboto Condensed',
-      text: 'contactsDayPlan.label',
-      display: true
-    },
     legend: {
-      position: 'right',
+      position: 'bottom',
       labels: {
         fontSize: 10,
         fontFamily: 'Roboto Condensed',
@@ -117,15 +78,8 @@ export class DashboardService {
   };
 
   contactsDayOptions: ChartOptions = {
-    title: {
-      position: 'top',
-      fontSize: 14,
-      fontFamily: 'Roboto Condensed',
-      text: 'contactsDay.label',
-      display: true
-    },
     legend: {
-      position: 'right',
+      position: 'bottom',
       labels: {
         fontSize: 10,
         fontFamily: 'Roboto Condensed',
@@ -206,7 +160,7 @@ export class DashboardService {
         .map((key: keyof IDashboardParams) => ({
           text: currencyIndicators.includes(key) ? `${data[key]} ${currencyName}` : `${data[key]}`,
           label: label(`indicators.${key}`),
-          color: this.indicatorColors[key]
+          color: DashboardService.PRIMARY_COLOR_LIGHT
         }));
   }
 
@@ -219,8 +173,8 @@ export class DashboardService {
       ],
       datasets: [
         {
-          data: [data.monthPromiseFulfilled, data.monthPromiseOverdue, data.monthPromiseWaiting],
-          backgroundColor: ['#37bc9b', '#23b7e5', '#131e26'],
+          data: [data.monthPromiseFulfilled || 1, data.monthPromiseOverdue || 1, data.monthPromiseWaiting || 1],
+          backgroundColor: [DashboardService.GREEN_COLOR, '#ff8500', DashboardService.PRIMARY_COLOR_LIGHT],
         }
       ]
     };
@@ -233,7 +187,7 @@ export class DashboardService {
         {
           data: data.promiseCountList,
           label: 'promiseCount.legend.promiseCount',
-          backgroundColor: '#23b7e5'
+          backgroundColor: DashboardService.PRIMARY_COLOR_LIGHT
         }
       ]
     };
@@ -246,7 +200,7 @@ export class DashboardService {
         {
           data: data.promiseAmountList,
           label: 'promiseAmount.legend.promiseAmount',
-          backgroundColor: '#23b7e5'
+          backgroundColor: DashboardService.PRIMARY_COLOR
         }
       ]
     };
@@ -261,7 +215,7 @@ export class DashboardService {
       datasets: [
         {
           data: [data.monthPromiseAmountCover, data.monthPromiseAmountRest],
-          backgroundColor: ['#37bc9b', '#131e26'],
+          backgroundColor: [DashboardService.GREEN_COLOR, DashboardService.PRIMARY_COLOR_LIGHT],
         }
       ]
     };
@@ -276,7 +230,7 @@ export class DashboardService {
       datasets: [
         {
           data: [data.debtorSuccessContact, data.debtorSuccessContactPlan],
-          backgroundColor: ['#37bc9b', '#131e26'],
+          backgroundColor: [DashboardService.GREEN_COLOR, DashboardService.PRIMARY_COLOR_LIGHT],
         }
       ]
     };
@@ -293,12 +247,12 @@ export class DashboardService {
       datasets: [
         {
           data: [
-            data.debtorSuccessContact,
-            data.guarantorSuccessContact,
-            data.pledgorSuccessContact,
-            data.thirdPersonSuccessContact
+            data.debtorSuccessContact || 1,
+            data.guarantorSuccessContact || 1,
+            data.pledgorSuccessContact || 1,
+            data.thirdPersonSuccessContact || 1
           ],
-          backgroundColor: ['#37bc9b', '#23b7e5', '#131e26', '#7266ba'],
+          backgroundColor: ['#6584d4', '#00bff6', '#ffcc00', '#d071e5'],
         }
       ]
     };

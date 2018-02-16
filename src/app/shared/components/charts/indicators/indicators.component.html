@@ -1,8 +1,9 @@
 <div class="indicator-wrapper">
+  <ng-content></ng-content>
   <div *ngFor="let item of data" class="indicator">
     <div class="indicator-badge" [style.background-color]="item.color">
+        <span class="indicator-label">{{ item.label | translate }}</span>
         <span class="indicator-text">{{ item.text | translate }}</span>
     </div>
-    <span class="indicator-label">{{ item.label | translate }}</span>
   </div>
 </div>

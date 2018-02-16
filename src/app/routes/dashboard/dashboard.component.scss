@@ -1,3 +1,35 @@
 .dashboard {
   position: relative;
 }
+
+.row-flex {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.date-widget {
+  margin: 10px;
+  min-width: 165px;
+}
+
+.date-widget-left, .date-widget-right {
+  flex: 1;
+  padding: 10px 5px 0 15px;
+  span:last-child {
+    display: block;
+    margin-top: 10px;
+    font-weight: 300;
+  }
+}
+
+.chart-header {
+  font-size: 14px;
+  padding-bottom: 15px;
+  display: block;
+  min-height: 60px;
+}
+
+.border-b {
+  border-bottom: 1px solid #dcdbe3;
+}
