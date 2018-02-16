@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { scan, startWith, tap } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { IWSData } from '@app/routes/ui/ws/ws.interface';
