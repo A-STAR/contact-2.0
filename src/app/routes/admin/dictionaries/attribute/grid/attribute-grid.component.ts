@@ -4,14 +4,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
-import { IAttribute } from '@app/shared/gui-objects/widgets/attribute/attribute.interface';
+import { IAttribute } from '../attribute.interface';
 import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 import { IGridTreeRow } from './gridtree.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { AttributeService } from '@app/shared/gui-objects/widgets/attribute/attribute.service';
+import { AttributeService } from '../attribute.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';

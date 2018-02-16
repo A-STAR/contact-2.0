@@ -13,8 +13,8 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Validators } from '@angular/forms';
 
+import { IAttribute } from '@app/shared/gui-objects/widgets/contact-property/tree/edit/contact-property-tree-edit.interface';
 import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
-import { IAttribute } from '@app/shared/gui-objects/widgets/attribute/attribute.interface';
 import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
 import { IContactTreeAttribute } from '@app/shared/gui-objects/widgets/contact-property/contact-property.interface';
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
