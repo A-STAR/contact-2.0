@@ -21,7 +21,7 @@ import { DebtorPhoneModule } from './phone/phone.module';
 import { DebtorPledgeAttributesModule } from './pledge-attributes/pledge-attributes.module';
 import { DebtorPledgeModule } from './pledge/pledge.module';
 import { DebtorPromiseModule } from './promise/promise.module';
-import { DebtorPropertyAttributesModule } from './property-attributes/property-attributes.module';
+import { DebtorPropertyAttributesModule } from './property/attributes/property-attributes.module';
 import { DebtorPropertyModule } from './property/property.module';
 import { DebtsModule } from './debts/debts.module';
 import { InformationModule } from './information/information.module';
@@ -46,7 +46,7 @@ import { DebtorPaymentComponent } from './payment/payment.component';
 import { DebtorPhoneComponent } from './phone/phone.component';
 import { DebtorPledgeComponent } from './pledge/pledge.component';
 import { DebtorPromiseComponent } from './promise/promise.component';
-import { DebtorPropertyComponent } from './property/property.component';
+import { DebtorPropertyCardComponent } from './property/card/property-card.component';
 
 const routes: Routes = [
   {
@@ -69,8 +69,8 @@ const routes: Routes = [
     path: 'property',
     children: [
       { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorPropertyComponent },
-      { path: ':propertyId', component: DebtorPropertyComponent },
+      { path: 'create', component: DebtorPropertyCardComponent },
+      { path: ':propertyId', component: DebtorPropertyCardComponent },
     ],
   },
   {
