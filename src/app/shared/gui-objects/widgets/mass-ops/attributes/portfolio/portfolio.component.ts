@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
 import { IGridColumn } from '../../../../../components/grid/grid.interface';
 import { ILookupPortfolio } from '../../../../../../core/lookup/lookup.interface';
 
@@ -14,7 +14,7 @@ import { GridService } from '../../../../../components/grid/grid.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfolioComponent implements OnInit {
-  @Input() debts: number[];
+  @Input() actionData: IGridActionParams;
   @Output() close = new EventEmitter<ICloseAction>();
 
   selectedPortfolio: ILookupPortfolio;
@@ -50,7 +50,7 @@ export class PortfolioComponent implements OnInit {
 
   submit(): void {
     this.attributesService
-      .change(this.debts, { portfolioId: this.selectedPortfolio.id })
+      .change(this.actionData.payload, { portfolioId: this.selectedPortfolio.id })
       .subscribe((res) => {
         const refresh = res.massInfo && !!res.massInfo.processed;
         this.close.emit({ refresh });

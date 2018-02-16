@@ -102,23 +102,22 @@
 
 <app-mass-attr-dictionary
   *ngIf="isAttrChangeDictionaryDlg()"
+  [actionData]="dialogData"
   [actionName]="dialog"
-  [debts]="getSelectionParam(0)"
-  [dictCode]="getAddOptions('dictCode')"
   (close)="onCloseAction($event)"
 >
 </app-mass-attr-dictionary>
 
 <app-mass-attr-portfolio
   *ngIf="isDialog('changePortfolioAttr')"
-  [debts]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 >
 </app-mass-attr-portfolio>
 
 <app-mass-attr-timezone
   *ngIf="isDialog('changeTimezoneAttr')"
-  [debts]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-mass-attr-timezone>
 
