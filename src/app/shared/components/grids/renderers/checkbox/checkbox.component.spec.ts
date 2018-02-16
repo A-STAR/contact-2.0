@@ -6,7 +6,7 @@ import { of } from 'rxjs/observable/of';
 
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 
-import { CheckboxCellRendererComponent } from './checkbox.component';
+import { CheckboxRendererComponent } from './checkbox.component';
 
 class TranslateLoaderMock {
   getTranslation(language: string): Observable<any> {
@@ -15,7 +15,7 @@ class TranslateLoaderMock {
 }
 
 describe('CheckboxCellRendererComponent', () => {
-  let fixture: ComponentFixture<CheckboxCellRendererComponent>;
+  let fixture: ComponentFixture<CheckboxRendererComponent>;
 
   beforeEach(Async(() => {
     TestBed
@@ -31,14 +31,14 @@ describe('CheckboxCellRendererComponent', () => {
           }),
         ],
         declarations: [
-          CheckboxCellRendererComponent,
+          CheckboxRendererComponent,
         ],
       })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CheckboxCellRendererComponent);
+    fixture = TestBed.createComponent(CheckboxRendererComponent);
   });
 
   it('should render checkbox renderer', () => {

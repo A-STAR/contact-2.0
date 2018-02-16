@@ -4,10 +4,14 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-grid-checkbox-renderer',
-  template: `<app-checkbox [ngModel]="value" (ngModelChange)="onChange($event)"></app-checkbox>`,
+  selector: 'app-grid-tick-renderer',
+  template: `
+    <div *ngIf="value" class="text-center">
+      <i style="vertical-align: middle;" class="icon co-checkbox-mark"></i>
+    </div>
+  `,
 })
-export class CheckboxRendererComponent implements ICellRendererAngularComp {
+export class TickRendererComponent implements ICellRendererAngularComp {
   private params: ICellRendererParams;
 
   agInit(params: ICellRendererParams): void {
@@ -20,9 +24,5 @@ export class CheckboxRendererComponent implements ICellRendererAngularComp {
 
   get value(): boolean {
     return this.params.value;
-  }
-
-  onChange(value: boolean): void {
-    this.params.node.setDataValue(this.params.column, value);
   }
 }
