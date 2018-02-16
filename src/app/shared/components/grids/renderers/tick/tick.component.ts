@@ -6,8 +6,8 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-grid-tick-renderer',
   template: `
-    <div class="text-center">
-      <i *ngIf="value" style="vertical-align: middle;" class="icon co-checkbox-mark"></i>
+    <div *ngIf="value" class="text-center">
+      <i style="vertical-align: middle;" class="icon co-checkbox-mark"></i>
     </div>
   `,
 })
