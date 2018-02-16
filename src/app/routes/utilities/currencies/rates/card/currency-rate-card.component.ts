@@ -1,12 +1,13 @@
-import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { ICurrencyRate } from '@app/shared/gui-objects/widgets/currency-rates/currency-rates.interface';
+import { ICurrencyRate } from '../currency-rates.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { CurrencyRatesService } from '@app/shared/gui-objects/widgets/currency-rates/currency-rates.service';
+import { CurrencyRatesService } from '../currency-rates.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
@@ -23,8 +24,8 @@ const label = makeKey('widgets.currencyRates.card');
 export class CurrencyRateCardComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  @Input() currencyId: number;
-  @Input() currencyRateId: number;
+  currencyId = Number(this.route.snapshot.paramMap.get('currencyId'));
+  currencyRateId = Number(this.route.snapshot.paramMap.get('currencyRateId'));
 
   controls: Array<IDynamicFormItem> = null;
   currencyRate: Partial<ICurrencyRate>;
@@ -32,6 +33,7 @@ export class CurrencyRateCardComponent implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private currencyRatesService: CurrencyRatesService,
+    private route: ActivatedRoute,
     private routingService: RoutingService
   ) {}
 
