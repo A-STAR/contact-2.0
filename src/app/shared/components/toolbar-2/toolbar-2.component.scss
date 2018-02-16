@@ -1,4 +1,3 @@
-$button-size: 32px;
 $checkbox-size: 15px;
 
 .toolbar {
@@ -22,6 +21,10 @@ $checkbox-size: 15px;
   border-top: 1px solid #d5d5d5;
 }
 
+:host(.bb) > .toolbar {
+  border-bottom: 1px solid #d5d5d5;
+}
+
 .toolbar-item {
   display: inline-block;
   &:not(:last-child) {
@@ -31,21 +34,6 @@ $checkbox-size: 15px;
     float: right;
     margin-right: 0;
     padding-left: 8px;
-  }
-}
-
-:host ::ng-deep .btn-default {
-  width: $button-size;
-  height: $button-size;
-  padding: 0;
-  line-height: $button-size;
-  text-align: center;
-  font-size: 14px;
-  // This prevents changing default button styles on hover
-  // TODO: fix this in global app theme
-  &[disabled]:hover {
-    background-color: #fff;
-    border-color: #eaeaea;
   }
 }
 
