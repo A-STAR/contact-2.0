@@ -2397,6 +2397,9 @@
       }
     },
     "currencies": {
+      "titlebar": {
+        "title": "Валюты"
+      },
       "grid": {
         "id": "ИД",
         "code": "Код",

@@ -6,6 +6,7 @@ import { first } from 'rxjs/operators';
 
 import { ICurrency } from '@app/shared/gui-objects/widgets/currencies/currencies.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CurrenciesService } from '@app/shared/gui-objects/widgets/currencies/currencies.service';
@@ -31,6 +32,10 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
     { prop: 'shortName' },
     { prop: 'isMain', renderer: 'checkboxRenderer' },
   ];
+
+  titlebar: ITitlebar = {
+    title: 'widgets.currencies.titlebar.title'
+  };
 
   toolbarItems: Array<IToolbarItem> = [
     {
