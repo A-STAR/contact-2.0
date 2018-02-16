@@ -1,14 +1,14 @@
 <div class="dashboard">
   <!-- START indicators -->
-  <div class="row mb-xl pb-lg border-b">
-    <div class="col-lg-3 col-md-6 col-sm-12">
+  <div class="row mb-lg ml-xl mr-xl pb border-b">
+    <div class="col-lg-4 col-md-6 col-sm-12">
       <app-indicators
         *ngIf="indicators$ | async"
         [data]="indicators$ | async"
       >
         <!-- START date widget-->
         <div class="panel date-widget">
-          <div class="row-flex">
+          <div class="row-flex border">
             <div class="date-widget-left bg-primary">
               <!-- See formats: https://docs.angularjs.org/api/ng/filter/date-->
               <span appNow class="text-sm" format="MMMM"></span>
@@ -26,9 +26,9 @@
         <!-- END date widget    -->
       </app-indicators>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 mt">
+    <div class="col-lg-4 col-md-6 col-sm-12 mt border-r">
       <div class="col-md-6 col-sm-12">
-        <span class="chart-header border-b">{{ 'dashboard.charts.promiseCountStatus.label' | translate }}</span>
+        <span class="chart-header border-b minh">{{ 'dashboard.charts.promiseCountStatus.label' | translate }}</span>
         <app-pie-chart
           *ngIf="promiseCountStatus$ | async"
           translationKey="dashboard.charts"
@@ -38,7 +38,7 @@
         </app-pie-chart>
       </div>
       <div class="col-md-6 col-sm-12">
-        <span class="chart-header border-b">{{ 'dashboard.charts.promiseCover.label' | translate }}</span>
+        <span class="chart-header border-b minh">{{ 'dashboard.charts.promiseCover.label' | translate }}</span>
         <app-progress-chart
           *ngIf="promiseCover$ | async"
           translationKey="dashboard.charts"
@@ -48,9 +48,9 @@
         </app-progress-chart>
       </div>
     </div>
-    <div class="col-lg-4 col-md-6 col-sm-12 mt">
+    <div class="col-lg-4 col-md-6 col-sm-12 mt border-r">
       <div class="col-md-6 col-sm-12">
-        <span class="chart-header border-b">{{ 'dashboard.charts.contactsDay.label' | translate }}</span>
+        <span class="chart-header border-b minh">{{ 'dashboard.charts.contactsDay.label' | translate }}</span>
         <app-pie-chart
           *ngIf="contactsDay"
           translationKey="dashboard.charts"
@@ -60,7 +60,7 @@
         </app-pie-chart>
       </div>
       <div class="col-md-6 col-sm-12">
-        <span class="chart-header border-b">{{ 'dashboard.charts.contactsDayPlan.label' | translate }}</span>
+        <span class="chart-header border-b minh">{{ 'dashboard.charts.contactsDayPlan.label' | translate }}</span>
         <app-progress-chart
           *ngIf="contactsDayPlan"
           translationKey="dashboard.charts"
@@ -72,9 +72,9 @@
     </div>
   </div>  <!-- END indicators  -->
   <!-- START charts -->
-  <div class="row mb-xl pb-lg border-b">
+  <div class="row mb-xl pb-lg">
       <div class="col-sm-12">
-        <span class="chart-header text-center">{{ 'dashboard.charts.promiseCount.label' | translate }}</span>
+        <span class="chart-header pl-xl">{{ 'dashboard.charts.promiseCount.label' | translate }}</span>
         <app-bar-chart
           *ngIf="promiseCount$ | async"
           translationKey="dashboard.charts"
@@ -86,7 +86,7 @@
   </div>
   <div class="row">
     <div class="col-sm-12">
-      <span class="chart-header text-center">{{ 'dashboard.charts.promiseAmount.label' | translate }}</span>
+      <span class="chart-header pl-xl">{{ 'dashboard.charts.promiseAmount.label' | translate }}</span>
       <app-bar-chart
         *ngIf="promiseAmount$ | async"
         translationKey="dashboard.charts"

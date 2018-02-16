@@ -1,4 +1,5 @@
 @import "../../../styles/app/variables.scss";
+
 .indicator-wrapper {
   display: flex;
   flex-basis: auto;
@@ -6,11 +7,13 @@
   justify-content: flex-start;
   align-content: space-between;
 }
+
 .indicator {
   flex: 0 1 19%;
-  min-width: 165px;
+  min-width: 225px;
   margin: 10px;
 }
+
 .indicator-badge {
   display: flex;
   align-items: flex-start;
@@ -19,13 +22,19 @@
   padding: 10px 5px 0 15px;
   color: #fff;
 }
+
 .indicator-text {
   font-size: 22px;
   line-height: 1;
   flex: 1 0 100%;
   margin-top: 10px;
 }
+
 .indicator-label {
   font-size: 13px;
   font-weight: 300;
+}
+
+.border-r {
+  border-right: 1px solid #dfdee4;
 }

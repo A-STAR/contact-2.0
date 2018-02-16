@@ -33,7 +33,7 @@ export class DashboardService {
     legend: {
       position: 'bottom',
       labels: {
-        fontSize: 10,
+        fontSize: 11,
         fontFamily: 'Roboto Condensed',
       }
     }
@@ -42,7 +42,7 @@ export class DashboardService {
   promiseCountOptions: ChartOptions = {
     legend: {
       labels: {
-        fontSize: 10,
+        fontSize: 11,
         fontFamily: 'Roboto Condensed',
       }
     }
@@ -51,7 +51,7 @@ export class DashboardService {
   promiseAmountOptions: ChartOptions = {
     legend: {
       labels: {
-        fontSize: 10,
+        fontSize: 11,
         fontFamily: 'Roboto Condensed',
       }
     }
@@ -61,7 +61,7 @@ export class DashboardService {
     legend: {
       position: 'bottom',
       labels: {
-        fontSize: 10,
+        fontSize: 11,
         fontFamily: 'Roboto Condensed',
       }
     }
@@ -71,7 +71,7 @@ export class DashboardService {
     legend: {
       position: 'bottom',
       labels: {
-        fontSize: 10,
+        fontSize: 11,
         fontFamily: 'Roboto Condensed',
       }
     }
@@ -81,7 +81,7 @@ export class DashboardService {
     legend: {
       position: 'bottom',
       labels: {
-        fontSize: 10,
+        fontSize: 11,
         fontFamily: 'Roboto Condensed',
       }
     }
