@@ -5,9 +5,11 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
+import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
 import { IVisit, IVisitOperator, IOperationResult } from './visit-prepare.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
@@ -21,6 +23,7 @@ export class VisitPrepareService extends AbstractActionService {
 
   constructor(
     protected actions: Actions,
+    private actionGridFilterService: ActionGridFilterService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     protected store: Store<IAppState>,
@@ -33,17 +36,24 @@ export class VisitPrepareService extends AbstractActionService {
       .catch(this.notificationsService.fetchError().entity('entities.operator.gen.plural').dispatchCallback());
   }
 
-  prepare(visits: number[], visit: IVisit): Observable<IOperationResult> {
-    const ids = visits.map(visitId => [ visitId ]);
+  prepare(idData: IGridActionPayload, visit: IVisit): Observable<IOperationResult> {
     return this.dataService
-      .update(`${this.visitUrl}/prepare`, {}, { idData: { ids }, actionData: visit })
+      .update(`${this.visitUrl}/prepare`, {},
+        {
+          idData: this.actionGridFilterService.buildRequest(idData),
+          actionData: visit
+        }
+      )
       .catch(this.notificationsService.createError().entity('entities.visit.gen.singular').dispatchCallback());
   }
 
-  cancel(visits: number[]): Observable<IOperationResult> {
-    const ids = visits.map(visitId => [ visitId ]);
+  cancel(idData: IGridActionPayload): Observable<IOperationResult> {
     return this.dataService
-      .update(`${this.visitUrl}/cancel`, {}, { idData: { ids }, actionData: {} })
+      .update(`${this.visitUrl}/cancel`, {},
+        {
+          idData: this.actionGridFilterService.buildRequest(idData)
+        }
+      )
       .catch(this.notificationsService.deleteError().entity('entities.visit.gen.singular').dispatchCallback());
   }
 
@@ -53,5 +63,13 @@ export class VisitPrepareService extends AbstractActionService {
     } else {
       this.notificationsService.info().entity('default.dialog.result.message').response(result).dispatch();
     }
+  }
+
+  getVisitsCount(idData: IGridActionPayload): number {
+    return this.actionGridFilterService.getSelectionCount(idData) || 0;
+  }
+
+  isFilterAction(idData: IGridActionPayload): boolean {
+    return this.actionGridFilterService.isFilterAction(idData);
   }
 }

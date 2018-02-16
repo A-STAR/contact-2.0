@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
-import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
 import { IVisit, IOperationResult, IConfirmOperation } from '../../visit-prepare.interface';
 
 import { VisitPrepareService } from '../../visit-prepare.service';
@@ -14,23 +14,26 @@ import { DialogFunctions } from 'app/core/dialog';
 })
 export class VisitPrepareDialogComponent extends DialogFunctions implements OnInit {
 
-  @Input() visits: number[];
+  @Input() actionData: IGridActionParams;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;
 
-  private prepareVisits: number[];
+  private prepareVisitsCount: number;
+  private visitsCount: number;
 
   constructor(
-    private visitPreapreService: VisitPrepareService,
+    private visitPrepareService: VisitPrepareService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.prepareVisits = this.visits.filter(visit => !!visit);
-    if (this.prepareVisits.length < this.visits.length) {
+    this.prepareVisitsCount = this.visitPrepareService.getVisitsCount(this.actionData.payload);
+    this.visitsCount = (this.actionData.selection && this.actionData.selection.length) || 0;
+    if ((this.prepareVisitsCount < this.visitsCount)
+      && !this.visitPrepareService.isFilterAction(this.actionData.payload)) {
       this.setDialog('visitPrepareConfirm');
     } else {
       this.setDialog('visitPrepare');
@@ -39,8 +42,8 @@ export class VisitPrepareDialogComponent extends DialogFunctions implements OnIn
 
   get confirmOperation(): IConfirmOperation {
     return {
-      count: this.visits.length - this.prepareVisits.length,
-      total: this.visits.length
+      count: this.visitsCount - this.prepareVisitsCount,
+      total: this.visitsCount
     };
   }
 
@@ -49,12 +52,12 @@ export class VisitPrepareDialogComponent extends DialogFunctions implements OnIn
   }
 
   onCreate(visit: IVisit): void {
-    this.visitPreapreService.prepare(this.prepareVisits, visit)
+    this.visitPrepareService.prepare(this.actionData.payload, visit)
       .subscribe(result => this.onOperationResult(result));
   }
 
   onOperationResult(result: IOperationResult): void {
-    this.visitPreapreService.showOperationNotification(result);
+    this.visitPrepareService.showOperationNotification(result);
     this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
   }
 
