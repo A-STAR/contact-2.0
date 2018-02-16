@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
 
 import { IWSData } from '@app/routes/ui/ws/ws.interface';
@@ -14,7 +15,7 @@ import { TickRendererComponent } from '@app/shared/components/grids/renderers/ti
   selector: 'app-route-ui-ws',
   templateUrl: './ws.component.html'
 })
-export class WSComponent implements OnInit {
+export class WSComponent implements OnInit, OnDestroy {
   columns: ISimpleGridColumn<IWSData>[] = [
     { prop: 'username', minWidth: 120 },
     { prop: 'date', minWidth: 160, label: 'sent' },
@@ -29,13 +30,16 @@ export class WSComponent implements OnInit {
   request: string;
   data: IWSData[] = [];
 
+  private wsSub: Subscription;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private wsService: WSService,
   ) {}
 
   ngOnInit(): void {
-    this.wsService.listener$.subscribe(item => {
+    this.wsService.open();
+    this.wsSub = this.wsService.listener$.subscribe(item => {
       this.data = [
         ...this.data,
         {
@@ -45,6 +49,11 @@ export class WSComponent implements OnInit {
       ];
       this.cdRef.markForCheck();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.wsSub.unsubscribe();
+    this.wsService.close();
   }
 
   onSendClick(): void {
