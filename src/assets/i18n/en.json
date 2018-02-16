@@ -266,8 +266,8 @@
       },
       "overview": {
         "info": {
-          "title": "Overview",
-          "shortInfo": "Overview"
+          "title": "Debt information",
+          "shortInfo": "Debt info"
         },
         "debtor": {
           "title": "Debtor",
