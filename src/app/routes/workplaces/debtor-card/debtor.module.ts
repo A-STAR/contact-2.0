@@ -14,7 +14,7 @@ import { DebtorDebtComponentModule } from './debt-component/debt-component.modul
 import { DebtorDocumentModule } from './document/document.module';
 import { DebtorEmailModule } from './email/email.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
-import { DebtorGuarantorModule } from './guarantor/guarantor.module';
+import { DebtorGuaranteeModule } from './guarantee/guarantee.module';
 import { DebtorIdentityModule } from './identity/identity.module';
 import { DebtorPaymentModule } from './payment/payment.module';
 import { DebtorPhoneModule } from './phone/phone.module';
@@ -40,7 +40,7 @@ import { DebtorDebtComponentComponent } from './debt-component/debt-component.co
 import { DebtorDocumentComponent } from './document/document.component';
 import { DebtorEmailComponent } from './email/email.component';
 import { DebtorEmploymentComponent } from './employment/employment.component';
-import { DebtorGuarantorComponent } from './guarantor/guarantor.component';
+import { DebtorGuaranteeCardComponent } from './guarantee/card/guarantee-card.component';
 import { DebtorIdentityComponent } from './identity/identity.component';
 import { DebtorPaymentComponent } from './payment/payment.component';
 import { DebtorPhoneComponent } from './phone/phone.component';
@@ -60,9 +60,9 @@ const routes: Routes = [
     path: 'guarantee',
     children: [
       { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorGuarantorComponent },
-      { path: ':contractId/guarantor/add', component: DebtorGuarantorComponent },
-      { path: ':contractId/guarantor/:guarantorId', component: DebtorGuarantorComponent },
+      { path: 'create', component: DebtorGuaranteeCardComponent },
+      { path: ':contractId/guarantor/add', component: DebtorGuaranteeCardComponent },
+      { path: ':contractId/guarantor/:guarantorId', component: DebtorGuaranteeCardComponent },
     ],
   },
   {
@@ -273,7 +273,7 @@ const routes: Routes = [
     DebtorDocumentModule,
     DebtorEmailModule,
     DebtorEmploymentModule,
-    DebtorGuarantorModule,
+    DebtorGuaranteeModule,
     DebtorIdentityModule,
     DebtorPaymentModule,
     DebtorPhoneModule,

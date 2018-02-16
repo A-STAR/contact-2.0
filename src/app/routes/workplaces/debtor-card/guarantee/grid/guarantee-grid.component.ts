@@ -5,11 +5,11 @@ import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGuaranteeContract } from '@app/shared/gui-objects/widgets/guarantee/guarantee.interface';
+import { IGuaranteeContract } from '../guarantee.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { GuaranteeService } from '@app/shared/gui-objects/widgets/guarantee/guarantee.service';
+import { GuaranteeService } from '../guarantee.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
