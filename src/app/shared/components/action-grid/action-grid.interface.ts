@@ -38,4 +38,7 @@ export type IGridActionPayload = ISelectionIds | ISelectionFilter | ISingleSelec
 export interface IGridActionParams {
   addOptions: IAddOption[];
   payload: IGridActionPayload;
+  // this is initial selection, filtered by params,
+  // but which can have undefined or null values
+  selection?: number[][];
 }

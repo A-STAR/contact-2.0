@@ -32,10 +32,42 @@ export class ActionGridFilterService {
       ids: actionData.data
     };
   }
-
+  /**
+   * Returns selection from grid filtered by config params
+   * and without undefined and null values.
+   * NOTE: This method should be marked as private when action handle logic
+   * is moved here from action grid cmp!
+   * @param action
+   * @param selected
+   */
   getSelection(action: IAGridAction, selected: any[]): number[][] {
     return selected.reduce((acc, row, i) => {
-      return [...acc, [...action.metadataAction.params.map(param => row[param])] ];
+      return [
+        ...acc,
+        [...action.metadataAction.params
+          .map(param => row[param])
+          // filter null and undefined params
+          .filter(value => value != null)
+        ]
+      ];
+    }, []);
+  }
+  /**
+   * Returns selection from grid filtered by config params.
+   * NOTE: it returns also undefined or null values!
+   * NOTE: This method should be marked as private when action handle logic
+   * is moved here from action grid cmp!
+   * @param action
+   * @param selected
+   */
+  getGridSelection(action: IAGridAction, selected: any[]): number[][] {
+    return selected.reduce((acc, row, i) => {
+      return [
+        ...acc,
+        [...action.metadataAction.params
+          .map(param => row[param])
+        ]
+      ];
     }, []);
   }
 
@@ -59,6 +91,10 @@ export class ActionGridFilterService {
     if (options && options.length > index) {
       return options[index];
     }
+  }
+
+  isFilterAction(actionData: IGridActionPayload): boolean {
+    return actionData.type === MetadataActionType.ALL;
   }
 
   private getFilters(filters?: FilterObject): { filtering: FilterObject | null } {

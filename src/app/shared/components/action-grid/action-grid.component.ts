@@ -158,6 +158,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.dialogData = {
       addOptions: metadataAction.addOptions,
       payload: this.getActionPayload(metadataAction.type, gridAction),
+      selection: this.actionGridFilterService.getGridSelection(gridAction, this.selection)
     };
     this.cdRef.markForCheck();
   }
