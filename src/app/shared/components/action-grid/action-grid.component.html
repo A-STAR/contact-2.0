@@ -170,8 +170,8 @@
 ></app-outsourcing-return>
 
 <app-titlebar
-  *ngIf="gridActionsForAll$ | async"
-  [titlebar]="gridActionsForAll$ | async"
+  *ngIf="titlebar"
+  [titlebar]="titlebar"
 ></app-titlebar>
 
 <app-action-grid-filter

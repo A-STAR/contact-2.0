@@ -25,6 +25,7 @@ import { IAGridAction, IAGridRequestParams, IAGridSelected, IAGridColumn } from 
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 import { IMetadataAction, IMetadataActionPermissions, MetadataActionType } from '@app/core/metadata/metadata.interface';
+import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ActionGridFilterService } from './filter/action-grid-filter.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
@@ -35,6 +36,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { ActionGridFilterComponent } from './filter/action-grid-filter.component';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { GridComponent } from '../../components/grid/grid.component';
+import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.component';
 
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
@@ -61,6 +63,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() columns: IGridColumn[];
   @Input() contextMenuOptions: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
+  @Input() titlebar: ITitlebar;
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
@@ -68,6 +71,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   @ViewChild(ActionGridFilterComponent) filter: ActionGridFilterComponent;
   @ViewChild('grid') grid: GridComponent | Grid2Component;
+  @ViewChild(TitlebarComponent) gridBar: TitlebarComponent;
 
   private _columns: IAGridColumn[];
   private _initialized = false;
