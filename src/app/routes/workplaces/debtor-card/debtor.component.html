@@ -19,57 +19,49 @@
       [data]="data"
     ></app-dynamic-form>
 
-    <app-tabstrip *ngIf="personId$ | async" [scrollerEnabled]="true" (select)="onTabSelect($event)">
-      <app-tab [title]="'debtor.information.title'">
+    <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+      <app-tabview-tab [title]="'debtor.information.title'">
         <app-debtor-information *ngIf="tabs[0].isInitialised"></app-debtor-information>
-      </app-tab>
-
-      <app-tab [title]="'debtor.debtsTab.title'" [closable]="false">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.debtsTab.title'">
         <app-debtor-debts *ngIf="tabs[1].isInitialised"></app-debtor-debts>
-      </app-tab>
-
-      <app-tab [title]="'debtor.guarantorsTab.title'" [closable]="false">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.guarantorsTab.title'">
         <app-guarantee-grid *ngIf="tabs[2].isInitialised"></app-guarantee-grid>
-      </app-tab>
-
-      <app-tab [title]="'debtor.contactsTab.title'" [closable]="false">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.contactsTab.title'">
         <app-contact-grid
           *ngIf="tabs[3].isInitialised"
           [personId]="personId$ | async"
         ></app-contact-grid>
-      </app-tab>
-
-      <app-tab [title]="'debtor.documentsTab.title'" [closable]="false">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.documentsTab.title'">
         <app-document-grid
           *ngIf="tabs[4].isInitialised"
           [entityId]="debtId$ | async"
           [entityType]="19"
         ></app-document-grid>
-      </app-tab>
-
-      <app-tab [title]="'debtor.employmentRecordTab.title'" [closable]="false" [disabled]="isCompany$ | async">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.employmentRecordTab.title'" [disabled]="isCompany$ | async">
         <app-employment-grid
           *ngIf="tabs[5].isInitialised"
           [personId]="personId$ | async"
         ></app-employment-grid>
-      </app-tab>
-
-      <app-tab [title]="'debtor.identityDocs.title'" [closable]="false" [disabled]="isCompany$ | async">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.identityDocs.title'" [disabled]="isCompany$ | async">
         <app-identity-grid
           *ngIf="tabs[6].isInitialised"
           [personId]="personId$ | async"
         ></app-identity-grid>
-      </app-tab>
-
-      <app-tab [title]="'debtor.pledgorsTab.title'" [closable]="false">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.pledgorsTab.title'">
         <ng-container *ngIf="tabs[7].isInitialised">
           <app-pledge-grid></app-pledge-grid>
           <app-hdivider></app-hdivider>
           <app-debtor-pledge-attributes></app-debtor-pledge-attributes>
         </ng-container>
-      </app-tab>
-
-      <app-tab [title]="'debtor.propertyTab.title'" [closable]="false">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.propertyTab.title'">
         <ng-container *ngIf="tabs[8].isInitialised">
           <app-property-grid
             [personId]="personId$ | async"
@@ -79,28 +71,25 @@
 
           <app-debtor-property-attributes></app-debtor-property-attributes>
         </ng-container>
-      </app-tab>
-
-      <app-tab [title]="'debtor.actionLogTab.title'" [closable]="false">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.actionLogTab.title'">
         <app-debtor-action-log
           *ngIf="tabs[9].isInitialised"
           [personId]="personId$ | async"
         ></app-debtor-action-log>
-      </app-tab>
-
-
-      <app-tab [title]="'debtor.contactLogTab.title'" [closable]="false">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.contactLogTab.title'">
         <app-contact-log-tab-grid
           *ngIf="tabs[10].isInitialised"
           [debtId]="debtId$ | async"
           [personId]="personId$ | async"
         ></app-contact-log-tab-grid>
-      </app-tab>
-
-      <app-tab [title]="'debtor.attributesTab.title'" [closable]="false">
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.attributesTab.title'">
         <app-debtor-attributes *ngIf="tabs[11].isInitialised"></app-debtor-attributes>
-      </app-tab>
-    </app-tabstrip>
+      </app-tabview-tab>
+    </app-tabview>
+
   </split-area>
 
   <!-- Contact Registration Area -->
