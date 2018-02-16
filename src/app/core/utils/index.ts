@@ -28,13 +28,14 @@ type IValueToOption<T> = (value: T) => IOption;
 
 export const toOption = <T extends Object>(valueKey: keyof T, labelKey: keyof T): IValueToOption<T> => {
   return value => ({
+    // TODO(i.lobanov): types are incompatible
     label: value[labelKey],
     value: value[valueKey]
-  });
+  } as any);
 };
 
 export const valuesToOptions = (values: Array<INamedValue>): Array<IOption> => {
-  return (values || []).map(toOption('id', 'name'));
+  return (values || []).map(toOption<INamedValue>('id', 'name'));
 };
 
 export const toFullName = (person: { lastName: string, firstName: string, middleName: string }) => {

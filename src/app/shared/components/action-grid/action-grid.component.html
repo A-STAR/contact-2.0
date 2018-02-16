@@ -123,17 +123,13 @@
 
 <app-mass-email
   *ngIf="isDialog('emailCreate')"
-  [debtIds]="getSelectionParam(0)"
-  [personIds]="getSelectionParam(1)"
-  [personRoles]="getAddOptions('personRole')"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-mass-email>
 
 <app-mass-sms
   *ngIf="isDialog('smsCreate')"
-  [debtIds]="getSelectionParam(0)"
-  [personIds]="getSelectionParam(1)"
-  [personRoles]="getAddOptions('personRole')"
+  [actionData]="dialogData"
   (close)="onCloseDialog()"
 ></app-mass-sms>
 
