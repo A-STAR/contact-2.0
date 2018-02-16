@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { tap, catchError } from 'rxjs/operators';
 
+import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
 import { IFilterPortfolio } from '@app/core/filters/grid-filters.interface';
 import { IOperationResult } from '../../debt-responsible/debt-responsible.interface';
 
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { DataService } from '@app/core/data/data.service';
 import { GridFiltersService } from '@app/core/filters/grid-filters.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -15,16 +17,21 @@ export class OutsourcingService {
   private baseUrl = '/mass/debts/outsourcing';
 
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private dataService: DataService,
     private gridFiltersService: GridFiltersService,
     private notificationsService: NotificationsService
   ) { }
 
 
-  send(debts: number[], data: IFilterPortfolio): Observable<IOperationResult> {
-    const ids = debts.map(debtId => [debtId]);
+  send(idData: IGridActionPayload, data: IFilterPortfolio): Observable<IOperationResult> {
     return this.dataService
-      .update(`${this.baseUrl}/send`, {}, { idData: { ids }, actionData: { outPortfolioId: data.id } })
+      .update(`${this.baseUrl}/send`, {},
+        {
+          idData: this.actionGridFilterService.buildRequest(idData),
+          actionData: { outPortfolioId: data.id }
+        }
+      )
       .pipe(
       tap(response => {
         if (response.success) {
@@ -36,10 +43,13 @@ export class OutsourcingService {
       catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback()));
   }
 
-  exclude(debts: number[]): Observable<IOperationResult> {
-    const ids = debts.map(debtId => [debtId]);
+  exclude(idData: IGridActionPayload): Observable<IOperationResult> {
     return this.dataService
-      .update(`${this.baseUrl}/exclude`, {}, { idData: { ids }, actionData: { } })
+      .update(`${this.baseUrl}/exclude`, {},
+        {
+          dData: this.actionGridFilterService.buildRequest(idData)
+        }
+      )
       .pipe(
       tap(response => {
         if (response.success) {
@@ -51,10 +61,13 @@ export class OutsourcingService {
       catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback()));
   }
 
-  return(debts: number[]): Observable<IOperationResult> {
-    const ids = debts.map(debtId => [debtId]);
+  return(idData: IGridActionPayload): Observable<IOperationResult> {
     return this.dataService
-      .update(`${this.baseUrl}/return`, {}, { idData: { ids }, actionData: { } })
+      .update(`${this.baseUrl}/return`, {},
+        {
+         idData: this.actionGridFilterService.buildRequest(idData)
+        }
+      )
       .pipe(
       tap(response => {
         if (response.success) {

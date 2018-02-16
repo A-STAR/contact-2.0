@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
+import { ICloseAction, IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { OutsourcingService } from '../outsourcing.service';
 
@@ -10,7 +10,7 @@ import { OutsourcingService } from '../outsourcing.service';
 })
 export class OutsourcingReturnComponent {
 
-  @Input() debts: number[];
+  @Input() actionData: IGridActionParams;
   @Output() close = new EventEmitter<ICloseAction>();
 
   constructor(
@@ -18,7 +18,7 @@ export class OutsourcingReturnComponent {
   ) { }
 
   onConfirm(): void {
-    this.outsourcingService.return(this.debts)
+    this.outsourcingService.return(this.actionData.payload)
       .subscribe(() => this.onCloseDialog());
   }
 

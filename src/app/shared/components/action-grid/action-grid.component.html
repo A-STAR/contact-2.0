@@ -135,37 +135,37 @@
 
 <app-visit-prepare-dialog
   *ngIf="isDialog('prepareVisit')"
-  [visits]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-visit-prepare-dialog>
 
 <app-visit-cancel-dialog
   *ngIf="isDialog('cancelVisit')"
-  [visits]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-visit-cancel-dialog>
 
 <app-operator-details
   *ngIf="isDialog('openUserDetail')"
-  [userId]="getDialogParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-operator-details>
 
 <app-outsourcing-send
   *ngIf="isDialog('debtOutsourcingSend')"
-  [debts]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-outsourcing-send>
 
 <app-outsourcing-exclude
   *ngIf="isDialog('debtOutsourcingExclude')"
-  [debts]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-outsourcing-exclude>
 
 <app-outsourcing-return
   *ngIf="isDialog('debtOutsourcingReturn')"
-  [debts]="getSelectionParam(0)"
+  [actionData]="dialogData"
   (close)="onCloseAction($event)"
 ></app-outsourcing-return>
 

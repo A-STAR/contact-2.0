@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
+import { ICloseAction, IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
 import { IFilterPortfolio } from '@app/core/filters/grid-filters.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 
@@ -16,7 +16,7 @@ import { OutsourcingService } from '../outsourcing.service';
 })
 export class OutsourcingSendComponent implements OnInit {
 
-  @Input() debts: number[];
+  @Input() actionData: IGridActionParams;
   @Output() close = new EventEmitter<ICloseAction>();
 
   selectedPortfolio: IFilterPortfolio;
@@ -58,7 +58,7 @@ export class OutsourcingSendComponent implements OnInit {
 
   submit(): void {
     this.outsourcingService
-      .send(this.debts, this.selectedPortfolio)
+      .send(this.actionData.payload, this.selectedPortfolio)
       .subscribe((res) => {
         const refresh = res.massInfo && !!res.massInfo.processed;
         this.close.emit({ refresh });
