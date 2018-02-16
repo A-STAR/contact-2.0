@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IActionType } from '../../../../core/app-modules/debtor-card/debtor-card.interface';
-import { IProperty } from '../property/property.interface';
+import { IActionType } from '../../../../../core/app-modules/debtor-card/debtor-card.interface';
+import { IProperty } from '../property.interface';
 
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
-import { PropertyService } from '../property/property.service';
+import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
+import { PropertyService } from '../property.service';
 
 @Component({
   selector: 'app-debtor-property-attributes',

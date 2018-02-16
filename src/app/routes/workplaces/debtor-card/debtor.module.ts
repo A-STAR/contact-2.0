@@ -21,7 +21,7 @@ import { DebtorPhoneModule } from './phone/phone.module';
 import { DebtorPledgeAttributesModule } from './pledge-attributes/pledge-attributes.module';
 import { DebtorPledgeModule } from './pledge/pledge.module';
 import { DebtorPromiseModule } from './promise/promise.module';
-import { DebtorPropertyAttributesModule } from './property-attributes/property-attributes.module';
+import { DebtorPropertyAttributesModule } from './property/attributes/property-attributes.module';
 import { DebtorPropertyModule } from './property/property.module';
 import { DebtsModule } from './debts/debts.module';
 import { InformationModule } from './information/information.module';
