@@ -17,23 +17,23 @@ import { of } from 'rxjs/observable/of';
 
 import { ICall } from '@app/core/calls/call.interface';
 import { IDebt } from '@app/core/debt/debt.interface';
-// import { IGridColumn, IContextMenuItem } from '@app/shared/components/grid/grid.interface';
 import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CallService } from '@app/core/calls/call.service';
 import { DebtService } from '@app/core/debt/debt.service';
-// import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PhoneService } from '../phone.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { addGridLabel } from '@app/core/utils';
+import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers/datetime/datetime.component';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers/tick/tick.component';
+
+import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -144,23 +144,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  // contextMenuOptions: IContextMenuItem[] = [
-  //   {
-  //     simpleActionsNames: [
-  //       'copyField',
-  //       'copyRow'
-  //     ],
-  //     translationKey: 'default.grid.localeText',
-  //     prop: 'phone',
-  //     enabled: of(true)
-  //   },
-  // ];
-
   columns: ISimpleGridColumn<IPhone>[] = [];
 
   dialog = null;
 
-  phones: Array<IPhone> = [];
+  phones: IPhone[] = [];
 
   debt: IDebt;
 
@@ -169,32 +157,20 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private busSubscription: Subscription;
   private callSubscription: Subscription;
 
-  // private _columns: Array<IGridColumn> = [
-  //   { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE },
-  //   { prop: 'phone', renderer: 'phoneRenderer' },
-  //   { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_STATUS },
-  //   { prop: 'isInactive', maxWidth: 90, renderer: 'checkboxRenderer', type: 'boolean' },
-  //   { prop: 'inactiveReasonCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING },
-  //   { prop: 'inactiveDateTime', renderer: 'dateTimeRenderer' },
-  //   { prop: 'comment' },
-  // ];
-
   private _columns: ISimpleGridColumn<IPhone>[] = [
-    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE },
-    { prop: 'phone' },
-    // { prop: 'phone', renderer: 'phoneRenderer' },
-    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_STATUS },
-    // { prop: 'isInactive', maxWidth: 90, renderer: 'checkboxRenderer', type: 'boolean' },
-    { prop: 'inactiveReasonCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING },
-    // { prop: 'inactiveDateTime', renderer: 'dateTimeRenderer' },
-    { prop: 'comment' },
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE, minWidth: 120 },
+    { prop: 'phone', /* renderer: 'phonerenderer', */ minWidth: 120 },
+    { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_STATUS, minWidth: 150 },
+    { prop: 'isInactive', renderer: TickRendererComponent, minWidth: 100, maxWidth: 120 },
+    { prop: 'inactiveReasonCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING, minWidth: 150 },
+    { prop: 'inactiveDateTime', renderer: DateTimeRendererComponent, minWidth: 150 },
+    { prop: 'comment', minWIdth: 200 },
   ].map(addGridLabel('debtor.information.phone.grid'));
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private callService: CallService,
     private debtService: DebtService,
-    // private gridService: GridService,
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
     private userConstantsService: UserConstantsService,
@@ -229,19 +205,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         });
         this.cdRef.markForCheck();
       });
-
-    // combineLatest(
-    //   this.gridService.setDictionaryRenderers(this._columns),
-    //   this.canViewBlock$,
-    // )
-    // .pipe(first())
-    // .subscribe(([ columns, canViewBlock ]) => {
-    //   const filteredColumns = columns.filter(column => {
-    //     return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
-    //   });
-    //   this.columns = this.gridService.setRenderers(filteredColumns);
-    //   this.cdRef.markForCheck();
-    // });
 
     this.busSubscription = this.phoneService
       .getAction(PhoneService.MESSAGE_PHONE_SAVED)
