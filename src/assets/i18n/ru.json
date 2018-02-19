@@ -190,7 +190,7 @@
       "info": "Номер Вашей лицензии"
     },
     "noDebts": {
-      "userId": "Ид пользователя",
+      "userId": "ID пользователя",
       "title": "Долги отсутствуют"
     },
     "noPerson": {
@@ -2401,14 +2401,14 @@
         "title": "Валюты"
       },
       "grid": {
-        "id": "ИД",
+        "id": "ID",
         "code": "Код",
         "name": "Название",
         "shortName": "Краткое наименование",
         "isMain": "Основная валюта"
       },
       "card":  {
-        "id": "ИД",
+        "id": "ID",
         "code": "Код",
         "names": "Название",
         "shortNames": "Краткое наименование",
@@ -3246,8 +3246,8 @@
       "contactPerson": {
         "name": "Контактное лицо",
         "fields": {
-          "id": "Ид",
-          "personId": "Ид персоны",
+          "id": "ID",
+          "personId": "ID персоны",
           "personRole": "Роль персоны",
           "personFullName": "ФИО персоны",
           "linkTypeCode": "Тип связи (для третьих лиц)"
@@ -3256,7 +3256,7 @@
       "person": {
         "name": "Персона",
         "fields": {
-          "id": "Ид",
+          "id": "ID",
           "lastName": "Фамилия",
           "firstName": "Имя",
           "middleName": "Отчество",

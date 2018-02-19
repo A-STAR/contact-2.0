@@ -3,15 +3,15 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { first, map } from 'rxjs/operators';
 
-import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-header-side-menu',
-  styleUrls: [ './side-menu.component.scss' ],
-  templateUrl: './side-menu.component.html',
+  selector: 'app-header-icon-menu',
+  styleUrls: [ './icon-menu.component.scss' ],
+  templateUrl: './icon-menu.component.html',
 })
-export class SideMenuComponent {
+export class IconMenuComponent {
   private _isSearchVisible = false;
 
   constructor(
@@ -43,7 +43,7 @@ export class SideMenuComponent {
   }
 
   toggleLanguage(): void {
-    // STUB: to test the language switching options
+    // STUB: to test the language switching options, remove for production
     const lang = this.translateService.currentLang === 'ru' ? 'en' : 'ru';
     this.translateService.use(lang).pipe(first()).subscribe();
   }
