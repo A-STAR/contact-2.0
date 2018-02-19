@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ViewChild,
-  ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -17,10 +16,8 @@ import { ActionGridComponent } from '../../../../shared/components/action-grid/a
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   host: { class: 'full-height' },
   selector: 'app-debt-processing-grid',
-  styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html',
 })
 export class GridComponent {

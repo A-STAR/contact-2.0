@@ -14,6 +14,7 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
 @Component({
   selector: 'app-incoming-call-debtor-grid',
   templateUrl: 'debtor-grid.component.html',
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtorGridComponent implements OnInit, OnDestroy {

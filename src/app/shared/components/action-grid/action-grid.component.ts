@@ -54,7 +54,6 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
   selector: 'app-action-grid',
   templateUrl: 'action-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   host: { class: 'full-height' },
   providers: [ ActionGridFilterService ]
 })

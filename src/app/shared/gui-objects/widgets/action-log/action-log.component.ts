@@ -6,7 +6,6 @@ import {
   OnDestroy,
   Input,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -26,9 +25,8 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-debtor-action-log',
-  styleUrls: ['./action-log.component.scss'],
+  host: { class: 'full-height' },
   templateUrl: './action-log.component.html',
-  encapsulation: ViewEncapsulation.None,
 })
 export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<any>;

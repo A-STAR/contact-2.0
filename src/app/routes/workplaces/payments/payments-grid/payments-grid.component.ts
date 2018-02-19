@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Component,
   ViewChild,
-  ViewEncapsulation
 } from '@angular/core';
 
 import { IPayment } from '../payments.interface';
@@ -16,9 +15,8 @@ import { ActionGridComponent } from '../../../../shared/components/action-grid/a
 @Component({
   selector: 'app-workplaces-payments-grid',
   templateUrl: './payments-grid.component.html',
-  styleUrls: ['./payments-grid.component.scss'],
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
 })
 export class PaymentsGridComponent {
 

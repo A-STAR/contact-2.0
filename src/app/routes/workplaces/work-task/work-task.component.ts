@@ -11,6 +11,7 @@ const label = makeKey('modules.workTask');
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-work-task',
+  host: { class: 'full-height' },
   templateUrl: 'work-task.component.html',
 })
 export class WorkTaskComponent {

@@ -4,7 +4,6 @@ import {
   Component,
   Input,
   ViewChild,
-  ViewEncapsulation
 } from '@angular/core';
 
 import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
@@ -17,8 +16,7 @@ import { ActionGridComponent } from '../../../../shared/components/action-grid/a
 @Component({
   selector: 'app-workplaces-contact-log-grid',
   templateUrl: './grid.component.html',
-  styleUrls: [ './grid.component.scss' ],
-  encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height'},
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridComponent {
