@@ -13,12 +13,8 @@ import { DebtComponentModule } from './debt/component/debt-component.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
-import { DocumentModule } from './documents/document.module';
-import { EmailModule } from './email/email.module';
 import { EmploymentModule } from './employment/employment.module';
 import { EntityGroupModule } from './entity-group/entity-group.module';
-import { GuaranteeModule } from './guarantee/guarantee.module';
-import { GuarantorModule } from './guarantor/guarantor.module';
 import { IdentityModule } from './identity/identity.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.module';
@@ -26,9 +22,6 @@ import { OperatorDetailsModule } from './operator-details/operator-details.modul
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
 import { PersonSelectModule } from './person-select/person-select.module';
-import { PledgeModule } from './pledge/pledge.module';
-import { PledgorModule } from './pledgor/pledgor.module';
-import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
 import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
 import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
@@ -48,13 +41,9 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     DebtResponsibleModule,
     DebtOpenIncomingCallModule,
     DebtorActionLogModule,
-    DocumentModule,
-    EmailModule,
     EmploymentModule,
     EntityAttributeModule,
     EntityGroupModule,
-    GuaranteeModule,
-    GuarantorModule,
     IdentityModule,
     MassOpsModule,
     NextCallDateSetModule,
@@ -62,9 +51,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PaymentModule,
     PaymentOperatorModule,
     PersonSelectModule,
-    PledgeModule,
-    PledgorModule,
-    PledgorPropertyModule,
     PortfolioLogModule,
     PromiseModule,
     PromiseResolveModule,
@@ -82,13 +68,9 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     DebtOpenIncomingCallModule,
     DebtResponsibleModule,
     DebtorActionLogModule,
-    DocumentModule,
-    EmailModule,
     EmploymentModule,
     EntityAttributeModule,
     EntityGroupModule,
-    GuaranteeModule,
-    GuarantorModule,
     IdentityModule,
     MassOpsModule,
     NextCallDateSetModule,
@@ -96,9 +78,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PaymentModule,
     PaymentOperatorModule,
     PersonSelectModule,
-    PledgeModule,
-    PledgorModule,
-    PledgorPropertyModule,
     PortfolioLogModule,
     PromiseModule,
     PromiseResolveModule,

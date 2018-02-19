@@ -25,11 +25,12 @@ import { IUserStatistic, ICampaign } from '../campaigns.interface';
 import { CampaignsService } from '../campaigns.service';
 
 @Component({
-  selector: 'app-statistics',
-  templateUrl: './statistics.component.html',
-  styleUrls: ['./statistics.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height' },
+  selector: 'app-statistics',
+  styleUrls: ['./statistics.component.scss'],
+  templateUrl: './statistics.component.html',
 })
 export class StatisticsComponent implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;

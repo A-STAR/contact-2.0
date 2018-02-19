@@ -32,10 +32,13 @@ import { DateTimeService } from '../datetime.service';
 })
 export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() format: string;
+  @Input() label: string;
   @Input() minDateTime: Date;
   @Input() maxDateTime: Date;
+  @Input() required = false;
 
-  private _disabled = false;
+  disabled = false;
+
   private _value: Date;
 
   private cachedValue: moment.Moment = null;
@@ -57,10 +60,6 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
 
   ngOnDestroy(): void {
     this.langSub.unsubscribe();
-  }
-
-  get disabled(): boolean {
-    return this._disabled;
   }
 
   get mask(): any {
@@ -94,7 +93,7 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
   }
 
   setDisabledState(disabled: boolean): void {
-    this._disabled = disabled;
+    this.disabled = disabled;
   }
 
   onFocus(): void {
@@ -102,19 +101,9 @@ export class DateTimeInputComponent implements ControlValueAccessor, OnInit, OnD
   }
 
   onChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-
-    let date = moment(target.value, this.formatString);
-    if (this.minDateTime && moment(date.toDate()).isBefore(this.minDateTime)) {
-      date = moment(this.minDateTime, this.formatString);
-    }
-
-    if (date.isValid()) {
-      this.update(date.toDate());
-      target.value = date.format(this.formatString);
-    } else {
-      this.update(null);
-    }
+    const { value } = event.target as HTMLInputElement;
+    const date = moment(value, this.formatString);
+    this.update(date.isValid() ? date.toDate() : null);
   }
 
   @HostListener('focusout')

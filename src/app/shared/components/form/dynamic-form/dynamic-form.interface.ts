@@ -155,6 +155,7 @@ export interface IDynamicFormNumberControl extends IDynamicFormBaseControl {
   min?: number;
   max?: number;
   placeholder?: string;
+  positive?: boolean;
 }
 
 export interface IDynamicFormRadioControl extends IDynamicFormBaseControl {

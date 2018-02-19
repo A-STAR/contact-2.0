@@ -17,9 +17,10 @@ import { DialogFunctions } from '../../../../core/dialog';
 import { combineLatestAnd } from '../../../../core/utils/helpers';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-message-template-grid',
   templateUrl: './grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageTemplateGridComponent extends DialogFunctions implements OnInit {
   @Input() typeCode: number;

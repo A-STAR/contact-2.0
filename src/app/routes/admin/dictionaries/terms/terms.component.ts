@@ -16,6 +16,7 @@ import { DialogFunctions } from '../../../../core/dialog';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Component({
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-terms',
   templateUrl: './terms.component.html'

@@ -15,6 +15,7 @@ import { ActionGridComponent } from '../../../../shared/components/action-grid/a
 
 @Component({
   selector: 'app-work-task-grid',
+  host: { class: 'full-height' },
   templateUrl: './grid.component.html',
   host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush

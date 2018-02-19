@@ -20,38 +20,32 @@
 
     <!-- Promise Amount -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.promise.form.amount' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-        <input
-          class="form-control"
-          type="number"
-          formControlName="amount"
-          [disabled]="isPromiseAmountDisabled$ | async"
-          [required]="true"
-          (input)="onPromiseAmountInput($event)"
-        />
-      </label>
+      <app-number
+        formControlName="amount"
+        label="routes.workplaces.shared.contactRegistration.edit.form.promise.form.amount"
+        [disabled]="isPromiseAmountDisabled$ | async"
+        [min]="promiseMinAmount$ | async"
+        [max]="promiseMaxAmount$ | async"
+        [positive]="true"
+        [required]="true"
+        (input)="onPromiseAmountInput($event)"
+      ></app-number>
     </div>
 
     <!-- Promise Percentage -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.promise.form.percentage' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-        <input
-          class="form-control"
-          type="number"
-          formControlName="percentage"
-          [disabled]="isPromiseAmountDisabled$ | async"
-          [required]="true"
-          (input)="onPromisePercentageInput($event)"
-        />
-      </label>
+      <app-number
+        class="form-control"
+        type="number"
+        formControlName="percentage"
+        label="routes.workplaces.shared.contactRegistration.edit.form.promise.form.percentage"
+        [disabled]="isPromiseAmountDisabled$ | async"
+        [min]="percentageMinPercentage$ | async"
+        [max]="100"
+        [positive]="true"
+        [required]="true"
+        (input)="onPromisePercentageInput($event)"
+      ></app-number>
     </div>
 
     <hr>

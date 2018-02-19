@@ -19,9 +19,10 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolba
 import { GridService } from '@app/shared/components/grid/grid.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-group-grid',
   templateUrl: './group-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 

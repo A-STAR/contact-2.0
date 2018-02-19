@@ -12,13 +12,12 @@ import { DebtorAttributesVersionsModule } from './versions/debtor-attributes-ver
 import { DebtorContactsModule } from './contacts/contacts.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
 import { DebtorDocumentModule } from './document/document.module';
-import { DebtorEmailModule } from './email/email.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
-import { DebtorGuarantorModule } from './guarantor/guarantor.module';
+import { DebtorGuaranteeModule } from './guarantee/guarantee.module';
 import { DebtorIdentityModule } from './identity/identity.module';
 import { DebtorPaymentModule } from './payment/payment.module';
 import { DebtorPhoneModule } from './phone/phone.module';
-import { DebtorPledgeAttributesModule } from './pledge-attributes/pledge-attributes.module';
+import { DebtorPledgeAttributesModule } from './pledge/attributes/pledge-attributes.module';
 import { DebtorPledgeModule } from './pledge/pledge.module';
 import { DebtorPromiseModule } from './promise/promise.module';
 import { DebtorPropertyAttributesModule } from './property/attributes/property-attributes.module';
@@ -38,13 +37,13 @@ import { DebtorContactLogTabComponent } from './contact-log-tab/contact-log-tab.
 import { DebtorContactsComponent } from './contacts/contacts.component';
 import { DebtorDebtComponentComponent } from './debt-component/debt-component.component';
 import { DebtorDocumentComponent } from './document/document.component';
-import { DebtorEmailComponent } from './email/email.component';
+import { DebtorEmailCardComponent } from './information/email/card/email-card.component';
 import { DebtorEmploymentComponent } from './employment/employment.component';
-import { DebtorGuarantorComponent } from './guarantor/guarantor.component';
+import { DebtorGuaranteeCardComponent } from './guarantee/card/guarantee-card.component';
 import { DebtorIdentityComponent } from './identity/identity.component';
 import { DebtorPaymentComponent } from './payment/payment.component';
 import { DebtorPhoneComponent } from './phone/phone.component';
-import { DebtorPledgeComponent } from './pledge/pledge.component';
+import { DebtorPledgeCardComponent } from './pledge/card/pledge-card.component';
 import { DebtorPromiseComponent } from './promise/promise.component';
 import { DebtorPropertyCardComponent } from './property/card/property-card.component';
 
@@ -60,9 +59,9 @@ const routes: Routes = [
     path: 'guarantee',
     children: [
       { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorGuarantorComponent },
-      { path: ':contractId/guarantor/add', component: DebtorGuarantorComponent },
-      { path: ':contractId/guarantor/:guarantorId', component: DebtorGuarantorComponent },
+      { path: 'create', component: DebtorGuaranteeCardComponent },
+      { path: ':contractId/guarantor/add', component: DebtorGuaranteeCardComponent },
+      { path: ':contractId/guarantor/:guarantorId', component: DebtorGuaranteeCardComponent },
     ],
   },
   {
@@ -84,9 +83,9 @@ const routes: Routes = [
     path: 'pledge',
     children: [
       { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorPledgeComponent },
-      { path: ':contractId/pledgor/add', component: DebtorPledgeComponent },
-      { path: ':contractId/pledgor/:pledgorId/:propertyId', component: DebtorPledgeComponent },
+      { path: 'create', component: DebtorPledgeCardComponent },
+      { path: ':contractId/pledgor/add', component: DebtorPledgeCardComponent },
+      { path: ':contractId/pledgor/:pledgorId/:propertyId', component: DebtorPledgeCardComponent },
     ]
   },
   {
@@ -197,8 +196,8 @@ const routes: Routes = [
     path: 'email',
     children: [
       { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorEmailComponent },
-      { path: ':emailId', component: DebtorEmailComponent },
+      { path: 'create', component: DebtorEmailCardComponent },
+      { path: ':emailId', component: DebtorEmailCardComponent },
     ]
   },
   {
@@ -271,9 +270,8 @@ const routes: Routes = [
     DebtorContactsModule,
     DebtorDebtComponentModule,
     DebtorDocumentModule,
-    DebtorEmailModule,
     DebtorEmploymentModule,
-    DebtorGuarantorModule,
+    DebtorGuaranteeModule,
     DebtorIdentityModule,
     DebtorPaymentModule,
     DebtorPhoneModule,
