@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IActionType } from '../../../../core/app-modules/debtor-card/debtor-card.interface';
-import { IPledgeContract } from '../../../../shared/gui-objects/widgets/pledge/pledge.interface';
+import { IActionType } from '../../../../../core/app-modules/debtor-card/debtor-card.interface';
+import { IPledgeContract } from '../pledge.interface';
 
-import { PledgeService } from '../../../../shared/gui-objects/widgets/pledge/pledge.service';
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { PledgeService } from '../pledge.service';
+import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
 
 @Component({
   selector: 'app-debtor-pledge-attributes',

@@ -5,19 +5,19 @@ import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IPledgor } from '../../pledgor/pledgor.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 
-import { PledgeService } from '../../pledge/pledge.service';
+import { PledgeService } from '../../pledge.service';
 import { PledgorService } from '../../pledgor/pledgor.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
-import { GridComponent } from '../../../../components/grid/grid.component';
+import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { parseStringValueAttrs } from '../../../../../core/utils';
+import { DialogFunctions } from '@app/core/dialog';
+import { parseStringValueAttrs } from '@app/core/utils';
 
 @Component({
   selector: 'app-pledgor-grid',

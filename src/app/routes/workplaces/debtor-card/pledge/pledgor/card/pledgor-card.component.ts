@@ -9,19 +9,20 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormGroup, IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPledgor } from '../pledgor.interface';
-import { IPledgeContract } from '../../pledge/pledge.interface';
-import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
+import { IPledgeContract } from '../../pledge.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
 import { PledgorService } from '../../pledgor/pledgor.service';
-import { PledgeService } from '../../pledge/pledge.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { PledgeService } from '../../pledge.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
-import { DialogFunctions } from '../../../../../core/dialog';
-import { makeKey, parseStringValueAttrs } from '../../../../../core/utils';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+
+import { DialogFunctions } from '@app/core/dialog';
+import { makeKey, parseStringValueAttrs } from '@app/core/utils';
 
 const label = makeKey('widgets.pledgor.grid');
 
