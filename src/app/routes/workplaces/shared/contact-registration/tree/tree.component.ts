@@ -53,14 +53,14 @@ export class TreeComponent implements OnInit, OnDestroy {
   get scenarioText(): { text: SafeHtml, translate: boolean } {
     if (!this.selectedNode) {
       return {
-        text: 'modules.contactRegistration.tree.selectOutcome',
+        text: 'routes.workplaces.shared.contactRegistration.tree.selectOutcome',
         translate: true,
       };
     }
 
     if (!this.scenario) {
       return {
-        text: 'modules.contactRegistration.tree.emptyScenario',
+        text: 'routes.workplaces.shared.contactRegistration.tree.emptyScenario',
         translate: true,
       };
     }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { DialogActionModule } from '../../../../components/dialog-action/dialog-action.module';
 import { GridModule } from '../../../../components/grid/grid.module';
+import { TitlebarModule } from '@app/shared/components/titlebar/titlebar.module';
 import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
 
 import { CurrenciesGridComponent } from './currencies-grid.component';
@@ -12,6 +13,7 @@ import { CurrenciesGridComponent } from './currencies-grid.component';
     CommonModule,
     DialogActionModule,
     GridModule,
+    TitlebarModule,
     Toolbar2Module,
   ],
   exports: [
