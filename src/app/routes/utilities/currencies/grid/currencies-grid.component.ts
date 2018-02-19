@@ -4,12 +4,12 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
-import { ICurrency } from '@app/shared/gui-objects/widgets/currencies/currencies.interface';
+import { ICurrency } from '../currencies.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { CurrenciesService } from '@app/shared/gui-objects/widgets/currencies/currencies.service';
+import { CurrenciesService } from '../currencies.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 
