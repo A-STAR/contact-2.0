@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ButtonModule } from '../../../../components/button/button.module';
-import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
+import { SharedModule } from '../../../../../shared/shared.module';
 
 import { CurrencyRateCardComponent } from './currency-rate-card.component';
 
 @NgModule({
   imports: [
-    ButtonModule,
     CommonModule,
-    DynamicFormModule
+    SharedModule
   ],
   exports: [
     CurrencyRateCardComponent,
@@ -18,8 +16,5 @@ import { CurrencyRateCardComponent } from './currency-rate-card.component';
   declarations: [
     CurrencyRateCardComponent,
   ],
-  entryComponents: [
-    CurrencyRateCardComponent,
-  ]
 })
 export class CurrencyRateCardModule { }

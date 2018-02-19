@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { map } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { CallService } from '@app/core/calls/call.service';
 import { PersistenceService } from '@app/core/persistence/persistence.service';
-// import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -36,19 +36,17 @@ export class AccountMenuComponent extends DialogFunctions {
     private authService: AuthService,
     private callService: CallService,
     private persistenceService: PersistenceService,
-    // private userPermissionsService: UserPermissionsService,
+    private userPermissionsService: UserPermissionsService,
   ) {
     super();
   }
 
   get canEditPhoneExtension$(): Observable<boolean> {
     return combineLatestAnd([
-      // TODO(d.maltsev): uncomment when DB and server are ready
-      // this.userPermissionsService.has('PBX_PARAM_AFTER_LOGIN_EDIT'),
-      // this.callService.settings$.pipe(
-      //   map(params => params.useIntPhone === 1),
-      // ),
-      of(true),
+      this.userPermissionsService.has('PBX_PARAM_AFTER_LOGIN_EDIT'),
+      this.callService.settings$.pipe(
+        map(settings => settings && settings.useIntPhone === 1),
+      ),
     ]);
   }
 

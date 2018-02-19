@@ -1,4 +1,6 @@
 <app-address-card
+  [addressId]="addressId$ | async"
+  [entityId]="entityId$ | async"
   [callCenter]="true"
   (close)="onClose()"
 ></app-address-card>

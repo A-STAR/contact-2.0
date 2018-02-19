@@ -47,7 +47,7 @@ export class UserTemplatesService {
       this.refresh(typeCode, recipientTypeCode);
     }
     return this.templates$
-      .map(state => state[key])
+      .map(state => state && state[key])
       .filter(slice => slice && slice.status === TemplateStatusEnum.LOADED)
       .map(slice => slice.templates.filter(template => !isSingleSending || template.isSingleSending))
       .distinctUntilChanged();

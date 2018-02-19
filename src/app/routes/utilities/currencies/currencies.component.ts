@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ICurrency } from 'app/shared/gui-objects/widgets/currencies/currencies.interface';
+import { ICurrency } from './currencies.interface';
 
-import { CurrenciesService } from 'app/shared/gui-objects/widgets/currencies/currencies.service';
+import { CurrenciesService } from './currencies.service';
 
 @Component({
   selector: 'app-currencies',

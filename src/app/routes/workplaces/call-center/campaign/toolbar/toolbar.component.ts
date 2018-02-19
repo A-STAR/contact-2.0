@@ -28,8 +28,8 @@ export class ToolbarComponent extends DialogFunctions {
     title: 'Сальников Андрей Юрьевич',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON,
-        iconCls: 'fa fa-newspaper-o',
+        type: TitlebarItemTypeEnum.BUTTON_DEBT_CARD,
+        // iconCls: 'co co-debt-list',
         title: 'Открытие карточки должника',
         action: () => this.openDebtorCard(),
       },
@@ -46,7 +46,7 @@ export class ToolbarComponent extends DialogFunctions {
       },
       {
         type: TitlebarItemTypeEnum.BUTTON,
-        iconCls: 'fa fa-book',
+        iconCls: 'co co-history',
         title: 'Информация о предыдущих долгах',
         action: () => this.setDialog('processed-debts'),
       },
