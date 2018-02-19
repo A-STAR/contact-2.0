@@ -42,7 +42,7 @@ export class ActionGridFilterService {
 
   getPayload(action: IAGridAction, params?: IGridActionContext): IGridActionPayload {
     return (this.actionPayloads[action.metadataAction.type]
-        || this.actionPayloads[MetadataActionType.SINGLE]).call(null, action, params);
+        || this.actionPayloads[MetadataActionType.SINGLE]).call(this, action, params);
   }
 
   /**
