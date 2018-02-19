@@ -17,14 +17,14 @@ import { of } from 'rxjs/observable/of';
 
 import { ICall } from '@app/core/calls/call.interface';
 import { IDebt } from '@app/core/debt/debt.interface';
-import { IGridColumn, IContextMenuItem } from '@app/shared/components/grid/grid.interface';
+// import { IGridColumn, IContextMenuItem } from '@app/shared/components/grid/grid.interface';
 import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CallService } from '@app/core/calls/call.service';
 import { DebtService } from '@app/core/debt/debt.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
+// import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PhoneService } from '../phone.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -144,17 +144,17 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  contextMenuOptions: IContextMenuItem[] = [
-    {
-      simpleActionsNames: [
-        'copyField',
-        'copyRow'
-      ],
-      translationKey: 'default.grid.localeText',
-      prop: 'phone',
-      enabled: of(true)
-    },
-  ];
+  // contextMenuOptions: IContextMenuItem[] = [
+  //   {
+  //     simpleActionsNames: [
+  //       'copyField',
+  //       'copyRow'
+  //     ],
+  //     translationKey: 'default.grid.localeText',
+  //     prop: 'phone',
+  //     enabled: of(true)
+  //   },
+  // ];
 
   columns: ISimpleGridColumn<IPhone>[] = [];
 
@@ -194,7 +194,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private callService: CallService,
     private debtService: DebtService,
-    private gridService: GridService,
+    // private gridService: GridService,
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
     private userConstantsService: UserConstantsService,
