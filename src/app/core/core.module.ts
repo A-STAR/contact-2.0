@@ -8,6 +8,7 @@ import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
 
 import { ActionsLogService } from './actions-log/actions-log.service';
+import { ButtonService } from './button/button.service';
 import { CallService } from './calls/call.service';
 import { DataService } from './data/data.service';
 import { EntityAttributesService } from './entity/attributes/entity-attributes.service';
@@ -36,6 +37,7 @@ import { environment } from '../../environments/environment';
   ],
   providers: [
     ActionsLogService,
+    ButtonService,
     CallService,
     EntityAttributesService,
     EntityTranslationsService,

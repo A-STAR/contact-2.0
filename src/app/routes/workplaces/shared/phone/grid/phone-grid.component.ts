@@ -110,23 +110,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       action: () => this.fetch()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_CALL,
+      type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
       align: 'right',
-      enabled: this.canMakeCall$,
-      action: () => this.onMakeCall()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DROP,
-      align: 'right',
-      enabled: this.canDropCall$,
-      action: () => this.onDropCall()
-    },
-
-    {
-      type: ToolbarItemTypeEnum.BUTTON_PAUSE,
-      align: 'right',
-      enabled: this.canHoldCall$,
-      action: () => this.onHoldCall()
+      enabled: this.canTransferCall$,
+      action: () => this.setDialog('operator')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_RESUME,
@@ -135,12 +122,23 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       action: () => this.onRetrieveCall()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
+      type: ToolbarItemTypeEnum.BUTTON_PAUSE,
       align: 'right',
-      enabled: this.canTransferCall$,
-      action: () => this.setDialog('operator')
+      enabled: this.canHoldCall$,
+      action: () => this.onHoldCall()
     },
-  ];
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DROP,
+      align: 'right',
+      enabled: this.canDropCall$,
+      action: () => this.onDropCall()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_CALL,
+      align: 'right',
+      enabled: this.canMakeCall$,
+      action: () => this.onMakeCall()
+    },  ];
 
   contextMenuOptions: IContextMenuItem[] = [
     {

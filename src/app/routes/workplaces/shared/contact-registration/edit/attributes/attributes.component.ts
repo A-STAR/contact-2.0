@@ -16,7 +16,7 @@ import { getRawValue, getValue } from '@app/core/utils/value';
 import {IAGridWrapperTreeColumn} from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
 import {IAttribute} from '@app/shared/gui-objects/widgets/entity-attribute/attribute.interface';
 
-const label = makeKey('modules.contactRegistration');
+const label = makeKey('routes.workplaces.shared.contactRegistration.edit.form.attributes.grid');
 
 @Component({
   selector: 'app-contact-registration-attributes',
@@ -42,7 +42,7 @@ export class ContactRegistrationAttributesComponent implements OnInit {
       { dataType: TYPE_CODES.STRING, name: 'value',
         valueGetter: row => this.valueConverterService.deserialize(row.data).value },
       { dataType: TYPE_CODES.BOOLEAN, name: 'mandatory' },
-    ].map(col => ({ ...col, label: label(`attributes.grid.${col.name}`)}));
+    ].map(col => ({ ...col, label: label(col.name) }));
 
     this.columns$ = this.gridService.getColumns(attrGridColumns, {});
 

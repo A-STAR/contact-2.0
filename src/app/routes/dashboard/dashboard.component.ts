@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 import { DashboardChartType } from './dashboard.interface';
 import { IIndicator } from '@app/shared/components/charts/charts.interface';
-import { ICurrency } from '@app/shared/gui-objects/widgets/currencies/currencies.interface';
+import { ICurrency } from '@app/routes/utilities/currencies/currencies.interface';
 
 import { DashboardService } from './dashboard.service';
 import { LookupService } from '@app/core/lookup/lookup.service';

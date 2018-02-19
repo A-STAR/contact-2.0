@@ -2,12 +2,16 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
-import { CurrencyEditModule } from './edit/edit.module';
-import { CurrencyRateEditModule } from './rate/rate.module';
+import { CurrencyCardModule } from './card/currency-card.module';
+import { CurrenciesGridModule } from './grid/currencies-grid.module';
+import { CurrencyRatesModule } from './rates/currency-rates.module';
+
+import { CurrenciesService } from './currencies.service';
 
 import { CurrenciesComponent } from './currencies.component';
-import { CurrencyEditComponent } from './edit/edit.component';
-import { CurrencyRateEditComponent } from './rate/rate.component';
+import { CurrencyCardComponent } from './card/currency-card.component';
+import { CurrencyRateCardComponent } from './rates/card/currency-rate-card.component';
+
 
 const routes: Routes = [
   {
@@ -17,21 +21,25 @@ const routes: Routes = [
       reuse: true,
     },
   },
-  { path: 'create', component: CurrencyEditComponent },
-  { path: ':currencyId', component: CurrencyEditComponent },
-  { path: ':currencyId/rates/create', component: CurrencyRateEditComponent },
-  { path: ':currencyId/rates/:currencyRateId', component: CurrencyRateEditComponent }
+  { path: 'create', component: CurrencyCardComponent },
+  { path: ':currencyId', component: CurrencyCardComponent },
+  { path: ':currencyId/rates/create', component: CurrencyRateCardComponent },
+  { path: ':currencyId/rates/:currencyRateId', component: CurrencyRateCardComponent }
 ];
 
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
     SharedModule,
-    CurrencyEditModule,
-    CurrencyRateEditModule,
+    CurrencyCardModule,
+    CurrenciesGridModule,
+    CurrencyRatesModule
   ],
   declarations: [
     CurrenciesComponent,
   ],
+  providers: [
+    CurrenciesService
+  ]
 })
 export class CurrenciesModule {}

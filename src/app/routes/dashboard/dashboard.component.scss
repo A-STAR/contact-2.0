@@ -1,3 +1,45 @@
 .dashboard {
   position: relative;
 }
+
+.row-flex {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.date-widget {
+  margin: 10px;
+  min-width: 225px;
+}
+
+.date-widget-left, .date-widget-right {
+  flex: 1;
+  padding: 10px 5px 0 15px;
+  span:last-child {
+    display: block;
+    margin-top: 10px;
+    font-weight: 300;
+  }
+}
+
+.chart-header {
+  font-size: 14px;
+  display: block;
+}
+
+.minh {
+  min-height: 60px;
+}
+
+.border {
+  border: solid 1px #dfdee4;
+}
+
+.border-b {
+  border-bottom: 1px solid #dfdee4;
+}
+
+.border-r {
+  border-right: 1px solid #dfdee4;
+}
