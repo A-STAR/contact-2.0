@@ -12,7 +12,6 @@ import { DebtorAttributesVersionsModule } from './versions/debtor-attributes-ver
 import { DebtorContactsModule } from './contacts/contacts.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
 import { DebtorDocumentModule } from './document/document.module';
-import { DebtorEmailModule } from './email/email.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
 import { DebtorGuaranteeModule } from './guarantee/guarantee.module';
 import { DebtorIdentityModule } from './identity/identity.module';
@@ -38,7 +37,7 @@ import { DebtorContactLogTabComponent } from './contact-log-tab/contact-log-tab.
 import { DebtorContactsComponent } from './contacts/contacts.component';
 import { DebtorDebtComponentComponent } from './debt-component/debt-component.component';
 import { DebtorDocumentComponent } from './document/document.component';
-import { DebtorEmailComponent } from './email/email.component';
+import { DebtorEmailCardComponent } from './information/email/card/email-card.component';
 import { DebtorEmploymentComponent } from './employment/employment.component';
 import { DebtorGuaranteeCardComponent } from './guarantee/card/guarantee-card.component';
 import { DebtorIdentityComponent } from './identity/identity.component';
@@ -197,8 +196,8 @@ const routes: Routes = [
     path: 'email',
     children: [
       { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorEmailComponent },
-      { path: ':emailId', component: DebtorEmailComponent },
+      { path: 'create', component: DebtorEmailCardComponent },
+      { path: ':emailId', component: DebtorEmailCardComponent },
     ]
   },
   {
@@ -271,7 +270,6 @@ const routes: Routes = [
     DebtorContactsModule,
     DebtorDebtComponentModule,
     DebtorDocumentModule,
-    DebtorEmailModule,
     DebtorEmploymentModule,
     DebtorGuaranteeModule,
     DebtorIdentityModule,

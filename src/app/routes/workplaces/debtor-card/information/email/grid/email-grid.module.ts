@@ -1,22 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { BlockDialogModule } from '../../../../components/dialog/block/block-dialog.module';
-import { DialogActionModule } from '../../../../components/dialog-action/dialog-action.module';
-import { GridModule } from '../../../../components/grid/grid.module';
 import { ScheduleModule } from './schedule/schedule.module';
-import { Toolbar2Module } from '../../../../components/toolbar-2/toolbar-2.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { EmailGridComponent } from './email-grid.component';
 
 @NgModule({
   imports: [
-    BlockDialogModule,
     CommonModule,
-    DialogActionModule,
-    GridModule,
     ScheduleModule,
-    Toolbar2Module,
+    SharedModule
   ],
   exports: [
     EmailGridComponent,

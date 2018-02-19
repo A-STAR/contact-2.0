@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import * as moment from 'moment';
 
 import { DateTimeService } from '../datetime.service';
+
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 @Component({
@@ -12,15 +13,22 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DatePickerComponent),
       multi: true,
-    }
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => DatePickerComponent),
+      multi: true,
+    },
   ],
   selector: 'app-datepicker',
   styleUrls: [ './datepicker.component.scss' ],
   templateUrl: './datepicker.component.html'
 })
-export class DatePickerComponent implements ControlValueAccessor {
+export class DatePickerComponent implements ControlValueAccessor, Validator {
+  @Input() label: string;
   @Input() minDate: Date;
   @Input() maxDate: Date;
+  @Input() required = false;
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
@@ -61,6 +69,18 @@ export class DatePickerComponent implements ControlValueAccessor {
 
   setDisabledState(disabled: boolean): void {
     this._disabled = disabled;
+  }
+
+  validate(c: any): any {
+    const value = moment(this._value, 'L');
+    switch (true) {
+      case this._value && this.minDate && value.isBefore(this.minDate):
+        return { min: { minValue: moment(this.minDate).format('L') } };
+      case this._value && this.maxDate && value.isAfter(this.maxDate):
+        return { max: { maxValue: moment(this.maxDate).format('L') } };
+      default:
+        return null;
+    }
   }
 
   onTouch(): void {

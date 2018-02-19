@@ -1,12 +1,14 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { EmailService } from '@app/shared/gui-objects/widgets/email/email.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { EmailService } from '../email.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -18,21 +20,22 @@ import { makeKey } from '@app/core/utils';
 const labelKey = makeKey('widgets.email.card');
 
 @Component({
-  selector: 'app-email-card',
+  selector: 'app-debtor-email-card',
   templateUrl: './email-card.component.html'
 })
-export class EmailCardComponent implements OnInit {
-  @Input() emailId: number;
-  @Input() entityId: number;
-  @Input() entityType = 18;
-
+export class DebtorEmailCardComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
   email: any;
 
+  private emailId: number;
+  private entityId: number;
+  private entityType = 18;
+
   constructor(
     private cdRef: ChangeDetectorRef,
+    private debtorCardService: DebtorCardService,
     private emailService: EmailService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -42,13 +45,23 @@ export class EmailCardComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
-      this.emailId ? this.userPermissionsService.has('EMAIL_EDIT') : of(true),
-      this.emailId ? this.userPermissionsService.has('EMAIL_COMMENT_EDIT') : of(true),
-      this.emailId ? this.emailService.fetch(this.entityType, this.entityId, this.emailId) : of(null)
+      this.emailId$,
+      this.entityId$
+    )
+    .flatMap(([ emailId, entityId ]) =>
+      combineLatest(
+        of(emailId),
+        of(entityId),
+        this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
+        emailId ? this.userPermissionsService.has('EMAIL_EDIT') : of(true),
+        emailId ? this.userPermissionsService.has('EMAIL_COMMENT_EDIT') : of(true),
+        emailId ? this.emailService.fetch(this.entityType, entityId, emailId) : of(null)
+      )
     )
     .pipe(first())
-    .subscribe(([ options, canEdit, canEditComment, email ]) => {
+    .subscribe(([ emailId, entityId, options, canEdit, canEditComment, email ]) => {
+      this.emailId = emailId;
+      this.entityId = entityId;
       this.controls = [
         { label: labelKey('typeCode'), controlName: 'typeCode', type: 'select', required: true, options, disabled: !canEdit },
         { label: labelKey('email'), controlName: 'email', type: 'text', required: true, disabled: !canEdit },
@@ -57,6 +70,15 @@ export class EmailCardComponent implements OnInit {
       this.email = email;
       this.cdRef.markForCheck();
     });
+  }
+
+  get emailId$(): Observable<number> {
+    return this.route.params.map(params => params.emailId);
+  }
+
+  get entityId$(): Observable<number> {
+    return combineLatest(this.debtorCardService.personId$, this.route.params)
+      .map(([ personId, params ]) => params.contactId || personId);
   }
 
   onSubmit(): void {

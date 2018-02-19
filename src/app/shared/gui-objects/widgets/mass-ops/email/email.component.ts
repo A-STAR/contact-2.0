@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
+import * as moment from 'moment';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '../../../../../core/converter/value-converter.interface';
@@ -22,7 +23,6 @@ import { UserPermissionsService } from '../../../../../core/user/permissions/use
 
 import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
 
-import { minDateThreeDaysAgo } from '../../../../../core/validators';
 import { addFormLabel, toOption } from '../../../../../core/utils';
 
 @Component({
@@ -108,10 +108,9 @@ export class EmailComponent implements OnInit {
       {
         controlName: 'startDateTime',
         markAsDirty: true,
-        minDate: new Date(),
+        minDate: moment().subtract(3, 'd').toDate(),
         required: true,
         type: 'datetimepicker',
-        validators: [ minDateThreeDaysAgo() ],
       },
       {
         controlName: 'emailTypes',

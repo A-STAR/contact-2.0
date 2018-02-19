@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import * as moment from 'moment';
 
 import { DateTimeService } from '@app/shared/components/form/datetime/datetime.service';
@@ -12,15 +12,22 @@ import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.dire
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => TimePickerComponent),
       multi: true,
-    }
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => TimePickerComponent),
+      multi: true,
+    },
   ],
   selector: 'app-timepicker',
   styleUrls: [ './timepicker.component.scss' ],
   templateUrl: './timepicker.component.html'
 })
-export class TimePickerComponent implements ControlValueAccessor {
+export class TimePickerComponent implements ControlValueAccessor, Validator {
+  @Input() label: string;
   @Input() minTime: Date;
   @Input() maxTime: Date;
+  @Input() required = false;
 
   @Input() set displaySeconds(displaySeconds: boolean) {
     this._displaySeconds = displaySeconds === undefined ? true : displaySeconds;
@@ -69,6 +76,18 @@ export class TimePickerComponent implements ControlValueAccessor {
 
   setDisabledState(disabled: boolean): void {
     this.disabled = disabled;
+  }
+
+  validate(c: any): any {
+    const value = moment(this.value, this.timeFormat);
+    switch (true) {
+      case this.value && this.minTime && value.isBefore(this.minTime):
+        return { min: { minValue: moment(this.minTime).format(this.timeFormat) } };
+      case this.value && this.maxTime && value.isAfter(this.maxTime):
+        return { max: { maxValue: moment(this.maxTime).format(this.timeFormat) } };
+      default:
+        return null;
+    }
   }
 
   onTouch(): void {
