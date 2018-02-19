@@ -24,9 +24,10 @@ import { GridComponent } from '../../../../shared/components/grid/grid.component
 import { DialogFunctions } from '../../../../core/dialog/index';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-participants',
   templateUrl: './participants.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantsComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;

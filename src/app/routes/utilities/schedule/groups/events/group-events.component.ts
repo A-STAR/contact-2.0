@@ -27,6 +27,7 @@ import { combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
+  host: { class: 'full-height' },
   selector: 'app-group-events',
   templateUrl: './group-events.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
