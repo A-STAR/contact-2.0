@@ -7,10 +7,6 @@
 
 <div class="flex vertical">
 
-  <div class="flex-item mb">
-    <app-titlebar [titlebar]="titlebar"></app-titlebar>
-  </div>
-
   <div class="flex-item grow">
     <app-action-grid
       [fullHeight]="true"
@@ -19,7 +15,8 @@
       [rowIdKey]="rowIdKey"
       [rows]="rows"
       [rowCount]="rowCount"
-      (request)="doSearch()"
+      [titlebar]="titlebar"
+      (request)="onRequest()"
     ></app-action-grid>
   </div>
 

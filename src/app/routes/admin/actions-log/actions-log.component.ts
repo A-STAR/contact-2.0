@@ -6,8 +6,10 @@ import * as moment from 'moment';
 import { of } from 'rxjs/observable/of';
 
 import { IActionLog } from './actions-log.interface';
+import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
+import { ActionsLogService } from '@app/routes/admin/actions-log/actions-log.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
@@ -21,7 +23,7 @@ import { DownloaderComponent } from '@app/shared/components/downloader/downloade
 })
 export class ActionsLogComponent implements AfterViewInit {
   @ViewChild('downloader') downloader: DownloaderComponent;
-  @ViewChild(ActionGridComponent) grid: ActionGridComponent<any>;
+  @ViewChild(ActionGridComponent) grid: ActionGridComponent<IActionLog>;
 
   rows: IActionLog[] = [];
   rowCount = 0;
@@ -32,11 +34,6 @@ export class ActionsLogComponent implements AfterViewInit {
     title: 'actionsLog.title',
     items: [
       {
-        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
-        enabled: of(true),
-        action: () => this.doSearch(),
-      },
-      {
         type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
         enabled: of(true),
         action: () => this.doExport(),
@@ -45,6 +42,7 @@ export class ActionsLogComponent implements AfterViewInit {
   };
 
   constructor(
+    private actionsLogService: ActionsLogService,
     private cdRef: ChangeDetectorRef,
     private gridService: GridService,
   ) {}
@@ -53,10 +51,17 @@ export class ActionsLogComponent implements AfterViewInit {
     this.setInitialDates();
   }
 
-  doSearch(): void {
-    if (this.grid) {
-      this.grid.onRequest();
-    }
+  onRequest(): void {
+    const filters = this.grid.getFilters();
+    const params = this.grid.getRequestParams();
+
+    this.actionsLogService
+      .fetch(filters, params)
+      .subscribe((response: IAGridResponse<IActionLog>) => {
+        this.rows = [...response.data];
+        this.rowCount = response.total;
+        this.cdRef.markForCheck();
+      });
   }
 
   private setInitialDates(): void {

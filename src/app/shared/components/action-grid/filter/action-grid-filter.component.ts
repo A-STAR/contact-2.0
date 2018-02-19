@@ -57,7 +57,7 @@ export class ActionGridFilterComponent implements OnInit {
     .pipe(first())
     .filter(([attributes, metadata]) => metadata.columns && metadata.filters)
     .subscribe(([attributes, metadata]) => {
-      this.formControls = this.buildFormControls(metadata.filters);
+      this.formControls = metadata.filters.controls;
       this.operators = metadata.filters.operators;
       this.columnsMetadata = metadata.columns;
       this.cdRef.markForCheck();
@@ -83,21 +83,6 @@ export class ActionGridFilterComponent implements OnInit {
 
   onFilter(): void {
     this.filter.emit();
-  }
-
-
-  private buildFormControls(metadata: IMetadataFilter): IDynamicFormControl[] {
-    return [
-      ...metadata.controls,
-      {
-        label: 'default.buttons.search',
-        controlName: 'searchBtn',
-        type: 'searchBtn',
-        iconCls: 'fa-search',
-        width: 3,
-        action: () => this.onFilter()
-      }
-    ];
   }
 
   private pickControlValues(data: any, props: any[]): any[] {

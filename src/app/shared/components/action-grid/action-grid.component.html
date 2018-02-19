@@ -169,51 +169,56 @@
   (close)="onCloseAction($event)"
 ></app-outsourcing-return>
 
-<app-titlebar
-  *ngIf="titlebar"
-  [titlebar]="titlebar"
-></app-titlebar>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar
+      *ngIf="titlebar"
+      [titlebar]="titlebar"
+    ></app-titlebar>
 
-<app-action-grid-filter
-  [metadataKey]="metadataKey"
-  (filter)="onRequest()"
-></app-action-grid-filter>
+    <app-action-grid-filter
+      [metadataKey]="metadataKey"
+    ></app-action-grid-filter>
+  </div>
 
-<ng-container
-  *ngIf="isUsingAGGrid; else simpleGrid"
->
-  <app-grid2
-    #grid
-    *ngIf="initialized"
-    [actions]="gridActions$ | async"
-    [columnIds]="columnIds"
-    [columns]="columnsDef"
-    [fullHeight]="fullHeight"
-    [ngClass]="ngClass"
-    [persistenceKey]="persistenceKey"
-    [rowCount]="rowCount"
-    [rowIdKey]="rowIdKey"
-    [rows]="rows"
-    (action)="onAction($event)"
-    (onDblClick)="onDblClick($event)"
-    (onFilter)="onRequest()"
-    (onPage)="onRequest()"
-    (onPageSize)="onRequest()"
-    (onSort)="onRequest()"
-    (onSelect)="onSelect($event)"
-  ></app-grid2>
-</ng-container>
+  <div class="flex-item grow">
+    <ng-container
+      *ngIf="isUsingAGGrid; else simpleGrid"
+    >
+      <app-grid2
+        #grid
+        *ngIf="initialized"
+        [actions]="gridActions$ | async"
+        [columnIds]="columnIds"
+        [columns]="columnsDef"
+        [fullHeight]="fullHeight"
+        [ngClass]="ngClass"
+        [persistenceKey]="persistenceKey"
+        [rowCount]="rowCount"
+        [rowIdKey]="rowIdKey"
+        [rows]="rows"
+        (action)="onAction($event)"
+        (onDblClick)="onDblClick($event)"
+        (onFilter)="onRequest()"
+        (onPage)="onRequest()"
+        (onPageSize)="onRequest()"
+        (onSort)="onRequest()"
+        (onSelect)="onSelect($event)"
+      ></app-grid2>
+    </ng-container>
 
-<ng-template #simpleGrid>
-  <app-grid
-    #grid
-    [columns]="columns"
-    [columnTranslationKey]="columnTranslationKey"
-    [contextMenuOptions]="contextMenuOptions"
-    [rows]="rows"
-    [styles]="styles"
-    (action)="onSimpleGridAction($event)"
-    (onDblClick)="onDblClick($event)"
-    (onSelect)="onSelect($event)"
-  ></app-grid>
-</ng-template>
+    <ng-template #simpleGrid>
+      <app-grid
+        #grid
+        [columns]="columns"
+        [columnTranslationKey]="columnTranslationKey"
+        [contextMenuOptions]="contextMenuOptions"
+        [rows]="rows"
+        [styles]="styles"
+        (action)="onSimpleGridAction($event)"
+        (onDblClick)="onDblClick($event)"
+        (onSelect)="onSelect($event)"
+      ></app-grid>
+    </ng-template>
+  </div>
+</div>

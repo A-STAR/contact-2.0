@@ -32,7 +32,7 @@ import {
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 import { IMetadataAction, IMetadataActionPermissions, MetadataActionType } from '@app/core/metadata/metadata.interface';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ActionGridFilterService } from './filter/action-grid-filter.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
@@ -55,6 +55,7 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
   templateUrl: 'action-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height' },
   providers: [ ActionGridFilterService ]
 })
 export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
@@ -119,6 +120,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
           this.actions$.next(actions);
           this._columns = [ ...columns ];
           this._initialized = true;
+          this.initSearchBtn();
           this.cdRef.markForCheck();
         });
     }
@@ -261,6 +263,16 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       filters.addFilter(this.filter.filters);
     }
     return filters;
+  }
+
+  private initSearchBtn(): void {
+    if (this.titlebar && this.filter) {
+      this.titlebar.items.unshift({
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        enabled: of(true),
+        action: () => this.onRequest(),
+      });
+    }
   }
 
   private addPermissions(actions: IMetadataAction[], constants: ValueBag, permissions: ValueBag,
