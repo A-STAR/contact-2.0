@@ -1,13 +1,15 @@
 <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
-
   <app-tabview-tab [title]="tabs[0].title">
-    <app-dict></app-dict>
-    <app-hdivider></app-hdivider>
-    <app-terms></app-terms>
+    <div class="flex vertical">
+      <div class="flex-item grow">
+        <app-dict></app-dict>
+      </div>
+      <div class="flex-item grow">
+        <app-terms></app-terms>
+      </div>
+    </div>
   </app-tabview-tab>
-
   <app-tabview-tab [title]="tabs[1].title">
     <app-attribute-grid *ngIf="tabs[1].isInitialised"></app-attribute-grid>
   </app-tabview-tab>
-
 </app-tabview>
