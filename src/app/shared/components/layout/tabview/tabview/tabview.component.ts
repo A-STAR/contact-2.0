@@ -23,10 +23,11 @@ import { LayoutService } from '@app/layout/layout.service';
 import { TabViewTabComponent } from '../tab/tab.component';
 
 @Component({
-  selector: 'app-tabview',
-  templateUrl: 'tabview.component.html',
-  styleUrls: ['./tabview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
+  selector: 'app-tabview',
+  styleUrls: ['./tabview.component.scss'],
+  templateUrl: 'tabview.component.html',
 })
 
 export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, AfterViewInit {

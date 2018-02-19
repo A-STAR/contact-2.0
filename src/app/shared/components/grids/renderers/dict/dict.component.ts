@@ -31,7 +31,10 @@ export class DictRendererComponent implements ICellRendererAngularComp {
     return this.userDictionariesService
       .getDictionary(this.params['dictCode'])
       .pipe(
-        map(dict => dict[value] ? dict[value].name : value),
+        map(terms => {
+          const term = terms.find(t => t.code === value);
+          return term ? term.name : value;
+        }),
       );
   }
 }

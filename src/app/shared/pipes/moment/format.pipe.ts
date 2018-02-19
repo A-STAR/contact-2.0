@@ -24,6 +24,8 @@ export class MomentFormatPipe implements OnDestroy, PipeTransform {
   transform(value: moment.Moment | Date, format: string): string {
     const { currentLang, defaultLang } = this.translateService;
     const lang = currentLang || defaultLang;
-    return moment(value).locale(lang).format(format);
+    return value
+      ? moment(value).locale(lang).format(format)
+      : '';
   }
 }
