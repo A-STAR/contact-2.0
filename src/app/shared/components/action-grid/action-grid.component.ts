@@ -20,8 +20,7 @@ import { of } from 'rxjs/observable/of';
 
 import {
   ICloseAction,
-  IGridActionParams,
-  IGridActionPayload,
+  IGridAction,
 } from './action-grid.interface';
 import {
   IAGridAction,
@@ -89,7 +88,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private actions$ = new BehaviorSubject<any[]>(null);
 
   dialog: string;
-  dialogData: IGridActionParams;
+  dialogData: IGridAction;
   gridActions$: Observable<IMetadataAction[]>;
 
   constructor(
@@ -107,7 +106,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   ngOnInit(): void {
 
     if (this.metadataKey) {
-      this.permissionKey ? this.userPermissionsService.has(this.permissionKey) : of(true)
+      this.getGridPermission(this.permissionKey)
         .switchMap(isAllowed => {
           if (isAllowed) {
             return this.gridService.getMetadata(this.metadataKey, {});
@@ -124,18 +123,24 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         });
     }
 
-     this.gridActions$ = combineLatest(
+    this.gridActions$ = this.getGridActions();
+  }
+
+  getGridPermission(permissionKey?: string): Observable<boolean> {
+      return permissionKey ? this.userPermissionsService.has(permissionKey) : of(true);
+  }
+
+  getGridActions(): Observable<IMetadataAction[]> {
+    return combineLatest(
         this.actions$.pipe(filter(Boolean)),
         this.userConstantsService.bag(),
         this.userPermissionsService.bag(),
         this.entityAttributesService.getDictValueAttributes()
       )
-      .pipe(
-        map(([ actions, constants, permissions, entityPermissions ]) => {
-          return this.addPermissions(actions, constants, permissions, entityPermissions);
-        })
-      );
-  }
+      .pipe(map(([actions, constants, permissions, entityPermissions]) => {
+        return this.addPermissions(actions, constants, permissions, entityPermissions);
+      }));
+    }
 
   get selection(): T[] {
     return this.grid.selected as T[];
@@ -174,23 +179,29 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onAction(gridAction: IAGridAction): void {
-    // TODO(i.lobanov): move to service
     const { metadataAction } = gridAction;
     this.dialog = metadataAction.action;
     this.dialogData = {
       addOptions: metadataAction.addOptions,
-      payload: this.getActionPayload(metadataAction.type, gridAction),
+      payload: this.actionGridFilterService.getPayload(gridAction, {
+        selection: this.selection,
+        metadataKey: this.metadataKey,
+        filters: this.getFilters()
+      }),
       selection: this.actionGridFilterService.getGridSelection(gridAction, this.selection)
     };
     this.cdRef.markForCheck();
   }
 
   onSimpleGridAction(metadataAction: any): void {
-    // TODO(i.lobanov): move to service
     this.dialog = metadataAction.action;
     this.dialogData = {
       addOptions: metadataAction.addOptions,
-      payload: this.getActionPayload(metadataAction.type, metadataAction),
+      payload: this.actionGridFilterService.getPayload(metadataAction, {
+        selection: this.selection,
+        metadataKey: this.metadataKey,
+        filters: this.getFilters()
+      }),
       selection: this.actionGridFilterService.getGridSelection(metadataAction, this.selection)
     };
     this.cdRef.markForCheck();
@@ -242,45 +253,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   get columnsDef(): IAGridColumn[] {
     return this._columns || [];
-  }
-
-  private getActionPayload(payloadType: MetadataActionType, action: IAGridAction): IGridActionPayload {
-    // TODO(i.lobanov): move to service
-    switch (payloadType) {
-      case MetadataActionType.ALL:
-        return this.getActionFilterPayload(action);
-      case MetadataActionType.SINGLE:
-        return this.getActionSingleSelectionPayload(action);
-      case MetadataActionType.SELECTED:
-        return this.getActionSelectionPayload(action);
-      default:
-        return this.getActionSelectionPayload(action);
-    }
-  }
-
-  private getActionSelectionPayload(action: IAGridAction): IGridActionPayload {
-    return {
-      type: action.metadataAction.type,
-      data: this.actionGridFilterService.getSelection(action, this.selection)
-    };
-  }
-
-  private getActionSingleSelectionPayload(action: IAGridAction): IGridActionPayload {
-    return {
-      type: action.metadataAction.type,
-      data: this.actionGridFilterService.getSingleSelection(action, action.selection.node.data)
-    };
-  }
-
-  private getActionFilterPayload(action: IAGridAction): IGridActionPayload {
-    return {
-      type: action.metadataAction.type,
-      data: {
-        filtering: this.getGridFilters(),
-        gridName: this.metadataKey,
-        columnNames: action.metadataAction.params
-      }
-    };
   }
 
   private getGridFilters(): FilterObject {

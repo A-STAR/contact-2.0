@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
-import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IEntityGroup } from '../../../entity-group/entity-group.interface';
 
 import { EntityGroupService } from '../../entity-group.service';
@@ -12,7 +12,7 @@ import { EntityGroupService } from '../../entity-group.service';
 })
 export class EntityGroupAddComponent implements OnInit  {
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 

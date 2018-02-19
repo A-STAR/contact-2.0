@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 
-import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IOperator } from '../../../operator/operator.interface';
 import { IOperationResult } from '../../debt-responsible.interface';
 
@@ -13,7 +13,7 @@ import { DebtResponsibleService } from '../../debt-responsible.service';
 })
 export class DebtResponsibleSetComponent {
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 

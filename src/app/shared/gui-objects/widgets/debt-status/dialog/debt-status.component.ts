@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ICloseAction, IGridActionParams } from '../../../../../shared/components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../shared/components/action-grid/action-grid.interface';
 import { IDebtStatusDictionaries } from '../debt-status.interface';
 import { IDynamicFormControl, IDynamicFormSelectControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOperationResult } from '../../debt-responsible/debt-responsible.interface';
@@ -38,7 +38,7 @@ const label = makeKey('massOperations.debtStatus');
 export class DebtStatusComponent implements OnInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 

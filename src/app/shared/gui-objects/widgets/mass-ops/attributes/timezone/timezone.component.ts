@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter
 import { first } from 'rxjs/operators';
 
 import { ILookupTimeZone } from '../../../../../../core/lookup/lookup.interface';
-import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IGridColumn } from '../../../../../components/grid/grid.interface';
 
 import { AttributesService } from '../attributes.service';
@@ -15,7 +15,7 @@ import { GridService } from '../../../../../components/grid/grid.service';
 })
 export class TimezoneComponent implements OnInit {
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
   selectedTimeZone: ILookupTimeZone;

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
-import { ICloseAction, IGridActionParams } from '../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../components/action-grid/action-grid.interface';
 
 import { PaymentConfirmService } from '../payment-confirm.service';
 
@@ -10,7 +10,7 @@ import { PaymentConfirmService } from '../payment-confirm.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentConfirmDialogComponent implements OnInit {
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
 

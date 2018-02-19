@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-import { ICloseAction, IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 
@@ -12,7 +12,7 @@ import { ActionGridFilterService } from '@app/shared/components/action-grid/filt
   templateUrl: './debt-card-open-by-debt.component.html'
 })
 export class DebtCardOpenByDebtComponent extends DialogFunctions implements OnInit {
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;

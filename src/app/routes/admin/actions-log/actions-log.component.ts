@@ -3,20 +3,15 @@ import {
   Component, ViewChild, AfterViewInit
 } from '@angular/core';
 import * as moment from 'moment';
-import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
 import { IActionLog } from './actions-log.interface';
-import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
-import { ActionsLogService } from './actions-log.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
-
-import { timeToHourMinSec } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

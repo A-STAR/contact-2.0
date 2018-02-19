@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
+import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
@@ -17,7 +17,7 @@ const label = makeKey('massOperations.visitAdd');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VisitAddDialogComponent {
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<void>();
 

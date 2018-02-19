@@ -11,7 +11,7 @@ import {
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
 
-import { IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
+import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
 import { IOption, INamedValue } from '../../../../../core/converter/value-converter.interface';
 
@@ -35,7 +35,7 @@ import { addFormLabel, toOption } from '../../../../../core/utils';
 export class EmailComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<void>();
 

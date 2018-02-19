@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input } from '@angular/core';
 
-import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 
 import { PromiseResolveService } from '../../promise-resolve.service';
 
@@ -11,7 +11,7 @@ import { PromiseResolveService } from '../../promise-resolve.service';
 })
 export class PromiseConfirmDialogComponent  {
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 

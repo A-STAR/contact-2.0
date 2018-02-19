@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit, ChangeDetectorRef } from '@angular/core';
 
-import { ICloseAction, IGridActionParams } from '../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../components/action-grid/action-grid.interface';
 
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { OpenDebtCardService } from './debt-card-open.service';
@@ -14,7 +14,7 @@ import { DialogFunctions } from '../../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtCardOpenByDebtorComponent extends DialogFunctions implements OnInit {
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;

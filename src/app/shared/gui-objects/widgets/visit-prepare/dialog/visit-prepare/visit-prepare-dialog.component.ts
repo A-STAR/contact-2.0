@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
-import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IVisit, IOperationResult, IConfirmOperation } from '../../visit-prepare.interface';
 
 import { VisitPrepareService } from '../../visit-prepare.service';
@@ -14,7 +14,7 @@ import { DialogFunctions } from 'app/core/dialog';
 })
 export class VisitPrepareDialogComponent extends DialogFunctions implements OnInit {
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 

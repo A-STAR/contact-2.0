@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 
-import { ICloseAction, IGridActionParams } from '../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../components/action-grid/action-grid.interface';
 
 import { PaymentOperatorService } from '../payment-operator.service';
 
@@ -11,7 +11,7 @@ import { PaymentOperatorService } from '../payment-operator.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorConfirmDialogComponent  {
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 

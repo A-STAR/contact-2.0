@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import {
-  IGridActionFilterParams,
-  IGridActionParams,
+  IGridActionFilterSelection,
+  IGridAction,
   IGridActionPayload,
-  ISelectionIds,
+  IGridActionSelection,
+  IGridActionContext,
 } from '../action-grid.interface';
 import { IAGridAction } from '@app/shared/components/grid2/grid2.interface';
 import { MetadataActionType } from '@app/core/metadata/metadata.interface';
@@ -14,13 +15,19 @@ import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 @Injectable()
 export class ActionGridFilterService {
 
+  private actionPayloads = {
+    [MetadataActionType.ALL]: this.getFilterPayload,
+    [MetadataActionType.SELECTED]: this.getSelectionPayload,
+    [MetadataActionType.SINGLE]: this.getSingleSelectionPayload,
+  };
+
   constructor() { }
 
   buildRequest(actionData: IGridActionPayload): any {
     if (actionData.type === MetadataActionType.ALL) {
       return {
         ...actionData.data,
-        ...this.getFilters((actionData.data as IGridActionFilterParams).filtering)
+        ...this.getFilters((actionData.data as IGridActionFilterSelection).filtering)
       };
     }
 
@@ -32,6 +39,12 @@ export class ActionGridFilterService {
       ids: actionData.data
     };
   }
+
+  getPayload(action: IAGridAction, params?: IGridActionContext): IGridActionPayload {
+    return (this.actionPayloads[action.metadataAction.type]
+        || this.actionPayloads[MetadataActionType.SINGLE]).call(null, action, params);
+  }
+
   /**
    * Returns selection from grid filtered by config params
    * and without undefined and null values.
@@ -71,37 +84,59 @@ export class ActionGridFilterService {
     }, []);
   }
 
-  getSingleSelection(action: IAGridAction, selection: any): { [key: string]: any } {
-    return action.metadataAction.params.reduce((acc, param) => ({ ...acc, [param]: selection[param] }), {});
-  }
-
   getSelectionCount(actionData: IGridActionPayload): number | null {
-    return actionData.type === MetadataActionType.SELECTED ? (actionData as ISelectionIds).data.length : null;
+    return actionData.type === MetadataActionType.SELECTED ? (actionData.data as IGridActionSelection).length : null;
   }
 
-  getAddOptions(action: IGridActionParams, name: string): (number|string)[] {
+  getAddOptions(action: IGridAction, name: string): (number|string)[] {
     // TODO(d.maltsev): not optimized; better to convert to key: value object on initialization
     // TODO(i.lobanov): why store it that way in json config?
     const found = action.addOptions.find(option => option.name === name);
     return found ? found.value : null;
   }
 
-  getAddOption(action: IGridActionParams, name: string, index: number): number|string {
+  getAddOption(action: IGridAction, name: string, index: number): number|string {
     const options = this.getAddOptions(action, name);
     if (options && options.length > index) {
       return options[index];
     }
   }
 
-  isFilterAction(actionData: IGridActionPayload): boolean {
-    return actionData.type === MetadataActionType.ALL;
+  getSelectionPayload(action: IAGridAction, params: IGridActionContext): IGridActionPayload {
+    return {
+      type: action.metadataAction.type,
+      data: this.getSelection(action, params.selection)
+    };
   }
 
-  private getFilters(filters?: FilterObject): { filtering: FilterObject | null } {
+  getFilterPayload(action: IAGridAction, params: IGridActionContext): IGridActionPayload {
     return {
-      filtering: filters && (filters.hasFilter() || filters.hasValues()) ? filters : null
+      type: action.metadataAction.type,
+      data: {
+        filtering: this.getFilters(params.filters),
+        gridName: params.metadataKey,
+        columnNames: action.metadataAction.params
+      }
+    };
+  }
+
+  getSingleSelectionPayload(action: IAGridAction, params: IGridActionContext): IGridActionPayload {
+    return {
+      type: action.metadataAction.type,
+      data: this.getSingleSelection(action, action.selection.node.data)
     };
   }
 
 
+  isFilterAction(actionData: IGridActionPayload): boolean {
+    return actionData.type === MetadataActionType.ALL;
+  }
+
+  private getSingleSelection(action: IAGridAction, selection: any): any {
+    return action.metadataAction.params.reduce((acc, param) => ({ ...acc, [param]: selection[param] }), {});
+  }
+
+  private getFilters(filters?: FilterObject): FilterObject | null {
+    return filters && (filters.hasFilter() || filters.hasValues()) ? filters : null;
+  }
 }

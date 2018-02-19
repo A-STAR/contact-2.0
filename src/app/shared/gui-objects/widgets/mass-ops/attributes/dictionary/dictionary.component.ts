@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { zip } from 'rxjs/observable/zip';
 
 import { DictOperation } from '../attributes.interface';
-import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IGridColumn } from '../../../../../components/grid/grid.interface';
 import { IUserTerm } from '../../../../../../core/user/dictionaries/user-dictionaries.interface';
 
@@ -36,7 +36,7 @@ const labelKey = makeKey('widgets.mass');
 })
 export class DictionaryComponent implements OnInit, OnDestroy {
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
   @Input() actionName: string;
   @Output() close = new EventEmitter<ICloseAction>();
 

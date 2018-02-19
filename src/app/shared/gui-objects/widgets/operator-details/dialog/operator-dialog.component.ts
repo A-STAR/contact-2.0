@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
+import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IOperator } from '../operator-details.interface';
 
 import { OperatorDetailsService } from '../operator-details.service';
@@ -13,7 +13,7 @@ import { OperatorDetailsService } from '../operator-details.service';
 })
 export class OperatorDialogComponent implements OnInit {
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<null>();
 

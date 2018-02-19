@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
+import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IEntityGroup } from '../entity-group/entity-group.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
@@ -41,7 +41,7 @@ export class EntityGroupService extends AbstractActionService {
       .catch(this.notificationsService.fetchError().entity('entities.entityGroup.gen.plural').dispatchCallback());
   }
 
-  addToGroup(actionParams: IGridActionParams, groupId: number): Observable<any> {
+  addToGroup(actionParams: IGridAction, groupId: number): Observable<any> {
     return this.dataService
       .create(`/mass/entityType/{entityTypeId}/groups/{groupId}/add`,
         {
@@ -62,7 +62,7 @@ export class EntityGroupService extends AbstractActionService {
       .catch(this.notificationsService.updateError().entity('entities.entityGroup.gen.singular').dispatchCallback());
   }
 
-  getEntityTypeId(actionParams: IGridActionParams): number {
+  getEntityTypeId(actionParams: IGridAction): number {
     return this.actionGridFilterService.getAddOption(actionParams, 'entityTypeId', 0) as number;
   }
 }

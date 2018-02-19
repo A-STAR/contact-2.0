@@ -2,43 +2,45 @@ import { MetadataActionType } from '@app/core/metadata/metadata.interface';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
-export interface IGridActionFilterParams {
+export interface IGridActionPayload {
+  data: IGridActionData;
+  type: MetadataActionType;
+}
+
+export interface IGridActionFilterSelection {
   filtering: FilterObject;
   gridName: string;
   columnNames: string[];
 }
 
-export interface ISingleSelection {
-  data: { [key: string]: any };
-  type: MetadataActionType;
+export interface IGridActionSingleSelection {
+  [key: string]: any;
 }
+
+export type IGridActionSelection = number[][];
 
 export interface IAddOption {
   name: string;
   value: (string | number)[];
 }
 
+export type IGridActionData = IGridActionSingleSelection | IGridActionSelection | IGridActionFilterSelection;
+
 export interface ICloseAction {
   refresh?: boolean;
   deselectAll?: boolean;
 }
 
-export interface ISelectionIds {
-  data: number[][];
-  type: MetadataActionType;
+export interface IGridActionContext {
+  metadataKey?: string;
+  filters?: FilterObject;
+  selection?: any[];
 }
 
-export interface ISelectionFilter {
-  data: IGridActionFilterParams;
-  type: MetadataActionType;
-}
-
-export type IGridActionPayload = ISelectionIds | ISelectionFilter | ISingleSelection;
-
-export interface IGridActionParams {
+export interface IGridAction {
   addOptions: IAddOption[];
   payload: IGridActionPayload;
   // this is initial selection, filtered by params,
-  // but which can have undefined or null values
+  // but it can contain undefined or null values
   selection?: number[][];
 }

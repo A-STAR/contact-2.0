@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { ICloseAction, IGridActionParams } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IGridColumn } from '../../../../../components/grid/grid.interface';
 import { ILookupPortfolio } from '../../../../../../core/lookup/lookup.interface';
 
@@ -14,7 +14,7 @@ import { GridService } from '../../../../../components/grid/grid.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfolioComponent implements OnInit {
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
   selectedPortfolio: ILookupPortfolio;

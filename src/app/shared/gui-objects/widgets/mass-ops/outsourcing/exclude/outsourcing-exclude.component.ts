@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { ICloseAction, IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { OutsourcingService } from '../outsourcing.service';
 
@@ -10,7 +10,7 @@ import { OutsourcingService } from '../outsourcing.service';
 })
 export class OutsourcingExcludeComponent {
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
   constructor(

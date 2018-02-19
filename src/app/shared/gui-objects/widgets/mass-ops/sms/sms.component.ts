@@ -12,7 +12,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
 
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
+import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IOption, INamedValue } from '../../../../../core/converter/value-converter.interface';
 
 import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
@@ -33,7 +33,7 @@ import { addFormLabel, toOption } from '../../../../../core/utils';
   templateUrl: 'sms.component.html'
 })
 export class SmsComponent implements OnInit {
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { ICloseAction, IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IFilterPortfolio } from '@app/core/filters/grid-filters.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 
@@ -16,7 +16,7 @@ import { OutsourcingService } from '../outsourcing.service';
 })
 export class OutsourcingSendComponent implements OnInit {
 
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
   selectedPortfolio: IFilterPortfolio;

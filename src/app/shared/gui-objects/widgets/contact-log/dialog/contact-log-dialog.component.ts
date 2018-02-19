@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
-import { IGridActionParams } from '@app/shared/components/action-grid/action-grid.interface';
+import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 
@@ -10,7 +10,7 @@ import { ActionGridFilterService } from '@app/shared/components/action-grid/filt
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContactLogDialogComponent implements OnInit {
-  @Input() actionData: IGridActionParams;
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<void>();
 
   personId: number;
