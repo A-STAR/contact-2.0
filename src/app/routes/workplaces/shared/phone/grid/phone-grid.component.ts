@@ -288,9 +288,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   onDoubleClick(phone: IPhone): void {
     this.dblClick.emit(phone);
-    }
+  }
 
-  onSelect(phone: IPhone): void {
+  onSelect(phones: IPhone[]): void {
+    const phone = phones[0];
     this.select.emit(phone);
     this.selectedPhoneId$.next(phone.id);
   }
