@@ -13,7 +13,6 @@ import { DebtComponentModule } from './debt/component/debt-component.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
-import { DocumentModule } from './documents/document.module';
 import { EmailModule } from './email/email.module';
 import { EmploymentModule } from './employment/employment.module';
 import { EntityGroupModule } from './entity-group/entity-group.module';
@@ -43,7 +42,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     DebtResponsibleModule,
     DebtOpenIncomingCallModule,
     DebtorActionLogModule,
-    DocumentModule,
     EmailModule,
     EmploymentModule,
     EntityAttributeModule,
@@ -72,7 +70,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     DebtOpenIncomingCallModule,
     DebtResponsibleModule,
     DebtorActionLogModule,
-    DocumentModule,
     EmailModule,
     EmploymentModule,
     EntityAttributeModule,
