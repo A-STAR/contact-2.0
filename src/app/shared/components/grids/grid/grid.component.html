@@ -5,14 +5,16 @@
       class="ag-theme-material"
       style="width: 100%; height: 100%;"
       [columnDefs]="colDefs"
+      [getRowClass]="rowClassCallback"
       [gridOptions]="gridOptions"
       [rowData]="rows"
+      [rowSelection]="selectionType"
       (gridReady)="onGridReady($event)"
     ></ag-grid-angular>
   </div>
 
   <app-grid-toolbar
-    *ngIf="gridApi"
+    *ngIf="showToolbar && gridApi"
     class="flex-item"
     [gridApi]="gridApi"
   ></app-grid-toolbar>
