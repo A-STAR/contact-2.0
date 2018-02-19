@@ -172,8 +172,8 @@
 <div class="flex vertical">
   <div class="flex-item">
     <app-titlebar
-      *ngIf="titlebar"
-      [titlebar]="titlebar"
+      *ngIf="titlebar$ | async"
+      [titlebar]="titlebar$ | async"
     ></app-titlebar>
 
     <app-action-grid-filter

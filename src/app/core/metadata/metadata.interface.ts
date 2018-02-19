@@ -1,5 +1,6 @@
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
+import { ITitlebarItem, ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
 
 export type MetadataAggregateType = 'sum' | 'average' | 'max' | 'min';
 
@@ -69,11 +70,23 @@ export interface IMetadataResponse {
   baseFilters: IMetadataFilter[];
 }
 
+export interface IMetadataTitlebarItem extends ITitlebarElement {
+  name: string;
+  params?: any[];
+  permissions?: string[];
+}
+
+export interface IMetadataTitlebar {
+  items?: IMetadataTitlebarItem[];
+  title?: string;
+}
+
 export interface IMetadata {
   actions: IMetadataAction[];
   columns: Array<IMetadataColumn>;
   status: MetadataListStatusEnum;
   filters: IMetadataFilter[];
+  titlebar?: IMetadataTitlebar;
 }
 
 export interface IMetadataState {

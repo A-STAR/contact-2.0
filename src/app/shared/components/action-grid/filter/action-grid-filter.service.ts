@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import {
   IGridActionFilterSelection,
@@ -20,6 +21,8 @@ export class ActionGridFilterService {
     [MetadataActionType.SELECTED]: this.getSelectionPayload,
     [MetadataActionType.SINGLE]: this.getSingleSelectionPayload,
   };
+  // notify subscribers, that grid has filters
+  hasFilter$ = new BehaviorSubject<boolean>(null);
 
   constructor() { }
 

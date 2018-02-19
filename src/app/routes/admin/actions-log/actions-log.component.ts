@@ -30,16 +30,21 @@ export class ActionsLogComponent implements AfterViewInit {
   rowIdKey = 'id';
 
   data: any;
-  titlebar: ITitlebar = {
-    title: 'actionsLog.title',
-    items: [
-      {
-        type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
-        enabled: of(true),
-        action: () => this.doExport(),
-      },
-    ],
-  };
+  // titlebar: ITitlebar = {
+  //   title: 'actionsLog.title',
+  //   items: [
+  //     {
+  //       type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+  //       enabled: of(true),
+  //       action: () => this.onRequest(),
+  //     },
+  //     {
+  //       type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
+  //       enabled: of(true),
+  //       action: () => this.doExport(),
+  //     },
+  //   ],
+  // };
 
   constructor(
     private actionsLogService: ActionsLogService,

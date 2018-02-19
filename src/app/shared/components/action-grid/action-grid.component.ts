@@ -30,7 +30,12 @@ import {
 } from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
-import { IMetadataAction, IMetadataActionPermissions, MetadataActionType } from '@app/core/metadata/metadata.interface';
+import {
+  IMetadataAction,
+  IMetadataActionPermissions,
+  MetadataActionType,
+  IMetadataTitlebar,
+} from '@app/core/metadata/metadata.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ActionGridFilterService } from './filter/action-grid-filter.service';
@@ -63,6 +68,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() metadataKey: string;
   @Input() ngClass: string;
   @Input() persistenceKey: string;
+  /**
+   * Will be deprecated
+   * @deprecated
+   */
   @Input() permissionKey: string;
   @Input() rowCount: number;
   @Input() rowIdKey: string;
@@ -71,7 +80,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() columns: IGridColumn[];
   @Input() contextMenuOptions: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
-  @Input() titlebar: ITitlebar;
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
@@ -85,10 +93,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private _initialized = false;
 
   private actions$ = new BehaviorSubject<any[]>(null);
+  private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
 
   dialog: string;
   dialogData: IGridAction;
   gridActions$: Observable<IMetadataAction[]>;
+  titlebar$: Observable<ITitlebar>;
 
   constructor(
     private actionGridFilterService: ActionGridFilterService,
@@ -114,8 +124,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
           return never();
         })
         .pipe(first())
-        .subscribe(({ actions, columns }) => {
+        .subscribe(({ actions, columns, titlebar }) => {
           this.actions$.next(actions);
+          this.titlebarConfig$.next(titlebar);
           this._columns = [ ...columns ];
           this._initialized = true;
           this.cdRef.markForCheck();
@@ -123,6 +134,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     }
 
     this.gridActions$ = this.getGridActions();
+    this.titlebar$ = this.getGridTitlebar();
   }
 
   getGridPermission(permissionKey?: string): Observable<boolean> {
@@ -139,7 +151,17 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       .pipe(map(([actions, constants, permissions, entityPermissions]) => {
         return this.addPermissions(actions, constants, permissions, entityPermissions);
       }));
-    }
+  }
+
+  getGridTitlebar(): Observable<ITitlebar> {
+    return combineLatest(
+      this.titlebarConfig$.pipe(filter(Boolean)),
+      this.actionGridFilterService.hasFilter$.pipe(filter(Boolean)),
+    )
+    .pipe(map(([config, hasFilters]) => {
+      return hasFilters ? this.buildTitlebar(config) : null;
+    }));
+  }
 
   get selection(): T[] {
     return this.grid.selected as T[];
@@ -365,6 +387,31 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         permissions.has('DEBT_OUTSOURCING_EXCLUDE') : selection.length && permissions.has('DEBT_OUTSOURCING_EXCLUDE'),
       debtOutsourcingReturn: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.has('DEBT_OUTSOURCING_RETURN') : selection.length && permissions.has('DEBT_OUTSOURCING_RETURN'),
+    };
+  }
+
+  private buildTitlebar(config: IMetadataTitlebar): ITitlebar {
+    const titlebarItems = {
+      refresh: (permissions: string[]) => ({
+        type: TitlebarItemTypeEnum.BUTTON_REFRESH,
+        action: () => this.onRequest(),
+        enabled: permissions ? this.userPermissionsService.hasAll(permissions) : of(true)
+      }),
+      search: (permissions: string[]) => ({
+        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
+        action: () => this.onRequest(),
+        enabled: permissions ? this.userPermissionsService.hasAll(permissions) : of(true)
+      }),
+      exportExcel: (permissions: string[]) => ({
+        type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
+        action: () => alert('In development!'),
+        enabled: permissions ? this.userPermissionsService.hasAll(permissions) : of(true)
+      }),
+
+    };
+    return {
+      title: config.title,
+      items: config.items.map(item => titlebarItems[item.name](item.permissions))
     };
   }
 
