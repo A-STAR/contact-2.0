@@ -27,9 +27,10 @@ import { GridComponent } from '@app/shared/components/grid/grid.component';
 import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
+  host: { class: 'full-height' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-campaigns',
   templateUrl: './campaigns.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CampaignsComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;

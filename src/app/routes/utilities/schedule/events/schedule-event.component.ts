@@ -27,9 +27,10 @@ import { DialogFunctions } from '@app/core/dialog';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-schedule-events',
   templateUrl: './schedule-event.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScheduleEventComponent extends DialogFunctions
   implements OnInit, OnDestroy {
