@@ -148,52 +148,34 @@
     </label>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'datetimepicker'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
-    <app-datetimepicker
-      [formControlName]="control.controlName"
-      [displaySeconds]="control.displaySeconds"
-      [minDateTime]="control.minDateTime"
-      [maxDateTime]="control.maxDateTime"
-      [required]="control.required"
-    ></app-datetimepicker>
-  </ng-container>
+  <app-datetimepicker
+    *ngSwitchCase="'datetimepicker'"
+    [formControlName]="control.controlName"
+    [displaySeconds]="control.displaySeconds"
+    [label]="control.label"
+    [minDateTime]="control.minDateTime"
+    [maxDateTime]="control.maxDateTime"
+    [required]="control.required"
+  ></app-datetimepicker>
 
-  <ng-container *ngSwitchCase="'datepicker'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
-    <app-datepicker
-      [formControlName]="control.controlName"
-      [minDate]="control.minDate"
-      [maxDate]="control.maxDate"
-      [required]="control.required"
-    ></app-datepicker>
-  </ng-container>
+  <app-datepicker
+    *ngSwitchCase="'datepicker'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [minDate]="control.minDate"
+    [maxDate]="control.maxDate"
+    [required]="control.required"
+  ></app-datepicker>
 
-  <ng-container *ngSwitchCase="'timepicker'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
-    <app-timepicker
-      [formControlName]="control.controlName"
-      [displaySeconds]="control.displaySeconds"
-      [minTime]="control.minTime"
-      [maxTime]="control.maxTime"
-      [required]="control.required"
-    ></app-timepicker>
-  </ng-container>
+  <app-timepicker
+    *ngSwitchCase="'timepicker'"
+    [formControlName]="control.controlName"
+    [displaySeconds]="control.displaySeconds"
+    [label]="control.label"
+    [minTime]="control.minTime"
+    [maxTime]="control.maxTime"
+    [required]="control.required"
+  ></app-timepicker>
 
   <ng-container *ngSwitchCase="'image'">
     <label>

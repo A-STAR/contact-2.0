@@ -1,10 +1,13 @@
 <div appDropdown [disabled]="disabled" [fitWidthToContent]="true" style="position: relative;">
   <div #dropdownParent>
     <app-datetime-input
-      [format]="dateTimeFormat"
       [disabled]="disabled"
-      [ngModel]="value"
+      [format]="dateTimeFormat"
+      [label]="label"
       [minDateTime]="minDateTime"
+      [maxDateTime]="maxDateTime"
+      [ngModel]="value"
+      [required]="required"
       (ngModelChange)="onChange($event)"
     ></app-datetime-input>
   </div>
@@ -17,13 +20,15 @@
         [minDate]="minDateTime"
         [maxDate]="maxDateTime"
         [ngModel]="tempValue"
-        (ngModelChange)="onDateChange($event)"></app-date>
+        (ngModelChange)="onDateChange($event)"
+      ></app-date>
       <app-time
         [minTime]="minDateTime"
         [maxTime]="maxDateTime"
         [ngModel]="tempValue"
         [displaySeconds]="displaySeconds"
-        (ngModelChange)="onTimeChange($event)"></app-time>
+        (ngModelChange)="onTimeChange($event)"
+      ></app-time>
       <footer>
         <span (click)="setCurrentTime()">{{ 'default.buttons.now' | translate }}</span>
         <span (click)="onOkClick()">{{ 'default.buttons.ok' | translate }}</span>
