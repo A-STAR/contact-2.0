@@ -365,12 +365,12 @@
 
   <ng-container *ngSwitchCase="'multilanguage'">
     <app-multilanguage-input
-      [disabled]="control.disabled"
+      [controlDisabled]="control.disabled"
       [formControlName]="control.controlName"
       [label]="control.label"
       [langOptions]="control.langOptions"
-      [placeholderKey]="control.placeholder"
-      [required]="control.required"
+      [placeholder]="control.placeholder"
+      [controlRequired]="control.required"
     ></app-multilanguage-input>
   </ng-container>
 

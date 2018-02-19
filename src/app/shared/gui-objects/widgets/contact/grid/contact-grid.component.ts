@@ -58,13 +58,10 @@ export class ContactGridComponent implements OnInit, OnDestroy {
 
   columns: Array<IGridColumn> = [
     { prop: 'fullName' },
-    { prop: 'birthDate', maxWidth: 110, renderer: 'dateRenderer' },
-    { prop: 'birthPlace' },
+    { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
     { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
-    { prop: 'familyStatusCode', dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS },
-    { prop: 'educationCode', dictCode: UserDictionariesService.DICTIONARY_EDUCATION },
-    { prop: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
     { prop: 'comment' },
+    { prop: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
   ];
 
   contacts: Array<IContact> = [];

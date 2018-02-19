@@ -14,17 +14,17 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IDocument } from '../document.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { DocumentService } from '../document.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DownloaderComponent } from '../../../../components/downloader/downloader.component';
+import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 
-import { combineLatestAnd, combineLatestOr } from '../../../../../core/utils/helpers';
+import { combineLatestOr, combineLatestAnd } from '@app/core/utils';
 
 @Component({
   selector: 'app-document-grid',

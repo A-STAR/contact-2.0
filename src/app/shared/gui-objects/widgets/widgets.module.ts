@@ -13,11 +13,8 @@ import { DebtComponentModule } from './debt/component/debt-component.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
-import { DocumentModule } from './documents/document.module';
 import { EmploymentModule } from './employment/employment.module';
 import { EntityGroupModule } from './entity-group/entity-group.module';
-import { GuaranteeModule } from './guarantee/guarantee.module';
-import { GuarantorModule } from './guarantor/guarantor.module';
 import { IdentityModule } from './identity/identity.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.module';
@@ -44,12 +41,9 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     DebtResponsibleModule,
     DebtOpenIncomingCallModule,
     DebtorActionLogModule,
-    DocumentModule,
     EmploymentModule,
     EntityAttributeModule,
     EntityGroupModule,
-    GuaranteeModule,
-    GuarantorModule,
     IdentityModule,
     MassOpsModule,
     NextCallDateSetModule,
@@ -74,12 +68,9 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     DebtOpenIncomingCallModule,
     DebtResponsibleModule,
     DebtorActionLogModule,
-    DocumentModule,
     EmploymentModule,
     EntityAttributeModule,
     EntityGroupModule,
-    GuaranteeModule,
-    GuarantorModule,
     IdentityModule,
     MassOpsModule,
     NextCallDateSetModule,

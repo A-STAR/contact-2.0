@@ -1,6 +1,6 @@
 @import '../../../../styles/app/variables.scss';
 
-:host > ul {
+.layout-tabview {
   display: flex;
   font-size: 0;
   position: relative;
@@ -15,7 +15,7 @@
   }
 }
 
-:host > ul > li {
+.layout-tabview > li {
   flex-shrink: 0;
   display: inline-block;
   padding: 0 16px;

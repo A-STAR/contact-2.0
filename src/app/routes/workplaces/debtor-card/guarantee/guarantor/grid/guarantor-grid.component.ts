@@ -5,20 +5,20 @@ import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGuarantor } from '../../guarantee/guarantee.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { IGuarantor } from '../../guarantee.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 
-import { GuarantorService } from '../../guarantor/guarantor.service';
-import { GridService } from '../../../../components/grid/grid.service';
-import { NotificationsService } from '../../../../../core/notifications/notifications.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { GuarantorService } from '../guarantor.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
-import { GridComponent } from '../../../../components/grid/grid.component';
+import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { parseStringValueAttrs } from '../../../../../core/utils';
+import { DialogFunctions } from '@app/core/dialog';
+import { parseStringValueAttrs } from '@app/core/utils';
 
 @Component({
   selector: 'app-guarantor-grid',

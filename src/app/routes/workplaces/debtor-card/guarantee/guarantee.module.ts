@@ -8,9 +8,9 @@ import { GuaranteeService } from './guarantee.service';
 
 @NgModule({
   imports: [
+    CommonModule,
     GuaranteeCardModule,
     GuaranteeGridModule,
-    CommonModule,
   ],
   exports: [
     GuaranteeCardModule,
@@ -20,4 +20,4 @@ import { GuaranteeService } from './guarantee.service';
     GuaranteeService,
   ]
 })
-export class GuaranteeModule { }
+export class DebtorGuaranteeModule { }

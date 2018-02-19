@@ -1,3 +1,8 @@
+export enum IGridSelectionType {
+  SINGLE = 'single',
+  MULTIPLE = 'multiple',
+}
+
 export enum IGridFilterType {
   TEXT,
   NUMBER,
