@@ -21,4 +21,5 @@ export interface IGridColumn<T> {
   lookupKey?: string;
   minWidth?: number;
   maxWidth?: number;
+  renderer?: any;
 }

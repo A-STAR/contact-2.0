@@ -31,7 +31,7 @@ import { UserTemplatesService } from '@app/core/user/templates/user-templates.se
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { CheckboxCellRendererComponent } from '@app/shared/components/grids/renderers/checkbox/checkbox.component';
+import { CheckboxRendererComponent } from '@app/shared/components/grids/renderers/checkbox/checkbox.component';
 
 import { flatten, isEmpty, makeKey, range, TYPE_CODES, valuesToOptions } from '@app/core/utils';
 
@@ -67,8 +67,8 @@ export class ContactPropertyTreeEditComponent implements OnInit {
   columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
     { dataType: TYPE_CODES.STRING, name: 'code', isDataPath: true },
     { dataType: TYPE_CODES.STRING, name: 'name' },
-    { dataType: TYPE_CODES.BOOLEAN, name: 'isDisplayed', cellRendererFramework: CheckboxCellRendererComponent },
-    { dataType: TYPE_CODES.BOOLEAN, name: 'isMandatory', cellRendererFramework: CheckboxCellRendererComponent },
+    { dataType: TYPE_CODES.BOOLEAN, name: 'isDisplayed', cellRendererFramework: CheckboxRendererComponent },
+    { dataType: TYPE_CODES.BOOLEAN, name: 'isMandatory', cellRendererFramework: CheckboxRendererComponent },
   ].map(col => ({ ...col, label: label(col.name)}));
 
   private attributeTypesChanged = false;

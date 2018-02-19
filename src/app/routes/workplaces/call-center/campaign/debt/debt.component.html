@@ -1,1 +1,7 @@
-<app-view-form *ngIf="controls" [controls]="controls" [data]="campaignDebt$ | async"></app-view-form>
+<app-titlebar [titlebar]="titlebar"></app-titlebar>
+
+<app-view-form
+  *ngIf="controls"
+  [controls]="controls"
+  [data]="campaignDebt$ | async"
+></app-view-form>

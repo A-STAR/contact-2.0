@@ -3,8 +3,8 @@
   <div>
     <label>
       <span class="form-label">
-        <!-- TODO(d.maltsev): i18n -->
-        Дата следующего звонка <b *ngIf="isNextCallDateRequired$ | async" class="text-danger">*</b>
+        {{ 'routes.workplaces.shared.contactRegistration.edit.form.nextCall.form.nextCall' | translate }}
+        <b *ngIf="isNextCallDateRequired$ | async" class="text-danger">*</b>
       </span>
     </label>
     <app-datetimepicker

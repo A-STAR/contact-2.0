@@ -32,7 +32,6 @@ import { PledgorPropertyModule } from './pledgor-property/pledgor-property.modul
 import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
 import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
-import { PropertyModule } from './property/property.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
@@ -69,7 +68,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PortfolioLogModule,
     PromiseModule,
     PromiseResolveModule,
-    PropertyModule,
     VisitPrepareModule,
   ],
   exports: [
@@ -104,7 +102,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PortfolioLogModule,
     PromiseModule,
     PromiseResolveModule,
-    PropertyModule,
     VisitPrepareModule,
   ],
   declarations: []

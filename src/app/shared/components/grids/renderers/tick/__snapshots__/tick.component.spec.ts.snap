@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TickRendererComponent should render tick renderer with false value 1`] = `
+<div
+  id="root0"
+  ng-version="5.2.4"
+>
+  
+    
+  
+  
+  
+</div>
+`;
+
+exports[`TickRendererComponent should render tick renderer with true value 1`] = `
+<div
+  id="root1"
+  ng-version="5.2.4"
+>
+  
+    
+  
+  <div
+    class="text-center"
+  >
+    
+      
+    <i
+      class="icon co-checkbox-mark"
+      style="vertical-align: middle;"
+    />
+    
+    
+  </div>
+  
+  
+</div>
+`;

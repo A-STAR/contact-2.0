@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid/main';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { Observable } from 'rxjs/Observable';
@@ -7,8 +7,9 @@ import { map } from 'rxjs/operators';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Component({
-    selector: 'app-dict-cell-renderer',
-    template: `{{ value$ | async }}`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-grid-dict-renderer',
+  template: `{{ value$ | async }}`,
 })
 export class DictRendererComponent implements ICellRendererAngularComp {
   private params: ICellRendererParams;
