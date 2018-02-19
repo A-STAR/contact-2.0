@@ -60,7 +60,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
           { label: label('expiryDate'), controlName: 'expiryDate', type: 'datepicker', },
           { label: label('citizenship'), controlName: 'citizenship', type: 'text', },
           { label: label('comment'), controlName: 'comment', type: 'textarea', },
-          { label: label('isMain'), controlName: 'isMain', type: 'checkbox', required: true },
+          { label: label('isMain'), controlName: 'isMain', type: 'checkbox' },
         ] as IDynamicFormControl[])
         .map(control => canEdit ? control : { ...control, disabled: true });
       this.identity = identity;

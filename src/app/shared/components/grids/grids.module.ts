@@ -15,9 +15,10 @@ import { GridsService } from './grids.service';
 import { SimpleGridComponent } from './grid/grid.component';
 
 // Renderers
-import { CheckboxCellRendererComponent } from './renderers/checkbox/checkbox.component';
+import { CheckboxRendererComponent } from './renderers/checkbox/checkbox.component';
 import { DictRendererComponent } from './renderers/dict/dict.component';
 import { LookupRendererComponent } from './renderers/lookup/lookup.component';
+import { TickRendererComponent } from './renderers/tick/tick.component';
 
 // Misc Components
 import { GridToolbarComponent } from './toolbar/toolbar.component';
@@ -25,9 +26,10 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
 @NgModule({
   imports: [
     AgGridModule.withComponents([
-      CheckboxCellRendererComponent,
+      CheckboxRendererComponent,
       DictRendererComponent,
       LookupRendererComponent,
+      TickRendererComponent,
     ]),
     ButtonModule,
     CheckModule,
@@ -37,19 +39,20 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
     TranslateModule,
   ],
   exports: [
-    CheckboxCellRendererComponent,
+    CheckboxRendererComponent,
     SimpleGridComponent,
   ],
   declarations: [
-    CheckboxCellRendererComponent,
+    CheckboxRendererComponent,
     DictRendererComponent,
     GridToolbarComponent,
     LookupRendererComponent,
     SimpleGridComponent,
+    TickRendererComponent,
   ],
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
   entryComponents: [
-    CheckboxCellRendererComponent,
+    CheckboxRendererComponent,
   ],
   providers: [
     GridsService,

@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { InfoDialogModule } from '../shared/components/dialog/info/info-dialog.module';
 import { SharedModule } from '../shared/shared.module';
 
+import { LayoutService } from './layout.service';
+
 import { AccountMenuComponent } from './header/side-menu/account-menu/account-menu.component';
 import { HeaderComponent } from './header/header.component';
 import { LayoutComponent } from './layout.component';
@@ -32,6 +34,9 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     LayoutComponent,
     NotificationsComponent,
     SidebarComponent,
+  ],
+  providers: [
+    LayoutService
   ]
 })
 export class LayoutModule {}

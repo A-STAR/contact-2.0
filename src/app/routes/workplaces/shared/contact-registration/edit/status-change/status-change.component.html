@@ -2,8 +2,8 @@
   <div>
     <label>
       <span class="form-label">
-        <!-- TODO(d.maltsev): i18n -->
-        Причина перевода в пользовательский статус <b *ngIf="isChangeReasonRequired$ | async" class="text-danger">*</b>
+        {{ 'routes.workplaces.shared.contactRegistration.edit.form.statusChange.form.statusChange' | translate }}
+        <b *ngIf="isChangeReasonRequired$ | async" class="text-danger">*</b>
       </span>
       <!-- Filter by terms whose parent is debtStatusCode -->
       <app-select-wrapper

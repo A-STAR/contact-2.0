@@ -4,15 +4,16 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
 import { GroupGridModule } from './grid/group-grid.module';
+import { GroupEventsModule } from './events/group-events.module';
 
 import { GroupsService } from './groups.service';
 
-import { GroupGridComponent } from './grid/group-grid.component';
+import { GroupsComponent } from './groups.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: GroupGridComponent,
+    component: GroupsComponent,
     data: {
       reuse: true,
     },
@@ -23,8 +24,12 @@ const routes: Routes = [
   imports: [
     CommonModule,
     GroupGridModule,
+    GroupEventsModule,
     RouterModule.forChild(routes),
     SharedModule
+  ],
+  declarations: [
+    GroupsComponent
   ],
   providers: [
     GroupsService,

@@ -1,1 +1,5 @@
-<input type="checkbox" [disabled]="disabled" (change)="onChange()"/>
+<label>
+  <input type="checkbox" [disabled]="disabled" (change)="onChange()"/>
+  <span [ngClass]="{ disabled: disabled, checked: checked }"></span>
+  {{ label | translate }}
+</label>

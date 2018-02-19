@@ -21,7 +21,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     { prop: 'debtId', minWidth: 100 },
     { prop: 'debtorId', minWidth: 100 },
     { prop: 'fullName', minWidth: 150 },
-    { prop: 'contact', minWidth: 100 },
+    { prop: 'contract', minWidth: 100 },
     { prop: 'docNumber', minWidth: 150 },
     { prop: 'personRole', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
     { prop: 'personId', minWidth: 100 },

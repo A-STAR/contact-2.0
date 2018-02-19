@@ -1,14 +1,13 @@
 <div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
   <div formGroupName="phone">
-    <!-- TODO(d.maltsev): i18n -->
-    <h3>Ввод нового телефона</h3>
+    <h3>{{ 'routes.workplaces.shared.contactRegistration.edit.form.phone.title' | translate }}</h3>
 
     <!-- Phone Type -->
     <div>
       <label>
         <span class="form-label">
-          <!-- TODO(d.maltsev): i18n -->
-          Тип <b class="text-danger">*</b>
+          {{ 'routes.workplaces.shared.contactRegistration.edit.form.phone.form.type' | translate }}
+          <b class="text-danger">*</b>
         </span>
         <app-select-wrapper
           formControlName="typeCode"
@@ -22,8 +21,8 @@
     <div>
       <label>
         <span class="form-label">
-          <!-- TODO(d.maltsev): i18n -->
-          Номер <b class="text-danger">*</b>
+          {{ 'routes.workplaces.shared.contactRegistration.edit.form.phone.form.number' | translate }}
+          <b class="text-danger">*</b>
         </span>
         <!-- TODO(d.maltsev): double check form control name -->
         <input type="text" class="form-control" formControlName="phone"/>
@@ -33,22 +32,20 @@
     <!-- Phone Auto SMS -->
     <div>
       <div class="checkbox mt0 mb0">
-        <label>
-          <app-checkbox formControlName="stopAutoSms"></app-checkbox>
-          <!-- TODO(d.maltsev): i18n -->
-          Не отправлять автоматические SMS
-        </label>
+        <app-checkbox
+          formControlName="stopAutoSms"
+          label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.stopAutoSms"
+        ></app-checkbox>
       </div>
     </div>
 
     <!-- Phone Auto Info -->
     <div>
       <div class="checkbox mt0 mb0">
-        <label>
-            <app-checkbox formControlName="stopAutoInfo"></app-checkbox>
-          <!-- TODO(d.maltsev): i18n -->
-          Запретить голосовое информирование
-        </label>
+        <app-checkbox
+          formControlName="stopAutoInfo"
+          label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.stopAutoInfo"
+        ></app-checkbox>
       </div>
     </div>
 
@@ -56,8 +53,7 @@
     <div>
       <label>
         <span class="form-label">
-          <!-- TODO(d.maltsev): i18n -->
-          Комментарий
+          {{ 'routes.workplaces.shared.contactRegistration.edit.form.phone.form.comment' | translate }}
         </span>
         <textarea
           class="form-control"

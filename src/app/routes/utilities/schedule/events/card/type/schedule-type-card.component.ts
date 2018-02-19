@@ -29,6 +29,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   @ViewChild('addParams') addParamsForm:  DynamicFormComponent;
   @ViewChild('groupGrid') groupGrid: GridComponent;
 
+  @Input() groupId: number;
   @Input() eventId: number;
   @Input() type: IScheduleType;
 
@@ -93,6 +94,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       gridLabelGetter: row => row.name || row.id,
       gridValueGetter: row => row.id,
       required: true,
+      display: true
     },
     inactiveReasonCode: { controlName: 'inactiveReasonCode', type: 'select' },
     phoneTypes: { controlName: 'phoneTypes', type: 'multiselect', required: true, width: 4 },
@@ -135,6 +137,8 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     .subscribe(([canEdit, options, templateSmsOptions, templateEmailOptions, constants, groups, users]) => {
       const [ useSmsSender, useEmailSender, smsSender, emailSender ] = constants;
       const groupsByEntityType = this.scheduleEventService.getGroupsByEntityType(groups);
+
+      this.formControlsFactory.groupId.display = !this.groupId;
 
       this.eventTypeControls = this.createEventTypeControls(canEdit);
 
@@ -385,6 +389,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
 
   private getDefaultFormData(): any {
     return {
+      groupId: this.groupId,
       phoneTypes: [ 1 ],
       emailTypes: [ 1 ],
       personRoles: [ 1 ],

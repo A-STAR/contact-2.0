@@ -9,8 +9,6 @@ import { ContactLogTabModule } from './contact-log-tab/contact-log.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { ContractorObjectModule } from './contractor-object/object.module';
-import { CurrenciesModule } from './currencies/currencies.module';
-import { CurrencyRatesModule } from './currency-rates/currency-rates.module';
 import { DebtComponentModule } from './debt/component/debt-component.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
@@ -34,7 +32,6 @@ import { PledgorPropertyModule } from './pledgor-property/pledgor-property.modul
 import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
 import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
-import { PropertyModule } from './property/property.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
@@ -47,8 +44,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     ContactModule,
     ContactPropertyModule,
     ContractorObjectModule,
-    CurrenciesModule,
-    CurrencyRatesModule,
     DebtComponentModule,
     DebtResponsibleModule,
     DebtOpenIncomingCallModule,
@@ -73,7 +68,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PortfolioLogModule,
     PromiseModule,
     PromiseResolveModule,
-    PropertyModule,
     VisitPrepareModule,
   ],
   exports: [
@@ -84,8 +78,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     ContactModule,
     ContactPropertyModule,
     ContractorObjectModule,
-    CurrenciesModule,
-    CurrencyRatesModule,
     DebtComponentModule,
     DebtOpenIncomingCallModule,
     DebtResponsibleModule,
@@ -110,7 +102,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     PortfolioLogModule,
     PromiseModule,
     PromiseResolveModule,
-    PropertyModule,
     VisitPrepareModule,
   ],
   declarations: []

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { GridModule } from '../../../../../components/grid/grid.module';
-import { TabstripModule } from '../../../../../components/tabstrip/tabstrip.module';
 
 import { ComponentLogGridComponent } from './component-log-grid.component';
 
@@ -10,7 +9,6 @@ import { ComponentLogGridComponent } from './component-log-grid.component';
   imports: [
     CommonModule,
     GridModule,
-    TabstripModule,
   ],
   exports: [
     ComponentLogGridComponent,

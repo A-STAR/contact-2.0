@@ -23,6 +23,11 @@
   }
 }
 
+.flex-item.grow {
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
 h1 {
   font-size: 36px;
 }

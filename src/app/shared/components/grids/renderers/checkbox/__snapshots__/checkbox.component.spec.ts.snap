@@ -5,25 +5,27 @@ exports[`CheckboxCellRendererComponent should render checkbox renderer 1`] = `
   id="root0"
   ng-version="5.2.4"
 >
-  
+  <app-checkbox
+    class="ng-untouched ng-pristine ng-valid"
+    ng-reflect-model="false"
+  >
+    <label>
       
-  <label>
-    
-        
-    <app-checkbox
-      class="ng-untouched ng-pristine ng-valid"
-      ng-reflect-model="false"
-    >
+  
       <input
         type="checkbox"
       />
       
-
-    </app-checkbox>
-    
-      
-  </label>
   
+      <span
+        ng-reflect-ng-class="[object Object]"
+      />
+      
+  
+
+    </label>
     
+
+  </app-checkbox>
 </div>
 `;

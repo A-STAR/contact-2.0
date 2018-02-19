@@ -15,5 +15,6 @@ export class UIComponent {
     { link: 'datetime', title: 'Date/Time' },
     { link: 'grids', title: 'Grids' },
     { link: 'icons', title: 'Icons' },
+    { link: 'ws', title: 'WebSockets' },
   ];
 }

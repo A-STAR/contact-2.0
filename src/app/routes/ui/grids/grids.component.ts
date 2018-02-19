@@ -12,6 +12,7 @@ interface IRow {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-route-ui-grids',
   templateUrl: './grids.component.html'
 })
