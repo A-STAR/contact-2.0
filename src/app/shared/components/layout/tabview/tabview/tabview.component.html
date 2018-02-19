@@ -14,19 +14,23 @@
         <div class="selection"></div>
       </li>
       <li menu #tabHeaderMenu *ngIf="hiddenTabs.length">
-        <app-dropdown position="right">
-          <i class="fa fa-ellipsis-h" trigger></i>
-          <ul class="list-group m0">
-            <li
-              *ngFor="let tab of hiddenTabs"
-              class="list-group-item b0 clickable"
-              [class.active]="tab.active"
-              (click)="selectTab($event, tab)"
-            >
-              {{ tab.title | translate }}
-            </li>
-          </ul>
-        </app-dropdown>
+        <div appDropdown fitWidthToContent="true">
+          <div #dropdownTrigger>
+            <i class="fa fa-ellipsis-h"></i>
+          </div>
+          <div #dropdownContent class="dropdown">
+            <ul class="list-group m0">
+              <li
+                *ngFor="let tab of hiddenTabs"
+                class="list-group-item b0 clickable"
+                [class.active]="tab.active"
+                (click)="selectTab($event, tab)"
+              >
+                {{ tab.title | translate }}
+              </li>
+            </ul>
+          </div>
+        </div>
       </li>
     </ul>
   </div>
