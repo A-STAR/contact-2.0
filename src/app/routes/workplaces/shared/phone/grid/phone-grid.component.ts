@@ -32,11 +32,14 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { combineLatestAnd } from '@app/core/utils/helpers';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-phone-grid',
   templateUrl: './phone-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridComponent implements OnInit, OnDestroy {
   @Input() campaignId: number;
@@ -138,7 +141,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       align: 'right',
       enabled: this.canMakeCall$,
       action: () => this.onMakeCall()
-    },  ];
+    },
+  ];
 
   contextMenuOptions: IContextMenuItem[] = [
     {
@@ -152,7 +156,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: Array<IGridColumn> = [];
+  columns: ISimpleGridColumn<IPhone>[] = [];
 
   dialog = null;
 
@@ -165,15 +169,26 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   private busSubscription: Subscription;
   private callSubscription: Subscription;
 
-  private _columns: Array<IGridColumn> = [
+  // private _columns: Array<IGridColumn> = [
+  //   { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE },
+  //   { prop: 'phone', renderer: 'phoneRenderer' },
+  //   { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_STATUS },
+  //   { prop: 'isInactive', maxWidth: 90, renderer: 'checkboxRenderer', type: 'boolean' },
+  //   { prop: 'inactiveReasonCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING },
+  //   { prop: 'inactiveDateTime', renderer: 'dateTimeRenderer' },
+  //   { prop: 'comment' },
+  // ];
+
+  private _columns: ISimpleGridColumn<IPhone>[] = [
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE },
-    { prop: 'phone', renderer: 'phoneRenderer' },
+    { prop: 'phone' },
+    // { prop: 'phone', renderer: 'phoneRenderer' },
     { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_STATUS },
-    { prop: 'isInactive', maxWidth: 90, renderer: 'checkboxRenderer', type: 'boolean' },
+    // { prop: 'isInactive', maxWidth: 90, renderer: 'checkboxRenderer', type: 'boolean' },
     { prop: 'inactiveReasonCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_REASON_FOR_BLOCKING },
-    { prop: 'inactiveDateTime', renderer: 'dateTimeRenderer' },
+    // { prop: 'inactiveDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'comment' },
-  ];
+  ].map(addGridLabel('debtor.information.phone.grid'));
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -206,18 +221,27 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
         }
       });
 
-    combineLatest(
-      this.gridService.setDictionaryRenderers(this._columns),
-      this.canViewBlock$,
-    )
-    .pipe(first())
-    .subscribe(([ columns, canViewBlock ]) => {
-      const filteredColumns = columns.filter(column => {
-        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
+    this.canViewBlock$
+      .pipe(first())
+      .subscribe(canViewBlock => {
+        this.columns = this._columns.filter(column => {
+          return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
+        });
+        this.cdRef.markForCheck();
       });
-      this.columns = this.gridService.setRenderers(filteredColumns);
-      this.cdRef.markForCheck();
-    });
+
+    // combineLatest(
+    //   this.gridService.setDictionaryRenderers(this._columns),
+    //   this.canViewBlock$,
+    // )
+    // .pipe(first())
+    // .subscribe(([ columns, canViewBlock ]) => {
+    //   const filteredColumns = columns.filter(column => {
+    //     return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
+    //   });
+    //   this.columns = this.gridService.setRenderers(filteredColumns);
+    //   this.cdRef.markForCheck();
+    // });
 
     this.busSubscription = this.phoneService
       .getAction(PhoneService.MESSAGE_PHONE_SAVED)

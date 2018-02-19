@@ -11,6 +11,7 @@ import {
 import { ColDef, GridApi, GridOptions, RowDoubleClickedEvent } from 'ag-grid';
 import { first } from 'rxjs/operators';
 
+import { IGridSelectionType } from '@app/shared/components/grids/grids.interface';
 import { ISimpleGridColumn } from './grid.interface';
 
 import { GridsService } from '../grids.service';
@@ -46,6 +47,10 @@ export class SimpleGridComponent<T> {
     this._rows = rows;
     this.updateRows();
   }
+
+  @Input() rowClass: (item: T) => string;
+  @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
+  @Input() showToolbar = false;
 
   @Output() select = new EventEmitter<T[]>();
   @Output() dblClick = new EventEmitter<T>();
@@ -99,6 +104,12 @@ export class SimpleGridComponent<T> {
 
   get rows(): T[] {
     return this._rows;
+  }
+
+  get rowClassCallback(): any {
+    return this.rowClass
+      ? params => this.rowClass(params.data)
+      : null;
   }
 
   onGridReady(params: any): void {
