@@ -31,6 +31,12 @@
     [required]="control.required"
   ></app-number>
 
+  <app-checkbox
+    *ngSwitchCase="'checkbox'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+  ></app-checkbox>
+
   <!--
     Below are old controls.
   -->
@@ -49,12 +55,6 @@
       {{'default.boolean.FALSE' | translate}}
     </label>
   </ng-container>
-
-  <app-checkbox
-    *ngSwitchCase="'checkbox'"
-    [formControlName]="control.controlName"
-    [label]="control.label"
-  ></app-checkbox>
 
   <ng-container *ngSwitchCase="'select'">
     <label>
