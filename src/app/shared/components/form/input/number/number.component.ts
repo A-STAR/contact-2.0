@@ -45,6 +45,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   @Input() label: string;
   @Input() min: number;
   @Input() max: number;
+  @Input() positive = false;
   @Input() required = false;
 
   @Input() set step(step: number | string) {
@@ -83,8 +84,10 @@ export class NumberComponent implements ControlValueAccessor, Validator {
 
   validate(control: FormControl): any {
     switch (true) {
-      case this.value == null && this.required:
+      case this.required && this.value == null:
         return { required: true };
+      case this.positive && this.value && this.value <= 0:
+        return { positive: true };
       case !this.isMinValid(this.value):
         return { min: { minValue: this.min } };
       case !this.isMaxValid(this.value):

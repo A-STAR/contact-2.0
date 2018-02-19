@@ -17,8 +17,6 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { min } from '@app/core/validators';
-
 @Component({
   selector: 'app-schedule-type-card',
   templateUrl: './schedule-type-card.component.html',
@@ -107,7 +105,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     dict3Code: { controlName: 'dict3Code', type: 'select', required: true },
     dict4Code: { controlName: 'dict4Code', type: 'select', required: true },
     modeCode: { controlName: 'modeCode', type: 'select', required: true },
-    delay: { controlName: 'delay', type: 'number', required: true, validators: [ min(0) ] },
+    delay: { controlName: 'delay', type: 'number', min: 0, required: true },
     stage: { controlName: 'stage', type: 'select', required: true },
   };
 
