@@ -1,11 +1,35 @@
 <section [formGroup]="formGroup">
   <div class="form-group">
-    <label class="label">Empty value</label>
-    <app-datetimepicker formControlName="datetime1"></app-datetimepicker>
+    <app-datetimepicker
+      formControlName="datetime1"
+      label="Empty value"
+    ></app-datetimepicker>
   </div>
 
   <div class="form-group">
-    <label class="label">Now</label>
-    <app-datetimepicker formControlName="datetime2"></app-datetimepicker>
+    <app-datetimepicker
+      formControlName="datetime2"
+      label="Now"
+    ></app-datetimepicker>
+  </div>
+
+  <div class="form-group">
+    <app-datetimepicker
+      formControlName="datetime3"
+      label="Validation"
+      [minDateTime]="minDateTime"
+      [maxDateTime]="maxDateTime"
+    ></app-datetimepicker>
+    <div class="mv-sm">
+      <em>Validation errors:</em>
+      <pre>{{ errors.datetime3 | json }}</pre>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <app-datetimepicker
+      formControlName="datetime4"
+      label="Disabled"
+    ></app-datetimepicker>
   </div>
 </section>
