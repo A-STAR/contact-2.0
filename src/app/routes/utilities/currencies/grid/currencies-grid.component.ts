@@ -17,9 +17,10 @@ import { DialogFunctions } from '@app/core/dialog';
 import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-currencies-grid',
   templateUrl: './currencies-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrenciesGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 
