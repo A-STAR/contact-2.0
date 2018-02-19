@@ -1,14 +1,29 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  forwardRef,
+  Input,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
 
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
+import { ILookupKey } from '@app/core/lookup/lookup.interface';
+
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DropdownDirective } from '../../../dropdown/dropdown.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-single-select',
-  templateUrl: './single-select.component.html',
   styleUrls: [ './single-select.component.scss' ],
+  templateUrl: './single-select.component.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -16,33 +31,72 @@ import { DropdownDirective } from '../../../dropdown/dropdown.directive';
       multi: true
     }
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SingleSelectComponent implements ControlValueAccessor {
+export class SingleSelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() nullable = false;
-  @Input() options: IOption[] = [];
+  @Input() dictCode: number;
+  @Input() lookupKey: ILookupKey;
+  @Input() isDisabled = false;
+
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
-  private _isDisabled = false;
-  private _value: number | string = null;
+  private _value: number;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  private _options: IOption[];
+  private _optionsSubscription: Subscription;
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private lookupService: LookupService,
+    private userDictionariesService: UserDictionariesService,
+  ) {}
+
+  @Input()
+  set options(options: IOption[]) {
+    this._options = options;
+    this.cdRef.markForCheck();
+  }
+
+  get options(): IOption[] {
+    return this._options;
+  }
 
   get label(): string {
     const option = (this.options || []).find(o => o.value === this._value);
     return option ? option.label : null;
   }
 
+  ngOnInit(): void {
+    if (!this.dictCode === !this.lookupKey) {
+      throw new Error('SingleSelectComponent must have either dictCode or lookupKey but not both.');
+    }
+    if (this.dictCode) {
+      this._optionsSubscription = this.userDictionariesService.getDictionaryAsOptions(this.dictCode)
+        .subscribe(this.onOptionsFetch);
+    }
+    if (this.lookupKey) {
+      this._optionsSubscription = this.lookupService.lookupAsOptions(this.lookupKey)
+        .subscribe(this.onOptionsFetch);
+    }
+    this.setDisabledState(this.isDisabled);
+  }
+
+  ngOnDestroy(): void {
+    if (this._optionsSubscription) {
+      this._optionsSubscription.unsubscribe();
+    }
+  }
+
   getId = (option: IOption) => option.value;
   getName = (option: IOption) => option.label;
 
   onSelect(item: IOption): void {
-    this.value = item.value;
+    this.value = <number>item.value;
     this.propagateChange(this._value);
     this.dropdown.close();
   }
 
-  writeValue(value: number | string): void {
+  writeValue(value: number): void {
     this.value = value;
   }
 
@@ -53,13 +107,17 @@ export class SingleSelectComponent implements ControlValueAccessor {
   registerOnTouched(fn: Function): void {
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    this._isDisabled = isDisabled;
+  setDisabledState(disabled: boolean): void {
+    this.isDisabled = disabled;
   }
 
-  private set value(value: number | string) {
+  private set value(value: number) {
     this._value = value;
     this.cdRef.markForCheck();
+  }
+
+  private onOptionsFetch = (options: IOption[]) => {
+    this.options = options;
   }
 
   private propagateChange: Function = () => {};
