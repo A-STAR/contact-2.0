@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IEmailSchedule } from '../../email.interface';
 
-import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { FormComponent } from './form/form.component';
 
