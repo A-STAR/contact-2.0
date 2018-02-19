@@ -1,51 +1,30 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, first, map } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 
-import { minStrict, max } from '@app/core/validators';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-contact-registration-payment',
   templateUrl: 'payment.component.html'
 })
-export class ContactRegistrationPaymentComponent implements OnInit, OnDestroy {
+export class ContactRegistrationPaymentComponent {
   @Input() formGroup: FormGroup;
 
-  private formSub: Subscription;
+  private limitInfo$ = combineLatest(
+    this.contactRegistrationService.debt$.pipe(filter(Boolean)),
+    this.contactRegistrationService.limit$.pipe(filter(Boolean)),
+    this.contactRegistrationService.canSetInsufficientPromiseAmount$,
+  );
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
   ) {}
-
-  ngOnInit(): void {
-    // TODO(d.maltsev): check out async validators?
-    this.formSub = combineLatest(
-      this.contactRegistrationService.debt$.pipe(filter(Boolean)),
-      this.contactRegistrationService.limit$.pipe(filter(Boolean)),
-    )
-    .subscribe(([ debt, limit ]) => {
-      this.formGroup.get('payment.amount').setValidators([
-        minStrict(0),
-        max(debt.debtAmount),
-      ]);
-      this.formGroup.get('payment.percentage').setValidators([
-        minStrict(0),
-        max(100),
-      ]);
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.formSub.unsubscribe();
-  }
 
   get canDisplayForm$(): Observable<boolean> {
     return this.contactRegistrationService.outcome$.pipe(
@@ -55,6 +34,24 @@ export class ContactRegistrationPaymentComponent implements OnInit, OnDestroy {
 
   get today(): Date {
     return moment().toDate();
+  }
+
+  get paymentMinAmount$(): Observable<number> {
+    return this.limitInfo$.pipe(
+      map(([ debt, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent * debt.debtAmount / 100),
+    );
+  }
+
+  get paymentMaxAmount$(): Observable<number> {
+    return this.limitInfo$.pipe(
+      map(([ debt ]) => debt.debtAmount),
+    );
+  }
+
+  get paymentMinPercentage$(): Observable<number> {
+    return this.limitInfo$.pipe(
+      map(([ _, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent),
+    );
   }
 
   get isPaymentAmountDisabled$(): Observable<boolean> {

@@ -7,7 +7,8 @@ import {
   Renderer2,
   forwardRef,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { range } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,8 +29,24 @@ import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } fro
   templateUrl: './number.component.html'
 })
 export class NumberComponent implements ControlValueAccessor, Validator {
+  private static readonly ALLOWED_KEYS = [
+    ...range(0, 9).map(String),
+    '.',
+    '-',
+    'Backspace',
+    'Delete',
+    'ArrowLeft',
+    'ArrowRight',
+    'Home',
+    'End',
+  ];
+
+  @Input() errors: any;
+  @Input() label: string;
   @Input() min: number;
   @Input() max: number;
+  @Input() positive = false;
+  @Input() required = false;
 
   @Input() set step(step: number | string) {
     this._step = Number(step);
@@ -65,20 +82,24 @@ export class NumberComponent implements ControlValueAccessor, Validator {
     this.disabled = disabled;
   }
 
-  validate(c: any): any {
+  validate(control: FormControl): any {
     switch (true) {
+      case this.required && this.value == null:
+        return { required: true };
+      case this.positive && this.value && this.value <= 0:
+        return { positive: true };
       case !this.isMinValid(this.value):
-        return { min: { maxValue: this.max } };
+        return { min: { minValue: this.min } };
       case !this.isMaxValid(this.value):
-        return { max: { minValue: this.max } };
+        return { max: { maxValue: this.max } };
       default:
         return null;
     }
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    const { key } = event;
-    if ((key < '0' || key > '9') && key !== '.' && key !== 'Backspace' && key !== 'Delete' && key !== '-') {
+    const { ctrlKey, key } = event;
+    if (!NumberComponent.ALLOWED_KEYS.includes(key) && !ctrlKey) {
       event.preventDefault();
     }
   }

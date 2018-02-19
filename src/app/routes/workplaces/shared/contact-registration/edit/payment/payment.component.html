@@ -29,6 +29,9 @@
           type="number"
           formControlName="amount"
           [disabled]="isPaymentAmountDisabled$ | async"
+          [min]="paymentMinAmount$ | async"
+          [max]="paymentMaxAmount$ | async"
+          [positive]="true"
           [required]="true"
           (input)="onPaymentAmountInput($event)"
         />
@@ -47,6 +50,9 @@
           type="number"
           formControlName="percentage"
           [disabled]="isPaymentAmountDisabled$ | async"
+          [min]="paymentMinPercentage$ | async"
+          [max]="100"
+          [positive]="true"
           [required]="true"
           (input)="onPaymentPercentageInput($event)"
         />
