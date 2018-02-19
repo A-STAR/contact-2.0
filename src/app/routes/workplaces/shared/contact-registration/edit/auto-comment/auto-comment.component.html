@@ -3,8 +3,7 @@
   <div>
     <label>
       <span class="form-label">
-        <!-- TODO(d.maltsev): i18n -->
-        Выберите автокомментарий
+        {{ 'routes.workplaces.shared.contactRegistration.edit.form.autoComment.comment' | translate }}
       </span>
       <app-select
         formControlName="autoCommentId"
@@ -18,7 +17,7 @@
   <div>
     <label>
       <span class="form-label">
-        {{ 'modules.contactRegistration.misc.autoComment' | translate }}
+        {{ 'routes.workplaces.shared.contactRegistration.edit.form.autoComment' | translate }}
       </span>
     </label>
     <app-html-textarea

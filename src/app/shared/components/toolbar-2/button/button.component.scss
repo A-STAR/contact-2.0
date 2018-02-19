@@ -1,0 +1,38 @@
+@import '../../../../shared/styles/app/variables.scss';
+
+$toolbar-button-size: 32px;
+
+// NOTE: too messy because of the .btn-default bootstrap styles
+// TODO(a.tymchuk): refactor & remove .btn-default
+
+button {
+  display: inline-block;
+  width: $toolbar-button-size;
+  height: $toolbar-button-size;
+  border: 1px solid transparent;
+  text-align: center;
+  font-size: 20px;
+  line-height: $toolbar-button-size + 2px;
+  &.btn-default {
+    color: $form-toolbar-icon-color;
+    &:hover {
+      color: $form-toolbar-icon-color;
+    }
+    &[disabled] {
+      color: $form-toolbar-icon-disabled-color;
+    }
+  }
+  transition: 100ms all ease-in-out;
+  i {
+    display: inline-block;
+    line-height: 13px;
+  }
+  // This prevents changing default button styles on hover
+  &[disabled] {
+    color: $form-toolbar-icon-disabled-color;
+    &:hover {
+      background-color: #fff;
+      border-color: transparent;
+    }
+  }
+}

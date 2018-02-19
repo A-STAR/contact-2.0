@@ -1,9 +1,7 @@
-<!-- TODO(d.maltsev): i18n -->
-
 <app-dialog-action
   *ngIf="showDialog$ | async"
-  titleTranslationKey="Отмена"
-  actionTranslationKey="Вы действительно хотите отменить регистрацию текущего контакта?"
+  titleTranslationKey="routes.workplaces.shared.contactRegistration.cancelDialog.title"
+  actionTranslationKey="routes.workplaces.shared.contactRegistration.cancelDialog.message"
   actionMessage="default.buttons.ok"
   actionMode="warning"
   (action)="onConfirm()"

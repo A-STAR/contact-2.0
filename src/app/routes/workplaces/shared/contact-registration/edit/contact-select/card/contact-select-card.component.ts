@@ -8,7 +8,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 
 import { makeKey } from '@app/core/utils';
 
-const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form');
+const labelKey = makeKey('routes.workplaces.shared.contactRegistration.edit.form.contactSelect.card.form');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

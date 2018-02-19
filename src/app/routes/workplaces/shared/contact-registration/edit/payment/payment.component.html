@@ -1,14 +1,13 @@
 <div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
   <div formGroupName="payment">
-    <!-- TODO(d.maltsev): i18n -->
-    <h3>Регистрация неподтвержденного платежа</h3>
+    <h3>{{ 'routes.workplaces.shared.contactRegistration.edit.form.payment.title' | translate }}</h3>
 
     <!-- Payment Date -->
     <div>
       <label>
         <span class="form-label">
-          <!-- TODO(d.maltsev): i18n -->
-          Дата <b class="text-danger">*</b>
+          {{ 'routes.workplaces.shared.contactRegistration.edit.form.payment.form.date' | translate }}
+          <b class="text-danger">*</b>
         </span>
       </label>
       <app-datepicker
@@ -22,8 +21,8 @@
     <div>
       <label>
         <span class="form-label">
-          <!-- TODO(d.maltsev): i18n -->
-          Сумма <b class="text-danger">*</b>
+          {{ 'routes.workplaces.shared.contactRegistration.edit.form.payment.form.amount' | translate }}
+          <b class="text-danger">*</b>
         </span>
         <input
           class="form-control"
@@ -40,8 +39,8 @@
     <div>
       <label>
         <span class="form-label">
-          <!-- TODO(d.maltsev): i18n -->
-          Процент от остатка <b class="text-danger">*</b>
+          {{ 'routes.workplaces.shared.contactRegistration.edit.form.payment.form.percentage' | translate }}
+          <b class="text-danger">*</b>
         </span>
         <input
           class="form-control"
@@ -58,8 +57,8 @@
     <div>
       <label>
         <span class="form-label">
-          <!-- TODO(d.maltsev): i18n -->
-          Валюта <b class="text-danger">*</b>
+          {{ 'routes.workplaces.shared.contactRegistration.edit.form.payment.form.currency' | translate }}
+          <b class="text-danger">*</b>
         </span>
         <app-select-wrapper
           formControlName="currencyId"
