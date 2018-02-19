@@ -31,7 +31,6 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { makeKey, getTranslations } from '@app/core/utils';
-import { multilanguageRequired } from '@app/core/validators';
 
 import {
   IDynamicFormSelectControl,
@@ -275,15 +274,13 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       disabled: control.disabled,
       value: control.type === 'checkbox' ? false : '',
     };
-    const isMultilanguageRequired = control.type === 'multilanguage' && control.required;
 
     // TODO(d.maltsev): need to refactor this in favor of built-in control validators
-    const validators = control.required
+    const controlsWithOwnRequired = [ 'multilanguage' ];
+    const validators = control.required && !controlsWithOwnRequired.includes(control.type)
       ? Validators.compose([
           ...control.validators || [],
-          isMultilanguageRequired
-            ? multilanguageRequired
-            : Validators.required
+          Validators.required
         ])
       : control.validators;
 
