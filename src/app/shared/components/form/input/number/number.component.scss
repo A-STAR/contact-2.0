@@ -1,0 +1,36 @@
+@import '../../../../styles/app/variables.scss';
+
+:host {
+  display: block;
+  position: relative;
+}
+
+i {
+  color: $gray;
+  cursor: pointer;
+  line-height: 0.5;
+  position: absolute;
+  right: 5px;
+  transition: color 0.2s ease;
+
+  &:before {
+    display: inline-block;
+  }
+
+  &.fa-angle-up {
+    top: 5px;
+  }
+
+  &.fa-angle-down {
+    bottom: 5px;
+  }
+}
+
+:host:hover > input:not(:disabled) {
+  & ~ i {
+    color: $text-light;
+  }
+  & ~ i:hover {
+    color: $link-color;
+  }
+}

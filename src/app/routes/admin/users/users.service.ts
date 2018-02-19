@@ -4,11 +4,13 @@ import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { DataService } from '../../../core/data/data.service';
 import { IAppState } from '../../../core/state/state.interface';
+import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IUser, IUsersState } from './users.interface';
 
 import { AbstractActionService } from '../../../core/state/action.service';
+import { DataService } from '../../../core/data/data.service';
+import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { NotificationsService } from '../../../core/notifications/notifications.service';
 
 @Injectable()
@@ -20,6 +22,7 @@ export class UsersService extends AbstractActionService {
   constructor(
     protected actions: Actions,
     private dataService: DataService,
+    private entityAttributesService: EntityAttributesService,
     private notificationsService: NotificationsService,
     protected store: Store<IAppState>,
   ) {
@@ -28,6 +31,10 @@ export class UsersService extends AbstractActionService {
 
   get state(): Observable<IUsersState> {
     return this.store.select(state => state.users);
+  }
+
+  get agentAttributes$(): Observable<IEntityAttributes> {
+    return this.entityAttributesService.getAttributes([87, 88, 89]);
   }
 
   fetch(): Observable<Array<IUser>> {

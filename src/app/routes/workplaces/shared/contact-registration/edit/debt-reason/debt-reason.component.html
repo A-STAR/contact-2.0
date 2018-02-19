@@ -1,8 +1,8 @@
 <div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
   <label>
     <span class="form-label">
-      <!-- TODO(d.maltsev): i18n -->
-      Причина возникновения задолженности <b *ngIf="isDebtReasonCodeRequired$ | async" class="text-danger">*</b>
+      {{ 'routes.workplaces.shared.contactRegistration.edit.form.debtReason.form.debtReason' | translate }}
+      <b *ngIf="isDebtReasonCodeRequired$ | async" class="text-danger">*</b>
     </span>
     <app-select-wrapper
       formControlName="debtReasonCode"

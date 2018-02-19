@@ -1,22 +1,22 @@
-<!-- TODO(d.maltsev): minAmountPercent -->
-
 <app-dialog-action
   *ngIf="isDialog('confirm')"
   actionMode="warning"
-  actionTranslationKey="debtor.promisesTab.confirmInsufficient.message"
+  actionTranslationKey="workplaces.shared.contactRegistration.edit.dialogs.confirmInsufficient.message"
   actionMessage="default.buttons.save"
-  [messageParams]="{ percent: minAmountPercent }"
-  titleTranslationKey="debtor.promisesTab.confirmInsufficient.title"
+  [messageParams]="minAmountPercentMessageParams$ | async"
+  titleTranslationKey="workplaces.shared.contactRegistration.edit.dialogs.confirmInsufficient.title"
   (action)="onConfirm()"
   (cancel)="onCloseDialog()"
 ></app-dialog-action>
 
 <app-info-dialog
   *ngIf="isDialog('info')"
-  titleTranslationKey="debtor.promisesTab.infoIncreaseAmount.title"
+  titleTranslationKey="workplaces.shared.contactRegistration.edit.dialogs.infoIncreaseAmount.title"
   (onClose)="onCloseDialog()"
 >
-  <section class="pv-xl">{{ 'debtor.promisesTab.infoIncreaseAmount.message' | translate: { percent: minAmountPercent} }}</section>
+  <section class="pv-xl">
+    {{ 'workplaces.shared.contactRegistration.edit.dialogs.infoIncreaseAmount.message' | translate: (minAmountPercentMessageParams$ | async) }}
+  </section>
 </app-info-dialog>
 
 <div class="flex vertical">
@@ -44,8 +44,7 @@
 
       <!-- Contact Person -->
       <div *ngIf="displayContactPersonForm$ | async">
-        <!-- TODO(d.maltsev): i18n -->
-        <h3>Изменение контактного лица</h3>
+        <h3>{{ 'routes.workplaces.shared.contactRegistration.edit.form.contactPerson.title' | translate }}</h3>
         <app-contact-registration-contact-select [excludeCurrentPersonId]="true"></app-contact-registration-contact-select>
         <hr>
       </div>
@@ -58,8 +57,7 @@
 
       <!-- Attachments -->
       <div *ngIf="displayAttachmentForm$ | async">
-        <!-- TODO(d.maltsev): i18n -->
-        <h3>Прикрепленные файлы</h3>
+        <h3>{{ 'routes.workplaces.shared.contactRegistration.edit.form.attachments.title' | translate }}</h3>
         <app-contact-registration-attachment></app-contact-registration-attachment>
         <hr>
       </div>

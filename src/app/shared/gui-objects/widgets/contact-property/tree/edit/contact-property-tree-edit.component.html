@@ -23,8 +23,9 @@
             *ngIf="attributeTypes && attributeTypes.length > 0"
             [translateColumnLabels]="true"
             [columns]="columns"
-            [rows]="attributeTypes">
-          </app-gridtree2-wrapper>
+            [rows]="attributeTypes"
+            (cellValueChanged)="onCellValueChanged($event)"
+          ></app-gridtree2-wrapper>
         </div>
       </app-tabview-tab>
 

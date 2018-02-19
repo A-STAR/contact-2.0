@@ -2,10 +2,11 @@
 
 .wrapper {
   height: 100%;
-  padding: $layout-content-padding;
+  padding: $layout-content-border-width;
   background-color: $layout-content-background-color;
   overflow: auto;
   .content {
+    overflow-y: auto;
     height: 100%;
     padding: $layout-content-padding;
     background-color: white;

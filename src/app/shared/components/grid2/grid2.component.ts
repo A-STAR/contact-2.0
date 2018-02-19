@@ -30,7 +30,7 @@ import {
   RefreshCellsParams,
 } from 'ag-grid/main';
 
-import { IMetadataAction } from '../../../core/metadata/metadata.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import {
   IToolbarAction,
   IToolbarActionSelect,
@@ -43,27 +43,24 @@ import {
   IAGridRequest, IAGridSorter } from './grid2.interface';
 import { FilterObject } from './filter/grid-filter';
 
-import { NotificationsService } from '../../../core/notifications/notifications.service';
-import { PersistenceService } from '../../../core/persistence/persistence.service';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../core/converter/value-converter.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { PersistenceService } from '@app/core/persistence/persistence.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { DatePickerComponent } from './editors/datepicker/datepicker.component';
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
-import { ValueBag } from '../../../core/value-bag/value-bag';
-// import { GridCell } from 'ag-grid/dist/lib/entities/gridCell';
+import { ValueBag } from '@app/core/value-bag/value-bag';
 
 @Component({
   selector: 'app-grid2',
   templateUrl: './grid2.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: [
-    './grid2.component.scss',
-  ],
+  styleUrls: [ './grid2.component.scss' ],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static DEFAULT_PAGE_SIZE = 250;

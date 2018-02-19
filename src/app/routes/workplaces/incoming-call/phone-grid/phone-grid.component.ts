@@ -6,12 +6,12 @@ import { Subscription } from 'rxjs/Subscription';
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 
 import { ContactRegistrationService } from '../../shared/contact-registration/contact-registration.service';
-import { DebtService } from '../../../../core/debt/debt.service';
+import { DebtService } from '@app/core/debt/debt.service';
 import { IncomingCallService } from '../incoming-call.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
-import { invert } from '../../../../core/utils';
-import { combineLatestAnd } from '../../../../core/utils/helpers';
+import { invert } from '@app/core/utils';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-incoming-call-phone-grid',
@@ -96,11 +96,11 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onPhoneAdd(): void {
-    this.routingService.navigate([ 'phone/create' ], this.route);
+    this.routingService.navigate([ `${this.personId}/phones/create` ], this.route);
   }
 
   onPhoneEdit(phone: IPhone): void {
-    this.routingService.navigate([ `phone/${phone.id}` ], this.route);
+    this.routingService.navigate([ `${this.personId}/phones/${phone.id}` ], this.route);
   }
 
   onPhoneRegister(phone: IPhone): void {

@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SimpleGridComponent should render empty grid 1`] = `
+<div
+  class="full-height"
+  id="root0"
+  ng-version="5.2.4"
+>
+  <div
+    class="flex vertical"
+  >
+    
+  
+    <div
+      class="flex-item grow"
+    >
+      
+    
+      
+      
+  
+    </div>
+    
+
+  
+    
+    
+
+  </div>
+  
+
+
+  
+
+</div>
+`;

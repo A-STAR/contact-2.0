@@ -170,7 +170,7 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
           this.fetchAll().subscribe(portfolios => this.onPortfoliosFetch(portfolios));
         } else {
           if (!canView) {
-            this.notificationsService.error('errors.default.read.403').entity('entities.portfolios.gen.plural').dispatch();
+            this.notificationsService.permissionError().entity('entities.portfolios.gen.plural').dispatch();
           }
           this.clearPortfolios();
         }

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { RadioButtonComponent } from './radiobutton/radiobutton.component';
@@ -9,6 +10,7 @@ import { RadioButtonComponent } from './radiobutton/radiobutton.component';
   imports: [
     CommonModule,
     FormsModule,
+    TranslateModule,
   ],
   exports: [
     CheckboxComponent,

@@ -33,6 +33,7 @@ export class GridTree2WrapperService<T> {
         // TODO(d.topheenko): model
         return {
           column: {
+            cellRendererFramework: column.cellRendererFramework,
             field: column.name,
             headerName: translateColumnLabels ? this.translate.instant(column.label) : column.label,
             maxWidth: column.maxWidth,
@@ -40,7 +41,9 @@ export class GridTree2WrapperService<T> {
             width: column.width || column.minWidth || column.maxWidth,
             valueGetter: column.valueGetter,
             valueFormatter: column.valueFormatter,
-          } as ColDef, isDataPath: column.isDataPath, dictCode: column.dictCode
+          } as ColDef,
+          dictCode: column.dictCode,
+          isDataPath: column.isDataPath,
         };
       });
   }

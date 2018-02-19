@@ -1,29 +1,40 @@
 @import "../../../styles/app/variables.scss";
+
 .indicator-wrapper {
   display: flex;
   flex-basis: auto;
-  flex-direction: row;
-  justify-content: center;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-content: space-between;
 }
+
 .indicator {
-  text-align: center;
-  font-family: 'Roboto Condensed';
-  padding: 0 10px;
-  width: 25%;
+  flex: 0 1 19%;
+  min-width: 225px;
+  margin: 10px;
 }
+
 .indicator-badge {
   display: flex;
-  justify-content: center;
+  align-items: flex-start;
   flex-direction: column;
-  border-radius: 6px;
-  min-height: 65px;
-}
-.indicator-text {
+  min-height: 78px;
+  padding: 10px 5px 0 15px;
   color: #fff;
-  font-size: 16px;
-  font-weight: bold;
 }
+
+.indicator-text {
+  font-size: 22px;
+  line-height: 1;
+  flex: 1 0 100%;
+  margin-top: 10px;
+}
+
 .indicator-label {
-  color: $text;
-  font-size: 10px;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.border-r {
+  border-right: 1px solid #dfdee4;
 }

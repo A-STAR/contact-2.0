@@ -1,0 +1,23 @@
+<section [formGroup]="formGroup">
+  <div class="form-group">
+    <label class="label">
+      <app-radiobutton formControlName="radioGroup1" [value]="false"></app-radiobutton>
+      Not checked
+    </label>
+    <label class="label">
+      <app-radiobutton formControlName="radioGroup1" [value]="true"></app-radiobutton>
+      Checked
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label class="label">
+      <app-radiobutton formControlName="radioGroup2" [value]="false"></app-radiobutton>
+      Not checked & disabled
+    </label>
+    <label class="label">
+      <app-radiobutton formControlName="radioGroup2" [value]="true"></app-radiobutton>
+      Checked & disabled
+    </label>
+  </div>
+</section>

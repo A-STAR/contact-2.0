@@ -1,4 +1,187 @@
 {
+  "layout": {
+
+  },
+  "routes": {
+    "admin": {
+      "users": {
+        "grid": {
+          "branchCode": "Branch",
+          "email": "Email",
+          "firstName": "Name",
+          "id": "ID",
+          "intPhone": "Extension",
+          "isInactive": "Inactive",
+          "languageId": "Language",
+          "lastName": "Family name",
+          "login": "Login",
+          "middleName": "Middle name",
+          "mobPhone": "Mobile",
+          "position": "Position",
+          "roleId": "Role",
+          "workPhone": "Work phone"
+        }
+      }
+    },
+    "workplaces": {
+      "shared": {
+        "contactRegistration": {
+          "cancelDialog": {
+            "message": "Are you sure you want to cancel contact registration?",
+            "title": "Cancel Contact Registration"
+          },
+          "edit": {
+            "dialogs": {
+              "confirmInsufficient": {
+                "message": "You have to increase the promise amount to {{ percent }}% of the amount due, otherwise the the current amount will be subject to approval. Do you really want to save this promise?",
+                "title": "Confirm amount"
+              },
+              "infoIncreaseAmount": {
+                "message": "You have to increase the promise amount to {{ percent }}% of the amount due.",
+                "title": "Information"
+              }
+            },
+            "form": {
+              "attachments": {
+                "add": {
+                  "title": "Add Attachment",
+                  "form": {
+                    "comment": "Comment",
+                    "docName": "Document Name",
+                    "docNumber": "Number",
+                    "docTypeCode": "Document Type",
+                    "file": "File"
+                  }
+                },
+                "dialogs": {
+                  "delete": {
+                    "confirmMessage": "Are you sure you want to delete document {{ docName }}?",
+                    "title": "Delete document?"
+                  }
+                },
+                "grid": {
+                  "comment": "Comment",
+                  "docName": "Document Name",
+                  "docNumber": "Number",
+                  "docTypeCode": "Document Type",
+                  "fileName": "File Name"
+                },
+                "title": "Attachments"
+              },
+              "attributes": {
+                "grid": {
+                  "code": "Code",
+                  "name": "Name",
+                  "value": "Value",
+                  "mandatory": "Mandatory Field"
+                }
+              },
+              "autoComment": {
+                "comment": "Select comment",
+                "autoComment": "Autocomment"
+              },
+              "callReason": {
+                "form": {
+                  "callReason": "Call Reason"
+                }
+              },
+              "comment": {
+                "form": {
+                  "comment": "Comments"
+                }
+              },
+              "contactPerson": {
+                "title": "Изменение контактного лица"
+              },
+              "contactSelect": {
+                "card": {
+                  "title": "Add Manually",
+                  "form": {
+                    "firstName": "First Name",
+                    "lastName": "Last Name",
+                    "linkTypeCode": "Relation Type",
+                    "middleName": "Middle Name",
+                    "personTypeCode": "Person Type"
+                  }
+                },
+                "grid": {
+                  "title": "Select From Linked"
+                },
+                "search": {
+                  "title": "Select From All"
+                }
+              },
+              "debtReason": {
+                "form": {
+                  "debtReason": "Debt Reason"
+                }
+              },
+              "nextCall": {
+                "form": {
+                  "nextCall": "Next Call Date"
+                }
+              },
+              "payment": {
+                "title": "Unconfirmed payment registration",
+                "form": {
+                  "date": "Date",
+                  "amount": "Amount",
+                  "percentage": "Percentage",
+                  "currency": "Currency"
+                }
+              },
+              "phone": {
+                "title": "New Phone",
+                "form": {
+                  "type": "Type",
+                  "number": "Phone number",
+                  "stopAutoSms": "Stop Auto SMS",
+                  "stopAutoInfo": "Stop Auto Info",
+                  "comment": "Comments"
+                }
+              },
+              "promise": {
+                "title": "Promise Registration",
+                "form": {
+                  "date": "Date",
+                  "amount": "Amount",
+                  "percentage": "Percentage"
+                }
+              },
+              "refusal": {
+                "form": {
+                  "refusal": "Payment Refusal Reason"
+                }
+              },
+              "statusChange": {
+                "form": {
+                  "statusChange": "Status Change Reason"
+                }
+              }
+            }
+          },
+          "tree": {
+            "emptyScenario": "Empty Scenario",
+            "scenario": "Scenario",
+            "selectOutcome": "Select Outcome"
+          }
+        }
+      }
+    }
+  },
+  "shared": {
+    "components": {
+      "grids": {
+        "toolbar": {
+          "rowsSelected": "selected",
+          "rowsTotal": "total"
+        }
+      }
+    }
+  },
+  "system": {
+
+  },
   "header": {
     "language": "Language",
     "notifications": "Notifications",
@@ -187,6 +370,7 @@
     "fieldLowerCase": "This field must contain at least one lower case character",
     "fieldUpperCase": "This field must contain at least one upper case character",
     "fieldMaxSize": "File size must not exceed {{ requiredSize }}",
+    "multilanguageRequired": "The field in main language is required",
     "oneOfGroupRequired": "At least one group field must not be empty",
     "timepicker": "Invalid time format"
   },
@@ -215,7 +399,8 @@
   "modules": {
     "callCenter": {
       "main": {
-        "title": "Сampaign selection"
+        "title": "Сampaign selection",
+        "nextDebtor": "Next debtor"
       },
       "grid": {
         "name": "Name",
@@ -226,8 +411,8 @@
       },
       "overview": {
         "info": {
-          "title": "Overview",
-          "shortInfo": "Overview"
+          "title": "Debt information",
+          "shortInfo": "Debt info"
         },
         "debtor": {
           "title": "Debtor",
@@ -441,116 +626,6 @@
         }
       }
     },
-    "contactRegistration": {
-      "tree": {
-        "selectOutcome": "Select Outcome",
-        "emptyScenario": "Empty Scenario"
-      },
-      "contact": {
-        "title": "Change Contact Person"
-      },
-      "dialogs": {
-        "contactType": {
-          "title": "Log Contact",
-          "address": {
-            "title": "Addresses",
-            "button": "Log Selected Address"
-          },
-          "phone": {
-            "title": "Phones",
-            "button": "Log Selected Phone"
-          },
-          "misc": {
-            "title": "Miscellaneous",
-            "buttonMisc": "Miscellaneous",
-            "buttonOfficeVisit": "Office Visit"
-          }
-        }
-      },
-      "contactGrid": {
-        "tabs": {
-          "selectFromDebt": {
-            "title": "Select From Linked"
-          },
-          "selectFromAll": {
-            "title": "Select From All"
-          },
-          "add": {
-            "title": "Add Manually",
-            "form": {
-              "firstName": "Имя",
-              "lastName": "Фамилия",
-              "middleName": "Отчество",
-              "linkTypeCode": "Тип связи",
-              "personTypeCode": "Тип персоны"
-            }
-          }
-        }
-      },
-      "outcome": {
-        "title": "Contact Outcome",
-        "template": "Scenario",
-        "autoCommentId": "Select Auto Comments",
-        "autoComment": "Auto Comments",
-        "comment": "Comments",
-        "errors": {
-          "init": "An error has occurred"
-        }
-      },
-      "promise": {
-        "title": "Promise Registration",
-        "date": "Date",
-        "amount": "Amount",
-        "percentage": "Remainder Percentage"
-      },
-      "payment": {
-        "title": "Регистрация неподтвержденного платежа",
-        "date": "Date",
-        "amount": "Amount",
-        "currencyId": "Currency",
-        "percentage": "Remainder Percentage"
-      },
-      "phone": {
-        "title": "Add Phone",
-        "typeCode": "Type",
-        "phone": "Phone Number",
-        "stopAutoSms": "Disable Auto SMS",
-        "stopAutoInfo": "Disable Audo Voicemail",
-        "comment": "Comments"
-      },
-      "attachment": {
-        "title": "File Attachments",
-        "add": "Add File",
-        "docTypeCode": "Type",
-        "docName": "Name",
-        "docNumber": "Number",
-        "comment": "Comments",
-        "file": "Select File"
-      },
-      "attributes": {
-        "title": "Additional Attributes",
-        "grid": {
-          "code": "Code",
-          "name": "Name",
-          "value": "Value",
-          "mandatory": "Mandatory Field"
-        }
-      },
-      "misc": {
-        "title": "Misc",
-        "autoCommentId": "Select Auto Comments",
-        "autoComment": "Auto Comments",
-        "callReasonCode": "Reason for Call",
-        "debtReasonCode": "Reason for Debt",
-        "nextCallDateTime": "Next Call Date",
-        "refusalReasonCode": "Reason for Refusal",
-        "statusReasonCode": "Reason for Status Change",
-        "comment": "Comments"
-      },
-      "confirm": {
-        "title": "Confirmation"
-      }
-    },
     "debtsProcessing": {
       "all": {
         "title": "All"
@@ -595,7 +670,7 @@
         "grid": {
           "bankName": "Bank",
           "branchCode": "Branch",
-          "contact": "Contract",
+          "contract": "Contract",
           "creditEndDate": "Credit End Date",
           "creditName": "Credit Name",
           "creditStartDate": "Credit Start Date",
@@ -644,7 +719,7 @@
           "comment": "Comment"
         },
         "card": {
-          "name": "Name",
+          "names": "Name",
           "sql": "SQL",
           "comment": "Comment",
           "exportUndescribed": "Export undescribed"
@@ -662,7 +737,7 @@
             "textWidth": "Text width"
           },
           "card": {
-            "name": "Name",
+            "names": "Name",
             "systemName": "System name",
             "sortOrder": "Sort order",
             "textWidth": "Text width"
@@ -683,7 +758,7 @@
             "multiSelect": "Multi select"
           },
           "card": {
-            "name": "Name",
+            "names": "Name",
             "systemName": "System name",
             "sortOrder": "Sort order",
             "paramTypeCode": "Param type",
@@ -793,7 +868,10 @@
       "email": "Email",
       "address": "Office address",
       "language": "Language",
-      "comment": "Comments"
+      "comment": "Comments",
+      "agentId": "Agent id",
+      "agentName": "Agent name",
+      "agentPassword": "Agent password"
     },
     "select": {
       "role": {
@@ -802,22 +880,6 @@
     },
     "create": {
       "title": "New user"
-    },
-    "grid": {
-      "id": "ID",
-      "branchCode": "Branch",
-      "login": "Login",
-      "lastName": "Family name",
-      "firstName": "Name",
-      "middleName": "Middle name",
-      "position": "Position",
-      "roleId": "Role",
-      "isInactive": "Inactive",
-      "mobPhone": "Mobile",
-      "workPhone": "Work phone",
-      "intPhone": "Extension",
-      "email": "Email",
-      "languageId": "Language"
     },
     "ldap": {
       "title": "Domain users",
@@ -1387,6 +1449,9 @@
       }
     },
     "campaigns": {
+      "titlebar": {
+        "title": "Campaigns"
+      },
       "create": {
         "title": "New campaign"
       },
@@ -2332,6 +2397,9 @@
       }
     },
     "currencies": {
+      "titlebar": {
+        "title": "Currencies"
+      },
       "grid": {
         "id": "ID",
         "code": "Code",
@@ -2370,6 +2438,11 @@
       "grid": {
         "id": "ID",
         "name": "Name"
+      }
+    },
+    "personSelect": {
+      "dialog": {
+        "title": "Select person"
       }
     },
     "scheduleEvents": {
@@ -2931,6 +3004,7 @@
       "clear": "Clear",
       "close": "Close",
       "copy": "Copy",
+      "debtCard": "Debtor card",
       "delete": "Delete",
       "download": "Download",
       "drop": "Drop",
@@ -3186,10 +3260,15 @@
           "lastName": "Last Name",
           "firstName": "First Name",
           "middleName": "Middle Name",
+          "personFullName": "Full Name",
           "typeCode": "Debtor Type",
           "birthDate": "Date of Birth",
+          "birthPlace": "Place of birth",
+          "familyStatusCode": "Family status",
+          "educationCode": "Education",
           "genderCode": "Gender",
           "passportNumber": "Passport Number",
+          "comment": "Comment",
           "stringValue1": "String Attribute 1",
           "stringValue2": "String Attribute 2",
           "stringValue3": "String Attribute 3",

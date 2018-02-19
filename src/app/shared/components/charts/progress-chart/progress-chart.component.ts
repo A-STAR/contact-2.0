@@ -13,6 +13,7 @@ export class ProgressChartComponent implements OnInit {
 
   @Input() data: ChartData;
   @Input() options: ChartOptions;
+  @Input() translationKey: string;
 
   chart: ChartComponent;
 
@@ -21,8 +22,9 @@ export class ProgressChartComponent implements OnInit {
   ngOnInit(): void {
     this.options = {
       ...this.options,
-      rotation: 1 * Math.PI,
-      circumference: 1 * Math.PI
+      // TODO:(i.lobanov): Why we use these options? By default is used 2 * PI (full circle)
+      // rotation: 1 * Math.PI,
+      // circumference: 1 * Math.PI
     };
   }
 

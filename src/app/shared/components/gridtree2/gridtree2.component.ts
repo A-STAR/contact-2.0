@@ -6,7 +6,7 @@ import {
   Input, OnInit, Output, OnChanges, SimpleChanges
 } from '@angular/core';
 
-import 'ag-grid-enterprise';
+// import 'ag-grid-enterprise';
 import { ColDef, GridApi, GridOptions, RowDragEndEvent, RowEvent } from 'ag-grid';
 
 import { IGridTreeRow } from '@app/shared/components/gridtree2/gridtree2.interface';
@@ -32,6 +32,7 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
   @Input() dnd: boolean;
   @Input() rowHeight: number;
 
+  @Output() cellValueChanged = new EventEmitter<any>();
   @Output() select = new EventEmitter<IGridTreeRow<T>>();
   @Output() move = new EventEmitter<IGridTreeRow<T> | null>();
   @Output() dblclick = new EventEmitter<IGridTreeRow<T>>();
@@ -53,8 +54,7 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     const { rows } = changes;
-
-    if (rows && rows.currentValue && !rows.firstChange) {
+    if (this.gridApi && rows && rows.currentValue && !rows.firstChange) {
       this.gridApi.redrawRows();
     }
   }
@@ -96,4 +96,7 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
     }
   }
 
+  onCellValueChanged(event: any): void {
+    this.cellValueChanged.emit(event);
+  }
 }

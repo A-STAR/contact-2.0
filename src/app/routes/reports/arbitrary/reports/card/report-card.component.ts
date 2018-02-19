@@ -62,7 +62,6 @@ export class ReportCardComponent implements OnInit {
 
     action.subscribe(() => {
       this.reportsService.dispatchAction(ReportsService.MESSAGE_REPORT_SAVED);
-      this.form.markAsPristine();
       this.onBack();
     });
   }
@@ -74,7 +73,7 @@ export class ReportCardComponent implements OnInit {
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
       {
-        controlName: 'name',
+        controlName: 'names',
         type: 'multilanguage',
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_NAME,

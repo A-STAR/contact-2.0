@@ -31,6 +31,8 @@ import { UserTemplatesService } from '@app/core/user/templates/user-templates.se
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
+import { CheckboxRendererComponent } from '@app/shared/components/grids/renderers/checkbox/checkbox.component';
+
 import { flatten, isEmpty, makeKey, range, TYPE_CODES, valuesToOptions } from '@app/core/utils';
 
 const label = makeKey('widgets.contactProperty.dialogs.edit.attributes');
@@ -65,8 +67,8 @@ export class ContactPropertyTreeEditComponent implements OnInit {
   columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
     { dataType: TYPE_CODES.STRING, name: 'code', isDataPath: true },
     { dataType: TYPE_CODES.STRING, name: 'name' },
-    { dataType: TYPE_CODES.BOOLEAN, name: 'isDisplayed' },
-    { dataType: TYPE_CODES.BOOLEAN, name: 'isMandatory' },
+    { dataType: TYPE_CODES.BOOLEAN, name: 'isDisplayed', cellRendererFramework: CheckboxRendererComponent },
+    { dataType: TYPE_CODES.BOOLEAN, name: 'isMandatory', cellRendererFramework: CheckboxRendererComponent },
   ].map(col => ({ ...col, label: label(col.name)}));
 
   private attributeTypesChanged = false;
@@ -106,12 +108,11 @@ export class ContactPropertyTreeEditComponent implements OnInit {
           : { name: 'templateId', value: data && data.templateId },
       };
       this.controls = this.buildControls(debtStatusDict, templates, attributes);
-
       this.cdRef.markForCheck();
     });
   }
 
-  convertToNodes(attributeTypes: IUserAttributeType[], attributeData: IContactTreeAttribute[]): ITreeNode[] {
+  convertToNodes(attributeTypes: IUserAttributeType[], attributeData: IContactTreeAttribute[]): any {
     return attributeTypes
       .map(attribute => {
         const { children, ...data } = attribute;
@@ -156,40 +157,86 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  /**
-   * @deprecated
-   */
-  onIsDisplayedChange(value: boolean, node: ITreeNode, traverseUp: boolean = true, traverseDown: boolean = true): void {
-    this.attributeTypesChanged = true;
-    node.data.isDisplayed = value;
-    if (!value && node.data.isMandatory) {
-      node.data.isMandatory = false;
-    }
-    if (traverseUp && !!node.parent) {
-      const isParentDisplayed = node.parent.children.reduce((acc, child) => acc || !!child.data.isDisplayed, false);
-      this.onIsDisplayedChange(isParentDisplayed, node.parent, true, false);
-    }
-    if (traverseDown && !!node.children) {
-      node.children.forEach(child => this.onIsDisplayedChange(value, child, false, true));
-    }
-    if (traverseUp && traverseDown) {
-      this.cdRef.markForCheck();
-    }
+  updateDisplayedField(nodes: any[], code: number, value: boolean): any[] {
+    return nodes.reduce((acc, node) => {
+      const isMatch = node.data.code === code;
+      const { isDisplayed, isMandatory } = node.data;
+      return [
+        ...acc,
+        {
+          ...node,
+          data: {
+            ...node.data,
+            isDisplayed: isMatch ? value : isDisplayed,
+            isMandatory: isMatch ? isMandatory && value : isMandatory,
+          },
+          ...(node.children ? { children: this.updateDisplayedField(node.children, code, value) } : {}),
+        }
+      ];
+    }, []);
   }
 
-  /**
-   * @deprecated
-   */
-  onIsMandatoryChange(value: boolean, node: ITreeNode): void {
-    this.attributeTypesChanged = true;
-    node.data.isMandatory = value;
-    if (value && !node.data.isDisplayed) {
-      this.onIsDisplayedChange(true, node);
-    }
+  onIsDisplayedChange(event: any): void {
+    const codes = event.data.code;
+    this.attributeTypes = this.updateDisplayedField(this.attributeTypes, codes[codes.length - 1], event.newValue);
+
+    // TODO(d.maltsev): traverse the tree and update ancestors' and descendants' attributes
+    // this.attributeTypesChanged = true;
+    // node.data.isDisplayed = value;
+    // if (!value && node.data.isMandatory) {
+    //   node.data.isMandatory = false;
+    // }
+    // if (traverseUp && !!node.parent) {
+    //   const isParentDisplayed = node.parent.children.reduce((acc, child) => acc || !!child.data.isDisplayed, false);
+    //   this.onIsDisplayedChange(isParentDisplayed, node.parent, true, false);
+    // }
+    // if (traverseDown && !!node.children) {
+    //   node.children.forEach(child => this.onIsDisplayedChange(value, child, false, true));
+    // }
+    // if (traverseUp && traverseDown) {
+    //   this.cdRef.markForCheck();
+    // }
+  }
+
+  updateMandatoryField(nodes: any[], code: number, value: boolean): any[] {
+    return nodes.reduce((acc, node) => {
+      const isMatch = node.data.code === code;
+      const { isDisplayed, isMandatory } = node.data;
+      return [
+        ...acc,
+        {
+          ...node,
+          data: {
+            ...node.data,
+            isMandatory: isMatch ? value : isMandatory,
+            isDisplayed: isMatch ? isDisplayed || value : isDisplayed,
+          },
+          ...(node.children ? { children: this.updateMandatoryField(node.children, code, value) } : {}),
+        }
+      ];
+    }, []);
+  }
+
+  onIsMandatoryChange(event: any): void {
+    const codes = event.data.code;
+    this.attributeTypes = this.updateMandatoryField(this.attributeTypes, codes[codes.length - 1], event.newValue);
   }
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
+  }
+
+  onCellValueChanged(event: any): void {
+    this.attributeTypesChanged = true;
+    switch (event.colDef.field) {
+      case 'isDisplayed':
+        this.onIsDisplayedChange(event);
+        break;
+      case 'isMandatory':
+        this.onIsMandatoryChange(event);
+        break;
+    }
+    this.cdRef.markForCheck();
   }
 
   private buildControls(

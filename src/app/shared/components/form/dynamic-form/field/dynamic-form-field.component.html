@@ -46,13 +46,11 @@
     </label>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'checkbox'">
-    <label>
-      <app-checkbox [formControlName]="control.controlName"></app-checkbox>
-      {{ control.label | translate }}
-      <b *ngIf="control.required" class="text-danger">*</b>
-    </label>
-  </ng-container>
+  <app-checkbox
+    *ngSwitchCase="'checkbox'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+  ></app-checkbox>
 
   <ng-container *ngSwitchCase="'select'">
     <label>
@@ -366,19 +364,14 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'multilanguage'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <i class="fa fa-language"></i>
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-multilanguage-input
-        [formControlName]="control.controlName"
-        [langOptions]="control.langOptions"
-        [controlDisabled]="control.disabled"
-        [placeholder]="control.placeholder"
-      ></app-multilanguage-input>
-    </label>
+    <app-multilanguage-input
+      [disabled]="control.disabled"
+      [formControlName]="control.controlName"
+      [label]="control.label"
+      [langOptions]="control.langOptions"
+      [placeholderKey]="control.placeholder"
+      [required]="control.required"
+    ></app-multilanguage-input>
   </ng-container>
 
   <ng-container *ngSwitchCase="'colorpicker'">
@@ -403,67 +396,5 @@
       ></app-debt-amount>
     </label>
   </ng-container>
-
-  <ng-container *ngSwitchCase="'dynamic'">
-
-    <ng-container *ngIf="control.dependsOn" [ngSwitch]="form.controls[control.dependsOn].value">
-
-      <ng-container *ngSwitchCase="1">
-        <label>
-          <span class="form-label">
-            {{ control.label | translate }}
-            <b *ngIf="control.required" class="text-danger">*</b>
-          </span>
-          <input type="number"
-                 class="form-control"
-                 [attr.placeholder]="(control.placeholder || '') | translate"
-                 [formControlName]="control.controlName">
-        </label>
-      </ng-container>
-
-      <ng-container *ngSwitchCase="2">
-        <label>
-          <span class="form-label">
-            {{ control.label | translate }}
-            <b *ngIf="control.required" class="text-danger">*</b>
-          </span>
-        </label>
-        <app-datepicker
-          [formControlName]="control.controlName"
-          [required]="control.required"
-        ></app-datepicker>
-      </ng-container>
-
-      <ng-container *ngSwitchCase="4">
-        <span class="form-label">
-          {{ control.label | translate }}
-          <b *ngIf="control.required" class="text-danger">*</b>
-        </span>
-        <label class="inline-label">
-          <app-radiobutton [formControlName]="control.controlName" value="1"></app-radiobutton>
-          {{'default.boolean.TRUE' | translate}}
-        </label>
-        <label class="inline-label">
-          <app-radiobutton [formControlName]="control.controlName" value="0"></app-radiobutton>
-          {{'default.boolean.FALSE' | translate}}
-        </label>
-      </ng-container>
-
-      <ng-container *ngSwitchDefault>
-        <label>
-          <span class="form-label">
-            {{ control.label | translate }}
-            <b *ngIf="control.required" class="text-danger">*</b>
-          </span>
-          <input type="text"
-                 class="form-control"
-                 [attr.placeholder]="(control.placeholder || '') | translate"
-                 [formControlName]="control.controlName">
-        </label>
-      </ng-container>
-
-    </ng-container> <!-- control.dependsOn -->
-
-  </ng-container> <!-- control.type:'dynamic' -->
 
 </div> <!-- ngSwitch:control.type -->

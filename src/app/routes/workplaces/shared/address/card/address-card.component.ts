@@ -1,7 +1,6 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
@@ -10,7 +9,6 @@ import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form-2/dy
 import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { AddressService } from '@app/routes/workplaces/shared/address/address.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -27,6 +25,8 @@ export class AddressCardComponent implements OnInit {
   @Input() callCenter = false;
   @Input() entityId: number;
 
+  @Output() close = new EventEmitter<void>();
+
   @ViewChild('form') form: DynamicForm2Component;
 
   address$ = new BehaviorSubject<IAddress>(null);
@@ -34,8 +34,6 @@ export class AddressCardComponent implements OnInit {
 
   constructor(
     private addressService: AddressService,
-    private route: ActivatedRoute,
-    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {}
@@ -71,22 +69,7 @@ export class AddressCardComponent implements OnInit {
   }
 
   onBack(): void {
-    const contactSegments = this.route.snapshot.paramMap.get('contactId')
-      ? [ 'contact', this.route.snapshot.paramMap.get('contactId') ]
-      : [];
-    const url = this.callCenter
-      ? [
-        '/workplaces',
-        'call-center',
-        this.route.snapshot.paramMap.get('campaignId')
-      ]
-      : [
-        '/workplaces',
-        'debtor-card',
-        this.route.snapshot.paramMap.get('debtId'),
-        ...contactSegments
-      ];
-    this.routingService.navigate(url);
+    this.close.emit();
   }
 
   get canSubmit(): boolean {

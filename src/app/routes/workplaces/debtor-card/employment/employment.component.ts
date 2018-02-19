@@ -4,10 +4,12 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 
 interface IEmploymentCardRouteParams {
   employmentId: number;
   contactId: number;
+  contactPersonId: number;
 }
 
 @Component({
@@ -19,6 +21,7 @@ export class DebtorEmploymentComponent {
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
+    private routingService: RoutingService,
   ) {}
 
   get employmentId$(): Observable<number> {
@@ -30,7 +33,7 @@ export class DebtorEmploymentComponent {
    */
   get personId$(): Observable<number> {
     return combineLatest(this.debtorCardService.personId$, this.routeParams$)
-      .map(([ personId, params ]) => params.contactId || personId)
+      .map(([ personId, params ]) => params.contactPersonId || params.contactId || personId)
       .distinctUntilChanged();
       /**
        * This experiment shows that despite the `onPush` mode
@@ -41,5 +44,17 @@ export class DebtorEmploymentComponent {
 
   get routeParams$(): Observable<IEmploymentCardRouteParams> {
     return <Observable<IEmploymentCardRouteParams>>this.route.params.distinctUntilChanged();
+  }
+
+  onClose(): void {
+    const contactId = this.route.snapshot.paramMap.get('contactId');
+    const contactPersonId = this.route.snapshot.paramMap.get('contactPersonId');
+    this.routingService.navigate([
+      '/workplaces',
+      'debtor-card',
+      this.route.snapshot.paramMap.get('debtId'),
+      ...(contactId ? [ 'contact', contactId ] : []),
+      ...(contactPersonId ? [ 'contact', 'create' ] : [])
+    ]);
   }
 }

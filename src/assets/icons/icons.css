@@ -41,90 +41,237 @@
 .co-action-log:before {
   content: "\e000";
 }
-.co-attributes:before {
+.co-add:before {
   content: "\e001";
 }
-.co-call-campaigns:before {
+.co-attributes:before {
   content: "\e002";
 }
-.co-call-center:before {
+.co-attributes-sm:before {
   content: "\e003";
 }
-.co-call-incoming:before {
+.co-back:before {
   content: "\e004";
 }
-.co-communication-out:before {
+.co-calendar:before {
   content: "\e005";
 }
-.co-constants:before {
+.co-call-campaigns:before {
   content: "\e006";
 }
-.co-contact-log:before {
+.co-call-cancel:before {
   content: "\e007";
 }
-.co-contact-tree:before {
+.co-call-center:before {
   content: "\e008";
 }
-.co-court:before {
+.co-call-incoming:before {
   content: "\e009";
 }
-.co-currencies:before {
+.co-call-transfer:before {
   content: "\e00a";
 }
-.co-data-upload:before {
+.co-call-unpause:before {
   content: "\e00b";
 }
-.co-debt-list:before {
+.co-change-status:before {
   content: "\e00c";
 }
-.co-debt-processing:before {
+.co-checkbox-mark:before {
   content: "\e00d";
 }
-.co-dictionaries:before {
+.co-clear:before {
   content: "\e00e";
 }
-.co-formulae:before {
+.co-close:before {
   content: "\e00f";
 }
-.co-groups:before {
+.co-communication-out:before {
   content: "\e010";
 }
-.co-home:before {
+.co-confirm:before {
   content: "\e011";
 }
-.co-legal:before {
+.co-constants:before {
   content: "\e012";
 }
-.co-load-templates:before {
+.co-contact-log:before {
   content: "\e013";
 }
-.co-mail:before {
+.co-contact-registration:before {
   content: "\e014";
 }
-.co-message-scenarios:before {
+.co-contact-tree:before {
   content: "\e015";
 }
-.co-org-structure:before {
+.co-copy:before {
   content: "\e016";
 }
-.co-payments:before {
+.co-court:before {
   content: "\e017";
 }
-.co-portfolios:before {
+.co-currencies:before {
   content: "\e018";
 }
-.co-roles:before {
+.co-data-upload:before {
   content: "\e019";
 }
-.co-schedule:before {
+.co-debt-list:before {
   content: "\e01a";
 }
-.co-search-groups:before {
+.co-debt-processing:before {
   content: "\e01b";
 }
-.co-tasks:before {
+.co-delete:before {
   content: "\e01c";
 }
-.co-users:before {
+.co-dialog-exclamation:before {
   content: "\e01d";
+}
+.co-dialog-info:before {
+  content: "\e01e";
+}
+.co-dialog-question:before {
+  content: "\e01f";
+}
+.co-dictionaries:before {
+  content: "\e020";
+}
+.co-download:before {
+  content: "\e021";
+}
+.co-download-excel:before {
+  content: "\e022";
+}
+.co-edit:before {
+  content: "\e023";
+}
+.co-email:before {
+  content: "\e024";
+}
+.co-exclamation-o:before {
+  content: "\e025";
+}
+.co-filter:before {
+  content: "\e026";
+}
+.co-filter-params:before {
+  content: "\e027";
+}
+.co-formulae:before {
+  content: "\e028";
+}
+.co-groups:before {
+  content: "\e029";
+}
+.co-help:before {
+  content: "\e02a";
+}
+.co-history:before {
+  content: "\e02b";
+}
+.co-home:before {
+  content: "\e02c";
+}
+.co-info-o:before {
+  content: "\e02d";
+}
+.co-legal:before {
+  content: "\e02e";
+}
+.co-load-templates:before {
+  content: "\e02f";
+}
+.co-lock:before {
+  content: "\e030";
+}
+.co-mail:before {
+  content: "\e031";
+}
+.co-managers:before {
+  content: "\e032";
+}
+.co-menu-v:before {
+  content: "\e033";
+}
+.co-message-scenarios:before {
+  content: "\e034";
+}
+.co-move:before {
+  content: "\e035";
+}
+.co-org-structure:before {
+  content: "\e036";
+}
+.co-pause:before {
+  content: "\e037";
+}
+.co-payments:before {
+  content: "\e038";
+}
+.co-picture:before {
+  content: "\e039";
+}
+.co-portfolios:before {
+  content: "\e03a";
+}
+.co-refresh:before {
+  content: "\e03b";
+}
+.co-reports:before {
+  content: "\e03c";
+}
+.co-roles:before {
+  content: "\e03d";
+}
+.co-save:before {
+  content: "\e03e";
+}
+.co-schedule:before {
+  content: "\e03f";
+}
+.co-search:before {
+  content: "\e040";
+}
+.co-search-groups:before {
+  content: "\e041";
+}
+.co-settings:before {
+  content: "\e042";
+}
+.co-sms:before {
+  content: "\e043";
+}
+.co-start:before {
+  content: "\e044";
+}
+.co-stop:before {
+  content: "\e045";
+}
+.co-tasks:before {
+  content: "\e046";
+}
+.co-template:before {
+  content: "\e047";
+}
+.co-time:before {
+  content: "\e048";
+}
+.co-undo:before {
+  content: "\e049";
+}
+.co-unlock:before {
+  content: "\e04a";
+}
+.co-upload:before {
+  content: "\e04b";
+}
+.co-users:before {
+  content: "\e04c";
+}
+.co-version-history:before {
+  content: "\e04d";
+}
+.co-visit:before {
+  content: "\e04e";
 }

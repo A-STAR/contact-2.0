@@ -3,14 +3,15 @@ import { Store } from '@ngrx/store';
 import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
 
-import { IAppState } from '../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IButtonType } from '../button/button.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from './toolbar-2.interface';
 
 import { DropdownComponent } from '@app/shared/components/dropdown/dropdown.component';
+// import { ButtonComponent } from './button/button.component';
 
-import { invert } from '../../../core/utils';
-import { doOnceIf } from '../../../core/utils/helpers';
+import { invert } from '@app/core/utils';
+import { doOnceIf } from '@app/core/utils/helpers';
 
 @Component({
   selector: 'app-toolbar-2',

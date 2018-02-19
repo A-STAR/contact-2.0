@@ -9,8 +9,6 @@ import { ContactLogTabModule } from './contact-log-tab/contact-log.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { ContractorObjectModule } from './contractor-object/object.module';
-import { CurrenciesModule } from './currencies/currencies.module';
-import { CurrencyRatesModule } from './currency-rates/currency-rates.module';
 import { DebtComponentModule } from './debt/component/debt-component.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
@@ -27,13 +25,13 @@ import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.m
 import { OperatorDetailsModule } from './operator-details/operator-details.module';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
+import { PersonSelectModule } from './person-select/person-select.module';
 import { PledgeModule } from './pledge/pledge.module';
 import { PledgorModule } from './pledgor/pledgor.module';
 import { PledgorPropertyModule } from './pledgor-property/pledgor-property.module';
 import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
 import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
-import { PropertyModule } from './property/property.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
@@ -46,8 +44,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     ContactModule,
     ContactPropertyModule,
     ContractorObjectModule,
-    CurrenciesModule,
-    CurrencyRatesModule,
     DebtComponentModule,
     DebtResponsibleModule,
     DebtOpenIncomingCallModule,
@@ -65,13 +61,13 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     OperatorDetailsModule,
     PaymentModule,
     PaymentOperatorModule,
+    PersonSelectModule,
     PledgeModule,
     PledgorModule,
     PledgorPropertyModule,
     PortfolioLogModule,
     PromiseModule,
     PromiseResolveModule,
-    PropertyModule,
     VisitPrepareModule,
   ],
   exports: [
@@ -82,8 +78,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     ContactModule,
     ContactPropertyModule,
     ContractorObjectModule,
-    CurrenciesModule,
-    CurrencyRatesModule,
     DebtComponentModule,
     DebtOpenIncomingCallModule,
     DebtResponsibleModule,
@@ -101,13 +95,13 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     OperatorDetailsModule,
     PaymentModule,
     PaymentOperatorModule,
+    PersonSelectModule,
     PledgeModule,
     PledgorModule,
     PledgorPropertyModule,
     PortfolioLogModule,
     PromiseModule,
     PromiseResolveModule,
-    PropertyModule,
     VisitPrepareModule,
   ],
   declarations: []

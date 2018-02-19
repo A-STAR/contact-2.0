@@ -12,6 +12,7 @@ import { ChartComponent } from '../chart/chart.component';
 export class BarChartComponent implements OnInit {
   @Input() data: ChartData;
   @Input() options: ChartOptions;
+  @Input() translationKey: string;
 
   chart: ChartComponent;
 

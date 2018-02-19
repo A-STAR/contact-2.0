@@ -66,7 +66,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
+      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd(),
     },
     {
@@ -112,7 +112,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.canView$,
+      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },
   ];
@@ -189,7 +189,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription = combineLatest(this.canView$, this._personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
-          this.notificationsService.error('errors.default.read.403').entity('entities.addresses.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.addresses.gen.plural').dispatch();
           this.clear();
         } else if (personId) {
           this.fetch();

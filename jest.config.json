@@ -5,5 +5,12 @@
     "^@app/(.*)$": "<rootDir>/src/app/$1.ts"
   },
 
+  "collectCoverageFrom": [
+    "src/app/**/*.ts"
+  ],
+  "coverageReporters": [
+    "text-summary"
+  ],
+
   "testRegex": "\\.spec\\.ts$"
 }

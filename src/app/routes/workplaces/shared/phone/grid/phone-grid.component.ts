@@ -8,7 +8,6 @@ import {
   OnDestroy,
   Output
 } from '@angular/core';
-// import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
@@ -72,7 +71,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   gridToolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.canAdd$,
+      enabled: combineLatestAnd([this.canAdd$, this._personId$.map(Boolean)]),
       action: () => this.onAdd()
     },
     {
@@ -107,38 +106,39 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.canView$,
+      enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },
-  ];
-
-  callToolbarItems: Array<IToolbarItem> = [
     {
-      type: ToolbarItemTypeEnum.BUTTON_CALL,
-      enabled: this.canMakeCall$,
-      action: () => this.onMakeCall()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DROP,
-      enabled: this.canDropCall$,
-      action: () => this.onDropCall()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_PAUSE,
-      enabled: this.canHoldCall$,
-      action: () => this.onHoldCall()
+      type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
+      align: 'right',
+      enabled: this.canTransferCall$,
+      action: () => this.setDialog('operator')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_RESUME,
+      align: 'right',
       enabled: this.canRetrieveCall$,
       action: () => this.onRetrieveCall()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
-      enabled: this.canTransferCall$,
-      action: () => this.setDialog('operator')
+      type: ToolbarItemTypeEnum.BUTTON_PAUSE,
+      align: 'right',
+      enabled: this.canHoldCall$,
+      action: () => this.onHoldCall()
     },
-  ];
+    {
+      type: ToolbarItemTypeEnum.BUTTON_DROP,
+      align: 'right',
+      enabled: this.canDropCall$,
+      action: () => this.onDropCall()
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_CALL,
+      align: 'right',
+      enabled: this.canMakeCall$,
+      action: () => this.onMakeCall()
+    },  ];
 
   contextMenuOptions: IContextMenuItem[] = [
     {
@@ -182,7 +182,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private gridService: GridService,
     private notificationsService: NotificationsService,
     private phoneService: PhoneService,
-    // private router: Router,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -198,7 +197,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription = combineLatest(this.canView$, this._personId$)
       .subscribe(([ canView, personId ]) => {
         if (!canView) {
-          this.notificationsService.error('errors.default.read.403').entity('entities.phones.gen.plural').dispatch();
+          this.notificationsService.permissionError().entity('entities.phones.gen.plural').dispatch();
           this.clear();
         } else if (personId) {
           this.fetch();
@@ -265,7 +264,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   onDoubleClick(phone: IPhone): void {
     this.dblClick.emit(phone);
-  }
+    }
 
   onSelect(phone: IPhone): void {
     this.select.emit(phone);

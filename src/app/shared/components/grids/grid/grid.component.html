@@ -1,0 +1,43 @@
+<div class="flex vertical">
+  <div class="flex-item grow">
+    <ag-grid-angular
+      *ngIf="colDefs"
+      class="ag-theme-material"
+      style="width: 100%; height: 100%;"
+      [columnDefs]="colDefs"
+      [gridOptions]="gridOptions"
+      [rowData]="rows"
+      (gridReady)="onGridReady($event)"
+    ></ag-grid-angular>
+  </div>
+
+  <app-grid-toolbar
+    *ngIf="gridApi"
+    class="flex-item"
+    [gridApi]="gridApi"
+  ></app-grid-toolbar>
+</div>
+
+<!--
+<ag-grid-angular
+  *ngIf="columns"
+  class="ag-theme-material"
+  style="height: 500px;"
+  [columnDefs]="columns"
+  [rowData]="rows"
+  [deltaRowDataMode]="true"
+  [treeData]="true"
+  [animateRows]="true"
+  [groupDefaultExpanded]="groupDefaultExpanded"
+  [getDataPath]="getDataPath"
+  [getRowNodeId]="getRowNodeId"
+  [autoGroupColumnDef]="autoGroupColumnDef"
+  [rowSelection]="rowSelection"
+  [gridOptions]="gridOptions"
+  (cellValueChanged)="onCellValueChanged($event)"
+  (gridReady)="onGridReady($event)"
+  (selectionChanged)="onSelect($event)"
+  (rowDoubleClicked)="onDblClick($event)"
+  (rowDragEnd)="onDragEnd($event)"
+></ag-grid-angular>
+-->

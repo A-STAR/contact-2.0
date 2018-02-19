@@ -1,38 +1,44 @@
-<div class="input-group">
+<label (click)="onLabelClick($event)">
+  <span *ngIf="label" class="form-label">
+    {{ label | translate }}
+    <i class="fa fa-language"></i>
+    <b *ngIf="required" class="text-danger">*</b>
+  </span>
 
-  <div class="input-group-btn">
-    <app-dropdown [fullWidth]="true">
-      <ng-container trigger>
-        <button type="button" class="btn btn-default dropdown-toggle">
-          <span style="display: inline-block; width: 100px; text-align: left;">{{ label | translate }}</span>
-          <span class="caret"></span>
-        </button>
-      </ng-container>
-      <div>
-        <ul class="list-group m0">
-          <li
-            *ngFor="let option of langOptions"
-            class="list-group-item b0 clickable"
-            (click)="onLanguageChange(option)"
-            [ngClass]="{'main-language': !!option.isMain}"
-          >
-            {{ option.label | translate }}
-          </li>
-        </ul>
-      </div>
-    </app-dropdown>
-  </div>
+  <div class="input-group" appDropdown>
 
-  <div class="input-wrapper">
-    <input
-      class="form-control"
-      type="text"
-      [disabled]="controlDisabled"
-      [ngModel]="value"
-      [attr.placeholder]="placeholder | translate"
-      (ngModelChange)="onValueChange($event)"
-    >
-    <i *ngIf="value != null" class="fa fa-close clear-btn" (click)="onClear()"></i>
-  </div>
+    <div class="input-group-btn">
 
-</div>
+      <button type="button" class="btn btn-default" #dropdownTrigger>
+        <span class="button-label">{{ buttonText | translate }}</span>
+        <i class="caret"></i>
+      </button>
+
+      <ul class="list-group m0" #dropdownContent>
+        <li
+          *ngFor="let option of langOptions"
+          class="list-group-item b0 clickable"
+          (click)="onLanguageChange(option)"
+          [ngClass]="{'main-language': !!option.isMain}"
+        >
+          {{ option.label | translate }}
+        </li>
+      </ul>
+
+    </div><!-- input-group-btn -->
+
+    <div class="input-wrapper">
+      <input
+        #input
+        class="form-control"
+        type="text"
+        [ngModel]="translation"
+        [attr.placeholder]="placeholderKey | translate "
+        (ngModelChange)="onValueChange($event)"
+        (focusout)="onFocusOut()"
+      >
+      <i *ngIf="translation != null" class="co co-close clear-btn" (click)="onClear($event)"></i>
+    </div><!-- input-wrapper -->
+
+  </div><!-- input-group -->
+</label>

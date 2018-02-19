@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
@@ -10,12 +9,38 @@ const routes: Routes = [
   {
     path: '',
     component: UIComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'inputs',
+      },
+      {
+        path: 'inputs',
+        loadChildren: './inputs/inputs.module#InputsModule',
+      },
+      {
+        path: 'datetime',
+        loadChildren: './datetime/datetime.module#DateTimeModule',
+      },
+      {
+        path: 'grids',
+        loadChildren: './grids/grids.module#GridsModule',
+      },
+      {
+        path: 'icons',
+        loadChildren: './icons/icons.module#IconsModule',
+      },
+      {
+        path: 'ws',
+        loadChildren: './ws/ws.module#WSModule',
+      },
+    ]
   },
 ];
 
 @NgModule({
   imports: [
-    FormsModule,
     RouterModule.forChild(routes),
     SharedModule,
   ],

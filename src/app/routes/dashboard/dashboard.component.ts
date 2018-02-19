@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component,  OnInit } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 import { DashboardChartType } from './dashboard.interface';
 import { IIndicator } from '@app/shared/components/charts/charts.interface';
-import { ICurrency } from '@app/shared/gui-objects/widgets/currencies/currencies.interface';
+import { ICurrency } from '@app/routes/utilities/currencies/currencies.interface';
 
 import { DashboardService } from './dashboard.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
@@ -14,7 +14,8 @@ import { LookupService } from '@app/core/lookup/lookup.service';
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.scss']
+    styleUrls: ['./dashboard.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit {
 
@@ -27,6 +28,7 @@ export class DashboardComponent implements OnInit {
   contactsDayPlan: ChartData;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private dashboardService: DashboardService,
     private lookupService: LookupService,
   ) { }
@@ -67,6 +69,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(data => {
         this.contactsDay = this.dashboardService.prepareChartData(DashboardChartType.CONTACT_DAY, data);
         this.contactsDayPlan = this.dashboardService.prepareChartData(DashboardChartType.CONTACT_DAY_PLAN, data);
+        this.cdRef.markForCheck();
       });
 
   }
@@ -92,7 +95,7 @@ export class DashboardComponent implements OnInit {
   }
 
   get promiseCountStatusOptions(): ChartOptions {
-    return this.dashboardService.contactsDayOptions;
+    return this.dashboardService.promiseCountStatusOptions;
   }
 
 }

@@ -7,6 +7,7 @@ import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
 import { DynamicFormModule } from '@app/shared/components/form/dynamic-form/dynamic-form.module';
+import { GridsModule } from '@app/shared/components/grids/grids.module';
 import { GridTree2WrapperModule } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.module';
 import { TabViewModule } from '@app/shared/components/layout/tabview/tabview.module';
 
@@ -20,6 +21,7 @@ import { ContactPropertyTreeEditComponent } from './contact-property-tree-edit.c
     DialogModule,
     DynamicFormModule,
     FormsModule,
+    GridsModule,
     GridTree2WrapperModule,
     TabViewModule,
     TranslateModule,
@@ -34,4 +36,4 @@ import { ContactPropertyTreeEditComponent } from './contact-property-tree-edit.c
     ContactPropertyTreeEditComponent,
   ]
 })
-export class ContactPropertyTreeEditModule { }
+export class ContactPropertyTreeEditModule {}

@@ -1,4 +1,187 @@
 {
+  "layout": {
+
+  },
+  "routes": {
+    "admin": {
+      "users": {
+        "grid": {
+          "branchCode": "Филиал",
+          "email": "Эл. почта",
+          "firstName": "Имя",
+          "id": "ID",
+          "intPhone": "Внутренний номер",
+          "isInactive": "Блокирован",
+          "languageId": "Язык",
+          "lastName": "Фамилия",
+          "login": "Логин",
+          "middleName": "Отчество",
+          "mobPhone": "Мобильный телефон",
+          "position": "Должность",
+          "roleId": "Роль",
+          "workPhone": "Рабочий телефон"
+        }
+      }
+    },
+    "workplaces": {
+      "shared": {
+        "contactRegistration": {
+          "cancelDialog": {
+            "message": "Вы действительно хотите отменить регистрацию текущего контакта?",
+            "title": "Отмена"
+          },
+          "edit": {
+            "dialogs": {
+              "confirmInsufficient": {
+                "message": "Необходимо увеличить сумму обещания до {{ percent }}% от суммы к погашению, иначе данное действие будет отправлено на рассмотрение. Сохранить обещание?",
+                "title": "Подтверждение суммы обещания"
+              },
+              "infoIncreaseAmount": {
+                "message": "Необходимо увеличить сумму обещания до {{ percent }}% от суммы к погашению.",
+                "title": "Информация"
+              }
+            },
+            "form": {
+              "attachments": {
+                "add": {
+                  "title": "Добавить",
+                  "form": {
+                    "comment": "Комментарий",
+                    "docName": "Название",
+                    "docNumber": "Номер документа",
+                    "docTypeCode": "Тип документа",
+                    "file": "Файл"
+                  }
+                },
+                "dialogs": {
+                  "delete": {
+                    "confirmMessage": "Вы действительно хотите удалить документ {{ docName }}?",
+                    "title": "Удалить документ"
+                  }
+                },
+                "grid": {
+                  "comment": "Комментарий",
+                  "docName": "Название",
+                  "docNumber": "Номер документа",
+                  "docTypeCode": "Тип документа",
+                  "file": "Файл"
+                },
+                "title": "Прикрепленные файлы"
+              },
+              "attributes": {
+                "grid": {
+                  "code": "Код",
+                  "name": "Название",
+                  "value": "Значение",
+                  "mandatory": "Обязательное поле"
+                }
+              },
+              "autoComment": {
+                "comment": "Выберите комментарий",
+                "autoComment": "Автокомментарий"
+              },
+              "callReason": {
+                "form": {
+                  "callReason": "Причина звонка должника"
+                }
+              },
+              "comment": {
+                "form": {
+                  "comment": "Комментарий"
+                }
+              },
+              "contactPerson": {
+                "title": "Изменение контактного лица"
+              },
+              "contactSelect": {
+                "card": {
+                  "title": "Добавить вручную",
+                  "form": {
+                    "firstName": "Имя",
+                    "lastName": "Фамилия",
+                    "linkTypeCode": "Тип связи",
+                    "middleName": "Отчество",
+                    "personTypeCode": "Тип персоны"
+                  }
+                },
+                "grid": {
+                  "title": "Из связанного долга"
+                },
+                "search": {
+                  "title": "Из всех"
+                }
+              },
+              "debtReason": {
+                "form": {
+                  "debtReason": "Причина возникновения задолженности"
+                }
+              },
+              "nextCall": {
+                "form": {
+                  "nextCall": "Дата следующего звонка"
+                }
+              },
+              "payment": {
+                "title": "Регистрация неподтвержденного платежа",
+                "form": {
+                  "date": "Дата",
+                  "amount": "Сумма",
+                  "percentage": "Процент от остатка",
+                  "currency": "Валюта"
+                }
+              },
+              "phone": {
+                "title": "Ввод нового телефона",
+                "form": {
+                  "type": "Тип",
+                  "number": "Номер телефона",
+                  "stopAutoSms": "Не отправлять автоматические SMS",
+                  "stopAutoInfo": "Запретить голосовое информирование",
+                  "comment": "Комментарий"
+                }
+              },
+              "promise": {
+                "title": "Регистрация обещания",
+                "form": {
+                  "date": "Дата",
+                  "amount": "Сумма",
+                  "percentage": "Процент от остатка"
+                }
+              },
+              "refusal": {
+                "form": {
+                  "refusal": "Причина отказа от оплаты"
+                }
+              },
+              "statusChange": {
+                "form": {
+                  "statusChange": "Причина перевода в пользовательский статус"
+                }
+              }
+            }
+          },
+          "tree": {
+            "emptyScenario": "Пустой сценарий",
+            "scenario": "Сценарий разговора",
+            "selectOutcome": "Выберите исход"
+          }
+        }
+      }
+    }
+  },
+  "shared": {
+    "components": {
+      "grids": {
+        "toolbar": {
+          "rowsSelected": "выбрано",
+          "rowsTotal": "всего"
+        }
+      }
+    }
+  },
+  "system": {
+
+  },
   "header": {
     "language": "Язык",
     "notifications": "Сообщения",
@@ -187,6 +370,7 @@
     "fieldLowerCase": "Это поле должно содержать хотя бы один символ в нижнем регистре",
     "fieldUpperCase": "Это поле должно содержать хотя бы один символ в верхнем регистре",
     "fieldMaxSize": "Размер файла не должен превышать {{ requiredSize }}",
+    "multilanguageRequired": "Значение поля на основном языке обязательно",
     "oneOfGroupRequired": "Хотя бы одно из полей должно быть заполнено",
     "timepicker": "Неверный формат времени"
   },
@@ -215,7 +399,8 @@
   "modules": {
     "callCenter": {
       "main": {
-        "title": "Выбор кампании"
+        "title": "Выбор кампании",
+        "nextDebtor": "Перейти к следующему должнику"
       },
       "grid": {
         "name": "Название",
@@ -226,8 +411,8 @@
       },
       "overview": {
         "info": {
-          "title": "Краткая информация",
-          "shortInfo": "Краткая информация"
+          "title": "Информация о долге",
+          "shortInfo": "Информация о долге"
         },
         "debtor": {
           "title": "Должник",
@@ -441,116 +626,6 @@
         }
       }
     },
-    "contactRegistration": {
-      "tree": {
-        "selectOutcome": "Выберите исход",
-        "emptyScenario": "Пустой сценарий"
-      },
-      "contact": {
-        "title": "Изменение контактного лица"
-      },
-      "dialogs": {
-        "contactType": {
-          "title": "Регистрация контакта",
-          "address": {
-            "title": "Адреса",
-            "button": "Зарегистрировать выбранный адрес"
-          },
-          "phone": {
-            "title": "Телефоны",
-            "button": "Зарегистрировать выбранный телефон"
-          },
-          "misc": {
-            "title": "Специальное",
-            "buttonMisc": "Специальное",
-            "buttonOfficeVisit": "Визит в офис"
-          }
-        }
-      },
-      "contactGrid": {
-        "tabs": {
-          "selectFromDebt": {
-            "title": "Выбрать из привязанных к долгу"
-          },
-          "selectFromAll": {
-            "title": "Выбрать из всех"
-          },
-          "add": {
-            "title": "Добавить вручную",
-            "form": {
-              "firstName": "Имя",
-              "lastName": "Фамилия",
-              "middleName": "Отчество",
-              "linkTypeCode": "Тип связи",
-              "personTypeCode": "Тип персоны"
-            }
-          }
-        }
-      },
-      "outcome": {
-        "title": "Выбор исхода",
-        "template": "Сценарий разговора",
-        "autoCommentId": "Выберите автокомментарий",
-        "autoComment": "Автокомментарий",
-        "comment": "Комментарий для ввода",
-        "errors": {
-          "init": "Произошла ошибка"
-        }
-      },
-      "promise": {
-        "title": "Регистрация обещания",
-        "date": "Дата",
-        "amount": "Сумма",
-        "percentage": "Процент от остатка"
-      },
-      "payment": {
-        "title": "Регистрация неподтвержденного платежа",
-        "date": "Дата",
-        "amount": "Сумма",
-        "currencyId": "Валюта",
-        "percentage": "Процент от остатка"
-      },
-      "phone": {
-        "title": "Добавление нового телефона",
-        "typeCode": "Тип",
-        "phone": "Номер телефона",
-        "stopAutoSms": "Не отправлять автоматические SMS",
-        "stopAutoInfo": "Запретить голосовое информирование",
-        "comment": "Комментарий"
-      },
-      "attachment": {
-        "title": "Прикрепление файлов",
-        "add": "Добавить файл",
-        "docTypeCode": "Тип",
-        "docName": "Название",
-        "docNumber": "Номер",
-        "comment": "Комментарий",
-        "file": "Выберите файл"
-      },
-      "attributes": {
-        "title": "Дополнительные атрибуты",
-        "grid": {
-          "code": "Код",
-          "name": "Название",
-          "value": "Значение",
-          "mandatory": "Обязательно к заполнению"
-        }
-      },
-      "misc": {
-        "title": "Дополнительно",
-        "autoCommentId": "Выберите автокомментарий",
-        "autoComment": "Автокомментарий",
-        "callReasonCode": "Причина звонка",
-        "debtReasonCode": "Причина возникновения задолженности",
-        "nextCallDateTime": "Дата повторного звонка",
-        "refusalReasonCode": "Причина отказа от оплаты",
-        "statusReasonCode": "Причина смены статуса на пользовательский",
-        "comment": "Комментарий"
-      },
-      "confirm": {
-        "title": "Подтверждение данных"
-      }
-    },
     "debtsProcessing": {
       "all": {
         "title": "Все"
@@ -595,7 +670,7 @@
         "grid": {
           "bankName": "Банк",
           "branchCode": "Филиал",
-          "contact": "Договор",
+          "contract": "Договор",
           "creditEndDate": "Дата окончания кредитного срока",
           "creditName": "Название продукта",
           "creditStartDate": "Дата выдачи кредита",
@@ -644,7 +719,7 @@
           "comment": "Описание"
         },
         "card": {
-          "name": "Название",
+          "names": "Название",
           "sql": "SQL",
           "comment": "Комментарий",
           "exportUndescribed": "Выгружать неописанные поля"
@@ -662,7 +737,7 @@
             "textWidth": "Ширина столбца"
           },
           "card": {
-            "name": "Название",
+            "names": "Название",
             "systemName": "Системное название",
             "sortOrder": "Порядковый номер",
             "textWidth": "Ширина столбца"
@@ -683,7 +758,7 @@
             "multiSelect": "Множественный выбор"
           },
           "card": {
-            "name": "Название",
+            "names": "Название",
             "systemName": "Системное название",
             "sortOrder": "Порядковый номер",
             "paramTypeCode": "Тип параметра",
@@ -793,7 +868,10 @@
       "email": "Email",
       "address": "Рабочий адрес",
       "language": "Язык",
-      "comment": "Комментарий"
+      "comment": "Комментарий",
+      "agentId": "ID агента",
+      "agentName": "Имя агента",
+      "agentPassword": "Пароль агента"
     },
     "select": {
       "role": {
@@ -802,22 +880,6 @@
     },
     "create": {
       "title": "Новый пользователь"
-    },
-    "grid": {
-      "id": "ID",
-      "branchCode": "Филиал",
-      "login": "Логин",
-      "lastName": "Фамилия",
-      "firstName": "Имя",
-      "middleName": "Отчество",
-      "position": "Должность",
-      "roleId": "Роль",
-      "isInactive": "Блокирован",
-      "mobPhone": "Мобильный телефон",
-      "workPhone": "Рабочий телефон",
-      "intPhone": "Внутренний номер",
-      "email": "Эл. почта",
-      "languageId": "Язык"
     },
     "ldap": {
       "title": "Пользователи домена",
@@ -1387,6 +1449,9 @@
       }
     },
     "campaigns": {
+      "titlebar": {
+        "title": "Кампании обзвона"
+      },
       "create": {
         "title": "Новая кампания обзвона"
       },
@@ -2332,6 +2397,9 @@
       }
     },
     "currencies": {
+      "titlebar": {
+        "title": "Валюты"
+      },
       "grid": {
         "id": "ИД",
         "code": "Код",
@@ -2370,6 +2438,11 @@
       "grid": {
         "id": "ID",
         "name": "Название"
+      }
+    },
+    "personSelect": {
+      "dialog": {
+        "title": "Выбор персоны"
       }
     },
     "scheduleEvents": {
@@ -2931,6 +3004,7 @@
       "clear": "Очистить",
       "close": "Закрыть",
       "copy": "Копировать",
+      "debtCard": "Карточка должника",
       "delete": "Удалить",
       "download": "Скачать",
       "drop": "Сброс",
@@ -3186,10 +3260,15 @@
           "lastName": "Фамилия",
           "firstName": "Имя",
           "middleName": "Отчество",
+          "personFullName": "ФИО",
           "typeCode": "Тип должника",
           "birthDate": "Дата рождения",
+          "birthPlace": "Место рождения",
+          "familyStatusCode": "Семейное положение",
+          "educationCode": "Образование",
           "genderCode": "Пол",
           "passportNumber": "Серия и номер паспорта",
+          "comment": "Комментарий",
           "stringValue1": "Строковый атрибут 1",
           "stringValue2": "Строковый атрибут 2",
           "stringValue3": "Строковый атрибут 3",

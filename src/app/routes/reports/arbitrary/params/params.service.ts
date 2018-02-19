@@ -27,20 +27,8 @@ export class ParamsService extends AbstractActionService {
     super();
   }
 
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('REPORT_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('REPORT_ADD');
-  }
-
   get canEdit$(): Observable<boolean> {
     return this.userPermissionsService.has('REPORT_EDIT');
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return this.userPermissionsService.has('REPORT_DELETE');
   }
 
   fetchAll(reportId: number): Observable<IReportParam[]> {

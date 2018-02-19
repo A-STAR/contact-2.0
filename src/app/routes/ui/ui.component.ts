@@ -1,25 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+
+import { ITab } from '@app/shared/components/layout/tabview/header/header.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-route-ui',
   styleUrls: [ './ui.component.scss' ],
   templateUrl: './ui.component.html'
 })
 export class UIComponent {
-  formGroup = new FormGroup({
-    checkbox1: new FormControl(false),
-    checkbox2: new FormControl(true),
-    checkbox3: new FormControl({ value: false, disabled: true }),
-    checkbox4: new FormControl({ value: true, disabled: true }),
-    radioGroup1: new FormControl(true),
-    radioGroup2: new FormControl({ value: true, disabled: true }),
-    datetime1: new FormControl(),
-    datetime2: new FormControl(new Date()),
-    date1: new FormControl(),
-    date2: new FormControl(new Date()),
-    time1: new FormControl(),
-    time2: new FormControl(new Date()),
-  });
+  tabs: ITab[] = [
+    { link: 'inputs', title: 'Inputs' },
+    { link: 'datetime', title: 'Date/Time' },
+    { link: 'grids', title: 'Grids' },
+    { link: 'icons', title: 'Icons' },
+    { link: 'ws', title: 'WebSockets' },
+  ];
 }

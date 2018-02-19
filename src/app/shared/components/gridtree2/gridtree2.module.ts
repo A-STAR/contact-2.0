@@ -23,6 +23,6 @@ import { GridTree2Component } from '@app/shared/components/gridtree2/gridtree2.c
 export class GridTree2Module {
   constructor() {
     // tslint:disable-next-line
-    LicenseManager.setLicenseKey('ag-Grid_Evaluation_License_Not_For_Production_1Devs20_January_2018__MTUxNjQwNjQwMDAwMA==4091ca44a0ac9c86778d044f42c5edc1');
+    LicenseManager.setLicenseKey('ag-Grid_Evaluation_License_Key_Not_for_Production_100Devs2_April_2018__MTUyMjYyMzYwMDAwMA==e8bb27c4f0c9ed34bce6c68b868694f2');
   }
 }

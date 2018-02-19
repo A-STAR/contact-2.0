@@ -1,5 +1,4 @@
-import { Component, ViewChild, OnInit, Input, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ViewChild, OnInit, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -8,7 +7,6 @@ import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dy
 import { IIdentityDoc } from '@app/shared/gui-objects/widgets/identity/identity.interface';
 
 import { IdentityService } from '@app/shared/gui-objects/widgets/identity/identity.service';
-import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
@@ -29,6 +27,8 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   @Input() personId: number;
   @Input() identityId: number;
 
+  @Output() close = new EventEmitter<void>();
+
   controls: IDynamicFormControl[] = null;
   dialog: string;
   identity: IIdentityDoc;
@@ -36,8 +36,6 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private identityService: IdentityService,
-    private route: ActivatedRoute,
-    private routingService: RoutingService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {
@@ -62,7 +60,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
           { label: label('expiryDate'), controlName: 'expiryDate', type: 'datepicker', },
           { label: label('citizenship'), controlName: 'citizenship', type: 'text', },
           { label: label('comment'), controlName: 'comment', type: 'textarea', },
-          { label: label('isMain'), controlName: 'isMain', type: 'checkbox', required: true },
+          { label: label('isMain'), controlName: 'isMain', type: 'checkbox' },
         ] as IDynamicFormControl[])
         .map(control => canEdit ? control : { ...control, disabled: true });
       this.identity = identity;
@@ -95,15 +93,7 @@ export class IdentityCardComponent extends DialogFunctions implements OnInit {
   }
 
   onBack(): void {
-    const contactSegments = this.route.snapshot.paramMap.get('contactId')
-      ? [ 'contact', this.route.snapshot.paramMap.get('contactId') ]
-      : [];
-    this.routingService.navigate([
-      '/workplaces',
-      'debtor-card',
-      this.route.snapshot.paramMap.get('debtId'),
-      ...contactSegments
-    ]);
+    this.close.emit();
   }
 
   private onSubmit(data: any): void {

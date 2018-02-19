@@ -6,9 +6,13 @@ export interface IContact {
   lastName?: string;
   birthDate?: Date | string;
   birthPlace?: string;
-  genderCode: number;
-  familyStatusCode: number;
-  educationCode: number;
-  linkTypeCode: number;
-  comment: string;
+  genderCode?: number;
+  familyStatusCode?: number;
+  educationCode?: number;
+  comment?: string;
+}
+
+export interface IContactLink {
+  contactPersonId: number;
+  linkTypeCode?: number;
 }
