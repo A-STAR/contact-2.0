@@ -9,6 +9,7 @@ interface AddressCardRouteParams {
 }
 
 @Component({
+  host: { class: 'full-height' },
   selector: 'app-debtor-contacts',
   templateUrl: './contacts.component.html'
 })

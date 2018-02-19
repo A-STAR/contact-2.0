@@ -1,18 +1,23 @@
 import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../shared/shared.module';
+import { PledgeCardModule } from './card/pledge-card.module';
+import { PledgeGridModule } from './grid/pledge-grid.module';
 
-import { DebtorPledgeComponent } from './pledge.component';
+import { PledgeService } from './pledge.service';
 
 @NgModule({
   imports: [
     SharedModule,
+    PledgeCardModule,
+    PledgeGridModule,
   ],
   exports: [
-    DebtorPledgeComponent
+    PledgeCardModule,
+    PledgeGridModule
   ],
-  declarations: [
-    DebtorPledgeComponent
-  ],
+  providers: [
+    PledgeService
+  ]
 })
 export class DebtorPledgeModule {}

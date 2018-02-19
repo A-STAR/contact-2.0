@@ -5,6 +5,6 @@ exports[`DictRendererComponent should render dict renderer 1`] = `
   id="root0"
   ng-version="5.2.4"
 >
-  Term 2
+  Term 1
 </div>
 `;
