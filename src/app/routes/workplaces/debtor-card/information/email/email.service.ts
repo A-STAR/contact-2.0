@@ -3,11 +3,11 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions } from '@ngrx/effects';
 
-import { IAppState } from '../../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IEmail, IEmailSchedule } from './email.interface';
 
-import { DataService } from '../../../../core/data/data.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Injectable()
 export class EmailService {

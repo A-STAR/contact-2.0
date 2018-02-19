@@ -2,24 +2,21 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { DynamicFormModule } from '../../../../components/form/dynamic-form/dynamic-form.module';
+import { SharedModule } from '@app/shared/shared.module';
 
-import { EmailCardComponent } from './email-card.component';
+import { DebtorEmailCardComponent } from './email-card.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicFormModule,
     TranslateModule,
+    SharedModule
   ],
   exports: [
-    EmailCardComponent,
+    DebtorEmailCardComponent,
   ],
   declarations: [
-    EmailCardComponent,
+    DebtorEmailCardComponent,
   ],
-  entryComponents: [
-    EmailCardComponent,
-  ]
 })
 export class EmailCardModule { }

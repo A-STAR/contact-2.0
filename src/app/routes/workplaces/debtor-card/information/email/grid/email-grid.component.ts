@@ -7,11 +7,11 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 
 import { IDebt } from '@app/core/app-modules/app-modules.interface';
-import { IEmail, IEmailSchedule } from '@app/shared/gui-objects/widgets/email/email.interface';
+import { IEmail, IEmailSchedule } from '../email.interface';
 import { IGridColumn, IContextMenuItem } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { EmailService } from '@app/shared/gui-objects/widgets/email/email.service';
+import { EmailService } from '../email.service';
 import { DebtService } from '@app/core/debt/debt.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
