@@ -8,8 +8,8 @@
 
 <app-dialog-action
   *ngIf="isDialog('delete')"
-  titleTranslationKey="widgets.document.dialogs.delete.title"
-  actionTranslationKey="widgets.document.dialogs.delete.confirmMessage"
+  titleTranslationKey="workplaces.shared.contactRegistration.edit.form.attachments.dialogs.delete.title"
+  actionTranslationKey="workplaces.shared.contactRegistration.edit.form.attachments.dialogs.delete.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
   [messageParams]="selectedDocument$ | async"
@@ -18,7 +18,7 @@
 ></app-dialog-action>
 
 <app-grid
-  columnTranslationKey="widgets.document"
+  columnTranslationKey="workplaces.shared.contactRegistration.edit.form.attachments"
   selectionType="single"
   [styles]="{ height: '200px' }"
   [columns]="columns"

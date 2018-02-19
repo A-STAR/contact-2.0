@@ -9,6 +9,7 @@ export enum TitlebarItemTypeEnum {
   BUTTON_CLOSE            = 'close',
   BUTTON_COPY             = 'copy',
   BUTTON_DELETE           = 'delete',
+  BUTTON_DEBT_CARD        = 'debtCard',
   BUTTON_DOWNLOAD         = 'download',
   BUTTON_EDIT             = 'edit',
   BUTTON_EMAIL            = 'email',

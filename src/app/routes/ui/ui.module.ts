@@ -31,6 +31,10 @@ const routes: Routes = [
         path: 'icons',
         loadChildren: './icons/icons.module#IconsModule',
       },
+      {
+        path: 'ws',
+        loadChildren: './ws/ws.module#WSModule',
+      },
     ]
   },
 ];
