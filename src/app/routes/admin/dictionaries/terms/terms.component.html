@@ -33,17 +33,20 @@
 >
 </app-dialog-action>
 
-
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
-
-<app-grid
-  selectionType="single"
-  [columns]="columns"
-  [columnTranslationKey]="'terms'"
-  [emptyMessage]="emptyMessage$ | async"
-  [rows]="rows"
-  [styles]="{height: '400px'}"
-  (onDblClick)="edit()"
-  (onSelect)="onSelect($event)"
->
-</app-grid>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow">
+    <app-grid
+      selectionType="single"
+      [columns]="columns"
+      [columnTranslationKey]="'terms'"
+      [emptyMessage]="emptyMessage$ | async"
+      [rows]="rows"
+      [styles]="{ height: 'auto' }"
+      (onDblClick)="edit()"
+      (onSelect)="onSelect($event)"
+    ></app-grid>
+  </div>
+</div>

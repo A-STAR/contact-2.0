@@ -1,13 +1,23 @@
-<input
-  class="form-control"
-  type="text"
-  [disabled]="disabled"
-  [ngModel]="value"
-  (focus)="onFocus()"
-  (focusout)="onFocusOut()"
-  (keydown)="onKeyDown($event)"
-  (ngModelChange)="onChange($event)"
-/>
-
-<i class="fa fa-angle-up" (click)="onIncrementClick()"></i>
-<i class="fa fa-angle-down" (click)="onDecrementClick()"></i>
+<label>
+  <div *ngIf="label" class="form-label">
+    {{ label | translate }}
+    <b *ngIf="required" class="text-danger">*</b>
+  </div>
+  <div class="input-container">
+    <input
+      class="form-control"
+      type="text"
+      [disabled]="disabled"
+      [ngModel]="value"
+      (focus)="onFocus()"
+      (focusout)="onFocusOut()"
+      (keydown)="onKeyDown($event)"
+      (ngModelChange)="onChange($event)"
+    />
+    <i class="fa fa-angle-up" (click)="onIncrementClick()"></i>
+    <i class="fa fa-angle-down" (click)="onDecrementClick()"></i>
+  </div>
+  <div>
+    <span *ngIf="errors">{{ errors | json }}</span>
+  </div>
+</label>

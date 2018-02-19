@@ -1,35 +1,46 @@
 <div [ngSwitch]="control.type" [formGroup]="form" [hidden]="isHidden">
 
-  <ng-container *ngSwitchCase="'number'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <input
-        type="number"
-        class="form-control"
-        [attr.min]="control.min"
-        [attr.max]="control.max"
-        [attr.placeholder]="(control.placeholder || '') | translate"
-        [formControlName]="control.controlName"
-        (input)="control.onChange ? control.onChange($event) : undefined">
-    </label>
-  </ng-container>
+  <!--
+    Below are controls that can validate themselves and render their labels and errors (errors are rendererd by the form for now though).
+    This is now the preferred way.
+  -->
 
-  <ng-container *ngSwitchCase="'text'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <input
-        type="text"
-        class="form-control"
-        [attr.placeholder]="(control.placeholder || '') | translate"
-        [formControlName]="control.controlName">
-    </label>
-  </ng-container>
+  <app-text
+    *ngSwitchCase="'text'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [minLength]="minLength"
+    [maxLength]="maxLength"
+    [required]="control.required"
+  ></app-text>
+
+  <app-textarea
+    *ngSwitchCase="'textarea'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [required]="control.required"
+    [rows]="control.rows"
+  ></app-textarea>
+
+  <app-number
+    *ngSwitchCase="'number'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [min]="control.min"
+    [max]="control.max"
+    [positive]="control.positive"
+    [required]="control.required"
+  ></app-number>
+
+  <app-checkbox
+    *ngSwitchCase="'checkbox'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+  ></app-checkbox>
+
+  <!--
+    Below are old controls.
+  -->
 
   <ng-container *ngSwitchCase="'boolean'">
     <span class="form-label">
@@ -45,12 +56,6 @@
       {{'default.boolean.FALSE' | translate}}
     </label>
   </ng-container>
-
-  <app-checkbox
-    *ngSwitchCase="'checkbox'"
-    [formControlName]="control.controlName"
-    [label]="control.label"
-  ></app-checkbox>
 
   <ng-container *ngSwitchCase="'select'">
     <label>
@@ -130,21 +135,6 @@
         [controlDisabled]="control.disabled"
         (select)="selectHandler({ control: control, items: $event})"
       ></app-multi-select>
-    </label>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'textarea'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <textarea
-        [attr.placeholder]="(control.placeholder || '') | translate"
-        [formControlName]="control.controlName"
-        class="form-control"
-        [rows]="control.rows || 2"
-      ></textarea>
     </label>
   </ng-container>
 

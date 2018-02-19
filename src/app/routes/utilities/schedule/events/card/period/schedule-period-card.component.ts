@@ -16,7 +16,7 @@ import { ValueConverterService } from '@app/core/converter/value-converter.servi
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { min, oneOfGroupRequired } from '@app/core/validators';
+import { oneOfGroupRequired } from '@app/core/validators';
 import { ValidatorFn } from '@angular/forms';
 
 @Component({
@@ -189,7 +189,7 @@ export class SchedulePeriodCardComponent implements OnInit {
     ] as Partial<IDynamicFormItem>[];
 
     this.periodFromControls = [
-      [ { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true, validators: [ min(1) ] } ],
+      [ { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, min: 1, required: true } ],
       [
         ...Object.keys(this.scheduleEventService.weekDays)
           .map(day => ({
