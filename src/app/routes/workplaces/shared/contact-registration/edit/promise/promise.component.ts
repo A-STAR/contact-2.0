@@ -7,8 +7,6 @@ import * as moment from 'moment';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 
-import { minStrict, max } from '@app/core/validators';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-contact-registration-promise',
