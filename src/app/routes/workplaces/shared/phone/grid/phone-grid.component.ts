@@ -246,7 +246,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   getRowClass(): any {
-    return (phone: IPhone) => ({ inactive: !!phone.isInactive });
+    return (phone: IPhone) => phone.isInactive ? 'inactive' : null;
   }
 
   onDoubleClick(phone: IPhone): void {

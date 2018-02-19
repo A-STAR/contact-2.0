@@ -19,5 +19,9 @@ $row-height: 28px;
 
 $cell-horizontal-padding: 15px;
 
+.inactive {
+  background-color: $gray-lighter;
+}
+
 @import '~ag-grid/src/styles/ag-grid.scss';
 @import '~ag-grid/src/styles/ag-theme-material.scss';
