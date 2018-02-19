@@ -18,9 +18,10 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
+  host: { class: 'full-height' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-currency-rates-grid',
   templateUrl: './currency-rates-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
 
