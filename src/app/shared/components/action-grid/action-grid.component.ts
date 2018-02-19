@@ -118,7 +118,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
           this.actions$.next(actions);
           this._columns = [ ...columns ];
           this._initialized = true;
-          this.initSearchBtn();
           this.cdRef.markForCheck();
         });
     }
@@ -261,16 +260,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       filters.addFilter(this.filter.filters);
     }
     return filters;
-  }
-
-  private initSearchBtn(): void {
-    if (this.titlebar && this.filter) {
-      this.titlebar.items.unshift({
-        type: TitlebarItemTypeEnum.BUTTON_SEARCH,
-        enabled: of(true),
-        action: () => this.onRequest(),
-      });
-    }
   }
 
   private addPermissions(actions: IMetadataAction[], constants: ValueBag, permissions: ValueBag,
