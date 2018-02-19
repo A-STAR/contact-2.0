@@ -7,7 +7,7 @@ import * as R from 'ramda';
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
 import { IGridColumn, IRenderer, TRendererType, IMetadataDefs } from './grid.interface';
 import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
-import { IMetadataAction, IMetadataColumn, IMetadata, IMetadataTitlebar } from '../../../core/metadata/metadata.interface';
+import { IMetadataColumn } from '../../../core/metadata/metadata.interface';
 import { IUserDictionaries } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
 import { LookupService } from '../../../core/lookup/lookup.service';
@@ -17,7 +17,6 @@ import { ValueConverterService } from '../../../core/converter/value-converter.s
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
 import { renderers as gridRenderers, TYPE_CODES } from '../../../core/utils/index';
-import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Injectable()
 export class GridService {

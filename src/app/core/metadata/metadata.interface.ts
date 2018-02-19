@@ -1,6 +1,6 @@
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
-import { ITitlebarItem, ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
 
 export type MetadataAggregateType = 'sum' | 'average' | 'max' | 'min';
 

@@ -3,14 +3,13 @@ import {
   Component, ViewChild, AfterViewInit
 } from '@angular/core';
 import * as moment from 'moment';
-import { of } from 'rxjs/observable/of';
 
 import { IActionLog } from './actions-log.interface';
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+// import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ActionsLogService } from '@app/routes/admin/actions-log/actions-log.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
+// import { GridService } from '@app/shared/components/grid/grid.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
@@ -49,7 +48,7 @@ export class ActionsLogComponent implements AfterViewInit {
   constructor(
     private actionsLogService: ActionsLogService,
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
+    // private gridService: GridService,
   ) {}
 
   ngAfterViewInit(): void {
@@ -88,16 +87,16 @@ export class ActionsLogComponent implements AfterViewInit {
     }
   }
 
-  private doExport(): void {
-    const filters = this.grid.getFilters();
-    const params = this.grid.getRequestParams();
-    const columns = this.grid.getExportableColumns();
-    if (columns) {
-      const request = this.gridService.buildRequest(params, filters);
-      // NOTE: no paging in export, so remove it from the request
-      const { paging, ...rest } = request;
-      const body = { columns, ...rest };
-      this.downloader.download(body);
-    }
-  }
+  // private doExport(): void {
+  //   const filters = this.grid.getFilters();
+  //   const params = this.grid.getRequestParams();
+  //   const columns = this.grid.getExportableColumns();
+  //   if (columns) {
+  //     const request = this.gridService.buildRequest(params, filters);
+  //     // NOTE: no paging in export, so remove it from the request
+  //     const { paging, ...rest } = request;
+  //     const body = { columns, ...rest };
+  //     this.downloader.download(body);
+  //   }
+  // }
 }
