@@ -7,18 +7,19 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 
-import { IDynamicFormGroup, IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IGuarantor, IGuaranteeContract } from '../../guarantee/guarantee.interface';
+import { IDynamicFormGroup, IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IGuarantor, IGuaranteeContract } from '../../guarantee.interface';
 
-import { GuaranteeService } from '../../guarantee/guarantee.service';
+import { GuaranteeService } from '../../guarantee.service';
 import { GuarantorService } from '../../guarantor/guarantor.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
-import { DialogFunctions } from '../../../../../core/dialog';
-import { makeKey, parseStringValueAttrs } from '../../../../../core/utils';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+
+import { DialogFunctions } from '@app/core/dialog';
+import { makeKey, parseStringValueAttrs } from '@app/core/utils';
 
 const label = makeKey('widgets.guarantor.grid');
 

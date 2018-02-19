@@ -7,10 +7,10 @@ import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IGuaranteeContract, IGuarantor } from '@app/shared/gui-objects/widgets/guarantee/guarantee.interface';
+import { IGuaranteeContract, IGuarantor } from '../guarantee.interface';
 
-import { GuaranteeService } from '@app/shared/gui-objects/widgets/guarantee/guarantee.service';
-import { GuarantorService } from '@app/shared/gui-objects/widgets/guarantor/guarantor.service';
+import { GuaranteeService } from '../guarantee.service';
+import { GuarantorService } from '../guarantor/guarantor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -22,10 +22,10 @@ const label = makeKey('widgets.guaranteeContract.grid');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-guarantee-card',
+  selector: 'app-debtor-guarantee-card',
   templateUrl: './guarantee-card.component.html'
 })
-export class GuaranteeCardComponent implements OnInit, OnDestroy {
+export class DebtorGuaranteeCardComponent implements OnInit, OnDestroy {
 
   @ViewChild(DynamicFormComponent) set form(guaranteeForm: DynamicFormComponent) {
     this._form = guaranteeForm;
