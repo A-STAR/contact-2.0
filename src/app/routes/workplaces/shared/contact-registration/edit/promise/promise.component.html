@@ -1,14 +1,13 @@
 <div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
   <div formGroupName="promise">
-    <!-- TODO(d.maltsev): i18n -->
-    <h3>Регистрация обещания</h3>
+    <h3>{{ 'routes.workplaces.shared.contactRegistration.edit.form.promise.title' | translate }}</h3>
 
     <!-- Promise Date -->
     <div>
       <label>
         <span class="form-label">
-          <!-- TODO(d.maltsev): i18n -->
-          Дата <b class="text-danger">*</b>
+          {{ 'routes.workplaces.shared.contactRegistration.edit.form.promise.form.date' | translate }}
+          <b class="text-danger">*</b>
         </span>
       </label>
       <app-datepicker
@@ -23,8 +22,8 @@
     <div>
       <label>
         <span class="form-label">
-          <!-- TODO(d.maltsev): i18n -->
-          Сумма <b class="text-danger">*</b>
+          {{ 'routes.workplaces.shared.contactRegistration.edit.form.promise.form.amount' | translate }}
+          <b class="text-danger">*</b>
         </span>
         <input
           class="form-control"
@@ -41,8 +40,8 @@
     <div>
       <label>
         <span class="form-label">
-          <!-- TODO(d.maltsev): i18n -->
-          Процент от остатка <b class="text-danger">*</b>
+          {{ 'routes.workplaces.shared.contactRegistration.edit.form.promise.form.percentage' | translate }}
+          <b class="text-danger">*</b>
         </span>
         <input
           class="form-control"
