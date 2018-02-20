@@ -70,6 +70,7 @@ describe('SimpleGridComponent', () => {
   });
 
   it('should render empty grid', () => {
+    fixture.componentInstance.persistenceKey = 'test-persistence-key';
     fixture.detectChanges();
     expect(fixture.nativeElement).toMatchSnapshot();
   });
