@@ -47,6 +47,7 @@ import { ImageUploadModule } from './components/form/image-upload/image-upload.m
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { InputModule } from './components/form/input/input.module';
 import { ListModule } from './components/list/list.module';
+import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { MetadataGridModule } from './components/metadata-grid/metadata-grid.module';
 import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
@@ -116,6 +117,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     InputModule,
     ListModule,
+    MassOpsModule,
     MetadataGridModule,
     MomentModule,
     MultiLanguageModule,
@@ -192,6 +194,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     InputModule,
     ListModule,
+    MassOpsModule,
     MetadataGridModule,
     MomentModule,
     MultiLanguageModule,
