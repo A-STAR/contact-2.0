@@ -3,7 +3,7 @@
     <app-group-grid (select)="onGroupSelect($event)"></app-group-grid>
   </div>
   <div class="flex-item grow">
-    <app-tabview [noMargin]="true" *ngIf="showEvents$ | async">
+    <app-tabview [fullHeight]="true" [noMargin]="true" *ngIf="showEvents$ | async">
       <app-tabview-tab [title]="'widgets.groups.tabs.scheduleEvents'">
         <app-group-events [groupId]="groupId"></app-group-events>
       </app-tabview-tab>

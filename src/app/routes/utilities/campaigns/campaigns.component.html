@@ -40,7 +40,7 @@
     </app-grid>
   </div>
   <div class="flex-item grow">
-    <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+    <app-tabview [fullHeight]="true" [noMargin]="true" (select)="onTabSelect($event)">
       <app-tabview-tab [title]="'utilities.campaigns.tabs.participants'">
         <app-participants *ngIf="tabs[0].isInitialised"></app-participants>
       </app-tabview-tab>
