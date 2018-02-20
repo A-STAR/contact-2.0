@@ -21,17 +21,12 @@ import {
   RowDoubleClickedEvent,
 } from 'ag-grid';
 
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first, mergeMap, tap } from 'rxjs/operators';
-
 import { IGridSelectionType } from '@app/shared/components/grids/grids.interface';
 import { ISimpleGridColumn } from './grid.interface';
 
 import { GridsService } from '../grids.service';
 
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

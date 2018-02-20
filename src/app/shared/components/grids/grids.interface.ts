@@ -1,5 +1,3 @@
-import { ColDef } from 'ag-grid';
-
 export enum IGridSelectionType {
   SINGLE = 'single',
   MULTIPLE = 'multiple',
