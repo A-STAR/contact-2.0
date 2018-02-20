@@ -98,9 +98,10 @@ export class TermEditComponent implements OnInit {
         disabled: this.disableParentSelection || disabled,
         type: 'select',
         options: this.terms.map(toLabeledValues),
-        optionsActions: [
-          { text: 'terms.edit.select.title', type: SelectionActionTypeEnum.SORT }
-        ],
+        // TODO(a.tymchuk): sort before rendering
+        // optionsActions: [
+        //   { text: 'terms.edit.select.title', type: SelectionActionTypeEnum.SORT }
+        // ],
       },
       {
         controlName: 'isClosed',

@@ -1,7 +1,7 @@
 @import '../../../styles/bootstrap/bootstrap/_mixins';
 @import '../../../styles/app/variables.scss';
 
-.app-select-unselectable {
+.no-select {
   @include user-select(none);
 }
 
@@ -25,16 +25,6 @@
   top: 45%;
   right: 10px;
   cursor: pointer;
-}
-
-.app-select-tool {
-  padding: 3px $padding-base-horizontal;
-  font-weight: bold;
-  cursor: pointer;
-}
-.app-select-tool .fa {
-  position: absolute;
-  right: 10px;
 }
 
 .app-select-match-item {
@@ -91,19 +81,6 @@
   cursor: not-allowed;
 }
 
-.ui-select-multiple[disabled] .app-select-match-item {
-  * {
-    cursor: pointer;
-  }
-  &.selected, &.selected * {
-    background-color: #99e5a9;
-  }
-}
-
-.ui-select-multiple .ui-select-choices {
-  margin-top: 1px;
-}
-
 .ui-select-item {
   &.active {
     .dropdown-item {
@@ -120,20 +97,5 @@
     color: #333;
     font-weight: normal;
     cursor: pointer;
-  }
-}
-
-.ui-select-multiple {
-  height: auto;
-  padding: 3px 3px 0 3px;
-  min-height: 35px;
-}
-
-.ui-select-multiple input.app-select-search {
-  background-color: transparent !important; /* To prevent double background when disabled */
-  margin-bottom: 3px;
-
-  &.hidden {
-   display: none;
   }
 }

@@ -87,25 +87,17 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'select'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-select
-        [formControlName]="control.controlName"
-        [actions]="control.optionsActions"
-        [closableSelectedItem]="control.closableSelectedItem"
-        [controlDisabled]="control.disabled"
-        [multiple]="control.multiple"
-        [nullable]="!control.required"
-        [options]="control.options"
-        [placeholder]="control.placeholder"
-        [readonly]="control.readonly"
-        [renderer]="control.optionsRenderer"
-        (onSelect)="selectHandler({ control: control, items: $event})"
-      ></app-select>
-    </label>
+    <app-select
+      [formControlName]="control.controlName"
+      [controlDisabled]="control.disabled"
+      [isRequired]="control.required"
+      [label]="control.label"
+      [nullable]="!control.required"
+      [options]="control.options"
+      [placeholder]="control.placeholder"
+      [renderer]="control.optionsRenderer"
+      (onSelect)="selectHandler({ control: control, items: $event})"
+    ></app-select>
   </ng-container>
 
   <ng-container *ngSwitchCase="'selectwrapper'">

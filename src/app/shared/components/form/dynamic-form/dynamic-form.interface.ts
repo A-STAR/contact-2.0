@@ -70,7 +70,11 @@ export interface IDynamicFormBaseControl {
   // set `markAsDirty: true` if the control is initialized with a value
   markAsDirty?: boolean;
   onChange?: (value: any) => void;
-  readonly?: boolean;
+  /**
+   * @deprecated
+   */
+  // TODO: remove forever, since this is in conflict with `disabled`
+  // readonly?: boolean;
   required?: boolean;
   validators?: Array<ValidatorFn>;
   validationMessages?: IValidationMessages;
@@ -183,9 +187,7 @@ export interface IDynamicFormSelectControl extends IDynamicFormBaseControl {
   type: 'select' | 'selectwrapper' | 'singleselect' | 'multiselect' | 'multiselectwrapper';
   // options for select controls
   multiple?: boolean;
-  closableSelectedItem?: boolean;
   options?: ILabeledValue[];
-  optionsActions?: Array<ISelectionAction>;
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
   placeholder?: string;
   dictCode?: number;
