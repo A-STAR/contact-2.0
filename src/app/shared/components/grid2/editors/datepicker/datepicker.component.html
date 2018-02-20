@@ -1,15 +1,7 @@
-<div style="padding-top: 24px;">
-  <p-calendar
-    [inline]="true"
-    [monthNavigator]="true"
+<div style="padding: 10px;">
+  <app-date
     [ngModel]="value"
     [required]="true"
-    [selectOtherMonths]="true"
-    [showTime]="false"
-    [showSeconds]="false"
-    [hourFormat]="'24'"
-    [yearNavigator]="true"
-    [yearRange]="'1900:2050'"
-    (ngModelChange)="onValueChange($event)">
-  </p-calendar>
+    (ngModelChange)="onValueChange($event)"
+  ></app-date>
 </div>
