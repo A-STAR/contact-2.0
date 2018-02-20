@@ -41,7 +41,7 @@ export class DataService {
         publishReplay(1),
         refCount()
       )
-      .map(response => response.url);
+      .map(response => `http://${response.url}`);
   }
 
   get isLoading$(): Observable<boolean> {
