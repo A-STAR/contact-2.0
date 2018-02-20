@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule} from '@angular/common';
-
-import { SelectModule } from '../form/select/select.module';
-
 import { TranslateModule } from '@ngx-translate/core';
+
+import { SelectModule } from '../../form/select/select.module';
 import { ToolbarComponent } from './toolbar.component';
 import { ToolbarService } from './toolbar.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    TranslateModule,
     SelectModule,
+    TranslateModule,
   ],
   exports: [
     ToolbarComponent,

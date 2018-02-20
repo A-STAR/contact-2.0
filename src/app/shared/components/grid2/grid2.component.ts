@@ -36,7 +36,7 @@ import {
   IToolbarActionSelect,
   ToolbarActionTypeEnum,
   ToolbarControlEnum
-} from '../toolbar/toolbar.interface';
+} from './toolbar/toolbar.interface';
 import {
   IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
   IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,

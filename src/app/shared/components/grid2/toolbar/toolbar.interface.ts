@@ -1,4 +1,4 @@
-import { ILabeledValue } from '../../../core/converter/value-converter.interface';
+import { ILabeledValue } from '@app/core/converter/value-converter.interface';
 
 export enum ToolbarControlEnum {
   BUTTON,
