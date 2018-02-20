@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ColDef, ColumnApi, GridApi } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
-import { mapTo } from 'rxjs/operators';
 
 import { IGridColumn, IGridFilterType } from './grids.interface';
 import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
@@ -21,30 +20,21 @@ export class GridsService {
     private userDictionariesService: UserDictionariesService,
   ) {}
 
-  convertColumnsToColDefs<T>(columns: IGridColumn<T>[], persistenceKey: string): Observable<ColDef[]> {
+  convertColumnsToColDefs<T>(columns: IGridColumn<T>[], persistenceKey: string): ColDef[] {
     const settings = this.persistenceService.get(persistenceKey);
-    console.log(settings);
-
-    const colDefs = columns.map(column => ({
-      field: column.prop,
-      headerName: this.translateService.instant(column.label),
-      minWidth: column.minWidth,
-      maxWidth: column.maxWidth,
-      ...this.getFilterOptions(column),
-      ...this.getCellRendererOptions(column),
-    }));
-
-    return this.preloadDictionaries(columns).pipe(
-      mapTo(colDefs),
-    );
-  }
-
-  preloadDictionaries<T>(columns: IGridColumn<T>[]): Observable<IUserDictionaries> {
-    // TODO(d.maltsev): remove duplicates
-    const dictCodes = columns
-      .map(column => column.dictCode)
-      .filter(Boolean);
-    return this.userDictionariesService.getDictionaries(dictCodes);
+    this.preloadDictionaries(columns);
+    return settings.columns.map(col => {
+      const column = columns.find(c => c.prop === col.colId);
+      return {
+        field: column.prop,
+        headerName: this.translateService.instant(column.label),
+        minWidth: column.minWidth,
+        maxWidth: column.maxWidth,
+        ...this.getFilterOptions(column),
+        ...this.getCellRendererOptions(column),
+        ...col,
+      };
+    });
   }
 
   getSettings(key: string, gridApi: GridApi, columnApi: ColumnApi): void {
@@ -59,6 +49,14 @@ export class GridsService {
     const filterModel = gridApi.getFilterModel();
     const sortModel = gridApi.getSortModel();
     this.persistenceService.set(key, { columns, filterModel, sortModel });
+  }
+
+  private preloadDictionaries<T>(columns: IGridColumn<T>[]): Observable<IUserDictionaries> {
+    // TODO(d.maltsev): remove duplicates
+    const dictCodes = columns
+      .map(column => column.dictCode)
+      .filter(Boolean);
+    return this.userDictionariesService.getDictionaries(dictCodes);
   }
 
   private getCellRendererOptions<T>(column: IGridColumn<T>): Partial<ColDef> {

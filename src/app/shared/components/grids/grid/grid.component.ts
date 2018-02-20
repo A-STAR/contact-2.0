@@ -106,13 +106,8 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     const { columns, persistenceKey } = changes;
-    this.gridsService
-      .convertColumnsToColDefs(columns.currentValue, persistenceKey.currentValue)
-      .pipe(first())
-      .subscribe(colDefs => {
-        this.colDefs = colDefs;
-        this.cdRef.markForCheck();
-      });
+    this.colDefs = this.gridsService.convertColumnsToColDefs(columns.currentValue, persistenceKey.currentValue);
+    this.cdRef.markForCheck();
   }
 
   ngOnDestroy(): void {
