@@ -29,7 +29,7 @@ import {
   IAGridExportableColumn,
 } from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
-import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
+import { IGridColumn, IContextMenuItem, IMetadataDefs } from '../grid/grid.interface';
 import {
   IMetadataAction,
   IMetadataActionPermissions,
@@ -94,6 +94,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   private actions$ = new BehaviorSubject<any[]>(null);
   private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
+  private defaultActionName: string;
+  private defaultAction: any;
 
   dialog: string;
   dialogData: IGridAction;
@@ -124,8 +126,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
           return never();
         })
         .pipe(first())
-        .subscribe(({ actions, columns, titlebar }) => {
+        .subscribe(({ actions, columns, titlebar, defaultAction }) => {
           this.actions$.next(actions);
+          this.defaultActionName = defaultAction;
           this.titlebarConfig$.next(titlebar);
           this._columns = [ ...columns ];
           this._initialized = true;
@@ -149,7 +152,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         this.entityAttributesService.getDictValueAttributes()
       )
       .pipe(map(([actions, constants, permissions, entityPermissions]) => {
-        return this.addPermissions(actions, constants, permissions, entityPermissions);
+        const actionsWithPermissions = this.addPermissions(actions, constants, permissions, entityPermissions);
+        this.defaultAction = this.getDefaultAction(actionsWithPermissions);
+        return actionsWithPermissions;
       }));
   }
 
@@ -290,6 +295,20 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     const actionPermissions = this.buildPermissions(actions, constants, permissions, entityPerms);
 
     return this.attachPermissions(actions, actionPermissions);
+  }
+  // TODO(i.lobanov): rewrite this in functional way
+  private getDefaultAction(actions: IMetadataAction[]): IMetadataAction {
+    let found: IMetadataAction;
+    for (const action of actions) {
+      if (action.action === this.defaultActionName) {
+        return action;
+      } else if (action.children) {
+        found = this.getDefaultAction(action.children);
+        if (found) {
+          return found;
+        }
+      }
+    }
   }
 
   private attachPermissions(actions: IMetadataAction[], actionPermissions: IMetadataActionPermissions): IMetadataAction[] {
