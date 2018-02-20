@@ -3,6 +3,9 @@ import { HttpResponse } from '@angular/common/http';
 import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+
+import { IUserParams } from '@app/core/auth/auth.interface';
 
 import { AuthService } from './auth.service';
 import { DataService } from '../data/data.service';
@@ -99,6 +102,22 @@ export class AuthEffects {
       return [{ type: AuthService.AUTH_GLOBAL_RESET }];
     });
 
+  @Effect()
+  userParams$ = this.actions
+    .ofType(AuthService.USER_FETCH)
+    .switchMap(() => {
+      return this.fetchUserParams()
+        .map(params => ({
+          type: AuthService.USER_FETCH_SUCCESS,
+          payload: { params }
+        }))
+        .catch(error => {
+          return [
+            this.notificationService.error('auth.errors.login').response(error).action(),
+          ];
+        });
+    });
+
   constructor(
     private actions: Actions,
     private authService: AuthService,
@@ -126,5 +145,12 @@ export class AuthEffects {
 
   private getTokenFromResponse(response: HttpResponse<string>): string {
     return response.headers.get('X-AUTH-TOKEN');
+  }
+
+  private fetchUserParams(): Observable<IUserParams> {
+    // return this.dataService.get('/userParams');
+    return of({
+      usePbx: 1
+    });
   }
 }

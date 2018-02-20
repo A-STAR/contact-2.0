@@ -4,9 +4,10 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
+import { tap, distinctUntilChanged } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
-import { IUser } from './auth.interface';
+import { IUser, IUserParams } from './auth.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
 
 import { PersistenceService } from '../persistence/persistence.service';
@@ -30,8 +31,13 @@ export class AuthService implements CanActivate {
   static AUTH_GLOBAL_RESET    = 'AUTH_GLOBAL_RESET';
   static AUTH_RETRIEVE_TOKEN  = 'AUTH_RETRIEVE_TOKEN';
 
+  static USER_FETCH           = 'USER_FETCH';
+  static USER_FETCH_SUCCESS   = 'USER_FETCH_SUCCESS';
+
   private tokenTimer = null;
   private url: string = null;
+
+  private isParamsFetching = false;
 
   constructor(
     private jwtHelper: JwtHelperService,
@@ -50,6 +56,21 @@ export class AuthService implements CanActivate {
     return this.token$
       .map(token => this.jwtHelper.decodeToken(token))
       .map(tokenInfo => ({ userId: tokenInfo.userId }));
+  }
+
+  get userParams$(): Observable<IUserParams> {
+    return this.store
+    .select(state => state.auth.params)
+    .pipe(
+      tap(params => {
+        if (params) {
+          this.isParamsFetching = false;
+        } else if (!this.isParamsFetching) {
+          this.refreshUserParamsAction();
+        }
+      }),
+      distinctUntilChanged(),
+    );
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -122,6 +143,11 @@ export class AuthService implements CanActivate {
       this.store.dispatch({ type: AuthService.AUTH_RETRIEVE_TOKEN, payload: { token } });
     }
     return isValid;
+  }
+
+  private refreshUserParamsAction(): void {
+    this.isParamsFetching = true;
+    this.store.dispatch(this.createAction(AuthService.USER_FETCH));
   }
 
   private onTimer(token: string): void {
