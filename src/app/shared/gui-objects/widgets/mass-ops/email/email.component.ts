@@ -80,7 +80,7 @@ export class EmailComponent implements OnInit {
       );
 
       if (senderCode) {
-        this.data.senderCode = senderCode;
+        this.data = { ...this.data, senderCode };
       }
 
       this.cdRef.markForCheck();
@@ -104,11 +104,12 @@ export class EmailComponent implements OnInit {
     useSender: boolean,
     isSenderPresent: boolean,
   ): IDynamicFormControl[] {
-    return [
+
+    const controls: IDynamicFormControl[] = [
       {
         controlName: 'startDateTime',
         markAsDirty: true,
-        minDate: moment().subtract(3, 'd').toDate(),
+        minDateTime: moment().subtract(3, 'd').toDate(),
         required: true,
         type: 'datetimepicker',
       },
@@ -135,9 +136,11 @@ export class EmailComponent implements OnInit {
         display: useSender,
         markAsDirty: useSender && isSenderPresent,
         required: useSender,
-        type: 'singleselectwrapper',
+        type: 'singleselect',
       },
     ]
     .map(addFormLabel('widgets.mass.email.form'));
+
+    return controls;
   }
 }

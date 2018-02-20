@@ -33,17 +33,16 @@ import { DropdownDirective } from '../../../dropdown/dropdown.directive';
   ],
 })
 export class SingleSelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
-  @Input() nullable = false;
   @Input() dictCode: number;
-  @Input() lookupKey: ILookupKey;
   @Input() isDisabled = false;
+  @Input() lookupKey: ILookupKey;
+  @Input() nullable = false;
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
-  private _value: number;
-
   private _options: IOption[];
   private _optionsSubscription: Subscription;
+  private _value: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
