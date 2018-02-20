@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CalendarModule } from 'primeng/primeng';
 
-import { DateTimeModule } from '../../../form/datetime/datetime.module';
+import { DateTimeModule } from '@app/shared/components/form/datetime/datetime.module';
 
 import { DatePickerComponent } from './datepicker.component';
 
@@ -17,7 +16,6 @@ import { DatePickerComponent } from './datepicker.component';
     DatePickerComponent,
   ],
   imports: [
-    CalendarModule,
     FormsModule,
     DateTimeModule,
   ],

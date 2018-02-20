@@ -1,21 +1,21 @@
 import { Component, ViewChild } from '@angular/core';
 import { AgEditorComponent } from 'ag-grid-angular';
-import { Calendar } from 'primeng/primeng';
+import { DateComponent } from '@app/shared/components/form/datetime/date/date.component';
 
 @Component({
   selector: 'app-grid-editor-datepicker',
   templateUrl: './datepicker.component.html'
 })
 export class DatePickerComponent implements AgEditorComponent {
-  @ViewChild(Calendar) calendar: Calendar;
+  @ViewChild(DateComponent) calendar: DateComponent;
 
   private params: any;
 
   value: Date;
 
   agInit(params: any): void {
-    this.value = this.calendar.value;
     this.params = params;
+    this.value = params.value;
   }
 
   getValue(): any {

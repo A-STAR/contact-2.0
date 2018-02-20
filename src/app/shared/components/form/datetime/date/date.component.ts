@@ -19,9 +19,8 @@ export class DateComponent implements ControlValueAccessor {
   @Input() minDate: Date;
   @Input() maxDate: Date;
 
-  private _value: Date;
-
   page = moment();
+  value: Date;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -32,12 +31,12 @@ export class DateComponent implements ControlValueAccessor {
       disabled: this.isDateDisabled(date),
       current: moment().startOf('day').isSame(date),
       outside: date.isBefore(this.page.startOf('month'), 'day') || date.isAfter(this.page.endOf('month'), 'day'),
-      selected: moment(this._value).startOf('day').isSame(date),
+      selected: moment(this.value).startOf('day').isSame(date),
     };
   }
 
   writeValue(value: Date): void {
-    this._value = value;
+    this.value = value;
     if (value) {
       this.page = moment(value);
     }
@@ -54,8 +53,8 @@ export class DateComponent implements ControlValueAccessor {
 
   onClick(date: moment.Moment): void {
     if (!this.isDateDisabled(date)) {
-      this._value = date.toDate();
-      this.propagateChange(this._value);
+      this.value = date.toDate();
+      this.propagateChange(this.value);
       this.cdRef.markForCheck();
     }
   }
