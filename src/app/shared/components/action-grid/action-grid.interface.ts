@@ -1,4 +1,4 @@
-import { MetadataActionType } from '@app/core/metadata/metadata.interface';
+import { MetadataActionType, IMetadataAction } from '@app/core/metadata/metadata.interface';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
@@ -29,6 +29,12 @@ export type IGridActionData = IGridActionSingleSelection | IGridActionSelection 
 export interface ICloseAction {
   refresh?: boolean;
   deselectAll?: boolean;
+}
+
+export interface IActionGridAction {
+  metadataAction: IMetadataAction;
+  // selected row data
+  selection: any;
 }
 
 export interface IGridActionContext {
