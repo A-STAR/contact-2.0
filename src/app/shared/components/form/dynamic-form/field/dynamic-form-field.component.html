@@ -95,17 +95,17 @@
     </label>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'singleselectwrapper'">
+  <ng-container *ngSwitchCase="'singleselect'">
     <label>
       <span class="form-label">
         {{ control.label | translate }}
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
-      <app-single-select-wrapper
+      <app-single-select
         [formControlName]="control.controlName"
         [dictCode]="control.dictCode"
         [lookupKey]="control.lookupKey">
-      </app-single-select-wrapper>
+      </app-single-select>
     </label>
   </ng-container>
 
