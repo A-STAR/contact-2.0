@@ -20,6 +20,7 @@ import { of } from 'rxjs/observable/of';
 import {
   ICloseAction,
   IGridAction,
+  IActionGridAction,
 } from './action-grid.interface';
 import {
   IAGridAction,
@@ -206,31 +207,19 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onAction(gridAction: IAGridAction): void {
-    const { metadataAction } = gridAction;
-    this.dialog = metadataAction.action;
-    this.dialogData = {
-      addOptions: metadataAction.addOptions,
-      payload: this.actionGridFilterService.getPayload(gridAction, {
-        selection: this.selection,
-        metadataKey: this.metadataKey,
-        filters: this.getFilters()
-      }),
-      selection: this.actionGridFilterService.getGridSelection(gridAction, this.selection)
+    const action = {
+      metadataAction: gridAction.metadataAction,
+      selection: gridAction.selection.node.data
     };
+    this.dialog = action.metadataAction.action;
+    this.dialogData = this.setDialogData(action);
     this.cdRef.markForCheck();
   }
 
   onSimpleGridAction(metadataAction: any): void {
     this.dialog = metadataAction.action;
-    this.dialogData = {
-      addOptions: metadataAction.addOptions,
-      payload: this.actionGridFilterService.getPayload(metadataAction, {
-        selection: this.selection,
-        metadataKey: this.metadataKey,
-        filters: this.getFilters()
-      }),
-      selection: this.actionGridFilterService.getGridSelection(metadataAction, this.selection)
-    };
+    // TODO(i.lobanov): make work for simple grid
+    this.dialogData = this.setDialogData(metadataAction);
     this.cdRef.markForCheck();
   }
 
@@ -288,6 +277,18 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       filters.addFilter(this.filter.filters);
     }
     return filters;
+  }
+
+  private setDialogData(action: IActionGridAction): IGridAction {
+    return {
+      addOptions: action.metadataAction.addOptions,
+      payload: this.actionGridFilterService.getPayload(action, {
+        selection: this.selection,
+        metadataKey: this.metadataKey,
+        filters: this.getFilters()
+      }),
+      selection: this.actionGridFilterService.getGridSelection(action, this.selection)
+    };
   }
 
   private addPermissions(actions: IMetadataAction[], constants: ValueBag, permissions: ValueBag,
