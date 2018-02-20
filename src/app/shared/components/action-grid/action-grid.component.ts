@@ -155,7 +155,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       .pipe(map(([actions, constants, permissions, entityPermissions]) => {
         const actionsWithPermissions = this.addPermissions(actions, constants, permissions, entityPermissions);
         this.defaultAction = this.getDefaultAction(actionsWithPermissions);
-        console.log(this.defaultAction);
         return actionsWithPermissions;
       }));
   }
