@@ -6,6 +6,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -36,7 +37,7 @@ import { GridToolbarComponent } from '../toolbar/toolbar.component';
   styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html'
 })
-export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
+export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
   @ViewChild(GridToolbarComponent) toolbar: GridToolbarComponent;
 
   @Input() columns: ISimpleGridColumn<T>[];
@@ -100,6 +101,12 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
     return this.rowClass
       ? params => this.rowClass(params.data)
       : null;
+  }
+
+  ngOnInit(): void {
+    if (!this.persistenceKey) {
+      throw new Error('Persistence key for simple grid must be specified');
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
