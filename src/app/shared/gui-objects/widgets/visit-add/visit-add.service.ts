@@ -34,4 +34,8 @@ export class VisitAddService {
       })
       .catch(this.notificationsService.error('errors.default.massOp').entity('entities.massOps.addVisit').dispatchCallback());
    }
+
+   getVisitsCount(idData: IGridActionPayload): number | string {
+    return this.actionGridFilterService.getSelectionCount(idData) || '';
+  }
 }
