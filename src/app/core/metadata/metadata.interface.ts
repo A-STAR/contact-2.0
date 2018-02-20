@@ -87,6 +87,8 @@ export interface IMetadata {
   status: MetadataListStatusEnum;
   filters: IMetadataFilter[];
   titlebar?: IMetadataTitlebar;
+  defaultAction?: string;
+  permits?: string[];
 }
 
 export interface IMetadataState {

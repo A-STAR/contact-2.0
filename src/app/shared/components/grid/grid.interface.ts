@@ -69,5 +69,6 @@ export interface IMetadataDefs {
   actions: IMetadataAction[];
   columns: IAGridColumn[];
   titlebar?: IMetadataTitlebar;
-  defaultAction: string;
+  defaultAction?: string;
+  permits?: string[];
 }
