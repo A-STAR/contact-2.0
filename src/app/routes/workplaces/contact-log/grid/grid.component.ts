@@ -43,8 +43,4 @@ export class GridComponent {
         this.cdRef.markForCheck();
       });
   }
-
-  onDblClick(entry: IContactLogEntry): void {
-
-  }
 }

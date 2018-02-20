@@ -41,8 +41,4 @@ export class PaymentsGridComponent {
       });
   }
 
-  onDblClick(entry: IPayment): void {
-
-  }
-
 }

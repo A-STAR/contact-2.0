@@ -242,6 +242,18 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onDblClick(row: T): void {
+    if (this.defaultAction) {
+      const action: IActionGridAction = {
+        selection: row,
+        metadataAction: this.defaultAction
+      };
+      this.dialog = action.metadataAction.action;
+      this.dialogData = this.setDialogData(action);
+      this.cdRef.markForCheck();
+    }
+  }
+
+  onSimpleGridDblClick(row: T): void {
     this.dblClick.emit(row);
   }
 
