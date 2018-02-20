@@ -3,10 +3,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-route-ui-select',
-  templateUrl: './select.component.html'
+  selector: 'app-ui-single-select',
+  templateUrl: './single-select.component.html'
 })
-export class SelectComponent {
+export class SingleSelectComponent {
 
   select1Model = 1;
   select2Model = 1;

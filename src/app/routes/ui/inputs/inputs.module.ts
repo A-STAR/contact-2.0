@@ -7,7 +7,6 @@ import { SharedModule } from '@app/shared/shared.module';
 import { CheckboxModule } from './checkbox/checkbox.module';
 import { NumberModule } from './number/number.module';
 import { RadioButtonModule } from './radiobutton/radiobutton.module';
-import { SelectModule } from './select/select.module';
 import { TextModule } from './text/text.module';
 import { TextareaModule } from './textarea/textarea.module';
 
@@ -27,7 +26,6 @@ const routes: Routes = [
     NumberModule,
     RadioButtonModule,
     RouterModule.forChild(routes),
-    SelectModule,
     SharedModule,
     TextModule,
     TextareaModule,
