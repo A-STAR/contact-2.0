@@ -29,7 +29,7 @@ import {
   IAGridExportableColumn,
 } from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
-import { IGridColumn, IContextMenuItem, IMetadataDefs } from '../grid/grid.interface';
+import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
 import {
   IMetadataAction,
   IMetadataActionPermissions,
@@ -95,7 +95,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private actions$ = new BehaviorSubject<any[]>(null);
   private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
   private defaultActionName: string;
-  private defaultAction: any;
+  private defaultAction: IMetadataAction;
 
   dialog: string;
   dialogData: IGridAction;
@@ -154,6 +154,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       .pipe(map(([actions, constants, permissions, entityPermissions]) => {
         const actionsWithPermissions = this.addPermissions(actions, constants, permissions, entityPermissions);
         this.defaultAction = this.getDefaultAction(actionsWithPermissions);
+        console.log(this.defaultAction);
         return actionsWithPermissions;
       }));
   }
