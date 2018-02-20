@@ -22,7 +22,7 @@ export class WSService {
       publishReplay(1),
       refCount()
     )
-    .map(response => `ws://${response.url}`);
+    .map(response => response.ws);
 
   constructor(
     private http: HttpClient,
