@@ -180,7 +180,7 @@ export interface IDynamicFormSegmentedInputControl extends IDynamicFormBaseContr
 }
 
 export interface IDynamicFormSelectControl extends IDynamicFormBaseControl {
-  type: 'select' | 'selectwrapper' | 'singleselectwrapper' | 'multiselect' | 'multiselectwrapper';
+  type: 'select' | 'selectwrapper' | 'singleselect' | 'multiselect' | 'multiselectwrapper';
   // options for select controls
   multiple?: boolean;
   closableSelectedItem?: boolean;
@@ -320,7 +320,7 @@ export type TControlTypes =
   | 'segmented'
   | 'select'
   | 'selectwrapper'
-  | 'singleselectwrapper'
+  | 'singleselect'
   | 'text'
   | 'textarea'
   | 'texteditor'

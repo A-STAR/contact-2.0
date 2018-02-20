@@ -14,7 +14,7 @@
 
   <!-- Contact Info Tabstrip -->
   <div class="flex-item grow">
-    <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
+    <app-tabview [fullHeight]="true" (select)="onTabSelect($event)" [noMargin]="true">
       <app-tabview-tab [title]="tabs[0].title">
         <app-phone-grid
           *ngIf="tabs[0].isInitialised"

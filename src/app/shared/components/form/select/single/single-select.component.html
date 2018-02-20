@@ -1,4 +1,4 @@
-<div appDropdown>
+<div appDropdown [disabled]="isDisabled">
   <div #dropdownTrigger class="form-control clickable">
     <span>
       {{ label }}
@@ -7,6 +7,7 @@
   </div>
   <div #dropdownContent style="z-index: 10000;">
     <app-single-list
+      #select
       [hideSearchBar]="true"
       [getId]="getId"
       [getName]="getName"

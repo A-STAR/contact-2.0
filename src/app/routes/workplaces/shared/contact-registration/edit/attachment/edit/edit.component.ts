@@ -33,7 +33,6 @@ export class AttachmentEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // TODO(d.maltsev): file form control wrapper that injects constants service (similar to select wrapper)
     this.userConstantsService.get('FileAttachment.MaxSize')
       .pipe(first())
       .subscribe(maxSize => {
@@ -55,7 +54,7 @@ export class AttachmentEditComponent implements OnInit {
       {
         label: labelKey('docTypeCode'),
         controlName: 'docTypeCode',
-        type: 'singleselectwrapper',
+        type: 'singleselect',
         dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE
       },
       {

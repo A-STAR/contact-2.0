@@ -3,7 +3,7 @@
     <app-currencies-grid></app-currencies-grid>
   </div>
   <div class="flex-item grow">
-    <app-tabview [noMargin]="true">
+    <app-tabview [fullHeight]="true" [noMargin]="true">
       <app-tabview-tab [title]="'utilities.currencyRatesTab.title'">
         <app-currency-rates-grid [currencyId$]="selectedCurrency$"></app-currency-rates-grid>
       </app-tabview-tab>
