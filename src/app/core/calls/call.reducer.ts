@@ -29,11 +29,11 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
         ]
       };
     case CallService.CALL_START_SUCCESS: {
-      const { id, phoneId } = action.payload;
+      const { phoneId } = action.payload;
       return {
         ...state,
         calls: state.calls.map(call => call.phoneId === phoneId
-          ? { ...call, id }
+          ? { ...call, isStarted: true }
           : call
         )
       };
@@ -46,47 +46,47 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
       };
     }
     case CallService.CALL_DROP: {
-      const { id } = action.payload;
+      const { phoneId } = action.payload;
       return {
         ...state,
-        calls: state.calls.filter(call => call.id !== id)
+        calls: state.calls.filter(call => call.phoneId !== phoneId)
       };
     }
     case CallService.CALL_HOLD_SUCCESS: {
-      const { id } = action.payload;
+      const { phoneId } = action.payload;
       return {
         ...state,
-        calls: state.calls.map(call => call.id === id
+        calls: state.calls.map(call => call.phoneId === phoneId
           ? { ...call, onHold: true }
           : call
         )
       };
     }
     case CallService.CALL_HOLD_FAILURE: {
-      const { id } = action.payload;
+      const { phoneId } = action.payload;
       return {
         ...state,
-        calls: state.calls.map(call => call.id === id
+        calls: state.calls.map(call => call.phoneId === phoneId
           ? { ...call, onHold: false }
           : call
         )
       };
     }
     case CallService.CALL_RETRIEVE_SUCCESS: {
-      const { id } = action.payload;
+      const { phoneId } = action.payload;
       return {
         ...state,
-        calls: state.calls.map(call => call.id === id
+        calls: state.calls.map(call => call.phoneId === phoneId
           ? { ...call, onHold: false }
           : call
         )
       };
     }
     case CallService.CALL_TRANSFER_SUCCESS: {
-      const { id } = action.payload;
+      const { phoneId } = action.payload;
       return {
         ...state,
-        calls: state.calls.filter(call => call.id !== id)
+        calls: state.calls.filter(call => call.phoneId !== phoneId)
       };
     }
     default:

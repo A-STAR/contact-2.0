@@ -59,14 +59,9 @@ export class CallService {
       .select(state => state.calls.calls);
   }
 
-  findPhoneCall(phoneId: number): Observable<ICall> {
+  findCall(phoneId: number): Observable<ICall> {
     return this.calls$
       .map(calls => calls.find(call => call.phoneId === phoneId));
-  }
-
-  findCall(callId: number): Observable<ICall> {
-    return this.calls$
-      .map(calls => calls.find(call => call.id === callId));
   }
 
   refresh(): void {
@@ -91,8 +86,8 @@ export class CallService {
     });
   }
 
-  dropCall(callId: number): void {
-    this.findCall(callId)
+  dropCall(phoneId: number): void {
+    this.findCall(phoneId)
       .pipe(first())
       .subscribe(call => this.store.dispatch({
         type: CallService.CALL_DROP,
@@ -100,8 +95,8 @@ export class CallService {
       }));
   }
 
-  holdCall(callId: number): void {
-    this.findCall(callId)
+  holdCall(phoneId: number): void {
+    this.findCall(phoneId)
       .pipe(first())
       .subscribe(call => this.store.dispatch({
         type: CallService.CALL_HOLD,
@@ -109,8 +104,8 @@ export class CallService {
       }));
   }
 
-  retrieveCall(callId: number): void {
-    this.findCall(callId)
+  retrieveCall(phoneId: number): void {
+    this.findCall(phoneId)
       .pipe(first())
       .subscribe(call => this.store.dispatch({
         type: CallService.CALL_RETRIEVE,
@@ -118,8 +113,8 @@ export class CallService {
       }));
   }
 
-  transferCall(callId: number, userId: number): void {
-    this.findCall(callId)
+  transferCall(phoneId: number, userId: number): void {
+    this.findCall(phoneId)
       .pipe(first())
       .subscribe(call => this.store.dispatch({
         type: CallService.CALL_TRANSFER,

@@ -5,17 +5,17 @@ export interface ICallSettings {
   useMakeCall?: number;
   useDropCall?: number;
   useHoldCall?: number;
-  useRetriveCall?: number;
+  useRetrieveCall?: number;
   useTransferCall?: number;
 }
 
 export interface ICall {
-  id?: number;
   phoneId: number;
   debtId: number;
   personId: number;
   personRole: number;
   onHold?: boolean;
+  isStarted?: boolean;
 }
 
 export interface ICallState {

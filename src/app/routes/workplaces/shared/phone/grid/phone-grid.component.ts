@@ -212,7 +212,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
     this.callSubscription = this.callService.calls$
       .flatMap(() => this.selectedPhoneCall$.pipe(first()))
-      .map(call => call && !call.id)
+      .map(call => call && !call.isStarted)
       .flatMap(hasCall => combineLatestAnd([
         of(hasCall),
         this.callService.settings$.map(settings => settings && !!settings.previewShowRegContact),
@@ -314,7 +314,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get selectedPhoneCall$(): Observable<ICall> {
     return this.selectedPhone$.flatMap(phone => phone
-      ? this.callService.findPhoneCall(phone.id)
+      ? this.callService.findCall(phone.id)
       : of(null)
     );
   }
@@ -374,7 +374,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canMakeCall$(): Observable<boolean> {
     return combineLatestAnd([
-      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
       this.selectedPhone$
@@ -387,7 +387,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canDropCall$(): Observable<boolean> {
     return combineLatestAnd([
-      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useDropCall),
       this.selectedPhoneCall$.map(Boolean)
@@ -396,7 +396,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canHoldCall$(): Observable<boolean> {
     return combineLatestAnd([
-      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useHoldCall),
       this.selectedPhoneCall$.map(call => call && !call.onHold)
@@ -405,16 +405,16 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canRetrieveCall$(): Observable<boolean> {
     return combineLatestAnd([
-      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
-        .map(settings => settings && !!settings.usePreview && !!settings.useRetriveCall),
+        .map(settings => settings && !!settings.usePreview && !!settings.useRetrieveCall),
       this.selectedPhoneCall$.map(call => call && call.onHold)
     ]);
   }
 
   get canTransferCall$(): Observable<boolean> {
     return combineLatestAnd([
-      // this.userPermissionsService.has('PBX_PREVIEW'),
+      this.userPermissionsService.has('PBX_PREVIEW'),
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall),
       this.selectedPhoneCall$.map(Boolean)
@@ -450,21 +450,21 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.selectedPhoneCall$
       .pipe(first())
       .filter(Boolean)
-      .subscribe(call => this.callService.dropCall(call.id));
+      .subscribe(call => this.callService.dropCall(call.phoneId));
   }
 
   private onHoldCall(): void {
     this.selectedPhoneCall$
       .pipe(first())
       .filter(Boolean)
-      .subscribe(call => this.callService.holdCall(call.id));
+      .subscribe(call => this.callService.holdCall(call.phoneId));
   }
 
   private onRetrieveCall(): void {
     this.selectedPhoneCall$
       .pipe(first())
       .filter(Boolean)
-      .subscribe(call => this.callService.retrieveCall(call.id));
+      .subscribe(call => this.callService.retrieveCall(call.phoneId));
   }
 
   private fetch(): void {

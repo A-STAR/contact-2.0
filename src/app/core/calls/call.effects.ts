@@ -8,7 +8,6 @@ import { UnsafeAction } from '@app/core/state/state.interface';
 import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class CallEffects {
@@ -38,7 +37,7 @@ export class CallEffects {
       return this.call(phoneId, debtId, personId, personRole)
         .map(call => ({
           type: CallService.CALL_START_SUCCESS,
-          payload: call
+          payload: { phoneId, debtId, personId, personRole }
         }))
         .catch(error => {
           return [
@@ -155,29 +154,12 @@ export class CallEffects {
   ) {}
 
   private read(): Observable<ICallSettings> {
-    // return this.dataService.read('/pbx/settings');
-    return of({
-      useIntPhone: 1,
-      usePreview: 1,
-      previewShowRegContact: 1,
-      useMakeCall: 1,
-      useDropCall: 1,
-      useHoldCall: 1,
-      useRetriveCall: 1,
-      useTransferCall: 1
-    });
+    return this.dataService.read('/pbx/settings');
   }
 
   private call(phoneId: number, debtId: number, personId: number, personRole: number): Observable<ICall> {
-    // return this.dataService
-      // .create('/pbx/call/make', { }, { phoneId, debtId, personId, personRole });
-    return of({
-      id: 1,
-      phoneId,
-      debtId,
-      personId,
-      personRole
-    });
+    return this.dataService
+      .create('/pbx/call/make', { }, { phoneId, debtId, personId, personRole });
   }
 
   private drop(debtId: number, personId: number, personRole: number): Observable<void> {
@@ -192,7 +174,7 @@ export class CallEffects {
 
   private retrieve(debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
-      .create('/pbx/call/retrive', {}, { debtId, personId, personRole });
+      .create('/pbx/call/retrieve', {}, { debtId, personId, personRole });
   }
 
   private transfer(userId: number, debtId: number, personId: number, personRole: number): Observable<void> {
