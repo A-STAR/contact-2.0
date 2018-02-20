@@ -72,6 +72,9 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
     headerHeight: 28,
     onSelectionChanged: () => this.onSelectionChanged(),
     onRowDoubleClicked: event => this.onRowDoubleClicked(event),
+    onSortChanged: () => this.saveSettings(),
+    onColumnMoved: () => this.saveSettings(),
+    onColumnResized: () => this.saveSettings(),
     rowHeight: 28,
     rowSelection: 'multiple',
     showToolPanel: false,
@@ -100,12 +103,14 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey);
-    this.cdRef.markForCheck();
+    if (changes.columns) {
+      this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey);
+      this.cdRef.markForCheck();
+    }
   }
 
   ngOnDestroy(): void {
-    this.gridsService.saveSettings(this.persistenceKey, this.gridApi, this.columnApi);
+    this.saveSettings();
   }
 
   onGridReady(params: any): void {
@@ -136,5 +141,9 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
       'copy',
       'copyWithHeaders',
     ];
+  }
+
+  private saveSettings(): void {
+    this.gridsService.saveSettings(this.persistenceKey, this.gridApi, this.columnApi);
   }
 }
