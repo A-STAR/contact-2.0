@@ -1,3 +1,5 @@
+import { ColDef } from 'ag-grid';
+
 export enum IGridSelectionType {
   SINGLE = 'single',
   MULTIPLE = 'multiple',
@@ -27,4 +29,15 @@ export interface IGridColumn<T> {
   minWidth?: number;
   maxWidth?: number;
   renderer?: any;
+}
+
+export interface IGridLocalSettingsColumn {
+  colId: string;
+  isVisible: boolean;
+  width: number;
+}
+
+export interface IGridLocalSettings {
+  columns: IGridLocalSettingsColumn[];
+  sortModel: any;
 }

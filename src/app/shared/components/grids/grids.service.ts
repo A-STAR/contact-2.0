@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ColDef, ColumnApi, GridApi } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
 
-import { IGridColumn, IGridFilterType } from './grids.interface';
+import { IGridColumn, IGridFilterType, IGridLocalSettings } from './grids.interface';
 import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
 import { PersistenceService } from '@app/core/persistence/persistence.service';
@@ -21,10 +21,14 @@ export class GridsService {
   ) {}
 
   convertColumnsToColDefs<T>(columns: IGridColumn<T>[], persistenceKey: string): ColDef[] {
-    const settings = this.persistenceService.get(persistenceKey);
+    const savedColumns = this.getLocalSettings(persistenceKey).columns;
     this.preloadDictionaries(columns);
-    return settings.columns.map(col => {
-      const column = columns.find(c => c.prop === col.colId);
+    const columnIds = columns.map(c => c.prop);
+    const savedColumnIds = savedColumns.map(c => c.colId);
+    const ids = Array.from(new Set([ ...savedColumnIds, ...columnIds ]));
+
+    return ids.map(id => {
+      const column = columns.find(c => c.prop === id);
       return {
         field: column.prop,
         headerName: this.translateService.instant(column.label),
@@ -32,23 +36,24 @@ export class GridsService {
         maxWidth: column.maxWidth,
         ...this.getFilterOptions(column),
         ...this.getCellRendererOptions(column),
-        ...col,
+        ...(savedColumns.find(c => c.colId === id) || {}),
       };
     });
   }
 
-  getSettings(key: string, gridApi: GridApi, columnApi: ColumnApi): void {
+  restoreSortModel(persistenceKey: string, gridApi: GridApi): void {
+    const sortModel = this.getLocalSettings(persistenceKey).sortModel;
+    gridApi.setSortModel(sortModel);
   }
 
-  setSettings(key: string, gridApi: GridApi, columnApi: ColumnApi): void {
+  saveSettings(persistenceKey: string, gridApi: GridApi, columnApi: ColumnApi): void {
     const columns = columnApi.getAllGridColumns().map(column => ({
       colId: column.getId(),
       isVisible: column.isVisible(),
       width: column.getActualWidth(),
     }));
-    const filterModel = gridApi.getFilterModel();
     const sortModel = gridApi.getSortModel();
-    this.persistenceService.set(key, { columns, filterModel, sortModel });
+    this.setLocalSettings(persistenceKey, { columns, sortModel });
   }
 
   private preloadDictionaries<T>(columns: IGridColumn<T>[]): Observable<IUserDictionaries> {
@@ -92,5 +97,13 @@ export class GridsService {
       default:
         return { suppressFilter: true };
     }
+  }
+
+  private setLocalSettings(key: string, settings: IGridLocalSettings): void {
+    this.persistenceService.set(key, settings);
+  }
+
+  private getLocalSettings(key: string): IGridLocalSettings {
+    return this.persistenceService.get(key) || { columns: [], sortModel: {} };
   }
 }

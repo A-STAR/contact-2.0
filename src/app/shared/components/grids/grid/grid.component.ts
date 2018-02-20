@@ -105,18 +105,18 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const { columns, persistenceKey } = changes;
-    this.colDefs = this.gridsService.convertColumnsToColDefs(columns.currentValue, persistenceKey.currentValue);
+    this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey);
     this.cdRef.markForCheck();
   }
 
   ngOnDestroy(): void {
-    this.gridsService.setSettings(this.persistenceKey, this.gridApi, this.columnApi);
+    this.gridsService.saveSettings(this.persistenceKey, this.gridApi, this.columnApi);
   }
 
   onGridReady(params: any): void {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
+    this.gridsService.restoreSortModel(this.persistenceKey, this.gridApi);
     this.updateToolbar();
   }
 
