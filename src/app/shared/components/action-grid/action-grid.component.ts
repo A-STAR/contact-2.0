@@ -215,11 +215,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  onSimpleGridAction(metadataAction: any): void {
-    this.dialog = metadataAction.action;
-    // TODO(i.lobanov): make work for simple grid
-    this.dialogData = this.setDialogData(metadataAction);
-    this.cdRef.markForCheck();
+  onSimpleGridAction(metadataAction: IMetadataAction): void {
+    alert(`Action ${metadataAction.action} is deprecated for simple grid!`);
   }
 
   onCloseAction(action: ICloseAction = {}): void {
@@ -423,6 +420,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   private buildTitlebar(config: IMetadataTitlebar): ITitlebar {
+    // TODO(i.lobanov): mock, remove when titlebar added in config
     const titlebarItems = {
       refresh: (permissions: string[]) => ({
         type: TitlebarItemTypeEnum.BUTTON_REFRESH,
