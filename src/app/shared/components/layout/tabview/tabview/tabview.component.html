@@ -32,7 +32,7 @@
   </div>
 
   <!-- Contents -->
-  <div class="flex-item grow">
+  <div [ngClass]="{ 'flex-item': true, grow: fullHeight }">
     <ng-content></ng-content>
   </div>
 </div>

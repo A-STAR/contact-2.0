@@ -16,7 +16,7 @@
 
       <!-- Tabs -->
       <div class="flex-item grow minh-200 mb">
-        <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
+        <app-tabview [fullHeight]="true" (select)="onTabSelect($event)" [noMargin]="true">
           <!-- Phones -->
           <app-tabview-tab [title]="'modules.callCenter.tabs.phones'">
             <app-call-center-phones *ngIf="shouldDisplayTab(0)"></app-call-center-phones>

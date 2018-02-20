@@ -37,6 +37,7 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
 
   @ContentChildren(TabViewTabComponent) tabs: QueryList<TabViewTabComponent>;
 
+  @Input() fullHeight = false;
   @Input() noMargin = false;
 
   @Output() select = new EventEmitter<number>();
