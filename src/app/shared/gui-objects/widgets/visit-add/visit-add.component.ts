@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+  OnInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
@@ -16,12 +25,14 @@ const label = makeKey('massOperations.visitAdd');
   templateUrl: 'visit-add.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VisitAddDialogComponent {
+export class VisitAddDialogComponent implements OnInit {
   @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  visitsCount: number | string;
 
   controls: IDynamicFormControl[] = [
     {
@@ -39,8 +50,14 @@ export class VisitAddDialogComponent {
   ];
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private visitAddService: VisitAddService,
   ) {}
+
+  ngOnInit(): void {
+    this.visitsCount = this.visitAddService.getVisitsCount(this.actionData.payload);
+    this.cdRef.markForCheck();
+  }
 
   canSubmit(): boolean {
     return this.form && this.form.canSubmit;
