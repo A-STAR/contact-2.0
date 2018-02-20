@@ -17,6 +17,7 @@ import { PhonesModule } from './phones/phones.module';
 import { PromiseModule } from './promise/promise.module';
 import { PromisesModule } from './promises/promises.module';
 import { SharedModule } from '../../../../shared/shared.module';
+import { ToolbarModule } from './toolbar/toolbar.module';
 import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { AddressComponent } from './address/address.component';
@@ -72,6 +73,7 @@ const routes: Routes = [
     PromisesModule,
     RouterModule.forChild(routes),
     SharedModule,
+    ToolbarModule,
     WorkplacesSharedModule,
   ],
   exports: [
