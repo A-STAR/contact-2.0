@@ -127,7 +127,7 @@ export class ActionGridFilterService {
   getSingleSelectionPayload(action: IActionGridAction, params: IGridActionContext): IGridActionPayload {
     return {
       type: action.metadataAction.type,
-      data: this.getSingleSelection(action, action.selection.node.data)
+      data: this.getSingleSelection(action, action.selection)
     };
   }
 
