@@ -4,12 +4,25 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
+  OnDestroy,
   Output,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ColDef, GetContextMenuItemsParams, GridApi, GridOptions, RowDoubleClickedEvent } from 'ag-grid';
-import { first } from 'rxjs/operators';
+
+import {
+  ColDef,
+  ColumnApi,
+  GetContextMenuItemsParams,
+  GridApi,
+  GridOptions,
+  RowDoubleClickedEvent,
+} from 'ag-grid';
+
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first, mergeMap, tap } from 'rxjs/operators';
 
 import { IGridSelectionType } from '@app/shared/components/grids/grids.interface';
 import { ISimpleGridColumn } from './grid.interface';
@@ -17,6 +30,8 @@ import { ISimpleGridColumn } from './grid.interface';
 import { GridsService } from '../grids.service';
 
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,28 +41,12 @@ import { GridToolbarComponent } from '../toolbar/toolbar.component';
   styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html'
 })
-export class SimpleGridComponent<T> {
+export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   @ViewChild(GridToolbarComponent) toolbar: GridToolbarComponent;
 
-  @Input()
-  set columns(columns: ISimpleGridColumn<T>[]) {
-    this.gridsService
-      .convertColumnsToColDefs(columns)
-      .pipe(
-        first(),
-      )
-      .subscribe(colDefs => {
-        this._colDefs = colDefs;
-        this.updateColumns();
-      });
-  }
-
-  @Input()
-  set rows(rows: T[]) {
-    this._rows = rows;
-    this.updateRows();
-  }
-
+  @Input() columns: ISimpleGridColumn<T>[];
+  @Input() persistenceKey: string;
+  @Input() rows: T[];
   @Input() rowClass: (item: T) => string;
   @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
   @Input() showToolbar = false;
@@ -89,23 +88,15 @@ export class SimpleGridComponent<T> {
     toolPanelSuppressValues: true,
   };
 
+  columnApi: ColumnApi;
   gridApi: GridApi;
 
-  private _colDefs: ColDef[];
-  private _rows: T[];
+  colDefs: ColDef[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridsService: GridsService,
   ) {}
-
-  get colDefs(): ColDef[] {
-    return this._colDefs;
-  }
-
-  get rows(): T[] {
-    return this._rows;
-  }
 
   get rowClassCallback(): any {
     return this.rowClass
@@ -113,27 +104,25 @@ export class SimpleGridComponent<T> {
       : null;
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    const { columns, persistenceKey } = changes;
+    this.gridsService
+      .convertColumnsToColDefs(columns.currentValue, persistenceKey.currentValue)
+      .pipe(first())
+      .subscribe(colDefs => {
+        this.colDefs = colDefs;
+        this.cdRef.markForCheck();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.gridsService.setSettings(this.persistenceKey, this.gridApi, this.columnApi);
+  }
+
   onGridReady(params: any): void {
     this.gridApi = params.api;
-    this.updateColumns();
-    this.updateRows();
+    this.columnApi = params.columnApi;
     this.updateToolbar();
-  }
-
-  private updateColumns(): void {
-    if (this.gridApi && this._colDefs) {
-      this.gridApi.sizeColumnsToFit();
-      this.updateToolbar();
-    }
-    this.cdRef.markForCheck();
-  }
-
-  private updateRows(): void {
-    if (this.gridApi && this._rows) {
-      this.gridApi.redrawRows();
-      this.updateToolbar();
-    }
-    this.cdRef.markForCheck();
   }
 
   private onSelectionChanged(): void {
