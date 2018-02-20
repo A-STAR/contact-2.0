@@ -47,7 +47,7 @@ import { ImageUploadModule } from './components/form/image-upload/image-upload.m
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { InputModule } from './components/form/input/input.module';
 import { ListModule } from './components/list/list.module';
-import { MetadataGridModule } from './components/metadata-grid/metadata-grid.module';
+import { MenuModule } from './components/form/menu/menu.module';
 import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
@@ -116,7 +116,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     InputModule,
     ListModule,
-    MetadataGridModule,
+    MenuModule,
     MomentModule,
     MultiLanguageModule,
     MultiSelectModule,
@@ -143,7 +143,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     NowDirective,
     // App Components
     NumericInputComponent,
-    QBuilderComponent
+    QBuilderComponent,
   ],
   exports: [
     // Angular Modules
@@ -192,7 +192,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     InputModule,
     ListModule,
-    MetadataGridModule,
+    MenuModule,
     MomentModule,
     MultiLanguageModule,
     MultiSelectModule,

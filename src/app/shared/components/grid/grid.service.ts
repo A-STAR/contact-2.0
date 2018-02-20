@@ -5,9 +5,9 @@ import { of } from 'rxjs/observable/of';
 import * as R from 'ramda';
 
 import { ILabeledValue } from '../../../core/converter/value-converter.interface';
-import { IGridColumn, IRenderer, TRendererType } from './grid.interface';
+import { IGridColumn, IRenderer, TRendererType, IMetadataDefs } from './grid.interface';
 import { IAGridColumn, IAGridRequest, IAGridRequestParams, IAGridSorter } from '../../../shared/components/grid2/grid2.interface';
-import { IMetadataAction, IMetadataColumn } from '../../../core/metadata/metadata.interface';
+import { IMetadataColumn } from '../../../core/metadata/metadata.interface';
 import { IUserDictionaries } from '../../../core/user/dictionaries/user-dictionaries.interface';
 
 import { LookupService } from '../../../core/lookup/lookup.service';
@@ -70,15 +70,21 @@ export class GridService {
    *
    * @param {string} metadataKey The key used to retrieve coldefs the from the metadata service
    * @param {object} renderers Column renderers, i.e. getters
-   * @returns {Observable<{ actions: IMetadataAction[], columns: IAGridColumn[] }>} Actions & column defininitions
+   * @returns {Observable<IMetadataDefs>} Actions, column & titlebar defininitions
    */
-  getMetadata(metadataKey: string, renderers: object): Observable<{ actions: IMetadataAction[], columns: IAGridColumn[] }> {
+  getMetadata(metadataKey: string, renderers: object): Observable<IMetadataDefs> {
     return this.metadataService.getData(metadataKey)
       .flatMap(metadata => {
         const { columns } = metadata;
         const dictionaryIds = this.getDictionaryIdsFromColumns(columns);
         return this.buildColumns(columns, dictionaryIds, renderers)
-          .map(cols => ({ ...metadata, columns: cols as IAGridColumn[] }));
+          .map(cols => ({ ...metadata, columns: cols as IAGridColumn[] }))
+          // TODO(i.lobanov): remove mock when added in config
+          .map(data => ({ ...data, titlebar: { items: [
+            {
+              name: 'search',
+            },
+          ]} }));
       });
   }
 

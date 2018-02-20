@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
-import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IEntityGroup } from '../../../entity-group/entity-group.interface';
 
 import { EntityGroupService } from '../../entity-group.service';
@@ -10,22 +10,26 @@ import { EntityGroupService } from '../../entity-group.service';
   templateUrl: './entity-group-add.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EntityGroupAddComponent  {
+export class EntityGroupAddComponent implements OnInit  {
 
-  @Input() debts: number[];
-  @Input() entityTypeId: number;
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
   manualGroup = true;
+  entityTypeId: number;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private entityGroupService: EntityGroupService,
   ) {}
 
+  ngOnInit(): void {
+    this.entityTypeId = this.entityGroupService.getEntityTypeId(this.actionData);
+  }
+
   onSelect(group: IEntityGroup): void {
-    this.entityGroupService.addToGroup(this.entityTypeId, group.id, this.debts)
+    this.entityGroupService.addToGroup(this.actionData, group.id)
       // .catch(this.notificationsService.updateError().callback())
       .subscribe(result => {
         this.close.emit({ refresh: true });

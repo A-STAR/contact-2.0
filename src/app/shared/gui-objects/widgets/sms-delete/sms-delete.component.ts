@@ -1,6 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+} from '@angular/core';
 
-import { ICloseAction } from '../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../components/action-grid/action-grid.interface';
 
 import { SmsDeleteService } from './sms-delete.service';
 
@@ -10,7 +17,7 @@ import { SmsDeleteService } from './sms-delete.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SmsDeleteDialogComponent  implements OnInit {
-  @Input() smsId: number[];
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
   smsCounter = {
@@ -22,11 +29,11 @@ export class SmsDeleteDialogComponent  implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.smsCounter.count = this.smsId && this.smsId.length;
+    this.smsCounter.count = this.smsDeleteService.getSmsCount(this.actionData.payload);
   }
 
   onConfirmDelete(): void {
-    this.smsDeleteService.smsDelete(this.smsId)
+    this.smsDeleteService.smsDelete(this.actionData.payload)
       .subscribe(res => {
         const refresh = !!res.massInfo && !!res.massInfo.processed;
         // NOTE: do not refresh, neither deselect if the processed is 0

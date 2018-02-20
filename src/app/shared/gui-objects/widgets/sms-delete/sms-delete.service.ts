@@ -1,21 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
+
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
 export class SmsDeleteService {
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
   private url = '/mass/sms/delete';
 
-  smsDelete(smsIds: number[]): Observable<any> {
-    const ids = smsIds.map(id => [ id ]);
-    return this.dataService.update(this.url, {}, { idData: { ids } } )
+  smsDelete(idData: IGridActionPayload): Observable<any> {
+    return this.dataService.update(this.url, {},
+        {
+          idData: this.actionGridFilterService.buildRequest(idData)
+        }
+      )
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
@@ -24,5 +31,11 @@ export class SmsDeleteService {
         }
       })
       .catch(this.notificationsService.deleteError().entity('entities.sms.gen.plural').dispatchCallback());
+   }
+
+   getSmsCount(idData: IGridActionPayload): number | string {
+     // NOTE: empty string is passed, when we ask for sms by filter,
+     // because we do not know yet how many we will delete
+     return this.actionGridFilterService.getSelectionCount(idData) || '';
    }
 }

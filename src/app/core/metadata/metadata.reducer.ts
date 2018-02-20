@@ -10,13 +10,14 @@ export const defaultState: IMetadataState = {
 export function reducer(state: IMetadataState = defaultState, action: UnsafeAction): IMetadataState {
   switch (action.type) {
     case MetadataService.METADATA_FETCH_SUCCESS:
-      const { actions, data, name, baseFilters } = action.payload;
+      const { actions, data, name, baseFilters, defaultAction } = action.payload;
       return {
         ...state,
         [name]: {
           actions,
           columns: data,
           filters: baseFilters,
+          defaultAction,
           status: MetadataListStatusEnum.LOADED
         }
       };

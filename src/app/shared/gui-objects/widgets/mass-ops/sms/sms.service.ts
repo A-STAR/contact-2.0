@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { IMassSms } from './sms.interface';
 
+import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { DataService } from '../../../../../core/data/data.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
 import { catchError, tap } from 'rxjs/operators';
@@ -9,14 +11,22 @@ import { catchError, tap } from 'rxjs/operators';
 @Injectable()
 export class SmsService {
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
-  schedule(debtIds: number[], personIds: number[], personRole: number, sms: IMassSms): Observable<void> {
-    const ids = debtIds.map((debtId, i) => [ debtId, personIds[i] ]);
+  schedule(idData: IGridActionPayload, personRole: number, sms: IMassSms): Observable<void> {
     return this.dataService
-      .create('/mass/sms/form', {}, { actionData: { ...sms, personRole }, idData: { ids } })
+      .create('/mass/sms/form', {},
+        {
+         idData: this.actionGridFilterService.buildRequest(idData),
+         actionData: {
+           ...sms,
+           personRole
+          }
+        }
+      )
       .pipe(
         tap(response => {
           if (response.success) {

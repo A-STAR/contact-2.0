@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter
 import { first } from 'rxjs/operators';
 
 import { ILookupTimeZone } from '../../../../../../core/lookup/lookup.interface';
-import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IGridColumn } from '../../../../../components/grid/grid.interface';
 
 import { AttributesService } from '../attributes.service';
@@ -15,7 +15,7 @@ import { GridService } from '../../../../../components/grid/grid.service';
 })
 export class TimezoneComponent implements OnInit {
 
-  @Input() debts: number[];
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
   selectedTimeZone: ILookupTimeZone;
@@ -51,7 +51,7 @@ export class TimezoneComponent implements OnInit {
 
   submit(): void {
     this.attributesService
-      .change(this.debts, { timeZoneId: this.selectedTimeZone.id })
+      .change(this.actionData.payload, { timeZoneId: this.selectedTimeZone.id })
       .subscribe((res) => {
         const refresh = res.massInfo && !!res.massInfo.processed;
         this.close.emit({ refresh });

@@ -1,10 +1,9 @@
 <app-action-grid
   [metadataKey]="gridKey"
   [persistenceKey]="gridKey"
+  [fullHeight]="true"
   [rowIdKey]="rowIdKey"
-  [ngClass]="'contact-log-grid'"
   [rows]="rows"
   [rowCount]="rowCount"
   (request)="onRequest()"
-  (dblClick)="onDblClick($event)"
 ></app-action-grid>

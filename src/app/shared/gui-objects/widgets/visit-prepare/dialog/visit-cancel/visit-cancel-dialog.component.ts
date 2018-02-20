@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
-import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IOperationResult, IConfirmOperation } from '../../visit-prepare.interface';
 
 import { VisitPrepareService } from '../../visit-prepare.service';
@@ -14,12 +14,13 @@ import { DialogFunctions } from 'app/core/dialog';
 })
 export class VisitCancelDialogComponent extends DialogFunctions implements OnInit {
 
-  @Input() visits: number[];
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;
 
-  private cancelVisits: number[];
+  private cancelVisitsCount: number;
+  private visitsCount: number;
 
   constructor(
     private visitPrepareService: VisitPrepareService
@@ -28,8 +29,10 @@ export class VisitCancelDialogComponent extends DialogFunctions implements OnIni
   }
 
   ngOnInit(): void {
-    this.cancelVisits = this.visits.filter(visit => !!visit);
-    if (this.cancelVisits.length < this.visits.length) {
+    this.cancelVisitsCount = this.visitPrepareService.getVisitsCount(this.actionData.payload);
+    this.visitsCount = (this.actionData.selection && this.actionData.selection.length) || 0;
+    if ((this.cancelVisitsCount < this.visitsCount)
+      && !this.visitPrepareService.isFilterAction(this.actionData.payload)) {
       this.setDialog('visitCancelConfirm');
     } else {
       this.setDialog('visitCancel');
@@ -38,13 +41,13 @@ export class VisitCancelDialogComponent extends DialogFunctions implements OnIni
 
   get confirmOperation(): IConfirmOperation {
     return {
-      count: this.visits.length - this.cancelVisits.length,
-      total: this.visits.length
+      count: this.visitsCount - this.cancelVisitsCount,
+      total: this.visitsCount
     };
   }
 
   onConfirm(): void {
-    this.visitPrepareService.cancel(this.cancelVisits)
+    this.visitPrepareService.cancel(this.actionData.payload)
       .subscribe(result => this.onOperationResult(result), () => this.onCloseDialog());
   }
 

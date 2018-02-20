@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
+import { IOperationResult } from './debt-responsible.interface';
 import { IOperator } from '../operator/operator.interface';
 
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { IOperationResult } from './debt-responsible.interface';
 
 @Injectable()
 export class DebtResponsibleService {
-  static ACTION_DEBT_RESPONSIBLE_SET = 'debtSetResponsible';
-  static ACTION_DEBT_RESPONSIBLE_CLEAR = 'debtClearResponsible';
 
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
@@ -27,17 +28,24 @@ export class DebtResponsibleService {
     return this.userPermissionsService.has('DEBT_RESPONSIBLE_CLEAR');
   }
 
-  setResponsible(debts: number[], operator: IOperator): Observable<IOperationResult> {
-    const ids = debts.map(debtId => [ debtId ]);
+  setResponsible(idData: IGridActionPayload, operator: IOperator): Observable<IOperationResult> {
     return this.dataService
-      .create('/mass/debts/setResponsible', {}, { idData: { ids }, actionData: { userId: operator.id } })
+      .create('/mass/debts/setResponsible', {},
+        {
+         idData: this.actionGridFilterService.buildRequest(idData),
+         actionData: { userId: operator.id }
+        }
+      )
       .catch(this.notificationsService.error('errors.default.add').entity('entities.operator.gen.singular').dispatchCallback());
   }
 
-  clearResponsible(debts: number[]): Observable<IOperationResult> {
-    const ids = debts.map(debtId => [ debtId ]);
+  clearResponsible(idData: IGridActionPayload): Observable<IOperationResult> {
     return this.dataService
-      .create('/mass/debts/clearResponsible', {}, { idData: { ids } })
+      .create('/mass/debts/clearResponsible', {},
+        {
+          idData: this.actionGridFilterService.buildRequest(idData)
+        }
+      )
       .catch(this.notificationsService.deleteError().entity('entities.operator.gen.singular').dispatchCallback());
   }
 

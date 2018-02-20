@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MetadataGridModule } from '../../../components/metadata-grid/metadata-grid.module';
+import { ActionGridModule } from '@app/shared/components/action-grid/action-grid.module';
 import { DynamicFormModule } from '../../../components/form/dynamic-form/dynamic-form.module';
 import { DebtorActionLogComponent } from './action-log.component';
 
@@ -11,7 +11,7 @@ import { ActionLogService } from './action-log.service';
   imports: [
     CommonModule,
     DynamicFormModule,
-    MetadataGridModule,
+    ActionGridModule,
   ],
   exports: [
     DebtorActionLogComponent

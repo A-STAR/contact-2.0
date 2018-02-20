@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 
-import { ICloseAction } from '../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../components/action-grid/action-grid.interface';
 
 import { PaymentConfirmService } from '../payment-confirm.service';
 
@@ -10,8 +10,7 @@ import { PaymentConfirmService } from '../payment-confirm.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentConfirmDialogComponent implements OnInit {
-  @Input() paymentsIds: number[];
-
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
 
@@ -22,12 +21,12 @@ export class PaymentConfirmDialogComponent implements OnInit {
   constructor(private paymentConfirmService: PaymentConfirmService) { }
 
   ngOnInit(): void {
-    this.paymentsCounter.count = this.paymentsIds && this.paymentsIds.length;
+    this.paymentsCounter.count = this.paymentConfirmService.getPaymentsCount(this.actionData.payload);
   }
 
   onConfirmPayments(): void {
 
-    this.paymentConfirmService.paymentsConfirm(this.paymentsIds)
+    this.paymentConfirmService.paymentsConfirm(this.actionData.payload)
       .subscribe(res => {
         const refresh = res.massInfo && !!res.massInfo.processed;
         // NOTE: do not refresh if the total is 0

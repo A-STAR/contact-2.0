@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit, ChangeDetectorRef } from '@angular/core';
 
-import { ICloseAction } from '../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../components/action-grid/action-grid.interface';
 
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { OpenDebtCardService } from './debt-card-open.service';
@@ -14,7 +14,7 @@ import { DialogFunctions } from '../../../../core/dialog';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtCardOpenByDebtorComponent extends DialogFunctions implements OnInit {
-  @Input() personId: number[];
+  @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<ICloseAction>();
 
   dialog = null;
@@ -29,13 +29,7 @@ export class DebtCardOpenByDebtorComponent extends DialogFunctions implements On
   }
 
   ngOnInit(): void {
-    if (!this.personId[0]) {
-      this.notificationsService.warning('header.noPerson.title').dispatch();
-      this.close.emit();
-      return;
-    }
-
-    this.openDebtCardService.getFirstDebtsByUserId(this.personId[0])
+    this.openDebtCardService.getFirstDebtsByUserId(this.actionData.payload)
       .subscribe( debtId => {
         if (!debtId) {
           this.notificationsService.warning('header.noDebt.title').dispatch();
