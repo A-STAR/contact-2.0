@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { IContactLog } from '@app/shared/gui-objects/widgets/contact-log-tab/contact-log.interface';
+import { IContactLog } from '../contact-log.interface';
 import { IDynamicFormControl, IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { ContactLogService } from '@app/shared/gui-objects/widgets/contact-log-tab/contact-log.service';
+import { ContactLogService } from '../contact-log.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -16,7 +17,6 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { makeKey } from '@app/core/utils';
-import { ActivatedRoute } from '@angular/router';
 
 const label = makeKey('widgets.contactLog.card');
 
@@ -25,7 +25,7 @@ const label = makeKey('widgets.contactLog.card');
   templateUrl: './contact-log-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactLogTabCardComponent implements OnInit {
+export class ContactLogCardComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   @Input() callCenter = false;
