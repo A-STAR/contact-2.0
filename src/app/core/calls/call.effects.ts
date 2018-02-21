@@ -203,8 +203,8 @@ export class CallEffects {
       .create('/pbx/call/transfer', {}, { userId, debtId, personId, personRole });
   }
 
-  private changeStatus(statsCode: number): Observable<void> {
+  private changeStatus(statusCode: number): Observable<void> {
     return this.dataService
-      .update('/pbx/users/status', {}, { statsCode });
+      .update('/pbx/users/status', {}, { statusCode });
   }
 }

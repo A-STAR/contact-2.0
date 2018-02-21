@@ -6,6 +6,7 @@ import { distinctUntilChanged, first, tap } from 'rxjs/operators';
 import { IAppState } from '../state/state.interface';
 import { ICallSettings, IPBXParams, ICall } from './call.interface';
 
+import { AuthService } from '@app/core/auth/auth.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { catchError } from 'rxjs/operators/catchError';
@@ -37,6 +38,7 @@ export class CallService {
   private isFetching = false;
 
   constructor(
+    private authService: AuthService,
     private dataService: DataService,
     private notificationService: NotificationsService,
     private store: Store<IAppState>,
@@ -57,9 +59,19 @@ export class CallService {
       );
   }
 
+  get usePBX$(): Observable<boolean> {
+    return this.authService.userParams$
+      .map(params => params && !!params.usePbx);
+  }
+
   get calls$(): Observable<ICall[]> {
     return this.store
       .select(state => state.calls.calls);
+  }
+
+  get status$(): Observable<number> {
+    return this.store
+      .select(state => state.calls.statusCode);
   }
 
   findCall(phoneId: number): Observable<ICall> {
