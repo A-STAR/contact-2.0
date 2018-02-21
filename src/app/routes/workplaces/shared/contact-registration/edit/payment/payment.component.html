@@ -4,14 +4,9 @@
 
     <!-- Payment Date -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.payment.form.date' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-      </label>
       <app-datepicker
         formControlName="date"
+        label="routes.workplaces.shared.contactRegistration.edit.form.payment.form.date"
         [maxDate]="today"
         [required]="true"
       ></app-datepicker>

@@ -4,14 +4,9 @@
 
     <!-- Promise Date -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.promise.form.date' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-      </label>
       <app-datepicker
         formControlName="date"
+        label="routes.workplaces.shared.contactRegistration.edit.form.promise.form.date"
         [minDate]="today"
         [maxDate]="promiseMaxDate$ | async"
         [required]="true"
@@ -35,8 +30,6 @@
     <!-- Promise Percentage -->
     <div>
       <app-number
-        class="form-control"
-        type="number"
         formControlName="percentage"
         label="routes.workplaces.shared.contactRegistration.edit.form.promise.form.percentage"
         [disabled]="isPromiseAmountDisabled$ | async"
