@@ -13,6 +13,7 @@ import { LayoutComponent } from './layout.component';
 import { MainMenuComponent } from './header/main-menu/main-menu.component';
 import { NotificationsComponent } from './header/icon-menu/notifications/notifications.component';
 import { IconMenuComponent } from './header/icon-menu/icon-menu.component';
+import { PbxControlsComponent } from './header/icon-menu/pbx-controls/pbx-controls.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
@@ -29,6 +30,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     LayoutComponent,
     MainMenuComponent,
     NotificationsComponent,
+    PbxControlsComponent,
     SidebarComponent,
   ],
   exports: [
