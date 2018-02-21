@@ -7,6 +7,7 @@ export interface ICallSettings {
   useHoldCall?: number;
   useRetrieveCall?: number;
   useTransferCall?: number;
+  useAgentStatus?: number;
 }
 
 export interface ICall {
@@ -19,6 +20,7 @@ export interface ICall {
 }
 
 export interface ICallState {
+  statusCode: number;
   settings: ICallSettings;
   calls: ICall[];
 }

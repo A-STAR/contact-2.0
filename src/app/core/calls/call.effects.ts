@@ -147,6 +147,27 @@ export class CallEffects {
         });
     });
 
+  @Effect()
+  changeStatus$ = this.actions
+    .ofType(CallService.PBX_STATUS_CHANGE)
+    .mergeMap((action: UnsafeAction) => {
+      const { statusCode } = action.payload;
+      return this.changeStatus(statusCode)
+        .map(() => ({
+          type: CallService.PBX_STATUS_CHANGE_SUCCESS,
+          payload: action.payload
+        }))
+        .catch(error => {
+          return [
+            this.notificationService
+              .updateError()
+              .entity('entities.status.gen.singular')
+              .response(error)
+              .action()
+          ];
+        });
+    });
+
   constructor(
     private actions: Actions,
     private dataService: DataService,
@@ -180,5 +201,10 @@ export class CallEffects {
   private transfer(userId: number, debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
       .create('/pbx/call/transfer', {}, { userId, debtId, personId, personRole });
+  }
+
+  private changeStatus(statsCode: number): Observable<void> {
+    return this.dataService
+      .update('/pbx/users/status', {}, { statsCode });
   }
 }

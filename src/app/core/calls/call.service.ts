@@ -31,6 +31,9 @@ export class CallService {
   static CALL_TRANSFER_SUCCESS = 'CALL_TRANSFER_SUCCESS';
   static CALL_TRANSFER_FAILURE = 'CALL_TRANSFER_FAILURE';
 
+  static PBX_STATUS_CHANGE = 'PBX_STATUS_CHANGE';
+  static PBX_STATUS_CHANGE_SUCCESS = 'PBX_STATUS_CHANGE_SUCCESS';
+
   private isFetching = false;
 
   constructor(
@@ -120,5 +123,12 @@ export class CallService {
         type: CallService.CALL_TRANSFER,
         payload: { userId, ...call }
       }));
+  }
+
+  changeBPXStatus(statusCode: number): void {
+    this.store.dispatch({
+      type: CallService.PBX_STATUS_CHANGE,
+      payload: { statusCode }
+    });
   }
 }

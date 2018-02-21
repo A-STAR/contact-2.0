@@ -2733,6 +2733,9 @@
     },
     "calls": {
       "gen": { "singular": "call", "plural": "calls" }
+    },
+    "status": {
+      "gen": { "singular": "status", "plural": "status list" }
     }
   },
   "massOperations": {

@@ -4,6 +4,7 @@ import { UnsafeAction } from '../../core/state/state.interface';
 import { CallService } from './call.service';
 
 export const defaultState: ICallState = {
+  statusCode: null,
   settings: null,
   calls: []
 };
@@ -87,6 +88,13 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
       return {
         ...state,
         calls: state.calls.filter(call => call.phoneId !== phoneId)
+      };
+    }
+    case CallService.PBX_STATUS_CHANGE_SUCCESS: {
+      const { statusCode } = action.payload;
+      return {
+        ...state,
+        statusCode
       };
     }
     default:
