@@ -15,11 +15,14 @@ import { GridsService } from './grids.service';
 import { SimpleGridComponent } from './grid/grid.component';
 
 // Renderers
-import { CheckboxRendererComponent } from './renderers/checkbox/checkbox.component';
-import { DateTimeRendererComponent } from './renderers/datetime/datetime.component';
-import { DictRendererComponent } from './renderers/dict/dict.component';
-import { LookupRendererComponent } from './renderers/lookup/lookup.component';
-import { TickRendererComponent } from './renderers/tick/tick.component';
+import {
+  CheckboxRendererComponent,
+  DateRendererComponent,
+  DateTimeRendererComponent,
+  DictRendererComponent,
+  LookupRendererComponent,
+  TickRendererComponent,
+} from './renderers';
 
 // Misc Components
 import { GridToolbarComponent } from './toolbar/toolbar.component';
@@ -28,6 +31,7 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
   imports: [
     AgGridModule.withComponents([
       CheckboxRendererComponent,
+      DateRendererComponent,
       DateTimeRendererComponent,
       DictRendererComponent,
       LookupRendererComponent,
@@ -47,6 +51,7 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
   ],
   declarations: [
     CheckboxRendererComponent,
+    DateRendererComponent,
     DateTimeRendererComponent,
     DictRendererComponent,
     GridToolbarComponent,

@@ -1,29 +1,31 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { first, map, distinctUntilChanged } from 'rxjs/operators';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IPromise } from '@app/shared/gui-objects/widgets/promise/promise.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IPromise } from '../promise.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { PromiseService } from '@app/shared/gui-objects/widgets/promise/promise.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { PromiseService } from '../promise.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
+import { DateRendererComponent, DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-promise-grid',
   templateUrl: './promise-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromiseGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
@@ -74,44 +76,34 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: IGridColumn[] = [
-    { prop: 'promiseDate', minWidth: 110, maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'promiseAmount', minWidth: 120, maxWidth: 130, renderer: 'numberRenderer' },
-    { prop: 'receiveDateTime', minWidth: 130, maxWidth: 150, renderer: 'dateTimeRenderer' },
+  columns: ISimpleGridColumn<IPromise>[] = [
+    // TODO(d.maltsev): should be just date
+    { prop: 'promiseDate', minWidth: 130, maxWidth: 200, renderer: DateRendererComponent },
+    { prop: 'promiseAmount', minWidth: 120, maxWidth: 150 /*, renderer: 'numberRenderer' */ },
+    { prop: 'receiveDateTime', minWidth: 130, maxWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'statusCode', minWidth: 120, dictCode: UserDictionariesService.DICTIONARY_PROMISE_STATUS },
     { prop: 'comment', minWidth: 100 },
     { prop: 'fullName', minWidth: 120 },
     // TODO(atymchuk): the currency should appear in the promiseAmount column header
     // { prop: 'currencyId', hidden: true, lookupKey: 'currencies', },
-  ];
+  ].map(addGridLabel('widgets.promise.grid'));
 
-  rows: Array<IPromise> = [];
+  rows: IPromise[] = [];
 
   private dialog: string;
-  private routeParams = (<any>this.route.params).value;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
 
-  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '300px' };
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private promiseService: PromiseService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService
-  ) {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.canViewSubscription = combineLatest(this.canView$, this.debtId$)
@@ -138,8 +130,8 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     this.canViewSubscription.unsubscribe();
   }
 
-  onSelect(promise: IPromise): void {
-    this.selectedPromise$.next(promise);
+  onSelect(promises: IPromise[]): void {
+    this.selectedPromise$.next(promises[0]);
   }
 
   onDoubleClick(promise: IPromise): void {
@@ -251,5 +243,4 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     this.hasActivePromise$.next(true);
     this.cdRef.markForCheck();
   }
-
 }

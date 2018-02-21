@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
-import { IAppState } from '../../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IPromise, IPromiseLimit } from './promise.interface';
-import { IDebt } from '../../../../core/debt/debt.interface';
+import { IDebt } from '@app/core/debt/debt.interface';
 
-import { AbstractActionService } from '../../../../core/state/action.service';
-import { DataService } from '../../../../core/data/data.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { AbstractActionService } from '@app/core/state/action.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Injectable()
 export class PromiseService extends AbstractActionService {

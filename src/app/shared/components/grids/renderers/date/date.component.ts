@@ -5,10 +5,10 @@ import * as moment from 'moment';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-grid-datetime-renderer',
-  template: `{{ value | momentFormat:'L LTS' }}`,
+  selector: 'app-grid-date-renderer',
+  template: `{{ value | momentFormat:'L' }}`,
 })
-export class DateTimeRendererComponent implements ICellRendererAngularComp {
+export class DateRendererComponent implements ICellRendererAngularComp {
   private params: ICellRendererParams;
 
   agInit(params: ICellRendererParams): void {

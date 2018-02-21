@@ -20,4 +20,4 @@ import { PromiseService } from './promise.service';
     PromiseService,
   ]
 })
-export class PromiseModule { }
+export class PromiseModule {}

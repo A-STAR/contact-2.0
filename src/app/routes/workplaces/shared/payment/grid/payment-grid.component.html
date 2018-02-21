@@ -18,19 +18,20 @@
   (cancel)="onCancel()"
 ></app-dialog-action>
 
-<app-toolbar-2
-  *ngIf="!hideToolbar"
-  class="bh"
-  [items]="toolbarItems"
-></app-toolbar-2>
-
-<app-grid
-  columnTranslationKey="widgets.payment"
-  selectionType="single"
-  [columns]="columns"
-  [filter]="filter"
-  [rows]="rows"
-  [styles]="gridStyles"
-  (onDblClick)="onDoubleClick($event)"
-  (onSelect)="onSelect($event)"
-></app-grid>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-toolbar-2
+      *ngIf="!hideToolbar"
+      class="bh"
+      [items]="toolbarItems"
+    ></app-toolbar-2>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      [columns]="columns"
+      [rows]="rows"
+      (select)="onSelect($event)"
+      (dblClick)="onDoubleClick($event)"
+    ></app-simple-grid>
+  </div>
+</div>

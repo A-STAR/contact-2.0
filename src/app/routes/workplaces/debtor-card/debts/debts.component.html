@@ -1,20 +1,22 @@
-<app-debt-grid></app-debt-grid>
-
-<app-hdivider></app-hdivider>
-
-<app-tabview (select)="onTabSelect($event)" [noMargin]="true">
-  <app-tabview-tab [title]="'debtor.paymentsTab.title'">
-    <app-payment-grid
-      *ngIf="tabs[0].isInitialised"
-      [debtId]="debtId$ | async"
-    ></app-payment-grid>
-  </app-tabview-tab>
-
-  <app-tabview-tab [title]="'debtor.promisesTab.title'">
-    <app-promise-grid
-      *ngIf="tabs[1].isInitialised"
-      [debtId]="debtId$ | async"
-      [debtStatusCode]="debtStatusCode$ | async"
-    ></app-promise-grid>
-  </app-tabview-tab>
-</app-tabview>
+<div class="flex vertical">
+  <div class="flex-item grow">
+    <app-debt-grid></app-debt-grid>
+  </div>
+  <div class="flex-item grow">
+    <app-tabview [fullHeight]="true" (select)="onTabSelect($event)" [noMargin]="true">
+      <app-tabview-tab [title]="'debtor.paymentsTab.title'">
+        <app-payment-grid
+          *ngIf="tabs[0].isInitialised"
+          [debtId]="debtId$ | async"
+        ></app-payment-grid>
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'debtor.promisesTab.title'">
+        <app-promise-grid
+          *ngIf="tabs[1].isInitialised"
+          [debtId]="debtId$ | async"
+          [debtStatusCode]="debtStatusCode$ | async"
+        ></app-promise-grid>
+      </app-tabview-tab>
+    </app-tabview>
+  </div>
+</div>

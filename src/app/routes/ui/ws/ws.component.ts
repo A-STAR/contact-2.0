@@ -7,7 +7,7 @@ import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interf
 
 import { WSService } from './ws.service';
 
-import { TickRendererComponent } from '@app/shared/components/grids/renderers/tick/tick.component';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

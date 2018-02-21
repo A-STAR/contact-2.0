@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../../../../shared/shared.module';
+import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { DebtGridModule } from './grid/debt-grid.module';
 
@@ -12,6 +13,7 @@ import { DebtsComponent } from './debts.component';
     CommonModule,
     DebtGridModule,
     SharedModule,
+    WorkplacesSharedModule,
   ],
   declarations: [
     DebtsComponent,
@@ -20,4 +22,4 @@ import { DebtsComponent } from './debts.component';
     DebtsComponent,
   ]
 })
-export class DebtsModule { }
+export class DebtsModule {}
