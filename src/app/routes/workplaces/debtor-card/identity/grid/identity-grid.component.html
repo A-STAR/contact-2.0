@@ -1,0 +1,26 @@
+<app-dialog-action
+  *ngIf="isDialog('removeIdentity')"
+  actionMode="danger"
+  actionTranslationKey="debtor.identityDocs.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  [messageParams]="identityDoc"
+  titleTranslationKey="debtor.identityDocs.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCloseDialog()"
+>
+</app-dialog-action>
+
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      persistenceKey="[grid] workplaces/debtor-card/identityDocs"
+      [columns]="columns"
+      [rows]="rows"
+      (select)="onSelect($event)"
+      (dblClick)="onDoubleClick($event)"
+    ></app-simple-grid>
+  </div>
+</div>

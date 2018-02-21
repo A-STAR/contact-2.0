@@ -9,7 +9,7 @@ import { DebtModule } from './debt/debt.module';
 import { DebtorAddressModule } from './address/address.module';
 import { DebtorAttributesModule } from './attributes/attributes.module';
 import { DebtorAttributesVersionsModule } from './versions/debtor-attributes-versions.module';
-import { DebtorContactsModule } from './contacts/contacts.module';
+import { ContactPersonsModule } from './contact-persons/contact-persons.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
 import { DebtorDocumentModule } from './document/document.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
@@ -34,7 +34,7 @@ import { DebtorAddressComponent } from './address/address.component';
 import { DebtorAttributesVersionsComponent } from './versions/debtor-attributes-versions.component';
 import { DebtorComponent } from './debtor.component';
 import { DebtorContactLogTabComponent } from './contact-log-tab/contact-log-tab.component';
-import { DebtorContactsComponent } from './contacts/contacts.component';
+import { ContactPersonsComponent } from './contact-persons/contact-persons.component';
 import { DebtorDebtComponentComponent } from './debt-component/debt-component.component';
 import { DebtorDocumentComponent } from './document/document.component';
 import { DebtorEmailCardComponent } from './information/email/card/email-card.component';
@@ -95,11 +95,11 @@ const routes: Routes = [
       {
         path: 'create',
         children: [
-          { path: '', component: DebtorContactsComponent, data: {reuse: true} },
+          { path: '', component: ContactPersonsComponent, data: {reuse: true} },
           {
             path: ':contactPersonId',
             children: [
-              { path: '', component: DebtorContactsComponent },
+              { path: '', component: ContactPersonsComponent },
               {
                 path: 'phone',
                 children: [
@@ -139,7 +139,7 @@ const routes: Routes = [
       {
         path: ':contactId',
         children: [
-          { path: '', component: DebtorContactsComponent },
+          { path: '', component: ContactPersonsComponent },
           {
             path: 'phone',
             children: [
@@ -267,7 +267,7 @@ const routes: Routes = [
     DebtorAddressModule,
     DebtorAttributesModule,
     DebtorAttributesVersionsModule,
-    DebtorContactsModule,
+    ContactPersonsModule,
     DebtorDebtComponentModule,
     DebtorDocumentModule,
     DebtorEmploymentModule,
