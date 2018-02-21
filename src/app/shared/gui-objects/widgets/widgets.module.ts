@@ -5,15 +5,12 @@ import { AttributeModule as EntityAttributeModule } from './entity-attribute/att
 import { AttributeModule } from './attribute/attribute.module';
 import { ComponentLogModule } from './debt/component-log/component-log.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
-import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { ContractorObjectModule } from './contractor-object/object.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
-import { EmploymentModule } from './employment/employment.module';
 import { EntityGroupModule } from './entity-group/entity-group.module';
-import { IdentityModule } from './identity/identity.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.module';
 import { OperatorDetailsModule } from './operator-details/operator-details.module';
@@ -29,16 +26,13 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     CommonModule,
     ComponentLogModule,
     ContactLogModule,
-    ContactModule,
     ContactPropertyModule,
     ContractorObjectModule,
     DebtResponsibleModule,
     DebtOpenIncomingCallModule,
     DebtorActionLogModule,
-    EmploymentModule,
     EntityAttributeModule,
     EntityGroupModule,
-    IdentityModule,
     MassOpsModule,
     NextCallDateSetModule,
     OperatorDetailsModule,
@@ -52,16 +46,13 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     AttributeModule,
     ComponentLogModule,
     ContactLogModule,
-    ContactModule,
     ContactPropertyModule,
     ContractorObjectModule,
     DebtOpenIncomingCallModule,
     DebtResponsibleModule,
     DebtorActionLogModule,
-    EmploymentModule,
     EntityAttributeModule,
     EntityGroupModule,
-    IdentityModule,
     MassOpsModule,
     NextCallDateSetModule,
     OperatorDetailsModule,

@@ -36,10 +36,10 @@
             <app-guarantee-grid *ngIf="tabs[2].isInitialised"></app-guarantee-grid>
           </app-tabview-tab>
           <app-tabview-tab [title]="'debtor.contactsTab.title'">
-            <app-contact-grid
+            <app-contact-persons-grid
               *ngIf="tabs[3].isInitialised"
               [personId]="personId$ | async"
-            ></app-contact-grid>
+            ></app-contact-persons-grid>
           </app-tabview-tab>
           <app-tabview-tab [title]="'debtor.documentsTab.title'">
             <app-document-grid
