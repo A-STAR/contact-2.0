@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 interface IEmploymentCardRouteParams {

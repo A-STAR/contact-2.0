@@ -16,8 +16,5 @@ import { ContactPersonsGridComponent } from './contact-persons-grid.component';
   declarations: [
     ContactPersonsGridComponent,
   ],
-  entryComponents: [
-    ContactPersonsGridComponent,
-  ]
 })
 export class ContactPersonsGridModule { }

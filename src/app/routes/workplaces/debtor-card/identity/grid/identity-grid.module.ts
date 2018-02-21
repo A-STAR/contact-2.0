@@ -16,8 +16,5 @@ import { IdentityGridComponent } from './identity-grid.component';
   declarations: [
     IdentityGridComponent,
   ],
-  entryComponents: [
-    IdentityGridComponent,
-  ]
 })
 export class IdentityGridModule { }

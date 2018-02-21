@@ -1,19 +1,19 @@
 <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
 
   <!-- Select from persons linked to debt -->
-  <app-tabview-tab [title]="'routes.workplaces.shared.contactRegistration.edit.form.contactSelect.grid.title'" [closable]="false">
+  <app-tabview-tab [title]="'routes.workplaces.shared.contactRegistration.edit.form.contactSelect.grid.title'" >
     <app-contact-registration-contact-select-grid [excludeCurrentPersonId]="excludeCurrentPersonId"></app-contact-registration-contact-select-grid>
   </app-tabview-tab>
 
   <!-- Select from all persons -->
-  <app-tabview-tab [title]="'routes.workplaces.shared.contactRegistration.edit.form.contactSelect.search.title'" [closable]="false">
+  <app-tabview-tab [title]="'routes.workplaces.shared.contactRegistration.edit.form.contactSelect.search.title'" >
     <div class="mt">
       <app-contact-registration-contact-select-search></app-contact-registration-contact-select-search>
     </div>
   </app-tabview-tab>
 
   <!-- Add manually -->
-  <app-tabview-tab [title]="'routes.workplaces.shared.contactRegistration.edit.form.contactSelect.card.title'" [closable]="false">
+  <app-tabview-tab [title]="'routes.workplaces.shared.contactRegistration.edit.form.contactSelect.card.title'" >
     <div class="mt">
       <app-contact-registration-contact-select-card></app-contact-registration-contact-select-card>
     </div>

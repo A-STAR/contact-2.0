@@ -4,7 +4,7 @@
   </div>
   <div>
     <app-tabview (select)="onTabSelect($event)">
-      <app-tabview-tab [title]="'widgets.email.dialogs.schedule.text'" [closable]="false" [disabled]="isTextTabDisabled$ | async">
+      <app-tabview-tab [title]="'widgets.email.dialogs.schedule.text'"  [disabled]="isTextTabDisabled$ | async">
         <div class="mt-lg">
           <app-phone-grid-schedule-form
             #formText
@@ -16,7 +16,7 @@
           ></app-phone-grid-schedule-form>
         </div>
       </app-tabview-tab>
-      <app-tabview-tab [title]="'widgets.email.dialogs.schedule.template'" [closable]="false">
+      <app-tabview-tab [title]="'widgets.email.dialogs.schedule.template'" >
         <div class="mt-lg">
           <app-phone-grid-schedule-form
             #formTemplate

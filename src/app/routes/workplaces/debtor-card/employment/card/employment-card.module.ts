@@ -17,9 +17,6 @@ import { EmploymentCardComponent } from './employment-card.component';
   ],
   declarations: [
     EmploymentCardComponent,
-  ],
-  entryComponents: [
-    EmploymentCardComponent,
   ]
 })
 export class EmploymentCardModule { }

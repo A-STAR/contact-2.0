@@ -18,8 +18,5 @@ import { IdentityCardComponent } from './identity-card.component';
   declarations: [
     IdentityCardComponent,
   ],
-  entryComponents: [
-    IdentityCardComponent,
-  ]
 })
 export class IdentityCardModule { }

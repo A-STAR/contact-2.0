@@ -26,7 +26,7 @@
     <app-tabview [fullHeight]="true" [noMargin]="true" (select)="onTabSelect($event)">
 
       <!-- Phones -->
-      <app-tabview-tab [title]="tabs[0].title" [closable]="false">
+      <app-tabview-tab [title]="tabs[0].title" >
         <app-phone-grid
           *ngIf="tabs[0].isInitialised"
           action="edit"
@@ -41,7 +41,7 @@
       </app-tabview-tab>
 
       <!-- Addresses -->
-      <app-tabview-tab [title]="tabs[1].title" [closable]="false">
+      <app-tabview-tab [title]="tabs[1].title" >
         <app-address-grid
           *ngIf="tabs[1].isInitialised"
           action="edit"
@@ -56,7 +56,7 @@
       </app-tabview-tab>
 
       <!-- Identity Documents -->
-      <app-tabview-tab [title]="tabs[2].title" [closable]="false">
+      <app-tabview-tab [title]="tabs[2].title" >
         <app-identity-grid
           *ngIf="tabs[2].isInitialised"
           [personId]="contactId"
@@ -67,7 +67,7 @@
       </app-tabview-tab>
 
       <!-- Employment History -->
-      <app-tabview-tab [title]="tabs[3].title" [closable]="false">
+      <app-tabview-tab [title]="tabs[3].title" >
         <app-employment-grid
           *ngIf="tabs[3].isInitialised"
           [personId]="contactId"

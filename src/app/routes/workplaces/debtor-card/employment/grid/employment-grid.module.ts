@@ -15,9 +15,6 @@ import { EmploymentGridComponent } from './employment-grid.component';
   ],
   declarations: [
     EmploymentGridComponent,
-  ],
-  entryComponents: [
-    EmploymentGridComponent,
   ]
 })
 export class EmploymentGridModule { }
