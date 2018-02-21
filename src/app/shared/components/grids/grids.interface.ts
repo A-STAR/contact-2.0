@@ -1,3 +1,5 @@
+import { ILookupKey } from '@app/core/lookup/lookup.interface';
+
 export enum IGridSelectionType {
   SINGLE = 'single',
   MULTIPLE = 'multiple',
@@ -23,7 +25,7 @@ export interface IGridColumn<T> {
   // Optional Fields
   dictCode?: number;
   filter?: IGridFilterType;
-  lookupKey?: string;
+  lookupKey?: ILookupKey;
   minWidth?: number;
   maxWidth?: number;
   renderer?: any;

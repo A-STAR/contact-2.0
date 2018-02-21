@@ -9,7 +9,6 @@ import { ContactLogTabModule } from './contact-log-tab/contact-log.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { ContractorObjectModule } from './contractor-object/object.module';
-import { DebtComponentModule } from './debt/component/debt-component.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
@@ -37,7 +36,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     ContactModule,
     ContactPropertyModule,
     ContractorObjectModule,
-    DebtComponentModule,
     DebtResponsibleModule,
     DebtOpenIncomingCallModule,
     DebtorActionLogModule,
@@ -64,7 +62,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     ContactModule,
     ContactPropertyModule,
     ContractorObjectModule,
-    DebtComponentModule,
     DebtOpenIncomingCallModule,
     DebtResponsibleModule,
     DebtorActionLogModule,
