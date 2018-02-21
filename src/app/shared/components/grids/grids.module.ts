@@ -21,11 +21,13 @@ import {
   DateTimeRendererComponent,
   DictRendererComponent,
   LookupRendererComponent,
+  NumberRendererComponent,
   TickRendererComponent,
 } from './renderers';
 
 // Misc Components
 import { GridToolbarComponent } from './toolbar/toolbar.component';
+import { EmptyOverlayComponent } from './overlays/empty/empty.component';
 
 @NgModule({
   imports: [
@@ -34,7 +36,9 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
       DateRendererComponent,
       DateTimeRendererComponent,
       DictRendererComponent,
+      EmptyOverlayComponent,
       LookupRendererComponent,
+      NumberRendererComponent,
       TickRendererComponent,
     ]),
     ButtonModule,
@@ -54,8 +58,10 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
     DateRendererComponent,
     DateTimeRendererComponent,
     DictRendererComponent,
+    EmptyOverlayComponent,
     GridToolbarComponent,
     LookupRendererComponent,
+    NumberRendererComponent,
     SimpleGridComponent,
     TickRendererComponent,
   ],

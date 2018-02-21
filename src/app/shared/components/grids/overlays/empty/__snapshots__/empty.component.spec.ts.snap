@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmptyOverlayComponent should render empty overlay 1`] = `
+<div
+  id="root0"
+  ng-version="5.2.4"
+>
+  <div
+    class="ag-overlay-loading-center"
+  >
+    
+  
+    <em>
+      shared.components.grids.overlays.empty
+    </em>
+    
+
+  </div>
+  
+
+</div>
+`;

@@ -15,7 +15,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
+import { DateTimeRendererComponent, NumberRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
@@ -84,10 +84,10 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   ];
 
   columns: ISimpleGridColumn<IPayment>[] = [
-    { prop: 'amount', minWidth: 110, maxWidth: 130 /* , renderer: 'numberRenderer' */ },
+    { prop: 'amount', minWidth: 110, maxWidth: 130, renderer: NumberRendererComponent },
     { prop: 'paymentDateTime', minWidth: 130, maxWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'currencyName', minWidth: 90, maxWidth: 110 },
-    { prop: 'amountMainCurrency', minWidth: 120, maxWidth: 150 /*, renderer: 'numberRenderer' */ },
+    { prop: 'amountMainCurrency', minWidth: 120, maxWidth: 150, renderer: NumberRendererComponent },
     { prop: 'receiveDateTime', minWidth: 130, maxWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'statusCode', minWidth: 120, maxWidth: 130, dictCode: UserDictionariesService.DICTIONARY_PAYMENT_STATUS },
     { prop: 'purposeCode', minWidth: 120, maxWidth: 130, dictCode: UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE },
@@ -96,7 +96,7 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     { prop: 'reqUserFullName', minWidth: 150 },
     { prop: 'payerName', minWidth: 120 },
     { prop: 'receiptNumber', minWidth: 110, maxWidth: 130 },
-    { prop: 'commission', minWidth: 100 /*, renderer: 'numberRenderer' */ },
+    { prop: 'commission', minWidth: 100, renderer: NumberRendererComponent },
     // TODO(atymchuk): the currency should appear in the promiseAmount column header
     // { prop: 'currencyId', hidden: true, lookupKey: 'currencies', },
   ].map(addGridLabel('widgets.payment.grid'));

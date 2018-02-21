@@ -172,6 +172,9 @@
   "shared": {
     "components": {
       "grids": {
+        "overlays": {
+          "empty": "Нет данных"
+        },
         "toolbar": {
           "rowsSelected": "выбрано",
           "rowsTotal": "всего"
