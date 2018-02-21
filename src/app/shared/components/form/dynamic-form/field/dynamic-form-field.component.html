@@ -38,6 +38,35 @@
     [label]="control.label"
   ></app-checkbox>
 
+  <app-datetimepicker
+    *ngSwitchCase="'datetimepicker'"
+    [formControlName]="control.controlName"
+    [displaySeconds]="control.displaySeconds"
+    [label]="control.label"
+    [minDateTime]="control.minDateTime"
+    [maxDateTime]="control.maxDateTime"
+    [required]="control.required"
+  ></app-datetimepicker>
+
+  <app-datepicker
+    *ngSwitchCase="'datepicker'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [minDate]="control.minDate"
+    [maxDate]="control.maxDate"
+    [required]="control.required"
+  ></app-datepicker>
+
+  <app-timepicker
+    *ngSwitchCase="'timepicker'"
+    [formControlName]="control.controlName"
+    [displaySeconds]="control.displaySeconds"
+    [label]="control.label"
+    [minTime]="control.minTime"
+    [maxTime]="control.maxTime"
+    [required]="control.required"
+  ></app-timepicker>
+
   <!--
     Below are old controls.
   -->
@@ -147,35 +176,6 @@
       <app-html-textarea [formControlName]="control.controlName"></app-html-textarea>
     </label>
   </ng-container>
-
-  <app-datetimepicker
-    *ngSwitchCase="'datetimepicker'"
-    [formControlName]="control.controlName"
-    [displaySeconds]="control.displaySeconds"
-    [label]="control.label"
-    [minDateTime]="control.minDateTime"
-    [maxDateTime]="control.maxDateTime"
-    [required]="control.required"
-  ></app-datetimepicker>
-
-  <app-datepicker
-    *ngSwitchCase="'datepicker'"
-    [formControlName]="control.controlName"
-    [label]="control.label"
-    [minDate]="control.minDate"
-    [maxDate]="control.maxDate"
-    [required]="control.required"
-  ></app-datepicker>
-
-  <app-timepicker
-    *ngSwitchCase="'timepicker'"
-    [formControlName]="control.controlName"
-    [displaySeconds]="control.displaySeconds"
-    [label]="control.label"
-    [minTime]="control.minTime"
-    [maxTime]="control.maxTime"
-    [required]="control.required"
-  ></app-timepicker>
 
   <ng-container *ngSwitchCase="'image'">
     <label>

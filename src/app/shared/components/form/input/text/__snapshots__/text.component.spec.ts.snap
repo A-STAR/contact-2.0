@@ -5,7 +5,9 @@ exports[`TextComponent should handle input 1`] = `
   id="root2"
   ng-version="5.2.4"
 >
-  <label>
+  <label
+    class="m0"
+  >
     
   
     
@@ -37,9 +39,6 @@ exports[`TextComponent should handle input 1`] = `
   </label>
   
 
-
-  
-
 </div>
 `;
 
@@ -48,7 +47,9 @@ exports[`TextComponent should handle losing focus 1`] = `
   id="root1"
   ng-version="5.2.4"
 >
-  <label>
+  <label
+    class="m0"
+  >
     
   
     
@@ -79,9 +80,6 @@ exports[`TextComponent should handle losing focus 1`] = `
   </label>
   
 
-
-  
-
 </div>
 `;
 
@@ -90,7 +88,9 @@ exports[`TextComponent should render 1`] = `
   id="root0"
   ng-version="5.2.4"
 >
-  <label>
+  <label
+    class="m0"
+  >
     
   
     
@@ -119,9 +119,6 @@ exports[`TextComponent should render 1`] = `
     
 
   </label>
-  
-
-
   
 
 </div>
