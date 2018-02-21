@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { first, map, distinctUntilChanged } from 'rxjs/operators';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -91,7 +91,6 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   rows: IPromise[] = [];
 
   private dialog: string;
-  private routeParams = (<any>this.route.params).value;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;

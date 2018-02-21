@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IPayment } from '../payment.interface';
@@ -105,7 +104,6 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   rows: IPayment[] = [];
 
   private dialog: string;
-  private routeParams = (<any>this.route.params).value;
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
