@@ -29,7 +29,7 @@ import { GridsService } from '../grids.service';
 
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
 
-import { isEmpty } from '@app/core/utils';
+import { isEmpty } from '@app/core/utils/index';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
