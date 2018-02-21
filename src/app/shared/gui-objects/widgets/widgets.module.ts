@@ -5,7 +5,6 @@ import { AttributeModule as EntityAttributeModule } from './entity-attribute/att
 import { AttributeModule } from './attribute/attribute.module';
 import { ComponentLogModule } from './debt/component-log/component-log.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
-import { ContactLogTabModule } from './contact-log-tab/contact-log.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
 import { ContractorObjectModule } from './contractor-object/object.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
@@ -27,7 +26,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     CommonModule,
     ComponentLogModule,
     ContactLogModule,
-    ContactLogTabModule,
     ContactPropertyModule,
     ContractorObjectModule,
     DebtResponsibleModule,
@@ -48,7 +46,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     AttributeModule,
     ComponentLogModule,
     ContactLogModule,
-    ContactLogTabModule,
     ContactPropertyModule,
     ContractorObjectModule,
     DebtOpenIncomingCallModule,

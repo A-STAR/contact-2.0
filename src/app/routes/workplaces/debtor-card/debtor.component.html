@@ -83,11 +83,11 @@
             ></app-debtor-action-log>
           </app-tabview-tab>
           <app-tabview-tab [title]="'debtor.contactLogTab.title'">
-            <app-contact-log-tab-grid
+            <app-contact-log-grid
               *ngIf="tabs[10].isInitialised"
               [debtId]="debtId$ | async"
               [personId]="personId$ | async"
-            ></app-contact-log-tab-grid>
+            ></app-contact-log-grid>
           </app-tabview-tab>
           <app-tabview-tab [title]="'debtor.attributesTab.title'">
             <app-debtor-attributes *ngIf="tabs[11].isInitialised"></app-debtor-attributes>

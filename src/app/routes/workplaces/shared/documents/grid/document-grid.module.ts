@@ -8,7 +8,7 @@ import { DocumentGridComponent } from './document-grid.component';
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
   ],
   exports: [
     DocumentGridComponent,
@@ -16,8 +16,5 @@ import { DocumentGridComponent } from './document-grid.component';
   declarations: [
     DocumentGridComponent,
   ],
-  entryComponents: [
-    DocumentGridComponent,
-  ]
 })
-export class DocumentGridModule { }
+export class DocumentGridModule {}

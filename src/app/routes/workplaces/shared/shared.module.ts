@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import { AddressModule } from './address/address.module';
+import { ContactLogModule } from './contact-log/contact-log.module';
 import { ContactRegistrationModule } from './contact-registration/contact-registration.module';
 import { DebtComponentModule } from './debt-component/debt-component.module';
 import { DocumentModule } from './documents/document.module';
@@ -11,6 +12,7 @@ import { PromiseModule } from './promise/promise.module';
 @NgModule({
   imports: [
     AddressModule,
+    ContactLogModule,
     ContactRegistrationModule,
     DebtComponentModule,
     DocumentModule,
@@ -20,6 +22,7 @@ import { PromiseModule } from './promise/promise.module';
   ],
   exports: [
     AddressModule,
+    ContactLogModule,
     ContactRegistrationModule,
     DebtComponentModule,
     DocumentModule,
