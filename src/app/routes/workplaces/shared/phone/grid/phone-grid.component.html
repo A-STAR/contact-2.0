@@ -52,6 +52,7 @@
   <div class="flex-item grow">
     <app-simple-grid
       *ngIf="canDisplayGrid"
+      persistenceKey="[grid] workplaces/shared/phone"
       [columns]="columns"
       [rows]="phones"
       [rowClass]="getRowClass()"

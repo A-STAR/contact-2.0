@@ -3,6 +3,7 @@
 
   <div class="flex-item grow">
     <app-simple-grid
+      persistenceKey="[grid] admin/users"
       [columns]="columns"
       [rows]="users"
       (select)="onSelect($event)"

@@ -4,12 +4,23 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { ColDef, GetContextMenuItemsParams, GridApi, GridOptions, RowDoubleClickedEvent } from 'ag-grid';
-import { first } from 'rxjs/operators';
+
+import {
+  ColDef,
+  ColumnApi,
+  GetContextMenuItemsParams,
+  GridApi,
+  GridOptions,
+  RowDoubleClickedEvent,
+} from 'ag-grid';
 
 import { IGridSelectionType } from '@app/shared/components/grids/grids.interface';
 import { ISimpleGridColumn } from './grid.interface';
@@ -26,28 +37,12 @@ import { GridToolbarComponent } from '../toolbar/toolbar.component';
   styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html'
 })
-export class SimpleGridComponent<T> {
+export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
   @ViewChild(GridToolbarComponent) toolbar: GridToolbarComponent;
 
-  @Input()
-  set columns(columns: ISimpleGridColumn<T>[]) {
-    this.gridsService
-      .convertColumnsToColDefs(columns)
-      .pipe(
-        first(),
-      )
-      .subscribe(colDefs => {
-        this._colDefs = colDefs;
-        this.updateColumns();
-      });
-  }
-
-  @Input()
-  set rows(rows: T[]) {
-    this._rows = rows;
-    this.updateRows();
-  }
-
+  @Input() columns: ISimpleGridColumn<T>[];
+  @Input() persistenceKey: string;
+  @Input() rows: T[];
   @Input() rowClass: (item: T) => string;
   @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
   @Input() showToolbar = false;
@@ -78,6 +73,9 @@ export class SimpleGridComponent<T> {
     headerHeight: 28,
     onSelectionChanged: () => this.onSelectionChanged(),
     onRowDoubleClicked: event => this.onRowDoubleClicked(event),
+    onSortChanged: () => this.saveSettings(),
+    onColumnMoved: () => this.saveSettings(),
+    onColumnResized: () => this.saveSettings(),
     rowHeight: 28,
     rowSelection: 'multiple',
     showToolPanel: false,
@@ -89,23 +87,15 @@ export class SimpleGridComponent<T> {
     toolPanelSuppressValues: true,
   };
 
+  columnApi: ColumnApi;
   gridApi: GridApi;
 
-  private _colDefs: ColDef[];
-  private _rows: T[];
+  colDefs: ColDef[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private gridsService: GridsService,
   ) {}
-
-  get colDefs(): ColDef[] {
-    return this._colDefs;
-  }
-
-  get rows(): T[] {
-    return this._rows;
-  }
 
   get rowClassCallback(): any {
     return this.rowClass
@@ -113,27 +103,28 @@ export class SimpleGridComponent<T> {
       : null;
   }
 
+  ngOnInit(): void {
+    if (!this.persistenceKey) {
+      throw new Error('Persistence key for simple grid must be specified');
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.columns) {
+      this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey);
+      this.cdRef.markForCheck();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.saveSettings();
+  }
+
   onGridReady(params: any): void {
     this.gridApi = params.api;
-    this.updateColumns();
-    this.updateRows();
+    this.columnApi = params.columnApi;
+    this.gridsService.restoreSortModel(this.persistenceKey, this.gridApi);
     this.updateToolbar();
-  }
-
-  private updateColumns(): void {
-    if (this.gridApi && this._colDefs) {
-      this.gridApi.sizeColumnsToFit();
-      this.updateToolbar();
-    }
-    this.cdRef.markForCheck();
-  }
-
-  private updateRows(): void {
-    if (this.gridApi && this._rows) {
-      this.gridApi.redrawRows();
-      this.updateToolbar();
-    }
-    this.cdRef.markForCheck();
   }
 
   private onSelectionChanged(): void {
@@ -157,5 +148,9 @@ export class SimpleGridComponent<T> {
       'copy',
       'copyWithHeaders',
     ];
+  }
+
+  private saveSettings(): void {
+    this.gridsService.saveSettings(this.persistenceKey, this.gridApi, this.columnApi);
   }
 }

@@ -28,3 +28,14 @@ export interface IGridColumn<T> {
   maxWidth?: number;
   renderer?: any;
 }
+
+export interface IGridLocalSettingsColumn {
+  colId: string;
+  isVisible: boolean;
+  width: number;
+}
+
+export interface IGridLocalSettings {
+  columns: IGridLocalSettingsColumn[];
+  sortModel: any;
+}
