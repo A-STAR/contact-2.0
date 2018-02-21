@@ -12,7 +12,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { UsersService } from '@app/routes/admin/users/users.service';
 
-import { TickRendererComponent } from '@app/shared/components/grids/renderers/tick/tick.component';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { combineLatestAnd, isEmpty, addGridLabel } from '@app/core/utils';
 

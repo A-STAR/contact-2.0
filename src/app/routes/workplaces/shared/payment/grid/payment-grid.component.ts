@@ -16,8 +16,9 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
+import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
+
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
-import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers/datetime/datetime.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

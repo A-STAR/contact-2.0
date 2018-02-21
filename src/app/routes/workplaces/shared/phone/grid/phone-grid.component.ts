@@ -30,8 +30,7 @@ import { UserConstantsService } from '@app/core/user/constants/user-constants.se
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers/datetime/datetime.component';
-import { TickRendererComponent } from '@app/shared/components/grids/renderers/tick/tick.component';
+import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
