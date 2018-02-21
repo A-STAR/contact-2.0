@@ -6,21 +6,21 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDebtComponent, IDebtDialog } from '../debt-component.interface';
-import { IGridColumn, IRenderer } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { DebtComponentService } from '@app/shared/gui-objects/widgets/debt/component/debt-component.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
-import { LookupService } from '@app/core/lookup/lookup.service';
+import { DebtComponentService } from '../debt-component.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { addGridLabel } from '@app/core/utils';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-debt-component-grid',
   templateUrl: './debt-component-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtComponentGridComponent implements OnDestroy {
   @Input() action: 'edit' = 'edit';
@@ -35,21 +35,16 @@ export class DebtComponentGridComponent implements OnDestroy {
 
   private selectedDebtComponentId$ = new BehaviorSubject<number>(null);
 
-  private gridSubscription: Subscription;
   private fetchSubscription: Subscription;
   private busSubscription: Subscription;
 
-  columns: Array<IGridColumn> = [
-    { prop: 'typeCode', minWidth: 150, maxWidth: 200 },
+  columns: ISimpleGridColumn<IDebtComponent>[] = [
+    { prop: 'typeCode', minWidth: 150, maxWidth: 200, dictCode: UserDictionariesService.DICTIONARY_DEBT_COMPONENTS },
     { prop: 'amount', minWidth: 150, maxWidth: 200 },
-    { prop: 'currencyId', minWidth: 150 },
-  ];
-  components: Array<IDebtComponent> = [];
+    { prop: 'currencyId', minWidth: 150, lookupKey: 'currencies' },
+  ].map(addGridLabel('widgets.debt.component.grid'));
 
-  private renderers: IRenderer = {
-    typeCode: [],
-    currencyId: [],
-  };
+  components: IDebtComponent[] = [];
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -85,25 +80,12 @@ export class DebtComponentGridComponent implements OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtComponentService: DebtComponentService,
-    private gridService: GridService,
-    private lookupService: LookupService,
     private notificationsService: NotificationsService,
     private router: Router,
     private route: ActivatedRoute,
     private routingService: RoutingService,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
   ) {
-    this.gridSubscription = combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_DEBT_COMPONENTS),
-      this.lookupService.currencyOptions,
-    ).subscribe(([ productTypeOptions, currencyOptions ]) => {
-      this.renderers.typeCode = [ ...productTypeOptions ];
-      this.renderers.currencyId = [ ...currencyOptions ];
-      this.columns = this.gridService.setRenderers(this.columns, this.renderers);
-      this.cdRef.markForCheck();
-    });
-
     this.fetchSubscription = combineLatest(
       this.canViewDebtComponent$,
       this.debtId$,
@@ -125,7 +107,6 @@ export class DebtComponentGridComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.gridSubscription.unsubscribe();
     this.fetchSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
   }
@@ -135,8 +116,8 @@ export class DebtComponentGridComponent implements OnDestroy {
       .map(id => this.components.find(component => component.id === id));
   }
 
-  onSelect(debtComponent: IDebtComponent): void {
-    this.selectedDebtComponentId$.next(debtComponent.id);
+  onSelect(debtComponents: IDebtComponent[]): void {
+    this.selectedDebtComponentId$.next(debtComponents[0].id);
   }
 
   onDoubleClick(debtComponent: IDebtComponent): void {

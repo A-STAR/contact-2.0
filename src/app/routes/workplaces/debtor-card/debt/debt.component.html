@@ -1,20 +1,25 @@
-<div class="pb-lg">
-  <button class="btn btn-default" (click)="onBack()">
-    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
-  </button>
-  <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
-    <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-  </button>
-</div>
+<div class="flex vertical">
 
-<div class="pb-lg">
-  <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
-</div>
+  <!-- Debt Form -->
+  <div class="flex-item">
+    <div class="pb-lg">
+      <button class="btn btn-default" (click)="onBack()">
+        <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+      </button>
+      <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
+        <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+      </button>
+    </div>
+    <div class="pb-lg">
+      <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
+    </div>
+  </div>
 
-<ng-container *ngIf="!!debt">
+  <!-- Debt Details Tab -->
+  <div *ngIf="!!debt" class="flex-item grow">
+    <app-tabview [noMargin]="true" [fullHeight]="true" (select)="onTabSelect($event)">
 
-  <app-tabview (select)="onTabSelect($event)" [noMargin]="true">
-
+      <!-- Debt Components -->
       <app-tabview-tab [title]="tabs[0].title">
         <app-debt-component-grid
           *ngIf="tabs[0].isInitialised"
@@ -22,6 +27,7 @@
         ></app-debt-component-grid>
       </app-tabview-tab>
 
+      <!-- Portfolio Log -->
       <app-tabview-tab [title]="tabs[1].title">
         <app-portfolio-log-grid
           *ngIf="tabs[1].isInitialised && (canViewPortfolioLog$ | async)"
@@ -29,13 +35,13 @@
         ></app-portfolio-log-grid>
       </app-tabview-tab>
 
+      <!-- Component Log -->
       <app-tabview-tab [title]="tabs[2].title">
         <app-component-log-grid
           *ngIf="tabs[2].isInitialised && (canViewComponentLog$ | async)"
           [debtId]="debtId$ | async"
         ></app-component-log-grid>
       </app-tabview-tab>
-
     </app-tabview>
-
-</ng-container>
+  </div>
+</div>

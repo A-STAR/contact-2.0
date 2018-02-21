@@ -4,10 +4,10 @@ import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
-import { IDebtComponent } from '@app/shared/gui-objects/widgets/debt/component/debt-component.interface';
+import { IDebtComponent } from '../debt-component.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DebtComponentService } from '@app/shared/gui-objects/widgets/debt/component/debt-component.service';
+import { DebtComponentService } from '../debt-component.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';

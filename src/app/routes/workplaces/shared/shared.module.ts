@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { AddressModule } from './address/address.module';
 import { ContactRegistrationModule } from './contact-registration/contact-registration.module';
+import { DebtComponentModule } from './debt-component/debt-component.module';
 import { DocumentModule } from './documents/document.module';
 import { PaymentModule } from './payment/payment.module';
 import { PhoneModule } from './phone/phone.module';
@@ -11,6 +12,7 @@ import { PromiseModule } from './promise/promise.module';
   imports: [
     AddressModule,
     ContactRegistrationModule,
+    DebtComponentModule,
     DocumentModule,
     PaymentModule,
     PhoneModule,
@@ -19,6 +21,7 @@ import { PromiseModule } from './promise/promise.module';
   exports: [
     AddressModule,
     ContactRegistrationModule,
+    DebtComponentModule,
     DocumentModule,
     PaymentModule,
     PhoneModule,
