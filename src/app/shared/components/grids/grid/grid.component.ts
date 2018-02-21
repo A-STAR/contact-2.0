@@ -27,6 +27,7 @@ import { ISimpleGridColumn } from './grid.interface';
 
 import { GridsService } from '../grids.service';
 
+import { EmptyOverlayComponent } from '../overlays/empty/empty.component';
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
 
 @Component({
@@ -71,11 +72,12 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
     enableSorting: true,
     getContextMenuItems: this.getContextMenuItems.bind(this),
     headerHeight: 28,
-    onSelectionChanged: () => this.onSelectionChanged(),
-    onRowDoubleClicked: event => this.onRowDoubleClicked(event),
-    onSortChanged: () => this.saveSettings(),
+    noRowsOverlayComponentFramework: EmptyOverlayComponent,
     onColumnMoved: () => this.saveSettings(),
     onColumnResized: () => this.saveSettings(),
+    onRowDoubleClicked: event => this.onRowDoubleClicked(event),
+    onSelectionChanged: () => this.onSelectionChanged(),
+    onSortChanged: () => this.saveSettings(),
     rowHeight: 28,
     rowSelection: 'multiple',
     showToolPanel: false,

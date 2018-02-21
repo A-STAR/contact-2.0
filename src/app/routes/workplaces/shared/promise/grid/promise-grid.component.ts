@@ -17,7 +17,11 @@ import { UserConstantsService } from '@app/core/user/constants/user-constants.se
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DateRendererComponent, DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
+import {
+  DateRendererComponent,
+  DateTimeRendererComponent,
+  NumberRendererComponent,
+} from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
@@ -79,7 +83,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
   columns: ISimpleGridColumn<IPromise>[] = [
     // TODO(d.maltsev): should be just date
     { prop: 'promiseDate', minWidth: 130, maxWidth: 200, renderer: DateRendererComponent },
-    { prop: 'promiseAmount', minWidth: 120, maxWidth: 150 /*, renderer: 'numberRenderer' */ },
+    { prop: 'promiseAmount', minWidth: 120, maxWidth: 150, renderer: NumberRendererComponent },
     { prop: 'receiveDateTime', minWidth: 130, maxWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'statusCode', minWidth: 120, dictCode: UserDictionariesService.DICTIONARY_PROMISE_STATUS },
     { prop: 'comment', minWidth: 100 },
