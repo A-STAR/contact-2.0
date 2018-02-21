@@ -6,7 +6,6 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDebtComponent, IDebtDialog } from '../debt-component.interface';
-import { IGridColumn, IRenderer } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { DebtComponentService } from '../debt-component.service';
