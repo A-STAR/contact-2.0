@@ -7,19 +7,21 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IContact } from '@app/routes/workplaces/debtor-card/contacts/contact.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContactService } from '@app/routes/workplaces/debtor-card/contacts/contact.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
+import { addGridLabel } from '@app/core/utils';
+
 @Component({
   selector: 'app-contact-grid',
   templateUrl: './contact-grid.component.html',
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactGridComponent implements OnInit, OnDestroy {
@@ -56,13 +58,13 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: Array<ISimpleGridColumn<IContact>> = [
     { prop: 'fullName' },
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
     { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER },
     { prop: 'comment' },
     { prop: 'linkTypeCode', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
-  ];
+  ].map(addGridLabel('widgets.contact.grid'));
 
   contacts: Array<IContact> = [];
 
@@ -74,7 +76,6 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactService: ContactService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -82,13 +83,6 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .map(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      })
-      .pipe(first())
-      .subscribe();
 
     this.canViewSubscription = this.canView$
       .subscribe(hasPermission => {
@@ -119,8 +113,8 @@ export class ContactGridComponent implements OnInit, OnDestroy {
     this.onEdit(contact.id);
   }
 
-  onSelect(contact: IContact): void {
-    this.selectedContact$.next(contact);
+  onSelect(contacts: IContact[]): void {
+    this.selectedContact$.next(Array.isArray(contacts) ? contacts[0] : null);
   }
 
   onRemove(): void {

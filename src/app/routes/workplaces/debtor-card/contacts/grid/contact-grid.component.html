@@ -11,9 +11,24 @@
 </app-dialog-action>
 
 
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
+  </div>
 
-<app-grid
+  <div class="flex-item grow">
+    <app-simple-grid
+      persistenceKey="[grid] workplaces/debtor-card/contacts"
+      [columns]="columns"
+      [rows]="contacts"
+      (select)="onSelect($event)"
+      (dblClick)="onDoubleClick($event)"
+    ></app-simple-grid>
+  </div>
+</div>
+
+
+<!-- <app-grid
   columnTranslationKey="widgets.contact"
   selectionType="single"
   [styles]="{ height: '500px' }"
@@ -21,4 +36,4 @@
   [rows]="contacts"
   (onDblClick)="onDoubleClick($event)"
   (onSelect)="onSelect($event)">
-</app-grid>
+</app-grid> -->
