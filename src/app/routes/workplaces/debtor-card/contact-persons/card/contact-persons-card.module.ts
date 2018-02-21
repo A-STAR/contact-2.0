@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { AddressGridModule } from '@app/routes/workplaces/shared/address/grid/address-grid.module';
 import { IdentityGridModule } from '@app/routes/workplaces/debtor-card/identity/grid/identity-grid.module';
@@ -20,7 +19,6 @@ import { ContactPersonsCardComponent } from './contact-persons-card.component';
     IdentityGridModule,
     PersonSelectModule,
     PhoneGridModule,
-    TranslateModule,
   ],
   exports: [
     ContactPersonsCardComponent,

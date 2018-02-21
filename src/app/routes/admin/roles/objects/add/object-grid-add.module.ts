@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '../../../../../shared/shared.module';
 
@@ -10,7 +9,6 @@ import { ObjectGridEditComponent } from './object-grid-add.component';
   imports: [
     CommonModule,
     SharedModule,
-    TranslateModule,
   ],
   exports: [
     ObjectGridEditComponent,

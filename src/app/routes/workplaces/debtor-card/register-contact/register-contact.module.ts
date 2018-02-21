@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { AddressGridModule } from './address/address.module';
 import { DialogModule } from '../../../../shared/components/dialog/dialog.module';
@@ -18,7 +17,6 @@ import { RegisterContactComponent } from './register-contact.component';
     MiscModule,
     PhoneGridModule,
     SharedModule,
-    TranslateModule,
   ],
   exports: [
     RegisterContactComponent,

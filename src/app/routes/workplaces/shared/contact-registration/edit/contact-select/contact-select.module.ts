@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { SelectModule } from '@app/shared/components/form/select/select.module';
 import { SharedModule } from '@app/shared/shared.module';
@@ -15,7 +14,6 @@ import { ContactSelectSearchComponent } from './search/contact-select-search.com
   imports: [
     SelectModule,
     SharedModule,
-    TranslateModule,
   ],
   exports: [
     ContactSelectComponent,
