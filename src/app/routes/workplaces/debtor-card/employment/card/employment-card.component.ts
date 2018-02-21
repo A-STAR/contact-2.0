@@ -4,14 +4,15 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEmployment } from '@app/shared/gui-objects/widgets/employment/employment.interface';
+import { IEmployment } from '@app/routes/workplaces/debtor-card/employment/employment.interface';
 
-import { EmploymentService } from '@app/shared/gui-objects/widgets/employment/employment.service';
+import { EmploymentService } from '@app/routes/workplaces/debtor-card/employment/employment.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+
 import { makeKey } from '@app/core/utils';
 
 const label = makeKey('widgets.employment.grid');

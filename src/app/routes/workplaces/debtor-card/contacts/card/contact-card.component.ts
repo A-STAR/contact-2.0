@@ -5,14 +5,14 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
-import { IContact, IContactLink } from '@app/shared/gui-objects/widgets/contact/contact.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEmployment } from '@app/shared/gui-objects/widgets/employment/employment.interface';
+import { IContact, IContactLink } from '@app/routes/workplaces/debtor-card/contacts/contact.interface';
+import { IEmployment } from '@app/routes/workplaces/debtor-card/employment/employment.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 import { IPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
-import { IIdentityDoc } from '@app/shared/gui-objects/widgets/identity/identity.interface';
 
-import { ContactService } from '@app/shared/gui-objects/widgets/contact/contact.service';
+import { ContactService } from '@app/routes/workplaces/debtor-card/contacts/contact.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';

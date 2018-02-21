@@ -10,11 +10,11 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { IIdentityDoc } from '@app/shared/gui-objects/widgets/identity/identity.interface';
 
 import { GridService } from '@app/shared/components/grid/grid.service';
-import { IdentityService } from '@app/shared/gui-objects/widgets/identity/identity.service';
+import { IdentityService } from '@app/routes/workplaces/debtor-card/identity/identity.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';

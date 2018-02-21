@@ -4,20 +4,21 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { first } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IEmployment } from '@app/shared/gui-objects/widgets/employment/employment.interface';
+import { IEmployment } from '@app/routes/workplaces/debtor-card/employment/employment.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { EmploymentService } from '../employment.service';
+import { EmploymentService } from '@app/routes/workplaces/debtor-card/employment/employment.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
 import { combineLatestAnd } from 'app/core/utils/helpers';
 
 @Component({
