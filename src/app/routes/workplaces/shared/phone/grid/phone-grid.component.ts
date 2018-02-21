@@ -32,7 +32,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
 
-import { addGridLabel, combineLatestAnd } from '@app/core/utils';
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -253,7 +253,9 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(phones: IPhone[]): void {
-    const phone = phones[0];
+    const phone = isEmpty(phones)
+      ? null
+      : phones[0];
     this.select.emit(phone);
     this.selectedPhoneId$.next(phone.id);
   }

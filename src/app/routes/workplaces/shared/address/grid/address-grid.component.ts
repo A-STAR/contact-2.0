@@ -18,22 +18,24 @@ import { of } from 'rxjs/observable/of';
 import { IAddress } from '../address.interface';
 import { IAddressMarkData } from './mark/mark.interface';
 import { IDebt } from '@app/core/debt/debt.interface';
-import { IGridColumn, IContextMenuItem } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { AddressService } from '../address.service';
 import { DebtService } from '@app/core/debt/debt.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd, combineLatestOr } from '@app/core/utils/helpers';
+import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel, combineLatestAnd, combineLatestOr, isEmpty } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-address-grid',
   templateUrl: './address-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
@@ -117,21 +119,9 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  contextMenuOptions: IContextMenuItem[] = [
-    {
-      simpleActionsNames: [
-        'copyField',
-        'copyRow'
-      ],
-      translationKey: 'default.grid.localeText',
-      prop: 'fullAddress',
-      enabled: of(true)
-    }
-  ];
+  columns: ISimpleGridColumn<IAddress>[] = [];
 
-  columns: Array<IGridColumn> = [];
-
-  private _addresses: Array<IAddress> = [];
+  private _addresses: IAddress[] = [];
 
   private canViewSubscription: Subscription;
   private busSubscription: Subscription;
@@ -139,16 +129,16 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private debt: IDebt;
 
-  private _columns: Array<IGridColumn> = [
+  private _columns: ISimpleGridColumn<IAddress>[] = [
     { prop: 'typeCode', dictCode:  UserDictionariesService.DICTIONARY_ADDRESS_TYPE },
     { prop: 'fullAddress' },
     { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_ADDRESS_STATUS },
-    { prop: 'isResidence', maxWidth: 90, type: 'boolean', renderer: 'checkboxRenderer' },
-    { prop: 'isInactive', maxWidth: 90, type: 'boolean', renderer: 'checkboxRenderer' },
+    { prop: 'isResidence', maxWidth: 90, renderer: TickRendererComponent },
+    { prop: 'isInactive', maxWidth: 90, renderer: TickRendererComponent },
     { prop: 'inactiveReasonCode', dictCode: UserDictionariesService.DICTIONARY_ADDRESS_REASON_FOR_BLOCKING },
-    { prop: 'inactiveDateTime', renderer: 'dateTimeRenderer' },
+    { prop: 'inactiveDateTime', renderer: DateTimeRendererComponent },
     { prop: 'comment' },
-  ];
+  ].map(addGridLabel('debtor.information.address.grid'));
 
   private dialog: string;
 
@@ -156,7 +146,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
   ) {}
@@ -169,16 +158,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-      combineLatest(
-        this.gridService.setDictionaryRenderers(this._columns),
-        this.canViewBlock$,
-      )
+    this.canViewBlock$
       .pipe(first())
-      .subscribe(([ columns, canViewBlock ]) => {
-        const filteredColumns = columns.filter(column => {
+      .subscribe(canViewBlock => {
+        this.columns = this._columns.filter(column => {
           return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
         });
-        this.columns = this.gridService.setRenderers(filteredColumns);
         this.cdRef.markForCheck();
       });
 
@@ -222,7 +207,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   getRowClass(): any {
-    return (address: IAddress) => ({ inactive: !!address.isInactive });
+    return (address: IAddress) => address.isInactive ? 'inactive' : null;
   }
 
   onMarkClick(): void {
@@ -243,8 +228,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.dblClick.emit(address);
   }
 
-  onSelect(address: IAddress): void {
-    this._selectedAddressId$.next(address.id);
+  onSelect(addresses: IAddress[]): void {
+    const addressId = isEmpty(addresses)
+      ? null
+      : addresses[0].id;
+    this._selectedAddressId$.next(addressId);
   }
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
