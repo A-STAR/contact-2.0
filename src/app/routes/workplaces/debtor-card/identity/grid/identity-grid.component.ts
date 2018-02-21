@@ -1,8 +1,7 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component,
-  ViewChild, OnDestroy, OnInit, Input, Output, EventEmitter
+  OnDestroy, OnInit, Input, Output, EventEmitter
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
@@ -17,7 +16,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { GridComponent } from '@app/shared/components/grid/grid.component';
+import { DateRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { combineLatestAnd } from '@app/core/utils/helpers';
 import { DialogFunctions } from '@app/core/dialog';
@@ -26,12 +25,10 @@ import { addGridLabel } from '@app/core/utils';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-identity-grid',
+  host: { class: 'full-height' },
   templateUrl: './identity-grid.component.html',
 })
 export class IdentityGridComponent extends DialogFunctions implements OnInit, OnDestroy {
-  @ViewChild(GridComponent) grid: GridComponent;
-
-  private routeParams = this.route.snapshot.paramMap;
 
   @Input()
   set personId(personId: number) {
@@ -48,8 +45,6 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   private selectedRows$ = new BehaviorSubject<IIdentityDoc[]>([]);
 
   dialog: string;
-  gridStyles = this.routeParams.get('contactId') ? { height: '230px' } : { height: '500px' };
-  toolbarClass = !this.routeParams.get('contactId') ? 'bh' : 'bordered';
   onSaveSubscription: Subscription;
   canViewSubscription: Subscription;
 
@@ -59,11 +54,11 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   columns: Array<ISimpleGridColumn<IIdentityDoc>> = [
     { prop: 'docTypeCode', minWidth: 70, type: 'number', dictCode: UserDictionariesService.DICTIONARY_IDENTITY_TYPE },
     { prop: 'docNumber', type: 'string', minWidth: 70 },
-    { prop: 'issueDate', type: 'date', renderer: 'dateRenderer', width: 110 },
+    { prop: 'issueDate', type: 'date', renderer: DateRendererComponent, width: 110 },
     { prop: 'issuePlace', type: 'string' },
-    { prop: 'expiryDate', type: 'date', renderer: 'dateRenderer', width: 110 },
+    { prop: 'expiryDate', type: 'date', renderer: DateRendererComponent, width: 110 },
     { prop: 'citizenship', type: 'string' },
-    { prop: 'isMain', width: 70 , renderer: 'checkboxRenderer' },
+    { prop: 'isMain', width: 70 , renderer: TickRendererComponent },
   ].map(addGridLabel('debtor.identityDocs.grid'));
 
   toolbarItems: Array<IToolbarItem> = [
@@ -93,7 +88,6 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
     private cdRef: ChangeDetectorRef,
     private identityService: IdentityService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
     private userPermissionsService: UserPermissionsService
   ) {
     super();
@@ -139,13 +133,13 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   }
 
   onRemove(): void {
-    this.identityService.delete(this._personId$.value, this.grid.selected[0].id)
+    this.identityService.delete(this._personId$.value, this.identityDoc.id)
       .subscribe(this.onSubmitSuccess);
   }
 
   onSelect(docs: IIdentityDoc[]): void {
     this.identityDoc = Array.isArray(docs) ? docs[0] : null;
-    this.selectedRows$.next(this.grid.selected);
+    this.selectedRows$.next(docs);
   }
 
   onDoubleClick(doc: IIdentityDoc): void {

@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
   OnDestroy, Input, EventEmitter, Output
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
@@ -17,6 +16,8 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
+import { DateRendererComponent } from '@app/shared/components/grids/renderers';
+
 import { combineLatestAnd } from 'app/core/utils/helpers';
 import { addGridLabel } from '@app/core/utils';
 
@@ -27,8 +28,6 @@ import { addGridLabel } from '@app/core/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmploymentGridComponent implements OnInit, OnDestroy {
-  // TODO(d.maltsev): always pass personId as input
-  private routeParams = this.route.snapshot.paramMap;
 
   @Input()
   set personId(personId: number) {
@@ -77,9 +76,11 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     { prop: 'workTypeCode', dictCode: UserDictionariesService.DICTIONARY_WORK_TYPE },
     { prop: 'company' },
     { prop: 'position' },
-    { prop: 'hireDate', maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'dismissDate', maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'income', maxWidth: 110, renderer: 'numberRenderer' },
+    { prop: 'hireDate', maxWidth: 130, renderer: DateRendererComponent },
+    { prop: 'dismissDate', maxWidth: 130, renderer: DateRendererComponent },
+    { prop: 'income', maxWidth: 110, },
+    // TODO(d.maltsev): not ready
+    // renderer: NumberRendererComponent },
     { prop: 'currencyId', maxWidth: 110, lookupKey: 'currencies' },
     { prop: 'comment' },
   ].map(addGridLabel('widgets.employment.grid'));
@@ -91,13 +92,10 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   private onSaveSubscription: Subscription;
   private canViewSubscription: Subscription;
 
-  gridStyles = this.routeParams.get('contactId') ? { height: '230px' } : { height: '500px' };
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,
     private notificationsService: NotificationsService,
-    private route: ActivatedRoute,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
