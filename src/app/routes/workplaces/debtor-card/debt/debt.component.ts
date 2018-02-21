@@ -26,9 +26,10 @@ import { makeKey } from '@app/core/utils';
 const label = makeKey('widgets.debt');
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-debt-card',
   templateUrl: './debt.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;

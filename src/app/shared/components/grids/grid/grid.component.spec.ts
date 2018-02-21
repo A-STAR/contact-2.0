@@ -24,12 +24,11 @@ class TranslateLoaderMock {
 }
 
 class GridsServiceMock {
-  convertColumnsToColDefs<T>(columns: IGridColumn<T>[]): Observable<ColDef[]> {
-    const colDefs = columns.map(column => ({
+  convertColumnsToColDefs<T>(columns: IGridColumn<T>[]): ColDef[] {
+    return columns.map(column => ({
       field: column.prop,
       headerName: column.label,
     }));
-    return of(colDefs);
   }
 }
 
@@ -71,6 +70,7 @@ describe('SimpleGridComponent', () => {
   });
 
   it('should render empty grid', () => {
+    fixture.componentInstance.persistenceKey = 'test-persistence-key';
     fixture.detectChanges();
     expect(fixture.nativeElement).toMatchSnapshot();
   });

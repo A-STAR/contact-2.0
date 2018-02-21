@@ -1,12 +1,11 @@
 <app-grid2
   *ngIf="columns$ | async"
   [columns]="columns$ | async"
-  [ngClass]="'info-debt-detail-grid'"
+  [fullHeight]="true"
   [persistenceKey]="'info-debt-detail-grid'"
   [rowIdKey]="rowIdKey"
   [rows]="rows"
   [rowCount]="rowCount"
-  [styles]="{ height: '320px' }"
   [translateColumnLabels]="true"
   (onFilter)="onRequest()"
   (onPage)="onRequest()"

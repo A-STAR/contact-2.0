@@ -1,0 +1,24 @@
+<app-dialog-action
+  *ngIf="(dialog$ | async) === 'delete'"
+  titleTranslationKey="widgets.debt.component.remove.title"
+  actionTranslationKey="widgets.debt.component.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  actionMode="danger"
+  [messageParams]="selectedDebtComponent$ | async"
+  (action)="onRemoveSubmit()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<div class="flex vertical">
+  <div *ngIf="displayToolbar" class="flex-item">
+    <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      [columns]="columns"
+      [rows]="components"
+      (select)="onSelect($event)"
+      (dblClick)="onDoubleClick($event)">
+    </app-simple-grid>
+  </div>
+</div>

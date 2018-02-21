@@ -1,0 +1,39 @@
+<app-dialog-action
+  *ngIf="isDialog('remove')"
+  actionMode="danger"
+  actionTranslationKey="debtor.promisesTab.remove.message"
+  actionMessage="default.buttons.remove"
+  titleTranslationKey="debtor.promisesTab.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCancel()"
+>
+</app-dialog-action>
+
+<app-dialog-action
+  *ngIf="isDialog('approve')"
+  actionMode="success"
+  actionTranslationKey="debtor.promisesTab.approve.message"
+  actionMessage="default.buttons.ok"
+  titleTranslationKey="debtor.promisesTab.approve.title"
+  (action)="onApprove()"
+  (cancel)="onCancel()"
+>
+</app-dialog-action>
+
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-toolbar-2
+      *ngIf="!hideToolbar"
+      class="bh"
+      [items]="toolbarItems"
+    ></app-toolbar-2>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      [columns]="columns"
+      [rows]="rows"
+      (select)="onSelect($event)"
+      (dblClick)="onDoubleClick($event)"
+    ></app-simple-grid>
+  </div>
+</div>

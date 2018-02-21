@@ -1,0 +1,37 @@
+<app-dialog-action
+  *ngIf="isDialog('confirm')"
+  actionMode="success"
+  actionTranslationKey="debtor.paymentsTab.confirm.message"
+  actionMessage="default.buttons.ok"
+  titleTranslationKey="debtor.paymentsTab.confirm.title"
+  (action)="onConfirm()"
+  (cancel)="onCancel()"
+></app-dialog-action>
+
+<app-dialog-action
+  *ngIf="isDialog('cancel')"
+  actionMode="warning"
+  actionTranslationKey="debtor.paymentsTab.cancel.message"
+  actionMessage="default.buttons.save"
+  titleTranslationKey="debtor.paymentsTab.cancel.title"
+  (action)="onCancelConfirm()"
+  (cancel)="onCancel()"
+></app-dialog-action>
+
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-toolbar-2
+      *ngIf="!hideToolbar"
+      class="bh"
+      [items]="toolbarItems"
+    ></app-toolbar-2>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      [columns]="columns"
+      [rows]="rows"
+      (select)="onSelect($event)"
+      (dblClick)="onDoubleClick($event)"
+    ></app-simple-grid>
+  </div>
+</div>

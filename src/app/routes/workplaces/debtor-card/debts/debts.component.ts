@@ -4,9 +4,10 @@ import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debt
 import { Observable } from 'rxjs/Observable';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-debtor-debts',
   templateUrl: 'debts.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtsComponent {
   tabs = [

@@ -16,10 +16,10 @@ import { InfoDebtService } from '../info-debt.service';
 import { ActionGridComponent } from '../../../../shared/components/action-grid/action-grid.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-info-debt-grid',
   templateUrl: './grid.component.html',
-  host: { class: 'full-height' },
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridComponent {
   @Input() gridKey: string;

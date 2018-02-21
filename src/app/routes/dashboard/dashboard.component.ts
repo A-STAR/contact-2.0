@@ -1,8 +1,7 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component,  OnInit } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
+import { map, first } from 'rxjs/operators';
 
 import { DashboardChartType } from './dashboard.interface';
 import { IIndicator } from '@app/shared/components/charts/charts.interface';
@@ -19,11 +18,11 @@ import { LookupService } from '@app/core/lookup/lookup.service';
 })
 export class DashboardComponent implements OnInit {
 
-  indicators$: Observable<IIndicator[]>;
-  promiseAmount$: Observable<ChartData>;
-  promiseCount$: Observable<ChartData>;
-  promiseCountStatus$: Observable<ChartData>;
-  promiseCover$: Observable<ChartData>;
+  indicators: IIndicator[];
+  promiseAmount: ChartData;
+  promiseCount: ChartData;
+  promiseCountStatus: ChartData;
+  promiseCover: ChartData;
   contactsDay: ChartData;
   contactsDayPlan: ChartData;
 
@@ -35,37 +34,63 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.indicators$ = combineLatest(
+    combineLatest(
         this.dashboardService.getParams(),
         this.lookupService.lookup<ICurrency>('currencies')
       )
+      .pipe(first())
       .map(([ params, currencies]) => {
         const prepareFn = this.dashboardService.prepareIndicators(params);
         const currentCurrency = currencies.find(currency => currency.code === '1');
         return currentCurrency && currentCurrency.shortName ? prepareFn(currentCurrency.shortName) : prepareFn('руб.');
+      })
+      .subscribe(indicators => {
+        this.indicators = indicators;
+        this.cdRef.markForCheck();
       });
 
-    this.promiseAmount$ = this.dashboardService.getPromiseAmount()
+    this.dashboardService.getPromiseAmount()
       .pipe(
-        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_AMOUNT, data))
-      );
+        first(),
+        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_AMOUNT, data)),
+      )
+      .subscribe(promiseAmount => {
+        this.promiseAmount = promiseAmount;
+        this.cdRef.markForCheck();
+      });
 
-    this.promiseCount$ = this.dashboardService.getPromiseCount()
+    this.dashboardService.getPromiseCount()
       .pipe(
-        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COUNT, data))
-      );
+        first(),
+        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COUNT, data)),
+      )
+      .subscribe(promiseCount => {
+        this.promiseCount = promiseCount;
+        this.cdRef.markForCheck();
+      });
 
-    this.promiseCover$ = this.dashboardService.getPromiseCover()
+    this.dashboardService.getPromiseCover()
       .pipe(
-        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COVER, data))
-      );
+        first(),
+        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COVER, data)),
+      )
+      .subscribe(promiseCover => {
+        this.promiseCover = promiseCover;
+        this.cdRef.markForCheck();
+      });
 
-    this.promiseCountStatus$ = this.dashboardService.getPromiseCountStatus()
+    this.dashboardService.getPromiseCountStatus()
       .pipe(
-        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COUNT_STATUS, data))
-      );
+        first(),
+        map(data => this.dashboardService.prepareChartData(DashboardChartType.PROMISE_COUNT_STATUS, data)),
+      )
+      .subscribe(promiseCountStatus => {
+        this.promiseCountStatus = promiseCountStatus;
+        this.cdRef.markForCheck();
+      });
 
     this.dashboardService.getContactsDay()
+      .pipe(first())
       .subscribe(data => {
         this.contactsDay = this.dashboardService.prepareChartData(DashboardChartType.CONTACT_DAY, data);
         this.contactsDayPlan = this.dashboardService.prepareChartData(DashboardChartType.CONTACT_DAY_PLAN, data);
