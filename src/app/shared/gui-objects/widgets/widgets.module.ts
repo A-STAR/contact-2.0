@@ -19,11 +19,9 @@ import { IdentityModule } from './identity/identity.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.module';
 import { OperatorDetailsModule } from './operator-details/operator-details.module';
-import { PaymentModule } from './payment/payment.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
 import { PersonSelectModule } from './person-select/person-select.module';
 import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
-import { PromiseModule } from './promise/promise.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
@@ -48,11 +46,9 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     MassOpsModule,
     NextCallDateSetModule,
     OperatorDetailsModule,
-    PaymentModule,
     PaymentOperatorModule,
     PersonSelectModule,
     PortfolioLogModule,
-    PromiseModule,
     PromiseResolveModule,
     VisitPrepareModule,
   ],
@@ -75,14 +71,11 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     MassOpsModule,
     NextCallDateSetModule,
     OperatorDetailsModule,
-    PaymentModule,
     PaymentOperatorModule,
     PersonSelectModule,
     PortfolioLogModule,
-    PromiseModule,
     PromiseResolveModule,
     VisitPrepareModule,
-  ],
-  declarations: []
+  ]
 })
-export class WidgetsModule { }
+export class WidgetsModule {}

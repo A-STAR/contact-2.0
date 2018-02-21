@@ -7,10 +7,10 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IPayment } from '@app/shared/gui-objects/widgets/payment/payment.interface';
+import { IPayment } from '../payment.interface';
 
-import { PaymentService } from '@app/shared/gui-objects/widgets/payment/payment.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
+import { PaymentService } from '../payment.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
