@@ -23,7 +23,7 @@
 
   <!-- Details Tabstrip -->
   <div class="flex-item grow">
-    <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+    <app-tabview [fullHeight]="true" [noMargin]="true" (select)="onTabSelect($event)">
 
       <!-- Phones -->
       <app-tabview-tab [title]="tabs[0].title" [closable]="false">
