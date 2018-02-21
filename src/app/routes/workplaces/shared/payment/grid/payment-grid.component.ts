@@ -20,9 +20,10 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-payment-grid',
   templateUrl: './payment-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;

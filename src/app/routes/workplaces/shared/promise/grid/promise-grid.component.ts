@@ -21,9 +21,10 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-promise-grid',
   templateUrl: './promise-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromiseGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
