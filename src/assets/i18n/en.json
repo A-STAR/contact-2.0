@@ -1755,13 +1755,14 @@
     },
     "document": {
       "grid": {
-        "docName": "Document Name",
-        "fileName": "File Name",
-        "docTypeCode": "Document Type",
-        "docNumber": "Number",
-        "operatorName": "Operator",
         "comment": "Comment",
-        "file": "File"
+        "docName": "Document Name",
+        "docNumber": "Number",
+        "docTypeCode": "Document Type",
+        "file": "File",
+        "fileName": "File Name",
+        "fullName": "Operator",
+        "operatorName": "Operator"
       },
       "dialogs": {
         "delete": {

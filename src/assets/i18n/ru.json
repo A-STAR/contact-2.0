@@ -1754,13 +1754,14 @@
     },
     "document": {
       "grid": {
-        "docName": "Название документа",
-        "fileName": "Имя файла",
-        "docTypeCode": "Тип документа",
-        "docNumber": "Номер",
-        "operatorName": "Оператор",
         "comment": "Комментарий",
-        "file": "Файл"
+        "docName": "Название документа",
+        "docNumber": "Номер",
+        "docTypeCode": "Тип документа",
+        "file": "Файл",
+        "fileName": "Имя файла",
+        "fullName": "Оператор",
+        "operatorName": "Оператор"
       },
       "dialogs": {
         "delete": {
