@@ -12,20 +12,20 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
 import * as moment from 'moment';
 
-import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IOption, INamedValue } from '../../../../../core/converter/value-converter.interface';
+import { IOption, INamedValue } from '@app/core/converter/value-converter.interface';
 
 import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { SmsService} from './sms.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserTemplatesService } from '../../../../../core/user/templates/user-templates.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DynamicFormComponent } from '../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { addFormLabel, toOption } from '../../../../../core/utils';
+import { addFormLabel, toOption } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
