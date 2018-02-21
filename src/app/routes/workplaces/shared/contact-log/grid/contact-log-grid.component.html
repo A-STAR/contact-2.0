@@ -1,0 +1,15 @@
+<div class="flex vertical">
+  <div *ngIf="!hideToolbar" class="flex-item">
+    <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      persistenceKey="[grid] workplaces/shared/contact-log"
+      [columns]="columns"
+      [rows]="contactLogList"
+      [selection]="selected"
+      (select)="onSelect($event)"
+      (dblClick)="onEdit($event)"
+    ></app-simple-grid>
+  </div>
+</div>

@@ -2,28 +2,32 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, O
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
+import { first } from 'rxjs/operators';
 
-import { IContactLog } from '@app/shared/gui-objects/widgets/contact-log-tab/contact-log.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IContactLog } from '../contact-log.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContactLogService } from '@app/shared/gui-objects/widgets/contact-log-tab/contact-log.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
+import { ContactLogService } from '../contact-log.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
+import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel } from '@app/core/utils';
+
 @Component({
-  selector: 'app-contact-log-tab-grid',
-  templateUrl: './contact-log-tab-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
+  selector: 'app-contact-log-grid',
+  templateUrl: './contact-log-grid.component.html',
 })
-export class ContactLogTabGridComponent implements OnInit, OnDestroy {
+export class ContactLogGridComponent implements OnInit, OnDestroy {
   @Input() callCenter = false;
   @Input() debtId: number;
   @Input() hideToolbar = false;
@@ -32,18 +36,18 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   selected: IContactLog[];
   selectedChanged$ = new BehaviorSubject<boolean>(false);
 
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<IContactLog>[] = [
     { prop: 'debtId', minWidth: 70, maxWidth: 100 },
     { prop: 'contactId', minWidth: 70, maxWidth: 100 },
     { prop: 'creditName', minWidth: 100, maxWidth: 150 },
     { prop: 'fullName', minWidth: 150, maxWidth: 200 },
     { prop: 'personRole', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-    { prop: 'contactDateTime', minWidth: 150, maxWidth: 200, renderer: 'dateTimeRenderer' },
+    { prop: 'contactDateTime', minWidth: 150, maxWidth: 200, renderer: DateTimeRendererComponent },
     { prop: 'contactType', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
     { prop: 'userFullName', minWidth: 150, maxWidth: 200 },
     { prop: 'resultName', minWidth: 150, maxWidth: 200 },
     { prop: 'promiseDate', minWidth: 100 },
-  ];
+  ].map(addGridLabel('widgets.contactLog.grid'));
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -70,7 +74,6 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactLogService: ContactLogService,
-    private gridService: GridService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private notificationsService: NotificationsService,
@@ -78,13 +81,6 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
     this.viewPermissionSubscription = this.canView$.subscribe(canView => {
       if (canView) {
         this.fetch();
@@ -134,8 +130,8 @@ export class ContactLogTabGridComponent implements OnInit, OnDestroy {
     return !!this.selected && !!this.selected.length;
   }
 
-  onSelect(contactLog: IContactLog): void {
-    this.selected = [contactLog];
+  onSelect(contactLogs: IContactLog[]): void {
+    this.selected = contactLogs;
     this.selectedChanged$.next(true);
   }
 

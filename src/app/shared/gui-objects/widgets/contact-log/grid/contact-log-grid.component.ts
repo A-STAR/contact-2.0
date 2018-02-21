@@ -18,7 +18,7 @@ import { GridService } from '@app/shared/components/grid/grid.service';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 
 @Component({
-  selector: 'app-contact-log-grid',
+  selector: 'app-contact-log-dialog-grid',
   templateUrl: 'contact-log-grid.component.html',
   styleUrls: [ './contact-log-grid.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -29,6 +29,8 @@ import { GridsService } from '../grids.service';
 
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
 
+import { isEmpty } from '@app/core/utils';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -41,11 +43,24 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
   @ViewChild(GridToolbarComponent) toolbar: GridToolbarComponent;
 
   @Input() columns: ISimpleGridColumn<T>[];
+  @Input() idKey = 'id';
   @Input() persistenceKey: string;
   @Input() rows: T[];
   @Input() rowClass: (item: T) => string;
   @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
   @Input() showToolbar = false;
+
+  @Input()
+  set selection(selection: T[]) {
+    if (!isEmpty(selection)) {
+      const ids = selection.map(item => item[this.idKey]);
+      this.gridApi.forEachNodeAfterFilterAndSort(node => {
+        const isSelected = ids.includes(node.data[this.idKey]);
+        node.setSelected(isSelected);
+      });
+      this.cdRef.markForCheck();
+    }
+  }
 
   @Output() select = new EventEmitter<T[]>();
   @Output() dblClick = new EventEmitter<T>();
