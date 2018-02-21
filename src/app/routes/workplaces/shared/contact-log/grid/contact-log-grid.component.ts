@@ -5,7 +5,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { first } from 'rxjs/operators';
 
 import { IContactLog } from '../contact-log.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';

@@ -11,6 +11,7 @@ import { ContactLogGridComponent } from './grid/contact-log-grid.component';
 @NgModule({
   imports: [
     SharedModule,
+    TranslateModule,
   ],
   exports: [
     ContactLogCardComponent,
