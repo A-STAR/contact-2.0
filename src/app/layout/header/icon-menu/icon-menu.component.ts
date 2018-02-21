@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { first, map } from 'rxjs/operators';
 
+import { CallService } from '@app/core/calls/call.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Component({
@@ -16,6 +17,7 @@ export class IconMenuComponent {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private callService: CallService,
     private notificationsService: NotificationsService,
     private translateService: TranslateService,
   ) {}
@@ -30,6 +32,10 @@ export class IconMenuComponent {
 
   get notificationsCount$(): Observable<number> {
     return this.notificationsService.count;
+  }
+
+  get canShowPbxStatus$(): Observable<boolean> {
+    return this.callService.usePBXStatus$;
   }
 
   openNavSearch(): void {

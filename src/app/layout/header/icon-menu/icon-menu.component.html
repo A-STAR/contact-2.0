@@ -1,5 +1,6 @@
 <ul class="flex">
-  <li class="flex-item">
+
+  <li class="flex-item" *ngIf="canShowPbxStatus$ | async">
     <span class="menu-item">
       <app-pbx-status-dropdown></app-pbx-status-dropdown>
     </span>

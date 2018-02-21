@@ -11,6 +11,8 @@ import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { catchError } from 'rxjs/operators/catchError';
 
+import { combineLatestAnd } from '@app/core/utils';
+
 @Injectable()
 export class CallService {
   static CALL_SETTINGS_FETCH = 'CALL_SETTINGS_FETCH';
@@ -69,7 +71,14 @@ export class CallService {
       .select(state => state.calls.calls);
   }
 
-  get status$(): Observable<number> {
+  get usePBXStatus$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.usePBX$,
+      this.settings$.map(settings => settings && !!settings.useAgentStatus)
+    ]);
+  }
+
+  get pbxStatus$(): Observable<number> {
     return this.store
       .select(state => state.calls.statusCode);
   }

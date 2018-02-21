@@ -1,12 +1,13 @@
-<app-dropdown #accountDropdown position="right" [displayArrow]="true">
-  <span trigger class="menu-item" [title]="'header.account.title' | translate">
-    {{ activeStatusOption.label }}
+<div appDropdown fitWidthToContent="true" position="right" [class.disabled]="!(canChangeStatus$ | async)">
+  <span #dropdownTrigger class="menu-item">
+    {{ activeStatusOption?.label }}
   </span>
-  <div class="dropdown-content">
+  <div #dropdownContent class="dropdown-menu">
     <ul class="list-group mb0">
-      <li class="list-group-item" *ngFor="let option of statusOptions" (click)="onChangeStatus(option)">
+      <li class="list-group-item" *ngFor="let option of statusOptions"
+        (click)="onChangeStatus(option)">
         {{ option.label }}
       </li>
     </ul>
   </div>
-</app-dropdown>
+</div>

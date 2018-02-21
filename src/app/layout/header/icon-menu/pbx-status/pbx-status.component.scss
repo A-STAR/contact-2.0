@@ -12,3 +12,13 @@
     color: #fff;
   }
 }
+
+.dropdown-menu {
+  display: block;
+}
+
+.disabled {
+  color: $navbar-default-link-disabled-color;
+  cursor: default;
+  pointer-events: none;
+}

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
@@ -6,6 +7,7 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { CallService } from '@app/core/calls/call.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +24,8 @@ export class PbxStatusComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private callService: CallService,
-    private userDictionariesService: UserDictionariesService
+    private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService
   ) { }
 
   ngOnInit(): void {
@@ -41,7 +44,7 @@ export class PbxStatusComponent implements OnInit, OnDestroy {
         this.cdRef.markForCheck();
       });
 
-    this.statusSub = this.callService.status$
+    this.statusSub = this.callService.pbxStatus$
       .subscribe(statusCode => {
         this.activeStatusCode = statusCode;
         this.cdRef.markForCheck();
@@ -54,11 +57,17 @@ export class PbxStatusComponent implements OnInit, OnDestroy {
       : this.statusOptions[0];
   }
 
+  get canChangeStatus$(): Observable<boolean> {
+    return this.userPermissionsService.has('PBX_CURRENT_USER_AGENT_STATUS_EDIT')
+      // TODO (i.kibisov): remove mock
+      .map(() => true);
+  }
+
   ngOnDestroy(): void {
     this.statusSub.unsubscribe();
   }
 
-  onChangeStatus(options: IOption[]): void {
-    this.callService.changeBPXStatus(Number(options[0].value));
+  onChangeStatus(option: IOption): void {
+    this.callService.changeBPXStatus(Number(option.value));
   }
 }

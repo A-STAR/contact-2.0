@@ -175,7 +175,9 @@ export class CallEffects {
   ) {}
 
   private read(): Observable<ICallSettings> {
-    return this.dataService.read('/pbx/settings');
+    return this.dataService.read('/pbx/settings')
+      // TODO (i.kibisov): remove mock
+      .map(settings => ({ ...settings, useAgentStatus: 1 }));
   }
 
   private call(phoneId: number, debtId: number, personId: number, personRole: number): Observable<ICall> {
