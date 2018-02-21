@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import { ContactGridComponent } from './contact-grid.component';
+import { ContactPersonsGridComponent } from './contact-persons-grid.component';
 
 @NgModule({
   imports: [
@@ -11,13 +11,13 @@ import { ContactGridComponent } from './contact-grid.component';
     SharedModule,
   ],
   exports: [
-    ContactGridComponent,
+    ContactPersonsGridComponent,
   ],
   declarations: [
-    ContactGridComponent,
+    ContactPersonsGridComponent,
   ],
   entryComponents: [
-    ContactGridComponent,
+    ContactPersonsGridComponent,
   ]
 })
-export class ContactGridModule { }
+export class ContactPersonsGridModule { }

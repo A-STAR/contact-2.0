@@ -10,10 +10,10 @@ interface AddressCardRouteParams {
 
 @Component({
   host: { class: 'full-height' },
-  selector: 'app-debtor-contacts',
-  templateUrl: './contacts.component.html'
+  selector: 'app-contact-persons',
+  templateUrl: './contact-persons.component.html'
 })
-export class DebtorContactsComponent {
+export class ContactPersonsComponent {
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute

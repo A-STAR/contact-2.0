@@ -4,14 +4,14 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '../../../../core/state/state.interface';
-import { IContact, IContactLink } from './contact.interface';
+import { IContact, IContactLink } from './contact-persons.interface';
 
 import { AbstractActionService } from '../../../../core/state/action.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
 @Injectable()
-export class ContactService extends AbstractActionService {
+export class ContactPersonsService extends AbstractActionService {
   static MESSAGE_CONTACT_SAVED = 'MESSAGE_CONTACT_SAVED';
 
   private baseUrl = '/persons/{personId}/contactpersons';

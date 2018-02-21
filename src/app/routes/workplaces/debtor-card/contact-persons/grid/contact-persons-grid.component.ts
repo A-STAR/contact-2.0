@@ -5,11 +5,11 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IContact } from '@app/routes/workplaces/debtor-card/contacts/contact.interface';
+import { IContact } from '@app/routes/workplaces/debtor-card/contact-persons/contact-persons.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContactService } from '@app/routes/workplaces/debtor-card/contacts/contact.service';
+import { ContactPersonsService } from '@app/routes/workplaces/debtor-card/contact-persons/contact-persons.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -18,12 +18,12 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { addGridLabel } from '@app/core/utils';
 
 @Component({
-  selector: 'app-contact-grid',
-  templateUrl: './contact-grid.component.html',
+  selector: 'app-contact-persons-grid',
+  templateUrl: './contact-persons-grid.component.html',
   host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactGridComponent implements OnInit, OnDestroy {
+export class ContactPersonsGridComponent implements OnInit, OnDestroy {
   @Input() personId: number;
 
   private selectedContact$ = new BehaviorSubject<IContact>(null);
@@ -74,7 +74,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contactService: ContactService,
+    private contactPersonsService: ContactPersonsService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -93,8 +93,8 @@ export class ContactGridComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.busSubscription = this.contactService
-      .getAction(ContactService.MESSAGE_CONTACT_SAVED)
+    this.busSubscription = this.contactPersonsService
+      .getAction(ContactPersonsService.MESSAGE_CONTACT_SAVED)
       .subscribe(() => this.fetch());
   }
 
@@ -118,7 +118,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
 
   onRemove(): void {
     const { id: contactId } = this.selectedContact$.value;
-    this.contactService.delete(this.personId, contactId)
+    this.contactPersonsService.delete(this.personId, contactId)
       .subscribe(() => {
         this.setDialog(null);
         this.fetch();
@@ -162,7 +162,7 @@ export class ContactGridComponent implements OnInit, OnDestroy {
   }
 
   private fetch(): void {
-    this.contactService.fetchAll(this.personId)
+    this.contactPersonsService.fetchAll(this.personId)
       .subscribe(contacts => {
         this.contacts = [].concat(contacts);
         this.selectedContact$.next(null);

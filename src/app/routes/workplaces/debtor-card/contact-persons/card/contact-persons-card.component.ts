@@ -6,13 +6,13 @@ import { of } from 'rxjs/observable/of';
 
 import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IContact, IContactLink } from '@app/routes/workplaces/debtor-card/contacts/contact.interface';
+import { IContact, IContactLink } from '@app/routes/workplaces/debtor-card/contact-persons/contact-persons.interface';
 import { IEmployment } from '@app/routes/workplaces/debtor-card/employment/employment.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 import { IPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
 
-import { ContactService } from '@app/routes/workplaces/debtor-card/contacts/contact.service';
+import { ContactPersonsService } from '@app/routes/workplaces/debtor-card/contact-persons/contact-persons.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -26,10 +26,10 @@ const label = makeKey('widgets.contact.grid');
 
 @Component({
   host: { class: 'full-height' },
-  selector: 'app-contact-card',
-  templateUrl: './contact-card.component.html'
+  selector: 'app-contact-persons-card',
+  templateUrl: './contact-persons-card.component.html'
 })
-export class ContactCardComponent implements OnInit {
+export class ContactPersonsCardComponent implements OnInit {
   @Input() contactId: number;
   @Input() personId: number;
 
@@ -50,7 +50,7 @@ export class ContactCardComponent implements OnInit {
   ];
 
   constructor(
-    private contactService: ContactService,
+    private contactPersonsService: ContactPersonsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
@@ -61,7 +61,7 @@ export class ContactCardComponent implements OnInit {
       this.contactId
         ? this.userPermissionsService.has('CONTACT_PERSON_EDIT')
         : this.userPermissionsService.has('CONTACT_PERSON_ADD'),
-      this.contactId ? this.contactService.fetch(this.personId, this.contactId) : of(null)
+      this.contactId ? this.contactPersonsService.fetch(this.personId, this.contactId) : of(null)
     )
     .pipe(first())
     .subscribe(([ canEdit, contact ]) => {
@@ -184,11 +184,11 @@ export class ContactCardComponent implements OnInit {
   private createContact(contactLink: IContactLink): void {
     const action = this.contact
       ? this.personSelectCard.submitPerson()
-        .flatMap(() => this.contactService.update(this.personId, this.contactId, contactLink))
-      : this.contactService.create(this.personId, contactLink);
+        .flatMap(() => this.contactPersonsService.update(this.personId, this.contactId, contactLink))
+      : this.contactPersonsService.create(this.personId, contactLink);
 
     action.subscribe(() => {
-      this.contactService.dispatchAction(ContactService.MESSAGE_CONTACT_SAVED);
+      this.contactPersonsService.dispatchAction(ContactPersonsService.MESSAGE_CONTACT_SAVED);
     });
   }
 

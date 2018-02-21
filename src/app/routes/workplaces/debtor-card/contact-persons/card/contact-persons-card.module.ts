@@ -9,7 +9,7 @@ import { PersonSelectModule } from '@app/shared/gui-objects/widgets/person-selec
 import { PhoneGridModule } from '@app/routes/workplaces/shared/phone/grid/phone-grid.module';
 import { SharedModule } from '@app/shared/shared.module';
 
-import { ContactCardComponent } from './contact-card.component';
+import { ContactPersonsCardComponent } from './contact-persons-card.component';
 
 @NgModule({
   imports: [
@@ -23,13 +23,13 @@ import { ContactCardComponent } from './contact-card.component';
     TranslateModule,
   ],
   exports: [
-    ContactCardComponent,
+    ContactPersonsCardComponent,
   ],
   declarations: [
-    ContactCardComponent,
+    ContactPersonsCardComponent,
   ],
   entryComponents: [
-    ContactCardComponent,
+    ContactPersonsCardComponent,
   ]
 })
-export class ContactCardModule {}
+export class ContactPersonsCardModule {}
