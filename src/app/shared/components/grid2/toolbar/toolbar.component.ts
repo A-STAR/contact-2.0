@@ -3,10 +3,10 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
 import { IToolbarAction, IToolbarActionSelect, ToolbarControlEnum } from './toolbar.interface';
-import { ILabeledValue } from '../../../core/converter/value-converter.interface';
+import { ILabeledValue } from '@app/core/converter/value-converter.interface';
 
 import { ToolbarService } from './toolbar.service';
-import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

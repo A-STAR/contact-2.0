@@ -1,16 +1,11 @@
-<div class="form-wrapper">
-  <app-dynamic-form [controls]="controls" [data]="data"></app-dynamic-form>
-</div>
-
-<app-metadata-grid
+<app-action-grid
   metadataKey="personActions"
   persistenceKey="personactionlog"
-  rowIdKey="id"
-  [ngClass]="'person-action-log-grid'"
+  [fullHeight]="true"
   [rows]="rows"
   [rowCount]="rowCount"
   (onPage)="onRequest()"
   (onPageSize)="onRequest()"
   (onSort)="onRequest()"
   (onFilter)="onRequest()"
-></app-metadata-grid>
+></app-action-grid>

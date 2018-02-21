@@ -1,6 +1,6 @@
 <app-dialog (close)="onCancel()">
   <div dialog-header>
-     <h3>{{ 'massOperations.visitAdd.title' | translate: { count: visitParams.length } }}</h3>
+     <h3>{{ 'massOperations.visitAdd.title' | translate: { count: visitsCount } }}</h3>
   </div>
 
   <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="formData"></app-dynamic-form>

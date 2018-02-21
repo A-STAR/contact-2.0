@@ -4,7 +4,6 @@ import {
   Component,
   Input,
   ViewChild,
-  ViewEncapsulation,
   Output,
   EventEmitter
 } from '@angular/core';
@@ -19,8 +18,7 @@ import { ActionGridComponent } from '../../../../shared/components/action-grid/a
 @Component({
   selector: 'app-info-debt-grid',
   templateUrl: './grid.component.html',
-  styleUrls: [ './grid.component.scss' ],
-  encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridComponent {

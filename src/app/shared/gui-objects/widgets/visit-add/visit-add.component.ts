@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+  OnInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 
 import { IDynamicFormControl } from '../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IVisitParams } from './visit-add.interface';
+import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { DynamicFormComponent } from '../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
@@ -16,12 +25,14 @@ const label = makeKey('massOperations.visitAdd');
   templateUrl: 'visit-add.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VisitAddDialogComponent {
-  @Input() visitParams: IVisitParams[];
+export class VisitAddDialogComponent implements OnInit {
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+
+  visitsCount: number | string;
 
   controls: IDynamicFormControl[] = [
     {
@@ -39,17 +50,23 @@ export class VisitAddDialogComponent {
   ];
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private visitAddService: VisitAddService,
   ) {}
+
+  ngOnInit(): void {
+    this.visitsCount = this.visitAddService.getVisitsCount(this.actionData.payload);
+    this.cdRef.markForCheck();
+  }
 
   canSubmit(): boolean {
     return this.form && this.form.canSubmit;
   }
 
   onSubmit(): void {
-    const actionData = this.form.serializedUpdates;
+    const data = this.form.serializedUpdates;
     this.visitAddService
-      .createVisit(this.visitParams, actionData)
+      .createVisit(this.actionData.payload, data)
       .subscribe(() => this.onCancel());
   }
 

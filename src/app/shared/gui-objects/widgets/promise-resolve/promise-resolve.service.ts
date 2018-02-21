@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
+
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
@@ -9,14 +12,18 @@ export class PromiseResolveService {
   private url = '/mass/promises';
 
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
-  confirm(promiseIds: number[]): Observable<any> {
-    const ids = promiseIds.map(id => [ id ]);
+  confirm(idData: IGridActionPayload): Observable<any> {
     return this.dataService
-      .update(`${this.url}/confirm`, {}, { idData: { ids } })
+      .update(`${this.url}/confirm`, {},
+        {
+          idData: this.actionGridFilterService.buildRequest(idData)
+        }
+      )
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
@@ -27,10 +34,13 @@ export class PromiseResolveService {
       .catch(this.notificationsService.updateError().entity('entities.promises.gen.plural').dispatchCallback());
   }
 
-  remove(promiseIds: number[]): Observable<any> {
-    const ids = promiseIds.map(id => [ id ]);
+  remove(idData: IGridActionPayload): Observable<any> {
     return this.dataService
-      .update(`${this.url}/delete`, {}, { idData: { ids } })
+      .update(`${this.url}/delete`, {},
+        {
+          idData: this.actionGridFilterService.buildRequest(idData)
+        }
+      )
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();

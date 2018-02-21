@@ -185,7 +185,7 @@ export class DataUploadComponent extends DialogFunctions
     const { action } = event.metadataAction;
     switch (action) {
       case 'delete':
-        const { id } = event.params.node;
+        const { id } = event.selection.node;
         this.dataUploadService.uploader
           .deleteRow(Number(id))
           .subscribe(() => this.onRequest());

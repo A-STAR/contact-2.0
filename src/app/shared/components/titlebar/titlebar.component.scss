@@ -13,7 +13,7 @@
   margin-bottom: 7px;
   user-select: none;
 
-  .no-border & {
+  &.no-border {
     border-bottom: 0;
   }
 }

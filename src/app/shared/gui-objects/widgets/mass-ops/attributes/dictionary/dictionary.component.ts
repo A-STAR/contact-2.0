@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { zip } from 'rxjs/observable/zip';
 
 import { DictOperation } from '../attributes.interface';
-import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
 import { IGridColumn } from '../../../../../components/grid/grid.interface';
 import { IUserTerm } from '../../../../../../core/user/dictionaries/user-dictionaries.interface';
 
@@ -25,6 +25,7 @@ import { UserPermissionsService } from '../../../../../../core/user/permissions/
 
 import { makeKey } from '../../../../../../core/utils';
 import { ValueBag } from '../../../../../../core/value-bag/value-bag';
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 
 const labelKey = makeKey('widgets.mass');
 
@@ -35,8 +36,7 @@ const labelKey = makeKey('widgets.mass');
 })
 export class DictionaryComponent implements OnInit, OnDestroy {
 
-  @Input() dictCode: [number];
-  @Input() debts: number[];
+  @Input() actionData: IGridAction;
   @Input() actionName: string;
   @Output() close = new EventEmitter<ICloseAction>();
 
@@ -55,6 +55,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
   private permissionsSub: Subscription;
 
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
     private userPermissionsService: UserPermissionsService,
@@ -64,7 +65,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.dictCodeNumber = this.dictCode && this.dictCode.length && Number(this.dictCode[0]);
+    this.dictCodeNumber = Number(this.actionGridFilterService.getAddOption(this.actionData, 'dictCode', 0));
 
     this.title = this.actionName ? labelKey(`${this.actionName}.title`) : labelKey(`changeDefaultAttr.title`);
 
@@ -113,7 +114,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
   submit(): void {
     this.attributesService
-      .change(this.debts, { [DictOperation[this.dictCodeNumber]]: this.selectedTerm.code })
+      .change(this.actionData.payload, { [DictOperation[this.dictCodeNumber]]: this.selectedTerm.code })
       .subscribe((res) => {
         const refresh = res.massInfo && !!res.massInfo.processed;
         this.close.emit({ refresh });

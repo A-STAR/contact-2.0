@@ -48,7 +48,7 @@ import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { InputModule } from './components/form/input/input.module';
 import { ListModule } from './components/list/list.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
-import { MetadataGridModule } from './components/metadata-grid/metadata-grid.module';
+import { MenuModule } from './components/form/menu/menu.module';
 import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
@@ -61,7 +61,6 @@ import { SpinnerModule } from './components/spinner/spinner.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TextEditorModule } from './components/form/text-editor/text-editor.module';
 import { TitlebarModule } from '@app/shared/components/titlebar/titlebar.module';
-import { ToolbarModule } from './components/toolbar/toolbar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
 import { ValueInputModule } from './components/form/value/value.module';
@@ -118,7 +117,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InputModule,
     ListModule,
     MassOpsModule,
-    MetadataGridModule,
+    MenuModule,
     MomentModule,
     MultiLanguageModule,
     MultiSelectModule,
@@ -130,7 +129,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     SpinnerModule,
     TabViewModule,
     TextEditorModule,
-    ToolbarModule,
     Toolbar2Module,
     TreeModule,
     TitlebarModule,
@@ -145,7 +143,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     NowDirective,
     // App Components
     NumericInputComponent,
-    QBuilderComponent
+    QBuilderComponent,
   ],
   exports: [
     // Angular Modules
@@ -195,7 +193,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InputModule,
     ListModule,
     MassOpsModule,
-    MetadataGridModule,
+    MenuModule,
     MomentModule,
     MultiLanguageModule,
     MultiSelectModule,
@@ -209,7 +207,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     SpinnerModule,
     TabViewModule,
     TextEditorModule,
-    ToolbarModule,
     Toolbar2Module,
     TreeModule,
     TitlebarModule,
