@@ -5,25 +5,25 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IEmployment } from '@app/routes/workplaces/debtor-card/employment/employment.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { EmploymentService } from '@app/routes/workplaces/debtor-card/employment/employment.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { combineLatestAnd } from 'app/core/utils/helpers';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-employment-grid',
   templateUrl: './employment-grid.component.html',
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmploymentGridComponent implements OnInit, OnDestroy {
@@ -73,7 +73,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: Array<ISimpleGridColumn<IEmployment>> = [
     { prop: 'workTypeCode', dictCode: UserDictionariesService.DICTIONARY_WORK_TYPE },
     { prop: 'company' },
     { prop: 'position' },
@@ -82,7 +82,7 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     { prop: 'income', maxWidth: 110, renderer: 'numberRenderer' },
     { prop: 'currencyId', maxWidth: 110, lookupKey: 'currencies' },
     { prop: 'comment' },
-  ];
+  ].map(addGridLabel('widgets.employment.grid'));
 
   employments: Array<IEmployment> = [];
 
@@ -96,19 +96,12 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private employmentService: EmploymentService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
 
     this.canViewSubscription = combineLatest(
       this.canView$,
@@ -138,8 +131,8 @@ export class EmploymentGridComponent implements OnInit, OnDestroy {
     this.dblClick.emit(employment);
   }
 
-  onSelect(employment: IEmployment): void {
-    this.selectedEmployment$.next(employment);
+  onSelect(employments: IEmployment[]): void {
+    this.selectedEmployment$.next(Array.isArray(employments) ? employments[0] : null);
   }
 
   onRemove(): void {

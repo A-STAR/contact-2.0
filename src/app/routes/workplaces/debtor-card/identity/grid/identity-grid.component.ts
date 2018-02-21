@@ -4,16 +4,14 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { IdentityService } from '@app/routes/workplaces/debtor-card/identity/identity.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -23,6 +21,7 @@ import { GridComponent } from '@app/shared/components/grid/grid.component';
 
 import { combineLatestAnd } from '@app/core/utils/helpers';
 import { DialogFunctions } from '@app/core/dialog';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,7 +56,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   identityDoc: IIdentityDoc;
   rows: IIdentityDoc[] = [];
 
-  columns: Array<IGridColumn> = [
+  columns: Array<ISimpleGridColumn<IIdentityDoc>> = [
     { prop: 'docTypeCode', minWidth: 70, type: 'number', dictCode: UserDictionariesService.DICTIONARY_IDENTITY_TYPE },
     { prop: 'docNumber', type: 'string', minWidth: 70 },
     { prop: 'issueDate', type: 'date', renderer: 'dateRenderer', width: 110 },
@@ -65,7 +64,7 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
     { prop: 'expiryDate', type: 'date', renderer: 'dateRenderer', width: 110 },
     { prop: 'citizenship', type: 'string' },
     { prop: 'isMain', width: 70 , renderer: 'checkboxRenderer' },
-  ];
+  ].map(addGridLabel('debtor.identityDocs.grid'));
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -92,7 +91,6 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private identityService: IdentityService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
@@ -103,12 +101,6 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
 
     this.onSaveSubscription = this.identityService
       .getAction(IdentityService.DEBTOR_IDENTITY_SAVED)
@@ -151,8 +143,8 @@ export class IdentityGridComponent extends DialogFunctions implements OnInit, On
       .subscribe(this.onSubmitSuccess);
   }
 
-  onSelect(doc: IIdentityDoc): void {
-    this.identityDoc = doc;
+  onSelect(docs: IIdentityDoc[]): void {
+    this.identityDoc = Array.isArray(docs) ? docs[0] : null;
     this.selectedRows$.next(this.grid.selected);
   }
 
