@@ -2,50 +2,52 @@
 <label>
   <span *ngIf="label" class="form-label">
     {{ label | translate }}
-    <b *ngIf="isRequired" class="text-danger">*</b>
+    <b *ngIf="required" class="text-danger">*</b>
   </span>
 
   <div
-    class="ui-select-container dropdown open"
+    class="select-container dropdown open"
     [ngStyle]="styles"
     [attr.disabled]="disabled || undefined"
-    [appOffClick]="clickedOutside"
+    [appOffClick]="hideOptions"
     >
 
-    <div *ngIf="!inputMode" class="ui-select-match">
+    <!-- <div *ngIf="!open" class="select-match">
       <span
         class="form-control no-select"
         (click)="onMatchClick($event)"
       >
         <span>{{ activeLabel }}</span>
-        <i *ngIf="!disabled" class="caret app-select-caret"></i>
+        <i *ngIf="!disabled" class="caret select-caret"></i>
       </span>
-    </div>
+    </div> -->
 
     <input
-      #input
       type="text"
-      *ngIf="inputMode"
-      class="form-control app-select-search"
+      class="form-control select-search"
       autocomplete="off"
-      [ngClass]="{ 'no-select': !this.isInputVisible() }"
+      [attr.placeholder]="(placeholder || '') | translate"
+      [attr.required]="required"
+      [ngModel]="activeLabel"
       (click)="onInputClick($event)"
-      [placeholder]="displayPlaceholder"
+      (ngModelChange)="onAutocomplete($event)"
     >
+    <i *ngIf="!disabled" class="caret select-caret"></i>
+
     <ul
-      *ngIf="optionsOpened"
-      class="ui-select-choices dropdown-menu"
+      *ngIf="open"
+      class="select-choices dropdown-menu"
       appAlignment
       [alignTarget]="input"
       [autoAlign]="autoAlign"
     >
-      <li *ngFor="let option of options | rawDataFilter: { sortType: sortType }">
+      <li *ngFor="let option of options">
         <div
-          class="ui-select-item"
+          class="select-item"
           [ngClass]="{ active: isActive(option) }"
           (click)="onSelectMatch($event, option)"
         >
-          <div class="dropdown-item" [innerHtml]="toDisplayValue(option)"></div>
+          <div class="dropdown-item">{{ renderer(option) }}</div>
         </div>
       </li>
 

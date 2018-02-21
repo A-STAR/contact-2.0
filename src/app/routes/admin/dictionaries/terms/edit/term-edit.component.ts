@@ -15,7 +15,6 @@ import {
   IDynamicFormConfig,
   IDynamicFormControl
 } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { SelectionActionTypeEnum } from '@app/shared/components/form/select/select.interface';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 

@@ -10,13 +10,13 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ILookupKey } from '../../../../core/lookup/lookup.interface';
-import { IOption } from '../../../../core/converter/value-converter.interface';
+import { ILookupKey } from '@app/core/lookup/lookup.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { LookupService } from '../../../../core/lookup/lookup.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { toLabeledValues } from '../../../../core/utils';
+import { toLabeledValues } from '@app/core/utils';
 
 @Component({
   selector: 'app-select-wrapper',
@@ -34,7 +34,6 @@ export class SelectWrapperComponent implements ControlValueAccessor, OnInit, OnD
   @Input() dictCode: number;
   @Input() parentCode: number;
   @Input() lookupKey = null as ILookupKey;
-  @Input() nullable = true;
 
   constructor(
     private cdRef: ChangeDetectorRef,

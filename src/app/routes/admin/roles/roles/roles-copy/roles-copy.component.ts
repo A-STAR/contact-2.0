@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { IDynamicFormControl, IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { ILabeledValue } from '../../../../../core/converter/value-converter.interface';
 import { IPermissionRole } from '../../permissions.interface';
-import { SelectionActionTypeEnum } from '../../../../../shared/components/form/select/select.interface';
 
 import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
 import { PermissionsService } from '../../permissions.service';

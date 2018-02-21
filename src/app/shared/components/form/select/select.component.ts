@@ -7,17 +7,21 @@ import {
   forwardRef,
   Input,
   Output,
-  ViewChild,
+  // ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  NG_VALIDATORS,
+  Validator,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import * as R from 'ramda';
 
-import { ISelectionAction, SelectionActionTypeEnum, ILabeledValue } from './select.interface';
+import { ILabeledValue } from './select.interface';
 
-// NOTE: declaring it here to avoid compile-time error
-type SelectInputValueType = number | string | ILabeledValue[];
+import { SortOptionsPipe } from '@app/shared/components/form/select/select-pipes';
 
 @Component({
   selector: 'app-select',
@@ -28,42 +32,41 @@ type SelectInputValueType = number | string | ILabeledValue[];
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => SelectComponent),
       multi: true
-    }
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => SelectComponent),
+      multi: true
+    },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectComponent implements ControlValueAccessor {
-  @ViewChild('input') input: ElementRef;
+export class SelectComponent implements ControlValueAccessor, Validator {
+  // @ViewChild('input') input: ElementRef;
 
-  /**
-   * `true` means the control's `required` property is false,
-   *  therefore an empty/null value can be selected
-   */
-  @Input() isRequired = false;
   @Input() label: string;
-  @Input() nullable = true;
   @Input() placeholder = '';
-  @Input() renderer: any;
+  @Input() renderer: (option: ILabeledValue) => void;
   @Input() styles: CSSStyleDeclaration;
 
-  @Output() onSelect = new EventEmitter<ILabeledValue[]>();
+  @Output() select = new EventEmitter<ILabeledValue[]>();
 
-  sortType: string;
-  optionsOpened = false;
-
-  private activeValue: number = null;
-  private _active: ILabeledValue[];
+  private _active: ILabeledValue;
   private _autoAlign = false;
+  private _autocomplete: ILabeledValue[] = [];
   private _disabled = false;
-  private _inputMode = false;
-  private _emptyOption: ILabeledValue = { value: null, label: 'default.select.empty' };
+  private _required = false;
   private _options: ILabeledValue[] = [];
+  private open = false;
+  private selectedIndex: number = null;
 
   @Input()
   set options(options: ILabeledValue[]) {
-    this._options = this.nullable
-      ? [].concat(this._emptyOption, options || [])
-      : [].concat(options || []);
+    this._options = this.sortOptionsPipe.transform(options);
+  }
+
+  get options(): ILabeledValue[] {
+    return this._options;
   }
 
   @Input()
@@ -71,8 +74,12 @@ export class SelectComponent implements ControlValueAccessor {
     this._autoAlign = this.setDefault(autoAlign, this._autoAlign);
   }
 
+  get autoAlign(): boolean {
+    return this._autoAlign;
+  }
+
   @Input()
-  set controlDisabled(value: boolean) {
+  set isDisabled(value: boolean) {
     this._disabled = this.setDefault(value, this._disabled);
 
     if (this._disabled) {
@@ -80,53 +87,40 @@ export class SelectComponent implements ControlValueAccessor {
     }
   }
 
-  get options(): ILabeledValue[] {
-    return this._options;
-  }
-
-  get autoAlign(): boolean {
-    return this._autoAlign;
-  }
-
   get disabled(): boolean {
     return this._disabled;
   }
 
-  get inputMode(): boolean {
-    return this._inputMode;
+  @Input()
+  set isRequired(value: boolean) {
+    this._required = value;
+  }
+
+  get required(): boolean {
+    return this._required;
   }
 
   @Input()
-  set active(activeValue: SelectInputValueType) {
-    this._active = activeValue as ILabeledValue[] || [];
-
-    if (['string', 'number'].includes(typeof this._active)) {
-      const option = this.lookupAtOptions(activeValue as string | number);
-      if (option) {
-        this._active = [ this.getValue(option) ];
-      } else {
-        this._active = [ { value: this._active } ];
-      }
-    }
+  set active(option: ILabeledValue) {
+    this._active = option;
+    this.selectedIndex = option.value;
   }
 
-  get active(): SelectInputValueType {
+  get active(): ILabeledValue {
     return this._active;
   }
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    public element: ElementRef,
-    private sanitizer: DomSanitizer,
-    private translateService: TranslateService,
+    private sortOptionsPipe: SortOptionsPipe,
   ) {
-    this.element = element;
-    this.clickedOutside = this.clickedOutside.bind(this);
+    this.hideOptions = this.hideOptions.bind(this);
+    this.renderer = (option: ILabeledValue) => option.label;
   }
 
   writeValue(value: number): void {
-    this.activeValue = value;
-    this.active = value;
+    this.selectedIndex = value;
+    this.active = this.selectedOption;
     this.cdRef.markForCheck();
   }
 
@@ -135,101 +129,82 @@ export class SelectComponent implements ControlValueAccessor {
   }
 
   registerOnTouched(fn: Function): void {
+    this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    this._disabled = isDisabled;
+  setDisabledState(disabled: boolean): void {
+    this.isDisabled = disabled;
     this.cdRef.markForCheck();
   }
 
+  validate(control: AbstractControl): ValidationErrors {
+    return control.enabled && this.selectedIndex === null
+      ? { required: true }
+      : null;
+  }
+
   get activeLabel(): string {
-    if (this.activeValue === null) {
-      return '';
-    }
-    const active = this.options.find(v => v.value === this.activeValue);
-    return active ? (active.label || '') : '';
+    return this.selectedIndex !== null
+      ? this.active.label || ''
+      : '';
   }
 
-  get displayPlaceholder(): string|number {
-    return this.activeLabel || this.placeholder || '';
+  get selectedOption(): ILabeledValue {
+    return this.options.find(v => v.value === this.selectedIndex);
   }
 
-  get filteredActiveItems(): ILabeledValue[] {
-    return (this.active as ILabeledValue[]).filter(value => !value.removed);
-  }
-
-  toDisplayValue(item: ILabeledValue): SafeHtml {
-    let displayValue: string;
-
-    if (item.label) {
-      displayValue = this.translateService.instant(item.label);
-    } else {
-      const option = this.lookupAtOptions(item.value);
-      if (option && option.label) {
-        displayValue = this.translateService.instant(option.label);
-      }
-    }
-
-    return this.sanitizer
-      .bypassSecurityTrustHtml(this.renderer ? this.renderer(displayValue, item) : (displayValue || item.value));
-  }
-
-  clickedOutside(): void {
-    this._inputMode = false;
-    this.optionsOpened = false;
-  }
-
-  onActiveItemClick(item: ILabeledValue, $event: MouseEvent): void {
-    this.stopEvent($event);
-  }
-
-  isInputVisible(): boolean {
-    return this.active && !this._active.length;
-  }
-
-  onInputClick($event: Event): void {
-    this.stopEvent($event);
-    this.hideOptions();
-  }
-
-  onMatchClick($event: Event): void {
-    this.stopEvent($event);
-
-    if (this._disabled) {
-      return;
-    }
-
-    this._inputMode = !this._inputMode;
-    if (this._inputMode) {
-      this.open();
+  onInputClick(event: MouseEvent): void {
+    this.stopEvent(event);
+    if (!this.open) {
+      this.showOptions();
     } else {
       this.hideOptions();
     }
   }
 
-  isActive(option: ILabeledValue): boolean {
-    return !!this._active.find(v => v.value === option.value);
+  onAutocomplete(event: MouseEvent): void {
+    // console.log('autocomplete', event);
   }
 
-  onSelectMatch($event: Event, option: ILabeledValue): void {
-    this.stopEvent($event);
+  onMatchClick(event: Event): void {
+    this.stopEvent(event);
 
-    this._active = [ this.getValue(option) ];
-    this.onChange(this._active);
-    this.onSelect.emit(this._active);
+    if (this._disabled) {
+      return;
+    }
+
+    if (!this.open) {
+      this.showOptions();
+    } else {
+      this.hideOptions();
+    }
+  }
+
+  onSelectMatch(event: Event, option: ILabeledValue): void {
+    this.stopEvent(event);
+
+    this.active = option;
+    this.onChange(this.active.value);
+    this.select.emit([this.active]);
 
     this.hideOptions();
   }
 
-  private onChange: Function = () => {};
-
-  private open(): void {
-    this.optionsOpened = true;
+  isActive(option: ILabeledValue): boolean {
+    return this.selectedIndex === option.value;
   }
 
+  private onChange: Function = () => {};
+
+  private onTouched: Function = () => {};
+
   private hideOptions(): void {
-    this._inputMode = false;
-    this.optionsOpened = false;
+    this.open = false;
+    this.onTouched(this.active);
+  }
+
+  private showOptions(): void {
+    this.open = true;
   }
 
   private stopEvent(event: Event): void {
@@ -239,14 +214,6 @@ export class SelectComponent implements ControlValueAccessor {
 
   private setDefault(value: boolean, defaultValue: boolean): boolean {
     return R.defaultTo(defaultValue)(value);
-  }
-
-  private lookupAtOptions(value: number|string): ILabeledValue {
-    return (this.options || []).find(item => String(item.value) === String(value));
-  }
-
-  private getValue(option: ILabeledValue): ILabeledValue {
-    return { value: option.value };
   }
 
 }

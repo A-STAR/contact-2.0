@@ -5,83 +5,58 @@
   @include user-select(none);
 }
 
-.app-select-search-wrapper {
-  padding: 0 4px;
-}
-
-.app-select-search {
+.select-search {
   width: 100%;
 }
 
-.app-select-close-action {
-  float: right;
-  margin-left: 5px;
-  font-size: 18px;
-  line-height: 12px;
+.select-clear {
+  position: absolute;
+  top: 45%;
+  right: 20px;
+  cursor: pointer;
 }
 
-.app-select-caret {
+.select-caret {
   position: absolute;
   top: 45%;
   right: 10px;
   cursor: pointer;
 }
 
-.app-select-match-item {
-  display: inline-block;
-  border: 1px solid #dde6e9;
-  cursor: pointer;
-  font-size: 13px;
-  padding: 3px;
-  margin: 1px 3px 3px 3px;
-
-  &.selected {
-    background-color: #99e5a9;
-    border-color: #b6b6b6;
-
-    &.context-exist {
-      background-color: #99e5a9;
-    }
-  }
-
-  &.context-exist {
-    background-color: #d8ffe1;
-  }
-}
-
-.ui-select-choices {
+.select-choices {
   width: 100%;
   height: auto;
   max-height: 180px;
   overflow-x: hidden;
-  margin-top: -1px;
+  margin-top: 0;
+
+  &.dropdown-menu {
+    // box-shadow: none;
+    border-top: 0;
+    min-width: unset;
+  }
 }
 
-.ui-select-choices.dropdown-menu {
-  box-shadow: none;
-  min-width: unset;
-}
-
-.ui-select-container {
+.select-container {
   font-weight: normal;
-  > .ui-select-match > .form-control {
+  > .select-match > .form-control {
     padding-right: 24px;
     white-space: nowrap;
   }
   &[disabled] {
-    > .ui.select-match > .form-control {
+    > .select-match > .form-control {
       white-space: nowrap;
       overflow-x: hidden;
     }
   }
 }
 
-.ui-select-container[disabled] * {
+.select-container[disabled] * {
   background-color: $gray-lighter;
   cursor: not-allowed;
 }
 
-.ui-select-item {
+.select-item {
   &.active {
     .dropdown-item {
       color: #fff;

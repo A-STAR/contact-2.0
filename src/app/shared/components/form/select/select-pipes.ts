@@ -1,30 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { ILabeledValue } from '../../../../core/converter/value-converter.interface';
-import { IRawDataFilterPipeParams } from './select.interface';
+import { ILabeledValue } from '@app/core/converter/value-converter.interface';
 
-@Pipe({name: 'rawDataFilter'})
-export class RawDataFilterPipe implements PipeTransform {
+@Pipe({name: 'sortOptionsPipe'})
+export class SortOptionsPipe implements PipeTransform {
 
-  public transform(value: ILabeledValue[], params: IRawDataFilterPipeParams): ILabeledValue[] {
-    const transformedList: ILabeledValue[] = (value || [])
-      .filter(item => {
-        return !params.filterValue || !item.label || item.label.toLocaleLowerCase()
-            .indexOf(params.filterValue.toLowerCase()) > -1;
-      });
+  transform(options: ILabeledValue[]): ILabeledValue[] {
 
-    if (params.sortType) {
-      switch (params.sortType) {
-        case 'up':
-          transformedList.sort((item1, item2) =>
-            (item1.label || String(item1.value)).localeCompare(item2.label || String(item2.value)));
-          break;
-        case 'down':
-          transformedList.sort((item1, item2) =>
-            (item2.label || String(item2.value)).localeCompare(item1.label || String(item1.value)));
-          break;
-      }
-    }
-    return transformedList;
+    return (options || []).sort((item1, item2) =>
+            (item1.label || '').localeCompare(item2.label || ''));
   }
 }

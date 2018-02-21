@@ -36,7 +36,6 @@ export class SingleSelectComponent implements ControlValueAccessor, OnInit, OnDe
   @Input() dictCode: number;
   @Input() isDisabled = false;
   @Input() lookupKey: ILookupKey;
-  @Input() nullable = false;
 
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
