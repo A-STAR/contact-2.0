@@ -6,18 +6,18 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IPayment } from '../payment.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PaymentService } from '../payment.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
+import { addGridLabel, combineLatestAnd } from '@app/core/utils';
+import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers/datetime/datetime.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -83,12 +83,12 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     }
   ];
 
-  columns: IGridColumn[] = [
-    { prop: 'amount', minWidth: 110, width: 110, maxWidth: 130, renderer: 'numberRenderer' },
-    { prop: 'paymentDateTime', minWidth: 130, maxWidth: 150, renderer: 'dateTimeRenderer' },
+  columns: ISimpleGridColumn<IPayment>[] = [
+    { prop: 'amount', minWidth: 110, maxWidth: 130 /* , renderer: 'numberRenderer' */ },
+    { prop: 'paymentDateTime', minWidth: 130, maxWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'currencyName', minWidth: 90, maxWidth: 110 },
-    { prop: 'amountMainCurrency', minWidth: 120, maxWidth: 150, renderer: 'numberRenderer' },
-    { prop: 'receiveDateTime', minWidth: 130, maxWidth: 150, renderer: 'dateTimeRenderer' },
+    { prop: 'amountMainCurrency', minWidth: 120, maxWidth: 150 /*, renderer: 'numberRenderer' */ },
+    { prop: 'receiveDateTime', minWidth: 130, maxWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'statusCode', minWidth: 120, maxWidth: 130, dictCode: UserDictionariesService.DICTIONARY_PAYMENT_STATUS },
     { prop: 'purposeCode', minWidth: 120, maxWidth: 130, dictCode: UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE },
     { prop: 'comment', minWidth: 100 },
@@ -96,12 +96,12 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     { prop: 'reqUserFullName', minWidth: 150 },
     { prop: 'payerName', minWidth: 120 },
     { prop: 'receiptNumber', minWidth: 110, maxWidth: 130 },
-    { prop: 'commission', minWidth: 100, renderer: 'numberRenderer' },
+    { prop: 'commission', minWidth: 100 /*, renderer: 'numberRenderer' */ },
     // TODO(atymchuk): the currency should appear in the promiseAmount column header
     // { prop: 'currencyId', hidden: true, lookupKey: 'currencies', },
-  ];
+  ].map(addGridLabel('widgets.payment.grid'));
 
-  rows: Array<IPayment> = [];
+  rows: IPayment[] = [];
 
   private dialog: string;
   private routeParams = (<any>this.route.params).value;
@@ -109,27 +109,14 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
 
-  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '300px' };
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private paymentService: PaymentService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService
-  ) {
-    // Bind the context to the filter, or it will throw
-    this.filter = this.filter.bind(this);
-
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.canViewSubscription = combineLatest(this.canView$, this.debtId$)
@@ -183,17 +170,13 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     return this.userPermissionsService.has('PAYMENT_CANCEL');
   }
 
-  filter(payment: IPayment): boolean {
-    return !payment.isCanceled || this.displayCanceled;
-  }
-
   toggleFilter(): void {
     this.displayCanceled = !this.displayCanceled;
     this.fetch();
   }
 
-  onSelect(payment: IPayment): void {
-    this.selectedPayment$.next(payment);
+  onSelect(payments: IPayment[]): void {
+    this.selectedPayment$.next(payments[0]);
   }
 
   onConfirm(): void {

@@ -27,15 +27,11 @@
     ></app-toolbar-2>
   </div>
   <div class="flex-item grow">
-    <app-grid
-      columnTranslationKey="widgets.payment"
-      selectionType="single"
+    <app-simple-grid
       [columns]="columns"
-      [filter]="filter"
       [rows]="rows"
-      [styles]="gridStyles"
-      (onDblClick)="onDoubleClick($event)"
-      (onSelect)="onSelect($event)"
-    ></app-grid>
+      (select)="onSelect($event)"
+      (dblClick)="onDoubleClick($event)"
+    ></app-simple-grid>
   </div>
 </div>
