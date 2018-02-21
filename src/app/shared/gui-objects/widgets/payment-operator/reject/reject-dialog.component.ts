@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 
-import { ICloseAction } from '../../../../components/action-grid/action-grid.interface';
+import { ICloseAction, IGridAction } from '../../../../components/action-grid/action-grid.interface';
 
 import { PaymentOperatorService } from '../payment-operator.service';
 
@@ -10,14 +10,14 @@ import { PaymentOperatorService } from '../payment-operator.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorRejectDialogComponent  {
-  @Input() payments: number[];
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
   constructor(private paymentOperatorService: PaymentOperatorService) {}
 
   onReject(): void {
-    this.paymentOperatorService.reject(this.payments)
+    this.paymentOperatorService.reject(this.actionData.payload)
       .subscribe(res => {
         const refresh = res.massInfo && !!res.massInfo.processed;
         this.close.emit({ refresh });

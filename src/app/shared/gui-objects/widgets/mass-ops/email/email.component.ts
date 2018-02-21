@@ -12,9 +12,11 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
 import * as moment from 'moment';
 
+import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IOption, INamedValue } from '../../../../../core/converter/value-converter.interface';
 
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { EmailService } from './email.service';
 import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
 import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
@@ -33,9 +35,7 @@ import { addFormLabel, toOption } from '../../../../../core/utils';
 export class EmailComponent implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  @Input() debtIds: number[];
-  @Input() personIds: number[];
-  @Input() personRoles: number[];
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<void>();
 
@@ -45,7 +45,10 @@ export class EmailComponent implements OnInit {
     startDateTime: new Date(),
   };
 
+  private personRole: number;
+
   constructor (
+    private actionGridFilterService: ActionGridFilterService,
     private cdRef: ChangeDetectorRef,
     private emailService: EmailService,
     private userConstantsService: UserConstantsService,
@@ -59,8 +62,11 @@ export class EmailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.personRole = Number(this.actionGridFilterService.getAddOption(this.actionData, 'personRole', 0));
+
     combineLatest(
-      this.userTemplatesService.getTemplates(3, this.personRoles[0]),
+      this.userTemplatesService.getTemplates(3, this.personRole),
       this.userDictionaryService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMAIL_TYPE),
       this.userConstantsService.get('Email.Sender.Default'),
       this.userConstantsService.get('Email.Sender.Use'),
@@ -74,7 +80,7 @@ export class EmailComponent implements OnInit {
 
       this.controls = this.buildControls(
         filteredEmailOptions,
-        templates.map(toOption('id', 'name')),
+        templates.map(toOption<INamedValue>('id', 'name')),
         Boolean(useSender.valueB),
         Boolean(senderCode),
       );
@@ -90,7 +96,7 @@ export class EmailComponent implements OnInit {
   onSubmit(): void {
     const email = this.form.serializedUpdates;
     this.emailService
-      .schedule(this.debtIds, this.personIds, Number(this.personRoles[0]), email)
+      .schedule(this.actionData.payload, this.personRole, email)
       .subscribe(() => this.close.emit());
   }
 

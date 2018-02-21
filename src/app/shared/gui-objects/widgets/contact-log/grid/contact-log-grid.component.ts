@@ -1,10 +1,21 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
+import { IAGridColumn } from '@app/shared/components/grid2/grid2.interface';
 import { IContact } from '../contact-log.interface';
 
 import { ContactLogService } from '../contact-log.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
 
-import { MetadataGridComponent } from '../../../../components/metadata-grid/metadata-grid.component';
+import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 
 @Component({
   selector: 'app-contact-log-grid',
@@ -13,10 +24,12 @@ import { MetadataGridComponent } from '../../../../components/metadata-grid/meta
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class ContactLogGridComponent {
+export class ContactLogGridComponent implements OnInit {
   @Input() personId: number;
 
-  @ViewChild(MetadataGridComponent) grid: MetadataGridComponent<IContact>;
+  @ViewChild(Grid2Component) grid: Grid2Component;
+
+  private static METADATA_KEY = 'contactSearchContactLog';
 
   columnIds = [
     'contactDateTime',
@@ -31,11 +44,20 @@ export class ContactLogGridComponent {
   ];
   data: IContact[];
   rowCount = 0;
+  columns$: Observable<IAGridColumn[]>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactLogService: ContactLogService,
+    private gridService: GridService,
   ) {}
+
+
+  ngOnInit(): void {
+    this.columns$ = this.gridService.getMetadata(ContactLogGridComponent.METADATA_KEY, {})
+        // TODO(i.lobanov): retrieve actions from here when it added in config
+        .map(({ actions, columns }) => columns);
+  }
 
   onRequest(): void {
     if (this.personId) {

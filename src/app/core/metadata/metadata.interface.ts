@@ -1,3 +1,7 @@
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
+import { ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
+
 export type MetadataAggregateType = 'sum' | 'average' | 'max' | 'min';
 
 export interface IMetadataActionOption {
@@ -10,7 +14,22 @@ export interface IMetadataAction {
   addOptions: IMetadataActionOption[];
   enabled: (selection: any[]) => boolean;
   params: string[];
+  applyTo?: {
+    all: boolean;
+    selected?: boolean;
+  };
   children?: IMetadataAction[];
+  type?: MetadataActionType;
+}
+
+export enum MetadataActionType {
+  SINGLE,
+  SELECTED,
+  ALL
+}
+
+export interface IMetadataActionPermissions {
+  [key: string]: (...args: any[]) => any;
 }
 
 export interface IMetadataColumn {
@@ -34,9 +53,14 @@ export interface IMetadataFilterOption {
 }
 
 export interface IMetadataFilter {
-  type: IMetadataFilterType;
-  column: string;
-  addOptions?: IMetadataFilterOption[];
+  controls: IDynamicFormControl[];
+  operators: IMetadataFilterOperator[];
+}
+
+export interface IMetadataFilterOperator {
+  type: FilterOperatorType;
+  columnName: string;
+  controls: string[];
 }
 
 export interface IMetadataResponse {
@@ -46,11 +70,25 @@ export interface IMetadataResponse {
   baseFilters: IMetadataFilter[];
 }
 
+export interface IMetadataTitlebarItem extends ITitlebarElement {
+  name: string;
+  params?: any[];
+  permissions?: string[];
+}
+
+export interface IMetadataTitlebar {
+  items?: IMetadataTitlebarItem[];
+  title?: string;
+}
+
 export interface IMetadata {
   actions: IMetadataAction[];
   columns: Array<IMetadataColumn>;
   status: MetadataListStatusEnum;
   filters: IMetadataFilter[];
+  titlebar?: IMetadataTitlebar;
+  defaultAction?: string;
+  permits?: string[];
 }
 
 export interface IMetadataState {

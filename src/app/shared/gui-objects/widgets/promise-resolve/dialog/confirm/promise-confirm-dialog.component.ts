@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output, Input } from '@angular/core';
 
+import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
+
 import { PromiseResolveService } from '../../promise-resolve.service';
-import { ICloseAction } from '../../../../../components/action-grid/action-grid.interface';
 
 @Component({
   selector: 'app-promise-confirm-dialog',
@@ -10,7 +11,7 @@ import { ICloseAction } from '../../../../../components/action-grid/action-grid.
 })
 export class PromiseConfirmDialogComponent  {
 
-  @Input() promises: number[];
+  @Input() actionData: IGridAction;
 
   @Output() close = new EventEmitter<ICloseAction>();
 
@@ -21,7 +22,7 @@ export class PromiseConfirmDialogComponent  {
   ) { }
 
   onConfirm(): void {
-    this.promiseResolveService.confirm(this.promises)
+    this.promiseResolveService.confirm(this.actionData.payload)
       .subscribe(result => {
         this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
         this.cdRef.markForCheck();

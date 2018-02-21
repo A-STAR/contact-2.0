@@ -30,13 +30,13 @@ import {
   RefreshCellsParams,
 } from 'ag-grid/main';
 
-import { IMetadataAction } from '@app/core/metadata/metadata.interface';
+import { IMetadataAction, MetadataActionType } from '@app/core/metadata/metadata.interface';
 import {
   IToolbarAction,
   IToolbarActionSelect,
   ToolbarActionTypeEnum,
   ToolbarControlEnum
-} from '../toolbar/toolbar.interface';
+} from './toolbar/toolbar.interface';
 import {
   IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
   IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
@@ -779,58 +779,114 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.translateOptionsMessages();
   }
 
-  private getMetadataMenuItems(actions: IMetadataAction[], params: GetContextMenuItemsParams): MenuItemDef[] {
-    // TODO(m.bobryshev): remove once the BE returns this action
-    // const visitAdd = {
-    //   action: 'visitAdd',
-    //   addOptions: null,
-    //   params: ['debtId', 'personId', 'regionCode']
-    // };
+  private getMetadataMenuItems(
+    actions: IMetadataAction[],
+    selection: GetContextMenuItemsParams,
+    isSubMenu: boolean = false): Array<MenuItemDef | string> {
 
-    // const found = this.actions.find(action => action.action === 'visitAdd');
-    // this.actions = found ? this.actions : this.actions.concat(visitAdd);
-
-    return actions.map(action => ({
-      name: this.translate.instant(`default.grid.actions.${action.action}`),
-      action: () => this.action.emit({ metadataAction: action, params }),
-      disabled: action.enabled
-        ? !action.enabled.call(null, this.selected, params.node.data)
-        : false,
-      subMenu: action.children ? this.getMetadataMenuItems(action.children, params) : undefined
-    }));
+    return [].concat(
+      ...this.getMetadataActions(actions, selection)
+      .map(mDefs => mDefs.length && !isSubMenu ? [...mDefs, 'separator'] : [...mDefs])
+    );
   }
 
-  private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
+  private getMetadataActions(actions: IMetadataAction[], selection: GetContextMenuItemsParams)
+    : [ MenuItemDef[], MenuItemDef[]] {
+    return actions.reduce((acc, action) => {
+
+      const menuDef = action.applyTo ?
+      this.getNonSingleAction(action, selection) :
+      action.children ?
+        {
+          ...this.getActionWithChildren(action, selection),
+          subMenu: this.getMetadataMenuItems(action.children, selection, true)
+        } :
+        this.getSingleAction(action, selection);
+      const arr = (action.applyTo || action.children) ? acc[0] : acc[1];
+
+      arr.push(menuDef);
+      return acc;
+    }, [[], []] as [ MenuItemDef[], MenuItemDef[] ]);
+  }
+
+  private getSingleAction(action: IMetadataAction, selection: GetContextMenuItemsParams): MenuItemDef {
+    return {
+      name: this.translate.instant(`default.grid.actions.${action.action}`),
+      action: () => this.action.emit({
+        metadataAction: {
+          ...action,
+          type: MetadataActionType.SINGLE
+        },
+        selection
+      }),
+      disabled: action.enabled
+        ? !action.enabled.call(null, MetadataActionType.SINGLE, this.selected, selection.node.data)
+        : false,
+    };
+  }
+
+  private getActionWithChildren(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
+    return {
+      name: this.translate.instant(`default.grid.actions.${action.action}`),
+      disabled: action.enabled
+        ? !action.enabled.call(null, MetadataActionType.ALL, this.selected, params.node.data)
+        : false,
+    };
+  }
+
+  private getNonSingleAction(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
+    const subMenu = [];
+    if (action.applyTo.all) {
+      subMenu.push(
+        this.getActionForAllSubmenu(action, params)
+      );
+    }
+    if (action.applyTo.selected) {
+      subMenu.push(
+        this.getActionForSelectedSubmenu(action, params)
+      );
+    }
+    return {
+      name: this.translate.instant(`default.grid.actions.${action.action}`),
+      subMenu: subMenu.length ? subMenu : undefined
+    };
+  }
+
+  private getActionForSelectedSubmenu(action: IMetadataAction, selection: GetContextMenuItemsParams): MenuItemDef {
+    return {
+      name: this.translate.instant(`default.grid.actions.actionForSelection`),
+      disabled: action.enabled ?
+        !action.enabled.call(null, MetadataActionType.SELECTED, this.selected, selection.node.data) : false,
+      action: () => this.action.emit({
+        metadataAction: {
+          ...action,
+          type: MetadataActionType.SELECTED
+        },
+        selection
+      }),
+    };
+  }
+
+  private getActionForAllSubmenu(action: IMetadataAction, selection: GetContextMenuItemsParams): MenuItemDef {
+    return {
+      name: this.translate.instant(`default.grid.actions.actionForAll`),
+      disabled: action.enabled ? !action.enabled.call(null, MetadataActionType.ALL, this.selected, selection.node.data) : false,
+      action: () => this.action.emit({
+        metadataAction: {
+          ...action,
+          type: MetadataActionType.ALL
+        },
+        selection
+      }),
+    };
+  }
+
+  private getContextMenuItems(selection: GetContextMenuItemsParams): (string | MenuItemDef)[] {
     return [
-      // {
-      //   name: 'Alert value',
-      //   action: () => { window.alert('Alerting about ' + params.value); },
-      // },
-      // {
-      //   name: 'Always disabled',
-      //   disabled: true,
-      //   tooltip: 'Just to test what the tooltip can show'
-      // },
-      // 'separator',
-      ...this.getMetadataMenuItems(this.actions, params),
-      // {
-      //   name: 'Person',
-      //   subMenu: [
-      //     {name: 'Niall', action: () => {log('Niall was pressed'); } },
-      //     {name: 'Sean', action: () => {log('Sean was pressed'); } },
-      //     {name: 'Lola', action: () => {log('Lola was pressed'); } },
-      //   ]
-      // },
-      'separator',
-      // {
-      //   name: 'Checked',
-      //   checked: true,
-      //   action: () => { log('Checked Selected'); }
-      // },
+      ...this.getMetadataMenuItems(this.actions, selection),
       'copy',
       'copyWithHeaders',
       'separator',
-      // 'resetColumns',
       {
         name: this.translate.instant('default.grid.localeText.resetColumns'),
         action: () => this.resetGridSettings(),

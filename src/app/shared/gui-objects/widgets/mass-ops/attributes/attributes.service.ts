@@ -3,9 +3,11 @@ import { Observable } from 'rxjs/Observable';
 import { catchError, tap } from 'rxjs/operators';
 
 import { IDebtAttributeChange, DictOperationPerms } from './attributes.interface';
+import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
 import { ILookupPortfolio, ILookupTimeZone } from '../../../../../core/lookup/lookup.interface';
 import { IOperationResult } from '../../debt-responsible/debt-responsible.interface';
 
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { LookupService } from '../../../../../core/lookup/lookup.service';
 import { DataService } from '../../../../../core/data/data.service';
 import { NotificationsService } from '../../../../../core/notifications/notifications.service';
@@ -22,15 +24,20 @@ export class AttributesService {
   ];
 
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private dataService: DataService,
     private lookupService: LookupService,
     private notificationsService: NotificationsService
   ) { }
 
-  change(debts: number[], data: IDebtAttributeChange): Observable<IOperationResult> {
-    const ids = debts.map(debtId => [debtId]);
+  change(idData: IGridActionPayload, data: IDebtAttributeChange): Observable<IOperationResult> {
     return this.dataService
-      .update('/mass/debts/attributechange', {}, { idData: { ids }, actionData: data })
+      .update('/mass/debts/attributechange', {},
+        {
+         idData: this.actionGridFilterService.buildRequest(idData),
+         actionData: data
+        }
+      )
       .pipe(
       tap(response => {
         if (response.success) {

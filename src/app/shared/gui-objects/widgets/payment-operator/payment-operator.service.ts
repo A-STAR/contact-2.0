@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
+
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { DataService } from '../../../../core/data/data.service';
 import { NotificationsService } from '../../../../core/notifications/notifications.service';
 
@@ -9,14 +12,18 @@ export class PaymentOperatorService {
   private url = '/mass/payments';
 
   constructor(
+    private actionGridFilterService: ActionGridFilterService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
 
-  confirm(paymentIds: number[]): Observable<any> {
-    const ids = paymentIds.map(id => [ id ]);
+  confirm(idData: IGridActionPayload): Observable<any> {
     return this.dataService
-      .update(`${this.url}/confirmOperator`, {}, { idData: { ids } })
+      .update(`${this.url}/confirmOperator`, {},
+        {
+          idData: this.actionGridFilterService.buildRequest(idData)
+        }
+      )
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
@@ -27,10 +34,13 @@ export class PaymentOperatorService {
       .catch(this.notificationsService.updateError().entity('entities.payments.gen.plural').dispatchCallback());
   }
 
-  reject(paymentIds: number[]): Observable<any> {
-    const ids = paymentIds.map(id => [ id ]);
+  reject(idData: IGridActionPayload): Observable<any> {
     return this.dataService
-      .update(`${this.url}/cancelOperator`, {}, { idData: { ids } })
+      .update(`${this.url}/cancelOperator`, {},
+        {
+          idData: this.actionGridFilterService.buildRequest(idData)
+        }
+      )
       .do(res => {
         if (!res.success) {
           this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();

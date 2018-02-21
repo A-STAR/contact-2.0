@@ -12,7 +12,6 @@ import { IDynamicFormConfig, IDynamicFormControl } from '@app/shared/components/
 import { IFilterGroup } from '@app/core/filters/grid-filters.interface';
 import { IGroupDebt } from './group-debts.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { GroupDebtsService } from './group-debts.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
@@ -44,7 +43,6 @@ export class GroupDebtsComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
     private groupDebtsService: GroupDebtsService,
     private gridFiltersService: GridFiltersService,
     @Inject(GroupDebtsService.ENTITY_GROUP_ID) private entityTypeId: number[]
@@ -73,10 +71,6 @@ export class GroupDebtsComponent implements OnInit {
           this.cdRef.markForCheck();
         });
     }
-  }
-
-  onDblClick(debt: IGroupDebt): void {
-    this.debtorCardService.openByDebtId(debt.debtId);
   }
 
   onSearch(): void {
