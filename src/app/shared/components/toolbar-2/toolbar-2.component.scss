@@ -27,6 +27,7 @@ $checkbox-size: 15px;
 
 .toolbar-item {
   display: inline-block;
+  vertical-align: middle;
   &:not(:last-child) {
     margin-right: 8px;
   }
