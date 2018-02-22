@@ -1,14 +1,9 @@
 <div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
   <!-- Next Call Date -->
   <div>
-    <label>
-      <span class="form-label">
-        {{ 'routes.workplaces.shared.contactRegistration.edit.form.nextCall.form.nextCall' | translate }}
-        <b *ngIf="isNextCallDateRequired$ | async" class="text-danger">*</b>
-      </span>
-    </label>
     <app-datetimepicker
       formControlName="nextCallDateTime"
+      label="routes.workplaces.shared.contactRegistration.edit.form.nextCall.form.nextCall"
       [minDateTime]="nextCallMinDate"
       [maxDateTime]="nextCallMaxDate$ | async"
       [required]="isNextCallDateRequired$ | async"
