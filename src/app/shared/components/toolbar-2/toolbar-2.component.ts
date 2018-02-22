@@ -10,7 +10,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from './toolbar-2.interface';
 import { DropdownComponent } from '@app/shared/components/dropdown/dropdown.component';
 // import { ButtonComponent } from './button/button.component';
 
-import { doOnceIf, invert } from '@app/core/utils/index';
+import { doOnceIf, invert } from '@app/core/utils';
 
 @Component({
   selector: 'app-toolbar-2',
