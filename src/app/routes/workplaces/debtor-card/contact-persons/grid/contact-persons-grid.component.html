@@ -10,20 +10,11 @@
 >
 </app-dialog-action>
 
-
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
-  </div>
-
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] workplaces/debtor-card/contacts"
-      [columns]="columns"
-      [rows]="contacts"
-      (select)="onSelect($event)"
-      (dblClick)="onDoubleClick($event)"
-    ></app-simple-grid>
-  </div>
-</div>
-
+<app-simple-grid
+  persistenceKey="[grid] workplaces/debtor-card/contacts"
+  [columns]="columns"
+  [rows]="contacts"
+  [toolbar]="toolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onDoubleClick($event)"
+></app-simple-grid>
