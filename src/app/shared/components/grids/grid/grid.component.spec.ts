@@ -9,6 +9,7 @@ import { of } from 'rxjs/observable/of';
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 import { SelectModule } from '@app/shared/components/form/select/select.module';
+import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
 
 import { IGridColumn } from '../grids.interface';
 
@@ -48,6 +49,7 @@ describe('SimpleGridComponent', () => {
           CheckModule,
           FormsModule,
           SelectModule,
+          Toolbar2Module,
           TranslateModule.forRoot({
             loader: {
               provide: TranslateLoader,
