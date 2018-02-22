@@ -18,6 +18,7 @@ import { combineLatestAnd } from '@app/core/utils';
 @Component({
   selector: 'app-contractor-objects-grid',
   templateUrl: './contractor-objects-grid.component.html',
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorObjectsGridComponent extends DialogFunctions implements OnInit, OnDestroy {
