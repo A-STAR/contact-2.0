@@ -7,11 +7,11 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IContractor, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+import { IContractor, IActionType } from '@app/routes/admin/contractors-and-portfolios/contractors-and-portfolios.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
-import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
+import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors-and-portfolios/contractors-and-portfolios.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';

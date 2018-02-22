@@ -42,7 +42,7 @@ const routes: Routes = [
       },
       {
         path: 'contractors',
-        loadChildren: './contractors/contractors-and-portfolios.module#ContractorsAndPortfoliosModule',
+        loadChildren: './contractors-and-portfolios/contractors-and-portfolios.module#ContractorsAndPortfoliosModule',
       },
       {
         path: '**',

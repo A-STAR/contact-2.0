@@ -5,11 +5,11 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IContractorManager, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+import { IContractorManager, IActionType } from '../../contractors-and-portfolios.interface';
 import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
+import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
