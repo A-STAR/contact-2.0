@@ -9,20 +9,14 @@
   (cancel)="onDialogClose()">
 </app-dialog-action>
 
-<div class="flex vertical">
-  <div *ngIf="!hideToolbar" class="flex-item">
-    <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] workplaces/shared/documents"
-      [columns]="columns"
-      [rows]="documents"
-      (dblClick)="onDoubleClick($event)"
-      (select)="onSelect($event)">
-    </app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] workplaces/shared/documents"
+  [columns]="columns"
+  [rows]="documents"
+  [toolbar]="hideToolbar ? null : toolbarItems"
+  (dblClick)="onDoubleClick($event)"
+  (select)="onSelect($event)">
+</app-simple-grid>
 
 <app-downloader
   #downloader

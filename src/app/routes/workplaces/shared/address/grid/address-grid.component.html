@@ -57,18 +57,13 @@
   (cancel)="onCloseDialog()">
 </app-address-grid-mark>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
-  </div>
-  <div *ngIf="canDisplayGrid" class="flex-item grow">
-    <app-simple-grid
-      persistenceKey="[grid] workplaces/shared/address"
-      [columns]="columns"
-      [rows]="addresses"
-      [rowClass]="getRowClass()"
-      (select)="onSelect($event)"
-      (dblClick)="onDoubleClick($event)"
-    ></app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  *ngIf="canDisplayGrid"
+  persistenceKey="[grid] workplaces/shared/address"
+  [columns]="columns"
+  [rows]="addresses"
+  [rowClass]="getRowClass()"
+  [toolbar]="toolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onDoubleClick($event)"
+></app-simple-grid>
