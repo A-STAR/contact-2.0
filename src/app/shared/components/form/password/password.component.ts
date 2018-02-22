@@ -14,8 +14,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PasswordComponent implements ControlValueAccessor {
+  isDisabled: boolean;
+
   private _value: string;
-  private _isDisabled: boolean;
   private _isMasked = true;
 
   constructor(private cdRef: ChangeDetectorRef) {}
@@ -33,7 +34,7 @@ export class PasswordComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this._isDisabled = isDisabled;
+    this.isDisabled = isDisabled;
   }
 
   get value(): string {
