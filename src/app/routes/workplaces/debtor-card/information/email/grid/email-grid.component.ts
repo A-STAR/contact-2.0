@@ -1,28 +1,28 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 
 import { IDebt } from '@app/core/app-modules/app-modules.interface';
 import { IEmail, IEmailSchedule } from '../email.interface';
-import { IGridColumn, IContextMenuItem } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { EmailService } from '../email.service';
 import { DebtService } from '@app/core/debt/debt.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
+import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/components/grids/renderers';
+
 import { DialogFunctions } from '@app/core/dialog';
-import { combineLatestAnd } from '@app/core/utils/helpers';
-import { ActivatedRoute } from '@angular/router';
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   selector: 'app-email-grid',
@@ -81,31 +81,19 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     },
   ];
 
-  contextMenuOptions: IContextMenuItem[] = [
-    {
-      simpleActionsNames: [
-        'copyField',
-        'copyRow'
-      ],
-      translationKey: 'default.grid.localeText',
-      prop: 'email',
-      enabled: of(true)
-    },
-  ];
-
-  columns: Array<IGridColumn> = [];
+  columns: ISimpleGridColumn<IEmail>[] = [];
 
   private _emails: Array<any> = [];
   private canViewSubscription: Subscription;
   private onSaveSubscription: Subscription;
 
-  private _columns: Array<IGridColumn> = [
+  private _columns: ISimpleGridColumn<IEmail>[] = [
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_EMAIL_TYPE },
     { prop: 'email' },
-    { prop: 'isInactive', renderer: 'checkboxRenderer', maxWidth: 90 },
+    { prop: 'isInactive', renderer: TickRendererComponent, maxWidth: 90 },
     { prop: 'inactiveReasonCode', dictCode: UserDictionariesService.DICTIONARY_EMAIL_REASON_FOR_BLOCKING },
-    { prop: 'inactiveDateTime', renderer: 'dateTimeRenderer' },
-  ];
+    { prop: 'inactiveDateTime', renderer: DateTimeRendererComponent },
+  ].map(addGridLabel('debtor.information.email.grid'));
 
   dialog: string;
 
@@ -113,7 +101,6 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
     private cdRef: ChangeDetectorRef,
     private emailService: EmailService,
     private debtService: DebtService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -124,19 +111,14 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   ngOnInit(): void {
-
-    combineLatest(
-      this.gridService.setAllRenderers(this._columns),
-      this.canViewBlock$,
-    )
-    .pipe(first())
-    .subscribe(([ columns, canViewBlock ]) => {
-      const filteredColumns = columns.filter(column => {
-        return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
+    this.canViewBlock$
+      .pipe(first())
+      .subscribe(canViewBlock => {
+        this.columns = this._columns.filter(column => {
+          return canViewBlock ? true : ![ 'isInactive', 'inactiveReasonCode', 'inactiveDateTime' ].includes(column.prop);
+        });
+        this.cdRef.markForCheck();
       });
-      this.columns = [...filteredColumns];
-      this.cdRef.markForCheck();
-    });
 
     this.onSaveSubscription = this.emailService.onSave$.subscribe(() => this.fetch());
 
@@ -173,15 +155,18 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   getRowClass(): any {
-    return (email: IEmail) => ({ inactive: !!email.isInactive });
+    return (email: IEmail) => email.isInactive ? 'inactive' : null;
   }
 
   onDoubleClick(email: IEmail): void {
     this.onEdit(email.id);
   }
 
-  onSelect(email: IEmail): void {
-    this.selectedEmailId$.next(email.id);
+  onSelect(emails: IEmail[]): void {
+    const id = isEmpty(emails)
+      ? null
+      : emails[0].id;
+    this.selectedEmailId$.next(id);
   }
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {

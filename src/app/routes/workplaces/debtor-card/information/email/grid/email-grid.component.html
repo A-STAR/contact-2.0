@@ -41,15 +41,11 @@
 
 <app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
 
-<app-grid
+<app-simple-grid
   *ngIf="canDisplayGrid"
-  columnTranslationKey="debtor.information.email"
-  [contextMenuOptions]="contextMenuOptions"
-  selectionType="single"
-  [styles]="{height: '230px'}"
   [columns]="columns"
   [rowClass]="getRowClass()"
   [rows]="emails"
-  (onDblClick)="onDoubleClick($event)"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  (dblClick)="onDoubleClick($event)"
+  (select)="onSelect($event)"
+></app-simple-grid>
