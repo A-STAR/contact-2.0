@@ -23,7 +23,6 @@ import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/co
 
 import { DialogFunctions } from '@app/core/dialog';
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
-import { IContextMenuItem } from '@app/shared/components/grid/grid.interface';
 
 @Component({
   selector: 'app-email-grid',
