@@ -23,6 +23,7 @@ import { DateTimeRendererComponent, TickRendererComponent } from '@app/shared/co
 
 import { DialogFunctions } from '@app/core/dialog';
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+import { IContextMenuItem } from '@app/shared/components/grid/grid.interface';
 
 @Component({
   selector: 'app-email-grid',
@@ -82,6 +83,20 @@ export class EmailGridComponent extends DialogFunctions implements OnInit, OnDes
   ];
 
   columns: ISimpleGridColumn<IEmail>[] = [];
+
+  /*
+  contextMenuOptions: IContextMenuItem[] = [
+    {
+      simpleActionsNames: [
+        'copyField',
+        'copyRow'
+      ],
+      translationKey: 'default.grid.localeText',
+      prop: 'email',
+      enabled: of(true)
+    },
+  ];
+  */
 
   private _emails: Array<any> = [];
   private canViewSubscription: Subscription;
