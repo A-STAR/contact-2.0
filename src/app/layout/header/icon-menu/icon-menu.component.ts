@@ -35,7 +35,7 @@ export class IconMenuComponent {
   }
 
   get canShowPbxStatus$(): Observable<boolean> {
-    return this.callService.usePBXStatus$;
+    return this.callService.pbxStatus$.map(Boolean);
   }
 
   openNavSearch(): void {

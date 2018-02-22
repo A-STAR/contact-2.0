@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged, first, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators/catchError';
 
 import { IAppState } from '../state/state.interface';
-import { ICallSettings, IPBXParams, ICall } from './call.interface';
+import { ICallSettings, IPBXParams, ICall, IPBXState } from './call.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { catchError } from 'rxjs/operators/catchError';
+import { WSService } from '@app/core/ws/ws.service';
 
 import { combineLatestAnd } from '@app/core/utils';
 
@@ -34,8 +35,8 @@ export class CallService {
   static CALL_TRANSFER_SUCCESS = 'CALL_TRANSFER_SUCCESS';
   static CALL_TRANSFER_FAILURE = 'CALL_TRANSFER_FAILURE';
 
+  static PBX_STATE_CHANGE = 'PBX_STATE_DATA';
   static PBX_STATUS_CHANGE = 'PBX_STATUS_CHANGE';
-  static PBX_STATUS_CHANGE_SUCCESS = 'PBX_STATUS_CHANGE_SUCCESS';
 
   private isFetching = false;
 
@@ -44,7 +45,12 @@ export class CallService {
     private dataService: DataService,
     private notificationService: NotificationsService,
     private store: Store<IAppState>,
-  ) { }
+    private wsService: WSService,
+  ) {
+    this.wsService.connect<IPBXState>('/wsapi/pbx/events')
+      .flatMap(connection => connection.listen())
+      .subscribe(state => this.updatePBXState(state));
+  }
 
   get settings$(): Observable<ICallSettings> {
     return this.store
@@ -66,21 +72,28 @@ export class CallService {
       .map(params => params && !!params.usePbx);
   }
 
+  get pbxState$(): Observable<IPBXState> {
+    return this.store.select(state => state.calls.pbxState);
+  }
+
+  get pbxStatus$(): Observable<number> {
+    return combineLatestAnd([
+      this.usePBX$,
+      this.settings$.map(settings => settings && !settings.useAgentStatus)
+    ])
+    .flatMap(() => this.pbxState$)
+    .filter(Boolean)
+    .map(state => state.agentStatus);
+  }
+
   get calls$(): Observable<ICall[]> {
     return this.store
       .select(state => state.calls.calls);
   }
 
-  get usePBXStatus$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.usePBX$,
-      this.settings$.map(settings => settings && !!settings.useAgentStatus)
-    ]);
-  }
-
-  get pbxStatus$(): Observable<number> {
-    return this.store
-      .select(state => state.calls.statusCode);
+  get activeCall$(): Observable<ICall> {
+    return this.calls$
+      .map(calls => calls.find(call => call.isStarted && !call.onHold));
   }
 
   findCall(phoneId: number): Observable<ICall> {
@@ -150,6 +163,13 @@ export class CallService {
     this.store.dispatch({
       type: CallService.PBX_STATUS_CHANGE,
       payload: { statusCode }
+    });
+  }
+
+  private updatePBXState(pbxState: IPBXState): void {
+    this.store.dispatch({
+      type: CallService.PBX_STATE_CHANGE,
+      payload: pbxState
     });
   }
 }

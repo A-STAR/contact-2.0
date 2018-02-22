@@ -20,11 +20,24 @@ export interface ICall {
 }
 
 export interface ICallState {
-  statusCode: number;
+  pbxState: IPBXState;
   settings: ICallSettings;
   calls: ICall[];
 }
 
 export interface IPBXParams {
   intPhone: string;
+}
+
+export enum PBXStateEnum {
+  PBX_BLOCK = 'BLOCK',
+  PBX_NOCALL = 'NO_CALL',
+  PBX_CALL = 'CALL',
+  PBX_HOLD = 'HOLD',
+  PBX_DIAL = 'DIAL'
+}
+
+export interface IPBXState {
+  lineStatus: PBXStateEnum;
+  agentStatus: number;
 }

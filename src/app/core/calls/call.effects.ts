@@ -153,10 +153,7 @@ export class CallEffects {
     .mergeMap((action: UnsafeAction) => {
       const { statusCode } = action.payload;
       return this.changeStatus(statusCode)
-        .map(() => ({
-          type: CallService.PBX_STATUS_CHANGE_SUCCESS,
-          payload: action.payload
-        }))
+        .map(() => ([]))
         .catch(error => {
           return [
             this.notificationService
