@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AttributeModule as EntityAttributeModule } from './entity-attribute/attribute.module';
-import { AttributeModule } from './attribute/attribute.module';
 import { ComponentLogModule } from './debt/component-log/component-log.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
 import { ContactPropertyModule } from './contact-property/contact-property.module';
@@ -21,7 +20,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
   imports: [
-    AttributeModule,
     CommonModule,
     ComponentLogModule,
     ContactLogModule,
@@ -41,7 +39,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     VisitPrepareModule,
   ],
   exports: [
-    AttributeModule,
     ComponentLogModule,
     ContactLogModule,
     ContactPropertyModule,
