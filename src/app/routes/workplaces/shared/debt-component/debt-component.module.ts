@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '@app/shared/shared.module';
 
@@ -11,7 +10,6 @@ import { DebtComponentGridComponent } from './grid/debt-component-grid.component
 @NgModule({
   imports: [
     SharedModule,
-    TranslateModule,
   ],
   exports: [
     DebtComponentCardComponent,

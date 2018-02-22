@@ -29,6 +29,11 @@ $ui-bg-color: #ddd;
   }
 }
 
+.form-label {
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
 .c-checkbox,
 .c-radio {
   margin-right: 4px;

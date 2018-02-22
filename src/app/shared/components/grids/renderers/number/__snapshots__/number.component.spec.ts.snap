@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NumberRendererComponent should render number renderer 1`] = `
+<div
+  id="root0"
+  ng-version="5.2.4"
+>
+  1
+</div>
+`;

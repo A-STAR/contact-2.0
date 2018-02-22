@@ -27,7 +27,10 @@ import { ISimpleGridColumn } from './grid.interface';
 
 import { GridsService } from '../grids.service';
 
+import { EmptyOverlayComponent } from '../overlays/empty/empty.component';
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
+
+import { isEmpty } from '@app/core/utils/index';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,11 +44,24 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
   @ViewChild(GridToolbarComponent) toolbar: GridToolbarComponent;
 
   @Input() columns: ISimpleGridColumn<T>[];
+  @Input() idKey = 'id';
   @Input() persistenceKey: string;
   @Input() rows: T[];
   @Input() rowClass: (item: T) => string;
   @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
   @Input() showToolbar = false;
+
+  @Input()
+  set selection(selection: T[]) {
+    if (!isEmpty(selection)) {
+      const ids = selection.map(item => item[this.idKey]);
+      this.gridApi.forEachNodeAfterFilterAndSort(node => {
+        const isSelected = ids.includes(node.data[this.idKey]);
+        node.setSelected(isSelected);
+      });
+      this.cdRef.markForCheck();
+    }
+  }
 
   @Output() select = new EventEmitter<T[]>();
   @Output() dblClick = new EventEmitter<T>();
@@ -71,11 +87,12 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
     enableSorting: true,
     getContextMenuItems: this.getContextMenuItems.bind(this),
     headerHeight: 28,
-    onSelectionChanged: () => this.onSelectionChanged(),
-    onRowDoubleClicked: event => this.onRowDoubleClicked(event),
-    onSortChanged: () => this.saveSettings(),
+    noRowsOverlayComponentFramework: EmptyOverlayComponent,
     onColumnMoved: () => this.saveSettings(),
     onColumnResized: () => this.saveSettings(),
+    onRowDoubleClicked: event => this.onRowDoubleClicked(event),
+    onSelectionChanged: () => this.onSelectionChanged(),
+    onSortChanged: () => this.saveSettings(),
     rowHeight: 28,
     rowSelection: 'multiple',
     showToolPanel: false,

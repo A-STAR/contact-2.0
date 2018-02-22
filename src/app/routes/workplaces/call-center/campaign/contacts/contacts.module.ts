@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../../shared/shared.module';
+import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { ContactsComponent } from './contacts.component';
 
 @NgModule({
   imports: [
     SharedModule,
+    WorkplacesSharedModule,
   ],
   exports: [
     ContactsComponent,
@@ -15,4 +17,4 @@ import { ContactsComponent } from './contacts.component';
     ContactsComponent,
   ],
 })
-export class ContactsModule { }
+export class ContactsModule {}

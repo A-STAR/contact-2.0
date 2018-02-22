@@ -14,22 +14,22 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IDocument } from '../document.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { DocumentService } from '../document.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 
-import { combineLatestOr, combineLatestAnd } from '@app/core/utils';
+import { combineLatestOr, combineLatestAnd, addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-document-grid',
   templateUrl: './document-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentGridComponent implements OnInit, OnDestroy {
   @Input() action: 'edit' | 'download' = 'edit';
@@ -86,16 +86,15 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     },
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IDocument>[] = [
     { prop: 'docName' },
     { prop: 'fileName' },
     { prop: 'docTypeCode', dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE },
     { prop: 'docNumber' },
     { prop: 'fullName' },
     { prop: 'comment' }
-  ];
+  ].map(addGridLabel('widgets.document.grid'));
 
-  private gridSubscription: Subscription;
   private busSubscription: Subscription;
 
   private _dialog = null;
@@ -103,15 +102,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   constructor(
     private documentService: DocumentService,
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private router: Router,
     private userPermissionsService: UserPermissionsService,
   ) {}
 
   ngOnInit(): void {
-    this.gridSubscription = this.gridService.setDictionaryRenderers(this.columns)
-      .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
-
     this.busSubscription = this.documentService
       .getAction(DocumentService.MESSAGE_DOCUMENT_SAVED)
       .subscribe(() => this.fetch());
@@ -120,7 +115,6 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.gridSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
   }
 
@@ -149,8 +143,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSelect(document: IDocument): void {
-    this.selectedDocumentId$.next(document.id);
+  onSelect(documents: IDocument[]): void {
+    const id = isEmpty(documents)
+      ? null
+      : documents[0].id;
+    this.selectedDocumentId$.next(id);
   }
 
   onDownload(): void {
