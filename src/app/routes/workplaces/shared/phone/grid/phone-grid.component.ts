@@ -15,7 +15,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { ICall } from '@app/core/calls/call.interface';
+import { ICall, PBXStateEnum } from '@app/core/calls/call.interface';
 import { IDebt } from '@app/core/debt/debt.interface';
 import { IPhone } from '../phone.interface';
 import { ISMSSchedule } from '../phone.interface';
@@ -115,26 +115,26 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
       align: 'right',
-      enabled: combineLatestAnd([this.callService.canTransferCall$, this.selectedPhone$.map(Boolean)]),
+      enabled: combineLatestAnd([this.callService.canTransferCall$, this.selectedPhoneCall$.map(Boolean)]),
       action: () => this.setDialog('operator')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_RESUME,
       align: 'right',
-      enabled: combineLatestAnd([this.callService.canRetrieveCall$, this.selectedPhone$.map(Boolean)]),
-      action: () => this.onRetrieveCall()
+      enabled: combineLatestAnd([this.callService.canRetrieveCall$, this.selectedPhoneCall$.map(Boolean)]),
+      action: () => this.callService.retrieveCall()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_PAUSE,
       align: 'right',
-      enabled: combineLatestAnd([this.callService.canHoldCall$, this.selectedPhone$.map(Boolean)]),
-      action: () => this.onHoldCall()
+      enabled: combineLatestAnd([this.callService.canHoldCall$, this.selectedPhoneCall$.map(Boolean)]),
+      action: () => this.callService.holdCall()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DROP,
       align: 'right',
-      enabled: combineLatestAnd([this.callService.canDropCall$, this.selectedPhone$.map(Boolean)]),
-      action: () => this.onDropCall()
+      enabled: combineLatestAnd([this.callService.canDropCall$, this.selectedPhoneCall$.map(Boolean)]),
+      action: () => this.callService.dropCall()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_CALL,
@@ -210,15 +210,16 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .getAction(PhoneService.MESSAGE_PHONE_SAVED)
       .subscribe(() => this.fetch());
 
-    this.callSubscription = this.callService.calls$
-      .flatMap(() => this.selectedPhoneCall$.pipe(first()))
-      .map(call => call && !call.isStarted)
-      .flatMap(hasCall => combineLatestAnd([
-        of(hasCall),
+
+    this.callSubscription = this.selectedPhoneCall$
+      .filter(Boolean)
+      .flatMap(() => this.callService.pbxLineStatus$.map(lineStatus => lineStatus === PBXStateEnum.PBX_DIAL))
+      .filter(Boolean)
+      .flatMap(() => combineLatestAnd([
         this.callService.settings$.map(settings => settings && !!settings.previewShowRegContact),
         this.canRegisterContact$
-      ]).pipe(first()))
-      .filter(Boolean)
+      ]))
+      .pipe(first())
       .subscribe(() => this.registerContact());
   }
 
@@ -288,10 +289,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   onPhoneOperatorSelect(operatorId: number): void {
-    this.selectedPhoneCall$
-      .pipe(first())
-      .filter(Boolean)
-      .subscribe(call => this.callService.transferCall(call.id, operatorId));
+    this.callService.transferCall(operatorId);
   }
 
   onDialogClose(): void {
@@ -313,10 +311,10 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   get selectedPhoneCall$(): Observable<ICall> {
-    return this.selectedPhone$.flatMap(phone => phone
-      ? this.callService.findCall(phone.id)
-      : of(null)
-    );
+    return this.selectedPhone$
+      .flatMap(phone => this.callService.activeCall$
+        .map(call => phone && call && call.phoneId === phone.id ? call : null)
+      );
   }
 
   get canView$(): Observable<boolean> {
@@ -402,27 +400,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.selectedPhone$
       .pipe(first())
       .subscribe(phone => this.callService.makeCall(phone.id, this._debtId$.value, this._personId$.value, this.personRole));
-  }
-
-  private onDropCall(): void {
-    this.selectedPhoneCall$
-      .pipe(first())
-      .filter(Boolean)
-      .subscribe(call => this.callService.dropCall(call.phoneId));
-  }
-
-  private onHoldCall(): void {
-    this.selectedPhoneCall$
-      .pipe(first())
-      .filter(Boolean)
-      .subscribe(call => this.callService.holdCall(call.phoneId));
-  }
-
-  private onRetrieveCall(): void {
-    this.selectedPhoneCall$
-      .pipe(first())
-      .filter(Boolean)
-      .subscribe(call => this.callService.retrieveCall(call.phoneId));
   }
 
   private fetch(): void {

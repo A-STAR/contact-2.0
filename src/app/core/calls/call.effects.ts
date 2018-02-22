@@ -1,6 +1,10 @@
+import * as R from 'ramda';
+
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import { defer } from 'rxjs/observable/defer';
+import { of } from 'rxjs/observable/of';
 
 import { ICallSettings, ICall } from './call.interface';
 import { UnsafeAction } from '@app/core/state/state.interface';
@@ -9,8 +13,16 @@ import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
+const savedState = localStorage.getItem(CallService.STORAGE_KEY);
+
 @Injectable()
 export class CallEffects {
+
+  @Effect()
+  init$ = defer(() => of({
+    type: CallService.CALL_INIT,
+    payload: R.tryCatch(JSON.parse, () => ({}))(savedState || undefined)
+  }));
 
   @Effect()
   fetchCallSettings$ = this.actions
@@ -32,7 +44,7 @@ export class CallEffects {
   @Effect()
   makeCall$ = this.actions
     .ofType(CallService.CALL_START)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { phoneId, debtId, personId, personRole } = action.payload;
       return this.call(phoneId, debtId, personId, personRole)
         .map(call => ({
@@ -50,7 +62,7 @@ export class CallEffects {
   @Effect()
   dropCall$ = this.actions
     .ofType(CallService.CALL_DROP)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { debtId, personId, personRole } = action.payload;
       return this.drop(debtId, personId, personRole)
         .map(call => ({
@@ -75,7 +87,7 @@ export class CallEffects {
   @Effect()
   holdCall$ = this.actions
     .ofType(CallService.CALL_HOLD)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { debtId, personId, personRole } = action.payload;
       return this.hold(debtId, personId, personRole)
         .map(call => ({
@@ -100,7 +112,7 @@ export class CallEffects {
   @Effect()
   retrieveCall$ = this.actions
     .ofType(CallService.CALL_RETRIEVE)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { debtId, personId, personRole } = action.payload;
       return this.retrieve(debtId, personId, personRole)
         .map(call => ({
@@ -125,7 +137,7 @@ export class CallEffects {
   @Effect()
   transferCall$ = this.actions
     .ofType(CallService.CALL_TRANSFER)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { userId, debtId, personId, personRole } = action.payload;
       return this.transfer(userId, debtId, personId, personRole)
         .map(call => ({
@@ -150,10 +162,13 @@ export class CallEffects {
   @Effect()
   changeStatus$ = this.actions
     .ofType(CallService.PBX_STATUS_CHANGE)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { statusCode } = action.payload;
       return this.changeStatus(statusCode)
-        .map(() => ([]))
+        .map(() => ([{
+          type: CallService.PBX_STATUS_CHANGE_SUCCESS,
+          payload: action.payload
+        }]))
         .catch(error => {
           return [
             this.notificationService

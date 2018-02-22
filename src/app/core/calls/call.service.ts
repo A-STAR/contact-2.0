@@ -1,22 +1,29 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { distinctUntilChanged, first, tap } from 'rxjs/operators';
+import { throttleTime } from 'rxjs/operators/throttleTime';
 import { catchError } from 'rxjs/operators/catchError';
 
 import { IAppState } from '../state/state.interface';
 import { ICallSettings, IPBXParams, ICall, IPBXState, PBXStateEnum } from './call.interface';
+import { IWSConnection } from '@app/core/ws/ws.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { PersistenceService } from '@app/core/persistence/persistence.service';
 import { WSService } from '@app/core/ws/ws.service';
 
 import { combineLatestAnd } from '@app/core/utils';
 
 @Injectable()
-export class CallService {
+export class CallService implements OnDestroy {
+  static STORAGE_KEY = 'state/calls';
+
+  static CALL_INIT = 'CALL_INIT';
   static CALL_SETTINGS_FETCH = 'CALL_SETTINGS_FETCH';
   static CALL_SETTINGS_FETCH_SUCCESS = 'CALL_SETTINGS_FETCH_SUCCESS';
   static CALL_SETTINGS_FETCH_FAILURE = 'CALL_SETTINGS_FETCH_FAILURE';
@@ -38,8 +45,13 @@ export class CallService {
 
   static PBX_STATE_CHANGE = 'PBX_STATE_DATA';
   static PBX_STATUS_CHANGE = 'PBX_STATUS_CHANGE';
+  static PBX_STATUS_CHANGE_SUCCESS = 'PBX_STATUS_CHANGE_SUCCESS';
 
   private isFetching = false;
+
+  private wsConnection: IWSConnection<IPBXState>;
+
+  private stateSub: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -47,11 +59,24 @@ export class CallService {
     private notificationService: NotificationsService,
     private store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService,
+    private persistenceService: PersistenceService,
     private wsService: WSService,
   ) {
     this.wsService.connect<IPBXState>('/wsapi/pbx/events')
+      .do(connection => this.wsConnection = connection)
       .flatMap(connection => connection.listen())
       .subscribe(state => this.updatePBXState(state));
+
+    this.stateSub = this.store.select(state => state.calls)
+      .pipe(throttleTime(500))
+      .subscribe(state =>
+        this.persistenceService.set(CallService.STORAGE_KEY, state)
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.stateSub.unsubscribe();
+    this.wsConnection.close();
   }
 
   get settings$(): Observable<ICallSettings> {
@@ -88,14 +113,13 @@ export class CallService {
     .map(state => state.agentStatus);
   }
 
-  get calls$(): Observable<ICall[]> {
-    return this.store
-      .select(state => state.calls.calls);
+  get pbxLineStatus$(): Observable<PBXStateEnum> {
+    return this.pbxState$
+      .map(state => state && state.lineStatus);
   }
 
   get activeCall$(): Observable<ICall> {
-    return this.calls$
-      .map(calls => calls.find(call => call.isStarted && !call.onHold));
+    return this.store.select(state => state.calls.activeCall);
   }
 
   get canMakeCall$(): Observable<boolean> {
@@ -105,7 +129,7 @@ export class CallService {
         .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
       this.pbxState$
         .filter(Boolean)
-        .map(({ lineStatus }) => lineStatus && lineStatus === PBXStateEnum.PBX_NOCALL),
+        .map(({ lineStatus }) => lineStatus === PBXStateEnum.PBX_NOCALL),
     ]);
   }
 
@@ -117,7 +141,7 @@ export class CallService {
       this.pbxState$
         .filter(Boolean)
         .map(({ lineStatus }) =>
-          lineStatus && [ PBXStateEnum.PBX_CALL, PBXStateEnum.PBX_HOLD, PBXStateEnum.PBX_DIAL ].indexOf(lineStatus) > -1
+          [ PBXStateEnum.PBX_CALL, PBXStateEnum.PBX_HOLD, PBXStateEnum.PBX_DIAL ].indexOf(lineStatus) > -1
         )
     ]);
   }
@@ -129,7 +153,7 @@ export class CallService {
         .map(settings => settings && !!settings.usePreview && !!settings.useHoldCall),
       this.pbxState$
         .filter(Boolean)
-        .map(({ lineStatus }) => lineStatus && lineStatus === PBXStateEnum.PBX_CALL)
+        .map(({ lineStatus }) => lineStatus === PBXStateEnum.PBX_CALL)
     ]);
   }
 
@@ -140,7 +164,7 @@ export class CallService {
         .map(settings => settings && !!settings.usePreview && !!settings.useRetrieveCall),
       this.pbxState$
         .filter(Boolean)
-        .map(({ lineStatus }) => lineStatus && lineStatus === PBXStateEnum.PBX_HOLD)
+        .map(({ lineStatus }) => lineStatus === PBXStateEnum.PBX_HOLD)
     ]);
   }
 
@@ -151,13 +175,8 @@ export class CallService {
         .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall),
       this.pbxState$
         .filter(Boolean)
-        .map(({ lineStatus }) => lineStatus && [ PBXStateEnum.PBX_CALL, PBXStateEnum.PBX_HOLD ].indexOf(lineStatus) > -1)
+        .map(({ lineStatus }) => [ PBXStateEnum.PBX_CALL, PBXStateEnum.PBX_HOLD ].indexOf(lineStatus) > -1)
     ]);
-  }
-
-  findCall(phoneId: number): Observable<ICall> {
-    return this.calls$
-      .map(calls => calls.find(call => call.phoneId === phoneId));
   }
 
   refreshSettings(): void {
@@ -182,8 +201,8 @@ export class CallService {
     });
   }
 
-  dropCall(phoneId: number): void {
-    this.findCall(phoneId)
+  dropCall(): void {
+    this.activeCall$
       .pipe(first())
       .subscribe(call => this.store.dispatch({
         type: CallService.CALL_DROP,
@@ -191,8 +210,8 @@ export class CallService {
       }));
   }
 
-  holdCall(phoneId: number): void {
-    this.findCall(phoneId)
+  holdCall(): void {
+    this.activeCall$
       .pipe(first())
       .subscribe(call => this.store.dispatch({
         type: CallService.CALL_HOLD,
@@ -200,8 +219,8 @@ export class CallService {
       }));
   }
 
-  retrieveCall(phoneId: number): void {
-    this.findCall(phoneId)
+  retrieveCall(): void {
+    this.activeCall$
       .pipe(first())
       .subscribe(call => this.store.dispatch({
         type: CallService.CALL_RETRIEVE,
@@ -209,8 +228,8 @@ export class CallService {
       }));
   }
 
-  transferCall(phoneId: number, userId: number): void {
-    this.findCall(phoneId)
+  transferCall(userId: number): void {
+    this.activeCall$
       .pipe(first())
       .subscribe(call => this.store.dispatch({
         type: CallService.CALL_TRANSFER,

@@ -15,14 +15,12 @@ export interface ICall {
   debtId: number;
   personId: number;
   personRole: number;
-  onHold?: boolean;
-  isStarted?: boolean;
 }
 
 export interface ICallState {
   pbxState: IPBXState;
   settings: ICallSettings;
-  calls: ICall[];
+  activeCall: ICall;
 }
 
 export interface IPBXParams {
