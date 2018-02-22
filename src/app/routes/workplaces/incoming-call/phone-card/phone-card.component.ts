@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
@@ -15,6 +15,7 @@ interface PhoneCardRouteParams {
 export class PhoneCardComponent {
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
   get phoneId$(): Observable<number> {
@@ -27,5 +28,9 @@ export class PhoneCardComponent {
 
   get routeParams$(): Observable<PhoneCardRouteParams> {
     return this.route.params as Observable<PhoneCardRouteParams>;
+  }
+
+  onClose(): void {
+    this.router.navigate([ '/workplaces/incoming-call' ]);
   }
 }
