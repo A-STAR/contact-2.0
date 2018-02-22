@@ -1,7 +1,7 @@
 <split *ngIf="hasDebt$ | async; else noActiveDebts" direction="horizontal" gutterColor="inherit" [useTransition]="true">
 
   <!-- Main Area -->
-  <split-area size="60" class="minw-500">
+  <split-area size="60">
     <div class="flex vertical">
 
       <!-- Toolbar + Person Form -->
@@ -61,7 +61,7 @@
   </split-area>
 
   <!-- Contact Registration -->
-  <split-area *ngIf="displayContactRegistration$ | async" size="40" class="minw-200">
+  <split-area *ngIf="displayContactRegistration$ | async" size="40">
     <app-contact-registration></app-contact-registration>
   </split-area>
 </split>
