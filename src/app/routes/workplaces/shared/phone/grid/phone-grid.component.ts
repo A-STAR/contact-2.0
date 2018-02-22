@@ -115,25 +115,25 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     {
       type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
       align: 'right',
-      enabled: this.canTransferCall$,
+      enabled: combineLatestAnd([this.callService.canTransferCall$, this.selectedPhone$.map(Boolean)]),
       action: () => this.setDialog('operator')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_RESUME,
       align: 'right',
-      enabled: this.canRetrieveCall$,
+      enabled: combineLatestAnd([this.callService.canRetrieveCall$, this.selectedPhone$.map(Boolean)]),
       action: () => this.onRetrieveCall()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_PAUSE,
       align: 'right',
-      enabled: this.canHoldCall$,
+      enabled: combineLatestAnd([this.callService.canHoldCall$, this.selectedPhone$.map(Boolean)]),
       action: () => this.onHoldCall()
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DROP,
       align: 'right',
-      enabled: this.canDropCall$,
+      enabled: combineLatestAnd([this.callService.canDropCall$, this.selectedPhone$.map(Boolean)]),
       action: () => this.onDropCall()
     },
     {
@@ -374,50 +374,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get canMakeCall$(): Observable<boolean> {
     return combineLatestAnd([
-      this.userPermissionsService.has('PBX_PREVIEW'),
-      this.callService.settings$
-        .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
-      this.selectedPhone$
-        .flatMap(phone => combineLatestAnd([
-          of(phone && !phone.isInactive),
-          this.selectedPhoneCall$.map(call => !call)
-        ]))
-    ]);
-  }
-
-  get canDropCall$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('PBX_PREVIEW'),
-      this.callService.settings$
-        .map(settings => settings && !!settings.usePreview && !!settings.useDropCall),
-      this.selectedPhoneCall$.map(Boolean)
-    ]);
-  }
-
-  get canHoldCall$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('PBX_PREVIEW'),
-      this.callService.settings$
-        .map(settings => settings && !!settings.usePreview && !!settings.useHoldCall),
-      this.selectedPhoneCall$.map(call => call && !call.onHold)
-    ]);
-  }
-
-  get canRetrieveCall$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('PBX_PREVIEW'),
-      this.callService.settings$
-        .map(settings => settings && !!settings.usePreview && !!settings.useRetrieveCall),
-      this.selectedPhoneCall$.map(call => call && call.onHold)
-    ]);
-  }
-
-  get canTransferCall$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('PBX_PREVIEW'),
-      this.callService.settings$
-        .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall),
-      this.selectedPhoneCall$.map(Boolean)
+      this.callService.canMakeCall$,
+      this.selectedPhone$.map(phone => phone && !phone.isInactive),
     ]);
   }
 

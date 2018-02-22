@@ -5,11 +5,12 @@ import { distinctUntilChanged, first, tap } from 'rxjs/operators';
 import { catchError } from 'rxjs/operators/catchError';
 
 import { IAppState } from '../state/state.interface';
-import { ICallSettings, IPBXParams, ICall, IPBXState } from './call.interface';
+import { ICallSettings, IPBXParams, ICall, IPBXState, PBXStateEnum } from './call.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { WSService } from '@app/core/ws/ws.service';
 
 import { combineLatestAnd } from '@app/core/utils';
@@ -45,6 +46,7 @@ export class CallService {
     private dataService: DataService,
     private notificationService: NotificationsService,
     private store: Store<IAppState>,
+    private userPermissionsService: UserPermissionsService,
     private wsService: WSService,
   ) {
     this.wsService.connect<IPBXState>('/wsapi/pbx/events')
@@ -60,7 +62,7 @@ export class CallService {
           if (settings) {
             this.isFetching = false;
           } else if (!this.isFetching) {
-            this.refresh();
+            this.refreshSettings();
           }
         }),
         distinctUntilChanged(),
@@ -96,12 +98,69 @@ export class CallService {
       .map(calls => calls.find(call => call.isStarted && !call.onHold));
   }
 
+  get canMakeCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('PBX_PREVIEW'),
+      this.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
+      this.pbxState$
+        .filter(Boolean)
+        .map(({ lineStatus }) => lineStatus && lineStatus === PBXStateEnum.PBX_NOCALL),
+    ]);
+  }
+
+  get canDropCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('PBX_PREVIEW'),
+      this.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useDropCall),
+      this.pbxState$
+        .filter(Boolean)
+        .map(({ lineStatus }) =>
+          lineStatus && [ PBXStateEnum.PBX_CALL, PBXStateEnum.PBX_HOLD, PBXStateEnum.PBX_DIAL ].indexOf(lineStatus) > -1
+        )
+    ]);
+  }
+
+  get canHoldCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('PBX_PREVIEW'),
+      this.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useHoldCall),
+      this.pbxState$
+        .filter(Boolean)
+        .map(({ lineStatus }) => lineStatus && lineStatus === PBXStateEnum.PBX_CALL)
+    ]);
+  }
+
+  get canRetrieveCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('PBX_PREVIEW'),
+      this.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useRetrieveCall),
+      this.pbxState$
+        .filter(Boolean)
+        .map(({ lineStatus }) => lineStatus && lineStatus === PBXStateEnum.PBX_HOLD)
+    ]);
+  }
+
+  get canTransferCall$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.has('PBX_PREVIEW'),
+      this.settings$
+        .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall),
+      this.pbxState$
+        .filter(Boolean)
+        .map(({ lineStatus }) => lineStatus && [ PBXStateEnum.PBX_CALL, PBXStateEnum.PBX_HOLD ].indexOf(lineStatus) > -1)
+    ]);
+  }
+
   findCall(phoneId: number): Observable<ICall> {
     return this.calls$
       .map(calls => calls.find(call => call.phoneId === phoneId));
   }
 
-  refresh(): void {
+  refreshSettings(): void {
     this.isFetching = true;
     this.store.dispatch({
       type: CallService.CALL_SETTINGS_FETCH,
