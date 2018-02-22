@@ -43,16 +43,13 @@
     </ng-container>
 
     <!-- Checkbox -->
-    <span *ngIf="isCheckbox(item)" class="checkbox mt0 mb0">
-      <label>
-        <input
-          type="checkbox"
-          [checked]="item.state | async"
-          [disabled]="item.disabled | async"
-          (change)="onClick(item)"
-        >
-        {{ item.label | translate }}
-      </label>
+    <span *ngIf="isCheckbox(item)">
+      <app-checkbox
+        [disabled]="item.disabled | async"
+        [label]="item.label"
+        [ngModel]="item.state | async"
+        (change)="onClick(item)"
+      ></app-checkbox>
     </span>
   </div>
 </div>
