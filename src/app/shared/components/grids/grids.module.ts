@@ -8,6 +8,7 @@ import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 import { MomentModule } from '@app/shared/pipes/moment/moment.module';
 import { SelectModule } from '@app/shared/components/form/select/select.module';
+import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
 
 import { GridsService } from './grids.service';
 
@@ -47,6 +48,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     FormsModule,
     MomentModule,
     SelectModule,
+    Toolbar2Module,
     TranslateModule,
   ],
   exports: [

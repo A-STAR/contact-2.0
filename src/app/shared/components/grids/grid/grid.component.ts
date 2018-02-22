@@ -22,8 +22,9 @@ import {
   RowDoubleClickedEvent,
 } from 'ag-grid';
 
-import { IGridSelectionType } from '@app/shared/components/grids/grids.interface';
+import { IGridSelectionType } from '../grids.interface';
 import { ISimpleGridColumn } from './grid.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { GridsService } from '../grids.service';
 
@@ -41,7 +42,7 @@ import { isEmpty } from '@app/core/utils/index';
   templateUrl: './grid.component.html'
 })
 export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
-  @ViewChild(GridToolbarComponent) toolbar: GridToolbarComponent;
+  @ViewChild(GridToolbarComponent) gridToolbar: GridToolbarComponent;
 
   @Input() columns: ISimpleGridColumn<T>[];
   @Input() idKey = 'id';
@@ -50,6 +51,7 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
   @Input() rowClass: (item: T) => string;
   @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
   @Input() showToolbar = false;
+  @Input() toolbar: IToolbarItem[];
 
   @Input()
   set selection(selection: T[]) {
@@ -155,8 +157,8 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateToolbar(): void {
-    if (this.toolbar) {
-      this.toolbar.update();
+    if (this.gridToolbar) {
+      this.gridToolbar.update();
     }
   }
 
