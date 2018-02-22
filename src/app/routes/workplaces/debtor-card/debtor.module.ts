@@ -5,11 +5,12 @@ import { ContactLogTabModule } from './contact-log-tab/contact-log-tab.module';
 import { GridModule } from '../../../shared/components/grid/grid.module';
 import { SharedModule } from '../../../shared/shared.module';
 
+import { ContactPersonsModule } from './contact-persons/contact-persons.module';
 import { DebtModule } from './debt/debt.module';
+import { DebtorActionLogModule } from './action-log/action-log.module';
 import { DebtorAddressModule } from './address/address.module';
 import { DebtorAttributesModule } from './attributes/attributes.module';
 import { DebtorAttributesVersionsModule } from './versions/debtor-attributes-versions.module';
-import { ContactPersonsModule } from './contact-persons/contact-persons.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
 import { DebtorDocumentModule } from './document/document.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
@@ -264,6 +265,7 @@ const routes: Routes = [
   imports: [
     ContactLogTabModule,
     DebtModule,
+    DebtorActionLogModule,
     DebtorAddressModule,
     DebtorAttributesModule,
     DebtorAttributesVersionsModule,

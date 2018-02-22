@@ -4,8 +4,5 @@
   [fullHeight]="true"
   [rows]="rows"
   [rowCount]="rowCount"
-  (onPage)="onRequest()"
-  (onPageSize)="onRequest()"
-  (onSort)="onRequest()"
-  (onFilter)="onRequest()"
+  (request)="onRequest()"
 ></app-action-grid>
