@@ -13,17 +13,17 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Validators } from '@angular/forms';
 
-import { IAttribute } from '@app/shared/gui-objects/widgets/contact-property/tree/edit/contact-property-tree-edit.interface';
+import { IAttribute } from './contact-property-tree-edit.interface';
 import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
 import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
-import { IContactTreeAttribute } from '@app/shared/gui-objects/widgets/contact-property/contact-property.interface';
+import { IContactTreeAttribute } from '../../contact-properties.interface';
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 import { IUserAttributeType } from '@app/core/user/attribute-types/user-attribute-types.interface';
 
-import { ContactPropertyService } from '@app/shared/gui-objects/widgets/contact-property/contact-property.service';
+import { ContactPropertyService } from '../../contact-properties.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { UserAttributeTypesService } from '@app/core/user/attribute-types/user-attribute-types.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
