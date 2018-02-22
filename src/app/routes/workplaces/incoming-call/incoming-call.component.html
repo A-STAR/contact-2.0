@@ -1,6 +1,6 @@
 <split direction="horizontal" gutterColor="inherit" [useTransition]="true">
   <!-- Main Area -->
-  <split-area size="60" class="minw-500">
+  <split-area size="60">
     <!-- TODO:(i.lobanov): to d.maltsev - remove after rework -->
     <div class="row mb-lg" style="height: 450px">
       <div class="col-md-2">
@@ -23,7 +23,7 @@
   </split-area>
 
   <!-- Contact Registration Area -->
-  <split-area *ngIf="displayContactRegistration$ | async" size="40" class="minw-200">
+  <split-area *ngIf="displayContactRegistration$ | async" size="40">
     <app-contact-registration></app-contact-registration>
   </split-area>
 </split>

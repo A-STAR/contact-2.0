@@ -1678,6 +1678,7 @@
       },
       "grid": {
         "code": "Code",
+        "name": "Name",
         "names": "Name",
         "value": "Value",
         "userFullName": "Operator",
