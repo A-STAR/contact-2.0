@@ -374,6 +374,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     return combineLatestAnd([
       this.callService.canMakeCall$,
       this.selectedPhone$.map(phone => phone && !phone.isInactive),
+      this.selectedPhoneCall$.map(call => !call)
     ]);
   }
 
