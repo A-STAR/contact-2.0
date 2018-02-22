@@ -6,19 +6,19 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild,
 } from '@angular/core';
 
-import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
 import { IObject } from '../../contractor-objects.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { ContractorObjectsService } from '../../contractor-objects.service';
 
-import { GridComponent } from '../../../../../components/grid/grid.component';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-contractor-objects-grid-add',
   templateUrl: './contractor-objects-grid-add.component.html',
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractorObjectsGridAddComponent implements OnInit {
@@ -28,14 +28,13 @@ export class ContractorObjectsGridAddComponent implements OnInit {
   @Output() submit = new EventEmitter<number[]>();
   @Output() cancel = new EventEmitter<void>();
 
-  @ViewChild(GridComponent) grid: GridComponent;
-
-  columns: IGridColumn[] = [
+  columns: Array<ISimpleGridColumn<IObject>>[] = [
     { prop: 'id' },
     { prop: 'name' },
-  ];
+  ].map(addGridLabel('widgets.contractorObject.grid'));
 
   rows: IObject[] = [];
+  private selection: IObject[];
 
   private _hasSelection = false;
 
@@ -55,13 +54,14 @@ export class ContractorObjectsGridAddComponent implements OnInit {
     return this._hasSelection;
   }
 
-  onSelect(): void {
+  onSelect(objects: IObject[]): void {
     this._hasSelection = true;
+    this.selection = objects;
     this.cdRef.markForCheck();
   }
 
   onSubmit(): void {
-    const ids = this.grid.selected.map(item => item.id);
+    const ids = this.selection.map(item => item.id);
     this.submit.emit(ids);
   }
 

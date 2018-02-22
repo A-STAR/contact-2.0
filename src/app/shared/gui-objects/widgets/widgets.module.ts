@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { AttributeModule as EntityAttributeModule } from './entity-attribute/attribute.module';
 import { ComponentLogModule } from './debt/component-log/component-log.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
-import { ContractorObjectModule } from './contractor-object/object.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
 import { EntityGroupModule } from './entity-group/entity-group.module';
@@ -22,7 +21,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     CommonModule,
     ComponentLogModule,
     ContactLogModule,
-    ContractorObjectModule,
     DebtResponsibleModule,
     DebtOpenIncomingCallModule,
     EntityAttributeModule,
@@ -39,7 +37,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
   exports: [
     ComponentLogModule,
     ContactLogModule,
-    ContractorObjectModule,
     DebtOpenIncomingCallModule,
     DebtResponsibleModule,
     EntityAttributeModule,
