@@ -10,18 +10,18 @@ import {
 } from '@angular/core';
 
 import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
-import { IObject } from '../../object.interface';
+import { IObject } from '../../contractor-objects.interface';
 
-import { ObjectService } from '../../object.service';
+import { ContractorObjectsService } from '../../contractor-objects.service';
 
 import { GridComponent } from '../../../../../components/grid/grid.component';
 
 @Component({
-  selector: 'app-object-grid-add',
-  templateUrl: './object-grid-add.component.html',
+  selector: 'app-contractor-objects-grid-add',
+  templateUrl: './contractor-objects-grid-add.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ObjectGridEditComponent implements OnInit {
+export class ContractorObjectsGridAddComponent implements OnInit {
   @Input() contractorId: number;
   @Input() typeCode: number;
 
@@ -41,11 +41,11 @@ export class ObjectGridEditComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private objectService: ObjectService,
+    private contractorObjectsService: ContractorObjectsService,
   ) {}
 
   ngOnInit(): void {
-    this.objectService.fetchNotAdded(this.contractorId, this.typeCode).subscribe(objects => {
+    this.contractorObjectsService.fetchNotAdded(this.contractorId, this.typeCode).subscribe(objects => {
       this.rows = objects;
       this.cdRef.markForCheck();
     });

@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
-  selector: 'app-contractor-attributes',
+  selector: 'app-contractor-objects',
   templateUrl: './contractor-objects.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

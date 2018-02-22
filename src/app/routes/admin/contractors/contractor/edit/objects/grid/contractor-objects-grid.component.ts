@@ -2,26 +2,26 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IObject } from '../object.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IObject } from '../contractor-objects.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ObjectService } from '../object.service';
+import { ContractorObjectsService } from '../contractor-objects.service';
 import { NotificationsService } from 'app/core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { GridComponent } from 'app/shared/components/grid/grid.component';
 
-import { DialogFunctions } from '../../../../../core/dialog';
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
-  selector: 'app-contractor-object-grid',
-  templateUrl: './object-grid.component.html',
+  selector: 'app-contractor-objects-grid',
+  templateUrl: './contractor-objects-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class ContractorObjectsGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   private dictionarySubscription: Subscription;
   private viewPermissionSubscription: Subscription;
 
@@ -66,7 +66,7 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private objectService: ObjectService,
+    private objectService: ContractorObjectsService,
     private notificationsService: NotificationsService,
     private userDictionariesService: UserDictionariesService,
   ) {

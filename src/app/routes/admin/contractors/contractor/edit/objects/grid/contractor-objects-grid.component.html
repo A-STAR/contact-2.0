@@ -1,10 +1,10 @@
-<app-object-grid-add
+<app-contractor-objects-grid-add
   *ngIf="isDialog('add')"
   [contractorId]="contractorId"
   [typeCode]="selectedTypeCode"
   (submit)="onAddDialogSubmit($event)"
   (cancel)="onCloseDialog()"
-></app-object-grid-add>
+></app-contractor-objects-grid-add>
 
 <app-dialog-action
   *ngIf="isDialog('delete')"
