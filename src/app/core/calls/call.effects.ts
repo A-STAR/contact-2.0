@@ -5,6 +5,7 @@ import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { defer } from 'rxjs/observable/defer';
 import { of } from 'rxjs/observable/of';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { ICallSettings, ICall, PBXStateEnum } from './call.interface';
 import { UnsafeAction } from '@app/core/state/state.interface';
@@ -166,10 +167,12 @@ export class CallEffects {
     .ofType(CallService.PBX_LOGIN)
     .map((action: UnsafeAction) => action.payload)
     .filter(userParams => userParams.usePbx)
-    .flatMap(() => this.callService.settings$)
-    .filter(Boolean)
+    .flatMap(() => combineLatest(
+      this.callService.settings$.filter(Boolean),
+      this.callService.intPhone$
+    ))
     .pipe(first())
-    .filter(settings => !settings.useIntPhone)
+    .filter(([ settings, intPhone ]) => !settings.useIntPhone || intPhone !== null)
     .switchMap(() => {
       return this.login()
         .map(() => ({

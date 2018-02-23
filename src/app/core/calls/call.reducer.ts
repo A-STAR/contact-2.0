@@ -4,6 +4,7 @@ import { UnsafeAction } from '../../core/state/state.interface';
 import { CallService } from './call.service';
 
 export const defaultState: ICallState = {
+  intPhone: null,
   pbxState: null,
   settings: null,
   activeCall: null

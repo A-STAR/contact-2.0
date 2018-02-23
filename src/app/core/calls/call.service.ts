@@ -126,6 +126,10 @@ export class CallService implements OnDestroy {
     return this.store.select(state => state.calls.activeCall);
   }
 
+  get intPhone$(): Observable<string> {
+    return this.store.select(state => state.calls.intPhone);
+  }
+
   get canMakeCall$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.has('PBX_PREVIEW'),
