@@ -4,11 +4,13 @@ import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { first } from 'rxjs/operators';
 
 import { IUserParams } from '@app/core/auth/auth.interface';
 
 import { AuthService } from './auth.service';
 import { DataService } from '../data/data.service';
+import { CallService } from '@app/core/calls/call.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
@@ -18,21 +20,37 @@ export class AuthEffects {
     .ofType(AuthService.AUTH_LOGIN)
     .switchMap((action: UnsafeAction) => {
       const { login, password } = action.payload;
-      return this.login(login, password)
-        .map((token: string) => ({
-          type: AuthService.AUTH_CREATE_SESSION,
-          payload: { token }
-        }))
-        .catch(error => {
-          return [
-            {
-              type: AuthService.AUTH_DESTROY_SESSION,
-              payload: { redirectToLogin: false }
-            },
-            this.notificationService.error('auth.errors.login').response(error).action(),
-          ];
-        });
+      return this.login(login, password);
+    })
+    .switchMap(token => [
+      {
+        type: AuthService.AUTH_CREATE_SESSION,
+        payload: { token }
+      },
+      {
+        type: AuthService.AUTH_LOGIN_SUCCESS
+      }
+    ])
+    .catch(error => {
+      return [
+        {
+          type: AuthService.AUTH_DESTROY_SESSION,
+          payload: { redirectToLogin: false }
+        },
+        this.notificationService.error('auth.errors.login').response(error).action(),
+      ];
     });
+
+  @Effect()
+  loginSuccess$ = this.actions
+    .ofType(AuthService.AUTH_LOGIN_SUCCESS)
+    .flatMap(() => this.authService.userParams$)
+    .filter(Boolean)
+    .pipe(first())
+    .switchMap(userParams => [{
+      type: CallService.PBX_LOGIN,
+      payload: userParams
+    }]);
 
   @Effect()
   refresh$ = this.actions

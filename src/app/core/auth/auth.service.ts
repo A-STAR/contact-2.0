@@ -24,6 +24,7 @@ export class AuthService implements CanActivate {
   static JWT_TIMER_INTERVAL       = 10e3;
 
   static AUTH_LOGIN           = 'AUTH_LOGIN';
+  static AUTH_LOGIN_SUCCESS   = 'AUTH_LOGIN_SUCCESS';
   static AUTH_REFRESH         = 'AUTH_REFRESH';
   static AUTH_LOGOUT          = 'AUTH_LOGOUT';
   static AUTH_CREATE_SESSION  = 'AUTH_CREATE_SESSION';

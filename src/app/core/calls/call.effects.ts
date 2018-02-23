@@ -13,6 +13,8 @@ import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
+import { first } from 'rxjs/operators';
+
 const savedState = localStorage.getItem(CallService.STORAGE_KEY);
 
 @Injectable()
@@ -160,6 +162,31 @@ export class CallEffects {
     });
 
   @Effect()
+  login$ = this.actions
+    .ofType(CallService.PBX_LOGIN)
+    .map((action: UnsafeAction) => action.payload)
+    .filter(userParams => userParams.usePbx)
+    .flatMap(() => this.callService.settings$)
+    .filter(Boolean)
+    .pipe(first())
+    .filter(settings => !settings.useIntPhone)
+    .switchMap(() => {
+      return this.login()
+        .map(() => ({
+          type: CallService.PBX_LOGIN_SUCCESS,
+        }))
+        .catch(error => {
+          return [
+            this.notificationService
+              .createError()
+              .entity('entities.calls.gen.plural')
+              .response(error)
+              .action()
+          ];
+        });
+    });
+
+  @Effect()
   changeStatus$ = this.actions
     .ofType(CallService.PBX_STATUS_CHANGE)
     .switchMap((action: UnsafeAction) => {
@@ -200,6 +227,10 @@ export class CallEffects {
     return this.dataService.read('/pbx/settings')
       // TODO (i.kibisov): remove mock
       .map(settings => ({ ...settings, useAgentStatus: 1 }));
+  }
+
+  private login(): Observable<void> {
+    return this.dataService.get('/pbx/call/make');
   }
 
   private call(phoneId: number, debtId: number, personId: number, personRole: number): Observable<ICall> {
