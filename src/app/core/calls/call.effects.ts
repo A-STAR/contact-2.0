@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { defer } from 'rxjs/observable/defer';
 import { of } from 'rxjs/observable/of';
 
-import { ICallSettings, ICall } from './call.interface';
+import { ICallSettings, ICall, PBXStateEnum } from './call.interface';
 import { UnsafeAction } from '@app/core/state/state.interface';
 
 import { CallService } from './call.service';
@@ -180,8 +180,18 @@ export class CallEffects {
         });
     });
 
+  @Effect()
+  stateChange$ = this.actions
+    .ofType(CallService.PBX_STATE_CHANGE)
+    .map((action: UnsafeAction) => action.payload)
+    .filter(Boolean)
+    .withLatestFrom(this.callService.activeCall$)
+    .filter(([ pbxState, call ]) => call && pbxState.lineStatus === PBXStateEnum.PBX_NOCALL)
+    .map(() => ({ type: CallService.CALL_DROP_SUCCESS }));
+
   constructor(
     private actions: Actions,
+    private callService: CallService,
     private dataService: DataService,
     private notificationService: NotificationsService
   ) {}
