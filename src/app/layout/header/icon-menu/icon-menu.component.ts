@@ -34,7 +34,7 @@ export class IconMenuComponent {
     return this.notificationsService.count;
   }
 
-  get canShowPbxStatus$(): Observable<boolean> {
+  get showPbxStatus$(): Observable<boolean> {
     return this.callService.pbxStatus$.map(Boolean);
   }
 

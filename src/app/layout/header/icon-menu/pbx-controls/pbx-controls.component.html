@@ -1,26 +1,21 @@
 <ul class="flex">
-  <li class="flex-item">
-    <span class="menu-item">
+  <li class="flex-item" *ngIf="showHoldCall$ | async">
+    <span class="menu-item" [class.disabled]="!(canHoldCall$ | async)">
       <i class="icon co-pause"></i>
     </span>
   </li>
-  <li class="flex-item">
-    <span class="menu-item">
+  <li class="flex-item" *ngIf="showRetrieveCall$ | async">
+    <span class="menu-item" [class.disabled]="!(canRetrieveCall$ | async)">
       <i class="icon co-call-unpause"></i>
     </span>
   </li>
-  <li class="flex-item">
-    <span class="menu-item">
+  <li class="flex-item" *ngIf="showTransferCall$ | async">
+    <span class="menu-item" [class.disabled]="!(canTransferCall$ | async)">
       <i class="icon co-call-transfer"></i>
     </span>
   </li>
-  <li class="flex-item">
-    <span class="menu-item">
-      <i class="icon co-call-campaigns"></i>
-    </span>
-  </li>
-  <li class="flex-item">
-    <span class="menu-item">
+  <li class="flex-item" *ngIf="showDropCall$ | async">
+    <span class="menu-item" [class.disabled]="!(canDropCall$ | async)">
       <i class="icon co-call-cancel"></i>
     </span>
   </li>

@@ -136,6 +136,7 @@ export class CallService implements OnDestroy {
   get canDropCall$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.has('PBX_PREVIEW'),
+      this.activeCall$.map(Boolean),
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useDropCall),
       this.pbxState$
@@ -149,6 +150,7 @@ export class CallService implements OnDestroy {
   get canHoldCall$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.has('PBX_PREVIEW'),
+      this.activeCall$.map(Boolean),
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useHoldCall),
       this.pbxState$
@@ -160,6 +162,7 @@ export class CallService implements OnDestroy {
   get canRetrieveCall$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.has('PBX_PREVIEW'),
+      this.activeCall$.map(Boolean),
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useRetrieveCall),
       this.pbxState$
@@ -171,6 +174,7 @@ export class CallService implements OnDestroy {
   get canTransferCall$(): Observable<boolean> {
     return combineLatestAnd([
       this.userPermissionsService.has('PBX_PREVIEW'),
+      this.activeCall$.map(Boolean),
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall),
       this.pbxState$

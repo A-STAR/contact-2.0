@@ -3,7 +3,7 @@
     <app-pbx-controls></app-pbx-controls>
   </li>
 
-  <li class="flex-item" *ngIf="canShowPbxStatus$ | async">
+  <li class="flex-item" *ngIf="showPbxStatus$ | async">
     <span class="menu-item">
       <app-pbx-status-dropdown></app-pbx-status-dropdown>
     </span>
