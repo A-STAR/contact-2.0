@@ -55,8 +55,8 @@ export class AuthService implements CanActivate {
 
   get currentUser$(): Observable<IUser> {
     return this.token$
-      .map(token => this.jwtHelper.decodeToken(token))
-      .map(tokenInfo => ({ userId: tokenInfo.userId }));
+      .map(token => token && this.jwtHelper.decodeToken(token))
+      .map(tokenInfo => tokenInfo && { userId: tokenInfo.userId });
   }
 
   get userParams$(): Observable<IUserParams> {

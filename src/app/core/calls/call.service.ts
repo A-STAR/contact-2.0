@@ -2,9 +2,10 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { distinctUntilChanged, first, tap } from 'rxjs/operators';
+import { distinctUntilChanged, first, tap, map } from 'rxjs/operators';
 import { throttleTime } from 'rxjs/operators/throttleTime';
 import { catchError } from 'rxjs/operators/catchError';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '../state/state.interface';
 import { ICallSettings, IPBXParams, ICall, IPBXState, PBXStateEnum } from './call.interface';
@@ -84,18 +85,21 @@ export class CallService implements OnDestroy {
   }
 
   get settings$(): Observable<ICallSettings> {
-    return this.store
-      .select(state => state.calls.settings)
-      .pipe(
-        tap(settings => {
-          if (settings) {
-            this.isFetching = false;
-          } else if (!this.isFetching) {
-            this.refreshSettings();
-          }
-        }),
-        distinctUntilChanged(),
-      );
+    return combineLatest(
+      this.authService.currentUser$.map(user => user && user.userId),
+      this.store.select(state => state.calls.settings)
+    )
+    .pipe(
+      tap(([userId, settings]) => {
+        if (settings) {
+          this.isFetching = false;
+        } else if (!this.isFetching && userId) {
+          this.refreshSettings();
+        }
+      }),
+      map(([userId, settings]) => settings),
+      distinctUntilChanged()
+    );
   }
 
   get usePBX$(): Observable<boolean> {
