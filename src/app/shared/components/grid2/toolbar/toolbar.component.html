@@ -14,12 +14,10 @@
         <app-select
           [active]="action.activeValue"
           [autoAlign]="true"
-          [controlDisabled]="!!action.disabled"
+          [isDisabled]="!!action.disabled"
           [options]="action.value"
-          [readonly]="true"
-          [nullable]="false"
           [styles]="action.styles"
-          (onSelect)="onSelect(action, $event)"
+          (select)="onSelect(action, $event)"
         >
         </app-select>
       </ng-container>

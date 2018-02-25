@@ -7,7 +7,6 @@
     <app-select-wrapper
       formControlName="debtReasonCode"
       [dictCode]="debtReasonDictCode"
-      [nullable]="!(isDebtReasonCodeRequired$ | async)"
       [required]="isDebtReasonCodeRequired$ | async"
     ></app-select-wrapper>
   </label>

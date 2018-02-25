@@ -7,7 +7,14 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  NG_VALIDATORS,
+  Validator,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { Renderer2 } from '@angular/core';
 
 import { IMultiLanguageOption } from './multi-language.interface';
@@ -69,7 +76,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
     this.cdRef.markForCheck();
   }
 
-  validate(control: AbstractControl): {[key: string]: any} {
+  validate(control: AbstractControl): ValidationErrors {
     return this.controlRequired
       ? multilanguageRequired(this.langOptions)(control)
       : null;

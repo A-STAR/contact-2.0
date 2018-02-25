@@ -13,9 +13,6 @@ export interface ILabeledValue {
   value: any;
   label?: string;
   selected?: boolean;
-  removed?: boolean;
-  canRemove?: boolean;
-  context?: any;
 }
 
 export interface INamedValue {

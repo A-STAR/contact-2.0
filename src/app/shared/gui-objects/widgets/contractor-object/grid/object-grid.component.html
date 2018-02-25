@@ -20,9 +20,8 @@
 <div class="panel m0 p ba">
   <app-select
     [ngModel]="selectedTypeCode"
-    [nullable]="false"
     [options]="typeCodeOptions"
-    (onSelect)="onSelectType($event)"
+    (select)="onSelectType($event)"
   ></app-select>
 </div>
 
@@ -34,5 +33,5 @@
   [columns]="columns"
   [rows]="rows"
   [styles]="{ height: '600px' }"
-  (onSelect)="onSelect($event)"
+  (select)="onSelect($event)"
 ></app-grid>

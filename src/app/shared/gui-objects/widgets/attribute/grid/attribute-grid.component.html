@@ -33,9 +33,8 @@
         <span>{{ 'widgets.attribute.treeType' | translate }}</span>
         <app-select
           [ngModel]="treeType"
-          [nullable]="false"
           [options]="treeTypeOptions"
-          (onSelect)="onTreeTypeChange($event)">
+          (select)="onTreeTypeChange($event)">
         </app-select>
       </label>
     </div>
@@ -45,9 +44,8 @@
         <app-select
           [disabled]="isTreeSubtypeDisabled"
           [ngModel]="treeSubtype"
-          [nullable]="false"
           [options]="treeSubtypeOptions"
-          (onSelect)="onTreeSubtypeChange($event)">
+          (select)="onTreeSubtypeChange($event)">
         </app-select>
       </label>
     </div>

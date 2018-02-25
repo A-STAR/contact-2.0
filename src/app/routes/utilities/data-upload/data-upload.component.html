@@ -44,8 +44,7 @@
         <app-select
           *ngIf="isCurrencySelected"
           [options]="currencies"
-          [disabled]="hasFile"
-          [nullable]="false"
+          [isDisabled]="hasFile"
           [ngModel]="currency"
           (ngModelChange)="onCurrencyChange($event)"
         ></app-select>
@@ -54,9 +53,8 @@
         <app-select
           *ngIf="hasAccess"
           [options]="uploaders"
-          [disabled]="hasFile"
+          [isDisabled]="hasFile"
           [ngModel]="format"
-          [nullable]="false"
           (ngModelChange)="onFormatChange($event)"
         ></app-select>
       </div>

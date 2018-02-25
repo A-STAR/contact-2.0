@@ -15,7 +15,6 @@ import {
   IDynamicFormConfig,
   IDynamicFormControl
 } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { SelectionActionTypeEnum } from '@app/shared/components/form/select/select.interface';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
@@ -98,9 +97,6 @@ export class TermEditComponent implements OnInit {
         disabled: this.disableParentSelection || disabled,
         type: 'select',
         options: this.terms.map(toLabeledValues),
-        optionsActions: [
-          { text: 'terms.edit.select.title', type: SelectionActionTypeEnum.SORT }
-        ],
       },
       {
         controlName: 'isClosed',

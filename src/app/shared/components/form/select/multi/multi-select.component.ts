@@ -24,9 +24,7 @@ type IMultiSelectValue = Array<number|string>;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MultiSelectComponent implements ControlValueAccessor {
-  private _list: MultiListComponent<IOption>;
 
-  @Input() nullable = false;
   @Input() options: IOption[] = [];
 
   @Input()
@@ -42,6 +40,7 @@ export class MultiSelectComponent implements ControlValueAccessor {
     this.cdRef.detectChanges();
   }
 
+  private _list: MultiListComponent<IOption>;
   private _isDisabled = false;
   private _selection: IMultiSelectValue;
 
