@@ -89,12 +89,12 @@
   <ng-container *ngSwitchCase="'select'">
     <app-select
       [formControlName]="control.controlName"
-      [isDisabled]="control.disabled"
+      [disabled]="control.disabled"
       [required]="control.required"
       [label]="control.label"
       [options]="control.options"
       [placeholder]="control.placeholder"
-      (onSelect)="selectHandler({ control: control, items: $event})"
+      (select)="selectHandler({ control: control, items: $event})"
     ></app-select>
   </ng-container>
 

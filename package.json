@@ -30,7 +30,10 @@
     "setupTestFrameworkScriptFile": "<rootDir>/src/jest.ts",
     "moduleNameMapper": {
       "^@app/(.*)$": "<rootDir>/src/app/$1.ts"
-    }
+    },
+    "testPathIgnorePatterns": [
+      "<rootDir>/src/app/shared/components/grids/"
+    ]
   },
   "dependencies": {
     "@angular/animations": "^5.2.4",

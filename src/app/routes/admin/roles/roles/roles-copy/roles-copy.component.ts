@@ -72,10 +72,6 @@ export class RolesCopyComponent implements OnInit, OnDestroy {
         type: 'select',
         required: true,
         options: this.roles,
-        // TODO(a.tymchuk): sort before rendering
-        // optionsActions: [
-        //   { text: 'roles.roles.copy.select.title', type: SelectionActionTypeEnum.SORT }
-        // ]
       },
       {
         label: 'roles.roles.copy.roleName',

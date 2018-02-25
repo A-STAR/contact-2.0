@@ -97,10 +97,6 @@ export class DictEditComponent implements OnInit {
         controlName: 'parentCode',
         type: 'select',
         options: this.dictionaries.map(toLabeledValues),
-        // TODO(a.tymchuk): sort before rendering
-        // optionsActions: [
-        //   { text: 'dictionaries.edit.select.title.dictList', type: SelectionActionTypeEnum.SORT }
-        // ],
         disabled,
       },
       {
@@ -108,10 +104,6 @@ export class DictEditComponent implements OnInit {
         type: 'select',
         required: true,
         options: this.dictionaryTermTypes.map(toLabeledValues),
-        // TODO(a.tymchuk): sort before rendering
-        // optionsActions: [
-        //   { text: 'dictionaries.edit.select.title.termTypesList', type: SelectionActionTypeEnum.SORT }
-        // ],
         disabled,
       }
     ] as IDynamicFormItem[];
