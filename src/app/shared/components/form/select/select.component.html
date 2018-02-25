@@ -9,12 +9,11 @@
     class="select-container dropdown open"
     [ngStyle]="styles"
     [attr.disabled]="disabled || undefined"
-    [appOffClick]="hideOptions"
     >
 
     <!-- <div *ngIf="!open" class="select-match">
       <span
-        class="form-control no-select"
+        class="form-control"
         (click)="onMatchClick($event)"
       >
         <span>{{ activeLabel }}</span>
@@ -23,16 +22,26 @@
     </div> -->
 
     <input
+      #input
       type="text"
       class="form-control select-search"
       autocomplete="off"
       [attr.placeholder]="(placeholder || '') | translate"
-      [attr.required]="required"
       [ngModel]="activeLabel"
       (click)="onInputClick($event)"
-      (ngModelChange)="onAutocomplete($event)"
+      (ngModelChange)="onModelChange($event)"
     >
-    <i *ngIf="!disabled" class="caret select-caret"></i>
+    <i
+      *ngIf="!disabled"
+      class="co co-back select-caret"
+      [ngClass]="caretCls"
+      (click)="onCaret($event)"
+    ></i>
+    <i
+      *ngIf="!disabled && !required && activeLabel"
+      class="co co-clear select-clear"
+      (click)="onClear($event)"
+    ></i>
 
     <ul
       *ngIf="open"

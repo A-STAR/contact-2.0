@@ -1,25 +1,33 @@
-@import '../../../styles/bootstrap/bootstrap/_mixins';
 @import '../../../styles/app/variables.scss';
 
-.no-select {
-  @include user-select(none);
+i.co {
+  font-size: 16px;
+  width: 1em;
+  height: 1em;
 }
 
 .select-search {
   width: 100%;
+  padding-right: 3.5em;
 }
 
 .select-clear {
   position: absolute;
-  top: 45%;
-  right: 20px;
+  top: 0.25em;
+  right: 1.5em;
   cursor: pointer;
 }
 
 .select-caret {
   position: absolute;
-  top: 45%;
-  right: 10px;
+  top: 0.25em;
+  right: 0.3em;
+  transition: transform 400ms ease;
+  transform: rotateZ(270deg);
+  &.up {
+    transform: rotateZ(90deg);
+    top: 0.3em;
+  }
   cursor: pointer;
 }
 

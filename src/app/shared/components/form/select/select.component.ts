@@ -2,19 +2,21 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   forwardRef,
+  HostListener,
   Input,
   Output,
-  // ViewChild,
+  ViewChild,
 } from '@angular/core';
 import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  NG_VALIDATORS,
-  Validator,
   AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
   ValidationErrors,
+  Validator,
 } from '@angular/forms';
 import * as R from 'ramda';
 
@@ -41,20 +43,20 @@ import { SortOptionsPipe } from '@app/shared/components/form/select/select-pipes
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent implements ControlValueAccessor, Validator {
-  // @ViewChild('input') input: ElementRef;
+  @ViewChild('input') input: ElementRef;
 
   @Input() label: string;
   @Input() placeholder = '';
   @Input() renderer: (option: ILabeledValue) => void;
+  @Input() required: boolean;
   @Input() styles: CSSStyleDeclaration;
 
   @Output() select = new EventEmitter<ILabeledValue[]>();
 
   private _active: ILabeledValue;
   private _autoAlign = false;
-  private _autocomplete: ILabeledValue[] = [];
+  // private _autocomplete: ILabeledValue[] = [];
   private _disabled = false;
-  private _required = false;
   private _options: ILabeledValue[] = [];
   private open = false;
   private selectedIndex: number = null;
@@ -91,18 +93,9 @@ export class SelectComponent implements ControlValueAccessor, Validator {
   }
 
   @Input()
-  set isRequired(value: boolean) {
-    this._required = value;
-  }
-
-  get required(): boolean {
-    return this._required;
-  }
-
-  @Input()
   set active(option: ILabeledValue) {
     this._active = option;
-    this.selectedIndex = option.value;
+    this.selectedIndex = option && option.value || null;
   }
 
   get active(): ILabeledValue {
@@ -117,6 +110,13 @@ export class SelectComponent implements ControlValueAccessor, Validator {
     this.renderer = (option: ILabeledValue) => option.label;
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.input.nativeElement.contains(event.target) && this.open) {
+      this.hideOptions();
+    }
+  }
+
   writeValue(value: number): void {
     this.selectedIndex = value;
     this.active = this.selectedOption;
@@ -124,11 +124,11 @@ export class SelectComponent implements ControlValueAccessor, Validator {
   }
 
   registerOnChange(fn: Function): void {
-    this.onChange = fn;
+    this.propagateChange = fn;
   }
 
   registerOnTouched(fn: Function): void {
-    this.onTouched = fn;
+    this.propagateTouched = fn;
   }
 
   setDisabledState(disabled: boolean): void {
@@ -137,7 +137,7 @@ export class SelectComponent implements ControlValueAccessor, Validator {
   }
 
   validate(control: AbstractControl): ValidationErrors {
-    return control.enabled && this.selectedIndex === null
+    return this.required && this.selectedIndex == null
       ? { required: true }
       : null;
   }
@@ -152,8 +152,11 @@ export class SelectComponent implements ControlValueAccessor, Validator {
     return this.options.find(v => v.value === this.selectedIndex);
   }
 
+  get caretCls(): string {
+    return this.open ? 'up' : '';
+  }
+
   onInputClick(event: MouseEvent): void {
-    this.stopEvent(event);
     if (!this.open) {
       this.showOptions();
     } else {
@@ -161,54 +164,71 @@ export class SelectComponent implements ControlValueAccessor, Validator {
     }
   }
 
-  onAutocomplete(event: MouseEvent): void {
-    // console.log('autocomplete', event);
+  onModelChange(value: string): void {
+    const foundIndex = this.options.findIndex(o => o.label === value);
+    this.selectedIndex = foundIndex > -1 ? foundIndex : null;
+    this.propagateChange(event);
   }
 
-  onMatchClick(event: Event): void {
-    this.stopEvent(event);
+  // onMatchClick(event: Event): void {
+  //   this.stopEvent(event);
 
-    if (this._disabled) {
-      return;
-    }
+  //   if (this._disabled) {
+  //     return;
+  //   }
 
-    if (!this.open) {
-      this.showOptions();
-    } else {
-      this.hideOptions();
-    }
-  }
+  //   if (!this.open) {
+  //     this.showOptions();
+  //   } else {
+  //     this.hideOptions();
+  //   }
+  // }
 
   onSelectMatch(event: Event, option: ILabeledValue): void {
-    this.stopEvent(event);
+    event.stopPropagation();
+    event.preventDefault();
 
     this.active = option;
-    this.onChange(this.active.value);
+    this.propagateChange(this.active.value);
     this.select.emit([this.active]);
 
     this.hideOptions();
+  }
+
+  onClear(event: MouseEvent): void {
+    event.preventDefault();
+    this.active = null;
+    this.propagateChange(null);
+  }
+
+  onCaret(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.open) {
+      this.hideOptions();
+    } else {
+      console.log('open', this.open);
+      this.showOptions();
+      this.cdRef.markForCheck();
+    }
   }
 
   isActive(option: ILabeledValue): boolean {
     return this.selectedIndex === option.value;
   }
 
-  private onChange: Function = () => {};
+  propagateTouched: Function = () => {};
 
-  private onTouched: Function = () => {};
+  private propagateChange: Function = () => {};
+
 
   private hideOptions(): void {
     this.open = false;
-    this.onTouched(this.active);
+    this.propagateTouched();
   }
 
   private showOptions(): void {
     this.open = true;
-  }
-
-  private stopEvent(event: Event): void {
-    event.stopPropagation();
-    event.preventDefault();
   }
 
   private setDefault(value: boolean, defaultValue: boolean): boolean {
