@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -119,7 +119,6 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
   private debtUpdateSub: Subscription;
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
