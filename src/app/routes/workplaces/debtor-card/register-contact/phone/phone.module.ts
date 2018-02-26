@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { GridModule } from '../../../../../shared/components/grid/grid.module';
-import { SharedModule } from '../../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { PhoneGridComponent } from './phone.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    GridModule,
     SharedModule,
   ],
   exports: [
@@ -19,4 +17,4 @@ import { PhoneGridComponent } from './phone.component';
     PhoneGridComponent
   ]
 })
-export class PhoneGridModule { }
+export class PhoneGridModule {}
