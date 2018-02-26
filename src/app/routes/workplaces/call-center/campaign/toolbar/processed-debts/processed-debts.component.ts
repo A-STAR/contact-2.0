@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { first } from 'rxjs/operators';
 
 import { ICampaignProcessedDebt } from '../../campaign.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
