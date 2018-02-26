@@ -52,6 +52,7 @@ import { MenuModule } from './components/form/menu/menu.module';
 import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
 import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
+import { OperatorModule } from './components/operator/operator.module';
 import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
@@ -121,6 +122,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MomentModule,
     MultiLanguageModule,
     MultiSelectModule,
+    OperatorModule,
     PasswordModule,
     PopupInputModule,
     ProgressbarModule,
@@ -198,6 +200,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MultiLanguageModule,
     MultiSelectModule,
     NumericInputComponent,
+    OperatorModule,
     PasswordModule,
     PopupInputModule,
     ProgressbarModule,

@@ -8,7 +8,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 
 @Injectable()
 export class OperatorService {
-  private url = '/users/forTrasfrerCall';
+  private url = '/users/forTransferCall';
 
   constructor(
     private dataService: DataService,

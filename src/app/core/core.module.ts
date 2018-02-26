@@ -23,6 +23,7 @@ import { PersistenceService } from './persistence/persistence.service';
 import { SettingsService } from './settings/settings.service';
 import { ThemesService } from './themes/themes.service';
 import { ValueConverterService } from './converter/value-converter.service';
+import { WSService } from './ws/ws.service';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 
@@ -53,6 +54,7 @@ import { environment } from '../../environments/environment';
     ThemesService,
     TranslateService,
     ValueConverterService,
+    WSService,
     environment.production
       ? {
           provide: ErrorHandler,

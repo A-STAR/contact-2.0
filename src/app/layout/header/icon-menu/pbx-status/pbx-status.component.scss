@@ -1,0 +1,24 @@
+@import "../../../../shared/styles/app/variables";
+
+.list-group-item {
+  border: none;
+  color: $gray-dark;
+  cursor: pointer;
+  padding: 8px 20px;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: $brand-primary-light;
+    color: #fff;
+  }
+}
+
+.dropdown-menu {
+  display: block;
+}
+
+.disabled {
+  color: $navbar-default-link-disabled-color;
+  cursor: default;
+  pointer-events: none;
+}
