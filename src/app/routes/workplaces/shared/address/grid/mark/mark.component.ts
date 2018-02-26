@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { IAddressMarkData, IDebt } from './mark.interface';
+import { IDebt } from './mark.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
