@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAttachment, IAttachmentFormData } from './attachment.interface';
