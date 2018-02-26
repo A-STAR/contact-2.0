@@ -2,17 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { ButtonModule } from '@app/shared/components/button/button.module';
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
-import { GridModule } from '@app/shared/components/grid/grid.module';
+import { GridsModule } from '@app/shared/components/grids/grids.module';
 
 import { OperatorDialogComponent } from './operator-dialog.component';
 
 @NgModule({
   imports: [
+    ButtonModule,
     CommonModule,
-    TranslateModule,
     DialogModule,
-    GridModule,
+    GridsModule,
+    TranslateModule,
   ],
   exports: [
     OperatorDialogComponent,
@@ -21,4 +23,4 @@ import { OperatorDialogComponent } from './operator-dialog.component';
     OperatorDialogComponent,
   ]
 })
-export class OperatorDialogModule { }
+export class OperatorDialogModule {}

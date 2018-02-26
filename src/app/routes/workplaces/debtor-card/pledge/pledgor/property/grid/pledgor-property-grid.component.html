@@ -11,13 +11,16 @@
     <h3>{{ 'widgets.pledgorProperty.dialog.title' | translate }}</h3>
   </div>
 
-  <app-simple-grid
-    *ngIf="columns"
-    persistenceKey="workplaces/debtor-card/pledge/pledgor-property"
-    [columns]="columns"
-    [rows]="propertyList"
-    (dblClick)="onSelect($event)"
-  ></app-simple-grid>
+  <div style="height: 75vh;">
+    <app-simple-grid
+      *ngIf="columns"
+      persistenceKey="workplaces/debtor-card/pledge/pledgor-property"
+      [columns]="columns"
+      [rows]="propertyList"
+      (dblClick)="onDblClick($event)"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
+  </div>
 
   <div dialog-footer>
     <app-button type="select" [disabled]="!selection" (click)="onSelect()"></app-button>

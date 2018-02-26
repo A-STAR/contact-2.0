@@ -88,13 +88,16 @@ export class PledgorGridComponent extends DialogFunctions implements OnInit, OnD
     this.close.emit();
   }
 
+  onDblClick(person: IPledgor): void {
+    this.select.emit(person);
+    this.close.emit();
+  }
+
   onSelect(persons: IPledgor[]): void {
     const person = isEmpty(persons)
       ? null
       : persons[0];
     this.selection = person;
-    this.select.emit(person);
-    this.close.emit();
     this.cdRef.markForCheck();
   }
 
