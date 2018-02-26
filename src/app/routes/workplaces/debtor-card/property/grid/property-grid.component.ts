@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, O
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
 
 import { IProperty } from '../property.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { PropertyService } from '../property.service';
@@ -16,9 +15,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DialogFunctions } from '@app/core/dialog';
 import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
-import { combineLatestAnd } from 'app/core/utils/helpers';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { addGridLabel, isEmpty } from '@app/core/utils';
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
