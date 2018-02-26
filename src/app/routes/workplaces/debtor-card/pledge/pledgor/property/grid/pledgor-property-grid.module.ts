@@ -8,7 +8,7 @@ import { PledgorPropertyGridComponent } from './pledgor-property-grid.component'
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
   ],
   exports: [
     PledgorPropertyGridComponent,
@@ -16,8 +16,5 @@ import { PledgorPropertyGridComponent } from './pledgor-property-grid.component'
   declarations: [
     PledgorPropertyGridComponent,
   ],
-  entryComponents: [
-    PledgorPropertyGridComponent,
-  ]
 })
-export class PledgorPropertyGridModule { }
+export class PledgorPropertyGridModule {}
