@@ -3,24 +3,18 @@
     <h3>{{ 'widgets.operator.dialog.title' | translate }}</h3>
   </div>
 
-  <app-grid
-    *ngIf="columns"
-    columnTranslationKey="widgets.operator"
-    [columns]="columns"
-    [footerHeight]="false"
-    [rows]="operators"
-    selectionType="single"
-    [styles]="gridStyles"
-    (onSelect)="onSelect($event)"
-    (onDblClick)="onDblClick($event)">
-  </app-grid>
+  <div style="height: 75vh;">
+    <app-simple-grid
+      *ngIf="columns"
+      persistenceKey="[grid] workplaces/shared/phone/operators"
+      [columns]="columns"
+      [rows]="operators"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
+  </div>
 
   <div dialog-footer>
-    <button class="btn btn-success" [disabled]="!hasSelection" (click)="onSubmit()">
-      <i class="fa fa-check"></i> {{ 'default.buttons.select' | translate }}
-    </button>
-    <button class="btn btn-default" (click)="onClose()">
-      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
-    </button>
+    <app-button type="select" [disabled]="!selection" (click)="onSubmit()"></app-button>
+    <app-button type="cancel" (click)="onClose()"></app-button>
   </div>
 </app-dialog>

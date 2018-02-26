@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
 
-import { DialogModule } from '@app/shared/components/dialog/dialog.module';
-import { GridModule } from '@app/shared/components/grid/grid.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { VisitService } from './visits.service';
 
@@ -12,9 +10,7 @@ import { AddressGridVisitsComponent } from './visits.component';
 @NgModule({
   imports: [
     CommonModule,
-    DialogModule,
-    GridModule,
-    TranslateModule,
+    SharedModule,
   ],
   exports: [
     AddressGridVisitsComponent,
@@ -25,8 +21,5 @@ import { AddressGridVisitsComponent } from './visits.component';
   providers: [
     VisitService,
   ],
-  entryComponents: [
-    AddressGridVisitsComponent,
-  ]
 })
-export class AddressGridVisitsModule { }
+export class AddressGridVisitsModule {}
