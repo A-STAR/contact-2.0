@@ -113,7 +113,7 @@ export class PersonComponent implements OnInit, OnDestroy {
         type: 'text',
         width: 3,
         display: displayedStringValues.includes(id) && attributes[id].isUsed,
-        required: attributes[id].isMandatory,
+        required: !!attributes[id].isMandatory,
       }) as IDynamicFormItem),
       {
         label: 'person.comment',

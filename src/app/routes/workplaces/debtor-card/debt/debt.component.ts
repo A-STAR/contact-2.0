@@ -320,7 +320,7 @@ export class DebtComponent implements OnInit {
             dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_1], dictPermissions['DEBT_DICT1_EDIT_LIST']
           ),
           disabled: !dictPermissions['DEBT_DICT1_EDIT_LIST'].valueS,
-          required: attributes[EntityAttributesService.DICT_VALUE_1].isMandatory,
+          required: !!attributes[EntityAttributesService.DICT_VALUE_1].isMandatory,
           width: 3
         }
         : null,
@@ -333,7 +333,7 @@ export class DebtComponent implements OnInit {
             dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_2], dictPermissions['DEBT_DICT2_EDIT_LIST']
           ),
           disabled: !dictPermissions['DEBT_DICT2_EDIT_LIST'].valueS,
-          required: attributes[EntityAttributesService.DICT_VALUE_2].isMandatory,
+          required: !!attributes[EntityAttributesService.DICT_VALUE_2].isMandatory,
           width: 3
         }
         : null,
@@ -346,7 +346,7 @@ export class DebtComponent implements OnInit {
             dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3], dictPermissions['DEBT_DICT3_EDIT_LIST']
           ),
           disabled: !dictPermissions['DEBT_DICT3_EDIT_LIST'].valueS,
-          required: attributes[EntityAttributesService.DICT_VALUE_3].isMandatory,
+          required: !!attributes[EntityAttributesService.DICT_VALUE_3].isMandatory,
           width: 3
         }
         : null,
@@ -359,7 +359,7 @@ export class DebtComponent implements OnInit {
             dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4], dictPermissions['DEBT_DICT4_EDIT_LIST']
           ),
           disabled: !dictPermissions['DEBT_DICT4_EDIT_LIST'].valueS,
-          required: attributes[EntityAttributesService.DICT_VALUE_4].isMandatory,
+          required: !!attributes[EntityAttributesService.DICT_VALUE_4].isMandatory,
           width: 3
         }
         : null,
