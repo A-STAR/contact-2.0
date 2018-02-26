@@ -16,7 +16,8 @@
     persistenceKey="workplaces/debtor-card/pledge/pledgor"
     [columns]="columns"
     [rows]="persons"
-    (dblClick)="onSelect($event)"
+    (dblClick)="onDblClick($event)"
+    (select)="onSelect($event)"
   ></app-simple-grid>
 
   <div dialog-footer>

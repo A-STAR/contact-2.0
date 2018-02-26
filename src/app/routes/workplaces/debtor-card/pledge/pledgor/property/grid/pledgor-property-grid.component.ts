@@ -81,13 +81,16 @@ export class PledgorPropertyGridComponent extends DialogFunctions implements OnI
     this.close.emit();
   }
 
+  onDblClick(property: IPledgorProperty): void {
+    this.select.emit(property);
+    this.close.emit();
+  }
+
   onSelect(properties: IPledgorProperty[]): void {
     const property = isEmpty(properties)
       ? null
       : properties[0];
     this.selection = property;
-    this.select.emit(property);
-    this.close.emit();
     this.cdRef.markForCheck();
   }
 
