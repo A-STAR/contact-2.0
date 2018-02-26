@@ -8,8 +8,7 @@ import { SingleSelectModule } from './single/single-select.module';
 
 import { SelectComponent } from './select.component';
 import { SelectWrapperComponent } from './select-wrapper.component';
-import { RawDataFilterPipe } from './select-pipes';
-import { OffClickDirective } from './off-click';
+import { SortOptionsPipe } from './select-pipes';
 import { AlignmentDirective } from '../../../directives/alignment/alignment.directive';
 import { FocusDirective } from '../../../directives/focus/focus.directive';
 
@@ -24,18 +23,18 @@ import { FocusDirective } from '../../../directives/focus/focus.directive';
   declarations: [
     AlignmentDirective,
     FocusDirective,
-    OffClickDirective,
-    RawDataFilterPipe,
     SelectComponent,
     SelectWrapperComponent,
   ],
   exports: [
     MultiSelectModule,
-    OffClickDirective,
     SelectComponent,
     SelectWrapperComponent,
     SingleSelectModule,
   ],
+  providers: [
+    SortOptionsPipe,
+  ]
 })
 export class SelectModule {
 }

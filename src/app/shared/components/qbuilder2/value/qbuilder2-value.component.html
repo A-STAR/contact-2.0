@@ -17,11 +17,10 @@
       <!-- Dropdown -->
       <ng-container *ngSwitchCase="'set'">
         <app-select
-          inputClass="form-control input-sm"
-          class="inline"
+          class="inline input-sm"
           [ngModel]="v"
           [options]="options"
-          (onSelect)="onSetValueChange($event, i)">
+          (select)="onSetValueChange($event, i)">
         </app-select>
       </ng-container>
 

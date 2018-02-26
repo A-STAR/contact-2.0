@@ -35,9 +35,8 @@
       <span>{{ 'widgets.contactProperty.contactType' | translate }}</span>
       <app-select
         [ngModel]="contactType"
-        [nullable]="false"
         [options]="contactTypeOptions"
-        (onSelect)="onContactTypeChange($event)">
+        (select)="onContactTypeChange($event)">
       </app-select>
     </label>
   </div>
@@ -46,9 +45,8 @@
       <span>{{ 'widgets.contactProperty.treeType' | translate }}</span>
       <app-select
         [ngModel]="treeType"
-        [nullable]="false"
         [options]="treeTypeOptions"
-        (onSelect)="onTreeTypeChange($event)">
+        (select)="onTreeTypeChange($event)">
       </app-select>
     </label>
   </div>

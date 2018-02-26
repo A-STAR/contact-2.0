@@ -7,7 +7,6 @@ import { ILookupKey } from '@app/core/lookup/lookup.interface';
 import { IMultiLanguageOption, IMultiLanguageConfig } from '@app/shared/components/form/multi-language/multi-language.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
-import { ISelectionAction } from '../select/select.interface';
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 
 export interface IValidationMessages {
@@ -25,7 +24,7 @@ export interface IFilterParam {
 export type IDynamicFormItem = IDynamicFormGroup | IDynamicFormControl;
 
 export type IDynamicFormControl =
-  // IDynamicFormBaseControl
+  // all those are children of `IDynamicFormBaseControl`
   IDynamicFormButtonControl |
   IDynamicFormDateControl |
   IDynamicFormDateTimeControl |
@@ -67,12 +66,12 @@ export interface IDynamicFormBaseControl {
   display?: boolean;
   iconCls?: string;
   label?: string;
-  // set `markAsDirty: true` if the control is initialized with a value
+  // set `markAsDirty: true` if you need the control to deliver its initial value
+  // when using the form's `serializedUpdates` getter
   markAsDirty?: boolean;
   onChange?: (value: any) => void;
-  readonly?: boolean;
   required?: boolean;
-  validators?: Array<ValidatorFn>;
+  validators?: ValidatorFn[];
   validationMessages?: IValidationMessages;
   // the width can take a number from 1 to 12 (we are using the bootstrap grid)
   width?: number;
@@ -183,10 +182,7 @@ export interface IDynamicFormSelectControl extends IDynamicFormBaseControl {
   type: 'select' | 'selectwrapper' | 'singleselect' | 'multiselect' | 'multiselectwrapper';
   // options for select controls
   multiple?: boolean;
-  closableSelectedItem?: boolean;
   options?: ILabeledValue[];
-  optionsActions?: Array<ISelectionAction>;
-  optionsRenderer?: (label: string, item: ILabeledValue) => string;
   placeholder?: string;
   dictCode?: number;
   parentCode?: number;
@@ -247,7 +243,7 @@ export interface IDynamicFormControlOld {
   multiple?: boolean;
   closableSelectedItem?: boolean;
   options?: ILabeledValue[];
-  optionsActions?: Array<ISelectionAction>;
+  // optionsActions?: Array<ISelectionAction>;
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
   // options for multilanguage
   langOptions?: IMultiLanguageOption[];
