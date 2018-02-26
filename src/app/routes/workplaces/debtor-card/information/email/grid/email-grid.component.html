@@ -39,13 +39,13 @@
   (cancel)="onCloseDialog()"
 ></app-dialog-action>
 
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
-
 <app-simple-grid
   *ngIf="canDisplayGrid"
+  persistenceKey="[grid] workplaces/debtor-card/information/email"
   [columns]="columns"
   [rowClass]="getRowClass()"
   [rows]="emails"
+  [toolbar]="toolbarItems"
   (dblClick)="onDoubleClick($event)"
   (select)="onSelect($event)"
 ></app-simple-grid>

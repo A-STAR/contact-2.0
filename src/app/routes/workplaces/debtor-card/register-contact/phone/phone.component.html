@@ -1,22 +1,23 @@
-<h4>{{ 'modules.contactRegistration.dialogs.contactType.phone.title' | translate }}</h4>
-
-<div class="mb">
-  <app-grid
-    columnTranslationKey="debtor.information.phone"
-    selectionType="single"
-    [columns]="columns"
-    [footerHeight]="false"
-    [rows]="phones"
-    [styles]="{ height: '200px' }"
-    (onSelect)="onSelect($event)"
-    (onDblClick)="onDoubleClick($event)"
-  ></app-grid>
+<div class="flex vertical">
+  <div class="flex-item mb">
+    <h4>{{ 'modules.contactRegistration.dialogs.contactType.phone.title' | translate }}</h4>
+  </div>
+  <div class="flex-item grow mb">
+    <app-simple-grid
+      persistenceKey="[grid] workplaces/debtor-card/register-contact/phone"
+      [columns]="columns"
+      [rows]="phones"
+      (select)="onSelect($event)"
+      (dblClick)="onDoubleClick($event)"
+    ></app-simple-grid>
+  </div>
+  <div class="flex-item">
+    <app-button
+      color="primary"
+      type="registerContact"
+      label="modules.contactRegistration.dialogs.contactType.phone.button"
+      [disabled]="!(canRegisterSelectedPhone$ | async)"
+      (click)="onSubmit()"
+    ></app-button>
+  </div>
 </div>
-
-<app-button
-  color="primary"
-  type="registerContact"
-  label="modules.contactRegistration.dialogs.contactType.phone.button"
-  [disabled]="!(canRegisterSelectedPhone$ | async)"
-  (click)="onSubmit()"
-></app-button>
