@@ -46,8 +46,8 @@ export class CallService implements OnDestroy {
   static PBX_STATE_CHANGE = 'PBX_STATE_DATA';
   static PBX_STATUS_CHANGE = 'PBX_STATUS_CHANGE';
   static PBX_STATUS_CHANGE_SUCCESS = 'PBX_STATUS_CHANGE_SUCCESS';
+  static PBX_PARAMS_UPDATE = 'PBX_PARAMS_UPDATE';
   static PBX_PARAMS_CHANGE = 'PBX_PARAMS_CHANGE';
-  static PBX_PARAMS_CHANGE_SUCCESS = 'PBX_PARAMS_CHANGE_SUCCESS';
 
   private isFetching = false;
 
@@ -199,13 +199,6 @@ export class CallService implements OnDestroy {
     });
   }
 
-  updateParams(params: IPBXParams): void {
-    this.store.dispatch({
-      type: CallService.PBX_PARAMS_CHANGE,
-      payload: params
-    });
-  }
-
   makeCall(phoneId: number, debtId: number, personId: number, personRole: number): void {
     this.store.dispatch({
       type: CallService.CALL_START,
@@ -253,6 +246,20 @@ export class CallService implements OnDestroy {
     this.store.dispatch({
       type: CallService.PBX_STATUS_CHANGE,
       payload: { statusCode }
+    });
+  }
+
+  updatePBXParams(params: IPBXParams): void {
+    this.store.dispatch({
+      type: CallService.PBX_PARAMS_UPDATE,
+      payload: params
+    });
+  }
+
+  changePBXParams(params: IPBXParams): void {
+    this.store.dispatch({
+      type: CallService.PBX_PARAMS_CHANGE,
+      payload: params
     });
   }
 

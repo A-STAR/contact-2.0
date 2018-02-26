@@ -76,7 +76,12 @@ export class AccountMenuComponent extends DialogFunctions implements OnInit {
   }
 
   onPhoneExtensionSubmit(): void {
-    this.callService.updateParams(this.form.serializedValue);
+    this.callService.updatePBXParams(this.form.serializedValue);
+    this.setDialog(null);
+  }
+
+  onCloseDialog(): void {
+    this.callService.changePBXParams({ intPhone: '' });
     this.setDialog(null);
   }
 

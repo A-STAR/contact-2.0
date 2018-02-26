@@ -231,13 +231,13 @@ export class CallEffects {
     });
 
   @Effect()
-  changeParams$ = this.actions
-    .ofType(CallService.PBX_PARAMS_CHANGE)
+  updateParams$ = this.actions
+    .ofType(CallService.PBX_PARAMS_UPDATE)
     .switchMap((action: UnsafeAction) => {
       const params = action.payload;
       return this.changeParams(params)
         .map(() => ({
-          type: CallService.PBX_PARAMS_CHANGE_SUCCESS,
+          type: CallService.PBX_PARAMS_CHANGE,
           payload: action.payload
         }))
         .catch(error => {

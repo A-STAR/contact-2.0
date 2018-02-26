@@ -56,7 +56,7 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
         pbxState: action.payload
       };
     }
-    case CallService.PBX_PARAMS_CHANGE_SUCCESS: {
+    case CallService.PBX_PARAMS_CHANGE: {
       return {
         ...state,
         params: action.payload
