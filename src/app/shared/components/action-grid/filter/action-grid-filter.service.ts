@@ -31,7 +31,7 @@ export class ActionGridFilterService {
     if (actionData.type === MetadataActionType.ALL) {
       return {
         ...actionData.data,
-        ...this.getFilters((actionData.data as IGridActionFilterSelection).filtering)
+        filtering: this.getFilters((actionData.data as IGridActionFilterSelection).filtering)
       };
     }
 
