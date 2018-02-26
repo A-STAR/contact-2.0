@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
-import { GridModule } from '../../../../../components/grid/grid.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { ComponentLogGridComponent } from './component-log-grid.component';
 
 @NgModule({
   imports: [
-    CommonModule,
-    GridModule,
+    SharedModule,
   ],
   exports: [
     ComponentLogGridComponent,

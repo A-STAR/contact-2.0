@@ -1,0 +1,23 @@
+<app-tabview (select)="onTabSelect($event)" [noMargin]="true" [fullHeight]="true">
+
+  <app-tabview-tab [title]="tabs[0].title">
+    <app-simple-grid
+      *ngIf="tabs[0].isInitialised"
+      persistenceKey="[grid] workplaces/debtor-card/debt/portfolio-log-1"
+      [columns]="columns"
+      [rows]="getEntries(1)"
+      [selectionType]="null"
+    ></app-simple-grid>
+  </app-tabview-tab>
+
+  <app-tabview-tab [title]="tabs[1].title">
+    <app-simple-grid
+      *ngIf="tabs[1].isInitialised"
+      persistenceKey="[grid] workplaces/debtor-card/debt/portfolio-log-2"
+      [columns]="columns"
+      [rows]="getEntries(2)"
+      [selectionType]="null"
+    ></app-simple-grid>
+  </app-tabview-tab>
+
+</app-tabview>

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IComponentLogEntry } from './component-log.interface';
 
-import { DataService } from '../../../../../core/data/data.service';
+import { DataService } from '@app/core/data/data.service';
 
 @Injectable()
 export class ComponentLogService {

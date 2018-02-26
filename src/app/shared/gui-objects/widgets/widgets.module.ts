@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AttributeModule as EntityAttributeModule } from './entity-attribute/attribute.module';
-import { ComponentLogModule } from './debt/component-log/component-log.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
@@ -12,14 +11,12 @@ import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.m
 import { OperatorDetailsModule } from './operator-details/operator-details.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
 import { PersonSelectModule } from './person-select/person-select.module';
-import { PortfolioLogModule } from './debt/portfolio-log/portfolio-log.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    ComponentLogModule,
     ContactLogModule,
     DebtResponsibleModule,
     DebtOpenIncomingCallModule,
@@ -30,12 +27,10 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     OperatorDetailsModule,
     PaymentOperatorModule,
     PersonSelectModule,
-    PortfolioLogModule,
     PromiseResolveModule,
     VisitPrepareModule,
   ],
   exports: [
-    ComponentLogModule,
     ContactLogModule,
     DebtOpenIncomingCallModule,
     DebtResponsibleModule,
@@ -46,7 +41,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     OperatorDetailsModule,
     PaymentOperatorModule,
     PersonSelectModule,
-    PortfolioLogModule,
     PromiseResolveModule,
     VisitPrepareModule,
   ]

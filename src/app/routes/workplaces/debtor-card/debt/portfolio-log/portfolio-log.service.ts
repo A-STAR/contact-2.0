@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IPortfolioLogEntry } from './portfolio-log.interface';
 
-import { DataService } from '../../../../../core/data/data.service';
+import { DataService } from '@app/core/data/data.service';
 
 @Injectable()
 export class PortfolioLogService {
