@@ -166,9 +166,11 @@ export class CallEffects {
   @Effect()
   authLogin$ = this.actions
     .ofType(AuthService.AUTH_LOGIN_SUCCESS)
-    .flatMap(() => this.authService.userParams$)
-    .filter(Boolean)
-    .pipe(first())
+    .flatMap(() =>
+      this.authService.userParams$
+        .filter(Boolean)
+        .pipe(first())
+    )
     .switchMap(userParams => [{
       type: CallService.PBX_LOGIN,
       payload: userParams
@@ -187,11 +189,13 @@ export class CallEffects {
     .ofType(CallService.PBX_LOGIN)
     .map((action: UnsafeAction) => action.payload)
     .filter(userParams => userParams.usePbx)
-    .flatMap(() => combineLatest(
-      this.callService.settings$.filter(Boolean),
-      this.callService.params$.map(params => params && params.intPhone)
-    ))
-    .pipe(first())
+    .flatMap(() =>
+      combineLatest(
+        this.callService.settings$.filter(Boolean),
+        this.callService.params$.map(params => params && params.intPhone)
+      )
+      .pipe(first())
+    )
     .filter(([ settings, intPhone ]) => !settings.useIntPhone || intPhone !== null)
     .switchMap(() => {
       return this.login()
@@ -252,6 +256,16 @@ export class CallEffects {
     });
 
   @Effect()
+  changeParams$ = this.actions
+    .ofType(CallService.PBX_PARAMS_CHANGE)
+    .flatMap(() => this.authService.userParams$.pipe(first()))
+    .filter(Boolean)
+    .switchMap(userParams => [{
+      type: CallService.PBX_LOGIN,
+      payload: userParams
+    }]);
+
+  @Effect()
   stateChange$ = this.actions
     .ofType(CallService.PBX_STATE_CHANGE)
     .map((action: UnsafeAction) => action.payload)
@@ -275,7 +289,7 @@ export class CallEffects {
   }
 
   private login(): Observable<void> {
-    return this.dataService.get('/pbx/call/make');
+    return this.dataService.get('/pbx/login');
   }
 
   private call(phoneId: number, debtId: number, personId: number, personRole: number): Observable<ICall> {
