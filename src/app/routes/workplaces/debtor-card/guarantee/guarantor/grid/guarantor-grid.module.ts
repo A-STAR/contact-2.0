@@ -17,4 +17,4 @@ import { GuarantorGridComponent } from './guarantor-grid.component';
     GuarantorGridComponent,
   ],
 })
-export class GuarantorGridModule { }
+export class GuarantorGridModule {}
