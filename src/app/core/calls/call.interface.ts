@@ -38,5 +38,5 @@ export enum PBXStateEnum {
 
 export interface IPBXState {
   lineStatus: PBXStateEnum;
-  agentStatus: number;
+  userStatus: number;
 }

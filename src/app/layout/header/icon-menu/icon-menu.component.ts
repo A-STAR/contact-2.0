@@ -39,7 +39,7 @@ export class IconMenuComponent {
   }
 
   get showPbxStatus$(): Observable<boolean> {
-    return this.callService.pbxStatus$.map(Boolean);
+    return this.callService.pbxStatus$.map(Number.isInteger);
   }
 
   get showPbxControls$(): Observable<boolean> {

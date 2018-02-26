@@ -65,8 +65,6 @@ export class CallService implements OnDestroy {
     this.wsService.connect<IPBXState>('/wsapi/pbx/events')
       .do(connection => this.wsConnection = connection)
       .flatMap(connection => connection.listen())
-      // TODO (i.kibisov): remove mock
-      .map(state => ({ ...state, agentStatus: 2 }))
       .subscribe(state => this.updatePBXState(state));
 
     this.stateSub = this.store.select(state => state.calls)
@@ -119,7 +117,7 @@ export class CallService implements OnDestroy {
     ])
     .flatMap(() => this.pbxState$)
     .filter(Boolean)
-    .map(state => state.agentStatus);
+    .map(state => state.userStatus);
   }
 
   get pbxLineStatus$(): Observable<PBXStateEnum> {

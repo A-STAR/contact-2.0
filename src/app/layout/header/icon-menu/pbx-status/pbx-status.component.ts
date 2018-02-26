@@ -32,15 +32,16 @@ export class PbxStatusComponent implements OnInit, OnDestroy {
     this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_AGENT_STATUS)
       .pipe(first())
       .map(statusOptions => statusOptions.filter(status => status.value > 0))
-      // TODO(i.kibisov): remove mock
+      // // TODO(i.kibisov): remove mock
       .map(() => ([
+        { label: 'Постобработка', value: -1 },
+        { label: 'Отключен', value: 0 },
         { label: 'Автодайлер', value: 1 },
         { label: 'Исходящие звонки', value: 2 },
         { label: 'Обед', value: 3 }
       ]))
       .subscribe(statusOptions => {
         this.statusOptions = statusOptions;
-
         this.cdRef.markForCheck();
       });
 
@@ -52,9 +53,13 @@ export class PbxStatusComponent implements OnInit, OnDestroy {
   }
 
   get activeStatusOption(): IOption {
-    return this.activeStatusCode
+    return Number.isInteger(this.activeStatusCode)
       ? this.statusOptions.find(option => option.value === this.activeStatusCode)
       : this.statusOptions[0];
+  }
+
+  get availableStatusOptions(): IOption[] {
+    return this.statusOptions.filter(option => option.value > 0);
   }
 
   get canChangeStatus$(): Observable<boolean> {

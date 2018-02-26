@@ -4,7 +4,7 @@
   </span>
   <div #dropdownContent class="dropdown-menu">
     <ul class="list-group mb0">
-      <li class="list-group-item" *ngFor="let option of statusOptions"
+      <li class="list-group-item" *ngFor="let option of availableStatusOptions"
         (click)="onChangeStatus(option)">
         {{ option.label }}
       </li>
