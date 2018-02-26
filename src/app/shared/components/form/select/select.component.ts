@@ -68,17 +68,19 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   private _autoAlign = false;
   // private _autocomplete: ILabeledValue[] = [];
   private _disabled = false;
-  private _options: ILabeledValue[] = [];
+  private _options: ILabeledValue[];
   private optionsSubscription: Subscription;
   private selectedIndex: number = null;
 
   @Input()
   set options(options: ILabeledValue[]) {
     this._options = this.sortOptionsPipe.transform(options);
+    // console.log('options are set', this.options);
+    this.writeValue(this.selectedIndex);
   }
 
   get options(): ILabeledValue[] {
-    return this._options;
+    return this._options || [];
   }
 
   @Input()
@@ -107,7 +109,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   @Input()
   set active(option: ILabeledValue) {
     this._active = option;
-    this.selectedIndex = option && option.value || null;
   }
 
   get active(): ILabeledValue {
@@ -154,10 +155,14 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   writeValue(id: number): void {
-    console.log('id', id);
+    // console.log('id', id);
+    // console.log('options len', this.options.length);
     this.selectedIndex = id;
-    this.active = this.selectedOption;
+    if (id != null && this.options.length) {
+      this.active = this.selectedOption;
+    }
     this.propagateChange(id);
+    this.renderer2.setProperty(this.input.nativeElement, 'value', this.activeLabel);
     this.cdRef.markForCheck();
   }
 
@@ -171,12 +176,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   setDisabledState(disabled: boolean): void {
     this._disabled = disabled;
-    const input = this.input.nativeElement;
-    if (disabled) {
-      this.renderer2.setAttribute(input, 'disabled', 'disabled');
-    } else {
-      this.renderer2.removeAttribute(input, 'disabled');
-    }
+    this.renderer2.setProperty(this.input.nativeElement, 'disabled', disabled);
     this.cdRef.markForCheck();
   }
 
@@ -187,7 +187,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   get activeLabel(): string {
-    return this.selectedIndex !== null
+    return this.selectedIndex !== null && this.active
       ? this.active.label || ''
       : '';
   }
@@ -214,6 +214,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   onInputChange(value: string): void {
     const foundIndex = this.options.findIndex(o => o.label === value);
     this.selectedIndex = foundIndex > -1 ? foundIndex : null;
+    // console.log('input changed sel index', this.selectedIndex);
     this.propagateChange(this.selectedIndex);
   }
 
@@ -231,11 +232,12 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   //   }
   // }
 
-  onSelectMatch(event: Event, option: ILabeledValue): void {
+  onSelect(event: Event, option: ILabeledValue): void {
     event.stopPropagation();
     event.preventDefault();
 
     this.active = option;
+    // console.log('select', option);
     this.propagateChange(this.active.value);
     this.select.emit([this.active]);
 
@@ -284,8 +286,8 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   private onOptionsFetch = (options: ILabeledValue[]) => {
     this.options = options;
     this.active = this.selectedOption;
-    console.log('selectedIndex', this.selectedIndex);
-    this.propagateChange(this.selectedIndex);
+    // console.log('selectedIndex', this.selectedIndex);
+    this.propagateChange(this.active);
     this.cdRef.markForCheck();
   }
 

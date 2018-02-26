@@ -9,8 +9,8 @@ import { SingleSelectModule } from './single/single-select.module';
 import { SelectComponent } from './select.component';
 import { SelectWrapperComponent } from './select-wrapper.component';
 import { SortOptionsPipe } from './select.pipe';
-import { AlignmentDirective } from '../../../directives/alignment/alignment.directive';
-import { FocusDirective } from '../../../directives/focus/focus.directive';
+import { AlignmentDirective } from '@app/shared/directives/alignment/alignment.directive';
+import { FocusDirective } from '@app/shared/directives/focus/focus.directive';
 
 @NgModule({
   imports: [
@@ -34,8 +34,7 @@ import { FocusDirective } from '../../../directives/focus/focus.directive';
     SingleSelectModule,
   ],
   providers: [
-    // SortOptionsPipe,
+    SortOptionsPipe
   ]
 })
-export class SelectModule {
-}
+export class SelectModule {}
