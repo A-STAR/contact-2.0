@@ -1,41 +1,46 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, OnDestroy, Output, ViewChild
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
 } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IPledgor } from '../../pledgor/pledgor.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { PledgeService } from '../../pledge.service';
 import { PledgorService } from '../../pledgor/pledgor.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { GridComponent } from '@app/shared/components/grid/grid.component';
-
 import { DialogFunctions } from '@app/core/dialog';
-import { parseStringValueAttrs } from '@app/core/utils';
+import { parseStringValueAttrs, addGridLabel, isEmpty } from '@app/core/utils';
+import { DateRendererComponent } from '@app/shared/components/grids/renderers/date/date.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-pledgor-grid',
   templateUrl: './pledgor-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PledgorGridComponent extends DialogFunctions implements OnInit, OnDestroy {
-  @ViewChild(GridComponent) grid: GridComponent;
-
   @Input() searchParams: any;
+
   @Output() close = new EventEmitter<null>();
   @Output() select = new EventEmitter<IPledgor>();
 
-  columns: Array<IGridColumn> = null;
+  columns: ISimpleGridColumn<IPledgor>[] = null;
 
   dialog: string;
-  gridStyles = { height: '500px' };
   persons: Array<IPledgor> = [];
+  selection: IPledgor;
 
   private canViewSubscription: Subscription;
 
@@ -43,7 +48,6 @@ export class PledgorGridComponent extends DialogFunctions implements OnInit, OnD
     private cdRef: ChangeDetectorRef,
     private pledgorService: PledgorService,
     private pledgeService: PledgeService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private userConstantsService: UserConstantsService,
   ) {
@@ -53,15 +57,11 @@ export class PledgorGridComponent extends DialogFunctions implements OnInit, OnD
   ngOnInit(): void {
     const attrConstant = this.pledgorService.getAttributeConstant(this.searchParams.typeCode);
     this.userConstantsService.get(attrConstant)
-      .flatMap(strAttributeList => {
+      .pipe(first())
+      .subscribe(strAttributeList => {
         const addColumns = parseStringValueAttrs(<string>strAttributeList.valueS)
           .map(attr => ({ prop: attr, type: 'string' }));
-        const columns: IGridColumn[] = this.creatateColumns(this.searchParams.typeCode);
-        return this.gridService.setAllRenderers(columns.concat(addColumns as IGridColumn[]));
-      })
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
+        this.columns = this.creatateColumns(this.searchParams.typeCode);
         this.cdRef.markForCheck();
       });
 
@@ -84,17 +84,14 @@ export class PledgorGridComponent extends DialogFunctions implements OnInit, OnD
     this.close.emit();
   }
 
-  onSelect(): void {
-    this.select.emit(this.selectedPerson);
+  onSelect(persons: IPledgor[]): void {
+    const person = isEmpty(persons)
+      ? null
+      : persons[0];
+    this.selection = person;
+    this.select.emit(person);
     this.close.emit();
-  }
-
-  get hasSelection(): boolean {
-    return this.grid && this.grid.hasSingleSelection;
-  }
-
-  get selectedPerson(): IPledgor {
-    return this.grid.selected.length ? this.grid.selected[0] : null;
+    this.cdRef.markForCheck();
   }
 
   private fetch(searchParams: object = {}): void {
@@ -116,28 +113,28 @@ export class PledgorGridComponent extends DialogFunctions implements OnInit, OnD
     this.cdRef.markForCheck();
   }
 
-  private getPersonColumns(): IGridColumn[] {
+  private getPersonColumns(): ISimpleGridColumn<IPledgor>[] {
     return [
       { prop: 'id', minWidth: 50, maxWidth: 80, type: 'number' },
       { prop: 'lastName', type: 'string' },
       { prop: 'firstName', type: 'string' },
       { prop: 'middleName', type: 'string' },
       { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
-      { prop: 'birthDate', maxWidth: 130, renderer: 'dateRenderer', type: 'date' },
+      { prop: 'birthDate', maxWidth: 130, renderer: DateRendererComponent, type: 'date' },
       { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER, type: 'number' },
       { prop: 'passportNumber', type: 'string' },
-    ];
+    ].map(addGridLabel('widgets.pledgor.grid'));
   }
 
-  private getDefaultColumns(): IGridColumn[] {
+  private getDefaultColumns(): ISimpleGridColumn<IPledgor>[] {
     return [
-      { prop: 'id', minWidth: 50, maxWidth: 80, type: 'number' },
-      { prop: 'lastName', type: 'string' },
-      { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
-    ];
+      { prop: 'id', minWidth: 50, maxWidth: 80 },
+      { prop: 'lastName' },
+      { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
+    ].map(addGridLabel('widgets.pledgor.grid'));
   }
 
-  private creatateColumns(typeCode: number): IGridColumn[] {
+  private creatateColumns(typeCode: number): ISimpleGridColumn<IPledgor>[] {
     return this.pledgorService.isPerson(typeCode) ? this.getPersonColumns() : this.getDefaultColumns();
   }
 }
