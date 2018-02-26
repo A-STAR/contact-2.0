@@ -4,13 +4,11 @@ import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { first } from 'rxjs/operators';
 
 import { IUserParams } from '@app/core/auth/auth.interface';
 
 import { AuthService } from './auth.service';
 import { DataService } from '../data/data.service';
-import { CallService } from '@app/core/calls/call.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
@@ -40,17 +38,6 @@ export class AuthEffects {
         this.notificationService.error('auth.errors.login').response(error).action(),
       ];
     });
-
-  @Effect()
-  loginSuccess$ = this.actions
-    .ofType(AuthService.AUTH_LOGIN_SUCCESS)
-    .flatMap(() => this.authService.userParams$)
-    .filter(Boolean)
-    .pipe(first())
-    .switchMap(userParams => [{
-      type: CallService.PBX_LOGIN,
-      payload: userParams
-    }]);
 
   @Effect()
   refresh$ = this.actions

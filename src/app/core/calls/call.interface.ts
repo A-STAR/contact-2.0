@@ -18,9 +18,9 @@ export interface ICall {
 }
 
 export interface ICallState {
-  intPhone: string;
   pbxState: IPBXState;
   settings: ICallSettings;
+  params: IPBXParams;
   activeCall: ICall;
 }
 

@@ -7,7 +7,7 @@ import { defer } from 'rxjs/observable/defer';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { ICallSettings, ICall, PBXStateEnum } from './call.interface';
+import { ICallSettings, ICall, PBXStateEnum, IPBXParams } from './call.interface';
 import { UnsafeAction } from '@app/core/state/state.interface';
 
 import { CallService } from './call.service';
@@ -15,6 +15,7 @@ import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
 
 import { first } from 'rxjs/operators';
+import { AuthService } from '@app/core/auth/auth.service';
 
 const savedState = localStorage.getItem(CallService.STORAGE_KEY);
 
@@ -163,13 +164,32 @@ export class CallEffects {
     });
 
   @Effect()
+  authLogin$ = this.actions
+    .ofType(AuthService.AUTH_LOGIN_SUCCESS)
+    .flatMap(() => this.authService.userParams$)
+    .filter(Boolean)
+    .pipe(first())
+    .switchMap(userParams => [{
+      type: CallService.PBX_LOGIN,
+      payload: userParams
+    }]);
+
+  @Effect()
+  authLogout$ = this.actions
+    .ofType(AuthService.AUTH_DESTROY_SESSION)
+    .switchMap(userParams => [{
+      type: CallService.PBX_PARAMS_CHANGE,
+      payload: null
+    }]);
+
+  @Effect()
   login$ = this.actions
     .ofType(CallService.PBX_LOGIN)
     .map((action: UnsafeAction) => action.payload)
     .filter(userParams => userParams.usePbx)
     .flatMap(() => combineLatest(
       this.callService.settings$.filter(Boolean),
-      this.callService.intPhone$
+      this.callService.params$.map(params => params && params.intPhone)
     ))
     .pipe(first())
     .filter(([ settings, intPhone ]) => !settings.useIntPhone || intPhone !== null)
@@ -195,15 +215,36 @@ export class CallEffects {
     .switchMap((action: UnsafeAction) => {
       const { statusCode } = action.payload;
       return this.changeStatus(statusCode)
-        .map(() => ([{
+        .map(() => ({
           type: CallService.PBX_STATUS_CHANGE_SUCCESS,
           payload: action.payload
-        }]))
+        }))
         .catch(error => {
           return [
             this.notificationService
               .updateError()
               .entity('entities.status.gen.singular')
+              .response(error)
+              .action()
+          ];
+        });
+    });
+
+  @Effect()
+  changeParams$ = this.actions
+    .ofType(CallService.PBX_PARAMS_CHANGE)
+    .switchMap((action: UnsafeAction) => {
+      const params = action.payload;
+      return this.changeParams(params)
+        .map(() => ({
+          type: CallService.PBX_PARAMS_CHANGE_SUCCESS,
+          payload: action.payload
+        }))
+        .catch(error => {
+          return [
+            this.notificationService
+              .updateError()
+              .entity('entities.callSettings.gen.plural')
               .response(error)
               .action()
           ];
@@ -221,6 +262,7 @@ export class CallEffects {
 
   constructor(
     private actions: Actions,
+    private authService: AuthService,
     private callService: CallService,
     private dataService: DataService,
     private notificationService: NotificationsService
@@ -264,5 +306,10 @@ export class CallEffects {
   private changeStatus(statusCode: number): Observable<void> {
     return this.dataService
       .update('/pbx/users/status', {}, { statusCode });
+  }
+
+  private changeParams(params: IPBXParams): Observable<void> {
+    return this.dataService
+      .update('/pbx/users', {}, params);
   }
 }

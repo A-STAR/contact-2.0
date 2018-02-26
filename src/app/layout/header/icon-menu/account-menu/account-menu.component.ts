@@ -48,7 +48,7 @@ export class AccountMenuComponent extends DialogFunctions implements OnInit {
       .flatMap(() => this.callService.settings$)
       .map(settings => settings && settings.useIntPhone)
       .filter(Boolean)
-      .flatMap(() => this.callService.intPhone$)
+      .flatMap(() => this.callService.params$.map(params => params && params.intPhone))
       .filter(phone => phone === null)
       .pipe(first())
       .subscribe(() => {
@@ -76,9 +76,8 @@ export class AccountMenuComponent extends DialogFunctions implements OnInit {
   }
 
   onPhoneExtensionSubmit(): void {
-    this.callService
-      .updatePBXParams(this.form.serializedValue)
-      .subscribe(() => this.setDialog(null));
+    this.callService.updateParams(this.form.serializedValue);
+    this.setDialog(null);
   }
 
   resetSettings(event: UIEvent): void {

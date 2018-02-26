@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { distinctUntilChanged, first, tap, map } from 'rxjs/operators';
 import { throttleTime } from 'rxjs/operators/throttleTime';
-import { catchError } from 'rxjs/operators/catchError';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '../state/state.interface';
@@ -12,8 +11,6 @@ import { ICallSettings, IPBXParams, ICall, IPBXState, PBXStateEnum } from './cal
 import { IWSConnection } from '@app/core/ws/ws.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
-import { DataService } from '../data/data.service';
-import { NotificationsService } from '../notifications/notifications.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { PersistenceService } from '@app/core/persistence/persistence.service';
 import { WSService } from '@app/core/ws/ws.service';
@@ -49,6 +46,8 @@ export class CallService implements OnDestroy {
   static PBX_STATE_CHANGE = 'PBX_STATE_DATA';
   static PBX_STATUS_CHANGE = 'PBX_STATUS_CHANGE';
   static PBX_STATUS_CHANGE_SUCCESS = 'PBX_STATUS_CHANGE_SUCCESS';
+  static PBX_PARAMS_CHANGE = 'PBX_PARAMS_CHANGE';
+  static PBX_PARAMS_CHANGE_SUCCESS = 'PBX_PARAMS_CHANGE_SUCCESS';
 
   private isFetching = false;
 
@@ -58,8 +57,6 @@ export class CallService implements OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private dataService: DataService,
-    private notificationService: NotificationsService,
     private store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService,
     private persistenceService: PersistenceService,
@@ -102,6 +99,10 @@ export class CallService implements OnDestroy {
     );
   }
 
+  get params$(): Observable<IPBXParams> {
+    return this.store.select(state => state.calls.params);
+  }
+
   get usePBX$(): Observable<boolean> {
     return this.authService.userParams$
       .map(params => params && !!params.usePbx);
@@ -128,10 +129,6 @@ export class CallService implements OnDestroy {
 
   get activeCall$(): Observable<ICall> {
     return this.store.select(state => state.calls.activeCall);
-  }
-
-  get intPhone$(): Observable<string> {
-    return this.store.select(state => state.calls.intPhone);
   }
 
   get canMakeCall$(): Observable<boolean> {
@@ -202,12 +199,11 @@ export class CallService implements OnDestroy {
     });
   }
 
-  updatePBXParams(params: IPBXParams): Observable<void> {
-    return this.dataService
-      .update('/pbx/users', {}, params)
-      .pipe(
-        catchError(this.notificationService.updateError().entity('entities.callSettings.gen.plural').dispatchCallback()),
-      );
+  updateParams(params: IPBXParams): void {
+    this.store.dispatch({
+      type: CallService.PBX_PARAMS_CHANGE,
+      payload: params
+    });
   }
 
   makeCall(phoneId: number, debtId: number, personId: number, personRole: number): void {
