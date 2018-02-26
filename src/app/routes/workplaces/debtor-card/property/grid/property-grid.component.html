@@ -8,16 +8,12 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
-
-<app-grid
-  columnTranslationKey="widgets.property"
-  selectionType="single"
+<app-simple-grid
+  persistenceKey="[grid] workplaces/debtor-card/property"
   [columns]="columns"
   [selection]="selection"
-  [footerHeight]="false"
   [rows]="propertyList"
-  [styles]="{ height: '230px' }"
-  (onSelect)="onSelect($event)"
-  (onDblClick)="onEdit($event)">
-</app-grid>
+  [toolbar]="toolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onEdit($event)">
+</app-simple-grid>
