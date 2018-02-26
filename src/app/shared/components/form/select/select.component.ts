@@ -7,7 +7,10 @@ import {
   forwardRef,
   HostListener,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
 import {
@@ -19,10 +22,14 @@ import {
   Validator,
 } from '@angular/forms';
 import * as R from 'ramda';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ILabeledValue } from './select.interface';
+import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
+import { LookupService } from '@app/core/lookup/lookup.service';
 import { SortOptionsPipe } from '@app/shared/components/form/select/select-pipes';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   selector: 'app-select',
@@ -42,10 +49,12 @@ import { SortOptionsPipe } from '@app/shared/components/form/select/select-pipes
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectComponent implements ControlValueAccessor, Validator {
+export class SelectComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
   @ViewChild('input') input: ElementRef;
 
+  @Input() dictCode: number;
   @Input() label: string;
+  @Input() lookupKey: ILookupKey;
   @Input() placeholder = '';
   @Input() renderer: (option: ILabeledValue) => void;
   @Input() required: boolean;
@@ -59,6 +68,7 @@ export class SelectComponent implements ControlValueAccessor, Validator {
   private _disabled = false;
   private _options: ILabeledValue[] = [];
   private open = false;
+  private optionsSubscription: Subscription;
   private selectedIndex: number = null;
 
   @Input()
@@ -86,6 +96,7 @@ export class SelectComponent implements ControlValueAccessor, Validator {
     if (this._disabled) {
       this.hideOptions();
     }
+    this.setDisabledState(value);
   }
 
   get disabled(): boolean {
@@ -104,10 +115,34 @@ export class SelectComponent implements ControlValueAccessor, Validator {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private lookupService: LookupService,
+    private renderer2: Renderer2,
     private sortOptionsPipe: SortOptionsPipe,
+    private userDictionariesService: UserDictionariesService,
   ) {
     this.hideOptions = this.hideOptions.bind(this);
     this.renderer = (option: ILabeledValue) => option.label;
+  }
+
+  ngOnInit(): void {
+    if (this.dictCode && this.lookupKey) {
+      throw new Error('SelectComponent must have either dictCode or lookupKey but not both.');
+    }
+    if (this.dictCode) {
+      this.optionsSubscription = this.userDictionariesService.getDictionaryAsOptions(this.dictCode)
+        .subscribe(this.onOptionsFetch);
+    }
+    if (this.lookupKey) {
+      this.optionsSubscription = this.lookupService.lookupAsOptions(this.lookupKey)
+        .subscribe(this.onOptionsFetch);
+    }
+    this.setDisabledState(this.disabled);
+  }
+
+  ngOnDestroy(): void {
+    if (this.optionsSubscription) {
+      this.optionsSubscription.unsubscribe();
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -117,9 +152,11 @@ export class SelectComponent implements ControlValueAccessor, Validator {
     }
   }
 
-  writeValue(value: number): void {
-    this.selectedIndex = value;
+  writeValue(id: number): void {
+    console.log('id', id);
+    this.selectedIndex = id;
     this.active = this.selectedOption;
+    this.propagateChange(id);
     this.cdRef.markForCheck();
   }
 
@@ -132,7 +169,13 @@ export class SelectComponent implements ControlValueAccessor, Validator {
   }
 
   setDisabledState(disabled: boolean): void {
-    this.isDisabled = disabled;
+    this._disabled = disabled;
+    const input = this.input.nativeElement;
+    if (disabled) {
+      this.renderer2.setAttribute(input, 'disabled', 'disabled');
+    } else {
+      this.renderer2.removeAttribute(input, 'disabled');
+    }
     this.cdRef.markForCheck();
   }
 
@@ -157,6 +200,9 @@ export class SelectComponent implements ControlValueAccessor, Validator {
   }
 
   onInputClick(event: MouseEvent): void {
+    if (this.disabled) {
+      return;
+    }
     if (!this.open) {
       this.showOptions();
     } else {
@@ -164,10 +210,10 @@ export class SelectComponent implements ControlValueAccessor, Validator {
     }
   }
 
-  onModelChange(value: string): void {
+  onInputChange(value: string): void {
     const foundIndex = this.options.findIndex(o => o.label === value);
     this.selectedIndex = foundIndex > -1 ? foundIndex : null;
-    this.propagateChange(event);
+    this.propagateChange(this.selectedIndex);
   }
 
   // onMatchClick(event: Event): void {
@@ -207,7 +253,6 @@ export class SelectComponent implements ControlValueAccessor, Validator {
     if (this.open) {
       this.hideOptions();
     } else {
-      console.log('open', this.open);
       this.showOptions();
       this.cdRef.markForCheck();
     }
@@ -233,6 +278,14 @@ export class SelectComponent implements ControlValueAccessor, Validator {
 
   private setDefault(value: boolean, defaultValue: boolean): boolean {
     return R.defaultTo(defaultValue)(value);
+  }
+
+  private onOptionsFetch = (options: ILabeledValue[]) => {
+    this.options = options;
+    this.active = this.selectedOption;
+    console.log('selectedIndex', this.selectedIndex);
+    this.propagateChange(this.selectedIndex);
+    this.cdRef.markForCheck();
   }
 
 }

@@ -9,10 +9,14 @@ export interface IValueEntity {
   value?: ValueType;
 }
 
+/**
+ * This one is mostly used in select controls
+ * TODO: rename to IOption, while also considering to rename
+ * `value` to `id`, which is more semantic
+ */
 export interface ILabeledValue {
-  value: any;
   label?: string;
-  selected?: boolean;
+  value: any;
 }
 
 export interface INamedValue {
