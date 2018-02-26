@@ -52,10 +52,11 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
     private renderer: Renderer2,
   ) {}
 
-  @Input() controlDisabled = false;
+  @Input() isDisabled = false;
   @Input() label = '';
-  @Input() placeholder = 'Enter translation value';
-  @Input() controlRequired = false;
+  // This somehow always gets undefined -> explore
+  @Input() placeholder = '';
+  @Input() required = false;
 
   @Input('langOptions')
   set langOptions(options: IMultiLanguageOption[]) {
@@ -77,7 +78,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
   }
 
   validate(control: AbstractControl): ValidationErrors {
-    return this.controlRequired
+    return this.required
       ? multilanguageRequired(this.langOptions)(control)
       : null;
   }
