@@ -326,13 +326,15 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'multilanguage'">
+    <!-- NOTE: isRequired helps here, since `required` would attach a standard validator,
+         which would lead to a false positive -->
     <app-multilanguage-input
       [isDisabled]="control.disabled"
       [formControlName]="control.controlName"
       [label]="control.label"
       [langOptions]="control.langOptions"
       [placeholder]="control.placeholder"
-      [required]="control.required"
+      [isRequired]="control.required"
     ></app-multilanguage-input>
   </ng-container>
 

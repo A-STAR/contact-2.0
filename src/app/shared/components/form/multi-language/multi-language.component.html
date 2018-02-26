@@ -2,7 +2,7 @@
   <span *ngIf="label" class="form-label">
     {{ label | translate }}
     <i class="fa fa-language"></i>
-    <b *ngIf="controlRequired" class="text-danger">*</b>
+    <b *ngIf="isRequired" class="text-danger">*</b>
   </span>
 
   <div class="input-group" appDropdown>
@@ -37,7 +37,7 @@
         (ngModelChange)="onValueChange($event)"
         (focusout)="onFocusOut()"
       >
-      <i *ngIf="value != null" class="co co-close clear-btn" (click)="onClear($event)"></i>
+      <i *ngIf="value != null && !isDisabled" class="co co-clear clear-btn" (click)="onClear($event)"></i>
     </div><!-- input-wrapper -->
 
   </div><!-- input-group -->
