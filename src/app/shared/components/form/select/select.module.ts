@@ -8,7 +8,7 @@ import { SingleSelectModule } from './single/single-select.module';
 
 import { SelectComponent } from './select.component';
 import { SelectWrapperComponent } from './select-wrapper.component';
-import { SortOptionsPipe } from './select-pipes';
+import { SortOptionsPipe } from './select.pipe';
 import { AlignmentDirective } from '../../../directives/alignment/alignment.directive';
 import { FocusDirective } from '../../../directives/focus/focus.directive';
 
@@ -25,6 +25,7 @@ import { FocusDirective } from '../../../directives/focus/focus.directive';
     FocusDirective,
     SelectComponent,
     SelectWrapperComponent,
+    SortOptionsPipe,
   ],
   exports: [
     MultiSelectModule,
@@ -33,7 +34,7 @@ import { FocusDirective } from '../../../directives/focus/focus.directive';
     SingleSelectModule,
   ],
   providers: [
-    SortOptionsPipe,
+    // SortOptionsPipe,
   ]
 })
 export class SelectModule {

@@ -23,7 +23,7 @@ export class CallCenterComponent {
     { prop: 'comment' },
   ].map(addGridLabel('modules.callCenter.grid'));
 
-  private selectedCampaign: ICampaign;
+  selectedCampaign: ICampaign;
 
   constructor(
     private callCenterService: CallCenterService,

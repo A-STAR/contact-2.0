@@ -28,7 +28,7 @@ import { ILabeledValue } from './select.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 import { LookupService } from '@app/core/lookup/lookup.service';
-import { SortOptionsPipe } from '@app/shared/components/form/select/select-pipes';
+import { SortOptionsPipe } from '@app/shared/components/form/select/select.pipe';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Component({
@@ -62,12 +62,13 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   @Output() select = new EventEmitter<ILabeledValue[]>();
 
+  public open = false;
+
   private _active: ILabeledValue;
   private _autoAlign = false;
   // private _autocomplete: ILabeledValue[] = [];
   private _disabled = false;
   private _options: ILabeledValue[] = [];
-  private open = false;
   private optionsSubscription: Subscription;
   private selectedIndex: number = null;
 
