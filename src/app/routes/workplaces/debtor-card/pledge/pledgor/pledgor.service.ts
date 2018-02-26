@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAGridRequestParams, IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IPledgor } from './pledgor.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
@@ -29,7 +29,7 @@ export class PledgorService {
     private notificationsService: NotificationsService,
   ) { }
 
-  makeFilter(searchParams: object, columns: IGridColumn[]): FilterObject {
+  makeFilter(searchParams: object, columns: ISimpleGridColumn<IPledgor>[]): FilterObject {
     const filter = FilterObject.create().and();
     const makeLike = str => `%${str}%`;
     const operators = {
@@ -43,7 +43,8 @@ export class PledgorService {
       .filter(param => searchParams[param] !== null)
       .forEach(param => {
         const column = columns.find(col => col.prop === param);
-        const operator = operators[column.type];
+        // TODO(d.maltsev): add type to coulmn interface?
+        const operator = operators[column['type']];
         const value = searchParams[param];
         filter.addFilter(
           FilterObject.create()

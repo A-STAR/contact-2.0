@@ -2737,6 +2737,9 @@
     },
     "calls": {
       "gen": { "singular": "звонка", "plural": "звонков" }
+    },
+    "status": {
+      "gen": { "singular": "статуса", "plural": "статусов" }
     }
   },
   "massOperations": {
