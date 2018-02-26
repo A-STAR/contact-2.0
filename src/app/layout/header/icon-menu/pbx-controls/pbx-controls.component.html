@@ -1,21 +1,28 @@
+
+<app-phone-operator-dialog
+  *ngIf="isDialog('operator')"
+  (select)="onPhoneOperatorSelect($event)"
+  (close)="onCloseDialog()"
+></app-phone-operator-dialog>
+
 <ul class="flex">
   <li class="flex-item" *ngIf="showHoldCall$ | async">
-    <span class="menu-item" [class.disabled]="!(canHoldCall$ | async)">
+    <span class="menu-item" [class.disabled]="!(canHoldCall$ | async)" (click)="onHoldCall()">
       <i class="icon co-pause"></i>
     </span>
   </li>
   <li class="flex-item" *ngIf="showRetrieveCall$ | async">
-    <span class="menu-item" [class.disabled]="!(canRetrieveCall$ | async)">
+    <span class="menu-item" [class.disabled]="!(canRetrieveCall$ | async)" (click)="onRetrieveCall()">
       <i class="icon co-call-unpause"></i>
     </span>
   </li>
   <li class="flex-item" *ngIf="showTransferCall$ | async">
-    <span class="menu-item" [class.disabled]="!(canTransferCall$ | async)">
+    <span class="menu-item" [class.disabled]="!(canTransferCall$ | async)" (click)="onTransferCall()">
       <i class="icon co-call-transfer"></i>
     </span>
   </li>
   <li class="flex-item" *ngIf="showDropCall$ | async">
-    <span class="menu-item" [class.disabled]="!(canDropCall$ | async)">
+    <span class="menu-item" [class.disabled]="!(canDropCall$ | async)" (click)="onDropCall()">
       <i class="icon co-call-cancel"></i>
     </span>
   </li>

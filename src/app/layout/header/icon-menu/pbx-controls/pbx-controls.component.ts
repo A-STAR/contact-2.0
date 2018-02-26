@@ -5,6 +5,7 @@ import { CallService } from '@app/core/calls/call.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { combineLatestAnd } from '@app/core/utils';
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,12 +13,16 @@ import { combineLatestAnd } from '@app/core/utils';
   templateUrl: './pbx-controls.component.html',
   styleUrls: [ './pbx-controls.component.scss' ]
 })
-export class PbxControlsComponent {
+export class PbxControlsComponent extends DialogFunctions {
+
+  dialog: string;
 
   constructor(
     private callService: CallService,
     private userPermissionsService: UserPermissionsService
-  ) {}
+  ) {
+    super();
+  }
 
   get canDropCall$(): Observable<boolean> {
     return this.callService.canDropCall$;
@@ -65,5 +70,25 @@ export class PbxControlsComponent {
       this.callService.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall)
     ]);
+  }
+
+  onDropCall(): void {
+    this.callService.dropCall();
+  }
+
+  onHoldCall(): void {
+    this.callService.holdCall();
+  }
+
+  onRetrieveCall(): void {
+    this.callService.retrieveCall();
+  }
+
+  onTransferCall(): void {
+    this.setDialog('operator');
+  }
+
+  onPhoneOperatorSelect(operatorId: number): void {
+    this.callService.transferCall(operatorId);
   }
 }
