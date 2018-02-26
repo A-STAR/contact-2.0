@@ -2,20 +2,20 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
 
 import { IPledgeContract } from '../pledge.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { PledgeService } from '../pledge.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { PledgeService } from '../pledge.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '@app/core/dialog';
-import { combineLatestAnd } from '@app/core/utils/helpers';
+import { DateRendererComponent } from '@app/shared/components/grids/renderers/date/date.component';
+
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   selector: 'app-pledge-grid',
@@ -28,19 +28,19 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
 
   dialog: string;
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IPledgeContract>[] = [
     { prop: 'id' },
     { prop: 'contractNumber' },
     { prop: 'fullName' },
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
-    { prop: 'contractStartDate', renderer: 'dateRenderer' },
-    { prop: 'contractEndDate', renderer: 'dateRenderer' },
+    { prop: 'contractStartDate', renderer: DateRendererComponent },
+    { prop: 'contractEndDate', renderer: DateRendererComponent },
     { prop: 'comment' },
     { prop: 'propertyType', dictCode: UserDictionariesService.DICTIONARY_PROPERTY_TYPE },
     { prop: 'propertyName' }
-  ];
+  ].map(addGridLabel('widgets.pledgeContract.grid'));
 
-  toolbarItems: Array<IToolbarItem> = [
+  toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.pledgeService.canAdd$,
@@ -73,7 +73,7 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
     },
   ];
 
-  private _contracts: Array<IPledgeContract> = [];
+  private _contracts: IPledgeContract[] = [];
 
   private debtId = (this.route.params as any).value.debtId || null;
 
@@ -82,7 +82,6 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private pledgeService: PledgeService,
     private route: ActivatedRoute,
@@ -92,13 +91,6 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-    .pipe(first())
-    .subscribe(columns => {
-      this.columns = [ ...columns ];
-      this.cdRef.markForCheck();
-    });
-
     this.viewPermissionSubscription = this.pledgeService.canView$
       .subscribe(canView => {
         if (canView) {
@@ -127,7 +119,10 @@ export class PledgeGridComponent extends DialogFunctions implements OnInit, OnDe
     return this._contracts;
   }
 
-  onSelect(pledge: IPledgeContract): void {
+  onSelect(pledges: IPledgeContract[]): void {
+    const pledge = isEmpty(pledges)
+      ? null
+      : pledges[0];
     this.selectedContract$.next(pledge);
   }
 

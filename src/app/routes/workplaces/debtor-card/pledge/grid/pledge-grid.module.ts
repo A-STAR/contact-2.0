@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SharedModule } from '../../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { PledgeGridComponent } from './pledge-grid.component';
 
@@ -17,4 +17,4 @@ import { PledgeGridComponent } from './pledge-grid.component';
     PledgeGridComponent,
   ],
 })
-export class PledgeGridModule { }
+export class PledgeGridModule {}
