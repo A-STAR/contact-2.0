@@ -20,16 +20,12 @@
   (close)="onDialogClose()">
 </app-debt-grid-call-dialog>
 
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
-
-<app-grid
-  columnTranslationKey="widgets.debt"
-  selectionType="single"
+<app-simple-grid
+  persistenceKey="[grid] workplaces/debtor-card/debts"
   [columns]="columns"
-  [footerHeight]="false"
   [rows]="debts$ | async"
   [selection]="selection$ | async"
-  [styles]="{ height: '230px' }"
-  (onDblClick)="onDoubleClick($event)"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  [toolbar]="toolbarItems"
+  (dblClick)="onDoubleClick($event)"
+  (select)="onSelect($event)">
+</app-simple-grid>
