@@ -9,33 +9,37 @@ import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { PropertyService } from '../property.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '@app/core/dialog';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
+
 import { combineLatestAnd } from 'app/core/utils/helpers';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-property-grid',
   templateUrl: './property-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PropertyGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @Input() personId: number;
 
   private selectedProperty$ = new BehaviorSubject<IProperty>(null);
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IProperty>[] = [
     { prop: 'id' },
     { prop: 'name' },
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PROPERTY_TYPE },
-    { prop: 'isConfirmed', renderer: 'checkboxRenderer' },
+    { prop: 'isConfirmed', renderer: TickRendererComponent },
     { prop: 'comment' }
-  ];
+  ].map(addGridLabel('widgets.property.grid'));
 
-  toolbarItems: Array<IToolbarItem> = [
+  toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.propertyService.canAdd$,
@@ -61,7 +65,7 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
 
   dialog: 'delete';
 
-  private _propertyList: Array<IProperty> = [];
+  private _propertyList: IProperty[] = [];
 
   private busSubscription: Subscription;
   private viewPermissionSubscription: Subscription;
@@ -69,7 +73,6 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
   constructor(
     private cdRef: ChangeDetectorRef,
     private propertyService: PropertyService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService
@@ -78,13 +81,6 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-    .pipe(first())
-    .subscribe(columns => {
-      this.columns = [...columns];
-      this.cdRef.markForCheck();
-    });
-
     this.viewPermissionSubscription = this.propertyService.canView$
       .subscribe(hasViewPermission => {
         if (hasViewPermission) {
@@ -126,7 +122,10 @@ export class PropertyGridComponent extends DialogFunctions implements OnInit, On
     return selectedProperty ? [ selectedProperty ] : [];
   }
 
-  onSelect(property: IProperty): void {
+  onSelect(properties: IProperty[]): void {
+    const property = isEmpty(properties)
+      ? null
+      : properties[0];
     this.selectedProperty$.next(property);
   }
 
