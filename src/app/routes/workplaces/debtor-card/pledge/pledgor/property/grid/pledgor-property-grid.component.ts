@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
 
 import { IPledgorProperty } from '../pledgor-property.interface';
 
@@ -18,8 +17,6 @@ import { PledgeService } from '../../../pledge.service';
 import { PledgorPropertyService } from '../pledgor-property.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-
-import { GridComponent } from '@app/shared/components/grid/grid.component';
 
 import { DialogFunctions } from '@app/core/dialog';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';

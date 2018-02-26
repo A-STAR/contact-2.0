@@ -60,8 +60,12 @@ export class PledgorGridComponent extends DialogFunctions implements OnInit, OnD
       .pipe(first())
       .subscribe(strAttributeList => {
         const addColumns = parseStringValueAttrs(<string>strAttributeList.valueS)
-          .map(attr => ({ prop: attr, type: 'string' }));
-        this.columns = this.creatateColumns(this.searchParams.typeCode);
+          .map(attr => ({ prop: attr, type: 'string' }))
+          .map(addGridLabel('widgets.pledgor.grid'));
+        this.columns = [
+          ...this.creatateColumns(this.searchParams.typeCode),
+          ...addColumns,
+        ];
         this.cdRef.markForCheck();
       });
 
