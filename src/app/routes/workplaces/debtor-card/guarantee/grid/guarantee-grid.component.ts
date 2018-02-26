@@ -1,26 +1,23 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGuaranteeContract } from '../guarantee.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { GuaranteeService } from '../guarantee.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '@app/core/dialog';
-import { combineLatestAnd } from '@app/core/utils/helpers';
-import { addGridLabel, isEmpty } from '@app/core/utils';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { DateRendererComponent } from '@app/shared/components/grids/renderers/date/date.component';
+import { DialogFunctions } from '@app/core/dialog';
+
+import { addGridLabel, isEmpty, combineLatestAnd } from '@app/core/utils';
 
 @Component({
   selector: 'app-guarantee-grid',
