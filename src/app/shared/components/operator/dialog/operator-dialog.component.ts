@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IOperator } from '../../operator/operator.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { OperatorService } from '../operator.service';
-
-import { GridComponent } from '@app/shared/components/grid/grid.component';
+import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   selector: 'app-phone-operator-dialog',
@@ -13,21 +12,19 @@ import { GridComponent } from '@app/shared/components/grid/grid.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorDialogComponent implements OnInit {
-  @ViewChild(GridComponent) grid: GridComponent;
-
   @Output() close = new EventEmitter<null>();
   @Output() select = new EventEmitter<number>();
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IOperator>[] = [
     { prop: 'id', width: 50 },
     { prop: 'fullName' },
     { prop: 'debtCnt', width: 100 },
     { prop: 'organization' },
     { prop: 'position' }
-  ];
+  ].map(addGridLabel('widgets.operator.grid'));
 
-  gridStyles = { height: '500px' };
-  operators: Array<IOperator> = [];
+  operators: IOperator[] = [];
+  selection: IOperator;
 
   private selectedOperator: IOperator;
 
@@ -40,8 +37,10 @@ export class OperatorDialogComponent implements OnInit {
     this.fetch();
   }
 
-  get hasSelection(): boolean {
-    return this.grid && !!this.grid.selected.length;
+  onSelect(operators: IOperator[]): void {
+    this.selection = isEmpty(operators)
+      ? null
+      : operators[0];
   }
 
   onSubmit(): void {

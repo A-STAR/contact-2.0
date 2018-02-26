@@ -2,17 +2,14 @@
   <div dialog-header>
     <h3>{{ 'widgets.address.dialogs.visits.title' | translate }}</h3>
   </div>
-  <div>
-    <app-grid
-      columnTranslationKey="widgets.address.dialogs.visits"
+  <div style="height: 75vh;">
+    <app-simple-grid
+      persistenceKey="[grid] workplaces/shared/address/visits"
       [columns]="columns"
       [rows]="visits"
-      [styles]="{ height: '600px' }">
-    </app-grid>
+    ></app-simple-grid>
   </div>
   <div dialog-footer>
-    <button class="btn btn-default" (click)="onCancel()">
-      <i class="fa fa-remove"></i> {{ 'default.buttons.close' | translate }}
-    </button>
+    <app-button type="close" (click)="onCancel()"></app-button>
   </div>
 </app-dialog>
