@@ -1,16 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IOperator, IGridAction } from '../../operator/operator.interface';
+import { IOperator, IGridAction } from '../debt-responsible-set.interface';
 
-import { OperatorService } from '../operator.service';
+import { DebtResponsibleSetService } from '../debt-responsible-set.service';
 
 @Component({
-  selector: 'app-operator-dialog',
-  templateUrl: './operator-dialog.component.html',
+  selector: 'app-debt-responsible-set-dialog',
+  templateUrl: './debt-responsible-set-dialog.component.html',
+  host: { class: 'full-height' },
+  styleUrls: ['./debt-responsible-set-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OperatorDialogComponent implements OnInit, OnDestroy {
+export class DebtResponsibleSetDialogComponent implements OnInit, OnDestroy {
 
   @Output() close = new EventEmitter<null>();
   @Output() select = new EventEmitter<IOperator>();
@@ -21,20 +23,20 @@ export class OperatorDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private operatorService: OperatorService
+    private debtResponsibleSetService: DebtResponsibleSetService
   ) { }
 
   ngOnInit(): void {
-    this.operatorSelectSub = this.operatorService
-      .getPayload<IGridAction>(OperatorService.MESSAGE_OPERATOR_SELECTED)
+    this.operatorSelectSub = this.debtResponsibleSetService
+      .getPayload<IGridAction>(DebtResponsibleSetService.MESSAGE_OPERATOR_SELECTED)
       .filter(action => action.type === 'select')
       .map(action => action.payload)
       .subscribe(operator => {
         this.selectedOperator = operator;
         this.cdRef.markForCheck();
       });
-    this.operatorClickSub = this.operatorService
-      .getPayload<IGridAction>(OperatorService.MESSAGE_OPERATOR_SELECTED)
+    this.operatorClickSub = this.debtResponsibleSetService
+      .getPayload<IGridAction>(DebtResponsibleSetService.MESSAGE_OPERATOR_SELECTED)
       .filter(action => action.type === 'dblclick')
       .map(action => action.payload)
       .subscribe(operator => {

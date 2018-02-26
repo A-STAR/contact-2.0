@@ -3,7 +3,9 @@
     <h3>{{ 'widgets.operator.dialog.title' | translate }}</h3>
   </div>
 
-  <app-operator-grid></app-operator-grid>
+  <div class="grid-wrapper">
+    <app-debt-responsible-set-grid></app-debt-responsible-set-grid>
+  </div>
 
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!hasSelection" (click)="onSelect()">

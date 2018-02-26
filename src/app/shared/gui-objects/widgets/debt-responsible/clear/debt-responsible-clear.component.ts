@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 
-import { ICloseAction, IGridAction } from '../../../../../components/action-grid/action-grid.interface';
-import { IOperationResult } from '../../debt-responsible.interface';
+import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
+import { IOperationResult } from '../debt-responsible.interface';
 
-import { DebtResponsibleService } from '../../debt-responsible.service';
+import { DebtResponsibleService } from '../debt-responsible.service';
 
 @Component({
   selector: 'app-debt-responsible-clear',

@@ -1,28 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
-import { DialogActionModule } from '../../../components/dialog-action/dialog-action.module';
-import { OperatorModule } from '../operator/operator.module';
+import { DebtResponsibleClearModule } from './clear/debt-responsible-clear.module';
+import { DebtResponsibleSetModule } from './set/debt-responsible-set.module';
 
 import { DebtResponsibleService } from './debt-responsible.service';
 
-import { DebtResponsibleClearComponent } from './dialog/clear/debt-responsible-clear.component';
-import { DebtResponsibleSetComponent } from './dialog/set/debt-responsible-set.component';
-
-
 @NgModule({
   imports: [
-    CommonModule,
-    DialogActionModule,
-    OperatorModule,
-  ],
-  declarations: [
-    DebtResponsibleSetComponent,
-    DebtResponsibleClearComponent
+    DebtResponsibleClearModule,
+    DebtResponsibleSetModule,
   ],
   exports: [
-    DebtResponsibleSetComponent,
-    DebtResponsibleClearComponent
+    DebtResponsibleClearModule,
+    DebtResponsibleSetModule,
   ],
   providers: [
     DebtResponsibleService,

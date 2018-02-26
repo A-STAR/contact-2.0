@@ -3,12 +3,12 @@ import { Observable } from 'rxjs/Observable';
 
 import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
 import { IOperationResult } from './debt-responsible.interface';
-import { IOperator } from '../operator/operator.interface';
+import { IOperator } from './set/debt-responsible-set.interface';
 
 import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
-import { DataService } from '../../../../core/data/data.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Injectable()
 export class DebtResponsibleService {
