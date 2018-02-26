@@ -19,8 +19,8 @@
               [title]="getTitle(item)"
               [enabled]="!(isDisabled(item) | async)"
             >
-            <i trigger class="fa" [ngClass]="getIconCls(item)" aria-hidden="true"></i>
-            <app-menu [items]="item.children"></app-menu>
+              <i trigger class="co" [ngClass]="getIconCls(item)" aria-hidden="true"></i>
+              <app-menu [items]="item.children"></app-menu>
             </app-dropdown>
           </ng-container>
           <ng-template #button>

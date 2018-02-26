@@ -150,7 +150,7 @@
       <app-multi-select
         [formControlName]="control.controlName"
         [options]="control.options"
-        [controlDisabled]="control.disabled"
+        [isDisabled]="control.disabled"
         (select)="selectHandler({ control: control, items: $event})"
       ></app-multi-select>
     </label>
@@ -326,12 +326,12 @@
 
   <ng-container *ngSwitchCase="'multilanguage'">
     <app-multilanguage-input
-      [controlDisabled]="control.disabled"
+      [isDisabled]="control.disabled"
       [formControlName]="control.controlName"
       [label]="control.label"
       [langOptions]="control.langOptions"
       [placeholder]="control.placeholder"
-      [controlRequired]="control.required"
+      [required]="control.required"
     ></app-multilanguage-input>
   </ng-container>
 

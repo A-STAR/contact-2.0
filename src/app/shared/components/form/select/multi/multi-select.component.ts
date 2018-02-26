@@ -28,8 +28,12 @@ export class MultiSelectComponent implements ControlValueAccessor {
   @Input() options: IOption[] = [];
 
   @Input()
-  set controlDisabled(value: boolean) {
+  set isDisabled(value: boolean) {
     this.setDisabledState(value);
+  }
+
+  get isDisabled(): boolean {
+    return this._isDisabled;
   }
 
   @Output() select = new EventEmitter<IMultiSelectValue>();
@@ -53,10 +57,6 @@ export class MultiSelectComponent implements ControlValueAccessor {
   get label(): string {
     const option = this.options.find(o => o.value === this.selection[0]);
     return option ? option.label : null;
-  }
-
-  get isDisabled(): boolean {
-    return this._isDisabled;
   }
 
   getId = (option: IOption) => option.value;

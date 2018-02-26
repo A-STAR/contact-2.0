@@ -25,3 +25,10 @@ $cell-horizontal-padding: 15px;
 
 @import '~ag-grid/src/styles/ag-grid.scss';
 @import '~ag-grid/src/styles/ag-theme-material.scss';
+
+app-simple-grid {
+  .toolbar {
+    padding: 6px 0 4px !important;
+    border-bottom: 1px solid #eaeaea;
+  }
+}
