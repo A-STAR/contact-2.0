@@ -2,36 +2,58 @@
 
   <label>
     Boolean - dictCode #2 - Selected: 'True'
-    <app-single-select
+    <app-select
       [dictCode]="2"
       formControlName="select1"
       [ngModel]="select1Model"
       (ngModelChange)="onSingleSelect1Change($event)"
-    ></app-single-select>
+    ></app-select>
   </label>
 
   <label>
-    Payment Type - dictCode #41 - Selected: '{{ select2Model }}'
-    <app-single-select
+    Payment Type - dictCode #41 - Selected: '{{ select2Model }}' - Required
+    <app-select
       [dictCode]="41"
       formControlName="select2"
+      [required]="true"
       [ngModel]="select2Model"
       (ngModelChange)="onSingleSelect2Change($event)"
-    ></app-single-select>
+    ></app-select>
   </label>
 
   <label>
-    Lookup - Currencies
-    <app-single-select
+    Lookup Currencies
+    <app-select
       lookupKey="currencies"
       formControlName="select3"
       [ngModel]="select3Model"
       (ngModelChange)="onSingleSelect3Change($event)"
+    ></app-select>
+  </label>
+
+  <label>
+    Lookup Currencies - Disabled
+    <app-select
+      lookupKey="currencies"
+      formControlName="select3"
+      [isDisabled]="true"
+      [ngModel]="select3Model"
+      (ngModelChange)="onSingleSelect3Change($event)"
+    ></app-select>
+  </label>
+
+  <label>
+    Old app-single-select
+    <app-single-select
+      [isDisabled]="false"
+      lookupKey="currencies"
+      formControlName="select4"
+      [ngModel]="select4Model"
     ></app-single-select>
   </label>
 
   <label>
-    Lookup - Disabled
+    Old app-single-select - Disabled
     <app-single-select
       [isDisabled]="true"
       lookupKey="currencies"

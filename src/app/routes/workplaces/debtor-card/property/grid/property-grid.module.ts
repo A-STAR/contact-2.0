@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SharedModule } from '../../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { PropertyGridComponent } from './property-grid.component';
 
@@ -17,4 +17,4 @@ import { PropertyGridComponent } from './property-grid.component';
     PropertyGridComponent,
   ]
 })
-export class PropertyGridModule { }
+export class PropertyGridModule {}

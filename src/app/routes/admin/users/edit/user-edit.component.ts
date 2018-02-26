@@ -197,21 +197,21 @@ export class UserEditComponent extends DialogFunctions {
             label: 'users.edit.agentId',
             controlName: 'agentId',
             type: 'text',
-            required: agentAttributes[87].isMandatory
+            required: !!agentAttributes[87].isMandatory
           } : null,
         agentAttributes[88].isUsed
           ? {
             label: 'users.edit.agentName',
             controlName: 'agentName',
             type: 'text',
-            required: agentAttributes[88].isMandatory
+            required: !!agentAttributes[88].isMandatory
           } : null,
         agentAttributes[89].isUsed
           ? {
             label: 'users.edit.agentPassword',
             controlName: 'agentPassword',
             type: 'text',
-            required: agentAttributes[89].isMandatory
+            required: !!agentAttributes[89].isMandatory
           } : null,
       ].filter(Boolean)
     ] as Array<IDynamicFormControl>).map(control => ({

@@ -28,7 +28,7 @@
       [attr.placeholder]="(placeholder || '') | translate"
       [ngModel]="activeLabel"
       (click)="onInputClick($event)"
-      (ngModelChange)="onModelChange($event)"
+      (ngModelChange)="onInputChange($event)"
     >
     <i
       *ngIf="!disabled"

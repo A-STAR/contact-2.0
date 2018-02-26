@@ -1,4 +1,10 @@
-<split *ngIf="hasDebt$ | async; else noActiveDebts" direction="horizontal" gutterColor="inherit" [useTransition]="true">
+<split
+  *ngIf="hasDebt$ | async; else noActiveDebts"
+  direction="horizontal"
+  gutterColor="inherit"
+  gutterSize="20"
+  [useTransition]="true"
+>
 
   <!-- Main Area -->
   <split-area size="60">
