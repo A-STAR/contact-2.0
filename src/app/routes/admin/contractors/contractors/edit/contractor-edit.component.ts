@@ -5,10 +5,10 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IActionType, IContractor } from '@app/routes/admin/contractors-and-portfolios/contractors-and-portfolios.interface';
+import { IActionType, IContractor } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors-and-portfolios/contractors-and-portfolios.service';
+import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';

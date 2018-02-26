@@ -4,7 +4,7 @@ import * as auth from '../auth/auth.reducer';
 import * as calls from '../calls/call.reducer';
 import * as campaigns from '../../routes/utilities/campaigns/campaigns.reducer';
 import * as constants from '../../routes/admin/constants/constants.reducer';
-import * as contractorsAndPortfolios from '../../routes/admin/contractors-and-portfolios/contractors-and-portfolios.reducer';
+import * as contractorsAndPortfolios from '../../routes/admin/contractors/contractors-and-portfolios.reducer';
 import * as debtorCard from '../app-modules/debtor-card/debtor-card.reducer';
 import * as dictionaries from '../../routes/admin/dictionaries/dictionaries.reducer';
 import * as entityAttributes from '../entity/attributes/entity-attributes.reducer';
