@@ -27,18 +27,22 @@ export class GridsService {
     const savedColumnIds = savedColumns.map(c => c.colId);
     const ids = Array.from(new Set([ ...savedColumnIds, ...columnIds ]));
 
-    return ids.map(id => {
-      const column = columns.find(c => c.prop === id);
-      return {
-        field: column.prop,
-        headerName: this.translateService.instant(column.label),
-        minWidth: column.minWidth,
-        maxWidth: column.maxWidth,
-        ...this.getFilterOptions(column),
-        ...this.getCellRendererOptions(column),
-        ...(savedColumns.find(c => c.colId === id) || {}),
-      };
-    });
+    return ids
+      .map(id => {
+        const column = columns.find(c => c.prop === id);
+        return column
+          ? {
+              field: column.prop,
+              headerName: this.translateService.instant(column.label),
+              minWidth: column.minWidth,
+              maxWidth: column.maxWidth,
+              ...this.getFilterOptions(column),
+              ...this.getCellRendererOptions(column),
+              ...(savedColumns.find(c => c.colId === id) || {}),
+            }
+          : null;
+      })
+      .filter(Boolean);
   }
 
   restoreSortModel(persistenceKey: string, gridApi: GridApi): void {
