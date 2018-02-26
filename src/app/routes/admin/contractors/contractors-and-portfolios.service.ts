@@ -4,7 +4,7 @@ import { Actions } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { catchError, first, map } from 'rxjs/operators';
 
-import { IAppState } from '../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import {
   IContractor,
   IContractorsAndPortfoliosState,
@@ -16,8 +16,8 @@ import {
   IContractorAndPorfolioAction
 } from './contractors-and-portfolios.interface';
 
-import { DataService } from '../../../core/data/data.service';
-import { NotificationsService } from '../../../core/notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Injectable()
 export class ContractorsAndPortfoliosService {

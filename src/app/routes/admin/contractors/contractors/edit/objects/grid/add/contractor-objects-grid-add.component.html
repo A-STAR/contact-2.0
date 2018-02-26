@@ -2,15 +2,14 @@
   <div dialog-header>
     <h3>{{ 'widgets.contractorObject.dialogs.add.title' | translate }}</h3>
   </div>
-  <div>
-    <app-grid
-      columnTranslationKey="widgets.contractorObject"
-      selectionType="multi"
+  <div class="object-add-grid-wrapper">
+    <app-simple-grid
+      persistenceKey="[grid] admin/contractors/edit/objects-add"
+      selectionType="multiple"
       [columns]="columns"
       [rows]="rows"
-      [styles]="{ height: '320px' }"
-      (onSelect)="onSelect()"
-    ></app-grid>
+      (select)="onSelect($event)"
+    ></app-simple-grid>
   </div>
   <div dialog-footer>
     <app-button color="primary" type="add" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>

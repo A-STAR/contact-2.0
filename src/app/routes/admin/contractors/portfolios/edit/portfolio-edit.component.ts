@@ -7,10 +7,10 @@ import { Subscription } from 'rxjs/Subscription';
 import {
   IActionType,
   IPortfolio
-} from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+} from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
+import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';

@@ -1,15 +1,18 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
-import { SharedModule } from '../../../../../../shared/shared.module';
+import { ContractorObjectsGridModule } from './grid/contractor-objects-grid.module';
+import { SharedModule } from '@app/shared/shared.module';
+
+import { ContractorObjectsService } from './contractor-objects.service';
 
 import { ContractorObjectsComponent } from './contractor-objects.component';
 
 @NgModule({
   imports: [
-    CommonModule,
-    SharedModule
+    ContractorObjectsGridModule,
+    SharedModule,
   ],
+  providers: [ ContractorObjectsService ],
   declarations: [
     ContractorObjectsComponent
   ],

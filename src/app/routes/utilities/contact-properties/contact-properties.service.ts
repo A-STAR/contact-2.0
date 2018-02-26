@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IContactTreeNode } from './contact-property.interface';
+import { IContactTreeNode } from './contact-properties.interface';
 
-import { DataService } from '../../../../core/data/data.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Injectable()
 export class ContactPropertyService {

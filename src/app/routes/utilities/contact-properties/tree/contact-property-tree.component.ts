@@ -4,21 +4,21 @@ import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 
-import { IOption } from '../../../../../core/converter/value-converter.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../components/toolbar-2/toolbar-2.interface';
-import { ITreeNode } from '../../../../components/flowtree/treenode/treenode.interface';
-import { IUserConstant } from '../../../../../core/user/constants/user-constants.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
-import { ContactPropertyService } from '../contact-property.service';
-import { UserConstantsService } from '../../../../../core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../core/user/permissions/user-permissions.service';
+import { ContactPropertyService } from '../contact-properties.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../../core/dialog';
+import { DialogFunctions } from '@app/core/dialog';
 
-import { combineLatestAnd, doOnceIf } from '../../../../../core/utils/helpers';
-import { isEmpty } from '../../../../../core/utils';
-import { toTreeNodes } from '../../../../../core/utils/tree';
+import { combineLatestAnd, doOnceIf } from '@app/core/utils/helpers';
+import { isEmpty } from '@app/core/utils';
+import { toTreeNodes } from '@app/core/utils/tree';
 
 @Component({
   selector: 'app-contact-property-tree',

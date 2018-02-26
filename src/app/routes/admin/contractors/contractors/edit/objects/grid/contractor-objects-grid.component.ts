@@ -1,61 +1,59 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IObject } from '../object.interface';
-import { IOption } from '../../../../../core/converter/value-converter.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IObject } from '../contractor-objects.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ObjectService } from '../object.service';
+import { ContractorObjectsService } from '../contractor-objects.service';
 import { NotificationsService } from 'app/core/notifications/notifications.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { GridComponent } from 'app/shared/components/grid/grid.component';
-
-import { DialogFunctions } from '../../../../../core/dialog';
-import { combineLatestAnd } from '../../../../../core/utils/helpers';
+import { addGridLabel } from '@app/core/utils';
+import { DialogFunctions } from '@app/core/dialog';
+import { combineLatestAnd } from '@app/core/utils';
 
 @Component({
-  selector: 'app-contractor-object-grid',
-  templateUrl: './object-grid.component.html',
+  selector: 'app-contractor-objects-grid',
+  templateUrl: './contractor-objects-grid.component.html',
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class ContractorObjectsGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   private dictionarySubscription: Subscription;
   private viewPermissionSubscription: Subscription;
 
   @Input() contractorId: number;
-
-  @ViewChild(GridComponent) grid: GridComponent;
 
   selectedObjects$ = new BehaviorSubject<IObject[]>(null);
 
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
-      enabled: this.objectService.canAdd$,
+      enabled: this.contractorObjectsService.canAdd$,
       action: () => this.setDialog('add'),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: combineLatestAnd([
-        this.objectService.canDelete$,
+        this.contractorObjectsService.canDelete$,
         this.selectedObjects$.map(objects => objects && !!objects.length)
       ]),
       action: () => this.setDialog('delete'),
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
-      enabled: this.objectService.canView$,
+      enabled: this.contractorObjectsService.canView$,
       action: () => this.fetch(),
     },
   ];
 
-  columns: IGridColumn[] = [
+  columns: Array<ISimpleGridColumn<IObject>>[] = [
     { prop: 'id' },
     { prop: 'name' },
-  ];
+  ].map(addGridLabel('widgets.contractorObject.grid'));
 
   rows: IObject[] = [];
 
@@ -64,9 +62,11 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
   typeCodeOptions = [];
   selectedTypeCode = 1;
 
+  private selection: IObject[];
+
   constructor(
     private cdRef: ChangeDetectorRef,
-    private objectService: ObjectService,
+    private contractorObjectsService: ContractorObjectsService,
     private notificationsService: NotificationsService,
     private userDictionariesService: UserDictionariesService,
   ) {
@@ -74,7 +74,7 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   ngOnInit(): void {
-    this.viewPermissionSubscription = this.objectService.canView$
+    this.viewPermissionSubscription = this.contractorObjectsService.canView$
       .subscribe(hasViewPermission => {
         if (hasViewPermission) {
           this.fetch();
@@ -103,23 +103,24 @@ export class ObjectGridComponent extends DialogFunctions implements OnInit, OnDe
   }
 
   onSelect(objects: IObject[]): void {
+    this.selection = objects;
     this.selectedObjects$.next(objects);
   }
 
   onAddDialogSubmit(ids: number[]): void {
-    this.objectService
+    this.contractorObjectsService
       .add(this.contractorId, this.selectedTypeCode, ids)
       .subscribe(() => this.onSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    const ids = this.grid.selected.map(item => item.id);
-    this.objectService.delete(this.contractorId, this.selectedTypeCode, ids)
+    const ids = this.selection.map(item => item.id);
+    this.contractorObjectsService.delete(this.contractorId, this.selectedTypeCode, ids)
       .subscribe(() => this.onSuccess());
   }
 
   private fetch(): void {
-    this.objectService.fetchAll(this.contractorId, this.selectedTypeCode).subscribe(objects => {
+    this.contractorObjectsService.fetchAll(this.contractorId, this.selectedTypeCode).subscribe(objects => {
       this.rows = objects;
       this.selectedObjects$.next(null);
       this.cdRef.markForCheck();

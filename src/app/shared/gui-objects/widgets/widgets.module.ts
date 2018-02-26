@@ -2,11 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AttributeModule as EntityAttributeModule } from './entity-attribute/attribute.module';
-import { AttributeModule } from './attribute/attribute.module';
 import { ComponentLogModule } from './debt/component-log/component-log.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
-import { ContactPropertyModule } from './contact-property/contact-property.module';
-import { ContractorObjectModule } from './contractor-object/object.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
 import { DebtOpenIncomingCallModule } from './debt-open-incoming-call/debt-open-incoming-call.module';
 import { EntityGroupModule } from './entity-group/entity-group.module';
@@ -21,12 +18,9 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
 @NgModule({
   imports: [
-    AttributeModule,
     CommonModule,
     ComponentLogModule,
     ContactLogModule,
-    ContactPropertyModule,
-    ContractorObjectModule,
     DebtResponsibleModule,
     DebtOpenIncomingCallModule,
     EntityAttributeModule,
@@ -41,11 +35,8 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     VisitPrepareModule,
   ],
   exports: [
-    AttributeModule,
     ComponentLogModule,
     ContactLogModule,
-    ContactPropertyModule,
-    ContractorObjectModule,
     DebtOpenIncomingCallModule,
     DebtResponsibleModule,
     EntityAttributeModule,
