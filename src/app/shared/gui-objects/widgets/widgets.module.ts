@@ -10,7 +10,6 @@ import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { NextCallDateSetModule } from './next-call-date-set/next-call-date-set.module';
 import { OperatorDetailsModule } from './operator-details/operator-details.module';
 import { PaymentOperatorModule } from './payment-operator/payment-operator.module';
-import { PersonSelectModule } from './person-select/person-select.module';
 import { PromiseResolveModule } from './promise-resolve/promise-resolve.module';
 import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
 
@@ -26,7 +25,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     NextCallDateSetModule,
     OperatorDetailsModule,
     PaymentOperatorModule,
-    PersonSelectModule,
     PromiseResolveModule,
     VisitPrepareModule,
   ],
@@ -40,7 +38,6 @@ import { VisitPrepareModule } from './visit-prepare/visit-prepare.module';
     NextCallDateSetModule,
     OperatorDetailsModule,
     PaymentOperatorModule,
-    PersonSelectModule,
     PromiseResolveModule,
     VisitPrepareModule,
   ]

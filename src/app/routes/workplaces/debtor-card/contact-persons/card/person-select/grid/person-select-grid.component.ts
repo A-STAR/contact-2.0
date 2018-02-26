@@ -6,23 +6,24 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
-import { IAGridResponse } from '../../../../../shared/components/grid2/grid2.interface';
+import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IPerson } from '../person-select.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from 'app/shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { PersonSelectService } from '../person-select.service';
-import { GridService } from '../../../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { Grid2Component } from '../../../../../shared/components/grid2/grid2.component';
-import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
+import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { isEmpty, range, addLabelForEntity } from '../../../../../core/utils';
-import { DialogFunctions } from 'app/core/dialog';
+import { isEmpty, range, addLabelForEntity } from '@app/core/utils';
+import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-person-select-grid',
+  host: { class: 'full-height' },
   templateUrl: './person-select-grid.component.html',
 })
 export class PersonSelectGridComponent extends DialogFunctions implements OnInit {

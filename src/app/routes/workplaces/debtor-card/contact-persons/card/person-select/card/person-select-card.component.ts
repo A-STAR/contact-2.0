@@ -4,18 +4,18 @@ import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
-import { IUserConstant } from 'app/core/user/constants/user-constants.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 import { IPerson } from '../person-select.interface';
 
-import { UserConstantsService } from 'app/core/user/constants/user-constants.service';
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
+import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { PersonSelectService } from '../person-select.service';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey, parseStringValueAttrs } from '../../../../../core/utils';
+import { makeKey, parseStringValueAttrs } from '@app/core/utils';
 
 const labelKey = makeKey('common.entities.person.fields');
 

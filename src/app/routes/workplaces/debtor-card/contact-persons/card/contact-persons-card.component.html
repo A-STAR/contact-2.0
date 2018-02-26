@@ -2,25 +2,24 @@
 
   <!-- Form -->
   <div class="flex-item">
-    <div class="pb-lg">
-      <button class="btn btn-default" (click)="onBack()">
-        <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
-      </button>
-      <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
-        <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
-      </button>
-    </div>
-
-    <div class="mb">
+      <div class="pb-lg">
+        <button class="btn btn-default" (click)="onBack()">
+          <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+        </button>
+        <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit">
+          <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+        </button>
+      </div>
       <app-dynamic-form *ngIf="controls" [controls]="controls" [data]="contact"></app-dynamic-form>
-    </div>
-
-    <div class="pb-lg">
-      <app-person-select-grid *ngIf="contact === null" (select)="onContactSelected($event)"></app-person-select-grid>
-      <app-person-select-card *ngIf="contact" [personId]="contact.id"></app-person-select-card>
-    </div>
   </div>
-
+  <!-- Person grid -->
+  <div class="flex-item grow" *ngIf="contact === null">
+      <app-person-select-grid  (select)="onContactSelected($event)"></app-person-select-grid>
+  </div>
+  <!-- Person card -->
+  <div class="flex-item" *ngIf="contact">
+      <app-person-select-card  [personId]="contact.id"></app-person-select-card>
+  </div>
   <!-- Details Tabstrip -->
   <div class="flex-item grow">
     <app-tabview [fullHeight]="true" [noMargin]="true" (select)="onTabSelect($event)">

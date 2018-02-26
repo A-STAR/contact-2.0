@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IAGridRequestParams, IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
+import { IAGridRequestParams, IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IPerson } from './person-select.interface';
 
-import { DataService } from '../../../../core/data/data.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 
-import { FilterObject } from '../../../../shared/components/grid2/filter/grid-filter';
+import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
 @Injectable()
 export class PersonSelectService {

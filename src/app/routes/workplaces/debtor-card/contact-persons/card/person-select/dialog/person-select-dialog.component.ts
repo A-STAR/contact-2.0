@@ -3,9 +3,9 @@ import {
   Output, ViewChild, Input
 } from '@angular/core';
 
-import { IPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
+import { IPerson } from '../person-select.interface';
 
-import { PersonSelectCardComponent } from 'app/shared/gui-objects/widgets/person-select/card/person-select-card.component';
+import { PersonSelectCardComponent } from '../card/person-select-card.component';
 
 @Component({
   selector: 'app-person-select-dialog',

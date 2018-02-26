@@ -10,7 +10,7 @@ import { IContact, IContactLink } from '@app/routes/workplaces/debtor-card/conta
 import { IEmployment } from '@app/routes/workplaces/debtor-card/employment/employment.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
-import { IPerson } from 'app/shared/gui-objects/widgets/person-select/person-select.interface';
+import { IPerson } from './person-select/person-select.interface';
 
 import { ContactPersonsService } from '@app/routes/workplaces/debtor-card/contact-persons/contact-persons.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -18,8 +18,8 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-import { PersonSelectGridComponent } from '@app/shared/gui-objects/widgets/person-select/grid/person-select-grid.component';
-import { PersonSelectCardComponent } from '@app/shared/gui-objects/widgets/person-select/card/person-select-card.component';
+import { PersonSelectGridComponent } from './person-select/grid/person-select-grid.component';
+import { PersonSelectCardComponent } from './person-select/card/person-select-card.component';
 
 import { makeKey } from '@app/core/utils';
 const label = makeKey('widgets.contact.grid');
@@ -72,7 +72,8 @@ export class ContactPersonsCardComponent implements OnInit {
           controlName: 'linkTypeCode',
           type: 'selectwrapper',
           dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
-          disabled: !canEdit
+          disabled: !canEdit,
+          width: 4
         },
       ];
     });

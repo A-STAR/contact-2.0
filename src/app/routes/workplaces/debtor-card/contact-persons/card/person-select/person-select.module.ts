@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { PersonSelectGridModule } from './grid/person-select-grid.module';
 import { PersonSelectCardModule } from './card/person-select-card.module';
@@ -12,7 +11,6 @@ import { PersonSelectService } from './person-select.service';
     PersonSelectGridModule,
     PersonSelectCardModule,
     PersonSelectDialogModule,
-    CommonModule,
   ],
   exports: [
     PersonSelectGridModule,
