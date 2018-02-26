@@ -29,11 +29,8 @@
     "preset": "jest-preset-angular",
     "setupTestFrameworkScriptFile": "<rootDir>/src/jest.ts",
     "moduleNameMapper": {
-      "^@app/(.*)$": "<rootDir>/src/app/$1.ts"
-    },
-    "testPathIgnorePatterns": [
-      "<rootDir>/src/app/shared/components/grids/"
-    ]
+      "^@app/(.*)$": "<rootDir>/src/app/$1"
+    }
   },
   "dependencies": {
     "@angular/animations": "^5.2.4",
