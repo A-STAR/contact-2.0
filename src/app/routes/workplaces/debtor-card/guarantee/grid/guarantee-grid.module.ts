@@ -17,4 +17,4 @@ import { GuaranteeGridComponent } from './guarantee-grid.component';
     GuaranteeGridComponent,
   ],
 })
-export class GuaranteeGridModule { }
+export class GuaranteeGridModule {}

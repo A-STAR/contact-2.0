@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { first } from 'rxjs/operators';
 
 import { ICampaignProcessedDebt } from '../../campaign.interface';
-import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { CampaignService } from '../../campaign.service';
-import { GridService } from '../../../../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
+import { NumberRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-call-center-toolbar-processed-debts',
@@ -16,31 +18,24 @@ import { UserDictionariesService } from '../../../../../../core/user/dictionarie
 export class ProcessedDebtsComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
 
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<ICampaignProcessedDebt>[] = [
     { prop: 'personFullName', minWidth: 200 },
     { prop: 'debtId', minWidth: 50, maxWidth: 100 },
     { prop: 'contract' },
     { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS },
     { prop: 'debtAmount', minWidth: 150 },
-    { prop: 'currencyName', renderer: 'numberRenderer' },
+    { prop: 'currencyName', renderer: NumberRendererComponent },
     { prop: 'dpd', minWidth: 100 },
-  ];
+  ].map(addGridLabel('modules.callCenter.processedDebts.grid'));
+
   debts: ICampaignProcessedDebt[];
 
   constructor(
     private campaignService: CampaignService,
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
   ) {}
 
   ngOnInit(): void {
-    this.gridService.setDictionaryRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = this.gridService.setRenderers(columns);
-        this.cdRef.markForCheck();
-      });
-
     this.campaignService.fetchProcessedDebtsForCurrentCampaign()
       .subscribe(debts => {
         this.debts = debts;
