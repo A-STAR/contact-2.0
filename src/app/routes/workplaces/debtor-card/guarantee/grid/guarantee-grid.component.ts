@@ -1,23 +1,23 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGuaranteeContract } from '../guarantee.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { GuaranteeService } from '../guarantee.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
+import { DateRendererComponent } from '@app/shared/components/grids/renderers/date/date.component';
 import { DialogFunctions } from '@app/core/dialog';
-import { combineLatestAnd } from '@app/core/utils/helpers';
+
+import { addGridLabel, isEmpty, combineLatestAnd } from '@app/core/utils';
 
 @Component({
   selector: 'app-guarantee-grid',
@@ -28,7 +28,7 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
 
   private selectedContract$ = new BehaviorSubject<IGuaranteeContract>(null);
 
-  toolbarItems: Array<IToolbarItem> = [
+  toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       enabled: this.canAdd$,
@@ -66,16 +66,16 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
     },
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IGuaranteeContract>[] = [
     { prop: 'id', width: 70, minWidth: 40 },
     { prop: 'contractNumber' },
     { prop: 'fullName' },
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE },
-    { prop: 'contractStartDate', maxWidth: 130, renderer: 'dateRenderer' },
-    { prop: 'contractEndDate', maxWidth: 130, renderer: 'dateRenderer' },
+    { prop: 'contractStartDate', maxWidth: 130, renderer: DateRendererComponent },
+    { prop: 'contractEndDate', maxWidth: 130, renderer: DateRendererComponent },
     { prop: 'contractTypeCode', dictCode: UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE },
     { prop: 'comment' },
-  ];
+  ].map(addGridLabel('widgets.guaranteeContract.grid'));
 
   contracts: Array<IGuaranteeContract> = [];
   dialog: string;
@@ -86,12 +86,9 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   private actionSubscription: Subscription;
   private canViewSubscription: Subscription;
 
-  gridStyles = this.routeParams.contactId ? { height: '230px' } : { height: '500px' };
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private guaranteeService: GuaranteeService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -101,13 +98,6 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
     this.canViewSubscription = this.canView$
       .subscribe(hasPermission => {
         if (hasPermission) {
@@ -145,11 +135,14 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
     return this.userPermissionsService.has('GUARANTEE_DELETE');
   }
 
-  onDoubleClick(): void {
-    this.onEdit();
+  onDoubleClick(contract: IGuaranteeContract): void {
+    this.onEdit(contract);
   }
 
-  onSelect(contract: IGuaranteeContract): void {
+  onSelect(contracts: IGuaranteeContract[]): void {
+    const contract = isEmpty(contracts)
+      ? null
+      : contracts[0];
     this.selectedContract$.next(contract);
   }
 
@@ -175,8 +168,8 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
     this.routingService.navigate([ `guarantee/${contractId}/guarantor/add` ], this.route);
   }
 
-  private onEdit(): void {
-    const { contractId, personId } = this.selectedContract$.value;
+  private onEdit(contract: IGuaranteeContract = null): void {
+    const { contractId, personId } = contract || this.selectedContract$.value;
     this.routingService.navigate([ `guarantee/${contractId}/guarantor/${personId}` ], this.route);
   }
 
