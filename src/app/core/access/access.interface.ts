@@ -12,6 +12,7 @@ export enum IAccessByEntityMethod {
 export interface IAccessByEntityConfigItem {
   type: IAccessConfigItemType.ENTITY;
   method: IAccessByEntityMethod;
+  value: string[];
 }
 
 export enum IAccessByValueBagMethod {
@@ -23,6 +24,7 @@ export enum IAccessByValueBagMethod {
 export interface IAccessByValueBagConfigItem {
   type: IAccessConfigItemType.CONSTANT | IAccessConfigItemType.PERMISSION;
   method: IAccessByValueBagMethod;
+  value: string[];
 }
 
 export type IAccessConfigItem = IAccessByEntityConfigItem | IAccessByValueBagConfigItem;
@@ -32,7 +34,10 @@ export enum IAccessConfigOperator {
   OR = 'or',
 }
 
-export interface IAccessConfig {
+export interface IAccessGroup {
+  type: 'group';
   operator: IAccessConfigOperator;
-  children: IAccessConfig | IAccessConfigItem;
+  children: IAccessConfig[];
 }
+
+export type IAccessConfig = IAccessGroup | IAccessConfigItem;
