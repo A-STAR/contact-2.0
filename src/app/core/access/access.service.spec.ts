@@ -72,8 +72,7 @@ describe('AccessService', () => {
       .hasAccess({
         type: IAccessConfigItemType.ENTITY,
         method: IAccessByEntityMethod.IS_MANDATORY,
-        // Attribute id:
-        value: 1,
+        value: null,
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -93,8 +92,7 @@ describe('AccessService', () => {
       .hasAccess({
         type: IAccessConfigItemType.ENTITY,
         method: IAccessByEntityMethod.IS_MANDATORY,
-        // Attribute id:
-        value: 1,
+        value: null,
       })
       .subscribe(res => {
         expect(res).toBeFalsy();
@@ -114,8 +112,7 @@ describe('AccessService', () => {
       .hasAccess({
         type: IAccessConfigItemType.ENTITY,
         method: IAccessByEntityMethod.IS_USED,
-        // Attribute id:
-        value: 1,
+        value: null,
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -135,14 +132,38 @@ describe('AccessService', () => {
       .hasAccess({
         type: IAccessConfigItemType.ENTITY,
         method: IAccessByEntityMethod.IS_USED,
-        // Attribute id:
-        value: 1,
+        value: null,
       })
       .subscribe(res => {
         expect(res).toBeFalsy();
         expect(spy).toHaveBeenCalledTimes(1);
         done();
       });
+  });
+
+  it('should fail on unknown method (type = entity)', done => {
+    const spy = spyOn(entityAttributesService, 'getAttribute')
+      .and
+      .returnValue(of({
+        isMandatory: null,
+        isUsed: null,
+      }));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.ENTITY,
+        method: null,
+        value: null,
+      })
+      .subscribe(
+        res => {
+          expect(res).toBeFalsy();
+        },
+        error => {
+          expect(error).toBeTruthy();
+          expect(spy).toHaveBeenCalledTimes(1);
+          done();
+        }
+      );
   });
 
   /*
@@ -324,6 +345,36 @@ describe('AccessService', () => {
       });
   });
 
+  it('should fail on unknowm method (type = constant)', done => {
+    const name = 'constant';
+    const spy = spyOn(userConstantsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name,
+          valueB: null,
+          valueN: null,
+          valueS: null,
+        }
+      })));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.CONSTANT,
+        method: null,
+        value: null,
+      })
+      .subscribe(
+        res => {
+          expect(res).toBeFalsy();
+        },
+        error => {
+          expect(error).toBeTruthy();
+          expect(spy).toHaveBeenCalledTimes(1);
+          done();
+        },
+      );
+  });
+
   /*
    * UserPermissionsService
    */
@@ -503,6 +554,36 @@ describe('AccessService', () => {
       });
   });
 
+  it('should fail on unknowm method (type = permission)', done => {
+    const name = 'permission';
+    const spy = spyOn(userPermissionsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name,
+          valueB: null,
+          valueN: null,
+          valueS: null,
+        }
+      })));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.PERMISSION,
+        method: null,
+        value: null,
+      })
+      .subscribe(
+        res => {
+          expect(res).toBeFalsy();
+        },
+        error => {
+          expect(error).toBeTruthy();
+          expect(spy).toHaveBeenCalledTimes(1);
+          done();
+        },
+      );
+  });
+
   /*
    * Groups
    */
@@ -629,5 +710,24 @@ describe('AccessService', () => {
         expect(spy).toHaveBeenCalledTimes(2);
         done();
       });
+  });
+
+  it('should fail on unknown operator (type = group)', done => {
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.GROUP,
+        operator: null,
+        children: [],
+      })
+      .subscribe(
+        res => {
+          expect(res).toBeFalsy();
+          done();
+        },
+        error => {
+          expect(error).toBeTruthy();
+          done();
+        },
+      );
   });
 });
