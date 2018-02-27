@@ -78,7 +78,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
     /**
      * This form's `config` is defined
-     * example: @app\shared\gui-objects\widgets\contact-property\tree\edit\contact-property-tree-edit.component.ts
      */
 
     // set the default config options

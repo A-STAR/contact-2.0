@@ -50,7 +50,7 @@ export class ContractorObjectsGridComponent extends DialogFunctions implements O
     },
   ];
 
-  columns: Array<ISimpleGridColumn<IObject>>[] = [
+  columns: Array<ISimpleGridColumn<IObject>> = [
     { prop: 'id' },
     { prop: 'name' },
   ].map(addGridLabel('widgets.contractorObject.grid'));

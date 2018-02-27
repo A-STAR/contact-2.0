@@ -1,0 +1,8 @@
+<app-simple-grid
+  persistenceKey="[grid] mass-ops/debt-responsible/set"
+  selectionType="single"
+  [columns]="columns"
+  [rows]="operators"
+  (select)="onSelect($event)"
+  (dblClick)="onDoubleClick($event)"
+></app-simple-grid>
