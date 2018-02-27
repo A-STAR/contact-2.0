@@ -43,6 +43,7 @@
       <div class="col-md-3">
         <app-select
           *ngIf="isCurrencySelected"
+          [required]="true"
           [options]="currencies"
           [isDisabled]="hasFile"
           [ngModel]="currency"
@@ -52,6 +53,7 @@
       <div class="col-md-3">
         <app-select
           *ngIf="hasAccess"
+          [required]="true"
           [options]="uploaders"
           [isDisabled]="hasFile"
           [ngModel]="format"

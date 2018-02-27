@@ -58,9 +58,10 @@ import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
 import { RadioGroupModule } from './components/form/radio-group/radio-group.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
+import { SelectModule } from './components/form/select/select.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TextEditorModule } from './components/form/text-editor/text-editor.module';
-import { TitlebarModule } from '@app/shared/components/titlebar/titlebar.module';
+import { TitlebarModule } from './components/titlebar/titlebar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
 import { ValueInputModule } from './components/form/value/value.module';
@@ -126,6 +127,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ProgressbarModule,
     QBuilder2Module,
     RadioGroupModule,
+    SelectModule,
     SpinnerModule,
     TabViewModule,
     TextEditorModule,
@@ -204,6 +206,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     QBuilderComponent,
     QBuilder2Module,
     RadioGroupModule,
+    SelectModule,
     SpinnerModule,
     TabViewModule,
     TextEditorModule,
