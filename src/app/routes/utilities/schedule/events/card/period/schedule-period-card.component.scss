@@ -1,8 +1,11 @@
 :host {
-  /deep/ .date-control app-dynamic-form label {
+  /deep/ .date-control app-dynamic-form .form-label {
     display: none;
   }
   /deep/ app-grid datatable-header {
     display: none !important;
+  }
+  app-button[type='add'] {
+    margin-left: 3px;
   }
 }
