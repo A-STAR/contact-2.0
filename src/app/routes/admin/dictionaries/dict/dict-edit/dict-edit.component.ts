@@ -15,7 +15,6 @@ import {
   IDynamicFormConfig
 } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
-import { SelectionActionTypeEnum } from '@app/shared/components/form/select/select.interface';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
@@ -24,6 +23,7 @@ import { toLabeledValues } from '@app/core/utils';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
+  host: { class: 'full-height' },
   selector: 'app-dict-edit',
   templateUrl: './dict-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,9 +97,6 @@ export class DictEditComponent implements OnInit {
         controlName: 'parentCode',
         type: 'select',
         options: this.dictionaries.map(toLabeledValues),
-        optionsActions: [
-          { text: 'dictionaries.edit.select.title.dictList', type: SelectionActionTypeEnum.SORT }
-        ],
         disabled,
       },
       {
@@ -107,9 +104,6 @@ export class DictEditComponent implements OnInit {
         type: 'select',
         required: true,
         options: this.dictionaryTermTypes.map(toLabeledValues),
-        optionsActions: [
-          { text: 'dictionaries.edit.select.title.termTypesList', type: SelectionActionTypeEnum.SORT }
-        ],
         disabled,
       }
     ] as IDynamicFormItem[];

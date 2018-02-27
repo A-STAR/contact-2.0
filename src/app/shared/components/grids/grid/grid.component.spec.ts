@@ -9,6 +9,7 @@ import { of } from 'rxjs/observable/of';
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 import { SelectModule } from '@app/shared/components/form/select/select.module';
+import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
 
 import { IGridColumn } from '../grids.interface';
 
@@ -24,12 +25,11 @@ class TranslateLoaderMock {
 }
 
 class GridsServiceMock {
-  convertColumnsToColDefs<T>(columns: IGridColumn<T>[]): Observable<ColDef[]> {
-    const colDefs = columns.map(column => ({
+  convertColumnsToColDefs<T>(columns: IGridColumn<T>[]): ColDef[] {
+    return columns.map(column => ({
       field: column.prop,
       headerName: column.label,
     }));
-    return of(colDefs);
   }
 }
 
@@ -49,6 +49,7 @@ describe('SimpleGridComponent', () => {
           CheckModule,
           FormsModule,
           SelectModule,
+          Toolbar2Module,
           TranslateModule.forRoot({
             loader: {
               provide: TranslateLoader,
@@ -71,6 +72,7 @@ describe('SimpleGridComponent', () => {
   });
 
   it('should render empty grid', () => {
+    fixture.componentInstance.persistenceKey = 'test-persistence-key';
     fixture.detectChanges();
     expect(fixture.nativeElement).toMatchSnapshot();
   });

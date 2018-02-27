@@ -6,18 +6,13 @@
   titleTranslationKey="debtor.guarantorsTab.remove.title"
   (action)="onRemove()"
   (cancel)="onCancel()"
->
-</app-dialog-action>
+></app-dialog-action>
 
-
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
-
-<app-grid
-  columnTranslationKey="widgets.guaranteeContract"
-  selectionType="single"
-  [styles]="gridStyles"
+<app-simple-grid
+  persistenceKey="[grid] workplaces/debtor-card/guarantee"
   [columns]="columns"
   [rows]="contracts"
-  (onDblClick)="onDoubleClick()"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  [toolbar]="toolbarItems"
+  (dblClick)="onDoubleClick($event)"
+  (select)="onSelect($event)">
+</app-simple-grid>

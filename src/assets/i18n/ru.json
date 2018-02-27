@@ -172,6 +172,9 @@
   "shared": {
     "components": {
       "grids": {
+        "overlays": {
+          "empty": "Нет данных"
+        },
         "toolbar": {
           "rowsSelected": "выбрано",
           "rowsTotal": "всего"
@@ -1675,6 +1678,7 @@
       },
       "grid": {
         "code": "Код",
+        "name": "Название",
         "names": "Название",
         "value": "Значение",
         "userFullName": "Оператор",
@@ -1754,13 +1758,14 @@
     },
     "document": {
       "grid": {
-        "docName": "Название документа",
-        "fileName": "Имя файла",
-        "docTypeCode": "Тип документа",
-        "docNumber": "Номер",
-        "operatorName": "Оператор",
         "comment": "Комментарий",
-        "file": "Файл"
+        "docName": "Название документа",
+        "docNumber": "Номер",
+        "docTypeCode": "Тип документа",
+        "file": "Файл",
+        "fileName": "Имя файла",
+        "fullName": "Оператор",
+        "operatorName": "Оператор"
       },
       "dialogs": {
         "delete": {
@@ -1923,6 +1928,29 @@
       },
       "changeDefaultAttr": {
         "title": "Изменить атрибут"
+      },
+      "outsourcing": {
+        "send": {
+          "title": "Выберите портфель",
+          "grid": {
+            "id": "ID",
+            "name": "Название",
+            "contractorName": "Контрагент",
+            "statusCode": "Статус",
+            "stageCode": "Стадия",
+            "signDate": "Дата подписания портфеля",
+            "startWorkDate": "Дата начала работ",
+            "endWorkDate": "Дата окончания работ"
+          }
+        },
+        "exclude": {
+          "message": "Вы действительно хотите исключить из аутсорсинга выбранные платежи?",
+          "title": "Исключить из аутсорсинга"
+        },
+        "return": {
+          "message": "Вы действительно хотите отозвать из аутсорсинга выбранные платежи?",
+          "title": "Отозвать из аутсорсинга"
+        }
       }
     },
     "nextCallDateSet": {
@@ -2709,6 +2737,9 @@
     },
     "calls": {
       "gen": { "singular": "звонка", "plural": "звонков" }
+    },
+    "status": {
+      "gen": { "singular": "статуса", "plural": "статусов" }
     }
   },
   "massOperations": {
@@ -3137,6 +3168,8 @@
         "filterOoo": "фильтр..."
       },
       "actions": {
+        "actionForSelection": "для выбранных",
+        "actionForAll": "для всех",
         "addVisit": "Отметить необходимость",
         "cancelVisit": "Отменить выезд",
         "confirmPaymentsOperator": "Подтвердить изменение оператора",
@@ -3173,7 +3206,10 @@
         "changeDict4Attr": "Словарный атрибут 4",
         "changeCreditTypeAttr": "Тип кредитного продукта",
         "changeBranchAttr": "Филиал",
-        "changeTimezoneAttr": "Часовой пояс"
+        "changeTimezoneAttr": "Часовой пояс",
+        "debtOutsourcingSend": "Передать на аутсорсинг",
+        "debtOutsourcingExclude": "Исключить из аутсорсинга",
+        "debtOutsourcingReturn": "Отозвать из аутсорсинга"
       }
     },
     "filter": {

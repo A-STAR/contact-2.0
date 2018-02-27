@@ -1,0 +1,23 @@
+<div class="menu"
+    tabindex="-1">
+  <ul
+    [ngClass]="menuClass"
+    class="menu__body"
+  >
+    <li
+      *ngFor="let item of items"
+      class="menu__item"
+      (click)="onAction(item)"
+      [ngClass]="{'disabled': isDisabled(item) | async }"
+    >
+    <span *ngIf="item.children" class="menu__arrow fa fa-caret-left"></span>
+    <span>{{ item.title | translate }}</span>
+    <app-menu
+      *ngIf="item.children"
+      [items]="item.children"
+      menuClass="menu__submenu menu__submenu--left"
+    >
+    </app-menu>
+    </li>
+  </ul>
+</div>

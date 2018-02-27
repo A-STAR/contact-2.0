@@ -1,9 +1,20 @@
-<textarea
-  class="form-control"
-  [disabled]="disabled"
-  [ngModel]="value"
-  [ngStyle]="style"
-  [rows]="rows"
-  (focusout)="onFocusOut()"
-  (ngModelChange)="onChange($event)"
-></textarea>
+<label class="m0">
+  <div *ngIf="label" class="form-label">
+    {{ label | translate }}
+    <b *ngIf="required" class="text-danger">*</b>
+  </div>
+  <div>
+    <textarea
+      class="form-control"
+      [readonly]="disabled"
+      [ngModel]="value"
+      [ngStyle]="style"
+      [rows]="rows"
+      (focusout)="onFocusOut()"
+      (ngModelChange)="onChange($event)"
+    ></textarea>
+  </div>
+  <div>
+    <span *ngIf="errors">{{ errors | json }}</span>
+  </div>
+</label>

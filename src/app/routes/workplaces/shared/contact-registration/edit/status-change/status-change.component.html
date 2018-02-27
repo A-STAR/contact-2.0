@@ -9,7 +9,6 @@
       <app-select-wrapper
         formControlName="statusReasonCode"
         [dictCode]="statusChangeReasonDictCode"
-        [nullable]="!(isChangeReasonRequired$ | async)"
         [required]="isChangeReasonRequired$ | async"
       ></app-select-wrapper>
     </label>

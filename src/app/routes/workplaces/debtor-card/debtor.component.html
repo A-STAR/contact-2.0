@@ -4,9 +4,9 @@
   (cancel)="onCloseDialog()">
 </app-register-contact-dialog>
 
-<split direction="horizontal" gutterColor="inherit" [useTransition]="true">
+<split direction="horizontal" gutterColor="inherit" gutterSize="20" [useTransition]="true">
   <!-- Main Area -->
-  <split-area size="60" class="minw-500">
+  <split-area size="60">
     <div class="flex vertical">
 
       <!-- Buttons & Form -->
@@ -25,7 +25,7 @@
 
       <!-- Tabstrip -->
       <div class="flex-item grow">
-        <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
+        <app-tabview [fullHeight]="true" [noMargin]="true" (select)="onTabSelect($event)">
           <app-tabview-tab [title]="'debtor.information.title'">
             <app-debtor-information *ngIf="tabs[0].isInitialised"></app-debtor-information>
           </app-tabview-tab>
@@ -36,10 +36,10 @@
             <app-guarantee-grid *ngIf="tabs[2].isInitialised"></app-guarantee-grid>
           </app-tabview-tab>
           <app-tabview-tab [title]="'debtor.contactsTab.title'">
-            <app-contact-grid
+            <app-contact-persons-grid
               *ngIf="tabs[3].isInitialised"
               [personId]="personId$ | async"
-            ></app-contact-grid>
+            ></app-contact-persons-grid>
           </app-tabview-tab>
           <app-tabview-tab [title]="'debtor.documentsTab.title'">
             <app-document-grid
@@ -83,11 +83,11 @@
             ></app-debtor-action-log>
           </app-tabview-tab>
           <app-tabview-tab [title]="'debtor.contactLogTab.title'">
-            <app-contact-log-tab-grid
+            <app-contact-log-grid
               *ngIf="tabs[10].isInitialised"
               [debtId]="debtId$ | async"
               [personId]="personId$ | async"
-            ></app-contact-log-tab-grid>
+            ></app-contact-log-grid>
           </app-tabview-tab>
           <app-tabview-tab [title]="'debtor.attributesTab.title'">
             <app-debtor-attributes *ngIf="tabs[11].isInitialised"></app-debtor-attributes>
@@ -99,7 +99,7 @@
   </split-area>
 
   <!-- Contact Registration Area -->
-  <split-area *ngIf="displayContactRegistration$ | async" size="40" class="minw-200">
+  <split-area *ngIf="displayContactRegistration$ | async" size="40">
     <app-contact-registration></app-contact-registration>
   </split-area>
 </split>

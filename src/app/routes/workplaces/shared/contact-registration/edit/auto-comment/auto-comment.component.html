@@ -7,7 +7,6 @@
       </span>
       <app-select
         formControlName="autoCommentId"
-        [nullable]="true"
         [options]="autoCommentIdOptions$ | async"
       ></app-select>
     </label>
@@ -15,14 +14,10 @@
 
   <!-- Autocomment Text -->
   <div>
-    <label>
-      <span class="form-label">
-        {{ 'routes.workplaces.shared.contactRegistration.edit.form.autoComment' | translate }}
-      </span>
-    </label>
-    <app-html-textarea
+    <app-textarea
       formControlName="autoComment"
-    ></app-html-textarea>
+      label="routes.workplaces.shared.contactRegistration.edit.form.autoComment.autoComment"
+    ></app-textarea>
   </div>
 
   <hr>

@@ -5,14 +5,14 @@ import { ContactLogTabModule } from './contact-log-tab/contact-log-tab.module';
 import { GridModule } from '../../../shared/components/grid/grid.module';
 import { SharedModule } from '../../../shared/shared.module';
 
+import { ContactPersonsModule } from './contact-persons/contact-persons.module';
 import { DebtModule } from './debt/debt.module';
+import { DebtorActionLogModule } from './action-log/action-log.module';
 import { DebtorAddressModule } from './address/address.module';
 import { DebtorAttributesModule } from './attributes/attributes.module';
 import { DebtorAttributesVersionsModule } from './versions/debtor-attributes-versions.module';
-import { DebtorContactsModule } from './contacts/contacts.module';
 import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
 import { DebtorDocumentModule } from './document/document.module';
-import { DebtorEmailModule } from './email/email.module';
 import { DebtorEmploymentModule } from './employment/employment.module';
 import { DebtorGuaranteeModule } from './guarantee/guarantee.module';
 import { DebtorIdentityModule } from './identity/identity.module';
@@ -35,10 +35,10 @@ import { DebtorAddressComponent } from './address/address.component';
 import { DebtorAttributesVersionsComponent } from './versions/debtor-attributes-versions.component';
 import { DebtorComponent } from './debtor.component';
 import { DebtorContactLogTabComponent } from './contact-log-tab/contact-log-tab.component';
-import { DebtorContactsComponent } from './contacts/contacts.component';
+import { ContactPersonsComponent } from './contact-persons/contact-persons.component';
 import { DebtorDebtComponentComponent } from './debt-component/debt-component.component';
 import { DebtorDocumentComponent } from './document/document.component';
-import { DebtorEmailComponent } from './email/email.component';
+import { DebtorEmailCardComponent } from './information/email/card/email-card.component';
 import { DebtorEmploymentComponent } from './employment/employment.component';
 import { DebtorGuaranteeCardComponent } from './guarantee/card/guarantee-card.component';
 import { DebtorIdentityComponent } from './identity/identity.component';
@@ -96,11 +96,11 @@ const routes: Routes = [
       {
         path: 'create',
         children: [
-          { path: '', component: DebtorContactsComponent, data: {reuse: true} },
+          { path: '', component: ContactPersonsComponent, data: {reuse: true} },
           {
             path: ':contactPersonId',
             children: [
-              { path: '', component: DebtorContactsComponent },
+              { path: '', component: ContactPersonsComponent },
               {
                 path: 'phone',
                 children: [
@@ -140,7 +140,7 @@ const routes: Routes = [
       {
         path: ':contactId',
         children: [
-          { path: '', component: DebtorContactsComponent },
+          { path: '', component: ContactPersonsComponent },
           {
             path: 'phone',
             children: [
@@ -197,8 +197,8 @@ const routes: Routes = [
     path: 'email',
     children: [
       { path: '', redirectTo: 'create', pathMatch: 'full' },
-      { path: 'create', component: DebtorEmailComponent },
-      { path: ':emailId', component: DebtorEmailComponent },
+      { path: 'create', component: DebtorEmailCardComponent },
+      { path: ':emailId', component: DebtorEmailCardComponent },
     ]
   },
   {
@@ -265,13 +265,13 @@ const routes: Routes = [
   imports: [
     ContactLogTabModule,
     DebtModule,
+    DebtorActionLogModule,
     DebtorAddressModule,
     DebtorAttributesModule,
     DebtorAttributesVersionsModule,
-    DebtorContactsModule,
+    ContactPersonsModule,
     DebtorDebtComponentModule,
     DebtorDocumentModule,
-    DebtorEmailModule,
     DebtorEmploymentModule,
     DebtorGuaranteeModule,
     DebtorIdentityModule,

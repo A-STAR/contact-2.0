@@ -1,6 +1,9 @@
 import { ILookupKey } from '../../../core/lookup/lookup.interface';
 import { Observable } from 'rxjs/Observable';
 
+import { IAGridColumn } from '@app/shared/components/grid2/grid2.interface';
+import { IMetadataAction, IMetadataTitlebar } from '@app/core/metadata/metadata.interface';
+
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
 export type TColumnType =
@@ -60,4 +63,12 @@ export interface IContextMenuItem {
   // these are internal collections
   actions?: IContextMenuItem[];
   simpleActions?: IContextMenuItem[];
+}
+
+export interface IMetadataDefs {
+  actions: IMetadataAction[];
+  columns: IAGridColumn[];
+  titlebar?: IMetadataTitlebar;
+  defaultAction?: string;
+  permits?: string[];
 }

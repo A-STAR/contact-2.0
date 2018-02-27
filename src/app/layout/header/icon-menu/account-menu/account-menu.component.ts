@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
+import { map, first } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
@@ -21,7 +21,7 @@ import { combineLatestAnd } from '@app/core/utils';
   styleUrls: [ './account-menu.component.scss' ],
   templateUrl: './account-menu.component.html'
 })
-export class AccountMenuComponent extends DialogFunctions {
+export class AccountMenuComponent extends DialogFunctions implements OnInit {
   @Output() close = new EventEmitter<void>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
@@ -33,12 +33,28 @@ export class AccountMenuComponent extends DialogFunctions {
   dialog: 'ext';
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private authService: AuthService,
     private callService: CallService,
     private persistenceService: PersistenceService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    this.callService.usePBX$
+      .filter(Boolean)
+      .flatMap(() => this.callService.settings$)
+      .map(settings => settings && settings.useIntPhone)
+      .filter(Boolean)
+      .flatMap(() => this.callService.params$.map(params => params && params.intPhone))
+      .filter(phone => phone === null)
+      .pipe(first())
+      .subscribe(() => {
+        this.setDialog('ext');
+        this.cdRef.markForCheck();
+      });
   }
 
   get canEditPhoneExtension$(): Observable<boolean> {
@@ -60,9 +76,13 @@ export class AccountMenuComponent extends DialogFunctions {
   }
 
   onPhoneExtensionSubmit(): void {
-    this.callService
-      .updatePBXParams(this.form.serializedValue)
-      .subscribe(() => this.setDialog(null));
+    this.callService.updatePBXParams(this.form.serializedValue);
+    this.setDialog(null);
+  }
+
+  onCloseDialog(): void {
+    this.callService.changePBXParams({ intPhone: '' });
+    this.setDialog(null);
   }
 
   resetSettings(event: UIEvent): void {

@@ -1,8 +1,17 @@
 import { async as Async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 
 import { TextComponent } from './text.component';
+
+class TranslateLoaderMock {
+  getTranslation(language: string): Observable<any> {
+    return of([]);
+  }
+}
 
 describe('TextComponent', () => {
   let fixture: ComponentFixture<TextComponent>;
@@ -16,6 +25,12 @@ describe('TextComponent', () => {
         ],
         imports: [
           FormsModule,
+          TranslateModule.forRoot({
+            loader: {
+              provide: TranslateLoader,
+              useClass: TranslateLoaderMock,
+            },
+          }),
         ]
       })
       .compileComponents();

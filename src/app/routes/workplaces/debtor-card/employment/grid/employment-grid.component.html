@@ -1,0 +1,19 @@
+<app-dialog-action
+  *ngIf="isDialog('removeEmployment')"
+  actionMode="danger"
+  actionTranslationKey="debtor.employmentRecordTab.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  titleTranslationKey="debtor.employmentRecordTab.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCancel()"
+>
+</app-dialog-action>
+
+<app-simple-grid
+  persistenceKey="[grid] workplaces/debtor-card/employment"
+  [columns]="columns"
+  [rows]="employments"
+  [toolbar]="toolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onDoubleClick($event)"
+></app-simple-grid>

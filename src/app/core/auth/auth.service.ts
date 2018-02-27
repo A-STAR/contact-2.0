@@ -4,9 +4,11 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { tap, distinctUntilChanged, map } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
-import { IUser } from './auth.interface';
+import { IUser, IUserParams } from './auth.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
 
 import { PersistenceService } from '../persistence/persistence.service';
@@ -23,6 +25,7 @@ export class AuthService implements CanActivate {
   static JWT_TIMER_INTERVAL       = 10e3;
 
   static AUTH_LOGIN           = 'AUTH_LOGIN';
+  static AUTH_LOGIN_SUCCESS   = 'AUTH_LOGIN_SUCCESS';
   static AUTH_REFRESH         = 'AUTH_REFRESH';
   static AUTH_LOGOUT          = 'AUTH_LOGOUT';
   static AUTH_CREATE_SESSION  = 'AUTH_CREATE_SESSION';
@@ -30,8 +33,13 @@ export class AuthService implements CanActivate {
   static AUTH_GLOBAL_RESET    = 'AUTH_GLOBAL_RESET';
   static AUTH_RETRIEVE_TOKEN  = 'AUTH_RETRIEVE_TOKEN';
 
+  static USER_FETCH           = 'USER_FETCH';
+  static USER_FETCH_SUCCESS   = 'USER_FETCH_SUCCESS';
+
   private tokenTimer = null;
   private url: string = null;
+
+  private isParamsFetching = false;
 
   constructor(
     private jwtHelper: JwtHelperService,
@@ -48,8 +56,30 @@ export class AuthService implements CanActivate {
 
   get currentUser$(): Observable<IUser> {
     return this.token$
-      .map(token => this.jwtHelper.decodeToken(token))
-      .map(tokenInfo => ({ userId: tokenInfo.userId }));
+      .map(token => token && this.jwtHelper.decodeToken(token))
+      .map(tokenInfo => tokenInfo && { userId: tokenInfo.userId });
+  }
+
+  get userParams$(): Observable<IUserParams> {
+    return combineLatest(
+      this.currentUser$.map(user => user && user.userId),
+      this.store.select(state => state.auth.params)
+    )
+    .pipe(
+      tap(([ userId, params ]) => {
+        if (params) {
+          this.isParamsFetching = false;
+        } else if (!this.isParamsFetching && userId) {
+          this.refreshUserParamsAction();
+        }
+      }),
+      map(([ user, params ]) => params),
+      distinctUntilChanged(),
+    );
+  }
+
+  setUserParamFetching(): void {
+    this.isParamsFetching = true;
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -122,6 +152,10 @@ export class AuthService implements CanActivate {
       this.store.dispatch({ type: AuthService.AUTH_RETRIEVE_TOKEN, payload: { token } });
     }
     return isValid;
+  }
+
+  private refreshUserParamsAction(): void {
+    this.store.dispatch(this.createAction(AuthService.USER_FETCH));
   }
 
   private onTimer(token: string): void {

@@ -1,4 +1,16 @@
 <ul class="flex">
+  <li class="flex-item" *ngIf="showPbxControls$ | async">
+    <app-pbx-controls></app-pbx-controls>
+  </li>
+
+  <li class="flex-item" *ngIf="showPbxStatus$ | async">
+    <span class="menu-item p0">
+      <app-pbx-status-dropdown></app-pbx-status-dropdown>
+    </span>
+  </li>
+
+  <li class="flex-item separator"></li>
+
   <li class="flex-item" [title]="'header.language' | translate" (click)="toggleLanguage()">
     <span class="menu-item">
       <i class="fa fa-language"></i>

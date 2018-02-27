@@ -19,11 +19,11 @@ import { IDragAndDropPayload, IDragAndDropView } from '../dnd/drag-and-drop.inte
 import { ITreeNode, ITreeNodeInfo } from './treenode/treenode.interface';
 
 @Component({
-  selector: 'app-tree',
-  styleUrls: ['./tree.component.scss'],
-  templateUrl: './tree.component.html',
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  selector: 'app-tree',
+  styleUrls: [ './styles.scss', './tree.component.scss' ],
+  templateUrl: './tree.component.html',
 })
 export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
   @Input() canPaste = false;

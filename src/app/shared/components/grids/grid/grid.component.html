@@ -1,4 +1,8 @@
 <div class="flex vertical">
+  <div *ngIf="toolbar" class="flex-item">
+    <app-toolbar-2 [items]="toolbar"></app-toolbar-2>
+  </div>
+
   <div class="flex-item grow">
     <ag-grid-angular
       *ngIf="colDefs"

@@ -45,18 +45,13 @@
   (close)="onDialogClose()"
 ></app-phone-operator-dialog>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-toolbar-2 [items]="gridToolbarItems"></app-toolbar-2>
-  </div>
-  <div class="flex-item grow">
-    <app-simple-grid
-      *ngIf="canDisplayGrid"
-      [columns]="columns"
-      [rows]="phones"
-      [rowClass]="getRowClass()"
-      (select)="onSelect($event)"
-      (dblClick)="onDoubleClick($event)"
-    ></app-simple-grid>
-  </div>
-</div>
+<app-simple-grid
+  *ngIf="canDisplayGrid"
+  persistenceKey="[grid] workplaces/shared/phone"
+  [columns]="columns"
+  [rows]="phones"
+  [rowClass]="getRowClass()"
+  [toolbar]="gridToolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onDoubleClick($event)"
+></app-simple-grid>

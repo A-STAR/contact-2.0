@@ -12,7 +12,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { UsersService } from '@app/routes/admin/users/users.service';
 
-import { TickRendererComponent } from '@app/shared/components/grids/renderers/tick/tick.component';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { combineLatestAnd, isEmpty, addGridLabel } from '@app/core/utils';
 
@@ -51,13 +51,13 @@ export class UsersComponent implements OnInit, OnDestroy {
       {
         type: TitlebarItemTypeEnum.BUTTON_ADD,
         action: () => this.onAdd(),
-        enabled: this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ])
+        enabled: this.userPermissionsService.hasOne([ 'USER_ADD' ])
       },
       {
         type: TitlebarItemTypeEnum.BUTTON_EDIT,
         action: () => this.onEdit({ id: this.selectedUserId } as any),
         enabled: combineLatestAnd([
-          this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT' ]),
+          this.userPermissionsService.hasOne([ 'USER_EDIT', 'USER_ROLE_EDIT', 'USER_LDAP_LOGIN_EDIT' ]),
           this.usersService.state.map(state => !!state.selectedUserId)
         ])
       },

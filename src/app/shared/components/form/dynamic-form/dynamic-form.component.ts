@@ -78,7 +78,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
     /**
      * This form's `config` is defined
-     * example: @app\shared\gui-objects\widgets\contact-property\tree\edit\contact-property-tree-edit.component.ts
      */
 
     // set the default config options
@@ -276,7 +275,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     };
 
     // TODO(d.maltsev): need to refactor this in favor of built-in control validators
-    const controlsWithOwnRequired = [ 'multilanguage' ];
+    const controlsWithOwnRequired = [ 'multilanguage', 'select' ];
     const validators = control.required && !controlsWithOwnRequired.includes(control.type)
       ? Validators.compose([
           ...control.validators || [],
@@ -383,7 +382,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   private serializeControlValue(value: any, control: IDynamicFormControl): any {
     switch (control.type) {
-      case 'select':
       case 'selectwrapper':
         return !Array.isArray(value)
           ? value
@@ -412,6 +410,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       case 'boolean':
       case 'checkbox':
         return Number(value);
+      case 'select':
       default:
         return value === '' ? null : value;
     }

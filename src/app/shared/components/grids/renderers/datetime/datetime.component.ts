@@ -5,7 +5,7 @@ import * as moment from 'moment';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-grid-dict-renderer',
+  selector: 'app-grid-datetime-renderer',
   template: `{{ value | momentFormat:'L LTS' }}`,
 })
 export class DateTimeRendererComponent implements ICellRendererAngularComp {

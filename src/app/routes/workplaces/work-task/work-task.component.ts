@@ -10,6 +10,7 @@ const label = makeKey('modules.workTask');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-work-task',
   templateUrl: 'work-task.component.html',
 })

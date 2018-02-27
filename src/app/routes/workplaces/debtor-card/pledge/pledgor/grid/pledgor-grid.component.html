@@ -11,23 +11,19 @@
     <h3>{{ 'widgets.pledgor.dialog.title' | translate }}</h3>
   </div>
 
-  <app-grid
-    *ngIf="columns"
-    columnTranslationKey="widgets.pledgor"
-    [columns]="columns"
-    [footerHeight]="false"
-    [rows]="persons"
-    selectionType="single"
-    [styles]="gridStyles"
-    (onDblClick)="onSelect()">
-  </app-grid>
+  <div style="height: 75vh;">
+    <app-simple-grid
+      *ngIf="columns"
+      persistenceKey="workplaces/debtor-card/pledge/pledgor"
+      [columns]="columns"
+      [rows]="persons"
+      (dblClick)="onDblClick($event)"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
+  </div>
 
   <div dialog-footer>
-    <button class="btn btn-success" [disabled]="!hasSelection" (click)="onSelect()">
-      <i class="fa fa-check"></i> {{ 'default.buttons.select' | translate }}
-    </button>
-    <button class="btn btn-default" (click)="onClose()">
-      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
-    </button>
+    <app-button type="select" [disabled]="!selection" (click)="onSelect()"></app-button>
+    <app-button type="cancel" (click)="onClose()"></app-button>
   </div>
 </app-dialog>

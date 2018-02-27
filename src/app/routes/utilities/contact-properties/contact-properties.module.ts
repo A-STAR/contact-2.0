@@ -1,27 +1,20 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
 
-import { SharedModule } from '../../../shared/shared.module';
+import { ContactPropertyTreeModule } from './tree/contact-property-tree.module';
+import { SharedModule } from '@app/shared/shared.module';
 
-import { ContactPropertiesComponent } from './contact-properties.component';
-
-const routes: Routes = [
-  {
-    path: '',
-    component: ContactPropertiesComponent,
-    data: {
-      reuse: true,
-    },
-  },
-];
+import { ContactPropertyService } from './contact-properties.service';
 
 @NgModule({
   imports: [
-    RouterModule.forChild(routes),
+    ContactPropertyTreeModule,
     SharedModule,
   ],
-  declarations: [
-    ContactPropertiesComponent,
+  exports: [
+    ContactPropertyTreeModule,
   ],
+  providers: [
+    ContactPropertyService,
+  ]
 })
-export class ContactPropertiesModule {}
+export class ContactPropertiesModule { }

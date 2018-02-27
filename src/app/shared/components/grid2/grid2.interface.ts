@@ -131,7 +131,7 @@ export interface ValueGetterParams {
 
 export interface IAGridAction {
   metadataAction: IMetadataAction;
-  params: GetContextMenuItemsParams;
+  selection: GetContextMenuItemsParams;
 }
 
 export interface IContextMenuItem {

@@ -27,8 +27,10 @@ import { TimePickerComponent } from './timepicker/timepicker.component';
     TimePickerComponent,
   ],
   exports: [
+    DateComponent,
     DatePickerComponent,
     DateTimePickerComponent,
+    TimeComponent,
     TimePickerComponent,
   ],
   imports: [

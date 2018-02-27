@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-message-templates',
   templateUrl: './message-templates.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageTemplatesComponent {
   tabs = [

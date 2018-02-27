@@ -7,13 +7,20 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  NG_VALIDATORS,
+  Validator,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { Renderer2 } from '@angular/core';
 
 import { IMultiLanguageOption } from './multi-language.interface';
 
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
-import { multilanguageRequired } from '@app/core/validators/multilanguageRequired';
+import { multilanguageRequired } from '@app/core/validators';
 
 @Component({
   selector: 'app-multilanguage-input',
@@ -45,10 +52,11 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
     private renderer: Renderer2,
   ) {}
 
-  @Input() controlDisabled = false;
+  @Input() isDisabled = false;
   @Input() label = '';
-  @Input() placeholder = 'Enter translation value';
-  @Input() controlRequired = false;
+  // This somehow always gets undefined -> explore
+  @Input() placeholder = '';
+  @Input() isRequired = false;
 
   @Input('langOptions')
   set langOptions(options: IMultiLanguageOption[]) {
@@ -58,6 +66,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
     }));
 
     this.selectedId = options.length ? 0 : null;
+    this.propagateChange(this.langOptions.find(o => !!o.active));
     this.cdRef.markForCheck();
   }
 
@@ -69,10 +78,14 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
     this.cdRef.markForCheck();
   }
 
-  validate(control: AbstractControl): {[key: string]: any} {
-    return this.controlRequired
+  validate(control: AbstractControl): ValidationErrors {
+
+    const valid = this.isRequired
       ? multilanguageRequired(this.langOptions)(control)
       : null;
+
+    this.cdRef.markForCheck();
+    return valid;
   }
 
   registerOnChange(fn: () => void): void {
@@ -108,7 +121,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
     if (option) {
       option.value = value;
       option.isUpdated = true;
-      this.propagateChange(this.langOptions);
+      this.propagateChange(value);
     }
   }
 
@@ -123,10 +136,11 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
   }
 
   onFocusOut(): void {
-    this.propagateTouched(this.langOptions);
+    this.propagateTouched();
   }
 
   setDisabledState(disabled: boolean): void {
+    this.isDisabled = disabled;
     this.renderer.setProperty(this.input.nativeElement, 'disabled', disabled);
   }
 

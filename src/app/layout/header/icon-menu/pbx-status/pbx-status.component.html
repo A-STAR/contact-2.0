@@ -1,0 +1,13 @@
+<div appDropdown fitWidthToContent="true" position="right" [class.disabled]="!(canChangeStatus$ | async)">
+  <span #dropdownTrigger class="menu-item">
+    {{ activeStatusOption?.label }}
+  </span>
+  <div #dropdownContent class="dropdown-menu">
+    <ul class="list-group mb0">
+      <li class="list-group-item" *ngFor="let option of availableStatusOptions"
+        (click)="onChangeStatus(option)">
+        {{ option.label }}
+      </li>
+    </ul>
+  </div>
+</div>

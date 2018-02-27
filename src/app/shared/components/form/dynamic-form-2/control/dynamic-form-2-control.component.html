@@ -30,8 +30,7 @@
         <span>{{ label | translate }}<span *ngIf="control.required">*</span></span>
         <app-select
           [formControlName]="control.name"
-          [controlDisabled]="control.disabled"
-          [nullable]="!control.required"
+          [disabled]="control.disabled"
           [options]="control.options"
           [placeholder]="control.placeholder"
         ></app-select>

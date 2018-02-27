@@ -4,14 +4,9 @@
 
     <!-- Payment Date -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.payment.form.date' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-      </label>
       <app-datepicker
         formControlName="date"
+        label="routes.workplaces.shared.contactRegistration.edit.form.payment.form.date"
         [maxDate]="today"
         [required]="true"
       ></app-datepicker>
@@ -19,38 +14,30 @@
 
     <!-- Payment Amount -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.payment.form.amount' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-        <input
-          class="form-control"
-          type="number"
-          formControlName="amount"
-          [disabled]="isPaymentAmountDisabled$ | async"
-          [required]="true"
-          (input)="onPaymentAmountInput($event)"
-        />
-      </label>
+      <app-number
+        formControlName="amount"
+        label="routes.workplaces.shared.contactRegistration.edit.form.payment.form.amount"
+        [disabled]="isPaymentAmountDisabled$ | async"
+        [min]="paymentMinAmount$ | async"
+        [max]="paymentMaxAmount$ | async"
+        [positive]="true"
+        [required]="true"
+        (input)="onPaymentAmountInput($event)"
+      ></app-number>
     </div>
 
     <!-- Payment Percentage -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.payment.form.percentage' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-        <input
-          class="form-control"
-          type="number"
-          formControlName="percentage"
-          [disabled]="isPaymentAmountDisabled$ | async"
-          [required]="true"
-          (input)="onPaymentPercentageInput($event)"
-        />
-      </label>
+      <app-number
+        formControlName="percentage"
+        label="routes.workplaces.shared.contactRegistration.edit.form.payment.form.percentage"
+        [disabled]="isPaymentAmountDisabled$ | async"
+        [min]="paymentMinPercentage$ | async"
+        [max]="100"
+        [positive]="true"
+        [required]="true"
+        (input)="onPaymentPercentageInput($event)"
+      ></app-number>
     </div>
 
     <!-- Currency -->
@@ -63,7 +50,6 @@
         <app-select-wrapper
           formControlName="currencyId"
           lookupKey="currencies"
-          [nullable]="false"
           [required]="true"
         ></app-select-wrapper>
       </label>

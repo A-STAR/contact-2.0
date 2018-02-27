@@ -24,14 +24,16 @@ type IMultiSelectValue = Array<number|string>;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MultiSelectComponent implements ControlValueAccessor {
-  private _list: MultiListComponent<IOption>;
 
-  @Input() nullable = false;
   @Input() options: IOption[] = [];
 
   @Input()
-  set controlDisabled(value: boolean) {
+  set isDisabled(value: boolean) {
     this.setDisabledState(value);
+  }
+
+  get isDisabled(): boolean {
+    return this._isDisabled;
   }
 
   @Output() select = new EventEmitter<IMultiSelectValue>();
@@ -42,6 +44,7 @@ export class MultiSelectComponent implements ControlValueAccessor {
     this.cdRef.detectChanges();
   }
 
+  private _list: MultiListComponent<IOption>;
   private _isDisabled = false;
   private _selection: IMultiSelectValue;
 
@@ -54,10 +57,6 @@ export class MultiSelectComponent implements ControlValueAccessor {
   get label(): string {
     const option = this.options.find(o => o.value === this.selection[0]);
     return option ? option.label : null;
-  }
-
-  get isDisabled(): boolean {
-    return this._isDisabled;
   }
 
   getId = (option: IOption) => option.value;

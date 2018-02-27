@@ -1,24 +1,29 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, OnDestroy, Output, ViewChild
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  OnDestroy,
+  Output,
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IGuarantor } from '../../guarantee.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { GuarantorService } from '../guarantor.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { GridComponent } from '@app/shared/components/grid/grid.component';
-
 import { DialogFunctions } from '@app/core/dialog';
-import { parseStringValueAttrs } from '@app/core/utils';
+
+import { parseStringValueAttrs, addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   selector: 'app-guarantor-grid',
@@ -26,24 +31,21 @@ import { parseStringValueAttrs } from '@app/core/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GuarantorGridComponent extends DialogFunctions implements OnInit, OnDestroy {
-  @ViewChild(GridComponent) grid: GridComponent;
-
   @Input() searchParams: any;
   @Output() close = new EventEmitter<null>();
   @Output() select = new EventEmitter<IGuarantor>();
 
-  columns: Array<IGridColumn> = null;
+  columns: ISimpleGridColumn<IGuarantor>[] = null;
 
   dialog: string;
-  gridStyles = { height: '500px' };
-  persons: Array<IGuarantor> = [];
+  persons: IGuarantor[] = [];
+  selection: IGuarantor;
 
   private canViewSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private guarantorService: GuarantorService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private userConstantsService: UserConstantsService,
     private userPermissionsService: UserPermissionsService,
@@ -54,33 +56,32 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
   ngOnInit(): void {
     const attrConstant = this.guarantorService.getAttributeConstant(this.searchParams.typeCode);
     this.userConstantsService.get(attrConstant)
-      .flatMap(strAttributeList => {
+      .map(strAttributeList => {
         const addColumns = parseStringValueAttrs(<string>strAttributeList.valueS)
           .map(attr => ({ prop: attr, type: 'string' }));
-        const baseControls: IGridColumn[] = [
+        const baseControls = [
           { prop: 'id', minWidth: 50, maxWidth: 80, type: 'number' },
           { prop: 'lastName', type: 'string' },
         ];
-        const columns: IGridColumn[] = this.searchParams.typeCode === 1
-            ? [
-                ...baseControls,
-                { prop: 'firstName', type: 'string' },
-                { prop: 'middleName', type: 'string' },
-                { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
-                { prop: 'birthDate', maxWidth: 130, renderer: 'dateRenderer', type: 'date' },
-                { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER, type: 'number' },
-                { prop: 'passportNumber', type: 'string' },
-              ]
-            : [
-                ...baseControls,
-                { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
-              ];
-
-        return this.gridService.setAllRenderers(columns.concat(addColumns as IGridColumn[]));
+        const columns = this.searchParams.typeCode === 1
+          ? [
+              ...baseControls,
+              { prop: 'firstName', type: 'string' },
+              { prop: 'middleName', type: 'string' },
+              { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
+              { prop: 'birthDate', maxWidth: 130, renderer: 'dateRenderer', type: 'date' },
+              { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER, type: 'number' },
+              { prop: 'passportNumber', type: 'string' },
+            ]
+          : [
+              ...baseControls,
+              { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
+            ];
+        return columns.concat(addColumns);
       })
       .pipe(first())
       .subscribe(columns => {
-        this.columns = [...columns];
+        this.columns = columns.map(addGridLabel('widgets.guarantor.grid'));
         this.cdRef.markForCheck();
       });
 
@@ -106,6 +107,13 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
     this.onClose();
   }
 
+  onSelect(guarantors: IGuarantor[]): void {
+    const guarantor = isEmpty(guarantors)
+      ? null
+      : guarantors[0];
+    this.selection = guarantor;
+  }
+
   onClose(): void {
     this.close.emit();
   }
@@ -114,9 +122,9 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
     return this.userPermissionsService.has('GUARANTEE_VIEW');
   }
 
-  get hasSelection(): boolean {
-    return this.grid && this.grid.hasSingleSelection;
-  }
+  // get hasSelection(): boolean {
+  //   return this.grid && this.grid.hasSingleSelection;
+  // }
 
   private fetch(searchParams: object = {}): void {
     const filter = this.guarantorService.makeFilter(searchParams, this.columns);

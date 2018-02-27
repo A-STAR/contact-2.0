@@ -3,7 +3,11 @@
     <app-datetime-input
       [format]="timeFormat"
       [disabled]="disabled"
+      [label]="label"
+      [minDateTime]="minTime"
+      [maxDateTime]="maxTime"
       [ngModel]="value"
+      [required]="required"
       (ngModelChange)="onChange($event)"
     ></app-datetime-input>
   </div>
@@ -17,7 +21,8 @@
         [maxTime]="maxTime"
         [ngModel]="tempValue"
         [displaySeconds]="displaySeconds"
-        (ngModelChange)="onTimeChange($event)"></app-time>
+        (ngModelChange)="onTimeChange($event)"
+      ></app-time>
       <footer>
         <span (click)="setCurrentTime()">{{ 'default.buttons.now' | translate }}</span>
         <span (click)="onOkClick()">{{ 'default.buttons.ok' | translate }}</span>

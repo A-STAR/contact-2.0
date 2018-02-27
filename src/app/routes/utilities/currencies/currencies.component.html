@@ -1,9 +1,12 @@
-<app-currencies-grid></app-currencies-grid>
-
-<app-hdivider></app-hdivider>
-
-<app-tabview [noMargin]="true">
-  <app-tabview-tab [title]="'utilities.currencyRatesTab.title'">
-    <app-currency-rates-grid [currencyId$]="selectedCurrency$"></app-currency-rates-grid>
-  </app-tabview-tab>
-</app-tabview>
+<div class="flex vertical">
+  <div class="flex-item grow">
+    <app-currencies-grid></app-currencies-grid>
+  </div>
+  <div class="flex-item grow">
+    <app-tabview [fullHeight]="true" [noMargin]="true">
+      <app-tabview-tab [title]="'utilities.currencyRatesTab.title'">
+        <app-currency-rates-grid [currencyId$]="selectedCurrency$"></app-currency-rates-grid>
+      </app-tabview-tab>
+    </app-tabview>
+  </div>
+</div>

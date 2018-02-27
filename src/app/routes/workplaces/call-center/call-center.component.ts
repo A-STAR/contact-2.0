@@ -1,39 +1,34 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { ICampaign } from './call-center.interface';
-import { IGridColumn } from '../../../shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { CallCenterService } from './call-center.service';
 
-import { GridComponent } from '../../../shared/components/grid/grid.component';
-
-import { isEmpty } from '../../../core/utils';
+import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
-  selector: 'app-call-center',
-  templateUrl: 'call-center.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   providers: [
     CallCenterService,
-  ]
+  ],
+  selector: 'app-call-center',
+  templateUrl: 'call-center.component.html',
 })
 export class CallCenterComponent {
-  @ViewChild(GridComponent) grid: GridComponent;
-
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<ICampaign>[] = [
     { prop: 'name' },
     { prop: 'comment' },
-  ];
+  ].map(addGridLabel('modules.callCenter.grid'));
+
+  selectedCampaign: ICampaign;
 
   constructor(
     private callCenterService: CallCenterService,
     private cdRef: ChangeDetectorRef,
   ) {}
-
-  get isSubmitButtonDisabled(): boolean {
-    return isEmpty(this.selection);
-  }
 
   get campaigns$(): Observable<ICampaign[]> {
     return this.callCenterService.campaigns$;
@@ -43,18 +38,18 @@ export class CallCenterComponent {
     this.callCenterService.navigateToCampaign(campaign);
   }
 
-  onSelect(): void {
+  onSelect(campaigns: ICampaign[]): void {
+    const campaign = isEmpty(campaigns)
+      ? null
+      : campaigns[0];
+    this.selectedCampaign = campaign;
     this.cdRef.markForCheck();
   }
 
   onSubmit(): void {
-    if (!isEmpty(this.selection)) {
+    if (this.selectedCampaign) {
       // TODO(d.maltsev): check using resolver if the campaign is active before redirecting
-      this.callCenterService.navigateToCampaign(this.selection[0]);
+      this.callCenterService.navigateToCampaign(this.selectedCampaign);
     }
-  }
-
-  private get selection(): ICampaign[] {
-    return this.grid.selected;
   }
 }

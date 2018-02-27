@@ -147,24 +147,49 @@ export class UserEditComponent extends DialogFunctions {
 
     const detailsBlock = ([
       { label: 'users.edit.login', controlName: 'login', type: 'text', required: true },
-      { label: 'users.edit.password', controlName: 'password', type: 'password', validators: [ passwordValidators ] },
+      {
+        label: 'users.edit.password',
+        controlName: 'password',
+        type: 'password',
+        validators: [ passwordValidators ],
+        required: !this.userId,
+      },
       { label: 'users.edit.ldapLogin', controlName: 'ldapLogin', type: 'dialog', disabled: !permissions.canEditLdap,
           action: () => this.setDialog('editLdap') },
       { label: 'users.edit.inactive', controlName: 'isInactive', type: 'checkbox' },
       { label: 'users.edit.isAutoReset', controlName: 'isAutoReset', type: 'checkbox' },
-      { label: 'users.edit.role', controlName: 'roleId', type: 'select', required: true, disabled: !permissions.canEditRole,
-          options: roles },
+      {
+        label: 'users.edit.role',
+        controlName: 'roleId',
+        type: 'select',
+        required: true,
+        disabled: !permissions.canEditRole,
+        options: roles,
+        markAsDirty: !this.userId,
+      },
       { label: 'users.edit.position', controlName: 'position', type: 'text' },
       { label: 'users.edit.startWorkDate', controlName: 'startWorkDate', type: 'datepicker' },
       { label: 'users.edit.endWorkDate', controlName: 'endWorkDate', type: 'datepicker' },
-      { label: 'users.edit.branchCode', controlName: 'branchCode', type: 'select', options: branchOptions,
-        dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
+      {
+        label: 'users.edit.branchCode',
+        controlName: 'branchCode',
+        type: 'select',
+        options: branchOptions,
+        dictCode: UserDictionariesService.DICTIONARY_BRANCHES,
+      },
       { label: 'users.edit.mobPhone', controlName: 'mobPhone', type: 'text' },
       { label: 'users.edit.workPhone', controlName: 'workPhone', type: 'text' },
       { label: 'users.edit.intPhone', controlName: 'intPhone', type: 'text' },
       { label: 'users.edit.email', controlName: 'email', type: 'text' },
       { label: 'users.edit.address', controlName: 'workAddress', type: 'text' },
-      { label: 'users.edit.language', controlName: 'languageId', type: 'select', required: true, options: languages },
+      {
+        label: 'users.edit.language',
+        controlName: 'languageId',
+        type: 'select',
+        required: true,
+        options: languages,
+        markAsDirty: !this.userId,
+      },
       { label: 'users.edit.comment', controlName: 'comment', type: 'textarea', disabled: !permissions.canEditUser },
       ...[
         agentAttributes[87].isUsed
@@ -172,21 +197,21 @@ export class UserEditComponent extends DialogFunctions {
             label: 'users.edit.agentId',
             controlName: 'agentId',
             type: 'text',
-            required: agentAttributes[87].isMandatory
+            required: !!agentAttributes[87].isMandatory
           } : null,
         agentAttributes[88].isUsed
           ? {
             label: 'users.edit.agentName',
             controlName: 'agentName',
             type: 'text',
-            required: agentAttributes[88].isMandatory
+            required: !!agentAttributes[88].isMandatory
           } : null,
         agentAttributes[89].isUsed
           ? {
             label: 'users.edit.agentPassword',
             controlName: 'agentPassword',
             type: 'text',
-            required: agentAttributes[89].isMandatory
+            required: !!agentAttributes[89].isMandatory
           } : null,
       ].filter(Boolean)
     ] as Array<IDynamicFormControl>).map(control => ({

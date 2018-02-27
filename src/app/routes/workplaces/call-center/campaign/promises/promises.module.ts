@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../../shared/shared.module';
+import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { PromisesComponent } from './promises.component';
 
 @NgModule({
   imports: [
     SharedModule,
+    WorkplacesSharedModule,
   ],
   exports: [
     PromisesComponent,
@@ -15,4 +17,4 @@ import { PromisesComponent } from './promises.component';
     PromisesComponent,
   ],
 })
-export class PromisesModule { }
+export class PromisesModule {}

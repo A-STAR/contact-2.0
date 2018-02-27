@@ -4,7 +4,6 @@ import {
   Component,
   Input,
   ViewChild,
-  ViewEncapsulation,
   Output,
   EventEmitter
 } from '@angular/core';
@@ -17,11 +16,10 @@ import { InfoDebtService } from '../info-debt.service';
 import { ActionGridComponent } from '../../../../shared/components/action-grid/action-grid.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-info-debt-grid',
   templateUrl: './grid.component.html',
-  styleUrls: [ './grid.component.scss' ],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridComponent {
   @Input() gridKey: string;

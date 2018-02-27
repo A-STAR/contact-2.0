@@ -5,24 +5,38 @@ export interface ICallSettings {
   useMakeCall?: number;
   useDropCall?: number;
   useHoldCall?: number;
-  useRetriveCall?: number;
+  useRetrieveCall?: number;
   useTransferCall?: number;
+  useAgentStatus?: number;
 }
 
 export interface ICall {
-  id?: number;
   phoneId: number;
   debtId: number;
   personId: number;
   personRole: number;
-  onHold?: boolean;
 }
 
 export interface ICallState {
+  pbxState: IPBXState;
   settings: ICallSettings;
-  calls: ICall[];
+  params: IPBXParams;
+  activeCall: ICall;
 }
 
 export interface IPBXParams {
   intPhone: string;
+}
+
+export enum PBXStateEnum {
+  PBX_BLOCK = 'BLOCK',
+  PBX_NOCALL = 'NO_CALL',
+  PBX_CALL = 'CALL',
+  PBX_HOLD = 'HOLD',
+  PBX_DIAL = 'DIAL'
+}
+
+export interface IPBXState {
+  lineStatus: PBXStateEnum;
+  userStatus: number;
 }

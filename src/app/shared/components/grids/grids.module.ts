@@ -3,12 +3,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AgGridModule } from 'ag-grid-angular/main';
-import { LicenseManager } from 'ag-grid-enterprise/main';
 
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 import { MomentModule } from '@app/shared/pipes/moment/moment.module';
 import { SelectModule } from '@app/shared/components/form/select/select.module';
+import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
 
 import { GridsService } from './grids.service';
 
@@ -16,22 +16,30 @@ import { GridsService } from './grids.service';
 import { SimpleGridComponent } from './grid/grid.component';
 
 // Renderers
-import { CheckboxRendererComponent } from './renderers/checkbox/checkbox.component';
-import { DateTimeRendererComponent } from './renderers/datetime/datetime.component';
-import { DictRendererComponent } from './renderers/dict/dict.component';
-import { LookupRendererComponent } from './renderers/lookup/lookup.component';
-import { TickRendererComponent } from './renderers/tick/tick.component';
+import {
+  CheckboxRendererComponent,
+  DateRendererComponent,
+  DateTimeRendererComponent,
+  DictRendererComponent,
+  LookupRendererComponent,
+  NumberRendererComponent,
+  TickRendererComponent,
+} from './renderers';
 
 // Misc Components
 import { GridToolbarComponent } from './toolbar/toolbar.component';
+import { EmptyOverlayComponent } from './overlays/empty/empty.component';
 
 @NgModule({
   imports: [
     AgGridModule.withComponents([
       CheckboxRendererComponent,
+      DateRendererComponent,
       DateTimeRendererComponent,
       DictRendererComponent,
+      EmptyOverlayComponent,
       LookupRendererComponent,
+      NumberRendererComponent,
       TickRendererComponent,
     ]),
     ButtonModule,
@@ -40,6 +48,7 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
     FormsModule,
     MomentModule,
     SelectModule,
+    Toolbar2Module,
     TranslateModule,
   ],
   exports: [
@@ -48,10 +57,13 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
   ],
   declarations: [
     CheckboxRendererComponent,
+    DateRendererComponent,
     DateTimeRendererComponent,
     DictRendererComponent,
+    EmptyOverlayComponent,
     GridToolbarComponent,
     LookupRendererComponent,
+    NumberRendererComponent,
     SimpleGridComponent,
     TickRendererComponent,
   ],
@@ -63,9 +75,4 @@ import { GridToolbarComponent } from './toolbar/toolbar.component';
     GridsService,
   ]
 })
-export class GridsModule {
-  constructor() {
-    // tslint:disable-next-line
-    LicenseManager.setLicenseKey('ag-Grid_Evaluation_License_Key_Not_for_Production_100Devs2_April_2018__MTUyMjYyMzYwMDAwMA==e8bb27c4f0c9ed34bce6c68b868694f2');
-  }
-}
+export class GridsModule {}

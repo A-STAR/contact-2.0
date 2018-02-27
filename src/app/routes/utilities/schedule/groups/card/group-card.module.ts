@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedModule } from '@app/shared/shared.module';
 
@@ -23,7 +22,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    TranslateModule,
     SharedModule
   ],
   exports: [

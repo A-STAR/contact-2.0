@@ -1,0 +1,9 @@
+<app-simple-grid
+  persistenceKey="[grid] workplaces/shared/contact-log"
+  [columns]="columns"
+  [rows]="contactLogList"
+  [selection]="selected"
+  [toolbar]="hideToolbar ? null : toolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onEdit($event)"
+></app-simple-grid>

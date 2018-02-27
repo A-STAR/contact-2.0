@@ -1,9 +1,16 @@
-<input
-  type="text"
-  class="form-control"
-  [disabled]="disabled"
-  [ngModel]="momentValue | momentFormat:format"
-  [textMask]="mask"
-  (change)="onChange($event)"
-  (focus)="onFocus()"
-/>
+<label class="m0">
+  <span class="form-label">
+    {{ label | translate }}
+    <b *ngIf="required" class="text-danger">*</b>
+  </span>
+
+  <input
+    type="text"
+    class="form-control"
+    [disabled]="disabled"
+    [ngModel]="momentValue | momentFormat:format"
+    [textMask]="mask"
+    (change)="onChange($event)"
+    (focus)="onFocus()"
+  />
+</label>

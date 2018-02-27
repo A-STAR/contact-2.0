@@ -1,11 +1,13 @@
-<split direction="horizontal" gutterColor="inherit" [useTransition]="true">
+<split direction="horizontal" gutterColor="inherit" gutterSize="20" [useTransition]="true">
   <!-- Main Area -->
-  <split-area size="60" class="minw-500">
-    <div class="row mb-lg">
+  <split-area size="60">
+    <!-- TODO(i.lobanov): to d.maltsev - remove after rework -->
+    <div class="row mb-lg" style="height: 450px">
       <div class="col-md-2">
         <app-incoming-call-filter></app-incoming-call-filter>
       </div>
-      <div class="col-md-10">
+       <!-- TODO(i.lobanov): to d.maltsev - remove after rework -->
+      <div class="col-md-10" style="height: 100%">
         <app-incoming-call-debtor-grid></app-incoming-call-debtor-grid>
       </div>
     </div>
@@ -21,7 +23,7 @@
   </split-area>
 
   <!-- Contact Registration Area -->
-  <split-area *ngIf="displayContactRegistration$ | async" size="40" class="minw-200">
+  <split-area *ngIf="displayContactRegistration$ | async" size="40">
     <app-contact-registration></app-contact-registration>
   </split-area>
 </split>
