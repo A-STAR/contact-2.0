@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 
-import { SelectModule } from '@app/shared/components/form/select/select.module';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { ContactRegistrationPromiseComponent } from './promise.component';
@@ -13,7 +12,6 @@ import { ContactRegistrationPromiseComponent } from './promise.component';
     ContactRegistrationPromiseComponent,
   ],
   imports: [
-    SelectModule,
     SharedModule,
   ],
 })

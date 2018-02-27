@@ -1,20 +1,18 @@
 import { NgModule } from '@angular/core';
 
-import { SelectModule } from '@app/shared/components/form/select/select.module';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { ContactRegistrationAutoCommentComponent } from './auto-comment.component';
 
 @NgModule({
+  imports: [
+    SharedModule,
+  ],
   declarations: [
     ContactRegistrationAutoCommentComponent,
   ],
   exports: [
     ContactRegistrationAutoCommentComponent,
-  ],
-  imports: [
-    SelectModule,
-    SharedModule,
   ],
 })
 export class ContactRegistrationAutoCommentModule {}

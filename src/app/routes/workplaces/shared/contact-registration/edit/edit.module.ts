@@ -14,7 +14,6 @@ import { ContactRegistrationPromiseModule } from './promise/promise.module';
 import { ContactRegistrationRefusalModule } from './refusal/refusal.module';
 import { ContactRegistrationStatusChangeModule } from './status-change/status-change.module';
 import { ContactSelectModule } from './contact-select/contact-select.module';
-import { SelectModule } from '@app/shared/components/form/select/select.module';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { EditComponent } from './edit.component';
@@ -35,7 +34,6 @@ import { EditComponent } from './edit.component';
     ContactRegistrationStatusChangeModule,
     ContactSelectModule,
     FormsModule,
-    SelectModule,
     SharedModule,
   ],
   exports: [
