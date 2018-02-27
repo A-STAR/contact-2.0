@@ -88,18 +88,19 @@ export class AccessService {
   }
 
   private getAccessForItemByEntity(item: IAccessByEntityConfigItem): Observable<boolean> {
-    switch (item.method) {
-      case IAccessByEntityMethod.IS_MANDATORY:
-        return this.entityAttributesService.getAttributes(item.value.map(Number)).pipe(
-          map(attributes => attributes[0].isMandatory),
-        );
-      case IAccessByEntityMethod.IS_USED:
-        return this.entityAttributesService.getAttributes(item.value.map(Number)).pipe(
-          map(attributes => attributes[0].isUsed),
-        );
-      default:
-        return of(false);
-    }
+    const attributeId = Number(item.value[0]);
+    return this.entityAttributesService.getAttribute(attributeId).pipe(
+      map(attribute => {
+        switch (item.method) {
+          case IAccessByEntityMethod.IS_MANDATORY:
+            return attribute.isMandatory;
+          case IAccessByEntityMethod.IS_USED:
+            return attribute.isUsed;
+          default:
+            return false;
+        }
+      }),
+    );
   }
 
   private getAccessForItemByPermission(item: IAccessByValueBagConfigItem): Observable<boolean> {
