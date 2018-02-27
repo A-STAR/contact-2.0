@@ -3,15 +3,34 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 
-import { IAppState } from '../../state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IUserPermissions } from './user-permissions.interface';
 
-import { ValueBag } from '../../value-bag/value-bag';
+import { ValueBag } from '@app/core/value-bag/value-bag';
 
 @Injectable()
 export class UserPermissionsService {
   static USER_PERMISSIONS_FETCH         = 'USER_PERMISSIONS_FETCH';
   static USER_PERMISSIONS_FETCH_SUCCESS = 'USER_PERMISSIONS_FETCH_SUCCESS';
+
+  private permissions$ = this.store
+    .select(state => state.userPermissions.permissions)
+    .pipe(
+      tap(permissions => {
+        if (permissions) {
+          this.isFetching = false;
+        } else if (!this.isFetching) {
+          this.refresh();
+        }
+      }),
+      filter(Boolean),
+      distinctUntilChanged(),
+    );
+
+  private bag$ = this.permissions$.pipe(
+    map(permissions => new ValueBag(permissions)),
+    distinctUntilChanged(),
+  );
 
   private isFetching = false;
 
@@ -30,10 +49,7 @@ export class UserPermissionsService {
   }
 
   bag(): Observable<ValueBag> {
-    return this.permissions$.pipe(
-      map(permissions => new ValueBag(permissions)),
-      distinctUntilChanged(),
-    );
+    return this.bag$;
   }
 
   check(callback: (permissions: ValueBag) => boolean): Observable<boolean> {
@@ -107,21 +123,5 @@ export class UserPermissionsService {
       map(permissions => permissionNames.reduce((acc, name) => ({ ...acc, [name]: permissions[name] }), {})),
       distinctUntilChanged(),
     );
-  }
-
-  private get permissions$(): Observable<IUserPermissions> {
-    return this.store
-      .select(state => state.userPermissions.permissions)
-      .pipe(
-        tap(permissions => {
-          if (permissions) {
-            this.isFetching = false;
-          } else if (!this.isFetching) {
-            this.refresh();
-          }
-        }),
-        filter(Boolean),
-        distinctUntilChanged(),
-      );
   }
 }

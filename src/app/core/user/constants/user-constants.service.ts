@@ -3,15 +3,34 @@ import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 
-import { IAppState } from '../../state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IUserConstant, IUserConstants } from './user-constants.interface';
 
-import { ValueBag } from '../../value-bag/value-bag';
+import { ValueBag } from '@app/core/value-bag/value-bag';
 
 @Injectable()
 export class UserConstantsService {
   static USER_CONSTANTS_FETCH         = 'USER_CONSTANTS_FETCH';
   static USER_CONSTANTS_FETCH_SUCCESS = 'USER_CONSTANTS_FETCH_SUCCESS';
+
+  private constants$ = this.store
+    .select(state => state.userConstants.constants)
+    .pipe(
+      tap(constants => {
+        if (constants) {
+          this.isFetching = false;
+        } else if (!this.isFetching) {
+          this.refresh();
+        }
+      }),
+      filter(Boolean),
+      distinctUntilChanged(),
+    );
+
+  private bag$ = this.constants$.pipe(
+    map(constants => new ValueBag(constants)),
+    distinctUntilChanged(),
+  );
 
   private isFetching = false;
 
@@ -30,10 +49,7 @@ export class UserConstantsService {
   }
 
   bag(): Observable<ValueBag> {
-    return this.constants$.pipe(
-      map(constants => new ValueBag(constants)),
-      distinctUntilChanged(),
-    );
+    return this.bag$;
   }
 
   get(constantName: string): Observable<IUserConstant> {
@@ -41,21 +57,5 @@ export class UserConstantsService {
       map(constants => constants[constantName]),
       distinctUntilChanged(),
     );
-  }
-
-  private get constants$(): Observable<IUserConstants> {
-    return this.store
-      .select(state => state.userConstants.constants)
-      .pipe(
-        tap(constants => {
-          if (constants) {
-            this.isFetching = false;
-          } else if (!this.isFetching) {
-            this.refresh();
-          }
-        }),
-        filter(Boolean),
-        distinctUntilChanged(),
-      );
   }
 }
