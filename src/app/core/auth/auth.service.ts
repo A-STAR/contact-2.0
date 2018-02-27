@@ -39,7 +39,7 @@ export class AuthService implements CanActivate {
   private tokenTimer = null;
   private url: string = null;
 
-  isParamsFetching = false;
+  private isParamsFetching = false;
 
   constructor(
     private jwtHelper: JwtHelperService,
@@ -76,6 +76,10 @@ export class AuthService implements CanActivate {
       map(([ user, params ]) => params),
       distinctUntilChanged(),
     );
+  }
+
+  setUserParamFetching(): void {
+    this.isParamsFetching = true;
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
