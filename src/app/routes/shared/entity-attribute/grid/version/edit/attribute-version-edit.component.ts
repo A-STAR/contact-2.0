@@ -10,12 +10,12 @@ import {
 } from '@angular/core';
 
 import { IAttribute, IAttributeVersion, IAttributeVersionForm } from '../../../attribute.interface';
-import { IDynamicFormControl } from '../../../../../../components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { DynamicFormComponent } from '../../../../../../components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { getFormControlConfig, getRawValue, getValue } from '../../../../../../../core/utils/value';
-import { makeKey } from '../../../../../../../core/utils';
+import { getFormControlConfig, getRawValue, getValue } from '@app/core/utils/value';
+import { makeKey } from '@app/core/utils';
 
 const labelKey = makeKey('widgets.attribute.grid');
 

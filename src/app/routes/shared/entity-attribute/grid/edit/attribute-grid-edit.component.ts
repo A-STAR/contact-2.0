@@ -10,14 +10,14 @@ import {
 } from '@angular/core';
 
 import { IAttribute, IAttributeForm } from '../../attribute.interface';
-import { IDynamicFormControl } from '../../../../../components/form/dynamic-form/dynamic-form.interface';
-import { IOption } from '../../../../../../core/converter/value-converter.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
-import { DynamicFormComponent } from '../../../../../components/form/dynamic-form/dynamic-form.component';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { getFormControlConfig, getRawValue, getValue } from '../../../../../../core/utils/value';
-import { makeKey } from '../../../../../../core/utils';
+import { getFormControlConfig, getRawValue, getValue } from '@app/core/utils/value';
+import { makeKey } from '@app/core/utils';
 
 const labelKey = makeKey('widgets.attribute.grid');
 

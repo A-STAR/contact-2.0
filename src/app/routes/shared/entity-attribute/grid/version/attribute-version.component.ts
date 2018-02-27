@@ -14,20 +14,20 @@ import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute, IAttributeVersion } from '../../attribute.interface';
-import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { IValueEntity } from '../../../../../../core/converter/value-converter.interface';
+import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IValueEntity } from '@app/core/converter/value-converter.interface';
 
 import { AttributeService } from '../../attribute.service';
-import { GridService } from '../../../../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from './../../../../../../core/converter/value-converter.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { GridComponent } from '../../../../../../shared/components/grid/grid.component';
+import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { DialogFunctions } from '../../../../../../core/dialog';
-import { combineLatestAnd } from '../../../../../../core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
+import { combineLatestAnd } from '@app/core/utils/helpers';
 
 
 @Component({
