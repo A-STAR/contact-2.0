@@ -1,6 +1,7 @@
 export enum IAccessConfigItemType {
   CONSTANT = 'constant',
   ENTITY = 'entity',
+  GROUP = 'group',
   PERMISSION = 'permission',
 }
 
@@ -35,7 +36,7 @@ export enum IAccessConfigOperator {
 }
 
 export interface IAccessGroup {
-  type: 'group';
+  type: IAccessConfigItemType.GROUP;
   operator: IAccessConfigOperator;
   children: IAccessConfig[];
 }

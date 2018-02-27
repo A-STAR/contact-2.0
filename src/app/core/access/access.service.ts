@@ -36,7 +36,7 @@ export class AccessService {
   }
 
   private getAccess(config: IAccessConfig): Observable<boolean> {
-    return config.type === 'group'
+    return config.type === IAccessConfigItemType.GROUP
       ? this.getAccessForGroup(config)
       : this.getAccessForItem(config);
   }
