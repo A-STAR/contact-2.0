@@ -13,7 +13,7 @@ export enum IAccessByEntityMethod {
 export interface IAccessByEntityConfigItem {
   type: IAccessConfigItemType.ENTITY;
   method: IAccessByEntityMethod;
-  value: string[];
+  value: number;
 }
 
 export enum IAccessByValueBagMethod {
@@ -22,11 +22,19 @@ export enum IAccessByValueBagMethod {
   NOT_EMPTY = 'notEmpty',
 }
 
-export interface IAccessByValueBagConfigItem {
+export interface IAccessByValueBagConfigItem1 {
   type: IAccessConfigItemType.CONSTANT | IAccessConfigItemType.PERMISSION;
-  method: IAccessByValueBagMethod;
-  value: string[];
+  method: IAccessByValueBagMethod.HAS | IAccessByValueBagMethod.NOT_EMPTY;
+  value: string;
 }
+
+export interface IAccessByValueBagConfigItem2 {
+  type: IAccessConfigItemType.CONSTANT | IAccessConfigItemType.PERMISSION;
+  method: IAccessByValueBagMethod.CONTAINS;
+  value: [string, string];
+}
+
+export type IAccessByValueBagConfigItem = IAccessByValueBagConfigItem1 | IAccessByValueBagConfigItem2;
 
 export type IAccessConfigItem = IAccessByEntityConfigItem | IAccessByValueBagConfigItem;
 

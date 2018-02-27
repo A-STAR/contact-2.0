@@ -75,11 +75,11 @@ export class AccessService {
       map(bag => {
         switch (item.method) {
           case IAccessByValueBagMethod.CONTAINS:
-            return bag.contains.apply(null, item.value);
+            return bag.contains(item.value[0], Number(item.value[1]));
           case IAccessByValueBagMethod.HAS:
-            return bag.has.apply(null, item.value);
+            return bag.has(item.value);
           case IAccessByValueBagMethod.NOT_EMPTY:
-            return bag.notEmpty.apply(null, item.value);
+            return bag.notEmpty(item.value);
           default:
             return false;
         }
@@ -108,11 +108,11 @@ export class AccessService {
       map(bag => {
         switch (item.method) {
           case IAccessByValueBagMethod.CONTAINS:
-            return bag.contains.apply(null, item.value);
+            return bag.contains(item.value[0], Number(item.value[1]));
           case IAccessByValueBagMethod.HAS:
-            return bag.has.apply(null, item.value);
+            return bag.has(item.value);
           case IAccessByValueBagMethod.NOT_EMPTY:
-            return bag.notEmpty.apply(null, item.value);
+            return bag.notEmpty(item.value);
           default:
             return false;
         }
