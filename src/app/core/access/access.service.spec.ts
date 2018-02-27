@@ -155,7 +155,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: true,
           valueN: null,
           valueS: null,
@@ -180,7 +180,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: false,
           valueN: null,
           valueS: null,
@@ -205,7 +205,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: null,
           valueN: null,
           valueS: 'value',
@@ -230,7 +230,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: null,
           valueN: null,
           valueS: '',
@@ -255,7 +255,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: null,
           valueN: null,
           valueS: 'ALL',
@@ -280,7 +280,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: null,
           valueN: null,
           valueS: '1,2,3',
@@ -305,7 +305,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: null,
           valueN: null,
           valueS: '1,2,3',
@@ -334,7 +334,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: true,
           valueN: null,
           valueS: null,
@@ -359,7 +359,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: false,
           valueN: null,
           valueS: null,
@@ -384,7 +384,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: null,
           valueN: null,
           valueS: 'value',
@@ -409,7 +409,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: null,
           valueN: null,
           valueS: '',
@@ -434,7 +434,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: null,
           valueN: null,
           valueS: 'ALL',
@@ -459,7 +459,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: null,
           valueN: null,
           valueS: '1,2,3',
@@ -484,7 +484,7 @@ describe('AccessService', () => {
       .and
       .returnValue(of(new ValueBag({
         [name]: {
-          name: name,
+          name,
           valueB: null,
           valueN: null,
           valueS: '1,2,3',
