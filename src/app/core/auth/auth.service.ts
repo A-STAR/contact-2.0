@@ -4,7 +4,8 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
-import { tap, distinctUntilChanged } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { tap, distinctUntilChanged, map } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
 import { IUser, IUserParams } from './auth.interface';
@@ -60,18 +61,25 @@ export class AuthService implements CanActivate {
   }
 
   get userParams$(): Observable<IUserParams> {
-    return this.store
-    .select(state => state.auth.params)
+    return combineLatest(
+      this.currentUser$.map(user => user && user.userId),
+      this.store.select(state => state.auth.params)
+    )
     .pipe(
-      tap(params => {
+      tap(([ userId, params ]) => {
         if (params) {
           this.isParamsFetching = false;
-        } else if (!this.isParamsFetching) {
+        } else if (!this.isParamsFetching && userId) {
           this.refreshUserParamsAction();
         }
       }),
+      map(([ user, params ]) => params),
       distinctUntilChanged(),
     );
+  }
+
+  setUserParamFetching(): void {
+    this.isParamsFetching = true;
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -147,7 +155,6 @@ export class AuthService implements CanActivate {
   }
 
   private refreshUserParamsAction(): void {
-    this.isParamsFetching = true;
     this.store.dispatch(this.createAction(AuthService.USER_FETCH));
   }
 

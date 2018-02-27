@@ -1,7 +1,6 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { distinctUntilChanged, first, tap, map } from 'rxjs/operators';
 import { throttleTime } from 'rxjs/operators/throttleTime';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -18,7 +17,7 @@ import { WSService } from '@app/core/ws/ws.service';
 import { combineLatestAnd } from '@app/core/utils';
 
 @Injectable()
-export class CallService implements OnDestroy {
+export class CallService {
   static STORAGE_KEY = 'state/calls';
 
   static CALL_INIT = 'CALL_INIT';
@@ -53,8 +52,6 @@ export class CallService implements OnDestroy {
 
   private wsConnection: IWSConnection<IPBXState>;
 
-  private stateSub: Subscription;
-
   constructor(
     private authService: AuthService,
     private store: Store<IAppState>,
@@ -62,21 +59,23 @@ export class CallService implements OnDestroy {
     private persistenceService: PersistenceService,
     private wsService: WSService,
   ) {
-    this.wsService.connect<IPBXState>('/wsapi/pbx/events')
+    this.usePBX$
+      .distinctUntilChanged()
+      .filter(Boolean)
+      .flatMap(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
       .do(connection => this.wsConnection = connection)
       .flatMap(connection => connection.listen())
       .subscribe(state => this.updatePBXState(state));
 
-    this.stateSub = this.store.select(state => state.calls)
+    this.usePBX$
+      .filter(use => !use)
+      .subscribe(() => this.wsConnection && this.wsConnection.close());
+
+    this.store.select(state => state.calls)
       .pipe(throttleTime(500))
       .subscribe(state =>
         this.persistenceService.set(CallService.STORAGE_KEY, state)
       );
-  }
-
-  ngOnDestroy(): void {
-    this.stateSub.unsubscribe();
-    this.wsConnection.close();
   }
 
   get settings$(): Observable<ICallSettings> {

@@ -9,8 +9,6 @@ import { IWSConnection } from './ws.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 
-const jwt = R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.TOKEN_NAME));
-
 @Injectable()
 export class WSService {
   private baseUrl$ = this.http.get('./assets/server/root.json')
@@ -37,7 +35,7 @@ export class WSService {
   }
 
   private open(url: string, callback: (data: any) => void): WebSocket {
-    const socket = new WebSocket(url, [ 'Authentication', `Token-${jwt}` ]);
+    const socket = new WebSocket(url, [ 'Authentication', `Token-${this.jwt}` ]);
     socket.addEventListener('message', event => {
       const data = R.tryCatch(JSON.parse, () => null)(event.data);
       if (data) {
@@ -56,5 +54,9 @@ export class WSService {
         socket.close();
       }
     };
+  }
+
+  private get jwt(): string {
+    return R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.TOKEN_NAME));
   }
 }

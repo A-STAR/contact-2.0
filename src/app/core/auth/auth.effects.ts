@@ -110,6 +110,7 @@ export class AuthEffects {
   @Effect()
   userParams$ = this.actions
     .ofType(AuthService.USER_FETCH)
+    .do(() => this.authService.setUserParamFetching())
     .switchMap(() => {
       return this.fetchUserParams()
         .map(params => ({
