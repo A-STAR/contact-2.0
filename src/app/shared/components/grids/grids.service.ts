@@ -110,4 +110,5 @@ export class GridsService {
   private getLocalSettings(key: string): IGridLocalSettings {
     return this.persistenceService.get(key) || { columns: [], sortModel: {} };
   }
+
 }

@@ -6,6 +6,7 @@ import { AgGridModule } from 'ag-grid-angular/main';
 
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
+import { ContextMenuModule } from '@app/shared/components/grids/context-menu/context-menu.module';
 import { MomentModule } from '@app/shared/pipes/moment/moment.module';
 import { SelectModule } from '@app/shared/components/form/select/select.module';
 import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
@@ -45,6 +46,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     ButtonModule,
     CheckModule,
     CommonModule,
+    ContextMenuModule,
     FormsModule,
     MomentModule,
     SelectModule,
@@ -53,6 +55,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
   ],
   exports: [
     CheckboxRendererComponent,
+    ContextMenuModule,
     SimpleGridComponent,
   ],
   declarations: [
