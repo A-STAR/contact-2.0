@@ -57,10 +57,9 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   @Input() lookupKey: ILookupKey;
   @Input() placeholder = '';
   @Input() renderer: (option: ILabeledValue) => void;
-  @Input() required: boolean;
   @Input() styles: CSSStyleDeclaration;
 
-  @Output() select = new EventEmitter<ILabeledValue[]>();
+  @Output() select = new EventEmitter<any>();
 
   public open = false;
 
@@ -69,14 +68,14 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   // private _autocomplete: ILabeledValue[] = [];
   private _disabled = false;
   private _options: ILabeledValue[];
+  private _required = false;
   private optionsSubscription: Subscription;
-  private selectedIndex: number = null;
+  private selectedValue: number = null;
 
   @Input()
   set options(options: ILabeledValue[]) {
     this._options = this.sortOptionsPipe.transform(options);
-    // console.log('options are set', this.options);
-    this.writeValue(this.selectedIndex);
+    this.writeValue(this.selectedValue);
   }
 
   get options(): ILabeledValue[] {
@@ -104,6 +103,15 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   get disabled(): boolean {
     return this._disabled;
+  }
+
+  @Input()
+  set isRequired(value: boolean) {
+    this._required = this.setDefault(value, this._required);
+  }
+
+  get required(): boolean {
+    return this._required;
   }
 
   @Input()
@@ -155,9 +163,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   writeValue(id: number): void {
-    // console.log('id', id);
-    // console.log('options len', this.options.length);
-    this.selectedIndex = id;
+    this.selectedValue = id;
     if (id != null && this.options.length) {
       this.active = this.selectedOption;
     }
@@ -181,19 +187,19 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   validate(control: AbstractControl): ValidationErrors {
-    return this.required && this.selectedIndex == null
-      ? { required: true }
+    return this.required && this.selectedValue == null
+      ? { required: false }
       : null;
   }
 
   get activeLabel(): string {
-    return this.selectedIndex !== null && this.active
+    return this.selectedValue !== null && this.active
       ? this.active.label || ''
       : '';
   }
 
   get selectedOption(): ILabeledValue {
-    return this.options.find(v => v.value === this.selectedIndex);
+    return this.options.find(v => v.value === this.selectedValue);
   }
 
   get caretCls(): string {
@@ -211,35 +217,20 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     }
   }
 
-  onInputChange(value: string): void {
-    const foundIndex = this.options.findIndex(o => o.label === value);
-    this.selectedIndex = foundIndex > -1 ? foundIndex : null;
-    // console.log('input changed sel index', this.selectedIndex);
-    this.propagateChange(this.selectedIndex);
+  onInputChange(label: string): void {
+    const option = this.options.find(o => o.label === label);
+    this.selectedValue = option ? option.value : null;
+    this.propagateChange(this.selectedValue);
   }
-
-  // onMatchClick(event: Event): void {
-  //   this.stopEvent(event);
-
-  //   if (this._disabled) {
-  //     return;
-  //   }
-
-  //   if (!this.open) {
-  //     this.showOptions();
-  //   } else {
-  //     this.hideOptions();
-  //   }
-  // }
 
   onSelect(event: Event, option: ILabeledValue): void {
     event.stopPropagation();
     event.preventDefault();
 
+    this.selectedValue = option.value;
     this.active = option;
-    // console.log('select', option);
-    this.propagateChange(this.active.value);
-    this.select.emit([this.active]);
+    this.propagateChange(option.value);
+    this.select.emit(option.value);
 
     this.hideOptions();
   }
@@ -257,18 +248,16 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
       this.hideOptions();
     } else {
       this.showOptions();
-      this.cdRef.markForCheck();
     }
   }
 
   isActive(option: ILabeledValue): boolean {
-    return this.selectedIndex === option.value;
+    return this.selectedValue === option.value;
   }
 
   propagateTouched: Function = () => {};
 
   private propagateChange: Function = () => {};
-
 
   private hideOptions(): void {
     this.open = false;
@@ -286,7 +275,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   private onOptionsFetch = (options: ILabeledValue[]) => {
     this.options = options;
     this.active = this.selectedOption;
-    // console.log('selectedIndex', this.selectedIndex);
     this.propagateChange(this.active);
     this.cdRef.markForCheck();
   }

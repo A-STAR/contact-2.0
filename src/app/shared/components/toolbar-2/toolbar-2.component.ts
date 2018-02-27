@@ -30,6 +30,7 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_CALL]: 'call',
     [ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS]: 'changeStatus',
     [ToolbarItemTypeEnum.BUTTON_CLOSE]: 'close',
+    [ToolbarItemTypeEnum.BUTTON_CLEAR]: 'clear',
     [ToolbarItemTypeEnum.BUTTON_COPY]: 'copy',
     [ToolbarItemTypeEnum.BUTTON_DELETE]: 'delete',
     [ToolbarItemTypeEnum.BUTTON_DROP]: 'drop',

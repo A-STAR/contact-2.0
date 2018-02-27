@@ -27,7 +27,7 @@ export class ContactSelectSearchComponent {
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   controls = [
-    { controlName: 'linkTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
+    { controlName: 'linkTypeCode', type: 'select', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
   ].map(control => ({ ...control, label: labelKey(control.controlName) } as IDynamicFormControl));
 
   columns$ = this.gridService.getColumns([

@@ -15,7 +15,7 @@ export class ButtonService {
     cancel:           { icon: 'co co-cancel',             label: 'default.buttons.cancel'           },
     change:           { icon: '',                         label: 'default.buttons.change'           }, // exchange-alt
     changeStatus:     { icon: 'co co-change-status',      label: 'default.buttons.changeStatus'     },
-    clear:            { icon: 'co co-close',              label: 'default.buttons.clear'            },
+    clear:            { icon: 'co co-clear',              label: 'default.buttons.clear'            },
     close:            { icon: 'co co-close',              label: 'default.buttons.close'            },
     copy:             { icon: 'co co-copy',               label: 'default.buttons.copy'             },
     debtCard:         { icon: 'co co-debt-list',          label: 'default.buttons.debtCard'         },

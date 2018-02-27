@@ -88,30 +88,16 @@
 
   <ng-container *ngSwitchCase="'select'">
     <app-select
+      [dictCode]="control.dictCode"
       [formControlName]="control.controlName"
       [isDisabled]="control.disabled"
+      [isRequired]="control.required"
       [label]="control.label"
+      [lookupKey]="control.lookupKey"
       [options]="control.options"
       [placeholder]="control.placeholder"
-      [required]="control.required"
       (select)="selectHandler({ control: control, items: $event})"
     ></app-select>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'selectwrapper'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-select-wrapper
-        [formControlName]="control.controlName"
-        [dictCode]="control.dictCode"
-        [parentCode]="control.parentCode"
-        [lookupKey]="control.lookupKey"
-        [required]="control.required || undefined"
-      ></app-select-wrapper>
-    </label>
   </ng-container>
 
   <ng-container *ngSwitchCase="'singleselect'">
@@ -123,8 +109,8 @@
       <app-single-select
         [formControlName]="control.controlName"
         [dictCode]="control.dictCode"
-        [lookupKey]="control.lookupKey">
-      </app-single-select>
+        [lookupKey]="control.lookupKey"
+      ></app-single-select>
     </label>
   </ng-container>
 
@@ -137,8 +123,8 @@
       <app-multi-select-wrapper
         [formControlName]="control.controlName"
         [dictCode]="control.dictCode"
-        [lookupKey]="control.lookupKey">
-      </app-multi-select-wrapper>
+        [lookupKey]="control.lookupKey"
+      ></app-multi-select-wrapper>
     </label>
   </ng-container>
 

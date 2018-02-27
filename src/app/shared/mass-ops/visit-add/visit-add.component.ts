@@ -38,7 +38,7 @@ export class VisitAddDialogComponent implements OnInit {
     {
       label: label('purposeCode'),
       controlName: 'purposeCode',
-      type: 'selectwrapper',
+      type: 'select',
       required: true,
       dictCode: UserDictionariesService.DICTIONARY_VISIT_PURPOSE,
     },

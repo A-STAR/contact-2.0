@@ -4,16 +4,11 @@
 
     <!-- Phone Type -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.phone.form.type' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-        <app-select-wrapper
-          formControlName="typeCode"
-          [dictCode]="phoneTypeDictCode"
-        ></app-select-wrapper>
-      </label>
+      <app-select
+        formControlName="typeCode"
+        label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.type"
+        [dictCode]="phoneTypeDictCode"
+      ></app-select>
     </div>
 
     <!-- Phone Number -->

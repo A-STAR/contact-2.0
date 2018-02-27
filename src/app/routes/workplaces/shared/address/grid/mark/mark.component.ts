@@ -50,7 +50,7 @@ export class AddressGridMarkComponent implements OnInit {
   selection: IDebt[];
 
   controls = [
-    { controlName: 'purposeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_VISIT_STATUS },
+    { controlName: 'purposeCode', type: 'select', dictCode: UserDictionariesService.DICTIONARY_VISIT_STATUS },
     { controlName: 'comment', type: 'textarea' },
   ].map(control => ({ ...control, label: labelKey(control.controlName) })) as IDynamicFormItem[];
 

@@ -44,7 +44,7 @@ export class OperatorCardComponent implements OnInit {
           }
         ],
       },
-      { label: label('roleCode'), controlName: 'roleCode', type: 'selectwrapper', disabled: true, lookupKey: 'roles' },
+      { label: label('roleCode'), controlName: 'roleCode', type: 'select', disabled: true, lookupKey: 'roles' },
       { label: label('email'), controlName: 'email', type: 'text', disabled: true },
       { label: label('mobPhone'), controlName: 'mobPhone', type: 'text', disabled: true },
       { label: label('workPhone'), controlName: 'workPhone', type: 'text', disabled: true },

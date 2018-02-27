@@ -79,13 +79,9 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
   }
 
   validate(control: AbstractControl): ValidationErrors {
-
-    const valid = this.isRequired
+    return this.isRequired
       ? multilanguageRequired(this.langOptions)(control)
       : null;
-
-    this.cdRef.markForCheck();
-    return valid;
   }
 
   registerOnChange(fn: () => void): void {
