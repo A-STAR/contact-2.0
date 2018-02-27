@@ -57,17 +57,22 @@ describe('AccessService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should process type = entity, method = isMandatory', done => {
+  /*
+   * EntityAttributesService
+   */
+
+  it('should process type = entity, method = isMandatory, result = true', done => {
     const spy = spyOn(entityAttributesService, 'getAttribute')
       .and
       .returnValue(of({
-        isUsed: true,
         isMandatory: true,
+        isUsed: null,
       }));
     service
       .hasAccess({
         type: IAccessConfigItemType.ENTITY,
         method: IAccessByEntityMethod.IS_MANDATORY,
+        // Attribute id:
         value: 1,
       })
       .subscribe(res => {
@@ -77,17 +82,39 @@ describe('AccessService', () => {
       });
   });
 
-  it('should process type = entity, method = isUsed', done => {
+  it('should process type = entity, method = isMandatory, result = false', done => {
     const spy = spyOn(entityAttributesService, 'getAttribute')
       .and
       .returnValue(of({
+        isMandatory: false,
+        isUsed: null,
+      }));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.ENTITY,
+        method: IAccessByEntityMethod.IS_MANDATORY,
+        // Attribute id:
+        value: 1,
+      })
+      .subscribe(res => {
+        expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = entity, method = isUsed, result = true', done => {
+    const spy = spyOn(entityAttributesService, 'getAttribute')
+      .and
+      .returnValue(of({
+        isMandatory: null,
         isUsed: true,
-        isMandatory: true,
       }));
     service
       .hasAccess({
         type: IAccessConfigItemType.ENTITY,
         method: IAccessByEntityMethod.IS_USED,
+        // Attribute id:
         value: 1,
       })
       .subscribe(res => {
@@ -97,12 +124,38 @@ describe('AccessService', () => {
       });
   });
 
-  it('should process type = constant, method = has', done => {
+  it('should process type = entity, method = isUsed, result = false', done => {
+    const spy = spyOn(entityAttributesService, 'getAttribute')
+      .and
+      .returnValue(of({
+        isMandatory: null,
+        isUsed: false,
+      }));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.ENTITY,
+        method: IAccessByEntityMethod.IS_USED,
+        // Attribute id:
+        value: 1,
+      })
+      .subscribe(res => {
+        expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  /*
+   * UserConstantsService
+   */
+
+  it('should process type = constant, method = has, result = true', done => {
+    const name = 'constant';
     const spy = spyOn(userConstantsService, 'bag')
       .and
       .returnValue(of(new ValueBag({
-        constant: {
-          name: 'constant',
+        [name]: {
+          name: name,
           valueB: true,
           valueN: null,
           valueS: null,
@@ -112,7 +165,7 @@ describe('AccessService', () => {
       .hasAccess({
         type: IAccessConfigItemType.CONSTANT,
         method: IAccessByValueBagMethod.HAS,
-        value: 'constant',
+        value: name,
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -121,12 +174,38 @@ describe('AccessService', () => {
       });
   });
 
-  it('should process type = constant, method = notEmpty', done => {
+  it('should process type = constant, method = has, result = false', done => {
+    const name = 'constant';
     const spy = spyOn(userConstantsService, 'bag')
       .and
       .returnValue(of(new ValueBag({
-        constant: {
-          name: 'constant',
+        [name]: {
+          name: name,
+          valueB: false,
+          valueN: null,
+          valueS: null,
+        }
+      })));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.CONSTANT,
+        method: IAccessByValueBagMethod.HAS,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = constant, method = notEmpty, result = true', done => {
+    const name = 'constant';
+    const spy = spyOn(userConstantsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name: name,
           valueB: null,
           valueN: null,
           valueS: 'value',
@@ -136,7 +215,7 @@ describe('AccessService', () => {
       .hasAccess({
         type: IAccessConfigItemType.CONSTANT,
         method: IAccessByValueBagMethod.NOT_EMPTY,
-        value: 'constant',
+        value: name,
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -145,12 +224,63 @@ describe('AccessService', () => {
       });
   });
 
-  it('should process type = constant, method = contains', done => {
+  it('should process type = constant, method = notEmpty, result = false', done => {
+    const name = 'constant';
     const spy = spyOn(userConstantsService, 'bag')
       .and
       .returnValue(of(new ValueBag({
-        constant: {
-          name: 'constant',
+        [name]: {
+          name: name,
+          valueB: null,
+          valueN: null,
+          valueS: '',
+        }
+      })));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.CONSTANT,
+        method: IAccessByValueBagMethod.NOT_EMPTY,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = constant, method = contains, result = true (value = ALL)', done => {
+    const name = 'constant';
+    const spy = spyOn(userConstantsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name: name,
+          valueB: null,
+          valueN: null,
+          valueS: 'ALL',
+        }
+      })));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.CONSTANT,
+        method: IAccessByValueBagMethod.CONTAINS,
+        value: [name, 1],
+      })
+      .subscribe(res => {
+        expect(res).toBeTruthy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = constant, method = contains, result = true (value = 1,2,3)', done => {
+    const name = 'constant';
+    const spy = spyOn(userConstantsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name: name,
           valueB: null,
           valueN: null,
           valueS: '1,2,3',
@@ -160,7 +290,7 @@ describe('AccessService', () => {
       .hasAccess({
         type: IAccessConfigItemType.CONSTANT,
         method: IAccessByValueBagMethod.CONTAINS,
-        value: ['constant', 1],
+        value: [name, 1],
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -169,12 +299,42 @@ describe('AccessService', () => {
       });
   });
 
-  it('should process type = permission, method = has', done => {
+  it('should process type = constant, method = contains, result = false', done => {
+    const name = 'constant';
+    const spy = spyOn(userConstantsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name: name,
+          valueB: null,
+          valueN: null,
+          valueS: '1,2,3',
+        }
+      })));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.CONSTANT,
+        method: IAccessByValueBagMethod.CONTAINS,
+        value: [name, 4],
+      })
+      .subscribe(res => {
+        expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  /*
+   * UserPermissionsService
+   */
+
+  it('should process type = permission, method = has, result = true', done => {
+    const name = 'permission';
     const spy = spyOn(userPermissionsService, 'bag')
       .and
       .returnValue(of(new ValueBag({
-        permission: {
-          name: 'permission',
+        [name]: {
+          name: name,
           valueB: true,
           valueN: null,
           valueS: null,
@@ -184,7 +344,7 @@ describe('AccessService', () => {
       .hasAccess({
         type: IAccessConfigItemType.PERMISSION,
         method: IAccessByValueBagMethod.HAS,
-        value: 'permission',
+        value: name,
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -193,12 +353,38 @@ describe('AccessService', () => {
       });
   });
 
-  it('should process type = permission, method = notEmpty', done => {
+  it('should process type = permission, method = has, result = false', done => {
+    const name = 'permission';
     const spy = spyOn(userPermissionsService, 'bag')
       .and
       .returnValue(of(new ValueBag({
-        permission: {
-          name: 'permission',
+        [name]: {
+          name: name,
+          valueB: false,
+          valueN: null,
+          valueS: null,
+        }
+      })));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.PERMISSION,
+        method: IAccessByValueBagMethod.HAS,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = permission, method = notEmpty, result = true', done => {
+    const name = 'permission';
+    const spy = spyOn(userPermissionsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name: name,
           valueB: null,
           valueN: null,
           valueS: 'value',
@@ -208,7 +394,7 @@ describe('AccessService', () => {
       .hasAccess({
         type: IAccessConfigItemType.PERMISSION,
         method: IAccessByValueBagMethod.NOT_EMPTY,
-        value: 'permission',
+        value: name,
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -217,12 +403,63 @@ describe('AccessService', () => {
       });
   });
 
-  it('should process type = permission, method = contains', done => {
+  it('should process type = permission, method = notEmpty, result = false', done => {
+    const name = 'permission';
     const spy = spyOn(userPermissionsService, 'bag')
       .and
       .returnValue(of(new ValueBag({
-        permission: {
-          name: 'permission',
+        [name]: {
+          name: name,
+          valueB: null,
+          valueN: null,
+          valueS: '',
+        }
+      })));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.PERMISSION,
+        method: IAccessByValueBagMethod.NOT_EMPTY,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = permission, method = contains, result = true (value = ALL)', done => {
+    const name = 'permission';
+    const spy = spyOn(userPermissionsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name: name,
+          valueB: null,
+          valueN: null,
+          valueS: 'ALL',
+        }
+      })));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.PERMISSION,
+        method: IAccessByValueBagMethod.CONTAINS,
+        value: [name, 1],
+      })
+      .subscribe(res => {
+        expect(res).toBeTruthy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = permission, method = contains, result = true (value = 1,2,3)', done => {
+    const name = 'permission';
+    const spy = spyOn(userPermissionsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name: name,
           valueB: null,
           valueN: null,
           valueS: '1,2,3',
@@ -232,7 +469,7 @@ describe('AccessService', () => {
       .hasAccess({
         type: IAccessConfigItemType.PERMISSION,
         method: IAccessByValueBagMethod.CONTAINS,
-        value: ['permission', 1],
+        value: [name, 1],
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
@@ -241,7 +478,36 @@ describe('AccessService', () => {
       });
   });
 
-  it('should process type = group', done => {
+  it('should process type = permission, method = contains, result = false', done => {
+    const name = 'permission';
+    const spy = spyOn(userPermissionsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name: name,
+          valueB: null,
+          valueN: null,
+          valueS: '1,2,3',
+        }
+      })));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.PERMISSION,
+        method: IAccessByValueBagMethod.CONTAINS,
+        value: [name, 4],
+      })
+      .subscribe(res => {
+        expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  /*
+   * Groups
+   */
+
+  it('should process type = group, operator = and, result = true', done => {
     const spy = spyOn(entityAttributesService, 'getAttribute')
       .and
       .returnValue(of({
@@ -267,6 +533,99 @@ describe('AccessService', () => {
       })
       .subscribe(res => {
         expect(res).toBeTruthy();
+        expect(spy).toHaveBeenCalledTimes(2);
+        done();
+      });
+  });
+
+  it('should process type = group, operator = and, result = false', done => {
+    const spy = spyOn(entityAttributesService, 'getAttribute')
+      .and
+      .returnValue(of({
+        isUsed: true,
+        isMandatory: false,
+      }));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.GROUP,
+        operator: IAccessConfigOperator.AND,
+        children: [
+          {
+            type: IAccessConfigItemType.ENTITY,
+            method: IAccessByEntityMethod.IS_MANDATORY,
+            value: 1,
+          },
+          {
+            type: IAccessConfigItemType.ENTITY,
+            method: IAccessByEntityMethod.IS_USED,
+            value: 1,
+          }
+        ],
+      })
+      .subscribe(res => {
+        expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(2);
+        done();
+      });
+  });
+
+  it('should process type = group, operator = or, result = true', done => {
+    const spy = spyOn(entityAttributesService, 'getAttribute')
+      .and
+      .returnValue(of({
+        isUsed: true,
+        isMandatory: false,
+      }));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.GROUP,
+        operator: IAccessConfigOperator.OR,
+        children: [
+          {
+            type: IAccessConfigItemType.ENTITY,
+            method: IAccessByEntityMethod.IS_MANDATORY,
+            value: 1,
+          },
+          {
+            type: IAccessConfigItemType.ENTITY,
+            method: IAccessByEntityMethod.IS_USED,
+            value: 1,
+          }
+        ],
+      })
+      .subscribe(res => {
+        expect(res).toBeTruthy();
+        expect(spy).toHaveBeenCalledTimes(2);
+        done();
+      });
+  });
+
+  it('should process type = group, operator = or, result = false', done => {
+    const spy = spyOn(entityAttributesService, 'getAttribute')
+      .and
+      .returnValue(of({
+        isUsed: false,
+        isMandatory: false,
+      }));
+    service
+      .hasAccess({
+        type: IAccessConfigItemType.GROUP,
+        operator: IAccessConfigOperator.OR,
+        children: [
+          {
+            type: IAccessConfigItemType.ENTITY,
+            method: IAccessByEntityMethod.IS_MANDATORY,
+            value: 1,
+          },
+          {
+            type: IAccessConfigItemType.ENTITY,
+            method: IAccessByEntityMethod.IS_USED,
+            value: 1,
+          }
+        ],
+      })
+      .subscribe(res => {
+        expect(res).toBeFalsy();
         expect(spy).toHaveBeenCalledTimes(2);
         done();
       });
