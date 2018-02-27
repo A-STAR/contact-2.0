@@ -31,7 +31,7 @@ export interface IAccessByValueBagConfigItem1 {
 export interface IAccessByValueBagConfigItem2 {
   type: IAccessConfigItemType.CONSTANT | IAccessConfigItemType.PERMISSION;
   method: IAccessByValueBagMethod.CONTAINS;
-  value: [string, string];
+  value: [string, number];
 }
 
 export type IAccessByValueBagConfigItem = IAccessByValueBagConfigItem1 | IAccessByValueBagConfigItem2;

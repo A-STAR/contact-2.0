@@ -19,6 +19,8 @@ import { EntityAttributesService } from '@app/core/entity/attributes/entity-attr
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
+import { ValueBag } from '@app/core/value-bag/value-bag';
+
 import { combineLatestAnd, combineLatestOr } from '@app/core/utils';
 
 type ICombiner = (observables: Observable<boolean>[]) => Observable<boolean>;
@@ -43,17 +45,13 @@ export class AccessService {
 
   private getAccessForGroup(config: IAccessGroup): Observable<boolean> {
     const children = config.children.map(child => this.getAccess(child));
-    return this.getCombiner(config.operator)(children);
-  }
-
-  private getCombiner(operator: IAccessConfigOperator): ICombiner {
-    switch (operator) {
+    switch (config.operator) {
       case IAccessConfigOperator.AND:
-        return combineLatestAnd;
+        return combineLatestAnd(children);
       case IAccessConfigOperator.OR:
-        return combineLatestOr;
+        return combineLatestOr(children);
       default:
-        return () => of(false);
+        throw new Error('Invalid group operator');
     }
   }
 
@@ -66,25 +64,33 @@ export class AccessService {
       case IAccessConfigItemType.PERMISSION:
         return this.getAccessForItemByPermission(item);
       default:
-        return of(false);
+        throw new Error('Invalid item type');
     }
   }
 
   private getAccessForItemByConstant(item: IAccessByValueBagConfigItem): Observable<boolean> {
     return this.userConstantsService.bag().pipe(
-      map(bag => {
-        switch (item.method) {
-          case IAccessByValueBagMethod.CONTAINS:
-            return bag.contains(item.value[0], Number(item.value[1]));
-          case IAccessByValueBagMethod.HAS:
-            return bag.has(item.value);
-          case IAccessByValueBagMethod.NOT_EMPTY:
-            return bag.notEmpty(item.value);
-          default:
-            return false;
-        }
-      }),
+      map(bag => this.getAccessForItemByValueBag(bag, item)),
     );
+  }
+
+  private getAccessForItemByPermission(item: IAccessByValueBagConfigItem): Observable<boolean> {
+    return this.userPermissionsService.bag().pipe(
+      map(bag => this.getAccessForItemByValueBag(bag, item)),
+    );
+  }
+
+  private getAccessForItemByValueBag(bag: ValueBag, item: IAccessByValueBagConfigItem): boolean {
+    switch (item.method) {
+      case IAccessByValueBagMethod.CONTAINS:
+        return bag.contains(item.value[0], item.value[1]);
+      case IAccessByValueBagMethod.HAS:
+        return bag.has(item.value);
+      case IAccessByValueBagMethod.NOT_EMPTY:
+        return bag.notEmpty(item.value);
+      default:
+        throw new Error('Invalid item method');
+    }
   }
 
   private getAccessForItemByEntity(item: IAccessByEntityConfigItem): Observable<boolean> {
@@ -96,24 +102,7 @@ export class AccessService {
           case IAccessByEntityMethod.IS_USED:
             return attribute.isUsed;
           default:
-            return false;
-        }
-      }),
-    );
-  }
-
-  private getAccessForItemByPermission(item: IAccessByValueBagConfigItem): Observable<boolean> {
-    return this.userPermissionsService.bag().pipe(
-      map(bag => {
-        switch (item.method) {
-          case IAccessByValueBagMethod.CONTAINS:
-            return bag.contains(item.value[0], Number(item.value[1]));
-          case IAccessByValueBagMethod.HAS:
-            return bag.has(item.value);
-          case IAccessByValueBagMethod.NOT_EMPTY:
-            return bag.notEmpty(item.value);
-          default:
-            return false;
+            throw new Error('Invalid item method');
         }
       }),
     );
