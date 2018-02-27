@@ -82,7 +82,7 @@ export class ReportCardComponent implements OnInit {
         required: true,
         disabled: !canEdit
       },
-      { controlName: 'sql', type: 'textarea', disabled: !canEdit, required: true },
+      { controlName: 'sql', type: 'textarea', rows: 10, disabled: !canEdit, required: true },
       { controlName: 'comment', type: 'textarea', disabled: !canEdit },
       { controlName: 'exportUndescribed', type: 'checkbox', disabled: !canEdit, markAsDirty: !this.reportId },
     ] as IDynamicFormItem[];
