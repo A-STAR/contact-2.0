@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators/map';
 
 import {
@@ -22,8 +21,6 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { ValueBag } from '@app/core/value-bag/value-bag';
 
 import { combineLatestAnd, combineLatestOr } from '@app/core/utils';
-
-type ICombiner = (observables: Observable<boolean>[]) => Observable<boolean>;
 
 @Injectable()
 export class AccessService {
