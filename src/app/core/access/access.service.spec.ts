@@ -722,7 +722,6 @@ describe('AccessService', () => {
       .subscribe(
         res => {
           expect(res).toBeFalsy();
-          done();
         },
         error => {
           expect(error).toBeTruthy();
