@@ -241,7 +241,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     if (this.defaultAction) {
       const action: IActionGridAction = {
         selection: row,
-        metadataAction: this.defaultAction
+        metadataAction: {
+          ...this.defaultAction,
+          type: MetadataActionType.SINGLE
+        }
       };
       this.dialog = action.metadataAction.action;
       this.dialogData = this.setDialogData(action);
