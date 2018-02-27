@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { ObjectGridEditModule } from './add/object-grid-add.module';
-import { SelectModule } from '../../../../shared/components/form/select/select.module';
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { ObjectsService } from './objects.service';
 
@@ -25,7 +24,6 @@ const routes: Routes = [
     CommonModule,
     ObjectGridEditModule,
     RouterModule.forChild(routes),
-    SelectModule,
     SharedModule,
   ],
   exports: [

@@ -75,7 +75,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   @Input()
   set options(options: ILabeledValue[]) {
     this._options = this.sortOptionsPipe.transform(options);
-    // console.log('options are set', this.options);
     this.writeValue(this.selectedValue);
   }
 
@@ -164,8 +163,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   writeValue(id: number): void {
-    // console.log('id', id);
-    // console.log('options len', this.options.length);
     this.selectedValue = id;
     if (id != null && this.options.length) {
       this.active = this.selectedOption;
@@ -190,8 +187,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   validate(control: AbstractControl): ValidationErrors {
-    console.log('required', this.required);
-    console.log('selectedValue', this.selectedValue);
     return this.required && this.selectedValue == null
       ? { required: false }
       : null;
@@ -225,7 +220,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   onInputChange(label: string): void {
     const option = this.options.find(o => o.label === label);
     this.selectedValue = option ? option.value : null;
-    // console.log('input changed sel index', this.selectedValue);
     this.propagateChange(this.selectedValue);
   }
 
@@ -235,7 +229,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
     this.selectedValue = option.value;
     this.active = option;
-    // console.log('select', option);
     this.propagateChange(option.value);
     this.select.emit(option.value);
 
@@ -256,7 +249,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     } else {
       this.showOptions();
     }
-    // this.cdRef.markForCheck();
   }
 
   isActive(option: ILabeledValue): boolean {
@@ -281,10 +273,8 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   private onOptionsFetch = (options: ILabeledValue[]) => {
-    console.log('options', options);
     this.options = options;
     this.active = this.selectedOption;
-    // console.log('selectedValue', this.selectedValue);
     this.propagateChange(this.active);
     this.cdRef.markForCheck();
   }
