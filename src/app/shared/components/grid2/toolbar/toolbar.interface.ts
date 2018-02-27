@@ -36,5 +36,5 @@ export interface IToolbarAction {
 
 export interface IToolbarActionSelect {
   action: IToolbarAction;
-  value: ILabeledValue[];
+  value: any;
 }
