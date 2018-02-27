@@ -12,7 +12,7 @@ import {
   IAccessGroup,
   IAccessByEntityMethod,
   IAccessByValueBagConfigItem,
-  IAccessByEntityConfigItem,
+  IAccessByEntityItem,
 } from './access.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
@@ -91,7 +91,7 @@ export class AccessService {
     }
   }
 
-  private getAccessForItemByEntity(item: IAccessByEntityConfigItem): Observable<boolean> {
+  private getAccessForItemByEntity(item: IAccessByEntityItem): Observable<boolean> {
     return this.entityAttributesService.getAttribute(item.value).pipe(
       map(attribute => {
         switch (item.method) {

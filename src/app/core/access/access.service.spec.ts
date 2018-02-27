@@ -1,7 +1,14 @@
 import { TestBed } from '@angular/core/testing';
+import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { IAccessConfigItemType, IAccessByEntityMethod, IAccessByValueBagMethod, IAccessConfigOperator } from './access.interface';
+import {
+  IAccessConfigItemType,
+  IAccessByEntityMethod,
+  IAccessByValueBagMethod,
+  IAccessConfigOperator,
+} from './access.interface';
+import { IEntityAttribute } from '@app/core/entity/attributes/entity-attributes.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -12,15 +19,21 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
 import { AccessService } from './access.service';
 
 class MockEntityAttributesService {
-  getAttribute(id: number): any {}
+  getAttribute(id: number): Observable<IEntityAttribute> {
+    return null;
+  }
 }
 
 class MockUserConstantsService {
-  bag(): any {}
+  bag(): Observable<ValueBag> {
+    return null;
+  }
 }
 
 class MockUserPermissionsService {
-  bag(): any {}
+  bag(): Observable<ValueBag> {
+    return null;
+  }
 }
 
 describe('AccessService', () => {

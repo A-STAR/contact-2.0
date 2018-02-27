@@ -10,7 +10,7 @@ export enum IAccessByEntityMethod {
   IS_MANDATORY = 'isMandatory',
 }
 
-export interface IAccessByEntityConfigItem {
+export interface IAccessByEntityItem {
   type: IAccessConfigItemType.ENTITY;
   method: IAccessByEntityMethod;
   value: number;
@@ -22,21 +22,21 @@ export enum IAccessByValueBagMethod {
   NOT_EMPTY = 'notEmpty',
 }
 
-export interface IAccessByValueBagConfigItem1 {
+export interface IAccessByValueBagItemWithPlainValue {
   type: IAccessConfigItemType.CONSTANT | IAccessConfigItemType.PERMISSION;
   method: IAccessByValueBagMethod.HAS | IAccessByValueBagMethod.NOT_EMPTY;
   value: string;
 }
 
-export interface IAccessByValueBagConfigItem2 {
+export interface IAccessByValueBagItemWithArrayValue {
   type: IAccessConfigItemType.CONSTANT | IAccessConfigItemType.PERMISSION;
   method: IAccessByValueBagMethod.CONTAINS;
   value: [string, number];
 }
 
-export type IAccessByValueBagConfigItem = IAccessByValueBagConfigItem1 | IAccessByValueBagConfigItem2;
+export type IAccessByValueBagConfigItem = IAccessByValueBagItemWithPlainValue | IAccessByValueBagItemWithArrayValue;
 
-export type IAccessConfigItem = IAccessByEntityConfigItem | IAccessByValueBagConfigItem;
+export type IAccessConfigItem = IAccessByEntityItem | IAccessByValueBagConfigItem;
 
 export enum IAccessConfigOperator {
   AND = 'and',
