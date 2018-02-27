@@ -88,8 +88,7 @@ export class AccessService {
   }
 
   private getAccessForItemByEntity(item: IAccessByEntityConfigItem): Observable<boolean> {
-    const attributeId = Number(item.value[0]);
-    return this.entityAttributesService.getAttribute(attributeId).pipe(
+    return this.entityAttributesService.getAttribute(item.value).pipe(
       map(attribute => {
         switch (item.method) {
           case IAccessByEntityMethod.IS_MANDATORY:
