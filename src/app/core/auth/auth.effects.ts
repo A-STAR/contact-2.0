@@ -111,6 +111,7 @@ export class AuthEffects {
   userParams$ = this.actions
     .ofType(AuthService.USER_FETCH)
     .switchMap(() => {
+      this.authService.isParamsFetching = true;
       return this.fetchUserParams()
         .map(params => ({
           type: AuthService.USER_FETCH_SUCCESS,
