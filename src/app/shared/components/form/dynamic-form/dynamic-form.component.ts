@@ -382,12 +382,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   private serializeControlValue(value: any, control: IDynamicFormControl): any {
     switch (control.type) {
-      case 'selectwrapper':
-        return !Array.isArray(value)
-          ? value
-          : control.multiple
-            ? value.map(item => item.value)
-            : value[0].value;
       case 'multilanguage': {
         // TODO(a.tymchuk): replace with proper type instead of ILabeledValue
         const values = (Array.isArray(value) ? value : control.langOptions)

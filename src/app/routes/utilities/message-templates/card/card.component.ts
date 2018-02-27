@@ -156,7 +156,7 @@ export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
         dictCode: UserDictionariesService.DICTIONARY_EMAIL_FORMAT,
         display: isEmail,
         required: isEmail,
-        type: 'selectwrapper',
+        type: 'select',
       },
       {
         controlName: 'text',
@@ -170,7 +170,7 @@ export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
         controlName: 'recipientTypeCode',
         dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE,
         display: displayRecipient,
-        type: 'selectwrapper',
+        type: 'select',
       },
       {
         controlName: 'isSingleSending',

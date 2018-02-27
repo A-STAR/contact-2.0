@@ -204,7 +204,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.bankId',
         controlName: 'bankId',
-        type: 'selectwrapper',
+        type: 'select',
         lookupKey: 'contractors',
         disabled: true,
         width: 3
@@ -227,7 +227,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.creditTypeCode',
         controlName: 'creditTypeCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
         disabled: !debtEditPerm,
         width: 3
@@ -250,7 +250,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.regionCode',
         controlName: 'regionCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_REGIONS,
         disabled: !debtEditPerm,
         width: 3
@@ -258,7 +258,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.branchCode',
         controlName: 'branchCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_BRANCHES,
         disabled: !debtEditPerm,
         width: 3
@@ -289,7 +289,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.currencyId',
         controlName: 'currencyId',
-        type: 'selectwrapper',
+        type: 'select',
         lookupKey: 'currencies',
         disabled: !debtEditPerm,
         required: true,
@@ -367,7 +367,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.stageCode',
         controlName: 'stageCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE,
         disabled: !debtEditPerm,
         width: 3,
