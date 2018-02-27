@@ -42,17 +42,12 @@
 
     <!-- Currency -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.payment.form.currency' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-        <app-select-wrapper
-          formControlName="currencyId"
-          lookupKey="currencies"
-          [required]="true"
-        ></app-select-wrapper>
-      </label>
+      <app-select
+        formControlName="currencyId"
+        label="routes.workplaces.shared.contactRegistration.edit.form.payment.form.currency"
+        lookupKey="currencies"
+        [required]="true"
+      ></app-select>
     </div>
 
     <hr>

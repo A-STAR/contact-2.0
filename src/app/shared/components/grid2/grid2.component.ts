@@ -497,7 +497,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
         control: ToolbarControlEnum.SELECT,
         disabled: true,
-        styles: { width: '60px' },
+        styles: { width: '80px' },
         value: this.pageSizes.map(pageSize => ({ value: pageSize, label: String(pageSize) })),
       },
       { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: false },

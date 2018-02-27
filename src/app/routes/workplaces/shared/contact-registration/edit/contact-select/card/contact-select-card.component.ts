@@ -27,9 +27,13 @@ export class ContactSelectCardComponent {
       dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
       markAsDirty: true,
       required: true,
-      type: 'selectwrapper',
+      type: 'select',
     },
-    { controlName: 'linkTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
+    {
+      controlName: 'linkTypeCode',
+      type: 'select',
+      dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE
+    },
   ].map(control => ({ ...control, label: labelKey(control.controlName) } as IDynamicFormControl));
 
   data = {

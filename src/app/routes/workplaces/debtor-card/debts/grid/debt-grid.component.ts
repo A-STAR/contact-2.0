@@ -50,9 +50,8 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
       action: () => this.onChangeStatus()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON,
+      type: ToolbarItemTypeEnum.BUTTON_CALL,
       label: 'widgets.debt.toolbar.call',
-      icon: 'fa fa-phone',
       enabled: combineLatestAnd([
         this.selectedDebt$.map(debt => debt && !!debt.id && ![ 6, 7, 8, 17 ].includes(debt.statusCode)),
         this.userPermissionsService.has('DEBT_NEXT_CALL_DATE_SET'),
@@ -60,7 +59,7 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
       action: () => this.onNextCall()
     },
     {
-      type: ToolbarItemTypeEnum.BUTTON_CLOSE,
+      type: ToolbarItemTypeEnum.BUTTON_CLEAR,
       enabled: this.selectedDebt$.map(debt => debt && !!debt.id),
       children: [
         {

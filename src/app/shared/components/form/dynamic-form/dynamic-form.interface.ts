@@ -34,6 +34,7 @@ export type IDynamicFormControl =
   IDynamicFormGridSelectControl |
   IDynamicFormImageControl |
   IDynamicFormLanguageControl |
+  IDynamicFormMultiSelectControl |
   IDynamicFormNumberControl |
   IDynamicFormRadioControl |
   IDynamicFormRichTextControl |
@@ -179,7 +180,17 @@ export interface IDynamicFormSegmentedInputControl extends IDynamicFormBaseContr
 }
 
 export interface IDynamicFormSelectControl extends IDynamicFormBaseControl {
-  type: 'select' | 'selectwrapper' | 'singleselect' | 'multiselect' | 'multiselectwrapper';
+  type: 'select' | 'singleselect';
+  // options for select controls
+  options?: ILabeledValue[];
+  placeholder?: string;
+  dictCode?: number;
+  parentCode?: number;
+  lookupKey?: ILookupKey;
+}
+
+export interface IDynamicFormMultiSelectControl extends IDynamicFormBaseControl {
+  type: 'multiselect' | 'multiselectwrapper';
   // options for select controls
   multiple?: boolean;
   options?: ILabeledValue[];
@@ -315,7 +326,6 @@ export type TControlTypes =
   | 'searchBtn'
   | 'segmented'
   | 'select'
-  | 'selectwrapper'
   | 'singleselect'
   | 'text'
   | 'textarea'

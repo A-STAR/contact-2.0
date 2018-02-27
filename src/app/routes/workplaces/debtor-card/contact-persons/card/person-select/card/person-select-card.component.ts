@@ -59,7 +59,7 @@ export class PersonSelectCardComponent implements OnInit {
         { controlName: 'birthDate',  type: 'datepicker', width: 4, disabled: !canEdit },
         {
           controlName: 'genderCode',
-          type: 'selectwrapper',
+          type: 'select',
           width: 4,
           dictCode: UserDictionariesService.DICTIONARY_GENDER,
           disabled: !canEdit
@@ -67,14 +67,14 @@ export class PersonSelectCardComponent implements OnInit {
         { controlName: 'birthPlace', type: 'text', width: 4 },
         {
           controlName: 'familyStatusCode',
-          type: 'selectwrapper',
+          type: 'select',
           width: 4,
           dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
           disabled: !canEdit
         },
         {
           controlName: 'educationCode',
-          type: 'selectwrapper',
+          type: 'select',
           width: 4,
           dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
           disabled: !canEdit
@@ -84,7 +84,7 @@ export class PersonSelectCardComponent implements OnInit {
           dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
           markAsDirty: !this.personId,
           required: true,
-          type: 'selectwrapper',
+          type: 'select',
           disabled: !canEdit
         },
         { controlName: 'comment', type: 'textarea', disabled: !canEdit },

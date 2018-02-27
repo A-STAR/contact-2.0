@@ -70,7 +70,7 @@ export class StatusDialogComponent implements OnInit {
     return [
       {
         controlName: 'reasonCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE,
         parentCode: 6,
         required: isReasonRequired,
