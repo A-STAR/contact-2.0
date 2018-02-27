@@ -295,6 +295,10 @@ $switch-sm-hg: $switch-sm-wd/2;
   width: 260px;
 }
 
+.input-group-btn > .btn {
+  padding-left: 6px;
+  padding-right: 6px;
+}
 
 .note-editor {
   background-image: -webkit-linear-gradient(#eee .1em, transparent .1em);

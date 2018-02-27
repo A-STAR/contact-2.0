@@ -1,7 +1,7 @@
 @import '../../../styles/app/variables.scss';
 
 i.co {
-  font-size: 16px;
+  font-size: 15px;
   width: 1em;
   height: 1em;
 }
@@ -13,20 +13,20 @@ i.co {
 
 .select-clear {
   position: absolute;
-  top: 0.25em;
+  top: 0.4em;
   right: 1.5em;
   cursor: pointer;
 }
 
 .select-caret {
   position: absolute;
-  top: 0.25em;
+  top: 0.35em;
   right: 0.3em;
   transition: transform 400ms ease;
   transform: rotateZ(270deg);
   &.up {
     transform: rotateZ(90deg);
-    top: 0.3em;
+    top: 0.4em;
   }
   cursor: pointer;
 }
@@ -39,7 +39,6 @@ i.co {
   margin-top: 0;
 
   &.dropdown-menu {
-    // box-shadow: none;
     border-top: 0;
     min-width: unset;
   }

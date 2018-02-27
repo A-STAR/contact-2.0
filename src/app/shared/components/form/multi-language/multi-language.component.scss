@@ -9,13 +9,16 @@ label {
 
   .clear-btn {
     display: none;
+    position: absolute;
+    top: 0.3em;
+    right: 0.3em;
+    width: 1em;
+    height: 1em;
+    font-size: 16px;
+    cursor: pointer;
+
     &:hover {
       display: inline-block;
-      position: absolute;
-      top: 0.6em;
-      right: 0.6em;
-      font-size: smaller;
-      cursor: pointer;
       z-index: 2;
     }
   }
@@ -23,11 +26,6 @@ label {
   input:hover + i,
   input:focus + i {
     display: inline-block;
-    position: absolute;
-    top: 0.6em;
-    right: 0.6em;
-    font-size: smaller;
-    cursor: pointer;
     z-index: 3;
   }
 }
@@ -42,7 +40,7 @@ button {
   position: relative;
   .caret {
     position: absolute;
-    right: 10px;
+    right: 8px;
     top: 45%;
   }
 }

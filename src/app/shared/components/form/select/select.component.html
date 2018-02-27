@@ -53,7 +53,7 @@
         <div
           class="select-item"
           [ngClass]="{ active: isActive(option) }"
-          (click)="onSelectMatch($event, option)"
+          (click)="onSelect($event, option)"
         >
           <div class="dropdown-item">{{ renderer(option) }}</div>
         </div>

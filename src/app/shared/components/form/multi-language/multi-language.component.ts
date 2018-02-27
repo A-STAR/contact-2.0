@@ -20,7 +20,7 @@ import { Renderer2 } from '@angular/core';
 import { IMultiLanguageOption } from './multi-language.interface';
 
 import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
-import { multilanguageRequired } from '@app/core/validators/multilanguageRequired';
+import { multilanguageRequired } from '@app/core/validators';
 
 @Component({
   selector: 'app-multilanguage-input',
@@ -56,7 +56,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
   @Input() label = '';
   // This somehow always gets undefined -> explore
   @Input() placeholder = '';
-  @Input() required = false;
+  @Input() isRequired = false;
 
   @Input('langOptions')
   set langOptions(options: IMultiLanguageOption[]) {
@@ -66,6 +66,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
     }));
 
     this.selectedId = options.length ? 0 : null;
+    this.propagateChange(this.langOptions.find(o => !!o.active));
     this.cdRef.markForCheck();
   }
 
@@ -78,9 +79,13 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
   }
 
   validate(control: AbstractControl): ValidationErrors {
-    return this.required
+
+    const valid = this.isRequired
       ? multilanguageRequired(this.langOptions)(control)
       : null;
+
+    this.cdRef.markForCheck();
+    return valid;
   }
 
   registerOnChange(fn: () => void): void {
@@ -116,7 +121,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
     if (option) {
       option.value = value;
       option.isUpdated = true;
-      this.propagateChange(this.langOptions);
+      this.propagateChange(value);
     }
   }
 
@@ -131,10 +136,11 @@ export class MultiLanguageComponent implements ControlValueAccessor, Validator {
   }
 
   onFocusOut(): void {
-    this.propagateTouched(this.langOptions);
+    this.propagateTouched();
   }
 
   setDisabledState(disabled: boolean): void {
+    this.isDisabled = disabled;
     this.renderer.setProperty(this.input.nativeElement, 'disabled', disabled);
   }
 
