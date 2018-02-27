@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IUserConstant, IUserConstants } from './user-constants.interface';
+import { IUserConstant } from './user-constants.interface';
 
 import { ValueBag } from '@app/core/value-bag/value-bag';
 
