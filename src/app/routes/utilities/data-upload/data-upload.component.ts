@@ -57,7 +57,7 @@ export class DataUploadComponent extends DialogFunctions
       action: 'delete',
       params: [],
       addOptions: [],
-      enabled: selection => !isEmpty(selection),
+      enabled: (_, __, row) => !!row,
     },
   ];
 
@@ -156,17 +156,19 @@ export class DataUploadComponent extends DialogFunctions
     return this.dataUploadService.uploader.errorFileName;
   }
 
-  onFormatChange(format: { value: number }[]): void {
-    this.dataUploadService.format = format[0].value;
-    this.isCurrencySelected = format[0].value === DataUploaders.CURRENCY_RATE;
-    if (this.isCurrencySelected) {
-      this.dataUploadService.uploader.parameter = this.currencies[0].value;
+  onFormatChange(formatId: number): void {
+    if (formatId !== -1) {
+      this.dataUploadService.format = formatId;
+      this.isCurrencySelected = formatId === DataUploaders.CURRENCY_RATE;
+      if (this.isCurrencySelected) {
+        this.dataUploadService.uploader.parameter = this.currencies[0].value;
+      }
     }
   }
 
-  onCurrencyChange(currency: { value: number }[]): void {
+  onCurrencyChange(currencyId: number): void {
     if (this.dataUploadService.uploaderOfType(DataUploaders.CURRENCY_RATE)) {
-      this.dataUploadService.uploader.parameter = currency[0].value;
+      this.dataUploadService.uploader.parameter = currencyId;
     }
   }
 

@@ -12,7 +12,7 @@ export interface IMetadataActionOption {
 export interface IMetadataAction {
   action: string;
   addOptions: IMetadataActionOption[];
-  enabled: (selection: any[]) => boolean;
+  enabled: (actionType: MetadataActionType, selection: any[], data?: any) => boolean;
   params: string[];
   applyTo?: {
     all: boolean;
