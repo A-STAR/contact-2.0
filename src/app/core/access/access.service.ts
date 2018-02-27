@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { map } from 'rxjs/operators/map';
 
 import {
@@ -48,7 +49,7 @@ export class AccessService {
       case IAccessConfigOperator.OR:
         return combineLatestOr(children);
       default:
-        throw new Error('Invalid group operator');
+        return ErrorObservable.create('Invalid group operator');
     }
   }
 
@@ -61,7 +62,7 @@ export class AccessService {
       case IAccessConfigItemType.PERMISSION:
         return this.getAccessForItemByPermission(item);
       default:
-        throw new Error('Invalid item type');
+        return ErrorObservable.create('Invalid item type');
     }
   }
 
