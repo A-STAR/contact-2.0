@@ -11,34 +11,36 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, switchMap } from 'rxjs/operators';
 
 import { ICampaign, CampaignStatus } from './campaigns.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 import { ToolbarItemTypeEnum, IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CampaignsService } from './campaigns.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { GridComponent } from '@app/shared/components/grid/grid.component';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
 import { DialogFunctions } from '@app/core/dialog';
 
+import { addGridLabel, isEmpty } from '@app/core/utils';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+
 @Component({
-  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-campaigns',
   templateUrl: './campaigns.component.html',
 })
 export class CampaignsComponent extends DialogFunctions implements OnInit, OnDestroy {
-  @ViewChild(GridComponent) grid: GridComponent;
+  @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<ICampaign>;
 
   dialog: string;
   campaigns: ICampaign[];
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<ICampaign>[] = [
     { prop: 'id', minWidth: 40 },
     { prop: 'name', minWidth: 150 },
     { prop: 'groupName', minWidth: 150 },
@@ -47,8 +49,8 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'startDateTime', minWidth: 150 },
     { prop: 'finishDateTime', minWidth: 150 },
     { prop: 'comment', minWidth: 100 },
-    { prop: 'timeZoneUsed', minWidth: 50, renderer: 'checkboxRenderer' },
-  ];
+    { prop: 'timeZoneUsed', minWidth: 50, renderer: TickRendererComponent },
+  ].map(addGridLabel('utilities.campaigns.grid'));
 
   tabs = [
     { isInitialised: true, },
@@ -83,7 +85,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     ]
   };
 
-  toolbarItems: Array<IToolbarItem> = [
+  toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
       action: () => this.setDialog('CAMPAIGN_ADD'),
@@ -117,7 +119,6 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   constructor(
     private campaignsService: CampaignsService,
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService,
@@ -126,14 +127,6 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   ngOnInit(): void {
-
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
     this.fetchCampaigns()
       .subscribe(campaigns => this.onCampaignsFetch(campaigns));
   }
@@ -146,7 +139,10 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     return this.campaignsService.selectedCampaign;
   }
 
-  onSelectCampaign(campaign?: ICampaign): void {
+  onSelectCampaign(campaigns: ICampaign[]): void {
+    const campaign = isEmpty(campaigns)
+      ? null
+      : campaigns[0];
     this.campaignsService.selectCampaign(campaign);
   }
 
@@ -226,7 +222,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   resetSelection(): void {
-    this.grid.clearSelection();
+    this.grid.selection = [];
     this.campaignsService.selectCampaign(null);
   }
 

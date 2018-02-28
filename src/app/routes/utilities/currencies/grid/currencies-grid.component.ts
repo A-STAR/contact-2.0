@@ -5,16 +5,17 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { first } from 'rxjs/operators';
 
 import { ICurrency } from '../currencies.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CurrenciesService } from '../currencies.service';
 import { RoutingService } from '@app/core/routing/routing.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 
 import { DialogFunctions } from '@app/core/dialog';
+
 import { combineLatestAnd } from 'app/core/utils/helpers';
+import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,13 +27,13 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
 
   private selectedCurrency$ = new BehaviorSubject<ICurrency>(null);
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<ICurrency>[] = [
     { prop: 'id', width: 50 },
     { prop: 'code' },
     { prop: 'name' },
     { prop: 'shortName' },
     { prop: 'isMain', renderer: 'checkboxRenderer' },
-  ];
+  ].map(addGridLabel('widgets.currencies.grid'));
 
   titlebar: ITitlebar = {
     title: 'widgets.currencies.titlebar.title'
@@ -77,7 +78,6 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
   constructor(
     private cdRef: ChangeDetectorRef,
     private currenciesService: CurrenciesService,
-    private gridService: GridService,
     private route: ActivatedRoute,
     private routingService: RoutingService
   ) {
@@ -85,13 +85,6 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
     this.fetch();
 
     this.actionSubscription = this.currenciesService
@@ -126,7 +119,10 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
     return selectedCurrency ? [ selectedCurrency ] : [];
   }
 
-  onSelect(currency: ICurrency): void {
+  onSelect(currencies: ICurrency[]): void {
+    const currency = isEmpty(currencies)
+      ? null
+      : currencies[0]
     this.selectedCurrency$.next(currency);
   }
 

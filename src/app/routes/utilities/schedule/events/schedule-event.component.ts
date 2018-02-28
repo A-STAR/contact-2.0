@@ -9,22 +9,22 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IScheduleEvent } from './schedule-event.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { ScheduleEventService } from './schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { GridComponent } from '@app/shared/components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
-import { combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '@app/core/dialog';
-import { Observable } from 'rxjs/Observable';
+
+import { combineLatestAnd, addGridLabel } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,28 +32,21 @@ import { Observable } from 'rxjs/Observable';
   selector: 'app-schedule-events',
   templateUrl: './schedule-event.component.html',
 })
-export class ScheduleEventComponent extends DialogFunctions
-  implements OnInit, OnDestroy {
+export class ScheduleEventComponent extends DialogFunctions implements OnInit, OnDestroy {
   private selectedEvents$ = new BehaviorSubject<IScheduleEvent[]>(null);
-
-  @ViewChild(GridComponent) grid: GridComponent;
 
   @Output() select = new EventEmitter<IScheduleEvent[]>();
 
+  @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IScheduleEvent>;
+
   dialog: string;
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IScheduleEvent>[] = [
     { prop: 'id', width: 70 },
     { prop: 'groupId', width: 100 },
     { prop: 'groupName' },
-    {
-      prop: 'eventTypeCode',
-      dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE,
-    },
-    {
-      prop: 'periodTypeCode',
-      dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE,
-    },
+    { prop: 'eventTypeCode', dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE },
+    { prop: 'periodTypeCode', dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE },
     { prop: 'startTime' },
     { prop: 'executeDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'isExecuting', renderer: 'checkboxRenderer' },
@@ -61,7 +54,7 @@ export class ScheduleEventComponent extends DialogFunctions
     { prop: 'endDate', renderer: 'dateRenderer' },
     { prop: 'isInactive', renderer: 'checkboxRenderer' },
     { prop: 'priority' },
-  ];
+  ].map(addGridLabel('widgets.scheduleEvents.grid'));
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -123,21 +116,12 @@ export class ScheduleEventComponent extends DialogFunctions
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private scheduleEventService: ScheduleEventService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.gridService
-      .setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
     this.fetch();
 
     this.selectedEvents$
@@ -174,7 +158,7 @@ export class ScheduleEventComponent extends DialogFunctions
 
   get hasSingleSelection$(): Observable<boolean> {
     return this.selectedEvents$.map(
-      selected => selected && this.grid.selected.length === 1,
+      selected => selected && this.grid.selection.length === 1,
     );
   }
 
@@ -201,17 +185,17 @@ export class ScheduleEventComponent extends DialogFunctions
     this.scheduleEventService.delete(this.selectedEvents[0].id).subscribe(() => {
       this.closeDialog();
       this.selectedEvents$.next(null);
-      this.grid.clearSelection();
+      this.grid.selection = [];
       this.fetch();
     });
   }
 
   onStart(checkGroup: 0 | 1): void {
     this.scheduleEventService
-      .start(this.grid.selected.map(event => event.id), { checkGroup })
+      .start(this.grid.selection.map(event => event.id), { checkGroup })
       .subscribe(() => {
         this.selectedEvents$.next(null);
-        this.grid.clearSelection();
+        this.grid.selection = [];
         this.fetch();
       });
   }

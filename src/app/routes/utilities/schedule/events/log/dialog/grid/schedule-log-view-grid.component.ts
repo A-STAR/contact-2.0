@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, Input } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IScheduleEventLog } from '../../../schedule-event.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { ScheduleEventService } from '../../../schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { GridComponent } from '@app/shared/components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
+
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-schedule-log-view-grid',
@@ -16,35 +17,25 @@ import { GridComponent } from '@app/shared/components/grid/grid.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScheduleLogViewGridComponent implements OnInit {
-  @ViewChild(GridComponent) grid: GridComponent;
+  @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IScheduleEventLog>;
 
   @Input() eventId: number;
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IScheduleEventLog>[] = [
     { prop: 'startDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'endDateTime', renderer: 'dateTimeRenderer' },
     { prop: 'startType', dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_START_TYPE_CODE },
     { prop: 'userFullName' },
-  ];
+  ].map(addGridLabel('utilities.schedule.log.grid'));
 
-  gridStyles = { height: '500px' };
   eventLogs: Array<IScheduleEventLog> = [];
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private scheduleEventService: ScheduleEventService,
   ) { }
 
   ngOnInit(): void {
-    this.gridService
-      .setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [ ...columns ];
-        this.cdRef.markForCheck();
-      });
-
     this.fetch();
   }
 
