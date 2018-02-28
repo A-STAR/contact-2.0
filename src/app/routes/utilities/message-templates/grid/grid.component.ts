@@ -60,7 +60,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
     { prop: 'id', maxWidth: 80 },
     { prop: 'name', maxWidth: 240 },
     { prop: 'text' },
-  ].map(addGridLabel('utilities.messageTemplates'));
+  ].map(addGridLabel('utilities.messageTemplates.grid'));
 
   templates: IMessageTemplate[];
 
@@ -129,7 +129,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
         ...this.columns,
         { prop: 'isSingleSending', maxWidth: 150, renderer: TickRendererComponent },
         { prop: 'recipientTypeCode', maxWidth: 100, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-      ].map(addGridLabel('utilities.messageTemplates'));
+      ].map(addGridLabel('utilities.messageTemplates.grid'));
     }
   }
 
