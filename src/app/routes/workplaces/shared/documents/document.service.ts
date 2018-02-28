@@ -51,7 +51,6 @@ export class DocumentService extends AbstractActionService {
 
   create(entityType: number, entityId: number, document: IDocument, file: File, callCenter: boolean): Observable<void> {
     const payload = { ...document, fileName: file.name };
-    console.log(payload);
     return this.dataService
       .createMultipart(DocumentService.BASE_URL, { entityType, entityId }, payload, file, { params: { callCenter } })
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
