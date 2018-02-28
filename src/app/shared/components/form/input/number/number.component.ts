@@ -29,17 +29,23 @@ import { range } from '@app/core/utils';
   templateUrl: './number.component.html'
 })
 export class NumberComponent implements ControlValueAccessor, Validator {
-  private static readonly ALLOWED_KEYS = [
-    ...range(0, 9).map(String),
-    '.',
-    '-',
-    'Backspace',
-    'Delete',
-    'ArrowLeft',
-    'ArrowRight',
-    'Home',
-    'End',
-  ];
+  private static readonly ALLOWED_KEYS = {
+    main: [
+      ...range(0, 9).map(String),
+      '.',
+      '-',
+    ],
+    aux: [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Home',
+      'End',
+    ],
+  };
+
+  private static readonly MAX_LENGTH = 12;
 
   @Input() errors: any;
   @Input() label: string;
@@ -98,8 +104,10 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    const { ctrlKey, key } = event;
-    if (!NumberComponent.ALLOWED_KEYS.includes(key) && !ctrlKey) {
+    const { ctrlKey, key, target } = event;
+    const { value } = target as HTMLInputElement;
+    const { main, aux } = NumberComponent.ALLOWED_KEYS;
+    if ((!main.includes(key) || value.length >= NumberComponent.MAX_LENGTH) && !aux.includes(key) && !ctrlKey) {
       event.preventDefault();
     }
   }
