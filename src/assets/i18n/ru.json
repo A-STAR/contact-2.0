@@ -1697,6 +1697,7 @@
         "fullName": "ФИО",
         "typeCode": "Тип",
         "genderCode": "Пол",
+        "educationCode": "Образование",
         "linkTypeCode": "Тип связи",
         "comment": "Комментарий"
       }
@@ -2034,14 +2035,14 @@
         "amountMainCurrency": "Сумма в валюте",
         "comment": "Комментарий",
         "commission": "Комиссия",
-        "currencyName": "Валюта",
+        "currencyId": "Валюта",
         "isConfirmed": "Подтвержден",
         "payerName": "ФИО плательщика",
         "paymentDateTime": "Дата платежа",
         "purposeCode": "Назначение",
-        "receiveDateTime": "Дата получения",
-        "reqUserFullName": "Оператор (заявка)",
         "receiptNumber": "№ квитанции",
+        "receiveDateTime": "Дата получения",
+        "reqUserId": "Оператор (заявка)",
         "statusCode": "Статус",
         "userFullName": "Оператор (факт)"
       },

@@ -11,19 +11,16 @@
 <div class="flex vertical">
   <div class="flex-item">
     <app-titlebar [titlebar]="titlebar"></app-titlebar>
-    <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
   </div>
   <div class="flex-item grow">
-    <app-grid
-      columnTranslationKey="widgets.currencies"
-      selectionType="single"
+    <app-simple-grid
+      persistenceKey="[grid] utilities/currencies"
       [columns]="columns"
       [selection]="selection"
-      [footerHeight]="false"
       [rows]="currencies"
-      [styles]="{ height: '320px' }"
-      (onSelect)="onSelect($event)"
-      (onDblClick)="onEdit($event)"
-    ></app-grid>
+      [toolbar]="toolbarItems"
+      (select)="onSelect($event)"
+      (dblClick)="onEdit($event)"
+    ></app-simple-grid>
   </div>
 </div>

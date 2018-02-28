@@ -122,6 +122,10 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
       : null;
   }
 
+  get selection(): T[] {
+    return this.gridApi.getSelectedNodes().map(node => node.data);
+  }
+
   ngOnInit(): void {
     if (!this.persistenceKey) {
       throw new Error('Persistence key for simple grid must be specified');

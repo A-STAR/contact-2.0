@@ -21,6 +21,7 @@ import { combineLatestAnd } from '@app/core/utils/helpers';
 export class PhoneGridComponent implements OnInit, OnDestroy {
   debtId = null;
   personId = null;
+  personRole = null;
 
   private selectedPhoneId: number;
 
@@ -40,6 +41,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .subscribe(debtor => {
         this.debtId = debtor ? debtor.debtId : null;
         this.personId = debtor ? debtor.personId : null;
+        this.personRole = debtor ? debtor.personRole : null;
         this.selectedPhoneId = null;
         this.cdRef.markForCheck();
       });
@@ -51,10 +53,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   get contactType(): number {
     return 2;
-  }
-
-  get personRole(): number {
-    return 1;
   }
 
   get fullName$(): Observable<string> {
