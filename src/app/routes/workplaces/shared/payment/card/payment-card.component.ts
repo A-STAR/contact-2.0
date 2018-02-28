@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -16,7 +15,6 @@ import { of } from 'rxjs/observable/of';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPayment } from '../payment.interface';
 
-import { LookupService } from '@app/core/lookup/lookup.service';
 import { PaymentService } from '../payment.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -44,7 +42,6 @@ export class PaymentCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private lookupService: LookupService,
     private paymentService: PaymentService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
