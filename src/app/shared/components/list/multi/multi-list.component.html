@@ -2,7 +2,7 @@
   <div *ngIf="!hideSearchBar" class="panel-heading p-sm">
     <input type="text" class="form-control input-sm" [ngModel]="search" (ngModelChange)="onSearch($event)">
   </div>
-  <div [ngStyle]="style">
+  <div class="list-wrapper" [ngStyle]="style">
     <ul class="list-group mb0">
       <li *ngFor="let item of filteredItems; trackBy: trackByFn" [ngClass]="getItemClass(item)" (click)="onClick(item)" (dblclick)="onDblClick(item)">
         {{ getName(item) }}

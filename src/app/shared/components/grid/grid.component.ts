@@ -168,7 +168,7 @@ export class GridComponent implements OnInit, AfterViewInit, OnChanges, OnDestro
         }
         this.cdRef.markForCheck();
       },
-      error => console.log(error)
+      error => console.error(error)
     );
   }
 

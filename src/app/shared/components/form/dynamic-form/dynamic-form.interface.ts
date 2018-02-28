@@ -190,9 +190,8 @@ export interface IDynamicFormSelectControl extends IDynamicFormBaseControl {
 }
 
 export interface IDynamicFormMultiSelectControl extends IDynamicFormBaseControl {
-  type: 'multiselect' | 'multiselectwrapper';
+  type: 'multiselect';
   // options for select controls
-  multiple?: boolean;
   options?: ILabeledValue[];
   placeholder?: string;
   dictCode?: number;
@@ -319,7 +318,6 @@ export type TControlTypes =
   | 'image'
   | 'multilanguage'
   | 'multiselect'
-  | 'multiselectwrapper'
   | 'number'
   | 'password'
   | 'radio'

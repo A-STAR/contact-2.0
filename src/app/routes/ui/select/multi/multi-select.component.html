@@ -2,45 +2,39 @@
 
   <label>
     Boolean - dictCode #2 - Selected: 'True'
-    <app-select
+    <app-multi-select
       [dictCode]="2"
       formControlName="select1"
-    ></app-select>
+      (ngModelChange)="onSelectChange($event)"
+    ></app-multi-select>
   </label>
 
   <label>
     Payment Type - dictCode #41 - Selected: '{{ select2Model }}' - Required
-    <app-select
+    <app-multi-select
       [dictCode]="41"
       [errors]="errors.select2"
       formControlName="select2"
-      [isRequired]="true"
+      [required]="true"
       [ngModel]="select2Model"
-    ></app-select>
+    ></app-multi-select>
   </label>
 
   <label>
     Lookup Currencies
-    <app-select
+    <app-multi-select
       lookupKey="currencies"
       formControlName="select3"
-    ></app-select>
+    ></app-multi-select>
   </label>
 
   <label>
-    Lookup Currencies - Disabled
-    <app-select
+    Lookup Currencies - To Be Disabled
+    <app-multi-select
       lookupKey="currencies"
-      formControlName="select4"
+      formControlName="select3"
       [isDisabled]="true"
-    ></app-select>
+    ></app-multi-select>
   </label>
 
-  <label>
-    Lookup Languages - Disabled via `FormControl()`
-    <app-select
-      lookupKey="languages"
-      formControlName="select5"
-    ></app-select>
-  </label>
 </section>

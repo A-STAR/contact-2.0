@@ -18,7 +18,7 @@ export class DynamicFormFieldComponent {
   @Input() control: IDynamicFormControl;
   @Input() form: FormGroup;
 
-  @Output() onSelect: EventEmitter<ISelectItemsPayload> = new EventEmitter<ISelectItemsPayload>();
+  @Output() onSelect = new EventEmitter<ISelectItemsPayload>();
 
   get isHidden(): boolean {
     return this.control.display === false;

@@ -14,18 +14,18 @@ export class MultiListComponent<T> {
   @Output() select = new EventEmitter<T[]>();
 
   private _search = '';
-  private _selection: (number|string)[] = [];
+  private _selection: number[] = [];
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
-  @Input() getId: (item: T) => number|string = () => null;
+  @Input() getId: (item: T) => number = () => null;
   @Input() getName: (item: T) => string = () => null;
 
-  get selection(): (number|string)[] {
+  get selection(): number[] {
     return this._selection;
   }
 
-  set selection(selection: (number|string)[]) {
+  set selection(selection: number[]) {
     this._selection = selection;
     this.cdRef.markForCheck();
   }
@@ -40,8 +40,7 @@ export class MultiListComponent<T> {
 
   get style(): object {
     return {
-      maxHeight: `${this.height}px`,
-      overflow: 'auto'
+      maxHeight: `${this.height}px`
     };
   }
 

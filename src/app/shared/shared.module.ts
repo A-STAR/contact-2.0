@@ -2,11 +2,11 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TextMaskModule } from 'angular2-text-mask';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { AngularSplitModule } from 'angular-split';
 
 // Third-party modules
+import { AngularSplitModule } from 'angular-split';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { TextMaskModule } from 'angular2-text-mask';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -50,7 +50,6 @@ import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { MenuModule } from './components/form/menu/menu.module';
 import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
-import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
 import { OperatorModule } from './components/operator/operator.module';
 import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
@@ -120,7 +119,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MenuModule,
     MomentModule,
     MultiLanguageModule,
-    MultiSelectModule,
     OperatorModule,
     PasswordModule,
     PopupInputModule,
@@ -197,7 +195,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MenuModule,
     MomentModule,
     MultiLanguageModule,
-    MultiSelectModule,
     NumericInputComponent,
     OperatorModule,
     PasswordModule,

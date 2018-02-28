@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SharedModule } from '@app/shared/shared.module';
-
+import { MultiSelectModule } from './multi/multi-select.module';
 import { SingleSelectModule } from './single/single-select.module';
 
 import { SelectComponent } from './select.component';
@@ -19,8 +18,8 @@ const routes: Routes = [
   imports: [
     FormsModule,
     RouterModule.forChild(routes),
+    MultiSelectModule,
     SingleSelectModule,
-    SharedModule,
   ],
   declarations: [
     SelectComponent,

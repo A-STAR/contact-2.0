@@ -1,5 +1,6 @@
 <!-- single-option-select -->
 <label>
+
   <span *ngIf="label" class="form-label">
     {{ label | translate }}
     <b *ngIf="required" class="text-danger">*</b>
@@ -34,7 +35,7 @@
 
     <ul
       *ngIf="open"
-      class="select-choices dropdown-menu"
+      class="select-options dropdown-menu"
       appAlignment
       [alignTarget]="input"
       [autoAlign]="autoAlign"
@@ -50,6 +51,10 @@
       </li>
 
     </ul>
+  </div>
+
+  <div>
+    <span *ngIf="errors">{{ errors | json }}</span>
   </div>
 
 </label>

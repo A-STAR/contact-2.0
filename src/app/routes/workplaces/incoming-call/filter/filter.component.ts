@@ -37,7 +37,8 @@ export class FilterComponent implements AfterViewInit, OnDestroy {
     { controlName: 'fullAddress', type: 'text' },
     { controlName: 'docNumber', type: 'text' },
     { controlName: 'birthDate', type: 'datepicker' },
-    { controlName: 'personRoleCodes', type: 'multiselectwrapper', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
+    // this used to be a 'multiselectwrapper'
+    { controlName: 'personRoleCodes', type: 'select', dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
     { controlName: 'isClosedDebt', type: 'checkbox' },
   ].map(addFormLabel('modules.incomingCall.filter.form'));
 

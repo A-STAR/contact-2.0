@@ -1,4 +1,4 @@
-@import '../../../styles/app/variables.scss';
+@import '../../../../styles/app/variables.scss';
 
 i.co {
   font-size: 15px;
@@ -31,15 +31,21 @@ i.co {
   cursor: pointer;
 }
 
-.select-choices {
+.select-options {
   width: 100%;
   height: auto;
   max-height: 180px;
   overflow-x: hidden;
   margin-top: 0;
 
+  & > li {
+    border-left: 1px solid $gray;
+    border-right: 1px solid $gray;
+  }
+
   &.dropdown-menu {
-    border-top: 0;
+    border: 0;
+    padding: 0;
     min-width: unset;
   }
 }
@@ -81,3 +87,13 @@ i.co {
     cursor: pointer;
   }
 }
+
+.select-container:hover > input:not(:disabled) {
+  & ~ i {
+    color: $text-light;
+  }
+  & ~ i:hover {
+    color: $link-color;
+  }
+}
+
