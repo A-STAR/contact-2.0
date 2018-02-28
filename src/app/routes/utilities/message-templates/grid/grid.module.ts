@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DialogActionModule } from '../../../../shared/components/dialog-action/dialog-action.module';
-import { GridModule } from '../../../../shared/components/grid/grid.module';
+import { DialogActionModule } from '@app/shared/components/dialog-action/dialog-action.module';
+import { GridsModule } from '@app/shared/components/grids/grids.module';
 import { MessageTemplateGridEditModule } from '../card/card.module';
-import { Toolbar2Module } from '../../../../shared/components/toolbar-2/toolbar-2.module';
+import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
 
 import { MessageTemplateGridComponent } from './grid.component';
 
@@ -12,7 +12,7 @@ import { MessageTemplateGridComponent } from './grid.component';
   imports: [
     CommonModule,
     DialogActionModule,
-    GridModule,
+    GridsModule,
     MessageTemplateGridEditModule,
     Toolbar2Module,
   ],
@@ -26,4 +26,4 @@ import { MessageTemplateGridComponent } from './grid.component';
     MessageTemplateGridComponent,
   ]
 })
-export class MessageTemplateGridModule { }
+export class MessageTemplateGridModule {}

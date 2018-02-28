@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, Input } from '@angular/core';
-import { first } from 'rxjs/operators';
 
 import { IScheduleEventLog } from '../../../schedule-event.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';

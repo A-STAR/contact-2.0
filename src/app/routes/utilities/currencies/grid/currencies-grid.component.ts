@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
 
 import { ICurrency } from '../currencies.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -122,7 +121,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
   onSelect(currencies: ICurrency[]): void {
     const currency = isEmpty(currencies)
       ? null
-      : currencies[0]
+      : currencies[0];
     this.selectedCurrency$.next(currency);
   }
 

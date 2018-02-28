@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
 
 import { IMessageTemplate } from '../message-templates.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';

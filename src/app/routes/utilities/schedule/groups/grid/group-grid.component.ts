@@ -10,7 +10,6 @@ import {
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IGroup } from '../groups.interface';

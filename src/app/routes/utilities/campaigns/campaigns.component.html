@@ -28,8 +28,8 @@
   </div>
   <div class="flex-item grow">
     <app-simple-grid
+      persistenceKey="[grid] utilities/campaigns"
       [columns]="columns"
-      [columnTranslationKey]="'utilities.campaigns'"
       [rows]="campaigns"
       [toolbar]="toolbarItems"
       (select)="onSelectCampaign($event)"

@@ -77,7 +77,6 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     }
   ];
 
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private campaignsService: CampaignsService,

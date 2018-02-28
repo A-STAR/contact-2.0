@@ -28,7 +28,7 @@
 ></app-schedule-log-view-dialog>
 
 <app-simple-grid
-  columnTranslationKey="widgets.scheduleEvents"
+  persistenceKey="[grid] utilities/groups/events"
   [columns]="columns"
   [rows]="events"
   [selection]="selectedEvents$ | async"

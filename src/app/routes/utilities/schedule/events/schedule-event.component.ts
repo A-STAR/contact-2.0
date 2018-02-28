@@ -11,7 +11,6 @@ import {
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { first } from 'rxjs/operators';
 
 import { IScheduleEvent } from './schedule-event.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
