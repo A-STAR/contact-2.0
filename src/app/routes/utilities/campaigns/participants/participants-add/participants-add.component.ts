@@ -7,16 +7,18 @@ import {
   OnInit,
   Output,
   ViewEncapsulation,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IParticipant } from '../../campaigns.interface';
 
 import { CampaignsService } from '../../campaigns.service';
 
-import { GridComponent } from '../../../../../shared/components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
+
+import { addGridLabel } from '@app/core/utils';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 @Component({
   selector: 'app-participants-add',
@@ -27,21 +29,24 @@ import { GridComponent } from '../../../../../shared/components/grid/grid.compon
 export class ParticipantsAddComponent implements OnInit, OnDestroy {
   @Output() submit: EventEmitter<any> = new EventEmitter();
   @Output() cancel: EventEmitter<null> = new EventEmitter();
-  @ViewChild(GridComponent) grid: GridComponent;
+
+  @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IParticipant>;
 
   notAddedParticipants: IParticipant[];
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IParticipant>[] = [
     { prop: 'id', minWidth: 40 },
     { prop: 'fullName', minWidth: 150 },
     { prop: 'organization', minWidth: 150 },
     { prop: 'position', minWidth: 100 },
-  ];
+  ].map(addGridLabel('utilities.campaigns.participants.add.grid'));
 
   private notAddedParticipantsSub: Subscription;
 
-  constructor(private cdRef: ChangeDetectorRef,
-              private campaignsService: CampaignsService) { }
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private campaignsService: CampaignsService,
+  ) {}
 
   ngOnInit(): void {
     this.notAddedParticipantsSub = this.campaignsService.fetchNotAddedParticipants().subscribe(participants => {
@@ -55,7 +60,7 @@ export class ParticipantsAddComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    this.submit.emit(this.grid.getSelectedRows());
+    this.submit.emit(this.grid.selection);
     this.onCancel();
   }
 
@@ -64,11 +69,10 @@ export class ParticipantsAddComponent implements OnInit, OnDestroy {
   }
 
   canSubmit(): boolean {
-    return this.grid.getSelectedRows().length > 0;
+    return this.grid.selection.length > 0;
   }
 
   onSelectParticipants(): void {
 
   }
-
 }

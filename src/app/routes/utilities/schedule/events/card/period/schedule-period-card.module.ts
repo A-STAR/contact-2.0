@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../../../../../../shared/shared.module';
+
+import { SharedModule } from '@app/shared/shared.module';
 
 import { SchedulePeriodCardComponent } from './schedule-period-card.component';
 
@@ -16,4 +17,4 @@ import { SchedulePeriodCardComponent } from './schedule-period-card.component';
     SchedulePeriodCardComponent,
   ],
 })
-export class SchedulePeriodCardModule { }
+export class SchedulePeriodCardModule {}

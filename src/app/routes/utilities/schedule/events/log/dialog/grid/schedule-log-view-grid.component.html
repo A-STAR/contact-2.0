@@ -1,9 +1,6 @@
-<app-grid
+<app-simple-grid
   *ngIf="columns"
-  columnTranslationKey="utilities.schedule.log"
+  persistenceKey="[grid] utilities/schedule/events/log/dialog"
   [columns]="columns"
-  [footerHeight]="false"
   [rows]="eventLogs"
-  selectionType="single"
-  [styles]="gridStyles">
-</app-grid>
+></app-simple-grid>

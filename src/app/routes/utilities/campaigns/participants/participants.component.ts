@@ -13,15 +13,17 @@ import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ICampaign, IParticipant } from '../campaigns.interface';
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CampaignsService } from '../campaigns.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
-import { DialogFunctions } from '../../../../core/dialog/index';
+import { DialogFunctions } from '@app/core/dialog/index';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +32,7 @@ import { DialogFunctions } from '../../../../core/dialog/index';
   templateUrl: './participants.component.html',
 })
 export class ParticipantsComponent extends DialogFunctions implements OnInit, OnDestroy {
-  @ViewChild(GridComponent) grid: GridComponent;
+  @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IParticipant>;
 
   @Input() campaign: Observable<ICampaign>;
 
@@ -40,12 +42,12 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
 
   dialog: string;
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IParticipant>[] = [
     { prop: 'id', minWidth: 40 },
     { prop: 'fullName', minWidth: 150 },
     { prop: 'organization', minWidth: 150 },
     { prop: 'position', minWidth: 100 }
-  ];
+  ].map(addGridLabel('utilities.campaigns.participants.grid'));
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -74,11 +76,13 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
     }
   ];
 
-  constructor(private campaignsService: CampaignsService,
-              private userPermissionsService: UserPermissionsService,
-              private cdRef: ChangeDetectorRef) {
-                super();
-              }
+  constructor(
+    private campaignsService: CampaignsService,
+    private cdRef: ChangeDetectorRef,
+    private userPermissionsService: UserPermissionsService,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.participantsSub = this.campaignsService.selectedCampaign
@@ -93,12 +97,13 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
   }
 
   fetchParticipants(): Observable<IParticipant[]> {
-    return this.campaignsService.fetchParticipants()
-    .pipe(first());
+    return this.campaignsService.fetchParticipants().pipe(
+      first(),
+    );
   }
 
   onSelectParticipant(selection: any): void {
-    const selectedParticipants = this.grid.getSelectedRows();
+    const selectedParticipants = selection;
     if (selectedParticipants && selectedParticipants.length) {
       this.campaignsService.selectParticipant(selectedParticipants[0]);
     } else {
@@ -107,7 +112,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
   }
 
   onRemove(): void {
-    this.campaignsService.removeParticipants(this.grid.selected.map(selection => selection.id))
+    this.campaignsService.removeParticipants(this.grid.selection.map(selection => selection.id))
       .switchMap(() => this.fetchParticipants())
       .subscribe(participants => this.onParticipantsFetch(participants));
   }
@@ -130,7 +135,7 @@ export class ParticipantsComponent extends DialogFunctions implements OnInit, On
   }
 
   resetSelection(): void {
-    this.grid.clearSelection();
+    this.grid.selection = [];
     this.campaignsService.selectParticipant(null);
   }
 }

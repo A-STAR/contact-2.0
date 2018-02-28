@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SharedModule } from '../../../shared/shared.module';
-import { ParticipantsModule } from '../../../routes/utilities/campaigns/participants/participants.module';
-import { StatisticsModule } from '../../../routes/utilities/campaigns/statistics/statistics.module';
+import { ParticipantsModule } from './participants/participants.module';
+import { SharedModule } from '@app/shared/shared.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 import { CampaignsService, CAMPAIGN_NAME_ID } from './campaigns.service';
 
@@ -44,4 +44,4 @@ const routes: Routes = [
     }
   ],
 })
-export class CampaignsModule { }
+export class CampaignsModule {}
