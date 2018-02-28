@@ -6,10 +6,12 @@ import { AgGridModule } from 'ag-grid-angular/main';
 
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
+
 import { MomentModule } from '@app/shared/pipes/moment/moment.module';
 import { SelectModule } from '@app/shared/components/form/select/select.module';
 import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
 
+import { ContextMenuService } from './context-menu/context-menu.service';
 import { GridsService } from './grids.service';
 
 // Grids
@@ -72,6 +74,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     CheckboxRendererComponent,
   ],
   providers: [
+    ContextMenuService,
     GridsService,
   ]
 })

@@ -20,29 +20,29 @@ import {
   ColDef,
   Column,
   ColumnRowGroupChangedEvent,
-  GetContextMenuItemsParams,
   GridCellDef,
   GridOptions,
   ICellRendererParams,
-  MenuItemDef,
   PostProcessPopupParams,
   RowNode,
   RefreshCellsParams,
 } from 'ag-grid/main';
 
-import { IMetadataAction, MetadataActionType } from '@app/core/metadata/metadata.interface';
+
+import {
+  IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
+  IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
+  IAGridRequest, IAGridSorter } from './grid2.interface';
+import { IContextMenuSimpleOptions } from '@app/shared/components/grids/context-menu/context-menu.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import {
   IToolbarAction,
   IToolbarActionSelect,
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from './toolbar/toolbar.interface';
-import {
-  IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
-  IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
-  IAGridRequest, IAGridSorter } from './grid2.interface';
-import { FilterObject } from './filter/grid-filter';
 
+import { ContextMenuService } from '@app/shared/components/grids/context-menu/context-menu.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PersistenceService } from '@app/core/persistence/persistence.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -51,6 +51,7 @@ import { ValueConverterService } from '@app/core/converter/value-converter.servi
 import { DatePickerComponent } from './editors/datepicker/datepicker.component';
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 
+import { FilterObject } from './filter/grid-filter';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { ValueBag } from '@app/core/value-bag/value-bag';
@@ -130,6 +131,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contextMenuService: ContextMenuService,
     private notificationService: NotificationsService,
     private persistenceService: PersistenceService,
     private translate: TranslateService,
@@ -732,7 +734,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       enableServerSideSorting: true,
       // floatingFilter: !this.disableFilters,
       floatingFilter: false,
-      getContextMenuItems: this.getContextMenuItems.bind(this),
+      getContextMenuItems: (selection) => this.contextMenuService.onCtxMenuClick(
+        {
+          actions: this.actions,
+          selected: this.selected,
+          selection,
+          cb: (action) => this.action.emit(action)
+        },
+        this.getContextMenuSimpleItems()
+      ),
       getMainMenuItems: (params) => {
         // hide the tool menu
         return params.defaultItems.slice(0, params.defaultItems.length - 1);
@@ -776,122 +786,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     };
 
     this.translateOptionsMessages();
-  }
-
-  private getMetadataMenuItems(
-    actions: IMetadataAction[],
-    selection: GetContextMenuItemsParams,
-    isSubMenu: boolean = false): Array<MenuItemDef | string> {
-
-    return [].concat(
-      ...this.getMetadataActions(actions, selection)
-      .map(mDefs => mDefs.length && !isSubMenu ? [...mDefs, 'separator'] : [...mDefs])
-    );
-  }
-
-  private getMetadataActions(actions: IMetadataAction[], selection: GetContextMenuItemsParams)
-    : [ MenuItemDef[], MenuItemDef[]] {
-    return actions.reduce((acc, action) => {
-
-      const menuDef = action.applyTo ?
-      this.getNonSingleAction(action, selection) :
-      action.children ?
-        {
-          ...this.getActionWithChildren(action, selection),
-          subMenu: this.getMetadataMenuItems(action.children, selection, true)
-        } :
-        this.getSingleAction(action, selection);
-      const arr = (action.applyTo || action.children) ? acc[0] : acc[1];
-
-      arr.push(menuDef);
-      return acc;
-    }, [[], []] as [ MenuItemDef[], MenuItemDef[] ]);
-  }
-
-  private getSingleAction(action: IMetadataAction, selection: GetContextMenuItemsParams): MenuItemDef {
-    return {
-      name: this.translate.instant(`default.grid.actions.${action.action}`),
-      action: () => this.action.emit({
-        metadataAction: {
-          ...action,
-          type: MetadataActionType.SINGLE
-        },
-        selection
-      }),
-      disabled: action.enabled
-        ? !action.enabled.call(null, MetadataActionType.SINGLE, this.selected, selection.node.data)
-        : false,
-    };
-  }
-
-  private getActionWithChildren(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
-    return {
-      name: this.translate.instant(`default.grid.actions.${action.action}`),
-      disabled: action.enabled
-        ? !action.enabled.call(null, MetadataActionType.ALL, this.selected, params.node.data)
-        : false,
-    };
-  }
-
-  private getNonSingleAction(action: IMetadataAction, params: GetContextMenuItemsParams): MenuItemDef {
-    const subMenu = [];
-    if (action.applyTo.all) {
-      subMenu.push(
-        this.getActionForAllSubmenu(action, params)
-      );
-    }
-    if (action.applyTo.selected) {
-      subMenu.push(
-        this.getActionForSelectedSubmenu(action, params)
-      );
-    }
-    return {
-      name: this.translate.instant(`default.grid.actions.${action.action}`),
-      subMenu: subMenu.length ? subMenu : undefined
-    };
-  }
-
-  private getActionForSelectedSubmenu(action: IMetadataAction, selection: GetContextMenuItemsParams): MenuItemDef {
-    return {
-      name: this.translate.instant(`default.grid.actions.actionForSelection`),
-      disabled: action.enabled ?
-        !action.enabled.call(null, MetadataActionType.SELECTED, this.selected, selection.node.data) : false,
-      action: () => this.action.emit({
-        metadataAction: {
-          ...action,
-          type: MetadataActionType.SELECTED
-        },
-        selection
-      }),
-    };
-  }
-
-  private getActionForAllSubmenu(action: IMetadataAction, selection: GetContextMenuItemsParams): MenuItemDef {
-    return {
-      name: this.translate.instant(`default.grid.actions.actionForAll`),
-      disabled: action.enabled ? !action.enabled.call(null, MetadataActionType.ALL, this.selected, selection.node.data) : false,
-      action: () => this.action.emit({
-        metadataAction: {
-          ...action,
-          type: MetadataActionType.ALL
-        },
-        selection
-      }),
-    };
-  }
-
-  private getContextMenuItems(selection: GetContextMenuItemsParams): (string | MenuItemDef)[] {
-    return [
-      ...this.getMetadataMenuItems(this.actions, selection),
-      'copy',
-      'copyWithHeaders',
-      'separator',
-      {
-        name: this.translate.instant('default.grid.localeText.resetColumns'),
-        action: () => this.resetGridSettings(),
-        // shortcut: 'Alt+R'
-      }
-    ];
   }
 
   /**
@@ -959,5 +853,18 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.setSortModel();
     this.initCallbacks.forEach((cb: Function) => cb());
     this.initCallbacks = [];
+  }
+
+  private getContextMenuSimpleItems(): IContextMenuSimpleOptions {
+    return [
+      'copy',
+      'copyWithHeaders',
+      'separator',
+      {
+        name: 'default.grid.localeText.resetColumns',
+        action: () => this.resetGridSettings(),
+        // shortcut: 'Alt+R'
+      },
+    ];
   }
 }
