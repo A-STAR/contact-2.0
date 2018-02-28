@@ -19,6 +19,11 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolba
 import { ScheduleEventService } from './schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
+import {
+  DateRendererComponent,
+  DateTimeRendererComponent,
+  TickRendererComponent,
+} from '@app/shared/components/grids/renderers';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
 import { DialogFunctions } from '@app/core/dialog';
@@ -47,11 +52,11 @@ export class ScheduleEventComponent extends DialogFunctions implements OnInit, O
     { prop: 'eventTypeCode', dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_EVENT_TYPE },
     { prop: 'periodTypeCode', dictCode: UserDictionariesService.DICTIONARY_PERIOD_TYPE },
     { prop: 'startTime' },
-    { prop: 'executeDateTime', renderer: 'dateTimeRenderer' },
-    { prop: 'isExecuting', renderer: 'checkboxRenderer' },
-    { prop: 'startDate', renderer: 'dateRenderer' },
-    { prop: 'endDate', renderer: 'dateRenderer' },
-    { prop: 'isInactive', renderer: 'checkboxRenderer' },
+    { prop: 'executeDateTime', renderer: DateTimeRendererComponent },
+    { prop: 'isExecuting', renderer: TickRendererComponent },
+    { prop: 'startDate', renderer: DateRendererComponent },
+    { prop: 'endDate', renderer: DateRendererComponent },
+    { prop: 'isInactive', renderer: TickRendererComponent },
     { prop: 'priority' },
   ].map(addGridLabel('widgets.scheduleEvents.grid'));
 

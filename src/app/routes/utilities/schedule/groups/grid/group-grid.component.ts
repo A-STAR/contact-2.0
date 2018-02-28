@@ -19,6 +19,8 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolba
 import { GroupsService } from '../groups.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
+
 import { DialogFunctions } from '@app/core/dialog';
 
 import { addGridLabel, isEmpty } from '@app/core/utils';
@@ -42,8 +44,8 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'entityTypeCode', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE, width: 90 },
     { prop: 'name' },
     { prop: 'comment' },
-    { prop: 'isManual', renderer: 'checkboxRenderer' },
-    { prop: 'isPreCleaned', renderer: 'checkboxRenderer' },
+    { prop: 'isManual', renderer: TickRendererComponent },
+    { prop: 'isPreCleaned', renderer: TickRendererComponent },
     { prop: 'userFullName' },
     { prop: 'formDateTime' },
   ].map(addGridLabel('widgets.groups.grid'));

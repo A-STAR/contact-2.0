@@ -13,8 +13,9 @@ import { RoutingService } from '@app/core/routing/routing.service';
 
 import { DialogFunctions } from '@app/core/dialog';
 
-import { combineLatestAnd } from 'app/core/utils/helpers';
-import { addGridLabel, isEmpty } from '@app/core/utils';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +32,7 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
     { prop: 'code' },
     { prop: 'name' },
     { prop: 'shortName' },
-    { prop: 'isMain', renderer: 'checkboxRenderer' },
+    { prop: 'isMain', renderer: TickRendererComponent },
   ].map(addGridLabel('widgets.currencies.grid'));
 
   titlebar: ITitlebar = {

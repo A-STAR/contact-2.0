@@ -6,6 +6,7 @@ import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interf
 import { ScheduleEventService } from '../../../schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
+import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
 import { addGridLabel } from '@app/core/utils';
@@ -21,8 +22,8 @@ export class ScheduleLogViewGridComponent implements OnInit {
   @Input() eventId: number;
 
   columns: ISimpleGridColumn<IScheduleEventLog>[] = [
-    { prop: 'startDateTime', renderer: 'dateTimeRenderer' },
-    { prop: 'endDateTime', renderer: 'dateTimeRenderer' },
+    { prop: 'startDateTime', renderer: DateTimeRendererComponent },
+    { prop: 'endDateTime', renderer: DateTimeRendererComponent },
     { prop: 'startType', dictCode: UserDictionariesService.DICTIONARY_SCHEDULE_START_TYPE_CODE },
     { prop: 'userFullName' },
   ].map(addGridLabel('utilities.schedule.log.grid'));

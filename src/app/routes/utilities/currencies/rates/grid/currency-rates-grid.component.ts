@@ -6,15 +6,16 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { ICurrencyRate } from '../currency-rates.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CurrencyRatesService } from '../currency-rates.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { addGridLabel, isEmpty } from '@app/core/utils';
+import { DateRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   host: { class: 'full-height' },
@@ -29,7 +30,7 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   private selectedCurrencyRate$ = new BehaviorSubject<ICurrencyRate>(null);
 
   columns: ISimpleGridColumn<ICurrencyRate>[] = [
-    { prop: 'fromDate', renderer: 'dateRenderer' },
+    { prop: 'fromDate', renderer: DateRendererComponent },
     { prop: 'rate' }
   ].map(addGridLabel('widgets.currencyRates.grid'));
 
