@@ -149,7 +149,7 @@ export class DataUploadComponent extends DialogFunctions
   }
 
   get errorFileUrl(): string {
-    return this.dataUploadService.uploader.getErrors();
+    return this.dataUploadService.uploader && this.dataUploadService.uploader.getErrors();
   }
 
   get errorFileName(): string {
@@ -157,7 +157,7 @@ export class DataUploadComponent extends DialogFunctions
   }
 
   onFormatChange(formatId: number): void {
-    if (formatId !== -1) {
+    if (formatId != null) {
       this.dataUploadService.format = formatId;
       this.isCurrencySelected = formatId === DataUploaders.CURRENCY_RATE;
       if (this.isCurrencySelected) {
