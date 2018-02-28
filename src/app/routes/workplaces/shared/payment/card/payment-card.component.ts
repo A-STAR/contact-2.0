@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
@@ -16,13 +23,14 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { addFormLabel } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-payment-card',
   templateUrl: './payment-card.component.html'
 })
-export class PaymentCardComponent {
+export class PaymentCardComponent implements OnInit {
   @Input() callCenter = false;
   @Input() readOnly = false;
   @Input() debtId: number;
@@ -40,64 +48,64 @@ export class PaymentCardComponent {
     private paymentService: PaymentService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService
-  ) {
+  ) {}
 
+  ngOnInit(): void {
     combineLatest(
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE),
-      this.lookupService.lookupAsOptions('currencies'),
-      this.lookupService.lookupAsOptions('users'),
-      this.userPermissionsService.has('PAYMENT_ADD'),
-      this.userPermissionsService.has('PAYMENT_EDIT'),
-      this.userPermissionsService.has('PAYMENT_USER_EDIT'),
-      this.canConfirm$,
+      this.userPermissionsService.bag(),
       this.paymentId
         ? this.paymentService.fetch(this.debtId, this.paymentId, this.callCenter)
         : of(null),
     )
     .pipe(first())
-    .subscribe(([ purposeOptions, currencyOptions, userOptions, canAdd, canEdit, canEditUser, canConfirm, payment ]) => {
-      this.payment = payment ? payment : { receiveDateTime: new Date(), paymentDateTime: new Date() };
-      const controls: IDynamicFormControl[] = [
-        {
-          label: 'widgets.payment.grid.amount', controlName: 'amount', disabled: !canEdit,
-          type: 'number', positive: true, width: 6
-        },
-        {
-          label: 'widgets.payment.grid.currencyName', controlName: 'currencyId', disabled: !canEdit,
-          type: 'select', required: true, options: currencyOptions, width: 6
-        },
-        {
-          label: 'widgets.payment.grid.paymentDateTime', controlName: 'paymentDateTime', disabled: !canEdit,
-          type: 'datepicker', required: true, markAsDirty: !payment, width: 6 },
-        {
-          label: 'widgets.payment.grid.receiveDateTime', controlName: 'receiveDateTime', disabled: !canEdit,
-          type: 'datepicker', markAsDirty: !payment, width: 6 },
-        { label: 'widgets.payment.grid.payerName', controlName: 'payerName', type: 'text', disabled: !canEdit, width: 6 },
-        {
-          label: 'widgets.payment.grid.reqUserFullName', controlName: 'reqUserId', disabled: !canEditUser,
-          type: 'select', options: userOptions, width: 6
-        },
-        { label: 'widgets.payment.grid.receiptNumber', controlName: 'receiptNumber', type: 'text', disabled: !canEdit, width: 6 },
-        {
-          label: 'widgets.payment.grid.purposeCode', controlName: 'purposeCode', disabled: !canEdit,
-          type: 'select', options: purposeOptions, width: 6
-        },
-        { label: 'widgets.payment.grid.comment', controlName: 'comment', type: 'textarea', disabled: !canEdit, width: 12 },
-        {
-          label: 'widgets.payment.grid.isConfirmed', controlName: 'isConfirmed', disabled: !canConfirm,
-          type: 'checkbox', width: 12
-        },
-      ].map(item => ({ ...item, disabled: this.readOnly } as IDynamicFormControl));
+    .subscribe(([ bag, payment ]) => {
+      const canAdd = bag.has('PAYMENT_ADD');
+      const canEdit = bag.has('PAYMENT_EDIT');
+      const canEditUser = bag.has('PAYMENT_USER_EDIT');
+      const canConfirm = bag.has('PAYMENT_CONFIRM');
+      this.payment = payment
+        ? payment
+        : {
+            receiveDateTime: new Date(),
+            paymentDateTime: new Date(),
+          };
 
       // TODO: fix displaying of selected payment
-      this.controls =  this.payment.isCanceled
-        ? controls.map(control => ({ ...control, disabled: true }))
-        : !canConfirm && !this.paymentId
-          ? controls.filter(control => control.controlName !== 'isConfirmed')
-              .map(control => canAdd ? control : { ...control, disabled: true })
-          : controls.map(control => canAdd ? control : { ...control, disabled: true });
+      this.controls = [
+        { controlName: 'amount', disabled: !canEdit, type: 'number', positive: true, width: 6 },
+        { controlName: 'currencyId', disabled: !canEdit, type: 'select', required: true, lookupKey: 'currencies', width: 6 },
+        {
+          controlName: 'paymentDateTime',
+          disabled: !canEdit,
+          markAsDirty: !payment,
+          required: true,
+          type: 'datepicker',
+          width: 6,
+        },
+        { controlName: 'receiveDateTime', disabled: !canEdit, type: 'datepicker', markAsDirty: !payment, width: 6 },
+        { controlName: 'payerName', type: 'text', disabled: !canEdit, width: 6 },
+        { controlName: 'reqUserId', disabled: !canEditUser, type: 'select', lookupKey: 'users', width: 6 },
+        { controlName: 'receiptNumber', type: 'text', disabled: !canEdit, width: 6 },
+        {
+          controlName: 'purposeCode',
+          dictCode: UserDictionariesService.DICTIONARY_PAYMENT_PURPOSE,
+          disabled: !canEdit,
+          type: 'select',
+          width: 6,
+        },
+        { controlName: 'comment', type: 'textarea', disabled: !canEdit, width: 12 },
+        { controlName: 'isConfirmed', disabled: !canConfirm, type: 'checkbox', width: 12 },
+      ]
+      .filter(control => {
+        const shouldFilter = !canConfirm && !this.paymentId;
+        return control.controlName !== 'isConfirmed' || !shouldFilter;
+      })
+      .map(addFormLabel('widgets.payment.grid'))
+      .map(item => ({
+        ...item,
+        disabled: this.readOnly || this.payment.isCanceled || !canAdd
+      }));
 
       this.cdRef.markForCheck();
     });
@@ -105,10 +113,6 @@ export class PaymentCardComponent {
 
   get canSubmit(): boolean {
     return this.form && this.form.canSubmit;
-  }
-
-  get canConfirm$(): Observable<boolean> {
-    return this.userPermissionsService.has('PAYMENT_CONFIRM');
   }
 
   onBack(): void {
