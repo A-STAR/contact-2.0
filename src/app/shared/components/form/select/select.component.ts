@@ -53,6 +53,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   @ViewChild('input') input: ElementRef;
 
   @Input() dictCode: number;
+  @Input() errors: ValidationErrors;
   @Input() label: string;
   @Input() lookupKey: ILookupKey;
   @Input() placeholder = '';

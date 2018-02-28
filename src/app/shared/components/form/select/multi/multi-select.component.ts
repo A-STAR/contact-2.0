@@ -1,14 +1,26 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component,
-  forwardRef, Input, ViewChild, Output, EventEmitter
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { IOption } from '../../../../../core/converter/value-converter.interface';
+import { IOption } from '@app/core/converter/value-converter.interface';
+import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 import { MultiListComponent } from '../../../list/multi/multi-list.component';
+import { LookupService } from '@app/core/lookup/lookup.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { Subscription } from 'rxjs/Subscription';
 
-type IMultiSelectValue = Array<number|string>;
+type IMultiSelectValue = number[];
 
 @Component({
   selector: 'app-multi-select',
@@ -23,8 +35,9 @@ type IMultiSelectValue = Array<number|string>;
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MultiSelectComponent implements ControlValueAccessor {
-
+export class MultiSelectComponent implements ControlValueAccessor, OnInit, OnDestroy {
+  @Input() dictCode: number;
+  @Input() lookupKey: ILookupKey = null;
   @Input() options: IOption[] = [];
 
   @Input()
@@ -46,16 +59,41 @@ export class MultiSelectComponent implements ControlValueAccessor {
 
   private _list: MultiListComponent<IOption>;
   private _isDisabled = false;
+  private optionsSubscription: Subscription;
   private _selection: IMultiSelectValue;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private lookupService: LookupService,
+    private userDictionariesService: UserDictionariesService,
+  ) {}
+
+  ngOnInit(): void {
+    if (this.dictCode && this.lookupKey) {
+      throw new Error('MultiSelectComponent must have either dictCode or lookupKey but not both.');
+    }
+    if (this.dictCode) {
+      this.optionsSubscription = this.userDictionariesService.getDictionaryAsOptions(this.dictCode)
+        .subscribe(this.onOptionsFetch);
+    }
+    if (this.lookupKey) {
+      this.optionsSubscription = this.lookupService.lookupAsOptions(this.lookupKey)
+        .subscribe(this.onOptionsFetch);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.optionsSubscription) {
+      this.optionsSubscription.unsubscribe();
+    }
+  }
 
   get selectionLength(): number {
     return this.selection && this.selection.length || 0;
   }
 
   get label(): string {
-    const option = this.options.find(o => o.value === this.selection[0]);
+    const option = (this.options || []).find(o => o.value === this.selection[0]);
     return option ? option.label : null;
   }
 
@@ -98,6 +136,11 @@ export class MultiSelectComponent implements ControlValueAccessor {
 
   private set value(value: IMultiSelectValue) {
     this.selection = value;
+    this.cdRef.markForCheck();
+  }
+
+  onOptionsFetch = (options: IOption[]) => {
+    this.options = options;
     this.cdRef.markForCheck();
   }
 

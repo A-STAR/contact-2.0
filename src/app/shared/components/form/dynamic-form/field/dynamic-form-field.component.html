@@ -67,6 +67,34 @@
     [required]="control.required"
   ></app-timepicker>
 
+
+  <ng-container *ngSwitchCase="'select'">
+    <app-select
+      [dictCode]="control.dictCode"
+      [formControlName]="control.controlName"
+      [isDisabled]="control.disabled"
+      [isRequired]="control.required"
+      [label]="control.label"
+      [lookupKey]="control.lookupKey"
+      [options]="control.options"
+      [placeholder]="control.placeholder"
+      (select)="selectHandler({ control: control, items: $event})"
+    ></app-select>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'multilanguage'">
+    <!-- NOTE: isRequired helps here, since `required` would attach a standard validator,
+          which would lead to a false negative -->
+    <app-multilanguage-input
+      [isDisabled]="control.disabled"
+      [formControlName]="control.controlName"
+      [label]="control.label"
+      [langOptions]="control.langOptions"
+      [placeholder]="control.placeholder"
+      [isRequired]="control.required"
+    ></app-multilanguage-input>
+  </ng-container>
+
   <!--
     Below are old controls.
   -->
@@ -86,34 +114,6 @@
     </label>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'select'">
-    <app-select
-      [dictCode]="control.dictCode"
-      [formControlName]="control.controlName"
-      [isDisabled]="control.disabled"
-      [isRequired]="control.required"
-      [label]="control.label"
-      [lookupKey]="control.lookupKey"
-      [options]="control.options"
-      [placeholder]="control.placeholder"
-      (select)="selectHandler({ control: control, items: $event})"
-    ></app-select>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'multiselectwrapper'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-multi-select-wrapper
-        [formControlName]="control.controlName"
-        [dictCode]="control.dictCode"
-        [lookupKey]="control.lookupKey"
-      ></app-multi-select-wrapper>
-    </label>
-  </ng-container>
-
   <ng-container *ngSwitchCase="'multiselect'">
     <label>
       <span class="form-label">
@@ -124,6 +124,8 @@
         [formControlName]="control.controlName"
         [options]="control.options"
         [isDisabled]="control.disabled"
+        [dictCode]="control.dictCode"
+        [lookupKey]="control.lookupKey"
         (select)="selectHandler({ control: control, items: $event})"
       ></app-multi-select>
     </label>
@@ -295,19 +297,6 @@
       [formControlName]="control.controlName"
       [options]="control.segmentedInputOptions">
     </app-segmented-input>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'multilanguage'">
-    <!-- NOTE: isRequired helps here, since `required` would attach a standard validator,
-         which would lead to a false negative -->
-    <app-multilanguage-input
-      [isDisabled]="control.disabled"
-      [formControlName]="control.controlName"
-      [label]="control.label"
-      [langOptions]="control.langOptions"
-      [placeholder]="control.placeholder"
-      [isRequired]="control.required"
-    ></app-multilanguage-input>
   </ng-container>
 
   <ng-container *ngSwitchCase="'colorpicker'">

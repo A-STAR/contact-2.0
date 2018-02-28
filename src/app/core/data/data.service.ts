@@ -173,7 +173,7 @@ export class DataService {
         catchError(resp => {
           if (401 === resp.status) {
             // TODO(a.tymchuk): ask for the password again
-            console.log('authentication error', resp);
+            console.error('authentication error', resp);
           }
           // rethrow the error up the chain
           return ErrorObservable.create(resp);

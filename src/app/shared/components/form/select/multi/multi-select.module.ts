@@ -7,7 +7,6 @@ import { DropdownModule } from '../../../dropdown/dropdown.module';
 import { ListModule } from '../../../list/list.module';
 
 import { MultiSelectComponent } from './multi-select.component';
-import { MultiSelectWrapperComponent } from './multi-select-wrapper.component';
 
 @NgModule({
   imports: [
@@ -19,11 +18,9 @@ import { MultiSelectWrapperComponent } from './multi-select-wrapper.component';
   ],
   exports: [
     MultiSelectComponent,
-    MultiSelectWrapperComponent,
   ],
   declarations: [
     MultiSelectComponent,
-    MultiSelectWrapperComponent,
   ],
 })
 export class MultiSelectModule { }
