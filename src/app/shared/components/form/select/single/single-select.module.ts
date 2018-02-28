@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { AlignmentDirective } from '@app/shared/directives/alignment/alignment.directive';
 import { DropdownModule } from '../../../dropdown/dropdown.module';
 import { ListModule } from '../../../list/list.module';
 
-import { MultiSelectComponent } from './multi-select.component';
+import { SelectComponent } from './select.component';
 
 @NgModule({
   imports: [
@@ -17,10 +18,11 @@ import { MultiSelectComponent } from './multi-select.component';
     TranslateModule,
   ],
   exports: [
-    MultiSelectComponent,
+    SelectComponent,
   ],
   declarations: [
-    MultiSelectComponent
+    AlignmentDirective,
+    SelectComponent,
   ],
 })
-export class MultiSelectModule { }
+export class SingleSelectModule { }

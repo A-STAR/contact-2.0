@@ -24,7 +24,7 @@ import {
 import * as R from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ILabeledValue } from './select.interface';
+import { ILabeledValue } from '../select.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 import { LookupService } from '@app/core/lookup/lookup.service';
