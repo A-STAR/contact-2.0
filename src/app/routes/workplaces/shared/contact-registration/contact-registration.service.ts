@@ -235,7 +235,7 @@ export class ContactRegistrationService {
   }
 
   private get initData(): any {
-    const { contactId, contactType, ...params } = this.params;
+    const { contactId, contactType, debtId, ...params } = this.params;
     return {
       ...params,
       ...this.getContactParams(contactId, contactType),
