@@ -8,16 +8,14 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class SingleSelectComponent {
 
-  select1Model = [1, 3];
+  // select1Model = [1, 3];
   select2Model = [1, 2];
-  select3Model = [2];
-  select4Model = [3];
 
   formGroup = new FormGroup({
-    select1: new FormControl(''),
-    select2: new FormControl([ { label: 'No effect here', value: 0 } ]),
+    select1: new FormControl([1]),
+    select2: new FormControl({ value: [1] }),
     select3: new FormControl([ { label: 'Absolutely useless assignment', value: 1 } ]),
-    select4: new FormControl(3),
+    select4: new FormControl({ value: [3], disabled: true }),
   });
 
   get errors(): any {
@@ -28,7 +26,7 @@ export class SingleSelectComponent {
     };
   }
 
-  onSingleSelect1Change(value: number): void {
-    // console.log('select1', value);
+  onSelectChange(value: number): void {
+    // console.info('select', value);
   }
 }

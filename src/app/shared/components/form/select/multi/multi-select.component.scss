@@ -1,17 +1,112 @@
-.form-control {
-  font-weight: normal;
-  position: relative;
-  span {
-    display: inline-block;
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+// .form-control {
+//   font-weight: normal;
+//   position: relative;
+//   span {
+//     display: inline-block;
+//     width: 100%;
+//     white-space: nowrap;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//   }
+//   .caret {
+//     margin-top: -2px;
+//     position: absolute;
+//     right: 10px;
+//     top: 50%;
+//   }
+// }
+
+@import '../../../../styles/app/variables.scss';
+
+i.co {
+  font-size: 15px;
+  width: 1em;
+  height: 1em;
+}
+
+.select-search {
+  width: 100%;
+  padding-right: 3.5em;
+}
+
+.select-clear {
+  position: absolute;
+  top: 0.4em;
+  right: 1.5em;
+  cursor: pointer;
+}
+
+.select-caret {
+  position: absolute;
+  top: 0.35em;
+  right: 0.3em;
+  transition: transform 400ms ease;
+  transform: rotateZ(270deg);
+  &.up {
+    transform: rotateZ(90deg);
+    top: 0.4em;
   }
-  .caret {
-    margin-top: -2px;
-    position: absolute;
-    right: 10px;
-    top: 50%;
+  cursor: pointer;
+}
+
+.select-options {
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  overflow-x: hidden;
+  margin-top: 0;
+
+  &.dropdown-menu {
+    border: 0;
+    padding: 0;
+    min-width: unset;
+  }
+
+  & > li {
+    border-left: 1px solid $gray;
+    border-right: 1px solid $gray;
+  }
+
+  .select-item {
+    padding: 3px $padding-base-horizontal;
+    &:hover {
+      background-color: #eee;
+    }
+  }
+
+  .select-buttons {
+    padding: 3px $padding-base-horizontal;
+    text-align: center;
+    border-top: 1px solid $gray;
+    background-color: $gray-lighter;
   }
 }
+
+.select-container {
+  font-weight: normal;
+  > .select-match > .form-control {
+    padding-right: 24px;
+    white-space: nowrap;
+  }
+  &[disabled] {
+    > .select-match > .form-control {
+      white-space: nowrap;
+      overflow-x: hidden;
+    }
+  }
+}
+
+.select-container[disabled] * {
+  background-color: $gray-lighter;
+  cursor: not-allowed;
+}
+
+.select-container:hover > input:not(:disabled) {
+  & ~ i {
+    color: $text-light;
+  }
+  & ~ i:hover {
+    color: $link-color;
+  }
+}
+

@@ -5,8 +5,7 @@
     <app-multi-select
       [dictCode]="2"
       formControlName="select1"
-      [ngModel]="select1Model"
-      (ngModelChange)="onSingleSelect1Change($event)"
+      (ngModelChange)="onSelectChange($event)"
     ></app-multi-select>
   </label>
 
@@ -14,6 +13,7 @@
     Payment Type - dictCode #41 - Selected: '{{ select2Model }}' - Required
     <app-multi-select
       [dictCode]="41"
+      [errors]="errors.select2"
       formControlName="select2"
       [required]="true"
       [ngModel]="select2Model"
@@ -25,7 +25,6 @@
     <app-multi-select
       lookupKey="currencies"
       formControlName="select3"
-      [ngModel]="select3Model"
     ></app-multi-select>
   </label>
 
@@ -34,7 +33,7 @@
     <app-multi-select
       lookupKey="currencies"
       formControlName="select3"
-      [ngModel]="select3Model"
+      [isDisabled]="true"
     ></app-multi-select>
   </label>
 

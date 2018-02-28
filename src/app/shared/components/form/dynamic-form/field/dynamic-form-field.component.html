@@ -82,6 +82,18 @@
     ></app-select>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'multiselect'">
+    <app-multi-select
+      [dictCode]="control.dictCode"
+      [formControlName]="control.controlName"
+      [isDisabled]="control.disabled"
+      [lookupKey]="control.lookupKey"
+      [options]="control.options"
+      [required]="control.required"
+      (select)="selectHandler({ control: control, items: $event})"
+    ></app-multi-select>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'multilanguage'">
     <!-- NOTE: isRequired helps here, since `required` would attach a standard validator,
           which would lead to a false negative -->
@@ -111,23 +123,6 @@
     <label class="inline-label">
       <app-radiobutton [formControlName]="control.controlName" value="0"></app-radiobutton>
       {{'default.boolean.FALSE' | translate}}
-    </label>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'multiselect'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-multi-select
-        [formControlName]="control.controlName"
-        [options]="control.options"
-        [isDisabled]="control.disabled"
-        [dictCode]="control.dictCode"
-        [lookupKey]="control.lookupKey"
-        (select)="selectHandler({ control: control, items: $event})"
-      ></app-multi-select>
     </label>
   </ng-container>
 
