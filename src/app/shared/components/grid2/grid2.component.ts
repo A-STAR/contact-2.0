@@ -857,7 +857,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private getContextMenuSimpleItems(): IContextMenuSimpleOptions {
     return [
-      'separator',
       'copy',
       'copyWithHeaders',
       'separator',
