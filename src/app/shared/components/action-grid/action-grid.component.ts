@@ -30,7 +30,7 @@ import {
   IAGridExportableColumn,
 } from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
-import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
+import { IGridColumn } from '../grid/grid.interface';
 import {
   IMetadataAction,
   IMetadataActionPermissions,
@@ -48,12 +48,13 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 import { ActionGridFilterComponent } from './filter/action-grid-filter.component';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
-import { GridComponent } from '../../components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.component';
 
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { ValueBag } from '@app/core/value-bag/value-bag';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 @Component({
   selector: 'app-action-grid',
@@ -66,6 +67,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   @Input() columnIds: string[];
   @Input() fullHeight = false;
+  @Input() isSimple = false;
+  @Input() selectionType;
   @Input() metadataKey: string;
   @Input() ngClass: string;
   @Input() persistenceKey: string;
@@ -79,15 +82,15 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() rows: T[] = [];
   @Input() columnTranslationKey: string;
   @Input() columns: IGridColumn[];
-  @Input() contextMenuOptions: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
+  @Input() toolbarItems: IToolbarItem[];
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
 
   @ViewChild(ActionGridFilterComponent) filter: ActionGridFilterComponent;
-  @ViewChild('grid') grid: GridComponent | Grid2Component;
+  @ViewChild('grid') grid: SimpleGridComponent<T> | Grid2Component;
   @ViewChild(TitlebarComponent) gridBar: TitlebarComponent;
 
   private _columns: IAGridColumn[];
@@ -170,11 +173,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   get selection(): T[] {
-    return this.grid.selected as T[];
-  }
-
-  get isUsingAGGrid(): boolean {
-    return !!this.metadataKey;
+    return this.isSimple ?
+      (this.grid as SimpleGridComponent<T>).selection : (this.grid as Grid2Component).selected;
   }
 
   isAttrChangeDictionaryDlg(): boolean {
@@ -215,20 +215,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  onSimpleGridAction(metadataAction: IMetadataAction): void {
-    alert(`Action ${metadataAction.action} is deprecated for simple grid!`);
-  }
-
   onCloseAction(action: ICloseAction = {}): void {
     if (action.refresh) {
       this.onRequest();
     }
     if (action.deselectAll) {
-      if (this.isUsingAGGrid) {
-        (this.grid as Grid2Component).deselectAll();
-      } else {
-        (this.grid as GridComponent).clearSelection();
-      }
+      this.grid.deselectAll();
     }
     this.onCloseDialog();
   }
@@ -268,10 +260,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   get initialized(): boolean {
     return this._initialized;
-  }
-
-  get selected(): T[] {
-    return this.grid && this.grid.selected || [] as any[];
   }
 
   get gridOptions(): GridOptions {

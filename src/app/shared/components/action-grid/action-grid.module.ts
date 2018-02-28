@@ -7,9 +7,9 @@ import { DebtOpenIncomingCallModule } from '@app/shared/mass-ops/debt-open-incom
 import { DebtStatusModule } from '@app/shared/mass-ops/debt-status/debt-status.module';
 import { DebtResponsibleModule } from '@app/shared/mass-ops/debt-responsible/debt-responsible.module';
 import { EntityGroupModule } from '@app/shared/mass-ops/entity-group/entity-group.module';
-import { GridModule } from '../grid/grid.module';
-import { MassOpsModule } from '@app/shared/mass-ops/mass-ops.module';
+import { GridsModule } from '@app/shared/components/grids/grids.module';
 import { Grid2Module } from '../grid2/grid2.module';
+import { MassOpsModule } from '@app/shared/mass-ops/mass-ops.module';
 import { NextCallDateSetModule } from '@app/shared/mass-ops/next-call-date-set/next-call-date-set.module';
 import { OpenDebtCardModule } from '@app/shared/mass-ops/debt-card-open/debt-card-open.module';
 import { OperatorDetailsModule } from '@app/shared/mass-ops/operator-details/operator-details.module';
@@ -31,7 +31,7 @@ import { ActionGridComponent } from './action-grid.component';
     DebtStatusModule,
     DebtResponsibleModule,
     EntityGroupModule,
-    GridModule,
+    GridsModule,
     Grid2Module,
     MassOpsModule,
     ActionGridFilterModule,

@@ -183,7 +183,7 @@
 
   <div class="flex-item grow">
     <ng-container
-      *ngIf="isUsingAGGrid; else simpleGrid"
+      *ngIf="!isSimple; else simpleGrid"
     >
       <app-grid2
         #grid
@@ -208,17 +208,17 @@
     </ng-container>
 
     <ng-template #simpleGrid>
-      <app-grid
+      <app-simple-grid
         #grid
+        [persistenceKey]="persistenceKey"
+        [selectionType]="selectionType"
         [columns]="columns"
-        [columnTranslationKey]="columnTranslationKey"
-        [contextMenuOptions]="contextMenuOptions"
         [rows]="rows"
-        [styles]="styles"
-        (action)="onSimpleGridAction($event)"
-        (onDblClick)="onSimpleGridDblClick($event)"
-        (onSelect)="onSelect($event)"
-      ></app-grid>
+        [toolbar]="toolbarItems"
+        (action)="onAction($event)"
+        (select)="onSelect($event)"
+        (dblClick)="onDblClick($event)">
+      </app-simple-grid>
     </ng-template>
   </div>
 </div>
