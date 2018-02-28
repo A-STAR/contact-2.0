@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MultiSelectModule } from './multi/multi-select.module';
-import { SingleSelectModule } from './single/single-select.module';
 
 import { SelectComponent } from './select.component';
 import { SortOptionsPipe } from './select.pipe';
@@ -16,7 +15,6 @@ import { FocusDirective } from '@app/shared/directives/focus/focus.directive';
     CommonModule,
     FormsModule,
     MultiSelectModule,
-    SingleSelectModule,
     TranslateModule,
   ],
   declarations: [
@@ -28,7 +26,6 @@ import { FocusDirective } from '@app/shared/directives/focus/focus.directive';
   exports: [
     MultiSelectModule,
     SelectComponent,
-    SingleSelectModule,
   ],
   providers: [
     SortOptionsPipe
