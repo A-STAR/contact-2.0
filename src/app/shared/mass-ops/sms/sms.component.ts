@@ -134,7 +134,7 @@ export class SmsComponent implements OnInit {
         display: useSender,
         markAsDirty: useSender && isSenderPresent,
         required: useSender,
-        type: 'singleselect',
+        type: 'select',
       },
     ]
     .map(addFormLabel('widgets.mass.sms.form'));
