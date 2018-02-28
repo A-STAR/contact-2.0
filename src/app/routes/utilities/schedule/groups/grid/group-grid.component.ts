@@ -1,22 +1,28 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component,
-  OnInit, OnDestroy, Output, EventEmitter
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  OnDestroy,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IGroup } from '../groups.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { GroupsService } from '../groups.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '@app/core/dialog';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { GridService } from '@app/shared/components/grid/grid.service';
+
+import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,7 +38,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
 
   @Output() select = new EventEmitter<number>();
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IGroup>[] = [
     { prop: 'id', width: 70 },
     { prop: 'entityTypeCode', dictCode: UserDictionariesService.DICTIONARY_ENTITY_TYPE, width: 90 },
     { prop: 'name' },
@@ -41,7 +47,7 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'isPreCleaned', renderer: 'checkboxRenderer' },
     { prop: 'userFullName' },
     { prop: 'formDateTime' },
-  ];
+  ].map(addGridLabel('widgets.groups.grid'));
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -89,20 +95,12 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
   constructor(
     private cdRef: ChangeDetectorRef,
     private groupService: GroupsService,
-    private gridService: GridService,
     private router: Router,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
     this.fetch();
 
     this.actionSubscription = this.groupService
@@ -137,7 +135,10 @@ export class GroupGridComponent extends DialogFunctions implements OnInit, OnDes
     this.fetch();
   }
 
-  onSelect(group: IGroup): void {
+  onSelect(groups: IGroup[]): void {
+    const group = isEmpty(groups)
+      ? null
+      : groups[0];
     this.selectedGroup$.next(group);
   }
 
