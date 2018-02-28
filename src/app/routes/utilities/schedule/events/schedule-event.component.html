@@ -25,21 +25,11 @@
   (close)="closeDialog()"
 ></app-schedule-log-view-dialog>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-toolbar-2
-      class="bordered"
-      [items]="toolbarItems"
-    ></app-toolbar-2>
-  </div>
-  <div class="flex-item grow">
-    <app-grid
-      columnTranslationKey="widgets.scheduleEvents"
-      [columns]="columns"
-      [footerHeight]="false"
-      [rows]="events"
-      (onSelect)="onSelect($event)"
-      (onDblClick)="onEdit()"
-    ></app-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] utilities/schedule/events/log"
+  [columns]="columns"
+  [rows]="events"
+  [toolbar]="toolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onEdit($event)"
+></app-simple-grid>

@@ -54,29 +54,29 @@ export class AttachmentEditComponent implements OnInit {
       {
         label: labelKey('docTypeCode'),
         controlName: 'docTypeCode',
-        type: 'singleselect',
-        dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE
+        type: 'select',
+        dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE,
       },
       {
         label: labelKey('docName'),
         controlName: 'docName',
-        type: 'text'
+        type: 'text',
       },
       {
         label: labelKey('docNumber'),
         controlName: 'docNumber',
-        type: 'text'
+        type: 'text',
       },
       {
         label: labelKey('comment'),
         controlName: 'comment',
-        type: 'textarea'
+        type: 'textarea',
       },
       {
         label: labelKey('file'),
         controlName: 'file',
         type: 'file',
-        validators: [ maxFileSize(1e3 * maxSize.valueN) ]
+        validators: [ maxFileSize(1e3 * maxSize.valueN) ],
       },
     ];
   }

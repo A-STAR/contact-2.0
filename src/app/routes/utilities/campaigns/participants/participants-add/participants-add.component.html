@@ -3,15 +3,13 @@
     <h3>{{ 'utilities.campaigns.participants.add.title' | translate }}</h3>
   </div>
 
-  <div style="margin: 0 0 12px">
-    <app-grid
-      class="flat"
-      [styles]="{ height: '250px' }"
+  <div style="height: 50vh; margin: 0 0 12px;">
+    <app-simple-grid
+      persistenceKey="[grid] utilities/campaigns/participants/add"
+      selectionType="multiple"
       [columns]="columns"
-      [columnTranslationKey]="'utilities.campaigns.participants.add'"
       [rows]="notAddedParticipants"
-      selectionType="multiClick">
-    </app-grid>
+    ></app-simple-grid>
   </div>
 
   <div dialog-footer>

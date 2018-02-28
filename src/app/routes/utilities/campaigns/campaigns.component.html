@@ -25,19 +25,16 @@
 <div class="flex vertical">
   <div class="flex-item">
     <app-titlebar [titlebar]="titlebar"></app-titlebar>
-    <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
   </div>
-  <div class="flex-item">
-    <app-grid
-      class="flat"
-      [styles]="{ height: '250px' }"
+  <div class="flex-item grow">
+    <app-simple-grid
+      persistenceKey="[grid] utilities/campaigns"
       [columns]="columns"
-      [columnTranslationKey]="'utilities.campaigns'"
       [rows]="campaigns"
-      selectionType="single"
-      (onSelect)="onSelectCampaign($event)"
-      (onDblClick)="onCampaignDblClick($event)">
-    </app-grid>
+      [toolbar]="toolbarItems"
+      (select)="onSelectCampaign($event)"
+      (dblClick)="onCampaignDblClick($event)">
+    </app-simple-grid>
   </div>
   <div class="flex-item grow">
     <app-tabview [fullHeight]="true" [noMargin]="true" (select)="onTabSelect($event)">

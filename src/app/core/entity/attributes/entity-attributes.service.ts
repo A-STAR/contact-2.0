@@ -1,11 +1,18 @@
 import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
+import { distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
-import { EntityAttributesStatusEnum, IEntityAttributes, IEntityAttributesState } from './entity-attributes.interface';
-import { IAppState } from '../../state/state.interface';
-import { AbstractActionService } from '../../../core/state/action.service';
+import {
+  EntityAttributesStatusEnum,
+  IEntityAttributes,
+  IEntityAttributesState,
+  IEntityAttribute,
+} from './entity-attributes.interface';
+import { IAppState } from '@app/core/state/state.interface';
+
+import { AbstractActionService } from '@app/core/state/action.service';
 
 @Injectable()
 export class EntityAttributesService extends AbstractActionService {
@@ -37,6 +44,22 @@ export class EntityAttributesService extends AbstractActionService {
       EntityAttributesService.DICT_VALUE_3,
       EntityAttributesService.DICT_VALUE_4,
     ]);
+  }
+
+  getAttribute(id: number): Observable<IEntityAttribute> {
+    return this.store.pipe(
+      select(state => state.entityAttributes[id]),
+      tap(attribute => {
+        if (attribute) {
+          this.hash[id] = EntityAttributesStatusEnum.LOADED;
+        } else if (this.hash[id] !== EntityAttributesStatusEnum.PENDING) {
+          this.refresh([id]);
+          this.hash[id] = EntityAttributesStatusEnum.PENDING;
+        }
+      }),
+      filter(Boolean),
+      distinctUntilChanged(),
+    );
   }
 
   getAttributes(ids: number[]): Observable<IEntityAttributes> {

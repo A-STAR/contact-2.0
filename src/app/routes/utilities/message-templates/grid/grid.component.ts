@@ -1,20 +1,21 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
 
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IMessageTemplate } from '../message-templates.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { GridService } from '../../../../shared/components/grid/grid.service';
 import { MessageTemplatesService } from '../message-templates.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '../../../../core/dialog';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers/tick/tick.component';
 
-import { combineLatestAnd } from '../../../../core/utils/helpers';
+import { DialogFunctions } from '@app/core/dialog';
+
+import { combineLatestAnd } from '@app/core/utils/helpers';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,11 +56,11 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
     }
   ];
 
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<IMessageTemplate>[] = [
     { prop: 'id', maxWidth: 80 },
     { prop: 'name', maxWidth: 240 },
     { prop: 'text' },
-  ];
+  ].map(addGridLabel('utilities.messageTemplates'));
 
   templates: IMessageTemplate[];
 
@@ -67,7 +68,6 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private messageTemplatesService: MessageTemplatesService,
     private userPermissionsService: UserPermissionsService,
   ) {
@@ -127,14 +127,9 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
     if ([ MessageTemplatesService.TYPE_EMAIL, MessageTemplatesService.TYPE_SMS ].includes(this.typeCode)) {
       this.columns = [
         ...this.columns,
-        { prop: 'isSingleSending', maxWidth: 150, renderer: 'checkboxRenderer' },
+        { prop: 'isSingleSending', maxWidth: 150, renderer: TickRendererComponent },
         { prop: 'recipientTypeCode', maxWidth: 100, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
-      ];
-
-      this.gridService.setDictionaryRenderers(this.columns)
-        .map(columns => this.columns = this.gridService.setRenderers(columns))
-        .pipe(first())
-        .subscribe();
+      ].map(addGridLabel('utilities.messageTemplates'));
     }
   }
 
