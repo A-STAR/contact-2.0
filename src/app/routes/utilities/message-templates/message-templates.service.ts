@@ -52,7 +52,6 @@ export class MessageTemplatesService {
   }
 
   fetchVariables(typeCode: number, recipientTypeCode: number): Observable<Array<any>> {
-    console.log(typeCode, recipientTypeCode);
     return this.dataService
       .readAll('/templates/{typeCode}/recipients/{recipientTypeCode}/attributes', { typeCode, recipientTypeCode })
       .catch(this.notificationsService.fetchError().entity(`entities.attribute.gen.plural`).dispatchCallback());
