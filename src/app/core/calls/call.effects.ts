@@ -289,7 +289,7 @@ export class CallEffects {
   }
 
   private login(): Observable<void> {
-    return this.dataService.get('/pbx/login');
+    return this.dataService.read('/pbx/login');
   }
 
   private call(phoneId: number, debtId: number, personId: number, personRole: number): Observable<ICall> {
