@@ -114,7 +114,8 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     return this._required;
   }
 
-  @Input()
+  // NOTE: active used to be an input (for compat reasons),
+  // so it may not really be necessary
   set active(option: ILabeledValue) {
     this._active = option;
   }

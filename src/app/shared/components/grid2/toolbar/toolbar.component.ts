@@ -3,7 +3,6 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
 import { IToolbarAction, IToolbarActionSelect, ToolbarControlEnum } from './toolbar.interface';
-import { ILabeledValue } from '@app/core/converter/value-converter.interface';
 
 import { ToolbarService } from './toolbar.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -33,8 +32,8 @@ export class ToolbarComponent {
     });
   }
 
-  onSelect(action: IToolbarAction, activeValues: ILabeledValue[]): void {
-    this.actionSelect.emit({ action: action, value: activeValues } as IToolbarActionSelect);
+  onSelect(action: IToolbarAction, value: any): void {
+    this.actionSelect.emit({ action, value } as IToolbarActionSelect);
   }
 
   isActionDisabled(action: IToolbarAction): Observable<boolean> {
