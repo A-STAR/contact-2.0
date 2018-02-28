@@ -13,7 +13,7 @@ export class ContextMenuService {
     private translateService: TranslateService,
   ) { }
 
-  onCtxMenuClick(options: IContextMenuOptions, simpleOptions?: IContextMenuSimpleOptions): (string | MenuItemDef)[] {
+  onCtxMenuClick(options?: IContextMenuOptions, simpleOptions?: IContextMenuSimpleOptions): (string | MenuItemDef)[] {
     return [
       ...this.getMetadataMenuItems(options),
       ...this.getSimpleMenuItems(simpleOptions)
@@ -21,7 +21,8 @@ export class ContextMenuService {
   }
 
   private getMetadataActions(options: IContextMenuOptions): [ MenuItemDef[], MenuItemDef[]] {
-    return options.actions.reduce((acc, action) => {
+    const actions = (options && options.actions) || [];
+    return actions.reduce((acc, action) => {
 
       const menuDef = action.applyTo ?
       this.getNonSingleAction(action, options) :
