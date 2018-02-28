@@ -142,7 +142,7 @@ export class EmailComponent implements OnInit {
         display: useSender,
         markAsDirty: useSender && isSenderPresent,
         required: useSender,
-        type: 'singleselect',
+        type: 'select',
       },
     ]
     .map(addFormLabel('widgets.mass.email.form'));

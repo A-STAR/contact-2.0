@@ -22,11 +22,11 @@
       <app-button label="Last Page" (click)="onLastPageClick()"></app-button>
     </li>
     <li style="width: 64px;">
-      <app-single-select
+      <app-select
         [ngModel]="pageSize"
         [options]="pageSizeOptions"
         (ngModelChange)="onPageSizeChange($event)"
-      ></app-single-select>
+      ></app-select>
     </li>
   </ng-container>
   <!--

@@ -180,7 +180,7 @@ export interface IDynamicFormSegmentedInputControl extends IDynamicFormBaseContr
 }
 
 export interface IDynamicFormSelectControl extends IDynamicFormBaseControl {
-  type: 'select' | 'singleselect';
+  type: 'select';
   // options for select controls
   options?: ILabeledValue[];
   placeholder?: string;
@@ -326,7 +326,6 @@ export type TControlTypes =
   | 'searchBtn'
   | 'segmented'
   | 'select'
-  | 'singleselect'
   | 'text'
   | 'textarea'
   | 'texteditor'

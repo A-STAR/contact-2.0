@@ -7,6 +7,7 @@ import { DebtModule } from './debt/debt.module';
 import { RoutingModule } from './routing/routing.module';
 import { UserModule } from './user/user.module';
 
+import { AccessService } from './access/access.service';
 import { ActionsLogService } from './actions-log/actions-log.service';
 import { ButtonService } from './button/button.service';
 import { CallService } from './calls/call.service';
@@ -37,6 +38,7 @@ import { environment } from '../../environments/environment';
     UserModule,
   ],
   providers: [
+    AccessService,
     ActionsLogService,
     ButtonService,
     CallService,
