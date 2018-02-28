@@ -173,7 +173,7 @@ export class DashboardService {
       ],
       datasets: [
         {
-          data: [data.monthPromiseFulfilled || 1, data.monthPromiseOverdue || 1, data.monthPromiseWaiting || 1],
+          data: [data.monthPromiseFulfilled, data.monthPromiseOverdue, data.monthPromiseWaiting],
           backgroundColor: [DashboardService.GREEN_COLOR, '#ff8500', DashboardService.PRIMARY_COLOR_LIGHT],
         }
       ]
@@ -247,10 +247,10 @@ export class DashboardService {
       datasets: [
         {
           data: [
-            data.debtorSuccessContact || 1,
-            data.guarantorSuccessContact || 1,
-            data.pledgorSuccessContact || 1,
-            data.thirdPersonSuccessContact || 1
+            data.debtorSuccessContact,
+            data.guarantorSuccessContact,
+            data.pledgorSuccessContact,
+            data.thirdPersonSuccessContact
           ],
           backgroundColor: ['#6584d4', '#00bff6', '#ffcc00', '#d071e5'],
         }
