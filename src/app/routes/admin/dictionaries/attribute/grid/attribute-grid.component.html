@@ -42,7 +42,7 @@
       <label>
         <span>{{ 'widgets.attribute.treeSubtype' | translate }}</span>
         <app-select
-          [disabled]="isTreeSubtypeDisabled"
+          [isDisabled]="isTreeSubtypeDisabled"
           [ngModel]="treeSubtype"
           [options]="treeSubtypeOptions"
           (select)="onTreeSubtypeChange($event)">

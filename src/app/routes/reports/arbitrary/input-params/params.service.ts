@@ -124,7 +124,8 @@ export class ParamsService extends AbstractActionService {
             type: 'dialogmultiselect',
             filterType: 'portfolios',
             filterParams: { directionCodes: [ 1 ] },
-          } : {
+          }
+          : {
             ...control,
             type: 'gridselect',
             ...this.gridConfig.portfolios
@@ -134,7 +135,8 @@ export class ParamsService extends AbstractActionService {
           ...control,
           type: 'dialogmultiselect',
           filterType: 'users'
-        } : {
+        }
+        : {
           ...control,
           type: 'gridselect',
           ...this.gridConfig.users
@@ -144,7 +146,8 @@ export class ParamsService extends AbstractActionService {
           ...control,
           type: 'dialogmultiselect',
           filterType: 'contractors'
-        } : {
+        }
+        : {
           ...control,
           type: 'gridselect',
           ...this.gridConfig.contractors
@@ -154,7 +157,7 @@ export class ParamsService extends AbstractActionService {
         ...control,
         type: inputParam.multiSelect ? 'multiselect' : 'select',
         dictCode: inputParam.dictNameCode
-      };
+      } as Partial<IDynamicFormControl>;
       case 9: return { ...control, type: 'checkbox' };
       case 10: return { ...control, type: 'datetimepicker' };
     }

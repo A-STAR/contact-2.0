@@ -190,11 +190,11 @@ export class DebtorComponent extends DialogFunctions implements AfterViewInit, O
 
   private buildControls(canEdit: boolean): IDynamicFormItem[] {
     const debtorTypeOptions = {
-      type: 'selectwrapper',
+      type: 'select',
       dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE
     };
     const stageCodeOptions = {
-      type: 'selectwrapper',
+      type: 'select',
       dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE
     };
     return [

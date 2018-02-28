@@ -70,7 +70,7 @@ export class ContactPersonsCardComponent implements OnInit {
         {
           label: label('linkTypeCode'),
           controlName: 'linkTypeCode',
-          type: 'selectwrapper',
+          type: 'select',
           dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE,
           disabled: !canEdit,
           width: 4

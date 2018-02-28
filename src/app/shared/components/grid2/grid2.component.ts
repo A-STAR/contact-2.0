@@ -288,13 +288,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
-    const newSize = payload.value[0].value;
+    const newSize = payload.value;
     const lastPage = Math.ceil(this.rowCount / newSize);
     if (this.page > lastPage) {
       this.page = lastPage;
       this.onPage.emit(this.page);
     }
-    // log('new page size', newSize);
     this.pageSize = newSize || this.pageSize;
 
     this.gridOptions.api.paginationSetPageSize(this.pageSize);
@@ -497,7 +496,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
         control: ToolbarControlEnum.SELECT,
         disabled: true,
-        styles: { width: '60px' },
+        styles: { width: '80px' },
         value: this.pageSizes.map(pageSize => ({ value: pageSize, label: String(pageSize) })),
       },
       { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: false },

@@ -258,7 +258,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   }
 
   onEventTypeSelect(): void {
-    const [ eventTypeControl ] = this.eventTypeForm.getControl('eventTypeCode').value;
+    const eventTypeControl = this.eventTypeForm.getControl('eventTypeCode');
     this.selectedEventTypeCode$.next(eventTypeControl.value);
   }
 

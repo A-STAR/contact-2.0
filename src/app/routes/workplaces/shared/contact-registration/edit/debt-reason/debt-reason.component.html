@@ -1,15 +1,9 @@
 <div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
-  <label>
-    <span class="form-label">
-      {{ 'routes.workplaces.shared.contactRegistration.edit.form.debtReason.form.debtReason' | translate }}
-      <b *ngIf="isDebtReasonCodeRequired$ | async" class="text-danger">*</b>
-    </span>
-    <app-select-wrapper
-      formControlName="debtReasonCode"
-      [dictCode]="debtReasonDictCode"
-      [required]="isDebtReasonCodeRequired$ | async"
-    ></app-select-wrapper>
-  </label>
-
+  <app-select
+    formControlName="debtReasonCode"
+    [dictCode]="debtReasonDictCode"
+    label="routes.workplaces.shared.contactRegistration.edit.form.debtReason.form.debtReason"
+    [isRequired]="isDebtReasonCodeRequired$ | async"
+  ></app-select>
   <hr>
 </div>

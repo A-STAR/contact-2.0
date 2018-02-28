@@ -21,7 +21,7 @@
   <div class="flex-item panel m0 p bl br">
     <app-select
       [ngModel]="selectedTypeCode"
-      [required]="true"
+      [isRequired]="true"
       [options]="typeCodeOptions"
       (select)="onSelectType($event)"
     ></app-select>

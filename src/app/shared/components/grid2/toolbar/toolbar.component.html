@@ -12,9 +12,10 @@
 
       <ng-container *ngSwitchCase="ToolbarControlEnum.SELECT">
         <app-select
-          [active]="action.activeValue"
           [autoAlign]="true"
           [isDisabled]="!!action.disabled"
+          [isRequired]="true"
+          [ngModel]="action.activeValue"
           [options]="action.value"
           [styles]="action.styles"
           (select)="onSelect(action, $event)"
