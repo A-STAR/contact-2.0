@@ -28,6 +28,12 @@ import {
   RefreshCellsParams,
 } from 'ag-grid/main';
 
+
+import {
+  IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
+  IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
+  IAGridRequest, IAGridSorter } from './grid2.interface';
+import { IContextMenuSimpleOptions } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import {
   IToolbarAction,
@@ -35,11 +41,6 @@ import {
   ToolbarActionTypeEnum,
   ToolbarControlEnum
 } from './toolbar/toolbar.interface';
-import {
-  IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
-  IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
-  IAGridRequest, IAGridSorter } from './grid2.interface';
-import { FilterObject } from './filter/grid-filter';
 
 import { ContextMenuService } from '@app/shared/components/grids/context-menu/context-menu.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -50,6 +51,7 @@ import { ValueConverterService } from '@app/core/converter/value-converter.servi
 import { DatePickerComponent } from './editors/datepicker/datepicker.component';
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 
+import { FilterObject } from './filter/grid-filter';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { ValueBag } from '@app/core/value-bag/value-bag';
@@ -738,7 +740,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
           selected: this.selected,
           selection,
           cb: (action) => this.action.emit(action)
-        }
+        },
+        this.getContextMenuSimpleItems()
       ),
       getMainMenuItems: (params) => {
         // hide the tool menu
@@ -820,15 +823,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.saveChangesDebounce.next();
   }
 
-  // private resetGridSettings(): void {
-  //   if (this.persistenceKey) {
-  //     this.gridSettings = { sortModel: [], colDefs: [] };
-  //   }
-  //   this.saveGridSettings();
-  //   this.gridOptions.api.setSortModel(null);
-  //   this.gridOptions.api.setFilterModel(null);
-  //   this.gridOptions.columnApi.resetColumnState();
-  // }
+  private resetGridSettings(): void {
+    if (this.persistenceKey) {
+      this.gridSettings = { sortModel: [], colDefs: [] };
+    }
+    this.saveGridSettings();
+    this.gridOptions.api.setSortModel(null);
+    this.gridOptions.api.setFilterModel(null);
+    this.gridOptions.columnApi.resetColumnState();
+  }
 
   private saveGridSettings(): void {
     if (this.persistenceKey) {
@@ -850,5 +853,19 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.setSortModel();
     this.initCallbacks.forEach((cb: Function) => cb());
     this.initCallbacks = [];
+  }
+
+  private getContextMenuSimpleItems(): IContextMenuSimpleOptions {
+    return [
+      'separator',
+      'copy',
+      'copyWithHeaders',
+      'separator',
+      {
+        name: 'default.grid.localeText.resetColumns',
+        action: () => this.resetGridSettings(),
+        // shortcut: 'Alt+R'
+      },
+    ];
   }
 }
