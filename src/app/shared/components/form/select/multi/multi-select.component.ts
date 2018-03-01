@@ -61,7 +61,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   @Input() placeholder = '';
   @Input() styles: CSSStyleDeclaration;
 
-  @Output() select = new EventEmitter<any>();
+  @Output() select = new EventEmitter<number[]>();
 
   open = false;
   disabled = false;
@@ -72,8 +72,8 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   private _required = false;
   private optionsSubscription: Subscription;
   private value: number[] = [];
-  // private tempValue: number[] = [];
-  // private tempOptions: IMultiSelectOption[];
+  private tempValue: number[] = [];
+  private srcOptions: IMultiSelectOption[] = [];
 
   @Input()
   set options(options: IMultiSelectOption[]) {
@@ -81,11 +81,11 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
       .transform(<IMultiSelectOption[]>options)
       .map(o => ({ ...o, checked: this.value.includes(o.value) }));
 
-      // Filter out value not found in options
-      this.value = this.value.filter(v => this.options.some(o => o.value === v));
-
-      this.propagateChange(this.value);
-      this.cdRef.markForCheck();
+    this.srcOptions = [...this.options];
+    // Filter out value not found in options
+    this.value = this.value.filter(v => this.options.some(o => o.value === v));
+    this.propagateChange(this.value);
+    this.cdRef.markForCheck();
   }
 
   get options(): IMultiSelectOption[] {
@@ -163,7 +163,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     // Filter out values not found in options
     this.value = Array.from(new Set([...value]))
       .filter(filterFn);
-
     // Update the `checked` prop of every option
     if (this.options.length) {
       this.options = this.options.map(o => ({ ...o, checked: this.value.includes(o.value) }));
@@ -202,17 +201,13 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
       case 0:
         return '';
       case 1: {
-        const option = this.options.find(o => o.value === this.value[0]);
+        const option = this.srcOptions.find(o => o.value === this.value[0]);
         return `${option ? option.label : ''}`;
       }
       default:
         const say = this.translate.instant('default.select.selected');
         return `${say}: ${length}`;
     }
-  }
-
-  get caretCls(): string {
-    return this.open ? 'up' : '';
   }
 
   onInputClick(event: MouseEvent): void {
@@ -232,23 +227,24 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
 
   onSelect(checked: boolean, option: IMultiSelectOption): void {
     option.checked = checked;
-    this.value = checked
-      ? Array.from(new Set([...this.value, option.value ]))
-      : this.value.filter(o => o !== option.value);
-    this.propagateChange(this.value);
-    this.select.emit(option);
+    this.tempValue = checked
+      ? Array.from(new Set([...this.tempValue, option.value ]))
+      : this.tempValue.filter(o => o !== option.value);
+
   }
 
   onApply(event: MouseEvent): void {
     event.preventDefault();
     this.hideOptions();
+    this.value = [...this.tempValue];
+    this.propagateChange(this.value);
+    this.select.emit(this.value);
   }
 
   onClear(event: MouseEvent): void {
     event.preventDefault();
-    this.value = [];
-    this.options = this.options.map(o => ({ ...o, checked: false }));
-    this.propagateChange([]);
+    this.tempValue = [];
+    this.srcOptions = this.srcOptions.map(o => ({ ...o, checked: false }));
   }
 
   onCaret(event: MouseEvent): void {
@@ -275,6 +271,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   }
 
   private showOptions(): void {
+    this.tempValue = [...this.value];
     this.open = true;
   }
 
