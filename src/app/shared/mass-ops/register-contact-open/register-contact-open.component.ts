@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { IGridAction, ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { DebtService } from '@app/core/debt/debt.service';
 
 import { AddressGridComponent } from './address/address.component';
@@ -32,7 +31,6 @@ export class RegisterContactOpenComponent implements OnInit {
 
   constructor(
     private actionGridFilterService: ActionGridFilterService,
-    private debtorCardService: DebtorCardService,
     private debtService: DebtService,
   ) { }
 
