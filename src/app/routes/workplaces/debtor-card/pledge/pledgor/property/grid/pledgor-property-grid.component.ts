@@ -39,7 +39,7 @@ export class PledgorPropertyGridComponent extends DialogFunctions implements OnI
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PROPERTY_TYPE },
     { prop: 'isConfirmed', renderer: 'checkboxRenderer' },
     { prop: 'comment' }
-  ].map(addGridLabel('widgets.property'));
+  ].map(addGridLabel('widgets.property.grid'));
 
   dialog: string;
   gridStyles = { height: '350px' };
