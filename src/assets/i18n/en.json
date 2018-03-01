@@ -3210,7 +3210,8 @@
         "changeTimezoneAttr": "Time zone",
         "debtOutsourcingSend": "Send to outsourcing",
         "debtOutsourcingExclude": "Exclude from outsourcing",
-        "debtOutsourcingReturn": "Return from outsourcing"
+        "debtOutsourcingReturn": "Return from outsourcing",
+        "registerContact": "Register Contact"
       }
     },
     "filter": {

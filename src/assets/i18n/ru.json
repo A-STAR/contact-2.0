@@ -3210,7 +3210,8 @@
         "changeTimezoneAttr": "Часовой пояс",
         "debtOutsourcingSend": "Передать на аутсорсинг",
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
-        "debtOutsourcingReturn": "Отозвать из аутсорсинга"
+        "debtOutsourcingReturn": "Отозвать из аутсорсинга",
+        "registerContact": "Регистрация контакта"
       }
     },
     "filter": {

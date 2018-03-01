@@ -448,6 +448,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         permissions.has('DEBT_OUTSOURCING_EXCLUDE') : selection.length && permissions.has('DEBT_OUTSOURCING_EXCLUDE'),
       debtOutsourcingReturn: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.has('DEBT_OUTSOURCING_RETURN') : selection.length && permissions.has('DEBT_OUTSOURCING_RETURN'),
+      registerContact: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        of(true) : selection.length && of(true),
     };
   }
 
