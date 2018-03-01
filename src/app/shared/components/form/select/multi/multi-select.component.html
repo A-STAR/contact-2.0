@@ -41,7 +41,7 @@
       [alignTarget]="input"
       [autoAlign]="autoAlign"
     >
-      <li class="select-item" *ngFor="let option of srcOptions; trackBy: trackByFn">
+      <li class="select-item" *ngFor="let option of tempOptions; trackBy: trackByFn">
         <app-checkbox
           [label]="option.label"
           [ngModel]="option.checked"
@@ -50,8 +50,8 @@
       </li>
 
       <li class="select-buttons">
-        <button type="button" class="btn btn-default" (click)="onClear($event)">Clear</button>
-        <button type="button" class="btn btn-info" (click)="onApply($event)">Select</button>
+        <button type="button" class="btn btn-default" (click)="onClear($event)">{{ 'default.buttons.clear' | translate }}</button>
+        <button type="button" class="btn btn-info" (click)="onApply($event)">{{ 'default.buttons.select' | translate }}</button>
       </li>
 
     </ul><!-- select-options -->
