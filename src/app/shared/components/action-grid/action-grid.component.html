@@ -169,6 +169,14 @@
   (close)="onCloseAction($event)"
 ></app-outsourcing-return>
 
+<!-- TODO(d.maltsev): what is entityTranslationKey? -->
+<app-downloader
+  #downloader
+  entityTranslationKey="entities.actionsLog.gen.plural"
+  [name]="metadataKey + '.xlsx'"
+  [url]="'/list/excel?name=' + metadataKey"
+></app-downloader>
+
 <div class="flex vertical">
   <div class="flex-item">
     <app-titlebar
