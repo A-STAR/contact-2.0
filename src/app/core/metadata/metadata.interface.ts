@@ -15,7 +15,7 @@ export interface IMetadataAction {
   enabled?: (actionType: MetadataActionType, selection: any[], data?: any) => boolean;
   params: string[];
   applyTo?: {
-    all: boolean;
+    all?: boolean;
     selected?: boolean;
   };
   children?: IMetadataAction[];

@@ -74,7 +74,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() defaultAction: string;
   @Input() columnIds: string[];
   @Input() toolbarItems: IToolbarItem[];
-  @Input() columns: Array<ISimpleGridColumn<T> | IAGridColumn>;
+  // TODO(i.lobanov): make this work for grid2 as well
+  @Input() columns: ISimpleGridColumn<T>;
   @Input() titlebarItems: IMetadataTitlebar;
 
   @Input() fullHeight = false;
@@ -145,8 +146,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         {
           actions: this.actions,
           titlebar: this.titlebarItems,
-          defaultAction: this.defaultAction,
-          columns: this.isSimple ? undefined : this.columns
+          defaultAction: this.defaultAction
         }
       );
     }
@@ -298,7 +298,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.actions$.next(data.actions);
     this.defaultActionName = data.defaultAction;
     this.titlebarConfig$.next(data.titlebar);
-    this._columns = [...data.columns] as IAGridColumn[];
+    this._columns = data.columns ? [...data.columns] : null;
     this._initialized = true;
     this.cdRef.markForCheck();
   }

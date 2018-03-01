@@ -218,6 +218,8 @@
     <ng-template #simpleGrid>
       <app-simple-grid
         #grid
+        *ngIf="initialized"
+        [actions]="gridActions$ | async"
         [persistenceKey]="persistenceKey"
         [selectionType]="selectionType"
         [columns]="columns"
