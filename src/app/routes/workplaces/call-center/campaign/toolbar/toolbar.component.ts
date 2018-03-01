@@ -87,7 +87,7 @@ export class ToolbarComponent extends DialogFunctions {
 
   onClose(): void {
     this.onCloseDialog();
-    this.cdRef.markForCheck();
+    this.cdRef.detectChanges();
   }
 
   private openDebtorCard(): void {
