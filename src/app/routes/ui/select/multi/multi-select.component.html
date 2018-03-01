@@ -10,13 +10,12 @@
   </label>
 
   <label>
-    Payment Type - dictCode #41 - Selected: '{{ select2Model }}' - Required
+    Payment Type - dictCode #41 - Selected: '1,2' - Required
     <app-multi-select
       [dictCode]="41"
       [errors]="errors.select2"
       formControlName="select2"
       [required]="true"
-      [ngModel]="select2Model"
     ></app-multi-select>
   </label>
 
@@ -29,12 +28,12 @@
   </label>
 
   <label>
-    Lookup Currencies - To Be Disabled
+    Lookup Languages - Disabled
     <app-multi-select
-      lookupKey="currencies"
-      formControlName="select3"
-      [isDisabled]="true"
+      lookupKey="languages"
+      formControlName="select4"
     ></app-multi-select>
   </label>
 
+  <button class="btn btn-default" (click)="disableControl4()">{{ lookupDisabled ? 'Enable' : 'Disable' }} Languages Lookup</button>
 </section>

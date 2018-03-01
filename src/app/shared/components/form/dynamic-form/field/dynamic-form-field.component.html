@@ -86,7 +86,6 @@
     <app-multi-select
       [dictCode]="control.dictCode"
       [formControlName]="control.controlName"
-      [isDisabled]="control.disabled"
       [lookupKey]="control.lookupKey"
       [options]="control.options"
       [required]="control.required"
@@ -98,12 +97,12 @@
     <!-- NOTE: isRequired helps here, since `required` would attach a standard validator,
           which would lead to a false negative -->
     <app-multilanguage-input
-      [isDisabled]="control.disabled"
       [formControlName]="control.controlName"
+      [isDisabled]="control.disabled"
+      [isRequired]="control.required"
       [label]="control.label"
       [langOptions]="control.langOptions"
       [placeholder]="control.placeholder"
-      [isRequired]="control.required"
     ></app-multilanguage-input>
   </ng-container>
 

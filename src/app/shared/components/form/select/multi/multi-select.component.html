@@ -16,6 +16,7 @@
       class="form-control select-search"
       autocomplete="off"
       [attr.placeholder]="(placeholder || '') | translate"
+      [disabled]="disabled"
       [ngModel]="selectionLabel"
       (click)="onInputClick($event)"
       (ngModelChange)="onInputChange($event)"
