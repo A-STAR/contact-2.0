@@ -88,7 +88,9 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
     const top = parentRect.bottom + contentRect.height > window.innerHeight
       ? parentRect.top - contentRect.height - DropdownDirective.OFFSET
       : parentRect.bottom + DropdownDirective.OFFSET;
-    const left = parentRect.left;
+    const left = parentRect.left + contentRect.width > window.innerWidth
+      ? parentRect.right - contentRect.width
+      : parentRect.left;
     const width = parentRect.width;
     return { top, left, width };
   }
