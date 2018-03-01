@@ -23,6 +23,7 @@ import {
 } from '@angular/forms';
 import * as R from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 
 import { IMultiSelectOption } from '../select.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
@@ -62,22 +63,29 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
 
   @Output() select = new EventEmitter<any>();
 
-  public open = false;
+  open = false;
+  disabled = false;
 
   private _active: IMultiSelectOption;
   private _autoAlign = false;
-  private _disabled = false;
   private _options: IMultiSelectOption[];
   private _required = false;
   private optionsSubscription: Subscription;
-  private selection: number[] = [];
+  private value: number[] = [];
+  // private tempValue: number[] = [];
+  // private tempOptions: IMultiSelectOption[];
 
   @Input()
   set options(options: IMultiSelectOption[]) {
     this._options = <IMultiSelectOption[]>this.sortOptionsPipe
       .transform(<IMultiSelectOption[]>options)
-      .map(o => ({ ...o, checked: false }));
-    this.writeValue(this.selection);
+      .map(o => ({ ...o, checked: this.value.includes(o.value) }));
+
+      // Filter out value not found in options
+      this.value = this.value.filter(v => this.options.some(o => o.value === v));
+
+      this.propagateChange(this.value);
+      this.cdRef.markForCheck();
   }
 
   get options(): IMultiSelectOption[] {
@@ -94,20 +102,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   }
 
   @Input()
-  set isDisabled(value: boolean) {
-    this._disabled = this.setDefault(value, this._disabled);
-
-    if (this._disabled) {
-      this.hideOptions();
-    }
-    this.setDisabledState(value);
-  }
-
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
-  @Input()
   set required(value: boolean) {
     this._required = this.setDefault(value, this._required);
   }
@@ -119,8 +113,9 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   constructor(
     private cdRef: ChangeDetectorRef,
     private lookupService: LookupService,
-    private renderer2: Renderer2,
+    private renderer: Renderer2,
     private sortOptionsPipe: SortOptionsPipe,
+    private translate: TranslateService,
     private userDictionariesService: UserDictionariesService,
   ) {
     this.hideOptions = this.hideOptions.bind(this);
@@ -138,7 +133,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
       this.optionsSubscription = this.lookupService.lookupAsOptions(this.lookupKey)
         .subscribe(this.onOptionsFetch);
     }
-    this.setDisabledState(this.disabled);
   }
 
   ngOnDestroy(): void {
@@ -157,19 +151,26 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     }
   }
 
-  writeValue(ids: number[]): void {
-    // console.log('write', ids);
-    if (ids != null && ids.length && this.options.length) {
-      // this.selection = Array.from(new Set([...this.selection, ...ids]));
-      this.selection = Array.from(new Set([...ids]));
-      // Chose forEach, otherwise would run out of stack
-      this.options.forEach(o => {
-        o.checked = this.selection.includes(o.value);
-      });
+  writeValue(value: number[]): void {
+    if (!Array.isArray(value)) {
+      return;
     }
-    this.propagateChange(this.selection);
-    this.renderer2.setProperty(this.input.nativeElement, 'value', this.selectionLabel);
-    this.cdRef.markForCheck();
+
+    const filterFn = this.options.length
+      ? (v) => this.options.some(o => o.value === v)
+      : (v) => v;
+
+    // Filter out values not found in options
+    this.value = Array.from(new Set([...value]))
+      .filter(filterFn);
+
+    // Update the `checked` prop of every option
+    if (this.options.length) {
+      this.options = this.options.map(o => ({ ...o, checked: this.value.includes(o.value) }));
+    } else {
+      this.propagateChange(this.value);
+      this.cdRef.markForCheck();
+    }
   }
 
   registerOnChange(fn: Function): void {
@@ -181,32 +182,32 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   }
 
   setDisabledState(disabled: boolean): void {
-    this._disabled = disabled;
-    this.renderer2.setProperty(this.input.nativeElement, 'disabled', disabled);
+    this.disabled = disabled;
     this.cdRef.markForCheck();
   }
 
   validate(control: AbstractControl): ValidationErrors {
-    return this.required && !this.selection.length
+    return this.required && !this.value.length
       ? { required: false }
       : null;
   }
 
   get hasSelection(): boolean {
-    return !!this.selection.length;
+    return !!this.value.length;
   }
 
   get selectionLabel(): string {
-    const length = this.selection.length;
+    const length = this.value.length;
     switch (length) {
       case 0:
-        return 'No items selected';
+        return '';
       case 1: {
-        const option = this.options.find(o => o.value === this.selection[0]);
+        const option = this.options.find(o => o.value === this.value[0]);
         return `${option ? option.label : ''}`;
       }
       default:
-        return `${length} items selected`;
+        const say = this.translate.instant('default.select.selected');
+        return `${say}: ${length}`;
     }
   }
 
@@ -226,26 +227,26 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   }
 
   onInputChange(label: string): void {
-    this.propagateChange(this.selection);
+    this.renderer.setProperty(this.input.nativeElement, 'value', this.selectionLabel);
   }
 
   onSelect(checked: boolean, option: IMultiSelectOption): void {
     option.checked = checked;
-    this.selection = checked
-      ? Array.from(new Set([...this.selection, option.value ]))
-      : this.selection.filter(o => o !== option.value);
-    this.propagateChange(this.selection);
+    this.value = checked
+      ? Array.from(new Set([...this.value, option.value ]))
+      : this.value.filter(o => o !== option.value);
+    this.propagateChange(this.value);
     this.select.emit(option);
   }
 
-  onClose(event: MouseEvent): void {
+  onApply(event: MouseEvent): void {
     event.preventDefault();
     this.hideOptions();
   }
 
   onClear(event: MouseEvent): void {
     event.preventDefault();
-    this.selection = [];
+    this.value = [];
     this.options = this.options.map(o => ({ ...o, checked: false }));
     this.propagateChange([]);
   }
@@ -258,6 +259,10 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     } else {
       this.showOptions();
     }
+  }
+
+  trackByFn(option: IMultiSelectOption): number {
+    return option.value;
   }
 
   propagateTouched: Function = () => {};
@@ -279,8 +284,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
 
   private onOptionsFetch = (options: IMultiSelectOption[]) => {
     this.options = options;
-    this.propagateChange(this.selection);
-    this.cdRef.markForCheck();
   }
 
 }
