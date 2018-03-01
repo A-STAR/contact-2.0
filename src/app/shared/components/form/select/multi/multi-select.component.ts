@@ -73,7 +73,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   private optionsSubscription: Subscription;
   private value: number[] = [];
   private tempValue: number[] = [];
-  private srcOptions: IMultiSelectOption[] = [];
+  private tempOptions: IMultiSelectOption[] = [];
 
   @Input()
   set options(options: IMultiSelectOption[]) {
@@ -81,7 +81,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
       .transform(<IMultiSelectOption[]>options)
       .map(o => ({ ...o, checked: this.value.includes(o.value) }));
 
-    this.srcOptions = [...this.options];
     // Filter out value not found in options
     this.value = this.value.filter(v => this.options.some(o => o.value === v));
     this.propagateChange(this.value);
@@ -201,7 +200,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
       case 0:
         return '';
       case 1: {
-        const option = this.srcOptions.find(o => o.value === this.value[0]);
+        const option = this.options.find(o => o.value === this.value[0]);
         return `${option ? option.label : ''}`;
       }
       default:
@@ -230,13 +229,13 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     this.tempValue = checked
       ? Array.from(new Set([...this.tempValue, option.value ]))
       : this.tempValue.filter(o => o !== option.value);
-
   }
 
   onApply(event: MouseEvent): void {
     event.preventDefault();
     this.hideOptions();
     this.value = [...this.tempValue];
+    this.options = [...this.tempOptions];
     this.propagateChange(this.value);
     this.select.emit(this.value);
   }
@@ -244,7 +243,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   onClear(event: MouseEvent): void {
     event.preventDefault();
     this.tempValue = [];
-    this.srcOptions = this.srcOptions.map(o => ({ ...o, checked: false }));
+    this.tempOptions = this.tempOptions.map(o => ({ ...o, checked: false }));
   }
 
   onCaret(event: MouseEvent): void {
@@ -271,7 +270,9 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   }
 
   private showOptions(): void {
+    // Copy source values and options before editing
     this.tempValue = [...this.value];
+    this.tempOptions = this.options.map(o => ({ ...o }));
     this.open = true;
   }
 
