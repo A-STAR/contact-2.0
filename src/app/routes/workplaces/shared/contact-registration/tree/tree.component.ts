@@ -42,6 +42,8 @@ export class TreeComponent implements OnInit, OnDestroy {
       )
       .subscribe(nodes => {
         this.nodes = nodes;
+        this.scenario = null;
+        this.selectedNode = null;
         this.cdRef.markForCheck();
       });
   }
