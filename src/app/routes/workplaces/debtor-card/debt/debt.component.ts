@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChil
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { first, flatMap, map } from 'rxjs/operators';
 
 import { IDebt } from '@app/core/app-modules/app-modules.interface';
@@ -96,25 +97,26 @@ export class DebtComponent implements OnInit {
       this.cdRef.markForCheck();
     });
 
-    if (!this.isRoute('create')) {
-      this.debtorCardService.selectedDebtId$
-        .flatMap(debtId => this.debtService.fetch(null, debtId))
-        .pipe(first())
-        .subscribe(debt => {
-          this.debt = <any>debt;
-          this.cdRef.markForCheck();
-        });
-    }
+    this.debtId$.pipe(
+      flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : of(null)),
+      first(),
+    )
+    .subscribe(debt => {
+      this.debt = debt;
+      this.cdRef.markForCheck();
+    });
   }
 
   get debtId$(): Observable<number> {
-    return this.debtorCardService.selectedDebtId$;
+    return this.debtorCardService.selectedDebtId$.pipe(
+      map(debtId => this.isRoute('create') ? null : debtId),
+    );
   }
 
   onSubmit(): void {
     combineLatest(
       this.debtorCardService.personId$,
-      this.debtorCardService.selectedDebtId$,
+      this.debtId$,
     )
     .pipe(
       flatMap(([personId, debtId]) => {
