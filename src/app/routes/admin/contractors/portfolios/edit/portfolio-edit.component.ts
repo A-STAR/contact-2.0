@@ -125,11 +125,13 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const portfolio = this.form.serializedUpdates;
-    // see requirements
-    portfolio.statusCode = portfolio.directionCode === 2 ? null : this.formData.statusCode;
+    const payload = {
+      ...portfolio,
+      statusCode: portfolio.directionCode === 2 ? null : portfolio.statusCode,
+    };
     const action = (this.contractorId && this.portfolioId
-      ? this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio)
-      : this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, portfolio));
+      ? this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, payload)
+      : this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, payload));
 
       action.subscribe(result => {
         if (result) {
