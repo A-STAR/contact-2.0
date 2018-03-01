@@ -47,6 +47,7 @@ import { UserConstantsService } from '@app/core/user/constants/user-constants.se
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { ActionGridFilterComponent } from './filter/action-grid-filter.component';
+import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { GridComponent } from '../../components/grid/grid.component';
 import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.component';
@@ -87,8 +88,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Output() select = new EventEmitter<IAGridSelected>();
 
   @ViewChild(ActionGridFilterComponent) filter: ActionGridFilterComponent;
-  @ViewChild('grid') grid: GridComponent | Grid2Component;
+  @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
   @ViewChild(TitlebarComponent) gridBar: TitlebarComponent;
+  @ViewChild('grid') grid: GridComponent | Grid2Component;
 
   private _columns: IAGridColumn[];
   private _initialized = false;
@@ -437,10 +439,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       }),
       exportExcel: (permissions: string[]) => ({
         type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
-        action: () => alert('In development!'),
+        action: () => this.exportExcel(),
         enabled: permissions ? this.userPermissionsService.hasAll(permissions) : of(true)
       }),
-
     };
     return {
       title: config.title,
@@ -448,4 +449,17 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     };
   }
 
+  private exportExcel(): void {
+    const grid = this.grid as Grid2Component;
+    const filters = grid.getFilters();
+    const params = grid.getRequestParams();
+    const columns = grid.getExportableColumns();
+    if (columns) {
+      const request = this.gridService.buildRequest(params, filters);
+      // NOTE: no paging in export, so remove it from the request
+      const { paging, ...rest } = request;
+      const body = { columns, ...rest };
+      this.downloader.download(body);
+    }
+  }
 }
