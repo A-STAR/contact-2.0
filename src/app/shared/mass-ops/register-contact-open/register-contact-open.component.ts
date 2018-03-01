@@ -12,7 +12,7 @@ import { PhoneGridComponent } from './phone/phone.component';
 
 @Component({
   selector: 'app-open-register-contact',
-  templateUrl: './open-register-contact.component.html',
+  templateUrl: './register-contact-open.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterContactOpenComponent implements OnInit {
@@ -28,6 +28,7 @@ export class RegisterContactOpenComponent implements OnInit {
   entityTypeId: number;
   entityId: number;
   debtId: number;
+  campaignId: number;
 
   constructor(
     private actionGridFilterService: ActionGridFilterService,
@@ -37,10 +38,11 @@ export class RegisterContactOpenComponent implements OnInit {
   ngOnInit(): void {
     const { debtId, personId } = this.actionGridFilterService.buildRequest(this.actionData.payload);
 
-    this.entityTypeId = Number(this.actionGridFilterService.getAddOption(this.actionData, 'entityTypeId', 0));
-
     this.debtId = debtId;
     this.entityId = personId;
+
+    this.entityTypeId = Number(this.actionGridFilterService.getAddOption(this.actionData, 'entityTypeId', 0));
+    this.campaignId = Number(this.actionGridFilterService.getAddOption(this.actionData, 'campaignId', 0));
   }
 
   get canRegisterPhones$(): Observable<boolean> {

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { GridsModule } from '@app/shared/components/grids/grids.module';
@@ -12,7 +13,8 @@ import { AddressGridComponent } from './address.component';
   imports: [
     CommonModule,
     ButtonModule,
-    GridsModule
+    GridsModule,
+    TranslateModule,
   ],
   exports: [
     AddressGridComponent,

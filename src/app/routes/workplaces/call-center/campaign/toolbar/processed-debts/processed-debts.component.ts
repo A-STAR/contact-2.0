@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { ICampaignProcessedDebt } from '../../campaign.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { CampaignService } from '../../campaign.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { NumberRendererComponent } from '@app/shared/components/grids/renderers';
@@ -48,6 +50,12 @@ export class ProcessedDebtsComponent implements OnInit  {
           value: [
             19
           ]
+        },
+        {
+          name: 'campaignId',
+          value: [
+            this.campaignService.campaignId
+          ]
         }
       ],
     }
@@ -56,6 +64,7 @@ export class ProcessedDebtsComponent implements OnInit  {
   constructor(
     private campaignService: CampaignService,
     private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
   ) { }
 
   ngOnInit(): void {
@@ -64,6 +73,16 @@ export class ProcessedDebtsComponent implements OnInit  {
         this.debts = debts;
         this.cdRef.markForCheck();
       });
+  }
+
+  onRegisterContactDialogSubmit({ contactType, contactId, personId, debtId }: any): void {
+    this.contactRegistrationService.startRegistration({
+      contactId,
+      contactType,
+      debtId,
+      personId,
+      personRole: 1,
+    });
   }
 
   onClose(): void {
