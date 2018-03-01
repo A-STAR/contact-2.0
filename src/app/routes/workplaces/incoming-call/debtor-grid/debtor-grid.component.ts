@@ -40,34 +40,42 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     { prop: 'statusCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS },
     { prop: 'regionCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_REGIONS },
     { prop: 'branchCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
-    { prop: 'startDate', minWidth: 200, renderer: 'dateRenderer' },
+    { prop: 'startDate', minWidth: 200, renderer: DateRendererComponent },
     { prop: 'creditStartDate', minWidth: 150, renderer: DateRendererComponent },
     { prop: 'creditEndDate', minWidth: 220, renderer: DateRendererComponent },
   ].map(addGridLabel('modules.incomingCall.debtors.grid'));
 
-  debtors: any[];
-
+  debtors: any[] = [];
+  defaultAction = 'openDebtCard';
   actions: IMetadataAction[] = [
-    // {
-    //   translationKey: 'default.grid.localeText',
-    //   prop: 'fullName',
-    //   enabled: of(true)
-    // },
+    {
+      action: 'openDebtCard',
+      params: [ 'debtId' ],
+    },
     {
       action: 'showContactHistory',
       params: [ 'personId' ],
     },
     {
       action: 'debtSetResponsible',
+      applyTo: {
+        selected: true,
+      },
       params: [ 'debtId' ]
     },
     {
       action: 'debtClearResponsible',
+      applyTo: {
+        selected: true,
+      },
       params: [ 'debtId' ]
     },
     {
       action: 'objectAddToGroup',
       params: [ 'debtId' ],
+      applyTo: {
+        selected: true,
+      },
       // TODO(d.maltsev, i.kibisov): currently using injection instead of this
       addOptions: [
         { name: 'entityTypeId', value: [ 19 ] }
@@ -118,7 +126,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   onAction($event: string): void {
     // uncomment to test action for context menu
-    console.log($event);
+    // console.log($event);
   }
 
   // private getUrlByDebtor(debtor: any): string {
