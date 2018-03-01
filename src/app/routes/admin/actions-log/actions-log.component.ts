@@ -10,7 +10,6 @@ import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { ActionsLogService } from '@app/routes/admin/actions-log/actions-log.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
-import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
