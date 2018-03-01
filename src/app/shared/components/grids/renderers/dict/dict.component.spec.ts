@@ -46,6 +46,17 @@ describe('DictRendererComponent', () => {
 
   it('should render dict renderer', () => {
     fixture.componentInstance.agInit({
+      dictCode: 1,
+      value: 1,
+    } as any);
+    fixture.detectChanges();
+    expect(fixture.nativeElement).toMatchSnapshot();
+  });
+
+  it('should render dict renderer using callback', () => {
+    fixture.componentInstance.agInit({
+      data: { dictCode: 1 },
+      dictCode: item => item.dictCode,
       value: 1,
     } as any);
     fixture.detectChanges();
