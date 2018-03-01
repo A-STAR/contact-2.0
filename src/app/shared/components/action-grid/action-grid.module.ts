@@ -17,6 +17,7 @@ import { OperatorDetailsModule } from '@app/shared/mass-ops/operator-details/ope
 import { PaymentConfirmModule } from '@app/shared/mass-ops/payment-confirm/payment-confirm.module';
 import { PaymentOperatorModule } from '@app/shared/mass-ops/payment-operator/payment-operator.module';
 import { PromiseResolveModule } from '@app/shared/mass-ops/promise-resolve/promise-resolve.module';
+import { RegisterContactOpenModule } from '@app/shared/mass-ops/register-contact-open/register-contact-open.module';
 import { SmsDeleteModule } from '@app/shared/mass-ops/sms-delete/sms-delete.module';
 import { TitlebarModule } from '../titlebar/titlebar.module';
 import { VisitAddModule } from '@app/shared/mass-ops/visit-add/visit-add.module';
@@ -47,6 +48,7 @@ import { ActionGridComponent } from './action-grid.component';
     TitlebarModule,
     VisitAddModule,
     VisitPrepareModule,
+    RegisterContactOpenModule,
   ],
   exports: [
     ActionGridComponent,

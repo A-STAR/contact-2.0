@@ -169,6 +169,12 @@
   (close)="onCloseAction($event)"
 ></app-outsourcing-return>
 
+<app-open-register-contact
+  *ngIf="isDialog('registerContact')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-open-register-contact>
+
 <!-- TODO(d.maltsev): what is entityTranslationKey? -->
 <app-downloader
   #downloader

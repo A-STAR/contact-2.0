@@ -1,0 +1,21 @@
+<h4>{{ 'modules.contactRegistration.dialogs.contactType.misc.title' | translate }}</h4>
+
+<div class="mb">
+
+  <app-button
+    *ngIf="canRegisterSpecial$ | async"
+    color="primary"
+    type="registerContact"
+    label="modules.contactRegistration.dialogs.contactType.misc.buttonMisc"
+    (click)="onSubmitSpecial()"
+  ></app-button>
+
+  <app-button
+    *ngIf="canRegisterOfficeVisit$ | async"
+    color="primary"
+    type="registerContact"
+    label="modules.contactRegistration.dialogs.contactType.misc.buttonOfficeVisit"
+    (click)="onSubmitOfficeVisit()"
+  ></app-button>
+
+</div>

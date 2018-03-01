@@ -38,6 +38,18 @@ export class ProcessedDebtsComponent implements OnInit  {
     {
       action: 'openDebtCard',
       params: [ 'debtId' ],
+    },
+    {
+      action: 'registerContact',
+      params: [ 'debtId', 'personId' ],
+      addOptions: [
+        {
+          name: 'entityTypeId',
+          value: [
+            19
+          ]
+        }
+      ],
     }
   ];
 
