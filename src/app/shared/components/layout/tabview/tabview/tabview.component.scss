@@ -1,4 +1,4 @@
-@import '../../../../styles/app/variables.scss';
+@import '../../../../styles/app/variables';
 
 .layout-tabview {
   display: flex;
@@ -46,19 +46,8 @@
     display: none !important;
   }
   &[menu] {
-    overflow: visible;
     flex-grow: 3;
     text-align: right;
-    ul {
-      text-align: left;
-      li {
-        padding: 15px 25px;
-        white-space: nowrap;
-      }
-    }
-    /deep/ .dropdown.right {
-      margin-right: 10%;
-    }
   }
   a {
     color: $text-color;
@@ -102,5 +91,13 @@
   100% {
     transform: scale(2);
     opacity: 0;
+  }
+}
+
+.dropdown {
+  border: 1px solid #d5d5d5;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  li {
+    padding: 15px 25px;
   }
 }

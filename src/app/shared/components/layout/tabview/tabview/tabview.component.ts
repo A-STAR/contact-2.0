@@ -115,11 +115,18 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
       this.select.emit(tabIndex);
     }
 
-    if (!event) {
+    if (!event || tabIndex >= this.visibleTabs.length) {
       return;
     }
 
-    // jQuery
+    this.showRipple(event, tabIndex);
+  }
+
+  private get tabHeaderWidth(): any {
+    return this.el.nativeElement.querySelector('ul').clientWidth - TabViewComponent.MENU_BTN_SPACE;
+  }
+
+  private showRipple(event: MouseEvent, tabIndex: number): void {
     $(this.el.nativeElement).find('.ripple').remove();
     const $listItem = $(this.el.nativeElement).find('ul').children().eq(tabIndex);
     const posX = $listItem.offset().left;
@@ -150,10 +157,6 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
         left: x + 'px'
       })
       .addClass('rippleEffect');
-  }
-
-  private get tabHeaderWidth(): any {
-    return this.el.nativeElement.querySelector('ul').clientWidth - TabViewComponent.MENU_BTN_SPACE;
   }
 
   private getTabIndex(tab: TabViewTabComponent): number {
