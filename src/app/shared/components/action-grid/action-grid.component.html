@@ -1,31 +1,31 @@
 <app-next-call-date-set
   *ngIf="isDialog('debtNextCallDate')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-next-call-date-set>
 
 <app-open-debt-card-by-debtor
   *ngIf="isDialog('openDebtCardByDebtor')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-open-debt-card-by-debtor>
 
 <app-open-debt-card-by-debt
   *ngIf="isDialog('openDebtCard')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-open-debt-card-by-debt>
 
 <app-debt-open-incoming-call
   *ngIf="isDialog('openIncomingCall')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-debt-open-incoming-call>
 
 <app-visit-add-dialog
   *ngIf="isDialog('addVisit')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-visit-add-dialog>
 
 <app-sms-delete-dialog
@@ -55,37 +55,37 @@
 <app-debt-status
   *ngIf="isDialog('debtChangeStatus')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-debt-status>
 
 <app-debt-responsible-set
   *ngIf="isDialog('debtSetResponsible')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-debt-responsible-set>
 
 <app-debt-responsible-clear
   *ngIf="isDialog('debtClearResponsible')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-debt-responsible-clear>
 
 <app-entity-group-add
   *ngIf="isDialog('objectAddToGroup')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-entity-group-add>
 
 <app-promise-confirm-dialog
   *ngIf="isDialog('confirmPromise')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-promise-confirm-dialog>
 
 <app-promise-remove-dialog
   *ngIf="isDialog('deletePromise')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-promise-remove-dialog>
 
 <app-payment-operator-confirm-dialog
@@ -124,13 +124,13 @@
 <app-mass-email
   *ngIf="isDialog('emailCreate')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-mass-email>
 
 <app-mass-sms
   *ngIf="isDialog('smsCreate')"
   [actionData]="dialogData"
-  (close)="onCloseDialog()"
+  (close)="onCloseAction($event)"
 ></app-mass-sms>
 
 <app-visit-prepare-dialog

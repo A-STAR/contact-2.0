@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { ICampaignProcessedDebt } from '../../campaign.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { CampaignService } from '../../campaign.service';
@@ -15,9 +16,10 @@ import { addGridLabel } from '@app/core/utils';
   templateUrl: 'processed-debts.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProcessedDebtsComponent implements OnInit {
+export class ProcessedDebtsComponent implements OnInit  {
   @Output() close = new EventEmitter<void>();
 
+  dialog = null;
   columns: ISimpleGridColumn<ICampaignProcessedDebt>[] = [
     { prop: 'personFullName', minWidth: 200 },
     { prop: 'debtId', minWidth: 50, maxWidth: 100 },
@@ -30,10 +32,19 @@ export class ProcessedDebtsComponent implements OnInit {
 
   debts: ICampaignProcessedDebt[];
 
+  defaultAction = 'openDebtCard';
+
+  actions: IMetadataAction[] = [
+    {
+      action: 'openDebtCard',
+      params: [ 'debtId' ],
+    }
+  ];
+
   constructor(
     private campaignService: CampaignService,
     private cdRef: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.campaignService.fetchProcessedDebtsForCurrentCampaign()

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first, map } from 'rxjs/operators';
 
@@ -54,6 +54,7 @@ export class ToolbarComponent extends DialogFunctions {
   };
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private campaignService: CampaignService,
     private contactRegistrationService: ContactRegistrationService,
     private debtorCardService: DebtorCardService,
@@ -82,6 +83,11 @@ export class ToolbarComponent extends DialogFunctions {
 
   get campaignDebt$(): Observable<ICampaignDebt> {
     return this.campaignService.campaignDebt$;
+  }
+
+  onClose(): void {
+    this.onCloseDialog();
+    this.cdRef.markForCheck();
   }
 
   private openDebtorCard(): void {

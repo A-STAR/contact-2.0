@@ -105,6 +105,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
+  @Output() action = new EventEmitter<IGridAction>();
+  // emits when dialog closes
+  @Output() close = new EventEmitter<ICloseAction>();
 
   @ViewChild(ActionGridFilterComponent) filter: ActionGridFilterComponent;
   @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
@@ -221,6 +224,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     };
     this.dialog = action.metadataAction.action;
     this.dialogData = this.setDialogData(action);
+    if (this.action) {
+      this.action.emit(this.dialogData);
+    }
     this.cdRef.markForCheck();
   }
 
@@ -232,6 +238,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       this.grid.deselectAll();
     }
     this.onCloseDialog();
+
+    if (this.close) {
+      this.close.emit(action);
+    }
   }
 
   onRequest(): void {
