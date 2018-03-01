@@ -10,7 +10,7 @@ export class SingleSelectComponent {
 
   formGroup = new FormGroup({
     select1: new FormControl([1]),
-    select2: new FormControl([1, 2]),
+    select2: new FormControl([2, 3]),
     // select3: new FormControl([ { label: 'Absolutely useless assignment, should be noop', value: 1 } ]),
     select3: new FormControl([3]),
     select4: new FormControl({ value: [6, 7], disabled: true }),
@@ -23,7 +23,7 @@ export class SingleSelectComponent {
   }
 
   onSelectChange(value: number): void {
-    console.info('select', value);
+    // console.info('select', value);
   }
 
   disableControl4(): void {

@@ -23,6 +23,7 @@ import {
 } from '@angular/forms';
 import * as R from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 
 import { IMultiSelectOption } from '../select.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
@@ -70,15 +71,21 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   private _options: IMultiSelectOption[];
   private _required = false;
   private optionsSubscription: Subscription;
-  private tempOptions: IMultiSelectOption[];
   private value: number[] = [];
+  // private tempValue: number[] = [];
+  // private tempOptions: IMultiSelectOption[];
 
   @Input()
   set options(options: IMultiSelectOption[]) {
     this._options = <IMultiSelectOption[]>this.sortOptionsPipe
       .transform(<IMultiSelectOption[]>options)
-      .map(o => ({ ...o, checked: false }));
-    // this.writeValue(this.value);
+      .map(o => ({ ...o, checked: this.value.includes(o.value) }));
+
+      // Filter out value not found in options
+      this.value = this.value.filter(v => this.options.some(o => o.value === v));
+
+      this.propagateChange(this.value);
+      this.cdRef.markForCheck();
   }
 
   get options(): IMultiSelectOption[] {
@@ -108,6 +115,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     private lookupService: LookupService,
     private renderer: Renderer2,
     private sortOptionsPipe: SortOptionsPipe,
+    private translate: TranslateService,
     private userDictionariesService: UserDictionariesService,
   ) {
     this.hideOptions = this.hideOptions.bind(this);
@@ -144,17 +152,25 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   }
 
   writeValue(value: number[]): void {
-    console.log('write', value);
-    // console.log('selection length', value.length);
-    if (Array.isArray(value) && value.length) {
-      // this.selection = Array.from(new Set([...this.value, ...ids]));
-      this.value = Array.from(new Set([...value]));
-      this.options.forEach(o => {
-        o.checked = this.value.includes(o.value);
-      });
+    if (!Array.isArray(value)) {
+      return;
     }
-    this.propagateChange(this.value);
-    this.cdRef.markForCheck();
+
+    const filterFn = this.options.length
+      ? (v) => this.options.some(o => o.value === v)
+      : (v) => v;
+
+    // Filter out values not found in options
+    this.value = Array.from(new Set([...value]))
+      .filter(filterFn);
+
+    // Update the `checked` prop of every option
+    if (this.options.length) {
+      this.options = this.options.map(o => ({ ...o, checked: this.value.includes(o.value) }));
+    } else {
+      this.propagateChange(this.value);
+      this.cdRef.markForCheck();
+    }
   }
 
   registerOnChange(fn: Function): void {
@@ -184,13 +200,14 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     const length = this.value.length;
     switch (length) {
       case 0:
-        return 'No items selected';
+        return '';
       case 1: {
         const option = this.options.find(o => o.value === this.value[0]);
         return `${option ? option.label : ''}`;
       }
       default:
-        return `${length} items selected`;
+        const say = this.translate.instant('default.select.selected');
+        return `${say}: ${length}`;
     }
   }
 
@@ -211,7 +228,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
 
   onInputChange(label: string): void {
     this.renderer.setProperty(this.input.nativeElement, 'value', this.selectionLabel);
-    this.propagateChange(this.value);
   }
 
   onSelect(checked: boolean, option: IMultiSelectOption): void {
@@ -223,7 +239,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     this.select.emit(option);
   }
 
-  onClose(event: MouseEvent): void {
+  onApply(event: MouseEvent): void {
     event.preventDefault();
     this.hideOptions();
   }
@@ -245,6 +261,10 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     }
   }
 
+  trackByFn(option: IMultiSelectOption): number {
+    return option.value;
+  }
+
   propagateTouched: Function = () => {};
 
   private propagateChange: Function = () => {};
@@ -264,8 +284,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
 
   private onOptionsFetch = (options: IMultiSelectOption[]) => {
     this.options = options;
-    this.propagateChange(this.value);
-    this.cdRef.markForCheck();
   }
 
 }
