@@ -146,7 +146,7 @@ export class ContractorsAndPortfoliosService {
 
   createPortfolio(contractorId: number, portfolio: IPortfolio): Observable<any> {
     return this.dataService
-      .create('/contractors/{contractorId}/portfolios', { contractorId }, { ...portfolio, stageCode: 1 })
+      .create('/contractors/{contractorId}/portfolios', { contractorId }, portfolio)
       .pipe(
         catchError(this.notificationsService.createError().entity('entities.portfolios.gen.singular').dispatchCallback())
       );
