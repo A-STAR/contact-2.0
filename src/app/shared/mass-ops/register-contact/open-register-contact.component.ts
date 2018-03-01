@@ -15,14 +15,20 @@ export class OpenRegisterContactComponent implements OnInit {
   @Output() close = new EventEmitter<ICloseAction>();
 
   entityId: number;
+  personId: number;
+  debtId: number;
 
   constructor(
     private actionGridFilterService: ActionGridFilterService
   ) { }
 
   ngOnInit(): void {
-    this.entityId = Number(this.actionGridFilterService.getAddOption(this.actionData, 'entityId', 0));
     const { debtId, personId } = this.actionGridFilterService.buildRequest(this.actionData.payload);
+
+    this.entityId = Number(this.actionGridFilterService.getAddOption(this.actionData, 'entityId', 0));
+
+    this.debtId = debtId;
+    this.personId = personId;
   }
 
 }
