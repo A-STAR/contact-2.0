@@ -24,7 +24,7 @@
     <i
       *ngIf="!disabled"
       class="co co-back select-caret"
-      [ngClass]="caretCls"
+      [ngClass]="{ 'up': open }"
       (click)="onCaret($event)"
     ></i>
     <i
@@ -41,7 +41,7 @@
       [alignTarget]="input"
       [autoAlign]="autoAlign"
     >
-      <li class="select-item" *ngFor="let option of options; trackBy: trackByFn">
+      <li class="select-item" *ngFor="let option of srcOptions; trackBy: trackByFn">
         <app-checkbox
           [label]="option.label"
           [ngModel]="option.checked"
