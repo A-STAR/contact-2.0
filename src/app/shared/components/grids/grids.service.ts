@@ -64,7 +64,8 @@ export class GridsService {
     // TODO(d.maltsev): remove duplicates
     const dictCodes = columns
       .map(column => column.dictCode)
-      .filter(Boolean);
+      .filter(dictCode => dictCode && typeof dictCode === 'number')
+      .map(Number);
     return this.userDictionariesService.getDictionaries(dictCodes);
   }
 
