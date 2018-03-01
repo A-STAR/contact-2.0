@@ -102,7 +102,7 @@ export class PledgorGridComponent extends DialogFunctions implements OnInit, OnD
   }
 
   private fetch(searchParams: object = {}): void {
-    const filter = this.pledgorService.makeFilter(searchParams, this.columns);
+    const filter = this.pledgorService.makeFilter(searchParams, this.columns as any);
     const params = { sorters: [{ colId: 'lastName', sort: 'asc' }] };
     this.pledgorService.fetchAll(filter, params)
       .subscribe(response => {
