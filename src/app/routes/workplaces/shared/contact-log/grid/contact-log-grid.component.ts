@@ -16,7 +16,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
+import { DateRendererComponent, DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel } from '@app/core/utils';
 
@@ -37,15 +37,32 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   columns: ISimpleGridColumn<IContactLog>[] = [
     { prop: 'debtId', minWidth: 70, maxWidth: 100 },
-    { prop: 'contactId', minWidth: 70, maxWidth: 100 },
+    { prop: 'contract', minWidth: 150, maxWidth: 200 },
     { prop: 'creditName', minWidth: 100, maxWidth: 150 },
+    { prop: 'createDateTime', renderer: DateTimeRendererComponent, },
     { prop: 'fullName', minWidth: 150, maxWidth: 200 },
     { prop: 'personRole', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE },
     { prop: 'contactDateTime', minWidth: 150, maxWidth: 200, renderer: DateTimeRendererComponent },
     { prop: 'contactType', minWidth: 100, maxWidth: 150, dictCode: UserDictionariesService.DICTIONARY_CONTACT_TYPE },
     { prop: 'userFullName', minWidth: 150, maxWidth: 200 },
     { prop: 'resultName', minWidth: 150, maxWidth: 200 },
-    { prop: 'promiseDate', minWidth: 100 },
+    {
+      prop: 'msgStatusCode',
+      dictCode: (item: IContactLog) => {
+        switch (item.contactType) {
+          case 4:
+            return UserDictionariesService.DICTIONARY_SMS_STATUS;
+          case 6:
+            return UserDictionariesService.DICTIONARY_EMAIL_STATUS;
+          default:
+            return null;
+        }
+      }
+    },
+    { prop: 'contactData' },
+    { prop: 'promiseDate', minWidth: 100, renderer: DateRendererComponent },
+    { prop: 'comment' },
+    { prop: 'messageTemplate' },
   ].map(addGridLabel('widgets.contactLog.grid'));
 
   toolbarItems: IToolbarItem[] = [

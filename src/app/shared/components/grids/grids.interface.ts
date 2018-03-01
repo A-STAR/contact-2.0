@@ -11,6 +11,8 @@ export enum IGridFilterType {
   DATE,
 }
 
+export type IDictCodeCallback<T> = (item: T) => number;
+
 /**
  * Base grid column interface for `ISimpleGridColumn` and others to extend
  *
@@ -23,7 +25,7 @@ export interface IGridColumn<T> {
   prop: keyof T;
 
   // Optional Fields
-  dictCode?: number;
+  dictCode?: number | IDictCodeCallback<T>;
   filter?: IGridFilterType;
   lookupKey?: ILookupKey;
   minWidth?: number;
