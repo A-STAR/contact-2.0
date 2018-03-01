@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IAGridColumn } from '@app/shared/components/grid2/grid2.interface';
 import { IMetadataAction, IMetadataTitlebar } from '@app/core/metadata/metadata.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 export type TSelectionType = 'single' | 'multiClick' | 'multi' | undefined;
 
@@ -67,7 +68,7 @@ export interface IContextMenuItem {
 
 export interface IMetadataDefs {
   actions: IMetadataAction[];
-  columns: IAGridColumn[];
+  columns?: Array<ISimpleGridColumn<any> | IAGridColumn>;
   titlebar?: IMetadataTitlebar;
   defaultAction?: string;
   permits?: string[];

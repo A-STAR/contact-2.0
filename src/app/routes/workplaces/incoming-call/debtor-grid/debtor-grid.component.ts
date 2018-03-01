@@ -3,13 +3,16 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn, IContextMenuItem } from '../../../../shared/components/grid/grid.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { DebtorGridService } from './debtor-grid.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
 import { IncomingCallService } from '../incoming-call.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
+import { addGridLabel } from '@app/core/utils';
+import { DateRendererComponent, NumberRendererComponent } from '@app/shared/components/grids/renderers';
 
 @Component({
   selector: 'app-incoming-call-debtor-grid',
@@ -18,7 +21,8 @@ import { UserDictionariesService } from '../../../../core/user/dictionaries/user
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtorGridComponent implements OnInit, OnDestroy {
-  columns: IGridColumn[] = [
+
+  columns: ISimpleGridColumn<any>[] = [
     { prop: 'debtId', minWidth: 100 },
     { prop: 'debtorId', minWidth: 100 },
     { prop: 'fullName', minWidth: 150 },
@@ -31,50 +35,38 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     { prop: 'bankName', minWidth: 100 },
     { prop: 'portfolioName', minWidth: 150 },
     { prop: 'outPortfolioName', minWidth: 200 },
-    { prop: 'debtAmount', minWidth: 100, renderer: 'numberRenderer' },
+    { prop: 'debtAmount', minWidth: 100, renderer: NumberRendererComponent },
     { prop: 'currencyName', minWidth: 100 },
     { prop: 'statusCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS },
     { prop: 'regionCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_REGIONS },
     { prop: 'branchCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_BRANCHES },
     { prop: 'startDate', minWidth: 200, renderer: 'dateRenderer' },
-    { prop: 'creditStartDate', minWidth: 150, renderer: 'dateRenderer' },
-    { prop: 'creditEndDate', minWidth: 220, renderer: 'dateRenderer' },
-  ];
+    { prop: 'creditStartDate', minWidth: 150, renderer: DateRendererComponent },
+    { prop: 'creditEndDate', minWidth: 220, renderer: DateRendererComponent },
+  ].map(addGridLabel('modules.incomingCall.debtors.grid'));
 
   debtors: any[];
 
-  contextMenuOptions: IContextMenuItem[] = [
-    {
-      simpleActionsNames: [
-        'copyField',
-        'copyRow'
-      ],
-      translationKey: 'default.grid.localeText',
-      prop: 'fullName',
-      enabled: of(true)
-    },
+  actions: IMetadataAction[] = [
+    // {
+    //   translationKey: 'default.grid.localeText',
+    //   prop: 'fullName',
+    //   enabled: of(true)
+    // },
     {
       action: 'showContactHistory',
-      label: 'default.grid.actions.showContactHistory',
-      enabled: of(true),
       params: [ 'personId' ],
     },
     {
       action: 'debtSetResponsible',
-      label: 'default.grid.actions.debtSetResponsible',
-      enabled: of(true),
       params: [ 'debtId' ]
     },
     {
       action: 'debtClearResponsible',
-      label: 'default.grid.actions.debtClearResponsible',
-      enabled: of(true),
       params: [ 'debtId' ]
     },
     {
       action: 'objectAddToGroup',
-      label: 'default.grid.actions.objectAddToGroup',
-      enabled: of(true),
       params: [ 'debtId' ],
       // TODO(d.maltsev, i.kibisov): currently using injection instead of this
       addOptions: [
@@ -89,16 +81,10 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private debtorCardService: DebtorCardService,
     private debtorGridService: DebtorGridService,
-    private gridService: GridService,
     private incomingCallService: IncomingCallService,
   ) {}
 
   ngOnInit(): void {
-    this.gridService.setDictionaryRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = this.gridService.setRenderers(columns);
-      });
 
     this.searchParamsSubscription = this.incomingCallService.searchParams$
       .flatMap(params => params ? this.debtorGridService.fetchAll(params as any) : of(null))
@@ -132,7 +118,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   onAction($event: string): void {
     // uncomment to test action for context menu
-    // log(`Action was fired for ${$event}`);
+    console.log($event);
   }
 
   // private getUrlByDebtor(debtor: any): string {
