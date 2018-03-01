@@ -127,7 +127,7 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
   // }
 
   private fetch(searchParams: object = {}): void {
-    const filter = this.guarantorService.makeFilter(searchParams, this.columns);
+    const filter = this.guarantorService.makeFilter(searchParams, this.columns as any);
     const params = { sorters: [{ colId: 'lastName', sort: 'asc' }] };
     this.guarantorService.fetchAll(filter, params)
       .subscribe(response => {

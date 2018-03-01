@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid/main';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -27,14 +28,17 @@ export class DictRendererComponent implements ICellRendererAngularComp {
   }
 
   get value$(): Observable<string> {
-    const { value } = this.params;
-    return this.userDictionariesService
-      .getDictionary(this.params['dictCode'])
-      .pipe(
-        map(terms => {
-          const term = terms.find(t => t.code === value);
-          return term ? term.name : value;
-        }),
-      );
+    const { data, dictCode, value } = this.params as any;
+    const code = typeof dictCode === 'function' ? dictCode(data) : dictCode;
+    return code
+      ? this.userDictionariesService
+          .getDictionary(code)
+          .pipe(
+            map(terms => {
+              const term = terms.find(t => t.code === value);
+              return term ? term.name : value;
+            }),
+          )
+      : of(value);
   }
 }

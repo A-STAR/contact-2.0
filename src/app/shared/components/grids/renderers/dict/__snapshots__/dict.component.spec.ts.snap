@@ -8,3 +8,12 @@ exports[`DictRendererComponent should render dict renderer 1`] = `
   Term 1
 </div>
 `;
+
+exports[`DictRendererComponent should render dict renderer using callback 1`] = `
+<div
+  id="root1"
+  ng-version="5.2.4"
+>
+  Term 1
+</div>
+`;

@@ -63,7 +63,7 @@ export class GridsService {
   private preloadDictionaries<T>(columns: IGridColumn<T>[]): Observable<IUserDictionaries> {
     // TODO(d.maltsev): remove duplicates
     const dictCodes = columns
-      .map(column => column.dictCode)
+      .map(column => Number(column.dictCode))
       .filter(Boolean);
     return this.userDictionariesService.getDictionaries(dictCodes);
   }
