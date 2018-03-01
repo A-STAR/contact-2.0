@@ -6,13 +6,10 @@ import * as moment from 'moment';
 
 import { IActionLog } from './actions-log.interface';
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
-// import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ActionsLogService } from '@app/routes/admin/actions-log/actions-log.service';
-// import { GridService } from '@app/shared/components/grid/grid.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
-import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +18,6 @@ import { DownloaderComponent } from '@app/shared/components/downloader/downloade
   templateUrl: './actions-log.component.html',
 })
 export class ActionsLogComponent implements AfterViewInit {
-  @ViewChild('downloader') downloader: DownloaderComponent;
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IActionLog>;
 
   rows: IActionLog[] = [];
@@ -29,26 +25,10 @@ export class ActionsLogComponent implements AfterViewInit {
   rowIdKey = 'id';
 
   data: any;
-  // titlebar: ITitlebar = {
-  //   title: 'actionsLog.title',
-  //   items: [
-  //     {
-  //       type: TitlebarItemTypeEnum.BUTTON_SEARCH,
-  //       enabled: of(true),
-  //       action: () => this.onRequest(),
-  //     },
-  //     {
-  //       type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
-  //       enabled: of(true),
-  //       action: () => this.doExport(),
-  //     },
-  //   ],
-  // };
 
   constructor(
     private actionsLogService: ActionsLogService,
     private cdRef: ChangeDetectorRef,
-    // private gridService: GridService,
   ) {}
 
   ngAfterViewInit(): void {
@@ -86,17 +66,4 @@ export class ActionsLogComponent implements AfterViewInit {
       }
     }
   }
-
-  // private doExport(): void {
-  //   const filters = this.grid.getFilters();
-  //   const params = this.grid.getRequestParams();
-  //   const columns = this.grid.getExportableColumns();
-  //   if (columns) {
-  //     const request = this.gridService.buildRequest(params, filters);
-  //     // NOTE: no paging in export, so remove it from the request
-  //     const { paging, ...rest } = request;
-  //     const body = { columns, ...rest };
-  //     this.downloader.download(body);
-  //   }
-  // }
 }

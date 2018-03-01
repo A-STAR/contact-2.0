@@ -1,23 +1,9 @@
-<app-downloader
-  #downloader
-  entityTranslationKey="entities.actionsLog.gen.plural"
-  name="actions.xlsx"
-  url="/list/excel?name=actions">
-</app-downloader>
-
-<div class="flex vertical">
-
-  <div class="flex-item grow">
-    <app-action-grid
-      [fullHeight]="true"
-      [persistenceKey]="'actionsLog'"
-      [metadataKey]="'actions'"
-      [rowIdKey]="rowIdKey"
-      [rows]="rows"
-      [rowCount]="rowCount"
-      (request)="onRequest()"
-    ></app-action-grid>
-  </div>
-
-</div>
-
+<app-action-grid
+  [fullHeight]="true"
+  [persistenceKey]="'actionsLog'"
+  [metadataKey]="'actions'"
+  [rowIdKey]="rowIdKey"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (request)="onRequest()"
+></app-action-grid>

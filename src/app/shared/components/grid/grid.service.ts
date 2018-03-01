@@ -80,11 +80,19 @@ export class GridService {
         return this.buildColumns(columns, dictionaryIds, renderers)
           .map(cols => ({ ...metadata, columns: cols as IAGridColumn[] }))
           // TODO(i.lobanov): remove mock when added in config
-          .map(data => ({ ...data, titlebar: { items: [
-            {
-              name: 'search',
-            },
-          ]} }));
+          .map(data => ({
+            ...data,
+            titlebar: {
+              items: [
+                {
+                  name: 'search',
+                },
+                {
+                  name: 'exportExcel',
+                },
+              ]
+            }
+          }));
       });
   }
 
