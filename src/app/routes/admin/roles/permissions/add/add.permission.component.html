@@ -3,15 +3,13 @@
     <h3>{{ 'roles.permissions.add.title' | translate }}</h3>
   </div>
 
-  <app-grid
+  <app-simple-grid
+    persistenceKey="[grid] admin/roles/permissions/add"
     [columns]="columns"
-    [columnTranslationKey]="'roles.permissions.add'"
-    [parseFn]="parseFn"
     [rows]="availablePermissions"
-    [styles]="{height: '300px'}"
-    (onDblClick)="onAddPermissions()"
-    (onSelect)="onSelectPermissions()">
-  </app-grid>
+    (dblClick)="onAddPermissions()"
+    (select)="onSelectPermissions()"
+  ></app-simple-grid>
 
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canAddPermissions()" (click)="onAddPermissions()">

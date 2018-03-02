@@ -42,16 +42,21 @@
 >
 </app-portfolio-send>
 
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
-
-<app-grid
-  columnTranslationKey="portfolios"
-  selectionType="single"
-  [styles]="{height: '400px'}"
-  [columns]="columns"
-  [rows]="portfolios"
-  [allowDblClick]="canEdit$ | async"
-  [contextMenuOptions]="contextMenuOptions"
-  (onDblClick)="onEdit()"
-  (onSelect)="onSelect($event)">
-</app-grid>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow">
+    <app-grid
+      columnTranslationKey="portfolios"
+      selectionType="single"
+      [styles]="{height: '400px'}"
+      [columns]="columns"
+      [rows]="portfolios"
+      [allowDblClick]="canEdit$ | async"
+      [contextMenuOptions]="contextMenuOptions"
+      (onDblClick)="onEdit()"
+      (onSelect)="onSelect($event)">
+    </app-grid>
+  </div>
+</div>

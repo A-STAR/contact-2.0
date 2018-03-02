@@ -30,9 +30,10 @@ import { DialogFunctions } from '@app/core/dialog';
 import { GridComponent } from '@app/shared/components/grid/grid.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-portfolios',
   templateUrl: './portfolios.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(GridComponent) grid: GridComponent;
