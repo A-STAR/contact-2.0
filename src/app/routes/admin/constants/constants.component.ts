@@ -22,7 +22,6 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
-import { ValueRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { DialogFunctions } from '@app/core/dialog';
 
