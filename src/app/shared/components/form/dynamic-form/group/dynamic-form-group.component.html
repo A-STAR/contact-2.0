@@ -18,11 +18,9 @@
             </app-dynamic-form-field>
 
             <div *ngIf="displayControlErrors(control)" class="error-messages">
-              <ul class="alert alert-danger">
-                <li *ngFor="let error of getControlErrors(control)">
-                  {{ error.message | translate:error.data }}
-                </li>
-              </ul>
+              <span *ngFor="let error of getControlErrors(control)">
+                {{ error.message | translate:error.data }}
+              </span>
             </div>
           </div>
 
