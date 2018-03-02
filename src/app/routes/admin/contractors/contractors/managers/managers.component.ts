@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators/first';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IContractorManager, IActionType, IManagersFetchAction } from '../../contractors-and-portfolios.interface';
+import { IContractorManager, IActionType } from '../../contractors-and-portfolios.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 

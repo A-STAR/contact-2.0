@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployeeUser, IEmployee, IOrganizationsState } from '../../organizations.interface';
