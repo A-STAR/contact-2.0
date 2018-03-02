@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ValueRendererComponent should render value renderer with typeCode 1 (number) 1`] = `
+<div
+  id="root0"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  <div
+    class="text-right"
+  >
+    
+    0
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+
+</div>
+`;
