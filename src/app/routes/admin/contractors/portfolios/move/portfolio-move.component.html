@@ -3,16 +3,13 @@
     <h3>{{ 'portfolios.move.title' | translate:portfolio }}</h3>
   </div>
 
-  <app-grid
+  <app-simple-grid
     *ngIf="contractors"
-    columnTranslationKey="contractors"
-    selectionType="single"
-    [styles]="{height: '200px'}"
+    persistenceKey="[grid] admin/contractors/portfolios/move"
     [columns]="columns"
     [rows]="contractors"
-    [allowDblClick]="false"
-    (onSelect)="onSelect($event)">
-  </app-grid>
+    (select)="onSelect($event)"
+  ></app-simple-grid>
 
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="submit()">

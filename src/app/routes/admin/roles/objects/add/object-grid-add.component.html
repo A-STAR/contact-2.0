@@ -3,14 +3,13 @@
     <h3>{{ 'widgets.object.dialogs.add.title' | translate }}</h3>
   </div>
   <div>
-    <app-grid
-      columnTranslationKey="widgets.object"
-      selectionType="multi"
+    <app-simple-grid
+      persistenceKey="[grid] admin/roles/objects/add"
+      selectionType="multiple"
       [columns]="columns"
       [rows]="rows"
-      [styles]="{ height: '320px' }"
-      (onSelect)="onSelect()">
-    </app-grid>
+      (select)="onSelect()"
+    ></app-simple-grid>
   </div>
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">

@@ -3,20 +3,20 @@
   [constant]="selectedRecord$ | async"
   (submit)="onSubmit($event)"
   (cancel)="onCloseDialog()"
->
-</app-constant-edit>
+></app-constant-edit>
 
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
-
-<!-- <app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2> -->
-
-<app-grid
-  selectionType="single"
-  [columns]="columns"
-  [selection]="selection"
-  columnTranslationKey="constants"
-  [emptyMessage]="emptyMessage$ | async"
-  [rows]="rows"
-  (onDblClick)="onDblClick()"
-  (onSelect)="onSelect($event)">
-</app-grid>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      persistenceKey="[grid] admin/constants"
+      [columns]="columns"
+      [selection]="selection"
+      [rows]="rows"
+      (dblClick)="onDblClick()"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
+  </div>
+</div>

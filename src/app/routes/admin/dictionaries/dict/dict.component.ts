@@ -5,17 +5,18 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { switchMap } from 'rxjs/operators';
 
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IDictionary, ITerm } from '../dictionaries.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { DictionariesService } from '../dictionaries.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { combineLatestAnd } from '../../../../core/utils/helpers';
-import { DialogFunctions } from '../../../../core/dialog';
+import { DialogFunctions } from '@app/core/dialog';
+
+import { combineLatestAnd } from '@app/core/utils/helpers';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   selector: 'app-dict',
@@ -52,26 +53,24 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     }
   ];
 
-  columns: IGridColumn[];
   dialog: 'create' | 'edit' | 'remove';
   dictionary: IDictionary;
 
   viewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
 
-  private _columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<IDictionary>[] = [
     { prop: 'code', minWidth: 50, maxWidth: 70 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200, lookupKey: 'dictionaries' },
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_DICTIONARY_TYPE },
     { prop: 'termTypeCode', dictCode: UserDictionariesService.DICTIONARY_TERM_TYPES },
-  ];
+  ].map(addGridLabel('dictionaries.grid'));
   private viewPermissionSubscription: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private dictionariesService: DictionariesService,
-    private gridService: GridService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -79,15 +78,6 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
 
   ngOnInit(): void {
     this.dictionariesService.fetchTermTypes();
-    this.gridService.setAllRenderers(this._columns)
-      .pipe(
-        first()
-      )
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
     this.viewPermission$ = this.userPermissionsService.has('DICT_VIEW');
     this.viewPermissionSubscription = this.viewPermission$.subscribe(canView =>
       canView
@@ -170,7 +160,10 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     this.setDialog();
   }
 
-  onSelect(dictionary: IDictionary): void {
+  onSelect(dictionaries: IDictionary[]): void {
+    const dictionary = isEmpty(dictionaries)
+      ? null
+      : dictionaries[0];
     this.dictionariesService.selectDictionary(dictionary);
   }
 }

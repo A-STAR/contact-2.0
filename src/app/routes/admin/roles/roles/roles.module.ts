@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { RolesComponent } from './roles.component';
 import { RolesEditComponent } from './roles-edit/roles-edit.component';

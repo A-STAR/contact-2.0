@@ -4,9 +4,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { distinctUntilKeyChanged, map } from 'rxjs/operators';
 
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IObject } from './objects.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ObjectsService } from './objects.service';
@@ -16,7 +16,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 import { DialogFunctions } from '@app/core/dialog';
 
-import { combineLatestAnd } from '@app/core/utils';
+import { combineLatestAnd, addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,10 +49,10 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
     },
   ];
 
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<IObject>[] = [
     { prop: 'id' },
     { prop: 'name' },
-  ];
+  ].map(addGridLabel('widgets.object.grid'));
 
   rows: IObject[] = [];
 
@@ -103,7 +103,10 @@ export class ObjectsComponent extends DialogFunctions implements OnInit, OnDestr
     this.fetch();
   }
 
-  onSelect(object: IObject): void {
+  onSelect(objects: IObject[]): void {
+    const object = isEmpty(objects)
+      ? null
+      : objects[0];
     this.selectedObject$.next(object);
   }
 

@@ -16,8 +16,10 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '@app/core/dialog';
+
+import { combineLatestAnd, addGridLabel, isEmpty } from '@app/core/utils';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,11 +72,11 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
     ]
   };
 
-  columns: Array<any> = [
+  columns: ISimpleGridColumn<IPermissionRole>[] = [
     { prop: 'id', minWidth: 30, maxWidth: 70 },
     { prop: 'name', maxWidth: 400 },
     { prop: 'comment', width: 200 },
-  ];
+  ].map(addGridLabel('roles.permissions.grid'));
 
   dialog: 'add' | 'copy' | 'edit' | 'remove';
 
@@ -138,9 +140,9 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
       });
   }
 
-  onSelect(role: IPermissionRole): void {
-    if (role) {
-      this.permissionsService.selectRole(role);
+  onSelect(roles: IPermissionRole[]): void {
+    if (!isEmpty(roles)) {
+      this.permissionsService.selectRole(roles[0]);
     }
   }
 

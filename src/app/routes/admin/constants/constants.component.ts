@@ -1,25 +1,31 @@
 import {
-  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  ViewChild,
 } from '@angular/core';
+
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IConstant } from './constants.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ConstantsService } from './constants.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { GridComponent } from '@app/shared/components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
-import { combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '@app/core/dialog';
+
+import { combineLatestAnd, addGridLabel, isEmpty } from '@app/core/utils';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,8 +33,8 @@ import { DialogFunctions } from '@app/core/dialog';
   selector: 'app-constants',
   templateUrl: './constants.component.html',
 })
-export class ConstantsComponent extends DialogFunctions implements AfterViewInit, OnDestroy, OnInit {
-  @ViewChild(GridComponent) grid: GridComponent;
+export class ConstantsComponent extends DialogFunctions implements AfterViewInit, OnDestroy {
+  @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IConstant>;
 
   titlebar: ITitlebar = {
     title: 'constants.title',
@@ -49,28 +55,30 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
     ]
   };
 
-
-  columns: Array<IGridColumn> = [
-    { prop: 'id', minWidth: 30, maxWidth: 70, disabled: true },
+  columns: ISimpleGridColumn<IConstant>[] = [
+    { prop: 'id', minWidth: 30, maxWidth: 70 /*, disabled: true */ },
     { prop: 'name', minWidth: 150, maxWidth: 350 },
-    { prop: 'value', minWidth: 100, maxWidth: 150,
-      renderer: (constant: IConstant) => this.valueConverterService.deserializeBoolean(constant)
+    {
+      prop: 'value',
+      minWidth: 100,
+      maxWidth: 150,
+      // TODO(d.maltsev)
+      // renderer: (constant: IConstant) => this.valueConverterService.deserializeBoolean(constant)
     },
     { prop: 'dsc', minWidth: 200 },
-  ];
+  ].map(addGridLabel('constants.grid'));
 
   dialog: string;
   emptyMessage$: Observable<string>;
   hasViewPermission$: Observable<boolean>;
   permissionSub: Subscription;
-  selectedRecord$: Observable<IConstant>;
+  selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
 
   rows: IConstant[];
   selection: IConstant[];
 
   constructor(
     private constantsService: ConstantsService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private cdRef: ChangeDetectorRef,
     private userConstantsService: UserConstantsService,
@@ -78,11 +86,6 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
     private valueConverterService: ValueConverterService,
   ) {
     super();
-  }
-
-  ngOnInit(): void {
-    this.columns = this.gridService.setRenderers(this.columns);
-    this.selectedRecord$ = this.constantsService.state.map(state => state.currentConstant);
   }
 
   ngAfterViewInit(): void {
@@ -154,8 +157,11 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
       });
   }
 
-  onSelect(record: IConstant): void {
-    this.selection = [record];
+  onSelect(records: IConstant[]): void {
+    this.selection = records;
+    const record = isEmpty(records)
+      ? null
+      : records[0];
     this.constantsService.changeSelected(record);
   }
 }

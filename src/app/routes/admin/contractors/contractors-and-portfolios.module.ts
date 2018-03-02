@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ContractorsModule } from './contractors/contractors.module';
 import { PortfoliosModule } from './portfolios/portfolios.module';
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 import { ContractorsAndPortfoliosVersionModule } from './version/contractors-and-portfolios-version.module';
 
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';

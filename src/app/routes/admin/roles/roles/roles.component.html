@@ -30,19 +30,15 @@
 </app-dialog-action>
 
 <div class="flex vertical">
-
   <app-titlebar [titlebar]="titlebar" class="flex-item"></app-titlebar>
 
   <div class="flex-item grow">
-    <app-grid
+    <app-simple-grid
+      persistenceKey="[grid] admin/roles"
       [columns]="columns"
-      [columnTranslationKey]="'roles.permissions'"
-      [emptyMessage]="emptyMessage$ | async"
       [rows]="roles$ | async"
-      [selectionType]="'single'"
-      [styles]="{ height: 'auto' }"
-      (onDblClick)="onDblClick()"
-      (onSelect)="onSelect($event)">
-    </app-grid>
+      (dblClick)="onDblClick($event)"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
   </div>
 </div>

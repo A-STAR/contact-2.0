@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { PortfolioEditModule } from './edit/portfolio-edit.module';
 import { PortfolioMoveModule } from './move/portfolio-move.module';
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { PortfoliosComponent } from './portfolios.component';
 import { PortfolioSendComponent } from './send/portfolio-send.component';
@@ -22,7 +22,6 @@ import { PortfolioSendComponent } from './send/portfolio-send.component';
   declarations: [
     PortfoliosComponent,
     PortfolioSendComponent,
-  ]
+  ],
 })
-export class PortfoliosModule {
-}
+export class PortfoliosModule {}
