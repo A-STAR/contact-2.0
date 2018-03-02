@@ -35,7 +35,7 @@
 
 .dialog_header /deep/ {
   [dialog-header] {
-    padding: 14px $padding-large-horizontal;
+    padding: 24px $padding-large-horizontal 15px;
     background-color: $app-dialog-header-bg-color;
   }
 
@@ -65,8 +65,8 @@
 
 .dialog_close {
   position: absolute;
-  top: 20px;
-  right: 12px;
+  top: 15px;
+  right: 15px;
   font-size: 16px;
   line-height: 16px;
   color: $app-dialog-close-color;
