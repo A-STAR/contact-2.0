@@ -26,6 +26,7 @@ import {
   LookupRendererComponent,
   NumberRendererComponent,
   TickRendererComponent,
+  ValueRendererComponent,
 } from './renderers';
 
 // Misc Components
@@ -43,6 +44,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
       LookupRendererComponent,
       NumberRendererComponent,
       TickRendererComponent,
+      ValueRendererComponent,
     ]),
     ButtonModule,
     CheckModule,
@@ -68,6 +70,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     NumberRendererComponent,
     SimpleGridComponent,
     TickRendererComponent,
+    ValueRendererComponent,
   ],
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
   entryComponents: [

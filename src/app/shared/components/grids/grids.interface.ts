@@ -31,6 +31,7 @@ export interface IGridColumn<T> {
   minWidth?: number;
   maxWidth?: number;
   renderer?: any;
+  valueTypeKey?: string;
 }
 
 export interface IGridLocalSettingsColumn {

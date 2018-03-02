@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
 
 import { IConstant } from './constants.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ConstantsService } from './constants.service';
@@ -25,7 +26,6 @@ import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.comp
 import { DialogFunctions } from '@app/core/dialog';
 
 import { combineLatestAnd, addGridLabel, isEmpty } from '@app/core/utils';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,13 +58,7 @@ export class ConstantsComponent extends DialogFunctions implements AfterViewInit
   columns: ISimpleGridColumn<IConstant>[] = [
     { prop: 'id', minWidth: 30, maxWidth: 70 /*, disabled: true */ },
     { prop: 'name', minWidth: 150, maxWidth: 350 },
-    {
-      prop: 'value',
-      minWidth: 100,
-      maxWidth: 150,
-      // TODO(d.maltsev)
-      // renderer: (constant: IConstant) => this.valueConverterService.deserializeBoolean(constant)
-    },
+    { prop: 'value', minWidth: 100, maxWidth: 200, valueTypeKey: 'typeCode' },
     { prop: 'dsc', minWidth: 200 },
   ].map(addGridLabel('constants.grid'));
 

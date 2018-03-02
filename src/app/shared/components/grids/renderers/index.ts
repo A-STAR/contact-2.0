@@ -5,3 +5,4 @@ export { DictRendererComponent } from './dict/dict.component';
 export { LookupRendererComponent } from './lookup/lookup.component';
 export { NumberRendererComponent } from './number/number.component';
 export { TickRendererComponent } from './tick/tick.component';
+export { ValueRendererComponent } from './value/value.component';
