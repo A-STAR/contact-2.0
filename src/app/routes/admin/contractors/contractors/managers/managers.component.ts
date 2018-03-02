@@ -21,9 +21,10 @@ import { DialogFunctions } from '@app/core/dialog';
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-contractor-managers',
   templateUrl: './managers.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorManagersComponent extends DialogFunctions implements OnDestroy, OnInit {
 

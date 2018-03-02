@@ -26,7 +26,7 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<div class="panel m0 p ba">
+<div class="panel m0 p">
   <div class="row">
     <div class="col-md-6">
       <label>
@@ -52,7 +52,7 @@
   </div>
 </div>
 
-<app-toolbar-2 class="bh" [items]="toolbarItems"></app-toolbar-2>
+<app-toolbar-2 [items]="toolbarItems"></app-toolbar-2>
 
 <app-gridtree2-wrapper
   *ngIf="attributes && attributes.length > 0"

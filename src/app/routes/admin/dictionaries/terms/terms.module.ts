@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 import { TermsComponent } from './terms.component';
 import { TermEditComponent } from './edit/term-edit.component';
 

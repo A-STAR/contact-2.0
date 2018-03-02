@@ -6,7 +6,6 @@
   <app-simple-grid
     persistenceKey="[grid] admin/roles/permissions/add"
     [columns]="columns"
-    [parseFn]="parseFn"
     [rows]="availablePermissions"
     (dblClick)="onAddPermissions()"
     (select)="onSelectPermissions()"

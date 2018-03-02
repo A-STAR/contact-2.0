@@ -24,6 +24,7 @@ import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-employees',
   templateUrl: './employees.component.html',
 })

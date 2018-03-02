@@ -53,14 +53,13 @@ export class DictComponent extends DialogFunctions implements OnDestroy, OnInit 
     }
   ];
 
-  columns: ISimpleGridColumn<IDictionary>[];
   dialog: 'create' | 'edit' | 'remove';
   dictionary: IDictionary;
 
   viewPermission$: Observable<boolean>;
   emptyMessage$: Observable<string>;
 
-  private _columns: ISimpleGridColumn<IDictionary>[] = [
+  columns: ISimpleGridColumn<IDictionary>[] = [
     { prop: 'code', minWidth: 50, maxWidth: 70 },
     { prop: 'name', maxWidth: 300 },
     { prop: 'parentCode', width: 200, lookupKey: 'dictionaries' },

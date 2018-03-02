@@ -24,9 +24,10 @@ import { DialogFunctions } from '@app/core/dialog';
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-contractors',
   templateUrl: './contractors.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorsComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IContractor>;

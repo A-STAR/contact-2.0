@@ -30,7 +30,7 @@ export class AddPermissionComponent {
 
   constructor(private valueConverterService: ValueConverterService) { }
 
-  parseFn = (permits: IPermissionModel[]) => this.valueConverterService.deserializeSet(permits);
+  // parseFn = (permits: IPermissionModel[]) => this.valueConverterService.deserializeSet(permits);
 
   onSelectPermissions(): void {
     this.selectedPermissions = this.addPermitGrid.selection;
