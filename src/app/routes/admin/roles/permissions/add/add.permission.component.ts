@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrat
 
 import { IPermissionModel } from '../../permissions.interface';
 
-import { ValueConverterService } from '@app/core/converter/value-converter.service';
+// import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -28,7 +28,7 @@ export class AddPermissionComponent {
     { prop: 'dsc', minWidth: 70 },
   ].map(addGridLabel('roles.permissions.add.grid'));
 
-  constructor(private valueConverterService: ValueConverterService) { }
+  // constructor(private valueConverterService: ValueConverterService) { }
 
   // parseFn = (permits: IPermissionModel[]) => this.valueConverterService.deserializeSet(permits);
 

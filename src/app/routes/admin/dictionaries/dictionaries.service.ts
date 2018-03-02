@@ -123,7 +123,6 @@ export class DictionariesService {
   }
 
   selectDictionary(dictionary: IDictionary): void {
-    console.log(dictionary);
     this.store.dispatch({
       type: DictionariesService.DICTIONARY_SELECT,
       payload: {
