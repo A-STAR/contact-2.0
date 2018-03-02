@@ -1,0 +1,32 @@
+<ng-container [ngSwitch]="type">
+
+  <div *ngSwitchCase="1" class="text-right">
+    {{ value }}
+  </div>
+
+  <div *ngSwitchCase="2">
+    {{ value | momentFormat:'L' }}
+  </div>
+
+  <div *ngSwitchCase="3">
+    {{ value }}
+  </div>
+
+  <div *ngSwitchCase="4">
+    <!-- TODO(d.maltsev): use dictionary 2 instead -->
+    {{ (value ? 'default.boolean.TRUE' : 'default.boolean.FALSE') | translate }}
+  </div>
+
+  <div *ngSwitchCase="5" class="text-right">
+    {{ value }}
+  </div>
+
+  <div *ngSwitchCase="6">
+    <!-- TODO(d.maltsev): add dict rendering if it's used anywhere -->
+    {{ value }}
+  </div>
+
+  <div *ngSwitchCase="7">
+    {{ value | momentFormat:'L LTS' }}
+  </div>
+</ng-container>
