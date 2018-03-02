@@ -37,7 +37,7 @@
       persistenceKey="[grid] admin/roles"
       [columns]="columns"
       [rows]="roles$ | async"
-      (dblClick)="onDblClick($event)"
+      (dblClick)="onDblClick()"
       (select)="onSelect($event)"
     ></app-simple-grid>
   </div>
