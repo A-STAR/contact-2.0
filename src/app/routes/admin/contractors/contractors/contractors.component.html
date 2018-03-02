@@ -11,13 +11,10 @@
 
 <app-titlebar [titlebar]="titlebar"></app-titlebar>
 
-<app-grid
-  columnTranslationKey="contractors"
-  selectionType="single"
-  [styles]="{height: '300px'}"
+<app-simple-grid
+  persistenceKey="[grid] admin/contractors"
   [columns]="columns"
   [rows]="contractors"
-  [allowDblClick]="canEdit$ | async"
-  (onDblClick)="onEdit()"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  (dblClick)="onEdit()"
+  (select)="onSelect($event)"
+></app-simple-grid>

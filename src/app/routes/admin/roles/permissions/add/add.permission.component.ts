@@ -2,9 +2,11 @@ import { Component, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrat
 
 import { IPermissionModel } from '../../permissions.interface';
 
-import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { GridComponent } from '../../../../../shared/components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-add-permission',
@@ -13,7 +15,7 @@ import { GridComponent } from '../../../../../shared/components/grid/grid.compon
 })
 
 export class AddPermissionComponent {
-  @ViewChild(GridComponent) addPermitGrid: GridComponent;
+  @ViewChild(SimpleGridComponent) addPermitGrid: SimpleGridComponent<IPermissionModel>;
 
   @Input() availablePermissions: IPermissionModel[];
   @Output() cancel: EventEmitter<null> = new EventEmitter<null>();
@@ -21,17 +23,17 @@ export class AddPermissionComponent {
 
   private selectedPermissions: IPermissionModel[];
 
-  columns: Array<any> = [
+  columns: ISimpleGridColumn<IPermissionModel>[] = [
     { prop: 'name', minWidth: 200, maxWidth: 350 },
     { prop: 'dsc', minWidth: 70 },
-  ];
+  ].map(addGridLabel('roles.permissions.add.grid'));
 
   constructor(private valueConverterService: ValueConverterService) { }
 
   parseFn = (permits: IPermissionModel[]) => this.valueConverterService.deserializeSet(permits);
 
   onSelectPermissions(): void {
-    this.selectedPermissions = this.addPermitGrid.selected;
+    this.selectedPermissions = this.addPermitGrid.selection;
   }
 
   onCancel(): void {

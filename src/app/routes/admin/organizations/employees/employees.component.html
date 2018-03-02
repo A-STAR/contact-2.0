@@ -25,13 +25,10 @@
 
 <app-titlebar [titlebar]="titlebar"></app-titlebar>
 
-<app-grid
-  class="flat"
+<app-simple-grid
+  persistenceKey="[grid] admin/organizations/employees"
   [columns]="columns"
-  [columnTranslationKey]="'organizations.employees'"
-  [emptyMessage]="emptyMessage$ | async"
   [rows]="employees$ | async"
-  selectionType="single"
-  (onDblClick)="onEdit($event)"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  (dblClick)="onEdit($event)"
+  (select)="onSelect($event)"
+></app-simple-grid>

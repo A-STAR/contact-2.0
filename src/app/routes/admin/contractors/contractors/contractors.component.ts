@@ -8,20 +8,20 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IContractor, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { GridComponent } from '@app/shared/components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
 import { DialogFunctions } from '@app/core/dialog';
-import { combineLatestAnd } from '@app/core/utils/helpers';
+
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   selector: 'app-contractors',
@@ -29,7 +29,7 @@ import { combineLatestAnd } from '@app/core/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorsComponent extends DialogFunctions implements OnInit, OnDestroy {
-  @ViewChild(GridComponent) grid: GridComponent;
+  @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IContractor>;
 
   titlebar: ITitlebar = {
     title: 'contractors.title',
@@ -63,7 +63,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
     ]
   };
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IContractor>[] = [
     { prop: 'id', minWidth: 50, maxWidth: 50 },
     { prop: 'name', minWidth: 120, maxWidth: 200 },
     { prop: 'fullName', minWidth: 120, maxWidth: 200 },
@@ -73,7 +73,7 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
     { prop: 'phone', minWidth: 100, maxWidth: 150 },
     { prop: 'address', minWidth: 100, maxWidth: 250 },
     { prop: 'comment', minWidth: 100 },
-  ];
+  ].map(addGridLabel('contractors.grid'));
 
   contractors: IContractor[] = [];
   dialog: string;
@@ -85,7 +85,6 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
     private actions$: Actions,
     private store: Store<IAppState>,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private gridService: GridService,
     private cdRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
@@ -96,12 +95,6 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-      });
-
     this.canViewSubscription = this.canView$.subscribe(canView => {
       if (canView) {
         this.fetchContractors();
@@ -145,18 +138,30 @@ export class ContractorsComponent extends DialogFunctions implements OnInit, OnD
   }
 
   onEdit(): void {
-    this.routingService.navigate([ this.grid.selected[0].id ], this.route);
-    this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_EDIT, {
-      selectedContractor: this.grid.selected[0]
-    });
+    this.canEdit$
+      .pipe(
+        first(),
+      )
+      .subscribe(canEdit => {
+        if (canEdit) {
+          const { selection } = this.grid;
+          this.routingService.navigate([ String(selection[0].id) ], this.route);
+          this.contractorsAndPortfoliosService.dispatch(IActionType.CONTRACTOR_EDIT, {
+            selectedContractor: selection[0]
+          });
+        }
+      });
   }
 
-  onSelect(contractor: IContractor): void {
+  onSelect(contractors: IContractor[]): void {
+    const contractor = isEmpty(contractors)
+      ? null
+      : contractors[0];
     this.contractorsAndPortfoliosService.selectContractor(contractor);
   }
 
   onRemove(): void {
-    this.contractorsAndPortfoliosService.deleteContractor(this.grid.selected[0].id)
+    this.contractorsAndPortfoliosService.deleteContractor(this.grid.selection[0].id)
       .subscribe(() => {
         this.setDialog();
         this.fetchContractors();

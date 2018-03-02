@@ -2,15 +2,15 @@ import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angu
 import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
-import { IDynamicFormControl } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEmployeeUser, IEmployee, IOrganizationsState } from '../../organizations.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { GridService } from '../../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../../organizations.service';
 
-import { GridComponent } from '../../../../../shared/components/grid/grid.component';
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-employee-add',
@@ -20,7 +20,6 @@ export class EmployeeAddComponent implements OnInit {
   @Input() employeeRoleOptions: Array<any> = [];
   @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
-  @ViewChild(GridComponent) addEmployeeGrid: GridComponent;
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private selectedEmployees: Array<IEmployeeUser> = [];
@@ -28,16 +27,15 @@ export class EmployeeAddComponent implements OnInit {
   notAddedEmployees: Observable<IEmployee[]>;
   controls: Array<IDynamicFormControl> = [];
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IEmployee>[] = [
     { prop: 'fullName', minWidth: 200 },
     { prop: 'position' },
     { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
-  ];
+  ].map(addGridLabel('organizations.employees.add.grid'));
 
   formData: any = {};
 
   constructor(
-    private gridService: GridService,
     private organizationsService: OrganizationsService,
   ) { }
 
@@ -47,10 +45,6 @@ export class EmployeeAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.notAddedEmployees = this.organizationsService.fetchNotAddedEmployees();
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => this.columns = [...columns]);
-
     this.controls = [
       {
         label: 'users.edit.role',
@@ -67,8 +61,8 @@ export class EmployeeAddComponent implements OnInit {
     };
   }
 
-  onSelectEmployees(): void {
-    this.selectedEmployees = this.addEmployeeGrid.selected;
+  onSelectEmployees(employees: IEmployeeUser[]): void {
+    this.selectedEmployees = employees;
   }
 
   canSubmit(): boolean {
