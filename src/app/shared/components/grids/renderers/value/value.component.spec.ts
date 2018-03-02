@@ -48,4 +48,34 @@ describe('ValueRendererComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement).toMatchSnapshot();
   });
+
+  it('should render value renderer with typeCode 3 (string)', () => {
+    fixture.componentInstance.agInit({
+      value: 'value',
+      data: { typeCode: 3 },
+      valueTypeKey: 'typeCode',
+    } as any);
+    fixture.detectChanges();
+    expect(fixture.nativeElement).toMatchSnapshot();
+  });
+
+  it('should render value renderer with typeCode 4 (boolean) and value = false', () => {
+    fixture.componentInstance.agInit({
+      value: false,
+      data: { typeCode: 4 },
+      valueTypeKey: 'typeCode',
+    } as any);
+    fixture.detectChanges();
+    expect(fixture.nativeElement).toMatchSnapshot();
+  });
+
+  it('should render value renderer with typeCode 4 (boolean) and value = true', () => {
+    fixture.componentInstance.agInit({
+      value: true,
+      data: { typeCode: 4 },
+      valueTypeKey: 'typeCode',
+    } as any);
+    fixture.detectChanges();
+    expect(fixture.nativeElement).toMatchSnapshot();
+  });
 });

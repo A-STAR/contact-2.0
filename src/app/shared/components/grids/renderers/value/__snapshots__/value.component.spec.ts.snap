@@ -47,3 +47,145 @@ exports[`ValueRendererComponent should render value renderer with typeCode 1 (nu
 
 </div>
 `;
+
+exports[`ValueRendererComponent should render value renderer with typeCode 3 (string) 1`] = `
+<div
+  id="root1"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    value
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+
+</div>
+`;
+
+exports[`ValueRendererComponent should render value renderer with typeCode 4 (boolean) and value = false 1`] = `
+<div
+  id="root2"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    
+    default.boolean.FALSE
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+
+</div>
+`;
+
+exports[`ValueRendererComponent should render value renderer with typeCode 4 (boolean) and value = true 1`] = `
+<div
+  id="root3"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    
+    default.boolean.TRUE
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+
+</div>
+`;
