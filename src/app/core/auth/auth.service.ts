@@ -50,7 +50,6 @@ export class AuthService implements CanActivate {
     private zone: NgZone,
   ) {
     if (!this.isRetrievedTokenValid()) {
-      this.persistenceService.set(AuthService.REDIRECT_TOKEN, this.router.url);
       this.router.navigate([ AuthService.URL_LOGIN ]);
     }
   }
