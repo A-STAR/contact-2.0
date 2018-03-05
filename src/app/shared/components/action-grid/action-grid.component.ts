@@ -76,7 +76,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() toolbarItems: IToolbarItem[];
   // TODO(i.lobanov): make this work for grid2 as well
   @Input() columns: ISimpleGridColumn<T>;
-  @Input() titlebarItems: IMetadataTitlebar;
+  @Input() titlebar: IMetadataTitlebar;
 
   @Input() fullHeight = false;
   /**
@@ -148,7 +148,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       this.initGrid(
         {
           actions: this.actions,
-          titlebar: this.titlebarItems,
+          titlebar: this.titlebar,
           defaultAction: this.defaultAction
         }
       );
@@ -211,6 +211,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return this.grid instanceof Grid2Component
       ? this.grid.getRequestParams()
       : null;
+  }
+
+  deselectAll(): void {
+    if (this.grid) {
+      this.grid.deselectAll();
+    }
   }
 
   getFiltersForm(): FormGroup {
@@ -356,7 +362,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private attachPermissions(actions: IMetadataAction[], actionPermissions: IMetadataActionPermissions): IMetadataAction[] {
     return actions.map(action => ({
       ...action,
-      enabled: actionPermissions[action.action],
+      enabled: action.enabled || actionPermissions[action.action],
       children: action.children ? this.attachPermissions(action.children, actionPermissions) : undefined
     }));
   }
