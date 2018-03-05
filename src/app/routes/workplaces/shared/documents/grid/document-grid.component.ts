@@ -126,6 +126,10 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     return this.selectedDocument$.map(document => document && document.fileName);
   }
 
+  get selectedDocumentMessageParams$(): Observable<Partial<IDocument>> {
+    return this.selectedDocument$.map(document => ({ docName: document && document.docName || document.fileName }));
+  }
+
   get selectedDocumentURL$(): Observable<string> {
     return this.selectedDocumentId$.map(documentId => `/api/fileattachments/${documentId}`);
   }
