@@ -43,16 +43,15 @@ export class DocumentService extends AbstractActionService {
   }
 
   fetch(entityType: number, entityId: number, documentId: number, callCenter: boolean): Observable<IDocument> {
-    const url = this.getFetchUrl(entityType);
+    const url = '/entityTypes/{entityType}/entities/{entityId}/fileattachments/{documentId}';
     return this.dataService
-      .read(`${url}/{documentId}`, { entityId, documentId }, { params: { callCenter } })
+      .read(url, { entityType, entityId, documentId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
   }
 
   create(entityType: number, entityId: number, document: IDocument, file: File, callCenter: boolean): Observable<void> {
-    const payload = { ...document, fileName: file.name };
     return this.dataService
-      .createMultipart(DocumentService.BASE_URL, { entityType, entityId }, payload, file, { params: { callCenter } })
+      .createMultipart(DocumentService.BASE_URL, { entityType, entityId }, document, file, { params: { callCenter } })
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
@@ -64,10 +63,9 @@ export class DocumentService extends AbstractActionService {
     file: File,
     callCenter: boolean,
   ): Observable<void> {
-    const payload = { ...document, fileName: file.name };
     const data = { entityType, entityId, documentId };
     return this.dataService
-      .updateMultipart(`${DocumentService.BASE_URL}/{documentId}`, data, payload, file, { params: { callCenter } })
+      .updateMultipart(`${DocumentService.BASE_URL}/{documentId}`, data, document, file, { params: { callCenter } })
       .catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
   }
 
@@ -78,18 +76,22 @@ export class DocumentService extends AbstractActionService {
       .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
 
+  /**
+   * See:
+   * http://confluence.luxbase.int:8090/display/WEB20/File+attachments
+   */
   private getFetchUrl(entityType: number): string {
     switch (entityType) {
-      case DocumentService.ENTITY_CONTRACTOR:
-      case DocumentService.ENTITY_PORTFOLIO:
-      case DocumentService.ENTITY_PERSON:
-        return `/entityTypes/${entityType}/entities/{entityId}/fileattachments`;
+      // case DocumentService.ENTITY_CONTRACTOR:
+      // case DocumentService.ENTITY_PORTFOLIO:
+      // case DocumentService.ENTITY_PERSON:
+      //   return `/entityTypes/${entityType}/entities/{entityId}/fileattachments`;
       case DocumentService.ENTITY_DEBT:
         return '/debts/{entityId}/fileattachments';
-      case DocumentService.ENTITY_GUARANTOR:
-        return '/guarantors/{entityId}/fileattachments';
-      case DocumentService.ENTITY_PLEDGOR:
-        return '/pledgors/{entityId}/fileattachments';
+      // case DocumentService.ENTITY_GUARANTOR:
+      //   return '/guarantors/{entityId}/fileattachments';
+      // case DocumentService.ENTITY_PLEDGOR:
+      //   return '/pledgors/{entityId}/fileattachments';
     }
     throw new Error(`No fetch URL provided for entity type (${entityType})`);
   }

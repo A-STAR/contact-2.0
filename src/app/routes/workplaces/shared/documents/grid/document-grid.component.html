@@ -4,7 +4,7 @@
   actionTranslationKey="widgets.document.dialogs.delete.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedDocument$ | async"
+  [messageParams]="selectedDocumentMessageParams$ | async"
   (action)="onRemoveDialogSubmit()"
   (cancel)="onDialogClose()">
 </app-dialog-action>

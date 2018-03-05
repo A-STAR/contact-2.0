@@ -145,7 +145,7 @@ export class DataUploadComponent extends DialogFunctions
   }
 
   get currency(): number {
-    return this.dataUploadService.uploader.parameter;
+    return this.dataUploadService.uploader && this.dataUploadService.uploader.parameter;
   }
 
   get errorFileUrl(): string {
