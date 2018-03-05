@@ -5,14 +5,14 @@
   <div>
     <div style="height: 25vh" class="mb-lg" *ngIf="canRegisterPhones$ | async">
       <app-register-contact-phone-grid
-        [entityType]="entityType"
+        [entityTypeId]="entityTypeId"
         [entityId]="entityId"
         (action)="onPhoneAction($event)"
       ></app-register-contact-phone-grid>
     </div>
     <div style="height: 25vh" class="mb-lg" *ngIf="canRegisterAddresses$ | async">
       <app-register-contact-address-grid
-        [entityType]="entityType"
+        [entityTypeId]="entityTypeId"
         [entityId]="entityId"
         (action)="onAddressAction($event)"
       ></app-register-contact-address-grid>

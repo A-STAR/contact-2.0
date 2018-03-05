@@ -8,6 +8,8 @@ import { DialogModule } from '@app/shared/components/dialog/dialog.module';
 import { MiscModule } from './misc/misc.module';
 import { PhoneGridModule } from './phone/phone.module';
 
+import { RegisterContactOpenService } from './register-contact-open.service';
+
 import { RegisterContactOpenComponent } from './register-contact-open.component';
 
 @NgModule({
@@ -20,6 +22,7 @@ import { RegisterContactOpenComponent } from './register-contact-open.component'
     PhoneGridModule,
     TranslateModule,
   ],
+  providers: [ RegisterContactOpenService ],
   declarations: [ RegisterContactOpenComponent ],
   exports: [ RegisterContactOpenComponent ]
 })

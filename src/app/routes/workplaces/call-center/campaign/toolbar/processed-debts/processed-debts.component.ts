@@ -1,12 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ICampaignProcessedDebt } from '../../campaign.interface';
+import { IContactRegistrationParams } from '@app/core/debt/debt.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { CampaignService } from '../../campaign.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
+import { RegisterContactOpenService } from '@app/shared/mass-ops/register-contact-open/register-contact-open.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { NumberRendererComponent } from '@app/shared/components/grids/renderers';
@@ -18,7 +21,7 @@ import { addGridLabel } from '@app/core/utils';
   templateUrl: 'processed-debts.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProcessedDebtsComponent implements OnInit  {
+export class ProcessedDebtsComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter<void>();
 
   dialog = null;
@@ -48,7 +51,7 @@ export class ProcessedDebtsComponent implements OnInit  {
         {
           name: 'entityTypeId',
           value: [
-            19
+            18
           ]
         },
         {
@@ -61,10 +64,13 @@ export class ProcessedDebtsComponent implements OnInit  {
     }
   ];
 
+  private registerContactActionSub: Subscription;
+
   constructor(
     private campaignService: CampaignService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
+    private registerContactOpenService: RegisterContactOpenService,
   ) { }
 
   ngOnInit(): void {
@@ -73,16 +79,26 @@ export class ProcessedDebtsComponent implements OnInit  {
         this.debts = debts;
         this.cdRef.markForCheck();
       });
+    this.registerContactActionSub = this.registerContactOpenService.registerContactAction$
+      .subscribe(this.onRegisterContactDialogSubmit.bind(this));
   }
 
-  onRegisterContactDialogSubmit({ contactType, contactId, personId, debtId }: any): void {
-    this.contactRegistrationService.startRegistration({
-      contactId,
-      contactType,
-      debtId,
-      personId,
-      personRole: 1,
-    });
+  ngOnDestroy(): void {
+    if (this.registerContactActionSub) {
+      this.registerContactActionSub.unsubscribe();
+    }
+  }
+
+  onRegisterContactDialogSubmit(params: Partial<IContactRegistrationParams>): void {
+    if (params) {
+      this.contactRegistrationService.startRegistration({
+        contactId: params.contactId,
+        contactType: params.contactType,
+        debtId: params.debtId,
+        personId: params.personId,
+        personRole: 1,
+      });
+    }
   }
 
   onClose(): void {
