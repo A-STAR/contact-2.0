@@ -104,9 +104,8 @@ export class ContextMenuService {
   }
 
   private getActionForSelectedSubmenu(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
-    action.action = 'actionForSelection';
     return {
-      name: this.translateAction(action),
+      name: this.translateService.instant(`default.grid.actions.actionForSelection`),
       disabled: action.enabled ?
         !action.enabled.call(null, MetadataActionType.SELECTED, options.selected, options.selection.node.data) : false,
       action: () => options.cb({
@@ -120,9 +119,8 @@ export class ContextMenuService {
   }
 
   private getActionForAllSubmenu(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
-    action.action = 'actionForAll';
     return {
-      name: this.translateAction(action),
+      name: this.translateService.instant(`default.grid.actions.actionForAll`),
       disabled: action.enabled ? !action.enabled.call(
         null,
         MetadataActionType.ALL,
