@@ -76,18 +76,22 @@ export class DocumentService extends AbstractActionService {
       .catch(this.notificationsService.deleteError().entity(this.errSingular).dispatchCallback());
   }
 
+  /**
+   * See:
+   * http://confluence.luxbase.int:8090/display/WEB20/File+attachments
+   */
   private getFetchUrl(entityType: number): string {
     switch (entityType) {
-      case DocumentService.ENTITY_CONTRACTOR:
-      case DocumentService.ENTITY_PORTFOLIO:
-      case DocumentService.ENTITY_PERSON:
-        return `/entityTypes/${entityType}/entities/{entityId}/fileattachments`;
+      // case DocumentService.ENTITY_CONTRACTOR:
+      // case DocumentService.ENTITY_PORTFOLIO:
+      // case DocumentService.ENTITY_PERSON:
+      //   return `/entityTypes/${entityType}/entities/{entityId}/fileattachments`;
       case DocumentService.ENTITY_DEBT:
         return '/debts/{entityId}/fileattachments';
-      case DocumentService.ENTITY_GUARANTOR:
-        return '/guarantors/{entityId}/fileattachments';
-      case DocumentService.ENTITY_PLEDGOR:
-        return '/pledgors/{entityId}/fileattachments';
+      // case DocumentService.ENTITY_GUARANTOR:
+      //   return '/guarantors/{entityId}/fileattachments';
+      // case DocumentService.ENTITY_PLEDGOR:
+      //   return '/pledgors/{entityId}/fileattachments';
     }
     throw new Error(`No fetch URL provided for entity type (${entityType})`);
   }
