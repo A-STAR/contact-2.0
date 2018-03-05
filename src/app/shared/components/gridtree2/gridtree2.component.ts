@@ -1,9 +1,12 @@
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
   EventEmitter,
-  ViewEncapsulation,
-  Input, OnInit, Output, OnChanges, SimpleChanges
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 
 // import 'ag-grid-enterprise';

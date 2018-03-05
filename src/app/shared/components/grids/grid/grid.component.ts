@@ -10,7 +10,6 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 
 import {

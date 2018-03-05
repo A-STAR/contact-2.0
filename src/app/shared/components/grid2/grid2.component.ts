@@ -9,7 +9,6 @@ import {
   Output,
   OnChanges,
   SimpleChanges,
-  ViewEncapsulation,
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
