@@ -62,7 +62,7 @@ export class ContextMenuService {
 
   private getSingleAction(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
     return {
-      name: this.translateService.instant(`default.grid.actions.${action.action}`),
+      name: this.translateAction(action),
       action: () => options.cb({
         metadataAction: {
           ...action,
@@ -78,7 +78,7 @@ export class ContextMenuService {
 
   private getActionWithChildren(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
     return {
-      name: this.translateService.instant(`default.grid.actions.${action.action}`),
+      name: this.translateAction(action),
       disabled: action.enabled
         ? !action.enabled.call(null, MetadataActionType.ALL, options.selected, options.selection.node.data)
         : false,
@@ -98,14 +98,15 @@ export class ContextMenuService {
       );
     }
     return {
-      name: this.translateService.instant(`default.grid.actions.${action.action}`),
+      name: this.translateAction(action),
       subMenu: subMenu.length ? subMenu : undefined
     };
   }
 
   private getActionForSelectedSubmenu(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
+    action.action = 'actionForSelection';
     return {
-      name: this.translateService.instant(`default.grid.actions.actionForSelection`),
+      name: this.translateAction(action),
       disabled: action.enabled ?
         !action.enabled.call(null, MetadataActionType.SELECTED, options.selected, options.selection.node.data) : false,
       action: () => options.cb({
@@ -119,8 +120,9 @@ export class ContextMenuService {
   }
 
   private getActionForAllSubmenu(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
+    action.action = 'actionForAll';
     return {
-      name: this.translateService.instant(`default.grid.actions.actionForAll`),
+      name: this.translateAction(action),
       disabled: action.enabled ? !action.enabled.call(
         null,
         MetadataActionType.ALL,
@@ -134,5 +136,9 @@ export class ContextMenuService {
         selection: options.selection
       }),
     };
+  }
+
+  private translateAction(action: IMetadataAction): string {
+    return this.translateService.instant(`${action.label || 'default.grid.actions'}.${action.action}`);
   }
 }

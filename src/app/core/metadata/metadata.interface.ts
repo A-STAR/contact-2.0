@@ -11,9 +11,11 @@ export interface IMetadataActionOption {
 
 export interface IMetadataAction {
   action: string;
+  // for custom actions, translates label path + action
+  label?: string;
   addOptions?: IMetadataActionOption[];
   enabled?: (actionType: MetadataActionType, selection: any[], data?: any) => boolean;
-  params: string[];
+  params?: string[];
   applyTo?: {
     all?: boolean;
     selected?: boolean;
