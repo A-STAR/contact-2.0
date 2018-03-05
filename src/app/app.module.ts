@@ -44,7 +44,7 @@ export function getInitialState(): Partial<IAppState> {
 }
 
 export function authTokenGetter(): string {
-  return R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.TOKEN_NAME));
+  return R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.AUTH_TOKEN));
 }
 
 export function reset(nextReducer: any): any {

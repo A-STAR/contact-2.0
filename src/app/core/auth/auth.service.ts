@@ -15,8 +15,9 @@ import { PersistenceService } from '../persistence/persistence.service';
 
 @Injectable()
 export class AuthService implements CanActivate {
-  static TOKEN_NAME = 'auth/token';
+  static AUTH_TOKEN     = 'auth/token';
   static LANGUAGE_TOKEN = 'auth/language';
+  static REDIRECT_TOKEN = 'auth/redirect';
 
   static URL_DEFAULT = '/';
   static URL_LOGIN   = '/login';
@@ -37,7 +38,6 @@ export class AuthService implements CanActivate {
   static USER_FETCH_SUCCESS   = 'USER_FETCH_SUCCESS';
 
   private tokenTimer = null;
-  private url: string = null;
 
   private isParamsFetching = false;
 
@@ -108,21 +108,22 @@ export class AuthService implements CanActivate {
   }
 
   redirectToLogin(url: string = null): void {
-    this.url = url || this.router.url;
-    this.router.navigate([AuthService.URL_LOGIN]);
+    this.persistenceService.set(AuthService.REDIRECT_TOKEN, url || this.router.url);
+    location.href = AuthService.URL_LOGIN;
   }
 
   redirectAfterLogin(): void {
-    this.router.navigate([this.url || AuthService.URL_DEFAULT]);
-    this.url = null;
+    const url = this.persistenceService.get(AuthService.REDIRECT_TOKEN) || AuthService.URL_DEFAULT;
+    this.persistenceService.remove(AuthService.REDIRECT_TOKEN);
+    this.router.navigate([ url ]);
   }
 
   saveToken(token: string): void {
-    this.persistenceService.set(AuthService.TOKEN_NAME, token);
+    this.persistenceService.set(AuthService.AUTH_TOKEN, token);
   }
 
   removeToken(): void {
-    this.persistenceService.remove(AuthService.TOKEN_NAME);
+    this.persistenceService.remove(AuthService.AUTH_TOKEN);
   }
 
   saveLanguage(token: string): void {
@@ -146,7 +147,7 @@ export class AuthService implements CanActivate {
   }
 
   isRetrievedTokenValid(): boolean {
-    const token = this.persistenceService.get(AuthService.TOKEN_NAME);
+    const token = this.persistenceService.get(AuthService.AUTH_TOKEN);
     const isValid = this.isTokenValid(token);
     if (isValid) {
       this.store.dispatch({ type: AuthService.AUTH_RETRIEVE_TOKEN, payload: { token } });
