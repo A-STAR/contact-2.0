@@ -9,7 +9,7 @@ import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries
 import { PersistenceService } from '@app/core/persistence/persistence.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DictRendererComponent, LookupRendererComponent, ValueRendererComponent } from './renderers';
+import { CallbackRendererComponent, DictRendererComponent, LookupRendererComponent, ValueRendererComponent } from './renderers';
 
 @Injectable()
 export class GridsService {
@@ -68,7 +68,7 @@ export class GridsService {
   }
 
   private getCellRendererOptions<T>(column: IGridColumn<T>): Partial<ColDef> {
-    const { dictCode, lookupKey, renderer, valueTypeKey } = column;
+    const { dictCode, lookupKey, renderer, valueTypeKey, rendererCallback } = column;
     switch (true) {
       case Boolean(renderer):
         return {
@@ -88,6 +88,11 @@ export class GridsService {
         return {
           cellRendererFramework: ValueRendererComponent,
           cellRendererParams: { valueTypeKey },
+        };
+      case Boolean(rendererCallback):
+        return {
+          cellRendererFramework: CallbackRendererComponent,
+          cellRendererParams: { rendererCallback },
         };
       default:
         return {};
