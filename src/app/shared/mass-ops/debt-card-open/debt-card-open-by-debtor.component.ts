@@ -33,11 +33,13 @@ export class DebtCardOpenByDebtorComponent extends DialogFunctions implements On
       .subscribe( debtId => {
         if (!debtId) {
           this.notificationsService.warning('header.noDebt.title').dispatch();
+          this.onClose();
           this.cdRef.markForCheck();
           return;
         }
-        this.close.emit();
+        this.onClose();
         this.debtorCardService.openByDebtId(debtId);
+        this.cdRef.markForCheck();
       });
   }
 

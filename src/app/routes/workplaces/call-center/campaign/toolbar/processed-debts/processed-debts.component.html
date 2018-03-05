@@ -4,11 +4,15 @@
   </div>
 
   <div style="height: 75vh;">
-    <app-simple-grid
+    <app-action-grid
       persistenceKey="[grid] workplaces/call-center/processed-debts"
       [columns]="columns"
+      [fullHeight]="true"
       [rows]="debts"
-    ></app-simple-grid>
+      [isSimple]="true"
+      [actions]="actions"
+      (close)="onClose()"
+    ></app-action-grid>
   </div>
 
   <div dialog-footer>

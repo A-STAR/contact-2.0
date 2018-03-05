@@ -39,6 +39,22 @@
               "infoIncreaseAmount": {
                 "message": "Необходимо увеличить сумму обещания до {{ percent }}% от суммы к погашению.",
                 "title": "Информация"
+              },
+              "contactType": {
+                "title": "Выберите тип контакта",
+                "address": {
+                  "title": "Адреса",
+                  "button": "Регистрация контакта с типом Выезд"
+                },
+                "misc": {
+                  "title": "Специальное",
+                  "buttonMisc": "Регистрация контакта с типом Специальное",
+                  "buttonOfficeVisit": "Регистрация контакта с типом Визит в офис"
+                },
+                "phone": {
+                  "title": "Телефоны",
+                  "button": "Регистрация контакта с типом Исходящий звонок"
+                }
               }
             },
             "form": {
@@ -3214,7 +3230,8 @@
         "changeTimezoneAttr": "Часовой пояс",
         "debtOutsourcingSend": "Передать на аутсорсинг",
         "debtOutsourcingExclude": "Исключить из аутсорсинга",
-        "debtOutsourcingReturn": "Отозвать из аутсорсинга"
+        "debtOutsourcingReturn": "Отозвать из аутсорсинга",
+        "registerContact": "Регистрация контакта"
       }
     },
     "filter": {

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
-import { DebtService } from '../../../../core/debt/debt.service';
+import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtService } from '@app/core/debt/debt.service';
 
 import { AddressGridComponent } from './address/address.component';
 import { MiscComponent } from './misc/misc.component';

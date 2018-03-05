@@ -20,7 +20,7 @@ import { addGridLabel, doOnceIf, isEmpty } from '@app/core/utils';
   templateUrl: 'address.component.html',
 })
 export class AddressGridComponent implements OnInit {
-  @Input() entityType: number;
+  @Input() entityTypeId: number;
   @Input() entityId: number;
   @Output() action = new EventEmitter<number>();
 
@@ -43,7 +43,7 @@ export class AddressGridComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.addressService.fetchAll(this.entityType, this.entityId, false).subscribe(addresses => {
+    this.addressService.fetchAll(this.entityTypeId, this.entityId, false).subscribe(addresses => {
       this.addresses = addresses.filter(address => !address.isInactive);
       this.cdRef.markForCheck();
     });

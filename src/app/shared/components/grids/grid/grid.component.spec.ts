@@ -1,7 +1,7 @@
 import { async as Async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { ColDef } from 'ag-grid';
+import { ColDef, MenuItemDef } from 'ag-grid';
 import { AgGridModule } from 'ag-grid-angular/main';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
@@ -13,10 +13,12 @@ import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.modul
 
 import { IGridColumn } from '../grids.interface';
 
+import { ContextMenuService } from '../context-menu/context-menu.service';
 import { GridsService } from '../grids.service';
 
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
 import { SimpleGridComponent } from './grid.component';
+import { IContextMenuOptions, IContextMenuSimpleOptions } from '@app/shared/components/grids/context-menu/context-menu.interface';
 
 class TranslateLoaderMock {
   getTranslation(language: string): Observable<any> {
@@ -30,6 +32,12 @@ class GridsServiceMock {
       field: column.prop,
       headerName: column.label,
     }));
+  }
+}
+
+class ContextMenuServiceMock {
+  onCtxMenuClick(options: IContextMenuOptions, simpleOptions: IContextMenuSimpleOptions): Array<string | MenuItemDef> {
+    return [];
   }
 }
 
@@ -61,6 +69,10 @@ describe('SimpleGridComponent', () => {
           {
             provide: GridsService,
             useClass: GridsServiceMock,
+          },
+          {
+            provide: ContextMenuService,
+            useClass: ContextMenuServiceMock,
           }
         ]
       })

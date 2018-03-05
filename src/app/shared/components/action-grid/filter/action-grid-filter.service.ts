@@ -28,20 +28,20 @@ export class ActionGridFilterService {
   constructor() { }
 
   buildRequest(actionData: IGridActionPayload): any {
-    if (actionData.type === MetadataActionType.ALL) {
-      return {
-        ...actionData.data,
-        filtering: this.getFilters((actionData.data as IGridActionFilterSelection).filtering)
-      };
+    switch (actionData.type) {
+      case MetadataActionType.ALL:
+        return {
+          ...actionData.data,
+          filtering: this.getFilters((actionData.data as IGridActionFilterSelection).filtering)
+        };
+      case MetadataActionType.SELECTED:
+        return {
+          ids: actionData.data
+        };
+      case MetadataActionType.SINGLE:
+      default:
+        return actionData.data;
     }
-
-    if (actionData.type === MetadataActionType.SINGLE) {
-      return actionData.data;
-    }
-
-    return {
-      ids: actionData.data
-    };
   }
 
   getPayload(action: IActionGridAction, params?: IGridActionContext): IGridActionPayload {

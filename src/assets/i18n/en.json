@@ -39,6 +39,22 @@
               "infoIncreaseAmount": {
                 "message": "You have to increase the promise amount to {{ percent }}% of the amount due.",
                 "title": "Information"
+              },
+              "contactType": {
+                "title": "Choose contact type",
+                "address": {
+                  "title": "Addresses",
+                  "button": "Register contact with type Visit"
+                },
+                "misc": {
+                  "title": "Special",
+                  "buttonMisc": "Register contact with type Special",
+                  "buttonOfficeVisit": "Register contact with type Office visit"
+                },
+                "phone": {
+                  "title": "Phones",
+                  "button": "Register contact with type Incoming call"
+                }
               }
             },
             "form": {
@@ -3214,7 +3230,8 @@
         "changeTimezoneAttr": "Time zone",
         "debtOutsourcingSend": "Send to outsourcing",
         "debtOutsourcingExclude": "Exclude from outsourcing",
-        "debtOutsourcingReturn": "Return from outsourcing"
+        "debtOutsourcingReturn": "Return from outsourcing",
+        "registerContact": "Register Contact"
       }
     },
     "filter": {

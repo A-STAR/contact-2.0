@@ -18,7 +18,7 @@ import { addGridLabel, doOnceIf, isEmpty } from '@app/core/utils';
   templateUrl: 'phone.component.html',
 })
 export class PhoneGridComponent implements OnInit {
-  @Input() entityType: number;
+  @Input() entityTypeId: number;
   @Input() entityId: number;
   @Output() action = new EventEmitter<number>();
 
@@ -40,7 +40,7 @@ export class PhoneGridComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.phoneService.fetchAll(this.entityType, this.entityId, false).subscribe(phones => {
+    this.phoneService.fetchAll(this.entityTypeId, this.entityId, false).subscribe(phones => {
       this.phones = phones.filter(phone => !phone.isInactive);
       this.cdRef.markForCheck();
     });

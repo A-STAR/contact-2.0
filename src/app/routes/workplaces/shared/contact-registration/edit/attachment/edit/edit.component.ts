@@ -12,7 +12,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 import { makeKey } from '@app/core/utils';
 import { maxFileSize } from '@app/core/validators';
 
-const labelKey = makeKey('workplaces.shared.contactRegistration.edit.form.attachments.add.form');
+const labelKey = makeKey('routes.workplaces.shared.contactRegistration.edit.form.attachments.add.form');
 
 @Component({
   selector: 'app-contact-registration-attachment-edit',

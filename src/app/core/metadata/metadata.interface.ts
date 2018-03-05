@@ -11,11 +11,11 @@ export interface IMetadataActionOption {
 
 export interface IMetadataAction {
   action: string;
-  addOptions: IMetadataActionOption[];
-  enabled: (actionType: MetadataActionType, selection: any[], data?: any) => boolean;
+  addOptions?: IMetadataActionOption[];
+  enabled?: (actionType: MetadataActionType, selection: any[], data?: any) => boolean;
   params: string[];
   applyTo?: {
-    all: boolean;
+    all?: boolean;
     selected?: boolean;
   };
   children?: IMetadataAction[];
