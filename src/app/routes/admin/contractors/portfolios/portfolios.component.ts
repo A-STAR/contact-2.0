@@ -2,17 +2,14 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { first } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs/Subscription';
-import { TranslateService } from '@ngx-translate/core';
 
+import { IActionGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IAppState } from '@app/core/state/state.interface';
-import { IGridAction, IActionGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import {
   IContractor,
   IPortfolio,
-  PortfolioAction,
   IActionType
 } from '../contractors-and-portfolios.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
@@ -163,7 +160,6 @@ export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDe
     private routingService: RoutingService,
     private store: Store<IAppState>,
     private userPermissionsService: UserPermissionsService,
-    private translateService: TranslateService
   ) {
     super();
   }
