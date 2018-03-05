@@ -43,9 +43,9 @@ export class DocumentService extends AbstractActionService {
   }
 
   fetch(entityType: number, entityId: number, documentId: number, callCenter: boolean): Observable<IDocument> {
-    const url = this.getFetchUrl(entityType);
+    const url = '/entityTypes/{entityType}/entities/{entityId}/fileattachments/{documentId}';
     return this.dataService
-      .read(`${url}/{documentId}`, { entityId, documentId }, { params: { callCenter } })
+      .read(url, { entityType, entityId, documentId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity(this.errSingular).dispatchCallback());
   }
 

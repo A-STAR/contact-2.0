@@ -199,7 +199,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   private onEdit(documentId: number): void {
-    this.router.navigate([ `${this.router.url}/document/${documentId}` ]);
+    const document = this.documents.find(d => d.id === documentId);
+    if (document) {
+      const { entityTypeCode, id } = document;
+      this.router.navigate([ `${this.router.url}/document/${id}` ], { queryParams: { entityType: entityTypeCode } });
+    }
   }
 
   private onSubmitSuccess(): void {
