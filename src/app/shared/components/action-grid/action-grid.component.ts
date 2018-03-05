@@ -105,7 +105,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
-  @Output() action = new EventEmitter<IGridAction>();
+  @Output() action = new EventEmitter<IActionGridAction>();
   // emits when dialog closes
   @Output() close = new EventEmitter<ICloseAction>();
 
@@ -225,7 +225,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.dialog = action.metadataAction.action;
     this.dialogData = this.setDialogData(action);
     if (this.action) {
-      this.action.emit(this.dialogData);
+      this.action.emit(action);
     }
     this.cdRef.markForCheck();
   }
