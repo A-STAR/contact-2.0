@@ -1,9 +1,12 @@
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
   EventEmitter,
-  ViewEncapsulation,
-  Input, OnInit, Output, OnChanges, SimpleChanges
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 
 // import 'ag-grid-enterprise';
@@ -16,9 +19,7 @@ import { GridTree2Service } from '@app/shared/components/gridtree2/gridtree2.ser
 @Component({
   selector: 'app-gridtree2',
   templateUrl: './gridtree2.component.html',
-  styleUrls: [ './gridtree2.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   providers: [ GridTree2Service ],
 })
 export class GridTree2Component<T> implements OnInit, OnChanges {
@@ -30,7 +31,8 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
   @Input() getDataPath: Function;
   @Input() getRowNodeId: Function;
   @Input() dnd: boolean;
-  @Input() rowHeight: number;
+  @Input() headerHeight = 32;
+  @Input() rowHeight = 32;
 
   @Output() cellValueChanged = new EventEmitter<any>();
   @Output() select = new EventEmitter<IGridTreeRow<T>>();
@@ -48,6 +50,7 @@ export class GridTree2Component<T> implements OnInit, OnChanges {
   ngOnInit(): void {
     this.groupDefaultExpanded = -1;
     this.gridOptions = {
+      headerHeight: this.headerHeight,
       rowHeight: this.rowHeight,
     };
   }

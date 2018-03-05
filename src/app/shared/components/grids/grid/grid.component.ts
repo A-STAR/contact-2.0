@@ -10,7 +10,6 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 
 import {
@@ -37,7 +36,6 @@ import { isEmpty } from '@app/core/utils/index';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   host: { class: 'full-height' },
   selector: 'app-simple-grid',
   styleUrls: [ './grid.component.scss' ],
@@ -100,14 +98,14 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
       },
       this.getContextMenuSimpleItems()
     ),
-    headerHeight: 28,
+    headerHeight: 32,
     noRowsOverlayComponentFramework: EmptyOverlayComponent,
     onColumnMoved: () => this.saveSettings(),
     onColumnResized: () => this.saveSettings(),
     onRowDoubleClicked: event => this.onRowDoubleClicked(event),
     onSelectionChanged: () => this.onSelectionChanged(),
     onSortChanged: () => this.saveSettings(),
-    rowHeight: 28,
+    rowHeight: 32,
     rowSelection: 'multiple',
     showToolPanel: false,
     suppressPaginationPanel: true,
