@@ -1,4 +1,4 @@
-<h4>{{ 'modules.contactRegistration.dialogs.contactType.misc.title' | translate }}</h4>
+<h4>{{ 'routes.workplaces.shared.contactRegistration.edit.dialogs.contactType.misc.title' | translate }}</h4>
 
 <div class="mb">
 
@@ -6,7 +6,7 @@
     *ngIf="canRegisterSpecial$ | async"
     color="primary"
     type="registerContact"
-    label="modules.contactRegistration.dialogs.contactType.misc.buttonMisc"
+    label="routes.workplaces.shared.contactRegistration.edit.dialogs.contactType.misc.buttonMisc"
     (click)="onSubmitSpecial()"
   ></app-button>
 
@@ -14,7 +14,7 @@
     *ngIf="canRegisterOfficeVisit$ | async"
     color="primary"
     type="registerContact"
-    label="modules.contactRegistration.dialogs.contactType.misc.buttonOfficeVisit"
+    label="routes.workplaces.shared.contactRegistration.edit.dialogs.contactType.misc.buttonOfficeVisit"
     (click)="onSubmitOfficeVisit()"
   ></app-button>
 

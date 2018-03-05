@@ -1,6 +1,6 @@
 <div class="flex vertical">
   <div class="flex-item mb">
-    <h4>{{ 'modules.contactRegistration.dialogs.contactType.phone.title' | translate }}</h4>
+    <h4>{{ 'routes.workplaces.shared.contactRegistration.edit.dialogs.contactType.phone.title' | translate }}</h4>
   </div>
   <div class="flex-item grow mb">
     <app-simple-grid
@@ -15,7 +15,7 @@
     <app-button
       color="primary"
       type="registerContact"
-      label="modules.contactRegistration.dialogs.contactType.phone.button"
+      label="routes.workplaces.shared.contactRegistration.edit.dialogs.contactType.phone.button"
       [disabled]="!(canRegisterSelectedPhone$ | async)"
       (click)="onSubmit()"
     ></app-button>

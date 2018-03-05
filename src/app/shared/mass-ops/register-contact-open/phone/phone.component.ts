@@ -27,7 +27,7 @@ export class PhoneGridComponent implements OnInit {
     { prop: 'phone' /*, renderer: 'phoneRenderer' */ },
     { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_STATUS },
     { prop: 'comment' },
-  ].map(addGridLabel('debtor.information.phone'));
+  ].map(addGridLabel('debtor.information.phone.grid'));
 
   phones: IPhone[];
 

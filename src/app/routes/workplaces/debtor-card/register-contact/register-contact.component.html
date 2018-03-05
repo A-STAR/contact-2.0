@@ -1,6 +1,6 @@
 <app-dialog [styles]="{ width: '70%' }" (close)="onCancel()">
   <div dialog-header>
-    <h3>{{ 'modules.contactRegistration.dialogs.contactType.title' | translate }}</h3>
+    <h3>{{ 'routes.workplaces.shared.contactRegistration.edit.dialogs.contactType.title' | translate }}</h3>
   </div>
   <div>
     <div style="height: 25vh" class="mb-lg" *ngIf="canRegisterPhones$ | async">

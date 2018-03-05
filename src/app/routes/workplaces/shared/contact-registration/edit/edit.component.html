@@ -1,21 +1,21 @@
 <app-dialog-action
   *ngIf="isDialog('confirm')"
   actionMode="warning"
-  actionTranslationKey="workplaces.shared.contactRegistration.edit.dialogs.confirmInsufficient.message"
+  actionTranslationKey="routes.workplaces.shared.contactRegistration.edit.dialogs.confirmInsufficient.message"
   actionMessage="default.buttons.save"
   [messageParams]="minAmountPercentMessageParams$ | async"
-  titleTranslationKey="workplaces.shared.contactRegistration.edit.dialogs.confirmInsufficient.title"
+  titleTranslationKey="routes.workplaces.shared.contactRegistration.edit.dialogs.confirmInsufficient.title"
   (action)="onConfirm()"
   (cancel)="onCloseDialog()"
 ></app-dialog-action>
 
 <app-info-dialog
   *ngIf="isDialog('info')"
-  titleTranslationKey="workplaces.shared.contactRegistration.edit.dialogs.infoIncreaseAmount.title"
+  titleTranslationKey="routes.workplaces.shared.contactRegistration.edit.dialogs.infoIncreaseAmount.title"
   (onClose)="onCloseDialog()"
 >
   <section class="pv-xl">
-    {{ 'workplaces.shared.contactRegistration.edit.dialogs.infoIncreaseAmount.message' | translate: (minAmountPercentMessageParams$ | async) }}
+    {{ 'routes.workplaces.shared.contactRegistration.edit.dialogs.infoIncreaseAmount.message' | translate: (minAmountPercentMessageParams$ | async) }}
   </section>
 </app-info-dialog>
 
