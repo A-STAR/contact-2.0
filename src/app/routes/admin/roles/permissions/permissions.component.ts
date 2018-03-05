@@ -40,10 +40,7 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
   columns: ISimpleGridColumn<IPermissionModel>[] = [
     { prop: 'id', minWidth: 70, maxWidth: 100 },
     { prop: 'name', minWidth: 200, maxWidth: 350 },
-    { prop: 'value', minWidth: 70, maxWidth: 100,
-      // TODO(d.maltsev)
-      // renderer: (permission: IPermissionModel) => this.valueConverterService.deserializeBoolean(permission)
-    },
+    { prop: 'value', minWidth: 70, maxWidth: 100, valueTypeKey: 'typeCode' },
     { prop: 'dsc', minWidth: 200 },
     { prop: 'comment', minWidth: 300 },
   ].map(addGridLabel('roles.permissions.grid'));
