@@ -114,8 +114,9 @@ export class AuthService implements CanActivate {
 
   redirectAfterLogin(): void {
     const url = this.persistenceService.get(AuthService.REDIRECT_TOKEN) || AuthService.URL_DEFAULT;
-    this.persistenceService.remove(AuthService.REDIRECT_TOKEN);
-    this.router.navigate([ url ]);
+    this.router
+      .navigate([ url ])
+      .then(() => this.persistenceService.remove(AuthService.REDIRECT_TOKEN));
   }
 
   saveToken(token: string): void {
