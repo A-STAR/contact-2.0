@@ -8,30 +8,29 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 import { zip } from 'rxjs/observable/zip';
 
 import { DictOperation } from '../attributes.interface';
 import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IUserTerm } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
+import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { AttributesService } from '../attributes.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { makeKey } from '@app/core/utils';
+import { makeKey, addGridLabel } from '@app/core/utils';
 import { ValueBag } from '@app/core/value-bag/value-bag';
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 
 const labelKey = makeKey('widgets.mass');
 
 @Component({
   selector: 'app-mass-attr-dictionary',
   templateUrl: './dictionary.component.html',
+  styleUrls: ['./dictionary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DictionaryComponent implements OnInit, OnDestroy {
@@ -40,10 +39,10 @@ export class DictionaryComponent implements OnInit, OnDestroy {
   @Input() actionName: string;
   @Output() close = new EventEmitter<ICloseAction>();
 
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<IUserTerm>[] = [
     { prop: 'code' },
     { prop: 'name' },
-  ];
+  ].map(addGridLabel('terms.grid'));
 
   terms: IUserTerm[];
 
@@ -59,7 +58,6 @@ export class DictionaryComponent implements OnInit, OnDestroy {
     private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
     private userPermissionsService: UserPermissionsService,
-    private gridService: GridService,
     private userDictionariesService: UserDictionariesService,
   ) { }
 
@@ -68,12 +66,6 @@ export class DictionaryComponent implements OnInit, OnDestroy {
     this.dictCodeNumber = Number(this.actionGridFilterService.getAddOption(this.actionData, 'dictCode', 0));
 
     this.title = this.actionName ? labelKey(`${this.actionName}.title`) : labelKey(`changeDefaultAttr.title`);
-
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-      });
 
     if (Number.isInteger(this.dictCodeNumber)) {
       this.permissionsSub = zip(
@@ -104,8 +96,8 @@ export class DictionaryComponent implements OnInit, OnDestroy {
     return !!this.selectedTerm;
   }
 
-  onSelect(term: IUserTerm): void {
-    this.selectedTerm = term;
+  onSelect(terms: IUserTerm[]): void {
+    this.selectedTerm = terms[0];
   }
 
   cancel(): void {
