@@ -82,14 +82,11 @@ export class AreaComponent implements AfterViewInit {
   }
 
   onMouseDown(i: number, event: MouseEvent): void {
-    const start = this.layout === IAreaLayout.ROW
-      ? event.clientX
-      : event.clientY;
     this.dragData = {
-      start,
       i,
       lSize: this.children[i].size,
       rSize: this.children[i + 1].size,
+      start: this.getCoordFromEvent(event),
     };
     this.mouseMoveListener = this.renderer.listen(this.elRef.nativeElement, 'mousemove', this.onMouseMove.bind(this));
     this.mouseUpListener = this.renderer.listen(this.elRef.nativeElement, 'mouseup', this.onMouseUp.bind(this));
@@ -107,12 +104,14 @@ export class AreaComponent implements AfterViewInit {
 
   private onDrag(event: MouseEvent): void {
     const { i, start, lSize, rSize } = this.dragData;
-
-    const size = this.layout === IAreaLayout.ROW
-      ? event.clientX - start
-      : event.clientY - start;
-
+    const size = this.getCoordFromEvent(event) - start;
     this.children[i].size = lSize + size;
     this.children[i + 1].size = rSize - size;
+  }
+
+  private getCoordFromEvent(event: MouseEvent): number {
+    return this.layout === IAreaLayout.ROW
+      ? event.clientX
+      : event.clientY;
   }
 }
