@@ -22,7 +22,7 @@ import { range } from '@app/core/utils';
   templateUrl: './area.component.html',
 })
 export class AreaComponent implements AfterViewInit {
-  @ContentChildren(AreaComponent, { descendants: false }) children: QueryList<AreaComponent>;
+  @ContentChildren(AreaComponent, { descendants: false }) _children: QueryList<AreaComponent>;
 
   @HostBinding('style.flex-direction')
   @Input()
@@ -31,20 +31,21 @@ export class AreaComponent implements AfterViewInit {
   @Input()
   persistenceKey: string;
 
-  @Input()
-  size: number;
-
   private mouseMoveListener: () => void;
   private mouseUpListener: () => void;
 
   private dragData: IDragData;
+
+  get children(): AreaComponent[] {
+    return this._children.filter(c => c !== this);
+  }
 
   set order(order: number) {
     this.renderer.setStyle(this.elRef.nativeElement, 'order', order);
   }
 
   get gutters(): number[] {
-    const n = this.children.length - 1;
+    const n = this.children.length;
     return n > 1 ? range(0, n - 2) : [];
   }
 
@@ -55,7 +56,19 @@ export class AreaComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    this.children.filter(c => c !== this).forEach((c, i) => c.order = i);
+    this.children.forEach((c, i) => c.order = i);
+  }
+
+  resize(delta: number, direction: IAreaLayout): void {
+    // console.log(this.elRef);
+    // console.log(delta, direction);
+
+    const r = this.elRef.nativeElement.getBoundingClientRect();
+    const basis = direction === IAreaLayout.ROW
+      ? r.width
+      : r.height;
+
+    this.renderer.setStyle(this.elRef.nativeElement, 'flex', `0 0 ${basis + delta}px`);
   }
 
   getGutterStyle(i: number): Partial<CSSStyleDeclaration> {
@@ -68,12 +81,7 @@ export class AreaComponent implements AfterViewInit {
     const start = this.layout === IAreaLayout.ROW
       ? event.clientX
       : event.clientY;
-
-    this.dragData = {
-      start,
-      i,
-    };
-
+    this.dragData = { start, i };
     this.mouseMoveListener = this.renderer.listen(this.elRef.nativeElement, 'mousemove', this.onMouseMove.bind(this));
     this.mouseUpListener = this.renderer.listen(this.elRef.nativeElement, 'mouseup', this.onMouseUp.bind(this));
   }
@@ -89,9 +97,13 @@ export class AreaComponent implements AfterViewInit {
   }
 
   private onDrag(event: MouseEvent): void {
+    const { i, start } = this.dragData;
+
     const size = this.layout === IAreaLayout.ROW
-      ? event.clientX - this.dragData.start
-      : event.clientY - this.dragData.start;
-    console.log(size);
+      ? event.clientX - start
+      : event.clientY - start;
+
+    this.children[i].resize(size, this.layout);
+    this.children[i + 1].resize(-size, this.layout);
   }
 }
