@@ -58,7 +58,7 @@ export class AreaComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.children.forEach((c, i) => {
-      c.order = i;
+      c.order = 2 * i;
       c.parentLayout = this.layout;
     });
   }
@@ -76,7 +76,7 @@ export class AreaComponent implements AfterViewInit {
 
   getGutterStyle(i: number): Partial<CSSStyleDeclaration> {
     return {
-      order: `${i}`,
+      order: `${2 * i + 1}`,
     };
   }
 
