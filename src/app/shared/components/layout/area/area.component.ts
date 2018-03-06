@@ -31,6 +31,8 @@ export class AreaComponent implements AfterViewInit {
   @Input()
   persistenceKey: string;
 
+  parentLayout: IAreaLayout;
+
   private mouseMoveListener: () => void;
   private mouseUpListener: () => void;
 
@@ -56,17 +58,20 @@ export class AreaComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    this.children.forEach((c, i) => c.order = i);
+    this.children.forEach((c, i) => {
+      c.order = i;
+      c.parentLayout = this.layout;
+    });
   }
 
-  getSize(direction: IAreaLayout): number {
+  get size(): number {
     const r = this.elRef.nativeElement.getBoundingClientRect();
-    return direction === IAreaLayout.ROW
+    return this.parentLayout === IAreaLayout.ROW
       ? r.width
       : r.height;
   }
 
-  setSize(size: number): void {
+  set size(size: number) {
     this.renderer.setStyle(this.elRef.nativeElement, 'flex', `0 0 ${size}px`);
   }
 
@@ -83,8 +88,8 @@ export class AreaComponent implements AfterViewInit {
     this.dragData = {
       start,
       i,
-      a: this.children[i].getSize(this.layout),
-      b: this.children[i + 1].getSize(this.layout),
+      lSize: this.children[i].size,
+      rSize: this.children[i + 1].size,
     };
     this.mouseMoveListener = this.renderer.listen(this.elRef.nativeElement, 'mousemove', this.onMouseMove.bind(this));
     this.mouseUpListener = this.renderer.listen(this.elRef.nativeElement, 'mouseup', this.onMouseUp.bind(this));
@@ -101,13 +106,13 @@ export class AreaComponent implements AfterViewInit {
   }
 
   private onDrag(event: MouseEvent): void {
-    const { i, start, a, b } = this.dragData;
+    const { i, start, lSize, rSize } = this.dragData;
 
     const size = this.layout === IAreaLayout.ROW
       ? event.clientX - start
       : event.clientY - start;
 
-    this.children[i].setSize(a + size);
-    this.children[i + 1].setSize(b - size);
+    this.children[i].size = lSize + size;
+    this.children[i + 1].size = rSize - size;
   }
 }
