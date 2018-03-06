@@ -5,6 +5,7 @@ import {
   ContentChildren,
   ElementRef,
   HostBinding,
+  HostListener,
   Input,
   QueryList,
   Renderer2,
@@ -86,8 +87,14 @@ export class AreaComponent implements AfterViewInit {
       rSize: this.children[i + 1].size,
       start: this.getCoordFromEvent(event),
     };
-    this.mouseMoveListener = this.renderer.listen(this.elRef.nativeElement, 'mousemove', this.onMouseMove.bind(this));
-    this.mouseUpListener = this.renderer.listen(this.elRef.nativeElement, 'mouseup', this.onMouseUp.bind(this));
+    this.mouseMoveListener = this.renderer.listen(document, 'mousemove', this.onMouseMove.bind(this));
+    this.mouseUpListener = this.renderer.listen(document, 'mouseup', this.onMouseUp.bind(this));
+  }
+
+  @HostListener('dragstart')
+  @HostListener('selectstart')
+  onDragStart(): false {
+    return false;
   }
 
   private onMouseMove(event: MouseEvent): void {
