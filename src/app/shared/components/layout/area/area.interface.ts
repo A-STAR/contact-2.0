@@ -6,4 +6,6 @@ export enum IAreaLayout {
 export interface IDragData {
   start: number;
   i: number;
+  a: number;
+  b: number;
 }

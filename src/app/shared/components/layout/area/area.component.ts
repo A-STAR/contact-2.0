@@ -59,16 +59,15 @@ export class AreaComponent implements AfterViewInit {
     this.children.forEach((c, i) => c.order = i);
   }
 
-  resize(delta: number, direction: IAreaLayout): void {
-    // console.log(this.elRef);
-    // console.log(delta, direction);
-
+  getSize(direction: IAreaLayout): number {
     const r = this.elRef.nativeElement.getBoundingClientRect();
-    const basis = direction === IAreaLayout.ROW
+    return direction === IAreaLayout.ROW
       ? r.width
       : r.height;
+  }
 
-    this.renderer.setStyle(this.elRef.nativeElement, 'flex', `0 0 ${basis + delta}px`);
+  setSize(size: number): void {
+    this.renderer.setStyle(this.elRef.nativeElement, 'flex', `0 0 ${size}px`);
   }
 
   getGutterStyle(i: number): Partial<CSSStyleDeclaration> {
@@ -81,7 +80,12 @@ export class AreaComponent implements AfterViewInit {
     const start = this.layout === IAreaLayout.ROW
       ? event.clientX
       : event.clientY;
-    this.dragData = { start, i };
+    this.dragData = {
+      start,
+      i,
+      a: this.children[i].getSize(this.layout),
+      b: this.children[i + 1].getSize(this.layout),
+    };
     this.mouseMoveListener = this.renderer.listen(this.elRef.nativeElement, 'mousemove', this.onMouseMove.bind(this));
     this.mouseUpListener = this.renderer.listen(this.elRef.nativeElement, 'mouseup', this.onMouseUp.bind(this));
   }
@@ -97,13 +101,13 @@ export class AreaComponent implements AfterViewInit {
   }
 
   private onDrag(event: MouseEvent): void {
-    const { i, start } = this.dragData;
+    const { i, start, a, b } = this.dragData;
 
     const size = this.layout === IAreaLayout.ROW
       ? event.clientX - start
       : event.clientY - start;
 
-    this.children[i].resize(size, this.layout);
-    this.children[i + 1].resize(-size, this.layout);
+    this.children[i].setSize(a + size);
+    this.children[i + 1].setSize(b - size);
   }
 }
