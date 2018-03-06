@@ -25,6 +25,7 @@ export class NowDirective implements OnInit, OnDestroy {
     this.currentLang = this.translateService.currentLang || this.translateService.defaultLang;
     this.langSub = this.translateService.onLangChange.subscribe((params: LangChangeEvent) => {
       this.currentLang = params.lang;
+      this.updateTime();
     });
 
     this.updateTime();
