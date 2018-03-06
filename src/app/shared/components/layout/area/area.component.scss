@@ -7,21 +7,17 @@
 
 .gutter {
   align-items: center;
-  display: flex;
+  background-position: center center;
+  background-repeat: no-repeat;
   flex: 0 0 20px;
-  justify-content: center;
 
-  .handle {
-    background-color: #ddd;
-    cursor: ew-resize;
-    flex: 0 0 auto;
-    height: 48px;
-    width: 6px;
+  &.horizontal {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFCAMAAABl/6zIAAAABlBMVEUAAADMzMzIT8AyAAAAAXRSTlMAQObYZgAAABRJREFUeAFjYGRkwIMJSeMHlBkOABP7AEGzSuPKAAAAAElFTkSuQmCC");
+    cursor: row-resize;
+  }
 
-    &.horizontal {
-      cursor: ns-resize;
-      height: 6px;
-      width: 48px;
-    }
+  &.vertical {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+    cursor: col-resize;
   }
 }

@@ -79,6 +79,14 @@ export class AreaComponent implements AfterViewInit {
     this.renderer.setStyle(this.elRef.nativeElement, 'flex', `0 0 ${size}px`);
   }
 
+  getGutterClass(): any {
+    return {
+      gutter: true,
+      horizontal: this.layout === IAreaLayout.COLUMN,
+      vertical: this.layout === IAreaLayout.ROW,
+    };
+  }
+
   getGutterStyle(i: number): Partial<CSSStyleDeclaration> {
     return {
       order: `${2 * i + 1}`,
