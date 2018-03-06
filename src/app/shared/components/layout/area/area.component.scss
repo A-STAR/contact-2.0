@@ -6,6 +6,22 @@
 }
 
 .gutter {
-  background-color: #eee;
-  flex: 0 0 10px;
+  align-items: center;
+  display: flex;
+  flex: 0 0 20px;
+  justify-content: center;
+
+  .handle {
+    background-color: #ddd;
+    cursor: ew-resize;
+    flex: 0 0 auto;
+    height: 48px;
+    width: 6px;
+
+    &.horizontal {
+      cursor: ns-resize;
+      height: 6px;
+      width: 48px;
+    }
+  }
 }

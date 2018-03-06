@@ -31,6 +31,11 @@ export class AreaComponent implements AfterViewInit {
   @Input()
   persistenceKey: string;
 
+  @Input()
+  set initialSize(size: number) {
+    this.renderer.setStyle(this.elRef.nativeElement, 'flex', size);
+  }
+
   parentLayout: IAreaLayout;
 
   private mouseMoveListener: () => void;
