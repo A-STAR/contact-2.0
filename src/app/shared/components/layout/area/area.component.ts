@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
@@ -52,7 +51,6 @@ export class AreaComponent implements AfterViewInit {
   }
 
   constructor(
-    private cdRef: ChangeDetectorRef,
     private elRef: ElementRef,
     private renderer: Renderer2,
   ) {}
