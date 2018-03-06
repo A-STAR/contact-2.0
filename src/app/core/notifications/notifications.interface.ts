@@ -21,7 +21,12 @@ export interface INotificationsState {
   notifications: Array<INotification>;
 }
 
-export type INotificationActionType = 'NOTIFICATION_PUSH' | 'NOTIFICATION_RESET' | 'NOTIFICATION_FILTER' | 'NOTIFICATION_DELETE';
+export type INotificationActionType =
+  'NOTIFICATION_INIT' |
+  'NOTIFICATION_PUSH' |
+  'NOTIFICATION_RESET' |
+  'NOTIFICATION_FILTER' |
+  'NOTIFICATION_DELETE';
 
 export interface IFilterActionPayload {
   type: NotificationTypeEnum;

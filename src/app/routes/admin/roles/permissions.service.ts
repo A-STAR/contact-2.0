@@ -17,6 +17,7 @@ export class PermissionsService extends AbstractActionService {
   static STORAGE_KEY = 'state/permissions';
 
   // store actions
+  static ROLE_INIT                  = 'ROLE_INIT';
   static ROLE_FETCH                 = 'ROLE_FETCH';
   static ROLE_FETCH_SUCCESS         = 'ROLE_FETCH_SUCCESS';
   static ROLE_ADD                   = 'ROLE_ADD';
