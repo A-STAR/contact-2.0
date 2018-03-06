@@ -62,7 +62,7 @@ export class ContextMenuService {
 
   private getSingleAction(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
     return {
-      name: this.translateService.instant(`default.grid.actions.${action.action}`),
+      name: this.translateAction(action),
       action: () => options.cb({
         metadataAction: {
           ...action,
@@ -78,7 +78,7 @@ export class ContextMenuService {
 
   private getActionWithChildren(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
     return {
-      name: this.translateService.instant(`default.grid.actions.${action.action}`),
+      name: this.translateAction(action),
       disabled: action.enabled
         ? !action.enabled.call(null, MetadataActionType.ALL, options.selected, options.selection.node.data)
         : false,
@@ -98,7 +98,7 @@ export class ContextMenuService {
       );
     }
     return {
-      name: this.translateService.instant(`default.grid.actions.${action.action}`),
+      name: this.translateAction(action),
       subMenu: subMenu.length ? subMenu : undefined
     };
   }
@@ -134,5 +134,9 @@ export class ContextMenuService {
         selection: options.selection
       }),
     };
+  }
+
+  private translateAction(action: IMetadataAction): string {
+    return this.translateService.instant(`${action.label || 'default.grid.actions'}.${action.action}`);
   }
 }

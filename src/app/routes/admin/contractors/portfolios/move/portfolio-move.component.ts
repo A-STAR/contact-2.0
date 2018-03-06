@@ -15,6 +15,7 @@ import { addGridLabel, isEmpty } from '@app/core/utils';
 @Component({
   selector: 'app-portfolio-move',
   templateUrl: './portfolio-move.component.html',
+  styleUrls: ['./portfolio-move.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortfolioMoveComponent {
@@ -51,7 +52,7 @@ export class PortfolioMoveComponent {
   columns: ISimpleGridColumn<IPortfolio>[] = [
     { prop: 'name' },
     { prop: 'fullName' },
-    { prop: 'responsibleName' },
+    { prop: 'responsibleFullName' },
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE }
   ].map(addGridLabel('contractors.grid'));
 

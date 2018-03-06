@@ -1,25 +1,25 @@
 <div class="row">
   <div class="col-md-5">
-    <app-grid
-      columnTranslationKey="users.ldap.groups"
-      selectionType="single"
-      [columns]="groupsColumns"
-      [footerHeight]="false"
-      [rows]="groups$ | async"
-      [styles]="{ height: '250px' }"
-      (onSelect)="onGroupSelect($event)">
-    </app-grid>
+    <div class="grid-wrapper">
+      <app-simple-grid
+        persistenceKey="[grid] admin/users/edit/ldap/groups"
+        selectionType="single"
+        [columns]="groupsColumns"
+        [rows]="groups$ | async"
+        (select)="onGroupSelect($event)">
+      </app-simple-grid>
+    </div>
   </div>
   <div class="col-md-7">
-    <app-grid
-      columnTranslationKey="users.ldap.users"
-      selectionType="single"
-      [columns]="usersColumns"
-      [footerHeight]="false"
-      [rows]="users$ | async"
-      [styles]="{ height: '250px' }"
-      (onSelect)="onUserSelect($event)"
-      (onDblClick)="onSubmit($event)">
-    </app-grid>
+    <div class="grid-wrapper">
+      <app-simple-grid
+        persistenceKey="[grid] admin/users/edit/ldap/users"
+        selectionType="single"
+        [columns]="usersColumns"
+        [rows]="users$ | async"
+        (onDblClick)="onSubmit($event)"
+        (select)="onUserSelect($event)">
+      </app-simple-grid>
+    </div>
   </div>
 </div>
