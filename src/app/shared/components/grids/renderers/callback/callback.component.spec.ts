@@ -1,6 +1,4 @@
 import { async as Async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 
 import { CallbackRendererComponent } from './callback.component';
 
