@@ -5,13 +5,13 @@ import { Subscription } from 'rxjs/Subscription';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
 import { DebtorGridService } from './debtor-grid.service';
 import { IncomingCallService } from '../incoming-call.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { addGridLabel } from '@app/core/utils';
 import { DateRendererComponent, NumberRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-incoming-call-debtor-grid',
@@ -86,7 +86,6 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
     private debtorGridService: DebtorGridService,
     private incomingCallService: IncomingCallService,
   ) {}
@@ -94,7 +93,8 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.searchParamsSubscription = this.incomingCallService.searchParams$
-      .flatMap(params => params ? this.debtorGridService.fetchAll(params as any) : of(null))
+      // with of(null) grid will think it is in loading state
+      .flatMap(params => params ? this.debtorGridService.fetchAll(params as any) : of([]))
       .subscribe(debtors => {
         this.debtors = debtors;
         this.incomingCallService.selectedDebtor = null;
