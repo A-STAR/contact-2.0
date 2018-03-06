@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { first } from 'rxjs/operators';
 
 import { ILookupTimeZone } from '@app/core/lookup/lookup.interface';
 import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { AttributesService } from '../attributes.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
+
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-mass-attr-timezone',
   templateUrl: './timezone.component.html',
+  styleUrls: ['./timezone.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimezoneComponent implements OnInit {
@@ -20,27 +21,20 @@ export class TimezoneComponent implements OnInit {
 
   selectedTimeZone: ILookupTimeZone;
 
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<ILookupTimeZone>[] = [
     { prop: 'code' },
     { prop: 'name' },
     { prop: 'utcOffset' },
-  ];
+  ].map(addGridLabel('widgets.mass.changeTimezoneAttr.grid'));
 
   timeZones: ILookupTimeZone[];
 
   constructor(
     private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService
   ) { }
 
   ngOnInit(): void {
-
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-      });
 
     this.attributesService.getTimezones()
       .subscribe(timeZones => {
@@ -62,8 +56,8 @@ export class TimezoneComponent implements OnInit {
     return !!this.selectedTimeZone;
   }
 
-  onSelect(timeZone: ILookupTimeZone): void {
-    this.selectedTimeZone = timeZone;
+  onSelect(timeZones: ILookupTimeZone[]): void {
+    this.selectedTimeZone = timeZones[0];
   }
 
   cancel(): void {

@@ -1,11 +1,10 @@
-<app-grid
-  *ngIf="columns"
-  columnTranslationKey="widgets.entityGroup"
-  [columns]="columns"
-  [footerHeight]="false"
-  [rows]="entityGroups"
-  selectionType="single"
-  [styles]="gridStyles"
-  (onSelect)="onSelect($event)"
-  (onDblClick)="onDblClick($event)">
-</app-grid>
+<div class="grid-wrapper">
+  <app-simple-grid
+    persistenceKey="[grid] mass-ops/entity-group"
+    selectionType="single"
+    [columns]="columns"
+    [rows]="entityGroups"
+    (select)="onSelect($event)"
+    (dblClick)="onDblClick($event)">
+  </app-simple-grid>
+</div>

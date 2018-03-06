@@ -1,3 +1,4 @@
+export { CallbackRendererComponent } from './callback/callback.component';
 export { CheckboxRendererComponent } from './checkbox/checkbox.component';
 export { DateRendererComponent } from './date/date.component';
 export { DateTimeRendererComponent } from './datetime/datetime.component';

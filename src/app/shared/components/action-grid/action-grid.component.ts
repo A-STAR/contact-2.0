@@ -76,7 +76,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() toolbarItems: IToolbarItem[];
   // TODO(i.lobanov): make this work for grid2 as well
   @Input() columns: ISimpleGridColumn<T>;
-  @Input() titlebarItems: IMetadataTitlebar;
+  @Input() titlebar: IMetadataTitlebar;
 
   @Input() fullHeight = false;
   /**
@@ -105,7 +105,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
-  @Output() action = new EventEmitter<IGridAction>();
+  @Output() action = new EventEmitter<IActionGridAction>();
   // emits when dialog closes
   @Output() close = new EventEmitter<ICloseAction>();
 
@@ -148,7 +148,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       this.initGrid(
         {
           actions: this.actions,
-          titlebar: this.titlebarItems,
+          titlebar: this.titlebar,
           defaultAction: this.defaultAction
         }
       );
@@ -213,6 +213,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       : null;
   }
 
+  deselectAll(): void {
+    if (this.grid) {
+      this.grid.deselectAll();
+    }
+  }
+
   getFiltersForm(): FormGroup {
     return this.filter && this.filter.form && this.filter.form.form;
   }
@@ -225,7 +231,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.dialog = action.metadataAction.action;
     this.dialogData = this.setDialogData(action);
     if (this.action) {
-      this.action.emit(this.dialogData);
+      this.action.emit(action);
     }
     this.cdRef.markForCheck();
   }
@@ -356,7 +362,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private attachPermissions(actions: IMetadataAction[], actionPermissions: IMetadataActionPermissions): IMetadataAction[] {
     return actions.map(action => ({
       ...action,
-      enabled: actionPermissions[action.action],
+      enabled: action.enabled || actionPermissions[action.action],
       children: action.children ? this.attachPermissions(action.children, actionPermissions) : undefined
     }));
   }

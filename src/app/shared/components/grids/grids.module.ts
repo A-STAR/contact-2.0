@@ -19,6 +19,7 @@ import { SimpleGridComponent } from './grid/grid.component';
 
 // Renderers
 import {
+  CallbackRendererComponent,
   CheckboxRendererComponent,
   DateRendererComponent,
   DateTimeRendererComponent,
@@ -36,6 +37,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
 @NgModule({
   imports: [
     AgGridModule.withComponents([
+      CallbackRendererComponent,
       CheckboxRendererComponent,
       DateRendererComponent,
       DateTimeRendererComponent,
@@ -60,6 +62,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     SimpleGridComponent,
   ],
   declarations: [
+    CallbackRendererComponent,
     CheckboxRendererComponent,
     DateRendererComponent,
     DateTimeRendererComponent,

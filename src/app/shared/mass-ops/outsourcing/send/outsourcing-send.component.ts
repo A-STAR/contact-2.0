@@ -1,17 +1,20 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { first } from 'rxjs/operators';
 
 import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IFilterPortfolio } from '@app/core/filters/grid-filters.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { OutsourcingService } from '../outsourcing.service';
+
+import { DateRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-outsourcing-send',
   templateUrl: './outsourcing-send.component.html',
+  styleUrls: ['./outsourcing-send.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OutsourcingSendComponent implements OnInit {
@@ -21,32 +24,25 @@ export class OutsourcingSendComponent implements OnInit {
 
   selectedPortfolio: IFilterPortfolio;
 
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<IFilterPortfolio>[] = [
     { prop: 'id' },
     { prop: 'name' },
     { prop: 'contractorName' },
     { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS },
     { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE },
-    { prop: 'signDate', renderer: 'dateRenderer' },
-    { prop: 'startWorkDate', renderer: 'dateRenderer' },
-    { prop: 'endWorkDate', renderer: 'dateRenderer' },
-  ];
+    { prop: 'signDate', renderer: DateRendererComponent },
+    { prop: 'startWorkDate', renderer: DateRendererComponent },
+    { prop: 'endWorkDate', renderer: DateRendererComponent },
+  ].map(addGridLabel('widgets.mass.outsourcing.send.grid'));
 
   portfolios: IFilterPortfolio[];
 
   constructor(
     private outsourcingService: OutsourcingService,
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService
   ) { }
 
   ngOnInit(): void {
-
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-      });
 
     this.outsourcingService
       .getOutsourcingPortfolios()
@@ -69,8 +65,8 @@ export class OutsourcingSendComponent implements OnInit {
     return !!this.selectedPortfolio;
   }
 
-  onSelect(portfolio: IFilterPortfolio): void {
-    this.selectedPortfolio = portfolio;
+  onSelect(portfolios: IFilterPortfolio[]): void {
+    this.selectedPortfolio = portfolios[0];
   }
 
   cancel(): void {
