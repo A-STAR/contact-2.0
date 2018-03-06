@@ -232,7 +232,7 @@ export class DashboardService {
       ],
       datasets: [
         {
-          data: [data.debtorSuccessContact, data.debtorSuccessContactPlan],
+          data: [data.debtorSuccessContact, -data.debtorSuccessContactPlan],
           backgroundColor: [DashboardService.GREEN_COLOR, DashboardService.PRIMARY_COLOR_LIGHT],
         }
       ]
