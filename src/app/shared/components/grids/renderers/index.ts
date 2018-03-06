@@ -1,3 +1,4 @@
+export { CallbackRendererComponent } from './callback/callback.component';
 export { CheckboxRendererComponent } from './checkbox/checkbox.component';
 export { DateRendererComponent } from './date/date.component';
 export { DateTimeRendererComponent } from './datetime/datetime.component';
@@ -5,3 +6,4 @@ export { DictRendererComponent } from './dict/dict.component';
 export { LookupRendererComponent } from './lookup/lookup.component';
 export { NumberRendererComponent } from './number/number.component';
 export { TickRendererComponent } from './tick/tick.component';
+export { ValueRendererComponent } from './value/value.component';

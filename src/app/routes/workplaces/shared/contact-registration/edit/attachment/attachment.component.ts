@@ -40,7 +40,7 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
     { prop: 'docTypeCode', dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE },
     { prop: 'docNumber' },
     { prop: 'comment' }
-  ].map(addGridLabel('workplaces.shared.contactRegistration.edit.form.attachments.grid'));
+  ].map(addGridLabel('routes.workplaces.shared.contactRegistration.edit.form.attachments.grid'));
 
   documents: IAttachment[] = [];
 

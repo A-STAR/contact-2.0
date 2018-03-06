@@ -13,7 +13,7 @@ export class ContextMenuService {
     private translateService: TranslateService,
   ) { }
 
-  onCtxMenuClick(options: IContextMenuOptions, simpleOptions?: IContextMenuSimpleOptions): (string | MenuItemDef)[] {
+  onCtxMenuClick(options?: IContextMenuOptions, simpleOptions?: IContextMenuSimpleOptions): (string | MenuItemDef)[] {
     return [
       ...this.getMetadataMenuItems(options),
       ...this.getSimpleMenuItems(simpleOptions)
@@ -21,7 +21,8 @@ export class ContextMenuService {
   }
 
   private getMetadataActions(options: IContextMenuOptions): [ MenuItemDef[], MenuItemDef[]] {
-    return options.actions.reduce((acc, action) => {
+    const actions = (options && options.actions) || [];
+    return actions.reduce((acc, action) => {
 
       const menuDef = action.applyTo ?
       this.getNonSingleAction(action, options) :
@@ -61,7 +62,7 @@ export class ContextMenuService {
 
   private getSingleAction(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
     return {
-      name: this.translateService.instant(`default.grid.actions.${action.action}`),
+      name: this.translateAction(action),
       action: () => options.cb({
         metadataAction: {
           ...action,
@@ -77,7 +78,7 @@ export class ContextMenuService {
 
   private getActionWithChildren(action: IMetadataAction, options: IContextMenuOptions): MenuItemDef {
     return {
-      name: this.translateService.instant(`default.grid.actions.${action.action}`),
+      name: this.translateAction(action),
       disabled: action.enabled
         ? !action.enabled.call(null, MetadataActionType.ALL, options.selected, options.selection.node.data)
         : false,
@@ -97,7 +98,7 @@ export class ContextMenuService {
       );
     }
     return {
-      name: this.translateService.instant(`default.grid.actions.${action.action}`),
+      name: this.translateAction(action),
       subMenu: subMenu.length ? subMenu : undefined
     };
   }
@@ -133,5 +134,9 @@ export class ContextMenuService {
         selection: options.selection
       }),
     };
+  }
+
+  private translateAction(action: IMetadataAction): string {
+    return this.translateService.instant(`${action.label || 'default.grid.actions'}.${action.action}`);
   }
 }

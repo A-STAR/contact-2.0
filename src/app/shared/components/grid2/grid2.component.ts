@@ -9,7 +9,6 @@ import {
   Output,
   OnChanges,
   SimpleChanges,
-  ViewEncapsulation,
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
@@ -57,11 +56,9 @@ import { ViewPortDatasource } from './data/viewport-data-source';
 import { ValueBag } from '@app/core/value-bag/value-bag';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-grid2',
   templateUrl: './grid2.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: [ './grid2.component.scss' ],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static DEFAULT_PAGE_SIZE = 250;
@@ -83,7 +80,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() fetchUrl: string;
   @Input() fullHeight = false;
   @Input() groupColumnMinWidth = 120;
-  @Input() headerHeight = 42;
+  @Input() headerHeight = 32;
   @Input() metadataKey: string;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000])).sort((x, y) => x > y ? 1 : -1);
@@ -91,7 +88,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() persistenceKey: string;
   @Input() remoteSorting = true;
   @Input() rowCount = 0;
-  @Input() rowHeight = 36;
+  @Input() rowHeight = 32;
   @Input() rowIdKey = 'id';
   @Input() rowSelection = 'multiple';
   @Input() rows: any[] = [];

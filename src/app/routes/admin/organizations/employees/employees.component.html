@@ -23,15 +23,17 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
-
-<app-grid
-  class="flat"
-  [columns]="columns"
-  [columnTranslationKey]="'organizations.employees'"
-  [emptyMessage]="emptyMessage$ | async"
-  [rows]="employees$ | async"
-  selectionType="single"
-  (onDblClick)="onEdit($event)"
-  (onSelect)="onSelect($event)">
-</app-grid>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      persistenceKey="[grid] admin/organizations/employees"
+      [columns]="columns"
+      [rows]="employees$ | async"
+      (dblClick)="onEdit($event)"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
+  </div>
+</div>

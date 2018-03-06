@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AngularSplitModule } from 'angular-split';
 
 import { RolesModule as RolesGridModule } from './roles/roles.module';
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { RolesAndPermissionsComponent } from './roles-and-permissions.component';
 

@@ -145,7 +145,7 @@ export class DataUploadComponent extends DialogFunctions
   }
 
   get currency(): number {
-    return this.dataUploadService.uploader.parameter;
+    return this.dataUploadService.uploader && this.dataUploadService.uploader.parameter;
   }
 
   get errorFileUrl(): string {
@@ -153,7 +153,7 @@ export class DataUploadComponent extends DialogFunctions
   }
 
   get errorFileName(): string {
-    return this.dataUploadService.uploader.errorFileName;
+    return this.dataUploadService.uploader && this.dataUploadService.uploader.errorFileName;
   }
 
   onFormatChange(formatId: number): void {

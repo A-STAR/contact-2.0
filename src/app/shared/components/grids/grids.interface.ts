@@ -1,4 +1,5 @@
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
+import { ICellRendererParams } from 'ag-grid';
 
 export enum IGridSelectionType {
   SINGLE = 'single',
@@ -12,6 +13,8 @@ export enum IGridFilterType {
 }
 
 export type IDictCodeCallback<T> = (item: T) => number;
+export type IRendererCallback<T> = (item: T) => string;
+export type IRendererCallbackParams = ICellRendererParams & { rendererCallback: IRendererCallback<any>};
 
 /**
  * Base grid column interface for `ISimpleGridColumn` and others to extend
@@ -26,11 +29,13 @@ export interface IGridColumn<T> {
 
   // Optional Fields
   dictCode?: number | IDictCodeCallback<T>;
+  rendererCallback?: IRendererCallback<T>;
   filter?: IGridFilterType;
   lookupKey?: ILookupKey;
   minWidth?: number;
   maxWidth?: number;
   renderer?: any;
+  valueTypeKey?: string;
 }
 
 export interface IGridLocalSettingsColumn {

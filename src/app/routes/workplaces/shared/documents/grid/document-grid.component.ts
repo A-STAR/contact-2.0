@@ -126,6 +126,10 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
     return this.selectedDocument$.map(document => document && document.fileName);
   }
 
+  get selectedDocumentMessageParams$(): Observable<Partial<IDocument>> {
+    return this.selectedDocument$.map(document => ({ docName: document && document.docName || document.fileName }));
+  }
+
   get selectedDocumentURL$(): Observable<string> {
     return this.selectedDocumentId$.map(documentId => `/api/fileattachments/${documentId}`);
   }
@@ -199,7 +203,11 @@ export class DocumentGridComponent implements OnInit, OnDestroy {
   }
 
   private onEdit(documentId: number): void {
-    this.router.navigate([ `${this.router.url}/document/${documentId}` ]);
+    const document = this.documents.find(d => d.id === documentId);
+    if (document) {
+      const { entityTypeCode, id } = document;
+      this.router.navigate([ `${this.router.url}/document/${id}` ], { queryParams: { entityType: entityTypeCode } });
+    }
   }
 
   private onSubmitSuccess(): void {

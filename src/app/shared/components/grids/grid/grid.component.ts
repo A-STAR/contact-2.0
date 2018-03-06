@@ -10,22 +10,23 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 
 import {
   ColDef,
   ColumnApi,
-  GetContextMenuItemsParams,
   GridApi,
   GridOptions,
   RowDoubleClickedEvent,
 } from 'ag-grid';
 
+import { IAGridAction } from '@app/shared/components/grid2/grid2.interface';
 import { IGridSelectionType } from '../grids.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from './grid.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
+import { ContextMenuService } from '../context-menu/context-menu.service';
 import { GridsService } from '../grids.service';
 
 import { EmptyOverlayComponent } from '../overlays/empty/empty.component';
@@ -35,7 +36,6 @@ import { isEmpty } from '@app/core/utils/index';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   host: { class: 'full-height' },
   selector: 'app-simple-grid',
   styleUrls: [ './grid.component.scss' ],
@@ -44,6 +44,7 @@ import { isEmpty } from '@app/core/utils/index';
 export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
   @ViewChild(GridToolbarComponent) gridToolbar: GridToolbarComponent;
 
+  @Input() actions: IMetadataAction[] = [];
   @Input() columns: ISimpleGridColumn<T>[];
   @Input() idKey = 'id';
   @Input() persistenceKey: string;
@@ -67,6 +68,7 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
 
   @Output() select = new EventEmitter<T[]>();
   @Output() dblClick = new EventEmitter<T>();
+  @Output() action = new EventEmitter<IAGridAction>();
 
   gridOptions: GridOptions = {
     defaultColDef: {
@@ -87,15 +89,23 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
     enableFilter: true,
     enableRangeSelection: true,
     enableSorting: true,
-    getContextMenuItems: this.getContextMenuItems.bind(this),
-    headerHeight: 28,
+    getContextMenuItems: (selection) => this.contextMenuService.onCtxMenuClick(
+      {
+        actions: this.actions,
+        selected: this.selection,
+        selection,
+        cb: (action) => this.action.emit(action)
+      },
+      this.getContextMenuSimpleItems()
+    ),
+    headerHeight: 32,
     noRowsOverlayComponentFramework: EmptyOverlayComponent,
     onColumnMoved: () => this.saveSettings(),
     onColumnResized: () => this.saveSettings(),
     onRowDoubleClicked: event => this.onRowDoubleClicked(event),
     onSelectionChanged: () => this.onSelectionChanged(),
     onSortChanged: () => this.saveSettings(),
-    rowHeight: 28,
+    rowHeight: 32,
     rowSelection: 'multiple',
     showToolPanel: false,
     suppressPaginationPanel: true,
@@ -113,6 +123,7 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contextMenuService: ContextMenuService,
     private gridsService: GridsService,
   ) {}
 
@@ -137,6 +148,10 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
       this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey);
       this.cdRef.markForCheck();
     }
+  }
+
+  deselectAll(): void {
+    this.gridApi.deselectAll();
   }
 
   ngOnDestroy(): void {
@@ -166,7 +181,7 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private getContextMenuItems(params: GetContextMenuItemsParams): string[] {
+  private getContextMenuSimpleItems(): string[] {
     return [
       'copy',
       'copyWithHeaders',

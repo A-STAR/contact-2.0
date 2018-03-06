@@ -30,7 +30,7 @@ export class AddressGridComponent implements OnInit {
     { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_ADDRESS_STATUS },
     { prop: 'isResidence', maxWidth: 90, type: 'boolean', renderer: TickRendererComponent },
     { prop: 'comment' },
-  ].map(addGridLabel('debtor.information.address'));
+  ].map(addGridLabel('debtor.information.address.grid'));
 
   addresses: IAddress[];
 

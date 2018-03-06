@@ -111,30 +111,30 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
-      align: 'right',
-      enabled: combineLatestAnd([this.callService.canTransferCall$, this.selectedPhoneCall$.map(Boolean)]),
-      action: () => this.setDialog('operator')
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_RESUME,
-      align: 'right',
-      enabled: combineLatestAnd([this.callService.canRetrieveCall$, this.selectedPhoneCall$.map(Boolean)]),
-      action: () => this.callService.retrieveCall()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_PAUSE,
-      align: 'right',
-      enabled: combineLatestAnd([this.callService.canHoldCall$, this.selectedPhoneCall$.map(Boolean)]),
-      action: () => this.callService.holdCall()
-    },
-    {
-      type: ToolbarItemTypeEnum.BUTTON_DROP,
-      align: 'right',
-      enabled: combineLatestAnd([this.callService.canDropCall$, this.selectedPhoneCall$.map(Boolean)]),
-      action: () => this.callService.dropCall()
-    },
+    // {
+    //   type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
+    //   align: 'right',
+    //   enabled: combineLatestAnd([this.callService.canTransferCall$, this.selectedPhoneCall$.map(Boolean)]),
+    //   action: () => this.setDialog('operator')
+    // },
+    // {
+    //   type: ToolbarItemTypeEnum.BUTTON_RESUME,
+    //   align: 'right',
+    //   enabled: combineLatestAnd([this.callService.canRetrieveCall$, this.selectedPhoneCall$.map(Boolean)]),
+    //   action: () => this.callService.retrieveCall()
+    // },
+    // {
+    //   type: ToolbarItemTypeEnum.BUTTON_PAUSE,
+    //   align: 'right',
+    //   enabled: combineLatestAnd([this.callService.canHoldCall$, this.selectedPhoneCall$.map(Boolean)]),
+    //   action: () => this.callService.holdCall()
+    // },
+    // {
+    //   type: ToolbarItemTypeEnum.BUTTON_DROP,
+    //   align: 'right',
+    //   enabled: combineLatestAnd([this.callService.canDropCall$, this.selectedPhoneCall$.map(Boolean)]),
+    //   action: () => this.callService.dropCall()
+    // },
     {
       type: ToolbarItemTypeEnum.BUTTON_CALL,
       align: 'right',

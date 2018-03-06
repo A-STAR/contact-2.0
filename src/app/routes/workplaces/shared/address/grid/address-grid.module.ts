@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { BlockDialogModule } from '@app/shared/components/dialog/block/block-dialog.module';
 import { DialogActionModule } from '@app/shared/components/dialog-action/dialog-action.module';
@@ -20,6 +21,7 @@ import { AddressGridComponent } from './address-grid.component';
     DialogActionModule,
     GridsModule,
     Toolbar2Module,
+    TranslateModule,
   ],
   exports: [
     AddressGridComponent,

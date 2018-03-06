@@ -67,7 +67,7 @@ export interface IContextMenuItem {
 
 export interface IMetadataDefs {
   actions: IMetadataAction[];
-  columns: IAGridColumn[];
+  columns?: IAGridColumn[];
   titlebar?: IMetadataTitlebar;
   defaultAction?: string;
   permits?: string[];

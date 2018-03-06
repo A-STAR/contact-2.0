@@ -9,12 +9,14 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
 import { IObject } from '../objects.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { ObjectsService } from '../objects.service';
 
-import { GridComponent } from '../../../../../shared/components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
+
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-object-grid-add',
@@ -28,12 +30,12 @@ export class ObjectGridEditComponent implements OnInit {
   @Output() submit = new EventEmitter<number[]>();
   @Output() cancel = new EventEmitter<void>();
 
-  @ViewChild(GridComponent) grid: GridComponent;
+  @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IObject>;
 
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<IObject>[] = [
     { prop: 'id' },
     { prop: 'name' },
-  ];
+  ].map(addGridLabel('widgets.object.grid'));
 
   rows: IObject[] = [];
 
@@ -61,7 +63,7 @@ export class ObjectGridEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const ids = this.grid.selected.map(item => item.id);
+    const ids = this.grid.selection.map(item => item.id);
     this.submit.emit(ids);
   }
 

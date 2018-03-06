@@ -47,7 +47,7 @@ export class OutsourcingService {
     return this.dataService
       .update(`${this.baseUrl}/exclude`, {},
         {
-          dData: this.actionGridFilterService.buildRequest(idData)
+          idData: this.actionGridFilterService.buildRequest(idData)
         }
       )
       .pipe(

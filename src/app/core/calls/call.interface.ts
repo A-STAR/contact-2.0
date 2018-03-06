@@ -29,11 +29,11 @@ export interface IPBXParams {
 }
 
 export enum PBXStateEnum {
-  PBX_BLOCK = 'BLOCK',
-  PBX_NOCALL = 'NO_CALL',
-  PBX_CALL = 'CALL',
-  PBX_HOLD = 'HOLD',
-  PBX_DIAL = 'DIAL'
+  PBX_BLOCK = 'block',
+  PBX_NOCALL = 'noCall',
+  PBX_CALL = 'call',
+  PBX_HOLD = 'hold',
+  PBX_DIAL = 'dial'
 }
 
 export interface IPBXState {

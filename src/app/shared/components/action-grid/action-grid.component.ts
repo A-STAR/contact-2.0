@@ -30,14 +30,16 @@ import {
   IAGridExportableColumn,
 } from '../grid2/grid2.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
-import { IGridColumn, IContextMenuItem } from '../grid/grid.interface';
+import { IMetadataDefs } from '../grid/grid.interface';
 import {
   IMetadataAction,
   IMetadataActionPermissions,
   MetadataActionType,
   IMetadataTitlebar,
 } from '@app/core/metadata/metadata.interface';
-import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, TitlebarItemTypeEnum, TitlebarGridDefaultItems } from '@app/shared/components/titlebar/titlebar.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { ActionGridFilterService } from './filter/action-grid-filter.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
@@ -49,7 +51,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { ActionGridFilterComponent } from './filter/action-grid-filter.component';
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
-import { GridComponent } from '../../components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.component';
 
 import { DialogFunctions } from '../../../core/dialog';
@@ -64,11 +66,30 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
   providers: [ ActionGridFilterService ]
 })
 export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
-
+  /**
+   * These inputs are handling config,
+   * passed directly from client code
+   */
+  @Input() actions: IMetadataAction[];
+  @Input() defaultAction: string;
   @Input() columnIds: string[];
+  @Input() toolbarItems: IToolbarItem[];
+  // TODO(i.lobanov): make this work for grid2 as well
+  @Input() columns: ISimpleGridColumn<T>;
+  @Input() titlebar: IMetadataTitlebar;
+
   @Input() fullHeight = false;
-  @Input() metadataKey: string;
+  /**
+   * Shows whether to use simple grid
+   */
+  @Input() isSimple = false;
+  @Input() selectionType;
   @Input() ngClass: string;
+  /**
+   * If metadataKey is passed,
+   * config retrieved from the server
+   */
+  @Input() metadataKey: string;
   @Input() persistenceKey: string;
   /**
    * Will be deprecated
@@ -79,18 +100,19 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() rowIdKey: string;
   @Input() rows: T[] = [];
   @Input() columnTranslationKey: string;
-  @Input() columns: IGridColumn[];
-  @Input() contextMenuOptions: IContextMenuItem[];
   @Input() styles: CSSStyleDeclaration;
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() select = new EventEmitter<IAGridSelected>();
+  @Output() action = new EventEmitter<IActionGridAction>();
+  // emits when dialog closes
+  @Output() close = new EventEmitter<ICloseAction>();
 
   @ViewChild(ActionGridFilterComponent) filter: ActionGridFilterComponent;
   @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
+  @ViewChild('grid') grid: SimpleGridComponent<T> | Grid2Component;
   @ViewChild(TitlebarComponent) gridBar: TitlebarComponent;
-  @ViewChild('grid') grid: GridComponent | Grid2Component;
 
   private _columns: IAGridColumn[];
   private _initialized = false;
@@ -98,7 +120,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private actions$ = new BehaviorSubject<any[]>(null);
   private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
   private defaultActionName: string;
-  private defaultAction: IMetadataAction;
+  private currentDefaultAction: IMetadataAction;
 
   dialog: string;
   dialogData: IGridAction;
@@ -118,25 +140,18 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   ngOnInit(): void {
-
+    // get data from the server
     if (this.metadataKey) {
-      this.getGridPermission(this.permissionKey)
-        .switchMap(isAllowed => {
-          if (isAllowed) {
-            return this.gridService.getMetadata(this.metadataKey, {});
-          }
-          this.notificationsService.permissionError().entity(`entities.${this.metadataKey}.gen.plural`).dispatch();
-          return never();
-        })
-        .pipe(first())
-        .subscribe(({ actions, columns, titlebar, defaultAction }) => {
-          this.actions$.next(actions);
-          this.defaultActionName = defaultAction;
-          this.titlebarConfig$.next(titlebar);
-          this._columns = [ ...columns ];
-          this._initialized = true;
-          this.cdRef.markForCheck();
-        });
+      this.getMetadata();
+    } else {
+      // proceed manually
+      this.initGrid(
+        {
+          actions: this.actions,
+          titlebar: this.titlebar,
+          defaultAction: this.defaultAction
+        }
+      );
     }
 
     this.gridActions$ = this.getGridActions();
@@ -156,7 +171,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       )
       .pipe(map(([actions, constants, permissions, entityPermissions]) => {
         const actionsWithPermissions = this.addPermissions(actions, constants, permissions, entityPermissions);
-        this.defaultAction = this.getDefaultAction(actionsWithPermissions);
+        this.currentDefaultAction = this.getDefaultAction(actionsWithPermissions);
         return actionsWithPermissions;
       }));
   }
@@ -164,19 +179,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   getGridTitlebar(): Observable<ITitlebar> {
     return combineLatest(
       this.titlebarConfig$.pipe(filter(Boolean)),
-      this.actionGridFilterService.hasFilter$.pipe(filter(Boolean)),
+      this.actionGridFilterService.hasFilter$,
     )
-    .pipe(map(([config, hasFilters]) => {
-      return hasFilters ? this.buildTitlebar(config) : null;
-    }));
+    .pipe(map(([config, hasFilters]) => this.buildTitlebar(config, hasFilters)));
   }
 
   get selection(): T[] {
-    return this.grid.selected as T[];
-  }
-
-  get isUsingAGGrid(): boolean {
-    return !!this.metadataKey;
+    return this.isSimple ?
+      (this.grid as SimpleGridComponent<T>).selection : (this.grid as Grid2Component).selected;
   }
 
   isAttrChangeDictionaryDlg(): boolean {
@@ -203,6 +213,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       : null;
   }
 
+  deselectAll(): void {
+    if (this.grid) {
+      this.grid.deselectAll();
+    }
+  }
+
   getFiltersForm(): FormGroup {
     return this.filter && this.filter.form && this.filter.form.form;
   }
@@ -214,11 +230,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     };
     this.dialog = action.metadataAction.action;
     this.dialogData = this.setDialogData(action);
+    if (this.action) {
+      this.action.emit(action);
+    }
     this.cdRef.markForCheck();
-  }
-
-  onSimpleGridAction(metadataAction: IMetadataAction): void {
-    alert(`Action ${metadataAction.action} is deprecated for simple grid!`);
   }
 
   onCloseAction(action: ICloseAction = {}): void {
@@ -226,13 +241,13 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       this.onRequest();
     }
     if (action.deselectAll) {
-      if (this.isUsingAGGrid) {
-        (this.grid as Grid2Component).deselectAll();
-      } else {
-        (this.grid as GridComponent).clearSelection();
-      }
+      this.grid.deselectAll();
     }
     this.onCloseDialog();
+
+    if (this.close) {
+      this.close.emit(action);
+    }
   }
 
   onRequest(): void {
@@ -240,11 +255,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onDblClick(row: T): void {
-    if (this.defaultAction) {
+    if (this.currentDefaultAction) {
       const action: IActionGridAction = {
         selection: row,
         metadataAction: {
-          ...this.defaultAction,
+          ...this.currentDefaultAction,
           type: MetadataActionType.SINGLE
         }
       };
@@ -272,16 +287,34 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return this._initialized;
   }
 
-  get selected(): T[] {
-    return this.grid && this.grid.selected || [] as any[];
-  }
-
   get gridOptions(): GridOptions {
     return this.grid && this.gridOptions;
   }
 
   get columnsDef(): IAGridColumn[] {
     return this._columns || [];
+  }
+
+  private getMetadata(): void {
+    this.getGridPermission(this.permissionKey)
+      .switchMap(isAllowed => {
+        if (isAllowed) {
+          return this.gridService.getMetadata(this.metadataKey, {});
+        }
+        this.notificationsService.permissionError().entity(`entities.${this.metadataKey}.gen.plural`).dispatch();
+        return never();
+      })
+      .pipe(first())
+      .subscribe(this.initGrid.bind(this));
+  }
+
+  private initGrid(data: IMetadataDefs): void {
+    this.actions$.next(data.actions);
+    this.defaultActionName = data.defaultAction;
+    this.titlebarConfig$.next(data.titlebar);
+    this._columns = data.columns ? [...data.columns] : null;
+    this._initialized = true;
+    this.cdRef.markForCheck();
   }
 
   private getGridFilters(): FilterObject {
@@ -329,7 +362,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private attachPermissions(actions: IMetadataAction[], actionPermissions: IMetadataActionPermissions): IMetadataAction[] {
     return actions.map(action => ({
       ...action,
-      enabled: actionPermissions[action.action],
+      enabled: action.enabled || actionPermissions[action.action],
       children: action.children ? this.attachPermissions(action.children, actionPermissions) : undefined
     }));
   }
@@ -421,10 +454,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         permissions.has('DEBT_OUTSOURCING_EXCLUDE') : selection.length && permissions.has('DEBT_OUTSOURCING_EXCLUDE'),
       debtOutsourcingReturn: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.has('DEBT_OUTSOURCING_RETURN') : selection.length && permissions.has('DEBT_OUTSOURCING_RETURN'),
+      registerContact: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
+        of(true) : selection.length && of(true),
     };
   }
 
-  private buildTitlebar(config: IMetadataTitlebar): ITitlebar {
+  private buildTitlebar(config: IMetadataTitlebar, hasFilter?: boolean): ITitlebar {
     // TODO(i.lobanov): mock, remove when titlebar added in config
     const titlebarItems = {
       refresh: (permissions: string[]) => ({
@@ -445,7 +480,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     };
     return {
       title: config.title,
-      items: config.items.map(item => titlebarItems[item.name](item.permissions))
+      items: config.items
+        .filter(configItem => hasFilter || TitlebarGridDefaultItems.includes(configItem.name))
+        .map(item => titlebarItems[item.name](item.permissions))
     };
   }
 

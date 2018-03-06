@@ -14,7 +14,7 @@ import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 
 import { isEmpty, makeKey, range, addLabelForEntity } from '@app/core/utils';
 
-const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form');
+const labelKey = makeKey('routes.workplaces.shared.contactRegistration.contactGrid.tabs.add.form');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

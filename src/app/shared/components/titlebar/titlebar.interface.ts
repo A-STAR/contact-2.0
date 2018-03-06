@@ -64,3 +64,7 @@ export interface ITitlebar {
   suppressCenterZone?: boolean;
   suppressBorder?: boolean;
 }
+
+export const TitlebarGridDefaultItems = [
+  'exportExcel'
+];

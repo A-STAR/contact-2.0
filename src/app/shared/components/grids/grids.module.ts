@@ -19,6 +19,7 @@ import { SimpleGridComponent } from './grid/grid.component';
 
 // Renderers
 import {
+  CallbackRendererComponent,
   CheckboxRendererComponent,
   DateRendererComponent,
   DateTimeRendererComponent,
@@ -26,6 +27,7 @@ import {
   LookupRendererComponent,
   NumberRendererComponent,
   TickRendererComponent,
+  ValueRendererComponent,
 } from './renderers';
 
 // Misc Components
@@ -35,6 +37,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
 @NgModule({
   imports: [
     AgGridModule.withComponents([
+      CallbackRendererComponent,
       CheckboxRendererComponent,
       DateRendererComponent,
       DateTimeRendererComponent,
@@ -43,6 +46,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
       LookupRendererComponent,
       NumberRendererComponent,
       TickRendererComponent,
+      ValueRendererComponent,
     ]),
     ButtonModule,
     CheckModule,
@@ -58,6 +62,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     SimpleGridComponent,
   ],
   declarations: [
+    CallbackRendererComponent,
     CheckboxRendererComponent,
     DateRendererComponent,
     DateTimeRendererComponent,
@@ -68,6 +73,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     NumberRendererComponent,
     SimpleGridComponent,
     TickRendererComponent,
+    ValueRendererComponent,
   ],
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
   entryComponents: [

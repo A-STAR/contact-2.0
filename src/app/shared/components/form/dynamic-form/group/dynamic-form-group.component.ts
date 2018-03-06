@@ -69,7 +69,7 @@ export class DynamicFormGroupComponent {
       message: control.validationMessages
         && control.validationMessages[key] || DynamicFormGroupComponent.DEFAULT_MESSAGES[key] || key,
       data: errors[key]
-    }));
+    })).slice(0, 1);
   }
 
   onSelectItems(event: ISelectItemsPayload): void {

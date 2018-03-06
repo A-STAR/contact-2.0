@@ -4,20 +4,21 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators/first';
 
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import { IPermissionModel, IPermissionRole } from '../permissions.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-import { IValueEntity } from '../../../../core/converter/value-converter.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { IValueEntity } from '@app/core/converter/value-converter.interface';
 
-import { DataService } from '../../../../core/data/data.service';
-import { GridService } from '../../../../shared/components/grid/grid.service';
-import { NotificationsService } from '../../../../core/notifications/notifications.service';
+import { DataService } from '@app/core/data/data.service';
+import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PermissionsService } from '../permissions.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '../../../../core/converter/value-converter.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { combineLatestAnd } from '../../../../core/utils/helpers';
-import { DialogFunctions } from '../../../../core/dialog';
+import { DialogFunctions } from '@app/core/dialog';
+
+import { combineLatestAnd } from '@app/core/utils/helpers';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,15 +37,13 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
 
   dialog: 'add' | 'edit' | 'remove';
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IPermissionModel>[] = [
     { prop: 'id', minWidth: 70, maxWidth: 100 },
     { prop: 'name', minWidth: 200, maxWidth: 350 },
-    { prop: 'value', minWidth: 70, maxWidth: 100,
-      renderer: (permission: IPermissionModel) => this.valueConverterService.deserializeBoolean(permission)
-    },
+    { prop: 'value', minWidth: 70, maxWidth: 100, valueTypeKey: 'typeCode' },
     { prop: 'dsc', minWidth: 200 },
     { prop: 'comment', minWidth: 300 },
-  ];
+  ].map(addGridLabel('roles.permissions.grid'));
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -88,7 +87,6 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
   constructor(
     private cdRef: ChangeDetectorRef,
     private dataService: DataService,
-    private gridService: GridService,
     private notifications: NotificationsService,
     private permissionsService: PermissionsService,
     private userPermissionsService: UserPermissionsService,
@@ -98,7 +96,6 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
   }
 
   ngOnInit(): void {
-    this.columns = this.gridService.setRenderers(this.columns);
     this.permissionsSubscription = this.permissionsService.permissions
       .subscribe(permissions => {
         this.currentRole = permissions.currentRole;
@@ -166,7 +163,10 @@ export class PermissionsComponent extends DialogFunctions implements OnInit, OnD
     this.onSuccess(PermissionsService.PERMISSION_UPDATE_SUCCESS);
   }
 
-  onSelect(record: IPermissionModel): void {
+  onSelect(records: IPermissionModel[]): void {
+    const record = isEmpty(records)
+      ? null
+      : records[0];
     if (record) {
       this.permissionsService.changeSelected(record);
     }
