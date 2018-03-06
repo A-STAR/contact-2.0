@@ -3265,6 +3265,13 @@
       },
       "lastMonthDay": "Last"
     },
+    "decimal": {
+      "format": {
+        "minIntegerDigits": 1,
+        "minFractionDigits": 0,
+        "maxFractionDigits": 2
+      }
+    },
     "colors": {
       "transparent": "Transparent",
       "azure": "Azure",
