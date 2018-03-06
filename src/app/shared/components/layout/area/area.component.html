@@ -1,0 +1,8 @@
+<ng-content></ng-content>
+
+<div
+  *ngFor="let i of gutters"
+  class="gutter"
+  [ngStyle]="getGutterStyle(i)"
+  (mousedown)="onMouseDown(i, $event)"
+></div>

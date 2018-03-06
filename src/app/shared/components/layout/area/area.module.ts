@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { AreaComponent } from './area.component';
@@ -8,6 +9,9 @@ import { AreaComponent } from './area.component';
   ],
   exports: [
     AreaComponent,
+  ],
+  imports: [
+    CommonModule,
   ],
 })
 export class AreaModule {}

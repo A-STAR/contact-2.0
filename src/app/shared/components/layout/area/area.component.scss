@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+}
+
+.gutter {
+  background-color: #eee;
+  flex: 0 0 20px;
+}
