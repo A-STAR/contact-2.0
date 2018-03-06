@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { async as Async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async as Async, TestBed } from '@angular/core/testing';
 
 import { AreaComponent } from './area.component';
 
