@@ -31,6 +31,9 @@ export class AreaComponent implements AfterViewInit {
   @Input()
   persistenceKey: string;
 
+  @Input()
+  size: number;
+
   private mouseMoveListener: () => void;
   private mouseUpListener: () => void;
 
@@ -62,9 +65,12 @@ export class AreaComponent implements AfterViewInit {
   }
 
   onMouseDown(i: number, event: MouseEvent): void {
+    const start = this.layout === IAreaLayout.ROW
+      ? event.clientX
+      : event.clientY;
+
     this.dragData = {
-      x: event.clientX,
-      y: event.clientY,
+      start,
       i,
     };
 
@@ -83,8 +89,9 @@ export class AreaComponent implements AfterViewInit {
   }
 
   private onDrag(event: MouseEvent): void {
-    const x = event.clientX - this.dragData.x;
-    const y = event.clientY - this.dragData.y;
-    // console.log(x, y);
+    const size = this.layout === IAreaLayout.ROW
+      ? event.clientX - this.dragData.start
+      : event.clientY - this.dragData.start;
+    console.log(size);
   }
 }
