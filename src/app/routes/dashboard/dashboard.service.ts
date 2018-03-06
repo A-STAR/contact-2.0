@@ -15,6 +15,7 @@ import { IIndicator } from '@app/shared/components/charts/charts.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { makeKey } from '@app/core/utils';
 
@@ -89,7 +90,8 @@ export class DashboardService {
 
   constructor(
     private dataService: DataService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private valueConverterService: ValueConverterService
   ) { }
 
   getParams(): Observable<IDashboardParams> {
@@ -158,7 +160,8 @@ export class DashboardService {
     return (currencyName: string) =>
       Object.keys(data)
         .map((key: keyof IDashboardParams) => ({
-          text: currencyIndicators.includes(key) ? `${data[key]} ${currencyName}` : `${data[key]}`,
+          text: currencyIndicators.includes(key) ?
+            `${this.valueConverterService.formatNumber(data[key])} ${currencyName || ''}` : `${data[key]}`,
           label: label(`indicators.${key}`),
           color: DashboardService.PRIMARY_COLOR_LIGHT
         }));
