@@ -41,3 +41,13 @@ export interface IDateFormats {
   time?: string;
   timeWithoutSeconds?: string;
 }
+
+export interface IDecimalFormats {
+  minIntegerDigits: number;
+  minFractionDigits: number;
+  maxFractionDigits: number;
+  /**
+   * @see {@link https://github.com/angular/angular/tree/master/packages/common/locales|i18n locales}
+   */
+  locale?: string;
+}
