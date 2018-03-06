@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogActionModule } from '@app/shared/components/dialog-action/dialog-action.module';
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
-import { GridModule } from '@app/shared/components/grid/grid.module';
+import { GridsModule } from '@app/shared/components/grids/grids.module';
 
 import { OutsourcingService } from './outsourcing.service';
 
@@ -17,7 +17,7 @@ import { OutsourcingReturnComponent } from './return/outsourcing-return.componen
     CommonModule,
     DialogActionModule,
     DialogModule,
-    GridModule,
+    GridsModule,
     TranslateModule,
   ],
   providers: [ OutsourcingService ],

@@ -3,17 +3,16 @@
     <h3>{{ title | translate }}</h3>
   </div>
 
-  <app-grid
-    *ngIf="terms"
-    columnTranslationKey="terms"
-    selectionType="single"
-    rowIdKey="nodeId"
-    [styles]="{height: '200px'}"
-    [columns]="columns"
-    [rows]="terms"
-    [allowDblClick]="false"
-    (onSelect)="onSelect($event)">
-  </app-grid>
+  <div class="grid-wrapper">
+    <app-simple-grid
+      persistenceKey="[grid] mass-ops/attributes/dictionary"
+      selectionType="single"
+      idKey="nodeId"
+      [columns]="columns"
+      [rows]="terms"
+      (select)="onSelect($event)">
+    </app-simple-grid>
+  </div>
 
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="submit()">
