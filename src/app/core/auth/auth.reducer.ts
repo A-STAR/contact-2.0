@@ -3,7 +3,7 @@ import { IAuthState } from './auth.interface';
 
 import { AuthService } from './auth.service';
 
-// const savedToken = localStorage.getItem(AuthService.TOKEN_NAME);
+const savedToken = localStorage.getItem(AuthService.AUTH_TOKEN);
 
 export const defaultState: IAuthState = {
   token: null,

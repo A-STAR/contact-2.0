@@ -15,27 +15,27 @@ import { PersistenceService } from '../persistence/persistence.service';
 
 @Injectable()
 export class AuthService implements CanActivate {
-  static AUTH_TOKEN     = 'auth/token';
-  static LANGUAGE_TOKEN = 'auth/language';
-  static REDIRECT_TOKEN = 'auth/redirect';
+  static readonly AUTH_TOKEN     = 'auth/token';
+  static readonly LANGUAGE_TOKEN = 'auth/language';
+  static readonly REDIRECT_TOKEN = 'auth/redirect';
 
-  static URL_DEFAULT = '/';
-  static URL_LOGIN   = '/login';
+  static readonly URL_DEFAULT = '/';
+  static readonly URL_LOGIN   = '/login';
 
-  static JWT_EXPIRATION_THRESHOLD = 60e3;
-  static JWT_TIMER_INTERVAL       = 10e3;
+  static readonly JWT_EXPIRATION_THRESHOLD = 60e3;
+  static readonly JWT_TIMER_INTERVAL       = 10e3;
 
-  static AUTH_LOGIN           = 'AUTH_LOGIN';
-  static AUTH_LOGIN_SUCCESS   = 'AUTH_LOGIN_SUCCESS';
-  static AUTH_REFRESH         = 'AUTH_REFRESH';
-  static AUTH_LOGOUT          = 'AUTH_LOGOUT';
-  static AUTH_CREATE_SESSION  = 'AUTH_CREATE_SESSION';
-  static AUTH_DESTROY_SESSION = 'AUTH_DESTROY_SESSION';
-  static AUTH_GLOBAL_RESET    = 'AUTH_GLOBAL_RESET';
-  static AUTH_RETRIEVE_TOKEN  = 'AUTH_RETRIEVE_TOKEN';
+  static readonly AUTH_LOGIN           = 'AUTH_LOGIN';
+  static readonly AUTH_LOGIN_SUCCESS   = 'AUTH_LOGIN_SUCCESS';
+  static readonly AUTH_REFRESH         = 'AUTH_REFRESH';
+  static readonly AUTH_LOGOUT          = 'AUTH_LOGOUT';
+  static readonly AUTH_CREATE_SESSION  = 'AUTH_CREATE_SESSION';
+  static readonly AUTH_DESTROY_SESSION = 'AUTH_DESTROY_SESSION';
+  static readonly AUTH_GLOBAL_RESET    = 'AUTH_GLOBAL_RESET';
+  static readonly AUTH_RETRIEVE_TOKEN  = 'AUTH_RETRIEVE_TOKEN';
 
-  static USER_FETCH           = 'USER_FETCH';
-  static USER_FETCH_SUCCESS   = 'USER_FETCH_SUCCESS';
+  static readonly USER_FETCH           = 'USER_FETCH';
+  static readonly USER_FETCH_SUCCESS   = 'USER_FETCH_SUCCESS';
 
   private tokenTimer = null;
 
