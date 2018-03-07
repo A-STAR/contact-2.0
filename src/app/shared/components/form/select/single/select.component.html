@@ -17,7 +17,7 @@
       class="form-control select-search"
       autocomplete="off"
       [attr.placeholder]="(placeholder || '') | translate"
-      [ngModel]="activeLabel"
+      [ngModel]="activeLabel | translate"
       (click)="onInputClick($event)"
       (ngModelChange)="onInputChange($event)"
     >
@@ -46,7 +46,7 @@
           [ngClass]="{ active: isActive(option) }"
           (click)="onSelect($event, option)"
         >
-          <div class="dropdown-item">{{ renderer(option) }}</div>
+          <div class="dropdown-item">{{ renderer(option) | translate }}</div>
         </div>
       </li>
 
