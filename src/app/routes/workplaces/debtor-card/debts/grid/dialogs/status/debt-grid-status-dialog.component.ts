@@ -45,8 +45,8 @@ export class DebtGridStatusDialogComponent implements OnInit, AfterViewInit, OnD
 
   controls: Array<IDynamicFormControl> = [
     { controlName: 'statusCode', type: 'radio', required: true },
-    { controlName: 'reasonCode', type: 'select' },
     { controlName: 'customStatusCode', type: 'select', disabled: true },
+    { controlName: 'reasonCode', type: 'select' },
     { controlName: 'comment', type: 'textarea' }
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.statusChange.${control.controlName}` }) as IDynamicFormControl);
 
