@@ -1580,6 +1580,12 @@
         "typeCode": "Type",
         "comment": "Comment"
       },
+      "card": {
+        "name": "Name",
+        "script": "Script",
+        "typeCode": "Type",
+        "comment": "Comment"
+      },
       "titlebar": {
         "title": "Formulas"
       },
