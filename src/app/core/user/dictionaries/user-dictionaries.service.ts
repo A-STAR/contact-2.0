@@ -92,6 +92,7 @@ export class UserDictionariesService {
   static DICTIONARY_SCHEDULE_START_TYPE_CODE      = 71;
   static DICTIONARY_REPORT_PARAM_TYPE_CODE        = 72;
   static DICTIONARY_AGENT_STATUS                  = 75;
+  static DICTIONARY_FORMULA_TYPE                  = 76;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';
   static USER_DICTIONARY_FETCH_SUCCESS = 'USER_DICTIONARY_FETCH_SUCCESS';

@@ -41,6 +41,10 @@ const routes: Routes = [
         loadChildren: './message-templates/message-templates.module#MessageTemplatesModule',
       },
       {
+        path: 'formulas',
+        loadChildren: './formulas/formulas.module#FormulasModule',
+      },
+      {
         path: '**',
         redirectTo: ''
       },

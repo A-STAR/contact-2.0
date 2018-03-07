@@ -1572,6 +1572,21 @@
           "history": "History"
         }
       }
+    },
+    "formulas": {
+      "grid": {
+        "id": "ID",
+        "name": "Name",
+        "typeCode": "Type",
+        "comment": "Comment"
+      },
+      "titlebar": {
+        "title": "Formulas"
+      },
+      "remove": {
+        "title": "Formula delete",
+        "confirmMessage": "Do you really want to delete selected formula?"
+      }
     }
   },
   "notifications": {
@@ -2761,6 +2776,9 @@
     },
     "status": {
       "gen": { "singular": "status", "plural": "status list" }
+    },
+    "fomulas": {
+      "gen": { "singular": "formula", "plural": "formulas" }
     }
   },
   "massOperations": {

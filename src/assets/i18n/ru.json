@@ -1572,6 +1572,23 @@
           "history": "История"
         }
       }
+    },
+    "formulas": {
+      "grid": {
+        "id": "ID",
+        "name": "Название",
+        "typeCode": "Тип",
+        "comment": "Комментарий"
+      },
+      "titlebar": {
+        "title": "Формулы"
+      },
+      "dialog": {
+        "remove": {
+          "title": "Удаление формулы",
+          "confirmMessage": "Вы действительно хотите удалить выбранную формулу?"
+        }
+      }
     }
   },
   "notifications": {
@@ -2761,6 +2778,9 @@
     },
     "status": {
       "gen": { "singular": "статуса", "plural": "статусов" }
+    },
+    "fomulas": {
+      "gen": { "singular": "формулы", "plural": "формул" }
     }
   },
   "massOperations": {
