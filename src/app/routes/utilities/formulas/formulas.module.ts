@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { FormulaCardModule } from './card/formula-card.module';
+import { FormulaCalculateModule } from './calculate/calculate-dialog.module';
 import { FormulasGridModule } from './grid/formulas-grid.module';
 
 import { FormulasService } from './formulas.service';
@@ -26,10 +27,9 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     SharedModule,
-  ],
-  exports: [
-    FormulasGridModule,
     FormulaCardModule,
+    FormulaCalculateModule,
+    FormulasGridModule,
   ],
   providers: [
     FormulasService

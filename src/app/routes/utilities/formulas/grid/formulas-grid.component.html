@@ -8,6 +8,12 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
+<app-formula-calculate-dialog
+  *ngIf="isDialog('calculateFormula')"
+  [formulaId]="selectedFormula.id"
+  (close)="onCloseDialog()"
+></app-formula-calculate-dialog>
+
 <div class="flex vertical">
   <div class="flex-item">
     <app-titlebar [titlebar]="titlebar"></app-titlebar>

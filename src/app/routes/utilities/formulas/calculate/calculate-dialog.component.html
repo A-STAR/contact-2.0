@@ -1,0 +1,19 @@
+<app-dialog (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'utilities.formulas.calculate.title' | translate }}</h3>
+  </div>
+
+  <div class="pb-lg">
+    <app-dynamic-form
+      *ngIf="controls"
+      [config]="config"
+      [controls]="controls"
+      [data]="{}"
+    ></app-dynamic-form>
+  </div>
+
+  <div dialog-footer>
+    <app-button color="primary" type="start" [label]="'default.buttons.calculate'" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+    <app-button type="close" (click)="onClose()"></app-button>
+  </div>
+</app-dialog>

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IFormula } from './formulas.interface';
+import { IFormula, IFormulaParams, IFormulaResult } from './formulas.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
@@ -35,6 +35,10 @@ export class FormulasService extends AbstractActionService {
     return this.userPermissionsService.has('FORMULA_EDIT');
   }
 
+  get canCalculate$(): Observable<boolean> {
+    return this.userPermissionsService.has('FORMULA_CALCULATE');
+  }
+
   fetchAll(): Observable<Array<IFormula>> {
     return this.dataService.readAll(this.baseUrl)
       .catch(this.notificationsService.fetchError().entity('entities.formulas.gen.plural').dispatchCallback());
@@ -58,5 +62,15 @@ export class FormulasService extends AbstractActionService {
   delete(formulaId: number): Observable<any> {
     return this.dataService.delete(`${this.baseUrl}/{formulaId}`, { formulaId })
       .catch(this.notificationsService.deleteError().entity('entities.formulas.gen.singular').dispatchCallback());
+  }
+
+  calculate(formulaId: number, params: IFormulaParams): Observable<IFormulaResult> {
+    return this.dataService.create(`${this.baseUrl}/{formulaId}/calculate`, { formulaId }, params)
+      .catch(
+        this.notificationsService
+          .error('utilities.formulas.errors.calculate')
+          .entity('entities.formulas.gen.singular')
+          .dispatchCallback()
+      );
   }
 }

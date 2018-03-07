@@ -45,7 +45,7 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
         action: () => this.onEdit(this.selectedFormula$.value),
         enabled: combineLatestAnd([
           this.formulasService.canEdit$,
-          this.selectedFormula$.map(o => !!o)
+          this.selectedFormula$.map(Boolean)
         ])
       },
       {
@@ -53,7 +53,15 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
         action: () => this.setDialog('removeFormula'),
         enabled: combineLatestAnd([
           this.formulasService.canEdit$,
-          this.selectedFormula$.map(o => !!o)
+          this.selectedFormula$.map(Boolean)
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_START,
+        action: () => this.setDialog('calculateFormula'),
+        enabled: combineLatestAnd([
+          this.formulasService.canCalculate$,
+          this.selectedFormula$.map(Boolean)
         ])
       },
       {

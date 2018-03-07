@@ -5,3 +5,13 @@ export interface IFormula {
   script: string;
   comment: string;
 }
+
+export interface IFormulaParams {
+  debtId: number;
+  userId: number;
+}
+
+export interface IFormulaResult {
+  typeCode: number;
+  value: string;
+}

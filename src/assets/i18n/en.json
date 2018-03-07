@@ -1592,6 +1592,17 @@
       "remove": {
         "title": "Formula delete",
         "confirmMessage": "Do you really want to delete selected formula?"
+      },
+      "errors": {
+        "calculate": {
+          "403": "You don't have permissions to calculate {{ entity }}",
+          "*": "Could not calculate {{ entity }}"
+        }
+      },
+      "calculate": {
+        "title": "Calculate",
+        "debtId": "ID долга",
+        "userId": "ID пользователя"
       }
     }
   },
@@ -3068,6 +3079,7 @@
       "back": "Back",
       "block": "Block",
       "call": "Call",
+      "calculate": "Calculate",
       "cancel": "Cancel",
       "change": "Change",
       "changeStatus": "",
