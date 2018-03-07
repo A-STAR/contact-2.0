@@ -14,10 +14,10 @@ export class ContextMenuService {
   ) { }
 
   onCtxMenuClick(options?: IContextMenuOptions, simpleOptions?: IContextMenuSimpleOptions): (string | MenuItemDef)[] {
-    return [
+    return options.selection.node ? [
       ...this.getMetadataMenuItems(options),
       ...this.getSimpleMenuItems(simpleOptions)
-    ];
+    ] : [];
   }
 
   private getMetadataActions(options: IContextMenuOptions): [ MenuItemDef[], MenuItemDef[]] {
