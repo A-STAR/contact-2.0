@@ -169,7 +169,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     if (id != null && this.options.length) {
       this.active = this.selectedOption;
     }
-    this.propagateChange(id);
     this.renderer2.setProperty(this.input.nativeElement, 'value', this.activeLabel);
     this.cdRef.markForCheck();
   }
@@ -277,8 +276,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   private onOptionsFetch = (options: ILabeledValue[]) => {
     this.options = options;
     this.active = this.selectedOption;
-    this.propagateChange(this.active);
     this.cdRef.markForCheck();
   }
-
 }
