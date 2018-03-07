@@ -338,6 +338,7 @@ $dropdown-caret-color:           #000;
 //
 // Note: These variables are not generated into the Customizer.
 
+$zindex-app-validation:        500;
 $zindex-navbar:               1000;
 $zindex-dropdown:             1000;
 $zindex-tooltip:              1070;
@@ -349,7 +350,6 @@ $zindex-app-dialog:          10000;
 $zindex-app-grid-dropdown:   10100;
 $zindex-app-datepicker:      10100;
 $zindex-popover:             10150;
-$zindex-app-validation:      10200;
 $zindex-app-grid2-dnd-ghost: 10300;
 $zindex-app-loader:          20000;
 
