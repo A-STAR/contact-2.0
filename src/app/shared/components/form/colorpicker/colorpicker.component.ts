@@ -43,14 +43,17 @@ export class ColorPickerComponent implements ControlValueAccessor {
   registerOnTouched(fn: Function): void {
   }
 
-  onChange(event: any): void {
-    this._value = event[0].value;
-    this.propagateChange(this._value);
+  onChange(value: string): void {
+    this._value = value;
+    this.propagateChange(value);
   }
 
-  renderer = (option: ILabeledValue) => {
-    return `<span style="background: ${option.value}; display: inline-block; width: 10px; height: 10px;"></span> ${option.label}`;
-  }
+  // renderer = (option: ILabeledValue) => {
+  //   return `
+  //     <span style="background: ${option.value}; display: inline-block; width: 10px; height: 10px;"></span>
+  //     ${option.label}
+  //   `;
+  // }
 
   get value(): string {
     return this._value;
