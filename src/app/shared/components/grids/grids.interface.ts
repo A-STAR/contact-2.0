@@ -38,6 +38,12 @@ export interface IGridColumn<T> {
   valueTypeKey?: string;
 }
 
+export interface IGridTreePath {
+  path: string[];
+  name: string;
+  children?: any[];
+}
+
 export interface IGridLocalSettingsColumn {
   colId: string;
   isVisible: boolean;

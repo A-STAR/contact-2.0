@@ -54,6 +54,8 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
   @Input() showToolbar = false;
   @Input() toolbar: IToolbarItem[];
 
+  @Input() treeData: boolean;
+
   @Input()
   set selection(selection: T[]) {
     if (!isEmpty(selection) && this.gridApi) {
@@ -85,6 +87,7 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
         'columnsMenuTab',
       ],
     },
+    getDataPath: this.treeData ? (data: T) => this.gridsService.getDataPath<T>(data) : null,
     enableColResize: true,
     enableFilter: true,
     enableRangeSelection: true,

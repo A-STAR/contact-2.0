@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ColDef, ColumnApi, GridApi } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
 
-import { IGridColumn, IGridFilterType, IGridLocalSettings } from './grids.interface';
+import { IGridColumn, IGridFilterType, IGridLocalSettings, IGridTreePath } from './grids.interface';
 import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
 import { PersistenceService } from '@app/core/persistence/persistence.service';
@@ -57,6 +57,22 @@ export class GridsService {
     }));
     const sortModel = gridApi.getSortModel();
     this.setLocalSettings(persistenceKey, { columns, sortModel });
+  }
+
+  convertTreeData<T>(data: T[], parent?: IGridTreePath): (T & IGridTreePath)[] {
+    return data.reduce((acc, item: T & IGridTreePath) => {
+      item.path = (item.path || []).concat((parent && parent.name) || [] , item.name);
+      return acc.concat(Array.isArray(item.children) ? [].concat(this.convertTreeData(item.children, item)) : item);
+    }, [])
+    // remove children property
+    .map(result => {
+      const { children, ...rest } = result;
+      return rest;
+    });
+  }
+
+  getDataPath<T>(data: T): string[] {
+    return (data as T & IGridTreePath).path;
   }
 
   private preloadDictionaries<T>(columns: IGridColumn<T>[]): Observable<IUserDictionaries> {
