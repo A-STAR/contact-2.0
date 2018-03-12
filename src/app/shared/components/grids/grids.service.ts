@@ -20,7 +20,9 @@ export class GridsService {
   ) {}
 
   convertColumnsToColDefs<T>(columns: IGridColumn<T>[], persistenceKey: string): ColDef[] {
-    const savedColumns = this.getLocalSettings(persistenceKey).columns;
+    const savedColumns = persistenceKey
+      ? this.getLocalSettings(persistenceKey).columns
+      : [];
     this.preloadDictionaries(columns);
     const columnIds = columns.map(c => c.prop);
     const savedColumnIds = savedColumns.map(c => c.colId);
@@ -45,11 +47,17 @@ export class GridsService {
   }
 
   restoreSortModel(persistenceKey: string, gridApi: GridApi): void {
+    if (!persistenceKey) {
+      return;
+    }
     const sortModel = this.getLocalSettings(persistenceKey).sortModel;
     gridApi.setSortModel(sortModel);
   }
 
   saveSettings(persistenceKey: string, gridApi: GridApi, columnApi: ColumnApi): void {
+    if (!persistenceKey) {
+      return;
+    }
     const columns = columnApi.getAllGridColumns().map(column => ({
       colId: column.getId(),
       isVisible: column.isVisible(),

@@ -35,8 +35,7 @@ import { isEmpty } from '@app/core/utils';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DialogMultiSelectComponent<T> extends DialogFunctions
-  implements ControlValueAccessor, OnInit {
+export class DialogMultiSelectComponent<T> extends DialogFunctions implements ControlValueAccessor, OnInit {
   @Input() filterType: IDialogMultiSelectFilterType;
   @Input() filterParams: any = {};
 
@@ -58,6 +57,9 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
   private previousValue: IDialogMultiSelectValue[];
   private _title: string;
   private value: IDialogMultiSelectValue[];
+
+  rowsFrom: T[] = [];
+  rowsTo: T[] = [];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -113,14 +115,6 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
       .join(', ');
   }
 
-  get rowsFrom(): T[] {
-    return this.rows.filter(row => !this.containsRow(row));
-  }
-
-  get rowsTo(): T[] {
-    return this.rows.filter(row => this.containsRow(row));
-  }
-
   get isSelectIconDisabled(): boolean {
     return isEmpty(this.selectionFrom);
   }
@@ -137,29 +131,29 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
     return isEmpty(this.rowsTo);
   }
 
-  onGridSelect(): void {
+  onFromSelect(): void {
     this.cdRef.markForCheck();
   }
 
-  onFromDoubleClick(rows: T[]): void {
-    if (!isEmpty(rows)) {
-      const row = rows[0];
-      this.value = [
-        ...this.value,
-        this.valueGetter(row),
-      ];
-      this.gridFrom.selection = [];
-      this.updateValue();
-    }
+  onToSelect(): void {
+    this.cdRef.markForCheck();
   }
 
-  onToDoubleClick(rows: T[]): void {
-    if (!isEmpty(rows)) {
-      const row = rows[0];
-      this.value = this.value.filter(rowValue => rowValue !== this.valueGetter(row));
-      this.gridTo.selection = [];
-      this.updateValue();
-    }
+  onFromDoubleClick(row: T): void {
+    this.value = [
+      ...this.value,
+      this.valueGetter(row),
+    ];
+    this.gridFrom.selection = [];
+    this.updateValue();
+    this.updateRows();
+  }
+
+  onToDoubleClick(row: T): void {
+    this.value = this.value.filter(rowValue => rowValue !== this.valueGetter(row));
+    this.gridTo.selection = [];
+    this.updateValue();
+    this.updateRows();
   }
 
   onSelect(): void {
@@ -169,24 +163,28 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
     ];
     this.gridFrom.selection = [];
     this.updateValue();
+    this.updateRows();
   }
 
   onSelectAll(): void {
     this.value = this.rows.map(this.valueGetter);
     this.gridFrom.selection = [];
     this.updateValue();
+    this.updateRows();
   }
 
   onUnselect(): void {
     this.value = this.value.filter(rowValue => !this.selectionTo.map(this.valueGetter).includes(rowValue));
     this.gridTo.selection = [];
     this.updateValue();
+    this.updateRows();
   }
 
   onUnselectAll(): void {
     this.value = [];
     this.gridTo.selection = [];
     this.updateValue();
+    this.updateRows();
   }
 
   onSubmit(): void {
@@ -206,6 +204,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
       this.isInitialised = true;
       this.fetch(this.filterParams).subscribe(rows => {
         this.rows = rows;
+        this.updateRows();
         this.cdRef.markForCheck();
       });
     }
@@ -237,6 +236,12 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
   }
 
   private propagateChange: Function = () => {};
+
+  private updateRows(): void {
+    this.rowsFrom = this.rows.filter(row => !this.containsRow(row));
+    this.rowsTo = this.rows.filter(row => this.containsRow(row));
+    this.cdRef.markForCheck();
+  }
 
   private updateValue(): void {
     this.propagateChange(this.value);

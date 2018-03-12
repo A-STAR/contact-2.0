@@ -7,10 +7,11 @@
     <div class="grid-container">
       <app-simple-grid
         #gridFrom
+        selectionType="multiple"
         [columns]="columnsFrom"
         [rows]="rowsFrom"
         (dblClick)="onFromDoubleClick($event)"
-        (select)="onGridSelect()"
+        (select)="onFromSelect()"
       ></app-simple-grid>
     </div>
     <div class="buttons-container">
@@ -30,10 +31,11 @@
     <div class="grid-container">
       <app-simple-grid
         #gridTo
+        selectionType="multiple"
         [columns]="columnsTo"
         [rows]="rowsTo"
         (dblClick)="onToDoubleClick($event)"
-        (select)="onGridSelect()"
+        (select)="onToSelect()"
       ></app-simple-grid>
     </div>
   </div>
