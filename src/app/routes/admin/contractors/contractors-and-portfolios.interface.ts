@@ -25,8 +25,6 @@ export interface IPortfolio {
   comment: string;
 }
 
-export type PortfolioAction = 'sendOutsource' | 'sendCession' | 'returnOutsource';
-
 export interface IPortfolioMoveRequest {
   newContractorId: number;
 }

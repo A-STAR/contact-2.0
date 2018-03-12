@@ -1,10 +1,11 @@
-<app-grid
-  columnTranslationKey="widgets.visit"
-  selectionType="single"
-  [columns]="columns"
-  [footerHeight]="false"
-  [rows]="operators"
-  [styles]="{ height: '230px' }"
-  (onSelect)="onSelect($event)"
->
-</app-grid>
+<div class="grid-wrapper">
+  <app-simple-grid
+    persistenceKey="[grid] mass-ops/visit-prepare"
+    selectionType="single"
+    [columns]="columns"
+    [rows]="operators"
+    (select)="onSelect($event)"
+  >
+  </app-simple-grid>
+</div>
+

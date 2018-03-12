@@ -19,10 +19,12 @@ import { SimpleGridComponent } from './grid/grid.component';
 
 // Renderers
 import {
+  CallbackRendererComponent,
   CheckboxRendererComponent,
   DateRendererComponent,
   DateTimeRendererComponent,
   DictRendererComponent,
+  HtmlRendererComponent,
   LookupRendererComponent,
   NumberRendererComponent,
   TickRendererComponent,
@@ -36,10 +38,12 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
 @NgModule({
   imports: [
     AgGridModule.withComponents([
+      CallbackRendererComponent,
       CheckboxRendererComponent,
       DateRendererComponent,
       DateTimeRendererComponent,
       DictRendererComponent,
+      HtmlRendererComponent,
       EmptyOverlayComponent,
       LookupRendererComponent,
       NumberRendererComponent,
@@ -60,12 +64,14 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     SimpleGridComponent,
   ],
   declarations: [
+    CallbackRendererComponent,
     CheckboxRendererComponent,
     DateRendererComponent,
     DateTimeRendererComponent,
     DictRendererComponent,
     EmptyOverlayComponent,
     GridToolbarComponent,
+    HtmlRendererComponent,
     LookupRendererComponent,
     NumberRendererComponent,
     SimpleGridComponent,

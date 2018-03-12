@@ -83,7 +83,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
 
     // Filter out value not found in options
     this.value = this.value.filter(v => this.options.some(o => o.value === v));
-    this.propagateChange(this.value);
     this.cdRef.markForCheck();
   }
 
@@ -166,7 +165,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     if (this.options.length) {
       this.options = this.options.map(o => ({ ...o, checked: this.value.includes(o.value) }));
     } else {
-      this.propagateChange(this.value);
       this.cdRef.markForCheck();
     }
   }

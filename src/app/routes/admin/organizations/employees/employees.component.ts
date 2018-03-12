@@ -10,17 +10,18 @@ import {
   IEmployeeUpdateRequest,
   IEmployeeCreateRequest,
 } from '../organizations.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { OrganizationsService } from '../organizations.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
+import { TickRendererComponent } from '@app/shared/components/grids/renderers/tick/tick.component';
+
 import { DialogFunctions } from '@app/core/dialog';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { addGridLabel, isEmpty } from '@app/core/utils';
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,7 +76,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     { prop: 'fullName', minWidth: 150 },
     { prop: 'position', minWidth: 100 },
     { prop: 'roleCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE },
-    { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
+    { prop: 'isInactive', minWidth: 100, renderer: TickRendererComponent },
   ].map(addGridLabel('organizations.employees.grid'));
 
   editedEntity: IEmployee;

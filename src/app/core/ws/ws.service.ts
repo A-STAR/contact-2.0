@@ -57,6 +57,6 @@ export class WSService {
   }
 
   private get jwt(): string {
-    return R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.TOKEN_NAME));
+    return R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.AUTH_TOKEN));
   }
 }

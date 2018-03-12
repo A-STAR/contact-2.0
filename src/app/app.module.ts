@@ -14,6 +14,7 @@ import * as R from 'ramda';
 
 import { AuthEffects } from './core/auth/auth.effects';
 import { CallEffects } from './core/calls/call.effects';
+import { ConstantsEffects } from './routes/admin/constants/constants.effect';
 import { DictionariesEffects } from './routes/admin/dictionaries/dictionaries.effects';
 import { EntityAttributesEffects } from './core/entity/attributes/entity-attributes.effects';
 import { GuiObjectsEffects } from './core/gui-objects/gui-objects.effects';
@@ -44,7 +45,7 @@ export function getInitialState(): Partial<IAppState> {
 }
 
 export function authTokenGetter(): string {
-  return R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.TOKEN_NAME));
+  return R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.AUTH_TOKEN));
 }
 
 export function reset(nextReducer: any): any {
@@ -64,6 +65,7 @@ export function reset(nextReducer: any): any {
     EffectsModule.forRoot([
       AuthEffects,
       CallEffects,
+      ConstantsEffects,
       DictionariesEffects,
       EntityAttributesEffects,
       GuiObjectsEffects,

@@ -1,10 +1,17 @@
+import * as R from 'ramda';
+
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { ToasterService } from 'angular2-toaster';
+import { defer } from 'rxjs/observable/defer';
+import { of } from 'rxjs/observable/of';
 
 import { INotificationAction, NotificationTypeEnum } from './notifications.interface';
 
 import { NotificationsService } from './notifications.service';
+
+// TODO(a.tymchuk): take this to a separate service for persisting global state
+const savedState = localStorage.getItem(NotificationsService.STORAGE_KEY);
 
 @Injectable()
 export class NotificationsEffects {
@@ -15,6 +22,12 @@ export class NotificationsEffects {
     [NotificationTypeEnum.ERROR]: 'error',
     [NotificationTypeEnum.DEBUG]: 'error',
   };
+
+  @Effect()
+  init$ = defer(() => of({
+    type: NotificationsService.NOTIFICATION_INIT,
+    payload: R.tryCatch(JSON.parse, () => ({}))(savedState || undefined)
+  }));
 
   @Effect({ dispatch: false })
   notificationPush$ = this.actions

@@ -119,7 +119,7 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   onPeriodSelect(): void {
-    const [ periodControl ] = this.periodTypeForm.getControl('periodTypeCode').value;
+    const periodControl = this.periodTypeForm.getControl('periodTypeCode');
     this.selectedPeriodTypeCode$.next(periodControl.value);
   }
 

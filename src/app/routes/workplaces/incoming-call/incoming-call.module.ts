@@ -5,7 +5,7 @@ import { DebtorCardModule } from './debtor-card/debtor-card.module';
 import { DebtorGridModule } from './debtor-grid/debtor-grid.module';
 import { FilterModule } from './filter/filter.module';
 import { PhoneGridModule } from './phone-grid/phone-grid.module';
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 import { WorkplacesSharedModule } from '../shared/shared.module';
 
 import { IncomingCallComponent } from './incoming-call.component';

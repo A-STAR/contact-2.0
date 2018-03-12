@@ -21,6 +21,7 @@ import { UserConstantsService } from '@app/core/user/constants/user-constants.se
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
+import { DateRendererComponent } from '@app/shared/components/grids/renderers';
 import { DialogFunctions } from '@app/core/dialog';
 
 import { parseStringValueAttrs, addGridLabel, isEmpty } from '@app/core/utils';
@@ -69,7 +70,7 @@ export class GuarantorGridComponent extends DialogFunctions implements OnInit, O
               { prop: 'firstName', type: 'string' },
               { prop: 'middleName', type: 'string' },
               { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, type: 'number' },
-              { prop: 'birthDate', maxWidth: 130, renderer: 'dateRenderer', type: 'date' },
+              { prop: 'birthDate', maxWidth: 130, renderer: DateRendererComponent, type: 'date' },
               { prop: 'genderCode', dictCode: UserDictionariesService.DICTIONARY_GENDER, type: 'number' },
               { prop: 'passportNumber', type: 'string' },
             ]

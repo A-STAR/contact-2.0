@@ -18,6 +18,7 @@ import { NowDirective } from './directives/now/now.directive';
 import { AccordionModule } from './components/accordion/accordion.module';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { ActionGridModule } from './components/action-grid/action-grid.module';
+import { AreaModule } from './components/layout/area/area.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
 import { ButtonModule } from './components/button/button.module';
 import { CapitalizeModule } from './pipes/capitalize/capitalize.module';
@@ -89,6 +90,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     AccordionModule,
     ActionDialogModule,
     ActionGridModule,
+    AreaModule,
     BlockDialogModule,
     ButtonModule,
     CapitalizeModule,
@@ -165,6 +167,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     AccordionModule,
     ActionDialogModule,
     ActionGridModule,
+    AreaModule,
     BlockDialogModule,
     ButtonModule,
     CapitalizeModule,
