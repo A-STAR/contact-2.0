@@ -7,15 +7,10 @@
   (cancel)="onCloseDialog()">
 </app-attribute-version-edit>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
-
-<app-grid
-  class="flat"
-  [styles]="{ height: '250px' }"
+<app-simple-grid
   [columns]="columns"
-  [columnTranslationKey]="'widgets.attribute'"
   [rows]="rows"
-  selectionType="single"
-  (onSelect)="onRowSelect($event)"
-  (onDblClick)="onRowDblClick($event)">
-</app-grid>
+  [toolbar]="toolbarItems"
+  (select)="onRowSelect($event)"
+  (dblClick)="onRowDblClick($event)">
+</app-simple-grid>

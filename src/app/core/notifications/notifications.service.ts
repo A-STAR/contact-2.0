@@ -23,6 +23,7 @@ import { NotificationActionBuilder } from './notification-action-builder';
 
 @Injectable()
 export class NotificationsService implements OnDestroy {
+  static NOTIFICATION_INIT:   INotificationActionType = 'NOTIFICATION_INIT';
   static NOTIFICATION_PUSH:   INotificationActionType = 'NOTIFICATION_PUSH';
   static NOTIFICATION_RESET:  INotificationActionType = 'NOTIFICATION_RESET';
   static NOTIFICATION_FILTER: INotificationActionType = 'NOTIFICATION_FILTER';

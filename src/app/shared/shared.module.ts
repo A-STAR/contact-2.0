@@ -18,6 +18,7 @@ import { NowDirective } from './directives/now/now.directive';
 import { AccordionModule } from './components/accordion/accordion.module';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { ActionGridModule } from './components/action-grid/action-grid.module';
+import { AreaModule } from './components/layout/area/area.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
 import { ButtonModule } from './components/button/button.module';
 import { CapitalizeModule } from './pipes/capitalize/capitalize.module';
@@ -58,6 +59,7 @@ import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
 import { RadioGroupModule } from './components/form/radio-group/radio-group.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
 import { SelectModule } from './components/form/select/select.module';
+import { ScriptEditorModule } from './components/form/script-editor/script-editor.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TextEditorModule } from './components/form/text-editor/text-editor.module';
 import { TitlebarModule } from './components/titlebar/titlebar.module';
@@ -88,6 +90,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     AccordionModule,
     ActionDialogModule,
     ActionGridModule,
+    AreaModule,
     BlockDialogModule,
     ButtonModule,
     CapitalizeModule,
@@ -127,6 +130,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     RadioGroupModule,
     SelectModule,
     SpinnerModule,
+    ScriptEditorModule,
     TabViewModule,
     TextEditorModule,
     Toolbar2Module,
@@ -163,6 +167,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     AccordionModule,
     ActionDialogModule,
     ActionGridModule,
+    AreaModule,
     BlockDialogModule,
     ButtonModule,
     CapitalizeModule,

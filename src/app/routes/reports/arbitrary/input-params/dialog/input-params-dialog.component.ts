@@ -11,6 +11,7 @@ import { DownloaderComponent } from '@app/shared/components/downloader/downloade
 export class InputParamsDialogComponent {
 
   @Input() reportId: number;
+  @Input() reportName: string;
 
   @Output() close = new EventEmitter<boolean>();
 

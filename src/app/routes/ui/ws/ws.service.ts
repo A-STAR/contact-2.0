@@ -9,7 +9,7 @@ import { IWSData } from './ws.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 
-const jwt = R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.TOKEN_NAME));
+const jwt = R.tryCatch(JSON.parse, () => null)(localStorage.getItem(AuthService.AUTH_TOKEN));
 
 @Injectable()
 export class WSService {

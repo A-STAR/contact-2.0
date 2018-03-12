@@ -86,6 +86,7 @@
     <app-multi-select
       [dictCode]="control.dictCode"
       [formControlName]="control.controlName"
+      [label]="control.label"
       [lookupKey]="control.lookupKey"
       [options]="control.options"
       [required]="control.required"
@@ -181,7 +182,6 @@
       [rows]="control.gridRows"
       [labelGetter]="control.gridLabelGetter"
       [valueGetter]="control.gridValueGetter"
-      [translationKey]="control.translationKey"
       (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
     </app-grid-dropdown>
   </ng-container>
@@ -276,6 +276,20 @@
       [codeMode]="control.codeMode"
       (init)="control.onInit ? control.onInit($event) : null"
     ></app-text-editor>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'scripteditor'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-script-editor
+      [isDisabled]="control.disabled"
+      [formControlName]="control.controlName"
+      [options]="control.options"
+    ></app-script-editor>
   </ng-container>
 
   <ng-container *ngSwitchCase="'segmented'">

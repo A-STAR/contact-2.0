@@ -3,17 +3,15 @@
     <h3>{{ 'widgets.mass.changeTimezoneAttr.title' | translate }}</h3>
   </div>
 
-  <app-grid
-    *ngIf="timeZones"
-    columnTranslationKey="widgets.mass.changeTimezoneAttr"
-    selectionType="single"
-    [selection]="selection"
-    [styles]="{height: '200px'}"
-    [columns]="columns"
-    [rows]="timeZones"
-    [allowDblClick]="false"
-    (onSelect)="onSelect($event)">
-  </app-grid>
+  <div class="grid-wrapper">
+    <app-simple-grid
+      persistenceKey="[grid] mass-ops/attributes/timezone"
+      selectionType="single"
+      [columns]="columns"
+      [rows]="timeZones"
+      (select)="onSelect($event)">
+    </app-simple-grid>
+  </div>
 
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="submit()">

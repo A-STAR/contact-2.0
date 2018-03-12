@@ -1,19 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IReport } from '../reports.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { DialogFunctions } from '@app/core/dialog';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { ReportsService } from '../reports.service';
 import { RoutingService } from '@app/core/routing/routing.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { combineLatestAnd } from '@app/core/utils';
+import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
 @Component({
   selector: 'app-arbitrary-report-grid',
@@ -27,11 +26,11 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
 
   @Output() select = new EventEmitter<IReport>();
 
-  columns: Array<IGridColumn> = [
+  columns: Array<ISimpleGridColumn<IReport>> = [
     { prop: 'id', maxWidth: 70 },
     { prop: 'name' },
     { prop: 'comment' },
-  ];
+  ].map(addGridLabel('modules.reports.arbitrary.grid'));
 
   titlebar: ITitlebar = {
     title: 'modules.reports.arbitrary.title',
@@ -82,21 +81,14 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
   constructor(
     private cdRef: ChangeDetectorRef,
     private reportsService: ReportsService,
-    private gridService: GridService,
     private route: ActivatedRoute,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private valueConverterService: ValueConverterService
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
     this.fetch();
 
     this.selectedReport$
@@ -127,12 +119,16 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
     return this.selectedReport && this.selectedReport.id;
   }
 
+  get selectedReportName(): string {
+    return `${this.selectedReport.name}_${this.valueConverterService.toLocalDateTime(new Date())}`;
+  }
+
   get selection(): Array<IReport> {
     const selectedReport = this.selectedReport;
     return selectedReport ? [ selectedReport ] : [];
   }
 
-  onSelect(report: IReport): void {
+  onSelect([ report ]: IReport[]): void {
     this.selectedReport$.next(report);
   }
 

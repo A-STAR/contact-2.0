@@ -20,6 +20,7 @@ import { PopupInputModule } from '../popup-input/popup-input.module';
 import { RadioGroupModule } from '../radio-group/radio-group.module';
 import { SegmentedInputModule } from '../segmented-input/segmented-input.module';
 import { SelectModule } from '../select/select.module';
+import { ScriptEditorModule } from '../script-editor/script-editor.module';
 import { TextEditorModule } from '../text-editor/text-editor.module';
 
 import { DynamicFormComponent } from './dynamic-form.component';
@@ -46,6 +47,7 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     ReactiveFormsModule,
     SegmentedInputModule,
     SelectModule,
+    ScriptEditorModule,
     TextEditorModule,
     TitlebarModule,
     TranslateModule,

@@ -13,6 +13,7 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 export class ConstantsService {
   static STORAGE_KEY = 'state/constants';
   static CONSTANT_SELECT = 'CONSTANT_SELECT';
+  static CONSTANT_INIT = 'CONSTANT_INIT';
 
   private baseUrl = '/constants';
 

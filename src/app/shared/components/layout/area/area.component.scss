@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+}
+
+.gutter {
+  align-items: center;
+  background-position: center center;
+  background-repeat: no-repeat;
+  flex: 0 0 20px;
+
+  &.horizontal {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFCAMAAABl/6zIAAAABlBMVEUAAADMzMzIT8AyAAAAAXRSTlMAQObYZgAAABRJREFUeAFjYGRkwIMJSeMHlBkOABP7AEGzSuPKAAAAAElFTkSuQmCC");
+    cursor: row-resize;
+  }
+
+  &.vertical {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+    cursor: col-resize;
+  }
+}

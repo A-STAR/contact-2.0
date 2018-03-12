@@ -4,22 +4,22 @@
   actionTranslationKey="portfolios.remove.confirmMessage"
   actionMessage="default.buttons.remove"
   actionMode="danger"
-  [messageParams]="selectedPortfolio$ | async"
+  [messageParams]="selectedPortfolio"
   (action)="onRemoveSubmit()"
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
 <app-portfolio-move
-  *ngIf="isDialog('move')"
+  *ngIf="isDialog('moveOutsource')"
   [contractor]="selectedContractor$ | async"
-  [portfolio]="selectedPortfolio$ | async"
+  [portfolio]="selectedPortfolio"
   (onSubmit)="onMoveSubmit($event)"
   (onCancel)="onCloseDialog()">
 </app-portfolio-move>
 
 <app-portfolio-send
   *ngIf="isDialog('sendOutsource')"
-  [portfolio]="selectedPortfolio$ | async"
+  [portfolio]="selectedPortfolio"
   (onSubmit)="onSendOutsourceSubmit($event)"
   (onCancel)="onCloseDialog()"
 >
@@ -27,7 +27,7 @@
 
 <app-portfolio-send
   *ngIf="isDialog('sendCession')"
-  [portfolio]="selectedPortfolio$ | async"
+  [portfolio]="selectedPortfolio"
   (onSubmit)="onSendCessionSubmit($event)"
   (onCancel)="onCloseDialog()"
 >
@@ -36,7 +36,7 @@
 <app-portfolio-send
   *ngIf="isDialog('returnOutsource')"
   [isReturn]="true"
-  [portfolio]="selectedPortfolio$ | async"
+  [portfolio]="selectedPortfolio"
   (onSubmit)="onReturnOutsourceSubmit($event)"
   (onCancel)="onCloseDialog()"
 >
@@ -47,16 +47,17 @@
     <app-titlebar [titlebar]="titlebar"></app-titlebar>
   </div>
   <div class="flex-item grow">
-    <app-grid
+    <app-action-grid
       columnTranslationKey="portfolios"
+      persistenceKey="[grid] admin/portfolios-and-contractors/portfolios"
       selectionType="single"
-      [styles]="{height: '400px'}"
+      [isSimple]="true"
       [columns]="columns"
       [rows]="portfolios"
-      [allowDblClick]="canEdit$ | async"
-      [contextMenuOptions]="contextMenuOptions"
+      [actions]="actions"
+      (action)="onAction($event)"
       (onDblClick)="onEdit()"
-      (onSelect)="onSelect($event)">
-    </app-grid>
+      (select)="onSelect($event)">
+    </app-action-grid>
   </div>
 </div>

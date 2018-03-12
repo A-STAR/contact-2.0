@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -87,6 +88,15 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     this.summernote('insertText', text);
   }
 
+  @HostListener('keydown')
+  @HostListener('mousedown')
+  onCursorChange(): void {
+    // This is obvously not optimal
+    // A better solution would be to save range on blur,
+    // but summernote focuses automatically on range save, which would make blur impossible
+    setTimeout(() => this.summernote('saveRange'), 0);
+  }
+
   private writeValueHandler(): void {
     this.summernote('reset');
     if (this.cachedValue) {
@@ -102,7 +112,6 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
         onInit: () => this.onInit(),
         onFocus: () => this.propagateTouch(),
         onChange: () => this.onChange(),
-        onBlur: () => this.summernote('saveRange'),
       }
     });
     this.summernote(this.isDisabled ? 'disable' : 'enable');

@@ -3,17 +3,15 @@
     <h3>{{ 'widgets.mass.changePortfolioAttr.title' | translate }}</h3>
   </div>
 
-  <app-grid
-    *ngIf="portfolios"
-    columnTranslationKey="widgets.mass.changePortfolioAttr"
-    selectionType="single"
-    [selection]="selection"
-    [styles]="{height: '200px'}"
-    [columns]="columns"
-    [rows]="portfolios"
-    [allowDblClick]="false"
-    (onSelect)="onSelect($event)">
-  </app-grid>
+  <div class="grid-wrapper">
+    <app-simple-grid
+      persistenceKey="[grid] mass-ops/attributes/portfolio"
+      selectionType="single"
+      [columns]="columns"
+      [rows]="portfolios"
+      (select)="onSelect($event)">
+    </app-simple-grid>
+  </div>
 
   <div dialog-footer>
     <button class="btn btn-success" [disabled]="!canSubmit" (click)="submit()">

@@ -1,31 +1,30 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
 
 import { IEntityGroup } from '../entity-group.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { EntityGroupService } from '../entity-group.service';
 
-import { GridComponent } from '@app/shared/components/grid/grid.component';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-entity-group-grid',
   templateUrl: './entity-group-grid.component.html',
+  styleUrls: ['./entity-group-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityGroupGridComponent implements OnInit {
-  @ViewChild(GridComponent) grid: GridComponent;
 
   @Input() entityTypeId: number;
   @Input() manualGroup: boolean;
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IEntityGroup>[] = [
     { prop: 'id' },
     { prop: 'name' },
     { prop: 'comment' },
-  ];
+  ].map(addGridLabel('widgets.entityGroup.grid'));
 
-  gridStyles = { height: '500px' };
-  entityGroups: Array<IEntityGroup> = [];
+  entityGroups: IEntityGroup[] = [];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -33,12 +32,16 @@ export class EntityGroupGridComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fetch();
+    this.entityGroupService.fetchAll(this.entityTypeId, this.manualGroup)
+      .subscribe(groups => {
+        this.entityGroups = groups;
+        this.cdRef.markForCheck();
+      });
   }
 
-  onSelect(group: IEntityGroup): void {
+  onSelect(groups: IEntityGroup[]): void {
     this.entityGroupService.dispatchAction(
-      EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, { type: 'select', payload: group }
+      EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, { type: 'select', payload: groups[0] }
     );
   }
 
@@ -46,12 +49,5 @@ export class EntityGroupGridComponent implements OnInit {
     this.entityGroupService.dispatchAction(
       EntityGroupService.MESSAGE_ENTITY_GROUP_SELECTED, { type: 'dblclick', payload: group }
     );
-  }
-
-  private fetch(): void {
-    this.entityGroupService.fetchAll(this.entityTypeId, this.manualGroup).subscribe(groups => {
-      this.entityGroups = groups;
-      this.cdRef.markForCheck();
-    });
   }
 }

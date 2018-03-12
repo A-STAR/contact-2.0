@@ -4,9 +4,10 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { IGridColumn } from '../../../grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { DropdownDirective } from '../../../dropdown/dropdown.directive';
+import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
+import { isEmpty } from '@app/core/utils';
 
 @Component({
   selector: 'app-grid-dropdown',
@@ -19,13 +20,12 @@ import { DropdownDirective } from '../../../dropdown/dropdown.directive';
       multi: true
     }
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GridDropdownComponent<T> implements ControlValueAccessor {
-  @Input() columns: Array<IGridColumn>;
+  @Input() columns: ISimpleGridColumn<T>[];
   @Input() controlClass = 'form-control';
   @Input() rows: Array<T>;
-  @Input() translationKey: string;
 
   @Input()
   set controlDisabled(value: boolean) {
@@ -39,7 +39,9 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   private _selection: T;
   private _isDisabled = false;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+  ) {}
 
   @Input() labelGetter: (row: T) => string = () => null;
   @Input() valueGetter: (row: T) => string = () => null;
@@ -76,8 +78,11 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
     this._isDisabled = isDisabled;
   }
 
-  onSelect(row: T): void {
-    this.setRow(row);
+  onSelect(rows: T[]): void {
+    if (!isEmpty(rows)) {
+      const [ row ] = rows;
+      this.setRow(row);
+    }
   }
 
   onClearClick(): void {
