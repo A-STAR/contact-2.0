@@ -2048,6 +2048,7 @@
         "comment": "Комментарий",
         "commission": "Комиссия",
         "currencyId": "Валюта",
+        "currencyName": "Валюта",
         "isConfirmed": "Подтвержден",
         "payerName": "ФИО плательщика",
         "paymentDateTime": "Дата платежа",
@@ -2055,6 +2056,7 @@
         "receiptNumber": "№ квитанции",
         "receiveDateTime": "Дата получения",
         "reqUserId": "Оператор (заявка)",
+        "reqUserFullName": "Оператор (заявка)",
         "statusCode": "Статус",
         "userFullName": "Оператор (факт)"
       },
