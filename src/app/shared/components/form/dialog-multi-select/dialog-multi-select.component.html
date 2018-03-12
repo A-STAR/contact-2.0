@@ -7,10 +7,10 @@
     <div class="grid-container">
       <app-simple-grid
         #gridFrom
-        styles="height: 50vh"
         [columns]="columnsFrom"
         [rows]="rowsFrom"
         (dblClick)="onFromDoubleClick($event)"
+        (select)="onGridSelect()"
       ></app-simple-grid>
     </div>
     <div class="buttons-container">
@@ -30,10 +30,10 @@
     <div class="grid-container">
       <app-simple-grid
         #gridTo
-        styles="height: 50vh"
         [columns]="columnsTo"
         [rows]="rowsTo"
         (dblClick)="onToDoubleClick($event)"
+        (select)="onGridSelect()"
       ></app-simple-grid>
     </div>
   </div>

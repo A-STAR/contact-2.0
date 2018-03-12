@@ -137,6 +137,10 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
     return isEmpty(this.rowsTo);
   }
 
+  onGridSelect(): void {
+    this.cdRef.markForCheck();
+  }
+
   onFromDoubleClick(rows: T[]): void {
     if (!isEmpty(rows)) {
       const row = rows[0];
