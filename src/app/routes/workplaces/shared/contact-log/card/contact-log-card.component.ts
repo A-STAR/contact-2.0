@@ -109,7 +109,7 @@ export class ContactLogCardComponent implements OnInit {
     contactLog: IContactLog,
     canEditComment: boolean
   ): IDynamicFormItem[] {
-    let contactNumber, promiseAmount;
+    let promiseDate, promiseAmount;
     const baseControls = [
       { controlName: 'contract', type: 'text',  width: 6, disabled: true },
       { controlName: 'contactDateTime', type: 'datepicker', width: 6, disabled: true },
@@ -120,9 +120,9 @@ export class ContactLogCardComponent implements OnInit {
     ].map(item => ({ ...item, label: label(item.controlName) } as IDynamicFormControl));
 
     if (contactLog.promiseDate) {
-      contactNumber = {
-        label: label('contactNumber'), controlName: 'contactNumber',
-        type: 'text', width: 6, disabled: true
+      promiseDate = {
+        label: label('promiseDate'), controlName: 'promiseDate',
+        type: 'datepicker', width: 6, disabled: true
       };
     }
 
@@ -138,7 +138,7 @@ export class ContactLogCardComponent implements OnInit {
       type: 'textarea', width: 12, disabled: !canEditComment || this.disabled
     };
 
-    return [...baseControls, contactNumber, promiseAmount, comment].filter(Boolean) as IDynamicFormItem[];
+    return [...baseControls, promiseDate, promiseAmount, comment].filter(Boolean) as IDynamicFormItem[];
   }
 
   private createSMSControls(roleOpts: IOption[], statusOpts: IOption[]): IDynamicFormItem[] {
