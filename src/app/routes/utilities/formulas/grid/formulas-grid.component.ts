@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { TranslateService } from '@ngx-translate/core';
 
 import { IFormula } from '../formulas.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -9,11 +10,11 @@ import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar
 
 import { FormulasService } from '../formulas.service';
 import { RoutingService } from '@app/core/routing/routing.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '@app/core/dialog';
 
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,6 +59,7 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
       },
       {
         type: TitlebarItemTypeEnum.BUTTON_START,
+        title: this.translateService.instant('default.buttons.calculate'),
         action: () => this.setDialog('calculateFormula'),
         enabled: combineLatestAnd([
           this.formulasService.canCalculate$,
@@ -84,7 +86,8 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
     private cdRef: ChangeDetectorRef,
     private formulasService: FormulasService,
     private route: ActivatedRoute,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private translateService: TranslateService
   ) {
     super();
   }
