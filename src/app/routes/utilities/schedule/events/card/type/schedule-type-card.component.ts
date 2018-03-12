@@ -17,6 +17,8 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 import { GridComponent } from '@app/shared/components/grid/grid.component';
 
+import { addGridLabel } from '@app/core/utils';
+
 @Component({
   selector: 'app-schedule-type-card',
   templateUrl: './schedule-type-card.component.html',
@@ -64,13 +66,14 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     userId: {
       controlName: 'userId',
       type: 'gridselect',
-      translationKey: 'default.filters.users',
       gridColumns: [
         { prop: 'id', maxWidth: 70 },
         { prop: 'fullName' },
         { prop: 'organization' },
         { prop: 'position' },
-      ].map(c => ({ ...c, name: this.translateService.instant(`widgets.operator.grid.${c.prop}`) })),
+      ]
+      .map(c => ({ ...c, name: this.translateService.instant(`widgets.operator.grid.${c.prop}`) }))
+      .map(addGridLabel('widgets.operator.grid')),
       gridLabelGetter: row => row.fullName,
       gridValueGetter: row => row.id,
       required: true,
@@ -78,7 +81,6 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     groupId: {
       controlName: 'groupId',
       type: 'gridselect',
-      translationKey: 'widgets.scheduleEvents.card.changeGroupId',
       gridColumns: [
         { prop: 'id', maxWidth: 70 },
         {
@@ -88,7 +90,9 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
         },
         { prop: 'name' },
         { prop: 'comment' },
-      ].map(c => ({ ...c, name: this.translateService.instant(`widgets.groups.grid.${c.prop}`) })),
+      ]
+      .map(c => ({ ...c, name: this.translateService.instant(`widgets.groups.grid.${c.prop}`) }))
+      .map(addGridLabel('widgets.groups.grid')),
       gridLabelGetter: row => row.name || row.id,
       gridValueGetter: row => row.id,
       required: true,

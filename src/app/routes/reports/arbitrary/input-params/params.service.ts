@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -14,8 +16,7 @@ import { GridFiltersService } from '@app/core/filters/grid-filters.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { of } from 'rxjs/observable/of';
+import { addGridLabel } from '@app/core/utils';
 
 @Injectable()
 export class ParamsService extends AbstractActionService {
@@ -35,7 +36,9 @@ export class ParamsService extends AbstractActionService {
         { prop: 'signDate' },
         { prop: 'startWorkDate', renderer: 'dateTimeRenderer' },
         { prop: 'endWorkDate', renderer: 'dateTimeRenderer' },
-      ].map(c => ({ ...c, name: this.translateService.instant(`default.filters.portfolios.grid.${c.prop}`) })),
+      ]
+      .map(c => ({ ...c, name: this.translateService.instant(`default.filters.portfolios.grid.${c.prop}`) }))
+      .map(addGridLabel('default.filters.portfolios.grid')),
       gridLabelGetter: row => row.name,
       gridValueGetter: row => row.id,
     },
@@ -45,7 +48,9 @@ export class ParamsService extends AbstractActionService {
         { prop: 'fullName' },
         { prop: 'organization' },
         { prop: 'position' },
-      ].map(c => ({ ...c, name: this.translateService.instant(`default.filters.users.grid.${c.prop}`) })),
+      ]
+      .map(c => ({ ...c, name: this.translateService.instant(`default.filters.users.grid.${c.prop}`) }))
+      .map(addGridLabel('default.filters.users.grid')),
       gridLabelGetter: row => row.fullName,
       gridValueGetter: row => row.id,
     },
@@ -56,7 +61,9 @@ export class ParamsService extends AbstractActionService {
         { prop: 'fullName' },
         { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE },
         { prop: 'comment' },
-      ].map(c => ({ ...c, name: this.translateService.instant(`default.filters.contractors.grid.${c.prop}`) })),
+      ]
+      .map(c => ({ ...c, name: this.translateService.instant(`default.filters.contractors.grid.${c.prop}`) }))
+      .map(addGridLabel('default.filters.contractors.grid')),
       gridLabelGetter: row => row.fullName,
       gridValueGetter: row => row.id,
     },
@@ -120,38 +127,38 @@ export class ParamsService extends AbstractActionService {
       case 8:
         return inputParam.multiSelect
           ? {
-            ...control,
-            type: 'dialogmultiselect',
-            filterType: 'portfolios',
-            filterParams: { directionCodes: [ 1 ] },
-          }
+              ...control,
+              type: 'dialogmultiselect',
+              filterType: 'portfolios',
+              filterParams: { directionCodes: [ 1 ] },
+            }
           : {
-            ...control,
-            type: 'gridselect',
-            ...this.gridConfig.portfolios
-          } as Partial<IDynamicFormControl>;
+              ...control,
+              type: 'gridselect',
+              ...this.gridConfig.portfolios
+            } as Partial<IDynamicFormControl>;
       case 4: return inputParam.multiSelect
         ? {
-          ...control,
-          type: 'dialogmultiselect',
-          filterType: 'users'
-        }
+            ...control,
+            type: 'dialogmultiselect',
+            filterType: 'users'
+          }
         : {
-          ...control,
-          type: 'gridselect',
-          ...this.gridConfig.users
-        } as Partial<IDynamicFormControl>;
+            ...control,
+            type: 'gridselect',
+            ...this.gridConfig.users
+          } as Partial<IDynamicFormControl>;
       case 5: return  inputParam.multiSelect
         ? {
-          ...control,
-          type: 'dialogmultiselect',
-          filterType: 'contractors'
-        }
+            ...control,
+            type: 'dialogmultiselect',
+            filterType: 'contractors'
+          }
         : {
-          ...control,
-          type: 'gridselect',
-          ...this.gridConfig.contractors
-        } as Partial<IDynamicFormControl>;
+            ...control,
+            type: 'gridselect',
+            ...this.gridConfig.contractors
+          } as Partial<IDynamicFormControl>;
       case 6: return { ...control, type: 'text' };
       case 7: return {
         ...control,

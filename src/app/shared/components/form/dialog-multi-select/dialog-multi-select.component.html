@@ -5,15 +5,13 @@
 
   <div class="grids-container">
     <div class="grid-container">
-      <app-grid
+      <app-simple-grid
         #gridFrom
+        styles="height: 50vh"
         [columns]="columnsFrom"
-        [columnTranslationKey]="columnsFromTranslationKey"
-        [footerHeight]="false"
         [rows]="rowsFrom"
-        [styles]="{ height: '320px' }"
-        (onDblClick)="onFromDoubleClick($event)"
-      ></app-grid>
+        (dblClick)="onFromDoubleClick($event)"
+      ></app-simple-grid>
     </div>
     <div class="buttons-container">
       <button class="btn btn-block btn-default" (click)="onSelect()" [disabled]="isSelectIconDisabled">
@@ -30,15 +28,13 @@
       </button>
     </div>
     <div class="grid-container">
-      <app-grid
+      <app-simple-grid
         #gridTo
+        styles="height: 50vh"
         [columns]="columnsTo"
-        [columnTranslationKey]="columnsToTranslationKey"
-        [footerHeight]="false"
         [rows]="rowsTo"
-        [styles]="{ height: '320px' }"
-        (onDblClick)="onToDoubleClick($event)"
-      ></app-grid>
+        (dblClick)="onToDoubleClick($event)"
+      ></app-simple-grid>
     </div>
   </div>
 

@@ -8,16 +8,13 @@
   </div>
   <div #dropdownContent class="dropdown">
     <ng-container *ngIf="!isDisabled">
-      <app-grid
+      <app-simple-grid
+        styles="height: 200px"
         [columns]="columns"
-        [footerHeight]="false"
         [rows]="rows"
-        [columnTranslationKey]="translationKey"
         [selection]="selection"
-        [selectionType]="'single'"
-        [styles]="{ height: '200px', border: 'none' }"
-        (onSelect)="onSelect($event)">
-      </app-grid>
+        (select)="onSelect($event)"
+      ></app-simple-grid>
       <div class="panel-footer text-right">
         <button class="btn btn-xs btn-default" [disabled]="!value" (click)="onClearClick()">
           {{ 'default.buttons.clear' | translate }}

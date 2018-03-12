@@ -6,6 +6,7 @@ import { IGridColumn } from '../../grid/grid.interface';
 
 import { GridFiltersService } from '@app/core/filters/grid-filters.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { addGridLabel } from '@app/core/utils';
 
 @Injectable()
 export class DialogMultiSelectService {
@@ -21,12 +22,10 @@ export class DialogMultiSelectService {
         { prop: 'signDate' },
         { prop: 'startWorkDate', renderer: 'dateTimeRenderer' },
         { prop: 'endWorkDate', renderer: 'dateTimeRenderer' },
-      ],
-      columnsFromTranslationKey: 'default.filters.portfolios',
+      ].map(addGridLabel('default.filters.portfolios.grid')),
       columnsTo: [
         { prop: 'name' },
-      ],
-      columnsToTranslationKey: 'default.filters.portfolios',
+      ].map(addGridLabel('default.filters.portfolios.grid')),
       fetchCallback: ({ directionCodes }) => this.gridFiltersService.fetchPortfolios(null, directionCodes),
       labelGetter: row => row.name,
       title: 'default.filters.portfolios.title',
@@ -38,12 +37,10 @@ export class DialogMultiSelectService {
         { prop: 'fullName' },
         { prop: 'organization' },
         { prop: 'position' },
-      ],
-      columnsFromTranslationKey: 'default.filters.users',
+      ].map(addGridLabel('default.filters.users.grid')),
       columnsTo: [
         { prop: 'fullName' },
-      ],
-      columnsToTranslationKey: 'default.filters.users',
+      ].map(addGridLabel('default.filters.users.grid')),
       fetchCallback: () => this.gridFiltersService.fetchUsers(0),
       labelGetter: row => row.fullName,
       title: 'default.filters.users.title',
@@ -53,13 +50,11 @@ export class DialogMultiSelectService {
       columnsFrom: [
         { prop: 'code', maxWidth: 70 },
         { prop: 'name' },
-      ],
-      columnsFromTranslationKey: 'default.filters.actions',
+      ].map(addGridLabel('default.filters.actions.grid')),
       columnsTo: [
         { prop: 'code', maxWidth: 70 },
         { prop: 'name' },
-      ],
-      columnsToTranslationKey: 'default.filters.actions',
+      ].map(addGridLabel('default.filters.actions.grid')),
       fetchCallback: () => this.gridFiltersService.fetchDictionaries(4),
       labelGetter: row => row.name,
       title: 'default.filters.actions.title',
@@ -69,12 +64,10 @@ export class DialogMultiSelectService {
       columnsFrom: [
         { prop: 'id' },
         { prop: 'name' },
-      ],
-      columnsFromTranslationKey: 'default.filters.entityGroups',
+      ].map(addGridLabel('default.filters.entityGroups.grid')),
       columnsTo: [
         { prop: 'name' },
-      ],
-      columnsToTranslationKey: 'default.filters.entityGroups',
+      ].map(addGridLabel('default.filters.entityGroups.grid')),
       fetchCallback: ({entityTypeId, isManual}) => this.gridFiltersService.fetchEntitiesGroups(entityTypeId, isManual),
       labelGetter: row => row.name,
       title: 'default.filters.entityGroups.title',
@@ -87,12 +80,10 @@ export class DialogMultiSelectService {
         { prop: 'fullName' },
         { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_CONTRACTOR_TYPE },
         { prop: 'comment' },
-      ],
-      columnsFromTranslationKey: 'default.filters.contractors',
+      ].map(addGridLabel('default.filters.contractors.grid')),
       columnsTo: [
         { prop: 'fullName' },
-      ],
-      columnsToTranslationKey: 'default.filters.contractors',
+      ].map(addGridLabel('default.filters.contractors.grid')),
       fetchCallback: () => this.gridFiltersService.fetchContractors(),
       labelGetter: row => row.fullName,
       title: 'default.filters.contractors.title',
