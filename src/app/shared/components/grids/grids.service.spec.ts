@@ -61,6 +61,10 @@ describe('GridsService', () => {
     persistenceService = TestBed.get(PersistenceService);
     translateService = TestBed.get(TranslateService);
     userDictionariesService = TestBed.get(UserDictionariesService);
+    // TODO(i.lobanov): to prevent tslint complains, will be actually used in tests later
+    persistenceService.get('');
+    translateService.instant('');
+    userDictionariesService.getDictionaries([1]);
   });
 
   it('should initialize', () => {
