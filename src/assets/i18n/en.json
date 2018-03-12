@@ -213,8 +213,8 @@
         },
         "calculate": {
           "title": "Calculate",
-          "debtId": "ID долга",
-          "userId": "ID пользователя",
+          "debtId": "Debt ID",
+          "userId": "User Id",
           "grid": {
             "type": "Type",
             "value": "Result"
