@@ -2048,6 +2048,7 @@
         "comment": "Comment",
         "commission": "Commission",
         "currencyId": "Currency",
+        "currencyName": "Currency",
         "isConfirmed": "Is confirmed",
         "payerName": "Payer",
         "paymentDateTime": "Payment date",
@@ -2055,6 +2056,7 @@
         "receiptNumber": "Receipt No",
         "receiveDateTime": "Received on",
         "reqUserId": "Req operator",
+        "reqUserFullName": "Req operator",
         "statusCode": "Status",
         "userFullName": "Operator"
       },
