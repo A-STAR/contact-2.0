@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IDialogMultiSelectFilterType, IDialogMultiSelectValue } from './dialog-multi-select.interface';
-import { IGridColumn } from '../../grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { GridFiltersService } from '@app/core/filters/grid-filters.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
+import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
+
 import { addGridLabel } from '@app/core/utils';
 
 @Injectable()
@@ -20,8 +23,8 @@ export class DialogMultiSelectService {
         { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE },
         { prop: 'directionCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION },
         { prop: 'signDate' },
-        { prop: 'startWorkDate', renderer: 'dateTimeRenderer' },
-        { prop: 'endWorkDate', renderer: 'dateTimeRenderer' },
+        { prop: 'startWorkDate', renderer: DateTimeRendererComponent },
+        { prop: 'endWorkDate', renderer: DateTimeRendererComponent },
       ].map(addGridLabel('default.filters.portfolios.grid')),
       columnsTo: [
         { prop: 'name' },
@@ -95,7 +98,7 @@ export class DialogMultiSelectService {
     private gridFiltersService: GridFiltersService,
   ) {}
 
-  getColumnsFrom(key: IDialogMultiSelectFilterType): IGridColumn[] {
+  getColumnsFrom(key: IDialogMultiSelectFilterType): ISimpleGridColumn<any>[] {
     return this.config[key].columnsFrom;
   }
 
@@ -103,7 +106,7 @@ export class DialogMultiSelectService {
     return this.config[key].columnsFromTranslationKey;
   }
 
-  getColumnsTo(key: IDialogMultiSelectFilterType): IGridColumn[] {
+  getColumnsTo(key: IDialogMultiSelectFilterType): ISimpleGridColumn<any>[] {
     return this.config[key].columnsTo;
   }
 

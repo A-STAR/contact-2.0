@@ -15,7 +15,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-import { GridComponent } from '@app/shared/components/grid/grid.component';
 
 import { addGridLabel } from '@app/core/utils';
 
@@ -27,7 +26,6 @@ import { addGridLabel } from '@app/core/utils';
 export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   @ViewChild('eventType') eventTypeForm: DynamicFormComponent;
   @ViewChild('addParams') addParamsForm:  DynamicFormComponent;
-  @ViewChild('groupGrid') groupGrid: GridComponent;
 
   @Input() groupId: number;
   @Input() eventId: number;

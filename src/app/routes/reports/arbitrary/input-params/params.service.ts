@@ -17,6 +17,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { addGridLabel } from '@app/core/utils';
+import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
 
 @Injectable()
 export class ParamsService extends AbstractActionService {
@@ -34,8 +35,8 @@ export class ParamsService extends AbstractActionService {
         { prop: 'stageCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE },
         { prop: 'directionCode', dictCode: UserDictionariesService.DICTIONARY_PORTFOLIO_DIRECTION },
         { prop: 'signDate' },
-        { prop: 'startWorkDate', renderer: 'dateTimeRenderer' },
-        { prop: 'endWorkDate', renderer: 'dateTimeRenderer' },
+        { prop: 'startWorkDate', renderer: DateTimeRendererComponent },
+        { prop: 'endWorkDate', renderer: DateTimeRendererComponent },
       ]
       .map(c => ({ ...c, name: this.translateService.instant(`default.filters.portfolios.grid.${c.prop}`) }))
       .map(addGridLabel('default.filters.portfolios.grid')),

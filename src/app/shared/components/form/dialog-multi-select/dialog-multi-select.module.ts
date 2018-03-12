@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ButtonModule } from '../../button/button.module';
 import { DialogModule } from '../../dialog/dialog.module';
-import { GridModule } from '../../grid/grid.module';
+import { GridsModule } from '../../grids/grids.module';
 
 import { DialogMultiSelectService } from './dialog-multi-select.service';
 
@@ -17,7 +17,7 @@ import { DialogMultiSelectComponent } from './dialog-multi-select.component';
     CommonModule,
     DialogModule,
     FormsModule,
-    GridModule,
+    GridsModule,
     TranslateModule,
   ],
   exports: [
@@ -30,4 +30,4 @@ import { DialogMultiSelectComponent } from './dialog-multi-select.component';
     DialogMultiSelectService,
   ]
 })
-export class DialogMultiSelectModule { }
+export class DialogMultiSelectModule {}
