@@ -38,15 +38,14 @@
     <app-titlebar [titlebar]="titlebar"></app-titlebar>
   </div>
   <div class="flex-item grow">
-    <app-grid
+    <app-simple-grid
+      columnTranslationKey="terms"
+      persistenceKey="[grid] admin/dictionaries/terms"
       selectionType="single"
       [columns]="columns"
-      [columnTranslationKey]="'terms'"
-      [emptyMessage]="emptyMessage$ | async"
       [rows]="rows"
-      [styles]="{ height: 'auto' }"
       (onDblClick)="edit()"
-      (onSelect)="onSelect($event)"
-    ></app-grid>
+      (select)="onSelect($event)">
+    </app-simple-grid>
   </div>
 </div>

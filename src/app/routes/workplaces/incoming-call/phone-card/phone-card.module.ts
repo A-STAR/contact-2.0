@@ -10,9 +10,6 @@ const routes: Routes = [
   {
     path: '',
     component: PhoneCardComponent,
-    data: {
-      reuse: true,
-    },
   },
 ];
 

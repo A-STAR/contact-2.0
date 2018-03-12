@@ -1,7 +1,11 @@
+import * as R from 'ramda';
+
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
+import { defer } from 'rxjs/observable/defer';
+import { of } from 'rxjs/observable/of';
 
 import { IPermissionRole, IPermissionModel } from './permissions.interface';
 import { IAppState } from '../../../core/state/state.interface';
@@ -12,12 +16,21 @@ import { NotificationsService } from '../../../core/notifications/notifications.
 import { PermissionsService } from './permissions.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
 
+// TODO(a.tymchuk): separate service for persisting global state?
+const savedState = localStorage.getItem(PermissionsService.STORAGE_KEY);
+
 @Injectable()
 export class PermissionsEffects {
 
   rolesFetchAction = { type: PermissionsService.ROLE_FETCH };
 
   rolePermissionFetchAction = { type: PermissionsService.PERMISSION_FETCH };
+
+  @Effect()
+  init$ = defer(() => of({
+    type: PermissionsService.ROLE_INIT,
+    payload: R.tryCatch(JSON.parse, () => ({}))(savedState || undefined)
+  }));
 
   @Effect()
   fetchRoles = this.actions

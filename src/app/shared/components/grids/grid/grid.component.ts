@@ -6,7 +6,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -41,7 +40,7 @@ import { isEmpty } from '@app/core/utils/index';
   styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html'
 })
-export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
+export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   @ViewChild(GridToolbarComponent) gridToolbar: GridToolbarComponent;
 
   @Input() actions: IMetadataAction[] = [];
@@ -134,13 +133,9 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
   }
 
   get selection(): T[] {
-    return this.gridApi.getSelectedNodes().map(node => node.data);
-  }
-
-  ngOnInit(): void {
-    if (!this.persistenceKey) {
-      throw new Error('Persistence key for simple grid must be specified');
-    }
+    return this.gridApi
+      ? this.gridApi.getSelectedNodes().map(node => node.data)
+      : [];
   }
 
   ngOnChanges(changes: SimpleChanges): void {

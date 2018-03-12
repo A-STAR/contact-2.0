@@ -193,6 +193,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       this.clearRangeSelections();
       this.viewportDatasource.params.setRowData(this.rows);
       this.viewportDatasource.params.setRowCount(this.rows.length);
+      // NOTE: we also must update viewport pageSize
+      this.gridOptions.viewportRowModelPageSize = this.rows.length;
       this.rowDataChange.emit(rows.currentValue);
     }
     if (rowCount) {

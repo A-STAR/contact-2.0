@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
 import { DialogActionModule } from '@app/shared/components/dialog-action/dialog-action.module';
-import { GridModule } from '@app/shared/components/grid/grid.module';
+import { GridsModule } from '@app/shared/components/grids/grids.module';
 
 import { EntityGroupGridComponent } from './entity-group-grid.component';
 
@@ -13,16 +13,13 @@ import { EntityGroupGridComponent } from './entity-group-grid.component';
     CommonModule,
     DialogModule,
     DialogActionModule,
-    GridModule,
+    GridsModule,
     TranslateModule,
   ],
   exports: [
     EntityGroupGridComponent,
   ],
   declarations: [
-    EntityGroupGridComponent,
-  ],
-  entryComponents: [
     EntityGroupGridComponent,
   ]
 })

@@ -1,5 +1,5 @@
 import { ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AppModulesModule } from './app-modules/app-modules.module';
@@ -42,10 +42,11 @@ import { environment } from '../../environments/environment';
     ActionsLogService,
     ButtonService,
     CallService,
-    EntityAttributesService,
-    EntityTranslationsService,
     DatePipe,
     DataService,
+    DecimalPipe,
+    EntityAttributesService,
+    EntityTranslationsService,
     LookupService,
     GridFiltersService,
     GuiObjectsService,

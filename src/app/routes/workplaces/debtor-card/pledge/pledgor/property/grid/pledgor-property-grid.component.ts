@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IPledgorProperty } from '../pledgor-property.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { PledgeService } from '../../../pledge.service';
 import { PledgorPropertyService } from '../pledgor-property.service';
@@ -19,7 +20,8 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '@app/core/dialog';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
+
 import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
@@ -37,7 +39,7 @@ export class PledgorPropertyGridComponent extends DialogFunctions implements OnI
     { prop: 'id' },
     { prop: 'name' },
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PROPERTY_TYPE },
-    { prop: 'isConfirmed', renderer: 'checkboxRenderer' },
+    { prop: 'isConfirmed', renderer: TickRendererComponent },
     { prop: 'comment' }
   ].map(addGridLabel('widgets.property.grid'));
 

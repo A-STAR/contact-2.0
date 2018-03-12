@@ -1410,19 +1410,15 @@
       "title": "move portfolio {{ name }}"
     },
     "outsourcing": {
-      "form": {
-        "menu": "Form outsourcing portfolio"
-      },
+      "formOutsourcing": "Form outsourcing portfolio",
       "send": {
-        "menu": {
-          "title": "Send portfolio for outsourcing",
-          "outsourcing": "Outsourcing",
-          "cession": "Cession"
-        },
+        "sendOutsourcing": "Send portfolio for outsourcing",
+        "sendOutsource": "Outsourcing",
+        "sendCession": "Cession",
         "title": "Send portfolio"
       },
       "return": {
-        "menu": "Return outsourcing portfolio",
+        "returnOutsource": "Return outsourcing portfolio",
         "title": "Return portfolio"
       }
     }
@@ -3268,6 +3264,13 @@
         "timepicker": "Enter time"
       },
       "lastMonthDay": "Last"
+    },
+    "decimal": {
+      "format": {
+        "minIntegerDigits": 1,
+        "minFractionDigits": 0,
+        "maxFractionDigits": 2
+      }
     },
     "colors": {
       "transparent": "Transparent",

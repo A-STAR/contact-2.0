@@ -1410,19 +1410,15 @@
       "title": "Переместить портфель {{ name }}"
     },
     "outsourcing": {
-      "form": {
-        "menu": "Сформировать портфель для аутсорсинга"
-      },
+      "formOutsourcing": "Сформировать портфель для аутсорсинга",
       "send": {
-        "menu": {
-          "title": "Передать портфель для аутсорсинга",
-          "outsourcing": "Аутсорсинг",
-          "cession": "Цессия"
-        },
+        "sendOutsourcing": "Передать портфель для аутсорсинга",
+        "sendOutsource": "Аутсорсинг",
+        "sendCession": "Цессия",
         "title": "Передать портфель"
       },
       "return": {
-        "menu": "Отозвать портфель",
+        "returnOutsource": "Отозвать портфель",
         "title": "Отозвать портфель"
       }
     }
@@ -3268,6 +3264,13 @@
         "timepicker": "Введите время "
       },
       "lastMonthDay": "Последний"
+    },
+    "decimal": {
+      "format": {
+        "minIntegerDigits": 1,
+        "minFractionDigits": 0,
+        "maxFractionDigits": 2
+      }
     },
     "colors": {
       "transparent": "Прозрачный",

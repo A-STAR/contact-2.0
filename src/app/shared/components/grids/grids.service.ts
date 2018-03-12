@@ -9,7 +9,7 @@ import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries
 import { PersistenceService } from '@app/core/persistence/persistence.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DictRendererComponent, LookupRendererComponent, ValueRendererComponent } from './renderers';
+import { CallbackRendererComponent, DictRendererComponent, LookupRendererComponent, ValueRendererComponent } from './renderers';
 
 @Injectable()
 export class GridsService {
@@ -20,7 +20,9 @@ export class GridsService {
   ) {}
 
   convertColumnsToColDefs<T>(columns: IGridColumn<T>[], persistenceKey: string): ColDef[] {
-    const savedColumns = this.getLocalSettings(persistenceKey).columns;
+    const savedColumns = persistenceKey
+      ? this.getLocalSettings(persistenceKey).columns
+      : [];
     this.preloadDictionaries(columns);
     const columnIds = columns.map(c => c.prop);
     const savedColumnIds = savedColumns.map(c => c.colId);
@@ -45,11 +47,17 @@ export class GridsService {
   }
 
   restoreSortModel(persistenceKey: string, gridApi: GridApi): void {
+    if (!persistenceKey) {
+      return;
+    }
     const sortModel = this.getLocalSettings(persistenceKey).sortModel;
     gridApi.setSortModel(sortModel);
   }
 
   saveSettings(persistenceKey: string, gridApi: GridApi, columnApi: ColumnApi): void {
+    if (!persistenceKey) {
+      return;
+    }
     const columns = columnApi.getAllGridColumns().map(column => ({
       colId: column.getId(),
       isVisible: column.isVisible(),
@@ -68,7 +76,7 @@ export class GridsService {
   }
 
   private getCellRendererOptions<T>(column: IGridColumn<T>): Partial<ColDef> {
-    const { dictCode, lookupKey, renderer, valueTypeKey } = column;
+    const { dictCode, lookupKey, renderer, valueTypeKey, rendererCallback } = column;
     switch (true) {
       case Boolean(renderer):
         return {
@@ -88,6 +96,11 @@ export class GridsService {
         return {
           cellRendererFramework: ValueRendererComponent,
           cellRendererParams: { valueTypeKey },
+        };
+      case Boolean(rendererCallback):
+        return {
+          cellRendererFramework: CallbackRendererComponent,
+          cellRendererParams: { rendererCallback },
         };
       default:
         return {};

@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
-import { GridModule } from '@app/shared/components/grid/grid.module';
 
 import { AttributesService } from './attributes.service';
+import { GridsModule } from '@app/shared/components/grids/grids.module';
 
 import { DictionaryComponent } from './dictionary/dictionary.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
@@ -15,8 +15,8 @@ import { TimezoneComponent } from './timezone/timezone.component';
   imports: [
     CommonModule,
     DialogModule,
-    GridModule,
-    TranslateModule
+    GridsModule,
+    TranslateModule,
   ],
   providers: [AttributesService],
   declarations: [DictionaryComponent, PortfolioComponent, TimezoneComponent],

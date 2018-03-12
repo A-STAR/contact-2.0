@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DropdownModule } from '../../../dropdown/dropdown.module';
-import { GridModule } from '../../../grid/grid.module';
+import { GridsModule } from '../../../grids/grids.module';
 
 import { GridDropdownComponent } from './grid-dropdown.component';
 
@@ -13,7 +13,7 @@ import { GridDropdownComponent } from './grid-dropdown.component';
     CommonModule,
     DropdownModule,
     FormsModule,
-    GridModule,
+    GridsModule,
     ReactiveFormsModule,
     TranslateModule,
   ],
@@ -24,4 +24,4 @@ import { GridDropdownComponent } from './grid-dropdown.component';
     GridDropdownComponent,
   ],
 })
-export class GridDropdownModule { }
+export class GridDropdownModule {}
