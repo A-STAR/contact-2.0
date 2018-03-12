@@ -1,12 +1,13 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 
 import { IDialogMultiSelectFilterType } from '../dialog-multi-select/dialog-multi-select.interface';
-import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '@app/core/converter/value-converter.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 import { IMultiLanguageOption, IMultiLanguageConfig } from '@app/shared/components/form/multi-language/multi-language.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 
 export interface IValidationMessages {
@@ -40,6 +41,7 @@ export type IDynamicFormControl =
   IDynamicFormRichTextControl |
   IDynamicFormSegmentedInputControl |
   IDynamicFormSelectControl |
+  IDynamicFormScriptControl |
   IDynamicFormTextControl |
   IDynamicFormTextareaControl |
   IDynamicFormTimeControl
@@ -116,12 +118,11 @@ export interface IDynamicFormFileControl extends IDynamicFormBaseControl {
 export interface IDynamicFormGridSelectControl extends IDynamicFormBaseControl {
   // options for grid select
   type: 'gridselect';
-  translationKey?: string;
   gridRows?: Array<any>;
   gridLabelGetter?: Function;
   gridValueGetter?: Function;
   gridOnSelect?: Function;
-  gridColumns?: IGridColumn[];
+  gridColumns?: ISimpleGridColumn<any>[];
   placeholder?: string;
 }
 
@@ -171,6 +172,11 @@ export interface IDynamicFormRichTextControl extends IDynamicFormBaseControl {
   onInit?: Function;
   richTextMode?: boolean;
   toolbar?: boolean;
+}
+
+export interface IDynamicFormScriptControl extends IDynamicFormBaseControl {
+  type: 'scripteditor';
+  options?: any;
 }
 
 export interface IDynamicFormSegmentedInputControl extends IDynamicFormBaseControl {
@@ -278,7 +284,7 @@ export interface IDynamicFormControlOld {
   gridLabelGetter?: Function;
   gridValueGetter?: Function;
   gridOnSelect?: Function;
-  gridColumns?: IGridColumn[];
+  gridColumns?: ISimpleGridColumn<any>[];
   // options for dialog multiselect
   filterType?: IDialogMultiSelectFilterType;
   // options for radio group
@@ -327,6 +333,7 @@ export type TControlTypes =
   | 'text'
   | 'textarea'
   | 'texteditor'
+  | 'scripteditor'
 ;
 
 export interface IValue {

@@ -11,16 +11,14 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 
 import { IDialogMultiSelectValue, IDialogMultiSelectFilterType } from './dialog-multi-select.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { DialogMultiSelectService } from './dialog-multi-select.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
-
-import { GridComponent } from '../../grid/grid.component';
 
 import { DialogFunctions } from '@app/core/dialog';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
 import { isEmpty } from '@app/core/utils';
 
@@ -37,25 +35,22 @@ import { isEmpty } from '@app/core/utils';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DialogMultiSelectComponent<T> extends DialogFunctions
-  implements ControlValueAccessor, OnInit {
+export class DialogMultiSelectComponent<T> extends DialogFunctions implements ControlValueAccessor, OnInit {
   @Input() filterType: IDialogMultiSelectFilterType;
   @Input() filterParams: any = {};
 
-  @Input() columnsFrom = [];
-  @Input() columnsTo = [];
+  @Input() columnsFrom: ISimpleGridColumn<T>[] = [];
+  @Input() columnsTo: ISimpleGridColumn<T>[] = [];
   @Input() rows: T[] = [];
 
   @Output() show = new EventEmitter<void>();
 
-  @ViewChild('gridFrom') gridFrom: GridComponent;
-  @ViewChild('gridTo') gridTo: GridComponent;
+  @ViewChild('gridFrom') gridFrom: SimpleGridComponent<T>;
+  @ViewChild('gridTo') gridTo: SimpleGridComponent<T>;
 
   dialog: string;
   isDisabled = false;
 
-  private _columnsToTranslationKey: string;
-  private _columnsFromTranslationKey: string;
   private isInitialised = false;
   private _labelGetter: (row: T) => string;
   private _valueGetter: (row: T) => IDialogMultiSelectValue;
@@ -63,41 +58,19 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
   private _title: string;
   private value: IDialogMultiSelectValue[];
 
+  rowsFrom: T[] = [];
+  rowsTo: T[] = [];
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private dialogMultiSelectService: DialogMultiSelectService,
-    private gridService: GridService,
   ) {
     super();
   }
 
   ngOnInit(): void {
-    const columnsFrom = this.dialogMultiSelectService.getColumnsFrom(this.filterType);
-    const columnsTo = this.dialogMultiSelectService.getColumnsTo(this.filterType);
-    this.gridService.setDictionaryRenderers([ ...columnsFrom, ...columnsTo ])
-      .pipe(first())
-      .subscribe(columns => {
-        this.columnsFrom = this.gridService.setRenderers(columnsFrom);
-        this.columnsTo = this.gridService.setRenderers(columnsTo);
-      });
-  }
-
-  @Input('columnsToTranslationKey')
-  set columnsToTranslationKey(translationKey: string) {
-    this._columnsToTranslationKey = translationKey;
-  }
-
-  get columnsToTranslationKey(): string {
-    return this._columnsToTranslationKey || this.dialogMultiSelectService.getColumnsToTranslationKey(this.filterType);
-  }
-
-  @Input('columnsFromTranslationKey')
-  set columnsFromTranslationKey(translationKey: string) {
-    this._columnsFromTranslationKey = translationKey;
-  }
-
-  get columnsFromTranslationKey(): string {
-    return this._columnsFromTranslationKey || this.dialogMultiSelectService.getColumnsFromTranslationKey(this.filterType);
+    this.columnsFrom = this.dialogMultiSelectService.getColumnsFrom(this.filterType);
+    this.columnsTo = this.dialogMultiSelectService.getColumnsTo(this.filterType);
   }
 
   get fetch(): (filterParams: any) => Observable<any> {
@@ -142,14 +115,6 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
       .join(', ');
   }
 
-  get rowsFrom(): T[] {
-    return this.rows.filter(row => !this.containsRow(row));
-  }
-
-  get rowsTo(): T[] {
-    return this.rows.filter(row => this.containsRow(row));
-  }
-
   get isSelectIconDisabled(): boolean {
     return isEmpty(this.selectionFrom);
   }
@@ -166,19 +131,29 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
     return isEmpty(this.rowsTo);
   }
 
+  onFromSelect(): void {
+    this.cdRef.markForCheck();
+  }
+
+  onToSelect(): void {
+    this.cdRef.markForCheck();
+  }
+
   onFromDoubleClick(row: T): void {
     this.value = [
       ...this.value,
       this.valueGetter(row),
     ];
-    this.gridFrom.clearSelection();
+    this.gridFrom.selection = [];
     this.updateValue();
+    this.updateRows();
   }
 
   onToDoubleClick(row: T): void {
     this.value = this.value.filter(rowValue => rowValue !== this.valueGetter(row));
-    this.gridTo.clearSelection();
+    this.gridTo.selection = [];
     this.updateValue();
+    this.updateRows();
   }
 
   onSelect(): void {
@@ -186,26 +161,30 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
       ...this.value,
       ...this.selectionFrom.map(this.valueGetter),
     ];
-    this.gridFrom.clearSelection();
+    this.gridFrom.selection = [];
     this.updateValue();
+    this.updateRows();
   }
 
   onSelectAll(): void {
     this.value = this.rows.map(this.valueGetter);
-    this.gridFrom.clearSelection();
+    this.gridFrom.selection = [];
     this.updateValue();
+    this.updateRows();
   }
 
   onUnselect(): void {
     this.value = this.value.filter(rowValue => !this.selectionTo.map(this.valueGetter).includes(rowValue));
-    this.gridTo.clearSelection();
+    this.gridTo.selection = [];
     this.updateValue();
+    this.updateRows();
   }
 
   onUnselectAll(): void {
     this.value = [];
-    this.gridTo.clearSelection();
+    this.gridTo.selection = [];
     this.updateValue();
+    this.updateRows();
   }
 
   onSubmit(): void {
@@ -225,6 +204,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
       this.isInitialised = true;
       this.fetch(this.filterParams).subscribe(rows => {
         this.rows = rows;
+        this.updateRows();
         this.cdRef.markForCheck();
       });
     }
@@ -257,17 +237,23 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
 
   private propagateChange: Function = () => {};
 
+  private updateRows(): void {
+    this.rowsFrom = this.rows.filter(row => !this.containsRow(row));
+    this.rowsTo = this.rows.filter(row => this.containsRow(row));
+    this.cdRef.markForCheck();
+  }
+
   private updateValue(): void {
     this.propagateChange(this.value);
     this.cdRef.markForCheck();
   }
 
   private get selectionFrom(): T[] {
-    return this.gridFrom && this.gridFrom.selected || [];
+    return this.gridFrom && this.gridFrom.selection || [];
   }
 
   private get selectionTo(): T[] {
-    return this.gridTo && this.gridTo.selected || [];
+    return this.gridTo && this.gridTo.selection || [];
   }
 
   private containsRow(row: T): boolean {

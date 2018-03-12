@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators';
@@ -8,6 +8,8 @@ import { IOption } from '@app/core/converter/value-converter.interface';
 import { CallService } from '@app/core/calls/call.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
+import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,6 +22,8 @@ export class PbxStatusComponent implements OnInit, OnDestroy {
   private activeStatusCode: number;
   private statusOptions: IOption[] = [];
   private statusSub: Subscription;
+
+  @ViewChild(DropdownDirective) dropdown: DropdownDirective;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -74,5 +78,6 @@ export class PbxStatusComponent implements OnInit, OnDestroy {
 
   onChangeStatus(option: IOption): void {
     this.callService.changeBPXStatus(Number(option.value));
+    this.dropdown.close();
   }
 }

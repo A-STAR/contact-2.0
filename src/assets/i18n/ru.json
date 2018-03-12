@@ -183,6 +183,44 @@
           }
         }
       }
+    },
+    "utilities": {
+      "formulas": {
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "typeCode": "Тип",
+          "comment": "Комментарий"
+        },
+        "card": {
+          "name": "Название",
+          "script": "Скрипт",
+          "typeCode": "Тип формулы",
+          "comment": "Комментарий"
+        },
+        "titlebar": {
+          "title": "Формулы"
+        },
+        "remove": {
+          "title": "Удаление формулы",
+          "confirmMessage": "Вы действительно хотите удалить выбранную формулу?"
+        },
+        "errors": {
+          "calculate": {
+            "403": "У вас недостаточно прав для вычисления {{ entity }}",
+            "*": "При вычислении {{ entity }} произошла ошибка"
+          }
+        },
+        "calculate": {
+          "title": "Проверка",
+          "debtId": "ID долга",
+          "userId": "ID пользователя",
+          "grid": {
+            "type": "Тип",
+            "value": "Результат"
+          }
+        }
+      }
     }
   },
   "shared": {
@@ -2048,6 +2086,7 @@
         "comment": "Комментарий",
         "commission": "Комиссия",
         "currencyId": "Валюта",
+        "currencyName": "Валюта",
         "isConfirmed": "Подтвержден",
         "payerName": "ФИО плательщика",
         "paymentDateTime": "Дата платежа",
@@ -2055,6 +2094,7 @@
         "receiptNumber": "№ квитанции",
         "receiveDateTime": "Дата получения",
         "reqUserId": "Оператор (заявка)",
+        "reqUserFullName": "Оператор (заявка)",
         "statusCode": "Статус",
         "userFullName": "Оператор (факт)"
       },
@@ -2757,6 +2797,9 @@
     },
     "status": {
       "gen": { "singular": "статуса", "plural": "статусов" }
+    },
+    "formulas": {
+      "gen": { "singular": "формулы", "plural": "формул" }
     }
   },
   "massOperations": {
@@ -3040,6 +3083,7 @@
       "back": "Назад",
       "block": "Блокировать",
       "call": "Позвонить",
+      "calculate": "Вычислить",
       "cancel": "Отменить",
       "change": "Изменить",
       "changeStatus": "",
