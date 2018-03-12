@@ -12,6 +12,6 @@ export interface IFormulaParams {
 }
 
 export interface IFormulaResult {
-  typeCode: number;
+  type: number;
   value: string;
 }

@@ -1602,7 +1602,11 @@
       "calculate": {
         "title": "Проверка",
         "debtId": "ID долга",
-        "userId": "ID пользователя"
+        "userId": "ID пользователя",
+        "grid": {
+          "type": "Тип",
+          "value": "Результат"
+        }
       }
     }
   },
@@ -2794,7 +2798,7 @@
     "status": {
       "gen": { "singular": "статуса", "plural": "статусов" }
     },
-    "fomulas": {
+    "formulas": {
       "gen": { "singular": "формулы", "plural": "формул" }
     }
   },
@@ -3079,7 +3083,7 @@
       "back": "Назад",
       "block": "Блокировать",
       "call": "Позвонить",
-      "calculate": "Посчитать",
+      "calculate": "Вычислить",
       "cancel": "Отменить",
       "change": "Изменить",
       "changeStatus": "",

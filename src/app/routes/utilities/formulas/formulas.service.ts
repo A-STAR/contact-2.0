@@ -66,11 +66,19 @@ export class FormulasService extends AbstractActionService {
 
   calculate(formulaId: number, params: IFormulaParams): Observable<IFormulaResult> {
     return this.dataService.create(`${this.baseUrl}/{formulaId}/calculate`, { formulaId }, params)
+      .map(response => this.mapResult(response))
       .catch(
         this.notificationsService
           .error('utilities.formulas.errors.calculate')
           .entity('entities.formulas.gen.singular')
           .dispatchCallback()
       );
+  }
+
+  private mapResult(response: any): IFormulaResult {
+    return {
+      success: response.success,
+      ...(response.success ? response.data[0] : {})
+    };
   }
 }

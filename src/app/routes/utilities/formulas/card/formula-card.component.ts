@@ -76,7 +76,8 @@ export class FormulaCardComponent implements OnInit {
         type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_FORMULA_TYPE,
         disabled: !canEdit,
-        required: true
+        required: true,
+        markAsDirty: !this.formulaId
       },
       { controlName: 'comment', type: 'textarea', disabled: !canEdit },
     ] as IDynamicFormItem[];

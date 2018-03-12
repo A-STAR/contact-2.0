@@ -1602,7 +1602,11 @@
       "calculate": {
         "title": "Calculate",
         "debtId": "ID долга",
-        "userId": "ID пользователя"
+        "userId": "ID пользователя",
+        "grid": {
+          "type": "Type",
+          "value": "Result"
+        }
       }
     }
   },
@@ -2794,7 +2798,7 @@
     "status": {
       "gen": { "singular": "status", "plural": "status list" }
     },
-    "fomulas": {
+    "formulas": {
       "gen": { "singular": "formula", "plural": "formulas" }
     }
   },

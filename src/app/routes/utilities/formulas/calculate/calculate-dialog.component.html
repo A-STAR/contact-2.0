@@ -12,8 +12,17 @@
     ></app-dynamic-form>
   </div>
 
+  <div class="pb-lg">
+    <app-simple-grid
+      persistenceKey="[grid] utilities/formulas/calculate"
+      [columns]="columns"
+      [rows]="[ result ]"
+      style="height: 10vh"
+    ></app-simple-grid>
+  </div>
+
   <div dialog-footer>
-    <app-button color="primary" type="start" [label]="'default.buttons.calculate'" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+    <app-button color="primary" type="start" [label]="'default.buttons.calculate'" (click)="onCalculate()" [disabled]="!canCalculate"></app-button>
     <app-button type="close" (click)="onClose()"></app-button>
   </div>
 </app-dialog>
