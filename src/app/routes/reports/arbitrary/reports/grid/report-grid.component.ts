@@ -12,6 +12,7 @@ import { DialogFunctions } from '@app/core/dialog';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { ReportsService } from '../reports.service';
 import { RoutingService } from '@app/core/routing/routing.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { combineLatestAnd } from '@app/core/utils';
 
@@ -84,7 +85,8 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
     private reportsService: ReportsService,
     private gridService: GridService,
     private route: ActivatedRoute,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private valueConverterService: ValueConverterService
   ) {
     super();
   }
@@ -125,6 +127,10 @@ export class ReportGridComponent extends DialogFunctions implements OnInit, OnDe
 
   get selectedReportId(): number {
     return this.selectedReport && this.selectedReport.id;
+  }
+
+  get selectedReportName(): string {
+    return `${this.selectedReport.name}_${this.valueConverterService.toLocalDateTime(new Date())}`;
   }
 
   get selection(): Array<IReport> {
