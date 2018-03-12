@@ -183,6 +183,44 @@
           }
         }
       }
+    },
+    "utilities": {
+      "formulas": {
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "typeCode": "Type",
+          "comment": "Comment"
+        },
+        "card": {
+          "name": "Name",
+          "script": "Script",
+          "typeCode": "Type",
+          "comment": "Comment"
+        },
+        "titlebar": {
+          "title": "Formulas"
+        },
+        "remove": {
+          "title": "Formula delete",
+          "confirmMessage": "Do you really want to delete selected formula?"
+        },
+        "errors": {
+          "calculate": {
+            "403": "You don't have permissions to calculate {{ entity }}",
+            "*": "Could not calculate {{ entity }}"
+          }
+        },
+        "calculate": {
+          "title": "Calculate",
+          "debtId": "Debt ID",
+          "userId": "User Id",
+          "grid": {
+            "type": "Type",
+            "value": "Result"
+          }
+        }
+      }
     }
   },
   "shared": {
@@ -2759,6 +2797,9 @@
     },
     "status": {
       "gen": { "singular": "status", "plural": "status list" }
+    },
+    "formulas": {
+      "gen": { "singular": "formula", "plural": "formulas" }
     }
   },
   "massOperations": {
@@ -3042,6 +3083,7 @@
       "back": "Back",
       "block": "Block",
       "call": "Call",
+      "calculate": "Calculate",
       "cancel": "Cancel",
       "change": "Change",
       "changeStatus": "",

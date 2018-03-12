@@ -41,6 +41,7 @@ export type IDynamicFormControl =
   IDynamicFormRichTextControl |
   IDynamicFormSegmentedInputControl |
   IDynamicFormSelectControl |
+  IDynamicFormScriptControl |
   IDynamicFormTextControl |
   IDynamicFormTextareaControl |
   IDynamicFormTimeControl
@@ -171,6 +172,11 @@ export interface IDynamicFormRichTextControl extends IDynamicFormBaseControl {
   onInit?: Function;
   richTextMode?: boolean;
   toolbar?: boolean;
+}
+
+export interface IDynamicFormScriptControl extends IDynamicFormBaseControl {
+  type: 'scripteditor';
+  options?: any;
 }
 
 export interface IDynamicFormSegmentedInputControl extends IDynamicFormBaseControl {
@@ -327,6 +333,7 @@ export type TControlTypes =
   | 'text'
   | 'textarea'
   | 'texteditor'
+  | 'scripteditor'
 ;
 
 export interface IValue {
