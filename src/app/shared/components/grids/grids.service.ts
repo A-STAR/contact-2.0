@@ -85,10 +85,6 @@ export class GridsService {
     });
   }
 
-  getDataPath<T>(data: T): string[] {
-    return (data as T & IGridTreePath).path;
-  }
-
   private preloadDictionaries<T>(columns: IGridColumn<T>[]): Observable<IUserDictionaries> {
     // TODO(d.maltsev): remove duplicates
     const dictCodes = columns

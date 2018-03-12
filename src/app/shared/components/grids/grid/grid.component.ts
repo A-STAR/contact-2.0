@@ -20,7 +20,7 @@ import {
 } from 'ag-grid';
 
 import { IAGridAction } from '@app/shared/components/grid2/grid2.interface';
-import { IGridSelectionType } from '../grids.interface';
+import { IGridSelectionType, IGridTreePath } from '../grids.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from './grid.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
@@ -47,13 +47,21 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   @Input() columns: ISimpleGridColumn<T>[];
   @Input() idKey = 'id';
   @Input() persistenceKey: string;
-  @Input() rows: T[];
   @Input() rowClass: (item: T) => string;
   @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
   @Input() showToolbar = false;
   @Input() toolbar: IToolbarItem[];
 
   @Input() treeData: boolean;
+
+  @Input()
+  set rows(rowData: T[]) {
+    if (this.treeData && rowData && rowData.length) {
+      this.rowData = this.gridsService.convertTreeData(rowData);
+    } else {
+      this.rowData = rowData;
+    }
+  }
 
   @Input()
   set selection(selection: T[]) {
@@ -86,7 +94,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
         'columnsMenuTab',
       ],
     },
-    getDataPath: this.treeData ? (data: T) => this.gridsService.getDataPath<T>(data) : null,
+    getDataPath: (data: T) => (data as T & IGridTreePath).path,
     enableColResize: true,
     enableFilter: true,
     enableRangeSelection: true,
@@ -122,6 +130,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   gridApi: GridApi;
 
   colDefs: ColDef[];
+  rowData: T[] | (T & IGridTreePath)[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -154,10 +163,6 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveSettings();
-  }
-
-  getDataPath(data: T): string[] {
-    return this.gridsService.getDataPath<T>(data);
   }
 
   onGridReady(params: any): void {

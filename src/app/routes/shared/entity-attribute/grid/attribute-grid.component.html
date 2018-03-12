@@ -7,13 +7,16 @@
   (cancel)="onCloseDialog()">
 </app-entity-attribute-grid-edit>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
-
-<app-gridtree2-wrapper
-  *ngIf="rows && rows.length > 0"
-  [translateColumnLabels]="true"
-  [columns]="columns"
-  [rows]="rows"
-  (dblclick)="onRowDblClick($event)"
-  (select)="onRowSelect($event)">
-</app-gridtree2-wrapper>
+<div class="flex vertical">
+  <div class="flex-item grow">
+    <app-simple-grid
+      persistenceKey="persistenceKey"
+      [columns]="columns"
+      [rows]="rows"
+      [treeData]="true"
+      [toolbar]="toolbarItems"
+      (dblClick)="onRowDblClick($event)"
+      (select)="onRowSelect($event)">
+    </app-simple-grid>
+  </div>
+</div>
