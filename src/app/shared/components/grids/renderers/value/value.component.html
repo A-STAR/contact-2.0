@@ -14,7 +14,7 @@
 
   <div *ngSwitchCase="4">
     <!-- TODO(d.maltsev): use dictionary 2 instead -->
-    {{ (value ? 'default.boolean.TRUE' : 'default.boolean.FALSE') | translate }}
+    {{ (value == 1 ? 'default.boolean.TRUE' : 'default.boolean.FALSE') | translate }}
   </div>
 
   <div *ngSwitchCase="5" class="text-right">

@@ -59,9 +59,9 @@ describe('ValueRendererComponent', () => {
     expect(fixture.nativeElement).toMatchSnapshot();
   });
 
-  it('should render value renderer with typeCode 4 (boolean) and value = false', () => {
+  it('should render value renderer with typeCode 4 (boolean) and value = 0', () => {
     fixture.componentInstance.agInit({
-      value: false,
+      value: 0,
       data: { typeCode: 4 },
       valueTypeKey: 'typeCode',
     } as any);
@@ -69,9 +69,9 @@ describe('ValueRendererComponent', () => {
     expect(fixture.nativeElement).toMatchSnapshot();
   });
 
-  it('should render value renderer with typeCode 4 (boolean) and value = true', () => {
+  it('should render value renderer with typeCode 4 (boolean) and value = 1', () => {
     fixture.componentInstance.agInit({
-      value: true,
+      value: 1,
       data: { typeCode: 4 },
       valueTypeKey: 'typeCode',
     } as any);
