@@ -31,10 +31,10 @@ export class FormulasGridComponent extends DialogFunctions implements OnInit, On
     { prop: 'name' },
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_FORMULA_TYPE },
     { prop: 'comment' },
-  ].map(addGridLabel('utilities.formulas.grid'));
+  ].map(addGridLabel('routes.utilities.formulas.grid'));
 
   titlebar: ITitlebar = {
-    title: 'utilities.formulas.titlebar.title',
+    title: 'routes.utilities.formulas.titlebar.title',
     items: [
       {
         type: TitlebarItemTypeEnum.BUTTON_ADD,

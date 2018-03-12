@@ -23,7 +23,7 @@ export class FormulaCardComponent implements OnInit {
 
   controls: IDynamicFormItem[];
   config: IDynamicFormConfig = {
-    labelKey: 'utilities.formulas.card',
+    labelKey: 'routes.utilities.formulas.card',
   };
   formula: Partial<IFormula>;
   formulaId = Number(this.route.snapshot.paramMap.get('formulaId'));

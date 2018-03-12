@@ -69,7 +69,7 @@ export class FormulasService extends AbstractActionService {
       .map(response => this.mapResult(response))
       .catch(
         this.notificationsService
-          .error('utilities.formulas.errors.calculate')
+          .error('routes.utilities.formulas.errors.calculate')
           .entity('entities.formulas.gen.singular')
           .dispatchCallback()
       );

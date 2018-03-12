@@ -28,13 +28,13 @@ export class CalculateDialogComponent {
     { controlName: 'userId', type: 'number', required: true, width: 6 },
   ];
   config: IDynamicFormConfig = {
-    labelKey: 'utilities.formulas.calculate',
+    labelKey: 'routes.utilities.formulas.calculate',
   };
 
   columns: ISimpleGridColumn<IFormula>[] = [
     { prop: 'type', dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE },
     { prop: 'value', valueTypeKey: 'type' },
-  ].map(addGridLabel('utilities.formulas.calculate.grid'));
+  ].map(addGridLabel('routes.utilities.formulas.calculate.grid'));
 
   result: IFormulaResult;
 

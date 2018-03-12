@@ -183,6 +183,44 @@
           }
         }
       }
+    },
+    "utilities": {
+      "formulas": {
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "typeCode": "Type",
+          "comment": "Comment"
+        },
+        "card": {
+          "name": "Name",
+          "script": "Script",
+          "typeCode": "Type",
+          "comment": "Comment"
+        },
+        "titlebar": {
+          "title": "Formulas"
+        },
+        "remove": {
+          "title": "Formula delete",
+          "confirmMessage": "Do you really want to delete selected formula?"
+        },
+        "errors": {
+          "calculate": {
+            "403": "You don't have permissions to calculate {{ entity }}",
+            "*": "Could not calculate {{ entity }}"
+          }
+        },
+        "calculate": {
+          "title": "Calculate",
+          "debtId": "ID долга",
+          "userId": "ID пользователя",
+          "grid": {
+            "type": "Type",
+            "value": "Result"
+          }
+        }
+      }
     }
   },
   "shared": {
@@ -1566,42 +1604,6 @@
         },
         "buttons": {
           "history": "History"
-        }
-      }
-    },
-    "formulas": {
-      "grid": {
-        "id": "ID",
-        "name": "Name",
-        "typeCode": "Type",
-        "comment": "Comment"
-      },
-      "card": {
-        "name": "Name",
-        "script": "Script",
-        "typeCode": "Type",
-        "comment": "Comment"
-      },
-      "titlebar": {
-        "title": "Formulas"
-      },
-      "remove": {
-        "title": "Formula delete",
-        "confirmMessage": "Do you really want to delete selected formula?"
-      },
-      "errors": {
-        "calculate": {
-          "403": "You don't have permissions to calculate {{ entity }}",
-          "*": "Could not calculate {{ entity }}"
-        }
-      },
-      "calculate": {
-        "title": "Calculate",
-        "debtId": "ID долга",
-        "userId": "ID пользователя",
-        "grid": {
-          "type": "Type",
-          "value": "Result"
         }
       }
     }
