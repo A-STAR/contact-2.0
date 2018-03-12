@@ -61,8 +61,12 @@ export class GridsService {
 
   convertTreeData<T>(data: T[], parent?: IGridTreePath): (T & IGridTreePath)[] {
     return data.reduce((acc, item: T & IGridTreePath) => {
-      item.path = (item.path || []).concat((parent && parent.name) || [] , item.name);
-      return acc.concat(Array.isArray(item.children) ? [].concat(this.convertTreeData(item.children, item)) : item);
+      item.path = parent ? [...parent.path, item.name] : [item.name];
+      return [
+        ...acc,
+        item,
+        ...(item.children && item.children.length ? this.convertTreeData(item.children, item) : [])
+      ];
     }, [])
     // remove children property
     .map(result => {

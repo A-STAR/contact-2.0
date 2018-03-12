@@ -80,7 +80,14 @@ describe('GridsService', () => {
             mandatory: 0,
             typeCode: 2,
             valueD: '2017-06-20T21:00:00Z',
-            children: []
+            children: [
+              {
+                code: 3,
+                name: 'Nested_Attribute',
+                mandatory: 0,
+                typeCode: 2,
+              }
+            ]
           },
           {
             code: 4,
@@ -116,6 +123,13 @@ describe('GridsService', () => {
         typeCode: 2,
         valueD: '2017-06-20T21:00:00Z',
         path: ['Поддерево', 'Атрибут_type_2']
+      },
+      {
+        code: 3,
+        name: 'Nested_Attribute',
+        mandatory: 0,
+        typeCode: 2,
+        path: ['Поддерево', 'Атрибут_type_2', 'Nested_Attribute']
       },
       {
         code: 4,
