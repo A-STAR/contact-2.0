@@ -144,6 +144,9 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
     if (!this.persistenceKey) {
       throw new Error('Persistence key for simple grid must be specified');
     }
+    if (this.treeData) {
+
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -159,6 +162,10 @@ export class SimpleGridComponent<T> implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveSettings();
+  }
+
+  getDataPath(data: T): string[] {
+    return this.gridsService.getDataPath<T>(data);
   }
 
   onGridReady(params: any): void {

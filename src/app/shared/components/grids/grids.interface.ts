@@ -36,6 +36,7 @@ export interface IGridColumn<T> {
   maxWidth?: number;
   renderer?: any;
   valueTypeKey?: string;
+  editable?: boolean;
 }
 
 export interface IGridTreePath {

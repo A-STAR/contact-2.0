@@ -10,6 +10,7 @@ import { PersistenceService } from '@app/core/persistence/persistence.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { CallbackRendererComponent, DictRendererComponent, LookupRendererComponent, ValueRendererComponent } from './renderers';
+import { ValueEditorComponent } from '@app/shared/components/grids/editors';
 
 @Injectable()
 export class GridsService {
@@ -38,6 +39,7 @@ export class GridsService {
               ...this.getFilterOptions(column),
               ...this.getCellRendererOptions(column),
               ...(savedColumns.find(c => c.colId === id) || {}),
+              ...this.getCellEditorOptions(column),
             }
           : null;
       })
@@ -117,6 +119,17 @@ export class GridsService {
       default:
         return {};
     }
+  }
+
+  private getCellEditorOptions<T>(column: IGridColumn<T>): Partial<ColDef> {
+    const { editable, valueTypeKey } = column;
+    if (editable) {
+      return {
+        cellEditorFramework: ValueEditorComponent,
+        cellEditorParams: valueTypeKey
+      };
+    }
+    return {};
   }
 
   private getFilterOptions<T>(column: IGridColumn<T>): Partial<ColDef> {
