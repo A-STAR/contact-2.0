@@ -33,7 +33,7 @@ export class CalculateDialogComponent {
 
   columns: ISimpleGridColumn<IFormula>[] = [
     { prop: 'type', dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE },
-    { prop: 'value' },
+    { prop: 'value', valueTypeKey: 'type' },
   ].map(addGridLabel('utilities.formulas.calculate.grid'));
 
   result: IFormulaResult;
