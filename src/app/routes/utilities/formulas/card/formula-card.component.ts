@@ -70,7 +70,7 @@ export class FormulaCardComponent implements OnInit {
   private initControls(canEdit: boolean): IDynamicFormItem[] {
     return [
       { controlName: 'name', type: 'text', disabled: !canEdit, required: true },
-      { controlName: 'script', type: 'textarea', rows: 10, disabled: !canEdit, required: true },
+      { controlName: 'script', type: 'scripteditor', disabled: !canEdit, required: true },
       {
         controlName: 'typeCode',
         type: 'select',

@@ -58,6 +58,7 @@ import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
 import { RadioGroupModule } from './components/form/radio-group/radio-group.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
 import { SelectModule } from './components/form/select/select.module';
+import { ScriptEditorModule } from './components/form/script-editor/script-editor.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TextEditorModule } from './components/form/text-editor/text-editor.module';
 import { TitlebarModule } from './components/titlebar/titlebar.module';
@@ -127,6 +128,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     RadioGroupModule,
     SelectModule,
     SpinnerModule,
+    ScriptEditorModule,
     TabViewModule,
     TextEditorModule,
     Toolbar2Module,
