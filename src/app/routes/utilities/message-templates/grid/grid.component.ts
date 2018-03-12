@@ -13,9 +13,9 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 import { TickRendererComponent } from '@app/shared/components/grids/renderers/tick/tick.component';
 
 import { DialogFunctions } from '@app/core/dialog';
+import { HtmlRendererComponent } from '@app/shared/components/grids/renderers';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
-import { addGridLabel } from '@app/core/utils';
+import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +59,7 @@ export class MessageTemplateGridComponent extends DialogFunctions implements OnI
   columns: ISimpleGridColumn<IMessageTemplate>[] = [
     { prop: 'id', maxWidth: 80 },
     { prop: 'name', maxWidth: 240 },
-    { prop: 'text' },
+    { prop: 'text', renderer: HtmlRendererComponent },
   ].map(addGridLabel('utilities.messageTemplates.grid'));
 
   templates: IMessageTemplate[];

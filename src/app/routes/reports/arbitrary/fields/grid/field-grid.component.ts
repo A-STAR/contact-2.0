@@ -2,18 +2,16 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestro
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
 
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IReportField } from '../fields.interface';
 
 import { FieldsService } from '../fields.service';
 import { DialogFunctions } from '@app/core/dialog';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
-import { combineLatestAnd } from '@app/core/utils';
+import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
 @Component({
   selector: 'app-arbitrary-report-field-grid',
@@ -29,13 +27,13 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
     this.reportId$.next(id);
   }
 
-  columns: Array<IGridColumn> = [
+  columns: Array<ISimpleGridColumn<IReportField>> = [
     { prop: 'id', maxWidth: 70 },
     { prop: 'name' },
     { prop: 'sortOrder' },
     { prop: 'systemName' },
     { prop: 'textWidth' },
-  ];
+  ].map(addGridLabel('modules.reports.arbitrary.fields.grid'));
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -80,7 +78,6 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
   constructor(
     private cdRef: ChangeDetectorRef,
     private fieldsService: FieldsService,
-    private gridService: GridService,
     private route: ActivatedRoute,
     private routingService: RoutingService
   ) {
@@ -88,13 +85,6 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
     this.reportId$.subscribe(id => id ? this.fetch() : this.clear());
 
     this.actionSubscription = this.fieldsService
@@ -123,7 +113,7 @@ export class FieldGridComponent extends DialogFunctions implements OnInit, OnDes
     return selectedField ? [ selectedField ] : [];
   }
 
-  onSelect(field: IReportField): void {
+  onSelect([ field ]: IReportField[]): void {
     this.selectedField$.next(field);
   }
 

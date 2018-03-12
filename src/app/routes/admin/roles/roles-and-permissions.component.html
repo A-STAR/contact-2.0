@@ -1,15 +1,15 @@
-<split direction="vertical" gutterColor="inherit">
+<app-area layout="column">
   <!-- Roles Grid -->
-  <split-area size="50">
+  <app-area>
     <app-roles></app-roles>
-  </split-area>
+  </app-area>
   <!-- Permissions, Access, Objects tabs -->
-  <split-area size="50">
+  <app-area>
     <div class="flex vertical">
       <app-tabview-header class="flex-item" [noMargin]="true" [tabs]="tabs"></app-tabview-header>
       <div class="flex-item grow">
         <router-outlet></router-outlet>
       </div>
     </div>
-  </split-area>
-</split>
+  </app-area>
+</app-area>

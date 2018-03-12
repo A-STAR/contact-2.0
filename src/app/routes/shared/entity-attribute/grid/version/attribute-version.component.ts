@@ -10,37 +10,37 @@ import {
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
+import { of } from 'rxjs/observable/of';
 
 import { IAttribute, IAttributeVersion } from '../../attribute.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { IValueEntity } from '@app/core/converter/value-converter.interface';
 
 import { AttributeService } from '../../attribute.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { GridComponent } from '@app/shared/components/grid/grid.component';
-
+import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers/datetime/datetime.component';
 import { DialogFunctions } from '@app/core/dialog';
-import { combineLatestAnd } from '@app/core/utils/helpers';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-attribute-version',
   templateUrl: './attribute-version.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeVersionComponent extends DialogFunctions implements OnInit, OnDestroy {
   @Input() attributeId: number;
   @Input() entityId: number;
   @Input() entityTypeId: number;
 
-  @ViewChild(GridComponent) grid: GridComponent;
+  @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IAttribute>;
 
   selectedVersion$ = new BehaviorSubject<IAttributeVersion>(null);
   selectedAttribute: IAttribute;
@@ -52,19 +52,18 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   rows: IAttributeVersion[] = [];
   private entitySubscription: Subscription;
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IAttribute>[] = [
     { prop: 'code', minWidth: 50 },
     { prop: 'name', minWidth: 150 },
     { prop: 'typeCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE },
     { prop: 'value', minWidth: 150 },
-    { prop: 'fromDateTime', minWidth: 150, renderer: 'dateTimeRenderer' },
-    { prop: 'toDateTime', minWidth: 150, renderer: 'dateTimeRenderer' },
+    { prop: 'fromDateTime', minWidth: 150, renderer: DateTimeRendererComponent },
+    { prop: 'toDateTime', minWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'userFullName', minWidth: 150 },
-  ];
+  ].map(addGridLabel('widgets.attribute.grid'));
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private attributeService: AttributeService,
     private userPermissionsService: UserPermissionsService,
     private valueConverterService: ValueConverterService
@@ -72,32 +71,28 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
     super();
   }
 
-  onRowSelect(version: IAttributeVersion): void {
-    this.selectedVersion$.next(version);
+  onRowSelect(versions: IAttributeVersion[]): void {
+    if (!isEmpty(versions)) {
+      const [ version ] = versions;
+      this.selectedVersion$.next(version);
+    }
   }
 
   ngOnInit(): void {
-
     this.entitySubscription = this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', this.entityTypeId)
-      .switchMap(canView => canView && this.entityTypeId
-        && this.attributeId ? this.fetchAll() : of([]))
+      .switchMap(canView => {
+        return canView && this.entityTypeId && this.attributeId
+          ? this.fetchAll()
+          : of([]);
+      })
       .subscribe(versions => {
-
         this.onVersionsFetch(versions);
-
         this.toolbarItems = this.getToolbarItems();
-
-        this.gridService.setAllRenderers(this.columns)
-          .pipe(first())
-          .subscribe(columns => {
-            this.columns = [...columns];
-            this.cdRef.markForCheck();
-          });
       });
   }
 
   ngOnDestroy(): void {
-    this.grid.clearSelection();
+    this.grid.selection = [];
     this.entitySubscription.unsubscribe();
   }
 
@@ -141,7 +136,7 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   }
 
   private clearSelection(): void {
-    this.grid.clearSelection();
+    this.grid.selection = [];
     this.selectedVersion$.next(null);
   }
 

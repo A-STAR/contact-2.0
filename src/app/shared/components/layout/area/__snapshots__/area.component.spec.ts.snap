@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AreaComponent should render 1`] = `
+<div
+  id="root0"
+  ng-version="5.2.4"
+>
+  
+
+
+  
+  
+
+</div>
+`;
+
+exports[`AreaComponent should render column layout 1`] = `
+<div
+  id="root1"
+  ng-version="5.2.4"
+>
+  
+    
+  <app-area
+    layout="column"
+    ng-reflect-layout="column"
+  >
+    
+      
+    <app-area
+      initialsize="1"
+      ng-reflect-initial-size="1"
+    >
+      
+        1
+      
+      
+
+
+      
+      
+
+    </app-area>
+    
+      
+    <app-area
+      initialsize="2"
+      ng-reflect-initial-size="2"
+    >
+      
+        2
+      
+      
+
+
+      
+      
+
+    </app-area>
+    
+    
+    
+
+
+    
+    <div
+      class="gutter horizontal"
+      ng-reflect-ng-class="[object Object]"
+      ng-reflect-ng-style="[object Object]"
+    />
+    
+
+  </app-area>
+  
+  
+</div>
+`;
+
+exports[`AreaComponent should render row layout 1`] = `
+<div
+  id="root2"
+  ng-version="5.2.4"
+>
+  
+    
+  <app-area
+    layout="row"
+    ng-reflect-layout="row"
+  >
+    
+      
+    <app-area
+      initialsize="1"
+      ng-reflect-initial-size="1"
+    >
+      
+        1
+      
+      
+
+
+      
+      
+
+    </app-area>
+    
+      
+    <app-area
+      initialsize="2"
+      ng-reflect-initial-size="2"
+    >
+      
+        2
+      
+      
+
+
+      
+      
+
+    </app-area>
+    
+    
+    
+
+
+    
+    <div
+      class="gutter vertical"
+      ng-reflect-ng-class="[object Object]"
+      ng-reflect-ng-style="[object Object]"
+    />
+    
+
+  </app-area>
+  
+  
+</div>
+`;

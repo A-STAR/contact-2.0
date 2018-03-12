@@ -22,7 +22,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '@app/core/utils';
+import { makeKey, addGridLabel } from '@app/core/utils';
 
 const label = makeKey('widgets.debt');
 
@@ -188,13 +188,12 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.portfolioId',
         controlName: 'portfolioId',
-        translationKey: 'widgets.debt.portfolioChange',
         type: 'gridselect',
         gridColumns: [
           { prop: 'id', minWidth: 50, maxWidth: 50 },
           { prop: 'name', minWidth: 100, maxWidth: 300 },
           { prop: 'contractor', minWidth: 100, maxWidth: 300 },
-        ],
+        ].map(addGridLabel('widgets.debt.portfolioChange.grid')),
         gridRows: portfolios,
         gridLabelGetter: (row: ILookupPortfolio) => row.name,
         gridValueGetter: (row: ILookupPortfolio) => row.id,

@@ -1,69 +1,52 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
 
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IVisitOperator } from '../visit-prepare.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { VisitPrepareService } from '../visit-prepare.service';
+
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-visit-operator-grid',
   templateUrl: './visit-operator-grid.component.html',
+  styleUrls: ['./visit-operator-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VisitOperatorGridComponent implements OnInit {
 
-  private _operators: Array<IVisitOperator> = [];
+  operators: IVisitOperator[];
 
-  private selectedOperator$ = new BehaviorSubject<IVisitOperator>(null);
+  private selectedOperator: IVisitOperator;
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IVisitOperator>[] = [
     { prop: 'id' },
     { prop: 'fullName' },
     { prop: 'organization' },
     { prop: 'position' }
-  ];
+  ].map(addGridLabel('widgets.visit.grid'));
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private visitPrepareService: VisitPrepareService,
-    private gridService: GridService,
+    private visitPrepareService: VisitPrepareService
   ) { }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-    .pipe(first())
-    .subscribe(columns => {
-      this.columns = [...columns];
-      this.cdRef.markForCheck();
-    });
+    this.visitPrepareService
+      .fetchOperators()
+      .subscribe(operators => {
+        this.operators = operators;
+        this.cdRef.markForCheck();
+      });
+  }
 
-    this.fetch();
+  onSelect(operators: IVisitOperator[]): void {
 
-    this.selectedOperator$.subscribe(operator =>
-      this.visitPrepareService.dispatchAction(VisitPrepareService.MESSAGE_OPERATOR_SELECTED, operator)
+    this.selectedOperator = operators[0];
+    this.visitPrepareService.dispatchAction(
+      VisitPrepareService.MESSAGE_OPERATOR_SELECTED,
+      this.selectedOperator
     );
-  }
 
-  get operators(): Array<IVisitOperator> {
-    return this._operators;
-  }
-
-  get selectedOperator(): IVisitOperator {
-    return (this._operators || [])
-      .find(operator => this.selectedOperator$.value && operator.id === this.selectedOperator$.value.id);
-  }
-
-  onSelect(operator: IVisitOperator): void {
-    this.selectedOperator$.next(operator);
-  }
-
-  private fetch(): void {
-    this.visitPrepareService.fetchOperators().subscribe(operators => {
-      this._operators = operators;
-      this.cdRef.markForCheck();
-    });
   }
 }

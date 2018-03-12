@@ -8,6 +8,7 @@ import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interf
 import { OrganizationsService } from '../../organizations.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel } from '@app/core/utils';
 
@@ -29,7 +30,7 @@ export class EmployeeAddComponent implements OnInit {
   columns: ISimpleGridColumn<IEmployee>[] = [
     { prop: 'fullName', minWidth: 200 },
     { prop: 'position' },
-    { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
+    { prop: 'isInactive', minWidth: 100, renderer: TickRendererComponent },
   ].map(addGridLabel('organizations.employees.add.grid'));
 
   formData: any = {};

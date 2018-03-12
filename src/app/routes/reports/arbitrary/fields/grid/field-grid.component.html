@@ -8,15 +8,13 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
-
-<app-grid
-  columnTranslationKey="modules.reports.arbitrary.fields"
-  selectionType="single"
+<app-simple-grid
+  style="height: 50vh"
+  persistenceKey="[grid] reports/arbitrary/fields"
   [columns]="columns"
   [selection]="selection"
-  [footerHeight]="false"
   [rows]="fields"
-  (onSelect)="onSelect($event)"
-  (onDblClick)="onEdit($event)"
-></app-grid>
+  [toolbar]="toolbarItems"
+  (dblClick)="onEdit($event)"
+  (select)="onSelect($event)"
+></app-simple-grid>
