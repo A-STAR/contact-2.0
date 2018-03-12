@@ -13,7 +13,7 @@ import { UserDictionariesService } from '../../../core/user/dictionaries/user-di
 import { ValueConverterService } from '../../../core/converter/value-converter.service';
 
 import { FilterObject } from '../../../shared/components/grid2/filter/grid-filter';
-import { renderers as gridRenderers, TYPE_CODES } from '../../../core/utils/index';
+import { TYPE_CODES } from '../../../core/utils/index';
 
 @Injectable()
 export class GridService {

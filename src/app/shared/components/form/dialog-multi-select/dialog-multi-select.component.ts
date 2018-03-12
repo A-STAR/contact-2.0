@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 
 import { IDialogMultiSelectValue, IDialogMultiSelectFilterType } from './dialog-multi-select.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -68,8 +67,8 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions
   }
 
   ngOnInit(): void {
-    const columnsFrom = this.dialogMultiSelectService.getColumnsFrom(this.filterType);
-    const columnsTo = this.dialogMultiSelectService.getColumnsTo(this.filterType);
+    this.columnsFrom = this.dialogMultiSelectService.getColumnsFrom(this.filterType);
+    this.columnsTo = this.dialogMultiSelectService.getColumnsTo(this.filterType);
   }
 
   get fetch(): (filterParams: any) => Observable<any> {

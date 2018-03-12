@@ -1,6 +1,3 @@
-import { ILookupKey } from '../../../core/lookup/lookup.interface';
-import { Observable } from 'rxjs/Observable';
-
 import { IAGridColumn } from '@app/shared/components/grid2/grid2.interface';
 import { IMetadataAction, IMetadataTitlebar } from '@app/core/metadata/metadata.interface';
 
