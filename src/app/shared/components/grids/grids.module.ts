@@ -6,6 +6,8 @@ import { AgGridModule } from 'ag-grid-angular/main';
 
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
+import { DateTimeModule } from '@app/shared/components/form/datetime/datetime.module';
+import { InputModule } from '@app/shared/components/form/input/input.module';
 
 import { MomentModule } from '@app/shared/pipes/moment/moment.module';
 import { SelectModule } from '@app/shared/components/form/select/select.module';
@@ -30,6 +32,13 @@ import {
   ValueRendererComponent,
 } from './renderers';
 
+// Editors
+
+import {
+  DateTimeEditComponent,
+  ValueEditorComponent,
+} from './editors';
+
 // Misc Components
 import { GridToolbarComponent } from './toolbar/toolbar.component';
 import { EmptyOverlayComponent } from './overlays/empty/empty.component';
@@ -40,6 +49,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
       CallbackRendererComponent,
       CheckboxRendererComponent,
       DateRendererComponent,
+      DateTimeEditComponent,
       DateTimeRendererComponent,
       DictRendererComponent,
       EmptyOverlayComponent,
@@ -47,11 +57,14 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
       NumberRendererComponent,
       TickRendererComponent,
       ValueRendererComponent,
+      ValueEditorComponent,
     ]),
     ButtonModule,
     CheckModule,
     CommonModule,
+    DateTimeModule,
     FormsModule,
+    InputModule,
     MomentModule,
     SelectModule,
     Toolbar2Module,
@@ -65,6 +78,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     CallbackRendererComponent,
     CheckboxRendererComponent,
     DateRendererComponent,
+    DateTimeEditComponent,
     DateTimeRendererComponent,
     DictRendererComponent,
     EmptyOverlayComponent,
@@ -74,6 +88,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     SimpleGridComponent,
     TickRendererComponent,
     ValueRendererComponent,
+    ValueEditorComponent,
   ],
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
   entryComponents: [

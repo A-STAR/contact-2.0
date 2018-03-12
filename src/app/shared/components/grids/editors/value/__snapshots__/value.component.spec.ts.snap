@@ -1,0 +1,1615 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ValueEditorComponent should render value editor with typeCode 1 (number) 1`] = `
+<div
+  id="root0"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  <div
+    class="text-right"
+  >
+    
+    
+    <app-number
+      class="ng-untouched ng-pristine ng-invalid"
+      ng-reflect-model="0"
+      ng-reflect-required="true"
+      required=""
+    >
+      <label
+        class="m0"
+      >
+        
+  
+        
+        
+  
+        <div
+          class="input-container"
+        >
+          
+    
+          <input
+            class="form-control ng-untouched ng-pristine ng-valid"
+            ng-reflect-is-disabled="false"
+            type="text"
+          />
+          
+    
+          <i
+            class="fa fa-angle-up"
+          />
+          
+    
+          <i
+            class="fa fa-angle-down"
+          />
+          
+  
+        </div>
+        
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+      </label>
+      
+
+    </app-number>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 2 (datepicker) 1`] = `
+<div
+  id="root1"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <div
+      style="padding: 10px;"
+    >
+      
+      
+      <app-date
+        class="ng-untouched ng-pristine ng-invalid"
+        ng-reflect-model="2017-06-20T21:00:00Z"
+        ng-reflect-required="true"
+        required=""
+      >
+        <header>
+          
+  
+          <span
+            class="arrow"
+          >
+            
+    
+            <i
+              class="fa fa-angle-left"
+            />
+            
+  
+          </span>
+          
+  
+          <span>
+            
+    Март 2018
+  
+          </span>
+          
+  
+          <span
+            class="arrow"
+          >
+            
+    
+            <i
+              class="fa fa-angle-right"
+            />
+            
+  
+          </span>
+          
+
+        </header>
+        
+
+
+        <ul
+          class="header"
+        >
+          
+  
+          
+          <li>
+            
+    Пн
+  
+          </li>
+          <li>
+            
+    Вт
+  
+          </li>
+          <li>
+            
+    Ср
+  
+          </li>
+          <li>
+            
+    Чт
+  
+          </li>
+          <li>
+            
+    Пт
+  
+          </li>
+          <li>
+            
+    Сб
+  
+          </li>
+          <li>
+            
+    Вс
+  
+          </li>
+          
+
+        </ul>
+        
+
+
+        <ul>
+          
+  
+          
+          <li
+            class="outside"
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    26
+  
+          </li>
+          <li
+            class="outside"
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    27
+  
+          </li>
+          <li
+            class="outside"
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    28
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    1
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    2
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    3
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    4
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    5
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    6
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    7
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    8
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    9
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    10
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    11
+  
+          </li>
+          <li
+            class="current"
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    12
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    13
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    14
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    15
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    16
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    17
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    18
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    19
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    20
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    21
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    22
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    23
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    24
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    25
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    26
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    27
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    28
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    29
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    30
+  
+          </li>
+          <li
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    31
+  
+          </li>
+          <li
+            class="outside"
+            ng-reflect-ng-class="[object Object]"
+          >
+            
+    1
+  
+          </li>
+          
+
+        </ul>
+        
+
+      </app-date>
+      
+    
+    </div>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 4 (boolean) 1`] = `
+<div
+  id="root3"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-select
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-dict-code="2"
+      ng-reflect-model="true"
+    >
+      
+
+      <label
+        class="m0"
+      >
+        
+
+  
+        
+        
+
+  
+        <div
+          class="select-container dropdown open"
+        >
+          
+
+    
+          <input
+            autocomplete="off"
+            class="form-control select-search ng-untouched ng-pristine ng-valid"
+            ng-reflect-model=""
+            placeholder=""
+            type="text"
+          />
+          
+    
+          
+          <i
+            class="co co-back select-caret"
+            ng-reflect-klass="co co-back select-caret"
+            ng-reflect-ng-class=""
+          />
+          
+    
+          
+          
+
+    
+          
+          
+  
+        </div>
+        
+
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+
+      </label>
+      
+
+    </app-select>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 5 (float) 1`] = `
+<div
+  id="root4"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div
+    class="text-right"
+  >
+    
+    
+    <app-number
+      class="ng-untouched ng-pristine ng-invalid"
+      ng-reflect-model="3.14"
+      ng-reflect-required="true"
+      required=""
+    >
+      <label
+        class="m0"
+      >
+        
+  
+        
+        
+  
+        <div
+          class="input-container"
+        >
+          
+    
+          <input
+            class="form-control ng-untouched ng-pristine ng-valid"
+            ng-reflect-is-disabled="false"
+            type="text"
+          />
+          
+    
+          <i
+            class="fa fa-angle-up"
+          />
+          
+    
+          <i
+            class="fa fa-angle-down"
+          />
+          
+  
+        </div>
+        
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+      </label>
+      
+
+    </app-number>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 6 (dictionary) 1`] = `
+<div
+  id="root5"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-select
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-dict-code="33"
+      ng-reflect-model="33"
+    >
+      
+
+      <label
+        class="m0"
+      >
+        
+
+  
+        
+        
+
+  
+        <div
+          class="select-container dropdown open"
+        >
+          
+
+    
+          <input
+            autocomplete="off"
+            class="form-control select-search ng-untouched ng-pristine ng-valid"
+            ng-reflect-model=""
+            placeholder=""
+            type="text"
+          />
+          
+    
+          
+          <i
+            class="co co-back select-caret"
+            ng-reflect-klass="co co-back select-caret"
+            ng-reflect-ng-class=""
+          />
+          
+    
+          
+          
+
+    
+          
+          
+  
+        </div>
+        
+
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+
+      </label>
+      
+
+    </app-select>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 6 (dictionary) using callback 1`] = `
+<div
+  id="root6"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-select
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-dict-code="33"
+      ng-reflect-model="33"
+    >
+      
+
+      <label
+        class="m0"
+      >
+        
+
+  
+        
+        
+
+  
+        <div
+          class="select-container dropdown open"
+        >
+          
+
+    
+          <input
+            autocomplete="off"
+            class="form-control select-search ng-untouched ng-pristine ng-valid"
+            ng-reflect-model=""
+            placeholder=""
+            type="text"
+          />
+          
+    
+          
+          <i
+            class="co co-back select-caret"
+            ng-reflect-klass="co co-back select-caret"
+            ng-reflect-ng-class=""
+          />
+          
+    
+          
+          
+
+    
+          
+          
+  
+        </div>
+        
+
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+
+      </label>
+      
+
+    </app-select>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 7 (datetimepicker) 1`] = `
+<div
+  id="root7"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-grid-datetime-edit
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-model="2017-06-20T21:00:00Z"
+    >
+      <div
+        class="datetimepicker"
+      >
+        
+  
+        <app-date
+          class="ng-untouched ng-pristine ng-valid"
+        >
+          <header>
+            
+  
+            <span
+              class="arrow"
+            >
+              
+    
+              <i
+                class="fa fa-angle-left"
+              />
+              
+  
+            </span>
+            
+  
+            <span>
+              
+    Март 2018
+  
+            </span>
+            
+  
+            <span
+              class="arrow"
+            >
+              
+    
+              <i
+                class="fa fa-angle-right"
+              />
+              
+  
+            </span>
+            
+
+          </header>
+          
+
+
+          <ul
+            class="header"
+          >
+            
+  
+            
+            <li>
+              
+    Пн
+  
+            </li>
+            <li>
+              
+    Вт
+  
+            </li>
+            <li>
+              
+    Ср
+  
+            </li>
+            <li>
+              
+    Чт
+  
+            </li>
+            <li>
+              
+    Пт
+  
+            </li>
+            <li>
+              
+    Сб
+  
+            </li>
+            <li>
+              
+    Вс
+  
+            </li>
+            
+
+          </ul>
+          
+
+
+          <ul>
+            
+  
+            
+            <li
+              class="outside"
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    26
+  
+            </li>
+            <li
+              class="outside"
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    27
+  
+            </li>
+            <li
+              class="outside"
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    28
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    1
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    2
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    3
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    4
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    5
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    6
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    7
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    8
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    9
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    10
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    11
+  
+            </li>
+            <li
+              class="current"
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    12
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    13
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    14
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    15
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    16
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    17
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    18
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    19
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    20
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    21
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    22
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    23
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    24
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    25
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    26
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    27
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    28
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    29
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    30
+  
+            </li>
+            <li
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    31
+  
+            </li>
+            <li
+              class="outside"
+              ng-reflect-ng-class="[object Object]"
+            >
+              
+    1
+  
+            </li>
+            
+
+          </ul>
+          
+
+        </app-date>
+        
+  
+        <app-time
+          class="ng-untouched ng-pristine ng-valid"
+        >
+          
+          
+  
+          <div
+            class="wheel"
+          >
+            
+    
+            <span
+              class="arrow"
+            >
+              
+      
+              <i
+                class="fa fa-angle-up"
+              />
+              
+    
+            </span>
+            
+    
+            <span>
+              
+      23
+    
+            </span>
+            
+    
+            <span
+              class="current"
+            >
+              
+      00
+    
+            </span>
+            
+    
+            <span>
+              
+      01
+    
+            </span>
+            
+    
+            <span
+              class="arrow"
+            >
+              
+      
+              <i
+                class="fa fa-angle-down"
+              />
+              
+    
+            </span>
+            
+  
+          </div>
+          
+
+          
+
+          <span
+            class="divider"
+          >
+            :
+          </span>
+          
+
+          
+          
+  
+          <div
+            class="wheel"
+          >
+            
+    
+            <span
+              class="arrow"
+            >
+              
+      
+              <i
+                class="fa fa-angle-up"
+              />
+              
+    
+            </span>
+            
+    
+            <span>
+              
+      59
+    
+            </span>
+            
+    
+            <span
+              class="current"
+            >
+              
+      00
+    
+            </span>
+            
+    
+            <span>
+              
+      01
+    
+            </span>
+            
+    
+            <span
+              class="arrow"
+            >
+              
+      
+              <i
+                class="fa fa-angle-down"
+              />
+              
+    
+            </span>
+            
+  
+          </div>
+          
+
+          
+
+
+          
+          
+
+
+          
+          
+
+        </app-time>
+        
+  
+        <footer>
+          
+    
+          <span>
+            
+          </span>
+          
+    
+          <span>
+            
+          </span>
+          
+  
+        </footer>
+        
+
+      </div>
+      
+
+    </app-grid-datetime-edit>
+    
+  
+  </div>
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value renderer with typeCode 3 (string) 1`] = `
+<div
+  id="root2"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-text
+      class="ng-untouched ng-pristine ng-invalid"
+      ng-reflect-model="value"
+      ng-reflect-required="true"
+      required=""
+    >
+      <label
+        class="m0"
+      >
+        
+  
+        
+        
+  
+        <div>
+          
+    
+          <input
+            class="form-control ng-untouched ng-pristine ng-valid"
+            ng-reflect-is-disabled="false"
+            type="text"
+          />
+          
+  
+        </div>
+        
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+      </label>
+      
+
+    </app-text>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;

@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ICellRendererParams, ICellEditorParams } from 'ag-grid/main';
+import { ICellEditorParams } from 'ag-grid/main';
 import { ICellEditorAngularComp } from 'ag-grid-angular';
-
-import { TYPE_CODES } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -13,6 +11,7 @@ export class ValueEditorComponent implements ICellEditorAngularComp {
   private params: ICellEditorParams;
 
   value: any;
+  dictCode: number;
 
   refresh(): boolean {
     return false;
@@ -24,8 +23,10 @@ export class ValueEditorComponent implements ICellEditorAngularComp {
   }
 
   agInit(params: any): void {
+    const { data, dictCode, value } = params as any;
     this.params = params;
-    this.value = params.value;
+    this.value = value;
+    this.dictCode = typeof dictCode === 'function' ? dictCode(data) : dictCode;
   }
 
   getValue(): any {
@@ -33,7 +34,7 @@ export class ValueEditorComponent implements ICellEditorAngularComp {
   }
 
   isPopup(): boolean {
-    return [TYPE_CODES.DATE, TYPE_CODES.DATETIME, TYPE_CODES.DICT].includes(this.type);
+    return true;
   }
 
   onValueChange(value: any): void {

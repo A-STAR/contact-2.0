@@ -1,7 +1,12 @@
 <ng-container [ngSwitch]="type">
 
   <div *ngSwitchCase="1" class="text-right">
-    {{ value }}
+    <app-number
+      [required]="true"
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    >
+    </app-number>
   </div>
 
   <div *ngSwitchCase="2">
@@ -15,30 +20,45 @@
   </div>
 
   <div *ngSwitchCase="3">
-    {{ value }}
+    <app-text
+      [required]="true"
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    >
+    </app-text>
   </div>
 
   <div *ngSwitchCase="4">
-    <!-- TODO(d.maltsev): use dictionary 2 instead -->
-    {{ (value ? 'default.boolean.TRUE' : 'default.boolean.FALSE') | translate }}
+    <app-select
+      [dictCode]="2"
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    ></app-select>
   </div>
 
   <div *ngSwitchCase="5" class="text-right">
-    {{ value }}
+    <app-number
+      [required]="true"
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    >
+    </app-number>
   </div>
 
   <div *ngSwitchCase="6">
-    <!-- TODO(d.maltsev): add dict rendering if it's used anywhere -->
-    {{ value }}
+    <app-select
+      [dictCode]="dictCode"
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    ></app-select>
   </div>
 
   <div *ngSwitchCase="7">
-    <div style="padding: 10px;">
-      <app-date
-        [ngModel]="value"
-        [required]="true"
-        (ngModelChange)="onValueChange($event)"
-      ></app-date>
-    </div>
+    <app-grid-datetime-edit
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    >
+    </app-grid-datetime-edit>
   </div>
+
 </ng-container>
