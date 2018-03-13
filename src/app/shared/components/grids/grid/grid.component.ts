@@ -17,6 +17,7 @@ import {
   GridApi,
   GridOptions,
   RowDoubleClickedEvent,
+  CellValueChangedEvent,
 } from 'ag-grid';
 
 import { IAGridAction } from '@app/shared/components/grid2/grid2.interface';
@@ -77,6 +78,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   @Output() select = new EventEmitter<T[]>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() action = new EventEmitter<IAGridAction>();
+  @Output() cellValueChanged = new EventEmitter<CellValueChangedEvent>();
 
   gridOptions: GridOptions = {
     defaultColDef: {
@@ -111,6 +113,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
     onColumnMoved: () => this.saveSettings(),
     onColumnResized: () => this.saveSettings(),
     onRowDoubleClicked: event => this.onRowDoubleClicked(event),
+    onCellValueChanged: event => this.onCellValueChanged(event),
     onSelectionChanged: () => this.onSelectionChanged(),
     onSortChanged: () => this.saveSettings(),
     rowHeight: 32,
@@ -181,6 +184,10 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
 
   private onRowDoubleClicked(event: RowDoubleClickedEvent): void {
     this.dblClick.emit(event.data);
+  }
+
+  private onCellValueChanged(event: CellValueChangedEvent): void {
+    this.cellValueChanged.emit(event);
   }
 
   private updateToolbar(): void {

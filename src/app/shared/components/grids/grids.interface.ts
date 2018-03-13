@@ -37,7 +37,7 @@ export interface IGridColumn<T> {
   maxWidth?: number;
   renderer?: any;
   valueTypeKey?: string;
-  editable?: boolean;
+  editable?: boolean | ((params: ValueGetterParams) => boolean);
   valueGetter?: ((params: ValueGetterParams) => any) | string;
   isGroup?: boolean;
 }

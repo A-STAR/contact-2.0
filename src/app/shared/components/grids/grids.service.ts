@@ -40,6 +40,7 @@ export class GridsService {
               minWidth: column.minWidth,
               maxWidth: column.maxWidth,
               valueGetter: column.valueGetter,
+              editable: column.editable,
               ...this.getFilterOptions(column),
               ...this.getCellRendererOptions(column),
               ...(savedColumns.find(c => c.colId === id) || {}),
@@ -143,11 +144,11 @@ export class GridsService {
   }
 
   private getCellEditorOptions<T>(column: IGridColumn<T>): Partial<ColDef> {
-    const { editable, valueTypeKey } = column;
+    const { editable, valueTypeKey, dictCode, lookupKey } = column;
     if (editable) {
       return {
         cellEditorFramework: ValueEditorComponent,
-        cellEditorParams: valueTypeKey
+        cellEditorParams: { valueTypeKey, dictCode, lookupKey }
       };
     }
     return {};
