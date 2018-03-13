@@ -50,6 +50,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
   languages: ILookupLanguage[] = [];
   value: IEntityTranslation[] = [];
 
+  private mainLanguageId: number;
   private selectedLanguageId = 1;
 
   constructor(
@@ -73,6 +74,10 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
       .lookup<ILookupLanguage>('languages')
       .subscribe(languages => {
         this.languages = languages;
+        const mainLanguage = languages.find(l => l.isMain === 1);
+        if (mainLanguage) {
+          this.mainLanguageId = mainLanguage.id;
+        }
         this.cdRef.markForCheck();
       });
 
@@ -107,8 +112,12 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
   }
 
   validate(): any {
+    const mainItem = this.mainLanguageId
+      ? this.value.find(i => i.languageId === this.mainLanguageId)
+      : null;
+
     switch (true) {
-      case this.value == null && this.isRequired:
+      case this.isRequired && mainItem && !mainItem.value:
         return { required: true };
       default:
         return null;
@@ -119,7 +128,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
     const item = this.value.find(i => i.languageId === this.selectedLanguageId);
     if (item) {
       const { value } = event.target as HTMLInputElement;
-      item.value = value;
+      item.value = value || null;
       this.propagateChange(this.value);
     }
   }
