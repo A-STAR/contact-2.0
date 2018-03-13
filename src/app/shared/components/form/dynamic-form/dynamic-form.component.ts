@@ -105,8 +105,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     // get subsets of `multilanguage` controls & `select` controls with `dictCode` & `lookupKey`
     const dictCodeCtrls = flatControls
       .filter(ctrl => ctrl.type === 'select' && ctrl.dictCode);
-      const lookupCtrls = flatControls.filter(ctrl => ctrl.type === 'select' && ctrl.lookupKey);
-    const multiLanguageCtrls = flatControls.filter(ctrl => ctrl.type === 'multilanguage');
+    const lookupCtrls = flatControls.filter(ctrl => ctrl.type === 'select' && ctrl.lookupKey);
 
     combineLatest(
       dictCodeCtrls.length
@@ -130,42 +129,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
           )
         : of([]),
 
-      // multiLanguageCtrls.length
-      //   ? this.lookupService.lookup<ILookupLanguage>('languages')
-      //       .pipe(
-      //         switchMap(languages => {
-      //           return combineLatest(
-      //             multiLanguageCtrls.map((ctrl: IDynamicFormLanguageControl) => {
-      //               const { langConfig } = ctrl;
-      //               if (!langConfig.entityAttributeId) {
-      //                 return new ErrorObservable('The multilanguage config must contain an \'entityAttributeId\'');
-      //               }
-
-      //               const emptyLangValues: IEntityTranslation[] = languages.map(v => (
-      //                 { languageId: v.id, isMain: v.isMain, value: null }
-      //               ));
-
-      //               return langConfig.entityId
-      //                 ? this.dataService.readTranslations(langConfig.entityId, langConfig.entityAttributeId)
-      //                 : of(emptyLangValues);
-      //             })
-      //           )
-      //           .pipe(
-      //             switchMap((translations: IEntityTranslation[][]) => {
-      //               // log('translations fetched', translations);
-      //               const map = translations.map((translation, i) => {
-      //                 // set langOptions for `multilanguage` controls
-      //                 const ctrl = <IDynamicFormLanguageControl>multiLanguageCtrls[i];
-      //                 ctrl.langOptions = getTranslations(languages, translation);
-      //                 return ctrl;
-      //               });
-      //               return [map];
-      //             })
-      //           );
-      //         })
-      //       )
-      //     : of([]),
-
       lookupCtrls.length
         ? combineLatest(
             lookupCtrls.map((ctrl: IDynamicFormSelectControl) => {
@@ -188,7 +151,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         : of([])
     )
     .pipe(first())
-    .subscribe(([ dictCtrlsWithOptions, /* multiLanguageCtrlsWithOptions, */ lookupCtrlsWithOptions ]) => {
+    .subscribe(([ dictCtrlsWithOptions, lookupCtrlsWithOptions ]) => {
 
       // 2. set the dictionary options for `select` controls
       // 3. set the `multilanguage` controls' options
@@ -382,13 +345,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   private serializeControlValue(value: any, control: IDynamicFormControl): any {
     switch (control.type) {
-      case 'multilanguage': {
-        // TODO(a.tymchuk): replace with proper type instead of ILabeledValue
-        const values = (Array.isArray(value) ? value : control.langOptions)
-          .filter((o: any) => o.isUpdated)
-          .map((o: any) => ({ languageId: o.languageId, value: o.value }));
-        return values.length ? values : undefined;
-      }
       case 'datepicker':
         return ['', null].includes(value)
           ? null

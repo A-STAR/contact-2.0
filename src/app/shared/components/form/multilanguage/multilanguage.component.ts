@@ -1,12 +1,23 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 
-import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
+import { EntityTranslationsConstants, IEntityTranslation } from '@app/core/entity/translations/entity-translations.interface';
 import { ILookupLanguage } from '@app/core/lookup/lookup.interface';
 import { IMultiLanguageConfig } from '@app/shared/components/form/multilanguage/multilanguage.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
+
+import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,8 +44,11 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
   @Input() label: string;
   @Input() langConfig: IMultiLanguageConfig;
 
+  @ViewChild('input') input: ElementRef;
+  @ViewChild(DropdownDirective) dropdown: DropdownDirective;
+
   languages: ILookupLanguage[] = [];
-  value: any[] = [];
+  value: IEntityTranslation[] = [];
 
   private selectedLanguageId = 1;
 
@@ -74,7 +88,10 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
   }
 
   writeValue(value: any[]): void {
-    //
+    if (Array.isArray(value)) {
+      this.value = value;
+      this.cdRef.markForCheck();
+    }
   }
 
   registerOnChange(fn: Function): void {
@@ -98,12 +115,29 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
     }
   }
 
-  onChange(event: any): void {
-    //
+  onChange(event: Event): void {
+    const item = this.value.find(i => i.languageId === this.selectedLanguageId);
+    if (item) {
+      const { value } = event.target as HTMLInputElement;
+      item.value = value;
+      this.propagateChange(this.value);
+    }
   }
 
   onFocusOut(): void {
-    //
+    this.propagateTouch();
+  }
+
+  onLanguageSelect(language: any): void {
+    this.selectedLanguageId = language.id;
+    this.dropdown.close();
+    this.input.nativeElement.focus();
+    this.cdRef.markForCheck();
+  }
+
+  onLabelClick(event: MouseEvent): void {
+    event.preventDefault();
+    this.input.nativeElement.focus();
   }
 
   private propagateChange: Function = () => {};

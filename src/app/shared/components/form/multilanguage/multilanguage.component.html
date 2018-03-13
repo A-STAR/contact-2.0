@@ -1,60 +1,30 @@
-<label class="m0">
+<label class="m0" (click)="onLabelClick($event)">
   <div *ngIf="label" class="form-label">
     {{ label | translate }}
     <b *ngIf="required" class="text-danger">*</b>
   </div>
-  <div class="input-group">
-    <span class="input-group-addon">{{ selectedLanguageLabel }}</span>
+  <div class="input-group" appDropdown>
+    <span class="input-group-addon" #dropdownTrigger>
+      <span class="language-label">
+        {{ selectedLanguageLabel }}
+      </span>
+    </span>
+    <ul class="dropdown-content" #dropdownContent>
+      <li *ngFor="let language of languages" (click)="onLanguageSelect(language)">
+        {{ language.name }}
+      </li>
+    </ul>
     <input
+      #input
       class="form-control"
       type="text"
       [disabled]="disabled"
       [ngModel]="selectedTranslationLabel"
       (focusout)="onFocusOut()"
-      (ngModelChange)="onChange($event)"
+      (input)="onChange($event)"
     />
   </div>
   <div>
     <span *ngIf="errors">{{ errors | json }}</span>
   </div>
 </label>
-
-
-<!--
-
-<div class="input-group" appDropdown>
-
-      <div class="input-group-btn">
-
-        <button type="button" class="btn btn-default" #dropdownTrigger>
-          <span class="button-label">{{ buttonText | translate }}</span>
-          <i class="caret"></i>
-        </button>
-
-        <ul class="list-group m0" #dropdownContent>
-          <li
-            *ngFor="let option of langOptions"
-            class="list-group-item b0 clickable"
-            (click)="onLanguageChange(option)"
-            [ngClass]="{'main-language': !!option.isMain}"
-          >
-            {{ option.label | translate }}
-          </li>
-        </ul>
-
-      </div>
-
-      <div class="input-wrapper">
-        <input
-          #input
-          class="form-control"
-          type="text"
-          [ngModel]="value"
-          [attr.placeholder]="(placeholder || '') | translate"
-          (ngModelChange)="onValueChange($event)"
-          (focusout)="onFocusOut()"
-        >
-        <i *ngIf="value != null && !isDisabled" class="co co-clear clear-btn" (click)="onClear($event)"></i>
-      </div>
-
-    </div> -->
