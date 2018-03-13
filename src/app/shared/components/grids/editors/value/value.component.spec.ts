@@ -179,7 +179,11 @@ describe('ValueEditorComponent', () => {
   it('should render value editor with typeCode 1 (number)', () => {
     fixture.componentInstance.agInit({
       value: 0,
-      data: { typeCode: 1 },
+      node: {
+        data: {
+          typeCode: 1
+        }
+      },
       valueTypeKey: 'typeCode',
     } as any);
     fixture.detectChanges();
@@ -189,7 +193,11 @@ describe('ValueEditorComponent', () => {
   it('should render value editor with typeCode 2 (datepicker)', () => {
     fixture.componentInstance.agInit({
       value: '2017-06-20T21:00:00Z',
-      data: { typeCode: 2 },
+      node: {
+        data: {
+          typeCode: 2
+        }
+      },
       valueTypeKey: 'typeCode',
     } as any);
     fixture.detectChanges();
@@ -199,7 +207,11 @@ describe('ValueEditorComponent', () => {
   it('should render value renderer with typeCode 3 (string)', () => {
     fixture.componentInstance.agInit({
       value: 'value',
-      data: { typeCode: 3 },
+      node: {
+        data: {
+          typeCode: 3
+        }
+      },
       valueTypeKey: 'typeCode',
     } as any);
     fixture.detectChanges();
@@ -209,7 +221,11 @@ describe('ValueEditorComponent', () => {
   it('should render value editor with typeCode 4 (boolean)', () => {
     fixture.componentInstance.agInit({
       value: true,
-      data: { typeCode: 4 },
+      node: {
+        data: {
+          typeCode: 4
+        }
+      },
       valueTypeKey: 'typeCode',
     } as any);
     fixture.detectChanges();
@@ -219,7 +235,11 @@ describe('ValueEditorComponent', () => {
   it('should render value editor with typeCode 5 (float)', () => {
     fixture.componentInstance.agInit({
       value: 3.14,
-      data: { typeCode: 5 },
+      node: {
+        data: {
+          typeCode: 5
+        }
+      },
       valueTypeKey: 'typeCode',
     } as any);
     fixture.detectChanges();
@@ -229,7 +249,11 @@ describe('ValueEditorComponent', () => {
   it('should render value editor with typeCode 6 (dictionary)', () => {
     fixture.componentInstance.agInit({
       value: 33,
-      data: { typeCode: 6 },
+      node: {
+        data: {
+          typeCode: 6
+        }
+      },
       dictCode: 33,
       valueTypeKey: 'typeCode',
     } as any);
@@ -240,7 +264,12 @@ describe('ValueEditorComponent', () => {
   it('should render value editor with typeCode 6 (dictionary) using callback', () => {
     fixture.componentInstance.agInit({
       value: 33,
-      data: { typeCode: 6, dictCode: 33 },
+      node: {
+        data: {
+          typeCode: 6,
+          dictCode: 33
+        }
+      },
       dictCode: item => item.dictCode,
       valueTypeKey: 'typeCode',
     } as any);
@@ -251,7 +280,11 @@ describe('ValueEditorComponent', () => {
   it('should render value editor with typeCode 7 (datetimepicker)', () => {
     fixture.componentInstance.agInit({
       value: '2017-06-20T21:00:00Z',
-      data: { typeCode: 7 },
+      node: {
+        data: {
+          typeCode: 7
+        }
+      },
       valueTypeKey: 'typeCode',
     } as any);
     fixture.detectChanges();

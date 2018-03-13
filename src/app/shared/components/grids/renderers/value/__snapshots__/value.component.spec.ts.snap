@@ -14,7 +14,7 @@ exports[`ValueRendererComponent should render value renderer with typeCode 1 (nu
     class="text-right"
   >
     
-    0
+    
   
   </div>
   
@@ -68,7 +68,7 @@ exports[`ValueRendererComponent should render value renderer with typeCode 3 (st
   
   <div>
     
-    value
+    
   
   </div>
   
@@ -168,7 +168,7 @@ exports[`ValueRendererComponent should render value renderer with typeCode 4 (bo
     
     
     
-    default.boolean.TRUE
+    default.boolean.FALSE
   
   </div>
   
