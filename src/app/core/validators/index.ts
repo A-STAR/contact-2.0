@@ -7,6 +7,5 @@ export { maxDate } from './maxDate';
 export { maxFileSize } from './maxFileSize';
 export { min } from './min';
 export { minDate, minDateThreeDaysAgo } from './minDate';
-export { multilanguageRequired } from './multilanguageRequired';
 export { oneOfGroupRequired } from './oneOfGroupRequired';
 export { password } from './password';
