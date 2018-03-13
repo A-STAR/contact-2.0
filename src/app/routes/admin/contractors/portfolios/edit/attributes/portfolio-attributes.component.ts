@@ -7,7 +7,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 @Component({
   selector: 'app-portfolio-attributes',
   templateUrl: './portfolio-attributes.component.html',
-  styleUrls: ['./portfolio-attributes.component.scss'],
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfolioAttributesComponent implements OnInit {
