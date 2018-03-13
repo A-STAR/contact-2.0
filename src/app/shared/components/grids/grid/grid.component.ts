@@ -51,7 +51,6 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
   @Input() showToolbar = false;
   @Input() toolbar: IToolbarItem[];
-  @Input() groupBy: string;
   @Input() treeData: boolean;
 
   @Input()
