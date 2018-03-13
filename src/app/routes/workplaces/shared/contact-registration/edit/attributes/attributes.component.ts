@@ -12,7 +12,8 @@ import { ContactRegistrationService } from '@app/routes/workplaces/shared/contac
 
 import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
-import { addGridLabel } from '@app/core/utils';
+import { addGridLabel, getValue } from '@app/core/utils';
+import { CellValueChangedEvent } from 'ag-grid';
 
 @Component({
   selector: 'app-contact-registration-attributes',
@@ -22,6 +23,7 @@ import { addGridLabel } from '@app/core/utils';
 })
 export class ContactRegistrationAttributesComponent implements OnInit {
   attributes: IContactTreeAttribute[];
+  private editedAttributes: any = {};
 
   constructor(
     private attributesService: AttributesService,
@@ -64,6 +66,17 @@ export class ContactRegistrationAttributesComponent implements OnInit {
       this.attributes = attributes;
       this.cdRef.markForCheck();
     });
+  }
+
+  onCellValueChanged(event: CellValueChangedEvent): void {
+    this.editedAttributes[event.rowIndex] = {
+      ...getValue(event.data.typeCode, event.newValue),
+      code: event.data.code
+    };
+  }
+
+  get data(): any {
+    return Object.keys(this.editedAttributes).map(key => this.editedAttributes[key]);
   }
 
 }

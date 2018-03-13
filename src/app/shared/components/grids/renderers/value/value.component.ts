@@ -25,8 +25,9 @@ export class ValueRendererComponent implements ICellRendererAngularComp {
   agInit(params: ICellRendererParams): void {
     this.params = params;
     const { data, valueTypeKey } = this.params as any;
-    this.type = data[valueTypeKey] || TYPE_CODES.STRING;
-    this.value = this.valueConverterService.deserialize(this.params.data).value;
+    this.type = data[valueTypeKey];
+    this.value = this.type ? this.valueConverterService.deserialize(this.params.data).value
+      : (this.type = TYPE_CODES.STRING) && this.params.value;
 
     this.cdRef.markForCheck();
   }
