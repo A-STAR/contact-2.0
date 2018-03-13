@@ -50,7 +50,8 @@ import { ListModule } from './components/list/list.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { MenuModule } from './components/form/menu/menu.module';
 import { MomentModule } from './pipes/moment/moment.module';
-import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
+import { MultiLanguageModule as MultiLanguageOldModule } from './components/form/multi-language/multi-language.module';
+import { MultiLanguageModule } from './components/form/multilanguage/multilanguage.module';
 import { OperatorModule } from './components/operator/operator.module';
 import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
@@ -122,6 +123,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MenuModule,
     MomentModule,
     MultiLanguageModule,
+    MultiLanguageOldModule,
     OperatorModule,
     PasswordModule,
     PopupInputModule,
@@ -200,6 +202,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MenuModule,
     MomentModule,
     MultiLanguageModule,
+    MultiLanguageOldModule,
     NumericInputComponent,
     OperatorModule,
     PasswordModule,

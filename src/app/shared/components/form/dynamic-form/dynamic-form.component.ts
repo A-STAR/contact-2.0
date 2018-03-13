@@ -130,41 +130,41 @@ export class DynamicFormComponent implements OnInit, OnChanges {
           )
         : of([]),
 
-      multiLanguageCtrls.length
-        ? this.lookupService.lookup<ILookupLanguage>('languages')
-            .pipe(
-              switchMap(languages => {
-                return combineLatest(
-                  multiLanguageCtrls.map((ctrl: IDynamicFormLanguageControl) => {
-                    const { langConfig } = ctrl;
-                    if (!langConfig.entityAttributeId) {
-                      return new ErrorObservable('The multilanguage config must contain an \'entityAttributeId\'');
-                    }
+      // multiLanguageCtrls.length
+      //   ? this.lookupService.lookup<ILookupLanguage>('languages')
+      //       .pipe(
+      //         switchMap(languages => {
+      //           return combineLatest(
+      //             multiLanguageCtrls.map((ctrl: IDynamicFormLanguageControl) => {
+      //               const { langConfig } = ctrl;
+      //               if (!langConfig.entityAttributeId) {
+      //                 return new ErrorObservable('The multilanguage config must contain an \'entityAttributeId\'');
+      //               }
 
-                    const emptyLangValues: IEntityTranslation[] = languages.map(v => (
-                      { languageId: v.id, isMain: v.isMain, value: null }
-                    ));
+      //               const emptyLangValues: IEntityTranslation[] = languages.map(v => (
+      //                 { languageId: v.id, isMain: v.isMain, value: null }
+      //               ));
 
-                    return langConfig.entityId
-                      ? this.dataService.readTranslations(langConfig.entityId, langConfig.entityAttributeId)
-                      : of(emptyLangValues);
-                  })
-                )
-                .pipe(
-                  switchMap((translations: IEntityTranslation[][]) => {
-                    // log('translations fetched', translations);
-                    const map = translations.map((translation, i) => {
-                      // set langOptions for `multilanguage` controls
-                      const ctrl = <IDynamicFormLanguageControl>multiLanguageCtrls[i];
-                      ctrl.langOptions = getTranslations(languages, translation);
-                      return ctrl;
-                    });
-                    return [map];
-                  })
-                );
-              })
-            )
-          : of([]),
+      //               return langConfig.entityId
+      //                 ? this.dataService.readTranslations(langConfig.entityId, langConfig.entityAttributeId)
+      //                 : of(emptyLangValues);
+      //             })
+      //           )
+      //           .pipe(
+      //             switchMap((translations: IEntityTranslation[][]) => {
+      //               // log('translations fetched', translations);
+      //               const map = translations.map((translation, i) => {
+      //                 // set langOptions for `multilanguage` controls
+      //                 const ctrl = <IDynamicFormLanguageControl>multiLanguageCtrls[i];
+      //                 ctrl.langOptions = getTranslations(languages, translation);
+      //                 return ctrl;
+      //               });
+      //               return [map];
+      //             })
+      //           );
+      //         })
+      //       )
+      //     : of([]),
 
       lookupCtrls.length
         ? combineLatest(
@@ -188,14 +188,14 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         : of([])
     )
     .pipe(first())
-    .subscribe(([ dictCtrlsWithOptions, multiLanguageCtrlsWithOptions, lookupCtrlsWithOptions ]) => {
+    .subscribe(([ dictCtrlsWithOptions, /* multiLanguageCtrlsWithOptions, */ lookupCtrlsWithOptions ]) => {
 
       // 2. set the dictionary options for `select` controls
       // 3. set the `multilanguage` controls' options
       // 4. set the lookup options for `select` controls'
 
       dictCtrlsWithOptions
-        .concat(multiLanguageCtrlsWithOptions)
+        // .concat(multiLanguageCtrlsWithOptions)
         .concat(lookupCtrlsWithOptions)
         .forEach(control => {
           this.recursivelyMergeControlProps(this.controls, control);
