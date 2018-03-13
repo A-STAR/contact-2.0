@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
+import { IContactTreeAttribute } from '@app/routes/utilities/contact-properties/contact-properties.interface';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
-import { toTreeNodes } from '@app/core/utils/tree';
 
 @Injectable()
 export class AttributesService {
@@ -15,11 +15,10 @@ export class AttributesService {
     private notificationsService: NotificationsService,
   ) {}
 
-  fetchAll(debtId: number, contactType: number, treeResultId: number): Observable<ITreeNode[]> {
+  fetchAll(debtId: number, contactType: number, treeResultId: number): Observable<IContactTreeAttribute[]> {
     const url = '/debts/{debtId}/contactTypes/{contactType}/treeResults/{treeResultId}/attributes';
     return this.dataService
       .readAll(url, { debtId, contactType, treeResultId })
-      .map(toTreeNodes(true, true))
       .catch(this.notificationsService.fetchError().entity('entities.attributes.gen.plural').dispatchCallback());
   }
 
