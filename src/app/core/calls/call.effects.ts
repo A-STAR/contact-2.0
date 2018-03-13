@@ -1,17 +1,143 @@
+import * as R from 'ramda';
+
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import { defer } from 'rxjs/observable/defer';
+import { of } from 'rxjs/observable/of';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { ICallSettings, ICall } from './call.interface';
+import { ICallSettings, ICall, PBXStateEnum, IPBXParams } from './call.interface';
 import { UnsafeAction } from '@app/core/state/state.interface';
 
 import { CallService } from './call.service';
 import { DataService } from '../data/data.service';
 import { NotificationsService } from '../notifications/notifications.service';
-import { of } from 'rxjs/observable/of';
+
+import { first } from 'rxjs/operators';
+import { AuthService } from '@app/core/auth/auth.service';
+
+const savedState = localStorage.getItem(CallService.STORAGE_KEY);
 
 @Injectable()
 export class CallEffects {
+
+  @Effect()
+  init$ = defer(() => of({
+    type: CallService.CALL_INIT,
+    payload: R.tryCatch(JSON.parse, () => ({}))(savedState || undefined)
+  }));
+
+  @Effect()
+  authLogin$ = this.actions
+    .ofType(AuthService.AUTH_LOGIN_SUCCESS)
+    .flatMap(() =>
+      this.authService.userParams$
+        .filter(Boolean)
+        .pipe(first())
+    )
+    .switchMap(userParams => [{
+      type: CallService.PBX_LOGIN,
+      payload: userParams
+    }]);
+
+  @Effect()
+  authLogout$ = this.actions
+    .ofType(AuthService.AUTH_DESTROY_SESSION)
+    .switchMap(userParams => [{
+      type: CallService.PBX_PARAMS_CHANGE,
+      payload: null
+    }]);
+
+  @Effect()
+  login$ = this.actions
+    .ofType(CallService.PBX_LOGIN)
+    .map((action: UnsafeAction) => action.payload)
+    .filter(userParams => userParams.usePbx)
+    .flatMap(() =>
+      combineLatest(
+        this.callService.settings$.filter(Boolean),
+        this.callService.params$.map(params => params && params.intPhone)
+      )
+      .pipe(first())
+    )
+    .filter(([ settings, intPhone ]) => !settings.useIntPhone || intPhone !== null)
+    .switchMap(() => {
+      return this.login()
+        .map(() => ({
+          type: CallService.PBX_LOGIN_SUCCESS,
+        }))
+        .catch(error => {
+          return [
+            this.notificationService
+              .createError()
+              .entity('entities.calls.gen.plural')
+              .response(error)
+              .action()
+          ];
+        });
+    });
+
+  @Effect()
+  changeStatus$ = this.actions
+    .ofType(CallService.PBX_STATUS_CHANGE)
+    .switchMap((action: UnsafeAction) => {
+      const { statusCode } = action.payload;
+      return this.changeStatus(statusCode)
+        .map(() => ({
+          type: CallService.PBX_STATUS_CHANGE_SUCCESS,
+          payload: action.payload
+        }))
+        .catch(error => {
+          return [
+            this.notificationService
+              .updateError()
+              .entity('entities.status.gen.singular')
+              .response(error)
+              .action()
+          ];
+        });
+    });
+
+  @Effect()
+  updateParams$ = this.actions
+    .ofType(CallService.PBX_PARAMS_UPDATE)
+    .switchMap((action: UnsafeAction) => {
+      const params = action.payload;
+      return this.changeParams(params)
+        .map(() => ({
+          type: CallService.PBX_PARAMS_CHANGE,
+          payload: action.payload
+        }))
+        .catch(error => {
+          return [
+            this.notificationService
+              .updateError()
+              .entity('entities.callSettings.gen.plural')
+              .response(error)
+              .action()
+          ];
+        });
+    });
+
+  @Effect()
+  changeParams$ = this.actions
+    .ofType(CallService.PBX_PARAMS_CHANGE)
+    .flatMap(() => this.authService.userParams$.pipe(first()))
+    .filter(Boolean)
+    .switchMap(userParams => [{
+      type: CallService.PBX_LOGIN,
+      payload: userParams
+    }]);
+
+  @Effect()
+  stateChange$ = this.actions
+    .ofType(CallService.PBX_STATE_CHANGE)
+    .map((action: UnsafeAction) => action.payload)
+    .filter(Boolean)
+    .withLatestFrom(this.callService.activeCall$)
+    .filter(([ pbxState, call ]) => call && pbxState.lineStatus === PBXStateEnum.PBX_NOCALL)
+    .map(() => ({ type: CallService.CALL_DROP_SUCCESS }));
 
   @Effect()
   fetchCallSettings$ = this.actions
@@ -33,12 +159,12 @@ export class CallEffects {
   @Effect()
   makeCall$ = this.actions
     .ofType(CallService.CALL_START)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { phoneId, debtId, personId, personRole } = action.payload;
       return this.call(phoneId, debtId, personId, personRole)
         .map(call => ({
           type: CallService.CALL_START_SUCCESS,
-          payload: call
+          payload: { phoneId, debtId, personId, personRole }
         }))
         .catch(error => {
           return [
@@ -51,7 +177,7 @@ export class CallEffects {
   @Effect()
   dropCall$ = this.actions
     .ofType(CallService.CALL_DROP)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { debtId, personId, personRole } = action.payload;
       return this.drop(debtId, personId, personRole)
         .map(call => ({
@@ -76,7 +202,7 @@ export class CallEffects {
   @Effect()
   holdCall$ = this.actions
     .ofType(CallService.CALL_HOLD)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { debtId, personId, personRole } = action.payload;
       return this.hold(debtId, personId, personRole)
         .map(call => ({
@@ -101,7 +227,7 @@ export class CallEffects {
   @Effect()
   retrieveCall$ = this.actions
     .ofType(CallService.CALL_RETRIEVE)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { debtId, personId, personRole } = action.payload;
       return this.retrieve(debtId, personId, personRole)
         .map(call => ({
@@ -126,7 +252,7 @@ export class CallEffects {
   @Effect()
   transferCall$ = this.actions
     .ofType(CallService.CALL_TRANSFER)
-    .mergeMap((action: UnsafeAction) => {
+    .switchMap((action: UnsafeAction) => {
       const { userId, debtId, personId, personRole } = action.payload;
       return this.transfer(userId, debtId, personId, personRole)
         .map(call => ({
@@ -150,34 +276,25 @@ export class CallEffects {
 
   constructor(
     private actions: Actions,
+    private authService: AuthService,
+    private callService: CallService,
     private dataService: DataService,
     private notificationService: NotificationsService
   ) {}
 
   private read(): Observable<ICallSettings> {
-    // return this.dataService.read('/pbx/settings');
-    return of({
-      useIntPhone: 1,
-      usePreview: 1,
-      previewShowRegContact: 1,
-      useMakeCall: 1,
-      useDropCall: 1,
-      useHoldCall: 1,
-      useRetriveCall: 1,
-      useTransferCall: 1
-    });
+    return this.dataService.read('/pbx/settings')
+      // TODO (i.kibisov): remove mock
+      .map(settings => ({ ...settings, useAgentStatus: 1 }));
+  }
+
+  private login(): Observable<void> {
+    return this.dataService.read('/pbx/login');
   }
 
   private call(phoneId: number, debtId: number, personId: number, personRole: number): Observable<ICall> {
-    // return this.dataService
-      // .create('/pbx/call/make', { }, { phoneId, debtId, personId, personRole });
-    return of({
-      id: 1,
-      phoneId,
-      debtId,
-      personId,
-      personRole
-    });
+    return this.dataService
+      .create('/pbx/call/make', { }, { phoneId, debtId, personId, personRole });
   }
 
   private drop(debtId: number, personId: number, personRole: number): Observable<void> {
@@ -192,11 +309,21 @@ export class CallEffects {
 
   private retrieve(debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
-      .create('/pbx/call/retrive', {}, { debtId, personId, personRole });
+      .create('/pbx/call/retrieve', {}, { debtId, personId, personRole });
   }
 
   private transfer(userId: number, debtId: number, personId: number, personRole: number): Observable<void> {
     return this.dataService
       .create('/pbx/call/transfer', {}, { userId, debtId, personId, personRole });
+  }
+
+  private changeStatus(statusCode: number): Observable<void> {
+    return this.dataService
+      .update('/pbx/users/status', {}, { statusCode });
+  }
+
+  private changeParams(params: IPBXParams): Observable<void> {
+    return this.dataService
+      .update('/pbx/users', {}, params);
   }
 }

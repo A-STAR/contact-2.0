@@ -12,7 +12,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 import { makeKey } from '@app/core/utils';
 import { maxFileSize } from '@app/core/validators';
 
-const labelKey = makeKey('workplaces.shared.contactRegistration.edit.form.attachments.add.form');
+const labelKey = makeKey('routes.workplaces.shared.contactRegistration.edit.form.attachments.add.form');
 
 @Component({
   selector: 'app-contact-registration-attachment-edit',
@@ -33,7 +33,6 @@ export class AttachmentEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // TODO(d.maltsev): file form control wrapper that injects constants service (similar to select wrapper)
     this.userConstantsService.get('FileAttachment.MaxSize')
       .pipe(first())
       .subscribe(maxSize => {
@@ -55,29 +54,29 @@ export class AttachmentEditComponent implements OnInit {
       {
         label: labelKey('docTypeCode'),
         controlName: 'docTypeCode',
-        type: 'singleselectwrapper',
-        dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE
+        type: 'select',
+        dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE,
       },
       {
         label: labelKey('docName'),
         controlName: 'docName',
-        type: 'text'
+        type: 'text',
       },
       {
         label: labelKey('docNumber'),
         controlName: 'docNumber',
-        type: 'text'
+        type: 'text',
       },
       {
         label: labelKey('comment'),
         controlName: 'comment',
-        type: 'textarea'
+        type: 'textarea',
       },
       {
         label: labelKey('file'),
         controlName: 'file',
         type: 'file',
-        validators: [ maxFileSize(1e3 * maxSize.valueN) ]
+        validators: [ maxFileSize(1e3 * maxSize.valueN) ],
       },
     ];
   }

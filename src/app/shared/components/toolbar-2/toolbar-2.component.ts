@@ -10,8 +10,7 @@ import { IToolbarItem, ToolbarItemTypeEnum } from './toolbar-2.interface';
 import { DropdownComponent } from '@app/shared/components/dropdown/dropdown.component';
 // import { ButtonComponent } from './button/button.component';
 
-import { invert } from '@app/core/utils';
-import { doOnceIf } from '@app/core/utils/helpers';
+import { doOnceIf, invert } from '@app/core/utils/index';
 
 @Component({
   selector: 'app-toolbar-2',
@@ -31,6 +30,7 @@ export class Toolbar2Component {
     [ToolbarItemTypeEnum.BUTTON_CALL]: 'call',
     [ToolbarItemTypeEnum.BUTTON_CHANGE_STATUS]: 'changeStatus',
     [ToolbarItemTypeEnum.BUTTON_CLOSE]: 'close',
+    [ToolbarItemTypeEnum.BUTTON_CLEAR]: 'clear',
     [ToolbarItemTypeEnum.BUTTON_COPY]: 'copy',
     [ToolbarItemTypeEnum.BUTTON_DELETE]: 'delete',
     [ToolbarItemTypeEnum.BUTTON_DROP]: 'drop',

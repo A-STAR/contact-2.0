@@ -1,8 +1,15 @@
 :host {
-  /deep/ .date-control app-dynamic-form label {
+  ::ng-deep .date-control app-dynamic-form .form-label {
     display: none;
   }
-  /deep/ app-grid datatable-header {
+  ::ng-deep .ag-header {
     display: none !important;
+  }
+  ::ng-deep .ag-body {
+    top: 0 !important;
+    height: 100% !important;
+  }
+  app-button[type='add'] {
+    margin-left: 3px;
   }
 }

@@ -3,36 +3,36 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { ICurrencyRate } from '../currency-rates.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { CurrencyRatesService } from '../currency-rates.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
+import { DateRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
+  host: { class: 'full-height' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-currency-rates-grid',
   templateUrl: './currency-rates-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
-
   @Input() currencyId$: Observable<number>;
 
   private currencyId: number;
   private selectedCurrencyRate$ = new BehaviorSubject<ICurrencyRate>(null);
 
-  columns: Array<IGridColumn> = [
-    { prop: 'fromDate', renderer: 'dateRenderer' },
+  columns: ISimpleGridColumn<ICurrencyRate>[] = [
+    { prop: 'fromDate', renderer: DateRendererComponent },
     { prop: 'rate' }
-  ];
+  ].map(addGridLabel('widgets.currencyRates.grid'));
 
   toolbarItems: Array<IToolbarItem>;
 
@@ -45,20 +45,12 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private currencyRatesService: CurrencyRatesService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService
   ) {}
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-    .pipe(first())
-    .subscribe(columns => {
-      this.columns = [...columns];
-      this.cdRef.markForCheck();
-    });
-
     this.toolbarItems = this.createToolbar();
 
     this.viewPermissionSubscription = combineLatest(
@@ -104,7 +96,10 @@ export class CurrencyRatesGridComponent implements OnInit, OnDestroy {
     return selectedCurrencyRate ? [ selectedCurrencyRate ] : [];
   }
 
-  onSelect(currencyRate: ICurrencyRate): void {
+  onSelect(currencyRates: ICurrencyRate[]): void {
+    const currencyRate = isEmpty(currencyRates)
+      ? null
+      : currencyRates[0];
     this.selectedCurrencyRate$.next(currencyRate);
   }
 

@@ -1,18 +1,9 @@
 <div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
-  <div>
-    <label>
-      <span class="form-label">
-        {{ 'routes.workplaces.shared.contactRegistration.edit.form.callReason.form.callReason' | translate }}
-        <b *ngIf="isCallReasonRequired$ | async" class="text-danger">*</b>
-      </span>
-      <app-select-wrapper
-        formControlName="callReasonCode"
-        [dictCode]="callReasonDictCode"
-        [nullable]="!(isCallReasonRequired$ | async)"
-        [required]="isCallReasonRequired$ | async"
-      ></app-select-wrapper>
-    </label>
-  </div>
-
+  <app-select
+    formControlName="callReasonCode"
+    [dictCode]="callReasonDictCode"
+    label="routes.workplaces.shared.contactRegistration.edit.form.callReason.form.callReason"
+    [isRequired]="isCallReasonRequired$ | async"
+  ></app-select>
   <hr>
 </div>

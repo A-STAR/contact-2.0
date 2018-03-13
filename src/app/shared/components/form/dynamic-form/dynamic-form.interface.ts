@@ -1,13 +1,13 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 
 import { IDialogMultiSelectFilterType } from '../dialog-multi-select/dialog-multi-select.interface';
-import { IGridColumn } from '../../grid/grid.interface';
 import { ILabeledValue } from '@app/core/converter/value-converter.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 import { IMultiLanguageOption, IMultiLanguageConfig } from '@app/shared/components/form/multi-language/multi-language.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
-import { ISelectionAction } from '../select/select.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 
 export interface IValidationMessages {
@@ -25,7 +25,7 @@ export interface IFilterParam {
 export type IDynamicFormItem = IDynamicFormGroup | IDynamicFormControl;
 
 export type IDynamicFormControl =
-  // IDynamicFormBaseControl
+  // all those are children of `IDynamicFormBaseControl`
   IDynamicFormButtonControl |
   IDynamicFormDateControl |
   IDynamicFormDateTimeControl |
@@ -35,11 +35,13 @@ export type IDynamicFormControl =
   IDynamicFormGridSelectControl |
   IDynamicFormImageControl |
   IDynamicFormLanguageControl |
+  IDynamicFormMultiSelectControl |
   IDynamicFormNumberControl |
   IDynamicFormRadioControl |
   IDynamicFormRichTextControl |
   IDynamicFormSegmentedInputControl |
   IDynamicFormSelectControl |
+  IDynamicFormScriptControl |
   IDynamicFormTextControl |
   IDynamicFormTextareaControl |
   IDynamicFormTimeControl
@@ -67,12 +69,12 @@ export interface IDynamicFormBaseControl {
   display?: boolean;
   iconCls?: string;
   label?: string;
-  // set `markAsDirty: true` if the control is initialized with a value
+  // set `markAsDirty: true` if you need the control to deliver its initial value
+  // when using the form's `serializedUpdates` getter
   markAsDirty?: boolean;
   onChange?: (value: any) => void;
-  readonly?: boolean;
   required?: boolean;
-  validators?: Array<ValidatorFn>;
+  validators?: ValidatorFn[];
   validationMessages?: IValidationMessages;
   // the width can take a number from 1 to 12 (we are using the bootstrap grid)
   width?: number;
@@ -116,12 +118,11 @@ export interface IDynamicFormFileControl extends IDynamicFormBaseControl {
 export interface IDynamicFormGridSelectControl extends IDynamicFormBaseControl {
   // options for grid select
   type: 'gridselect';
-  translationKey?: string;
   gridRows?: Array<any>;
   gridLabelGetter?: Function;
   gridValueGetter?: Function;
   gridOnSelect?: Function;
-  gridColumns?: IGridColumn[];
+  gridColumns?: ISimpleGridColumn<any>[];
   placeholder?: string;
 }
 
@@ -155,6 +156,7 @@ export interface IDynamicFormNumberControl extends IDynamicFormBaseControl {
   min?: number;
   max?: number;
   placeholder?: string;
+  positive?: boolean;
 }
 
 export interface IDynamicFormRadioControl extends IDynamicFormBaseControl {
@@ -172,6 +174,11 @@ export interface IDynamicFormRichTextControl extends IDynamicFormBaseControl {
   toolbar?: boolean;
 }
 
+export interface IDynamicFormScriptControl extends IDynamicFormBaseControl {
+  type: 'scripteditor';
+  options?: any;
+}
+
 export interface IDynamicFormSegmentedInputControl extends IDynamicFormBaseControl {
   type: 'segmented';
   // options for segmented input
@@ -179,13 +186,19 @@ export interface IDynamicFormSegmentedInputControl extends IDynamicFormBaseContr
 }
 
 export interface IDynamicFormSelectControl extends IDynamicFormBaseControl {
-  type: 'select' | 'selectwrapper' | 'singleselectwrapper' | 'multiselect' | 'multiselectwrapper';
+  type: 'select';
   // options for select controls
-  multiple?: boolean;
-  closableSelectedItem?: boolean;
   options?: ILabeledValue[];
-  optionsActions?: Array<ISelectionAction>;
-  optionsRenderer?: (label: string, item: ILabeledValue) => string;
+  placeholder?: string;
+  dictCode?: number;
+  parentCode?: number;
+  lookupKey?: ILookupKey;
+}
+
+export interface IDynamicFormMultiSelectControl extends IDynamicFormBaseControl {
+  type: 'multiselect';
+  // options for select controls
+  options?: ILabeledValue[];
   placeholder?: string;
   dictCode?: number;
   parentCode?: number;
@@ -246,7 +259,7 @@ export interface IDynamicFormControlOld {
   multiple?: boolean;
   closableSelectedItem?: boolean;
   options?: ILabeledValue[];
-  optionsActions?: Array<ISelectionAction>;
+  // optionsActions?: Array<ISelectionAction>;
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
   // options for multilanguage
   langOptions?: IMultiLanguageOption[];
@@ -271,7 +284,7 @@ export interface IDynamicFormControlOld {
   gridLabelGetter?: Function;
   gridValueGetter?: Function;
   gridOnSelect?: Function;
-  gridColumns?: IGridColumn[];
+  gridColumns?: ISimpleGridColumn<any>[];
   // options for dialog multiselect
   filterType?: IDialogMultiSelectFilterType;
   // options for radio group
@@ -311,18 +324,16 @@ export type TControlTypes =
   | 'image'
   | 'multilanguage'
   | 'multiselect'
-  | 'multiselectwrapper'
   | 'number'
   | 'password'
   | 'radio'
   | 'searchBtn'
   | 'segmented'
   | 'select'
-  | 'selectwrapper'
-  | 'singleselectwrapper'
   | 'text'
   | 'textarea'
   | 'texteditor'
+  | 'scripteditor'
 ;
 
 export interface IValue {

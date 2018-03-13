@@ -3,13 +3,17 @@
     <h3>{{ 'modules.callCenter.processedDebts.title' | translate }}</h3>
   </div>
 
-  <app-grid
-    selectionType="single"
-    columnTranslationKey="modules.callCenter.processedDebts"
-    [columns]="columns"
-    [rows]="debts"
-    [styles]="{ height: '480px' }"
-  ></app-grid>
+  <div style="height: 75vh;">
+    <app-action-grid
+      persistenceKey="[grid] workplaces/call-center/processed-debts"
+      [columns]="columns"
+      [fullHeight]="true"
+      [rows]="debts"
+      [isSimple]="true"
+      [actions]="actions"
+      (close)="onClose()"
+    ></app-action-grid>
+  </div>
 
   <div dialog-footer>
     <app-button type="close" (click)="onClose()"></app-button>

@@ -3,7 +3,11 @@
     <app-datetime-input
       format="L"
       [disabled]="disabled"
+      [label]="label"
+      [minDateTime]="minDate"
+      [maxDateTime]="maxDate"
       [ngModel]="value"
+      [required]="required"
       (ngModelChange)="onChange($event)"
     ></app-datetime-input>
   </div>

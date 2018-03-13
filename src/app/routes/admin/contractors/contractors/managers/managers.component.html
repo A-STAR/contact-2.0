@@ -9,29 +9,22 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<div>
-  <button class="btn btn-default" (click)="onBack()">
-    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
-  </button>
+<div class="flex vertical">
+  <div class="flex-item mb">
+    <button class="btn btn-default" (click)="onBack()">
+      <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+    </button>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      *ngIf="managers"
+      persistenceKey="[grid] admin/contractors/managers"
+      [selection]="selection"
+      [columns]="columns"
+      [rows]="managers"
+      [toolbar]="toolbarItems"
+      (dblClick)="onEdit()"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
+  </div>
 </div>
-
-<br>
-
-<app-toolbar-2
-  class="bordered"
-  [items]="toolbarItems">
-</app-toolbar-2>
-
-<app-grid
-  *ngIf="managers"
-  columnTranslationKey="contractors.managers"
-  selectionType="single"
-  [selection]="selection"
-  [styles]="{height: '200px'}"
-  [columns]="columns"
-  [rows]="managers"
-  [allowDblClick]="canEdit$ | async"
-  (onDblClick)="onEdit()"
-  (onSelect)="onSelect($event)">
-</app-grid>
-

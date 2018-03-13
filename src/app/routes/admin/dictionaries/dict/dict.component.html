@@ -30,20 +30,12 @@
   (cancel)="onCancel()">
 </app-dialog-action>
 
-<app-toolbar-2
-  class="bordered"
-  [items]="toolbarItems">
-</app-toolbar-2>
-
-<app-grid
+<app-simple-grid
   *ngIf="columns"
-  selectionType="single"
-  [allowDblClick]="canEdit | async"
+  persistenceKey="[grid] admin/dictionaries"
   [columns]="columns"
-  [columnTranslationKey]="'dictionaries'"
-  [emptyMessage]="emptyMessage$ | async"
   [rows]="dictionaries | async"
-  [styles]="{height: '300px'}"
-  (onDblClick)="edit($event)"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  [toolbar]="toolbarItems"
+  (dblClick)="edit($event)"
+  (select)="onSelect($event)"
+></app-simple-grid>

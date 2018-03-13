@@ -8,7 +8,7 @@ import { CurrencyRatesGridComponent } from './currency-rates-grid.component';
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
   ],
   exports: [
     CurrencyRatesGridComponent,
@@ -17,4 +17,4 @@ import { CurrencyRatesGridComponent } from './currency-rates-grid.component';
     CurrencyRatesGridComponent,
   ],
 })
-export class CurrencyRatesGridModule { }
+export class CurrencyRatesGridModule {}

@@ -3,19 +3,19 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { first } from 'rxjs/operators';
 
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IReportParam } from '../params.interface';
 
 import { ParamsService } from '../params.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
+import { CheckboxRendererComponent } from '@app/shared/components/grids/renderers';
+
 import { DialogFunctions } from '@app/core/dialog';
-import { combineLatestAnd } from '@app/core/utils';
+import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
 @Component({
   selector: 'app-arbitrary-report-param-grid',
@@ -32,15 +32,15 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
     this.reportId$.next(id);
   }
 
-  columns: Array<IGridColumn> = [
+  columns: Array<ISimpleGridColumn<IReportParam>> = [
     { prop: 'id', maxWidth: 70 },
     { prop: 'name' },
     { prop: 'paramTypeCode', dictCode: UserDictionariesService.DICTIONARY_REPORT_PARAM_TYPE_CODE },
     { prop: 'sortOrder' },
     { prop: 'systemName' },
-    { prop: 'isMandatory', renderer: 'checkboxRenderer' },
-    { prop: 'multiSelect', renderer: 'checkboxRenderer' }
-  ];
+    { prop: 'isMandatory', renderer: CheckboxRendererComponent },
+    { prop: 'multiSelect', renderer: CheckboxRendererComponent }
+  ].map(addGridLabel('modules.reports.arbitrary.params.grid'));
 
   toolbarItems: Array<IToolbarItem> = [
     {
@@ -84,7 +84,6 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
   constructor(
     private cdRef: ChangeDetectorRef,
     private paramsService: ParamsService,
-    private gridService: GridService,
     private route: ActivatedRoute,
     private routingService: RoutingService
   ) {
@@ -92,13 +91,6 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-        this.cdRef.markForCheck();
-      });
-
     this.reportId$.subscribe(id => id ? this.fetch() : this.clear());
 
     this.actionSubscription = this.paramsService
@@ -135,7 +127,7 @@ export class ParamGridComponent extends DialogFunctions implements OnInit, OnDes
     return selectedParam ? [ selectedParam ] : [];
   }
 
-  onSelect(param: IReportParam): void {
+  onSelect([ param ]: IReportParam[]): void {
     this.selectedParam$.next(param);
   }
 

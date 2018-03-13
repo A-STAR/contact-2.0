@@ -23,22 +23,11 @@
   (cancel)="onCancel()"
 ></app-dialog-action>
 
-<div class="flex vertical">
-  <app-toolbar-2
-    class="flex-item bordered"
-    [items]="toolbarItems"
-  ></app-toolbar-2>
-
-  <div class="flex-item grow">
-    <app-grid
-      [columns]="columns"
-      [columnTranslationKey]="'roles.permissions'"
-      [emptyMessage]="emptyMessage$ | async"
-      [rows]="permissions$ | async"
-      [selectionType]="'single'"
-      [styles]="{ height: 'auto' }"
-      (onDblClick)="onDblClick()"
-      (onSelect)="onSelect($event)"
-    ></app-grid>
-  </div>
-</div>
+<app-simple-grid
+  persistenceKey="[grid] admin/roles/permissions"
+  [columns]="columns"
+  [rows]="permissions$ | async"
+  [toolbar]="toolbarItems"
+  (dblClick)="onDblClick()"
+  (select)="onSelect($event)"
+></app-simple-grid>

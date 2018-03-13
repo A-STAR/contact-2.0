@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { AttributeModule } from './attribute/attribute.module';
 import { DictModule } from './dict/dict.module';
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 import { TermsModule } from './terms/terms.module';
 
 import { DictionariesService } from './dictionaries.service';
@@ -21,6 +22,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    AttributeModule,
     RouterModule.forChild(routes),
     SharedModule,
     DictModule,

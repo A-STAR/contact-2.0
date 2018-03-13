@@ -1,0 +1,18 @@
+<app-dialog-action
+  *ngIf="isDialog('removeGuarantee')"
+  actionMode="danger"
+  actionTranslationKey="debtor.guarantorsTab.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  titleTranslationKey="debtor.guarantorsTab.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCancel()"
+></app-dialog-action>
+
+<app-simple-grid
+  persistenceKey="[grid] workplaces/debtor-card/guarantee"
+  [columns]="columns"
+  [rows]="contracts"
+  [toolbar]="toolbarItems"
+  (dblClick)="onDoubleClick($event)"
+  (select)="onSelect($event)">
+</app-simple-grid>

@@ -4,51 +4,70 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
+  OnDestroy,
   Output,
+  SimpleChanges,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
-import { ColDef, GridApi, GridOptions, RowDoubleClickedEvent } from 'ag-grid';
-import { first } from 'rxjs/operators';
 
+import {
+  ColDef,
+  ColumnApi,
+  GridApi,
+  GridOptions,
+  RowDoubleClickedEvent,
+} from 'ag-grid';
+
+import { IAGridAction } from '@app/shared/components/grid2/grid2.interface';
+import { IGridSelectionType } from '../grids.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from './grid.interface';
+import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
+import { ContextMenuService } from '../context-menu/context-menu.service';
 import { GridsService } from '../grids.service';
 
+import { EmptyOverlayComponent } from '../overlays/empty/empty.component';
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
+
+import { isEmpty } from '@app/core/utils/index';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   host: { class: 'full-height' },
   selector: 'app-simple-grid',
   styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html'
 })
-export class SimpleGridComponent<T> {
-  @ViewChild(GridToolbarComponent) toolbar: GridToolbarComponent;
+export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
+  @ViewChild(GridToolbarComponent) gridToolbar: GridToolbarComponent;
+
+  @Input() actions: IMetadataAction[] = [];
+  @Input() columns: ISimpleGridColumn<T>[];
+  @Input() idKey = 'id';
+  @Input() persistenceKey: string;
+  @Input() rows: T[];
+  @Input() rowClass: (item: T) => string;
+  @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
+  @Input() showToolbar = false;
+  @Input() toolbar: IToolbarItem[];
 
   @Input()
-  set columns(columns: ISimpleGridColumn<T>[]) {
-    this.gridsService
-      .convertColumnsToColDefs(columns)
-      .pipe(
-        first(),
-      )
-      .subscribe(colDefs => {
-        this._colDefs = colDefs;
-        this.updateColumns();
+  set selection(selection: T[]) {
+    if (!isEmpty(selection) && this.gridApi) {
+      const ids = selection.map(item => item[this.idKey]);
+      this.gridApi.forEachNodeAfterFilterAndSort(node => {
+        const isSelected = ids.includes(node.data[this.idKey]);
+        node.setSelected(isSelected);
       });
-  }
-
-  @Input()
-  set rows(rows: T[]) {
-    this._rows = rows;
-    this.updateRows();
+      this.cdRef.markForCheck();
+    }
   }
 
   @Output() select = new EventEmitter<T[]>();
   @Output() dblClick = new EventEmitter<T>();
+  @Output() action = new EventEmitter<IAGridAction>();
 
   gridOptions: GridOptions = {
     defaultColDef: {
@@ -69,10 +88,23 @@ export class SimpleGridComponent<T> {
     enableFilter: true,
     enableRangeSelection: true,
     enableSorting: true,
-    headerHeight: 28,
-    onSelectionChanged: () => this.onSelectionChanged(),
+    getContextMenuItems: (selection) => this.contextMenuService.onCtxMenuClick(
+      {
+        actions: this.actions,
+        selected: this.selection,
+        selection,
+        cb: (action) => this.action.emit(action)
+      },
+      this.getContextMenuSimpleItems()
+    ),
+    headerHeight: 32,
+    noRowsOverlayComponentFramework: EmptyOverlayComponent,
+    onColumnMoved: () => this.saveSettings(),
+    onColumnResized: () => this.saveSettings(),
     onRowDoubleClicked: event => this.onRowDoubleClicked(event),
-    rowHeight: 28,
+    onSelectionChanged: () => this.onSelectionChanged(),
+    onSortChanged: () => this.saveSettings(),
+    rowHeight: 32,
     rowSelection: 'multiple',
     showToolPanel: false,
     suppressPaginationPanel: true,
@@ -83,45 +115,49 @@ export class SimpleGridComponent<T> {
     toolPanelSuppressValues: true,
   };
 
+  columnApi: ColumnApi;
   gridApi: GridApi;
 
-  private _colDefs: ColDef[];
-  private _rows: T[];
+  colDefs: ColDef[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contextMenuService: ContextMenuService,
     private gridsService: GridsService,
   ) {}
 
-  get colDefs(): ColDef[] {
-    return this._colDefs;
+  get rowClassCallback(): any {
+    return this.rowClass
+      ? params => this.rowClass(params.data)
+      : null;
   }
 
-  get rows(): T[] {
-    return this._rows;
+  get selection(): T[] {
+    return this.gridApi
+      ? this.gridApi.getSelectedNodes().map(node => node.data)
+      : [];
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.columns) {
+      this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey);
+      this.cdRef.markForCheck();
+    }
+  }
+
+  deselectAll(): void {
+    this.gridApi.deselectAll();
+  }
+
+  ngOnDestroy(): void {
+    this.saveSettings();
   }
 
   onGridReady(params: any): void {
     this.gridApi = params.api;
-    this.updateColumns();
-    this.updateRows();
+    this.columnApi = params.columnApi;
+    this.gridsService.restoreSortModel(this.persistenceKey, this.gridApi);
     this.updateToolbar();
-  }
-
-  private updateColumns(): void {
-    if (this.gridApi && this._colDefs) {
-      this.gridApi.sizeColumnsToFit();
-      this.updateToolbar();
-    }
-    this.cdRef.markForCheck();
-  }
-
-  private updateRows(): void {
-    if (this.gridApi && this._rows) {
-      this.gridApi.redrawRows();
-      this.updateToolbar();
-    }
-    this.cdRef.markForCheck();
   }
 
   private onSelectionChanged(): void {
@@ -135,8 +171,19 @@ export class SimpleGridComponent<T> {
   }
 
   private updateToolbar(): void {
-    if (this.toolbar) {
-      this.toolbar.update();
+    if (this.gridToolbar) {
+      this.gridToolbar.update();
     }
+  }
+
+  private getContextMenuSimpleItems(): string[] {
+    return [
+      'copy',
+      'copyWithHeaders',
+    ];
+  }
+
+  private saveSettings(): void {
+    this.gridsService.saveSettings(this.persistenceKey, this.gridApi, this.columnApi);
   }
 }

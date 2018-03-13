@@ -13,8 +13,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 
 @Injectable()
 export class GroupEventService extends AbstractActionService {
-  // private baseUrl = '/groups/{groupId}/scheduleEvent';
-  private baseUrl = '/scheduleEvent';
+  private baseUrl = '/groups/{groupId}/scheduleEvent';
 
   constructor(
     protected actions: Actions,
@@ -27,7 +26,6 @@ export class GroupEventService extends AbstractActionService {
 
   fetchAll(groupId: number): Observable<IGroupEvent[]> {
     return this.dataService.readAll(this.baseUrl, { groupId })
-      .map(events => events.filter(e => e.groupId === groupId))
       .catch(this.notificationsService.fetchError().entity('entities.scheduleEvents.gen.plural').dispatchCallback());
   }
 }

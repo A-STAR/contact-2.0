@@ -1,0 +1,46 @@
+<section [formGroup]="formGroup">
+
+  <label>
+    Boolean - dictCode #2 - Selected: 'True'
+    <app-select
+      [dictCode]="2"
+      formControlName="select1"
+    ></app-select>
+  </label>
+
+  <label>
+    Payment Type - dictCode #41 - Selected: '{{ select2Model }}' - Required
+    <app-select
+      [dictCode]="41"
+      [errors]="errors.select2"
+      formControlName="select2"
+      [isRequired]="true"
+      [ngModel]="select2Model"
+    ></app-select>
+  </label>
+
+  <label>
+    Lookup Currencies
+    <app-select
+      lookupKey="currencies"
+      formControlName="select3"
+    ></app-select>
+  </label>
+
+  <label>
+    Lookup Currencies - Disabled
+    <app-select
+      lookupKey="currencies"
+      formControlName="select4"
+      [isDisabled]="true"
+    ></app-select>
+  </label>
+
+  <label>
+    Lookup Languages - Disabled via `FormControl()`
+    <app-select
+      lookupKey="languages"
+      formControlName="select5"
+    ></app-select>
+  </label>
+</section>

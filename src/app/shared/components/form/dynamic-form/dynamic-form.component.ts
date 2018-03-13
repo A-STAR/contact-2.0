@@ -31,7 +31,6 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { makeKey, getTranslations } from '@app/core/utils';
-import { multilanguageRequired } from '@app/core/validators';
 
 import {
   IDynamicFormSelectControl,
@@ -79,7 +78,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
     /**
      * This form's `config` is defined
-     * example: @app\shared\gui-objects\widgets\contact-property\tree\edit\contact-property-tree-edit.component.ts
      */
 
     // set the default config options
@@ -275,15 +273,13 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       disabled: control.disabled,
       value: control.type === 'checkbox' ? false : '',
     };
-    const isMultilanguageRequired = control.type === 'multilanguage' && control.required;
 
     // TODO(d.maltsev): need to refactor this in favor of built-in control validators
-    const validators = control.required
+    const controlsWithOwnRequired = [ 'multilanguage', 'select' ];
+    const validators = control.required && !controlsWithOwnRequired.includes(control.type)
       ? Validators.compose([
           ...control.validators || [],
-          isMultilanguageRequired
-            ? multilanguageRequired
-            : Validators.required
+          Validators.required
         ])
       : control.validators;
 
@@ -386,13 +382,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   private serializeControlValue(value: any, control: IDynamicFormControl): any {
     switch (control.type) {
-      case 'select':
-      case 'selectwrapper':
-        return !Array.isArray(value)
-          ? value
-          : control.multiple
-            ? value.map(item => item.value)
-            : value[0].value;
       case 'multilanguage': {
         // TODO(a.tymchuk): replace with proper type instead of ILabeledValue
         const values = (Array.isArray(value) ? value : control.langOptions)
@@ -415,6 +404,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       case 'boolean':
       case 'checkbox':
         return Number(value);
+      case 'select':
       default:
         return value === '' ? null : value;
     }

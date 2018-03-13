@@ -15,9 +15,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-import { GridComponent } from '@app/shared/components/grid/grid.component';
 
-import { min } from '@app/core/validators';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-schedule-type-card',
@@ -27,7 +26,6 @@ import { min } from '@app/core/validators';
 export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   @ViewChild('eventType') eventTypeForm: DynamicFormComponent;
   @ViewChild('addParams') addParamsForm:  DynamicFormComponent;
-  @ViewChild('groupGrid') groupGrid: GridComponent;
 
   @Input() groupId: number;
   @Input() eventId: number;
@@ -66,13 +64,14 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     userId: {
       controlName: 'userId',
       type: 'gridselect',
-      translationKey: 'default.filters.users',
       gridColumns: [
         { prop: 'id', maxWidth: 70 },
         { prop: 'fullName' },
         { prop: 'organization' },
         { prop: 'position' },
-      ].map(c => ({ ...c, name: this.translateService.instant(`widgets.operator.grid.${c.prop}`) })),
+      ]
+      .map(c => ({ ...c, name: this.translateService.instant(`widgets.operator.grid.${c.prop}`) }))
+      .map(addGridLabel('widgets.operator.grid')),
       gridLabelGetter: row => row.fullName,
       gridValueGetter: row => row.id,
       required: true,
@@ -80,7 +79,6 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     groupId: {
       controlName: 'groupId',
       type: 'gridselect',
-      translationKey: 'widgets.scheduleEvents.card.changeGroupId',
       gridColumns: [
         { prop: 'id', maxWidth: 70 },
         {
@@ -90,7 +88,9 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
         },
         { prop: 'name' },
         { prop: 'comment' },
-      ].map(c => ({ ...c, name: this.translateService.instant(`widgets.groups.grid.${c.prop}`) })),
+      ]
+      .map(c => ({ ...c, name: this.translateService.instant(`widgets.groups.grid.${c.prop}`) }))
+      .map(addGridLabel('widgets.groups.grid')),
       gridLabelGetter: row => row.name || row.id,
       gridValueGetter: row => row.id,
       required: true,
@@ -107,7 +107,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
     dict3Code: { controlName: 'dict3Code', type: 'select', required: true },
     dict4Code: { controlName: 'dict4Code', type: 'select', required: true },
     modeCode: { controlName: 'modeCode', type: 'select', required: true },
-    delay: { controlName: 'delay', type: 'number', required: true, validators: [ min(0) ] },
+    delay: { controlName: 'delay', type: 'number', min: 0, required: true },
     stage: { controlName: 'stage', type: 'select', required: true },
   };
 
@@ -260,7 +260,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
   }
 
   onEventTypeSelect(): void {
-    const [ eventTypeControl ] = this.eventTypeForm.getControl('eventTypeCode').value;
+    const eventTypeControl = this.eventTypeForm.getControl('eventTypeCode');
     this.selectedEventTypeCode$.next(eventTypeControl.value);
   }
 

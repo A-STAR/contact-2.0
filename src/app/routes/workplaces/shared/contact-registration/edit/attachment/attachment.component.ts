@@ -1,20 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAttachment, IAttachmentFormData } from './attachment.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { AttachmentService } from './attachment.service';
 import { ContactRegistrationService } from '../../contact-registration.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DialogFunctions } from '@app/core/dialog';
 
-import { isEmpty } from '@app/core/utils';
+import { isEmpty, addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-contact-registration-attachment',
@@ -36,13 +34,13 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
     },
   ];
 
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<IAttachment>[] = [
     { prop: 'docName' },
     { prop: 'fileName' },
     { prop: 'docTypeCode', dictCode: UserDictionariesService.DICTIONARY_DOCUMENT_TYPE },
     { prop: 'docNumber' },
     { prop: 'comment' }
-  ];
+  ].map(addGridLabel('routes.workplaces.shared.contactRegistration.edit.form.attachments.grid'));
 
   documents: IAttachment[] = [];
 
@@ -52,15 +50,8 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
     private attachmentService: AttachmentService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    private gridService: GridService,
   ) {
     super();
-    this.gridService.setDictionaryRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [ ...columns ];
-        this.cdRef.markForCheck();
-      });
   }
 
   get selectedDocument$(): Observable<IAttachment > {
@@ -72,8 +63,11 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
       .map(outcome => outcome.fileAttachMode === 3 && isEmpty(this.documents));
   }
 
-  onSelect(document: IAttachment): void {
-    this.selectedDocumentGuid$.next(document.guid);
+  onSelect(documents: IAttachment[]): void {
+    const guid = isEmpty(documents)
+      ? null
+      : documents[0].guid;
+    this.selectedDocumentGuid$.next(guid);
   }
 
   onDoubleClick(document: IAttachment): void {

@@ -1,0 +1,31 @@
+<app-dialog-action
+  *ngIf="isDialog('removeFormula')"
+  actionMode="danger"
+  actionTranslationKey="routes.utilities.formulas.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  titleTranslationKey="routes.utilities.formulas.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<app-formula-calculate-dialog
+  *ngIf="isDialog('calculateFormula')"
+  [formulaId]="selectedFormula.id"
+  (close)="onCloseDialog()"
+></app-formula-calculate-dialog>
+
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      persistenceKey="[grid] utilities/formulas"
+      [columns]="columns"
+      [selection]="selection"
+      [rows]="formulas"
+      (select)="onSelect($event)"
+      (dblClick)="onEdit($event)"
+    ></app-simple-grid>
+  </div>
+</div>

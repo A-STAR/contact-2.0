@@ -1,35 +1,36 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 
 import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
-import { IGridColumn } from '../../../../../shared/components/grid/grid.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { AddressService } from '@app/routes/workplaces/shared/address/address.service';
-import { GridService } from '../../../../../shared/components/grid/grid.service';
-import { DebtService } from '../../../../../core/debt/debt.service';
+import { DebtService } from '@app/core/debt/debt.service';
 
-import { UserDictionariesService } from '../../../../../core/user/dictionaries/user-dictionaries.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { doOnceIf } from '../../../../../core/utils/helpers';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel, doOnceIf, isEmpty } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-register-contact-address-grid',
   templateUrl: 'address.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddressGridComponent implements OnInit {
   @Input() entityType: number;
   @Input() entityId: number;
   @Output() action = new EventEmitter<number>();
 
-  columns: IGridColumn[] = [
+  columns: ISimpleGridColumn<IAddress>[] = [
     { prop: 'typeCode', dictCode:  UserDictionariesService.DICTIONARY_ADDRESS_TYPE },
     { prop: 'fullAddress', minWidth: 500 },
     { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_ADDRESS_STATUS },
-    { prop: 'isResidence', maxWidth: 90, type: 'boolean', renderer: 'checkboxRenderer' },
+    { prop: 'isResidence', maxWidth: 90, type: 'boolean', renderer: TickRendererComponent },
     { prop: 'comment' },
-  ];
+  ].map(addGridLabel('debtor.information.address.grid'));
 
   addresses: IAddress[];
 
@@ -39,14 +40,9 @@ export class AddressGridComponent implements OnInit {
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
     private debtService: DebtService,
-    private gridService: GridService,
   ) {}
 
   ngOnInit(): void {
-    this.gridService.setDictionaryRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => this.columns = this.gridService.setRenderers(columns));
-
     this.addressService.fetchAll(this.entityType, this.entityId, false).subscribe(addresses => {
       this.addresses = addresses.filter(address => !address.isInactive);
       this.cdRef.markForCheck();
@@ -61,8 +57,10 @@ export class AddressGridComponent implements OnInit {
     return (this.addresses || []).find(address => address.id === this.selectedAddressId);
   }
 
-  onSelect(address: IAddress): void {
-    this.selectedAddressId = address.id;
+  onSelect(addresses: IAddress[]): void {
+    this.selectedAddressId = isEmpty(addresses)
+      ? null
+      : addresses[0].id;
     this.cdRef.markForCheck();
   }
 

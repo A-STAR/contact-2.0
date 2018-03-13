@@ -6,13 +6,13 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
-import { first } from 'rxjs/operators/first';
+import { distinctUntilChanged, first, startWith } from 'rxjs/operators';
 
 import { IDebt } from '@app/core/debt/debt.interface';
 import {
@@ -35,16 +35,18 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
   templateUrl: './debt-grid-status-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
+export class DebtGridStatusDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() debt: IDebt;
+
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<void>();
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormControl> = [
     { controlName: 'statusCode', type: 'radio', required: true },
-    { controlName: 'reasonCode', type: 'select' },
     { controlName: 'customStatusCode', type: 'select', disabled: true },
+    { controlName: 'reasonCode', type: 'select' },
     { controlName: 'comment', type: 'textarea' }
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.statusChange.${control.controlName}` }) as IDynamicFormControl);
 
@@ -60,44 +62,66 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
     private userPermissionsService: UserPermissionsService,
   ) {}
 
+  ngOnInit(): void {
+    this.userPermissionsService.bag()
+      .pipe(
+        first(),
+      )
+      .subscribe(bag => {
+        const statusCodeControl = this.getControl('statusCode') as IDynamicFormRadioControl;
+        statusCodeControl.radioOptions = [
+          {
+            label: 'widgets.debt.dialogs.statusChange.statusProblematic',
+            value: 9,
+            disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 9),
+          },
+          {
+            label: 'widgets.debt.dialogs.statusChange.statusInfoCollection',
+            value: 15,
+            disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 15),
+          },
+          {
+            label: 'widgets.debt.dialogs.statusChange.statusFutile',
+            value: 12,
+            disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 12),
+          },
+          {
+            label: 'widgets.debt.dialogs.statusChange.statusCustom',
+            value: 0,
+            disabled: !bag.containsCustom('DEBT_STATUS_EDIT_LIST') && !bag.containsALL('DEBT_STATUS_EDIT_LIST'),
+          },
+        ];
+        this.cdRef.markForCheck();
+      });
+  }
+
   ngAfterViewInit(): void {
     this.formDataSubscription = combineLatest(
-      this.userDictionariesService.getDictionaries([
-        UserDictionariesService.DICTIONARY_DEBT_STATUS,
-        UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE,
-      ]),
-      this.userPermissionsService.bag(),
-      this.userConstantsService.get('Debt.StatusReason.MandatoryList'),
-      this.form.onCtrlValueChange('statusCode').startWith(null),
-      this.form.onCtrlValueChange('customStatusCode').startWith(null),
+      this.userDictionariesService
+        .getDictionaries([
+          UserDictionariesService.DICTIONARY_DEBT_STATUS,
+          UserDictionariesService.DICTIONARY_REASON_FOR_STATUS_CHANGE,
+        ])
+        .pipe(
+          first(),
+        ),
+      this.userConstantsService
+        .get('Debt.StatusReason.MandatoryList')
+        .pipe(
+          first(),
+        ),
+      this.form.onCtrlValueChange('statusCode')
+        .pipe(
+          startWith(null),
+          distinctUntilChanged(),
+        ),
+      this.form.onCtrlValueChange('customStatusCode')
+        .pipe(
+          startWith(null),
+          distinctUntilChanged(),
+        ),
     )
-    .pipe(
-      distinctUntilChanged()
-    )
-    .subscribe(([ dictionaries, bag, reasonCodeRequired, statusCode, customStatusCode ]) => {
-      (<IDynamicFormRadioControl>this.getControl('statusCode')).radioOptions = [
-        {
-          label: 'widgets.debt.dialogs.statusChange.statusProblematic',
-          value: 9,
-          disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 9),
-        },
-        {
-          label: 'widgets.debt.dialogs.statusChange.statusInfoCollection',
-          value: 15,
-          disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 15),
-        },
-        {
-          label: 'widgets.debt.dialogs.statusChange.statusFutile',
-          value: 12,
-          disabled: !bag.contains('DEBT_STATUS_EDIT_LIST', 12),
-        },
-        {
-          label: 'widgets.debt.dialogs.statusChange.statusCustom',
-          value: 0,
-          disabled: !bag.containsCustom('DEBT_STATUS_EDIT_LIST') && !bag.containsALL('DEBT_STATUS_EDIT_LIST'),
-        },
-      ];
-
+    .subscribe(([ dictionaries, reasonCodeRequired, statusCode, customStatusCode ]) => {
       const reasonCodeControl = this.getControl('reasonCode') as IDynamicFormSelectControl;
       const code = customStatusCode || statusCode;
       reasonCodeControl.required = this.isReasonCodeRequired(reasonCodeRequired, code);
@@ -146,7 +170,7 @@ export class DebtGridStatusDialogComponent implements AfterViewInit, OnDestroy {
         return this.debtService.changeStatus(personId, this.debt.id, value, false);
       })
       .pipe(first())
-      .subscribe(_ => {
+      .subscribe(() => {
         this.submit.emit();
         this.onClose();
       });

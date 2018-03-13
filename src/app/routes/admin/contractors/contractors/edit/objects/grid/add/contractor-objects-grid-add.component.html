@@ -1,0 +1,18 @@
+<app-dialog (close)="onCancel()">
+  <div dialog-header>
+    <h3>{{ 'widgets.contractorObject.dialogs.add.title' | translate }}</h3>
+  </div>
+  <div class="object-add-grid-wrapper">
+    <app-simple-grid
+      persistenceKey="[grid] admin/contractors/edit/objects-add"
+      selectionType="multiple"
+      [columns]="columns"
+      [rows]="rows"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
+  </div>
+  <div dialog-footer>
+    <app-button color="primary" type="add" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+    <app-button type="cancel" (click)="onCancel()"></app-button>
+  </div>
+</app-dialog>

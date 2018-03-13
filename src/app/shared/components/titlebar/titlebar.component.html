@@ -10,17 +10,30 @@
 
   <div *ngIf="items?.length" class="titlebar-zone right">
     <div class="icon-section">
-
-      <button
-        *ngFor="let item of items"
-        class="icon"
-        [disabled]="isDisabled(item) | async"
-        [title]="getTitle(item) | translate"
-        (click)="item.action()"
-      >
-        <i class="co" [ngClass]="getIconCls(item)" aria-hidden="true"></i>
-      </button><!-- item -->
-
+      <ng-container *ngFor="let item of items">
+          <ng-container *ngIf="item.children; else button">
+            <app-dropdown
+              #dropdown
+              position="right"
+              class="icon"
+              [title]="getTitle(item)"
+              [enabled]="!(isDisabled(item) | async)"
+            >
+              <i trigger class="co" [ngClass]="getIconCls(item)" aria-hidden="true"></i>
+              <app-menu [items]="item.children"></app-menu>
+            </app-dropdown>
+          </ng-container>
+          <ng-template #button>
+            <button
+              class="icon"
+              [disabled]="isDisabled(item) | async"
+              [title]="getTitle(item)"
+              (click)="item.action()"
+            >
+              <i class="co" [ngClass]="getIconCls(item)" aria-hidden="true"></i>
+            </button>
+          </ng-template>
+      </ng-container><!-- item -->
     </div><!-- icon-section -->
   </div><!-- titlebar-zone -->
 

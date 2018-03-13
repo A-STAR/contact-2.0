@@ -16,14 +16,11 @@
 >
 </app-dialog-action>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems">
-</app-toolbar-2>
-
-<app-grid
-  class="flat" [styles]="{ height: '250px' }"
+<app-simple-grid
+  persistenceKey="[grid] utilities/campaigns/participants"
+  selectionType="multiple"
   [columns]="columns"
-  [columnTranslationKey]="'utilities.campaigns.participants'"
   [rows]="participants"
-  selectionType="multiClick"
-  (onSelect)="onSelectParticipant($event)">
-</app-grid>
+  [toolbar]="toolbarItems"
+  (select)="onSelectParticipant($event)">
+</app-simple-grid>

@@ -77,7 +77,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
       type: 'text',
       width: 3,
       display: displayedStringValues.includes(id) && attributes[id].isUsed,
-      required: attributes[id].isMandatory,
+      required: displayedStringValues.includes(id) && !!attributes[id].isMandatory,
     }) as IDynamicFormControl);
   }
 

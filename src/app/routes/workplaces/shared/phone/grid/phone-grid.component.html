@@ -45,18 +45,13 @@
   (close)="onDialogClose()"
 ></app-phone-operator-dialog>
 
-<app-toolbar-2 class="bordered" [items]="gridToolbarItems"></app-toolbar-2>
-
-<app-grid
+<app-simple-grid
   *ngIf="canDisplayGrid"
-  columnTranslationKey="debtor.information.phone"
-  [contextMenuOptions]="contextMenuOptions"
+  persistenceKey="[grid] workplaces/shared/phone"
   [columns]="columns"
-  [footerHeight]="false"
-  [rowClass]="getRowClass()"
   [rows]="phones"
-  selectionType="single"
-  [styles]="styles"
-  (onDblClick)="onDoubleClick($event)"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  [rowClass]="getRowClass()"
+  [toolbar]="gridToolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onDoubleClick($event)"
+></app-simple-grid>

@@ -7,10 +7,10 @@ import { Subscription } from 'rxjs/Subscription';
 import {
   IActionType,
   IPortfolio
-} from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+} from '../../contractors-and-portfolios.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
+import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -125,11 +125,13 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const portfolio = this.form.serializedUpdates;
-    // see requirements
-    portfolio.statusCode = portfolio.directionCode === 2 ? null : this.formData.statusCode;
+    const payload = {
+      ...portfolio,
+      statusCode: portfolio.directionCode === 2 ? null : portfolio.statusCode,
+    };
     const action = (this.contractorId && this.portfolioId
-      ? this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, portfolio)
-      : this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, portfolio));
+      ? this.contractorsAndPortfoliosService.updatePortfolio(this.contractorId, this.portfolioId, payload)
+      : this.contractorsAndPortfoliosService.createPortfolio(this.contractorId, payload));
 
       action.subscribe(result => {
         if (result) {

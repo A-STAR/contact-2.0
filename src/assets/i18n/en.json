@@ -39,6 +39,22 @@
               "infoIncreaseAmount": {
                 "message": "You have to increase the promise amount to {{ percent }}% of the amount due.",
                 "title": "Information"
+              },
+              "contactType": {
+                "title": "Choose contact type",
+                "address": {
+                  "title": "Addresses",
+                  "button": "Register contact with type Visit"
+                },
+                "misc": {
+                  "title": "Special",
+                  "buttonMisc": "Register contact with type Special",
+                  "buttonOfficeVisit": "Register contact with type Office visit"
+                },
+                "phone": {
+                  "title": "Phones",
+                  "button": "Register contact with type Incoming call"
+                }
               }
             },
             "form": {
@@ -167,11 +183,52 @@
           }
         }
       }
+    },
+    "utilities": {
+      "formulas": {
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "typeCode": "Type",
+          "comment": "Comment"
+        },
+        "card": {
+          "name": "Name",
+          "script": "Script",
+          "typeCode": "Type",
+          "comment": "Comment"
+        },
+        "titlebar": {
+          "title": "Formulas"
+        },
+        "remove": {
+          "title": "Formula delete",
+          "confirmMessage": "Do you really want to delete selected formula?"
+        },
+        "errors": {
+          "calculate": {
+            "403": "You don't have permissions to calculate {{ entity }}",
+            "*": "Could not calculate {{ entity }}"
+          }
+        },
+        "calculate": {
+          "title": "Calculate",
+          "debtId": "Debt ID",
+          "userId": "User Id",
+          "grid": {
+            "type": "Type",
+            "value": "Result"
+          }
+        }
+      }
     }
   },
   "shared": {
     "components": {
       "grids": {
+        "overlays": {
+          "empty": "No Data"
+        },
         "toolbar": {
           "rowsSelected": "selected",
           "rowsTotal": "total"
@@ -1391,19 +1448,15 @@
       "title": "move portfolio {{ name }}"
     },
     "outsourcing": {
-      "form": {
-        "menu": "Form outsourcing portfolio"
-      },
+      "formOutsourcing": "Form outsourcing portfolio",
       "send": {
-        "menu": {
-          "title": "Send portfolio for outsourcing",
-          "outsourcing": "Outsourcing",
-          "cession": "Cession"
-        },
+        "sendOutsourcing": "Send portfolio for outsourcing",
+        "sendOutsource": "Outsourcing",
+        "sendCession": "Cession",
         "title": "Send portfolio"
       },
       "return": {
-        "menu": "Return outsourcing portfolio",
+        "returnOutsource": "Return outsourcing portfolio",
         "title": "Return portfolio"
       }
     }
@@ -1675,6 +1728,7 @@
       },
       "grid": {
         "code": "Code",
+        "name": "Name",
         "names": "Name",
         "value": "Value",
         "userFullName": "Operator",
@@ -1691,15 +1745,10 @@
     "contact": {
       "grid": {
         "fullName": "Full name",
-        "firstName": "First name",
-        "middleName": "Middle name",
-        "lastName": "Last name",
-        "birthDate": "Date of birth",
-        "birthPlace": "Place of birth",
+        "typeCode": "Type",
         "genderCode": "Gender",
-        "familyStatusCode": "Family status",
         "educationCode": "Education",
-        "linkTypeCode": "Type",
+        "linkTypeCode": "Link Type",
         "comment": "Comment"
       }
     },
@@ -1760,13 +1809,14 @@
     },
     "document": {
       "grid": {
-        "docName": "Document Name",
-        "fileName": "File Name",
-        "docTypeCode": "Document Type",
-        "docNumber": "Number",
-        "operatorName": "Operator",
         "comment": "Comment",
-        "file": "File"
+        "docName": "Document Name",
+        "docNumber": "Number",
+        "docTypeCode": "Document Type",
+        "file": "File",
+        "fileName": "File Name",
+        "fullName": "Operator",
+        "operatorName": "Operator"
       },
       "dialogs": {
         "delete": {
@@ -1929,6 +1979,29 @@
       },
       "changeDefaultAttr": {
         "title": "Change attribute"
+      },
+      "outsourcing": {
+        "send": {
+          "title": "Choose a portfolio",
+          "grid": {
+            "id": "ID",
+            "name": "Name",
+            "contractorName": "Contractor",
+            "statusCode": "Status",
+            "stageCode": "Stage",
+            "signDate": "Signed on",
+            "startWorkDate": "Processing start date",
+            "endWorkDate": "Processing end date"
+          }
+        },
+        "exclude": {
+          "message": "Do you really want to exclude outsourcing for the selected debts?",
+          "title": "Exclude outsourcing"
+        },
+        "return": {
+          "message": "Do you really want to return outsourcing for the selected debts?",
+          "title": "Return outsourcing"
+        }
       }
     },
     "nextCallDateSet": {
@@ -2012,6 +2085,7 @@
         "amountMainCurrency": "Amount in currency",
         "comment": "Comment",
         "commission": "Commission",
+        "currencyId": "Currency",
         "currencyName": "Currency",
         "isConfirmed": "Is confirmed",
         "payerName": "Payer",
@@ -2019,6 +2093,7 @@
         "purposeCode": "Purpose",
         "receiptNumber": "Receipt No",
         "receiveDateTime": "Received on",
+        "reqUserId": "Req operator",
         "reqUserFullName": "Req operator",
         "statusCode": "Status",
         "userFullName": "Operator"
@@ -2191,14 +2266,18 @@
         "subject": "Subject"
       },
       "grid": {
-        "contactId": "Contact ID",
+        "comment": "Comments",
+        "contactData": "Phone/Address",
         "contactDateTime": "Contact date",
+        "contactId": "Contact ID",
         "contactType": "Contact type",
         "contract": "Contact No",
         "createDateTime": "Created at",
         "creditName": "Product name",
         "debtId": "Debt id",
         "fullName": "Full name",
+        "messageTemplate": "Template",
+        "msgStatusCode": "Status",
         "personRole": "Role",
         "promiseDate": "Promise date",
         "resultName": "Result",
@@ -2715,6 +2794,12 @@
     },
     "calls": {
       "gen": { "singular": "call", "plural": "calls" }
+    },
+    "status": {
+      "gen": { "singular": "status", "plural": "status list" }
+    },
+    "formulas": {
+      "gen": { "singular": "formula", "plural": "formulas" }
     }
   },
   "massOperations": {
@@ -2998,6 +3083,7 @@
       "back": "Back",
       "block": "Block",
       "call": "Call",
+      "calculate": "Calculate",
       "cancel": "Cancel",
       "change": "Change",
       "changeStatus": "",
@@ -3143,6 +3229,8 @@
         "filterOoo": "filter..."
       },
       "actions": {
+        "actionForSelection": "for selection",
+        "actionForAll": "for all",
         "addVisit": "Add a visit",
         "cancelVisit": "Cancel a visit",
         "confirmPaymentsOperator": "Confirm change operator",
@@ -3179,7 +3267,11 @@
         "changeDict4Attr": "Dictionary Attribute 4",
         "changeCreditTypeAttr": "Credit Product Type",
         "changeBranchAttr": "Branch",
-        "changeTimezoneAttr": "Time zone"
+        "changeTimezoneAttr": "Time zone",
+        "debtOutsourcingSend": "Send to outsourcing",
+        "debtOutsourcingExclude": "Exclude from outsourcing",
+        "debtOutsourcingReturn": "Return from outsourcing",
+        "registerContact": "Register Contact"
       }
     },
     "filter": {
@@ -3216,6 +3308,13 @@
         "timepicker": "Enter time"
       },
       "lastMonthDay": "Last"
+    },
+    "decimal": {
+      "format": {
+        "minIntegerDigits": 1,
+        "minFractionDigits": 0,
+        "maxFractionDigits": 2
+      }
     },
     "colors": {
       "transparent": "Transparent",

@@ -2,11 +2,11 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TextMaskModule } from 'angular2-text-mask';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { AngularSplitModule } from 'angular-split';
 
 // Third-party modules
+import { AngularSplitModule } from 'angular-split';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { TextMaskModule } from 'angular2-text-mask';
 import { ToasterModule } from 'angular2-toaster/angular2-toaster';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -18,6 +18,7 @@ import { NowDirective } from './directives/now/now.directive';
 import { AccordionModule } from './components/accordion/accordion.module';
 import { ActionDialogModule } from './components/dialog/action/action-dialog.module';
 import { ActionGridModule } from './components/action-grid/action-grid.module';
+import { AreaModule } from './components/layout/area/area.module';
 import { BlockDialogModule } from './components/dialog/block/block-dialog.module';
 import { ButtonModule } from './components/button/button.module';
 import { CapitalizeModule } from './pipes/capitalize/capitalize.module';
@@ -40,27 +41,28 @@ import { Grid2Module } from './components/grid2/grid2.module';
 import { GridsModule } from './components/grids/grids.module';
 import { GridTree2Module } from './components/gridtree2/gridtree2.module';
 import { GridTree2WrapperModule } from './components/gridtree2-wrapper/gridtree2-wrapper.module';
-import { GuiObjectsModule } from './gui-objects/gui-objects.module';
 import { HDividerModule } from './components/hdivider/hdivider.module';
 import { HtmlTextareaModule } from './components/form/html-textarea/html-textarea.module';
 import { ImageUploadModule } from './components/form/image-upload/image-upload.module';
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { InputModule } from './components/form/input/input.module';
 import { ListModule } from './components/list/list.module';
-import { MetadataGridModule } from './components/metadata-grid/metadata-grid.module';
+import { MassOpsModule } from './mass-ops/mass-ops.module';
+import { MenuModule } from './components/form/menu/menu.module';
 import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multi-language/multi-language.module';
-import { MultiSelectModule } from './components/form/multi-select/multi-select.module';
+import { OperatorModule } from './components/operator/operator.module';
 import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
 import { RadioGroupModule } from './components/form/radio-group/radio-group.module';
 import { SpinnerModule } from './components/spinner/spinner.module';
+import { SelectModule } from './components/form/select/select.module';
+import { ScriptEditorModule } from './components/form/script-editor/script-editor.module';
 import { TabViewModule } from './components/layout/tabview/tabview.module';
 import { TextEditorModule } from './components/form/text-editor/text-editor.module';
-import { TitlebarModule } from '@app/shared/components/titlebar/titlebar.module';
-import { ToolbarModule } from './components/toolbar/toolbar.module';
+import { TitlebarModule } from './components/titlebar/titlebar.module';
 import { Toolbar2Module } from './components/toolbar-2/toolbar-2.module';
 import { TreeModule } from './components/flowtree/tree.module';
 import { ValueInputModule } from './components/form/value/value.module';
@@ -88,6 +90,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     AccordionModule,
     ActionDialogModule,
     ActionGridModule,
+    AreaModule,
     BlockDialogModule,
     ButtonModule,
     CapitalizeModule,
@@ -109,26 +112,27 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridsModule,
     GridTree2Module,
     GridTree2WrapperModule,
-    GuiObjectsModule,
     HDividerModule,
     HtmlTextareaModule,
     ImageUploadModule,
     InfoDialogModule,
     InputModule,
     ListModule,
-    MetadataGridModule,
+    MassOpsModule,
+    MenuModule,
     MomentModule,
     MultiLanguageModule,
-    MultiSelectModule,
+    OperatorModule,
     PasswordModule,
     PopupInputModule,
     ProgressbarModule,
     QBuilder2Module,
     RadioGroupModule,
+    SelectModule,
     SpinnerModule,
+    ScriptEditorModule,
     TabViewModule,
     TextEditorModule,
-    ToolbarModule,
     Toolbar2Module,
     TreeModule,
     TitlebarModule,
@@ -143,7 +147,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     NowDirective,
     // App Components
     NumericInputComponent,
-    QBuilderComponent
+    QBuilderComponent,
   ],
   exports: [
     // Angular Modules
@@ -163,6 +167,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     AccordionModule,
     ActionDialogModule,
     ActionGridModule,
+    AreaModule,
     BlockDialogModule,
     ButtonModule,
     CapitalizeModule,
@@ -185,28 +190,28 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     GridsModule,
     GridTree2Module,
     GridTree2WrapperModule,
-    GuiObjectsModule,
     HDividerModule,
     HtmlTextareaModule,
     ImageUploadModule,
     InfoDialogModule,
     InputModule,
     ListModule,
-    MetadataGridModule,
+    MassOpsModule,
+    MenuModule,
     MomentModule,
     MultiLanguageModule,
-    MultiSelectModule,
     NumericInputComponent,
+    OperatorModule,
     PasswordModule,
     PopupInputModule,
     ProgressbarModule,
     QBuilderComponent,
     QBuilder2Module,
     RadioGroupModule,
+    SelectModule,
     SpinnerModule,
     TabViewModule,
     TextEditorModule,
-    ToolbarModule,
     Toolbar2Module,
     TreeModule,
     TitlebarModule,

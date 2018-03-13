@@ -9,7 +9,6 @@ import {
   Output,
   OnChanges,
   SimpleChanges,
-  ViewEncapsulation,
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
@@ -20,29 +19,29 @@ import {
   ColDef,
   Column,
   ColumnRowGroupChangedEvent,
-  GetContextMenuItemsParams,
   GridCellDef,
   GridOptions,
   ICellRendererParams,
-  MenuItemDef,
   PostProcessPopupParams,
   RowNode,
   RefreshCellsParams,
 } from 'ag-grid/main';
 
+
+import {
+  IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
+  IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
+  IAGridRequest, IAGridSorter } from './grid2.interface';
+import { IContextMenuSimpleOptions } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import {
   IToolbarAction,
   IToolbarActionSelect,
   ToolbarActionTypeEnum,
   ToolbarControlEnum
-} from '../toolbar/toolbar.interface';
-import {
-  IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
-  IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
-  IAGridRequest, IAGridSorter } from './grid2.interface';
-import { FilterObject } from './filter/grid-filter';
+} from './toolbar/toolbar.interface';
 
+import { ContextMenuService } from '@app/shared/components/grids/context-menu/context-menu.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PersistenceService } from '@app/core/persistence/persistence.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -51,16 +50,15 @@ import { ValueConverterService } from '@app/core/converter/value-converter.servi
 import { DatePickerComponent } from './editors/datepicker/datepicker.component';
 import { GridDatePickerComponent } from './datepicker/grid-date-picker.component';
 
+import { FilterObject } from './filter/grid-filter';
 import { GridTextFilter } from './filter/text-filter';
 import { ViewPortDatasource } from './data/viewport-data-source';
 import { ValueBag } from '@app/core/value-bag/value-bag';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-grid2',
   templateUrl: './grid2.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: [ './grid2.component.scss' ],
 })
 export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   static DEFAULT_PAGE_SIZE = 250;
@@ -82,7 +80,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() fetchUrl: string;
   @Input() fullHeight = false;
   @Input() groupColumnMinWidth = 120;
-  @Input() headerHeight = 42;
+  @Input() headerHeight = 32;
   @Input() metadataKey: string;
   @Input() pageSize = Grid2Component.DEFAULT_PAGE_SIZE;
   @Input() pageSizes = Array.from(new Set([this.pageSize, 100, 250, 500, 1000])).sort((x, y) => x > y ? 1 : -1);
@@ -90,7 +88,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   @Input() persistenceKey: string;
   @Input() remoteSorting = true;
   @Input() rowCount = 0;
-  @Input() rowHeight = 36;
+  @Input() rowHeight = 32;
   @Input() rowIdKey = 'id';
   @Input() rowSelection = 'multiple';
   @Input() rows: any[] = [];
@@ -130,6 +128,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contextMenuService: ContextMenuService,
     private notificationService: NotificationsService,
     private persistenceService: PersistenceService,
     private translate: TranslateService,
@@ -194,6 +193,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       this.clearRangeSelections();
       this.viewportDatasource.params.setRowData(this.rows);
       this.viewportDatasource.params.setRowCount(this.rows.length);
+      // NOTE: we also must update viewport pageSize
+      this.gridOptions.viewportRowModelPageSize = this.rows.length;
       this.rowDataChange.emit(rows.currentValue);
     }
     if (rowCount) {
@@ -288,13 +289,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   onPageSizeChange(payload: IToolbarActionSelect): void {
-    const newSize = payload.value[0].value;
+    const newSize = payload.value;
     const lastPage = Math.ceil(this.rowCount / newSize);
     if (this.page > lastPage) {
       this.page = lastPage;
       this.onPage.emit(this.page);
     }
-    // log('new page size', newSize);
     this.pageSize = newSize || this.pageSize;
 
     this.gridOptions.api.paginationSetPageSize(this.pageSize);
@@ -497,8 +497,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         activeValue: Grid2Component.DEFAULT_PAGE_SIZE,
         control: ToolbarControlEnum.SELECT,
         disabled: true,
-        styles: { width: '60px' },
-        value: this.pageSizes.map(pageSize => ({ value: pageSize })),
+        styles: { width: '80px' },
+        value: this.pageSizes.map(pageSize => ({ value: pageSize, label: String(pageSize) })),
       },
       { control: ToolbarControlEnum.BUTTON, type: ToolbarActionTypeEnum.REFRESH, disabled: false },
     ];
@@ -733,7 +733,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       enableServerSideSorting: true,
       // floatingFilter: !this.disableFilters,
       floatingFilter: false,
-      getContextMenuItems: this.getContextMenuItems.bind(this),
+      getContextMenuItems: (selection) => this.contextMenuService.onCtxMenuClick(
+        {
+          actions: this.actions,
+          selected: this.selected,
+          selection,
+          cb: (action) => this.action.emit(action)
+        },
+        this.getContextMenuSimpleItems()
+      ),
       getMainMenuItems: (params) => {
         // hide the tool menu
         return params.defaultItems.slice(0, params.defaultItems.length - 1);
@@ -777,66 +785,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     };
 
     this.translateOptionsMessages();
-  }
-
-  private getMetadataMenuItems(actions: IMetadataAction[], params: GetContextMenuItemsParams): MenuItemDef[] {
-    // TODO(m.bobryshev): remove once the BE returns this action
-    // const visitAdd = {
-    //   action: 'visitAdd',
-    //   addOptions: null,
-    //   params: ['debtId', 'personId', 'regionCode']
-    // };
-
-    // const found = this.actions.find(action => action.action === 'visitAdd');
-    // this.actions = found ? this.actions : this.actions.concat(visitAdd);
-
-    return actions.map(action => ({
-      name: this.translate.instant(`default.grid.actions.${action.action}`),
-      action: () => this.action.emit({ metadataAction: action, params }),
-      disabled: action.enabled
-        ? !action.enabled.call(null, this.selected, params.node.data)
-        : false,
-      subMenu: action.children ? this.getMetadataMenuItems(action.children, params) : undefined
-    }));
-  }
-
-  private getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
-    return [
-      // {
-      //   name: 'Alert value',
-      //   action: () => { window.alert('Alerting about ' + params.value); },
-      // },
-      // {
-      //   name: 'Always disabled',
-      //   disabled: true,
-      //   tooltip: 'Just to test what the tooltip can show'
-      // },
-      // 'separator',
-      ...this.getMetadataMenuItems(this.actions, params),
-      // {
-      //   name: 'Person',
-      //   subMenu: [
-      //     {name: 'Niall', action: () => {log('Niall was pressed'); } },
-      //     {name: 'Sean', action: () => {log('Sean was pressed'); } },
-      //     {name: 'Lola', action: () => {log('Lola was pressed'); } },
-      //   ]
-      // },
-      'separator',
-      // {
-      //   name: 'Checked',
-      //   checked: true,
-      //   action: () => { log('Checked Selected'); }
-      // },
-      'copy',
-      'copyWithHeaders',
-      'separator',
-      // 'resetColumns',
-      {
-        name: this.translate.instant('default.grid.localeText.resetColumns'),
-        action: () => this.resetGridSettings(),
-        // shortcut: 'Alt+R'
-      }
-    ];
   }
 
   /**
@@ -904,5 +852,18 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.setSortModel();
     this.initCallbacks.forEach((cb: Function) => cb());
     this.initCallbacks = [];
+  }
+
+  private getContextMenuSimpleItems(): IContextMenuSimpleOptions {
+    return [
+      'copy',
+      'copyWithHeaders',
+      'separator',
+      {
+        name: 'default.grid.localeText.resetColumns',
+        action: () => this.resetGridSettings(),
+        // shortcut: 'Alt+R'
+      },
+    ];
   }
 }

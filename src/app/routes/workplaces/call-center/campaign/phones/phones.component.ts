@@ -10,9 +10,10 @@ import { ContactRegistrationService } from '@app/routes/workplaces/shared/contac
 import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-call-center-phones',
   templateUrl: 'phones.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhonesComponent {
   constructor(

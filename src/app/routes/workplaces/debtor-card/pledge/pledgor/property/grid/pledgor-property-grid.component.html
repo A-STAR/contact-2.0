@@ -1,0 +1,29 @@
+<app-info-dialog
+  *ngIf="isDialog('infoNotFound')"
+  titleTranslationKey="widgets.pledgorProperty.dialog.title"
+  (close)="onClose()"
+>
+  <section class="pv-xl">{{ 'widgets.pledgorProperty.dialog.notFound' | translate }}</section>
+</app-info-dialog>
+
+<app-dialog *ngIf="!!propertyList?.length" (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'widgets.pledgorProperty.dialog.title' | translate }}</h3>
+  </div>
+
+  <div style="height: 75vh;">
+    <app-simple-grid
+      *ngIf="columns"
+      persistenceKey="workplaces/debtor-card/pledge/pledgor-property"
+      [columns]="columns"
+      [rows]="propertyList"
+      (dblClick)="onDblClick($event)"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
+  </div>
+
+  <div dialog-footer>
+    <app-button type="select" [disabled]="!selection" (click)="onSelect()"></app-button>
+    <app-button type="cancel" (click)="onClose()"></app-button>
+  </div>
+</app-dialog>

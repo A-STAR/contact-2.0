@@ -1,35 +1,113 @@
 <div [ngSwitch]="control.type" [formGroup]="form" [hidden]="isHidden">
 
-  <ng-container *ngSwitchCase="'number'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <input
-        type="number"
-        class="form-control"
-        [attr.min]="control.min"
-        [attr.max]="control.max"
-        [attr.placeholder]="(control.placeholder || '') | translate"
-        [formControlName]="control.controlName"
-        (input)="control.onChange ? control.onChange($event) : undefined">
-    </label>
+  <!--
+    Below are controls that can validate themselves and render their labels and errors (errors are rendererd by the form for now though).
+    This is now the preferred way.
+  -->
+
+  <app-text
+    *ngSwitchCase="'text'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [minLength]="minLength"
+    [maxLength]="maxLength"
+    [required]="control.required"
+  ></app-text>
+
+  <app-textarea
+    *ngSwitchCase="'textarea'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [required]="control.required"
+    [rows]="control.rows"
+  ></app-textarea>
+
+  <app-number
+    *ngSwitchCase="'number'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [min]="control.min"
+    [max]="control.max"
+    [positive]="control.positive"
+    [required]="control.required"
+  ></app-number>
+
+  <app-checkbox
+    *ngSwitchCase="'checkbox'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+  ></app-checkbox>
+
+  <app-datetimepicker
+    *ngSwitchCase="'datetimepicker'"
+    [formControlName]="control.controlName"
+    [displaySeconds]="control.displaySeconds"
+    [label]="control.label"
+    [minDateTime]="control.minDateTime"
+    [maxDateTime]="control.maxDateTime"
+    [required]="control.required"
+  ></app-datetimepicker>
+
+  <app-datepicker
+    *ngSwitchCase="'datepicker'"
+    [formControlName]="control.controlName"
+    [label]="control.label"
+    [minDate]="control.minDate"
+    [maxDate]="control.maxDate"
+    [required]="control.required"
+  ></app-datepicker>
+
+  <app-timepicker
+    *ngSwitchCase="'timepicker'"
+    [formControlName]="control.controlName"
+    [displaySeconds]="control.displaySeconds"
+    [label]="control.label"
+    [minTime]="control.minTime"
+    [maxTime]="control.maxTime"
+    [required]="control.required"
+  ></app-timepicker>
+
+
+  <ng-container *ngSwitchCase="'select'">
+    <app-select
+      [dictCode]="control.dictCode"
+      [formControlName]="control.controlName"
+      [isDisabled]="control.disabled"
+      [isRequired]="control.required"
+      [label]="control.label"
+      [lookupKey]="control.lookupKey"
+      [options]="control.options"
+      [placeholder]="control.placeholder"
+      (select)="selectHandler({ control: control, items: $event})"
+    ></app-select>
   </ng-container>
 
-  <ng-container *ngSwitchCase="'text'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <input
-        type="text"
-        class="form-control"
-        [attr.placeholder]="(control.placeholder || '') | translate"
-        [formControlName]="control.controlName">
-    </label>
+  <ng-container *ngSwitchCase="'multiselect'">
+    <app-multi-select
+      [dictCode]="control.dictCode"
+      [formControlName]="control.controlName"
+      [label]="control.label"
+      [lookupKey]="control.lookupKey"
+      [options]="control.options"
+      [required]="control.required"
+      (select)="selectHandler({ control: control, items: $event})"
+    ></app-multi-select>
   </ng-container>
+
+  <ng-container *ngSwitchCase="'multilanguage'">
+    <app-multilanguage-input
+      [formControlName]="control.controlName"
+      [isDisabled]="control.disabled"
+      [isRequired]="control.required"
+      [label]="control.label"
+      [langOptions]="control.langOptions"
+      [placeholder]="control.placeholder"
+    ></app-multilanguage-input>
+  </ng-container>
+
+  <!--
+    Below are old controls.
+  -->
 
   <ng-container *ngSwitchCase="'boolean'">
     <span class="form-label">
@@ -46,108 +124,6 @@
     </label>
   </ng-container>
 
-  <app-checkbox
-    *ngSwitchCase="'checkbox'"
-    [formControlName]="control.controlName"
-    [label]="control.label"
-  ></app-checkbox>
-
-  <ng-container *ngSwitchCase="'select'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-select
-        [formControlName]="control.controlName"
-        [actions]="control.optionsActions"
-        [closableSelectedItem]="control.closableSelectedItem"
-        [controlDisabled]="control.disabled"
-        [multiple]="control.multiple"
-        [nullable]="!control.required"
-        [options]="control.options"
-        [placeholder]="control.placeholder"
-        [readonly]="control.readonly"
-        [renderer]="control.optionsRenderer"
-        (onSelect)="selectHandler({ control: control, items: $event})"
-      ></app-select>
-    </label>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'selectwrapper'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-select-wrapper
-        [formControlName]="control.controlName"
-        [dictCode]="control.dictCode"
-        [parentCode]="control.parentCode"
-        [lookupKey]="control.lookupKey"
-        [nullable]="!control.required"
-      ></app-select-wrapper>
-    </label>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'singleselectwrapper'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-single-select-wrapper
-        [formControlName]="control.controlName"
-        [dictCode]="control.dictCode"
-        [lookupKey]="control.lookupKey">
-      </app-single-select-wrapper>
-    </label>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'multiselectwrapper'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-multi-select-wrapper
-        [formControlName]="control.controlName"
-        [dictCode]="control.dictCode"
-        [lookupKey]="control.lookupKey">
-      </app-multi-select-wrapper>
-    </label>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'multiselect'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <app-multi-select
-        [formControlName]="control.controlName"
-        [options]="control.options"
-        [controlDisabled]="control.disabled"
-        (select)="selectHandler({ control: control, items: $event})"
-      ></app-multi-select>
-    </label>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'textarea'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-      <textarea
-        [attr.placeholder]="(control.placeholder || '') | translate"
-        [formControlName]="control.controlName"
-        class="form-control"
-        [rows]="control.rows || 2"
-      ></textarea>
-    </label>
-  </ng-container>
-
   <ng-container *ngSwitchCase="'htmltextarea'">
     <label>
       <span class="form-label">
@@ -156,53 +132,6 @@
       </span>
       <app-html-textarea [formControlName]="control.controlName"></app-html-textarea>
     </label>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'datetimepicker'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
-    <app-datetimepicker
-      [formControlName]="control.controlName"
-      [displaySeconds]="control.displaySeconds"
-      [minDateTime]="control.minDateTime"
-      [maxDateTime]="control.maxDateTime"
-      [required]="control.required"
-    ></app-datetimepicker>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'datepicker'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
-    <app-datepicker
-      [formControlName]="control.controlName"
-      [minDate]="control.minDate"
-      [maxDate]="control.maxDate"
-      [required]="control.required"
-    ></app-datepicker>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'timepicker'">
-    <label>
-      <span class="form-label">
-        {{ control.label | translate }}
-        <b *ngIf="control.required" class="text-danger">*</b>
-      </span>
-    </label>
-    <app-timepicker
-      [formControlName]="control.controlName"
-      [displaySeconds]="control.displaySeconds"
-      [minTime]="control.minTime"
-      [maxTime]="control.maxTime"
-      [required]="control.required"
-    ></app-timepicker>
   </ng-container>
 
   <ng-container *ngSwitchCase="'image'">
@@ -253,7 +182,6 @@
       [rows]="control.gridRows"
       [labelGetter]="control.gridLabelGetter"
       [valueGetter]="control.gridValueGetter"
-      [translationKey]="control.translationKey"
       (select)="control.gridOnSelect ? control.gridOnSelect($event) : null">
     </app-grid-dropdown>
   </ng-container>
@@ -350,6 +278,20 @@
     ></app-text-editor>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'scripteditor'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-script-editor
+      [isDisabled]="control.disabled"
+      [formControlName]="control.controlName"
+      [options]="control.options"
+    ></app-script-editor>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'segmented'">
     <label>
       <span class="form-label">
@@ -361,17 +303,6 @@
       [formControlName]="control.controlName"
       [options]="control.segmentedInputOptions">
     </app-segmented-input>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="'multilanguage'">
-    <app-multilanguage-input
-      [disabled]="control.disabled"
-      [formControlName]="control.controlName"
-      [label]="control.label"
-      [langOptions]="control.langOptions"
-      [placeholderKey]="control.placeholder"
-      [required]="control.required"
-    ></app-multilanguage-input>
   </ng-container>
 
   <ng-container *ngSwitchCase="'colorpicker'">

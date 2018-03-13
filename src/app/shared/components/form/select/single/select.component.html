@@ -1,0 +1,60 @@
+<!-- single-option-select -->
+<label class="m0">
+
+  <span *ngIf="label" class="form-label">
+    {{ label | translate }}
+    <b *ngIf="required" class="text-danger">*</b>
+  </span>
+
+  <div
+    class="select-container dropdown open"
+    [ngStyle]="styles"
+    >
+
+    <input
+      #input
+      type="text"
+      class="form-control select-search"
+      autocomplete="off"
+      [attr.placeholder]="(placeholder || '') | translate"
+      [ngModel]="activeLabel | translate"
+      (click)="onInputClick($event)"
+      (ngModelChange)="onInputChange($event)"
+    >
+    <i
+      *ngIf="!disabled"
+      class="co co-back select-caret"
+      [ngClass]="caretCls"
+      (click)="onCaret($event)"
+    ></i>
+    <i
+      *ngIf="!disabled && !required && activeLabel"
+      class="co co-clear select-clear"
+      (click)="onClear($event)"
+    ></i>
+
+    <ul
+      *ngIf="open"
+      class="select-options dropdown-menu"
+      appAlignment
+      [alignTarget]="input"
+      [autoAlign]="autoAlign"
+    >
+      <li *ngFor="let option of options">
+        <div
+          class="select-item"
+          [ngClass]="{ active: isActive(option) }"
+          (click)="onSelect($event, option)"
+        >
+          <div class="dropdown-item">{{ renderer(option) | translate }}</div>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+
+  <div>
+    <span *ngIf="errors">{{ errors | json }}</span>
+  </div>
+
+</label>

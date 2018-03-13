@@ -14,7 +14,7 @@ import { ValueConverterService } from '@app/core/converter/value-converter.servi
 import { flatten, makeKey, TYPE_CODES } from '@app/core/utils';
 import { getRawValue, getValue } from '@app/core/utils/value';
 import {IAGridWrapperTreeColumn} from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
-import {IAttribute} from '@app/shared/gui-objects/widgets/entity-attribute/attribute.interface';
+import {IAttribute} from '@app/routes/shared/entity-attribute/attribute.interface';
 
 const label = makeKey('routes.workplaces.shared.contactRegistration.edit.form.attributes.grid');
 

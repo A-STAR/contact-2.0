@@ -12,9 +12,10 @@ import { InfoDebtService } from '../info-debt.service';
 import { Grid2Component } from 'app/shared/components/grid2/grid2.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-info-debt-detail-grid',
   templateUrl: './detail-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailGridComponent implements OnInit, OnDestroy {
 

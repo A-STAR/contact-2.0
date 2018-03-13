@@ -1,42 +1,34 @@
 <div [ngClass]="{ control: true, 'has-error': displayErrors }">
   <ng-container [ngSwitch]="control.type" [formGroup]="parentFormGroup">
 
-    <ng-container *ngSwitchCase="'text'">
-      <label>
-        <span>{{ label | translate }}<span *ngIf="control.required">*</span></span>
-        <input type="text" class="form-control" [attr.placeholder]="(control.placeholder || '') | translate" [formControlName]="control.name">
-      </label>
-    </ng-container>
+    <app-text
+      *ngSwitchCase="'text'"
+      [formControlName]="control.name"
+      [label]="label"
+      [required]="control.required"
+    ></app-text>
 
-    <ng-container *ngSwitchCase="'textarea'">
-      <label>
-        <span>{{ label | translate }}<span *ngIf="control.required">*</span></span>
-        <textarea class="form-control" rows="control.nRows || 2" [attr.placeholder]="(control.placeholder || '') | translate" [formControlName]="control.name">
-        </textarea>
-      </label>
-    </ng-container>
+    <app-textarea
+      *ngSwitchCase="'textarea'"
+      [formControlName]="control.name"
+      [label]="control.label"
+      [required]="control.required"
+      [rows]="control.nRows || 2"
+    ></app-textarea>
 
-    <ng-container *ngSwitchCase="'checkbox'">
-      <div class="checkbox mt0 mb0">
-        <label>
-          <input type="checkbox" [formControlName]="control.name"/>
-          <span>{{ label | translate }}<span *ngIf="control.required">*</span></span>
-        </label>
-      </div>
-    </ng-container>
+    <app-checkbox
+      *ngSwitchCase="'checkbox'"
+      [formControlName]="control.name"
+      [label]="label"
+    ></app-checkbox>
 
-    <ng-container *ngSwitchCase="'select'">
-      <label>
-        <span>{{ label | translate }}<span *ngIf="control.required">*</span></span>
-        <app-select
-          [formControlName]="control.name"
-          [controlDisabled]="control.disabled"
-          [nullable]="!control.required"
-          [options]="control.options"
-          [placeholder]="control.placeholder"
-        ></app-select>
-      </label>
-    </ng-container>
+    <app-select
+      *ngSwitchCase="'select'"
+      [formControlName]="control.name"
+      [disabled]="control.disabled"
+      [label]="label"
+      [options]="control.options"
+    ></app-select>
   </ng-container>
 
   <ul *ngIf="displayErrors" class="error">

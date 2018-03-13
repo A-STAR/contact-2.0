@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChil
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 import { first, flatMap, map } from 'rxjs/operators';
 
 import { IDebt } from '@app/core/app-modules/app-modules.interface';
@@ -21,14 +22,15 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '@app/core/utils';
+import { makeKey, addGridLabel } from '@app/core/utils';
 
 const label = makeKey('widgets.debt');
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-debt-card',
   templateUrl: './debt.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DebtComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
@@ -95,25 +97,26 @@ export class DebtComponent implements OnInit {
       this.cdRef.markForCheck();
     });
 
-    if (!this.isRoute('create')) {
-      this.debtorCardService.selectedDebtId$
-        .flatMap(debtId => this.debtService.fetch(null, debtId))
-        .pipe(first())
-        .subscribe(debt => {
-          this.debt = <any>debt;
-          this.cdRef.markForCheck();
-        });
-    }
+    this.debtId$.pipe(
+      flatMap(debtId => debtId ? this.debtService.fetch(null, debtId) : of(null)),
+      first(),
+    )
+    .subscribe(debt => {
+      this.debt = debt;
+      this.cdRef.markForCheck();
+    });
   }
 
   get debtId$(): Observable<number> {
-    return this.debtorCardService.selectedDebtId$;
+    return this.debtorCardService.selectedDebtId$.pipe(
+      map(debtId => this.isRoute('create') ? null : debtId),
+    );
   }
 
   onSubmit(): void {
     combineLatest(
       this.debtorCardService.personId$,
-      this.debtorCardService.selectedDebtId$,
+      this.debtId$,
     )
     .pipe(
       flatMap(([personId, debtId]) => {
@@ -185,13 +188,12 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.portfolioId',
         controlName: 'portfolioId',
-        translationKey: 'widgets.debt.portfolioChange',
         type: 'gridselect',
         gridColumns: [
           { prop: 'id', minWidth: 50, maxWidth: 50 },
           { prop: 'name', minWidth: 100, maxWidth: 300 },
           { prop: 'contractor', minWidth: 100, maxWidth: 300 },
-        ],
+        ].map(addGridLabel('widgets.debt.portfolioChange.grid')),
         gridRows: portfolios,
         gridLabelGetter: (row: ILookupPortfolio) => row.name,
         gridValueGetter: (row: ILookupPortfolio) => row.id,
@@ -203,7 +205,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.bankId',
         controlName: 'bankId',
-        type: 'selectwrapper',
+        type: 'select',
         lookupKey: 'contractors',
         disabled: true,
         width: 3
@@ -226,7 +228,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.creditTypeCode',
         controlName: 'creditTypeCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
         disabled: !debtEditPerm,
         width: 3
@@ -249,7 +251,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.regionCode',
         controlName: 'regionCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_REGIONS,
         disabled: !debtEditPerm,
         width: 3
@@ -257,7 +259,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.branchCode',
         controlName: 'branchCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_BRANCHES,
         disabled: !debtEditPerm,
         width: 3
@@ -288,7 +290,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.currencyId',
         controlName: 'currencyId',
-        type: 'selectwrapper',
+        type: 'select',
         lookupKey: 'currencies',
         disabled: !debtEditPerm,
         required: true,
@@ -319,7 +321,7 @@ export class DebtComponent implements OnInit {
             dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_1], dictPermissions['DEBT_DICT1_EDIT_LIST']
           ),
           disabled: !dictPermissions['DEBT_DICT1_EDIT_LIST'].valueS,
-          required: attributes[EntityAttributesService.DICT_VALUE_1].isMandatory,
+          required: !!attributes[EntityAttributesService.DICT_VALUE_1].isMandatory,
           width: 3
         }
         : null,
@@ -332,7 +334,7 @@ export class DebtComponent implements OnInit {
             dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_2], dictPermissions['DEBT_DICT2_EDIT_LIST']
           ),
           disabled: !dictPermissions['DEBT_DICT2_EDIT_LIST'].valueS,
-          required: attributes[EntityAttributesService.DICT_VALUE_2].isMandatory,
+          required: !!attributes[EntityAttributesService.DICT_VALUE_2].isMandatory,
           width: 3
         }
         : null,
@@ -345,7 +347,7 @@ export class DebtComponent implements OnInit {
             dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_3], dictPermissions['DEBT_DICT3_EDIT_LIST']
           ),
           disabled: !dictPermissions['DEBT_DICT3_EDIT_LIST'].valueS,
-          required: attributes[EntityAttributesService.DICT_VALUE_3].isMandatory,
+          required: !!attributes[EntityAttributesService.DICT_VALUE_3].isMandatory,
           width: 3
         }
         : null,
@@ -358,7 +360,7 @@ export class DebtComponent implements OnInit {
             dictionaries[UserDictionariesService.DICTIONARY_DEBT_LIST_4], dictPermissions['DEBT_DICT4_EDIT_LIST']
           ),
           disabled: !dictPermissions['DEBT_DICT4_EDIT_LIST'].valueS,
-          required: attributes[EntityAttributesService.DICT_VALUE_4].isMandatory,
+          required: !!attributes[EntityAttributesService.DICT_VALUE_4].isMandatory,
           width: 3
         }
         : null,
@@ -366,7 +368,7 @@ export class DebtComponent implements OnInit {
       {
         label: 'widgets.debt.grid.stageCode',
         controlName: 'stageCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE,
         disabled: !debtEditPerm,
         width: 3,

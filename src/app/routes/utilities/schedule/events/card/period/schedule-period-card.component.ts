@@ -1,23 +1,25 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ValidatorFn } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import {
-  IDynamicFormItem, IDynamicFormConfig, IDynamicFormControl
+  IDynamicFormItem,
+  IDynamicFormConfig,
+  IDynamicFormControl,
 } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
 import { ISchedulePeriod, SchedulePeriodEnum } from '../../schedule-event.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { GridService } from '@app/shared/components/grid/grid.service';
 import { ScheduleEventService } from '../../schedule-event.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
+import { DateRendererComponent } from '@app/shared/components/grids/renderers';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-import { GridComponent } from '@app/shared/components/grid/grid.component';
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 
-import { min, oneOfGroupRequired } from '@app/core/validators';
-import { ValidatorFn } from '@angular/forms';
+import { oneOfGroupRequired } from '@app/core/validators';
 
 @Component({
   selector: 'app-schedule-period-card',
@@ -35,7 +37,7 @@ export class SchedulePeriodCardComponent implements OnInit {
       this.setPeriodFromValidators();
     }
   }
-  @ViewChild('datesGrid') datesGrid: GridComponent;
+  @ViewChild('datesGrid') datesGrid: SimpleGridComponent<any>;
 
   @Input() eventId: number;
   @Input() period: ISchedulePeriod;
@@ -52,8 +54,8 @@ export class SchedulePeriodCardComponent implements OnInit {
   periodFromControls: Array<Partial<IDynamicFormItem>[]> = [];
   periodValidators: Array<ValidatorFn[]>;
 
-  periodGridControls: Array<IGridColumn> = [
-    { prop: 'date', renderer: 'dateRenderer' },
+  periodGridControls: ISimpleGridColumn<any>[] = [
+    { label: 'date', prop: 'date', renderer: DateRendererComponent },
   ];
 
   selectedPeriod: ISchedulePeriod;
@@ -64,20 +66,11 @@ export class SchedulePeriodCardComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
     private scheduleEventService: ScheduleEventService,
     private valueConverterService: ValueConverterService,
   ) {}
 
   ngOnInit(): void {
-    this.gridService
-    .setAllRenderers(this.periodGridControls)
-    .pipe(first())
-    .subscribe(columns => {
-      this.periodGridControls = [...columns];
-      this.cdRef.markForCheck();
-    });
-
     (this.eventId ? this.scheduleEventService.canEdit$ : this.scheduleEventService.canView$)
       .pipe(first())
       .subscribe(canEdit => {
@@ -126,7 +119,7 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   onPeriodSelect(): void {
-    const [ periodControl ] = this.periodTypeForm.getControl('periodTypeCode').value;
+    const periodControl = this.periodTypeForm.getControl('periodTypeCode');
     this.selectedPeriodTypeCode$.next(periodControl.value);
   }
 
@@ -143,7 +136,7 @@ export class SchedulePeriodCardComponent implements OnInit {
   }
 
   onDateDelete(): void {
-    const date = this.datesGrid.selected[0] && this.datesGrid.selected[0].date;
+    const date = this.datesGrid.selection[0] && this.datesGrid.selection[0].date;
     const datesControl = this._periodForm.getControl('dates');
     if (date) {
       datesControl.setValue(this.selectedDates.filter(d => d.date !== date));
@@ -189,7 +182,7 @@ export class SchedulePeriodCardComponent implements OnInit {
     ] as Partial<IDynamicFormItem>[];
 
     this.periodFromControls = [
-      [ { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, required: true, validators: [ min(1) ] } ],
+      [ { controlName: 'dayPeriod', type: 'number', disabled: !canEdit, min: 1, required: true } ],
       [
         ...Object.keys(this.scheduleEventService.weekDays)
           .map(day => ({

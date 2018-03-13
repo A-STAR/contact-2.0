@@ -33,17 +33,19 @@
 >
 </app-dialog-action>
 
-
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
-
-<app-grid
-  selectionType="single"
-  [columns]="columns"
-  [columnTranslationKey]="'terms'"
-  [emptyMessage]="emptyMessage$ | async"
-  [rows]="rows"
-  [styles]="{height: '400px'}"
-  (onDblClick)="edit()"
-  (onSelect)="onSelect($event)"
->
-</app-grid>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      columnTranslationKey="terms"
+      persistenceKey="[grid] admin/dictionaries/terms"
+      selectionType="single"
+      [columns]="columns"
+      [rows]="rows"
+      (onDblClick)="edit()"
+      (select)="onSelect($event)">
+    </app-simple-grid>
+  </div>
+</div>

@@ -5,9 +5,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-contractors-and-portfolios-version',
   templateUrl: './contractors-and-portfolios-version.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestroy {
   static ENTITY_TYPE_CONTRACTOR = 13;

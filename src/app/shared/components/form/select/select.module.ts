@@ -6,12 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MultiSelectModule } from './multi/multi-select.module';
 import { SingleSelectModule } from './single/single-select.module';
 
-import { SelectComponent } from './select.component';
-import { SelectWrapperComponent } from './select-wrapper.component';
-import { RawDataFilterPipe } from './select-pipes';
-import { OffClickDirective } from './off-click';
-import { AlignmentDirective } from '../../../directives/alignment/alignment.directive';
-import { FocusDirective } from '../../../directives/focus/focus.directive';
+import { SortOptionsPipe } from './select.pipe';
 
 @NgModule({
   imports: [
@@ -22,20 +17,14 @@ import { FocusDirective } from '../../../directives/focus/focus.directive';
     TranslateModule,
   ],
   declarations: [
-    AlignmentDirective,
-    FocusDirective,
-    OffClickDirective,
-    RawDataFilterPipe,
-    SelectComponent,
-    SelectWrapperComponent,
+    SortOptionsPipe,
   ],
   exports: [
     MultiSelectModule,
-    OffClickDirective,
-    SelectComponent,
-    SelectWrapperComponent,
     SingleSelectModule,
   ],
+  providers: [
+    SortOptionsPipe
+  ]
 })
-export class SelectModule {
-}
+export class SelectModule {}

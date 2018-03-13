@@ -1,0 +1,191 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ValueRendererComponent should render value renderer with typeCode 1 (number) 1`] = `
+<div
+  id="root0"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  <div
+    class="text-right"
+  >
+    
+    0
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+
+</div>
+`;
+
+exports[`ValueRendererComponent should render value renderer with typeCode 3 (string) 1`] = `
+<div
+  id="root1"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    value
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+
+</div>
+`;
+
+exports[`ValueRendererComponent should render value renderer with typeCode 4 (boolean) and value = 0 1`] = `
+<div
+  id="root2"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    
+    default.boolean.FALSE
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+
+</div>
+`;
+
+exports[`ValueRendererComponent should render value renderer with typeCode 4 (boolean) and value = 1 1`] = `
+<div
+  id="root3"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    
+    default.boolean.TRUE
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+
+</div>
+`;

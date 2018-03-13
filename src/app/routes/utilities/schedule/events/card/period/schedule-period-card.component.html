@@ -28,18 +28,18 @@
           ></app-dynamic-form>
         </div>
         <div class="p0">
-          <app-button type="add" [label]="false" (click)="onDateAdd()" [disabled]="!canEdit"></app-button> 
-          <app-button type="delete" [label]="false" (click)="onDateDelete()" [disabled]="!canEdit"></app-button>           
+          <app-button type="add" [label]="false" (click)="onDateAdd()" [disabled]="!canEdit"></app-button>
+          <app-button type="delete" [label]="false" (click)="onDateDelete()" [disabled]="!canEdit"></app-button>
         </div>
       </div>
-      <app-grid
+      <app-simple-grid
         #datesGrid
-        selectionType="single"
-        [styles]="{height: '120px'}"
-        [footerHeight]="false"
+        persistenceKey="[grid] schedule/events/card"
+        class="bl br bb"
+        style="height: 120px"
         [columns]="periodGridControls"
         [rows]="selectedDates"
-      ></app-grid>
+      ></app-simple-grid>
     </div>
   </div>
 </ng-container>

@@ -1,0 +1,30 @@
+<app-dialog [styles]="{ width: '70%' }" (close)="onCancel()">
+  <div dialog-header>
+    <h3>{{ 'routes.workplaces.shared.contactRegistration.edit.dialogs.contactType.title' | translate }}</h3>
+  </div>
+  <div>
+    <div style="height: 25vh" class="mb-lg" *ngIf="canRegisterPhones$ | async">
+      <app-register-contact-phone-grid
+        [entityTypeId]="entityTypeId"
+        [entityId]="entityId"
+        (action)="onPhoneAction($event)"
+      ></app-register-contact-phone-grid>
+    </div>
+    <div style="height: 25vh" class="mb-lg" *ngIf="canRegisterAddresses$ | async">
+      <app-register-contact-address-grid
+        [entityTypeId]="entityTypeId"
+        [entityId]="entityId"
+        (action)="onAddressAction($event)"
+      ></app-register-contact-address-grid>
+    </div>
+    <div *ngIf="canRegisterMisc$ | async">
+      <app-register-contact-misc
+        (actionSpecial)="onSpecialAction()"
+        (actionOfficeVisit)="onOfficeVisitAction()"
+      ></app-register-contact-misc>
+    </div>
+  </div>
+  <div dialog-footer>
+    <app-button type="close" (click)="onCancel()"></app-button>
+  </div>
+</app-dialog>

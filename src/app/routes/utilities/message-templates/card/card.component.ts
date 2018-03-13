@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { first } from 'rxjs/operators/first';
+import { distinctUntilChanged, first } from 'rxjs/operators';
 
 import {
   IDynamicFormControl,
@@ -156,7 +156,7 @@ export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
         dictCode: UserDictionariesService.DICTIONARY_EMAIL_FORMAT,
         display: isEmail,
         required: isEmail,
-        type: 'selectwrapper',
+        type: 'select',
       },
       {
         controlName: 'text',
@@ -170,7 +170,7 @@ export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
         controlName: 'recipientTypeCode',
         dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE,
         display: displayRecipient,
-        type: 'selectwrapper',
+        type: 'select',
       },
       {
         controlName: 'isSingleSending',
@@ -196,7 +196,13 @@ export class MessageTemplateGridEditComponent implements OnInit, OnDestroy {
     if (displayRecipient) {
       this.recipientTypeCodeSubscription = this.form
         .onCtrlValueChange('recipientTypeCode')
-        .subscribe(value => this.fetchVariables(this.form.serializedUpdates.recipientTypeCode || value));
+        .pipe(distinctUntilChanged())
+        .subscribe(value => {
+          const recipientTypeCode = this.form.serializedUpdates.recipientTypeCode || value;
+          if (recipientTypeCode != null && recipientTypeCode !== '') {
+            this.fetchVariables(recipientTypeCode);
+          }
+        });
     } else {
       this.fetchVariables(0);
     }

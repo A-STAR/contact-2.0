@@ -13,12 +13,14 @@ import { FileUploadModule } from '../file-upload/file-upload.module';
 import { TitlebarModule } from '../../titlebar/titlebar.module';
 import { HtmlTextareaModule } from '../html-textarea/html-textarea.module';
 import { ImageUploadModule } from '../image-upload/image-upload.module';
+import { InputModule } from '../input/input.module';
 import { MultiLanguageModule } from '../multi-language/multi-language.module';
 import { PasswordModule } from '../password/password.module';
 import { PopupInputModule } from '../popup-input/popup-input.module';
 import { RadioGroupModule } from '../radio-group/radio-group.module';
 import { SegmentedInputModule } from '../segmented-input/segmented-input.module';
 import { SelectModule } from '../select/select.module';
+import { ScriptEditorModule } from '../script-editor/script-editor.module';
 import { TextEditorModule } from '../text-editor/text-editor.module';
 
 import { DynamicFormComponent } from './dynamic-form.component';
@@ -35,9 +37,9 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     DialogMultiSelectModule,
     DropdownInputModule,
     FileUploadModule,
-    TitlebarModule,
     HtmlTextareaModule,
     ImageUploadModule,
+    InputModule,
     MultiLanguageModule,
     PasswordModule,
     PopupInputModule,
@@ -45,7 +47,9 @@ import { DynamicFormFieldComponent } from './field/dynamic-form-field.component'
     ReactiveFormsModule,
     SegmentedInputModule,
     SelectModule,
+    ScriptEditorModule,
     TextEditorModule,
+    TitlebarModule,
     TranslateModule,
   ],
   exports: [

@@ -26,12 +26,12 @@
   />
 
   <!-- Boolean -->
-  <app-single-select-wrapper
+  <app-select
     *ngSwitchCase="4"
     [dictCode]="2"
     [ngModel]="value.valueB"
     (ngModelChange)="onBooleanChange($event)">
-  </app-single-select-wrapper>
+  </app-select>
 
   <!-- Float -->
   <input
@@ -43,12 +43,12 @@
   />
 
   <!-- Dictionary -->
-  <app-single-select-wrapper
+  <app-select
     *ngSwitchCase="6"
     [dictCode]="value.dictNameCode"
     [ngModel]="value.valueN"
     (ngModelChange)="onNumberChange($event)">
-  </app-single-select-wrapper>
+  </app-select>
 
   <!-- DateTime -->
   <app-datetimepicker

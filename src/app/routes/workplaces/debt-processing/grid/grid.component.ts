@@ -3,24 +3,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   ViewChild,
-  ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { IDebt } from '../debt-processing.interface';
 import { IAGridResponse } from '../../../../shared/components/grid2/grid2.interface';
 
-import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { DebtProcessingService } from '../debt-processing.service';
 
 import { ActionGridComponent } from '../../../../shared/components/action-grid/action-grid.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   host: { class: 'full-height' },
   selector: 'app-debt-processing-grid',
-  styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html',
 })
 export class GridComponent {
@@ -42,7 +38,6 @@ export class GridComponent {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
     private debtProcessingService: DebtProcessingService,
     private route: ActivatedRoute,
   ) {}
@@ -61,9 +56,5 @@ export class GridComponent {
         this.rowCount = response.total;
         this.cdRef.markForCheck();
       });
-  }
-
-  onDblClick(debt: IDebt): void {
-    this.debtorCardService.openByDebtId(debt.debtId);
   }
 }

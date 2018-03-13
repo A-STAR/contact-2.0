@@ -13,8 +13,8 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IAGridAction, IAGridColumn } from '../../../shared/components/grid2/grid2.interface';
-import { IMetadataAction } from '../../../core/metadata/metadata.interface';
+import { IAGridAction, IAGridColumn } from '@app/shared/components/grid2/grid2.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { DataUploaders,
   IOpenFileResponse,
   ICell,
@@ -26,17 +26,17 @@ import { DataUploaders,
 import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { DataUploadService } from './data-upload.service';
-import { GridService } from '../../../shared/components/grid/grid.service';
+import { GridService } from '@app/shared/components/grid/grid.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { CellRendererComponent } from './cell-renderer.component';
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
-import { Grid2Component } from '../../../shared/components/grid2/grid2.component';
+import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 
-import { DialogFunctions } from '../../../core/dialog';
-import { isEmpty, TYPE_CODES } from '../../../core/utils';
+import { DialogFunctions } from '@app/core/dialog';
+import { isEmpty, TYPE_CODES } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,7 +57,7 @@ export class DataUploadComponent extends DialogFunctions
       action: 'delete',
       params: [],
       addOptions: [],
-      enabled: selection => !isEmpty(selection),
+      enabled: (_, __, row) => !!row,
     },
   ];
 
@@ -145,28 +145,30 @@ export class DataUploadComponent extends DialogFunctions
   }
 
   get currency(): number {
-    return this.dataUploadService.uploader.parameter;
+    return this.dataUploadService.uploader && this.dataUploadService.uploader.parameter;
   }
 
   get errorFileUrl(): string {
-    return this.dataUploadService.uploader.getErrors();
+    return this.dataUploadService.uploader && this.dataUploadService.uploader.getErrors();
   }
 
   get errorFileName(): string {
-    return this.dataUploadService.uploader.errorFileName;
+    return this.dataUploadService.uploader && this.dataUploadService.uploader.errorFileName;
   }
 
-  onFormatChange(format: { value: number }[]): void {
-    this.dataUploadService.format = format[0].value;
-    this.isCurrencySelected = format[0].value === DataUploaders.CURRENCY_RATE;
-    if (this.isCurrencySelected) {
-      this.dataUploadService.uploader.parameter = this.currencies[0].value;
+  onFormatChange(formatId: number): void {
+    if (formatId != null) {
+      this.dataUploadService.format = formatId;
+      this.isCurrencySelected = formatId === DataUploaders.CURRENCY_RATE;
+      if (this.isCurrencySelected) {
+        this.dataUploadService.uploader.parameter = this.currencies[0].value;
+      }
     }
   }
 
-  onCurrencyChange(currency: { value: number }[]): void {
+  onCurrencyChange(currencyId: number): void {
     if (this.dataUploadService.uploaderOfType(DataUploaders.CURRENCY_RATE)) {
-      this.dataUploadService.uploader.parameter = currency[0].value;
+      this.dataUploadService.uploader.parameter = currencyId;
     }
   }
 
@@ -185,7 +187,7 @@ export class DataUploadComponent extends DialogFunctions
     const { action } = event.metadataAction;
     switch (action) {
       case 'delete':
-        const { id } = event.params.node;
+        const { id } = event.selection.node;
         this.dataUploadService.uploader
           .deleteRow(Number(id))
           .subscribe(() => this.onRequest());

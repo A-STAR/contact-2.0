@@ -17,13 +17,14 @@
             (click)="onClick(item)">
           </app-button2>
           <ul class="list-group mb0">
-            <li *ngFor="let child of item.children" class="list-group-item p0 b0">
-              <app-button2
-                color="none"
+            <li *ngFor="let child of item.children" class="list-group-item p-sm b0">
+              <button
+                class="btn btn-link"
                 [disabled]="isDisabled(child) | async"
-                [label]="child.label"
-                (click)="onClick(child)">
-              </app-button2>
+                (click)="onClick(child)"
+              >
+                {{ child.label | translate }}
+              </button>
             </li>
           </ul>
         </app-dropdown>
@@ -43,16 +44,13 @@
     </ng-container>
 
     <!-- Checkbox -->
-    <span *ngIf="isCheckbox(item)" class="checkbox mt0 mb0">
-      <label>
-        <input
-          type="checkbox"
-          [checked]="item.state | async"
-          [disabled]="item.disabled | async"
-          (change)="onClick(item)"
-        >
-        {{ item.label | translate }}
-      </label>
+    <span *ngIf="isCheckbox(item)">
+      <app-checkbox
+        [disabled]="item.disabled | async"
+        [label]="item.label"
+        [ngModel]="item.state | async"
+        (change)="onClick(item)"
+      ></app-checkbox>
     </span>
   </div>
 </div>

@@ -19,6 +19,7 @@ import { IDropdownPosition } from './dropdown.interface';
 })
 /**
  * @deprecated
+ * NOTE: prefer using [appDropdown] directive
  */
 export class DropdownComponent {
   private _isOpen = false;

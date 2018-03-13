@@ -11,17 +11,18 @@
 <app-arbitrary-input-params-dialog
   *ngIf="isDialog('create')"
   [reportId]="selectedReportId"
+  [reportName]="selectedReportName"
   (close)="onCloseDialog()"
 ></app-arbitrary-input-params-dialog>
 
 <app-titlebar [titlebar]="titlebar"></app-titlebar>
-<app-grid
-  columnTranslationKey="modules.reports.arbitrary"
-  selectionType="single"
+
+<app-simple-grid
+  style="height: 50vh"
+  persistenceKey="[grid] reports/arbitrary/reports"
   [columns]="columns"
   [selection]="selection"
-  [footerHeight]="false"
   [rows]="reports"
-  (onSelect)="onSelect($event)"
-  (onDblClick)="onEdit($event)"
-></app-grid>
+  (dblClick)="onEdit($event)"
+  (select)="onSelect($event)"
+></app-simple-grid>

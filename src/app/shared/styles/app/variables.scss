@@ -26,7 +26,7 @@ $gray-darker:         #232735;
 $gray-dark:           #3a3f51;
 $gray:                #dde6e9;
 $gray-light:          #e4eaec;
-$gray-lighter:        #edf1f2;
+$gray-lighter:        #f7f7f7;
 
 $radioButtonSize: 18px;
 $radioButtonDotSize: 10px;
@@ -282,7 +282,7 @@ $legend-border-color:            #e5e5e5;
 
 // Custom dynamic form tweaks
 $form-accordion-title:           lighten($brand-primary-light, 40%);
-$form-group-bottom-margin:       6px;
+$form-group-bottom-margin:       10px;
 $form-toolbar-title-color:       #594b62;
 $form-toolbar-border-color:      $form-toolbar-title-color;
 $form-toolbar-icon-color:        #44a1f8;
@@ -338,6 +338,7 @@ $dropdown-caret-color:           #000;
 //
 // Note: These variables are not generated into the Customizer.
 
+$zindex-app-validation:        500;
 $zindex-navbar:               1000;
 $zindex-dropdown:             1000;
 $zindex-tooltip:              1070;
@@ -349,7 +350,6 @@ $zindex-app-dialog:          10000;
 $zindex-app-grid-dropdown:   10100;
 $zindex-app-datepicker:      10100;
 $zindex-popover:             10150;
-$zindex-app-validation:      10200;
 $zindex-app-grid2-dnd-ghost: 10300;
 $zindex-app-loader:          20000;
 
@@ -946,8 +946,8 @@ $hr-border:                   $gray-lighter;
 
 
 //== App-dialog
-$app-dialog-header-color:       lighten($brand-white, 20%);
-$app-dialog-header-bg-color:    lighten($brand-primary-light, 20%);
+$app-dialog-header-color:       $text;
+$app-dialog-header-bg-color:    #fff;
 $app-dialog-close-color:        darken($gray, 10%);
 $app-dialog-close-hover-color:  #333;
 

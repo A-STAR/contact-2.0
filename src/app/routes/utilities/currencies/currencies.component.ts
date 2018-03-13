@@ -7,9 +7,10 @@ import { ICurrency } from './currencies.interface';
 import { CurrenciesService } from './currencies.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-currencies',
   templateUrl: './currencies.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrenciesComponent implements OnInit, OnDestroy {
   selectedCurrency$ = new BehaviorSubject<number>(null);
@@ -31,4 +32,3 @@ export class CurrenciesComponent implements OnInit, OnDestroy {
     this.selectedCurrencySubscription.unsubscribe();
   }
 }
-

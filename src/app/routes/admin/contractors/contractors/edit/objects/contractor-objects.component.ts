@@ -4,8 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
-  selector: 'app-contractor-attributes',
+  selector: 'app-contractor-objects',
   templateUrl: './contractor-objects.component.html',
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorObjectsComponent {

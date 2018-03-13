@@ -13,7 +13,6 @@ import { ContactRegistrationService } from '@app/routes/workplaces/shared/contac
     ContactRegistrationService,
   ],
   selector: 'app-campaign',
-  styleUrls: [ './campaign.component.scss' ],
   templateUrl: './campaign.component.html',
 })
 export class CampaignComponent implements OnInit {

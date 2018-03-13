@@ -1,20 +1,65 @@
-<div appDropdown>
-  <div #dropdownTrigger class="form-control clickable" [attr.disabled]="isDisabled || undefined">
-    <span [ngSwitch]="selectionLength">
-      <ng-container *ngSwitchCase="0"></ng-container>
-      <ng-container *ngSwitchCase="1">{{ label }}</ng-container>
-      <ng-container *ngSwitchDefault>{{ 'default.select.selected' | translate }}: {{ selectionLength }}</ng-container>
-    </span>
-    <i class="caret"></i>
+<label class="m0">
+
+  <span *ngIf="label" class="form-label">
+    {{ label | translate }}
+    <b *ngIf="required" class="text-danger">*</b>
+  </span>
+
+  <div
+    class="select-container dropdown open"
+    [ngStyle]="styles"
+    >
+
+    <input
+      #input
+      type="text"
+      class="form-control select-search"
+      autocomplete="off"
+      [attr.placeholder]="(placeholder || '') | translate"
+      [disabled]="disabled"
+      [ngModel]="selectionLabel"
+      (click)="onInputClick($event)"
+      (ngModelChange)="onInputChange($event)"
+    >
+    <i
+      *ngIf="!disabled"
+      class="co co-back select-caret"
+      [ngClass]="{ 'up': open }"
+      (click)="onCaret($event)"
+    ></i>
+    <i
+      *ngIf="!disabled && !required && hasSelection"
+      class="co co-clear select-clear"
+      (click)="onClear($event)"
+    ></i>
+
+    <ul
+      #list
+      *ngIf="open"
+      class="select-options dropdown-menu"
+      appAlignment
+      [alignTarget]="input"
+      [autoAlign]="autoAlign"
+    >
+      <li class="select-item" *ngFor="let option of tempOptions; trackBy: trackByFn">
+        <app-checkbox
+          [label]="option.label"
+          [ngModel]="option.checked"
+          (ngModelChange)="onSelect($event, option)"
+        ></app-checkbox>
+      </li>
+
+      <li class="select-buttons">
+        <button type="button" class="btn btn-default" (click)="onClear($event)">{{ 'default.buttons.clear' | translate }}</button>
+        <button type="button" class="btn btn-info" (click)="onApply($event)">{{ 'default.buttons.select' | translate }}</button>
+      </li>
+
+    </ul><!-- select-options -->
+
+  </div><!-- select-container -->
+
+  <div>
+    <span *ngIf="errors">{{ errors | json }}</span>
   </div>
-  <div #dropdownContent style="z-index: 10000;">
-    <app-multi-list
-      *ngIf="!isDisabled"
-      [hideSearchBar]="true"
-      [getId]="getId"
-      [getName]="getName"
-      [items]="options"
-      (select)="onSelect($event)">
-    </app-multi-list>
-  </div>
-</div>
+
+</label>

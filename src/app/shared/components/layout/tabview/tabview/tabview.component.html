@@ -1,29 +1,42 @@
-<ul class="layout-tabview" [ngClass]="{'no-margin': noMargin}">
-  <li
-    #tabHeader
-    *ngFor="let tab of visibleTabs"
-    (click)="selectTab($event, tab)"
-    [class.active]="tab.active"
-    [class.disabled]="tab.disabled"
-  >
-    <a>{{ tab.title | translate }}</a>
-    <div class="selection"></div>
-  </li>
-  <li menu #tabHeaderMenu *ngIf="hiddenTabs.length">
-    <app-dropdown position="right">
-      <i class="fa fa-ellipsis-h" trigger></i>
-      <ul class="list-group m0">
-        <li
-          *ngFor="let tab of hiddenTabs"
-          class="list-group-item b0 clickable"
-          [class.active]="tab.active"
-          (click)="selectTab($event, tab)"
-        >
-          {{ tab.title | translate }}
-        </li>
-      </ul>
-    </app-dropdown>
-  </li>
-</ul>
+<div class="flex vertical">
 
-<ng-content></ng-content>
+  <!-- Header -->
+  <div class="flex-item">
+    <ul class="layout-tabview" [ngClass]="{'no-margin': noMargin}">
+      <li
+        #tabHeader
+        *ngFor="let tab of visibleTabs"
+        (click)="selectTab($event, tab)"
+        [class.active]="tab.active"
+        [class.disabled]="tab.disabled"
+      >
+        <a>{{ tab.title | translate }}</a>
+        <div class="selection"></div>
+      </li>
+      <li menu #tabHeaderMenu *ngIf="hiddenTabs.length">
+        <div appDropdown fitWidthToContent="true">
+          <div #dropdownTrigger>
+            <i class="fa fa-ellipsis-h"></i>
+          </div>
+          <div #dropdownContent class="dropdown">
+            <ul class="list-group m0">
+              <li
+                *ngFor="let tab of hiddenTabs"
+                class="list-group-item b0 clickable"
+                [class.active]="tab.active"
+                (click)="selectTab($event, tab)"
+              >
+                {{ tab.title | translate }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Contents -->
+  <div [ngClass]="{ 'flex-item': true, grow: fullHeight }">
+    <ng-content></ng-content>
+  </div>
+</div>

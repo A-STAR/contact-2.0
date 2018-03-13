@@ -1,16 +1,9 @@
 <div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
-  <label>
-    <span class="form-label">
-      {{ 'routes.workplaces.shared.contactRegistration.edit.form.comment.form.comment' | translate }}
-      <b *ngIf="isCommentRequired$ | async" class="text-danger">*</b>
-    </span>
-    <textarea
-      class="form-control"
-      formControlName="comment"
-      rows="2"
-      [required]="isCommentRequired$ | async"
-    ></textarea>
-  </label>
+  <app-textarea
+    formControlName="comment"
+    label="routes.workplaces.shared.contactRegistration.edit.form.comment.form.comment"
+    [required]="isCommentRequired$ | async"
+  ></app-textarea>
 
   <hr>
 </div>

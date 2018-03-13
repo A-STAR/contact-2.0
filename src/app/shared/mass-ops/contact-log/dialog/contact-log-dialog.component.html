@@ -1,0 +1,8 @@
+<app-dialog [styles]="{ width: '80%' }" (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'widgets.contactLog.dialog.title' | translate }}</h3>
+  </div>
+  <div>
+    <app-contact-log-dialog-grid [personId]="personId"></app-contact-log-dialog-grid>
+  </div>
+</app-dialog>

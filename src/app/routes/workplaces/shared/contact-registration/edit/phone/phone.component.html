@@ -4,63 +4,46 @@
 
     <!-- Phone Type -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.phone.form.type' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-        <app-select-wrapper
-          formControlName="typeCode"
-          [dictCode]="phoneTypeDictCode"
-          [nullable]="false"
-        ></app-select-wrapper>
-      </label>
+      <app-select
+        formControlName="typeCode"
+        label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.type"
+        [dictCode]="phoneTypeDictCode"
+      ></app-select>
     </div>
 
     <!-- Phone Number -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.phone.form.number' | translate }}
-          <b class="text-danger">*</b>
-        </span>
-        <!-- TODO(d.maltsev): double check form control name -->
-        <input type="text" class="form-control" formControlName="phone"/>
-      </label>
+      <!-- TODO(d.maltsev): double check form control name -->
+      <app-text
+        formControlName="phone"
+        label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.number"
+        [required]="true"
+      ></app-text>
     </div>
 
     <!-- Phone Auto SMS -->
     <div>
-      <div class="checkbox mt0 mb0">
-        <app-checkbox
-          formControlName="stopAutoSms"
-          label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.stopAutoSms"
-        ></app-checkbox>
-      </div>
+      <app-checkbox
+        formControlName="stopAutoSms"
+        label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.stopAutoSms"
+      ></app-checkbox>
     </div>
 
     <!-- Phone Auto Info -->
     <div>
-      <div class="checkbox mt0 mb0">
-        <app-checkbox
-          formControlName="stopAutoInfo"
-          label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.stopAutoInfo"
-        ></app-checkbox>
-      </div>
+      <app-checkbox
+        formControlName="stopAutoInfo"
+        label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.stopAutoInfo"
+      ></app-checkbox>
     </div>
 
     <!-- Phone Comment -->
     <div>
-      <label>
-        <span class="form-label">
-          {{ 'routes.workplaces.shared.contactRegistration.edit.form.phone.form.comment' | translate }}
-        </span>
-        <textarea
-          class="form-control"
-          formControlName="comment"
-          rows="2"
-        ></textarea>
-      </label>
+      <app-textarea
+        formControlName="comment"
+        label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.comment"
+        [required]="true"
+      ></app-textarea>
     </div>
 
     <!-- Contact Person -->

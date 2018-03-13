@@ -4,34 +4,42 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { tap, distinctUntilChanged, map } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
-import { IUser } from './auth.interface';
+import { IUser, IUserParams } from './auth.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
 
 import { PersistenceService } from '../persistence/persistence.service';
 
 @Injectable()
 export class AuthService implements CanActivate {
-  static TOKEN_NAME = 'auth/token';
-  static LANGUAGE_TOKEN = 'auth/language';
+  static readonly AUTH_TOKEN     = 'auth/token';
+  static readonly LANGUAGE_TOKEN = 'auth/language';
+  static readonly REDIRECT_TOKEN = 'auth/redirect';
 
-  static URL_DEFAULT = '/';
-  static URL_LOGIN   = '/login';
+  static readonly URL_DEFAULT = '/';
+  static readonly URL_LOGIN   = '/login';
 
-  static JWT_EXPIRATION_THRESHOLD = 60e3;
-  static JWT_TIMER_INTERVAL       = 10e3;
+  static readonly JWT_EXPIRATION_THRESHOLD = 60e3;
+  static readonly JWT_TIMER_INTERVAL       = 10e3;
 
-  static AUTH_LOGIN           = 'AUTH_LOGIN';
-  static AUTH_REFRESH         = 'AUTH_REFRESH';
-  static AUTH_LOGOUT          = 'AUTH_LOGOUT';
-  static AUTH_CREATE_SESSION  = 'AUTH_CREATE_SESSION';
-  static AUTH_DESTROY_SESSION = 'AUTH_DESTROY_SESSION';
-  static AUTH_GLOBAL_RESET    = 'AUTH_GLOBAL_RESET';
-  static AUTH_RETRIEVE_TOKEN  = 'AUTH_RETRIEVE_TOKEN';
+  static readonly AUTH_LOGIN           = 'AUTH_LOGIN';
+  static readonly AUTH_LOGIN_SUCCESS   = 'AUTH_LOGIN_SUCCESS';
+  static readonly AUTH_REFRESH         = 'AUTH_REFRESH';
+  static readonly AUTH_LOGOUT          = 'AUTH_LOGOUT';
+  static readonly AUTH_CREATE_SESSION  = 'AUTH_CREATE_SESSION';
+  static readonly AUTH_DESTROY_SESSION = 'AUTH_DESTROY_SESSION';
+  static readonly AUTH_GLOBAL_RESET    = 'AUTH_GLOBAL_RESET';
+  static readonly AUTH_RETRIEVE_TOKEN  = 'AUTH_RETRIEVE_TOKEN';
+
+  static readonly USER_FETCH           = 'USER_FETCH';
+  static readonly USER_FETCH_SUCCESS   = 'USER_FETCH_SUCCESS';
 
   private tokenTimer = null;
-  private url: string = null;
+
+  private isParamsFetching = false;
 
   constructor(
     private jwtHelper: JwtHelperService,
@@ -42,14 +50,36 @@ export class AuthService implements CanActivate {
     private zone: NgZone,
   ) {
     if (!this.isRetrievedTokenValid()) {
-      this.redirectToLogin();
+      this.router.navigate([ AuthService.URL_LOGIN ]);
     }
   }
 
   get currentUser$(): Observable<IUser> {
     return this.token$
-      .map(token => this.jwtHelper.decodeToken(token))
-      .map(tokenInfo => ({ userId: tokenInfo.userId }));
+      .map(token => token && this.jwtHelper.decodeToken(token))
+      .map(tokenInfo => tokenInfo && { userId: tokenInfo.userId });
+  }
+
+  get userParams$(): Observable<IUserParams> {
+    return combineLatest(
+      this.currentUser$.map(user => user && user.userId),
+      this.store.select(state => state.auth.params)
+    )
+    .pipe(
+      tap(([ userId, params ]) => {
+        if (params) {
+          this.isParamsFetching = false;
+        } else if (!this.isParamsFetching && userId) {
+          this.refreshUserParamsAction();
+        }
+      }),
+      map(([ user, params ]) => params),
+      distinctUntilChanged(),
+    );
+  }
+
+  setUserParamFetching(): void {
+    this.isParamsFetching = true;
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -78,21 +108,23 @@ export class AuthService implements CanActivate {
   }
 
   redirectToLogin(url: string = null): void {
-    this.url = url || this.router.url;
-    this.router.navigate([AuthService.URL_LOGIN]);
+    this.persistenceService.set(AuthService.REDIRECT_TOKEN, url || this.router.url);
+    location.href = AuthService.URL_LOGIN;
   }
 
   redirectAfterLogin(): void {
-    this.router.navigate([this.url || AuthService.URL_DEFAULT]);
-    this.url = null;
+    const url = this.persistenceService.get(AuthService.REDIRECT_TOKEN) || AuthService.URL_DEFAULT;
+    this.router
+      .navigate([ url ])
+      .then(() => this.persistenceService.remove(AuthService.REDIRECT_TOKEN));
   }
 
   saveToken(token: string): void {
-    this.persistenceService.set(AuthService.TOKEN_NAME, token);
+    this.persistenceService.set(AuthService.AUTH_TOKEN, token);
   }
 
   removeToken(): void {
-    this.persistenceService.remove(AuthService.TOKEN_NAME);
+    this.persistenceService.remove(AuthService.AUTH_TOKEN);
   }
 
   saveLanguage(token: string): void {
@@ -116,12 +148,16 @@ export class AuthService implements CanActivate {
   }
 
   isRetrievedTokenValid(): boolean {
-    const token = this.persistenceService.get(AuthService.TOKEN_NAME);
+    const token = this.persistenceService.get(AuthService.AUTH_TOKEN);
     const isValid = this.isTokenValid(token);
     if (isValid) {
       this.store.dispatch({ type: AuthService.AUTH_RETRIEVE_TOKEN, payload: { token } });
     }
     return isValid;
+  }
+
+  private refreshUserParamsAction(): void {
+    this.store.dispatch(this.createAction(AuthService.USER_FETCH));
   }
 
   private onTimer(token: string): void {

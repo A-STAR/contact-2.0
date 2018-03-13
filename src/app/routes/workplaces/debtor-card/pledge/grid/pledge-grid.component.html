@@ -1,0 +1,18 @@
+<app-dialog-action
+  *ngIf="isDialog('removePledge')"
+  actionMode="danger"
+  actionTranslationKey="debtor.pledgorsTab.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  titleTranslationKey="debtor.pledgorsTab.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCancel()">
+</app-dialog-action>
+
+<app-simple-grid
+  persistenceKey="[grid] workplaces/debtor-card/pledge"
+  [columns]="columns"
+  [rows]="contracts"
+  [toolbar]="toolbarItems"
+  (dblClick)="onDoubleClick($event)"
+  (select)="onSelect($event)">
+</app-simple-grid>

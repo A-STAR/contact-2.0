@@ -3,7 +3,7 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-sm-12" style="height: 360px;">
     <app-phone-grid
       [contactType]="contactType"
       [debtId]="debtId"
@@ -11,7 +11,7 @@
       [personRole]="personRole"
       [styles]="{ height: '420px' }"
       (add)="onPhoneAdd()"
-      (dblClick)="onPhoneEdit($event)"
+      (dblClick)="onPhoneRegister($event)"
       (edit)="onPhoneEdit($event)"
       (register)="onPhoneRegister($event)"
       (select)="onSelect($event)"

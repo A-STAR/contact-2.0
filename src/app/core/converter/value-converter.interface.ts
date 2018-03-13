@@ -9,13 +9,14 @@ export interface IValueEntity {
   value?: ValueType;
 }
 
+/**
+ * This one is mostly used in select controls
+ * TODO: rename to IOption, while also considering to rename
+ * `value` to `id`, which is more semantic
+ */
 export interface ILabeledValue {
-  value: any;
   label?: string;
-  selected?: boolean;
-  removed?: boolean;
-  canRemove?: boolean;
-  context?: any;
+  value: any;
 }
 
 export interface INamedValue {
@@ -39,4 +40,14 @@ export interface IDateFormats {
   dateISO: string;
   time?: string;
   timeWithoutSeconds?: string;
+}
+
+export interface IDecimalFormats {
+  minIntegerDigits: number;
+  minFractionDigits: number;
+  maxFractionDigits: number;
+  /**
+   * @see {@link https://github.com/angular/angular/tree/master/packages/common/locales|i18n locales}
+   */
+  locale?: string;
 }

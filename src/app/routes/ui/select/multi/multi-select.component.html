@@ -1,0 +1,39 @@
+<section [formGroup]="formGroup">
+
+  <label>
+    Boolean - dictCode #2 - Selected: [1]
+    <app-multi-select
+      [dictCode]="2"
+      formControlName="select1"
+      (ngModelChange)="onSelectChange($event)"
+    ></app-multi-select>
+  </label>
+
+  <label>
+    Payment Type - dictCode #41 - Selected: [1,2] - Required
+    <app-multi-select
+      [dictCode]="41"
+      [errors]="errors.select2"
+      formControlName="select2"
+      [required]="true"
+    ></app-multi-select>
+  </label>
+
+  <label>
+    Lookup Currencies - Values [2, 3]
+    <app-multi-select
+      lookupKey="currencies"
+      formControlName="select3"
+    ></app-multi-select>
+  </label>
+
+  <label>
+    Lookup Languages - Disabled, Bogus values [6,7] filtered
+    <app-multi-select
+      lookupKey="languages"
+      formControlName="select4"
+    ></app-multi-select>
+  </label>
+
+  <button class="btn btn-default" (click)="disableControl4()">{{ lookupDisabled ? 'Enable' : 'Disable' }} Languages Lookup</button>
+</section>

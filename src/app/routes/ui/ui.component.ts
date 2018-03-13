@@ -12,8 +12,10 @@ import { ITab } from '@app/shared/components/layout/tabview/header/header.interf
 export class UIComponent {
   tabs: ITab[] = [
     { link: 'inputs', title: 'Inputs' },
+    { link: 'select', title: 'Select' },
     { link: 'datetime', title: 'Date/Time' },
     { link: 'grids', title: 'Grids' },
+    { link: 'areas', title: 'Areas' },
     { link: 'icons', title: 'Icons' },
     { link: 'ws', title: 'WebSockets' },
   ];

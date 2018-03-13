@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from '../../../../shared/shared.module';
+
+import { RoutesSharedModule } from '@app/routes/shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { ContractorsAndPortfoliosVersionComponent } from './contractors-and-portfolios-version.component';
 
 @NgModule({
   imports: [
-    CommonModule,
+    RoutesSharedModule,
     SharedModule
   ],
   declarations: [ ContractorsAndPortfoliosVersionComponent ],

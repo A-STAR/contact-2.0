@@ -1,52 +1,9 @@
-<!--
-<app-dialog *ngIf="queryBuilderOpen$ | async" [styles]="{ width: '80%', 'max-width': '80%' }" (onClose)="closeQueryBuilder()">
-  <div dialog-header>
-    <h3>{{ 'queryBuilder.title' | translate }}</h3>
-  </div>
-  <div>
-    <app-qbuilder-2 [query]="query$ | async"></app-qbuilder-2>
-  </div>
-  <div dialog-footer>
-    <button class="btn btn-default" (click)="closeQueryBuilder()">OK</button>
-  </div>
-</app-dialog>
-
-  <button *ngIf="false" class="btn btn-default export-button" (click)="openQueryBuilder()">
-    <i class="fa fa-filter" aria-hidden="true"></i>
-  </button>
--->
-
-<app-downloader
-  #downloader
-  entityTranslationKey="entities.actionsLog.gen.plural"
-  name="actions.xlsx"
-  url="/list/excel?name=actions">
-</app-downloader>
-
-<div class="flex vertical">
-
-  <div class="flex-item mb">
-    <app-titlebar [titlebar]="titlebar"></app-titlebar>
-
-    <app-dynamic-form
-      *ngIf="controls"
-      [controls]="controls"
-      [data]="data"
-    ></app-dynamic-form>
-  </div>
-
-  <div class="flex-item grow">
-    <app-action-grid
-      [contextMenuOptions]="contextMenuOptions"
-      [fullHeight]="true"
-      [persistenceKey]="'actionsLog'"
-      [metadataKey]="'actions'"
-      [rowIdKey]="rowIdKey"
-      [rows]="rows"
-      [rowCount]="rowCount"
-      (request)="doSearch()"
-    ></app-action-grid>
-  </div>
-
-</div>
-
+<app-action-grid
+  [fullHeight]="true"
+  [persistenceKey]="'actionsLog'"
+  [metadataKey]="'actions'"
+  [rowIdKey]="rowIdKey"
+  [rows]="rows"
+  [rowCount]="rowCount"
+  (request)="onRequest()"
+></app-action-grid>

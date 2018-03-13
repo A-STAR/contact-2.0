@@ -2,16 +2,16 @@
   <div>
     <label>
       <span class="form-label">
-        {{ 'routes.workplaces.shared.contactRegistration.edit.form.refusal.form.refusal' | translate }}
+        {{ '' | translate }}
         <b class="text-danger">*</b>
       </span>
       <!-- TODO(d.maltsev): filter by parent 3 -->
-      <app-select-wrapper
+      <app-select
         formControlName="refusalReasonCode"
         [dictCode]="statusChangeReasonDictCode"
-        [nullable]="false"
-        [required]="true"
-      ></app-select-wrapper>
+        label="routes.workplaces.shared.contactRegistration.edit.form.refusal.form.refusal"
+        [isRequired]="true"
+      ></app-select>
     </label>
   </div>
 

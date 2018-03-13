@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ILabeledValue } from '@app/core/converter/value-converter.interface';
 
 @Component({
   selector: 'app-colorpicker-input',
@@ -16,7 +17,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class ColorPickerComponent implements ControlValueAccessor {
   private _value: string;
 
-  options = [
+  options: ILabeledValue[] = [
     { value: '',     label: 'default.colors.transparent' },
     { value: '#dff', label: 'default.colors.azure' },
     { value: '#edf', label: 'default.colors.violet' },
@@ -42,14 +43,17 @@ export class ColorPickerComponent implements ControlValueAccessor {
   registerOnTouched(fn: Function): void {
   }
 
-  onChange(event: any): void {
-    this._value = event[0].value;
-    this.propagateChange(this._value);
+  onChange(value: string): void {
+    this._value = value;
+    this.propagateChange(value);
   }
 
-  renderer = (label, item) => {
-    return `<span style="background: ${item.value}; display: inline-block; width: 10px; height: 10px;"></span> ${label}`;
-  }
+  // renderer = (option: ILabeledValue) => {
+  //   return `
+  //     <span style="background: ${option.value}; display: inline-block; width: 10px; height: 10px;"></span>
+  //     ${option.label}
+  //   `;
+  // }
 
   get value(): string {
     return this._value;

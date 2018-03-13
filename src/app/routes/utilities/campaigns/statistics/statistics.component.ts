@@ -13,30 +13,30 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
-import { IToolbarItem, ToolbarItemTypeEnum } from '../../../../shared/components/toolbar-2/toolbar-2.interface';
-
-import { GridService } from '../../../../shared/components/grid/grid.service';
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
-
-
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { IUserStatistic, ICampaign } from '../campaigns.interface';
+
 import { CampaignsService } from '../campaigns.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+
+import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
-  selector: 'app-statistics',
-  templateUrl: './statistics.component.html',
-  styleUrls: ['./statistics.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  host: { class: 'full-height' },
+  selector: 'app-statistics',
+  styleUrls: ['./statistics.component.scss'],
+  templateUrl: './statistics.component.html',
 })
 export class StatisticsComponent implements OnInit, OnDestroy {
-  @ViewChild(GridComponent) grid: GridComponent;
+  @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IUserStatistic>;
 
   campaignUserStatistics: IUserStatistic[];
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IUserStatistic>[] = [
     { prop: 'userFullName', minWidth: 200 },
     { prop: 'successProcessing', minWidth: 250 },
     { prop: 'unsuccessProcessing', minWidth: 250 },
@@ -55,7 +55,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     // { prop: 'refusalSum', minWidth: 200 },
     // { prop: 'promiseSum', minWidth: 200 },
     // { prop: 'promiseAmountSum', minWidth: 200 },
-  ];
+  ].map(addGridLabel('utilities.campaigns.statistics.grid'));
 
   private campaignStatisticSub: Subscription;
   private selectedCampaign: ICampaign;
@@ -77,23 +77,13 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     }
   ];
 
-
   constructor(
-    private gridService: GridService,
     private cdRef: ChangeDetectorRef,
     private campaignsService: CampaignsService,
     private userPermissionsService: UserPermissionsService,
   ) { }
 
   ngOnInit(): void {
-
-    this.gridService.setAllRenderers(this.columns)
-    .pipe(first())
-    .subscribe(columns => {
-      this.columns = [...columns];
-      this.cdRef.markForCheck();
-    });
-
     this.campaignStatisticSub = combineLatest(
         this.canView$,
         this.campaignsService.selectedCampaign)

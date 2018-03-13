@@ -1,0 +1,17 @@
+@import "../../../shared/styles/app/variables";
+
+.dropdown-content {
+  background-color: #fff;
+  padding: 8px 0;
+}
+
+li.separator {
+  border-right: 1px solid $brand-white;
+  height: 32px;
+  margin: 8px 15px;
+  opacity: 0.5;
+
+  &:first-child {
+    display: none;
+  }
+}

@@ -87,20 +87,6 @@ export class DataUploadService {
 
   private currentUploaderType: DataUploaders;
 
-  /**
-   * The order of this corresponds dict 62
-   */
-  private uploaderTypes = [
-    // filler for 0 index
-    null,
-    DataUploaders.PAYMENT_NEW,
-    DataUploaders.PAYMENT_UPDATE,
-    DataUploaders.SET_OPERATOR,
-    DataUploaders.DEBTS,
-    DataUploaders.CONTACT_HISTORY,
-    DataUploaders.CURRENCY_RATE
-  ];
-
   constructor(
     private dataService: DataService,
     private gridService: GridService,
@@ -110,17 +96,21 @@ export class DataUploadService {
   ) {}
 
   get format(): number {
-    return this.uploaderTypes.indexOf(this.currentUploaderType);
+    return this.currentUploaderType;
   }
 
   set format(value: number) {
-    this.currentUploaderType = this.uploaderTypes[value];
-    this.create(this.currentUploaderType);
+    this.currentUploaderType = !!DataUploadService.UPLOADERS_CONFIG[value] ? value : null;
+    if (this.currentUploaderType != null) {
+      this.create(this.currentUploaderType);
+    }
   }
 
   get uploader(): DataUploader {
-    return this.uploaders[this.currentUploaderType] ||
-      (this.uploaders[this.currentUploaderType] = this.create(this.currentUploaderType));
+    if (this.currentUploaderType != null) {
+      return this.uploaders[this.currentUploaderType] ||
+        (this.uploaders[this.currentUploaderType] = this.create(this.currentUploaderType));
+    }
   }
 
   formatCellValue(valueType: TYPE_CODES, value: ICellValue): ICellValue {

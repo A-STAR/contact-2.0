@@ -57,20 +57,13 @@
   (cancel)="onCloseDialog()">
 </app-address-grid-mark>
 
-<app-toolbar-2
-  [ngClass]="!callCenter ? 'bh' : 'bordered'"
-  [items]="toolbarItems"
-></app-toolbar-2>
-
-<app-grid
+<app-simple-grid
   *ngIf="canDisplayGrid"
-  columnTranslationKey="debtor.information.address"
-  [contextMenuOptions]="contextMenuOptions"
-  selectionType="single"
-  [styles]="{height: '230px'}"
+  persistenceKey="[grid] workplaces/shared/address"
   [columns]="columns"
-  [rowClass]="getRowClass()"
   [rows]="addresses"
-  (onDblClick)="onDoubleClick($event)"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  [rowClass]="getRowClass()"
+  [toolbar]="toolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onDoubleClick($event)"
+></app-simple-grid>

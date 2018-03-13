@@ -1,49 +1,82 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ColDef } from 'ag-grid';
+import { ColDef, ColumnApi, GridApi } from 'ag-grid';
 import { Observable } from 'rxjs/Observable';
-import { mapTo } from 'rxjs/operators';
 
-import { IGridColumn, IGridFilterType } from './grids.interface';
+import { IGridColumn, IGridFilterType, IGridLocalSettings } from './grids.interface';
 import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
+import { PersistenceService } from '@app/core/persistence/persistence.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { DictRendererComponent } from './renderers/dict/dict.component';
-import { LookupRendererComponent } from './renderers/lookup/lookup.component';
+import { CallbackRendererComponent, DictRendererComponent, LookupRendererComponent, ValueRendererComponent } from './renderers';
 
 @Injectable()
 export class GridsService {
   constructor(
+    private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private userDictionariesService: UserDictionariesService,
   ) {}
 
-  convertColumnsToColDefs<T>(columns: IGridColumn<T>[]): Observable<ColDef[]> {
-    const colDefs = columns.map(column => ({
-      field: column.prop,
-      headerName: this.translateService.instant(column.label),
-      minWidth: column.minWidth,
-      maxWidth: column.maxWidth,
-      ...this.getFilterOptions(column),
-      ...this.getCellRendererOptions(column),
-    }));
+  convertColumnsToColDefs<T>(columns: IGridColumn<T>[], persistenceKey: string): ColDef[] {
+    const savedColumns = persistenceKey
+      ? this.getLocalSettings(persistenceKey).columns
+      : [];
+    this.preloadDictionaries(columns);
+    const columnIds = columns.map(c => c.prop);
+    const savedColumnIds = savedColumns.map(c => c.colId);
+    const ids = Array.from(new Set([ ...savedColumnIds, ...columnIds ]));
 
-    return this.preloadDictionaries(columns).pipe(
-      mapTo(colDefs),
-    );
+    return ids
+      .map(id => {
+        const column = columns.find(c => c.prop === id);
+        return column
+          ? {
+              field: column.prop,
+              headerName: this.translateService.instant(column.label),
+              minWidth: column.minWidth,
+              maxWidth: column.maxWidth,
+              ...this.getFilterOptions(column),
+              ...this.getCellRendererOptions(column),
+              ...(savedColumns.find(c => c.colId === id) || {}),
+            }
+          : null;
+      })
+      .filter(Boolean);
   }
 
-  preloadDictionaries<T>(columns: IGridColumn<T>[]): Observable<IUserDictionaries> {
+  restoreSortModel(persistenceKey: string, gridApi: GridApi): void {
+    if (!persistenceKey) {
+      return;
+    }
+    const sortModel = this.getLocalSettings(persistenceKey).sortModel;
+    gridApi.setSortModel(sortModel);
+  }
+
+  saveSettings(persistenceKey: string, gridApi: GridApi, columnApi: ColumnApi): void {
+    if (!persistenceKey) {
+      return;
+    }
+    const columns = columnApi.getAllGridColumns().map(column => ({
+      colId: column.getId(),
+      isVisible: column.isVisible(),
+      width: column.getActualWidth(),
+    }));
+    const sortModel = gridApi.getSortModel();
+    this.setLocalSettings(persistenceKey, { columns, sortModel });
+  }
+
+  private preloadDictionaries<T>(columns: IGridColumn<T>[]): Observable<IUserDictionaries> {
     // TODO(d.maltsev): remove duplicates
     const dictCodes = columns
-      .map(column => column.dictCode)
+      .map(column => Number(column.dictCode))
       .filter(Boolean);
     return this.userDictionariesService.getDictionaries(dictCodes);
   }
 
   private getCellRendererOptions<T>(column: IGridColumn<T>): Partial<ColDef> {
-    const { dictCode, lookupKey, renderer } = column;
+    const { dictCode, lookupKey, renderer, valueTypeKey, rendererCallback } = column;
     switch (true) {
       case Boolean(renderer):
         return {
@@ -58,6 +91,16 @@ export class GridsService {
         return {
           cellRendererFramework: LookupRendererComponent,
           cellRendererParams: { lookupKey },
+        };
+      case Boolean(valueTypeKey):
+        return {
+          cellRendererFramework: ValueRendererComponent,
+          cellRendererParams: { valueTypeKey },
+        };
+      case Boolean(rendererCallback):
+        return {
+          cellRendererFramework: CallbackRendererComponent,
+          cellRendererParams: { rendererCallback },
         };
       default:
         return {};
@@ -76,4 +119,13 @@ export class GridsService {
         return { suppressFilter: true };
     }
   }
+
+  private setLocalSettings(key: string, settings: IGridLocalSettings): void {
+    this.persistenceService.set(key, settings);
+  }
+
+  private getLocalSettings(key: string): IGridLocalSettings {
+    return this.persistenceService.get(key) || { columns: [], sortModel: {} };
+  }
+
 }

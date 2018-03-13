@@ -2,28 +2,24 @@
   <div dialog-header>
     <h3>{{ 'widgets.address.dialogs.mark.title' | translate }}</h3>
   </div>
-  <div>
+  <div style="height: 75vh;">
     <div class="mb">
-      <app-grid
-        columnTranslationKey="widgets.address.dialogs.mark"
-        selectionType="multi"
+      <app-simple-grid
+        persistenceKey="[grid] workplaces/shared/address/mark"
+        selectionType="multiple"
         [columns]="columns"
         [rows]="debts"
-        [styles]="{ height: '240px' }"
-        (onSelect)="onSelect($event)">
-      </app-grid>
+        [selection]="selection"
+        (select)="onSelect($event)"
+      ></app-simple-grid>
     </div>
     <app-dynamic-form
       *ngIf="controls"
-      [controls]="controls">
-    </app-dynamic-form>
+      [controls]="controls"
+    ></app-dynamic-form>
   </div>
   <div dialog-footer>
-    <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
-      <i class="fa fa-check"></i> {{ 'default.buttons.ok' | translate }}
-    </button>
-    <button class="btn btn-default" (click)="onCancel()">
-      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
-    </button>
+    <app-button type="ok" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
+    <app-button type="cancel" (click)="onCancel()"></app-button>
   </div>
 </app-dialog>

@@ -31,7 +31,10 @@ export class LookupRendererComponent implements ICellRendererAngularComp {
     return this.lookupService
       .lookup(this.params['lookupKey'])
       .pipe(
-        map(lookup => lookup.find(l => l['id'] === value)['name']),
+        map(lookup => {
+          const item = lookup.find(l => l['id'] === value);
+          return item ? item['name'] : value;
+        }),
       );
   }
 }

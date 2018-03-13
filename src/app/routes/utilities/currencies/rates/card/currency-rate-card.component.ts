@@ -27,7 +27,7 @@ export class CurrencyRateCardComponent implements OnInit {
   currencyId = Number(this.route.snapshot.paramMap.get('currencyId'));
   currencyRateId = Number(this.route.snapshot.paramMap.get('currencyRateId'));
 
-  controls: Array<IDynamicFormItem> = null;
+  controls: Array<IDynamicFormItem>;
   currencyRate: Partial<ICurrencyRate>;
 
   constructor(

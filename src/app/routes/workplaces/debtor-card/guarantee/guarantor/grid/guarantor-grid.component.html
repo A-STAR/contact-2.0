@@ -1,0 +1,29 @@
+<app-info-dialog
+  *ngIf="isDialog('infoNotFound')"
+  titleTranslationKey="widgets.guarantor.dialog.title"
+  (close)="onClose()"
+>
+  <section class="pv-xl">{{ 'widgets.guarantor.dialog.notFound' | translate }}</section>
+</app-info-dialog>
+
+<app-dialog *ngIf="!!persons?.length" (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'widgets.guarantor.dialog.title' | translate }}</h3>
+  </div>
+
+  <div style="height: 75vh;">
+    <app-simple-grid
+      *ngIf="columns"
+      persistenceKey="workplaces/debtor-card/guarantee"
+      [columns]="columns"
+      [rows]="persons"
+      (dblClick)="onDoubleClick($event)"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
+  </div>
+
+  <div dialog-footer>
+    <app-button type="select" [disabled]="!selection" (click)="onClose()"></app-button>
+    <app-button type="cancel" (click)="onClose()"></app-button>
+  </div>
+</app-dialog>

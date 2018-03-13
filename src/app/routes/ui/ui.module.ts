@@ -20,12 +20,20 @@ const routes: Routes = [
         loadChildren: './inputs/inputs.module#InputsModule',
       },
       {
+        path: 'select',
+        loadChildren: './select/select.module#SelectModule',
+      },
+      {
         path: 'datetime',
         loadChildren: './datetime/datetime.module#DateTimeModule',
       },
       {
         path: 'grids',
         loadChildren: './grids/grids.module#GridsModule',
+      },
+      {
+        path: 'areas',
+        loadChildren: './areas/areas.module#AreasModule',
       },
       {
         path: 'icons',

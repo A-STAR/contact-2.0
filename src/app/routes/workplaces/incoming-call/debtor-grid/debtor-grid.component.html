@@ -1,9 +1,10 @@
 <app-action-grid
-  columnTranslationKey="modules.incomingCall.debtors"
-  [styles]="{ height: '600px' }"
+  persistenceKey="[grid] workplaces/incomingCall/debtors"
   [columns]="columns"
+  [fullHeight]="true"
   [rows]="debtors"
-  [contextMenuOptions]="contextMenuOptions"
+  [isSimple]="true"
+  [actions]="actions"
+  [defaultAction]="defaultAction"
   (select)="onSelect($event)"
-  (dblClick)="onDoubleClick($event)"
 ></app-action-grid>

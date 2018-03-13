@@ -21,9 +21,9 @@
       "styles": [
         "styles.scss",
         "./assets/icons/icons.css",
+        "./assets/icons/co.css",
         "../node_modules/font-awesome/css/font-awesome.css",
         "../node_modules/simple-line-icons/css/simple-line-icons.css",
-        "../node_modules/primeng/resources/primeng.min.css",
         "../node_modules/summernote/dist/summernote.css"
       ],
       "scripts": [

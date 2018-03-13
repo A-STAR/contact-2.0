@@ -1,0 +1,13 @@
+<app-grid2
+  *ngIf="columns$ | async"
+  persistenceKey="contactSearchContactLog"
+  [columnIds]="columnIds"
+  [columns]="columns$ | async"
+  [ngClass]="'contact-log-grid'"
+  [rowCount]="rowCount"
+  [rows]="data"
+  (onFilter)="onRequest()"
+  (onPage)="onRequest()"
+  (onPageSize)="onRequest()"
+  (onSort)="onRequest()"
+></app-grid2>

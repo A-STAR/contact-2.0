@@ -24,18 +24,12 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<app-toolbar-2
-  class="bh"
-  [items]="toolbarItems">
-</app-toolbar-2>
-
-<app-grid
-  columnTranslationKey="utilities.messageTemplates"
-  selectionType="single"
+<app-simple-grid
+  persistenceKey="[grid] utilities/message-templates"
   [columns]="columns"
   [rows]="templates"
   [selection]="selection$ | async"
-  [styles]="{height: '600px'}"
-  (onSelect)="onSelect($event)"
-  (onDblClick)="onDblClick($event)">
-</app-grid>
+  [toolbar]="toolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onDblClick($event)">
+</app-simple-grid>

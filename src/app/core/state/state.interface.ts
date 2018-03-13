@@ -4,7 +4,9 @@ import { IAuthState } from '../auth/auth.interface';
 import { ICallState } from '@app/core/calls/call.interface';
 import { ICampaignsState } from '../../routes/utilities/campaigns/campaigns.interface';
 import { IConstantsState } from '../../routes/admin/constants/constants.interface';
-import { IContractorsAndPortfoliosState } from '../../routes/admin/contractors/contractors-and-portfolios.interface';
+import {
+  IContractorsAndPortfoliosState
+} from '../../routes/admin/contractors/contractors-and-portfolios.interface';
 import { IDebtorCardState } from '../app-modules/debtor-card/debtor-card.interface';
 import { IDictionariesState } from '../../routes/admin/dictionaries/dictionaries.interface';
 import { IEntityAttributesState } from '../entity/attributes/entity-attributes.interface';

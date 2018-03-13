@@ -5,9 +5,9 @@
 
 //== Application
 @import './app/shared/styles/app.scss';
-@import './app/shared/styles/primeng/omega.scss';
 @import './app/shared/styles/swimlane/material.scss';
 
 //== Vendor
+@import '../node_modules/ag-grid/src/styles/ag-grid.scss';
+@import '../node_modules/ag-grid/src/styles/ag-theme-material.scss';
 @import '../node_modules/angular2-toaster/toaster';
-

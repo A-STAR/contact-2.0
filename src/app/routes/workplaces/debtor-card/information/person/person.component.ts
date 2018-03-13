@@ -72,7 +72,7 @@ export class PersonComponent implements OnInit, OnDestroy {
       {
         label: 'person.gender',
         controlName: 'genderCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_GENDER,
         disabled: !canEdit,
         width: 2,
@@ -94,7 +94,7 @@ export class PersonComponent implements OnInit, OnDestroy {
       {
         label: 'person.familyStatusCode',
         controlName: 'familyStatusCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
         disabled: !canEdit,
         width: 3,
@@ -102,7 +102,7 @@ export class PersonComponent implements OnInit, OnDestroy {
       {
         label: 'person.educationCode',
         controlName: 'educationCode',
-        type: 'selectwrapper',
+        type: 'select',
         dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
         disabled: !canEdit,
         width: 3,
@@ -113,7 +113,7 @@ export class PersonComponent implements OnInit, OnDestroy {
         type: 'text',
         width: 3,
         display: displayedStringValues.includes(id) && attributes[id].isUsed,
-        required: attributes[id].isMandatory,
+        required: displayedStringValues.includes(id) && !!attributes[id].isMandatory,
       }) as IDynamicFormItem),
       {
         label: 'person.comment',

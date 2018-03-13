@@ -23,10 +23,11 @@ import { LayoutService } from '@app/layout/layout.service';
 import { TabViewTabComponent } from '../tab/tab.component';
 
 @Component({
-  selector: 'app-tabview',
-  templateUrl: 'tabview.component.html',
-  styleUrls: ['./tabview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
+  selector: 'app-tabview',
+  styleUrls: ['./tabview.component.scss'],
+  templateUrl: 'tabview.component.html',
 })
 
 export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, AfterViewInit {
@@ -36,6 +37,7 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
 
   @ContentChildren(TabViewTabComponent) tabs: QueryList<TabViewTabComponent>;
 
+  @Input() fullHeight = false;
   @Input() noMargin = false;
 
   @Output() select = new EventEmitter<number>();
@@ -113,11 +115,18 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
       this.select.emit(tabIndex);
     }
 
-    if (!event) {
+    if (!event || tabIndex >= this.visibleTabs.length) {
       return;
     }
 
-    // jQuery
+    this.showRipple(event, tabIndex);
+  }
+
+  private get tabHeaderWidth(): any {
+    return this.el.nativeElement.querySelector('ul').clientWidth - TabViewComponent.MENU_BTN_SPACE;
+  }
+
+  private showRipple(event: MouseEvent, tabIndex: number): void {
     $(this.el.nativeElement).find('.ripple').remove();
     const $listItem = $(this.el.nativeElement).find('ul').children().eq(tabIndex);
     const posX = $listItem.offset().left;
@@ -148,10 +157,6 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
         left: x + 'px'
       })
       .addClass('rippleEffect');
-  }
-
-  private get tabHeaderWidth(): any {
-    return this.el.nativeElement.querySelector('ul').clientWidth - TabViewComponent.MENU_BTN_SPACE;
   }
 
   private getTabIndex(tab: TabViewTabComponent): number {

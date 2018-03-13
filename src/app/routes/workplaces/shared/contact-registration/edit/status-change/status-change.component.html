@@ -1,18 +1,13 @@
 <div *ngIf="canDisplayForm$ | async" [formGroup]="formGroup">
+
   <div>
-    <label>
-      <span class="form-label">
-        {{ 'routes.workplaces.shared.contactRegistration.edit.form.statusChange.form.statusChange' | translate }}
-        <b *ngIf="isChangeReasonRequired$ | async" class="text-danger">*</b>
-      </span>
-      <!-- Filter by terms whose parent is debtStatusCode -->
-      <app-select-wrapper
-        formControlName="statusReasonCode"
-        [dictCode]="statusChangeReasonDictCode"
-        [nullable]="!(isChangeReasonRequired$ | async)"
-        [required]="isChangeReasonRequired$ | async"
-      ></app-select-wrapper>
-    </label>
+    <!-- Filter by terms whose parent is debtStatusCode -->
+    <app-select
+      formControlName="statusReasonCode"
+      [dictCode]="statusChangeReasonDictCode"
+      label="routes.workplaces.shared.contactRegistration.edit.form.statusChange.form.statusChange"
+      [isRequired]="isChangeReasonRequired$ | async"
+    ></app-select>
   </div>
 
   <hr>

@@ -1,0 +1,11 @@
+<div class="grid-wrapper">
+  <app-simple-grid
+    persistenceKey="[grid] mass-ops/visit-prepare"
+    selectionType="single"
+    [columns]="columns"
+    [rows]="operators"
+    (select)="onSelect($event)"
+  >
+  </app-simple-grid>
+</div>
+

@@ -1,0 +1,10 @@
+<div class="grid-wrapper">
+  <app-simple-grid
+    persistenceKey="[grid] mass-ops/entity-group"
+    selectionType="single"
+    [columns]="columns"
+    [rows]="entityGroups"
+    (select)="onSelect($event)"
+    (dblClick)="onDblClick($event)">
+  </app-simple-grid>
+</div>

@@ -8,16 +8,12 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<app-toolbar-2 class="bordered" [items]="toolbarItems"></app-toolbar-2>
-
-<app-grid
-  columnTranslationKey="widgets.groups"
-  selectionType="single"
+<app-simple-grid
+  persistenceKey="[grid] utilities/schedule/groups"
   [columns]="columns"
-  [selection]="selection"
-  [footerHeight]="false"
   [rows]="groups"
-  (onSelect)="onSelect($event)"
-  (onDblClick)="onEdit($event)"
->
-</app-grid>
+  [selection]="selection"
+  [toolbar]="toolbarItems"
+  (select)="onSelect($event)"
+  (dblClick)="onEdit($event)"
+></app-simple-grid>

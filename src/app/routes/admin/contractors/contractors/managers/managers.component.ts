@@ -3,26 +3,28 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import { first } from 'rxjs/operators/first';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IContractorManager, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
-import { IGridColumn } from '@app/shared/components/grid/grid.interface';
+import { IContractorManager, IActionType } from '../../contractors-and-portfolios.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
+import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { combineLatestAnd } from '@app/core/utils/helpers';
 import { DialogFunctions } from '@app/core/dialog';
 
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
+
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-contractor-managers',
   templateUrl: './managers.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorManagersComponent extends DialogFunctions implements OnDestroy, OnInit {
 
@@ -57,7 +59,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
     }
   ];
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IContractorManager>[] = [
     // { prop: 'fullName' },
     { prop: 'lastName', minWidth: 120, maxWidth: 200 },
     { prop: 'firstName', minWidth: 120, maxWidth: 200 },
@@ -71,7 +73,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
     { prop: 'workAddress', minWidth: 100, maxWidth: 250 },
     { prop: 'email', minWidth: 100, maxWidth: 200 },
     { prop: 'comment', minWidth: 100, maxWidth: 250 },
-  ];
+  ].map(addGridLabel('contractors.managers.grid'));
 
   private contractorId = (<any>this.route.params).value.contractorId;
   private canViewSubscription: Subscription;
@@ -83,7 +85,6 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
   constructor(
     private cdRef: ChangeDetectorRef,
     private contractorsAndPortfoliosService: ContractorsAndPortfoliosService,
-    private gridService: GridService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -94,11 +95,6 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .subscribe(columns => {
-        this.columns = [...columns];
-      });
-
     this.canViewSubscription = this.canView$.subscribe(canView => {
       if (canView) {
         this.fetchAll();
@@ -145,11 +141,18 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
   }
 
   onEdit(): void {
-    this.routingService.navigate([ String(this.selection[0].id) ], this.route);
+    this.canEdit$
+      .pipe(
+        first(),
+      )
+      .subscribe(() => this.routingService.navigate([ String(this.selection[0].id) ], this.route));
   }
 
-  onSelect(manager: IContractorManager): void {
-    this.selection = [manager];
+  onSelect(managers: IContractorManager[]): void {
+    this.selection = managers;
+    const manager = isEmpty(managers)
+      ? null
+      : managers[0];
     this.contractorsAndPortfoliosService.selectManager(manager);
   }
 

@@ -1,11 +1,11 @@
 <app-call-center-toolbar-processed-debts
   *ngIf="isDialog('processed-debts')"
-  (close)="onCloseDialog()"
+  (close)="onClose()"
 ></app-call-center-toolbar-processed-debts>
 
 <app-call-center-toolbar-status-dialog
   *ngIf="isDialog('change-status')"
-  (close)="onCloseDialog()"
+  (close)="onClose()"
 ></app-call-center-toolbar-status-dialog>
 
 <app-titlebar [titlebar]="titlebar$ | async"></app-titlebar>

@@ -4,9 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import { ScheduleEventService } from '@app/routes/utilities/schedule/events/schedule-event.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-groups',
   templateUrl: './groups.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupsComponent {
 

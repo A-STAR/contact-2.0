@@ -11,6 +11,10 @@ exports[`SimpleGridComponent should render empty grid 1`] = `
   >
     
   
+    
+    
+
+  
     <div
       class="flex-item grow"
     >

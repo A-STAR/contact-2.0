@@ -3,22 +3,21 @@
   <div class="row mb-lg ml-xl mr-xl pb border-b">
     <div class="col-lg-4 col-md-6 col-sm-12">
       <app-indicators
-        *ngIf="indicators$ | async"
-        [data]="indicators$ | async"
+        *ngIf="indicators"
+        [data]="indicators"
       >
         <!-- START date widget-->
         <div class="panel date-widget">
           <div class="row-flex border">
             <div class="date-widget-left bg-primary">
-              <!-- See formats: https://docs.angularjs.org/api/ng/filter/date-->
-              <span appNow class="text-sm" format="MMMM"></span>
+              <span appNow format="MMMM"></span>
               <br/>
               <span appNow class="h2" format="D"></span>
             </div>
             <div class="date-widget-right">
               <span appNow format="dddd"></span>
               <br/>
-              <span appNow class="h2" format="hh:mm"></span>
+              <span appNow class="h2" format="HH:mm"></span>
               <!--<span appNow class="text-muted text-sm" format="a"></span>-->
             </div>
           </div>
@@ -30,9 +29,9 @@
       <div class="col-md-6 col-sm-12">
         <span class="chart-header border-b minh">{{ 'dashboard.charts.promiseCountStatus.label' | translate }}</span>
         <app-pie-chart
-          *ngIf="promiseCountStatus$ | async"
+          *ngIf="promiseCountStatus"
           translationKey="dashboard.charts"
-          [data]="promiseCountStatus$ | async"
+          [data]="promiseCountStatus"
           [options]="promiseCountStatusOptions"
         >
         </app-pie-chart>
@@ -40,9 +39,9 @@
       <div class="col-md-6 col-sm-12">
         <span class="chart-header border-b minh">{{ 'dashboard.charts.promiseCover.label' | translate }}</span>
         <app-progress-chart
-          *ngIf="promiseCover$ | async"
+          *ngIf="promiseCover"
           translationKey="dashboard.charts"
-          [data]="promiseCover$ | async"
+          [data]="promiseCover"
           [options]="promiseCoverOptions"
         >
         </app-progress-chart>
@@ -76,9 +75,9 @@
       <div class="col-sm-12">
         <span class="chart-header pl-xl">{{ 'dashboard.charts.promiseCount.label' | translate }}</span>
         <app-bar-chart
-          *ngIf="promiseCount$ | async"
+          *ngIf="promiseCount"
           translationKey="dashboard.charts"
-          [data]="promiseCount$ | async"
+          [data]="promiseCount"
           [options]="promiseCountOptions"
         >
         </app-bar-chart>
@@ -88,9 +87,9 @@
     <div class="col-sm-12">
       <span class="chart-header pl-xl">{{ 'dashboard.charts.promiseAmount.label' | translate }}</span>
       <app-bar-chart
-        *ngIf="promiseAmount$ | async"
+        *ngIf="promiseAmount"
         translationKey="dashboard.charts"
-        [data]="promiseAmount$ | async"
+        [data]="promiseAmount"
         [options]="promiseAmountOptions"
       >
       </app-bar-chart>

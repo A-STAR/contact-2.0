@@ -1,0 +1,41 @@
+<app-dialog (close)="onCancel()">
+  <div dialog-header>
+    <h3>{{ 'widgets.email.dialogs.schedule.title' | translate }}</h3>
+  </div>
+  <div>
+    <app-tabview (select)="onTabSelect($event)">
+      <app-tabview-tab [title]="'widgets.email.dialogs.schedule.text'"  [disabled]="isTextTabDisabled$ | async">
+        <div class="mt-lg">
+          <app-email-grid-schedule-form
+            #formText
+            [debtId]="debtId"
+            [emailId]="emailId"
+            [personId]="personId"
+            [personRole]="personRole"
+            [useTemplate]="false"
+          ></app-email-grid-schedule-form>
+        </div>
+      </app-tabview-tab>
+      <app-tabview-tab [title]="'widgets.email.dialogs.schedule.template'" >
+        <div class="mt-lg">
+          <app-email-grid-schedule-form
+            #formTemplate
+            [debtId]="debtId"
+            [emailId]="emailId"
+            [personId]="personId"
+            [personRole]="personRole"
+            [useTemplate]="true"
+          ></app-email-grid-schedule-form>
+        </div>
+      </app-tabview-tab>
+    </app-tabview>
+  </div>
+  <div dialog-footer>
+    <button class="btn btn-success" [disabled]="!canSubmit" (click)="onSubmit()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.ok' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="onCancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

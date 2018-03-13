@@ -1,7 +1,7 @@
 import { async as Async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { ColDef } from 'ag-grid';
+import { ColDef, MenuItemDef } from 'ag-grid';
 import { AgGridModule } from 'ag-grid-angular/main';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
@@ -9,13 +9,16 @@ import { of } from 'rxjs/observable/of';
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { CheckModule } from '@app/shared/components/form/check/check.module';
 import { SelectModule } from '@app/shared/components/form/select/select.module';
+import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
 
 import { IGridColumn } from '../grids.interface';
 
+import { ContextMenuService } from '../context-menu/context-menu.service';
 import { GridsService } from '../grids.service';
 
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
 import { SimpleGridComponent } from './grid.component';
+import { IContextMenuOptions, IContextMenuSimpleOptions } from '@app/shared/components/grids/context-menu/context-menu.interface';
 
 class TranslateLoaderMock {
   getTranslation(language: string): Observable<any> {
@@ -24,12 +27,17 @@ class TranslateLoaderMock {
 }
 
 class GridsServiceMock {
-  convertColumnsToColDefs<T>(columns: IGridColumn<T>[]): Observable<ColDef[]> {
-    const colDefs = columns.map(column => ({
+  convertColumnsToColDefs<T>(columns: IGridColumn<T>[]): ColDef[] {
+    return columns.map(column => ({
       field: column.prop,
       headerName: column.label,
     }));
-    return of(colDefs);
+  }
+}
+
+class ContextMenuServiceMock {
+  onCtxMenuClick(options: IContextMenuOptions, simpleOptions: IContextMenuSimpleOptions): Array<string | MenuItemDef> {
+    return [];
   }
 }
 
@@ -49,6 +57,7 @@ describe('SimpleGridComponent', () => {
           CheckModule,
           FormsModule,
           SelectModule,
+          Toolbar2Module,
           TranslateModule.forRoot({
             loader: {
               provide: TranslateLoader,
@@ -60,6 +69,10 @@ describe('SimpleGridComponent', () => {
           {
             provide: GridsService,
             useClass: GridsServiceMock,
+          },
+          {
+            provide: ContextMenuService,
+            useClass: ContextMenuServiceMock,
           }
         ]
       })
@@ -71,6 +84,7 @@ describe('SimpleGridComponent', () => {
   });
 
   it('should render empty grid', () => {
+    fixture.componentInstance.persistenceKey = 'test-persistence-key';
     fixture.detectChanges();
     expect(fixture.nativeElement).toMatchSnapshot();
   });

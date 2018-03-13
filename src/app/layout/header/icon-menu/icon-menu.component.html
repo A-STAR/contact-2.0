@@ -1,0 +1,43 @@
+<ul class="flex">
+  <li class="flex-item" *ngIf="showPbxControls$ | async">
+    <app-pbx-controls></app-pbx-controls>
+  </li>
+
+  <li class="flex-item" *ngIf="showPbxStatus$ | async">
+    <span class="menu-item p0">
+      <app-pbx-status-dropdown></app-pbx-status-dropdown>
+    </span>
+  </li>
+
+  <li class="flex-item separator"></li>
+
+  <li class="flex-item" [title]="'header.language' | translate" (click)="toggleLanguage()">
+    <span class="menu-item">
+      <i class="fa fa-language"></i>
+    </span>
+  </li>
+
+  <li class="flex-item">
+    <app-dropdown #notificationsDropdown position="right" [displayArrow]="true" [enabled]="hasNotifications$ | async">
+      <span trigger class="menu-item" [title]="'header.notifications' | translate">
+        <i class="fa fa-bell"></i>
+        <div *ngIf="hasNotifications$ | async" class="label label-danger">
+          {{ notificationsCount$ | async }}
+        </div>
+      </span>
+      <app-notifications (close)="notificationsDropdown.close()">
+      </app-notifications>
+    </app-dropdown>
+  </li>
+
+  <li class="flex-item">
+    <app-dropdown #accountDropdown position="right" [displayArrow]="true">
+      <span trigger class="menu-item" [title]="'header.account.title' | translate">
+        <i class="fa fa-user"></i>
+      </span>
+      <div class="dropdown-content">
+        <app-account-menu (close)="accountDropdown.close()"></app-account-menu>
+      </div>
+    </app-dropdown>
+  </li>
+</ul>

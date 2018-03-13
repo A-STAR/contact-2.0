@@ -5,12 +5,38 @@ exports[`TextComponent should handle input 1`] = `
   id="root2"
   ng-version="5.2.4"
 >
-  <input
-    class="form-control ng-untouched ng-valid ng-dirty"
-    ng-reflect-is-disabled="false"
-    ng-reflect-model="a"
-    type="text"
-  />
+  <label
+    class="m0"
+  >
+    
+  
+    
+    
+  
+    <div>
+      
+    
+      <input
+        class="form-control ng-untouched ng-valid ng-dirty"
+        ng-reflect-is-disabled="false"
+        ng-reflect-model="a"
+        type="text"
+      />
+      
+  
+    </div>
+    
+  
+    <div>
+      
+    
+      
+      
+  
+    </div>
+    
+
+  </label>
   
 
 </div>
@@ -21,11 +47,37 @@ exports[`TextComponent should handle losing focus 1`] = `
   id="root1"
   ng-version="5.2.4"
 >
-  <input
-    class="form-control ng-pristine ng-valid ng-touched"
-    ng-reflect-is-disabled="false"
-    type="text"
-  />
+  <label
+    class="m0"
+  >
+    
+  
+    
+    
+  
+    <div>
+      
+    
+      <input
+        class="form-control ng-pristine ng-valid ng-touched"
+        ng-reflect-is-disabled="false"
+        type="text"
+      />
+      
+  
+    </div>
+    
+  
+    <div>
+      
+    
+      
+      
+  
+    </div>
+    
+
+  </label>
   
 
 </div>
@@ -36,11 +88,37 @@ exports[`TextComponent should render 1`] = `
   id="root0"
   ng-version="5.2.4"
 >
-  <input
-    class="form-control ng-untouched ng-pristine ng-valid"
-    ng-reflect-is-disabled="false"
-    type="text"
-  />
+  <label
+    class="m0"
+  >
+    
+  
+    
+    
+  
+    <div>
+      
+    
+      <input
+        class="form-control ng-untouched ng-pristine ng-valid"
+        ng-reflect-is-disabled="false"
+        type="text"
+      />
+      
+  
+    </div>
+    
+  
+    <div>
+      
+    
+      
+      
+  
+    </div>
+    
+
+  </label>
   
 
 </div>

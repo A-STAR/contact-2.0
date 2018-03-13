@@ -8,9 +8,12 @@ job_test:
   script:
     - cd $CI_PROJECT_DIR
     - echo $CI_PROJECT_DIR
-    - node -v && npm -v
+    - node -v
+    - npm -v
     - npm install
-    - npm run lint && npm run test:ci && npm run build
+    - npm run lint
+    - npm run test:ci
+    - npm run build -- --aot --progress=false
   cache:
     paths:
       - node_modules/
@@ -22,7 +25,10 @@ job_build:
   script:
     - cd $CI_PROJECT_DIR
     - echo $CI_PROJECT_DIR
-    - node -v && npm -v && npm install
+    - node -v
+    - npm -v
+    - npm install
+    - npm run lint
     - npm run test:ci -- --coverage
     - npm run build -- --aot --progress=false
   coverage: /Statements\s*:\s*([\d\.]+)%/

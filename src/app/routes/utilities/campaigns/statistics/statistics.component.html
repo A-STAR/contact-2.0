@@ -1,12 +1,7 @@
-<app-toolbar-2 class="bordered" [items]="toolbarItems">
-</app-toolbar-2>
-
-<app-grid
-  class="flat"
-  [styles]="{ height: '250px' }"
+<app-simple-grid
+  persistenceKey="[grid] utilities/campaigns/statistics"
   [columns]="columns"
-  [columnTranslationKey]="'utilities.campaigns.statistics'"
   [rows]="campaignUserStatistics"
-  selectionType="single"
-  (onSelect)="onSelect($event)">
-</app-grid>
+  [toolbar]="toolbarItems"
+  (select)="onSelect($event)"
+></app-simple-grid>

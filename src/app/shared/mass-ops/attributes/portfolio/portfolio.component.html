@@ -1,0 +1,24 @@
+<app-dialog (close)="cancel()">
+  <div dialog-header>
+    <h3>{{ 'widgets.mass.changePortfolioAttr.title' | translate }}</h3>
+  </div>
+
+  <div class="grid-wrapper">
+    <app-simple-grid
+      persistenceKey="[grid] mass-ops/attributes/portfolio"
+      selectionType="single"
+      [columns]="columns"
+      [rows]="portfolios"
+      (select)="onSelect($event)">
+    </app-simple-grid>
+  </div>
+
+  <div dialog-footer>
+    <button class="btn btn-success" [disabled]="!canSubmit" (click)="submit()">
+      <i class="fa fa-check"></i> {{ 'default.buttons.save' | translate }}
+    </button>
+    <button class="btn btn-default" (click)="cancel()">
+      <i class="fa fa-remove"></i> {{ 'default.buttons.cancel' | translate }}
+    </button>
+  </div>
+</app-dialog>

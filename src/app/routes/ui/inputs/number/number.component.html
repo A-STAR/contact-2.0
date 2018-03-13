@@ -1,28 +1,49 @@
 <section [formGroup]="formGroup">
   <div class="form-group">
-    <label>Empty</label>
-    <app-number formControlName="number1"></app-number>
+    <app-number
+      formControlName="number1"
+      label="Empty"
+    ></app-number>
   </div>
 
   <div class="form-group">
-    <label>Not empty</label>
-    <app-number formControlName="number2"></app-number>
+    <app-number
+      formControlName="number2"
+      label="Not Empty"
+    ></app-number>
   </div>
 
   <div class="form-group">
-    <label>Custom step value</label>
-    <app-number formControlName="number3" step="10"></app-number>
+    <app-number
+      formControlName="number3"
+      label="Custom step value"
+      step="10"
+    ></app-number>
   </div>
 
   <div class="form-group">
-    <label>Validation (min = 0, max = 10)</label>
-    <app-number formControlName="number4" min="0" max="10"></app-number>
-    <div class="mv-sm"><em>Validation errors:</em></div>
-    <pre>{{ errors | json }}</pre>
+    <app-number
+      formControlName="number4"
+      label="Validation (required)"
+      [errors]="errors.number4"
+      [required]="true"
+    ></app-number>
   </div>
 
   <div class="form-group">
-    <label>Disabled</label>
-    <app-number formControlName="number5"></app-number>
+    <app-number
+      formControlName="number5"
+      label="Validation (min = 5, max = 15)"
+      min="5"
+      max="15"
+      [errors]="errors.number5"
+    ></app-number>
+  </div>
+
+  <div class="form-group">
+    <app-number
+      formControlName="number6"
+      label="Disabled"
+    ></app-number>
   </div>
 </section>

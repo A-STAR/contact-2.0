@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { GridModule } from '@app/shared/components/grid/grid.module';
+import { GridsModule } from '@app/shared/components/grids/grids.module';
 
 import { ScheduleLogViewGridComponent } from './schedule-log-view-grid.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    GridModule,
+    GridsModule,
   ],
   exports: [
     ScheduleLogViewGridComponent,
@@ -17,4 +17,4 @@ import { ScheduleLogViewGridComponent } from './schedule-log-view-grid.component
     ScheduleLogViewGridComponent,
   ]
 })
-export class ScheduleLogViewGridModule { }
+export class ScheduleLogViewGridModule {}

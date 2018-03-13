@@ -39,6 +39,22 @@
               "infoIncreaseAmount": {
                 "message": "Необходимо увеличить сумму обещания до {{ percent }}% от суммы к погашению.",
                 "title": "Информация"
+              },
+              "contactType": {
+                "title": "Выберите тип контакта",
+                "address": {
+                  "title": "Адреса",
+                  "button": "Регистрация контакта с типом Выезд"
+                },
+                "misc": {
+                  "title": "Специальное",
+                  "buttonMisc": "Регистрация контакта с типом Специальное",
+                  "buttonOfficeVisit": "Регистрация контакта с типом Визит в офис"
+                },
+                "phone": {
+                  "title": "Телефоны",
+                  "button": "Регистрация контакта с типом Исходящий звонок"
+                }
               }
             },
             "form": {
@@ -167,11 +183,52 @@
           }
         }
       }
+    },
+    "utilities": {
+      "formulas": {
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "typeCode": "Тип",
+          "comment": "Комментарий"
+        },
+        "card": {
+          "name": "Название",
+          "script": "Скрипт",
+          "typeCode": "Тип формулы",
+          "comment": "Комментарий"
+        },
+        "titlebar": {
+          "title": "Формулы"
+        },
+        "remove": {
+          "title": "Удаление формулы",
+          "confirmMessage": "Вы действительно хотите удалить выбранную формулу?"
+        },
+        "errors": {
+          "calculate": {
+            "403": "У вас недостаточно прав для вычисления {{ entity }}",
+            "*": "При вычислении {{ entity }} произошла ошибка"
+          }
+        },
+        "calculate": {
+          "title": "Проверка",
+          "debtId": "ID долга",
+          "userId": "ID пользователя",
+          "grid": {
+            "type": "Тип",
+            "value": "Результат"
+          }
+        }
+      }
     }
   },
   "shared": {
     "components": {
       "grids": {
+        "overlays": {
+          "empty": "Нет данных"
+        },
         "toolbar": {
           "rowsSelected": "выбрано",
           "rowsTotal": "всего"
@@ -190,7 +247,7 @@
       "info": "Номер Вашей лицензии"
     },
     "noDebts": {
-      "userId": "Ид пользователя",
+      "userId": "ID пользователя",
       "title": "Долги отсутствуют"
     },
     "noPerson": {
@@ -1391,19 +1448,15 @@
       "title": "Переместить портфель {{ name }}"
     },
     "outsourcing": {
-      "form": {
-        "menu": "Сформировать портфель для аутсорсинга"
-      },
+      "formOutsourcing": "Сформировать портфель для аутсорсинга",
       "send": {
-        "menu": {
-          "title": "Передать портфель для аутсорсинга",
-          "outsourcing": "Аутсорсинг",
-          "cession": "Цессия"
-        },
+        "sendOutsourcing": "Передать портфель для аутсорсинга",
+        "sendOutsource": "Аутсорсинг",
+        "sendCession": "Цессия",
         "title": "Передать портфель"
       },
       "return": {
-        "menu": "Отозвать портфель",
+        "returnOutsource": "Отозвать портфель",
         "title": "Отозвать портфель"
       }
     }
@@ -1675,6 +1728,7 @@
       },
       "grid": {
         "code": "Код",
+        "name": "Название",
         "names": "Название",
         "value": "Значение",
         "userFullName": "Оператор",
@@ -1691,15 +1745,10 @@
     "contact": {
       "grid": {
         "fullName": "ФИО",
-        "firstName": "Имя",
-        "middleName": "Отчество",
-        "lastName": "Фамилия",
-        "birthDate": "Дата рождения",
-        "birthPlace": "Место рождения",
+        "typeCode": "Тип",
         "genderCode": "Пол",
-        "familyStatusCode": "Семейное положение",
         "educationCode": "Образование",
-        "linkTypeCode": "Тип",
+        "linkTypeCode": "Тип связи",
         "comment": "Комментарий"
       }
     },
@@ -1760,13 +1809,14 @@
     },
     "document": {
       "grid": {
-        "docName": "Название документа",
-        "fileName": "Имя файла",
-        "docTypeCode": "Тип документа",
-        "docNumber": "Номер",
-        "operatorName": "Оператор",
         "comment": "Комментарий",
-        "file": "Файл"
+        "docName": "Название документа",
+        "docNumber": "Номер",
+        "docTypeCode": "Тип документа",
+        "file": "Файл",
+        "fileName": "Имя файла",
+        "fullName": "Оператор",
+        "operatorName": "Оператор"
       },
       "dialogs": {
         "delete": {
@@ -1929,6 +1979,29 @@
       },
       "changeDefaultAttr": {
         "title": "Изменить атрибут"
+      },
+      "outsourcing": {
+        "send": {
+          "title": "Выберите портфель",
+          "grid": {
+            "id": "ID",
+            "name": "Название",
+            "contractorName": "Контрагент",
+            "statusCode": "Статус",
+            "stageCode": "Стадия",
+            "signDate": "Дата подписания портфеля",
+            "startWorkDate": "Дата начала работ",
+            "endWorkDate": "Дата окончания работ"
+          }
+        },
+        "exclude": {
+          "message": "Вы действительно хотите исключить из аутсорсинга выбранные платежи?",
+          "title": "Исключить из аутсорсинга"
+        },
+        "return": {
+          "message": "Вы действительно хотите отозвать из аутсорсинга выбранные платежи?",
+          "title": "Отозвать из аутсорсинга"
+        }
       }
     },
     "nextCallDateSet": {
@@ -2012,14 +2085,16 @@
         "amountMainCurrency": "Сумма в валюте",
         "comment": "Комментарий",
         "commission": "Комиссия",
+        "currencyId": "Валюта",
         "currencyName": "Валюта",
         "isConfirmed": "Подтвержден",
         "payerName": "ФИО плательщика",
         "paymentDateTime": "Дата платежа",
         "purposeCode": "Назначение",
-        "receiveDateTime": "Дата получения",
-        "reqUserFullName": "Оператор (заявка)",
         "receiptNumber": "№ квитанции",
+        "receiveDateTime": "Дата получения",
+        "reqUserId": "Оператор (заявка)",
+        "reqUserFullName": "Оператор (заявка)",
         "statusCode": "Статус",
         "userFullName": "Оператор (факт)"
       },
@@ -2191,14 +2266,18 @@
         "subject": "Тема"
       },
       "grid": {
-        "contactId": "ID контакта",
+        "comment": "Комментарий",
+        "contactData": "Телефон/Адрес",
         "contactDateTime": "Дата контакта",
+        "contactId": "ID контакта",
         "contactType": "Тип контакта",
         "contract": "Номер договора",
         "createDateTime": "Дата создания",
         "creditName": "Название продукта",
         "debtId": "ID долга",
         "fullName": "ФИО",
+        "messageTemplate": "Шаблон",
+        "msgStatusCode": "Статус",
         "personRole": "Роль",
         "promiseDate": "Обещанная дата",
         "resultName": "Результат",
@@ -2401,14 +2480,14 @@
         "title": "Валюты"
       },
       "grid": {
-        "id": "ИД",
+        "id": "ID",
         "code": "Код",
         "name": "Название",
         "shortName": "Краткое наименование",
         "isMain": "Основная валюта"
       },
       "card":  {
-        "id": "ИД",
+        "id": "ID",
         "code": "Код",
         "names": "Название",
         "shortNames": "Краткое наименование",
@@ -2715,6 +2794,12 @@
     },
     "calls": {
       "gen": { "singular": "звонка", "plural": "звонков" }
+    },
+    "status": {
+      "gen": { "singular": "статуса", "plural": "статусов" }
+    },
+    "formulas": {
+      "gen": { "singular": "формулы", "plural": "формул" }
     }
   },
   "massOperations": {
@@ -2998,6 +3083,7 @@
       "back": "Назад",
       "block": "Блокировать",
       "call": "Позвонить",
+      "calculate": "Вычислить",
       "cancel": "Отменить",
       "change": "Изменить",
       "changeStatus": "",
@@ -3143,6 +3229,8 @@
         "filterOoo": "фильтр..."
       },
       "actions": {
+        "actionForSelection": "для выбранных",
+        "actionForAll": "для всех",
         "addVisit": "Отметить необходимость",
         "cancelVisit": "Отменить выезд",
         "confirmPaymentsOperator": "Подтвердить изменение оператора",
@@ -3179,7 +3267,11 @@
         "changeDict4Attr": "Словарный атрибут 4",
         "changeCreditTypeAttr": "Тип кредитного продукта",
         "changeBranchAttr": "Филиал",
-        "changeTimezoneAttr": "Часовой пояс"
+        "changeTimezoneAttr": "Часовой пояс",
+        "debtOutsourcingSend": "Передать на аутсорсинг",
+        "debtOutsourcingExclude": "Исключить из аутсорсинга",
+        "debtOutsourcingReturn": "Отозвать из аутсорсинга",
+        "registerContact": "Регистрация контакта"
       }
     },
     "filter": {
@@ -3217,6 +3309,13 @@
       },
       "lastMonthDay": "Последний"
     },
+    "decimal": {
+      "format": {
+        "minIntegerDigits": 1,
+        "minFractionDigits": 0,
+        "maxFractionDigits": 2
+      }
+    },
     "colors": {
       "transparent": "Прозрачный",
       "azure": "Голубой",
@@ -3246,8 +3345,8 @@
       "contactPerson": {
         "name": "Контактное лицо",
         "fields": {
-          "id": "Ид",
-          "personId": "Ид персоны",
+          "id": "ID",
+          "personId": "ID персоны",
           "personRole": "Роль персоны",
           "personFullName": "ФИО персоны",
           "linkTypeCode": "Тип связи (для третьих лиц)"
@@ -3256,7 +3355,7 @@
       "person": {
         "name": "Персона",
         "fields": {
-          "id": "Ид",
+          "id": "ID",
           "lastName": "Фамилия",
           "firstName": "Имя",
           "middleName": "Отчество",

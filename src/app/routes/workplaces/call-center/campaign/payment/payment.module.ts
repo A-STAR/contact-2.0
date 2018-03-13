@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../../../../../shared/shared.module';
+import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { PaymentComponent } from './payment.component';
 
 @NgModule({
   imports: [
     SharedModule,
+    WorkplacesSharedModule,
   ],
   exports: [
     PaymentComponent,
@@ -15,4 +17,4 @@ import { PaymentComponent } from './payment.component';
     PaymentComponent,
   ],
 })
-export class PaymentModule { }
+export class PaymentModule {}

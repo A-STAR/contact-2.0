@@ -1,7 +1,7 @@
-<app-contact-log-tab-grid
+<app-contact-log-grid
   *ngIf="debtExists$ | async"
   [callCenter]="true"
   [hideToolbar]="true"
   [debtId]="debtId$ | async"
   [personId]="personId$ | async"
-></app-contact-log-tab-grid>
+></app-contact-log-grid>

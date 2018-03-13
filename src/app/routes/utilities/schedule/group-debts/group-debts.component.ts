@@ -12,20 +12,20 @@ import { IDynamicFormConfig, IDynamicFormControl } from '@app/shared/components/
 import { IFilterGroup } from '@app/core/filters/grid-filters.interface';
 import { IGroupDebt } from './group-debts.interface';
 
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { GridFiltersService } from '@app/core/filters/grid-filters.service';
 import { GroupDebtsService } from './group-debts.service';
 
 import { ActionGridComponent } from '@app/shared/components/action-grid/action-grid.component';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { GridFiltersService } from '@app/core/filters/grid-filters.service';
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-group-debts',
   templateUrl: './group-debts.component.html',
   styleUrls: ['./group-debts.component.scss'],
   host: { class: 'full-height' },
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupDebtsComponent implements OnInit {
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IGroupDebt>;
@@ -44,7 +44,6 @@ export class GroupDebtsComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtorCardService: DebtorCardService,
     private groupDebtsService: GroupDebtsService,
     private gridFiltersService: GridFiltersService,
     @Inject(GroupDebtsService.ENTITY_GROUP_ID) private entityTypeId: number[]
@@ -60,7 +59,6 @@ export class GroupDebtsComponent implements OnInit {
   }
 
   onRequest(): void {
-
     if (this.groupId) {
       const filters = this.grid.getFilters();
       const params = this.grid.getRequestParams();
@@ -75,10 +73,6 @@ export class GroupDebtsComponent implements OnInit {
     }
   }
 
-  onDblClick(debt: IGroupDebt): void {
-    this.debtorCardService.openByDebtId(debt.debtId);
-  }
-
   onSearch(): void {
     const { groups } = this.form.serializedUpdates;
     this.groupId = groups;
@@ -90,11 +84,10 @@ export class GroupDebtsComponent implements OnInit {
       {
         controlName: 'groups',
         type: 'gridselect',
-        translationKey: 'widgets.groups.groupObjectDebts.filter',
         gridColumns: [
           { prop: 'id', minWidth: 50, maxWidth: 50 },
           { prop: 'name', minWidth: 300 }
-        ],
+        ].map(addGridLabel('widgets.groups.groupObjectDebts.filter.grid')),
         gridRows: groups,
         gridLabelGetter: (row: IFilterGroup) => row.name,
         gridValueGetter: (row: IFilterGroup) => row.id,

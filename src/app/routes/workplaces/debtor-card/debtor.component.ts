@@ -135,7 +135,13 @@ export class DebtorComponent extends DialogFunctions implements AfterViewInit, O
   }
 
   get canSubmit(): boolean {
-    return this.form && this.information && this.information.form && (this.form.canSubmit || this.information.form.canSubmit);
+    const mainForm = this.form;
+    const infoForm = this.information && this.information.form;
+    // Both forms have to be valid
+    const isValid = (mainForm && mainForm.isValid) && (infoForm && infoForm.isValid);
+    // Only one form has to be dirty
+    const isDirty = (mainForm && mainForm.isDirty) || (infoForm && infoForm.isDirty);
+    return isValid && isDirty;
   }
 
   get isContactRegistrationDisabled$(): Observable<boolean> {
@@ -190,11 +196,11 @@ export class DebtorComponent extends DialogFunctions implements AfterViewInit, O
 
   private buildControls(canEdit: boolean): IDynamicFormItem[] {
     const debtorTypeOptions = {
-      type: 'selectwrapper',
+      type: 'select',
       dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE
     };
     const stageCodeOptions = {
-      type: 'selectwrapper',
+      type: 'select',
       dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE
     };
     return [

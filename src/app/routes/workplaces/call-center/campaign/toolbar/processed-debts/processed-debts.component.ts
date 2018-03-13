@@ -1,51 +1,103 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { first } from 'rxjs/operators';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ICampaignProcessedDebt } from '../../campaign.interface';
-import { IGridColumn } from '../../../../../../shared/components/grid/grid.interface';
+import { IContactRegistrationParams } from '@app/core/debt/debt.interface';
+import { IMetadataAction } from '@app/core/metadata/metadata.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { CampaignService } from '../../campaign.service';
-import { GridService } from '../../../../../../shared/components/grid/grid.service';
-import { UserDictionariesService } from '../../../../../../core/user/dictionaries/user-dictionaries.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
+import { RegisterContactOpenService } from '@app/shared/mass-ops/register-contact-open/register-contact-open.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
+import { NumberRendererComponent } from '@app/shared/components/grids/renderers';
+
+import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-call-center-toolbar-processed-debts',
   templateUrl: 'processed-debts.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProcessedDebtsComponent implements OnInit {
+export class ProcessedDebtsComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter<void>();
 
-  columns: IGridColumn[] = [
+  dialog = null;
+  columns: ISimpleGridColumn<ICampaignProcessedDebt>[] = [
     { prop: 'personFullName', minWidth: 200 },
     { prop: 'debtId', minWidth: 50, maxWidth: 100 },
     { prop: 'contract' },
     { prop: 'statusCode', dictCode: UserDictionariesService.DICTIONARY_DEBT_STATUS },
     { prop: 'debtAmount', minWidth: 150 },
-    { prop: 'currencyName', renderer: 'numberRenderer' },
+    { prop: 'currencyName', renderer: NumberRendererComponent },
     { prop: 'dpd', minWidth: 100 },
-  ];
+  ].map(addGridLabel('modules.callCenter.processedDebts.grid'));
+
   debts: ICampaignProcessedDebt[];
+
+  defaultAction = 'openDebtCard';
+
+  actions: IMetadataAction[] = [
+    {
+      action: 'openDebtCard',
+      params: [ 'debtId' ],
+    },
+    {
+      action: 'registerContact',
+      params: [ 'debtId', 'personId' ],
+      addOptions: [
+        {
+          name: 'entityTypeId',
+          value: [
+            18
+          ]
+        },
+        {
+          name: 'campaignId',
+          value: [
+            this.campaignService.campaignId
+          ]
+        }
+      ],
+    }
+  ];
+
+  private registerContactActionSub: Subscription;
 
   constructor(
     private campaignService: CampaignService,
     private cdRef: ChangeDetectorRef,
-    private gridService: GridService,
-  ) {}
+    private contactRegistrationService: ContactRegistrationService,
+    private registerContactOpenService: RegisterContactOpenService,
+  ) { }
 
   ngOnInit(): void {
-    this.gridService.setDictionaryRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = this.gridService.setRenderers(columns);
-        this.cdRef.markForCheck();
-      });
-
     this.campaignService.fetchProcessedDebtsForCurrentCampaign()
       .subscribe(debts => {
         this.debts = debts;
         this.cdRef.markForCheck();
       });
+    this.registerContactActionSub = this.registerContactOpenService.registerContactAction$
+      .subscribe(this.onRegisterContactDialogSubmit.bind(this));
+  }
+
+  ngOnDestroy(): void {
+    if (this.registerContactActionSub) {
+      this.registerContactActionSub.unsubscribe();
+    }
+  }
+
+  onRegisterContactDialogSubmit(params: Partial<IContactRegistrationParams>): void {
+    if (params) {
+      this.contactRegistrationService.startRegistration({
+        contactId: params.contactId,
+        contactType: params.contactType,
+        debtId: params.debtId,
+        personId: params.personId,
+        personRole: 1,
+      });
+    }
   }
 
   onClose(): void {

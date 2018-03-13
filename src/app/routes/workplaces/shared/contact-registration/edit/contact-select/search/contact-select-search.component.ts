@@ -14,7 +14,7 @@ import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 
 import { isEmpty, makeKey, range, addLabelForEntity } from '@app/core/utils';
 
-const labelKey = makeKey('modules.contactRegistration.contactGrid.tabs.add.form');
+const labelKey = makeKey('routes.workplaces.shared.contactRegistration.contactGrid.tabs.add.form');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +27,7 @@ export class ContactSelectSearchComponent {
   @ViewChild(Grid2Component) grid: Grid2Component;
 
   controls = [
-    { controlName: 'linkTypeCode', type: 'selectwrapper', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
+    { controlName: 'linkTypeCode', type: 'select', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
   ].map(control => ({ ...control, label: labelKey(control.controlName) } as IDynamicFormControl));
 
   columns$ = this.gridService.getColumns([

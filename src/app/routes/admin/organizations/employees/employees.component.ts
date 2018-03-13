@@ -1,32 +1,35 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewChild, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGridColumn } from '../../../../shared/components/grid/grid.interface';
 import {
-  IEmployee, IOrganizationsState, IEmployeeUpdateRequest, IEmployeeCreateRequest
+  IEmployee,
+  IOrganizationsState,
+  IEmployeeUpdateRequest,
+  IEmployeeCreateRequest,
 } from '../organizations.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
-import { GridService } from '../../../../shared/components/grid/grid.service';
 import { OrganizationsService } from '../organizations.service';
-import { UserDictionariesService } from '../../../../core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { GridComponent } from '../../../../shared/components/grid/grid.component';
-import { DialogFunctions } from '../../../../core/dialog';
-import { combineLatestAnd } from '../../../../core/utils/helpers';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers/tick/tick.component';
+
+import { DialogFunctions } from '@app/core/dialog';
+
+import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-employees',
   templateUrl: './employees.component.html',
 })
 export class EmployeesComponent extends DialogFunctions implements OnInit, OnDestroy {
-  @ViewChild(GridComponent) grid: GridComponent;
-
   @Input() employees: Array<IEmployee>;
 
   dialog: string;
@@ -69,12 +72,12 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     ]
   };
 
-  columns: Array<IGridColumn> = [
+  columns: ISimpleGridColumn<IEmployee>[] = [
     { prop: 'fullName', minWidth: 150 },
     { prop: 'position', minWidth: 100 },
     { prop: 'roleCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE },
-    { prop: 'isInactive', minWidth: 100, renderer: 'checkboxRenderer' },
-  ];
+    { prop: 'isInactive', minWidth: 100, renderer: TickRendererComponent },
+  ].map(addGridLabel('organizations.employees.grid'));
 
   editedEntity: IEmployee;
 
@@ -91,7 +94,6 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
   private viewPermissionSubscription: Subscription;
 
   constructor(
-    private gridService: GridService,
     private organizationsService: OrganizationsService,
     private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
@@ -100,12 +102,6 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
   }
 
   ngOnInit(): void {
-    this.gridService.setAllRenderers(this.columns)
-      .pipe(first())
-      .subscribe(columns => {
-        this.columns = [...columns];
-      });
-
     this.selectedEmployeeSubscription = combineLatest(
       this.organizationsService.selectedEmployeeId,
       this.organizationsService.employees
@@ -142,10 +138,11 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     return this.organizationsService.state;
   }
 
-  onSelect(employee: IEmployee): void {
-    if (employee) {
-      this.organizationsService.selectEmployee(employee.userId);
-    }
+  onSelect(employees: IEmployee[]): void {
+    const userId = isEmpty(employees)
+      ? null
+      : employees[0].userId;
+    this.organizationsService.selectEmployee(userId);
   }
 
   onEdit(employee: IEmployee): void {

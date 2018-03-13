@@ -21,25 +21,19 @@
   <div class="flex-item panel m0 p bl br">
     <app-select
       [ngModel]="selectedTypeCode"
-      [nullable]="false"
+      [isRequired]="true"
       [options]="typeCodeOptions"
-      (onSelect)="onSelectType($event)"
+      (select)="onSelectType($event)"
     ></app-select>
   </div>
 
-  <app-toolbar-2
-    class="bordered flex-item"
-    [items]="toolbarItems"
-  ></app-toolbar-2>
-
   <div class="flex-item grow">
-    <app-grid
-      columnTranslationKey="widgets.object"
-      selectionType="single"
+    <app-simple-grid
+      persistenceKey="[grid] admin/roles/objects"
       [columns]="columns"
       [rows]="rows"
-      [styles]="{ height: 'auto' }"
-      (onSelect)="onSelect($event)"
-    ></app-grid>
+      [toolbar]="toolbarItems"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
   </div>
 </div>
