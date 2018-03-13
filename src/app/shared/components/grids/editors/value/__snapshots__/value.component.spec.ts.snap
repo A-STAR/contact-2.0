@@ -323,7 +323,6 @@ exports[`ValueEditorComponent should render value editor with typeCode 2 (datepi
   
           </li>
           <li
-            class="current"
             ng-reflect-ng-class="[object Object]"
           >
             
@@ -331,6 +330,7 @@ exports[`ValueEditorComponent should render value editor with typeCode 2 (datepi
   
           </li>
           <li
+            class="current"
             ng-reflect-ng-class="[object Object]"
           >
             
@@ -1194,7 +1194,6 @@ exports[`ValueEditorComponent should render value editor with typeCode 7 (dateti
   
             </li>
             <li
-              class="current"
               ng-reflect-ng-class="[object Object]"
             >
               
@@ -1202,6 +1201,7 @@ exports[`ValueEditorComponent should render value editor with typeCode 7 (dateti
   
             </li>
             <li
+              class="current"
               ng-reflect-ng-class="[object Object]"
             >
               
