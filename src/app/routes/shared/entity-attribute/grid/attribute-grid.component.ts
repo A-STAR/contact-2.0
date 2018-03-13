@@ -25,6 +25,7 @@ import { ValueConverterService } from '@app/core/converter/value-converter.servi
 
 import { DialogFunctions } from '@app/core/dialog';
 import { combineLatestAnd, addGridLabel } from '@app/core/utils';
+import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
 
 @Component({
   selector: 'app-entity-attribute-grid',
@@ -51,24 +52,24 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
 
   columns: Array<ISimpleGridColumn<IAttribute>> = [
     {
-      valueTypeKey: 'typeCode', name: 'code',
+      prop: 'code', minWidth: 50, maxWidth: 80,
     },
     {
-      valueTypeKey: 'typeCode', name: 'name',
+      prop: 'name', minWidth: 150, maxWidth: 200, isGroup: true,
     },
     {
-      valueTypeKey: 'typeCode', name: 'value', editable: true,
+      prop: 'value', valueTypeKey: 'typeCode', minWidth: 100, maxWidth: 200,
       valueGetter: row => this.valueConverterService.deserialize(row.data).value,
     },
     {
-      valueTypeKey: 'typeCode', name: 'userFullName',
+      prop: 'userFullName', minWidth: 100, maxWidth: 200,
     },
     {
-      valueTypeKey: 'typeCode', name: 'changeDateTime',
-      valueFormatter: row => this.valueConverterService.ISOToLocalDateTime(row.value) || '',
+      prop: 'changeDateTime', minWidth: 100, maxWidth: 200,
+      renderer: DateTimeRendererComponent,
     },
     {
-      valueTypeKey: 'typeCode', name: 'comment',
+     prop: 'comment', minWidth: 80, maxWidth: 150,
     },
   ].map(addGridLabel('widgets.attribute.grid'));
 
