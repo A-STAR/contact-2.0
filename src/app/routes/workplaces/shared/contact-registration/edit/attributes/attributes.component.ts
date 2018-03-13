@@ -1,16 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, mergeMap } from 'rxjs/operators';
 
 import { IContactTreeAttribute } from '@app/routes/utilities/contact-properties/contact-properties.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
+
 import { ValueGetterParams } from 'ag-grid/dist/lib/entities/colDef';
 
 import { AttributesService } from '@app/routes/workplaces/shared/contact-registration/edit/attributes/attributes.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
-import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
@@ -29,7 +27,6 @@ export class ContactRegistrationAttributesComponent implements OnInit {
     private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    private valueConverterService: ValueConverterService,
   ) {}
 
   columns: Array<ISimpleGridColumn<IContactTreeAttribute>> = [

@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { ICellEditorParams } from 'ag-grid/main';
 import { ICellEditorAngularComp } from 'ag-grid-angular';
 
+import { TYPE_CODES } from '@app/core/utils';
+
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-grid-value-edit',
   templateUrl: './value.component.html',
 })
@@ -18,15 +19,15 @@ export class ValueEditorComponent implements ICellEditorAngularComp {
   }
 
   get type(): number {
-    const { data, valueTypeKey } = this.params as any;
-    return data[valueTypeKey];
+    const { node, valueTypeKey } = this.params as any;
+    return node.data[valueTypeKey] || TYPE_CODES.STRING;
   }
 
-  agInit(params: any): void {
-    const { data, dictCode, value } = params as any;
+  agInit(params: ICellEditorParams): void {
+    const { node, dictCode, value } = params as any;
     this.params = params;
     this.value = value;
-    this.dictCode = typeof dictCode === 'function' ? dictCode(data) : dictCode;
+    this.dictCode = typeof dictCode === 'function' ? dictCode(node.data) : dictCode;
   }
 
   getValue(): any {
@@ -39,6 +40,5 @@ export class ValueEditorComponent implements ICellEditorAngularComp {
 
   onValueChange(value: any): void {
     this.value = value;
-    this.params.api.stopEditing();
   }
 }

@@ -21,7 +21,6 @@ import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolba
 import { AttributeService } from '../attribute.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { DialogFunctions } from '@app/core/dialog';
 import { combineLatestAnd, addGridLabel } from '@app/core/utils';
@@ -86,7 +85,6 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService
   ) {
     super();
   }

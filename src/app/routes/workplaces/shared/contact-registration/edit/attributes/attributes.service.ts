@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IContactTreeAttribute } from '@app/routes/utilities/contact-properties/contact-properties.interface';
-import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
