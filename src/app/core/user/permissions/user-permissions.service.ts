@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged, filter, map, tap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { IUserPermissions } from './user-permissions.interface';
+
+import { AuthService } from '@app/core/auth/auth.service';
 
 import { ValueBag } from '@app/core/value-bag/value-bag';
 
@@ -13,19 +16,22 @@ export class UserPermissionsService {
   static USER_PERMISSIONS_FETCH         = 'USER_PERMISSIONS_FETCH';
   static USER_PERMISSIONS_FETCH_SUCCESS = 'USER_PERMISSIONS_FETCH_SUCCESS';
 
-  private permissions$ = this.store
-    .select(state => state.userPermissions.permissions)
-    .pipe(
-      tap(permissions => {
-        if (permissions) {
-          this.isFetching = false;
-        } else if (!this.isFetching) {
-          this.refresh();
-        }
-      }),
-      filter(Boolean),
-      distinctUntilChanged(),
-    );
+  private permissions$ = combineLatest(
+    this.authService.currentUser$.map(user => user && user.userId),
+    this.store.select(state => state.userPermissions.permissions)
+  )
+  .pipe(
+    tap(([userId, permissions]) => {
+      if (permissions) {
+        this.isFetching = false;
+      } else if (!this.isFetching && userId) {
+        this.refresh();
+      }
+    }),
+    map(([userId, permissions]) => permissions),
+    filter(Boolean),
+    distinctUntilChanged(),
+  );
 
   private bag$ = this.permissions$.pipe(
     map(permissions => new ValueBag(permissions)),
@@ -34,7 +40,10 @@ export class UserPermissionsService {
 
   private isFetching = false;
 
-  constructor(private store: Store<IAppState>) {}
+  constructor(
+    private authService: AuthService,
+    private store: Store<IAppState>
+  ) {}
 
   createRefreshAction(): Action {
     return {

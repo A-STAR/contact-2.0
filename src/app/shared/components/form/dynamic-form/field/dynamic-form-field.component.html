@@ -94,6 +94,7 @@
     ></app-multi-select>
   </ng-container>
 
+  <!--
   <ng-container *ngSwitchCase="'multilanguage'">
     <app-multilanguage-input
       [formControlName]="control.controlName"
@@ -103,6 +104,17 @@
       [langOptions]="control.langOptions"
       [placeholder]="control.placeholder"
     ></app-multilanguage-input>
+  </ng-container>
+  -->
+
+  <ng-container *ngSwitchCase="'multilanguage'">
+    <app-multilanguage
+      [formControlName]="control.controlName"
+      [isDisabled]="control.disabled"
+      [isRequired]="control.required"
+      [label]="control.label"
+      [langConfig]="control.langConfig"
+    ></app-multilanguage>
   </ng-container>
 
   <!--

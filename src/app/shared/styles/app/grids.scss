@@ -19,6 +19,10 @@ $row-height: 32px;
 
 $cell-horizontal-padding: 15px;
 
+.ag-row.active {
+  background-color: $brand-info;
+}
+
 .inactive {
   background-color: $gray-lighter;
 }

@@ -22,7 +22,7 @@ export class CallService {
 
   static CALL_INIT = 'CALL_INIT';
   static CALL_SETTINGS_FETCH = 'CALL_SETTINGS_FETCH';
-  static CALL_SETTINGS_FETCH_SUCCESS = 'CALL_SETTINGS_FETCH_SUCCESS';
+  static CALL_SETTINGS_CHANGE = 'CALL_SETTINGS_CHANGE';
   static CALL_SETTINGS_FETCH_FAILURE = 'CALL_SETTINGS_FETCH_FAILURE';
   static CALL_START = 'CALL_START';
   static CALL_START_SUCCESS = 'CALL_START_SUCCESS';
@@ -42,7 +42,7 @@ export class CallService {
 
   static PBX_LOGIN = 'PBX_LOGIN';
   static PBX_LOGIN_SUCCESS = 'PBX_LOGIN_SUCCESS';
-  static PBX_STATE_CHANGE = 'PBX_STATE_DATA';
+  static PBX_STATE_CHANGE = 'PBX_STATE_CHANGE';
   static PBX_STATUS_CHANGE = 'PBX_STATUS_CHANGE';
   static PBX_STATUS_CHANGE_SUCCESS = 'PBX_STATUS_CHANGE_SUCCESS';
   static PBX_PARAMS_UPDATE = 'PBX_PARAMS_UPDATE';
@@ -112,8 +112,9 @@ export class CallService {
   get pbxStatus$(): Observable<number> {
     return combineLatestAnd([
       this.usePBX$,
-      this.settings$.map(settings => settings && !settings.useAgentStatus)
+      this.settings$.map(settings => settings && !!settings.useAgentStatus)
     ])
+    .filter(Boolean)
     .flatMap(() => this.pbxState$)
     .filter(Boolean)
     .map(state => state.userStatus);

@@ -9,7 +9,6 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -23,20 +22,16 @@ import {
   ISelectItemsPayload,
   IValue,
 } from './dynamic-form.interface';
-import { ILookupLanguage } from '@app/core/lookup/lookup.interface';
 
-import { DataService } from '@app/core/data/data.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { makeKey, getTranslations } from '@app/core/utils';
+import { makeKey } from '@app/core/utils';
 
 import {
   IDynamicFormSelectControl,
-  IDynamicFormLanguageControl
 } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEntityTranslation } from '@app/core/entity/translations/entity-translations.interface';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -55,7 +50,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private dataService: DataService,
     private formBuilder: FormBuilder,
     private lookupService: LookupService,
     private valueConverterService: ValueConverterService,
@@ -105,8 +99,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     // get subsets of `multilanguage` controls & `select` controls with `dictCode` & `lookupKey`
     const dictCodeCtrls = flatControls
       .filter(ctrl => ctrl.type === 'select' && ctrl.dictCode);
-      const lookupCtrls = flatControls.filter(ctrl => ctrl.type === 'select' && ctrl.lookupKey);
-    const multiLanguageCtrls = flatControls.filter(ctrl => ctrl.type === 'multilanguage');
+    const lookupCtrls = flatControls.filter(ctrl => ctrl.type === 'select' && ctrl.lookupKey);
 
     combineLatest(
       dictCodeCtrls.length
@@ -130,42 +123,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
           )
         : of([]),
 
-      multiLanguageCtrls.length
-        ? this.lookupService.lookup<ILookupLanguage>('languages')
-            .pipe(
-              switchMap(languages => {
-                return combineLatest(
-                  multiLanguageCtrls.map((ctrl: IDynamicFormLanguageControl) => {
-                    const { langConfig } = ctrl;
-                    if (!langConfig.entityAttributeId) {
-                      return new ErrorObservable('The multilanguage config must contain an \'entityAttributeId\'');
-                    }
-
-                    const emptyLangValues: IEntityTranslation[] = languages.map(v => (
-                      { languageId: v.id, isMain: v.isMain, value: null }
-                    ));
-
-                    return langConfig.entityId
-                      ? this.dataService.readTranslations(langConfig.entityId, langConfig.entityAttributeId)
-                      : of(emptyLangValues);
-                  })
-                )
-                .pipe(
-                  switchMap((translations: IEntityTranslation[][]) => {
-                    // log('translations fetched', translations);
-                    const map = translations.map((translation, i) => {
-                      // set langOptions for `multilanguage` controls
-                      const ctrl = <IDynamicFormLanguageControl>multiLanguageCtrls[i];
-                      ctrl.langOptions = getTranslations(languages, translation);
-                      return ctrl;
-                    });
-                    return [map];
-                  })
-                );
-              })
-            )
-          : of([]),
-
       lookupCtrls.length
         ? combineLatest(
             lookupCtrls.map((ctrl: IDynamicFormSelectControl) => {
@@ -188,14 +145,14 @@ export class DynamicFormComponent implements OnInit, OnChanges {
         : of([])
     )
     .pipe(first())
-    .subscribe(([ dictCtrlsWithOptions, multiLanguageCtrlsWithOptions, lookupCtrlsWithOptions ]) => {
+    .subscribe(([ dictCtrlsWithOptions, lookupCtrlsWithOptions ]) => {
 
       // 2. set the dictionary options for `select` controls
       // 3. set the `multilanguage` controls' options
       // 4. set the lookup options for `select` controls'
 
       dictCtrlsWithOptions
-        .concat(multiLanguageCtrlsWithOptions)
+        // .concat(multiLanguageCtrlsWithOptions)
         .concat(lookupCtrlsWithOptions)
         .forEach(control => {
           this.recursivelyMergeControlProps(this.controls, control);
@@ -382,13 +339,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   private serializeControlValue(value: any, control: IDynamicFormControl): any {
     switch (control.type) {
-      case 'multilanguage': {
-        // TODO(a.tymchuk): replace with proper type instead of ILabeledValue
-        const values = (Array.isArray(value) ? value : control.langOptions)
-          .filter((o: any) => o.isUpdated)
-          .map((o: any) => ({ languageId: o.languageId, value: o.value }));
-        return values.length ? values : undefined;
-      }
       case 'datepicker':
         return ['', null].includes(value)
           ? null

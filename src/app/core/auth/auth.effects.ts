@@ -3,7 +3,6 @@ import { HttpResponse } from '@angular/common/http';
 import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 
 import { IUserParams } from '@app/core/auth/auth.interface';
 
@@ -154,9 +153,6 @@ export class AuthEffects {
   }
 
   private fetchUserParams(): Observable<IUserParams> {
-    // return this.dataService.get('/userParams');
-    return of({
-      usePbx: 1
-    });
+    return this.dataService.read('/api/userParams');
   }
 }
