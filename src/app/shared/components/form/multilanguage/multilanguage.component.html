@@ -1,0 +1,31 @@
+<label class="m0" (click)="onLabelClick($event)">
+  <div *ngIf="label" class="form-label">
+    {{ label | translate }}
+    <b *ngIf="isRequired" class="text-danger">*</b>
+  </div>
+  <div class="input-group" appDropdown>
+    <span class="input-group-addon language-label" #dropdownTrigger>
+      <span>
+        {{ selectedLanguageLabel }}
+      </span>
+      <i class="caret"></i>
+    </span>
+    <ul class="dropdown-content" #dropdownContent>
+      <li *ngFor="let language of languages" (click)="onLanguageSelect(language)">
+        {{ language.name }}
+      </li>
+    </ul>
+    <input
+      #input
+      class="form-control"
+      type="text"
+      [disabled]="isDisabled"
+      [ngModel]="selectedTranslationLabel"
+      (focusout)="onFocusOut()"
+      (input)="onChange($event)"
+    />
+  </div>
+  <div>
+    <span *ngIf="errors">{{ errors | json }}</span>
+  </div>
+</label>

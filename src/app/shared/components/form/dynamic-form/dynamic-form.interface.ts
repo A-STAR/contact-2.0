@@ -3,7 +3,7 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 import { IDialogMultiSelectFilterType } from '../dialog-multi-select/dialog-multi-select.interface';
 import { ILabeledValue } from '@app/core/converter/value-converter.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
-import { IMultiLanguageOption, IMultiLanguageConfig } from '@app/shared/components/form/multi-language/multi-language.interface';
+import { IMultiLanguageConfig } from '@app/shared/components/form/multilanguage/multilanguage.interface';
 import { IRadioGroupOption } from '../radio-group/radio-group.interface';
 import { ISegmentedInputOption } from '../segmented-input/segmented-input.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -138,7 +138,6 @@ export interface IDynamicFormImageControl extends IDynamicFormBaseControl {
 export interface IDynamicFormLanguageControl extends IDynamicFormBaseControl {
   type: 'multilanguage';
   // options for multilanguage
-  langOptions?: IMultiLanguageOption[];
   langConfig?: IMultiLanguageConfig;
 }
 
@@ -262,8 +261,7 @@ export interface IDynamicFormControlOld {
   // optionsActions?: Array<ISelectionAction>;
   optionsRenderer?: (label: string, item: ILabeledValue) => string;
   // options for multilanguage
-  langOptions?: IMultiLanguageOption[];
-  langConfig?: IMultiLanguageConfig;
+  langConfig?: IMultiLanguageConfig[];
   // options for select wrapper
   dictCode?: number;
   parentCode?: number;
