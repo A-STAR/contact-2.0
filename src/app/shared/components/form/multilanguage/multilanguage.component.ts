@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 
-import { EntityTranslationsConstants, IEntityTranslation } from '@app/core/entity/translations/entity-translations.interface';
+import { IEntityTranslation } from '@app/core/entity/translations/entity-translations.interface';
 import { ILookupLanguage } from '@app/core/lookup/lookup.interface';
 import { IMultiLanguageConfig } from '@app/shared/components/form/multilanguage/multilanguage.interface';
 

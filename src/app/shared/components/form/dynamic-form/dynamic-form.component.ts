@@ -9,7 +9,6 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -23,20 +22,17 @@ import {
   ISelectItemsPayload,
   IValue,
 } from './dynamic-form.interface';
-import { ILookupLanguage } from '@app/core/lookup/lookup.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { makeKey, getTranslations } from '@app/core/utils';
+import { makeKey } from '@app/core/utils';
 
 import {
   IDynamicFormSelectControl,
-  IDynamicFormLanguageControl
 } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEntityTranslation } from '@app/core/entity/translations/entity-translations.interface';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -55,7 +51,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private dataService: DataService,
     private formBuilder: FormBuilder,
     private lookupService: LookupService,
     private valueConverterService: ValueConverterService,
