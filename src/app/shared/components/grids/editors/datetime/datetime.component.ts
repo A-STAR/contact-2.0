@@ -60,6 +60,11 @@ export class DateTimeEditComponent implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
+  setCurrentTime(): void {
+    const value = new Date();
+    this.update(value);
+  }
+
   onDateChange(date: Date): void {
     this.tempValue = this.dateTimeService.setDate(this.tempValue, date);
   }
