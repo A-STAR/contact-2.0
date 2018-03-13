@@ -4,13 +4,10 @@ jest.setTimeout(32000);
 
 expect.extend({ toMatchImageSnapshot });
 
-describe('foo', () => {
-  it('should find the nightmare github link first', async (done) => {
+describe('Login Page', () => {
+  it('should render', async (done) => {
     const page = await global['__BROWSER__'].newPage();
-    await page.goto('https://duckduckgo.com');
-    await page.type('#search_form_input_homepage', 'github nightmare');
-    await page.click('#search_button_homepage');
-    await page.waitForNavigation();
+    await page.goto('http://appservertest.luxbase.int:4100');
     const screenshot = await page.screenshot();
     await page.close();
     expect(screenshot)['toMatchImageSnapshot']();
