@@ -69,13 +69,13 @@ export class GridsService {
     this.setLocalSettings(persistenceKey, { columns, sortModel });
   }
 
-  convertTreeData<T>(data: T[], parent?: IGridTreePath): (T & IGridTreePath)[] {
+  convertTreeData<T>(data: T[], prop: string = 'name', parent?: IGridTreePath): (T & IGridTreePath)[] {
     return data.reduce((acc, item: T & IGridTreePath) => {
-      item.path = parent ? [...parent.path, item.name] : [item.name];
+      item.path = parent ? [...parent.path, item[prop]] : [item[prop]];
       return [
         ...acc,
         item,
-        ...(item.children && item.children.length ? this.convertTreeData(item.children, item) : [])
+        ...(item.children && item.children.length ? this.convertTreeData(item.children, prop, item) : [])
       ];
     }, [])
     // remove children property
