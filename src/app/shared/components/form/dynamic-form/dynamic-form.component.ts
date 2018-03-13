@@ -23,7 +23,6 @@ import {
   IValue,
 } from './dynamic-form.interface';
 
-import { DataService } from '@app/core/data/data.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
