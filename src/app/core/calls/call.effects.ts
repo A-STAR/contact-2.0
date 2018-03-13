@@ -47,6 +47,9 @@ export class CallEffects {
     .switchMap(userParams => [{
       type: CallService.PBX_PARAMS_CHANGE,
       payload: null
+    }, {
+      type: CallService.CALL_SETTINGS_CHANGE,
+      payload: null
     }]);
 
   @Effect()
@@ -145,7 +148,7 @@ export class CallEffects {
     .mergeMap(() => {
       return this.read()
         .map(settings => ({
-          type: CallService.CALL_SETTINGS_FETCH_SUCCESS,
+          type: CallService.CALL_SETTINGS_CHANGE,
           payload: settings
         }))
         .catch(error => {
@@ -283,9 +286,7 @@ export class CallEffects {
   ) {}
 
   private read(): Observable<ICallSettings> {
-    return this.dataService.read('/pbx/settings')
-      // TODO (i.kibisov): remove mock
-      .map(settings => ({ ...settings, useAgentStatus: 1 }));
+    return this.dataService.read('/pbx/settings');
   }
 
   private login(): Observable<void> {
