@@ -51,7 +51,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
   @Input() showToolbar = false;
   @Input() toolbar: IToolbarItem[];
-
+  @Input() groupBy: string;
   @Input() treeData: boolean;
 
   @Input()
@@ -81,7 +81,6 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
 
   gridOptions: GridOptions = {
     defaultColDef: {
-      enableRowGroup: false,
       filterParams: {
         newRowsAction: 'keep',
       },
@@ -129,6 +128,8 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   columnApi: ColumnApi;
   gridApi: GridApi;
 
+  autoGroupColumnDef: ColDef;
+
   colDefs: ColDef[];
   rowData: T[] | (T & IGridTreePath)[];
 
@@ -152,6 +153,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.columns) {
+      this.autoGroupColumnDef = this.gridsService.getRowGrouping(this.columns);
       this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey);
       this.cdRef.markForCheck();
     }

@@ -36,8 +36,10 @@ export class GridsService {
           ? {
               field: column.prop,
               headerName: this.translateService.instant(column.label),
+              hide: column.isGroup,
               minWidth: column.minWidth,
               maxWidth: column.maxWidth,
+              valueGetter: column.valueGetter,
               ...this.getFilterOptions(column),
               ...this.getCellRendererOptions(column),
               ...(savedColumns.find(c => c.colId === id) || {}),
@@ -46,6 +48,21 @@ export class GridsService {
           : null;
       })
       .filter(Boolean);
+  }
+
+  getRowGrouping<T>(columns: IGridColumn<T>[]): ColDef {
+    return columns
+          .filter(c => c.isGroup)
+          .slice(0, 1)
+          .map(col => ({
+              headerName: this.translateService.instant(col.label),
+              minWidth: col.minWidth,
+              maxWidth: col.maxWidth,
+              cellRendererParams: {
+                suppressCount: true
+              }
+            })
+          ).shift();
   }
 
   restoreSortModel(persistenceKey: string, gridApi: GridApi): void {

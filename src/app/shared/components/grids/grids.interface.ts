@@ -1,5 +1,6 @@
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 import { ICellRendererParams } from 'ag-grid';
+import { ValueGetterParams } from 'ag-grid/dist/lib/entities/colDef';
 
 export enum IGridSelectionType {
   SINGLE = 'single',
@@ -37,6 +38,8 @@ export interface IGridColumn<T> {
   renderer?: any;
   valueTypeKey?: string;
   editable?: boolean;
+  valueGetter?: ((params: ValueGetterParams) => any) | string;
+  isGroup?: boolean;
 }
 
 export interface IGridTreePath {

@@ -9,16 +9,13 @@
       class="ag-theme-material"
       style="width: 100%; height: 100%;"
       [treeData]="treeData"
-      [animateRows]="true"
-      [groupDefaultExpanded]="groupDefaultExpanded"
       [getDataPath]="getDataPath"
-      [getRowNodeId]="getRowNodeId"
-      [autoGroupColumnDef]="autoGroupColumnDef"
       [columnDefs]="colDefs"
       [getRowClass]="rowClassCallback"
       [gridOptions]="gridOptions"
       [rowData]="rowData"
       [rowSelection]="selectionType"
+      [autoGroupColumnDef]="autoGroupColumnDef"
       (gridReady)="onGridReady($event)"
     ></ag-grid-angular>
   </div>
