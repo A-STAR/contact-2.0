@@ -51,7 +51,7 @@ export class OperatorDialogComponent implements OnInit {
     this.close.emit();
   }
 
-  private fetch(searchParams: object = {}): void {
+  private fetch(): void {
     this.operatorService.fetchAll().subscribe(operators => {
       this.operators = operators;
       this.cdRef.markForCheck();
