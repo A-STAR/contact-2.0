@@ -21,8 +21,8 @@
 
 <div class="flex vertical">
   <!-- Form -->
-  <div class="flex-item grow" style="overflow-y: auto;">
-    <div [formGroup]="form">
+  <div class="flex-item grow" [formGroup]="form" style="overflow-y: auto;">
+
 
       <!-- Promise -->
       <app-contact-registration-promise [formGroup]="form"></app-contact-registration-promise>
@@ -70,7 +70,6 @@
 
       <!-- Attributes -->
       <app-contact-registration-attributes></app-contact-registration-attributes>
-    </div>
   </div>
 
   <!-- Buttons -->

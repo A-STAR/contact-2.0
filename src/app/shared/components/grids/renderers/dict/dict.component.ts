@@ -14,6 +14,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 })
 export class DictRendererComponent implements ICellRendererAngularComp {
   private params: ICellRendererParams;
+  value$: Observable<string>;
 
   constructor(
     private userDictionariesService: UserDictionariesService,
@@ -21,24 +22,21 @@ export class DictRendererComponent implements ICellRendererAngularComp {
 
   agInit(params: ICellRendererParams): void {
     this.params = params;
+    const { data, dictCode, value } = this.params as any;
+    const code = typeof dictCode === 'function' ? dictCode(data) : dictCode;
+    this.value$ = code
+    ? this.userDictionariesService
+        .getDictionary(code)
+        .pipe(
+          map(terms => {
+            const term = terms.find(t => t.code === value);
+            return term ? term.name : value;
+          }),
+        )
+    : of(value);
   }
 
   refresh(): boolean {
     return false;
-  }
-
-  get value$(): Observable<string> {
-    const { data, dictCode, value } = this.params as any;
-    const code = typeof dictCode === 'function' ? dictCode(data) : dictCode;
-    return code
-      ? this.userDictionariesService
-          .getDictionary(code)
-          .pipe(
-            map(terms => {
-              const term = terms.find(t => t.code === value);
-              return term ? term.name : value;
-            }),
-          )
-      : of(value);
   }
 }

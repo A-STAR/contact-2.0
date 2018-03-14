@@ -14,9 +14,10 @@ import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dy
 import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { getFormControlConfig, getRawValue, getValue } from '@app/core/utils/value';
+import { getFormControlConfig, getValue, getRawValue } from '@app/core/utils/value';
 import { makeKey } from '@app/core/utils';
 
 const labelKey = makeKey('widgets.attribute.grid');

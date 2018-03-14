@@ -1,6 +1,9 @@
-<app-gridtree2-wrapper
-  *ngIf="attributes?.length"
-  [translateColumnLabels]="true"
-  [rows]="attributes"
-  [columns]="columns$ | async"
-></app-gridtree2-wrapper>
+<div class="grid-wrapper">
+  <app-simple-grid
+    persistenceKey="[grid] workplaces/contact-registration/edit/attributes"
+    [treeData]="true"
+    [rows]="attributes"
+    [columns]="columns"
+    (cellValueChanged)="onCellValueChanged($event)"
+  ></app-simple-grid>
+</div>

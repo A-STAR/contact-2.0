@@ -28,9 +28,7 @@ export class ContactRegistrationAutoCommentComponent implements OnInit, OnDestro
   ngOnInit(): void {
     this.formSub = combineLatest(
       this.contactRegistrationService.params$,
-      this.formGroup.get('autoCommentId').valueChanges.pipe(
-        map(item => item && item[0].value),
-      ),
+      this.formGroup.get('autoCommentId').valueChanges
     )
     .pipe(
       filter(([ params, autoCommentId ]) => params && autoCommentId),

@@ -17,10 +17,11 @@ import {
   GridApi,
   GridOptions,
   RowDoubleClickedEvent,
+  CellValueChangedEvent,
 } from 'ag-grid';
 
 import { IAGridAction } from '@app/shared/components/grid2/grid2.interface';
-import { IGridSelectionType } from '../grids.interface';
+import { IGridSelectionType, IGridTreePath } from '../grids.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from './grid.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
@@ -47,11 +48,20 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   @Input() columns: ISimpleGridColumn<T>[];
   @Input() idKey = 'id';
   @Input() persistenceKey: string;
-  @Input() rows: T[];
   @Input() rowClass: (item: T) => string;
   @Input() selectionType: IGridSelectionType = IGridSelectionType.SINGLE;
   @Input() showToolbar = false;
   @Input() toolbar: IToolbarItem[];
+  @Input() treeData: boolean;
+
+  @Input()
+  set rows(rowData: T[]) {
+    if (this.treeData && rowData && rowData.length) {
+      this.rowData = this.gridsService.convertTreeData(rowData);
+    } else {
+      this.rowData = rowData;
+    }
+  }
 
   @Input()
   set selection(selection: T[]) {
@@ -68,10 +78,10 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   @Output() select = new EventEmitter<T[]>();
   @Output() dblClick = new EventEmitter<T>();
   @Output() action = new EventEmitter<IAGridAction>();
+  @Output() cellValueChanged = new EventEmitter<CellValueChangedEvent>();
 
   gridOptions: GridOptions = {
     defaultColDef: {
-      enableRowGroup: false,
       filterParams: {
         newRowsAction: 'keep',
       },
@@ -84,6 +94,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
         'columnsMenuTab',
       ],
     },
+    getDataPath: (data: T) => (data as T & IGridTreePath).path,
     enableColResize: true,
     enableFilter: true,
     enableRangeSelection: true,
@@ -102,6 +113,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
     onColumnMoved: () => this.saveSettings(),
     onColumnResized: () => this.saveSettings(),
     onRowDoubleClicked: event => this.onRowDoubleClicked(event),
+    onCellValueChanged: event => this.onCellValueChanged(event),
     onSelectionChanged: () => this.onSelectionChanged(),
     onSortChanged: () => this.saveSettings(),
     rowHeight: 32,
@@ -118,7 +130,10 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   columnApi: ColumnApi;
   gridApi: GridApi;
 
+  autoGroupColumnDef: ColDef;
+
   colDefs: ColDef[];
+  rowData: T[] | (T & IGridTreePath)[];
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -140,6 +155,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.columns) {
+      this.autoGroupColumnDef = this.gridsService.getRowGrouping(this.columns);
       this.colDefs = this.gridsService.convertColumnsToColDefs(this.columns, this.persistenceKey);
       this.cdRef.markForCheck();
     }
@@ -168,6 +184,10 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
 
   private onRowDoubleClicked(event: RowDoubleClickedEvent): void {
     this.dblClick.emit(event.data);
+  }
+
+  private onCellValueChanged(event: CellValueChangedEvent): void {
+    this.cellValueChanged.emit(event);
   }
 
   private updateToolbar(): void {
