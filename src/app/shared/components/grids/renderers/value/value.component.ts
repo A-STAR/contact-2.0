@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
-import { ICellRendererParams } from 'ag-grid/main';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { Observable } from 'rxjs/Observable';
 
