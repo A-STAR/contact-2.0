@@ -17,7 +17,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { isEmpty, range, addLabelForEntity } from '@app/core/utils';
+import { isEmpty, range, addLabelForEntity, combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
@@ -69,12 +69,16 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
         this.toolbarItems = [
           {
             type: ToolbarItemTypeEnum.BUTTON_ADD,
-            action: () => this.setDialog('create')
+            action: () => this.setDialog('create'),
+            enabled: this.personSelectService.canAdd$
           },
           {
             type: ToolbarItemTypeEnum.BUTTON_EDIT,
             action: () => this.setDialog('edit'),
-            enabled: this.selectedPerson$.map(Boolean)
+            enabled: combineLatestAnd([
+              this.personSelectService.canEdit$,
+              this.selectedPerson$.map(Boolean)
+            ])
           }
         ];
       });
