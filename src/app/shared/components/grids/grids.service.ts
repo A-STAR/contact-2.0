@@ -40,7 +40,9 @@ export class GridsService {
               minWidth: column.minWidth,
               maxWidth: column.maxWidth,
               valueGetter: column.valueGetter,
-              editable: column.editable,
+              valueSetter: column.valueSetter,
+              valueParser: column.valueParser,
+              editable: column.edit && column.edit.editable,
               ...this.getFilterOptions(column),
               ...this.getCellRendererOptions(column),
               ...(savedColumns.find(c => c.colId === id) || {}),
@@ -63,7 +65,8 @@ export class GridsService {
                 suppressCount: true
               }
             })
-          ).shift();
+          )
+          .shift();
   }
 
   restoreSortModel(persistenceKey: string, gridApi: GridApi): void {
@@ -104,9 +107,16 @@ export class GridsService {
   }
 
   private preloadDictionaries<T>(columns: IGridColumn<T>[]): Observable<IUserDictionaries> {
-    // TODO(d.maltsev): remove duplicates
-    const dictCodes = columns
-      .map(column => Number(column.dictCode))
+    const dictCodes = Array.from(
+      columns
+        .reduce((acc, column) => {
+          acc.add(Number(column.dictCode));
+          if (column.edit) {
+            acc.add(Number(column.edit.dictCode));
+          }
+          return acc;
+        }, new Set())
+      )
       .filter(Boolean);
     return this.userDictionariesService.getDictionaries(dictCodes);
   }
@@ -144,8 +154,9 @@ export class GridsService {
   }
 
   private getCellEditorOptions<T>(column: IGridColumn<T>): Partial<ColDef> {
-    const { editable, valueTypeKey, dictCode, lookupKey } = column;
-    if (editable) {
+    const { edit, valueTypeKey } = column;
+    if (edit) {
+      const { dictCode, lookupKey } = edit;
       return {
         cellEditorFramework: ValueEditorComponent,
         cellEditorParams: { valueTypeKey, dictCode, lookupKey }
