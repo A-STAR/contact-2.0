@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { IDebt } from '@app/core/debt/debt.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
