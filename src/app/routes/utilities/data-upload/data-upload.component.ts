@@ -352,7 +352,7 @@ export class DataUploadComponent extends DialogFunctions
   private getColumnsFromResponse(
     response: IOpenFileResponse,
   ): Observable<IAGridColumn[]> {
-    const columns = response.columns.map((column, i) => {
+    const columns = response.columns.map(column => {
       return {
         name: column.id,
         // cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),

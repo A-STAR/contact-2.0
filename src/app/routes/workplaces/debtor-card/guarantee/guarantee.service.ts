@@ -38,7 +38,7 @@ export class GuaranteeService extends AbstractActionService {
   }
 
   // TODO: fetch one item form server
-  fetch(debtId: number, contractId: number, personId: number = null): Observable<IGuaranteeContract> {
+  fetch(_: number, contractId: number, personId: number = null): Observable<IGuaranteeContract> {
     return this.contracts$.map(contracts => contracts.find(
       contract => contract.contractId === contractId && (!personId || contract.personId === personId))
     );

@@ -18,7 +18,7 @@
       autocomplete="off"
       [attr.placeholder]="(placeholder || '') | translate"
       [ngModel]="activeLabel | translate"
-      (click)="onInputClick($event)"
+      (click)="onInputClick()"
       (ngModelChange)="onInputChange($event)"
     >
     <i

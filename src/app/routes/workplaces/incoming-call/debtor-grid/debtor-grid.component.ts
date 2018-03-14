@@ -110,7 +110,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     this.incomingCallService.selectedDebtor = debtor && debtor[0];
   }
 
-  onAction($event: string): void {
+  onAction(): void {
     // uncomment to test action for context menu
     // console.log($event);
   }

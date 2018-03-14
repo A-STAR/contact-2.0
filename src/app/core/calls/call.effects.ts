@@ -162,7 +162,7 @@ export class CallEffects {
     .switchMap((action: UnsafeAction) => {
       const { phoneId, debtId, personId, personRole } = action.payload;
       return this.call(phoneId, debtId, personId, personRole)
-        .map(call => ({
+        .map(() => ({
           type: CallService.CALL_START_SUCCESS,
           payload: { phoneId, debtId, personId, personRole }
         }))
@@ -180,7 +180,7 @@ export class CallEffects {
     .switchMap((action: UnsafeAction) => {
       const { debtId, personId, personRole } = action.payload;
       return this.drop(debtId, personId, personRole)
-        .map(call => ({
+        .map(() => ({
           type: CallService.CALL_DROP_SUCCESS,
           payload: action.payload
         }))
@@ -205,7 +205,7 @@ export class CallEffects {
     .switchMap((action: UnsafeAction) => {
       const { debtId, personId, personRole } = action.payload;
       return this.hold(debtId, personId, personRole)
-        .map(call => ({
+        .map(() => ({
           type: CallService.CALL_HOLD_SUCCESS,
           payload: action.payload
         }))
@@ -230,7 +230,7 @@ export class CallEffects {
     .switchMap((action: UnsafeAction) => {
       const { debtId, personId, personRole } = action.payload;
       return this.retrieve(debtId, personId, personRole)
-        .map(call => ({
+        .map(() => ({
           type: CallService.CALL_RETRIEVE_SUCCESS,
           payload: action.payload
         }))
@@ -255,7 +255,7 @@ export class CallEffects {
     .switchMap((action: UnsafeAction) => {
       const { userId, debtId, personId, personRole } = action.payload;
       return this.transfer(userId, debtId, personId, personRole)
-        .map(call => ({
+        .map(() => ({
           type: CallService.CALL_TRANSFER_SUCCESS,
           payload: action.payload
         }))

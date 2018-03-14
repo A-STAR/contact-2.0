@@ -96,7 +96,7 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
     return this.selectedPerson && this.selectedPerson.id;
   }
 
-  onSelect(persons: IPerson[]): void {
+  onSelect(): void {
     this.selectedPerson$.next(this.grid.selected && this.grid.selected[0] as any);
     this.select.emit(this.selectedPerson);
   }
@@ -109,7 +109,7 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
     this.fetch();
   }
 
-  onPersonCreated(person: IPerson): void {
+  onPersonCreated(): void {
     this.closeDialog();
     this.fetch();
   }

@@ -81,11 +81,11 @@ export class TabViewComponent implements OnInit, AfterContentInit, OnDestroy, Af
   }
 
   get visibleTabs(): TabViewTabComponent[] {
-    return this.tabs.filter((tab, index) => this.isHeaderTabVisible(index));
+    return this.tabs.filter((_, index) => this.isHeaderTabVisible(index));
   }
 
   get hiddenTabs(): TabViewTabComponent[] {
-    return this.tabs.filter((tab, index) => !this.isHeaderTabVisible(index));
+    return this.tabs.filter((_, index) => !this.isHeaderTabVisible(index));
   }
 
   isHeaderTabVisible(tabIndex: number): boolean {

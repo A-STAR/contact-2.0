@@ -41,7 +41,7 @@ export class RadioButtonComponent implements ControlValueAccessor, OnInit {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
     // No need in touch callback for radiobutton
     // because a click will change its value and mark control as dirty anyway
   }

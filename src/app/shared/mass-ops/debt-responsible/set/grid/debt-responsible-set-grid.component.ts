@@ -50,7 +50,7 @@ export class DebtResponsibleSetGridComponent implements OnInit {
     );
   }
 
-  private fetch(searchParams: object = {}): void {
+  private fetch(): void {
     this.debtResponsibleSetService.fetchAll().subscribe(operators => {
       this.operators = operators;
       this.cdRef.markForCheck();

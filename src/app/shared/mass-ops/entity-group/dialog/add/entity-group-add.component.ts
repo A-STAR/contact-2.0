@@ -31,7 +31,7 @@ export class EntityGroupAddComponent implements OnInit  {
   onSelect(group: IEntityGroup): void {
     this.entityGroupService.addToGroup(this.actionData, group.id)
       // .catch(this.notificationsService.updateError().callback())
-      .subscribe(result => {
+      .subscribe(() => {
         this.close.emit({ refresh: true });
         this.cdRef.markForCheck();
       });

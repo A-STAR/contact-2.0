@@ -18,8 +18,8 @@
       [attr.placeholder]="(placeholder || '') | translate"
       [disabled]="disabled"
       [ngModel]="selectionLabel"
-      (click)="onInputClick($event)"
-      (ngModelChange)="onInputChange($event)"
+      (click)="onInputClick()"
+      (ngModelChange)="onInputChange()"
     >
     <i
       *ngIf="!disabled"

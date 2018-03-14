@@ -25,7 +25,7 @@ export class PromiseRemoveDialogComponent {
 
   onConfirm(): void {
     this.promiseResolveService.remove(this.actionData.payload)
-      .subscribe(result => {
+      .subscribe(() => {
         this.close.emit({ refresh: true });
         this.cdRef.markForCheck();
       });

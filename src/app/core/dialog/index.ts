@@ -28,7 +28,7 @@ export abstract class DialogFunctions {
     this.setDialog();
   }
 
-  onResult(result: any): void {
-
+  onResult(): void {
+    //
   }
 }

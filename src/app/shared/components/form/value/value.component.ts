@@ -19,7 +19,6 @@ import { IValue } from '../../../../core/utils/value';
 })
 export class ValueInputComponent implements ControlValueAccessor {
   private _value: IValue;
-  private _isDisabled: boolean;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -41,11 +40,7 @@ export class ValueInputComponent implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this._isDisabled = isDisabled;
+  registerOnTouched(): void {
   }
 
   get value(): IValue {

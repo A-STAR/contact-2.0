@@ -53,7 +53,6 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
 
   private isInitialised = false;
   private _labelGetter: (row: T) => string;
-  private _valueGetter: (row: T) => IDialogMultiSelectValue;
   private previousValue: IDialogMultiSelectValue[];
   private _title: string;
   private value: IDialogMultiSelectValue[];
@@ -84,11 +83,6 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
 
   get labelGetter(): (row: T) => string {
     return this._labelGetter || this.dialogMultiSelectService.getLabelGetter(this.filterType);
-  }
-
-  @Input('valueGetter')
-  set valueGetter(fn: (row: T) => IDialogMultiSelectValue) {
-    this._valueGetter = fn;
   }
 
   get valueGetter(): (row: T) => IDialogMultiSelectValue {
@@ -228,7 +222,7 @@ export class DialogMultiSelectComponent<T> extends DialogFunctions implements Co
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
   }
 
   setDisabledState(isDisabled: boolean): void {
