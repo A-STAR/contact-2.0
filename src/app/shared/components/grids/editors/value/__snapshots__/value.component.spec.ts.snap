@@ -16,10 +16,8 @@ exports[`ValueEditorComponent should render value editor with typeCode 1 (number
     
     
     <app-number
-      class="ng-untouched ng-pristine ng-invalid"
+      class="ng-untouched ng-pristine ng-valid"
       ng-reflect-model="0"
-      ng-reflect-required="true"
-      required=""
     >
       <label
         class="m0"
@@ -125,10 +123,8 @@ exports[`ValueEditorComponent should render value editor with typeCode 2 (datepi
       
       
       <app-date
-        class="ng-untouched ng-pristine ng-invalid"
+        class="ng-untouched ng-pristine ng-valid"
         ng-reflect-model="2017-06-20T21:00:00Z"
-        ng-reflect-required="true"
-        required=""
       >
         <header>
           
@@ -656,10 +652,8 @@ exports[`ValueEditorComponent should render value editor with typeCode 5 (float)
     
     
     <app-number
-      class="ng-untouched ng-pristine ng-invalid"
+      class="ng-untouched ng-pristine ng-valid"
       ng-reflect-model="3.14"
-      ng-reflect-required="true"
-      required=""
     >
       <label
         class="m0"
@@ -1660,10 +1654,8 @@ exports[`ValueEditorComponent should render value renderer with typeCode 3 (stri
     
     
     <app-text
-      class="ng-untouched ng-pristine ng-invalid"
+      class="ng-untouched ng-pristine ng-valid"
       ng-reflect-model="value"
-      ng-reflect-required="true"
-      required=""
     >
       <label
         class="m0"

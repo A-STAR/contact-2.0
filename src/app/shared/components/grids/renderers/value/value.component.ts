@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+
+import { IValueRendererParams } from '@app/shared/components/grids/grids.interface';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { TYPE_CODES, getRawValue } from '@app/core/utils';
-import { of } from 'rxjs/observable/of';
-import { map } from 'rxjs/operators';
-import { IValueRendererParams } from '@app/shared/components/grids/grids.interface';
-
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
