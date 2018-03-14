@@ -13,7 +13,7 @@ job_test:
     - npm install
     - npm run lint
     - npm run test:ci
-    - npm run e2e:ci
+    # - npm run e2e:ci
     - npm run build -- --aot --progress=false
   cache:
     paths:
