@@ -29,7 +29,8 @@ export class ValueRendererComponent implements ICellRendererAngularComp {
   agInit(params: IValueRendererParams): void {
     const { data, valueTypeKey, value } = params;
     this.type = data[valueTypeKey];
-
+    // value is undefined on initial load
+    // value is present after cellEditor changes
     if (this.type) {
       this.value = value ? value : getRawValue(params.data, valueTypeKey);
     } else if (!this.type) {
@@ -54,6 +55,7 @@ export class ValueRendererComponent implements ICellRendererAngularComp {
     const { data, valueTypeParams } = params;
     // TODO(i.lobanov): lookupKey
     if (valueTypeParams && valueTypeParams.dictCode) {
+
       const code = typeof valueTypeParams.dictCode === 'function' ? valueTypeParams.dictCode(data)
         : valueTypeParams.dictCode;
 
