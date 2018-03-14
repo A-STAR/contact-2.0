@@ -17,9 +17,17 @@ class PuppeteerEnvironment extends NodeEnvironment {
     if (!wsEndpoint) {
       throw new Error('wsEndpoint not found')
     }
-    this.global.__BROWSER__ = await puppeteer.connect({
+
+    const browser = await puppeteer.connect({
       browserWSEndpoint: wsEndpoint,
-    })
+    });
+
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1600, height: 1200 });
+
+    this.global.__BROWSER__ = browser;
+    this.global.__PAGE__ = page;
+    this.global.__URL__ = 'http://appservertest.luxbase.int:4100';
   }
 
   async teardown() {

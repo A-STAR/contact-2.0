@@ -15,9 +15,8 @@ module.exports = async function() {
       '--ignore-certificate-errors-spki-list'
     ],
   });
-
-  global.__BROWSER__ = browser;
-
   mkdirp.sync(DIR);
   fs.writeFileSync(path.join(DIR, 'wsEndpoint'), browser.wsEndpoint());
+
+  global.__BROWSER__ = browser;
 }
