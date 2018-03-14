@@ -30,6 +30,14 @@ export class CallEffects {
 
   @Effect()
   authLogin$ = this.actions
+    .ofType(AuthService.AUTH_LOGIN)
+    .switchMap(() => [{
+      type: CallService.CALL_INIT,
+      payload: {}
+    }]);
+
+  @Effect()
+  authLoginSuccess$ = this.actions
     .ofType(AuthService.AUTH_LOGIN_SUCCESS)
     .flatMap(() =>
       this.authService.userParams$
@@ -42,17 +50,6 @@ export class CallEffects {
     }]);
 
   @Effect()
-  authLogout$ = this.actions
-    .ofType(AuthService.AUTH_DESTROY_SESSION)
-    .switchMap(userParams => [{
-      type: CallService.PBX_PARAMS_CHANGE,
-      payload: null
-    }, {
-      type: CallService.CALL_SETTINGS_CHANGE,
-      payload: null
-    }]);
-
-  @Effect()
   login$ = this.actions
     .ofType(CallService.PBX_LOGIN)
     .map((action: UnsafeAction) => action.payload)
@@ -60,7 +57,7 @@ export class CallEffects {
     .flatMap(() =>
       combineLatest(
         this.callService.settings$.filter(Boolean),
-        this.callService.params$.map(params => params && params.intPhone)
+        this.callService.params$.map(params => params ? params.intPhone : null)
       )
       .pipe(first())
     )

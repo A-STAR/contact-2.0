@@ -189,15 +189,18 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .subscribe(() => this.fetch());
 
 
-    this.callSubscription = this.selectedPhoneCall$
+    this.callSubscription = this.callService.activeCall$
       .filter(Boolean)
       .flatMap(() => this.callService.pbxLineStatus$.map(lineStatus => lineStatus === PBXStateEnum.PBX_DIAL))
+      .distinctUntilChanged()
       .filter(Boolean)
-      .flatMap(() => combineLatestAnd([
-        this.callService.settings$.map(settings => settings && !!settings.previewShowRegContact),
-        this.canRegisterContact$
-      ]))
-      .pipe(first())
+      .flatMap(() =>
+        combineLatestAnd([
+          this.callService.settings$.map(settings => settings && !!settings.previewShowRegContact),
+          this.canRegisterContact$
+        ])
+        .pipe(first())
+      )
       .subscribe(() => this.registerContact());
 
     this.activeCallSubscription = this.callService.activeCall$
