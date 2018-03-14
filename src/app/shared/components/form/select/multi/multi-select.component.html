@@ -27,11 +27,14 @@
       [ngClass]="{ 'up': open }"
       (click)="onCaret($event)"
     ></i>
+
+    <!--
     <i
       *ngIf="!disabled && !required && hasSelection"
       class="co co-clear select-clear"
       (click)="onClear($event)"
     ></i>
+    -->
 
     <ul
       #list
