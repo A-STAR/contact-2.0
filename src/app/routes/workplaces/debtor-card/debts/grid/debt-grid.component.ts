@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
+import { first, map } from 'rxjs/operators';
 
 import { IDebt } from '@app/core/debt/debt.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -26,6 +26,27 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
   templateUrl: './debt-grid.component.html',
 })
 export class DebtGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+  readonly debts$ = this.debtorCardService.debts$;
+  readonly selectedDebt$ = this.debtorCardService.selectedDebt$;
+
+  readonly selection$ = this.debtorCardService.selectedDebt$.pipe(
+    map(debt => debt ? [ debt ] : []),
+  );
+
+  readonly canAdd$ = this.userPermissionsService.bag()
+    .map(bag => (
+      bag.has('DEBT_ADD') &&
+      bag.notEmptyAllOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
+    ))
+    .distinctUntilChanged();
+
+  readonly canEdit$ = this.userPermissionsService.bag()
+    .map(bag => (
+      bag.hasOneOf([ 'DEBT_EDIT', 'DEBT_PORTFOLIO_EDIT', 'DEBT_COMPONENT_AMOUNT_EDIT' ]) ||
+      bag.notEmptyOneOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
+    ))
+    .distinctUntilChanged();
+
   toolbarItems: Array<IToolbarItem> = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -136,18 +157,6 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
     this.debtUpdateSub.unsubscribe();
   }
 
-  get debts$(): Observable<any> {
-    return this.debtorCardService.debts$;
-  }
-
-  get selectedDebt$(): Observable<IDebt> {
-    return this.debtorCardService.selectedDebt$ as Observable<any>;
-  }
-
-  get selection$(): Observable<IDebt[]> {
-    return this.debtorCardService.selectedDebt$.map(debt => debt ? [ debt ] : []) as Observable<any>;
-  }
-
   onDoubleClick(debt: IDebt): void {
     this.debtorCardService.selectDebt(debt.id);
     this.onEdit();
@@ -197,23 +206,5 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
 
   private onNextCall(): void {
     this.setDialog('nextCall');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.bag()
-      .map(bag => (
-        bag.has('DEBT_ADD') &&
-        bag.notEmptyAllOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
-      ))
-      .distinctUntilChanged();
-  }
-
-  get canEdit$(): Observable<boolean> {
-    return this.userPermissionsService.bag()
-      .map(bag => (
-        bag.hasOneOf([ 'DEBT_EDIT', 'DEBT_PORTFOLIO_EDIT', 'DEBT_COMPONENT_AMOUNT_EDIT' ]) ||
-        bag.notEmptyOneOf([ 'DEBT_DICT1_EDIT_LIST', 'DEBT_DICT2_EDIT_LIST', 'DEBT_DICT3_EDIT_LIST', 'DEBT_DICT4_EDIT_LIST' ])
-      ))
-      .distinctUntilChanged();
   }
 }

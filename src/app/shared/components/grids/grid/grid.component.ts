@@ -56,7 +56,7 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy {
   @Input()
   set selection(selection: T[]) {
     if (!isEmpty(selection) && this.gridApi) {
-      const ids = selection.map(item => item[this.idKey]);
+      const ids = selection.map(item => item && item[this.idKey]);
       this.gridApi.forEachNodeAfterFilterAndSort(node => {
         const isSelected = ids.includes(node.data[this.idKey]);
         node.setSelected(isSelected);
