@@ -35,7 +35,7 @@ export class PermissionsEffects {
   @Effect()
   fetchRoles = this.actions
     .ofType(PermissionsService.ROLE_FETCH)
-    .switchMap((action: UnsafeAction) => {
+    .switchMap(() => {
       return this.readRoles()
         .map(roles => ({
           type: PermissionsService.ROLE_FETCH_SUCCESS,
@@ -87,8 +87,7 @@ export class PermissionsEffects {
   deleteRole$ = this.actions
     .ofType(PermissionsService.ROLE_DELETE)
     .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [_, store]: [UnsafeAction, IAppState] = data;
+    .switchMap(([_, store]) => {
       return this.deleteRole(store.permissions.currentRole.id)
         .mergeMap(() => [
           this.rolesFetchAction,
@@ -102,8 +101,7 @@ export class PermissionsEffects {
   fetchRolePermissions$ = this.actions
     .ofType(PermissionsService.PERMISSION_FETCH)
     .withLatestFrom(this.store)
-    .switchMap(data => {
-      const [_, store]: [UnsafeAction, IAppState] = data;
+    .switchMap(([_, store]) => {
       return this.readPermissions(store.permissions.currentRole.id)
         .map(permissions => ({
           type: PermissionsService.PERMISSION_FETCH_SUCCESS,
