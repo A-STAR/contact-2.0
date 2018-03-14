@@ -185,9 +185,7 @@ export class DebtGridComponent extends DialogFunctions implements OnInit, OnDest
   }
 
   private onEdit(): void {
-    this.selectedDebt$
-      .pipe(first())
-      .subscribe(debt => this.routingService.navigate([ 'debt' ], this.route));
+    this.routingService.navigate([ 'debt' ], this.route);
   }
 
   private fetch(): void {
