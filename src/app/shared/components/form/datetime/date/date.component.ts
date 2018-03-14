@@ -47,7 +47,7 @@ export class DateComponent implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
     // this.propagateTouch = fn;
   }
 

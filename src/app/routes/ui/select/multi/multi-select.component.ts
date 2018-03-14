@@ -22,8 +22,8 @@ export class SingleSelectComponent {
     };
   }
 
-  onSelectChange(value: number): void {
-    // console.info('select', value);
+  onSelectChange(): void {
+    //
   }
 
   disableControl4(): void {

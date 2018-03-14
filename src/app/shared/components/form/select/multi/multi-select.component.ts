@@ -14,7 +14,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  AbstractControl,
   ControlValueAccessor,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
@@ -66,7 +65,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   open = false;
   disabled = false;
 
-  private _active: IMultiSelectOption;
   private _autoAlign = false;
   private _options: IMultiSelectOption[];
   private _required = false;
@@ -182,7 +180,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     this.cdRef.markForCheck();
   }
 
-  validate(control: AbstractControl): ValidationErrors {
+  validate(): ValidationErrors {
     return this.required && !this.value.length
       ? { required: false }
       : null;
@@ -207,7 +205,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     }
   }
 
-  onInputClick(event: MouseEvent): void {
+  onInputClick(): void {
     if (this.disabled) {
       return;
     }
@@ -218,7 +216,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     }
   }
 
-  onInputChange(label: string): void {
+  onInputChange(): void {
     this.renderer.setProperty(this.input.nativeElement, 'value', this.selectionLabel);
   }
 

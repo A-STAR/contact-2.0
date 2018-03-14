@@ -117,7 +117,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     this.viewPermissionSubscription = combineLatest(
       this.hasViewPermission$
     )
-      .subscribe(([hasViewPermission, currentOrganization]) => {
+      .subscribe(([hasViewPermission]) => {
         if (!hasViewPermission) {
           this.organizationsService.clearEmployees();
         }
@@ -165,7 +165,7 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     this.organizationsService.updateEmployee(data).subscribe(() => this.cancelAction());
   }
 
-  onRemoveSubmit(data: any): void {
+  onRemoveSubmit(): void {
      this.organizationsService.removeEmployee().subscribe(() => this.cancelAction());
   }
 

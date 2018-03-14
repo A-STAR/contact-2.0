@@ -47,7 +47,7 @@ export class CheckboxComponent implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
     // No need in touch callback for checkbox
     // because a click will change its value and mark control as dirty anyway
   }

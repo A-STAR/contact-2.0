@@ -70,7 +70,7 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
       this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
     )
       // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-      .subscribe(([directionOptions, stageOptions, statusOptions, action, canViewAttributes]) => {
+      .subscribe(([directionOptions, stageOptions, statusOptions, action, /* canViewAttributes */]) => {
         this.canViewAttributes = true;
 
         const editedPortfolio = (action as any).portfolio;

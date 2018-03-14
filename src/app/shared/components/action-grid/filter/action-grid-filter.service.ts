@@ -58,7 +58,7 @@ export class ActionGridFilterService {
    * @param selected
    */
   getSelection(action: IActionGridAction, selected: any[]): number[][] {
-    return selected.reduce((acc, row, i) => {
+    return selected.reduce((acc, row) => {
       return [
         ...acc,
         [...action.metadataAction.params
@@ -78,7 +78,7 @@ export class ActionGridFilterService {
    * @param selected
    */
   getGridSelection(action: IActionGridAction, selected: any[]): number[][] {
-    return selected.reduce((acc, row, i) => {
+    return selected.reduce((acc, row) => {
       return [
         ...acc,
         [...action.metadataAction.params
@@ -124,7 +124,7 @@ export class ActionGridFilterService {
     };
   }
 
-  getSingleSelectionPayload(action: IActionGridAction, params: IGridActionContext): IGridActionPayload {
+  getSingleSelectionPayload(action: IActionGridAction): IGridActionPayload {
     return {
       type: action.metadataAction.type,
       data: this.getSingleSelection(action, action.selection)

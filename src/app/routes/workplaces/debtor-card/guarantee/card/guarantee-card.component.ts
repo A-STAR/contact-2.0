@@ -75,7 +75,6 @@ export class DebtorGuaranteeCardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     combineLatest(
-      this.guaranteeService.fetchAll(this.debtId),
       this.contract$,
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GUARANTOR_RESPONSIBILITY_TYPE),
       this.contract$.flatMap(
@@ -83,7 +82,7 @@ export class DebtorGuaranteeCardComponent implements OnInit, OnDestroy {
       )
     )
     .pipe(first())
-    .subscribe(([ contacts, contract, respTypeOpts, canEdit ]) => {
+    .subscribe(([ contract, respTypeOpts, canEdit ]) => {
       const controls: IDynamicFormGroup[] = [
         {
           title: 'widgets.guaranteeContract.title', collapsible: true,

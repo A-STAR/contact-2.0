@@ -69,7 +69,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
     return this.debtorCardService.person$;
   }
 
-  protected getControls(stringValues: IUserConstant, canEdit: boolean, attributes: IEntityAttributes): IDynamicFormControl[] {
+  protected getControls(stringValues: IUserConstant, _: boolean, attributes: IEntityAttributes): IDynamicFormControl[] {
     const displayedStringValues = stringValues.valueS.split(',').map(Number);
     return this.attributeIds.map((id, i) => ({
       label: `person.stringValue${i + 1}`,

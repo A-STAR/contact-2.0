@@ -1,13 +1,13 @@
 <app-person-select-dialog
   *ngIf="isDialog('create')"
-  (select)="onPersonCreated($event)"
+  (select)="onPersonCreated()"
   (close)="closeDialog()"
 ></app-person-select-dialog>
 
 <app-person-select-dialog
   *ngIf="isDialog('edit')"
   [personId]="selectedPersonId"
-  (select)="onPersonCreated($event)"
+  (select)="onPersonCreated()"
   (close)="closeDialog()"
 ></app-person-select-dialog>
 

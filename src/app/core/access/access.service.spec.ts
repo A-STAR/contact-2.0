@@ -19,7 +19,7 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
 import { AccessService } from './access.service';
 
 class MockEntityAttributesService {
-  getAttribute(id: number): Observable<IEntityAttribute> {
+  getAttribute(): Observable<IEntityAttribute> {
     return null;
   }
 }
