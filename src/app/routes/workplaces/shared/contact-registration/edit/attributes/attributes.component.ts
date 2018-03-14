@@ -37,10 +37,6 @@ export class ContactRegistrationAttributesComponent implements OnInit {
     },
     {
       prop: 'name', minWidth: 150, maxWidth: 200, isGroup: true,
-      valueTypeKey: 'typeCode',
-      edit: {
-        editable: (params: ValueGetterParams) => params.data.disabledValue !== 1
-      }
     },
     {
       prop: 'value', valueTypeKey: 'typeCode', minWidth: 100, maxWidth: 200,

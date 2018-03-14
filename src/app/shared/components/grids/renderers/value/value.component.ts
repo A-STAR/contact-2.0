@@ -50,20 +50,22 @@ export class ValueRendererComponent implements ICellRendererAngularComp {
   refresh(): boolean {
     return false;
   }
-
   private getDictValue(params: IValueRendererParams, value: any): Observable<string> {
     const { data, valueTypeParams } = params;
-    const code = typeof valueTypeParams.dictCode === 'function' ? valueTypeParams.dictCode(data)
-      : valueTypeParams.dictCode;
-    return code
-    ? this.userDictionariesService
+    // TODO(i.lobanov): lookupKey
+    if (valueTypeParams && valueTypeParams.dictCode) {
+      const code = typeof valueTypeParams.dictCode === 'function' ? valueTypeParams.dictCode(data)
+        : valueTypeParams.dictCode;
+
+      return this.userDictionariesService
         .getDictionary(code)
         .pipe(
           map(terms => {
             const term = terms.find(t => t.code === value);
             return term ? term.name : value;
           }),
-        )
-    : of(value);
+        );
+    }
+    return of(value);
   }
 }

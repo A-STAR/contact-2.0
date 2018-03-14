@@ -58,6 +58,9 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     },
     {
       prop: 'value', valueTypeKey: 'typeCode', minWidth: 100, maxWidth: 200,
+      valueTypeParams: {
+        dictCode: row => row.dictNameCode
+      },
     },
     {
       prop: 'userFullName', minWidth: 100, maxWidth: 200,
