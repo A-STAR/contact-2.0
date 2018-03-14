@@ -62,7 +62,7 @@ export class PledgeService extends AbstractActionService {
   }
 
   // TODO: fetch one item form server
-  fetch(debtId: number, contractId: number, personId: number = null, propertyId: number = null): Observable<IPledgeContract> {
+  fetch(_: number, contractId: number, personId: number = null, propertyId: number = null): Observable<IPledgeContract> {
     return this.contracts$.map(contracts => contracts.find(contract => contract.contractId === contractId
       && (!personId || contract.personId === personId) && (!propertyId || contract.propertyId === propertyId)));
   }

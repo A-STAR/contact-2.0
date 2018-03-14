@@ -111,7 +111,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.canViewSubscription = combineLatest(this.canView$, this.debtId$)
-      .subscribe(([ hasPermission, debtId ]) => {
+      .subscribe(([ hasPermission ]) => {
         if (!hasPermission) {
           this.notificationsService.permissionError().entity('entities.promises.gen.plural').dispatch();
           this.clear();

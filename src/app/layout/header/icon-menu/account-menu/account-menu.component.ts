@@ -45,12 +45,11 @@ export class AccountMenuComponent extends DialogFunctions implements OnInit {
   ngOnInit(): void {
     this.callService.usePBX$
       .filter(Boolean)
-      .flatMap(() => this.callService.settings$)
-      .map(settings => settings && settings.useIntPhone)
+      .flatMap(() => this.canEditPhoneExtension$)
       .filter(Boolean)
-      .flatMap(() => this.callService.params$.map(params => params && params.intPhone))
-      .filter(phone => phone === null)
+      .flatMap(() => this.callService.params$)
       .pipe(first())
+      .filter(params => !params || params.intPhone === null)
       .subscribe(() => {
         this.setDialog('ext');
         this.cdRef.markForCheck();

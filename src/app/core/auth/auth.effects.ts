@@ -3,7 +3,6 @@ import { HttpResponse } from '@angular/common/http';
 import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
 
 import { IUserParams } from '@app/core/auth/auth.interface';
 
@@ -42,7 +41,7 @@ export class AuthEffects {
   @Effect()
   refresh$ = this.actions
     .ofType(AuthService.AUTH_REFRESH)
-    .switchMap((action: UnsafeAction) => {
+    .switchMap(() => {
       return this.refresh()
         .map((token: string) => ({
           type: AuthService.AUTH_CREATE_SESSION,
@@ -59,7 +58,7 @@ export class AuthEffects {
   @Effect()
   logout$ = this.actions
     .ofType(AuthService.AUTH_LOGOUT)
-    .switchMap((action: UnsafeAction) => {
+    .switchMap(() => {
       return this.logout()
         .map(() => ({
           type: AuthService.AUTH_DESTROY_SESSION
@@ -154,9 +153,6 @@ export class AuthEffects {
   }
 
   private fetchUserParams(): Observable<IUserParams> {
-    // return this.dataService.get('/userParams');
-    return of({
-      usePbx: 1
-    });
+    return this.dataService.read('/api/userParams');
   }
 }

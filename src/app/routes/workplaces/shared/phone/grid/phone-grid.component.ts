@@ -111,30 +111,6 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
     },
-    // {
-    //   type: ToolbarItemTypeEnum.BUTTON_TRANSFER,
-    //   align: 'right',
-    //   enabled: combineLatestAnd([this.callService.canTransferCall$, this.selectedPhoneCall$.map(Boolean)]),
-    //   action: () => this.setDialog('operator')
-    // },
-    // {
-    //   type: ToolbarItemTypeEnum.BUTTON_RESUME,
-    //   align: 'right',
-    //   enabled: combineLatestAnd([this.callService.canRetrieveCall$, this.selectedPhoneCall$.map(Boolean)]),
-    //   action: () => this.callService.retrieveCall()
-    // },
-    // {
-    //   type: ToolbarItemTypeEnum.BUTTON_PAUSE,
-    //   align: 'right',
-    //   enabled: combineLatestAnd([this.callService.canHoldCall$, this.selectedPhoneCall$.map(Boolean)]),
-    //   action: () => this.callService.holdCall()
-    // },
-    // {
-    //   type: ToolbarItemTypeEnum.BUTTON_DROP,
-    //   align: 'right',
-    //   enabled: combineLatestAnd([this.callService.canDropCall$, this.selectedPhoneCall$.map(Boolean)]),
-    //   action: () => this.callService.dropCall()
-    // },
     {
       type: ToolbarItemTypeEnum.BUTTON_CALL,
       align: 'right',
@@ -151,10 +127,13 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
 
   debt: IDebt;
 
+  private activeCallPhoneId: number;
+
   private canViewSubscription: Subscription;
   private debtSubscription: Subscription;
   private busSubscription: Subscription;
   private callSubscription: Subscription;
+  private activeCallSubscription: Subscription;
 
   private _columns: ISimpleGridColumn<IPhone>[] = [
     { prop: 'typeCode', dictCode: UserDictionariesService.DICTIONARY_PHONE_TYPE, minWidth: 120 },
@@ -210,16 +189,26 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
       .subscribe(() => this.fetch());
 
 
-    this.callSubscription = this.selectedPhoneCall$
+    this.callSubscription = this.callService.activeCall$
       .filter(Boolean)
       .flatMap(() => this.callService.pbxLineStatus$.map(lineStatus => lineStatus === PBXStateEnum.PBX_DIAL))
+      .distinctUntilChanged()
       .filter(Boolean)
-      .flatMap(() => combineLatestAnd([
-        this.callService.settings$.map(settings => settings && !!settings.previewShowRegContact),
-        this.canRegisterContact$
-      ]))
-      .pipe(first())
+      .flatMap(() =>
+        combineLatestAnd([
+          this.callService.settings$.map(settings => settings && !!settings.previewShowRegContact),
+          this.canRegisterContact$
+        ])
+        .pipe(first())
+      )
       .subscribe(() => this.registerContact());
+
+    this.activeCallSubscription = this.callService.activeCall$
+      .subscribe(call => {
+        this.activeCallPhoneId = call && call.phoneId;
+        this.phones = [ ...this.phones ];
+        this.cdRef.markForCheck();
+      });
   }
 
   ngOnDestroy(): void {
@@ -227,6 +216,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.debtSubscription.unsubscribe();
     this.busSubscription.unsubscribe();
     this.callSubscription.unsubscribe();
+    this.activeCallSubscription.unsubscribe();
   }
 
   get debtId$(): Observable<number> {
@@ -246,7 +236,14 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
   }
 
   getRowClass(): any {
-    return (phone: IPhone) => phone.isInactive ? 'inactive' : null;
+    return (phone: IPhone) => {
+      if (phone.isInactive) {
+        return 'inactive';
+      } else if (this.activeCallPhoneId === phone.id) {
+        return 'active';
+      }
+      return null;
+    };
   }
 
   onDoubleClick(phone: IPhone): void {

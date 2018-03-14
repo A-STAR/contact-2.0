@@ -57,8 +57,8 @@ export class ActionGridFilterComponent implements OnInit {
         .filter(Boolean)
     )
     .pipe(first())
-    .filter(([attributes, metadata]) => metadata.columns && metadata.filters)
-    .subscribe(([attributes, metadata]) => {
+    .filter(([_, metadata]) => metadata.columns && metadata.filters)
+    .subscribe(([_, metadata]) => {
       this.formControls = metadata.filters.controls;
       this.operators = metadata.filters.operators;
       this.columnsMetadata = metadata.columns;

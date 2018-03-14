@@ -14,7 +14,7 @@ import { TitlebarModule } from '../../titlebar/titlebar.module';
 import { HtmlTextareaModule } from '../html-textarea/html-textarea.module';
 import { ImageUploadModule } from '../image-upload/image-upload.module';
 import { InputModule } from '../input/input.module';
-import { MultiLanguageModule } from '../multi-language/multi-language.module';
+import { MultiLanguageModule } from '../multilanguage/multilanguage.module';
 import { PasswordModule } from '../password/password.module';
 import { PopupInputModule } from '../popup-input/popup-input.module';
 import { RadioGroupModule } from '../radio-group/radio-group.module';

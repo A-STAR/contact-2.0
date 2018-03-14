@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -73,7 +73,7 @@ export class AuthService implements CanActivate {
           this.refreshUserParamsAction();
         }
       }),
-      map(([ user, params ]) => params),
+      map(([ _, params ]) => params),
       distinctUntilChanged(),
     );
   }
@@ -82,9 +82,8 @@ export class AuthService implements CanActivate {
     this.isParamsFetching = true;
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    return this.token$
-      .map(token => this.isTokenValid(token) || this.isRetrievedTokenValid());
+  canActivate(): Observable<boolean> {
+    return this.token$.map(token => this.isTokenValid(token) || this.isRetrievedTokenValid());
   }
 
   dispatchLoginAction(login: string, password: string): void {

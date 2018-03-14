@@ -19,7 +19,7 @@ export class DictionariesEffects {
   @Effect()
   fetchDictionaries$ = this.actions
     .ofType(DictionariesService.DICTIONARIES_FETCH)
-    .switchMap((action: UnsafeAction) => {
+    .switchMap(() => {
       return this.readDictionaries()
         .map(dictionaries => ({
           type: DictionariesService.DICTIONARIES_FETCH_SUCCESS,
@@ -76,8 +76,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.DICTIONARY_DELETE)
     .withLatestFrom(this.store)
     .switchMap(data => {
-      const [_, store]: [UnsafeAction, IAppState] = data;
-      const { code } = store.dictionaries.selectedDictionary;
+      const { code } = data[1].dictionaries.selectedDictionary;
       return this.deleteDictionary(code)
         .mergeMap(() => [
           {
@@ -122,7 +121,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERMS_FETCH)
     .withLatestFrom(this.store)
     .switchMap(store => {
-      const [_, state]: [UnsafeAction, IAppState] = store;
+      const state: IAppState = store[1];
       return state.dictionaries.selectedDictionary
         ? this.readTerms(state.dictionaries.selectedDictionary.code)
             .map((terms: any) => {
@@ -148,7 +147,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERMS_PARENT_FETCH)
     .withLatestFrom(this.store)
     .switchMap(store => {
-      const [_, state]: [UnsafeAction, IAppState] = store;
+      const state: IAppState = store[1];
       const code = state.dictionaries.selectedDictionary.parentCode || state.dictionaries.selectedDictionary.code;
       return this.readTerms(code as number)
         .map((terms: any) => {
@@ -201,7 +200,7 @@ export class DictionariesEffects {
     .ofType(DictionariesService.TERM_DELETE)
     .withLatestFrom(this.store)
     .switchMap(store => {
-      const [_, state]: [UnsafeAction, IAppState] = store;
+      const state: IAppState = store[1];
       const { code } = state.dictionaries.selectedDictionary;
       return this.deleteTerm(code, state.dictionaries.selectedTerm.id)
         .mergeMap(() => [

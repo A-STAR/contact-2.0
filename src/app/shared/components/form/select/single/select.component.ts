@@ -14,7 +14,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  AbstractControl,
   ControlValueAccessor,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
@@ -187,7 +186,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     this.cdRef.markForCheck();
   }
 
-  validate(control: AbstractControl): ValidationErrors {
+  validate(): ValidationErrors {
     return this.required && this.selectedValue == null
       ? { required: false }
       : null;
@@ -207,7 +206,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     return this.open ? 'up' : '';
   }
 
-  onInputClick(event: MouseEvent): void {
+  onInputClick(): void {
     if (this.disabled) {
       return;
     }

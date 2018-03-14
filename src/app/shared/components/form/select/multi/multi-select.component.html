@@ -18,8 +18,8 @@
       [attr.placeholder]="(placeholder || '') | translate"
       [disabled]="disabled"
       [ngModel]="selectionLabel"
-      (click)="onInputClick($event)"
-      (ngModelChange)="onInputChange($event)"
+      (click)="onInputClick()"
+      (ngModelChange)="onInputChange()"
     >
     <i
       *ngIf="!disabled"
@@ -27,11 +27,14 @@
       [ngClass]="{ 'up': open }"
       (click)="onCaret($event)"
     ></i>
+
+    <!--
     <i
       *ngIf="!disabled && !required && hasSelection"
       class="co co-clear select-clear"
       (click)="onClear($event)"
     ></i>
+    -->
 
     <ul
       #list

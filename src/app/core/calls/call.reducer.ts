@@ -14,10 +14,9 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
   switch (action.type) {
     case CallService.CALL_INIT:
       return {
-        ...state,
         ...action.payload
       };
-    case CallService.CALL_SETTINGS_FETCH_SUCCESS:
+    case CallService.CALL_SETTINGS_CHANGE:
       return {
         ...state,
         settings: action.payload
