@@ -70,13 +70,13 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
           {
             type: ToolbarItemTypeEnum.BUTTON_ADD,
             action: () => this.setDialog('create'),
-            enabled: this.personSelectService.canAdd$
+            enabled: this.userPermissionsService.has('PERSON_ADD')
           },
           {
             type: ToolbarItemTypeEnum.BUTTON_EDIT,
             action: () => this.setDialog('edit'),
             enabled: combineLatestAnd([
-              this.personSelectService.canEdit$,
+              this.userPermissionsService.has('PERSON_EDIT'),
               this.selectedPerson$.map(Boolean)
             ])
           }
