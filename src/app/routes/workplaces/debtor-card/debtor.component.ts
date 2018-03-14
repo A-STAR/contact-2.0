@@ -14,6 +14,7 @@ import { first, mergeMap, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem } from '../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IEmployment } from '@app/routes/workplaces/debtor-card/employment/employment.interface';
 import { IPerson } from './debtor.interface';
 import { IDebt } from '../debt-processing/debt-processing.interface';
 import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
@@ -203,6 +204,14 @@ export class DebtorComponent extends DialogFunctions implements AfterViewInit, O
 
   onIdentityEdit(doc: IIdentityDoc): void {
     this.routingService.navigate([ `identity/${doc.id}` ], this.route);
+  }
+
+  onEmploymentAdd(): void {
+    this.routingService.navigate([ 'employment/create' ], this.route);
+  }
+
+  onEmploymentEdit(employment: IEmployment): void {
+    this.routingService.navigate([ `employment/${employment.id}` ], this.route);
   }
 
   private buildControls(canEdit: boolean): IDynamicFormItem[] {

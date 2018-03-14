@@ -52,6 +52,9 @@
             <app-employment-grid
               *ngIf="tabs[5].isInitialised"
               [personId]="personId$ | async"
+              (add)="onEmploymentAdd()"
+              (dblClick)="onEmploymentEdit($event)"
+              (edit)="onEmploymentEdit($event)"
             ></app-employment-grid>
           </app-tabview-tab>
           <app-tabview-tab [title]="'debtor.identityDocs.title'" [disabled]="isCompany$ | async">
