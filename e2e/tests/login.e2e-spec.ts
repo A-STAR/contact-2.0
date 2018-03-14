@@ -10,7 +10,10 @@ describe('Login Page', () => {
   it('should render', async (done) => {
     await navigate('');
     const screenshot = await takeScreenshot();
-    expect(screenshot)['toMatchImageSnapshot']();
+    expect(screenshot)['toMatchImageSnapshot']({
+      failureThreshold: '0.1',
+      failureThresholdType: 'percent'
+    });
     done();
   });
 });

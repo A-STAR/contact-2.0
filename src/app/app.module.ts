@@ -80,12 +80,9 @@ export function reset(nextReducer: any): any {
         tokenGetter: authTokenGetter,
         whitelistedDomains: [
           '*',
-          'localhost:4200',
-          'localhost:8080',
-          'appservertest.luxbase.int:4100',
-          'appservertest.luxbase.int:4300',
-          'go.luxbase.ru:3000',
-          'go.luxbase.ru:4300',
+          /localhost:(\d)+/,
+          /appservertest.luxbase.int:(\d)+/,
+          /go.luxbase.ru:(\d)+/,
         ],
         throwNoTokenError: false
       }
