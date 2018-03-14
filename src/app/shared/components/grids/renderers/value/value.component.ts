@@ -40,6 +40,9 @@ export class ValueRendererComponent implements ICellRendererAngularComp {
     if (this.type === TYPE_CODES.DICT) {
       this.dictValue$ = this.getDictValue(params, this.value);
     }
+    // we mutate data because cellEditor won't have initial value
+    // TODO(i.lobanov): find a way to avoid it
+    data.value = this.value;
 
     this.cdRef.markForCheck();
   }
