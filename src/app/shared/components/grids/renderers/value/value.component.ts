@@ -2,9 +2,7 @@ import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/
 import { ICellRendererParams } from 'ag-grid/main';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 
-import { ValueConverterService } from '@app/core/converter/value-converter.service';
-
-import { TYPE_CODES } from '@app/core/utils';
+import { TYPE_CODES, getRawValue } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,22 +10,19 @@ import { TYPE_CODES } from '@app/core/utils';
   templateUrl: './value.component.html',
 })
 export class ValueRendererComponent implements ICellRendererAngularComp {
-  private params: ICellRendererParams;
 
   type: TYPE_CODES;
   value: any;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private valueConverterService: ValueConverterService
   ) {}
 
-  agInit(params: ICellRendererParams): void {
-    this.params = params;
-    const { data, valueTypeKey } = this.params as any;
+  agInit(params: ICellRendererParams & { valueTypeKey: string}): void {
+    const { data, valueTypeKey } = params;
     this.type = data[valueTypeKey];
-    this.value = this.type ? this.valueConverterService.deserialize(this.params.data).value
-      : (this.type = TYPE_CODES.STRING) && this.params.value;
+    this.value = this.type ? getRawValue(params.data, valueTypeKey)
+      : (this.type = TYPE_CODES.STRING) && params.value;
 
     this.cdRef.markForCheck();
   }

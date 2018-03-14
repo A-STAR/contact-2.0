@@ -33,18 +33,21 @@ export class ContactRegistrationAttributesComponent implements OnInit {
 
   columns: Array<ISimpleGridColumn<IContactTreeAttribute>> = [
     {
-      prop: 'code', minWidth: 50, maxWidth: 80,
-      valueTypeKey: 'typeCode',
+      prop: 'code', minWidth: 50, maxWidth: 80
     },
     {
       prop: 'name', minWidth: 150, maxWidth: 200, isGroup: true,
       valueTypeKey: 'typeCode',
-      editable: (params: ValueGetterParams) => params.data.disabledValue !== 1
+      edit: {
+        editable: (params: ValueGetterParams) => params.data.disabledValue !== 1
+      }
     },
     {
       prop: 'value', valueTypeKey: 'typeCode', minWidth: 100, maxWidth: 200,
-      dictCode: row => row.dictNameCode,
-      editable: (params: ValueGetterParams) => params.data.disabledValue !== 1
+      edit: {
+        dictCode: row => row.dictNameCode,
+        editable: (params: ValueGetterParams) => params.data.disabledValue !== 1
+      },
     },
     {
       prop: 'mandatory', minWidth: 40, maxWidth: 60,

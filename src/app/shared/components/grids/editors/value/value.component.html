@@ -48,6 +48,7 @@
   <div *ngSwitchCase="6">
     <app-select
       [dictCode]="dictCode"
+      [lookupKey]="lookupKey"
       [ngModel]="value"
       (ngModelChange)="onValueChange($event)"
     ></app-select>

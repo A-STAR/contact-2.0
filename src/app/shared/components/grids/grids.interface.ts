@@ -1,6 +1,7 @@
-import { ILookupKey } from '@app/core/lookup/lookup.interface';
-import { ICellRendererParams } from 'ag-grid';
+import { ICellRendererParams, ICellEditorParams } from 'ag-grid';
 import { ValueGetterParams, ValueSetterParams, ValueParserParams } from 'ag-grid/dist/lib/entities/colDef';
+
+import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 export enum IGridSelectionType {
   SINGLE = 'single',
@@ -48,7 +49,6 @@ export interface IGridEditableColumn<T> {
   editable: boolean | ((params: ValueGetterParams) => boolean);
   dictCode?: number | IDictCodeCallback<T>;
   lookupKey?: ILookupKey;
-  renderer?: any;
 }
 
 export interface IGridTreePath {
@@ -67,3 +67,5 @@ export interface IGridLocalSettings {
   columns: IGridLocalSettingsColumn[];
   sortModel: any;
 }
+
+export type IValueEditorParams = IGridEditableColumn<any> & ICellEditorParams & { valueTypeKey: string };
