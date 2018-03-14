@@ -119,13 +119,17 @@ export class DebtComponent implements OnInit {
       this.debtId$,
     )
     .pipe(
+      first(),
       flatMap(([personId, debtId]) => {
         return debtId
           ? this.debtService.update(personId, debtId, this.form.serializedUpdates)
           : this.debtService.create(personId, this.form.serializedUpdates);
       })
     )
-    .subscribe(() => this.onBack());
+    .subscribe(() => {
+      this.debtorCardService.refreshDebts();
+      this.onBack();
+    });
   }
 
   onBack(): void {
