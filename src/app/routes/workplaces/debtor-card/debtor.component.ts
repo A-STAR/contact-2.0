@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IDynamicFormItem } from '../../../shared/components/form/dynamic-form/dynamic-form.interface';
 import { IPerson } from './debtor.interface';
 import { IDebt } from '../debt-processing/debt-processing.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtService } from '../../../core/debt/debt.service';
@@ -23,6 +24,7 @@ import { DebtorCardService } from '../../../core/app-modules/debtor-card/debtor-
 import { DebtorService } from './debtor.service';
 import { UserDictionariesService } from '../../../core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '../../../core/user/permissions/user-permissions.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 
 import { DebtorInformationComponent } from './information/information.component';
 import { DynamicFormComponent } from '../../../shared/components/form/dynamic-form/dynamic-form.component';
@@ -75,6 +77,7 @@ export class DebtorComponent extends DialogFunctions implements AfterViewInit, O
     private debtorService: DebtorService,
     private userPermissionsService: UserPermissionsService,
     private route: ActivatedRoute,
+    private routingService: RoutingService
   ) {
     super();
   }
@@ -192,6 +195,14 @@ export class DebtorComponent extends DialogFunctions implements AfterViewInit, O
     if (Number.isInteger(tabIndex)) {
       this.tabs[tabIndex].isInitialised = true;
     }
+  }
+
+  onIdentityAdd(): void {
+    this.routingService.navigate([ 'identity/create' ], this.route);
+  }
+
+  onIdentityEdit(doc: IIdentityDoc): void {
+    this.routingService.navigate([ `identity/${doc.id}` ], this.route);
   }
 
   private buildControls(canEdit: boolean): IDynamicFormItem[] {

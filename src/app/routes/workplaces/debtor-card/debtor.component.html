@@ -58,6 +58,9 @@
             <app-identity-grid
               *ngIf="tabs[6].isInitialised"
               [personId]="personId$ | async"
+              (add)="onIdentityAdd()"
+              (dblClick)="onIdentityEdit($event)"
+              (edit)="onIdentityEdit($event)"
             ></app-identity-grid>
           </app-tabview-tab>
           <app-tabview-tab [title]="'debtor.pledgorsTab.title'">
