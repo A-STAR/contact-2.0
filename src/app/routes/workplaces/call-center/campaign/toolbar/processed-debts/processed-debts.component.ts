@@ -14,6 +14,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { NumberRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel } from '@app/core/utils';
+import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 @Component({
   selector: 'app-call-center-toolbar-processed-debts',
@@ -78,7 +79,9 @@ export class ProcessedDebtsComponent implements OnInit, OnDestroy {
         this.debts = debts;
         this.cdRef.markForCheck();
       });
-    this.registerContactActionSub = this.registerContactOpenService.registerContactAction$
+    this.registerContactActionSub = this.registerContactOpenService
+      .registerContactAction$
+      .filter(Boolean)
       .subscribe(this.onRegisterContactDialogSubmit.bind(this));
   }
 
@@ -97,10 +100,13 @@ export class ProcessedDebtsComponent implements OnInit, OnDestroy {
         personId: params.personId,
         personRole: 1,
       });
+      this.close.emit();
     }
   }
 
-  onClose(): void {
-    this.close.emit();
+  onClose($event?: ICloseAction): void {
+    if (!$event || !$event.metadataAction || $event.metadataAction.name !== 'registerContact') {
+      this.close.emit();
+    }
   }
 }
