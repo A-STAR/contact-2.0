@@ -246,7 +246,7 @@ describe('ValueEditorComponent', () => {
     expect(fixture.nativeElement).toMatchSnapshot();
   });
 
-  it('should render value editor with typeCode 6 (dictionary)', () => {
+  it('should render value editor with typeCode 6 (dictionary) by dictCode', () => {
     fixture.componentInstance.agInit({
       value: 33,
       node: {
@@ -261,7 +261,7 @@ describe('ValueEditorComponent', () => {
     expect(fixture.nativeElement).toMatchSnapshot();
   });
 
-  it('should render value editor with typeCode 6 (dictionary) using callback', () => {
+  it('should render value editor with typeCode 6 (dictionary) by dictCode callback', () => {
     fixture.componentInstance.agInit({
       value: 33,
       node: {
@@ -271,6 +271,21 @@ describe('ValueEditorComponent', () => {
         }
       },
       dictCode: item => item.dictCode,
+      valueTypeKey: 'typeCode',
+    } as any);
+    fixture.detectChanges();
+    expect(fixture.nativeElement).toMatchSnapshot();
+  });
+
+  it('should render value editor with typeCode 6 (dictionary) by lookupKey', () => {
+    fixture.componentInstance.agInit({
+      value: 33,
+      node: {
+        data: {
+          typeCode: 6,
+          lookupKey: 'users'
+        }
+      },
       valueTypeKey: 'typeCode',
     } as any);
     fixture.detectChanges();

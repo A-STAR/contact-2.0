@@ -5,22 +5,11 @@ import { of } from 'rxjs/observable/of';
 
 import { MomentModule } from '@app/shared/pipes/moment/moment.module';
 
-import { IValueEntity } from '@app/core/converter/value-converter.interface';
-
-import { ValueConverterService } from '@app/core/converter/value-converter.service';
-
 import { ValueRendererComponent } from './value.component';
 
 class TranslateLoaderMock {
   getTranslation(language: string): Observable<any> {
     return of([]);
-  }
-}
-
-class ValueConverterServiceMock {
-  deserialize(valueEntity: IValueEntity): IValueEntity {
-    valueEntity.value = '';
-    return valueEntity;
   }
 }
 
@@ -38,12 +27,6 @@ describe('ValueRendererComponent', () => {
               useClass: TranslateLoaderMock,
             },
           }),
-        ],
-        providers: [
-          {
-            provide: ValueConverterService,
-            useClass: ValueConverterServiceMock
-          }
         ],
         declarations: [
           ValueRendererComponent,

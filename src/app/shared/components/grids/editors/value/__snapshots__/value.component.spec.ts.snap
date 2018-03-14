@@ -330,7 +330,6 @@ exports[`ValueEditorComponent should render value editor with typeCode 2 (datepi
   
           </li>
           <li
-            class="current"
             ng-reflect-ng-class="[object Object]"
           >
             
@@ -338,6 +337,7 @@ exports[`ValueEditorComponent should render value editor with typeCode 2 (datepi
   
           </li>
           <li
+            class="current"
             ng-reflect-ng-class="[object Object]"
           >
             
@@ -726,7 +726,7 @@ exports[`ValueEditorComponent should render value editor with typeCode 5 (float)
 </div>
 `;
 
-exports[`ValueEditorComponent should render value editor with typeCode 6 (dictionary) 1`] = `
+exports[`ValueEditorComponent should render value editor with typeCode 6 (dictionary) by dictCode 1`] = `
 <div
   id="root5"
   ng-version="5.2.4"
@@ -839,7 +839,7 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
 </div>
 `;
 
-exports[`ValueEditorComponent should render value editor with typeCode 6 (dictionary) using callback 1`] = `
+exports[`ValueEditorComponent should render value editor with typeCode 6 (dictionary) by dictCode callback 1`] = `
 <div
   id="root6"
   ng-version="5.2.4"
@@ -952,9 +952,121 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
 </div>
 `;
 
-exports[`ValueEditorComponent should render value editor with typeCode 7 (datetimepicker) 1`] = `
+exports[`ValueEditorComponent should render value editor with typeCode 6 (dictionary) by lookupKey 1`] = `
 <div
   id="root7"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-select
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-model="33"
+    >
+      
+
+      <label
+        class="m0"
+      >
+        
+
+  
+        
+        
+
+  
+        <div
+          class="select-container dropdown open"
+        >
+          
+
+    
+          <input
+            autocomplete="off"
+            class="form-control select-search ng-untouched ng-pristine ng-valid"
+            ng-reflect-model=""
+            placeholder=""
+            type="text"
+          />
+          
+    
+          
+          <i
+            class="co co-back select-caret"
+            ng-reflect-klass="co co-back select-caret"
+            ng-reflect-ng-class=""
+          />
+          
+    
+          
+          
+
+    
+          
+          
+  
+        </div>
+        
+
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+
+      </label>
+      
+
+    </app-select>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 7 (datetimepicker) 1`] = `
+<div
+  id="root8"
   ng-version="5.2.4"
 >
   
@@ -1201,7 +1313,6 @@ exports[`ValueEditorComponent should render value editor with typeCode 7 (dateti
   
             </li>
             <li
-              class="current"
               ng-reflect-ng-class="[object Object]"
             >
               
@@ -1209,6 +1320,7 @@ exports[`ValueEditorComponent should render value editor with typeCode 7 (dateti
   
             </li>
             <li
+              class="current"
               ng-reflect-ng-class="[object Object]"
             >
               
