@@ -13,13 +13,13 @@ import { LookupService } from '@app/core/lookup/lookup.service';
 import { MultiLanguageComponent } from './multilanguage.component';
 
 class TranslateLoaderMock {
-  getTranslation(language: string): Observable<any> {
+  getTranslation(): Observable<any> {
     return of([]);
   }
 }
 
 class DataServiceMock {
-  readTranslations(entityId: number, entityAttributeId: number): Observable<IEntityTranslation[]> {
+  readTranslations(): Observable<IEntityTranslation[]> {
     return of([
       { languageId: 1, value: 'Value for language 1' },
       { languageId: 2, value: 'Value for language 2' },
@@ -28,7 +28,7 @@ class DataServiceMock {
 }
 
 class LookupServiceMock {
-  lookup(key: string): Observable<ILookupLanguage[]> {
+  lookup(): Observable<ILookupLanguage[]> {
     return of([
       { id: 1, name: 'Language 1', isMain: 1 },
       { id: 2, name: 'Language 2', isMain: 0 },

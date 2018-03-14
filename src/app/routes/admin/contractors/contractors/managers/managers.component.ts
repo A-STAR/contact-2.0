@@ -105,7 +105,7 @@ export class ContractorManagersComponent extends DialogFunctions implements OnDe
     });
 
     this.managersSubscription = this.contractorsAndPortfoliosService.getAction(IActionType.MANAGERS_FETCH)
-      .subscribe(action => {
+      .subscribe(() => {
         this.fetchAll();
       });
   }

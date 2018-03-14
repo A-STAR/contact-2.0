@@ -43,7 +43,7 @@ export class TabHeaderComponent implements OnInit, OnDestroy {
         permissions[index] = true;
         this.router.navigate([permittedTab.link], { relativeTo: this.route});
       }
-      this.tabs = this.tabs.filter((tab, index) => permissions[index]);
+      this.tabs = this.tabs.filter((_, index) => permissions[index]);
       this.cdRef.markForCheck();
     });
   }

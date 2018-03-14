@@ -772,7 +772,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       viewportRowModelPageSize: this.pageSize,
       viewportRowModelBufferSize: 0,
       isExternalFilterPresent: () => !this.disableFilters,
-      doesExternalFilterPass: (node: RowNode) => true,
+      doesExternalFilterPass: () => true,
       onColumnRowGroupChanged: (event?: any) => this.onColumnRowGroupChanged(event),
       onFilterChanged: this.onFilterChanged.bind(this),
       onGridReady: () => this.onGridReady(),

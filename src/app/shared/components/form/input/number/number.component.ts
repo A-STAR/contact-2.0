@@ -7,7 +7,7 @@ import {
   Renderer2,
   forwardRef,
 } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { range } from '@app/core/utils';
 
 @Component({
@@ -88,7 +88,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
     this.disabled = disabled;
   }
 
-  validate(control: FormControl): any {
+  validate(): any {
     switch (true) {
       case this.required && this.value == null:
         return { required: true };

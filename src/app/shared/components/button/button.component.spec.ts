@@ -3,28 +3,26 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
-import { IButtonStyle, IButtonType } from './button.interface';
-
 import { ButtonService } from './button.service';
 
 import { ButtonComponent } from './button.component';
 
 class ButtonServiceMock {
-  getIcon(type: IButtonType): string {
+  getIcon(): string {
     return 'default-icon-class';
   }
 
-  getLabel(type: IButtonType): string {
+  getLabel(): string {
     return 'default-label';
   }
 
-  getClass(style: IButtonStyle): string {
+  getClass(): string {
     return 'default-button-class';
   }
 }
 
 class TranslateLoaderMock {
-  getTranslation(language: string): Observable<any> {
+  getTranslation(): Observable<any> {
     return of([]);
   }
 }

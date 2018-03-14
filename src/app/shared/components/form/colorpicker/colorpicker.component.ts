@@ -40,7 +40,7 @@ export class ColorPickerComponent implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
   }
 
   onChange(value: string): void {

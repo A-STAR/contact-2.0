@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
 import { IGuiObject } from './gui-objects.interface';
-import { UnsafeAction } from '../../core/state/state.interface';
 
 import { AuthService } from '../auth/auth.service';
 import { DataService } from '../data/data.service';
@@ -17,7 +16,7 @@ export class GuiObjectsEffects {
   @Effect()
   fetchGuiObjects$ = this.actions
     .ofType(GuiObjectsService.GUI_OBJECTS_FETCH)
-    .switchMap((action: UnsafeAction) => {
+    .switchMap(() => {
       return this.authService.isRetrievedTokenValid()
         ? this.readGuiObjects()
           .map(guiObjects => ({ type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: guiObjects }))

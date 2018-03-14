@@ -34,17 +34,13 @@ import { DateTimeRendererComponent } from '@app/shared/components/grids/renderer
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @Input('entityTypeId') set entityTypeId(entityTypeId: number) {
-    this._entityTypeId = entityTypeId;
     this.entityTypeId$.next(entityTypeId);
   }
 
   @Input('entityId') set entityId(entityId: number){
-    this._entityId = entityId;
     this.entityId$.next(entityId);
   }
 
-  private _entityTypeId: number;
-  private _entityId: number;
   private entityTypeId$ = new BehaviorSubject<number>(null);
   private entityId$ = new BehaviorSubject<number>(null);
   private entitySubscription: Subscription;

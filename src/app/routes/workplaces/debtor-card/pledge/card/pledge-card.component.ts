@@ -76,7 +76,7 @@ export class DebtorPledgeCardComponent implements OnInit, OnDestroy {
       this.contract$.flatMap(contract => of(contract || this.getFormData()))
     )
     .pipe(first())
-    .subscribe(([ contracts, typeOptions, canEdit, pledgeContract ]) => {
+    .subscribe(([ _, typeOptions, canEdit, pledgeContract ]) => {
       this.controls = this.getControls(canEdit, typeOptions);
       this.contract = pledgeContract;
       this.canEdit = canEdit;

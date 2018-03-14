@@ -87,14 +87,14 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     this.campaignStatisticSub = combineLatest(
         this.canView$,
         this.campaignsService.selectedCampaign)
-      .filter(([canView, campaign]) => {
+      .filter(([canView]) => {
         if (!canView) {
           this.campaignUserStatistics = [];
           this.cdRef.markForCheck();
         }
         return canView;
       })
-      .map(([canView, campaign]) => campaign)
+      .map(([_, campaign]) => campaign)
       .flatMap(campaign => {
         if (!campaign) {
           return of(null);
@@ -119,8 +119,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSelect(data: any): void {
-
+  onSelect(): void {
+    //
   }
 
 }

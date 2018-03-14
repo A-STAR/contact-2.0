@@ -5,7 +5,6 @@ import { of } from 'rxjs/observable/of';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { IUserConstant } from './user-constants.interface';
-import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { DataService } from '../../data/data.service';
@@ -18,7 +17,7 @@ export class UserConstantsEffects {
   fetchConstants$ = this.actions
     .ofType(UserConstantsService.USER_CONSTANTS_FETCH)
     .pipe(
-      switchMap((action: UnsafeAction) => {
+      switchMap(() => {
         return this.authService.isRetrievedTokenValid()
           ? this.read().pipe(
               map((constants: IUserConstant[]) => ({

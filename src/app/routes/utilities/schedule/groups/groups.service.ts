@@ -1,5 +1,5 @@
 import { Actions } from '@ngrx/effects';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateChild } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
@@ -68,7 +68,7 @@ export class GroupsService extends AbstractActionService implements CanActivateC
     );
   }
 
-  canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  canActivateChild(childRoute: ActivatedRouteSnapshot): Observable<boolean> {
     let routePerm: Observable<boolean>;
 
     switch (childRoute.routeConfig.path) {

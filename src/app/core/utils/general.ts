@@ -69,7 +69,7 @@ export const phoneRenderer = (key: string) => ({ [key]: phone }) => (phone || ''
     .split('')
     .reverse()
     .join('')
-    .replace(/^(\d{4})?(\d{1,3})?(\d{1,3})?(\d{1,3})?/, (str, p1, p2, p3, p4) => {
+    .replace(/^(\d{4})?(\d{1,3})?(\d{1,3})?(\d{1,3})?/, (_, p1, p2, p3, p4) => {
       const [t1, t2, t3, t4] = [p1, p2, p3, p4]
         .map(p => p || '')
         .map(reverseString)

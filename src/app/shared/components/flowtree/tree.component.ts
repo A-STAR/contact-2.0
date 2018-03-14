@@ -162,7 +162,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
           if (this.propagateSelectionDown) {
             this.propagateDown(node, false);
           } else {
-            this.selection = this.selectionAsArray.filter((val, i) => i !== index);
+            this.selection = this.selectionAsArray.filter((_, i) => i !== index);
           }
 
           if (this.propagateSelectionUp && node.parent) {
@@ -195,7 +195,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
             if (this.isSingleSelectionMode()) {
               this.selectionChange.emit(null);
             } else {
-              this.selection = this.selectionAsArray.filter((val, i) => i !== index);
+              this.selection = this.selectionAsArray.filter((_, i) => i !== index);
               this.selectionChange.emit(this.selection);
             }
 
@@ -221,7 +221,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
             }
           } else {
             if (selected) {
-              this.selection = this.selectionAsArray.filter((val, i) => i !== index);
+              this.selection = this.selectionAsArray.filter((_, i) => i !== index);
               this.onNodeUnselect.emit({originalEvent: event, node: node});
             } else {
               this.selection = [...this.selectionAsArray || [], node];
@@ -235,7 +235,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
     }
   }
 
-  onDoubleNodeClick(event: MouseEvent, node: ITreeNode): void {
+  onDoubleNodeClick(_: MouseEvent, node: ITreeNode): void {
     if (this.dblClickEnabled) {
       this.onNodeDblClick.emit(node);
     }
@@ -277,7 +277,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
         if (!select) {
           const index = this.findIndexInSelection(node);
           if (index >= 0) {
-            this.selection = this.selectionAsArray.filter((val, i) => i !== index);
+            this.selection = this.selectionAsArray.filter((_, i) => i !== index);
           }
         }
 
@@ -300,7 +300,7 @@ export class TreeComponent implements IDragAndDropView, OnInit, OnDestroy {
     if (select && index === -1) {
       this.selection = [...this.selectionAsArray || [], node];
     } else if (!select && index > -1) {
-      this.selection = this.selectionAsArray.filter((val, i) => i !== index);
+      this.selection = this.selectionAsArray.filter((_, i) => i !== index);
     }
     node.partialSelected = false;
     if (node.children && node.children.length) {

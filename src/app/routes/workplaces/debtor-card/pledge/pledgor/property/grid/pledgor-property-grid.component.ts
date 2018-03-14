@@ -96,7 +96,7 @@ export class PledgorPropertyGridComponent extends DialogFunctions implements OnI
     this.cdRef.markForCheck();
   }
 
-  private fetch(searchParams: object = {}): void {
+  private fetch(): void {
     this.pledgorPropertyService.fetchAll(this.personId).subscribe(propertyList => {
       this.propertyList = propertyList;
       if (!this.propertyList.length) {
