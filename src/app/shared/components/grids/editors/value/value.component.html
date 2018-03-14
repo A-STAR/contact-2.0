@@ -2,7 +2,6 @@
 
   <div *ngSwitchCase="1" class="text-right">
     <app-number
-      [required]="true"
       [ngModel]="value"
       (ngModelChange)="onValueChange($event)"
     >
@@ -13,7 +12,6 @@
     <div style="padding: 10px;">
       <app-date
         [ngModel]="value"
-        [required]="true"
         (ngModelChange)="onValueChange($event)"
       ></app-date>
     </div>
@@ -21,7 +19,6 @@
 
   <div *ngSwitchCase="3">
     <app-text
-      [required]="true"
       [ngModel]="value"
       (ngModelChange)="onValueChange($event)"
     >
@@ -38,7 +35,6 @@
 
   <div *ngSwitchCase="5" class="text-right">
     <app-number
-      [required]="true"
       [ngModel]="value"
       (ngModelChange)="onValueChange($event)"
     >

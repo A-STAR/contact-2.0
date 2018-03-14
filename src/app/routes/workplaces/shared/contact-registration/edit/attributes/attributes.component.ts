@@ -44,6 +44,9 @@ export class ContactRegistrationAttributesComponent implements OnInit {
     },
     {
       prop: 'value', valueTypeKey: 'typeCode', minWidth: 100, maxWidth: 200,
+      valueTypeParams: {
+        dictCode: row => row.dictNameCode
+      },
       edit: {
         dictCode: row => row.dictNameCode,
         editable: (params: ValueGetterParams) => params.data.disabledValue !== 1

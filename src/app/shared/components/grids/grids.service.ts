@@ -122,7 +122,7 @@ export class GridsService {
   }
 
   private getCellRendererOptions<T>(column: IGridColumn<T>): Partial<ColDef> {
-    const { dictCode, lookupKey, renderer, valueTypeKey, rendererCallback } = column;
+    const { dictCode, lookupKey, renderer, valueTypeKey, valueTypeParams, rendererCallback } = column;
     switch (true) {
       case Boolean(renderer):
         return {
@@ -141,7 +141,7 @@ export class GridsService {
       case Boolean(valueTypeKey):
         return {
           cellRendererFramework: ValueRendererComponent,
-          cellRendererParams: { valueTypeKey },
+          cellRendererParams: { valueTypeKey, valueTypeParams },
         };
       case Boolean(rendererCallback):
         return {

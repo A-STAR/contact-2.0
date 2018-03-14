@@ -38,6 +38,11 @@ export interface IGridColumn<T> {
   maxWidth?: number;
   renderer?: any;
   valueTypeKey?: string;
+  // params for value renderer
+  valueTypeParams?: {
+    dictCode?: number | IDictCodeCallback<T>;
+    lookupKey?: ILookupKey;
+  };
   valueGetter?: ((params: ValueGetterParams) => any) | string;
   valueSetter?: ((params: ValueSetterParams) => boolean) | string;
   valueParser?: ((params: ValueParserParams) => any);
@@ -67,5 +72,15 @@ export interface IGridLocalSettings {
   columns: IGridLocalSettingsColumn[];
   sortModel: any;
 }
+
+export interface IValueRendererDef {
+  valueTypeKey: string;
+  valueTypeParams?: {
+    dictCode?: number | IDictCodeCallback<any>;
+    lookupKey?: ILookupKey;
+  };
+}
+
+export type IValueRendererParams = ICellRendererParams & IValueRendererDef & { data: any };
 
 export type IValueEditorParams = IGridEditableColumn<any> & ICellEditorParams & { valueTypeKey: string };
