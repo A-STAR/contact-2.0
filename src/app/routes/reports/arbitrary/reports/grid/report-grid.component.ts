@@ -15,9 +15,10 @@ import { ValueConverterService } from '@app/core/converter/value-converter.servi
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-arbitrary-report-grid',
   templateUrl: './report-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportGridComponent extends DialogFunctions implements OnInit, OnDestroy {
 
