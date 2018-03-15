@@ -12,13 +12,21 @@ export const navigate = async (path: string) => {
   if (await getPath() === '/login') {
     await page.type('app-login form app-text input', 'admin');
     await page.type('app-login form app-password-input input', 'spring');
-    await page.keyboard.press('Enter');
-    // await page.click('app-login form button[type="submit"]');
-    await page.waitForSelector('app-layout');
+    await page.click('app-login form button[type="submit"]');
   }
+  await page.waitForSelector('app-header');
+  await page.waitForFunction(() => document.querySelectorAll('app-spinner').length === 0);
 };
 
-export const takeScreenshot = async () => {
+export const expectToMatchUrl = async (url: string) => {
+  return expect(await getPath() === '/' + url);
+};
+
+export const expectToMatchScreenshot = async (threshold = 0.1) => {
   const page: Page = global['__PAGE__'];
-  return await page.screenshot();
+  const screenshot = await page.screenshot();
+  expect(screenshot)['toMatchImageSnapshot']({
+    failureThreshold: `${threshold}`,
+    failureThresholdType: 'percent'
+  });
 };
