@@ -1,29 +1,19 @@
-import { LoginPage } from '../pages';
+import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
-describe('/login', () => {
-  const loginPage = new LoginPage();
+import { navigate, takeScreenshot } from '../utils/index';
 
-  beforeAll(async () => {
-    await loginPage.navigateToLogin();
-  });
+jest.setTimeout(32000);
 
-  it('should have login input', async () => {
-    expect(loginPage.loginForm.isLoginInputPresent()).toBeTruthy();
-  });
+expect.extend({ toMatchImageSnapshot });
 
-  it('should have password input', async () => {
-    expect(loginPage.loginForm.isPasswordInputPresent()).toBeTruthy();
-  });
-
-  it('should have submit button', async () => {
-    expect(loginPage.loginForm.isSubmitButtonPresent()).toBeTruthy();
-  });
-
-  // TODO(d.maltsev): test login errors
-
-  it('should handle click on submit button', async () => {
-    await loginPage.loginForm.login('admin', 'spring');
-    const url = await loginPage.getCurrentUrl();
-    expect(url).toEqual('/home');
+describe('Login Page', () => {
+  it('should render', async (done) => {
+    await navigate('');
+    const screenshot = await takeScreenshot();
+    expect(screenshot)['toMatchImageSnapshot']({
+      failureThreshold: '0.1',
+      failureThresholdType: 'percent'
+    });
+    done();
   });
 });
