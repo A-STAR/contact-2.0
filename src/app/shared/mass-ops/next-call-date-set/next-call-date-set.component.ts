@@ -29,7 +29,7 @@ export class NextCallDateSetDialogComponent {
   @Output() close = new EventEmitter<ICloseAction>();
 
   private static readonly NEXT_CALL_CONTROL = 'nextCallDate';
-  private static readonly MIN_DATE_TIME = moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate();
+  private static readonly MIN_DATE_TIME = moment().toDate();
 
   constructor(
     private nextCallDateSetService: NextCallDateSetService,
@@ -37,11 +37,12 @@ export class NextCallDateSetDialogComponent {
 
   controls: IDynamicFormControl[] = [
     {
-      label: labelKey(NextCallDateSetDialogComponent.NEXT_CALL_CONTROL),
       controlName: NextCallDateSetDialogComponent.NEXT_CALL_CONTROL,
-      type: 'datetimepicker',
-      minDateTime: NextCallDateSetDialogComponent.MIN_DATE_TIME,
       displaySeconds: false,
+      label: labelKey(NextCallDateSetDialogComponent.NEXT_CALL_CONTROL),
+      markAsDirty: true,
+      minDateTime: NextCallDateSetDialogComponent.MIN_DATE_TIME,
+      type: 'datetimepicker',
     }
   ];
 
