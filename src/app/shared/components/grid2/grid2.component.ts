@@ -332,6 +332,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   onFilterChanged(): void {
+    this.calculateGridSettings();
     const filters = this.getFilters();
     this.page = 1;
     this.onFilter.emit(filters);
@@ -815,16 +816,18 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private calculateGridSettings(): void {
     const sortModel = this.gridOptions.api.getSortModel();
+    const filterModel = this.gridOptions.api.getFilterModel();
     const colDefs: ColDef[] = this.allColumns.map(column => (
       { width: column.getActualWidth(), hide: !column.isVisible(), colId: column.getColId() }
     ));
-    this.gridSettings = { sortModel, colDefs };
+    this.gridSettings = { sortModel, colDefs, filterModel };
     this.saveChangesDebounce.next();
   }
 
   private resetGridSettings(): void {
     if (this.persistenceKey) {
-      this.gridSettings = { sortModel: [], colDefs: [] };
+      // TODO(i.lobanov): colDefs should have default values here
+      this.gridSettings = { sortModel: [], colDefs: [], filterModel: {} };
     }
     this.saveGridSettings();
     this.gridOptions.api.setSortModel(null);
@@ -838,14 +841,22 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  // private restoreColDefs(): ColDef[] {
+  //   return this.allColumns.map(column => (
+  //     // TODO(i.lobanov): store defined defaults somewhere
+  //     { width: column.getActualWidth(), hide: false, colId: column.getColId() }
+  //   ));
+  // }
+
   private restoreGridSettings(): IAGridSettings {
     this.gridSettings = this.persistenceService.get(this.persistenceKey) || {};
     return this.gridSettings;
   }
 
   private setSortModel(): void {
-    const { sortModel } = this.gridSettings || this.restoreGridSettings();
+    const { sortModel, filterModel } = this.gridSettings || this.restoreGridSettings();
     this.gridOptions.api.setSortModel(sortModel);
+    this.gridOptions.api.setFilterModel(filterModel);
   }
 
   private onGridReady(): void {

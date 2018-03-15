@@ -47,6 +47,7 @@ export interface IAGridSortModel {
 export interface IAGridSettings {
   sortModel: IAGridSortModel[];
   colDefs: ColDef[];
+  filterModel: any;
 }
 
 export interface IAGridSorter {
