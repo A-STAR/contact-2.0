@@ -27,7 +27,13 @@ export class AccountMenuComponent extends DialogFunctions implements OnInit {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: IDynamicFormControl[] = [
-    { type: 'text', controlName: 'intPhone', label: 'header.account.dialogs.phoneExtension.intPhone', required: true },
+    {
+      type: 'text',
+      controlName: 'intPhone',
+      label: 'header.account.dialogs.phoneExtension.intPhone',
+      required: true,
+      autofocus: true
+    }
   ];
 
   dialog: 'ext';
