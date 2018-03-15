@@ -28,7 +28,7 @@ export class UserPermissionsService {
         this.refresh();
       }
     }),
-    map(([userId, permissions]) => permissions),
+    map(([_, permissions]) => permissions),
     filter(Boolean),
     distinctUntilChanged(),
   );

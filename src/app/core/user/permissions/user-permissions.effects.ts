@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { IUserPermission } from './user-permissions.interface';
-import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { DataService } from '../../data/data.service';
@@ -18,7 +17,7 @@ export class UserPermissionsEffects {
   fetchUserPermissions$ = this.actions
     .ofType(UserPermissionsService.USER_PERMISSIONS_FETCH)
     .pipe(
-      switchMap((action: UnsafeAction) => {
+      switchMap(() => {
         return this.authService.isRetrievedTokenValid()
           ? this.read().pipe(
               map((permissions: IUserPermission[]) => ({

@@ -54,7 +54,7 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
   }
 
   setDisabledState(isDisabled: boolean): void {

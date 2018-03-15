@@ -1,5 +1,7 @@
+import { ICellRendererParams, ICellEditorParams } from 'ag-grid';
+import { ValueGetterParams, ValueSetterParams, ValueParserParams } from 'ag-grid/dist/lib/entities/colDef';
+
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
-import { ICellRendererParams } from 'ag-grid';
 
 export enum IGridSelectionType {
   SINGLE = 'single',
@@ -36,6 +38,28 @@ export interface IGridColumn<T> {
   maxWidth?: number;
   renderer?: any;
   valueTypeKey?: string;
+  // params for value renderer
+  valueTypeParams?: {
+    dictCode?: number | IDictCodeCallback<T>;
+    lookupKey?: ILookupKey;
+  };
+  valueGetter?: ((params: ValueGetterParams) => any) | string;
+  valueSetter?: ((params: ValueSetterParams) => boolean) | string;
+  valueParser?: ((params: ValueParserParams) => any);
+  isGroup?: boolean;
+  edit?: IGridEditableColumn<T>;
+}
+
+export interface IGridEditableColumn<T> {
+  editable: boolean | ((params: ValueGetterParams) => boolean);
+  dictCode?: number | IDictCodeCallback<T>;
+  lookupKey?: ILookupKey;
+}
+
+export interface IGridTreePath {
+  path: string[];
+  name: string;
+  children?: any[];
 }
 
 export interface IGridLocalSettingsColumn {
@@ -48,3 +72,15 @@ export interface IGridLocalSettings {
   columns: IGridLocalSettingsColumn[];
   sortModel: any;
 }
+
+export interface IValueRendererDef {
+  valueTypeKey: string;
+  valueTypeParams?: {
+    dictCode?: number | IDictCodeCallback<any>;
+    lookupKey?: ILookupKey;
+  };
+}
+
+export type IValueRendererParams = ICellRendererParams & IValueRendererDef & { data: any };
+
+export type IValueEditorParams = IGridEditableColumn<any> & ICellEditorParams & { valueTypeKey: string };

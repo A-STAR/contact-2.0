@@ -91,7 +91,7 @@ export class CallService {
           this.refreshSettings();
         }
       }),
-      map(([userId, settings]) => settings),
+      map(([_, settings]) => settings),
       distinctUntilChanged()
     );
   }

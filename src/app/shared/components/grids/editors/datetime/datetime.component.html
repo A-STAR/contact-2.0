@@ -1,0 +1,15 @@
+<div class="datetimepicker">
+  <app-date
+    [ngModel]="tempValue"
+    (ngModelChange)="onDateChange($event)"
+  ></app-date>
+  <app-time
+    [ngModel]="tempValue"
+    [displaySeconds]="displaySeconds"
+    (ngModelChange)="onTimeChange($event)"
+  ></app-time>
+  <footer>
+    <span (click)="setCurrentTime()">{{ 'default.buttons.now' | translate }}</span>
+    <span (click)="onOkClick()">{{ 'default.buttons.ok' | translate }}</span>
+  </footer>
+</div>

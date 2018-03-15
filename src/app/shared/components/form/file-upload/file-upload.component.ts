@@ -29,7 +29,7 @@ export class FileUploadComponent implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
   }
 
   setDisabledState(isDisabled: boolean): void {

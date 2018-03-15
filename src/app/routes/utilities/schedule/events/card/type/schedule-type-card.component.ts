@@ -163,7 +163,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
           'emailTypes'
 
         ),
-        ...Array.from(new Array(4), (v, i) =>
+        ...Array.from(new Array(4), (_, i) =>
           this.createDictTypeControls(canEdit, groupsByEntityType[19], i + 1)
         ),
         this.createDebtStageTypeControls(canEdit, groupsByEntityType[19]),
@@ -207,7 +207,7 @@ export class ScheduleTypeCardComponent implements OnInit, OnDestroy {
       };
 
       this.selectedEventTypeCode$.next(this.type.eventTypeCode);
-      this.selectedEventTypeCodeSub = this.selectedEventTypeCode$.subscribe(type => {
+      this.selectedEventTypeCodeSub = this.selectedEventTypeCode$.subscribe(() => {
         this.selectedType = this.getFormData();
         this.cdRef.markForCheck();
       });

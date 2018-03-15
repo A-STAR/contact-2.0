@@ -40,9 +40,9 @@ export class HtmlTextareaComponent implements ControlValueAccessor {
     this.cdRef.markForCheck();
   }
 
-  registerOnChange(fn: Function): void {
+  registerOnChange(): void {
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
   }
 }

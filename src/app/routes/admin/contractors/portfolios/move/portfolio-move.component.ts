@@ -70,7 +70,7 @@ export class PortfolioMoveComponent {
     combineLatest(this.haveContractor$, this.havePortfolio$)
       .filter(([contractor, portfolio]) => !!(contractor && portfolio))
       .pipe(first())
-      .flatMap(([contractor, portfolio]) => {
+      .flatMap(([contractor]) => {
         return this.contractorsAndPortfoliosService.readAllContractorsExeptCurrent(contractor.id);
       })
       .subscribe(contractors => {

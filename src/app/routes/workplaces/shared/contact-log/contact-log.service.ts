@@ -48,17 +48,17 @@ export class ContactLogService extends AbstractActionService {
     }
   }
 
-  fetchDefaultContact(debtId: number, contactsLogId: number, contactType: number, callCenter: boolean): Observable<IContactLog> {
+  fetchDefaultContact(debtId: number, contactsLogId: number, _: number, callCenter: boolean): Observable<IContactLog> {
     return this.dataService.read(this.urlDefault, { debtId, contactsLogId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.singular').dispatchCallback());
   }
 
-  fetchSmsContact(debtId: number, contactsLogId: number, contactType: number, callCenter: boolean): Observable<IContactLog> {
+  fetchSmsContact(debtId: number, contactsLogId: number, _: number, callCenter: boolean): Observable<IContactLog> {
     return this.dataService.read(this.urlSMS, { debtId, contactsLogId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.singular').dispatchCallback());
   }
 
-  fecthEmailContact(debtId: number, contactsLogId: number, contactType: number, callCenter: boolean): Observable<IContactLog> {
+  fecthEmailContact(debtId: number, contactsLogId: number, _: number, callCenter: boolean): Observable<IContactLog> {
     return this.dataService.read(this.urlEmail, { debtId, contactsLogId }, { params: { callCenter } })
       .catch(this.notificationsService.fetchError().entity('entities.contactLog.gen.singular').dispatchCallback());
   }

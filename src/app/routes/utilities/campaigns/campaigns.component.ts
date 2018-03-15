@@ -146,7 +146,7 @@ export class CampaignsComponent extends DialogFunctions implements OnInit, OnDes
     this.campaignsService.selectCampaign(campaign);
   }
 
-  onCampaignDblClick(selection: ICampaign): void {
+  onCampaignDblClick(): void {
     const permission = 'CAMPAIGN_EDIT';
     this.userPermissionsService.has(permission)
       .pipe(first())

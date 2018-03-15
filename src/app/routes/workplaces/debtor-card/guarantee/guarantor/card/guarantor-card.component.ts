@@ -83,11 +83,9 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
 
   ngOnInit(): void {
     combineLatest(
-      this.contract$,
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_GENDER),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_FAMILY_STATUS),
-      this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EDUCATION),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PERSON_TYPE),
       this.contract$.flatMap(
         contract => this.userPermissionsService.has(contract && contract.id ? 'GUARANTEE_EDIT' : 'GUARANTEE_ADD')
@@ -97,7 +95,7 @@ export class GuarantorCardComponent extends DialogFunctions implements OnInit, O
       )
     )
     .pipe(first())
-    .subscribe(([ contract, attributeList, genderOpts, familyStatusOpts, educationOpts, typeOpts, canEdit, guarantor ]) => {
+    .subscribe(([ attributeList, genderOpts, familyStatusOpts, typeOpts, canEdit, guarantor ]) => {
       const additionalControlNames = this.makeControlsFromAttributeList(<string>attributeList.valueS)
         .map(ctrl => ctrl.controlName);
 

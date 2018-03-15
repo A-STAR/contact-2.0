@@ -52,7 +52,7 @@ export class QBuilderComponent {
     condition.value = null;
   }
 
-  trackByFn(index: number, item: any): number {
+  trackByFn(index: number): number {
     return index;
   }
 }

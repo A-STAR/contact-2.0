@@ -88,7 +88,7 @@ export class GuiObjectsService {
       .map(state => state.data)
       .pipe(
         filter(Boolean),
-        tap(data => {
+        tap(() => {
           this.isFetching = false;
         }),
         distinctUntilChanged(),

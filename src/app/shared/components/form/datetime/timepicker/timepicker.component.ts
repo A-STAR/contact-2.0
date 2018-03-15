@@ -78,7 +78,7 @@ export class TimePickerComponent implements ControlValueAccessor, Validator {
     this.disabled = disabled;
   }
 
-  validate(c: any): any {
+  validate(): any {
     const value = moment(this.value, this.timeFormat);
     switch (true) {
       case this.value && this.minTime && value.isBefore(this.minTime):

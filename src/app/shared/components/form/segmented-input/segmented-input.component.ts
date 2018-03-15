@@ -37,7 +37,7 @@ export class SegmentedInputComponent implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
   }
 
   get label(): string {
