@@ -29,6 +29,7 @@ export type IGridActionData = IGridActionSingleSelection | IGridActionSelection 
 export interface ICloseAction {
   refresh?: boolean;
   deselectAll?: boolean;
+  metadataAction?: IGridAction;
 }
 
 export interface IActionGridAction {
@@ -44,6 +45,7 @@ export interface IGridActionContext {
 }
 
 export interface IGridAction {
+  name: string;
   addOptions: IAddOption[];
   payload: IGridActionPayload;
   // this is initial selection, filtered by params,

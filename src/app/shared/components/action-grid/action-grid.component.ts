@@ -327,6 +327,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   private setDialogData(action: IActionGridAction): IGridAction {
     return {
+      name: action.metadataAction.action,
       addOptions: action.metadataAction.addOptions,
       payload: this.actionGridFilterService.getPayload(action, {
         selection: this.selection,

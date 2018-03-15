@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
+import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ICampaignProcessedDebt } from '../../campaign.interface';
+import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IContactRegistrationParams } from '@app/core/debt/debt.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -78,7 +80,10 @@ export class ProcessedDebtsComponent implements OnInit, OnDestroy {
         this.debts = debts;
         this.cdRef.markForCheck();
       });
-    this.registerContactActionSub = this.registerContactOpenService.registerContactAction$
+    this.registerContactActionSub = this.registerContactOpenService
+      .registerContactAction$
+      .pipe(first())
+      .filter(Boolean)
       .subscribe(this.onRegisterContactDialogSubmit.bind(this));
   }
 
@@ -97,10 +102,13 @@ export class ProcessedDebtsComponent implements OnInit, OnDestroy {
         personId: params.personId,
         personRole: 1,
       });
+      this.close.emit();
     }
   }
 
-  onClose(): void {
-    this.close.emit();
+  onClose($event?: ICloseAction): void {
+    if (!$event || !$event.metadataAction || $event.metadataAction.name !== 'registerContact') {
+      this.close.emit();
+    }
   }
 }

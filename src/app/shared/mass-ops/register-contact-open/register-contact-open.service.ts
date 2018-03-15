@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
+
 import { IContactRegistrationParams } from '@app/core/debt/debt.interface';
 
 @Injectable()
 export class RegisterContactOpenService {
-  registerContactAction$ = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
+  registerContactAction$ = new Subject<Partial<IContactRegistrationParams>>();
 
   constructor() { }
 
