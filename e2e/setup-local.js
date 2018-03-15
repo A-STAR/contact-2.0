@@ -15,7 +15,7 @@ module.exports = async function() {
       `--window-size=${width},${height}`,
     ],
     headless: false,
-    slowMo: 100,
+    slowMo: 250,
   });
   mkdirp.sync(DIR);
   fs.writeFileSync(path.join(DIR, 'wsEndpoint'), browser.wsEndpoint());
