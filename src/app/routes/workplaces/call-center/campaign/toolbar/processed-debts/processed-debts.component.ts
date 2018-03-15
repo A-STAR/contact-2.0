@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
+import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ICampaignProcessedDebt } from '../../campaign.interface';
+import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IContactRegistrationParams } from '@app/core/debt/debt.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
@@ -14,7 +16,6 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { NumberRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel } from '@app/core/utils';
-import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 
 @Component({
   selector: 'app-call-center-toolbar-processed-debts',
@@ -81,6 +82,7 @@ export class ProcessedDebtsComponent implements OnInit, OnDestroy {
       });
     this.registerContactActionSub = this.registerContactOpenService
       .registerContactAction$
+      .pipe(first())
       .filter(Boolean)
       .subscribe(this.onRegisterContactDialogSubmit.bind(this));
   }
