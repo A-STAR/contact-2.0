@@ -56,7 +56,11 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
     { prop: 'code', minWidth: 50 },
     { prop: 'name', minWidth: 150 },
     { prop: 'typeCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE },
-    { prop: 'value', minWidth: 150 },
+    { prop: 'value', minWidth: 150, valueTypeKey: 'typeCode',
+      valueTypeParams: {
+        dictCode: row => row.dictNameCode
+      },
+    },
     { prop: 'fromDateTime', minWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'toDateTime', minWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'userFullName', minWidth: 150 },
