@@ -68,13 +68,12 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
       getPortfolio$,
-      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
+      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 15)
     )
-      // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-      .subscribe(([directionOptions, stageOptions, statusOptions, action, /* canViewAttributes */]) => {
-        this.canViewAttributes = true;
+      .subscribe(([directionOptions, stageOptions, statusOptions, action, canViewAttributes ]) => {
 
         const editedPortfolio = (action as any).portfolio;
+        this.canViewAttributes = canViewAttributes && editedPortfolio;
         this.contractorId = action.contractorId;
         this.portfolioId = editedPortfolio && editedPortfolio.id;
 
