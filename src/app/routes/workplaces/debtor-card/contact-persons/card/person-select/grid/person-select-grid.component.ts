@@ -4,7 +4,6 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IPerson } from '../person-select.interface';
