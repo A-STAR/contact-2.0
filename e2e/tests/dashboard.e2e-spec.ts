@@ -1,10 +1,13 @@
 import { expectToMatchUrl, navigate } from '../utils/index';
 
-describe('Dashboard', () => {
+describe('home', () => {
+  beforeEach(async () => {
+    await navigate('');
+  });
+
   // Note:
   // Not taking screenshot because dashboard data is updated frequently
   it('should exist', async done => {
-    await navigate('');
     await expectToMatchUrl('home');
     done();
   });
