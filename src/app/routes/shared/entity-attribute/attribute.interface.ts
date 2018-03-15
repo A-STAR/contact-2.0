@@ -1,3 +1,5 @@
+import { ValueType } from '@app/core/converter/value-converter.interface';
+
 export interface IAttribute {
   code: number;
   name: string;
@@ -18,7 +20,7 @@ export interface IAttribute {
 }
 
 export interface IAttributeForm {
-  value: number | string;
+  value: ValueType;
   comment: string;
 }
 

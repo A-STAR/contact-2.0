@@ -43,6 +43,7 @@ export class ValueConverterService {
   deserialize(valueEntity: IValueEntity): IValueEntity {
     switch (valueEntity.typeCode) {
       case 1:
+      case 6:
         valueEntity.value = valueEntity.valueN;
         break;
       case 2:
@@ -56,6 +57,9 @@ export class ValueConverterService {
         break;
       case 5:
         valueEntity.value = Number(valueEntity.valueN).toFixed(2);
+        break;
+      case 7:
+        valueEntity.value = this.ISOToLocalDateTime(valueEntity.valueD);
         break;
       default:
         valueEntity.value = '';

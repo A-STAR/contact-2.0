@@ -22,8 +22,7 @@
   </div>
 
   <div *ngSwitchCase="6">
-    <!-- TODO(d.maltsev): add dict rendering if it's used anywhere -->
-    {{ value }}
+    {{ dictValue$ | async }}
   </div>
 
   <div *ngSwitchCase="7">
