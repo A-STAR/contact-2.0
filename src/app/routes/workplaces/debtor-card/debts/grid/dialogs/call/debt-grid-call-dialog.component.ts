@@ -20,14 +20,15 @@ export class DebtGridCallDialogComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private static readonly NEXT_CALL_CONTROL = 'nextCallDateTime';
-  private static readonly MIN_DATE_TIME = moment().set({ h: 0, m: 0, s: 0, ms: 0 }).toDate();
+  private static readonly MIN_DATE_TIME = moment().toDate();
 
   controls: Array<IDynamicFormControl> = [
     {
       controlName: DebtGridCallDialogComponent.NEXT_CALL_CONTROL,
-      type: 'datetimepicker',
-      minDateTime: DebtGridCallDialogComponent.MIN_DATE_TIME,
       displaySeconds: false,
+      markAsDirty: true,
+      minDateTime: DebtGridCallDialogComponent.MIN_DATE_TIME,
+      type: 'datetimepicker',
     },
     { controlName: 'forAllDebts', type: 'checkbox' },
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.nextCall.${control.controlName}` }) as IDynamicFormControl);
