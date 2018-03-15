@@ -266,11 +266,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       this.dialog = action.metadataAction.action;
       this.dialogData = this.setDialogData(action);
       this.cdRef.markForCheck();
+    } else if (this.dblClick) {
+      this.dblClick.emit(row);
     }
-  }
-
-  onSimpleGridDblClick(row: T): void {
-    this.dblClick.emit(row);
   }
 
   onSelect(selected: number[]): void {
