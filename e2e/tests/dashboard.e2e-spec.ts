@@ -2,12 +2,12 @@ import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 import { navigate, takeScreenshot } from '../utils/index';
 
-jest.setTimeout(32000);
+jest.setTimeout(128000);
 
 expect.extend({ toMatchImageSnapshot });
 
-describe('Login Page', () => {
-  it('should render', async (done) => {
+describe('Dashboard', () => {
+  it('should render', async done => {
     await navigate('');
     const screenshot = await takeScreenshot();
     expect(screenshot)['toMatchImageSnapshot']({

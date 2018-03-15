@@ -1,5 +1,5 @@
 {
-  "globalSetup": "./e2e/setup.js",
+  "globalSetup": "./e2e/setup-local.js",
   "globalTeardown": "./e2e/teardown.js",
   "moduleFileExtensions": [
     "js",
