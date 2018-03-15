@@ -87,11 +87,11 @@ export class ScheduleEventService extends AbstractActionService {
 
   get weekDays(): { [dayControl: string]: string } {
     return this.translateService.instant('default.date.days.full')
-      .reduce((acc, day, i, days) => ({ ...acc, [`weekDays${i}`]: days[(i + 1) % 7] }), {});
+      .reduce((acc, _, i, days) => ({ ...acc, [`weekDays${i}`]: days[(i + 1) % 7] }), {});
   }
 
   get monthDays(): { [dayControl: string]: string } {
-    return Array.from(new Array(32), (v, i) => String(++i))
+    return Array.from(new Array(32), (_, i) => String(++i))
       .reduce((acc, day, i) => ({ ...acc, [`monthDays${i}`]: day }), {});
   }
 

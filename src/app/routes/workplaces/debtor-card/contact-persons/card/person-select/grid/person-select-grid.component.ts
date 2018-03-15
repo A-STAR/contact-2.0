@@ -4,7 +4,6 @@ import {
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
 
 import { IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
 import { IPerson } from '../person-select.interface';
@@ -17,7 +16,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { isEmpty, range, addLabelForEntity } from '@app/core/utils';
+import { isEmpty, range, addLabelForEntity, combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
@@ -62,22 +61,21 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
   }
 
   ngOnInit(): void {
-    this.userPermissionsService.has('CONTACT_PERSON_ADD')
-      .pipe(first())
-      .filter(Boolean)
-      .subscribe(() => {
-        this.toolbarItems = [
-          {
-            type: ToolbarItemTypeEnum.BUTTON_ADD,
-            action: () => this.setDialog('create')
-          },
-          {
-            type: ToolbarItemTypeEnum.BUTTON_EDIT,
-            action: () => this.setDialog('edit'),
-            enabled: this.selectedPerson$.map(Boolean)
-          }
-        ];
-      });
+    this.toolbarItems = [
+      {
+        type: ToolbarItemTypeEnum.BUTTON_ADD,
+        action: () => this.setDialog('create'),
+        enabled: this.userPermissionsService.hasAll(['CONTACT_PERSON_ADD', 'PERSON_ADD'])
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('CONTACT_PERSON_EDIT'),
+          this.selectedPerson$.map(Boolean)
+        ])
+      }
+    ];
   }
 
   get isValid(): boolean {
@@ -96,7 +94,7 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
     return this.selectedPerson && this.selectedPerson.id;
   }
 
-  onSelect(persons: IPerson[]): void {
+  onSelect(): void {
     this.selectedPerson$.next(this.grid.selected && this.grid.selected[0] as any);
     this.select.emit(this.selectedPerson);
   }
@@ -109,7 +107,7 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
     this.fetch();
   }
 
-  onPersonCreated(person: IPerson): void {
+  onPersonCreated(): void {
     this.closeDialog();
     this.fetch();
   }

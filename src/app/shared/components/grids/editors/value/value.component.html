@@ -1,0 +1,61 @@
+<ng-container [ngSwitch]="type">
+
+  <div *ngSwitchCase="1" class="text-right">
+    <app-number
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    >
+    </app-number>
+  </div>
+
+  <div *ngSwitchCase="2">
+    <div style="padding: 10px;">
+      <app-date
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+      ></app-date>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="3">
+    <app-text
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    >
+    </app-text>
+  </div>
+
+  <div *ngSwitchCase="4">
+    <app-select
+      [dictCode]="2"
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    ></app-select>
+  </div>
+
+  <div *ngSwitchCase="5" class="text-right">
+    <app-number
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    >
+    </app-number>
+  </div>
+
+  <div *ngSwitchCase="6">
+    <app-select
+      [dictCode]="dictCode"
+      [lookupKey]="lookupKey"
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    ></app-select>
+  </div>
+
+  <div *ngSwitchCase="7">
+    <app-grid-datetime-edit
+      [ngModel]="value"
+      (ngModelChange)="onValueChange($event)"
+    >
+    </app-grid-datetime-edit>
+  </div>
+
+</ng-container>

@@ -13,6 +13,7 @@ job_test:
     - npm install
     - npm run lint
     - npm run test:ci
+    # - npm run e2e:ci
     - npm run build -- --aot --progress=false
   cache:
     paths:
@@ -64,3 +65,16 @@ deploy_demo:
   when: manual
   only:
     - dev
+    
+deploy_test_e2e:
+  stage: deploy
+  script:
+    - rm -rf /var/www/html/angular-java-at-test-http/dist
+    - cp -R dist/ /var/www/html/angular-java-at-test-http/
+    - cp -R /var/www/configs/angular-java-at-test-http/* /var/www/html/angular-java-at-test-http/
+  environment:
+    name: e2e
+  when: manual
+  only:
+    - dev
+    

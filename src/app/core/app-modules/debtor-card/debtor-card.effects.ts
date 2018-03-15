@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Store, Action } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators/catchError';
@@ -10,7 +10,6 @@ import { withLatestFrom } from 'rxjs/operators/withLatestFrom';
 
 import {
   IActionType,
-  IDebtorCardState,
   IFetchDebtsAction,
   IFetchDebtsSuccessAction,
   IFetchPersonAction,
@@ -102,8 +101,7 @@ export class DebtorCardEffects {
     .ofType(IActionType.REFRESH_DEBTS)
     .pipe(
       withLatestFrom(this.store.select(state => state.debtorCard)),
-      switchMap(state => {
-        const [_, cardState]: [Action, IDebtorCardState] = state;
+      switchMap(([_, cardState]) => {
         return [
           { type: IActionType.FETCH_DEBTS,
             payload: {

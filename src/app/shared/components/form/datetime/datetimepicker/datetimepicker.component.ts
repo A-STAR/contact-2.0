@@ -80,7 +80,7 @@ export class DateTimePickerComponent implements ControlValueAccessor, Validator 
     this.disabled = disabled;
   }
 
-  validate(c: any): any {
+  validate(): any {
     const value = moment(this.value, this.dateTimeFormat);
     switch (true) {
       case this.value && this.minDateTime && value.isBefore(this.minDateTime):

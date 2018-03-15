@@ -5,11 +5,28 @@ import { of } from 'rxjs/observable/of';
 
 import { MomentModule } from '@app/shared/pipes/moment/moment.module';
 
+import { IUserTerm } from '@app/core/user/dictionaries/user-dictionaries.interface';
+
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
 import { ValueRendererComponent } from './value.component';
 
 class TranslateLoaderMock {
   getTranslation(language: string): Observable<any> {
     return of([]);
+  }
+}
+
+class UserDictionariesServiceMock {
+  getDictionary(dictCode: number): Observable<IUserTerm[]> {
+    const terms = Array(10).fill(null).map((_, i) => i + 1).map(code => ({
+      code,
+      name: `Term ${code}`,
+      isClosed: false,
+      parentCode: null,
+      parentDictTerm: null,
+    }));
+    return of(terms);
   }
 }
 
@@ -27,6 +44,12 @@ describe('ValueRendererComponent', () => {
               useClass: TranslateLoaderMock,
             },
           }),
+        ],
+        providers: [
+          {
+            provide: UserDictionariesService,
+            useClass: UserDictionariesServiceMock,
+          }
         ],
         declarations: [
           ValueRendererComponent,

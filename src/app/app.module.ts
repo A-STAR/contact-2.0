@@ -84,6 +84,7 @@ export function reset(nextReducer: any): any {
           'localhost:8080',
           'appservertest.luxbase.int:4100',
           'appservertest.luxbase.int:4300',
+          'appservertest.luxbase.int:4400',
           'go.luxbase.ru:3000',
           'go.luxbase.ru:4300',
         ],

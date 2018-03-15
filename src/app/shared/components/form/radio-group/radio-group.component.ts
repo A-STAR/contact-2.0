@@ -39,7 +39,7 @@ export class RadioGroupComponent implements ControlValueAccessor, OnInit {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
   }
 
   get value(): string {

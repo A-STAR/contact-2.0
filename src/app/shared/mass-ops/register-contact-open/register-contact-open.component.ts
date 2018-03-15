@@ -68,6 +68,7 @@ export class RegisterContactOpenComponent implements OnInit {
         campaignId: this.campaignId
       }
     );
+    this.close.emit();
   }
 
   onPhoneAction(contactId: any): void {
@@ -80,6 +81,7 @@ export class RegisterContactOpenComponent implements OnInit {
         campaignId: this.campaignId
       }
     );
+    this.close.emit();
   }
 
   onSpecialAction(): void {
@@ -92,6 +94,7 @@ export class RegisterContactOpenComponent implements OnInit {
         campaignId: this.campaignId
       }
     );
+    this.close.emit();
   }
 
   onOfficeVisitAction(): void {
@@ -104,10 +107,11 @@ export class RegisterContactOpenComponent implements OnInit {
         campaignId: this.campaignId
       }
     );
+    this.close.emit();
   }
 
   onCancel(): void {
-    this.close.emit();
+    this.close.emit({ metadataAction: this.actionData });
   }
 
 }

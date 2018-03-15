@@ -1,50 +1,60 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, mergeMap } from 'rxjs/operators';
 
-import { IAGridColumn } from '@app/shared/components/grid2/grid2.interface';
-import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
+import { IContactTreeAttribute } from '@app/routes/utilities/contact-properties/contact-properties.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
+
+import { ValueGetterParams } from 'ag-grid/dist/lib/entities/colDef';
 
 import { AttributesService } from '@app/routes/workplaces/shared/contact-registration/edit/attributes/attributes.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
-import { GridService } from '@app/shared/components/grid/grid.service';
-import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { flatten, makeKey, TYPE_CODES } from '@app/core/utils';
-import { getRawValue, getValue } from '@app/core/utils/value';
-import {IAGridWrapperTreeColumn} from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
-import {IAttribute} from '@app/routes/shared/entity-attribute/attribute.interface';
+import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
-const label = makeKey('routes.workplaces.shared.contactRegistration.edit.form.attributes.grid');
+import { addGridLabel, getValue } from '@app/core/utils';
+import { CellValueChangedEvent } from 'ag-grid';
 
 @Component({
   selector: 'app-contact-registration-attributes',
   templateUrl: './attributes.component.html',
+  styleUrls: ['./attributes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactRegistrationAttributesComponent implements OnInit {
-  attributes: ITreeNode[];
-  columns$: Observable<IAGridColumn[]>;
+  attributes: IContactTreeAttribute[];
+  private editedAttributes: any = {};
 
   constructor(
     private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
-    private gridService: GridService,
-    private valueConverterService: ValueConverterService,
   ) {}
 
-  ngOnInit(): void {
-    const attrGridColumns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
-      { dataType: TYPE_CODES.STRING, name: 'code', isDataPath: true },
-      { dataType: TYPE_CODES.STRING, name: 'name' },
-      { dataType: TYPE_CODES.STRING, name: 'value',
-        valueGetter: row => this.valueConverterService.deserialize(row.data).value },
-      { dataType: TYPE_CODES.BOOLEAN, name: 'mandatory' },
-    ].map(col => ({ ...col, label: label(col.name) }));
+  columns: Array<ISimpleGridColumn<IContactTreeAttribute>> = [
+    {
+      prop: 'code', minWidth: 50, maxWidth: 80
+    },
+    {
+      prop: 'name', minWidth: 150, maxWidth: 200, isGroup: true,
+    },
+    {
+      prop: 'value', valueTypeKey: 'typeCode', minWidth: 100, maxWidth: 200,
+      valueTypeParams: {
+        dictCode: row => row.dictNameCode
+      },
+      edit: {
+        dictCode: row => row.dictNameCode,
+        editable: (params: ValueGetterParams) => params.data.disabledValue !== 1
+      },
+    },
+    {
+      prop: 'mandatory', minWidth: 40, maxWidth: 60,
+      renderer: TickRendererComponent,
+    },
+  ].map(addGridLabel('routes.workplaces.shared.contactRegistration.edit.form.attributes.grid'));
 
-    this.columns$ = this.gridService.getColumns(attrGridColumns, {});
+  ngOnInit(): void {
 
     combineLatest(
       this.contactRegistrationService.params$,
@@ -60,13 +70,15 @@ export class ContactRegistrationAttributesComponent implements OnInit {
     });
   }
 
-  get data(): any {
-    return flatten(this.attributes)
-      .map(node => node.data)
-      .filter(attribute => attribute.typeCode)
-      .map(attribute => ({
-        ...getValue(attribute.typeCode, getRawValue(attribute)),
-        code: attribute.code,
-      }));
+  onCellValueChanged(event: CellValueChangedEvent): void {
+    this.editedAttributes[event.rowIndex] = {
+      ...getValue(event.data.typeCode, event.newValue),
+      code: event.data.code
+    };
   }
+
+  get data(): any {
+    return Object.keys(this.editedAttributes).map(key => this.editedAttributes[key]);
+  }
+
 }

@@ -7,7 +7,7 @@ import { DataService } from '../data/data.service';
 export class ActionsLogService {
   constructor(private dataService: DataService) {}
 
-  log(name: string, delay: number, guiObjectId: string): void {
+  log(delay: number, guiObjectId: string): void {
     const data = { typeCode: 1, duration: delay };
     const headers = new HttpHeaders({
       'X-Gui-Object': guiObjectId

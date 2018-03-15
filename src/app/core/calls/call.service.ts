@@ -91,7 +91,7 @@ export class CallService {
           this.refreshSettings();
         }
       }),
-      map(([userId, settings]) => settings),
+      map(([_, settings]) => settings),
       distinctUntilChanged()
     );
   }
@@ -135,7 +135,6 @@ export class CallService {
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
       this.pbxState$
-        // .filter(Boolean)
         .map(pbxState => pbxState && pbxState.lineStatus === PBXStateEnum.PBX_NOCALL),
     ]);
   }
@@ -147,7 +146,6 @@ export class CallService {
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useDropCall),
       this.pbxState$
-        // .filter(Boolean)
         .map(pbxState =>
           pbxState && [ PBXStateEnum.PBX_CALL, PBXStateEnum.PBX_HOLD, PBXStateEnum.PBX_DIAL ].indexOf(pbxState.lineStatus) > -1
         )
@@ -161,7 +159,6 @@ export class CallService {
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useHoldCall),
       this.pbxState$
-        // .filter(Boolean)
         .map(pbxState => pbxState && pbxState.lineStatus === PBXStateEnum.PBX_CALL)
     ]);
   }
@@ -173,7 +170,6 @@ export class CallService {
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useRetrieveCall),
       this.pbxState$
-        // .filter(Boolean)
         .map(pbxState => pbxState && pbxState.lineStatus === PBXStateEnum.PBX_HOLD)
     ]);
   }
@@ -185,7 +181,6 @@ export class CallService {
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useTransferCall),
       this.pbxState$
-        // .filter(Boolean)
         .map(pbxState => pbxState && [ PBXStateEnum.PBX_CALL, PBXStateEnum.PBX_HOLD ].indexOf(pbxState.lineStatus) > -1)
     ]);
   }

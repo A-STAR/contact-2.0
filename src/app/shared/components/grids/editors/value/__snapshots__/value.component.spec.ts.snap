@@ -1,0 +1,738 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ValueEditorComponent should render value editor with typeCode 1 (number) 1`] = `
+<div
+  id="root0"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  <div
+    class="text-right"
+  >
+    
+    
+    <app-number
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-model="0"
+    >
+      <label
+        class="m0"
+      >
+        
+  
+        
+        
+  
+        <div
+          class="input-container"
+        >
+          
+    
+          <input
+            class="form-control ng-untouched ng-pristine ng-valid"
+            ng-reflect-is-disabled="false"
+            type="text"
+          />
+          
+    
+          <i
+            class="fa fa-angle-up"
+          />
+          
+    
+          <i
+            class="fa fa-angle-down"
+          />
+          
+  
+        </div>
+        
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+      </label>
+      
+
+    </app-number>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 4 (boolean) 1`] = `
+<div
+  id="root2"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-select
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-dict-code="2"
+      ng-reflect-model="true"
+    >
+      
+
+      <label
+        class="m0"
+      >
+        
+
+  
+        
+        
+
+  
+        <div
+          class="select-container dropdown open"
+        >
+          
+
+    
+          <input
+            autocomplete="off"
+            class="form-control select-search ng-untouched ng-pristine ng-valid"
+            ng-reflect-model=""
+            placeholder=""
+            type="text"
+          />
+          
+    
+          
+          <i
+            class="co co-back select-caret"
+            ng-reflect-klass="co co-back select-caret"
+            ng-reflect-ng-class=""
+          />
+          
+    
+          
+          
+
+    
+          
+          
+  
+        </div>
+        
+
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+
+      </label>
+      
+
+    </app-select>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 5 (float) 1`] = `
+<div
+  id="root3"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div
+    class="text-right"
+  >
+    
+    
+    <app-number
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-model="3.14"
+    >
+      <label
+        class="m0"
+      >
+        
+  
+        
+        
+  
+        <div
+          class="input-container"
+        >
+          
+    
+          <input
+            class="form-control ng-untouched ng-pristine ng-valid"
+            ng-reflect-is-disabled="false"
+            type="text"
+          />
+          
+    
+          <i
+            class="fa fa-angle-up"
+          />
+          
+    
+          <i
+            class="fa fa-angle-down"
+          />
+          
+  
+        </div>
+        
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+      </label>
+      
+
+    </app-number>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 6 (dictionary) by dictCode 1`] = `
+<div
+  id="root4"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-select
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-dict-code="33"
+      ng-reflect-model="33"
+    >
+      
+
+      <label
+        class="m0"
+      >
+        
+
+  
+        
+        
+
+  
+        <div
+          class="select-container dropdown open"
+        >
+          
+
+    
+          <input
+            autocomplete="off"
+            class="form-control select-search ng-untouched ng-pristine ng-valid"
+            ng-reflect-model=""
+            placeholder=""
+            type="text"
+          />
+          
+    
+          
+          <i
+            class="co co-back select-caret"
+            ng-reflect-klass="co co-back select-caret"
+            ng-reflect-ng-class=""
+          />
+          
+    
+          
+          
+
+    
+          
+          
+  
+        </div>
+        
+
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+
+      </label>
+      
+
+    </app-select>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 6 (dictionary) by dictCode callback 1`] = `
+<div
+  id="root5"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-select
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-dict-code="33"
+      ng-reflect-model="33"
+    >
+      
+
+      <label
+        class="m0"
+      >
+        
+
+  
+        
+        
+
+  
+        <div
+          class="select-container dropdown open"
+        >
+          
+
+    
+          <input
+            autocomplete="off"
+            class="form-control select-search ng-untouched ng-pristine ng-valid"
+            ng-reflect-model=""
+            placeholder=""
+            type="text"
+          />
+          
+    
+          
+          <i
+            class="co co-back select-caret"
+            ng-reflect-klass="co co-back select-caret"
+            ng-reflect-ng-class=""
+          />
+          
+    
+          
+          
+
+    
+          
+          
+  
+        </div>
+        
+
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+
+      </label>
+      
+
+    </app-select>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value editor with typeCode 6 (dictionary) by lookupKey 1`] = `
+<div
+  id="root6"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-select
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-model="33"
+    >
+      
+
+      <label
+        class="m0"
+      >
+        
+
+  
+        
+        
+
+  
+        <div
+          class="select-container dropdown open"
+        >
+          
+
+    
+          <input
+            autocomplete="off"
+            class="form-control select-search ng-untouched ng-pristine ng-valid"
+            ng-reflect-model=""
+            placeholder=""
+            type="text"
+          />
+          
+    
+          
+          <i
+            class="co co-back select-caret"
+            ng-reflect-klass="co co-back select-caret"
+            ng-reflect-ng-class=""
+          />
+          
+    
+          
+          
+
+    
+          
+          
+  
+        </div>
+        
+
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+
+      </label>
+      
+
+    </app-select>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;
+
+exports[`ValueEditorComponent should render value renderer with typeCode 3 (string) 1`] = `
+<div
+  id="root1"
+  ng-version="5.2.4"
+>
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  <div>
+    
+    
+    <app-text
+      class="ng-untouched ng-pristine ng-valid"
+      ng-reflect-model="value"
+    >
+      <label
+        class="m0"
+      >
+        
+  
+        
+        
+  
+        <div>
+          
+    
+          <input
+            class="form-control ng-untouched ng-pristine ng-valid"
+            ng-reflect-is-disabled="false"
+            type="text"
+          />
+          
+  
+        </div>
+        
+  
+        <div>
+          
+    
+          
+          
+  
+        </div>
+        
+
+      </label>
+      
+
+    </app-text>
+    
+  
+  </div>
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+
+
+  
+
+</div>
+`;

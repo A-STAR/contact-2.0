@@ -1,7 +1,12 @@
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
-
-<app-view-form
-  *ngIf="controls"
-  [controls]="controls"
-  [data]="campaignDebt$ | async"
-></app-view-form>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow" style="overflow-y: auto;">
+    <app-view-form
+      *ngIf="controls"
+      [controls]="controls"
+      [data]="campaignDebt$ | async"
+    ></app-view-form>
+  </div>
+</div>

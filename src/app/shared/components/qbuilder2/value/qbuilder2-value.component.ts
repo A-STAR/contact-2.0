@@ -73,7 +73,7 @@ export class QBuilder2ValueComponent implements ControlValueAccessor, OnChanges 
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
   }
 
   addValue(): void {

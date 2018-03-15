@@ -41,7 +41,7 @@ export class AuthEffects {
   @Effect()
   refresh$ = this.actions
     .ofType(AuthService.AUTH_REFRESH)
-    .switchMap((action: UnsafeAction) => {
+    .switchMap(() => {
       return this.refresh()
         .map((token: string) => ({
           type: AuthService.AUTH_CREATE_SESSION,
@@ -58,7 +58,7 @@ export class AuthEffects {
   @Effect()
   logout$ = this.actions
     .ofType(AuthService.AUTH_LOGOUT)
-    .switchMap((action: UnsafeAction) => {
+    .switchMap(() => {
       return this.logout()
         .map(() => ({
           type: AuthService.AUTH_DESTROY_SESSION

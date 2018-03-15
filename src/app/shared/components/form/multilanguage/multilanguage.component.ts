@@ -9,6 +9,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { of } from 'rxjs/observable/of';
 
 import { IEntityTranslation } from '@app/core/entity/translations/entity-translations.interface';
 import { ILookupLanguage } from '@app/core/lookup/lookup.interface';
@@ -70,26 +72,27 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
   }
 
   ngOnInit(): void {
-    this.lookupService
-      .lookup<ILookupLanguage>('languages')
-      .subscribe(languages => {
-        this.languages = languages;
-        const mainLanguage = languages.find(l => l.isMain === 1);
-        if (mainLanguage) {
-          this.mainLanguageId = mainLanguage.id;
-        }
-        this.cdRef.markForCheck();
-      });
+    const { entityId, entityAttributeId } = this.langConfig;
 
-    // This is where multilanguage controls get different from other controls.
-    // We have to get value not from form but from server api.
-    this.dataService
-      .readTranslations(this.langConfig.entityId, this.langConfig.entityAttributeId)
-      .subscribe(value => {
-        this.value = value;
-        this.propagateChange(value);
-        this.cdRef.markForCheck();
-      });
+    combineLatest(
+      this.lookupService.lookup<ILookupLanguage>('languages'),
+      // This is where multilanguage controls get different from other controls.
+      // We have to get value not from form but from server api.
+      entityId && entityAttributeId
+        ? this.dataService.readTranslations(entityId, entityAttributeId)
+        : of(null),
+    ).subscribe(([ languages, value ]) => {
+      this.languages = languages;
+      this.value = value || languages.map(l => ({ languageId: l.id, value: null }));
+
+      const mainLanguage = languages.find(l => l.isMain === 1);
+      if (mainLanguage) {
+        this.mainLanguageId = mainLanguage.id;
+      }
+
+      this.propagateChange(this.value);
+      this.cdRef.markForCheck();
+    });
   }
 
   writeValue(value: any[]): void {
@@ -125,12 +128,17 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
   }
 
   onChange(event: Event): void {
+    const { value } = event.target as HTMLInputElement;
     const item = this.value.find(i => i.languageId === this.selectedLanguageId);
     if (item) {
-      const { value } = event.target as HTMLInputElement;
       item.value = value || null;
-      this.propagateChange(this.value);
+    } else {
+      this.value.push({
+        languageId: this.selectedLanguageId,
+        value: value || null,
+      });
     }
+    this.propagateChange(this.value);
   }
 
   onFocusOut(): void {

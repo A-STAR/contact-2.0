@@ -71,7 +71,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(): void {
   }
 
   setDisabledState(isDisabled: boolean): void {

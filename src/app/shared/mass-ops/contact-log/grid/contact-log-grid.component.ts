@@ -56,7 +56,7 @@ export class ContactLogGridComponent implements OnInit {
   ngOnInit(): void {
     this.columns$ = this.gridService.getMetadata(ContactLogGridComponent.METADATA_KEY, {})
         // TODO(i.lobanov): retrieve actions from here when it added in config
-        .map(({ actions, columns }) => columns);
+        .map(({ columns }) => columns);
   }
 
   onRequest(): void {

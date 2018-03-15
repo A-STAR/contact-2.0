@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { first, map } from 'rxjs/operators';
 
@@ -19,7 +19,7 @@ import { combineLatestAnd } from '@app/core/utils/helpers';
   selector: 'app-call-center-toolbar',
   templateUrl: './toolbar.component.html',
 })
-export class ToolbarComponent extends DialogFunctions {
+export class ToolbarComponent extends DialogFunctions implements OnInit {
 
   dialog: 'processed-debts' | 'change-status' = null;
 
@@ -53,6 +53,8 @@ export class ToolbarComponent extends DialogFunctions {
     ]
   };
 
+  titlebar$: Observable<ITitlebar>;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private campaignService: CampaignService,
@@ -63,15 +65,8 @@ export class ToolbarComponent extends DialogFunctions {
     super();
   }
 
-  get canChangeStatusToProblematic$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.campaignService.isCampaignDebtActive$,
-      this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 9),
-    ]);
-  }
-
-  get titlebar$(): Observable<ITitlebar> {
-    return this.campaignService.campaignDebt$.pipe(
+  ngOnInit(): void {
+    this.titlebar$ = this.campaignService.campaignDebt$.pipe(
       map(campaignDebt => {
         const { personLastName, personFirstName, personMiddleName } = campaignDebt;
         const title = [ personLastName, personFirstName, personMiddleName ].filter(Boolean).join(' ');
@@ -81,13 +76,23 @@ export class ToolbarComponent extends DialogFunctions {
     );
   }
 
+  get canChangeStatusToProblematic$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.campaignService.isCampaignDebtActive$,
+      this.userPermissionsService.contains('DEBT_STATUS_EDIT_LIST', 9),
+    ]);
+  }
+
   get campaignDebt$(): Observable<ICampaignDebt> {
     return this.campaignService.campaignDebt$;
   }
 
   onClose(): void {
     this.onCloseDialog();
-    this.cdRef.detectChanges();
+
+    setTimeout(() => {
+      this.cdRef.markForCheck();
+    }, 0);
   }
 
   private openDebtorCard(): void {

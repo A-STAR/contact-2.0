@@ -10,69 +10,65 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, flatMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IAttribute } from '../attribute.interface';
-import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
-import { IGridTreeRow } from './gridtree.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { AttributeService } from '../attribute.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { DialogFunctions } from '@app/core/dialog';
-import { makeKey, combineLatestAnd, TYPE_CODES } from '@app/core/utils';
-import { of } from 'rxjs/observable/of';
-
-const label = makeKey('widgets.attribute.grid');
+import { combineLatestAnd, addGridLabel } from '@app/core/utils';
+import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers';
 
 @Component({
   selector: 'app-entity-attribute-grid',
   templateUrl: './attribute-grid.component.html',
+  host: { class: 'full-height' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @Input('entityTypeId') set entityTypeId(entityTypeId: number) {
-    this._entityTypeId = entityTypeId;
     this.entityTypeId$.next(entityTypeId);
   }
 
   @Input('entityId') set entityId(entityId: number){
-    this._entityId = entityId;
     this.entityId$.next(entityId);
   }
 
-  private _entityTypeId: number;
-  private _entityId: number;
   private entityTypeId$ = new BehaviorSubject<number>(null);
   private entityId$ = new BehaviorSubject<number>(null);
   private entitySubscription: Subscription;
 
-  private _columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
+  columns: Array<ISimpleGridColumn<IAttribute>> = [
     {
-      dataType: TYPE_CODES.STRING, name: 'code', isDataPath: true,
+      prop: 'code', minWidth: 50, maxWidth: 80,
     },
     {
-      dataType: TYPE_CODES.STRING, name: 'name',
+      prop: 'name', minWidth: 150, maxWidth: 200, isGroup: true,
     },
     {
-      dataType: TYPE_CODES.STRING, name: 'value',
-      valueGetter: row => this.valueConverterService.deserialize(row.data).value,
+      prop: 'value', valueTypeKey: 'typeCode', minWidth: 100, maxWidth: 200,
+      valueTypeParams: {
+        dictCode: row => row.dictNameCode
+      },
     },
     {
-      dataType: TYPE_CODES.STRING, name: 'userFullName',
+      prop: 'userFullName', minWidth: 100, maxWidth: 200,
     },
     {
-      dataType: TYPE_CODES.STRING, name: 'changeDateTime',
-      valueFormatter: row => this.valueConverterService.ISOToLocalDateTime(row.value) || '',
+      prop: 'changeDateTime', minWidth: 100, maxWidth: 200,
+      renderer: DateTimeRendererComponent,
     },
     {
-      dataType: TYPE_CODES.STRING, name: 'comment',
+     prop: 'comment', minWidth: 80, maxWidth: 150,
     },
-  ].map(col => ({ ...col, label: label(col.name)}));
+  ].map(addGridLabel('widgets.attribute.grid'));
 
   selectedAttribute$ = new BehaviorSubject<IAttribute>(null);
 
@@ -80,7 +76,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
 
   dialog: 'edit';
 
-  rows: IGridTreeRow<Partial<IAttribute>>[] = [];
+  rows: IAttribute[];
 
   constructor(
     private attributeService: AttributeService,
@@ -88,7 +84,6 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService
   ) {
     super();
   }
@@ -117,17 +112,17 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     this.entitySubscription.unsubscribe();
   }
 
-  get columns(): IAGridWrapperTreeColumn<IAttribute>[] {
-    return this._columns;
+  get persistenceKey(): string {
+    return `[grid] attributes/${this.entityTypeId}/${this.entityId}`;
   }
 
   get selectedAttributeCode$(): Observable<number> {
     return this.selectedAttribute$.map(attribute => attribute.code);
   }
 
-  onRowDblClick(row: IGridTreeRow<IAttribute>): void {
-    if (row && row.data) {
-      this.selectedAttribute$.next(row.data);
+  onRowDblClick(row: IAttribute): void {
+    if (row) {
+      this.selectedAttribute$.next(row);
       this.canEdit$
         .pipe(first())
         .filter(Boolean)
@@ -138,8 +133,9 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
     }
   }
 
-  onRowSelect(row: IGridTreeRow<IAttribute>): void {
-    this.selectedAttribute$.next(row.data);
+  onRowSelect(rows: IAttribute[]): void {
+    const [ row ] = rows;
+    this.selectedAttribute$.next(row);
   }
 
   onEditDialogSubmit(attribute: Partial<IAttribute>): void {
@@ -168,16 +164,6 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
         this.selectedAttribute$.map(attribute => attribute && !attribute.disabledValue)
       ])
     );
-  }
-
-  private convertToGridTreeRow(attributes: IAttribute[]): IGridTreeRow<IAttribute>[] {
-    return attributes.map(attribute => {
-      const { children, ...rest } = attribute;
-      const hasChildren = children && children.length > 0;
-      return hasChildren
-        ? { data: rest, children: this.convertToGridTreeRow(children), isExpanded: true }
-        : { data: rest };
-    });
   }
 
   private getToolbarItems(): IToolbarItem[] {
@@ -229,7 +215,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
       if (!attributes) {
         return;
       }
-      this.rows = this.convertToGridTreeRow(attributes);
+      this.rows = attributes;
       this.removeSelection();
       this.cdRef.markForCheck();
     });

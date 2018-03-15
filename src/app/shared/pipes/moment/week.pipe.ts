@@ -21,7 +21,7 @@ export class MomentWeekPipe implements OnDestroy, PipeTransform {
     this.langSub.unsubscribe();
   }
 
-  transform(value: moment.Moment, format: string): moment.Moment[] {
+  transform(value: moment.Moment): moment.Moment[] {
     const { currentLang, defaultLang } = this.translateService;
     const lang = currentLang || defaultLang;
     const firstDay = value.clone().locale(lang).startOf('week');

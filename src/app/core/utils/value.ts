@@ -17,8 +17,8 @@ export enum TYPE_CODES {
   DATETIME = 7
 }
 
-export const getRawValue = <T extends IValue>(value: T): number | string => {
-  switch (value.typeCode) {
+export const getRawValue = <T extends IValue>(value: T, valueTypeKey: string = 'typeCode'): number | string => {
+  switch (value[valueTypeKey]) {
     case TYPE_CODES.NUMBER:
     case TYPE_CODES.FLOAT:
     case TYPE_CODES.DICT:

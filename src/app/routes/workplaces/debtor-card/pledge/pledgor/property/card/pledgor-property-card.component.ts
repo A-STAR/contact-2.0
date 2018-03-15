@@ -121,7 +121,7 @@ export class PledgorPropertyCardComponent extends DialogFunctions implements OnI
     }
 
     this.formSubscription = this.form.form.valueChanges
-      .map(updates => this.form.serializedValue)
+      .map(() => this.form.serializedValue)
       .subscribe(property => {
         this.pledgeService.dispatchAction(PledgorPropertyService.MESSAGE_PLEDGOR_PROPERTY_SELECTION_CHANGED, {
           id: property.id,

@@ -53,9 +53,9 @@ export class AccountMenuComponent extends DialogFunctions implements OnInit {
       .filter(Boolean)
       .flatMap(() => this.canEditPhoneExtension$)
       .filter(Boolean)
-      .flatMap(() => this.callService.params$.map(params => params && params.intPhone))
-      .filter(phone => phone === null)
+      .flatMap(() => this.callService.params$)
       .pipe(first())
+      .filter(params => !params || params.intPhone === null)
       .subscribe(() => {
         this.setDialog('ext');
         this.cdRef.markForCheck();

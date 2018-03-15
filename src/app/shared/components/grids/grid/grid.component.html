@@ -8,11 +8,14 @@
       *ngIf="colDefs"
       class="ag-theme-material"
       style="width: 100%; height: 100%;"
+      [treeData]="treeData"
+      [getDataPath]="getDataPath"
       [columnDefs]="colDefs"
       [getRowClass]="rowClassCallback"
       [gridOptions]="gridOptions"
-      [rowData]="rows"
+      [rowData]="rowData"
       [rowSelection]="selectionType"
+      [autoGroupColumnDef]="autoGroupColumnDef"
       (gridReady)="onGridReady($event)"
     ></ag-grid-angular>
   </div>
