@@ -30,6 +30,7 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   controls: Array<IDynamicFormItem> = null;
   formData: IContractor = null;
   canViewAttributes: boolean;
+  canViewManagers: boolean;
   canViewObjects: boolean;
   private editedContractorSub: Subscription;
   private contractorId: number;
@@ -54,13 +55,14 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
       this.lookupService.lookupAsOptions('users'),
       getContractor$,
       this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 13),
-      this.userPermissionsService.has('OBJECT_CONTRACTOR_VIEW')
+      this.userPermissionsService.has('OBJECT_CONTRACTOR_VIEW'),
+      this.userPermissionsService.has('CONTRACTOR_MANAGER_VIEW')
     )
     .pipe(first())
-    // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes, canViewObjects ]) => {
-      this.canViewAttributes = canViewAttributes;
-      this.canViewObjects = canViewObjects;
+    .subscribe(([ contractorTypeOptions, userOptions, contractor, canViewAttributes, canViewObjects, canViewManagers ]) => {
+      this.canViewAttributes = canViewAttributes && contractor;
+      this.canViewObjects = canViewObjects && contractor;
+      this.canViewManagers = canViewManagers && contractor;
 
       this.contractorId = contractor && contractor.id;
 
