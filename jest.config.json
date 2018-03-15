@@ -1,0 +1,14 @@
+{
+  "preset": "jest-preset-angular",
+  "setupTestFrameworkScriptFile": "<rootDir>/src/jest.ts",
+  "moduleNameMapper": {
+    "^@app/(.*)$": "<rootDir>/src/app/$1"
+  },
+  "collectCoverageFrom": [
+    "src/app/**/*.ts"
+  ],
+  "coverageReporters": [
+    "text-summary"
+  ],
+  "testRegex": "\\.spec\\.ts$"
+}
