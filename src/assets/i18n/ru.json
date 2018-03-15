@@ -24,6 +24,38 @@
       }
     },
     "workplaces": {
+      "debtor-card": {
+        "contact-persons": {
+          "person": {
+            "name": "Персона",
+            "fields": {
+              "id": "ID",
+              "lastName": "Фамилия",
+              "firstName": "Имя",
+              "middleName": "Отчество",
+              "personFullName": "ФИО",
+              "typeCode": "Тип",
+              "birthDate": "Дата рождения",
+              "birthPlace": "Место рождения",
+              "familyStatusCode": "Семейное положение",
+              "educationCode": "Образование",
+              "genderCode": "Пол",
+              "passportNumber": "Серия и номер паспорта",
+              "comment": "Комментарий",
+              "stringValue1": "Строковый атрибут 1",
+              "stringValue2": "Строковый атрибут 2",
+              "stringValue3": "Строковый атрибут 3",
+              "stringValue4": "Строковый атрибут 4",
+              "stringValue5": "Строковый атрибут 5",
+              "stringValue6": "Строковый атрибут 6",
+              "stringValue7": "Строковый атрибут 7",
+              "stringValue8": "Строковый атрибут 8",
+              "stringValue9": "Строковый атрибут 9",
+              "stringValue10": "Строковый атрибут 10"
+            }
+          }
+        }
+      },
       "shared": {
         "contactRegistration": {
           "cancelDialog": {
@@ -3350,34 +3382,6 @@
           "personRole": "Роль персоны",
           "personFullName": "ФИО персоны",
           "linkTypeCode": "Тип связи (для третьих лиц)"
-        }
-      },
-      "person": {
-        "name": "Персона",
-        "fields": {
-          "id": "ID",
-          "lastName": "Фамилия",
-          "firstName": "Имя",
-          "middleName": "Отчество",
-          "personFullName": "ФИО",
-          "typeCode": "Тип должника",
-          "birthDate": "Дата рождения",
-          "birthPlace": "Место рождения",
-          "familyStatusCode": "Семейное положение",
-          "educationCode": "Образование",
-          "genderCode": "Пол",
-          "passportNumber": "Серия и номер паспорта",
-          "comment": "Комментарий",
-          "stringValue1": "Строковый атрибут 1",
-          "stringValue2": "Строковый атрибут 2",
-          "stringValue3": "Строковый атрибут 3",
-          "stringValue4": "Строковый атрибут 4",
-          "stringValue5": "Строковый атрибут 5",
-          "stringValue6": "Строковый атрибут 6",
-          "stringValue7": "Строковый атрибут 7",
-          "stringValue8": "Строковый атрибут 8",
-          "stringValue9": "Строковый атрибут 9",
-          "stringValue10": "Строковый атрибут 10"
         }
       }
     }

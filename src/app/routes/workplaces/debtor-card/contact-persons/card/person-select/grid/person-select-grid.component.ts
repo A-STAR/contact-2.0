@@ -62,26 +62,21 @@ export class PersonSelectGridComponent extends DialogFunctions implements OnInit
   }
 
   ngOnInit(): void {
-    this.userPermissionsService.has('CONTACT_PERSON_ADD')
-      .pipe(first())
-      .filter(Boolean)
-      .subscribe(() => {
-        this.toolbarItems = [
-          {
-            type: ToolbarItemTypeEnum.BUTTON_ADD,
-            action: () => this.setDialog('create'),
-            enabled: this.userPermissionsService.has('PERSON_ADD')
-          },
-          {
-            type: ToolbarItemTypeEnum.BUTTON_EDIT,
-            action: () => this.setDialog('edit'),
-            enabled: combineLatestAnd([
-              this.userPermissionsService.has('PERSON_EDIT'),
-              this.selectedPerson$.map(Boolean)
-            ])
-          }
-        ];
-      });
+    this.toolbarItems = [
+      {
+        type: ToolbarItemTypeEnum.BUTTON_ADD,
+        action: () => this.setDialog('create'),
+        enabled: this.userPermissionsService.hasAll(['CONTACT_PERSON_ADD', 'PERSON_ADD'])
+      },
+      {
+        type: ToolbarItemTypeEnum.BUTTON_EDIT,
+        action: () => this.setDialog('edit'),
+        enabled: combineLatestAnd([
+          this.userPermissionsService.has('CONTACT_PERSON_EDIT'),
+          this.selectedPerson$.map(Boolean)
+        ])
+      }
+    ];
   }
 
   get isValid(): boolean {

@@ -17,7 +17,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 
 import { makeKey, range } from '@app/core/utils';
 
-const labelKey = makeKey('common.entities.person.fields');
+const labelKey = makeKey('routes.workplaces.debtor-card.contact-persons.person.fields');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,40 +50,44 @@ export class PersonSelectCardComponent implements OnInit {
       this.personId
         ? this.userPermissionsService.has('CONTACT_PERSON_EDIT')
         : this.userPermissionsService.has('CONTACT_PERSON_ADD'),
+      this.personId
+        ? this.userPermissionsService.has('PERSON_INFO_EDIT')
+        : this.userPermissionsService.has('PERSON_ADD'),
+      this.userPermissionsService.has('PERSON_COMMENT_EDIT'),
       this.userContantsService.get('Person.Individual.AdditionalAttribute.List'),
       this.entityAttributesService.getAttributes(this.attributeIds),
       this.personId ? this.personSelectService.fetch(this.personId) : of(this.formData)
     )
     .pipe(first())
-    .subscribe(([ canEdit, attributeList, attributes, person ]) => {
+    .subscribe(([ canContactEdit, canPersonEdit, canCommentEdit, attributeList, attributes, person ]) => {
       const displayedStringValues = attributeList.valueS.split(',').map(Number);
       this.person = person;
       this.controls = [
-        { controlName: 'lastName', type: 'text', width: 4, required: true, disabled: !canEdit },
-        { controlName: 'firstName', type: 'text', width: 4, disabled: !canEdit },
-        { controlName: 'middleName', type: 'text', width: 4, disabled: !canEdit },
-        { controlName: 'birthDate',  type: 'datepicker', width: 4, disabled: !canEdit },
+        { controlName: 'lastName', type: 'text', width: 4, required: true, disabled: !canContactEdit || !canPersonEdit },
+        { controlName: 'firstName', type: 'text', width: 4, disabled: !canContactEdit || !canPersonEdit },
+        { controlName: 'middleName', type: 'text', width: 4, disabled: !canContactEdit || !canPersonEdit },
+        { controlName: 'birthDate',  type: 'datepicker', width: 4, disabled: !canContactEdit || !canPersonEdit },
         {
           controlName: 'genderCode',
           type: 'select',
           width: 4,
           dictCode: UserDictionariesService.DICTIONARY_GENDER,
-          disabled: !canEdit
+          disabled: !canContactEdit || !canPersonEdit
         },
-        { controlName: 'birthPlace', type: 'text', width: 4 },
+        { controlName: 'birthPlace', type: 'text', width: 4, disabled: !canContactEdit || !canPersonEdit },
         {
           controlName: 'familyStatusCode',
           type: 'select',
           width: 4,
           dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
-          disabled: !canEdit
+          disabled: !canContactEdit || !canPersonEdit
         },
         {
           controlName: 'educationCode',
           type: 'select',
           width: 4,
           dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
-          disabled: !canEdit
+          disabled: !canContactEdit || !canPersonEdit
         },
         {
           controlName: 'typeCode',
@@ -91,9 +95,9 @@ export class PersonSelectCardComponent implements OnInit {
           markAsDirty: !this.personId,
           required: true,
           type: 'select',
-          disabled: !canEdit
+          disabled: !canContactEdit || !canPersonEdit
         },
-        { controlName: 'comment', type: 'textarea', disabled: !canEdit },
+        { controlName: 'comment', type: 'textarea', disabled: !canContactEdit || !canCommentEdit },
         ...this.attributeIds.map((id, i) => ({
           label: `person.stringValue${i + 1}`,
           controlName: `stringValue${i + 1}`,
@@ -101,6 +105,7 @@ export class PersonSelectCardComponent implements OnInit {
           width: 3,
           display: displayedStringValues.includes(id) && attributes[id].isUsed,
           required: displayedStringValues.includes(id) && !!attributes[id].isMandatory,
+          disabled: !canContactEdit || !canPersonEdit
         }) as IDynamicFormControl),
       ].map(control => ({ label: labelKey(control.controlName), ...control } as IDynamicFormControl));
 
