@@ -22,7 +22,7 @@ export class PersonSelectDialogComponent {
   @Output() select = new EventEmitter<IPerson>();
 
   get canSave(): boolean {
-    return this.card && !!this.card.isValid;
+    return this.card && !!this.card.canSubmit;
   }
 
   onSave(): void {

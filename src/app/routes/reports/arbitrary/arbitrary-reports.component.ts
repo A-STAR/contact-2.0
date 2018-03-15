@@ -6,9 +6,10 @@ import { ReportGridComponent } from './reports/grid/report-grid.component';
 import { ParamGridComponent } from './params/grid/param-grid.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-arbitrary-reports',
   templateUrl: './arbitrary-reports.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArbitraryReportsComponent {
 

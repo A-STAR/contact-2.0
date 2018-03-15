@@ -1,12 +1,12 @@
-<div class="flex vertical">
-  <div class="flex-item grow">
+<app-area layout="column">
+  <app-area>
     <app-currencies-grid></app-currencies-grid>
-  </div>
-  <div class="flex-item grow">
+  </app-area>
+  <app-area>
     <app-tabview [fullHeight]="true" [noMargin]="true">
       <app-tabview-tab [title]="'utilities.currencyRatesTab.title'">
         <app-currency-rates-grid [currencyId$]="selectedCurrency$"></app-currency-rates-grid>
       </app-tabview-tab>
     </app-tabview>
-  </div>
-</div>
+  </app-area>
+</app-area>

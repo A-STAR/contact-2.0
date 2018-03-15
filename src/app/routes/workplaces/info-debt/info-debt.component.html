@@ -1,5 +1,5 @@
-<div class="flex vertical">
-  <div class="flex-item grow">
+<app-area layout="column">
+  <app-area initialSize="2">
     <app-tabview [fullHeight]="true" (select)="onTabSelect($event)">
       <app-tabview-tab *ngFor="let grid of grids" [title]="grid.title" >
         <app-info-debt-grid
@@ -10,8 +10,8 @@
         ></app-info-debt-grid>
       </app-tabview-tab>
     </app-tabview>
-  </div>
-  <div class="flex-item grow">
+  </app-area>
+  <app-area initialSize="1">
     <app-tabview [fullHeight]="true" (select)="onDetailTabSelect($event)">
       <app-tabview-tab *ngFor="let grid of detailGrids" [title]="grid.title" >
         <app-info-debt-detail-grid
@@ -22,5 +22,5 @@
         ></app-info-debt-detail-grid>
       </app-tabview-tab>
     </app-tabview>
-  </div>
-</div>
+  </app-area>
+</app-area>

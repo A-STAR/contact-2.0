@@ -9,12 +9,17 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
-
-<app-simple-grid
-  persistenceKey="[grid] admin/contractors"
-  [columns]="columns"
-  [rows]="contractors"
-  (dblClick)="onEdit()"
-  (select)="onSelect($event)"
-></app-simple-grid>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      persistenceKey="[grid] admin/contractors"
+      [columns]="columns"
+      [rows]="contractors"
+      (dblClick)="onEdit()"
+      (select)="onSelect($event)"
+    ></app-simple-grid>
+  </div>
+</div>
