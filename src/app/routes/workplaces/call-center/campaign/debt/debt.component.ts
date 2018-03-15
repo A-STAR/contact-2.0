@@ -15,8 +15,9 @@ import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height '},
   selector: 'app-call-center-debt',
-  templateUrl: 'debt.component.html'
+  templateUrl: 'debt.component.html',
 })
 export class DebtComponent implements OnInit {
 
