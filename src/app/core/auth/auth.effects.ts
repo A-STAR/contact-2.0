@@ -3,6 +3,7 @@ import { HttpResponse } from '@angular/common/http';
 import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import { throttleTime } from 'rxjs/operators';
 
 import { IUserParams } from '@app/core/auth/auth.interface';
 
@@ -121,6 +122,15 @@ export class AuthEffects {
             this.notificationService.error('auth.errors.login').response(error).action(),
           ];
         });
+    });
+
+  @Effect()
+  invalidToken$ = this.actions
+    .ofType(AuthService.AUTH_TOKEN_INVALID)
+    .pipe(throttleTime(500))
+    .switchMap(() => {
+      this.authService.removeToken();
+      return [ this.notificationService.error('auth.errors.invalidToken').action() ];
     });
 
   constructor(
