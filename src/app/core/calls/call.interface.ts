@@ -18,6 +18,7 @@ export interface ICall {
 }
 
 export interface ICallState {
+  pbxConnected: boolean;
   pbxState: IPBXState;
   settings: ICallSettings;
   params: IPBXParams;

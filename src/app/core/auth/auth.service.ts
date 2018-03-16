@@ -1,11 +1,12 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable, NgZone } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
+import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { tap, distinctUntilChanged, map } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
 import { IUser, IUserParams } from './auth.interface';
@@ -25,6 +26,7 @@ export class AuthService implements CanActivate {
   static readonly JWT_EXPIRATION_THRESHOLD = 60e3;
   static readonly JWT_TIMER_INTERVAL       = 10e3;
 
+  static readonly AUTH_INIT            = 'AUTH_INIT';
   static readonly AUTH_LOGIN           = 'AUTH_LOGIN';
   static readonly AUTH_LOGIN_SUCCESS   = 'AUTH_LOGIN_SUCCESS';
   static readonly AUTH_REFRESH         = 'AUTH_REFRESH';
@@ -39,9 +41,8 @@ export class AuthService implements CanActivate {
 
   private tokenTimer = null;
 
-  private isParamsFetching = false;
-
   constructor(
+    private actions: Actions,
     private jwtHelper: JwtHelperService,
     private persistenceService: PersistenceService,
     private router: Router,
@@ -52,6 +53,13 @@ export class AuthService implements CanActivate {
     if (!this.isRetrievedTokenValid()) {
       this.router.navigate([ AuthService.URL_LOGIN ]);
     }
+
+    combineLatest(
+      this.actions.ofType(AuthService.AUTH_INIT),
+      this.currentUser$.filter(Boolean)
+    )
+    .pipe(first())
+    .subscribe(() => this.refreshUserParamsAction());
   }
 
   get currentUser$(): Observable<IUser> {
@@ -61,25 +69,7 @@ export class AuthService implements CanActivate {
   }
 
   get userParams$(): Observable<IUserParams> {
-    return combineLatest(
-      this.currentUser$.map(user => user && user.userId),
-      this.store.select(state => state.auth.params)
-    )
-    .pipe(
-      tap(([ userId, params ]) => {
-        if (params) {
-          this.isParamsFetching = false;
-        } else if (!this.isParamsFetching && userId) {
-          this.refreshUserParamsAction();
-        }
-      }),
-      map(([ _, params ]) => params),
-      distinctUntilChanged(),
-    );
-  }
-
-  setUserParamFetching(): void {
-    this.isParamsFetching = true;
+    return this.store.select(store => store.auth.params);
   }
 
   canActivate(): Observable<boolean> {
