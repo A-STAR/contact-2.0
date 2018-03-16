@@ -4,6 +4,7 @@ import { UnsafeAction } from '../../core/state/state.interface';
 import { CallService } from './call.service';
 
 export const defaultState: ICallState = {
+  pbxConnected: null,
   pbxState: null,
   settings: null,
   params: null,
@@ -47,6 +48,18 @@ export function reducer(state: ICallState = defaultState, action: UnsafeAction):
       return {
         ...state,
         activeCall: null
+      };
+    }
+    case CallService.PBX_LOGIN_SUCCESS: {
+      return {
+        ...state,
+        pbxConnected: true
+      };
+    }
+    case CallService.PBX_LOGIN_FAILURE: {
+      return {
+        ...state,
+        pbxConnected: false
       };
     }
     case CallService.PBX_STATE_CHANGE: {

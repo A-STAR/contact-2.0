@@ -8,7 +8,7 @@ import {
   IActionType,
   IPortfolio
 } from '../../contractors-and-portfolios.interface';
-import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -31,7 +31,7 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  controls: Array<IDynamicFormItem> = null;
+  controls: Array<IDynamicFormControl> = null;
   formData: IPortfolio = null;
   canViewAttributes: boolean;
 
@@ -151,6 +151,7 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
   }
 
   onDirectionCodeChange(code: number): any {
+    this.controls.find(c => c.controlName === 'statusCode').required = code !== 2;
     const control = this.form.getControl('statusCode');
     if (control) {
       control[code === 2 ? 'disable' : 'enable']();

@@ -44,9 +44,16 @@ export interface IAGridSortModel {
   sort: string;
 }
 
+export interface IAgridColSetting {
+  hide?: boolean;
+  colId?: string;
+  width?: number;
+}
+
 export interface IAGridSettings {
   sortModel: IAGridSortModel[];
-  colDefs: ColDef[];
+  colDefs: IAgridColSetting[];
+  filterModel: any;
 }
 
 export interface IAGridSorter {
