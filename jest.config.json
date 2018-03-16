@@ -1,6 +1,6 @@
 {
   "preset": "jest-preset-angular",
-  "setupTestFrameworkScriptFile": "<rootDir>/src/jest.ts",
+  "setupTestFrameworkScriptFile": "<rootDir>/jest-setup.ts",
   "moduleNameMapper": {
     "^@app/(.*)$": "<rootDir>/src/app/$1"
   },
