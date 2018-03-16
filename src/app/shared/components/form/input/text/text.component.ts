@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef,
+  Input, ViewChild, ElementRef, AfterViewInit
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 
 @Component({
@@ -18,12 +21,15 @@ import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } fro
   selector: 'app-text',
   templateUrl: 'text.component.html'
 })
-export class TextComponent implements ControlValueAccessor, Validator {
+export class TextComponent implements ControlValueAccessor, Validator, AfterViewInit {
+  @ViewChild('input') inputEl: ElementRef;
+
   @Input() errors: any;
   @Input() label: string;
   @Input() minLength: number;
   @Input() maxLength: number;
   @Input() required = false;
+  @Input() autofocus = false;
 
   disabled = false;
   value: string;
@@ -31,6 +37,12 @@ export class TextComponent implements ControlValueAccessor, Validator {
   constructor(
     private cdRef: ChangeDetectorRef,
   ) {}
+
+  ngAfterViewInit(): void {
+    if (this.autofocus) {
+      this.inputEl.nativeElement.focus();
+    }
+  }
 
   writeValue(value: string): void {
     this.value = value;
