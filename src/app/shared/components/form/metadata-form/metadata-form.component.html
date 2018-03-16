@@ -1,3 +1,14 @@
-<div>
-  Metadata Form
-</div>
+<form *ngIf="config" [formGroup]="formGroup">
+  <ng-container *ngFor="let item of config.items">
+    <ng-container [ngSwitch]="item.type">
+      <app-text
+        *ngSwitchCase="'text'"
+        [formControlName]="item.name"
+        [label]="item.label"
+        [minLength]="item.min"
+        [maxLength]="item.max"
+        [required]="item.required"
+      ></app-text>
+    </ng-container>
+  </ng-container>
+</form>
