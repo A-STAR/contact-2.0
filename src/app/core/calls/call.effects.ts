@@ -69,6 +69,7 @@ export class CallEffects {
         }))
         .catch(error => {
           return [
+            { type: CallService.PBX_LOGIN_FAILURE },
             this.notificationService
               .createError()
               .entity('entities.calls.gen.plural')
