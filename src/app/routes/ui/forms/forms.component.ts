@@ -17,8 +17,8 @@ export class FormsComponent {
       {
         display: true,
         label: 'Text Input',
-        max: 10,
-        min: 0,
+        max: 20,
+        min: 'userConstants/constants/UserPassword.MinLength/valueN',
         name: 'text',
         required: false,
         type: IMetadataFormControlType.TEXT,

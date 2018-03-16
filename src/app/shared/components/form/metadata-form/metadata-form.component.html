@@ -5,9 +5,9 @@
         *ngSwitchCase="'text'"
         [formControlName]="item.name"
         [label]="item.label"
-        [minLength]="item.min"
-        [maxLength]="item.max"
-        [required]="item.required"
+        [minLength]="getValidator(item.min) | async"
+        [maxLength]="getValidator(item.max) | async"
+        [required]="getValidator(item.required) | async"
       ></app-text>
     </ng-container>
   </ng-container>
