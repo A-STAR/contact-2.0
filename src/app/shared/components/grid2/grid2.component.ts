@@ -31,7 +31,7 @@ import {
 import {
   IAGridAction, IAGridExportableColumn, IAGridGroups, IAGridSelected,
   IAGridColumn, IAGridSortModel, IAGridSettings, IAGridRequestParams,
-  IAGridRequest, IAGridSorter } from './grid2.interface';
+  IAGridRequest, IAGridSorter, IAgridColSetting } from './grid2.interface';
 import { IContextMenuSimpleOptions } from '@app/shared/components/grids/context-menu/context-menu.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import {
@@ -117,6 +117,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   paginationPanel: IToolbarAction[] = [];
   initCallbacks: Function[] = [];
 
+  private originalColSettings: IAgridColSetting[] = [];
   private gridSettings: IAGridSettings;
   private initialized = false;
   private saveChangesDebounce = new Subject<void>();
@@ -214,6 +215,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveGridSettings();
+    this.originalColSettings = [];
     this.saveChangesDebounceSub.unsubscribe();
     this.userPermissionsSub.unsubscribe();
   }
@@ -648,6 +650,13 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         minWidth: column.minWidth,
         width: column.width || column.minWidth || column.maxWidth,
       };
+
+      this.originalColSettings.push({
+        width: colDef.width,
+        hide: colDef.hide,
+        colId: colDef.colId
+      });
+
       // Merge persisted column settings, if any
       if (savedColDefs) {
         index = savedColDefs.findIndex(col => col.colId === column.colId);
@@ -685,6 +694,29 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       // ES6 sort is not necessarily stable: http://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.sort
       .sort((a, b) => a.index === b.index ? a.originalIndex - b.originalIndex : a.index - b.index)
       .map(item => item.column);
+  }
+
+  private applyColumnSettings(columns: Column[], settings: IAgridColSetting[]): IAgridColSetting[] {
+    return columns.map((column: Column, index: number) => {
+      const originalIndex = settings.findIndex(col => col.colId === column.getColId());
+      // tslint:disable-next-line:no-bitwise
+      if (!!~originalIndex) {
+        const { width, hide } = settings[originalIndex];
+        // TODO(i.lobanov): optimize by applying in batch
+        this.gridOptions.columnApi.setColumnVisible(column, !hide);
+        this.gridOptions.columnApi.setColumnWidth(column, width);
+        this.gridOptions.columnApi.moveColumn(column, originalIndex);
+      }
+      return { index, originalIndex, column };
+    })
+    .sort((a, b) => a.index === b.index ? a.originalIndex - b.originalIndex : a.index - b.index)
+    .map(item => item.column)
+    .map(column => ({
+        width: column.getActualWidth(),
+        hide: !column.isVisible(),
+        colId: column.getColId()
+      })
+    );
   }
 
   private setGridOptions(): void {
@@ -826,13 +858,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private resetGridSettings(): void {
     if (this.persistenceKey) {
-      // TODO(i.lobanov): colDefs should have default values here
-      this.gridSettings = { sortModel: [], colDefs: [], filterModel: {} };
+      this.gridSettings = {
+        sortModel: [],
+        colDefs: this.applyColumnSettings(this.allColumns, this.originalColSettings),
+        filterModel: {}
+      };
     }
     this.saveGridSettings();
+    // TODO(i.lobanov): find a way to pospone these changes,
+    // so grid callback fires once
     this.gridOptions.api.setSortModel(null);
     this.gridOptions.api.setFilterModel(null);
-    this.gridOptions.columnApi.resetColumnState();
   }
 
   private saveGridSettings(): void {
@@ -840,13 +876,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       this.persistenceService.set(this.persistenceKey, this.gridSettings);
     }
   }
-
-  // private restoreColDefs(): ColDef[] {
-  //   return this.allColumns.map(column => (
-  //     // TODO(i.lobanov): store defined defaults somewhere
-  //     { width: column.getActualWidth(), hide: false, colId: column.getColId() }
-  //   ));
-  // }
 
   private restoreGridSettings(): IAGridSettings {
     this.gridSettings = this.persistenceService.get(this.persistenceKey) || {};
