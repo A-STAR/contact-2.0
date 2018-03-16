@@ -248,6 +248,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     if (this.close) {
       this.close.emit(action);
     }
+    this.cdRef.markForCheck();
   }
 
   onRequest(): void {
