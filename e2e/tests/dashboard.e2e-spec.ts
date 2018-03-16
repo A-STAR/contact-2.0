@@ -1,19 +1,14 @@
-import { toMatchImageSnapshot } from 'jest-image-snapshot';
+import { expectToMatchUrl, navigate } from '../utils/index';
 
-import { navigate, takeScreenshot } from '../utils/index';
-
-jest.setTimeout(128000);
-
-expect.extend({ toMatchImageSnapshot });
-
-describe('Dashboard', () => {
-  it('should render', async done => {
+describe('home', () => {
+  beforeEach(async () => {
     await navigate('');
-    const screenshot = await takeScreenshot();
-    expect(screenshot)['toMatchImageSnapshot']({
-      failureThreshold: '0.1',
-      failureThresholdType: 'percent'
-    });
+  });
+
+  // Note:
+  // Not taking screenshot because dashboard data is updated frequently
+  it('should exist', async done => {
+    await expectToMatchUrl('home');
     done();
   });
 });

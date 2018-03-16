@@ -30,3 +30,8 @@ $cell-horizontal-padding: 15px;
 .ag-menu-column-select-wrapper {
   height: 200px !important;
 }
+
+.ag-body-container,
+.ag-header-row {
+  min-width: 100% !important;
+}
