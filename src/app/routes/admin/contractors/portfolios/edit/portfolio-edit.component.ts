@@ -28,6 +28,7 @@ const label = makeKey('portfolios.grid');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortfolioEditComponent implements OnInit, OnDestroy {
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem> = null;
@@ -89,12 +90,12 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
           { label: label('name'), controlName: 'name', type: 'text', required: true },
           {
             label: label('directionCode'), controlName: 'directionCode', type: 'select', required: true,
-            disabled: !!editedPortfolio, options: directionOptions
+            disabled: !!editedPortfolio, options: directionOptions,
+            onChange: directionCode => this.onDirectionCodeChange(directionCode)
           },
           {
             label: label('stageCode'), controlName: 'stageCode', type: 'select',
-            // NOTE: must be true, but the dictionary is empty
-            required: false, options: stageOptions
+            required: true, options: stageOptions
           },
           {
             label: label('statusCode'), controlName: 'statusCode', type: 'select', required: true,
@@ -147,5 +148,13 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   onAttributesClick(): void {
     this.routingService.navigate([ 'attributes' ], this.route);
+  }
+
+  onDirectionCodeChange(code: number): any {
+    const control = this.form.getControl('statusCode');
+    if (control) {
+      control[code === 2 ? 'disable' : 'enable']();
+      this.cdRef.markForCheck();
+    }
   }
 }
