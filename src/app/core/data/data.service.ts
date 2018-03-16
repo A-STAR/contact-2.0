@@ -150,11 +150,6 @@ export class DataService {
       headers.append('Content-Type', 'application/json');
     }
 
-    const isAuthenticated = this.authService.isRetrievedTokenValid();
-    if (!isAuthenticated && !['/auth/login', '/api/refresh'].includes(url)) {
-      return empty();
-    }
-
     // increase the request counter for the loader
     this.nRequests$.next(this.nRequests$.value + 1);
 
@@ -172,8 +167,8 @@ export class DataService {
         }),
         catchError(resp => {
           if (401 === resp.status) {
-            // TODO(a.tymchuk): ask for the password again
-            console.error('authentication error', resp);
+            this.authService.dispatchInvalidTokenAction();
+            return empty();
           }
           // rethrow the error up the chain
           return ErrorObservable.create(resp);
