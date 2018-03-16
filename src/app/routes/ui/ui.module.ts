@@ -32,6 +32,10 @@ const routes: Routes = [
         loadChildren: './grids/grids.module#GridsModule',
       },
       {
+        path: 'forms',
+        loadChildren: './forms/forms.module#FormsModule',
+      },
+      {
         path: 'areas',
         loadChildren: './areas/areas.module#AreasModule',
       },
