@@ -36,7 +36,9 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
     this.destroyEditor();
     this.initEditor();
 
-    if (!richTextMode) {
+    // No idea why but without checking for disabled state a nasty bug occurs:
+    // If the control is disabled and its mode is plain text the value is not displayed most of the time.
+    if (!richTextMode && !this.isDisabled) {
       const text = this.elRef.nativeElement.querySelector('.note-editable').innerText.trim();
       this.summernote('reset');
       this.summernote('code', text);
