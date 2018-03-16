@@ -1,8 +1,7 @@
 import { Page } from 'puppeteer';
 
 import { getUrl } from './url';
-
-const pause = async () => new Promise(resolve => setTimeout(resolve, 1000));
+import { pause } from './pause';
 
 export const expectToMatchUrl = async (url: string) => {
   await pause();

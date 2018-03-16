@@ -3,6 +3,8 @@ import { HttpResponse } from '@angular/common/http';
 import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import { defer } from 'rxjs/observable/defer';
+import { of } from 'rxjs/observable/of';
 
 import { IUserParams } from '@app/core/auth/auth.interface';
 
@@ -109,7 +111,6 @@ export class AuthEffects {
   @Effect()
   userParams$ = this.actions
     .ofType(AuthService.USER_FETCH)
-    .do(() => this.authService.setUserParamFetching())
     .switchMap(() => {
       return this.fetchUserParams()
         .map(params => ({
@@ -122,6 +123,11 @@ export class AuthEffects {
           ];
         });
     });
+
+  @Effect()
+  init$ = defer(() => of({
+    type: AuthService.AUTH_INIT,
+  }));
 
   constructor(
     private actions: Actions,

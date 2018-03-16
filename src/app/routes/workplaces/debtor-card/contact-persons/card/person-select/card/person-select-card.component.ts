@@ -95,6 +95,7 @@ export class PersonSelectCardComponent implements OnInit {
           markAsDirty: !this.personId,
           required: true,
           type: 'select',
+          width: 4,
           disabled: !canContactEdit || !canPersonEdit
         },
         { controlName: 'comment', type: 'textarea', disabled: !canContactEdit || !canCommentEdit },
