@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { ActionGridFilterModule } from './filter/action-grid-filter.module';
 import { ContactLogModule } from '@app/shared/mass-ops/contact-log/contact-log.module';
-import { DebtOpenIncomingCallModule } from '@app/shared/mass-ops/debt-open-incoming-call/debt-open-incoming-call.module';
 import { DebtResponsibleModule } from '@app/shared/mass-ops/debt-responsible/debt-responsible.module';
 import { DebtStatusModule } from '@app/shared/mass-ops/debt-status/debt-status.module';
 import { DownloaderModule } from '@app/shared/components/downloader/downloader.module';
@@ -12,7 +11,6 @@ import { GridsModule } from '@app/shared/components/grids/grids.module';
 import { Grid2Module } from '../grid2/grid2.module';
 import { MassOpsModule } from '@app/shared/mass-ops/mass-ops.module';
 import { NextCallDateSetModule } from '@app/shared/mass-ops/next-call-date-set/next-call-date-set.module';
-import { OpenDebtCardModule } from '@app/shared/mass-ops/debt-card-open/debt-card-open.module';
 import { OperatorDetailsModule } from '@app/shared/mass-ops/operator-details/operator-details.module';
 import { PaymentConfirmModule } from '@app/shared/mass-ops/payment-confirm/payment-confirm.module';
 import { PaymentOperatorModule } from '@app/shared/mass-ops/payment-operator/payment-operator.module';
@@ -29,7 +27,6 @@ import { ActionGridComponent } from './action-grid.component';
   imports: [
     CommonModule,
     ContactLogModule,
-    DebtOpenIncomingCallModule,
     DebtStatusModule,
     DebtResponsibleModule,
     DownloaderModule,
@@ -39,7 +36,6 @@ import { ActionGridComponent } from './action-grid.component';
     MassOpsModule,
     ActionGridFilterModule,
     NextCallDateSetModule,
-    OpenDebtCardModule,
     OperatorDetailsModule,
     PaymentConfirmModule,
     PaymentOperatorModule,

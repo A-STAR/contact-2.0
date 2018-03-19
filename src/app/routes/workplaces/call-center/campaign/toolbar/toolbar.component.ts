@@ -7,7 +7,7 @@ import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar
 
 import { CampaignService } from '../campaign.service';
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
-import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
+import { DebtService } from '@app/core/debt/debt.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DialogFunctions } from '@app/core/dialog';
@@ -59,7 +59,7 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
     private cdRef: ChangeDetectorRef,
     private campaignService: CampaignService,
     private contactRegistrationService: ContactRegistrationService,
-    private debtorCardService: DebtorCardService,
+    private debtService: DebtService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -89,16 +89,13 @@ export class ToolbarComponent extends DialogFunctions implements OnInit {
 
   onClose(): void {
     this.onCloseDialog();
-
-    setTimeout(() => {
-      this.cdRef.markForCheck();
-    }, 0);
+    this.cdRef.detectChanges();
   }
 
   private openDebtorCard(): void {
     this.campaignService.campaignDebt$
       .pipe(first())
-      .subscribe(debt => this.debtorCardService.openByDebtId(debt.debtId));
+      .subscribe(debt => this.debtService.openByDebtId(debt.debtId));
   }
 
   private registerSpecial(): void {
