@@ -79,6 +79,7 @@ export class GridService {
                 },
                 {
                   name: 'exportExcel',
+                  permissions: ['LIST_TAB_EXPORT_TO_EXCEL']
                 },
               ]
             }
