@@ -86,6 +86,8 @@ export class ContextService {
         return bag.has(item.value);
       case IContextByValueBagMethod.NOT_EMPTY:
         return bag.notEmpty(item.value);
+      case IContextByValueBagMethod.VALUE:
+        return bag.get(item.value);
       default:
         throw new Error('Invalid item method');
     }

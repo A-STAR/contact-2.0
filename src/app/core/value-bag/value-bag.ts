@@ -5,6 +5,11 @@ export class ValueBag {
 
   constructor(private bag: IValueBag) {}
 
+  get(name: string): any {
+    const item = this.bag[name];
+    return item && item.valueN || item.valueS;
+  }
+
   has(name: string): boolean {
     return this.getBooleanValue(name);
   }

@@ -20,6 +20,13 @@ export enum IContextByValueBagMethod {
   HAS = 'has',
   CONTAINS = 'contains',
   NOT_EMPTY = 'notEmpty',
+  VALUE = 'value',
+}
+
+export interface IContextByValueBagItemWithAnyValue {
+  type: IContextConfigItemType.CONSTANT | IContextConfigItemType.PERMISSION;
+  method: IContextByValueBagMethod.VALUE;
+  value: string;
 }
 
 export interface IContextByValueBagItemWithPlainValue {
@@ -34,7 +41,10 @@ export interface IContextByValueBagItemWithArrayValue {
   value: [string, number];
 }
 
-export type IContextByValueBagConfigItem = IContextByValueBagItemWithPlainValue | IContextByValueBagItemWithArrayValue;
+export type IContextByValueBagConfigItem =
+  IContextByValueBagItemWithPlainValue |
+  IContextByValueBagItemWithArrayValue |
+  IContextByValueBagItemWithAnyValue;
 
 export type IContextConfigItem = IContextByEntityItem | IContextByValueBagConfigItem;
 
