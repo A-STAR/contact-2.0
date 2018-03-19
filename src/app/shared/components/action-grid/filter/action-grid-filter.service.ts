@@ -7,8 +7,7 @@ import {
   IGridAction,
   IGridActionPayload,
   IGridActionSelection,
-  IGridActionContext,
-  ICloseAction,
+  IGridActionContext
 } from '../action-grid.interface';
 
 import { MetadataActionType } from '@app/core/metadata/metadata.interface';
@@ -149,8 +148,8 @@ export class ActionGridFilterService {
   private createDlgActions(): { [key: string]: (action: IGridAction) => any } {
     return Object.keys(this.massOpsService.nonDlgActions).reduce((acc, actionName) => ({
       ...acc,
-      [actionName]: (actionData: any, close: EventEmitter<ICloseAction>) =>
-        this.massOpsService.nonDlgActions[actionName](this.buildRequest(actionData.payload), close)
+      [actionName]: (actionData: any, onClose?: Function) =>
+        this.massOpsService.nonDlgActions[actionName](this.buildRequest(actionData.payload), onClose)
     }), {});
   }
 

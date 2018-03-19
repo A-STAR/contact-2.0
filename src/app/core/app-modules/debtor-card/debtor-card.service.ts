@@ -7,7 +7,6 @@ import { IAppState } from '../../state/state.interface';
 import { IActionType, IDataStatus } from './debtor-card.interface';
 
 import { AbstractActionService } from '../../state/action.service';
-import { RoutingService } from 'app/core/routing/routing.service';
 
 @Injectable()
 export class DebtorCardService extends AbstractActionService {

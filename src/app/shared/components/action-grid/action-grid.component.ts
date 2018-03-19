@@ -109,7 +109,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Output() select = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IActionGridAction>();
   // emits when dialog closes
-  @Output() close = new EventEmitter<ICloseAction>();
+  @Output() close = new EventEmitter<ICloseAction | IActionGridAction>();
 
   @ViewChild(ActionGridFilterComponent) filter: ActionGridFilterComponent;
   @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
@@ -237,7 +237,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       this.dialog = action.metadataAction.action;
       this.dialogData = this.setDialogData(action);
     } else if (action.metadataAction.cb) {
-      action.metadataAction.cb(this.setDialogData(action), this.close);
+      action.metadataAction.cb(this.setDialogData(action), this.createCloseAction(action) );
     }
     if (this.action) {
       this.action.emit(action);
@@ -277,7 +277,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         this.dialog = action.metadataAction.action;
         this.dialogData = this.setDialogData(action);
       } else if (action.metadataAction.cb) {
-        action.metadataAction.cb(this.setDialogData(action), this.close);
+        action.metadataAction.cb(this.setDialogData(action), this.createCloseAction(action));
       }
       this.cdRef.markForCheck();
     } else if (this.dblClick) {
@@ -305,6 +305,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   get columnsDef(): IAGridColumn[] {
     return this._columns || [];
+  }
+
+  private createCloseAction(actionData: ICloseAction | IActionGridAction): () => any {
+    return () => this.close ? this.close.emit(actionData) : actionData;
   }
 
   private getMetadata(): void {

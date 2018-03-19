@@ -1,6 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
-
-import { ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
+import { Injectable } from '@angular/core';
 
 import { DebtService } from '@app/core/debt/debt.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -8,9 +6,9 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 @Injectable()
 export class MassOperationsService {
 
-  nonDlgActions: { [key: string]: (actionData: any, close: EventEmitter<ICloseAction>) => any } = {
-    openDebtCard: (actionData: any, close: EventEmitter<ICloseAction>) => this.openDebtCard(actionData, close),
-    openDebtCardByDebtor: (actionData: any, close: EventEmitter<ICloseAction>) => this.openDebtCardByDebtor(actionData, close),
+  nonDlgActions: { [key: string]: (actionData: any, onClose: Function) => any } = {
+    openDebtCard: (actionData: any, onClose: Function) => this.openDebtCard(actionData, onClose),
+    openDebtCardByDebtor: (actionData: any, onClose: Function) => this.openDebtCardByDebtor(actionData, onClose),
     openIncomingCall: action => this.openIncomingCall(action),
   };
 
@@ -19,21 +17,21 @@ export class MassOperationsService {
     private notificationsService: NotificationsService,
   ) { }
 
-  openDebtCardByDebtor(actionData: any, close?: EventEmitter<ICloseAction>): void {
+  openDebtCardByDebtor(actionData: any, onClose?: Function): void {
     this.debtService.getFirstDebtsByUserId(actionData)
       .subscribe( debtId => {
         if (!debtId) {
           this.notificationsService.warning('header.noDebt.title').dispatch();
           return;
         }
-        this.openDebtCard({ debtId, ...actionData }, close);
+        this.openDebtCard({ debtId, ...actionData }, onClose);
       });
   }
 
-  openDebtCard(actionData: any, close?: EventEmitter<any>): Promise<void> {
+  openDebtCard(actionData: any, onClose?: Function): Promise<void> {
     const { debtId } = actionData;
     return this.debtService.openByDebtId(debtId)
-      .then(success => success && close && close.emit ? close.emit(actionData) : null);
+      .then(success => success && onClose ? onClose() : null);
   }
 
   openIncomingCall(actionData: any): Promise<boolean> {
