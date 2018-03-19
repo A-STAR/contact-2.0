@@ -4,24 +4,6 @@
   (close)="onCloseAction($event)"
 ></app-next-call-date-set>
 
-<app-open-debt-card-by-debtor
-  *ngIf="isDialog('openDebtCardByDebtor')"
-  [actionData]="dialogData"
-  (close)="onCloseAction($event)"
-></app-open-debt-card-by-debtor>
-
-<app-open-debt-card-by-debt
-  *ngIf="isDialog('openDebtCard')"
-  [actionData]="dialogData"
-  (close)="onCloseAction($event)"
-></app-open-debt-card-by-debt>
-
-<app-debt-open-incoming-call
-  *ngIf="isDialog('openIncomingCall')"
-  [actionData]="dialogData"
-  (close)="onCloseAction($event)"
-></app-debt-open-incoming-call>
-
 <app-visit-add-dialog
   *ngIf="isDialog('addVisit')"
   [actionData]="dialogData"

@@ -1,3 +1,5 @@
+import { EventEmitter } from '@angular/core';
+
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 import { ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
@@ -17,6 +19,7 @@ export interface IMetadataAction {
   enabled?: (actionType: MetadataActionType, selection: any[], data?: any) => boolean;
   params?: string[];
   isDialog?: boolean;
+  cb?: (action: any, close?: EventEmitter<any>) => any;
   applyTo?: {
     all?: boolean;
     selected?: boolean;

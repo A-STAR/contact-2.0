@@ -79,13 +79,8 @@ export class DebtorCardService extends AbstractActionService {
   constructor(
     protected actions: Actions,
     protected store: Store<IAppState>,
-    private routingService: RoutingService,
   ) {
     super();
-  }
-
-  openByDebtId(debtId: number): void {
-    this.routingService.navigate([ '/workplaces', `debtor-card/${debtId}` ]);
   }
 
   initByDebtId(debtId: number): void {

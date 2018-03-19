@@ -233,8 +233,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       metadataAction: gridAction.metadataAction,
       selection: gridAction.selection.node.data
     };
-    this.dialog = action.metadataAction.action;
-    this.dialogData = this.setDialogData(action);
+    if (action.metadataAction.isDialog) {
+      this.dialog = action.metadataAction.action;
+      this.dialogData = this.setDialogData(action);
+    } else if (action.metadataAction.cb) {
+      action.metadataAction.cb(this.setDialogData(action), this.close);
+    }
     if (this.action) {
       this.action.emit(action);
     }
@@ -269,8 +273,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
           type: MetadataActionType.SINGLE
         }
       };
-      this.dialog = action.metadataAction.action;
-      this.dialogData = this.setDialogData(action);
+      if (this.currentDefaultAction.isDialog) {
+        this.dialog = action.metadataAction.action;
+        this.dialogData = this.setDialogData(action);
+      } else if (action.metadataAction.cb) {
+        action.metadataAction.cb(this.setDialogData(action), this.close);
+      }
       this.cdRef.markForCheck();
     } else if (this.dblClick) {
       this.dblClick.emit(row);
@@ -349,7 +357,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
     return this.attachData(actions, [
       action => ({ ...action, enabled: action.enabled || actionPermissions[action.action] }),
-      action => ({ ...action, isDialog: !ActionGridFilterService.NON_DIALOG_ACTIONS.includes(action.action) }),
+      action => {
+        const isDialog = !Object.keys(this.actionGridFilterService.cbActions).includes(action.action);
+        return { ...action, isDialog, cb: !isDialog ? this.actionGridFilterService.cbActions[action.action] : null };
+      },
     ]);
   }
   // TODO(i.lobanov): rewrite this in functional way
@@ -367,13 +378,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     }
   }
 
-  private attachPermissions(actions: IMetadataAction[], actionPermissions: IMetadataActionPermissions): IMetadataAction[] {
-    return actions.map(action => ({
-      ...action,
-      enabled: action.enabled || actionPermissions[action.action],
-      children: action.children ? this.attachPermissions(action.children, actionPermissions) : undefined
-    }));
-  }
   /**
    * Recursively attaches data to action and it's children
    * @param actions Array of actions
