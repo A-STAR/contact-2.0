@@ -207,6 +207,7 @@ export interface IDynamicFormMultiSelectControl extends IDynamicFormBaseControl 
 export interface IDynamicFormTextControl extends IDynamicFormBaseControl {
   type: 'text' | 'password' | 'htmltextarea' | 'checkbox' | 'colorpicker';
   placeholder?: string;
+  autofocus?: boolean;
 }
 
 export interface IDynamicFormTextareaControl extends IDynamicFormBaseControl {

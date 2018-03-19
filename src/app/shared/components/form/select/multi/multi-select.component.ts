@@ -238,8 +238,11 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
 
   onClear(event: MouseEvent): void {
     event.preventDefault();
-    this.tempValue = [];
-    this.tempOptions = this.tempOptions.map(o => ({ ...o, checked: false }));
+    this.hideOptions();
+    this.value = [];
+    this.options = this.tempOptions.map(o => ({ ...o, checked: false }));
+    this.propagateChange(this.value);
+    this.select.emit(this.value);
   }
 
   onCaret(event: MouseEvent): void {

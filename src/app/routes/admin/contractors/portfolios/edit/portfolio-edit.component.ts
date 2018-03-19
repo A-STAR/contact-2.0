@@ -8,7 +8,7 @@ import {
   IActionType,
   IPortfolio
 } from '../../contractors-and-portfolios.interface';
-import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -28,9 +28,10 @@ const label = makeKey('portfolios.grid');
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortfolioEditComponent implements OnInit, OnDestroy {
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  controls: Array<IDynamicFormItem> = null;
+  controls: Array<IDynamicFormControl> = null;
   formData: IPortfolio = null;
   canViewAttributes: boolean;
 
@@ -67,13 +68,12 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STAGE),
       this.userDictionariesService.getDictionaryAsOptions(UserDictionariesService.DICTIONARY_PORTFOLIO_STATUS),
       getPortfolio$,
-      this.userPermissionsService.has('ATTRIBUTE_VIEW_LIST')
+      this.userPermissionsService.contains('ATTRIBUTE_VIEW_LIST', 15)
     )
-      // TODO:(i.lobanov) remove canViewAttributes default value when permission will be added on BE
-      .subscribe(([directionOptions, stageOptions, statusOptions, action, /* canViewAttributes */]) => {
-        this.canViewAttributes = true;
+      .subscribe(([directionOptions, stageOptions, statusOptions, action, canViewAttributes ]) => {
 
         const editedPortfolio = (action as any).portfolio;
+        this.canViewAttributes = canViewAttributes && editedPortfolio;
         this.contractorId = action.contractorId;
         this.portfolioId = editedPortfolio && editedPortfolio.id;
 
@@ -90,12 +90,12 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
           { label: label('name'), controlName: 'name', type: 'text', required: true },
           {
             label: label('directionCode'), controlName: 'directionCode', type: 'select', required: true,
-            disabled: !!editedPortfolio, options: directionOptions
+            disabled: !!editedPortfolio, options: directionOptions,
+            onChange: directionCode => this.onDirectionCodeChange(directionCode)
           },
           {
             label: label('stageCode'), controlName: 'stageCode', type: 'select',
-            // NOTE: must be true, but the dictionary is empty
-            required: false, options: stageOptions
+            required: true, options: stageOptions
           },
           {
             label: label('statusCode'), controlName: 'statusCode', type: 'select', required: true,
@@ -148,5 +148,14 @@ export class PortfolioEditComponent implements OnInit, OnDestroy {
 
   onAttributesClick(): void {
     this.routingService.navigate([ 'attributes' ], this.route);
+  }
+
+  onDirectionCodeChange(code: number): any {
+    this.controls.find(c => c.controlName === 'statusCode').required = code !== 2;
+    const control = this.form.getControl('statusCode');
+    if (control) {
+      control[code === 2 ? 'disable' : 'enable']();
+      this.cdRef.markForCheck();
+    }
   }
 }

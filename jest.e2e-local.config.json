@@ -5,6 +5,7 @@
     "js",
     "ts"
   ],
+  "setupTestFrameworkScriptFile": "<rootDir>/jest-setup.e2e.ts",
   "testEnvironment": "./e2e/puppeteer_environment.js",
   "testRegex": "\\.e2e-spec\\.ts$",
   "transform": {

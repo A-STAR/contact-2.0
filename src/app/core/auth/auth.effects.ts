@@ -3,6 +3,9 @@ import { HttpResponse } from '@angular/common/http';
 import { UnsafeAction } from '../../core/state/state.interface';
 import { Actions, Effect } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
+import { defer } from 'rxjs/observable/defer';
+import { of } from 'rxjs/observable/of';
+import { throttleTime } from 'rxjs/operators';
 
 import { IUserParams } from '@app/core/auth/auth.interface';
 
@@ -109,7 +112,6 @@ export class AuthEffects {
   @Effect()
   userParams$ = this.actions
     .ofType(AuthService.USER_FETCH)
-    .do(() => this.authService.setUserParamFetching())
     .switchMap(() => {
       return this.fetchUserParams()
         .map(params => ({
@@ -122,6 +124,20 @@ export class AuthEffects {
           ];
         });
     });
+
+  @Effect()
+  invalidToken$ = this.actions
+    .ofType(AuthService.AUTH_TOKEN_INVALID)
+    .pipe(throttleTime(500))
+    .switchMap(() => {
+      this.authService.removeToken();
+      return [ this.notificationService.error('auth.errors.invalidToken').action() ];
+    });
+
+  @Effect()
+  init$ = defer(() => of({
+    type: AuthService.AUTH_INIT,
+  }));
 
   constructor(
     private actions: Actions,
