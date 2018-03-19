@@ -1,4 +1,4 @@
-<form *ngIf="config">
+<form *ngIf="config" [formGroup]="formGroup">
   <app-metadata-form-group
     [editable]="config.editable"
     [formGroup]="formGroup"
