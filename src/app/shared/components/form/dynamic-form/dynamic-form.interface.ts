@@ -139,6 +139,7 @@ export interface IDynamicFormLanguageControl extends IDynamicFormBaseControl {
   type: 'multilanguage';
   // options for multilanguage
   langConfig?: IMultiLanguageConfig;
+  createMode?: boolean;
 }
 
 export interface IDynamicFormDialogMultiSelectControl extends IDynamicFormBaseControl {

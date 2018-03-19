@@ -35,6 +35,7 @@ export class TermEditComponent implements OnInit {
   @Input() term: ITerm;
   @Input() terms: ITerm[];
   @Input() title: string;
+  @Input() isCreate = false;
 
   @Output() submit = new EventEmitter<ITerm>();
   @Output() cancel = new EventEmitter<null>();
@@ -79,6 +80,7 @@ export class TermEditComponent implements OnInit {
         controlName: 'names',
         type: 'multilanguage',
         required: true,
+        createMode: this.isCreate,
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_TERM_NAME,
           entityId: this.term && this.term.id

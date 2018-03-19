@@ -1,5 +1,6 @@
 <app-attribute-grid-edit
   *ngIf="isDialog('add')"
+  [isCreate]="true"
   [treeType]="treeType"
   [treeSubtype]="treeSubtype"
   (submit)="onAddDialogSubmit($event)"

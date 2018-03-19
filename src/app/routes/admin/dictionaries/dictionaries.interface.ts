@@ -11,7 +11,7 @@ export interface IDictionaryItem {
 export interface IDictionary {
   id: number;
   code: number;
-  name: IEntityTranslation[];
+  names: IEntityTranslation[];
   parentCode: IDictionaryValue;
   typeCode: IDictionaryValue;
   termTypeCode: IDictionaryValue;
@@ -20,7 +20,7 @@ export interface IDictionary {
 export interface ITerm {
   id: number;
   code: number;
-  name: IEntityTranslation[];
+  names: IEntityTranslation[];
   typeCode: IDictionaryValue;
   parentCode: IDictionaryValue;
   parentCodeName: string;
