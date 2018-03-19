@@ -11,9 +11,9 @@ export interface IMetadataFormTextControl {
   name: string;
   type: IMetadataFormControlType.TEXT;
   validators: {
-    maxLength: IMetadataFormValidator<number>;
-    minLength: IMetadataFormValidator<number>;
-    required: IMetadataFormValidator<boolean>;
+    maxLength?: IMetadataFormValidator<number>;
+    minLength?: IMetadataFormValidator<number>;
+    required?: IMetadataFormValidator<boolean>;
   };
 }
 

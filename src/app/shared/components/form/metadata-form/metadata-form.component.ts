@@ -5,7 +5,12 @@ import { of } from 'rxjs/observable/of';
 import { first, map } from 'rxjs/operators';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IMetadataFormConfig, IMetadataFormControl } from './metadata-form.interface';
+import {
+  IMetadataFormConfig,
+  IMetadataFormControl,
+  IMetadataFormControlType,
+  IMetadataFormItem,
+} from './metadata-form.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,23 +27,12 @@ export class MetadataFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const controls = this.config.items.reduce((acc, item) => ({
+    const controls = this.flattenControls(this.config.items).reduce((acc, item) => ({
       ...acc,
       [item['name']]: new FormControl('', { asyncValidators: this.getAsyncValidators(item as any) })
     }), {});
     this.formGroup = new FormGroup(controls);
   }
-
-  getErrors(control: IMetadataFormControl): any {
-    const c = this.formGroup.get(control.name);
-    return c.touched ? c.errors : null;
-  }
-
-  // getValidator<T>(validator: IMetadataFormValidator<T>): Observable<T> {
-  //   return typeof validator === 'string'
-  //     ? this.store.pipe(select(state => this.getSlice(state, validator)))
-  //     : of(validator);
-  // }
 
   private getAsyncValidators(control: IMetadataFormControl): AsyncValidatorFn[] {
     return Object.keys(control.validators || {}).map(key => {
@@ -68,5 +62,12 @@ export class MetadataFormComponent implements OnInit {
 
   private getSlice(object: any, path: string): any {
     return path.split('/').reduce((acc, chunk) => acc && acc[chunk], object);
+  }
+
+  private flattenControls(items: IMetadataFormItem[]): IMetadataFormControl[] {
+    return items.reduce((acc, item) => [
+      ...acc,
+      ...(item.type === IMetadataFormControlType.GROUP ? this.flattenControls(item.children) : [item]),
+    ], []);
   }
 }

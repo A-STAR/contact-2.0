@@ -1,0 +1,35 @@
+<ng-container *ngFor="let item of items">
+
+  <!-- Form Controls -->
+  <ng-container *ngIf="editable" [formGroup]="formGroup">
+    <ng-container [ngSwitch]="item.type">
+
+      <!-- Group -->
+      <app-metadata-form-group
+        [editable]="editable"
+        [formGroup]="formGroup"
+        [items]="item.children"
+      ></app-metadata-form-group>
+
+      <!-- Text -->
+      <app-text
+        *ngSwitchCase="'text'"
+        [errors]="getErrors(item)"
+        [formControlName]="item.name"
+        [label]="item.label"
+      ></app-text>
+    </ng-container>
+  </ng-container>
+
+  <!-- Plain controls -->
+  <ng-container *ngIf="!editable">
+    <label class="m0">
+      <div *ngIf="label" class="form-label">
+        {{ label }}
+      </div>
+      <div>
+        {{ item.name }}
+      </div>
+    </label>
+  </ng-container>
+</ng-container>

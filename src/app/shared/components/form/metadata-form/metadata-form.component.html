@@ -1,36 +1,7 @@
-<form *ngIf="config" [formGroup]="formGroup">
-  <ng-container *ngFor="let item of config.items">
-
-    <!-- Form Controls -->
-    <ng-container *ngIf="config.editable">
-      <ng-container [ngSwitch]="item.type">
-
-        <!-- Text -->
-        <app-text
-          *ngSwitchCase="'text'"
-          [errors]="getErrors(item)"
-          [formControlName]="item.name"
-          [label]="item.label"
-        ></app-text>
-      </ng-container>
-    </ng-container>
-
-    <!-- Plain controls -->
-    <ng-container *ngIf="!config.editable">
-      <label class="m0">
-        <div *ngIf="label" class="form-label">
-          {{ label }}
-        </div>
-        <div>
-          {{ item.name }}
-        </div>
-      </label>
-    </ng-container>
-  </ng-container>
+<form *ngIf="config">
+  <app-metadata-form-group
+    [editable]="config.editable"
+    [formGroup]="formGroup"
+    [items]="config.items"
+  ></app-metadata-form-group>
 </form>
-
-<!--
-[minLength]="getValidator(item.min) | async"
-[maxLength]="getValidator(item.max) | async"
-[required]="getValidator(item.required) | async"
--->
