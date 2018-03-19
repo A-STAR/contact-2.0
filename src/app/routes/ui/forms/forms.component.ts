@@ -13,6 +13,7 @@ import {
 })
 export class FormsComponent {
   readonly config: IMetadataFormConfig = {
+    editable: true,
     items: [
       {
         display: true,

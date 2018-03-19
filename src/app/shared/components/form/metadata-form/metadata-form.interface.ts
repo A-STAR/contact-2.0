@@ -27,5 +27,6 @@ export type IMetadataFormControl = IMetadataFormTextControl;
 export type IMetadataFormItem = IMetadataFormControl | IMetadataFormGroup;
 
 export interface IMetadataFormConfig {
+  editable: boolean;
   items: IMetadataFormItem[];
 }
