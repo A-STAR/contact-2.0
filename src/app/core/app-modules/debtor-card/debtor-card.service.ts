@@ -7,7 +7,6 @@ import { IAppState } from '../../state/state.interface';
 import { IActionType, IDataStatus } from './debtor-card.interface';
 
 import { AbstractActionService } from '../../state/action.service';
-import { RoutingService } from 'app/core/routing/routing.service';
 
 @Injectable()
 export class DebtorCardService extends AbstractActionService {
@@ -79,13 +78,8 @@ export class DebtorCardService extends AbstractActionService {
   constructor(
     protected actions: Actions,
     protected store: Store<IAppState>,
-    private routingService: RoutingService,
   ) {
     super();
-  }
-
-  openByDebtId(debtId: number): void {
-    this.routingService.navigate([ '/workplaces', `debtor-card/${debtId}` ]);
   }
 
   initByDebtId(debtId: number): void {
