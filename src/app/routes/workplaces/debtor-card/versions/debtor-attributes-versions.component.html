@@ -1,12 +1,14 @@
-<div>
-  <button class="btn btn-default" (click)="onBack()">
-    <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
-  </button>
+<div class="flex vertical">
+  <div class="flex-item">
+    <button class="btn btn-default" (click)="onBack()">
+      <i class="fa fa-arrow-left"></i> {{ 'default.buttons.back' | translate }}
+    </button>
+  </div>
+  <div class="flex-item grow">
+    <app-attribute-version
+      [attributeId]="attributeId"
+      [entityId]="entityId"
+      [entityTypeId]="entityTypeId"
+    ></app-attribute-version>
+  </div>
 </div>
-
-<br>
-<app-attribute-version
-  [attributeId]="attributeId"
-  [entityId]="entityId"
-  [entityTypeId]="entityTypeId"
-></app-attribute-version>
