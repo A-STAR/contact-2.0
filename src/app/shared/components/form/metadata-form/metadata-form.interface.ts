@@ -8,11 +8,13 @@ export enum IMetadataFormControlType {
 export interface IMetadataFormTextControl {
   display: boolean;
   label: string;
-  max: IMetadataFormValidator<number>;
-  min: IMetadataFormValidator<number>;
   name: string;
-  required: IMetadataFormValidator<boolean>;
   type: IMetadataFormControlType.TEXT;
+  validators: {
+    maxLength: IMetadataFormValidator<number>;
+    minLength: IMetadataFormValidator<number>;
+    required: IMetadataFormValidator<boolean>;
+  };
 }
 
 export interface IMetadataFormGroup {

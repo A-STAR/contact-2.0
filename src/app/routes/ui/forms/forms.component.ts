@@ -17,11 +17,13 @@ export class FormsComponent {
       {
         display: true,
         label: 'Text Input',
-        max: 20,
-        min: 'userConstants/constants/UserPassword.MinLength/valueN',
         name: 'text',
-        required: false,
         type: IMetadataFormControlType.TEXT,
+        validators: {
+          maxLength: 20,
+          minLength: 'userConstants/constants/UserPassword.MinLength/valueN',
+          required: true,
+        }
       },
     ],
   };

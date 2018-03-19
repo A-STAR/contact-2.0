@@ -5,10 +5,15 @@
         *ngSwitchCase="'text'"
         [formControlName]="item.name"
         [label]="item.label"
-        [minLength]="getValidator(item.min) | async"
-        [maxLength]="getValidator(item.max) | async"
-        [required]="getValidator(item.required) | async"
       ></app-text>
+      {{ errors | json }}
+      {{ status | json }}
     </ng-container>
   </ng-container>
 </form>
+
+<!--
+[minLength]="getValidator(item.min) | async"
+[maxLength]="getValidator(item.max) | async"
+[required]="getValidator(item.required) | async"
+-->
