@@ -21,20 +21,17 @@ export class MetadataFormComponent implements OnInit {
     private store: Store<IAppState>,
   ) {}
 
-  get errors(): any {
-    return this.formGroup && this.formGroup.get('text').errors;
-  }
-
-  get status(): any {
-    return this.formGroup && this.formGroup.get('text').status;
-  }
-
   ngOnInit(): void {
     const controls = this.config.items.reduce((acc, item) => ({
       ...acc,
       [item['name']]: new FormControl('', { asyncValidators: this.getAsyncValidators(item as any) })
     }), {});
     this.formGroup = new FormGroup(controls);
+  }
+
+  getErrors(control: IMetadataFormControl): any {
+    const c = this.formGroup.get(control.name);
+    return c.touched ? c.errors : null;
   }
 
   // getValidator<T>(validator: IMetadataFormValidator<T>): Observable<T> {
