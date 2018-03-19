@@ -22,6 +22,10 @@ export class ActionGridFilterService {
     [MetadataActionType.SELECTED]: this.getSelectionPayload,
     [MetadataActionType.SINGLE]: this.getSingleSelectionPayload,
   };
+  static NON_DIALOG_ACTIONS: string[] = [
+    'openDebtCard',
+    'openDebtCardByDebtor',
+  ];
   // notify subscribers, that grid has filters
   hasFilter$ = new BehaviorSubject<boolean>(null);
 

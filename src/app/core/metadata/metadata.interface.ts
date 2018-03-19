@@ -16,6 +16,7 @@ export interface IMetadataAction {
   addOptions?: IMetadataActionOption[];
   enabled?: (actionType: MetadataActionType, selection: any[], data?: any) => boolean;
   params?: string[];
+  isDialog?: boolean;
   applyTo?: {
     all?: boolean;
     selected?: boolean;

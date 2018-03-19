@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { compose } from 'ramda';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, filter, map } from 'rxjs/operators';
 import { GridOptions } from 'ag-grid';
@@ -21,6 +22,7 @@ import {
   ICloseAction,
   IGridAction,
   IActionGridAction,
+  IMetadataActionSetter,
 } from './action-grid.interface';
 import {
   IAGridAction,
@@ -169,11 +171,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         this.userPermissionsService.bag(),
         this.entityAttributesService.getDictValueAttributes()
       )
-      .pipe(map(([actions, constants, permissions, entityPermissions]) => {
-        const actionsWithPermissions = this.addPermissions(actions, constants, permissions, entityPermissions);
-        this.currentDefaultAction = this.getDefaultAction(actionsWithPermissions);
-        return actionsWithPermissions;
-      }));
+      .pipe(
+          first(),
+          map(([actions, constants, permissions, entityPermissions]) => {
+            const actionsWithPermissions = this.addActionData(actions, constants, permissions, entityPermissions);
+            this.currentDefaultAction = this.getDefaultAction(actionsWithPermissions);
+            return actionsWithPermissions;
+        })
+      );
   }
 
   getGridTitlebar(): Observable<ITitlebar> {
@@ -337,12 +342,15 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     };
   }
 
-  private addPermissions(actions: IMetadataAction[], constants: ValueBag, permissions: ValueBag,
+  private addActionData(actions: IMetadataAction[], constants: ValueBag, permissions: ValueBag,
       entityPerms: IEntityAttributes): IMetadataAction[] {
 
     const actionPermissions = this.buildPermissions(actions, constants, permissions, entityPerms);
 
-    return this.attachPermissions(actions, actionPermissions);
+    return this.attachData(actions, [
+      action => ({ ...action, enabled: action.enabled || actionPermissions[action.action] }),
+      action => ({ ...action, isDialog: !ActionGridFilterService.NON_DIALOG_ACTIONS.includes(action.action) }),
+    ]);
   }
   // TODO(i.lobanov): rewrite this in functional way
   private getDefaultAction(actions: IMetadataAction[]): IMetadataAction {
@@ -365,6 +373,21 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       enabled: action.enabled || actionPermissions[action.action],
       children: action.children ? this.attachPermissions(action.children, actionPermissions) : undefined
     }));
+  }
+  /**
+   * Recursively attaches data to action and it's children
+   * @param actions Array of actions
+   * @param setters Array of data setters
+   */
+  private attachData(actions: IMetadataAction[], setters?: IMetadataActionSetter[]): IMetadataAction[] {
+    const noop = [ action => action ];
+    return actions.map(action => ({
+        ...action,
+        // apply action setters in pipe
+        ...(compose as any)(...(setters || noop))(action),
+        children: action.children ? this.attachData(action.children, setters) : undefined
+      })
+    );
   }
 
   private buildPermissions(actions: IMetadataAction[], constants: ValueBag,
