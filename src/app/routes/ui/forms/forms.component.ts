@@ -54,4 +54,10 @@ export class FormsComponent {
       },
     ],
   };
+
+  readonly data = {
+    text: 'Text',
+    nestedText: 'Nested Text',
+    deeplyNestedText: 'Deeply Nested Text',
+  };
 }

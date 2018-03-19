@@ -17,10 +17,20 @@ import {
   selector: 'app-metadata-form',
   templateUrl: 'metadata-form.component.html'
 })
-export class MetadataFormComponent implements OnInit {
+export class MetadataFormComponent<T> implements OnInit {
   formGroup: FormGroup;
 
   @Input() config: IMetadataFormConfig;
+
+  @Input()
+  set data(data: T) {
+    if (data) {
+      this._data = data;
+      this.populateForm();
+    }
+  }
+
+  private _data: T;
 
   constructor(
     private store: Store<IAppState>,
@@ -32,6 +42,7 @@ export class MetadataFormComponent implements OnInit {
       [item.name]: new FormControl(null, { asyncValidators: this.getAsyncValidators(item as any) })
     }), {});
     this.formGroup = new FormGroup(controls);
+    this.populateForm();
   }
 
   private getAsyncValidators(control: IMetadataFormControl): AsyncValidatorFn[] {
@@ -39,7 +50,7 @@ export class MetadataFormComponent implements OnInit {
       const value = control.validators[key];
       return typeof value === 'string'
         ? c => this.store.pipe(
-            select(state => this.getSlice(state, value)),
+            select(state => this.getStateSlice(state, value)),
             map(v => this.getValidator(key, v)(c)),
             first(),
           )
@@ -60,8 +71,8 @@ export class MetadataFormComponent implements OnInit {
     }
   }
 
-  private getSlice(object: any, path: string): any {
-    return path.split('/').reduce((acc, chunk) => acc && acc[chunk], object);
+  private getStateSlice(state: IAppState, path: string): any {
+    return path.split('/').reduce((acc, chunk) => acc && acc[chunk], state);
   }
 
   private flattenControls(items: IMetadataFormItem[]): IMetadataFormControl[] {
@@ -69,5 +80,11 @@ export class MetadataFormComponent implements OnInit {
       ...acc,
       ...(item.type === IMetadataFormControlType.GROUP ? this.flattenControls(item.children) : [item]),
     ], []);
+  }
+
+  private populateForm(): void {
+    if (this.formGroup && this._data) {
+      this.formGroup.patchValue(this._data);
+    }
   }
 }
