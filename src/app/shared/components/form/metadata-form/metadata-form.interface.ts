@@ -5,10 +5,15 @@ export enum IMetadataFormControlType {
   TEXT = 'text',
 }
 
-export interface IMetadataFormTextControl {
+export interface IMetadataFormGenericControl {
   display: boolean;
   label: string;
   name: string;
+  required: boolean;
+  type: IMetadataFormControlType;
+}
+
+export interface IMetadataFormTextControl extends IMetadataFormGenericControl {
   type: IMetadataFormControlType.TEXT;
   validators: {
     maxLength?: IMetadataFormValidator<number>;
