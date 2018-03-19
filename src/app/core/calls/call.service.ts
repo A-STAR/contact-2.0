@@ -42,6 +42,7 @@ export class CallService {
 
   static PBX_LOGIN = 'PBX_LOGIN';
   static PBX_LOGIN_SUCCESS = 'PBX_LOGIN_SUCCESS';
+  static PBX_LOGIN_FAILURE = 'PBX_LOGIN_FAILURE';
   static PBX_STATE_CHANGE = 'PBX_STATE_CHANGE';
   static PBX_STATUS_CHANGE = 'PBX_STATUS_CHANGE';
   static PBX_STATUS_CHANGE_SUCCESS = 'PBX_STATUS_CHANGE_SUCCESS';
@@ -59,13 +60,16 @@ export class CallService {
     private persistenceService: PersistenceService,
     private wsService: WSService,
   ) {
-    this.usePBX$
-      .distinctUntilChanged()
-      .filter(Boolean)
-      .flatMap(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
-      .do(connection => this.wsConnection = connection)
-      .flatMap(connection => connection.listen())
-      .subscribe(state => this.updatePBXState(state));
+    combineLatestAnd([
+      this.usePBX$,
+      this.pbxConnected$
+    ])
+    .distinctUntilChanged()
+    .filter(Boolean)
+    .flatMap(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
+    .do(connection => this.wsConnection = connection)
+    .flatMap(connection => connection.listen())
+    .subscribe(state => this.updatePBXState(state));
 
     this.usePBX$
       .filter(use => !use)
@@ -103,6 +107,11 @@ export class CallService {
   get usePBX$(): Observable<boolean> {
     return this.authService.userParams$
       .map(params => params && !!params.usePbx);
+  }
+
+  get pbxConnected$(): Observable<boolean> {
+    return this.store
+      .select(state => state.calls.pbxConnected);
   }
 
   get pbxState$(): Observable<IPBXState> {
