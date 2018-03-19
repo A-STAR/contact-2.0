@@ -23,6 +23,8 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
 
 import { combineLatestAnd, combineLatestOr } from '@app/core/utils';
 
+type IContextValue = boolean | number | string;
+
 @Injectable()
 export class ContextService {
   constructor(
@@ -31,29 +33,29 @@ export class ContextService {
     private userPermissionsService: UserPermissionsService,
   ) {}
 
-  calculate(config: IContextConfig): Observable<boolean> {
+  calculate(config: IContextConfig): Observable<IContextValue> {
     return this.eval(config);
   }
 
-  private eval(config: IContextConfig): Observable<boolean> {
+  private eval(config: IContextConfig): Observable<IContextValue> {
     return config.type === IContextConfigItemType.GROUP
       ? this.evalGroup(config)
       : this.evalItem(config);
   }
 
-  private evalGroup(config: IContextGroup): Observable<boolean> {
+  private evalGroup(config: IContextGroup): Observable<IContextValue> {
     const children = config.children.map(child => this.eval(child));
     switch (config.operator) {
       case IContextConfigOperator.AND:
-        return combineLatestAnd(children);
+        return combineLatestAnd(children as any);
       case IContextConfigOperator.OR:
-        return combineLatestOr(children);
+        return combineLatestOr(children as any);
       default:
         return ErrorObservable.create('Invalid group operator');
     }
   }
 
-  private evalItem(item: IContextConfigItem): Observable<boolean> {
+  private evalItem(item: IContextConfigItem): Observable<IContextValue> {
     switch (item.type) {
       case IContextConfigItemType.CONSTANT:
         return this.evalConstant(item);
@@ -66,19 +68,19 @@ export class ContextService {
     }
   }
 
-  private evalConstant(item: IContextByValueBagConfigItem): Observable<boolean> {
+  private evalConstant(item: IContextByValueBagConfigItem): Observable<IContextValue> {
     return this.userConstantsService.bag().pipe(
       map(bag => this.evalValueBagItem(bag, item)),
     );
   }
 
-  private evalPermission(item: IContextByValueBagConfigItem): Observable<boolean> {
+  private evalPermission(item: IContextByValueBagConfigItem): Observable<IContextValue> {
     return this.userPermissionsService.bag().pipe(
       map(bag => this.evalValueBagItem(bag, item)),
     );
   }
 
-  private evalValueBagItem(bag: ValueBag, item: IContextByValueBagConfigItem): boolean {
+  private evalValueBagItem(bag: ValueBag, item: IContextByValueBagConfigItem): IContextValue {
     switch (item.method) {
       case IContextByValueBagMethod.CONTAINS:
         return bag.contains(item.value[0], item.value[1]);

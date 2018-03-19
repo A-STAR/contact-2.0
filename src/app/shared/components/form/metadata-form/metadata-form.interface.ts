@@ -1,4 +1,6 @@
-export type IMetadataFormValidator<T> = T | string;
+import { IContextConfig } from '@app/core/context/context.interface';
+
+export type IMetadataFormValidator<T> = T | IContextConfig;
 
 export enum IMetadataFormControlType {
   GROUP = 'group',

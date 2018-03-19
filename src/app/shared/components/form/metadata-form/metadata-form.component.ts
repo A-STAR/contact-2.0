@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { Store, select } from '@ngrx/store';
 import { of } from 'rxjs/observable/of';
 import { first, map } from 'rxjs/operators';
 
-import { IAppState } from '@app/core/state/state.interface';
 import {
   IMetadataFormConfig,
   IMetadataFormControl,
   IMetadataFormControlType,
   IMetadataFormItem,
 } from './metadata-form.interface';
+
+import { ContextService } from '@app/core/context/context.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +33,7 @@ export class MetadataFormComponent<T> implements OnInit {
   private _data: T;
 
   constructor(
-    private store: Store<IAppState>,
+    private contextService: ContextService,
   ) {}
 
   ngOnInit(): void {
@@ -48,9 +48,8 @@ export class MetadataFormComponent<T> implements OnInit {
   private getAsyncValidators(control: IMetadataFormControl): AsyncValidatorFn[] {
     return Object.keys(control.validators || {}).map(key => {
       const value = control.validators[key];
-      return typeof value === 'string'
-        ? c => this.store.pipe(
-            select(state => this.getStateSlice(state, value)),
+      return typeof value === 'object'
+        ? c => this.contextService.calculate(value).pipe(
             map(v => this.getValidator(key, v)(c)),
             first(),
           )
@@ -69,10 +68,6 @@ export class MetadataFormComponent<T> implements OnInit {
       default:
         return null;
     }
-  }
-
-  private getStateSlice(state: IAppState, path: string): any {
-    return path.split('/').reduce((acc, chunk) => acc && acc[chunk], state);
   }
 
   private flattenControls(items: IMetadataFormItem[]): IMetadataFormControl[] {

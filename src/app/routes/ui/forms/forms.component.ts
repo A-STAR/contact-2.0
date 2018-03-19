@@ -4,6 +4,7 @@ import {
   IMetadataFormConfig,
   IMetadataFormControlType,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
+import { IContextConfigItemType, IContextByValueBagMethod } from '@app/core/context/context.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,10 +20,15 @@ export class FormsComponent {
         display: true,
         label: 'Text Input',
         name: 'text',
+        required: false,
         type: IMetadataFormControlType.TEXT,
         validators: {
           maxLength: 20,
-          minLength: 'userConstants/constants/UserPassword.MinLength/valueN',
+          minLength: {
+            type: IContextConfigItemType.CONSTANT,
+            method: IContextByValueBagMethod.VALUE,
+            value: 'UserPassword.MinLength',
+          },
           required: true,
         },
       },
@@ -32,6 +38,7 @@ export class FormsComponent {
             display: true,
             label: 'Nested Text Input',
             name: 'nestedText',
+            required: false,
             type: IMetadataFormControlType.TEXT,
             validators: {
               maxLength: 10,
@@ -43,6 +50,7 @@ export class FormsComponent {
                 display: true,
                 label: 'Deeply Nested Text Input',
                 name: 'deeplyNestedText',
+                required: false,
                 type: IMetadataFormControlType.TEXT,
                 validators: {},
               },

@@ -15,6 +15,6 @@ export class MetadataFormGroupComponent {
 
   getErrors(control: IMetadataFormControl): any {
     const c = this.formGroup.get(control.name);
-    return c.touched ? c.errors : null;
+    return c.touched || c.dirty ? c.errors : null;
   }
 }
