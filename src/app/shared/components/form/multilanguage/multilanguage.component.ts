@@ -90,7 +90,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
         this.mainLanguageId = mainLanguage.id;
       }
 
-      const langs = this.createMode && this.mainLanguageId ?
+      const langs = this.createMode ?
         languages.filter(l => l.id === (this.mainLanguageId || languages[0].id)) : languages;
 
       this.value = value || langs.map(l => ({ languageId: l.id, value: null }));
