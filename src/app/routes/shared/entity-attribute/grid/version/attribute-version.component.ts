@@ -16,12 +16,10 @@ import { of } from 'rxjs/observable/of';
 import { IAttribute, IAttributeVersion } from '../../attribute.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
-import { IValueEntity } from '@app/core/converter/value-converter.interface';
 
 import { AttributeService } from '../../attribute.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
-import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { DateTimeRendererComponent } from '@app/shared/components/grids/renderers/datetime/datetime.component';
 import { DialogFunctions } from '@app/core/dialog';
@@ -56,7 +54,11 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
     { prop: 'code', minWidth: 50 },
     { prop: 'name', minWidth: 150 },
     { prop: 'typeCode', minWidth: 100, dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE },
-    { prop: 'value', minWidth: 150 },
+    { prop: 'value', minWidth: 150, valueTypeKey: 'typeCode',
+      valueTypeParams: {
+        dictCode: row => row.dictNameCode
+      },
+    },
     { prop: 'fromDateTime', minWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'toDateTime', minWidth: 150, renderer: DateTimeRendererComponent },
     { prop: 'userFullName', minWidth: 150 },
@@ -66,7 +68,6 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
     private cdRef: ChangeDetectorRef,
     private attributeService: AttributeService,
     private userPermissionsService: UserPermissionsService,
-    private valueConverterService: ValueConverterService
   ) {
     super();
   }
@@ -169,11 +170,6 @@ export class AttributeVersionComponent extends DialogFunctions implements OnInit
   private processVersions(versions: IAttributeVersion[]): IAttributeVersion[] {
     return versions.map(version => ({
       ...version,
-      ...this.valueConverterService.deserialize({
-        ...version,
-        typeCode: this.selectedAttribute.typeCode
-      } as IValueEntity) as IAttributeVersion,
-      typeCode: this.selectedAttribute.typeCode,
       code: this.selectedAttribute.code,
       name: this.selectedAttribute.name,
     }));
