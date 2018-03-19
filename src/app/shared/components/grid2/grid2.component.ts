@@ -26,6 +26,7 @@ import {
   RowNode,
   RefreshCellsParams,
 } from 'ag-grid/main';
+import { first } from 'rxjs/operators';
 
 
 import {
@@ -43,7 +44,7 @@ import {
 
 import { ContextMenuService } from '@app/shared/components/grids/context-menu/context-menu.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { PersistenceService } from '@app/core/persistence/persistence.service';
+import { SettingsService } from '@app/core/settings/settings.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
@@ -118,6 +119,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   initCallbacks: Function[] = [];
 
   private originalColSettings: IAgridColSetting[] = [];
+  private defaultGridSettings: IAGridSettings;
   private gridSettings: IAGridSettings;
   private initialized = false;
   private saveChangesDebounce = new Subject<void>();
@@ -131,8 +133,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private contextMenuService: ContextMenuService,
     private notificationService: NotificationsService,
-    private persistenceService: PersistenceService,
     private translate: TranslateService,
+    private settingsService: SettingsService,
     private userPermissionsService: UserPermissionsService,
     private valueConverter: ValueConverterService,
   ) {}
@@ -170,12 +172,17 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.userPermissionsSub = this.userPermissionsService.bag()
       .subscribe(bag => this.userPermissionsBag = bag);
 
-    const { colDefs } = this.restoreGridSettings();
-    this.columnDefs = this.setColumnDefs(colDefs);
-    this.setGridOptions();
-    this.setPagination();
-    this.initialized = true;
-    this.cdRef.markForCheck();
+    this.settingsService.get(this.persistenceKey)
+      .pipe(first())
+      .subscribe(settings => {
+        this.defaultGridSettings = settings || {};
+        const { colDefs } = this.restoreGridSettings();
+        this.columnDefs = this.setColumnDefs(colDefs);
+        this.setGridOptions();
+        this.setPagination();
+        this.initialized = true;
+        this.cdRef.markForCheck();
+      });
 
     this.saveChangesDebounceSub = this.saveChangesDebounce
       .debounceTime(2000)
@@ -873,13 +880,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private saveGridSettings(): void {
     if (this.persistenceKey) {
-      this.persistenceService.set(this.persistenceKey, this.gridSettings);
+      this.settingsService.set(this.persistenceKey, this.gridSettings);
     }
   }
 
   private restoreGridSettings(): IAGridSettings {
-    this.gridSettings = this.persistenceService.get(this.persistenceKey) || {};
-    return this.gridSettings;
+    return this.gridSettings = this.defaultGridSettings;
   }
 
   private setSortModel(): void {
