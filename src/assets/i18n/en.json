@@ -1653,7 +1653,8 @@
     "errors": {
       "login": "Could not log in",
       "logout": "Could not log out",
-      "refresh": "Could not refresh session"
+      "refresh": "Could not refresh session",
+      "invalidToken": "Current session is finished. Please refresh the page."
     }
   },
   "widgets": {

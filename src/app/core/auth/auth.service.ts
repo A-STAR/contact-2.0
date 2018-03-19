@@ -35,6 +35,7 @@ export class AuthService implements CanActivate {
   static readonly AUTH_DESTROY_SESSION = 'AUTH_DESTROY_SESSION';
   static readonly AUTH_GLOBAL_RESET    = 'AUTH_GLOBAL_RESET';
   static readonly AUTH_RETRIEVE_TOKEN  = 'AUTH_RETRIEVE_TOKEN';
+  static readonly AUTH_TOKEN_INVALID   = 'AUTH_TOKEN_INVALID';
 
   static readonly USER_FETCH           = 'USER_FETCH';
   static readonly USER_FETCH_SUCCESS   = 'USER_FETCH_SUCCESS';
@@ -94,6 +95,10 @@ export class AuthService implements CanActivate {
   dispatchResetAction(url: string = null): void {
     const action = this.createAction(AuthService.AUTH_DESTROY_SESSION, { url });
     this.store.dispatch(action);
+  }
+
+  dispatchInvalidTokenAction(): void {
+    this.store.dispatch(this.createAction(AuthService.AUTH_TOKEN_INVALID));
   }
 
   redirectToLogin(url: string = null): void {
