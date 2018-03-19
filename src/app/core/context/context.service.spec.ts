@@ -285,6 +285,58 @@ describe('ContextService', () => {
       });
   });
 
+  it('should process type = constant, method = value (valueN)', done => {
+    const name = 'constant';
+    const valueN = 42;
+    const spy = spyOn(userConstantsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name,
+          valueB: null,
+          valueN,
+          valueS: '',
+        }
+      })));
+    service
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.VALUE,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toEqual(valueN);
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = constant, method = value (valueS)', done => {
+    const name = 'constant';
+    const valueS = 'Foo';
+    const spy = spyOn(userConstantsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name,
+          valueB: null,
+          valueN: null,
+          valueS,
+        }
+      })));
+    service
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.VALUE,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toEqual(valueS);
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
   it('should process type = constant, method = contains, result = true (value = ALL)', done => {
     const name = 'constant';
     const spy = spyOn(userConstantsService, 'bag')
@@ -489,6 +541,58 @@ describe('ContextService', () => {
       })
       .subscribe(res => {
         expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = permission, method = value (valueN)', done => {
+    const name = 'permission';
+    const valueN = 42;
+    const spy = spyOn(userPermissionsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name,
+          valueB: null,
+          valueN,
+          valueS: '',
+        }
+      })));
+    service
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.VALUE,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toEqual(valueN);
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = permission, method = value (valueS)', done => {
+    const name = 'permission';
+    const valueS = 'Foo';
+    const spy = spyOn(userPermissionsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name,
+          valueB: null,
+          valueN: null,
+          valueS,
+        }
+      })));
+    service
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.VALUE,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toEqual(valueS);
         expect(spy).toHaveBeenCalledTimes(1);
         done();
       });

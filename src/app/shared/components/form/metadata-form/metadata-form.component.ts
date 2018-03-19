@@ -48,7 +48,7 @@ export class MetadataFormComponent<T> implements OnInit {
   private getAsyncValidators(control: IMetadataFormControl): AsyncValidatorFn[] {
     return Object.keys(control.validators || {}).map(key => {
       const value = control.validators[key];
-      return typeof value === 'object'
+      return typeof value === 'object' && value !== null
         ? c => this.contextService.calculate(value).pipe(
             map(v => this.getValidator(key, v)(c)),
             first(),
