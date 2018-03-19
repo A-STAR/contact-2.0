@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { filter, map, first } from 'rxjs/operators';
 
+import { AuthService } from '@app/core/auth/auth.service';
 import { PersistenceService } from '../persistence/persistence.service';
+
 import { propOr } from '../utils';
 
 @Injectable()
@@ -15,7 +19,10 @@ export class SettingsService {
 
   layout: any;
 
-  constructor(private persistenceService: PersistenceService) {
+  constructor(
+    private authService: AuthService,
+    private persistenceService: PersistenceService
+  ) {
     const layout = this.persistenceService.getOr(PersistenceService.LAYOUT_KEY, {});
     const isCollapsed = propOr('isCollapsed', false)(layout);
 
@@ -40,6 +47,33 @@ export class SettingsService {
     if (!$('.app-content') || !$('.topnavbar-wrapper')) {
       throw new Error('Could not find the content area or the navbar div');
     }
+  }
+
+  get settingsKey$(): Observable<string> {
+    return this.authService.currentUser$
+      .pipe(
+        map(user => user && String(user.userId)),
+        filter(Boolean)
+      );
+  }
+
+  get(key: string): Observable<any> {
+    return this.settingsKey$
+      .pipe(
+        map(settingsKey => this.persistenceService.getOr(settingsKey, {})),
+        map(storage => storage && storage[key])
+      );
+  }
+
+  set(key: string, value: any): void {
+    this.settingsKey$
+      .pipe(first())
+      .subscribe(settingsKey =>
+        this.persistenceService.set(settingsKey, {
+          ...this.persistenceService.getOr(settingsKey, {}),
+          [key]: value
+        })
+      );
   }
 
   // Calculate the available content area height

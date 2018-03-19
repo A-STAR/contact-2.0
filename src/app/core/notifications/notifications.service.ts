@@ -1,9 +1,11 @@
+import { Actions } from '@ngrx/effects';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { throttleTime } from 'rxjs/operators/throttleTime';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '../state/state.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
@@ -17,9 +19,8 @@ import {
   NotificationTypeEnum,
 } from './notifications.interface';
 
-import { PersistenceService } from '../persistence/persistence.service';
-
 import { NotificationActionBuilder } from './notification-action-builder';
+import { SettingsService } from '@app/core/settings/settings.service';
 
 @Injectable()
 export class NotificationsService implements OnDestroy {
@@ -34,16 +35,20 @@ export class NotificationsService implements OnDestroy {
   private notificationsStateSubscription: Subscription;
 
   constructor(
-    private persistenceService: PersistenceService,
+    private actions: Actions,
     private store: Store<IAppState>,
     private translateService: TranslateService,
+    private settingsService: SettingsService
   ) {
-    this.notificationsStateSubscription = this.state
+    this.notificationsStateSubscription = combineLatest(
+      this.state,
+      this.actions.ofType(NotificationsService.NOTIFICATION_INIT)
+    )
+    .pipe(
       // NOTE: this is to prevent multiple events from writing to the storage too often
-      .pipe(throttleTime(500))
-      .subscribe(state => {
-        this.persistenceService.set(NotificationsService.STORAGE_KEY, state);
-    });
+      throttleTime(500),
+    )
+    .subscribe(([ state ]) => this.settingsService.set(NotificationsService.STORAGE_KEY, state));
   }
 
   ngOnDestroy(): void {
