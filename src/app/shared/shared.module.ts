@@ -49,6 +49,7 @@ import { InputModule } from './components/form/input/input.module';
 import { ListModule } from './components/list/list.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { MenuModule } from './components/form/menu/menu.module';
+import { MetadataFormModule } from './components/form/metadata-form/metadata-form.module';
 import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multilanguage/multilanguage.module';
 import { OperatorModule } from './components/operator/operator.module';
@@ -120,6 +121,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ListModule,
     MassOpsModule,
     MenuModule,
+    MetadataFormModule,
     MomentModule,
     MultiLanguageModule,
     OperatorModule,
@@ -198,6 +200,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     ListModule,
     MassOpsModule,
     MenuModule,
+    MetadataFormModule,
     MomentModule,
     MultiLanguageModule,
     NumericInputComponent,
