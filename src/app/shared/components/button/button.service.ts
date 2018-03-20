@@ -46,7 +46,7 @@ export class ButtonService {
   };
 
   private styles: IButtonStylesConfig = {
-    none: 'btn btn-link',
+    none: 'btn btn-link ph0',
     default: 'btn btn-default',
     primary: 'btn btn-success',
     secondary: 'btn btn-primary',
