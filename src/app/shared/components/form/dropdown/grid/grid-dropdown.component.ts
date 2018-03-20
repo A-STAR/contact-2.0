@@ -81,7 +81,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   onSelect(rows: T[]): void {
     if (!isEmpty(rows)) {
       const [ row ] = rows;
-      this.setRow(row);
+      this.setRow(row, this.dropdown.opened);
     }
   }
 
@@ -89,9 +89,11 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
     this.setRow(null);
   }
 
-  private setRow(row: T): void {
+  private setRow(row: T, propagateChange: boolean = true): void {
     this._selection = row;
-    this.propagateChange(this.value);
+    if (propagateChange) {
+      this.propagateChange(this.value);
+    }
     this.dropdown.close();
     this.select.emit(row);
   }
