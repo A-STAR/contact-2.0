@@ -123,15 +123,15 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit {
     return this.userPermissionsService.has('ATTRIBUTE_TYPE_DELETE');
   }
 
-  onTreeTypeChange(selection: IOption[]): void {
-    this.treeType = Number(selection[0].value);
+  onTreeTypeChange(selection: number): void {
+    this.treeType = selection;
     this.isTreeSubtypeDisabled = this.treeType !== 33;
     this.treeSubtype = this.initTreeSubtype();
     this.fetch();
   }
 
-  onTreeSubtypeChange(selection: IOption[]): void {
-    this.treeSubtype = Number(selection[0].value);
+  onTreeSubtypeChange(selection: number): void {
+    this.treeSubtype = selection;
     this.fetch();
   }
 

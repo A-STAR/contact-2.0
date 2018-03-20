@@ -35,6 +35,7 @@
         <app-select
           [ngModel]="treeType"
           [options]="treeTypeOptions"
+          [isRequired]="true"
           (select)="onTreeTypeChange($event)">
         </app-select>
       </label>
@@ -46,6 +47,7 @@
           [isDisabled]="isTreeSubtypeDisabled"
           [ngModel]="treeSubtype"
           [options]="treeSubtypeOptions"
+          [isRequired]="true"
           (select)="onTreeSubtypeChange($event)">
         </app-select>
       </label>
