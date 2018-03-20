@@ -134,7 +134,8 @@ export class FormComponent implements OnInit, OnDestroy {
         label: labelKey('text'),
         controlName: 'text',
         type: this.useTemplate ? 'htmltextarea' : 'textarea',
-        rows: 5,
+        rows: 25,
+        height: 400,
         required: !this.useTemplate
       },
     ] as IDynamicFormControl[];

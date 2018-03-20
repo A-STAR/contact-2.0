@@ -144,7 +144,10 @@
         {{ control.label | translate }}
         <b *ngIf="control.required" class="text-danger">*</b>
       </span>
-      <app-html-textarea [formControlName]="control.controlName"></app-html-textarea>
+      <app-html-textarea
+        [formControlName]="control.controlName"
+        [height]="control.height"
+      ></app-html-textarea>
     </label>
   </ng-container>
 
