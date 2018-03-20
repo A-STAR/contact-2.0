@@ -275,6 +275,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
           entityAttributeId: EntityTranslationsConstants.SPEC_CONTACT_TREE_NAME,
           entityId: this.selectedId
         },
+        createMode: !this.isEditing,
         required: true,
         width: 6
       },

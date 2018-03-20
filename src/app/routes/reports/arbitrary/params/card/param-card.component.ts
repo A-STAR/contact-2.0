@@ -165,6 +165,7 @@ export class ParamCardComponent implements OnInit, DoCheck {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_PARAM_NAME,
           entityId: this.paramId
         },
+        createMode: !this.paramId,
         required: true,
         disabled: !canEdit
       },
