@@ -56,6 +56,17 @@
           }
         }
       },
+      "incomingCall": {
+        "debtor": {
+          "title": "Debtor"
+        },
+        "operator": {
+          "title": "Operator"
+        },
+        "search": {
+          "title": "Quick Search"
+        }
+      },
       "shared": {
         "contactRegistration": {
           "cancelDialog": {

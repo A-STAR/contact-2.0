@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
 
@@ -13,7 +22,7 @@ import { doOnceIf, invert } from '@app/core/utils';
   styleUrls: [ './titlebar.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TitlebarComponent implements OnInit {
+export class TitlebarComponent implements OnChanges, OnInit {
   @Input() titlebar: ITitlebar;
 
   @Output() action = new EventEmitter<ITitlebarItem>();
@@ -37,6 +46,15 @@ export class TitlebarComponent implements OnInit {
   };
   suppressCenterZone: boolean;
   title: string;
+
+  constructor(
+    private cdRef: ChangeDetectorRef,
+  ) {}
+
+  ngOnChanges(): void {
+    this.title = this.titlebar.title;
+    this.cdRef.markForCheck();
+  }
 
   ngOnInit(): void {
     this.borderCls = { 'no-border': this.titlebar.suppressBorder === true };

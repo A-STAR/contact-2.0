@@ -56,6 +56,17 @@
           }
         }
       },
+      "incomingCall": {
+        "debtor": {
+          "title": "Должник"
+        },
+        "operator": {
+          "title": "Ответственный"
+        },
+        "search": {
+          "title": "Быстрый поиск"
+        }
+      },
       "shared": {
         "contactRegistration": {
           "cancelDialog": {
