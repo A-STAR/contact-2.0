@@ -59,6 +59,10 @@
 
 <app-letter-generation-dialog
   *ngIf="isDialog('letterGeneration')"
+  [addressId]="selectedAddressId$ | async"
+  [debtId]="debtId$ | async"
+  [personId]="personId$ | async"
+  [personRole]="personRole"
   (cancel)="onCloseDialog()"
 ></app-letter-generation-dialog>
 

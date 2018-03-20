@@ -195,6 +195,10 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.debtSubscription.unsubscribe();
   }
 
+  get debtId$(): Observable<number> {
+    return this._debtId$;
+  }
+
   get personId$(): Observable<number> {
     return this._personId$;
   }

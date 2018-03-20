@@ -59,7 +59,10 @@
       "shared": {
         "address": {
           "letterGeneration": {
-            "title": "Формирование писем"
+            "title": "Формирование писем",
+            "templateId": "Шаблон",
+            "formatCode": "Формат",
+            "regLetter": "Регистрировать письмо"
           }
         },
         "contactRegistration": {

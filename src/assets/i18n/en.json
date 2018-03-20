@@ -59,7 +59,10 @@
       "shared": {
         "address": {
           "letterGeneration": {
-            "title": "Letter Generation"
+            "title": "Letter Generation",
+            "templateId": "Template",
+            "formatCode": "Format",
+            "regLetter": "Register letter"
           }
         },
         "contactRegistration": {
