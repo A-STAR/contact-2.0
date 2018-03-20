@@ -5,13 +5,14 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
-import { first } from 'rxjs/operators';
+import { first, filter } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { IAppState } from '../state/state.interface';
 import { IUser, IUserParams } from './auth.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
 
+import { SettingsService } from '@app/core/settings/settings.service';
 import { PersistenceService } from '../persistence/persistence.service';
 
 @Injectable()
@@ -48,6 +49,7 @@ export class AuthService implements CanActivate {
     private persistenceService: PersistenceService,
     private router: Router,
     private store: Store<IAppState>,
+    private settingsService: SettingsService,
     private translateService: TranslateService,
     private zone: NgZone,
   ) {
@@ -61,12 +63,19 @@ export class AuthService implements CanActivate {
     )
     .pipe(first())
     .subscribe(() => this.refreshUserParamsAction());
+
+    this.currentUser$
+      .pipe(
+        filter(Boolean),
+        first()
+      )
+      .subscribe(user => this.settingsService.settingsKey = user.userName);
   }
 
   get currentUser$(): Observable<IUser> {
     return this.token$
       .map(token => token && this.jwtHelper.decodeToken(token))
-      .map(tokenInfo => tokenInfo && { userId: tokenInfo.userId });
+      .map(tokenInfo => tokenInfo && { userId: tokenInfo.userId, userName: tokenInfo.username });
   }
 
   get userParams$(): Observable<IUserParams> {
@@ -102,15 +111,15 @@ export class AuthService implements CanActivate {
   }
 
   redirectToLogin(url: string = null): void {
-    this.persistenceService.set(AuthService.REDIRECT_TOKEN, url || this.router.url);
+    this.settingsService.set(AuthService.REDIRECT_TOKEN, url || this.router.url);
     location.href = AuthService.URL_LOGIN;
   }
 
   redirectAfterLogin(): void {
-    const url = this.persistenceService.get(AuthService.REDIRECT_TOKEN) || AuthService.URL_DEFAULT;
+    const url = this.settingsService.get(AuthService.REDIRECT_TOKEN) || AuthService.URL_DEFAULT;
     this.router
       .navigate([ url ])
-      .then(() => this.persistenceService.remove(AuthService.REDIRECT_TOKEN));
+      .then(() => this.settingsService.remove(AuthService.REDIRECT_TOKEN));
   }
 
   saveToken(token: string): void {

@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { filter, map, first } from 'rxjs/operators';
 
-import { AuthService } from '@app/core/auth/auth.service';
 import { PersistenceService } from '../persistence/persistence.service';
-
-import { propOr } from '../utils';
 
 @Injectable()
 export class SettingsService {
@@ -19,17 +14,17 @@ export class SettingsService {
 
   layout: any;
 
+  private _settingsKey: string;
+
   constructor(
-    private authService: AuthService,
     private persistenceService: PersistenceService
   ) {
     const layout = this.persistenceService.getOr(PersistenceService.LAYOUT_KEY, {});
-    const isCollapsed = propOr('isCollapsed', false)(layout);
 
     // Layout Settings
     this.layout = {
       isFixed: true,
-      isCollapsed: isCollapsed,
+      isCollapsed: !!layout.isCollapsed,
       isBoxed: false,
       isRTL: false,
       horizontal: false,
@@ -49,31 +44,24 @@ export class SettingsService {
     }
   }
 
-  get settingsKey$(): Observable<string> {
-    return this.authService.currentUser$
-      .pipe(
-        map(user => user && String(user.userId)),
-        filter(Boolean)
-      );
+  set settingsKey(value: string) {
+    this._settingsKey = value;
   }
 
-  get(key: string): Observable<any> {
-    return this.settingsKey$
-      .pipe(
-        map(settingsKey => this.persistenceService.getOr(settingsKey, {})),
-        map(storage => storage && storage[key])
-      );
+  get(key: string): any {
+    const settings = this.persistenceService.getOr(this._settingsKey, {});
+    return settings[key];
   }
 
   set(key: string, value: any): void {
-    this.settingsKey$
-      .pipe(first())
-      .subscribe(settingsKey =>
-        this.persistenceService.set(settingsKey, {
-          ...this.persistenceService.getOr(settingsKey, {}),
-          [key]: value
-        })
-      );
+    const settings = this.persistenceService.getOr(this._settingsKey, {});
+    this.persistenceService.set(this._settingsKey, { ...settings, [key]: value });
+  }
+
+  remove(key: string): void {
+    const settings = this.persistenceService.getOr(this._settingsKey, {});
+    delete settings[key];
+    this.persistenceService.set(this._settingsKey, settings);
   }
 
   // Calculate the available content area height

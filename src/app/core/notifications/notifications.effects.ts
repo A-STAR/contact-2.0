@@ -5,6 +5,7 @@ import { defer } from 'rxjs/observable/defer';
 
 import { INotificationAction, NotificationTypeEnum } from './notifications.interface';
 
+import { AuthService } from '@app/core/auth/auth.service';
 import { NotificationsService } from './notifications.service';
 import { SettingsService } from '@app/core/settings/settings.service';
 
@@ -21,7 +22,9 @@ export class NotificationsEffects {
 
   @Effect()
   init$ = defer(() =>
-    this.settingsService.get(NotificationsService.STORAGE_KEY)
+    this.authService.currentUser$
+      .filter(Boolean)
+      .map(() => this.settingsService.get(NotificationsService.STORAGE_KEY))
       .map(settings => ({ type: NotificationsService.NOTIFICATION_INIT, payload: settings }))
   );
 
@@ -37,6 +40,7 @@ export class NotificationsEffects {
 
   constructor(
     private actions: Actions,
+    private authService: AuthService,
     private toasterService: ToasterService,
     private settingsService: SettingsService
   ) {}

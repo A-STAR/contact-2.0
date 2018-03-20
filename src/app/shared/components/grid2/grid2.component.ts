@@ -26,7 +26,6 @@ import {
   RowNode,
   RefreshCellsParams,
 } from 'ag-grid/main';
-import { first } from 'rxjs/operators';
 
 
 import {
@@ -119,7 +118,6 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   initCallbacks: Function[] = [];
 
   private originalColSettings: IAgridColSetting[] = [];
-  private defaultGridSettings: IAGridSettings;
   private gridSettings: IAGridSettings;
   private initialized = false;
   private saveChangesDebounce = new Subject<void>();
@@ -133,8 +131,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private contextMenuService: ContextMenuService,
     private notificationService: NotificationsService,
-    private translate: TranslateService,
     private settingsService: SettingsService,
+    private translate: TranslateService,
     private userPermissionsService: UserPermissionsService,
     private valueConverter: ValueConverterService,
   ) {}
@@ -172,17 +170,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.userPermissionsSub = this.userPermissionsService.bag()
       .subscribe(bag => this.userPermissionsBag = bag);
 
-    this.settingsService.get(this.persistenceKey)
-      .pipe(first())
-      .subscribe(settings => {
-        this.defaultGridSettings = settings || {};
-        const { colDefs } = this.restoreGridSettings();
-        this.columnDefs = this.setColumnDefs(colDefs);
-        this.setGridOptions();
-        this.setPagination();
-        this.initialized = true;
-        this.cdRef.markForCheck();
-      });
+    const { colDefs } = this.restoreGridSettings();
+    this.columnDefs = this.setColumnDefs(colDefs);
+    this.setGridOptions();
+    this.setPagination();
+    this.initialized = true;
+    this.cdRef.markForCheck();
 
     this.saveChangesDebounceSub = this.saveChangesDebounce
       .debounceTime(2000)
@@ -885,7 +878,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private restoreGridSettings(): IAGridSettings {
-    return this.gridSettings = this.defaultGridSettings;
+    this.gridSettings = this.settingsService.get(this.persistenceKey) || {};
+    return this.gridSettings;
   }
 
   private setSortModel(): void {
