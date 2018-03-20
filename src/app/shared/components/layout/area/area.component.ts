@@ -14,6 +14,7 @@ import {
 import { IAreaLayout, IDragData } from './area.interface';
 
 import { range } from '@app/core/utils';
+import { PersistenceService } from '@app/core/persistence/persistence.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,6 +39,9 @@ export class AreaComponent implements AfterViewInit {
 
   parentLayout: IAreaLayout;
 
+  private id: string;
+  private rootPersistenceKey: string;
+
   private mouseMoveListener: () => void;
   private mouseUpListener: () => void;
 
@@ -58,6 +62,7 @@ export class AreaComponent implements AfterViewInit {
 
   constructor(
     private elRef: ElementRef,
+    private persistenceService: PersistenceService,
     private renderer: Renderer2,
   ) {}
 
@@ -66,6 +71,10 @@ export class AreaComponent implements AfterViewInit {
       c.order = 2 * i;
       c.parentLayout = this.layout;
     });
+
+    if (this.persistenceKey) {
+      this.restoreState(this.persistenceKey);
+    }
   }
 
   get size(): number {
@@ -77,6 +86,8 @@ export class AreaComponent implements AfterViewInit {
 
   set size(size: number) {
     this.renderer.setStyle(this.elRef.nativeElement, 'flex', `0 0 ${size}px`);
+    // TODO(d.maltsev): only save state on drag finish
+    this.saveState(size);
   }
 
   getGutterClass(): any {
@@ -108,6 +119,26 @@ export class AreaComponent implements AfterViewInit {
   @HostListener('selectstart')
   onDragStart(): false {
     return false;
+  }
+
+  restoreState(rootPersistenceKey: string, id: string = ''): void {
+    this.id = id;
+    this.rootPersistenceKey = rootPersistenceKey;
+
+    const state = this.persistenceService.get(this.rootPersistenceKey);
+    console.log(this.elRef.nativeElement);
+    console.log(rootPersistenceKey);
+    console.log(id);
+    console.log(state);
+
+    // TODO(d.maltsev): get state from local storage
+
+    this.children.forEach((c, i) => c.restoreState(rootPersistenceKey, id ? `${id}.${i}` : `${i}`));
+  }
+
+  private saveState(size: number): void {
+    const state = this.persistenceService.get(this.rootPersistenceKey) || {};
+    this.persistenceService.set(this.rootPersistenceKey, { ...state, [this.id]: size });
   }
 
   private onMouseMove(event: MouseEvent): void {
