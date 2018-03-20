@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { filter, first } from 'rxjs/operators';
 
+import { AuthService } from '@app/core/auth/auth.service';
 import { PersistenceService } from '../persistence/persistence.service';
 
 @Injectable()
 export class SettingsService {
+  static readonly REDIRECT_TOKEN = 'auth/redirect';
+  static readonly REDIRECT_DEFAULT = '/';
 
   // App Settings
   app = {
@@ -14,11 +19,20 @@ export class SettingsService {
 
   layout: any;
 
-  private _settingsKey: string;
+  private settingsKey: string;
 
   constructor(
-    private persistenceService: PersistenceService
+    private authService: AuthService,
+    private persistenceService: PersistenceService,
+    private router: Router
   ) {
+    this.authService.currentUser$
+      .pipe(
+        filter(Boolean),
+        first()
+      )
+      .subscribe(user => this.settingsKey = user.userName);
+
     const layout = this.persistenceService.getOr(PersistenceService.LAYOUT_KEY, {});
 
     // Layout Settings
@@ -44,24 +58,32 @@ export class SettingsService {
     }
   }
 
-  set settingsKey(value: string) {
-    this._settingsKey = value;
-  }
-
   get(key: string): any {
-    const settings = this.persistenceService.getOr(this._settingsKey, {});
+    const settings = this.persistenceService.getOr(this.settingsKey, {});
     return settings[key];
   }
 
   set(key: string, value: any): void {
-    const settings = this.persistenceService.getOr(this._settingsKey, {});
-    this.persistenceService.set(this._settingsKey, { ...settings, [key]: value });
+    const settings = this.persistenceService.getOr(this.settingsKey, {});
+    this.persistenceService.set(this.settingsKey, { ...settings, [key]: value });
   }
 
   remove(key: string): void {
-    const settings = this.persistenceService.getOr(this._settingsKey, {});
+    const settings = this.persistenceService.getOr(this.settingsKey, {});
     delete settings[key];
-    this.persistenceService.set(this._settingsKey, settings);
+    this.persistenceService.set(this.settingsKey, settings);
+  }
+
+  redirectToLogin(url: string = null): void {
+    this.set(SettingsService.REDIRECT_TOKEN, url || this.router.url);
+    this.authService.redirectToLogin();
+  }
+
+  redirectAfterLogin(): void {
+    const url = this.get(SettingsService.REDIRECT_TOKEN) || SettingsService.REDIRECT_DEFAULT;
+    this.router
+      .navigate([ url ])
+      .then(() => this.remove(SettingsService.REDIRECT_TOKEN));
   }
 
   // Calculate the available content area height
