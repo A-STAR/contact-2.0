@@ -225,6 +225,12 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     });
   }
 
+  enableControls(controls: IDynamicFormControl[]): void {
+    controls.forEach(control => {
+      this.form.get(control.controlName).enable();
+    });
+  }
+
   createControl(control: IDynamicFormControl): FormControl {
     const options = {
       disabled: control.disabled,
