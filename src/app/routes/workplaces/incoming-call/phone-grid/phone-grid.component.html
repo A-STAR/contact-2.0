@@ -4,7 +4,7 @@
     <app-titlebar [titlebar]="titlebar$ | async"></app-titlebar>
   </div>
 
-  <div class="flex-item grow">
+  <div class="flex-item grow mb">
     <app-phone-grid
       [contactType]="contactType"
       [debtId]="debtId"
@@ -21,25 +21,26 @@
   <div class="flex-item">
 
     <app-button
-      color="secondary"
-      type="registerContact"
-      label="Регистрация контакта"
+      color="none"
+      label="routes.workplaces.incomingCall.debtor.toolbar.registerContact"
       [disabled]="contactButtonDisabled"
       (click)="onRegisterContact()"
     ></app-button>
 
+    &nbsp;
+
     <app-button
-      color="secondary"
-      type="registerContact"
-      label="Регистрация контакта по неопределенному номеру"
+      color="none"
+      label="routes.workplaces.incomingCall.debtor.toolbar.registerUnidentifiedPhone"
       [disabled]="unidentifiedContactButtonDisabled$ | async"
       (click)="onRegisterUnidentifiedContact()"
     ></app-button>
 
+    &nbsp;
+
     <app-button
-      color="secondary"
-      type="registerContact"
-      label="Регистрация визита в офис"
+      color="none"
+      label="routes.workplaces.incomingCall.debtor.toolbar.registerOfficeVisit"
       [disabled]="officeVisitButtonDisabled$ | async"
       (click)="onRegisterOfficeVisit()"
     ></app-button>

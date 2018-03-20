@@ -58,7 +58,12 @@
       },
       "incomingCall": {
         "debtor": {
-          "title": "Должник"
+          "title": "Должник",
+          "toolbar": {
+            "registerContact": "Регистрация контакта",
+            "registerUnidentifiedPhone": "Регистрация контакта по неопределенному номеру",
+            "registerOfficeVisit": "Регистрация визита в офис"
+          }
         },
         "operator": {
           "title": "Ответственный"
