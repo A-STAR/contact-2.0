@@ -1,23 +1,26 @@
 <split direction="horizontal" gutterColor="inherit" gutterSize="20" [useTransition]="true">
   <!-- Main Area -->
   <split-area size="60">
-    <!-- TODO(i.lobanov): to d.maltsev - remove after rework -->
-    <div class="row mb-lg" style="height: 450px">
-      <div class="col-md-2">
-        <app-incoming-call-filter></app-incoming-call-filter>
+    <div class="flex vertical">
+      <div class="flex-item">
+        <div class="flex horizontal">
+          <div class="flex-item" style="flex-basis: 200px;">
+            <app-incoming-call-filter></app-incoming-call-filter>
+          </div>
+          <div class="flex-item grow">
+            <app-incoming-call-debtor-grid></app-incoming-call-debtor-grid>
+          </div>
+        </div>
       </div>
-       <!-- TODO(i.lobanov): to d.maltsev - remove after rework -->
-      <div class="col-md-10" style="height: 100%">
-        <app-incoming-call-debtor-grid></app-incoming-call-debtor-grid>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-8">
-        <app-incoming-call-phone-grid></app-incoming-call-phone-grid>
-      </div>
-      <div class="col-md-4">
-        <app-incoming-call-debtor-card></app-incoming-call-debtor-card>
+      <div class="flex-item grow">
+        <app-area layout="column">
+          <app-area>
+            <app-incoming-call-phone-grid></app-incoming-call-phone-grid>
+          </app-area>
+          <app-area>
+            <app-incoming-call-debtor-card></app-incoming-call-debtor-card>
+          </app-area>
+        </app-area>
       </div>
     </div>
   </split-area>

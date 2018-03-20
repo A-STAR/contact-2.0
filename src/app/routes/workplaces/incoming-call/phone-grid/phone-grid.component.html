@@ -1,9 +1,11 @@
-<div>
-  <b>Должник</b> {{ fullName$ | async }}
-</div>
+<div class="flex vertical">
 
-<div class="row">
-  <div class="col-sm-12" style="height: 360px;">
+  <div class="flex-item">
+    <!-- TODO(d.maltsev): i18n -->
+    <b>Должник</b> {{ fullName$ | async }}
+  </div>
+
+  <div class="flex-item grow">
     <app-phone-grid
       [contactType]="contactType"
       [debtId]="debtId"
@@ -17,10 +19,9 @@
       (select)="onSelect($event)"
     ></app-phone-grid>
   </div>
-</div>
 
-<div class="row mt">
-  <div class="col-sm-12">
+  <div class="flex-item">
+
     <app-button
       color="secondary"
       type="registerContact"

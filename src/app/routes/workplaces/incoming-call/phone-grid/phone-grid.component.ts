@@ -14,9 +14,10 @@ import { invert } from '@app/core/utils';
 import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-incoming-call-phone-grid',
   templateUrl: 'phone-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridComponent implements OnInit, OnDestroy {
   debtId = null;
