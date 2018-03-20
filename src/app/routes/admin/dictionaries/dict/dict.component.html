@@ -4,6 +4,7 @@
   [dictionaries]="dictionaries | async"
   [dictionaryTermTypes]="dictionaryTermTypes | async"
   [title]="'dictionaries.create.title'"
+  [isCreate]="true"
   (submit)="onCreate($event)"
   (cancel)="onCancel()">
 </app-dict-edit>

@@ -36,6 +36,7 @@ export class AttributeGridEditComponent implements OnInit {
   @Input() attributeId: number;
   @Input() treeType: number;
   @Input() treeSubtype: number;
+  @Input() isCreate = false;
 
   @Output() submit = new EventEmitter<Partial<IAttribute>>();
   @Output() cancel = new EventEmitter<void>();
@@ -87,6 +88,7 @@ export class AttributeGridEditComponent implements OnInit {
           entityAttributeId: EntityTranslationsConstants.SPEC_ATTRIBUTE_TYPE_NAME,
           entityId: this.attribute && this.attribute.id
         },
+        createMode: this.isCreate,
         required: true
       },
       { controlName: 'code', type: 'number', required: true },

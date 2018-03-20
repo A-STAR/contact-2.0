@@ -80,6 +80,7 @@ export class CampaignsEditComponent implements OnInit {
           entityAttributeId: EntityTranslationsConstants.SPEC_CAMPAIGN_NAME,
           entityId: this.campaign && this.campaign.id
         },
+        createMode: !this.campaign,
         required: true
       },
       {
