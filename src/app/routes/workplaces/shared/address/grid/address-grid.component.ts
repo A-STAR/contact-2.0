@@ -113,6 +113,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       action: () => this.setDialog('delete')
     },
     {
+      type: ToolbarItemTypeEnum.BUTTON_EMAIL,
+      enabled: this.canGenerateLetter$,
+      action: () => this.setDialog('letterGeneration')
+    },
+    {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
       enabled: combineLatestAnd([this.canView$, this._personId$.map(Boolean)]),
       action: () => this.fetch()
@@ -337,6 +342,13 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3)
         .map(hasPermission => hasPermission || this.ignorePermissions),
       this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
+    ]);
+  }
+
+  get canGenerateLetter$(): Observable<boolean> {
+    return combineLatestAnd([
+      this.userPermissionsService.contains('LETTER_FORM_PERSON_ROLE_LIST', this.personRole),
+      this.selectedAddress$.map(address => address && !address.isInactive)
     ]);
   }
 

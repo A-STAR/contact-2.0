@@ -57,6 +57,11 @@
         }
       },
       "shared": {
+        "address": {
+          "letterGeneration": {
+            "title": "Формирование писем"
+          }
+        },
         "contactRegistration": {
           "cancelDialog": {
             "message": "Вы действительно хотите отменить регистрацию текущего контакта?",

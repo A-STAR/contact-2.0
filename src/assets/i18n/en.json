@@ -57,6 +57,11 @@
         }
       },
       "shared": {
+        "address": {
+          "letterGeneration": {
+            "title": "Letter Generation"
+          }
+        },
         "contactRegistration": {
           "cancelDialog": {
             "message": "Are you sure you want to cancel contact registration?",

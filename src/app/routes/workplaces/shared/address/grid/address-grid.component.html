@@ -57,6 +57,11 @@
   (cancel)="onCloseDialog()">
 </app-address-grid-mark>
 
+<app-letter-generation-dialog
+  *ngIf="isDialog('letterGeneration')"
+  (cancel)="onCloseDialog()"
+></app-letter-generation-dialog>
+
 <app-simple-grid
   *ngIf="canDisplayGrid"
   persistenceKey="[grid] workplaces/shared/address"

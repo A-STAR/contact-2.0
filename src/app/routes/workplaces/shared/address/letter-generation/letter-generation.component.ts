@@ -12,12 +12,12 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 export class LetterGenerationDialogComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
-  @Output() close = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
 
   controls: IDynamicFormItem[] = [
   ];
   config: IDynamicFormConfig = {
-    labelKey: 'routes.workplaces.shared.address.letterDialog',
+    labelKey: 'routes.workplaces.shared.address.letterGeneration',
   };
 
   get canCalculate(): boolean {
@@ -28,6 +28,6 @@ export class LetterGenerationDialogComponent {
   }
 
   onClose(): void {
-    this.close.emit();
+    this.cancel.emit();
   }
 }
