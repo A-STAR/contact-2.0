@@ -17,6 +17,7 @@ export class ValueEditorComponent implements ICellEditorAngularComp {
   value: any;
   dictCode: number;
   lookupKey: ILookupKey;
+  private params: IValueEditorParams;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -30,6 +31,7 @@ export class ValueEditorComponent implements ICellEditorAngularComp {
 
     const { node, valueTypeKey, dictCode, lookupKey, value } = params;
 
+    this.params = params;
     this.value = value;
 
     this.dictCode = typeof dictCode === 'function' ? dictCode(node.data) : dictCode;
@@ -54,5 +56,8 @@ export class ValueEditorComponent implements ICellEditorAngularComp {
 
   onValueChange(value: any): void {
     this.value = value;
+    if (value && this.type === TYPE_CODES.DATETIME) {
+      this.params.stopEditing();
+    }
   }
 }
