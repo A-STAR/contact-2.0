@@ -7,14 +7,14 @@ import {
   IGridActionPayload
 } from '@app/shared/components/action-grid/action-grid.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 
 @Injectable()
 export class  NextCallDateSetService {
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
-    private actionGridFilterService: ActionGridFilterService
+    private actionGridService: ActionGridService
   ) {}
 
   private url = '/mass/debts/nextCall';
@@ -22,7 +22,7 @@ export class  NextCallDateSetService {
   setNextCall(idData: IGridActionPayload, nextCallDateTime: string): Observable<any> {
     return this.dataService.update(this.url, {},
       {
-        idData: this.actionGridFilterService.buildRequest(idData),
+        idData: this.actionGridService.buildRequest(idData),
         actionData: { nextCallDateTime }
       }
     )

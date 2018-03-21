@@ -4,14 +4,14 @@ import { Observable } from 'rxjs/Observable';
 import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
 import { IMarkForVisitRequest } from './visit-add.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
 @Injectable()
 export class VisitAddService {
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
@@ -21,7 +21,7 @@ export class VisitAddService {
   createVisit(idData: IGridActionPayload, actionData: IMarkForVisitRequest): Observable<any> {
     return this.dataService.create(this.baseUrl, {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData),
+          idData: this.actionGridService.buildRequest(idData),
           actionData
         }
       )
@@ -36,6 +36,6 @@ export class VisitAddService {
    }
 
    getVisitsCount(idData: IGridActionPayload): number | string {
-    return this.actionGridFilterService.getSelectionCount(idData) || '';
+    return this.actionGridService.getSelectionCount(idData) || '';
   }
 }

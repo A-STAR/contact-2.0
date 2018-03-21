@@ -220,3 +220,15 @@
     </ng-template>
   </div>
 </div>
+
+<ng-container
+  *ngIf="currentSelectionAction && selectionActionData"
+>
+  <span>
+    {{ currentSelectionAction | json }}
+  </span>
+  <br>
+  <span>
+    {{ selectionActionData | json }}
+  </span>
+</ng-container>

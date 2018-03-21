@@ -15,5 +15,6 @@ export interface IMetadataDefs {
   columns?: IAGridColumn[];
   titlebar?: IMetadataTitlebar;
   defaultAction?: string;
+  selectionAction?: string;
   permits?: string[];
 }

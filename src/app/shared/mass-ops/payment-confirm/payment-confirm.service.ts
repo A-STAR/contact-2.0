@@ -5,12 +5,12 @@ import { IGridActionPayload } from '@app/shared/components/action-grid/action-gr
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 
 @Injectable()
 export class PaymentConfirmService {
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
@@ -21,7 +21,7 @@ export class PaymentConfirmService {
   paymentsConfirm(idData: IGridActionPayload): Observable<any> {
     return this.dataService.update(this.confirmUrl, {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData)
+          idData: this.actionGridService.buildRequest(idData)
         }
       )
       .do(res => {
@@ -37,7 +37,7 @@ export class PaymentConfirmService {
   paymentsCancel(idData: IGridActionPayload): Observable<any> {
     return this.dataService.update(this.cancelUrl, {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData)
+          idData: this.actionGridService.buildRequest(idData)
         }
       )
       .do(res => {
@@ -53,7 +53,7 @@ export class PaymentConfirmService {
   getPaymentsCount(idData: IGridActionPayload): number | string {
     // NOTE: empty string is passed, when we ask for payments by filter,
     // because we do not know yet how many we will confirm or cancel
-    return this.actionGridFilterService.getSelectionCount(idData) || '';
+    return this.actionGridService.getSelectionCount(idData) || '';
   }
 
 }

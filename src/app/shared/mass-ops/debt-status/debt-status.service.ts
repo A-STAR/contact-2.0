@@ -6,7 +6,7 @@ import { IGridActionPayload } from '@app/shared/components/action-grid/action-gr
 import { IOperationResult } from '../debt-responsible/debt-responsible.interface';
 import { IDebtStatusChangeParams } from './debt-status.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
@@ -14,7 +14,7 @@ import { NotificationsService } from '@app/core/notifications/notifications.serv
 export class DebtStatusService {
 
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private dataService: DataService,
     private notificationsService: NotificationsService
   ) { }
@@ -23,7 +23,7 @@ export class DebtStatusService {
     return this.dataService
       .update('/mass/debts/statuschange', {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData),
+          idData: this.actionGridService.buildRequest(idData),
           actionData: data
         }
       )
@@ -39,7 +39,7 @@ export class DebtStatusService {
   }
 
   getDebtsCount(actionData: IGridActionPayload): number | string {
-    return this.actionGridFilterService.getSelectionCount(actionData) || '';
+    return this.actionGridService.getSelectionCount(actionData) || '';
   }
 
 }

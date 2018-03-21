@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnInit
 
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 
 @Component({
   selector: 'app-contact-log-dialog',
@@ -16,11 +16,11 @@ export class ContactLogDialogComponent implements OnInit {
   personId: number;
 
   constructor(
-    private actionGridFilterService: ActionGridFilterService
+    private actionGridService: ActionGridService
   ) {}
 
   ngOnInit(): void {
-    this.personId = this.actionGridFilterService.buildRequest(this.actionData.payload).personId;
+    this.personId = this.actionGridService.buildRequest(this.actionData.payload).personId;
   }
 
   onClose(): void {
