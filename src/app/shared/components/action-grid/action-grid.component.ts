@@ -131,6 +131,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   selectionActionData: T;
   gridActions$: Observable<IMetadataAction[]>;
   titlebar$: Observable<ITitlebar>;
+  splitSize: any = {
+    grid: 1,
+    details: 0
+  };
 
   constructor(
     private actionGridFilterService: ActionGridFilterService,
@@ -263,6 +267,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   onSelectionAction(selected: number[]): void {
     this.selectionActionData = this.selection.find(r => r[this.rowIdKey] === selected[0]);
+    this.splitSize.details = 2;
+    this.splitSize.grid = 2;
     this.cdRef.markForCheck();
   }
 

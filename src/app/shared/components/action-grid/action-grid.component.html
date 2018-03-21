@@ -165,70 +165,73 @@
   [url]="'/list/excel?name=' + metadataKey"
 ></app-downloader>
 
-<div class="flex vertical">
-  <div class="flex-item">
-    <app-titlebar
-      *ngIf="titlebar$ | async"
-      [titlebar]="titlebar$ | async"
-    ></app-titlebar>
+<app-area layout="row">
+  <app-area initialSize="splitSize.grid">
+    <div class="flex vertical">
+      <div class="flex-item">
+        <app-titlebar
+          *ngIf="titlebar$ | async"
+          [titlebar]="titlebar$ | async"
+        ></app-titlebar>
 
-    <app-action-grid-filter
-      [metadataKey]="metadataKey"
-    ></app-action-grid-filter>
-  </div>
+        <app-action-grid-filter
+          [metadataKey]="metadataKey"
+        ></app-action-grid-filter>
+      </div>
 
-  <div class="flex-item grow">
-    <ng-container
-      *ngIf="!isSimple; else simpleGrid"
-    >
-      <app-grid2
-        #grid
-        *ngIf="initialized"
-        [actions]="gridActions$ | async"
-        [columnIds]="columnIds"
-        [columns]="columnsDef"
-        [fullHeight]="fullHeight"
-        [ngClass]="ngClass"
-        [persistenceKey]="persistenceKey"
-        [rowCount]="rowCount"
-        [rowIdKey]="rowIdKey"
-        [rows]="rows"
-        (action)="onAction($event)"
-        (onDblClick)="onDblClick($event)"
-        (onFilter)="onRequest()"
-        (onPage)="onRequest()"
-        (onPageSize)="onRequest()"
-        (onSort)="onRequest()"
-        (onSelect)="onSelect($event)"
-      ></app-grid2>
+      <div class="flex-item grow">
+        <ng-container
+          *ngIf="!isSimple; else simpleGrid"
+        >
+          <app-grid2
+            #grid
+            *ngIf="initialized"
+            [actions]="gridActions$ | async"
+            [columnIds]="columnIds"
+            [columns]="columnsDef"
+            [fullHeight]="fullHeight"
+            [ngClass]="ngClass"
+            [persistenceKey]="persistenceKey"
+            [rowCount]="rowCount"
+            [rowIdKey]="rowIdKey"
+            [rows]="rows"
+            (action)="onAction($event)"
+            (onDblClick)="onDblClick($event)"
+            (onFilter)="onRequest()"
+            (onPage)="onRequest()"
+            (onPageSize)="onRequest()"
+            (onSort)="onRequest()"
+            (onSelect)="onSelect($event)"
+          ></app-grid2>
+        </ng-container>
+
+        <ng-template #simpleGrid>
+          <app-simple-grid
+            #grid
+            *ngIf="initialized"
+            [actions]="gridActions$ | async"
+            [persistenceKey]="persistenceKey"
+            [selectionType]="selectionType"
+            [columns]="columns"
+            [rows]="rows"
+            [toolbar]="toolbarItems"
+            (action)="onAction($event)"
+            (select)="onSelect($event)"
+            (dblClick)="onDblClick($event)">
+          </app-simple-grid>
+        </ng-template>
+      </div>
+    </div>
+  </app-area>
+  <app-area initialSize="splitSize.details">
+      <ng-container *ngIf="currentSelectionAction && selectionActionData">
+      <span>
+        {{ currentSelectionAction | json }}
+      </span>
+      <br>
+      <span>
+        {{ selectionActionData | json }}
+      </span>
     </ng-container>
-
-    <ng-template #simpleGrid>
-      <app-simple-grid
-        #grid
-        *ngIf="initialized"
-        [actions]="gridActions$ | async"
-        [persistenceKey]="persistenceKey"
-        [selectionType]="selectionType"
-        [columns]="columns"
-        [rows]="rows"
-        [toolbar]="toolbarItems"
-        (action)="onAction($event)"
-        (select)="onSelect($event)"
-        (dblClick)="onDblClick($event)">
-      </app-simple-grid>
-    </ng-template>
-  </div>
-</div>
-
-<ng-container
-  *ngIf="currentSelectionAction && selectionActionData"
->
-  <span>
-    {{ currentSelectionAction | json }}
-  </span>
-  <br>
-  <span>
-    {{ selectionActionData | json }}
-  </span>
-</ng-container>
+  </app-area>
+</app-area>
