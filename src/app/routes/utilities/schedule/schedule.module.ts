@@ -32,14 +32,6 @@ const routes: Routes = [
       }
     ],
   },
-  {
-    path: 'all/create',
-    loadChildren: './groups/card/group-card.module#GroupCardModule',
-  },
-  {
-    path: 'all/:groupId',
-    loadChildren: './groups/card/group-card.module#GroupCardModule',
-  },
 ];
 
 @NgModule({
