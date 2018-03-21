@@ -29,6 +29,14 @@ const routes: Routes = [
         loadChildren: './schedule/schedule.module#ScheduleModule',
       },
       {
+        path: 'schedule/all/create',
+        loadChildren: './schedule/groups/card/group-card.module#GroupCardModule',
+      },
+      {
+        path: 'schedule/all/:groupId',
+        loadChildren: './schedule/groups/card/group-card.module#GroupCardModule',
+      },
+      {
         path: 'contact-properties',
         loadChildren: './contact-properties/contact-properties.module#ContactPropertiesModule',
       },
