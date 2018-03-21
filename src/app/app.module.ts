@@ -4,13 +4,15 @@ import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { JwtModule, JwtHelperService } from '@auth0/angular-jwt';
+import { JwtModule, JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ToasterModule } from 'angular2-toaster';
 import * as R from 'ramda';
+
+import { ConfigService } from '@app/core/config/config.service';
 
 import { AuthEffects } from './core/auth/auth.effects';
 import { CallEffects } from './core/calls/call.effects';
@@ -54,6 +56,14 @@ export function reset(nextReducer: any): any {
   };
 }
 
+export function jwtOptionsFactory(configService: ConfigService): any {
+  return {
+    tokenGetter: authTokenGetter,
+    whitelistedDomains: configService.get('domains'),
+    throwNoTokenError: false
+  };
+}
+
 @NgModule({
   declarations: [
     AppComponent
@@ -76,20 +86,11 @@ export function reset(nextReducer: any): any {
     FormsModule,
     HttpClientModule,
     JwtModule.forRoot({
-      config: {
-        tokenGetter: authTokenGetter,
-        whitelistedDomains: [
-          '*',
-          'localhost:4200',
-          'localhost:8080',
-          'appservertest.luxbase.int:4100',
-          'appservertest.luxbase.int:4300',
-          'appservertest.luxbase.int:4400',
-          'go.luxbase.ru:3000',
-          'go.luxbase.ru:4300',
-        ],
-        throwNoTokenError: false
-      }
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [ ConfigService ],
+      },
     }),
     LayoutModule,
     RoutesModule,
