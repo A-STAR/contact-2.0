@@ -132,7 +132,7 @@ export class PaymentCardComponent implements OnInit {
     const data: IPayment = this.form.serializedUpdates;
     const action = this.paymentId
       ? this.paymentService.update(this.debtId, this.paymentId, data, this.callCenter)
-      : this.paymentService.create(this.debtId, data, this.callCenter);
+      : this.paymentService.create(this.debtId, {...data, isCanceled: 0 }, this.callCenter);
 
     action.subscribe(() => {
       this.paymentService.dispatchAction(PaymentService.MESSAGE_PAYMENT_SAVED);
