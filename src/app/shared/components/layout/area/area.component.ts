@@ -13,8 +13,9 @@ import {
 
 import { IAreaLayout, IDragData } from './area.interface';
 
+import { AreaService } from './area.service';
+
 import { range } from '@app/core/utils';
-import { PersistenceService } from '@app/core/persistence/persistence.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +35,7 @@ export class AreaComponent implements AfterViewInit {
 
   @Input()
   set initialSize(size: number) {
-    this.renderer.setStyle(this.elRef.nativeElement, 'flex', size);
+    this.setSize(size, true);
   }
 
   parentLayout: IAreaLayout;
@@ -61,8 +62,8 @@ export class AreaComponent implements AfterViewInit {
   }
 
   constructor(
+    private areaService: AreaService,
     private elRef: ElementRef,
-    private persistenceService: PersistenceService,
     private renderer: Renderer2,
   ) {}
 
@@ -85,9 +86,9 @@ export class AreaComponent implements AfterViewInit {
   }
 
   set size(size: number) {
-    this.renderer.setStyle(this.elRef.nativeElement, 'flex', `0 0 ${size}px`);
+    this.setSize(size);
     // TODO(d.maltsev): only save state on drag finish
-    this.saveState(size);
+    this.areaService.saveState(this.rootPersistenceKey, this.id, size);
   }
 
   getGutterClass(): any {
@@ -125,20 +126,17 @@ export class AreaComponent implements AfterViewInit {
     this.id = id;
     this.rootPersistenceKey = rootPersistenceKey;
 
-    const state = this.persistenceService.get(this.rootPersistenceKey);
-    if (id) {
-      const size = state[id];
-      if (size) {
-        this.renderer.setStyle(this.elRef.nativeElement, 'flex', `0 0 ${size}px`);
-      }
-    }
+    const size = this.areaService.getState(rootPersistenceKey, id);
+    this.setSize(size);
 
     this.children.forEach((c, i) => c.restoreState(rootPersistenceKey, id ? `${id}.${i}` : `${i}`));
   }
 
-  private saveState(size: number): void {
-    const state = this.persistenceService.get(this.rootPersistenceKey) || {};
-    this.persistenceService.set(this.rootPersistenceKey, { ...state, [this.id]: size });
+  private setSize(size: number, relative: boolean = false): void {
+    if (size > 0) {
+      const value = relative ? size : `0 0 ${size}px`;
+      this.renderer.setStyle(this.elRef.nativeElement, 'flex', value);
+    }
   }
 
   private onMouseMove(event: MouseEvent): void {
