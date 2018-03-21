@@ -56,6 +56,22 @@
           }
         }
       },
+      "incomingCall": {
+        "debtor": {
+          "title": "Должник",
+          "toolbar": {
+            "registerContact": "Регистрация контакта",
+            "registerUnidentifiedPhone": "Регистрация контакта по неопределенному номеру",
+            "registerOfficeVisit": "Регистрация визита в офис"
+          }
+        },
+        "operator": {
+          "title": "Ответственный"
+        },
+        "search": {
+          "title": "Быстрый поиск"
+        }
+      },
       "shared": {
         "address": {
           "toolbar": {
@@ -533,7 +549,7 @@
           "debtAmount": "Сумма просроченного долга",
           "debtComment": "Комментарий",
           "debtId": "ID долга",
-          "debtReasonCode": "Причина возникновения задолженности",
+          "debtReasonCode": "Причина задолженности",
           "dict1Code": "Словарный атрибут 1",
           "dict2Code": "Словарный атрибут 2",
           "dict3Code": "Словарный атрибут 3",
@@ -2198,7 +2214,7 @@
         "dpd": "Кол-во дней просрочки",
         "portfolio": "Портфель",
         "bank": "Банк",
-        "debtReasonCode": "Причина просрочки",
+        "debtReasonCode": "Причина задолженности",
         "comment": "Комментарий",
         "dict1Code": "Интервал",
         "dict2Code": "Стратегия",

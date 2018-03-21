@@ -45,7 +45,7 @@ export class DebtGridStatusDialogComponent implements OnInit, AfterViewInit, OnD
 
   controls: Array<IDynamicFormControl> = [
     { controlName: 'statusCode', type: 'radio', required: true },
-    { controlName: 'customStatusCode', type: 'select', disabled: true },
+    { controlName: 'customStatusCode', type: 'select', required: true },
     { controlName: 'reasonCode', type: 'select' },
     { controlName: 'comment', type: 'textarea' }
   ].map(control => ({ ...control, label: `widgets.debt.dialogs.statusChange.${control.controlName}` }) as IDynamicFormControl);
@@ -129,10 +129,12 @@ export class DebtGridStatusDialogComponent implements OnInit, AfterViewInit, OnD
         .filter(option => option.parentCode === code)
         .map(term => ({ value: term.code, label: term.name }));
 
-      const customStatusCodeControl = this.getControl('customStatusCode') as IDynamicFormSelectControl;
-      customStatusCodeControl.disabled = statusCode !== 0;
-      customStatusCodeControl.required = statusCode === 0;
-      customStatusCodeControl.options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS]
+      const customStatusCodeControl = this.form.getControl('customStatusCode');
+      customStatusCodeControl[statusCode !== 0 ? 'disable' : 'enable']();
+
+      const customStatusCodeControlDef = this.getControl('customStatusCode') as IDynamicFormSelectControl;
+      customStatusCodeControlDef.required = statusCode === 0;
+      customStatusCodeControlDef.options = dictionaries[UserDictionariesService.DICTIONARY_DEBT_STATUS]
         .filter(term => term.code >= 20000)
         .map(term => ({ value: term.code, label: term.name }));
 

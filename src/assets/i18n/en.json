@@ -56,6 +56,22 @@
           }
         }
       },
+      "incomingCall": {
+        "debtor": {
+          "title": "Debtor",
+          "toolbar": {
+            "registerContact": "Register Contact",
+            "registerUnidentifiedPhone": "Register by Unidentified Phone Number",
+            "registerOfficeVisit": "Register Office Visit"
+          }
+        },
+        "operator": {
+          "title": "Operator"
+        },
+        "search": {
+          "title": "Quick Search"
+        }
+      },
       "shared": {
         "address": {
           "toolbar": {

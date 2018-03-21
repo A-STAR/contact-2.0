@@ -44,6 +44,8 @@ export interface IGridActionContext {
   selection?: any[];
 }
 
+export type IMetadataActionSetter = (action: IMetadataAction) => IMetadataAction;
+
 export interface IGridAction {
   name: string;
   addOptions: IAddOption[];

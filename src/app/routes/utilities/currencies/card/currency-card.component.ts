@@ -87,6 +87,7 @@ export class CurrencyCardComponent implements OnInit {
           entityAttributeId: EntityTranslationsConstants.SPEC_CURRENCY_NAME,
           entityId: this.currency && this.currency.id
         },
+        createMode: !this.currencyId,
         disabled: !canEdit,
         required: true
       },
@@ -97,6 +98,7 @@ export class CurrencyCardComponent implements OnInit {
           entityAttributeId: EntityTranslationsConstants.SPEC_CURRENCY_SHORT_NAME,
           entityId: this.currency && this.currency.id
         },
+        createMode: !this.currencyId,
         disabled: !canEdit,
         required: true
       },

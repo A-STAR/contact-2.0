@@ -83,6 +83,7 @@ export class FieldCardComponent implements OnInit {
           entityAttributeId: EntityTranslationsConstants.SPEC_REPORT_FIELD_NAME,
           entityId: this.fieldId
         },
+        createMode: !this.fieldId,
         required: true,
         disabled: !canEdit
       },

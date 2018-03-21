@@ -1,3 +1,4 @@
+import { IActionGridAction, ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { FilterOperatorType } from '@app/shared/components/grid2/filter/grid-filter';
 import { ITitlebarElement } from '@app/shared/components/titlebar/titlebar.interface';
@@ -16,6 +17,8 @@ export interface IMetadataAction {
   addOptions?: IMetadataActionOption[];
   enabled?: (actionType: MetadataActionType, selection: any[], data?: any) => boolean;
   params?: string[];
+  isDialog?: boolean;
+  cb?: (action: any, onClose?: (data: IActionGridAction | ICloseAction) => any) => void;
   applyTo?: {
     all?: boolean;
     selected?: boolean;
