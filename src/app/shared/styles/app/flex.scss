@@ -25,6 +25,7 @@
     // IE needs units for flex basis for some reason
     // See: https://github.com/philipwalton/flexbugs#flexbug-4
     flex: 1 0 0px;
+    overflow: hidden;
   }
 }
 
