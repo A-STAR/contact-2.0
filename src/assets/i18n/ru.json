@@ -3374,7 +3374,8 @@
       "fuchsia": "Фуксия",
       "orange": "Оранжевый",
       "pink": "Розовый",
-      "yellow": "Желтый"
+      "yellow": "Желтый",
+      "lightViolet": "Светло-фиолетовый"
     },
     "dialog": {
       "result": {

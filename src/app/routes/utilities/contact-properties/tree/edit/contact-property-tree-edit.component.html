@@ -3,7 +3,7 @@
     <h3>{{ 'widgets.contactProperty.dialogs.edit.title' | translate }}</h3>
   </div>
 
-  <div style="height: auto;">
+  <div class="contact-tree-dlg-body">
     <app-tabview [noMargin]="true" (select)="onTabSelect($event)">
 
       <app-tabview-tab [title]="'widgets.contactProperty.dialogs.edit.mainSettings'">
@@ -33,7 +33,9 @@
   </div>
 
   <div dialog-footer>
-    <app-button color="primary" type="save" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
-    <app-button type="cancel" (click)="onCancel()"></app-button>
+    <div class="flex justify-center contact-tree-dlg-footer">
+      <app-button class="contact-tree-dlg-footer-btn" type="cancel" (click)="onCancel()"></app-button>
+      <app-button class="contact-tree-dlg-footer-btn" color="primary" type="save" (click)="onSubmit()" [disabled]="!canSubmit"></app-button>
+    </div>
   </div>
 </app-dialog>
