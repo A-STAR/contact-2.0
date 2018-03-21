@@ -2841,6 +2841,9 @@
     },
     "formulas": {
       "gen": { "singular": "formula", "plural": "formulas" }
+    },
+    "letters": {
+      "gen": { "singular": "letter", "plural": "letters" }
     }
   },
   "massOperations": {

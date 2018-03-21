@@ -6,9 +6,10 @@ import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
+// import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
+import { LetterGenerationService } from '@app/routes/workplaces/shared/address/letter-generation/letter-generation.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 @Component({
@@ -33,13 +34,14 @@ export class LetterGenerationDialogComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private userTemplatesService: UserTemplatesService
+    private letterGenerationService: LetterGenerationService
+    // private userTemplatesService: UserTemplatesService
   ) { }
 
   ngOnInit(): void {
     // this.userTemplatesService.getLetterTemplatesForDebt(this.personRole, this.debtId)
     of([
-      { id: 1, name: '1' }
+      { id: 12, name: '1' }
     ])
       .subscribe(templates => {
         this.controls = [
@@ -57,11 +59,21 @@ export class LetterGenerationDialogComponent implements OnInit {
       });
   }
 
-  get canCalculate(): boolean {
+  get canGenerate(): boolean {
     return this.form && this.form.canSubmit;
   }
 
-  onCalculate(): void {
+  onGenerate(): void {
+    const { templateId, formatCode, regLetter } = this.form.serializedValue;
+    this.letterGenerationService.generate(templateId, {
+      debtId: this.debtId,
+      personId: this.personId,
+      personRole: this.personRole,
+      addressId: this.addressId,
+      formatCode,
+      regLetter
+    })
+    .subscribe(() => this.cancel.emit());
   }
 
   onClose(): void {
