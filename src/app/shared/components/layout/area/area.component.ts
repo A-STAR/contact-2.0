@@ -126,12 +126,12 @@ export class AreaComponent implements AfterViewInit {
     this.rootPersistenceKey = rootPersistenceKey;
 
     const state = this.persistenceService.get(this.rootPersistenceKey);
-    console.log(this.elRef.nativeElement);
-    console.log(rootPersistenceKey);
-    console.log(id);
-    console.log(state);
-
-    // TODO(d.maltsev): get state from local storage
+    if (id) {
+      const size = state[id];
+      if (size) {
+        this.renderer.setStyle(this.elRef.nativeElement, 'flex', `0 0 ${size}px`);
+      }
+    }
 
     this.children.forEach((c, i) => c.restoreState(rootPersistenceKey, id ? `${id}.${i}` : `${i}`));
   }
