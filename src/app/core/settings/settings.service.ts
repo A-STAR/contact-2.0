@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { filter, first, map, tap } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { PersistenceService } from '../persistence/persistence.service';
@@ -21,30 +21,19 @@ export class SettingsService {
 
   layout: any;
 
-  private settingsKey: string;
-  private _settings$ = new BehaviorSubject<any>(null);
+  private settingsKey$ = new BehaviorSubject<string>(null);
 
   constructor(
     private authService: AuthService,
     private persistenceService: PersistenceService,
     private router: Router
   ) {
-    this._settings$
-      .pipe(
-        filter(Boolean)
-      )
-      .subscribe(settings => this.persistenceService.set(this.settingsKey, settings));
-
     this.authService.currentUser$
       .pipe(
         filter(Boolean),
-        first(),
-        map(user => user.userName),
-        tap(settingsKey => this.settingsKey = settingsKey)
+        map(user => user && user.userName)
       )
-      .subscribe(settingsKey =>
-        this._settings$.next(this.persistenceService.getOr(settingsKey, {}))
-      );
+      .subscribe(settingsKey => this.settingsKey$.next(settingsKey));
 
     const layout = this.persistenceService.getOr(PersistenceService.LAYOUT_KEY, {});
 
@@ -72,21 +61,24 @@ export class SettingsService {
   }
 
   get settings$(): Observable<any> {
-    return this._settings$.asObservable();
+    return this.settingsKey$
+      .map(key => key ? this.persistenceService.getOr(key, {}) : null);
   }
 
   get(key: string): any {
-    return this._settings$.value && this._settings$.value[key];
+    const settings = this.persistenceService.getOr(this.settingsKey$.value, {});
+    return settings[key];
   }
 
   set(key: string, value: any): void {
-    this._settings$.next({ ...this._settings$.value, [key]: value });
+    const settings = this.persistenceService.getOr(this.settingsKey$.value, {});
+    this.persistenceService.set(this.settingsKey$.value, { ...settings, [key]: value });
   }
 
   remove(key: string): void {
-    const settings = this._settings$.value;
+    const settings = this.persistenceService.getOr(this.settingsKey$.value, {});
     delete settings[key];
-    this._settings$.next(settings);
+    this.persistenceService.set(this.settingsKey$.value, settings);
   }
 
   redirectToLogin(url: string = null): void {

@@ -6,9 +6,12 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { throttleTime } from 'rxjs/operators/throttleTime';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { filter } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
+
+import { AuthService } from '@app/core/auth/auth.service';
 
 import {
   IFilters,
@@ -36,17 +39,20 @@ export class NotificationsService implements OnDestroy {
 
   constructor(
     private actions: Actions,
+    private authService: AuthService,
     private store: Store<IAppState>,
     private translateService: TranslateService,
     private settingsService: SettingsService
   ) {
     this.notificationsStateSubscription = combineLatest(
       this.state,
+      this.authService.currentUser$,
       this.actions.ofType(NotificationsService.NOTIFICATION_INIT)
     )
     .pipe(
       // NOTE: this is to prevent multiple events from writing to the storage too often
       throttleTime(500),
+      filter(([ _, user ]) => !!user)
     )
     .subscribe(([ state ]) => this.settingsService.set(NotificationsService.STORAGE_KEY, state));
   }
