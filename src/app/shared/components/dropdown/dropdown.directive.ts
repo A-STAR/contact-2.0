@@ -47,6 +47,10 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
     this.collapse();
   }
 
+  get opened(): boolean {
+    return this.isExpanded;
+  }
+
   private toggle(): void {
     this.isExpanded ? this.collapse() : this.expand();
   }
