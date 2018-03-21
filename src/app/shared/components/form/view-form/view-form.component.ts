@@ -19,7 +19,10 @@ export class ViewFormComponent implements OnInit {
   }
 
   get items(): any {
-    return this.controls.map(control => ({ control, value: this.data[control.controlName] }));
+    return this.controls.map(control => ({
+      control,
+      value: this.data && this.data[control.controlName],
+    }));
   }
 
   getStyle(item: IViewFormItem): Partial<CSSStyleDeclaration> {

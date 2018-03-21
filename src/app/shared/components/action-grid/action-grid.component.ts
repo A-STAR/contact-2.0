@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { compose } from 'ramda';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, filter, map } from 'rxjs/operators';
 import { GridOptions } from 'ag-grid';
@@ -21,6 +22,7 @@ import {
   ICloseAction,
   IGridAction,
   IActionGridAction,
+  IMetadataActionSetter,
 } from './action-grid.interface';
 import {
   IAGridAction,
@@ -107,7 +109,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Output() select = new EventEmitter<IAGridSelected>();
   @Output() action = new EventEmitter<IActionGridAction>();
   // emits when dialog closes
-  @Output() close = new EventEmitter<ICloseAction>();
+  @Output() close = new EventEmitter<ICloseAction | IActionGridAction>();
 
   @ViewChild(ActionGridFilterComponent) filter: ActionGridFilterComponent;
   @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
@@ -169,11 +171,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         this.userPermissionsService.bag(),
         this.entityAttributesService.getDictValueAttributes()
       )
-      .pipe(map(([actions, constants, permissions, entityPermissions]) => {
-        const actionsWithPermissions = this.addPermissions(actions, constants, permissions, entityPermissions);
-        this.currentDefaultAction = this.getDefaultAction(actionsWithPermissions);
-        return actionsWithPermissions;
-      }));
+      .pipe(
+          first(),
+          map(([actions, constants, permissions, entityPermissions]) => {
+            const actionsWithPermissions = this.addActionData(actions, constants, permissions, entityPermissions);
+            this.currentDefaultAction = this.getDefaultAction(actionsWithPermissions);
+            return actionsWithPermissions;
+        })
+      );
   }
 
   getGridTitlebar(): Observable<ITitlebar> {
@@ -228,8 +233,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       metadataAction: gridAction.metadataAction,
       selection: gridAction.selection.node.data
     };
-    this.dialog = action.metadataAction.action;
-    this.dialogData = this.setDialogData(action);
+    if (action.metadataAction.isDialog) {
+      this.dialog = action.metadataAction.action;
+      this.dialogData = this.setDialogData(action);
+    } else if (action.metadataAction.cb) {
+      action.metadataAction.cb(this.setDialogData(action), this.createCloseAction(action) );
+    }
     if (this.action) {
       this.action.emit(action);
     }
@@ -248,6 +257,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     if (this.close) {
       this.close.emit(action);
     }
+    this.cdRef.markForCheck();
   }
 
   onRequest(): void {
@@ -263,8 +273,12 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
           type: MetadataActionType.SINGLE
         }
       };
-      this.dialog = action.metadataAction.action;
-      this.dialogData = this.setDialogData(action);
+      if (this.currentDefaultAction.isDialog) {
+        this.dialog = action.metadataAction.action;
+        this.dialogData = this.setDialogData(action);
+      } else if (action.metadataAction.cb) {
+        action.metadataAction.cb(this.setDialogData(action), this.createCloseAction(action));
+      }
       this.cdRef.markForCheck();
     } else if (this.dblClick) {
       this.dblClick.emit(row);
@@ -291,6 +305,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   get columnsDef(): IAGridColumn[] {
     return this._columns || [];
+  }
+
+  private createCloseAction(actionData: ICloseAction | IActionGridAction): () => any {
+    return () => this.close ? this.close.emit(actionData) : actionData;
   }
 
   private getMetadata(): void {
@@ -336,12 +354,18 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     };
   }
 
-  private addPermissions(actions: IMetadataAction[], constants: ValueBag, permissions: ValueBag,
+  private addActionData(actions: IMetadataAction[], constants: ValueBag, permissions: ValueBag,
       entityPerms: IEntityAttributes): IMetadataAction[] {
 
     const actionPermissions = this.buildPermissions(actions, constants, permissions, entityPerms);
 
-    return this.attachPermissions(actions, actionPermissions);
+    return this.attachData(actions, [
+      action => ({ ...action, enabled: action.enabled || actionPermissions[action.action] }),
+      action => {
+        const isDialog = !Object.keys(this.actionGridFilterService.cbActions).includes(action.action);
+        return { ...action, isDialog, cb: !isDialog ? this.actionGridFilterService.cbActions[action.action] : null };
+      },
+    ]);
   }
   // TODO(i.lobanov): rewrite this in functional way
   private getDefaultAction(actions: IMetadataAction[]): IMetadataAction {
@@ -358,12 +382,20 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     }
   }
 
-  private attachPermissions(actions: IMetadataAction[], actionPermissions: IMetadataActionPermissions): IMetadataAction[] {
+  /**
+   * Recursively attaches data to action and it's children
+   * @param actions Array of actions
+   * @param setters Array of data setters
+   */
+  private attachData(actions: IMetadataAction[], setters?: IMetadataActionSetter[]): IMetadataAction[] {
+    const noop = [ action => action ];
     return actions.map(action => ({
-      ...action,
-      enabled: action.enabled || actionPermissions[action.action],
-      children: action.children ? this.attachPermissions(action.children, actionPermissions) : undefined
-    }));
+        ...action,
+        // apply action setters in pipe
+        ...(compose as any)(...(setters || noop))(action),
+        children: action.children ? this.attachData(action.children, setters) : undefined
+      })
+    );
   }
 
   private buildPermissions(actions: IMetadataAction[], constants: ValueBag,

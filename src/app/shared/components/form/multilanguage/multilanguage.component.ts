@@ -45,6 +45,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
   @Input() isRequired = false;
   @Input() label: string;
   @Input() langConfig: IMultiLanguageConfig;
+  @Input() createMode = false;
 
   @ViewChild('input') input: ElementRef;
   @ViewChild(DropdownDirective) dropdown: DropdownDirective;
@@ -83,12 +84,16 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
         : of(null),
     ).subscribe(([ languages, value ]) => {
       this.languages = languages;
-      this.value = value || languages.map(l => ({ languageId: l.id, value: null }));
 
       const mainLanguage = languages.find(l => l.isMain === 1);
       if (mainLanguage) {
         this.mainLanguageId = mainLanguage.id;
       }
+
+      const langs = this.createMode ?
+        languages.filter(l => l.id === (this.mainLanguageId || languages[0].id)) : languages;
+
+      this.value = value || langs.map(l => ({ languageId: l.id, value: null }));
 
       this.propagateChange(this.value);
       this.cdRef.markForCheck();

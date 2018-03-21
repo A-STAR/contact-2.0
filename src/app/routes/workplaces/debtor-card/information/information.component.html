@@ -18,7 +18,6 @@
       <app-tabview-tab [title]="tabs[0].title">
         <app-phone-grid
           *ngIf="tabs[0].isInitialised"
-          action="edit"
           [contactType]="phoneContactType"
           [debtId]="debtId$ | async"
           [personId]="personId$ | async"
@@ -32,7 +31,6 @@
       <app-tabview-tab [title]="tabs[1].title">
         <app-address-grid
           *ngIf="tabs[1].isInitialised"
-          action="edit"
           [debtId]="debtId$ | async"
           [debtorId]="personId$ | async"
           [personId]="personId$ | async"

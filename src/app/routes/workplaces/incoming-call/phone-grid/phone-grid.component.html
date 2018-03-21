@@ -1,15 +1,15 @@
-<div>
-  <b>Должник</b> {{ fullName$ | async }}
-</div>
+<div class="flex vertical">
 
-<div class="row">
-  <div class="col-sm-12" style="height: 360px;">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar$ | async"></app-titlebar>
+  </div>
+
+  <div class="flex-item grow mb">
     <app-phone-grid
       [contactType]="contactType"
       [debtId]="debtId"
       [personId]="personId"
       [personRole]="personRole"
-      [styles]="{ height: '420px' }"
       (add)="onPhoneAdd()"
       (dblClick)="onPhoneRegister($event)"
       (edit)="onPhoneEdit($event)"
@@ -17,30 +17,30 @@
       (select)="onSelect($event)"
     ></app-phone-grid>
   </div>
-</div>
 
-<div class="row mt">
-  <div class="col-sm-12">
+  <div class="flex-item">
+
     <app-button
-      color="secondary"
-      type="registerContact"
-      label="Регистрация контакта"
+      color="none"
+      label="routes.workplaces.incomingCall.debtor.toolbar.registerContact"
       [disabled]="contactButtonDisabled"
       (click)="onRegisterContact()"
     ></app-button>
 
+    &nbsp;
+
     <app-button
-      color="secondary"
-      type="registerContact"
-      label="Регистрация контакта по неопределенному номеру"
+      color="none"
+      label="routes.workplaces.incomingCall.debtor.toolbar.registerUnidentifiedPhone"
       [disabled]="unidentifiedContactButtonDisabled$ | async"
       (click)="onRegisterUnidentifiedContact()"
     ></app-button>
 
+    &nbsp;
+
     <app-button
-      color="secondary"
-      type="registerContact"
-      label="Регистрация визита в офис"
+      color="none"
+      label="routes.workplaces.incomingCall.debtor.toolbar.registerOfficeVisit"
       [disabled]="officeVisitButtonDisabled$ | async"
       (click)="onRegisterOfficeVisit()"
     ></app-button>

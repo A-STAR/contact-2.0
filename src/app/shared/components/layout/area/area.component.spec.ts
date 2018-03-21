@@ -1,7 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { async as Async, TestBed } from '@angular/core/testing';
 
+import { AreaService } from './area.service';
+
 import { AreaComponent } from './area.component';
+
+class AreaServiceMock {
+  getState(): number {
+    return null;
+  }
+  saveState(): void {
+  }
+}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +51,12 @@ describe('AreaComponent', () => {
           AreaComponent,
           AreaColumnContainerComponent,
           AreaRowContainerComponent,
+        ],
+        providers: [
+          {
+            provide: AreaService,
+            useClass: AreaServiceMock,
+          }
         ],
       })
       .compileComponents();

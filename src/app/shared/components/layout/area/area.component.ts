@@ -7,11 +7,14 @@ import {
   HostBinding,
   HostListener,
   Input,
+  OnDestroy,
   QueryList,
   Renderer2,
 } from '@angular/core';
 
 import { IAreaLayout, IDragData } from './area.interface';
+
+import { AreaService } from './area.service';
 
 import { range } from '@app/core/utils';
 
@@ -21,7 +24,9 @@ import { range } from '@app/core/utils';
   styleUrls: [ './area.component.scss' ],
   templateUrl: './area.component.html',
 })
-export class AreaComponent implements AfterViewInit {
+export class AreaComponent implements AfterViewInit, OnDestroy {
+  private static MIN_SIZE = 100;
+
   @ContentChildren(AreaComponent, { descendants: false }) _children: QueryList<AreaComponent>;
 
   @HostBinding('style.flex-direction')
@@ -33,15 +38,19 @@ export class AreaComponent implements AfterViewInit {
 
   @Input()
   set initialSize(size: number) {
-    this.renderer.setStyle(this.elRef.nativeElement, 'flex', size);
+    this.setSize(size);
   }
 
   parentLayout: IAreaLayout;
 
-  private mouseMoveListener: () => void;
-  private mouseUpListener: () => void;
+  private id: string;
+  private rootPersistenceKey: string;
 
   private dragData: IDragData;
+
+  private mouseMoveListener: () => void;
+  private mouseUpListener: () => void;
+  private resizeListener: () => void;
 
   get children(): AreaComponent[] {
     return this._children.filter(c => c !== this);
@@ -57,6 +66,7 @@ export class AreaComponent implements AfterViewInit {
   }
 
   constructor(
+    private areaService: AreaService,
     private elRef: ElementRef,
     private renderer: Renderer2,
   ) {}
@@ -66,6 +76,17 @@ export class AreaComponent implements AfterViewInit {
       c.order = 2 * i;
       c.parentLayout = this.layout;
     });
+
+    if (this.persistenceKey) {
+      this.restoreState(this.persistenceKey);
+      this.resizeListener = this.renderer.listen(window, 'resize', () => this.restoreState(this.persistenceKey));
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.resizeListener) {
+      this.resizeListener();
+    }
   }
 
   get size(): number {
@@ -76,7 +97,9 @@ export class AreaComponent implements AfterViewInit {
   }
 
   set size(size: number) {
-    this.renderer.setStyle(this.elRef.nativeElement, 'flex', `0 0 ${size}px`);
+    this.setSize(size, false);
+    // TODO(d.maltsev): only save state on drag finish
+    this.areaService.saveState(this.rootPersistenceKey, this.id, size);
   }
 
   getGutterClass(): any {
@@ -110,6 +133,23 @@ export class AreaComponent implements AfterViewInit {
     return false;
   }
 
+  restoreState(rootPersistenceKey: string, id: string = ''): void {
+    this.id = id;
+    this.rootPersistenceKey = rootPersistenceKey;
+
+    const size = this.areaService.getState(rootPersistenceKey, id);
+    this.setSize(size);
+
+    this.children.forEach((c, i) => c.restoreState(rootPersistenceKey, id ? `${id}.${i}` : `${i}`));
+  }
+
+  private setSize(size: number, relative: boolean = true): void {
+    if (size > 0) {
+      const value = relative ? size : `0 0 ${size}px`;
+      this.renderer.setStyle(this.elRef.nativeElement, 'flex', value);
+    }
+  }
+
   private onMouseMove(event: MouseEvent): void {
     this.onDrag(event);
   }
@@ -123,8 +163,12 @@ export class AreaComponent implements AfterViewInit {
   private onDrag(event: MouseEvent): void {
     const { i, start, lSize, rSize } = this.dragData;
     const size = this.getCoordFromEvent(event) - start;
-    this.children[i].size = lSize + size;
-    this.children[i + 1].size = rSize - size;
+    const lSizeUpdated = lSize + size;
+    const rSizeUpdated = rSize - size;
+    if (lSizeUpdated >= AreaComponent.MIN_SIZE && rSizeUpdated >= AreaComponent.MIN_SIZE) {
+      this.children[i].size = lSizeUpdated;
+      this.children[i + 1].size = rSizeUpdated;
+    }
   }
 
   private getCoordFromEvent(event: MouseEvent): number {

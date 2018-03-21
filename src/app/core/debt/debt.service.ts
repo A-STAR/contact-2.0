@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
@@ -7,8 +8,8 @@ import { IAddress, IPhone, IDebt, IDebtNextCall, IDebtOpenIncomingCallData } fro
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { RoutingService } from '@app/core/routing/routing.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class DebtService {
@@ -28,6 +29,7 @@ export class DebtService {
   constructor(
     private dataService: DataService,
     private notificationsService: NotificationsService,
+    private routingService: RoutingService,
     private userPermissionsService: UserPermissionsService
   ) {}
 
@@ -128,5 +130,20 @@ export class DebtService {
     return this.dataService
       .update('/debts/{debtId}/nextCall', { debtId }, call)
       .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());
+  }
+
+  getFirstDebtsByUserId(payload: any): Observable<any> {
+    return this.dataService.read(this.baseUrl, payload)
+      .map(res => res && res.id)
+      .catch(this.notificationsService.deleteError().entity('entities.debts.gen.plural').dispatchCallback());
+  }
+
+  openByDebtId(debtId: number): Promise<boolean> {
+    return this.routingService.navigate([ '/workplaces', `debtor-card/${debtId}` ]);
+  }
+
+  openIncomingCall(data: any): Promise<boolean> {
+    return this.routingService.navigate(['workplaces/incoming-call'])
+      .then(success => success ? (this.incomingCallSearchParams = data) : null);
   }
 }

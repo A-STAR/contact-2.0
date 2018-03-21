@@ -7,10 +7,12 @@ import {
   IGridAction,
   IGridActionPayload,
   IGridActionSelection,
-  IGridActionContext,
+  IGridActionContext
 } from '../action-grid.interface';
 
 import { MetadataActionType } from '@app/core/metadata/metadata.interface';
+
+import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 
@@ -22,10 +24,17 @@ export class ActionGridFilterService {
     [MetadataActionType.SELECTED]: this.getSelectionPayload,
     [MetadataActionType.SINGLE]: this.getSingleSelectionPayload,
   };
+
+  cbActions: { [key: string]: (action: IGridAction) => any };
+
   // notify subscribers, that grid has filters
   hasFilter$ = new BehaviorSubject<boolean>(null);
 
-  constructor() { }
+  constructor(
+    private massOpsService: MassOperationsService,
+  ) {
+    this.cbActions = this.createDlgActions();
+  }
 
   buildRequest(actionData: IGridActionPayload): any {
     switch (actionData.type) {
@@ -134,6 +143,14 @@ export class ActionGridFilterService {
 
   isFilterAction(actionData: IGridActionPayload): boolean {
     return actionData.type === MetadataActionType.ALL;
+  }
+
+  private createDlgActions(): { [key: string]: (action: IGridAction) => any } {
+    return Object.keys(this.massOpsService.nonDlgActions).reduce((acc, actionName) => ({
+      ...acc,
+      [actionName]: (actionData: any, onClose?: Function) =>
+        this.massOpsService.nonDlgActions[actionName](this.buildRequest(actionData.payload), onClose)
+    }), {});
   }
 
   private getSingleSelection(action: IActionGridAction, selection: any): any {

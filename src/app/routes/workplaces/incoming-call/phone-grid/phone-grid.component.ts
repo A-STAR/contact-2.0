@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { TranslateService } from '@ngx-translate/core';
+import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
@@ -14,14 +15,36 @@ import { invert } from '@app/core/utils';
 import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-incoming-call-phone-grid',
   templateUrl: 'phone-grid.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhoneGridComponent implements OnInit, OnDestroy {
   debtId = null;
   personId = null;
   personRole = null;
+
+  readonly contactType = 2;
+  readonly titlebar$ = this.incomingCallService.selectedDebtor$.pipe(
+    map(debtor => {
+      const title = this.translateService.instant('routes.workplaces.incomingCall.debtor.title');
+      const { fullName } = debtor || {} as any;
+      return {
+        title: fullName ? `${title}: ${fullName}` : title,
+      };
+    }),
+  );
+
+  readonly unidentifiedContactButtonDisabled$ = this.incomingCallService.selectedDebtor$.pipe(
+    map(Boolean),
+    map(invert),
+  );
+
+  readonly officeVisitButtonDisabled$ = combineLatestAnd([
+    this.debtService.canRegisterOfficeVisit$,
+    this.incomingCallService.selectedDebtor$.map(Boolean),
+  ]);
 
   private selectedPhoneId: number;
 
@@ -34,6 +57,7 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     private incomingCallService: IncomingCallService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
+    private translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -51,30 +75,8 @@ export class PhoneGridComponent implements OnInit, OnDestroy {
     this.debtorSubscription.unsubscribe();
   }
 
-  get contactType(): number {
-    return 2;
-  }
-
-  get fullName$(): Observable<string> {
-    return this.incomingCallService.selectedDebtor$.map(debtor => debtor && debtor.fullName);
-  }
-
   get contactButtonDisabled(): boolean {
     return !this.selectedPhoneId;
-  }
-
-  get unidentifiedContactButtonDisabled$(): Observable<boolean> {
-    return this.incomingCallService.selectedDebtor$
-      .map(Boolean)
-      .map(invert);
-  }
-
-  get officeVisitButtonDisabled$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.debtService.canRegisterOfficeVisit$,
-      this.incomingCallService.selectedDebtor$.map(Boolean),
-    ])
-    .map(invert);
   }
 
   onSelect(phone: any): void {

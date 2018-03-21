@@ -3,11 +3,11 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
 import {
-  IAccessConfigItemType,
-  IAccessByEntityMethod,
-  IAccessByValueBagMethod,
-  IAccessConfigOperator,
-} from './access.interface';
+  IContextConfigItemType,
+  IContextByEntityMethod,
+  IContextByValueBagMethod,
+  IContextConfigOperator,
+} from './context.interface';
 import { IEntityAttribute } from '@app/core/entity/attributes/entity-attributes.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
@@ -16,7 +16,9 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 import { ValueBag } from '@app/core/value-bag/value-bag';
 
-import { AccessService } from './access.service';
+import { ContextService } from './context.service';
+
+declare var spyOn: any;
 
 class MockEntityAttributesService {
   getAttribute(): Observable<IEntityAttribute> {
@@ -36,8 +38,8 @@ class MockUserPermissionsService {
   }
 }
 
-describe('AccessService', () => {
-  let service: AccessService;
+describe('ContextService', () => {
+  let service: ContextService;
   let entityAttributesService: EntityAttributesService;
   let userConstantsService: UserConstantsService;
   let userPermissionsService: UserPermissionsService;
@@ -45,7 +47,7 @@ describe('AccessService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        AccessService,
+        ContextService,
         {
           provide: EntityAttributesService,
           useClass: MockEntityAttributesService,
@@ -60,7 +62,7 @@ describe('AccessService', () => {
         },
       ],
     });
-    service = TestBed.get(AccessService);
+    service = TestBed.get(ContextService);
     entityAttributesService = TestBed.get(EntityAttributesService);
     userConstantsService = TestBed.get(UserConstantsService);
     userPermissionsService = TestBed.get(UserPermissionsService);
@@ -82,9 +84,9 @@ describe('AccessService', () => {
         isUsed: null,
       }));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.ENTITY,
-        method: IAccessByEntityMethod.IS_MANDATORY,
+      .calculate({
+        type: IContextConfigItemType.ENTITY,
+        method: IContextByEntityMethod.IS_MANDATORY,
         value: null,
       })
       .subscribe(res => {
@@ -102,9 +104,9 @@ describe('AccessService', () => {
         isUsed: null,
       }));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.ENTITY,
-        method: IAccessByEntityMethod.IS_MANDATORY,
+      .calculate({
+        type: IContextConfigItemType.ENTITY,
+        method: IContextByEntityMethod.IS_MANDATORY,
         value: null,
       })
       .subscribe(res => {
@@ -122,9 +124,9 @@ describe('AccessService', () => {
         isUsed: true,
       }));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.ENTITY,
-        method: IAccessByEntityMethod.IS_USED,
+      .calculate({
+        type: IContextConfigItemType.ENTITY,
+        method: IContextByEntityMethod.IS_USED,
         value: null,
       })
       .subscribe(res => {
@@ -142,9 +144,9 @@ describe('AccessService', () => {
         isUsed: false,
       }));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.ENTITY,
-        method: IAccessByEntityMethod.IS_USED,
+      .calculate({
+        type: IContextConfigItemType.ENTITY,
+        method: IContextByEntityMethod.IS_USED,
         value: null,
       })
       .subscribe(res => {
@@ -162,8 +164,8 @@ describe('AccessService', () => {
         isUsed: null,
       }));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.ENTITY,
+      .calculate({
+        type: IContextConfigItemType.ENTITY,
         method: null,
         value: null,
       })
@@ -196,9 +198,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.CONSTANT,
-        method: IAccessByValueBagMethod.HAS,
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.HAS,
         value: name,
       })
       .subscribe(res => {
@@ -221,9 +223,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.CONSTANT,
-        method: IAccessByValueBagMethod.HAS,
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.HAS,
         value: name,
       })
       .subscribe(res => {
@@ -246,9 +248,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.CONSTANT,
-        method: IAccessByValueBagMethod.NOT_EMPTY,
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.NOT_EMPTY,
         value: name,
       })
       .subscribe(res => {
@@ -271,13 +273,65 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.CONSTANT,
-        method: IAccessByValueBagMethod.NOT_EMPTY,
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.NOT_EMPTY,
         value: name,
       })
       .subscribe(res => {
         expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = constant, method = value (valueN)', done => {
+    const name = 'constant';
+    const valueN = 42;
+    const spy = spyOn(userConstantsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name,
+          valueB: null,
+          valueN,
+          valueS: '',
+        }
+      })));
+    service
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.VALUE,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toEqual(valueN);
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = constant, method = value (valueS)', done => {
+    const name = 'constant';
+    const valueS = 'Foo';
+    const spy = spyOn(userConstantsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name,
+          valueB: null,
+          valueN: null,
+          valueS,
+        }
+      })));
+    service
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.VALUE,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toEqual(valueS);
         expect(spy).toHaveBeenCalledTimes(1);
         done();
       });
@@ -296,9 +350,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.CONSTANT,
-        method: IAccessByValueBagMethod.CONTAINS,
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.CONTAINS,
         value: [name, 1],
       })
       .subscribe(res => {
@@ -321,9 +375,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.CONSTANT,
-        method: IAccessByValueBagMethod.CONTAINS,
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.CONTAINS,
         value: [name, 1],
       })
       .subscribe(res => {
@@ -346,9 +400,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.CONSTANT,
-        method: IAccessByValueBagMethod.CONTAINS,
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
+        method: IContextByValueBagMethod.CONTAINS,
         value: [name, 4],
       })
       .subscribe(res => {
@@ -371,8 +425,8 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.CONSTANT,
+      .calculate({
+        type: IContextConfigItemType.CONSTANT,
         method: null,
         value: null,
       })
@@ -405,9 +459,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.PERMISSION,
-        method: IAccessByValueBagMethod.HAS,
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.HAS,
         value: name,
       })
       .subscribe(res => {
@@ -430,9 +484,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.PERMISSION,
-        method: IAccessByValueBagMethod.HAS,
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.HAS,
         value: name,
       })
       .subscribe(res => {
@@ -455,9 +509,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.PERMISSION,
-        method: IAccessByValueBagMethod.NOT_EMPTY,
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.NOT_EMPTY,
         value: name,
       })
       .subscribe(res => {
@@ -480,13 +534,65 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.PERMISSION,
-        method: IAccessByValueBagMethod.NOT_EMPTY,
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.NOT_EMPTY,
         value: name,
       })
       .subscribe(res => {
         expect(res).toBeFalsy();
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = permission, method = value (valueN)', done => {
+    const name = 'permission';
+    const valueN = 42;
+    const spy = spyOn(userPermissionsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name,
+          valueB: null,
+          valueN,
+          valueS: '',
+        }
+      })));
+    service
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.VALUE,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toEqual(valueN);
+        expect(spy).toHaveBeenCalledTimes(1);
+        done();
+      });
+  });
+
+  it('should process type = permission, method = value (valueS)', done => {
+    const name = 'permission';
+    const valueS = 'Foo';
+    const spy = spyOn(userPermissionsService, 'bag')
+      .and
+      .returnValue(of(new ValueBag({
+        [name]: {
+          name,
+          valueB: null,
+          valueN: null,
+          valueS,
+        }
+      })));
+    service
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.VALUE,
+        value: name,
+      })
+      .subscribe(res => {
+        expect(res).toEqual(valueS);
         expect(spy).toHaveBeenCalledTimes(1);
         done();
       });
@@ -505,9 +611,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.PERMISSION,
-        method: IAccessByValueBagMethod.CONTAINS,
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.CONTAINS,
         value: [name, 1],
       })
       .subscribe(res => {
@@ -530,9 +636,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.PERMISSION,
-        method: IAccessByValueBagMethod.CONTAINS,
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.CONTAINS,
         value: [name, 1],
       })
       .subscribe(res => {
@@ -555,9 +661,9 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.PERMISSION,
-        method: IAccessByValueBagMethod.CONTAINS,
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
+        method: IContextByValueBagMethod.CONTAINS,
         value: [name, 4],
       })
       .subscribe(res => {
@@ -580,8 +686,8 @@ describe('AccessService', () => {
         }
       })));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.PERMISSION,
+      .calculate({
+        type: IContextConfigItemType.PERMISSION,
         method: null,
         value: null,
       })
@@ -609,18 +715,18 @@ describe('AccessService', () => {
         isMandatory: true,
       }));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.GROUP,
-        operator: IAccessConfigOperator.AND,
+      .calculate({
+        type: IContextConfigItemType.GROUP,
+        operator: IContextConfigOperator.AND,
         children: [
           {
-            type: IAccessConfigItemType.ENTITY,
-            method: IAccessByEntityMethod.IS_MANDATORY,
+            type: IContextConfigItemType.ENTITY,
+            method: IContextByEntityMethod.IS_MANDATORY,
             value: 1,
           },
           {
-            type: IAccessConfigItemType.ENTITY,
-            method: IAccessByEntityMethod.IS_USED,
+            type: IContextConfigItemType.ENTITY,
+            method: IContextByEntityMethod.IS_USED,
             value: 1,
           }
         ],
@@ -640,18 +746,18 @@ describe('AccessService', () => {
         isMandatory: false,
       }));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.GROUP,
-        operator: IAccessConfigOperator.AND,
+      .calculate({
+        type: IContextConfigItemType.GROUP,
+        operator: IContextConfigOperator.AND,
         children: [
           {
-            type: IAccessConfigItemType.ENTITY,
-            method: IAccessByEntityMethod.IS_MANDATORY,
+            type: IContextConfigItemType.ENTITY,
+            method: IContextByEntityMethod.IS_MANDATORY,
             value: 1,
           },
           {
-            type: IAccessConfigItemType.ENTITY,
-            method: IAccessByEntityMethod.IS_USED,
+            type: IContextConfigItemType.ENTITY,
+            method: IContextByEntityMethod.IS_USED,
             value: 1,
           }
         ],
@@ -671,18 +777,18 @@ describe('AccessService', () => {
         isMandatory: false,
       }));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.GROUP,
-        operator: IAccessConfigOperator.OR,
+      .calculate({
+        type: IContextConfigItemType.GROUP,
+        operator: IContextConfigOperator.OR,
         children: [
           {
-            type: IAccessConfigItemType.ENTITY,
-            method: IAccessByEntityMethod.IS_MANDATORY,
+            type: IContextConfigItemType.ENTITY,
+            method: IContextByEntityMethod.IS_MANDATORY,
             value: 1,
           },
           {
-            type: IAccessConfigItemType.ENTITY,
-            method: IAccessByEntityMethod.IS_USED,
+            type: IContextConfigItemType.ENTITY,
+            method: IContextByEntityMethod.IS_USED,
             value: 1,
           }
         ],
@@ -702,18 +808,18 @@ describe('AccessService', () => {
         isMandatory: false,
       }));
     service
-      .hasAccess({
-        type: IAccessConfigItemType.GROUP,
-        operator: IAccessConfigOperator.OR,
+      .calculate({
+        type: IContextConfigItemType.GROUP,
+        operator: IContextConfigOperator.OR,
         children: [
           {
-            type: IAccessConfigItemType.ENTITY,
-            method: IAccessByEntityMethod.IS_MANDATORY,
+            type: IContextConfigItemType.ENTITY,
+            method: IContextByEntityMethod.IS_MANDATORY,
             value: 1,
           },
           {
-            type: IAccessConfigItemType.ENTITY,
-            method: IAccessByEntityMethod.IS_USED,
+            type: IContextConfigItemType.ENTITY,
+            method: IContextByEntityMethod.IS_USED,
             value: 1,
           }
         ],
@@ -727,8 +833,8 @@ describe('AccessService', () => {
 
   it('should fail on unknown operator (type = group)', done => {
     service
-      .hasAccess({
-        type: IAccessConfigItemType.GROUP,
+      .calculate({
+        type: IContextConfigItemType.GROUP,
         operator: null,
         children: [],
       })

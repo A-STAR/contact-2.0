@@ -139,6 +139,7 @@ export interface IDynamicFormLanguageControl extends IDynamicFormBaseControl {
   type: 'multilanguage';
   // options for multilanguage
   langConfig?: IMultiLanguageConfig;
+  createMode?: boolean;
 }
 
 export interface IDynamicFormDialogMultiSelectControl extends IDynamicFormBaseControl {
@@ -205,16 +206,17 @@ export interface IDynamicFormMultiSelectControl extends IDynamicFormBaseControl 
 }
 
 export interface IDynamicFormTextControl extends IDynamicFormBaseControl {
-  type: 'text' | 'password' | 'htmltextarea' | 'checkbox' | 'colorpicker';
+  type: 'text' | 'password' | 'checkbox' | 'colorpicker';
   placeholder?: string;
   autofocus?: boolean;
 }
 
 export interface IDynamicFormTextareaControl extends IDynamicFormBaseControl {
-  type: 'textarea';
+  type: 'textarea' | 'htmltextarea';
   // number of rows for textarea, defaults to 2
   rows?: number;
   placeholder?: string;
+  height?: string;
 }
 
 export interface IDynamicFormDebtAmountControl extends IDynamicFormBaseControl {

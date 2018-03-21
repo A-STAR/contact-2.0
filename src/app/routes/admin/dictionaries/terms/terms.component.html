@@ -3,6 +3,7 @@
   [canEdit]="canEdit | async"
   [disableParentSelection]="disableParentSelection | async"
   [terms]="dropdownTerms | async"
+  [isCreate]="true"
   [title]="'terms.create.title'"
   (submit)="onCreate($event)"
   (cancel)="onCancel()"

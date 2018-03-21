@@ -185,9 +185,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
           this.entityTypeId$.flatMap(
             entityTypeId => this.userPermissionsService.contains('ATTRIBUTE_VERSION_VIEW_LIST', entityTypeId)
           ),
-          // TODO:(i.lobanov) there is no version prop now on BE, uncomment when done
-          this.selectedAttribute$.map(attribute => !!attribute && attribute.disabledValue !== 1)
-          // this.selectedAttribute$.map(attribute => attribute && !!attribute.version && attribute.disabledValue !== 1)
+          this.selectedAttribute$.map(attribute => attribute && !!attribute.version && attribute.disabledValue !== 1)
         ])
       },
       {

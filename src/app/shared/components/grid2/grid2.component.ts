@@ -120,6 +120,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private originalColSettings: IAgridColSetting[] = [];
   private gridSettings: IAGridSettings;
   private initialized = false;
+  private persistenceClearSub: Subscription;
   private saveChangesDebounce = new Subject<void>();
   private saveChangesDebounceSub: Subscription;
   private userPermissionsBag: ValueBag;
@@ -182,6 +183,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
       .subscribe(() => {
         this.saveGridSettings();
       });
+
+    this.persistenceClearSub = this.persistenceService.onClear$.subscribe( _ => this.resetGridSettings());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -216,6 +219,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.saveGridSettings();
     this.originalColSettings = [];
+    this.persistenceClearSub.unsubscribe();
     this.saveChangesDebounceSub.unsubscribe();
     this.userPermissionsSub.unsubscribe();
   }

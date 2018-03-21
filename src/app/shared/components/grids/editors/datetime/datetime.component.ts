@@ -56,8 +56,9 @@ export class DateTimeEditComponent implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn: Function): void {
-    this.propagateChange = fn;
+  registerOnTouched(): void {
+    // NOTE: do not uncomment
+    // this.propagateChange = fn;
   }
 
   setCurrentTime(): void {

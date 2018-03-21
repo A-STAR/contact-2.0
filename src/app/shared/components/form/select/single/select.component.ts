@@ -187,7 +187,8 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
   }
 
   validate(): ValidationErrors {
-    return this.required && this.selectedValue == null
+    // TODO(i.lobanov): fix this horrible check
+    return this.required && (this.selectedValue == null || (this.selectedValue as any) === '')
       ? { required: false }
       : null;
   }

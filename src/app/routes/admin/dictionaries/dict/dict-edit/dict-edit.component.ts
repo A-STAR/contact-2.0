@@ -36,6 +36,7 @@ export class DictEditComponent implements OnInit {
   @Input() dictionaryTermTypes: ITerm[];
   @Input() dictionary: IDictionary;
   @Input() title: string;
+  @Input() isCreate = false;
 
   @Output() cancel = new EventEmitter<null>();
   @Output() submit = new EventEmitter<null>();
@@ -80,6 +81,7 @@ export class DictEditComponent implements OnInit {
         controlName: 'names',
         type: 'multilanguage',
         required: true,
+        createMode: this.isCreate,
         langConfig: {
           entityAttributeId: EntityTranslationsConstants.SPEC_DICT_NAME,
           entityId: this.dictionary && this.dictionary.id

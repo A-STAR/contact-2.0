@@ -89,6 +89,7 @@ export class GroupCardComponent implements OnInit {
           entityAttributeId: EntityTranslationsConstants.SPEC_GROUP_NAME,
           entityId: this.groupId
         },
+        createMode: !this.groupId,
         required: true,
         disabled: !canEdit
       },
