@@ -2,6 +2,7 @@ import { Router } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { filter, first } from 'rxjs/operators';
 
 import { IUser } from '@app/core/auth/auth.interface';
 
@@ -21,8 +22,8 @@ class MockAuthService {
 }
 
 class MockPersistenceService {
-  getOr(): any {
-    return {};
+  getOr(settingsKey: string): any {
+    return settingsKey === SETTINGS_KEY ? { ...SETTINGS } : {};
   }
 
   set(): void {
@@ -67,56 +68,36 @@ describe('SettingsService', () => {
   });
 
   it('should get settings', () => {
-    const spy = spyOn(persistenceService, 'getOr')
-      .and
-      .callFake(settingsKey => settingsKey === SETTINGS_KEY ? { ...SETTINGS } : {});
-
     const result = service.get('testSetting');
 
-    expect(spy).toHaveBeenCalledTimes(1);
     expect(result).toEqual(SETTINGS['testSetting']);
   });
 
   it('should set settings', () => {
-    const spyGet = spyOn(persistenceService, 'getOr')
-    .and
-    .callFake(settingsKey => settingsKey === SETTINGS_KEY ? { ...SETTINGS } : {});
-
     const spySet = spyOn(persistenceService, 'set');
 
     service.set('testSetting', SETTINGS['testSetting']);
 
-    expect(spyGet).toHaveBeenCalledTimes(1);
     expect(spySet).toHaveBeenCalledWith(SETTINGS_KEY, SETTINGS);
   });
 
   it('should remove settings', () => {
-    const spyGet = spyOn(persistenceService, 'getOr')
-      .and
-      .callFake(settingsKey => settingsKey === SETTINGS_KEY ? { ...SETTINGS } : {});
-
     const spySet = spyOn(persistenceService, 'set');
 
     service.remove('testSetting');
 
-    expect(spyGet).toHaveBeenCalledTimes(1);
     expect(spySet).toHaveBeenCalledWith(SETTINGS_KEY, {
       [SettingsService.REDIRECT_TOKEN]: SETTINGS[SettingsService.REDIRECT_TOKEN]
     });
   });
 
   it('should redirect after login', () => {
-    const spyGet = spyOn(persistenceService, 'getOr')
-      .and
-      .callFake(settingsKey => settingsKey === SETTINGS_KEY ? { ...SETTINGS } : {});
-
     const spyNavigate = spyOn(router, 'navigate')
       .and
       .returnValue(Promise.resolve());
 
     service.redirectAfterLogin();
 
-    expect(spyGet).toHaveBeenCalledTimes(1);
     expect(spyNavigate).toHaveBeenCalledWith([ SETTINGS[SettingsService.REDIRECT_TOKEN] ]);
   });
 });
