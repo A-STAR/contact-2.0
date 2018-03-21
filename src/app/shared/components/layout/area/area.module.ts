@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { AreaService } from './area.service';
+
 import { AreaComponent } from './area.component';
 
 @NgModule({
@@ -13,5 +15,8 @@ import { AreaComponent } from './area.component';
   imports: [
     CommonModule,
   ],
+  providers: [
+    AreaService,
+  ]
 })
 export class AreaModule {}
