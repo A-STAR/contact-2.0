@@ -46,11 +46,10 @@ export class AreaComponent implements AfterViewInit, OnDestroy {
   private id: string;
   private rootPersistenceKey: string;
 
-  private mouseMoveListener: () => void;
-  private mouseUpListener: () => void;
-
   private dragData: IDragData;
 
+  private mouseMoveListener: () => void;
+  private mouseUpListener: () => void;
   private resizeListener: () => void;
 
   get children(): AreaComponent[] {
