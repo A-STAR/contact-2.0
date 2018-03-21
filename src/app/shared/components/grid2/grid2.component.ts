@@ -184,7 +184,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.saveGridSettings();
       });
 
-    this.persistenceClearSub = this.persistenceService.onClear$.subscribe( _ => this.resetGridSettings());
+    this.persistenceClearSub = this.settingsService.onClear$
+      .subscribe( _ => this.resetGridSettings());
   }
 
   ngOnChanges(changes: SimpleChanges): void {

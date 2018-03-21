@@ -28,6 +28,9 @@ class MockPersistenceService {
 
   set(): void {
   }
+
+  remove(): void {
+  }
 }
 
 class MockRouter {
@@ -74,30 +77,38 @@ describe('SettingsService', () => {
   });
 
   it('should set settings', () => {
-    const spySet = spyOn(persistenceService, 'set');
+    const spy = spyOn(persistenceService, 'set');
 
     service.set('testSetting', SETTINGS['testSetting']);
 
-    expect(spySet).toHaveBeenCalledWith(SETTINGS_KEY, SETTINGS);
+    expect(spy).toHaveBeenCalledWith(SETTINGS_KEY, SETTINGS);
   });
 
   it('should remove settings', () => {
-    const spySet = spyOn(persistenceService, 'set');
+    const spy = spyOn(persistenceService, 'set');
 
     service.remove('testSetting');
 
-    expect(spySet).toHaveBeenCalledWith(SETTINGS_KEY, {
+    expect(spy).toHaveBeenCalledWith(SETTINGS_KEY, {
       [SettingsService.REDIRECT_TOKEN]: SETTINGS[SettingsService.REDIRECT_TOKEN]
     });
   });
 
   it('should redirect after login', () => {
-    const spyNavigate = spyOn(router, 'navigate')
+    const spy = spyOn(router, 'navigate')
       .and
       .returnValue(Promise.resolve());
 
     service.redirectAfterLogin();
 
-    expect(spyNavigate).toHaveBeenCalledWith([ SETTINGS[SettingsService.REDIRECT_TOKEN] ]);
+    expect(spy).toHaveBeenCalledWith([ SETTINGS[SettingsService.REDIRECT_TOKEN] ]);
+  });
+
+  it('should clear settings', () => {
+    const spy = spyOn(persistenceService, 'remove');
+
+    service.clear();
+
+    expect(spy).toHaveBeenCalledWith(SETTINGS_KEY);
   });
 });

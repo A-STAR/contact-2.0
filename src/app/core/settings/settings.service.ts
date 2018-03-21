@@ -65,6 +65,11 @@ export class SettingsService {
       .map(key => key ? this.persistenceService.getOr(key, {}) : null);
   }
 
+  get onClear$(): Observable<any> {
+    return this.persistenceService.onDelete$
+      .filter(({ payload: { data } }) => data.key === this.settingsKey$.value);
+  }
+
   get(key: string): any {
     const settings = this.persistenceService.getOr(this.settingsKey$.value, {});
     return settings[key];
@@ -79,6 +84,10 @@ export class SettingsService {
     const settings = this.persistenceService.getOr(this.settingsKey$.value, {});
     delete settings[key];
     this.persistenceService.set(this.settingsKey$.value, settings);
+  }
+
+  clear(): void {
+    this.persistenceService.remove(this.settingsKey$.value);
   }
 
   redirectToLogin(url: string = null): void {
