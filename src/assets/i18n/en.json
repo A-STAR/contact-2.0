@@ -58,6 +58,9 @@
       },
       "shared": {
         "address": {
+          "toolbar": {
+            "letter": "Letter"
+          },
           "letterGeneration": {
             "title": "Letter Generation",
             "templateId": "Template",

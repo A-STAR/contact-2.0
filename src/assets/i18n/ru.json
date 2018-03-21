@@ -58,6 +58,9 @@
       },
       "shared": {
         "address": {
+          "toolbar": {
+            "letter": "Письмо"
+          },
           "letterGeneration": {
             "title": "Формирование писем",
             "templateId": "Шаблон",

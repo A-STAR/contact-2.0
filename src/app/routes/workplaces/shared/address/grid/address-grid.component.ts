@@ -114,6 +114,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_EMAIL,
+      label: 'routes.workplaces.shared.address.toolbar.letter',
       enabled: this.canGenerateLetter$,
       action: () => this.setDialog('letterGeneration')
     },
