@@ -4,9 +4,5 @@ import { IConfig } from './config.interface';
 
 @Injectable()
 export class ConfigService {
-  readonly config: IConfig;
-
-  constructor() {
-    this.config = window['__CONFIG__'];
-  }
+  readonly config: IConfig = window['__CONFIG__'];
 }
