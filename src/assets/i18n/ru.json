@@ -268,6 +268,23 @@
             "value": "Результат"
           }
         }
+      },
+      "letters": {
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "fileName": "Имя файла",
+          "recipientTypeCode": "Получатель",
+          "serviceTypeCode": "Тип сервиса",
+          "comment": "Комментарий"
+        },
+        "titlebar": {
+          "title": "Шаблоны писем"
+        },
+        "remove": {
+          "title": "Удаление шаблона",
+          "confirmMessage": "Вы действительно хотите удалить выбранный шаблон?"
+        }
       }
     }
   },

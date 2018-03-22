@@ -53,6 +53,10 @@ const routes: Routes = [
         loadChildren: './formulas/formulas.module#FormulasModule',
       },
       {
+        path: 'letters',
+        loadChildren: './letters/letters.module#LettersModule',
+      },
+      {
         path: '**',
         redirectTo: ''
       },
