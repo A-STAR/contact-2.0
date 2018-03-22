@@ -37,10 +37,13 @@ export class MetadataFormComponent<T> implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const controls = this.flattenControls(this.config.items).reduce((acc, item) => ({
-      ...acc,
-      [item.name]: new FormControl(null, { asyncValidators: this.getAsyncValidators(item as any) })
-    }), {});
+    const controls = this.flattenControls(this.config.items).reduce((acc, item) => {
+      const asyncValidators = this.getAsyncValidators(item);
+      return {
+        ...acc,
+        [item.name]: new FormControl(null, { asyncValidators })
+      };
+    }, {});
     this.formGroup = new FormGroup(controls);
     this.populateForm();
   }
