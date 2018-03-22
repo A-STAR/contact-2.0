@@ -66,7 +66,7 @@ export class CallService {
     ])
     .distinctUntilChanged()
     .filter(Boolean)
-    .flatMap(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
+    .map(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
     .do(connection => this.wsConnection = connection)
     .flatMap(connection => connection.listen())
     .subscribe(state => this.updatePBXState(state));
