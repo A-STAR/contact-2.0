@@ -2,6 +2,7 @@
   "url": "http://localhost:8080",
   "ws": "ws://localhost:8080",
   "i18n": [
-    "/assets/i18n/{lang}.json"
+    "/assets/i18n/{lang}.json",
+    "/assets/i18n/{lang}-client.json"
   ]
 }
