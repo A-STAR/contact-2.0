@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { IViewFormControl, IViewFormData, IViewFormItem } from './view-form.interface';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +22,7 @@ export class ViewFormComponent {
 
   constructor(
     private userDictionariesService: UserDictionariesService,
+    private valueConverterService: ValueConverterService,
   ) {}
 
   get items(): any {
@@ -38,12 +40,14 @@ export class ViewFormComponent {
 
   getValue(item: IViewFormControl, value: any): Observable<string> {
     switch (item.type) {
+      case 'date':
+        return of(this.valueConverterService.ISOToLocalDate(value));
       case 'dict':
         return item.dictCode
           ? this.userDictionariesService.getDictionary(item.dictCode).pipe(
               map(terms => {
                 const term = terms.find(t => t.code === value);
-                return term ? term.name : item.dictCode.toString();
+                return term ? term.name : value;
               }),
             )
           : of('');
