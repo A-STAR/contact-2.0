@@ -65,6 +65,61 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   private _selectedAddressId$ = new BehaviorSubject<number>(null);
 
+  readonly debtId$ = this._debtId$;
+  readonly personId$ = this._personId$;
+
+  readonly canView$ = this.userPermissionsService.has('ADDRESS_VIEW')
+    .map(hasPermission => hasPermission || this.ignorePermissions);
+
+  readonly canViewBlock$ = this.userPermissionsService.has('ADDRESS_INACTIVE_VIEW');
+
+  readonly canAdd$ = this.userPermissionsService.has('ADDRESS_ADD');
+
+  readonly canEdit$ = combineLatestAnd([
+    this.userPermissionsService.hasOne([ 'ADDRESS_EDIT', 'ADDRESS_COMMENT_EDIT' ]),
+    this.selectedAddress$.map(Boolean),
+  ]);
+
+  readonly canDelete$ = combineLatestAnd([
+    this.userPermissionsService.has('ADDRESS_DELETE'),
+    this.selectedAddress$.map(Boolean),
+  ]);
+
+  readonly canBlock$ = combineLatestAnd([
+    this.userPermissionsService.has('ADDRESS_SET_INACTIVE'),
+    this.selectedAddress$.map(address => address && !address.isInactive),
+  ]);
+
+  readonly canUnblock$ = combineLatestAnd([
+    this.userPermissionsService.has('ADDRESS_SET_ACTIVE'),
+    this.selectedAddress$.map(address => address && !!address.isInactive),
+  ]);
+
+  readonly canViewVisitLog$ = combineLatestAnd([
+    this.userPermissionsService.has('ADDRESS_VISIT_VIEW')
+      .map(hasPermission => hasPermission || this.ignorePermissions),
+    this.selectedAddress$.map(Boolean),
+  ]);
+
+  readonly canMarkVisit$ = combineLatestAnd([
+    this.userPermissionsService.has('ADDRESS_VISIT_ADD')
+      .map(hasPermission => hasPermission || this.ignorePermissions),
+    this.selectedAddress$.map(address => address && address.statusCode !== 3 && !address.isInactive),
+  ]);
+
+  // TODO(d.maltsev): use debtor service
+  readonly canRegisterContact$ = combineLatestAnd([
+    this.selectedAddress$.map(address => address && !address.isInactive),
+    this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3)
+      .map(hasPermission => hasPermission || this.ignorePermissions),
+    this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
+  ]);
+
+  readonly canGenerateLetter$ = combineLatestAnd([
+    this.userPermissionsService.contains('LETTER_FORM_PERSON_ROLE_LIST', this.personRole),
+    this.selectedAddress$.map(address => address && !address.isInactive)
+  ]);
+
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -111,6 +166,12 @@ export class AddressGridComponent implements OnInit, OnDestroy {
       type: ToolbarItemTypeEnum.BUTTON_DELETE,
       enabled: this.canDelete$,
       action: () => this.setDialog('delete')
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_EMAIL,
+      label: 'routes.workplaces.shared.address.toolbar.letter',
+      enabled: this.canGenerateLetter$,
+      action: () => this.setDialog('letterGeneration')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REFRESH,
@@ -190,10 +251,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.debtSubscription.unsubscribe();
   }
 
-  get personId$(): Observable<number> {
-    return this._personId$;
-  }
-
   get canDisplayGrid(): boolean {
     return this.columns.length > 0;
   }
@@ -271,73 +328,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
 
   get selectedAddress$(): Observable<IAddress> {
     return this._selectedAddressId$.map(id => this._addresses.find(address => address.id === id));
-  }
-
-  get canView$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_VIEW')
-      .map(hasPermission => hasPermission || this.ignorePermissions);
-  }
-
-  get canViewBlock$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_INACTIVE_VIEW');
-  }
-
-  get canAdd$(): Observable<boolean> {
-    return this.userPermissionsService.has('ADDRESS_ADD');
-  }
-
-  get canEdit$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.hasOne([ 'ADDRESS_EDIT', 'ADDRESS_COMMENT_EDIT' ]),
-      this.selectedAddress$.map(Boolean),
-    ]);
-  }
-
-  get canDelete$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('ADDRESS_DELETE'),
-      this.selectedAddress$.map(Boolean),
-    ]);
-  }
-
-  get canBlock$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('ADDRESS_SET_INACTIVE'),
-      this.selectedAddress$.map(address => address && !address.isInactive),
-    ]);
-  }
-
-  get canUnblock$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('ADDRESS_SET_ACTIVE'),
-      this.selectedAddress$.map(address => address && !!address.isInactive),
-    ]);
-  }
-
-  get canViewVisitLog$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('ADDRESS_VISIT_VIEW')
-        .map(hasPermission => hasPermission || this.ignorePermissions),
-      this.selectedAddress$.map(Boolean),
-    ]);
-  }
-
-  get canMarkVisit$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('ADDRESS_VISIT_ADD')
-        .map(hasPermission => hasPermission || this.ignorePermissions),
-      this.selectedAddress$.map(address => address && address.statusCode !== 3 && !address.isInactive),
-    ]);
-  }
-
-  get canRegisterContact$(): Observable<boolean> {
-    // TODO(d.maltsev): use debtor service
-    return combineLatestAnd([
-      this.selectedAddress$.map(address => address && !address.isInactive),
-      this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', 3)
-        .map(hasPermission => hasPermission || this.ignorePermissions),
-      this.userPermissionsService.has('DEBT_CLOSE_CONTACT_REG').map(canRegisterClosed => this.isDebtOpen || canRegisterClosed),
-    ]);
   }
 
   private get isDebtOpen(): boolean {

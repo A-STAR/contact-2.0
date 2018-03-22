@@ -73,6 +73,17 @@
         }
       },
       "shared": {
+        "address": {
+          "toolbar": {
+            "letter": "Письмо"
+          },
+          "letterGeneration": {
+            "title": "Формирование писем",
+            "templateId": "Шаблон",
+            "formatCode": "Формат",
+            "regLetter": "Регистрировать письмо"
+          }
+        },
         "contactRegistration": {
           "cancelDialog": {
             "message": "Вы действительно хотите отменить регистрацию текущего контакта?",
@@ -2849,6 +2860,9 @@
     },
     "formulas": {
       "gen": { "singular": "формулы", "plural": "формул" }
+    },
+    "letters": {
+      "gen": { "singular": "письма", "plural": "писем" }
     }
   },
   "massOperations": {

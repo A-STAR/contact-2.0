@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../../state/state.interface';
-import { IUserTemplate, IUserTemplates, TemplateStatusEnum } from './user-templates.interface';
+import { IUserTemplate, IUserTemplates, TemplateStatusEnum, IUserLetterTemplate } from './user-templates.interface';
 import { UnsafeAction } from '../../../core/state/state.interface';
 
 import { DataService } from '../../data/data.service';
@@ -65,6 +65,14 @@ export class UserTemplatesService {
   ): Observable<IUserTemplate[]> {
     const url = '/lookup/templates/typeCode/{typeCode}/recipientsTypeCode/{recipientTypeCode}';
     return this.dataService.readAll(url, { typeCode, recipientTypeCode }, { params: { isSingleSending, debtId } });
+  }
+
+  getLetterTemplatesForDebt(
+    recipientTypeCode: number,
+    debtId: number,
+  ): Observable<IUserLetterTemplate[]> {
+    const url = '/lookup/templates/letters/recipientsTypeCode/{recipientTypeCode}';
+    return this.dataService.readAll(url, { recipientTypeCode }, { params: { debtId } });
   }
 
   /**

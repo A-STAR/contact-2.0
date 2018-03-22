@@ -73,6 +73,17 @@
         }
       },
       "shared": {
+        "address": {
+          "toolbar": {
+            "letter": "Letter"
+          },
+          "letterGeneration": {
+            "title": "Letter Generation",
+            "templateId": "Template",
+            "formatCode": "Format",
+            "regLetter": "Register letter"
+          }
+        },
         "contactRegistration": {
           "cancelDialog": {
             "message": "Are you sure you want to cancel contact registration?",
@@ -2849,6 +2860,9 @@
     },
     "formulas": {
       "gen": { "singular": "formula", "plural": "formulas" }
+    },
+    "letters": {
+      "gen": { "singular": "letter", "plural": "letters" }
     }
   },
   "massOperations": {
