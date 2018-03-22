@@ -1,0 +1,17 @@
+<app-dialog (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'routes.workplaces.shared.address.letterGeneration.title' | translate }}</h3>
+  </div>
+
+  <app-dynamic-form
+    *ngIf="controls"
+    [config]="config"
+    [controls]="controls"
+    [data]="{}"
+  ></app-dynamic-form>
+
+  <div dialog-footer>
+    <app-button color="primary" type="ok" (click)="onGenerate()" [disabled]="!canGenerate"></app-button>
+    <app-button type="close" (click)="onClose()"></app-button>
+  </div>
+</app-dialog>
