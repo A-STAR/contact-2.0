@@ -33,16 +33,21 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   @Input()
   set richTextMode(richTextMode: boolean) {
     this._richTextMode = richTextMode;
-    this.destroyEditor();
-    this.initEditor();
 
-    // No idea why but without checking for disabled state a nasty bug occurs:
-    // If the control is disabled and its mode is plain text the value is not displayed most of the time.
-    if (!richTextMode && !this.isDisabled) {
-      const text = this.elRef.nativeElement.querySelector('.note-editable').innerText.trim();
-      this.summernote('reset');
-      this.summernote('code', text);
-      this.propagateChange(text);
+    if (this.isInitialized) {
+      this.destroyEditor();
+      this.initEditor();
+
+      // No idea why but without checking for disabled state a nasty bug occurs:
+      // If the control is disabled and its mode is plain text the value is not displayed most of the time.
+      if (!this.isDisabled) {
+        const text = this.elRef.nativeElement.querySelector('.note-editable').innerText.trim();
+        if (!richTextMode) {
+          this.summernote('reset');
+          this.summernote('code', text);
+        }
+        this.propagateChange(text);
+      }
     }
   }
 
@@ -53,6 +58,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   private cachedValue: string;
   private isDisabled = false;
   private _richTextMode = true;
+  private isInitialized = false;
 
   constructor(
     private elRef: ElementRef,
@@ -142,6 +148,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit, OnDest
   private onInit(): void {
     this.writeValueHandler();
     this.cachedValue = null;
+    this.isInitialized = true;
     this.init.emit(this);
   }
 
