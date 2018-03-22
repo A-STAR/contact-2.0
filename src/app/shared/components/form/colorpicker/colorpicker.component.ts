@@ -19,6 +19,7 @@ export class ColorPickerComponent implements ControlValueAccessor {
 
   options: ILabeledValue[] = [
     { value: '',     label: 'default.colors.transparent' },
+    { value: '#dcdae2', label: 'default.colors.lightViolet' },
     { value: '#dff', label: 'default.colors.azure' },
     { value: '#edf', label: 'default.colors.violet' },
     { value: '#eed', label: 'default.colors.olive' },
