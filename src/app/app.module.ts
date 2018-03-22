@@ -59,7 +59,7 @@ export function reset(nextReducer: any): any {
 export function jwtOptionsFactory(configService: ConfigService): any {
   return {
     tokenGetter: authTokenGetter,
-    whitelistedDomains: configService.get('domains'),
+    whitelistedDomains: configService.config.domains,
     throwNoTokenError: false
   };
 }

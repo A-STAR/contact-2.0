@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 
+import { IConfig } from './config.interface';
+
 @Injectable()
 export class ConfigService {
-  get(key: string): any {
-    return window['__CONFIG__'][key];
+  readonly config: IConfig;
+
+  constructor() {
+    this.config = window['__CONFIG__'];
   }
 }
