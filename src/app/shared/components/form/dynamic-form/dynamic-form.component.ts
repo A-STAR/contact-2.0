@@ -238,7 +238,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     };
 
     // TODO(d.maltsev): need to refactor this in favor of built-in control validators
-    const controlsWithOwnRequired = [ 'multilanguage', 'select' ];
+    const controlsWithOwnRequired = [ 'multilanguage', 'select', 'number', 'text', 'textarea' ];
     const validators = control.required && !controlsWithOwnRequired.includes(control.type)
       ? Validators.compose([
           ...control.validators || [],
