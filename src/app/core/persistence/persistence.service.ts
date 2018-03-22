@@ -15,7 +15,6 @@ export class PersistenceService extends AbstractActionService {
   static PERSISTENCE_GET = 'PERSISTENCE_GET';
   static PERSISTENCE_SET = 'PERSISTENCE_SET';
   static PERSISTENCE_DELETE = 'PERSISTENCE_DELETE';
-  static PERSISTENCE_CLEAR = 'PERSISTENCE_CLEAR';
   static PERSISTENCE_ERROR = 'PERSISTENCE_ERROR';
 
   // constructor(@Inject(forwardRef(() => NotificationsService)) private notifications: NotificationsService) {}
@@ -70,14 +69,6 @@ export class PersistenceService extends AbstractActionService {
     this.dispatchDelete(key);
   }
 
-  clear(): void {
-    Object.keys(localStorage)
-      .filter(key => !key.startsWith('auth/'))
-      .forEach(key => this.remove(key));
-
-    this.dispatchClear();
-  }
-
   get onGet$(): Observable<any> {
     return this.actions.ofType(PersistenceService.PERSISTENCE_GET);
   }
@@ -88,10 +79,6 @@ export class PersistenceService extends AbstractActionService {
 
   get onDelete$(): Observable<any> {
     return this.actions.ofType(PersistenceService.PERSISTENCE_DELETE);
-  }
-
-  get onClear$(): Observable<any> {
-    return this.actions.ofType(PersistenceService.PERSISTENCE_CLEAR);
   }
 
   get onError$(): Observable<any> {
@@ -120,13 +107,6 @@ export class PersistenceService extends AbstractActionService {
     this.dispatchAction(
       PersistenceService.PERSISTENCE_DELETE,
       { data: { key } },
-    );
-  }
-
-  private dispatchClear(): void {
-    this.dispatchAction(
-      PersistenceService.PERSISTENCE_CLEAR,
-      {},
     );
   }
 

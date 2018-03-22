@@ -5,11 +5,11 @@ import { of } from 'rxjs/observable/of';
 import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
 import { GridsService } from './grids.service';
-import { PersistenceService } from '@app/core/persistence/persistence.service';
 import { TranslateService } from '@ngx-translate/core';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { SettingsService } from '@app/core/settings/settings.service';
 
-class MockPersistenceService {
+class MockSettingsService {
   private storage = new Map<string, any>();
 
   set(key: string, value: any): void {
@@ -35,7 +35,7 @@ class MockUserDictionariesService {
 
 describe('GridsService', () => {
   let service: GridsService;
-  let persistenceService: PersistenceService;
+  let settingsService: SettingsService;
   let translateService: TranslateService;
   let userDictionariesService: UserDictionariesService;
 
@@ -44,8 +44,8 @@ describe('GridsService', () => {
       providers: [
         GridsService,
         {
-          provide: PersistenceService,
-          useClass: MockPersistenceService,
+          provide: SettingsService,
+          useClass: MockSettingsService,
         },
         {
           provide: TranslateService,
@@ -58,11 +58,11 @@ describe('GridsService', () => {
       ],
     });
     service = TestBed.get(GridsService);
-    persistenceService = TestBed.get(PersistenceService);
+    settingsService = TestBed.get(SettingsService);
     translateService = TestBed.get(TranslateService);
     userDictionariesService = TestBed.get(UserDictionariesService);
     // TODO(i.lobanov): to prevent tslint complains, will be actually used in tests later
-    persistenceService.get('');
+    settingsService.get('');
     translateService.instant('');
     userDictionariesService.getDictionaries([1]);
   });

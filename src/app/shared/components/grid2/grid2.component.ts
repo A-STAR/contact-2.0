@@ -43,7 +43,7 @@ import {
 
 import { ContextMenuService } from '@app/shared/components/grids/context-menu/context-menu.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { PersistenceService } from '@app/core/persistence/persistence.service';
+import { SettingsService } from '@app/core/settings/settings.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
@@ -132,7 +132,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private contextMenuService: ContextMenuService,
     private notificationService: NotificationsService,
-    private persistenceService: PersistenceService,
+    private settingsService: SettingsService,
     private translate: TranslateService,
     private userPermissionsService: UserPermissionsService,
     private valueConverter: ValueConverterService,
@@ -184,7 +184,8 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
         this.saveGridSettings();
       });
 
-    this.persistenceClearSub = this.persistenceService.onClear$.subscribe( _ => this.resetGridSettings());
+    this.persistenceClearSub = this.settingsService.onClear$
+      .subscribe( _ => this.resetGridSettings());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -877,12 +878,12 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
   private saveGridSettings(): void {
     if (this.persistenceKey) {
-      this.persistenceService.set(this.persistenceKey, this.gridSettings);
+      this.settingsService.set(this.persistenceKey, this.gridSettings);
     }
   }
 
   private restoreGridSettings(): IAGridSettings {
-    this.gridSettings = this.persistenceService.get(this.persistenceKey) || {};
+    this.gridSettings = this.settingsService.get(this.persistenceKey) || {};
     return this.gridSettings;
   }
 

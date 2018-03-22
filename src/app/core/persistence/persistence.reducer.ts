@@ -23,10 +23,6 @@ export function reducer(state: IPersistenceState = defaultState, action: UnsafeA
         data: action.payload.data,
         error: action.payload.error
       };
-    case PersistenceService.PERSISTENCE_CLEAR:
-      return {
-        ...state
-      };
     default:
       return state;
 

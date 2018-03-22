@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { IGridColumn, IGridFilterType, IGridLocalSettings, IGridTreePath } from './grids.interface';
 import { IUserDictionaries } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
-import { PersistenceService } from '@app/core/persistence/persistence.service';
+import { SettingsService } from '@app/core/settings/settings.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { CallbackRendererComponent, DictRendererComponent, LookupRendererComponent, ValueRendererComponent } from './renderers';
@@ -15,7 +15,7 @@ import { ValueEditorComponent } from '@app/shared/components/grids/editors';
 @Injectable()
 export class GridsService {
   constructor(
-    private persistenceService: PersistenceService,
+    private settingsService: SettingsService,
     private translateService: TranslateService,
     private userDictionariesService: UserDictionariesService,
   ) {}
@@ -179,11 +179,11 @@ export class GridsService {
   }
 
   private setLocalSettings(key: string, settings: IGridLocalSettings): void {
-    this.persistenceService.set(key, settings);
+    this.settingsService.set(key, settings);
   }
 
   private getLocalSettings(key: string): IGridLocalSettings {
-    return this.persistenceService.get(key) || { columns: [], sortModel: {} };
+    return this.settingsService.get(key) || { columns: [], sortModel: {} };
   }
 
 }

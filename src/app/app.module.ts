@@ -21,6 +21,7 @@ import { GuiObjectsEffects } from './core/gui-objects/gui-objects.effects';
 import { LookupEffects } from './core/lookup/lookup.effects';
 import { MetadataEffects } from './core/metadata/metadata.effects';
 import { NotificationsEffects } from './core/notifications/notifications.effects';
+import { SettingsEffects } from '@app/core/settings/settings.effects';
 
 import { CoreModule } from './core/core.module';
 import { LayoutModule } from './layout/layout.module';
@@ -72,6 +73,7 @@ export function reset(nextReducer: any): any {
       LookupEffects,
       NotificationsEffects,
       MetadataEffects,
+      SettingsEffects,
     ]),
     FormsModule,
     HttpClientModule,

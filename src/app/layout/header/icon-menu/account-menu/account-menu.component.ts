@@ -6,7 +6,7 @@ import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dy
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { CallService } from '@app/core/calls/call.service';
-import { PersistenceService } from '@app/core/persistence/persistence.service';
+import { SettingsService } from '@app/core/settings/settings.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
@@ -42,7 +42,7 @@ export class AccountMenuComponent extends DialogFunctions implements OnInit {
     private cdRef: ChangeDetectorRef,
     private authService: AuthService,
     private callService: CallService,
-    private persistenceService: PersistenceService,
+    private settingsService: SettingsService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -92,7 +92,7 @@ export class AccountMenuComponent extends DialogFunctions implements OnInit {
 
   resetSettings(event: UIEvent): void {
     this.onClick(event);
-    this.persistenceService.clear();
+    this.settingsService.clear();
   }
 
   logout(event: UIEvent): void {
