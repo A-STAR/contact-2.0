@@ -70,7 +70,7 @@ export class PaymentCardComponent implements OnInit {
 
       // TODO: fix displaying of selected payment
       this.controls = [
-        { controlName: 'amount', disabled: !canEdit, type: 'number', positive: true, width: 6 },
+        { controlName: 'amount', disabled: !canEdit, type: 'number', positive: true, width: 6, required: true },
         { controlName: 'currencyId', disabled: !canEdit, type: 'select', required: true, lookupKey: 'currencies', width: 6 },
         {
           controlName: 'paymentDateTime',
