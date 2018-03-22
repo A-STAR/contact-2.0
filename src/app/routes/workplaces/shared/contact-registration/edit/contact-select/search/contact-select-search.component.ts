@@ -32,9 +32,7 @@ export class ContactSelectSearchComponent {
 
   columns$ = this.gridService.getColumns([
     { dataType: 1, name: 'id' },
-    { dataType: 3, name: 'lastName' },
-    { dataType: 3, name: 'firstName' },
-    { dataType: 3, name: 'middleName' },
+    { dataType: 3, name: 'personFullName' },
     { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE, name: 'typeCode' },
     { dataType: 2, name: 'birthDate' },
     { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_GENDER, name: 'genderCode' },

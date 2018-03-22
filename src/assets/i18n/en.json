@@ -89,6 +89,31 @@
             "message": "Are you sure you want to cancel contact registration?",
             "title": "Cancel Contact Registration"
           },
+          "contactGrid": {
+            "tabs": {
+              "selectFromDebt": {
+                "title": "Select From Linked",
+                "grid": {
+                  "linkTypeCode": "Тип связи",
+                  "personFullName": "ФИО",
+                  "personRole": "Роль"
+                }
+              },
+              "selectFromAll": {
+                "title": "Select From All"
+              },
+              "add": {
+                "title": "Add Manually",
+                "form": {
+                  "firstName": "Имя",
+                  "lastName": "Фамилия",
+                  "middleName": "Отчество",
+                  "linkTypeCode": "Тип связи",
+                  "personTypeCode": "Тип персоны"
+                }
+              }
+            }
+          },
           "edit": {
             "dialogs": {
               "confirmInsufficient": {
