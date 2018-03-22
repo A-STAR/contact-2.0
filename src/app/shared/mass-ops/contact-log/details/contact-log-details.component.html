@@ -1,0 +1,22 @@
+<div class="contact-log-detail-container">
+  <div class="contact-log-detail-header">
+      {{ 'widgets.contactLog.grid.fullName' | translate }}: {{ contactFullName }}
+  </div>
+  <div class="contact-log-detail-list">
+    <div class="contact-log-detail" *ngFor="let contact of contacts$ | async"
+    >
+      <div class="contact-log-detail-info">
+        {{ contact.contactDateTime | momentFormat:'L LTS' }}
+        {{ contact.contactType }}
+        {{ contact.msgStatusCode }}
+        {{ contact.contract }}
+        {{ contact.createDateTime | momentFormat:'L LTS' }}
+        {{ contact.personRole }}
+        {{ contact.resultName }}
+      </div>
+      <div>
+          {{ 'widgets.contactLog.grid.userFullName' | translate }}: {{ contact.userFullName }}
+      </div>
+    </div>
+  </div>
+</div>

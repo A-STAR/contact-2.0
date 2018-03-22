@@ -63,6 +63,7 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
   selector: 'app-action-grid',
   templateUrl: 'action-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: [ './action-grid.component.scss' ],
   host: { class: 'full-height' },
   providers: [ ActionGridFilterService, ActionGridService ]
 })
@@ -123,18 +124,14 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private titlebarConfig$ = new BehaviorSubject<IMetadataTitlebar>(null);
   private defaultActionName: string;
   private currentDefaultAction: IMetadataAction;
-  private selectionActionName: string;
+  private currentSelectionAction: IMetadataAction;
 
-  currentSelectionAction: IMetadataAction;
   dialog: string;
   dialogData: IGridAction;
-  selectionActionData: T;
+  selectionActionData: IGridAction;
+  selectionActionName: string;
   gridActions$: Observable<IMetadataAction[]>;
   titlebar$: Observable<ITitlebar>;
-  splitSize: any = {
-    grid: 1,
-    details: 0
-  };
 
   constructor(
     private actionGridFilterService: ActionGridFilterService,
@@ -159,7 +156,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         {
           actions: this.actions,
           titlebar: this.titlebar,
-          defaultAction: this.defaultAction
+          defaultAction: this.defaultAction,
+          selectionAction: this.selectionAction
         }
       );
     }
@@ -214,6 +212,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       (this.grid as SimpleGridComponent<T>).selection : (this.grid as Grid2Component).selected;
   }
 
+  get isGridDetails(): boolean {
+    return this.currentSelectionAction && !!this.selectionActionData;
+  }
+
   isAttrChangeDictionaryDlg(): boolean {
     return [
       'changeRegionAttr',
@@ -266,9 +268,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onSelectionAction(selected: number[]): void {
-    this.selectionActionData = this.selection.find(r => r[this.rowIdKey] === selected[0]);
-    this.splitSize.details = 2;
-    this.splitSize.grid = 2;
+    const selection = this.selection.find(r => r[this.rowIdKey] === selected[0]);
+    this.selectionActionData = this.setDialogData({ metadataAction: this.currentSelectionAction, selection });
     this.cdRef.markForCheck();
   }
 

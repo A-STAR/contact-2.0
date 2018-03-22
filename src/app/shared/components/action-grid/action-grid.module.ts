@@ -22,6 +22,8 @@ import { TitlebarModule } from '../titlebar/titlebar.module';
 import { VisitAddModule } from '@app/shared/mass-ops/visit-add/visit-add.module';
 import { VisitPrepareModule } from '@app/shared/mass-ops/visit-prepare/visit-prepare.module';
 
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
+
 import { ActionGridComponent } from './action-grid.component';
 
 @NgModule({
@@ -48,6 +50,7 @@ import { ActionGridComponent } from './action-grid.component';
     VisitPrepareModule,
     RegisterContactOpenModule,
   ],
+  providers: [ ActionGridService ],
   exports: [
     ActionGridComponent,
   ],

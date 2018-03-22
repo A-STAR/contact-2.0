@@ -165,21 +165,20 @@
   [url]="'/list/excel?name=' + metadataKey"
 ></app-downloader>
 
-<app-area layout="row">
-  <app-area initialSize="splitSize.grid">
-    <div class="flex vertical">
-      <div class="flex-item">
-        <app-titlebar
-          *ngIf="titlebar$ | async"
-          [titlebar]="titlebar$ | async"
-        ></app-titlebar>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar
+      *ngIf="titlebar$ | async"
+      [titlebar]="titlebar$ | async"
+    ></app-titlebar>
 
-        <app-action-grid-filter
-          [metadataKey]="metadataKey"
-        ></app-action-grid-filter>
-      </div>
+    <app-action-grid-filter
+      [metadataKey]="metadataKey"
+    ></app-action-grid-filter>
+  </div>
 
-      <div class="flex-item grow">
+  <div class="grid-container">
+    <div class="flex-item grow" [ngClass]="{'grid-has-details': isGridDetails}">
         <ng-container
           *ngIf="!isSimple; else simpleGrid"
         >
@@ -221,17 +220,12 @@
           </app-simple-grid>
         </ng-template>
       </div>
-    </div>
-  </app-area>
-  <app-area initialSize="splitSize.details">
-      <ng-container *ngIf="currentSelectionAction && selectionActionData">
-      <span>
-        {{ currentSelectionAction | json }}
-      </span>
-      <br>
-      <span>
-        {{ selectionActionData | json }}
-      </span>
-    </ng-container>
-  </app-area>
-</app-area>
+      <div class="grid-details" *ngIf="isGridDetails">
+        <app-contact-log-details
+          *ngIf="selectionActionName === 'showContactHistory'"
+          [actionData]="selectionActionData"
+          [rowData]="selection[0]"
+        ></app-contact-log-details>
+      </div>
+  </div>
+
