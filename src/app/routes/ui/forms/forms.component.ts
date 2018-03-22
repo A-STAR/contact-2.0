@@ -17,6 +17,7 @@ export class FormsComponent {
     editable: true,
     items: [
       {
+        disabled: false,
         display: true,
         label: 'Text Input',
         name: 'text',
@@ -34,6 +35,7 @@ export class FormsComponent {
       {
         children: [
           {
+            disabled: false,
             display: true,
             label: 'Nested Text Input',
             name: 'nestedText',
