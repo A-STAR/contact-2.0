@@ -64,6 +64,7 @@ export class DebtComponent implements OnInit {
       { controlName: 'dpd', type: 'text', width: 3 },
       { controlName: 'startDate', type: 'date', width: 3 },
       ...range(1, 4).map(i => ({
+        type: 'dict',
         controlName: `dict${i}Code`,
         dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
         display: attributes[EntityAttributesService[`DICT_VALUE_${i}`]].isUsed,

@@ -5,6 +5,7 @@ export interface IAuthState {
 
 export interface IUser {
   userId: number;
+  userName: string;
 }
 
 export interface IUserParams {

@@ -18,9 +18,7 @@ import { PersistenceService } from '../persistence/persistence.service';
 export class AuthService implements CanActivate {
   static readonly AUTH_TOKEN     = 'auth/token';
   static readonly LANGUAGE_TOKEN = 'auth/language';
-  static readonly REDIRECT_TOKEN = 'auth/redirect';
 
-  static readonly URL_DEFAULT = '/';
   static readonly URL_LOGIN   = '/login';
 
   static readonly JWT_EXPIRATION_THRESHOLD = 60e3;
@@ -66,7 +64,7 @@ export class AuthService implements CanActivate {
   get currentUser$(): Observable<IUser> {
     return this.token$
       .map(token => token && this.jwtHelper.decodeToken(token))
-      .map(tokenInfo => tokenInfo && { userId: tokenInfo.userId });
+      .map(tokenInfo => tokenInfo && { userId: tokenInfo.userId, userName: tokenInfo.username });
   }
 
   get userParams$(): Observable<IUserParams> {
@@ -101,16 +99,8 @@ export class AuthService implements CanActivate {
     this.store.dispatch(this.createAction(AuthService.AUTH_TOKEN_INVALID));
   }
 
-  redirectToLogin(url: string = null): void {
-    this.persistenceService.set(AuthService.REDIRECT_TOKEN, url || this.router.url);
+  redirectToLogin(): void {
     location.href = AuthService.URL_LOGIN;
-  }
-
-  redirectAfterLogin(): void {
-    const url = this.persistenceService.get(AuthService.REDIRECT_TOKEN) || AuthService.URL_DEFAULT;
-    this.router
-      .navigate([ url ])
-      .then(() => this.persistenceService.remove(AuthService.REDIRECT_TOKEN));
   }
 
   saveToken(token: string): void {

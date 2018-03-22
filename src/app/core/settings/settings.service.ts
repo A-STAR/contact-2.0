@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { map, filter } from 'rxjs/operators';
 
+import { AuthService } from '@app/core/auth/auth.service';
 import { PersistenceService } from '../persistence/persistence.service';
-import { propOr } from '../utils';
 
 @Injectable()
 export class SettingsService {
+  static readonly REDIRECT_TOKEN = 'auth/redirect';
+  static readonly REDIRECT_DEFAULT = '/';
 
   // App Settings
   app = {
@@ -15,14 +21,26 @@ export class SettingsService {
 
   layout: any;
 
-  constructor(private persistenceService: PersistenceService) {
+  private settingsKey$ = new BehaviorSubject<string>(null);
+
+  constructor(
+    private authService: AuthService,
+    private persistenceService: PersistenceService,
+    private router: Router
+  ) {
+    this.authService.currentUser$
+      .pipe(
+        filter(Boolean),
+        map(user => user && user.userName)
+      )
+      .subscribe(settingsKey => this.settingsKey$.next(settingsKey));
+
     const layout = this.persistenceService.getOr(PersistenceService.LAYOUT_KEY, {});
-    const isCollapsed = propOr('isCollapsed', false)(layout);
 
     // Layout Settings
     this.layout = {
       isFixed: true,
-      isCollapsed: isCollapsed,
+      isCollapsed: !!layout.isCollapsed,
       isBoxed: false,
       isRTL: false,
       horizontal: false,
@@ -40,6 +58,48 @@ export class SettingsService {
     if (!$('.app-content') || !$('.topnavbar-wrapper')) {
       throw new Error('Could not find the content area or the navbar div');
     }
+  }
+
+  get settings$(): Observable<any> {
+    return this.settingsKey$
+      .map(key => key ? this.persistenceService.getOr(key, {}) : null);
+  }
+
+  get onClear$(): Observable<any> {
+    return this.persistenceService.onDelete$
+      .filter(({ payload: { data } }) => data.key === this.settingsKey$.value);
+  }
+
+  get(key: string): any {
+    const settings = this.persistenceService.getOr(this.settingsKey$.value, {});
+    return settings[key];
+  }
+
+  set(key: string, value: any): void {
+    const settings = this.persistenceService.getOr(this.settingsKey$.value, {});
+    this.persistenceService.set(this.settingsKey$.value, { ...settings, [key]: value });
+  }
+
+  remove(key: string): void {
+    const settings = this.persistenceService.getOr(this.settingsKey$.value, {});
+    delete settings[key];
+    this.persistenceService.set(this.settingsKey$.value, settings);
+  }
+
+  clear(): void {
+    this.persistenceService.remove(this.settingsKey$.value);
+  }
+
+  redirectToLogin(url: string = null): void {
+    this.set(SettingsService.REDIRECT_TOKEN, url || this.router.url);
+    this.authService.redirectToLogin();
+  }
+
+  redirectAfterLogin(): void {
+    const url = this.get(SettingsService.REDIRECT_TOKEN) || SettingsService.REDIRECT_DEFAULT;
+    this.router
+      .navigate([ url ])
+      .then(() => this.remove(SettingsService.REDIRECT_TOKEN));
   }
 
   // Calculate the available content area height

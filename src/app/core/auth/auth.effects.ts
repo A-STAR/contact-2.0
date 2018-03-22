@@ -87,25 +87,19 @@ export class AuthEffects {
   createSession$ = this.actions
     .ofType(AuthService.AUTH_CREATE_SESSION)
     .switchMap((action: UnsafeAction) => {
-      const { redirectAfterLogin, token } = action.payload;
+      const { token } = action.payload;
       this.authService.saveToken(token);
       this.authService.saveLanguage(token);
       this.authService.initTokenTimer(token);
-      if (redirectAfterLogin !== false) {
-        this.authService.redirectAfterLogin();
-      }
       return [];
     });
 
   @Effect()
   destroySession$ = this.actions
     .ofType(AuthService.AUTH_DESTROY_SESSION)
-    .switchMap((action: UnsafeAction) => {
+    .switchMap(() => {
       this.authService.removeToken();
       this.authService.clearTokenTimer();
-      if (!action.payload || action.payload.redirectToLogin !== false) {
-        this.authService.redirectToLogin(action.payload ? action.payload.url : null);
-      }
       return [{ type: AuthService.AUTH_GLOBAL_RESET }];
     });
 

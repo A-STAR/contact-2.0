@@ -8,10 +8,10 @@ export enum IMetadataFormControlType {
 }
 
 export interface IMetadataFormGenericControl {
-  display: boolean;
+  disabled: IMetadataFormValidator<boolean>;
+  display: IMetadataFormValidator<boolean>;
   label: string;
   name: string;
-  required: boolean;
   type: IMetadataFormControlType;
 }
 

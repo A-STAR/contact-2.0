@@ -21,7 +21,9 @@
       <ng-template #field>
         <div class="field">
           <div class="field-label">{{ item.control.label | translate }}</div>
-          <div class="field-value" [ngClass]="{ 'empty': item.value == null }">{{ item.value || '&nbsp;' }}</div>
+          <div class="field-value" [ngClass]="{ 'empty': item.value == null }">
+            {{ getValue(item.control, item.value) | async }} &nbsp;
+          </div>
         </div>
       </ng-template>
 
