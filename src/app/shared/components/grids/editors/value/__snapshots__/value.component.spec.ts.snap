@@ -146,13 +146,13 @@ exports[`ValueEditorComponent should render value editor with typeCode 4 (boolea
           class="select-container dropdown open"
         >
           
-
     
           <input
             autocomplete="off"
             class="form-control select-search ng-untouched ng-pristine ng-valid"
             ng-reflect-model=""
             placeholder=""
+            readonly="readonly"
             type="text"
           />
           
@@ -367,13 +367,13 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
           class="select-container dropdown open"
         >
           
-
     
           <input
             autocomplete="off"
             class="form-control select-search ng-untouched ng-pristine ng-valid"
             ng-reflect-model=""
             placeholder=""
+            readonly="readonly"
             type="text"
           />
           
@@ -480,13 +480,13 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
           class="select-container dropdown open"
         >
           
-
     
           <input
             autocomplete="off"
             class="form-control select-search ng-untouched ng-pristine ng-valid"
             ng-reflect-model=""
             placeholder=""
+            readonly="readonly"
             type="text"
           />
           
@@ -592,13 +592,13 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
           class="select-container dropdown open"
         >
           
-
     
           <input
             autocomplete="off"
             class="form-control select-search ng-untouched ng-pristine ng-valid"
             ng-reflect-model=""
             placeholder=""
+            readonly="readonly"
             type="text"
           />
           

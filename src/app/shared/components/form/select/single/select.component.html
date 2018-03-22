@@ -6,13 +6,10 @@
     <b *ngIf="required" class="text-danger">*</b>
   </span>
 
-  <div
-    class="select-container dropdown open"
-    [ngStyle]="styles"
-    >
-
+  <div class="select-container dropdown open" [ngStyle]="styles">
     <input
       #input
+      readonly="readonly"
       type="text"
       class="form-control select-search"
       autocomplete="off"
