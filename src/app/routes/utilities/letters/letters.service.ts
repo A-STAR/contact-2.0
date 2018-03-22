@@ -2,6 +2,7 @@ import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
+import { of } from 'rxjs/observable/of';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { ILetterTemplate } from './letters.interface';
@@ -26,8 +27,11 @@ export class LettersService extends AbstractActionService {
   }
 
   fetchAll(): Observable<Array<ILetterTemplate>> {
-    return this.dataService.readAll(this.baseUrl)
-      .catch(this.notificationsService.fetchError().entity('entities.letters.gen.plural').dispatchCallback());
+    // return this.dataService.readAll(this.baseUrl)
+      // .catch(this.notificationsService.fetchError().entity('entities.letters.gen.plural').dispatchCallback());
+    return of([
+      { id: 1, name: 'Name', fileName: 'fileName', serviceTypeCode: 1, recipientTypeCode: 1, comment: 'comment' }
+    ]);
   }
 
   fetch(templateId: number): Observable<ILetterTemplate> {
