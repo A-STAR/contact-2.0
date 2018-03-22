@@ -4,4 +4,5 @@ export interface IConfig {
     ws: string;
   };
   domains: string[];
+  i18n: string[];
 }

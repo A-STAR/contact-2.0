@@ -8,7 +8,6 @@ import { JwtModule, JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ToasterModule } from 'angular2-toaster';
 import * as R from 'ramda';
 
@@ -35,12 +34,14 @@ import { AppComponent } from './app.component';
 
 import { AuthService } from './core/auth/auth.service';
 
+import { AppTranslateLoader } from '@app/core/translate/translate-loader';
+
 import { initialState, reducers } from './core/state/root.reducer';
 import { environment } from '../environments/environment';
 
 // https://github.com/ocombe/ng2-translate/issues/218
-export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+export function createTranslateLoader(configService: ConfigService, httpClient: HttpClient): TranslateLoader {
+  return new AppTranslateLoader(configService, httpClient);
 }
 
 export function getInitialState(): Partial<IAppState> {
@@ -106,7 +107,7 @@ export function jwtOptionsFactory(configService: ConfigService): any {
       loader: {
         provide: TranslateLoader,
         useFactory: createTranslateLoader,
-        deps: [HttpClient]
+        deps: [ ConfigService, HttpClient ]
       }
     })
   ],

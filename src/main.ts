@@ -29,7 +29,7 @@ request.onload = () => {
     `);
   }
 
-  const domain = response.url.match(/:\/\/(.+)$/)[1];
+  const domain = response.url.match(/:\/\/([^\/]+)/)[1];
   if (!domain) {
     throw new Error(`
       Could not extract whitelisted domains from config at ${configUrl}.
@@ -42,6 +42,7 @@ request.onload = () => {
       ws: response.ws,
     },
     domains: [ domain ],
+    i18n: response.i18n || [ '/assets/i18n/{lang}.json' ],
   };
 
   window['__CONFIG__'] = config;
