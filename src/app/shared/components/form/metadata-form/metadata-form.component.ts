@@ -37,14 +37,27 @@ export class MetadataFormComponent<T> implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const controls = this.flattenControls(this.config.items).reduce((acc, item) => {
+    const flatControls = this.flattenControls(this.config.items);
+
+    const controls = flatControls.reduce((acc, item) => {
       const asyncValidators = this.getAsyncValidators(item);
+      const disabled = item.disabled === true;
       return {
         ...acc,
-        [item.name]: new FormControl(null, { asyncValidators })
+        [item.name]: new FormControl({ value: null, disabled }, { asyncValidators })
       };
     }, {});
+
     this.formGroup = new FormGroup(controls);
+
+    flatControls.forEach(item => {
+      if (typeof item.disabled === 'object' && item.disabled !== null) {
+        this.contextService
+          .calculate(item.disabled)
+          .subscribe((d: boolean) => this.disable(item.name, d));
+      }
+    });
+
     this.populateForm();
   }
 
@@ -83,6 +96,15 @@ export class MetadataFormComponent<T> implements OnInit {
   private populateForm(): void {
     if (this.formGroup && this._data) {
       this.formGroup.patchValue(this._data);
+    }
+  }
+
+  private disable(name: string, disabled: boolean): void {
+    const control = this.formGroup.get(name);
+    if (disabled) {
+      control.disable();
+    } else {
+      control.enable();
     }
   }
 }

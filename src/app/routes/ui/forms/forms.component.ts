@@ -20,7 +20,6 @@ export class FormsComponent {
         display: true,
         label: 'Text Input',
         name: 'text',
-        required: false,
         type: IMetadataFormControlType.TEXT,
         validators: {
           maxLength: 20,
@@ -38,7 +37,6 @@ export class FormsComponent {
             display: true,
             label: 'Nested Text Input',
             name: 'nestedText',
-            required: false,
             type: IMetadataFormControlType.TEXT,
             validators: {
               maxLength: 10,
@@ -47,10 +45,10 @@ export class FormsComponent {
           {
             children: [
               {
+                disabled: true,
                 display: true,
                 label: 'Deeply Nested Text Input',
                 name: 'deeplyNestedText',
-                required: false,
                 type: IMetadataFormControlType.TEXT,
                 validators: {},
               },
