@@ -2913,6 +2913,9 @@
     },
     "letters": {
       "gen": { "singular": "письма", "plural": "писем" }
+    },
+    "letterTemplates": {
+      "gen": { "singular": "шаблона письма", "plural" : "шаблонов писем" }
     }
   },
   "massOperations": {

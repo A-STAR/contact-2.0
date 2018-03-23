@@ -2913,6 +2913,9 @@
     },
     "letters": {
       "gen": { "singular": "letter", "plural": "letters" }
+    },
+    "letterTemplates": {
+      "gen": { "singular": "letter template", "plural" : "letter templates" }
     }
   },
   "massOperations": {

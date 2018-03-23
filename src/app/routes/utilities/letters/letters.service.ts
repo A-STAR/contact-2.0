@@ -33,7 +33,7 @@ export class LettersService extends AbstractActionService {
 
   fetchAll(): Observable<Array<ILetterTemplate>> {
     // return this.dataService.readAll(this.baseUrl)
-      // .catch(this.notificationsService.fetchError().entity('entities.letters.gen.plural').dispatchCallback());
+      // .catch(this.notificationsService.fetchError().entity('entities.letterTemplates.gen.plural').dispatchCallback());
     return of([
       { id: 1, name: 'Name', fileName: 'fileName', serviceTypeCode: 1, recipientTypeCode: 1, comment: 'comment' }
     ]);
@@ -41,7 +41,7 @@ export class LettersService extends AbstractActionService {
 
   fetch(templateId: number): Observable<ILetterTemplate> {
     // return this.dataService.read(`${this.baseUrl}/{templateId}`, { templateId })
-      // .catch(this.notificationsService.fetchError().entity('entities.letters.gen.singular').dispatchCallback());
+      // .catch(this.notificationsService.fetchError().entity('entities.letterTemplates.gen.singular').dispatchCallback());
     return of(
       { id: templateId, name: 'Name', fileName: 'fileName', serviceTypeCode: 1, recipientTypeCode: 1, comment: 'comment' }
     );
@@ -49,16 +49,16 @@ export class LettersService extends AbstractActionService {
 
   create(template: ILetterTemplate): Observable<ILetterTemplate> {
     return this.dataService.create(this.baseUrl, {}, template)
-      .catch(this.notificationsService.createError().entity('entities.letters.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.createError().entity('entities.letterTemplates.gen.singular').dispatchCallback());
   }
 
   update(templateId: number, template: ILetterTemplate): Observable<any> {
     return this.dataService.update(`${this.baseUrl}/{templateId}`, { templateId }, template)
-      .catch(this.notificationsService.updateError().entity('entities.letters.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.updateError().entity('entities.letterTemplates.gen.singular').dispatchCallback());
   }
 
   delete(templateId: number): Observable<any> {
     return this.dataService.delete(`${this.baseUrl}/{templateId}`, { templateId })
-      .catch(this.notificationsService.deleteError().entity('entities.letters.gen.singular').dispatchCallback());
+      .catch(this.notificationsService.deleteError().entity('entities.letterTemplates.gen.singular').dispatchCallback());
   }
 }
