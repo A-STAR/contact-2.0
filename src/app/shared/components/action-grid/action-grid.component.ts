@@ -37,11 +37,10 @@ import {
   IMetadataTitlebar,
   IMetadataActionPermissions,
 } from '@app/core/metadata/metadata.interface';
-import { ITitlebar, TitlebarItemTypeEnum, TitlebarGridDefaultItems } from '@app/shared/components/titlebar/titlebar.interface';
+import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { ActionGridFilterService } from './filter/action-grid-filter.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -65,7 +64,7 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: [ './action-grid.component.scss' ],
   host: { class: 'full-height' },
-  providers: [ ActionGridFilterService, ActionGridService ]
+  providers: [ ActionGridService ]
 })
 export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   /**
@@ -135,7 +134,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   titlebar$: Observable<ITitlebar>;
 
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
     private actionGridService: ActionGridService,
     private cdRef: ChangeDetectorRef,
     private entityAttributesService: EntityAttributesService,
@@ -201,11 +199,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   getGridTitlebar(): Observable<ITitlebar> {
-    return combineLatest(
-      this.titlebarConfig$.pipe(filter(Boolean)),
-      this.actionGridFilterService.hasFilter$,
-    )
-    .pipe(map(([config, hasFilters]) => this.buildTitlebar(config, hasFilters)));
+    return this.titlebarConfig$
+      .pipe(
+        filter(Boolean),
+        map(config => this.buildTitlebar(config))
+      );
   }
 
   get selection(): T[] {
@@ -401,7 +399,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     ]);
   }
 
-  private buildTitlebar(config: IMetadataTitlebar, hasFilter?: boolean): ITitlebar {
+  private buildTitlebar(config: IMetadataTitlebar): ITitlebar {
     // TODO(i.lobanov): mock, remove when titlebar added in config
     const titlebarItems = {
       refresh: (permissions: string[]) => ({
@@ -423,7 +421,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return {
       title: config.title,
       items: config.items
-        .filter(configItem => hasFilter || ActionGridService.DefaultTitlebarItems.includes(configItem.name))
         .map(item => titlebarItems[item.name](item.permissions))
     };
   }

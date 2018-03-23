@@ -20,10 +20,6 @@ import { compose } from 'ramda';
 @Injectable()
 export class ActionGridService {
 
-  static DefaultTitlebarItems: string[] = [
-    'exportExcel'
-  ];
-
   static DefaultSelectionAction = 'showContactHistory';
 
   cbActions: { [key: string]: (action: IGridAction) => any };

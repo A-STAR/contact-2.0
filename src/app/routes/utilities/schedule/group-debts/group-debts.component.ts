@@ -43,18 +43,6 @@ export class GroupDebtsComponent implements OnInit {
 
   controls: IDynamicFormControl[];
 
-  titlebar: IMetadataTitlebar = {
-    items: [
-      {
-        name: 'search',
-      },
-      {
-        name: 'exportExcel',
-        permissions: ['LIST_TAB_EXPORT_TO_EXCEL']
-      },
-    ],
-  };
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private groupDebtsService: GroupDebtsService,
