@@ -36,7 +36,7 @@
 
       <!-- Errors -->
       <div *ngIf="item.type !== 'group'">
-        {{ getErrors(item) | json }}
+        {{ getErrorMessage(item).message | translate:getErrorMessage(item).data }}
       </div>
     </ng-container>
   </ng-container>

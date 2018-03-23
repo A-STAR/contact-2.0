@@ -19,6 +19,7 @@ export interface IMetadataFormGenericControl {
 
 export interface IMetadataFormCheckboxControl extends IMetadataFormGenericControl {
   type: IMetadataFormControlType.CHECKBOX;
+  validators: {};
 }
 
 export interface IMetadataFormTextControl extends IMetadataFormGenericControl {

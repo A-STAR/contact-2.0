@@ -1,52 +1,73 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+
+import { IMetadataFormConfig, IMetadataFormControlType } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
 import { AuthService } from '../../../core/auth/auth.service';
 import { PersistenceService } from '../../../core/persistence/persistence.service';
 import { SettingsService } from '../../../core/settings/settings.service';
+import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-login',
+  styleUrls: [ './login.component.scss' ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  static LOGIN_KEY = 'auth/login';
+  private static LOGIN_KEY = 'auth/login';
 
-  form: FormGroup;
+  @ViewChild(MetadataFormComponent) form: MetadataFormComponent<any>;
+
+  readonly config: IMetadataFormConfig = {
+    editable: true,
+    items: [
+      {
+        disabled: false,
+        display: true,
+        label: 'login.login_placeholder',
+        name: 'login',
+        type: IMetadataFormControlType.TEXT,
+        validators: { required: true, minLength: 2 },
+      },
+      {
+        disabled: false,
+        display: true,
+        label: 'login.password_placeholder',
+        name: 'password',
+        type: IMetadataFormControlType.PASSWORD,
+        validators: { required: true },
+      },
+      {
+        disabled: false,
+        display: true,
+        label: 'login.remember_me',
+        name: 'remember_login',
+        type: IMetadataFormControlType.CHECKBOX,
+        validators: {},
+      },
+    ],
+  };
+
+  readonly data = {
+    login: this.login,
+  };
 
   constructor(
     public settings: SettingsService,
-    private fb: FormBuilder,
     private authService: AuthService,
     private persistenceService: PersistenceService,
-  ) {
-    const login = this.login;
-    const remember = !!login;
+  ) {}
 
-    this.form = this.fb.group({
-      login: [ login, Validators.compose([ Validators.required, Validators.minLength(2) ]) ],
-      password: [ null, Validators.required ],
-      remember_login: [ remember ],
-    });
+  get canSubmit(): boolean {
+    const { formGroup } = this.form;
+    return formGroup.valid && formGroup.dirty;
   }
 
-  isControlDirtyOrTouched(controlName: string): boolean {
-    const control = this.form.get(controlName);
-    return (control.dirty || control.touched);
-  }
-
-  submitForm(event: UIEvent, value: any): void {
-    event.preventDefault();
-
+  onSubmitClick(): void {
+    const { value } = this.form.formGroup;
     this.login = value.remember_login ? value.login : null;
-
-    this.form.markAsTouched();
-
-    if (this.form.valid) {
-      const { login, password } = value;
-      this.authService.dispatchLoginAction(login, password);
-    }
+    const { login, password } = value;
+    this.authService.dispatchLoginAction(login, password);
   }
 
   private get login(): string {
