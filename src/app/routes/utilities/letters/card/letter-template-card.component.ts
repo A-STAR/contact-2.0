@@ -12,7 +12,6 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { LettersService } from '@app/routes/utilities/letters/letters.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
@@ -33,21 +32,17 @@ export class LetterTemplateCardComponent implements OnInit {
   template: Partial<ILetterTemplate>;
   templateId = Number(this.route.snapshot.paramMap.get('templateId'));
 
-  readonly canAdd$ = this.userPermissionsService.has('LETTER_TEMPLATE_ADD');
-  readonly canEdit$ = this.userPermissionsService.has('LETTER_TEMPLATE_EDIT');
-
   constructor(
     private cdRef: ChangeDetectorRef,
     private lettersService: LettersService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
     private userConstantsService: UserConstantsService,
-    private userPermissionsService: UserPermissionsService
   ) {}
 
   ngOnInit(): void {
     combineLatest(
-      this.templateId ? this.canEdit$ : this.canAdd$,
+      this.templateId ? this.lettersService.canEdit$ : this.lettersService.canAdd$,
       this.templateId ? this.lettersService.fetch(this.templateId) : of(this.getFormData()),
       this.userConstantsService.get('FileAttachment.MaxSize'),
     )

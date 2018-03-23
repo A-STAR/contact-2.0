@@ -10,7 +10,6 @@ import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar
 import { LettersService } from '@app/routes/utilities/letters/letters.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
-import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 
@@ -28,11 +27,6 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
 
   private selectedTemplate$ = new BehaviorSubject<ILetterTemplate>(null);
 
-  readonly canView$ = this.userPermissionsService.has('LETTER_TEMPLATE_VIEW');
-  readonly canAdd$ = this.userPermissionsService.has('LETTER_TEMPLATE_ADD');
-  readonly canEdit$ = this.userPermissionsService.has('LETTER_TEMPLATE_EDIT');
-  readonly canDelete$ = this.userPermissionsService.has('LETTER_TEMPLATE_DELETE');
-
   columns: ISimpleGridColumn<ILetterTemplate>[] = [
     { prop: 'id', width: 50 },
     { prop: 'name' },
@@ -47,14 +41,14 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
     items: [
       {
         type: TitlebarItemTypeEnum.BUTTON_ADD,
-        enabled: this.canAdd$,
+        enabled: this.lettersService.canAdd$,
         action: () => this.onAdd()
       },
       {
         type: TitlebarItemTypeEnum.BUTTON_EDIT,
         action: () => this.onEdit(this.selectedTemplate$.value),
         enabled: combineLatestAnd([
-          this.canEdit$,
+          this.lettersService.canEdit$,
           this.selectedTemplate$.map(Boolean)
         ])
       },
@@ -62,7 +56,7 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
         type: TitlebarItemTypeEnum.BUTTON_DELETE,
         action: () => this.setDialog('removeTemplate'),
         enabled: combineLatestAnd([
-          this.canDelete$,
+          this.lettersService.canDelete$,
           this.selectedTemplate$.map(Boolean)
         ])
       },
@@ -70,14 +64,14 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
         type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD,
         action: () => this.onExport(),
         enabled: combineLatestAnd([
-          this.canView$,
+          this.lettersService.canView$,
           this.selectedTemplate$.map(Boolean)
         ])
       },
       {
         type: TitlebarItemTypeEnum.BUTTON_REFRESH,
         action: () => this.fetch(),
-        enabled: this.canView$
+        enabled: this.lettersService.canView$
       }
     ]
   };
@@ -93,7 +87,6 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
     private lettersService: LettersService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
-    private userPermissionsService: UserPermissionsService,
   ) {
     super();
   }

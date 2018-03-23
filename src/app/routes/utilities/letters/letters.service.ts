@@ -17,6 +17,11 @@ export class LettersService extends AbstractActionService {
 
   private baseUrl = '/letters/templates';
 
+  readonly canView$ = of(true); // this.userPermissionsService.has('LETTER_TEMPLATE_VIEW');
+  readonly canAdd$ = of(true); // this.userPermissionsService.has('LETTER_TEMPLATE_ADD');
+  readonly canEdit$ = of(true); // this.userPermissionsService.has('LETTER_TEMPLATE_EDIT');
+  readonly canDelete$ = of(true); // this.userPermissionsService.has('LETTER_TEMPLATE_DELETE');
+
   constructor(
     protected actions: Actions,
     private dataService: DataService,
@@ -35,8 +40,11 @@ export class LettersService extends AbstractActionService {
   }
 
   fetch(templateId: number): Observable<ILetterTemplate> {
-    return this.dataService.read(`${this.baseUrl}/{templateId}`, { templateId })
-      .catch(this.notificationsService.fetchError().entity('entities.letters.gen.singular').dispatchCallback());
+    // return this.dataService.read(`${this.baseUrl}/{templateId}`, { templateId })
+      // .catch(this.notificationsService.fetchError().entity('entities.letters.gen.singular').dispatchCallback());
+    return of(
+      { id: templateId, name: 'Name', fileName: 'fileName', serviceTypeCode: 1, recipientTypeCode: 1, comment: 'comment' }
+    );
   }
 
   create(template: ILetterTemplate): Observable<ILetterTemplate> {
