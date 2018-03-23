@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { LetterTemplatesGridModule } from './grid/letter-templates-grid.module';
-
 import { LettersService } from './letters.service';
 
 import { LetterTemplatesGridComponent } from './grid/letter-templates-grid.component';

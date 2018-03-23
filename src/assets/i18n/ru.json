@@ -278,6 +278,13 @@
           "serviceTypeCode": "Тип сервиса",
           "comment": "Комментарий"
         },
+        "card": {
+          "name": "Название",
+          "file": "Файл",
+          "recipientTypeCode": "Получатель",
+          "serviceTypeCode": "Тип сервиса",
+          "comment": "Комментарий"
+        },
         "titlebar": {
           "title": "Шаблоны писем"
         },

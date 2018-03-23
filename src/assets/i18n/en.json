@@ -278,6 +278,13 @@
           "serviceTypeCode": "Service type",
           "comment": "Comment"
         },
+        "card": {
+          "name": "Name",
+          "file": "File",
+          "recipientTypeCode": "Recipient",
+          "serviceTypeCode": "Service type",
+          "comment": "Comment"
+        },
         "titlebar": {
           "title": "Letter templates"
         },

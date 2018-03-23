@@ -57,6 +57,14 @@ const routes: Routes = [
         loadChildren: './letters/letters.module#LettersModule',
       },
       {
+        path: 'letters/create',
+        loadChildren: './letters/card/letter-template-card.module#LetterTemplateCardModule',
+      },
+      {
+        path: 'letters/:templateId',
+        loadChildren: './letters/card/letter-template-card.module#LetterTemplateCardModule',
+      },
+      {
         path: '**',
         redirectTo: ''
       },
