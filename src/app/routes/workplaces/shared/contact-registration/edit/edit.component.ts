@@ -94,7 +94,7 @@ export class EditComponent extends DialogFunctions {
   }
 
   get canSubmit(): boolean {
-    return this.form.valid;
+    return this.form.valid && this.isAnyEntityHasChosen();
   }
 
   get minAmountPercentMessageParams$(): Observable<{ percent: number }> {
@@ -131,13 +131,13 @@ export class EditComponent extends DialogFunctions {
 
   private submit(isUnconfirmed: boolean = null): void {
     const { autoComment, ...data } = this.getFormGroupValueRecursively(this.form);
-    if (this.attributes && !isEmpty(this.attributes.data)) {
+    if (this.isAttributeHasChosen()) {
       data.attributes = this.attributes.data;
     }
-    if (this.contactForPerson && this.contactForPerson.person) {
+    if (this.isContactForPersonHasChosen()) {
       data.contactPerson = this.contactForPerson.person;
     }
-    if (data.phone && this.contactForPhone && this.contactForPhone.person) {
+    if (data.phone && this.isContactForPhoneHasChosen()) {
       data.phone.person = this.contactForPhone.person;
     }
     if (data.payment) {
@@ -153,6 +153,26 @@ export class EditComponent extends DialogFunctions {
         this.contactRegistrationService.cancelRegistration();
         this.form.reset();
       });
+  }
+
+  private isAnyEntityHasChosen(): boolean {
+    return this.isAttributeHasChosen() || this.isContactHasChosen();
+  }
+
+  private isAttributeHasChosen(): boolean {
+    return this.attributes && !isEmpty(this.attributes.data);
+  }
+
+  private isContactForPersonHasChosen(): boolean {
+    return this.contactForPerson && !!this.contactForPerson.person;
+  }
+
+  private isContactForPhoneHasChosen(): boolean {
+    return this.contactForPhone && !!this.contactForPhone.person;
+  }
+
+  private isContactHasChosen(): boolean {
+    return this.isContactForPersonHasChosen() && this.isContactForPhoneHasChosen();
   }
 
   private displayOutcomeTree(): void {
