@@ -70,7 +70,8 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
 export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   /**
    * These inputs are handling config,
-   * passed directly from client code
+   * passed directly from client code,
+   * NOTE: They override config (if any) retrieved from the server!
    */
   @Input() actions: IMetadataAction[];
   @Input() defaultAction: string;
@@ -356,10 +357,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   private initGrid(data: IMetadataDefs): void {
-    this.actions$.next(data.actions);
+    this.actions$.next(data.actions || this.actions);
     this.defaultActionName = data.defaultAction;
-    this.selectionActionName = data.selectionAction || 'showContactHistory';
-    this.titlebarConfig$.next(data.titlebar);
+    this.selectionActionName = data.selectionAction || ActionGridService.DefaultSelectionAction;
+    this.titlebarConfig$.next(data.titlebar || this.titlebar);
     this._columns = data.columns ? [...data.columns] : null;
     this._initialized = true;
     this.cdRef.markForCheck();
@@ -422,7 +423,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return {
       title: config.title,
       items: config.items
-        .filter(configItem => hasFilter || TitlebarGridDefaultItems.includes(configItem.name))
+        .filter(configItem => hasFilter || ActionGridService.DefaultTitlebarItems.includes(configItem.name))
         .map(item => titlebarItems[item.name](item.permissions))
     };
   }

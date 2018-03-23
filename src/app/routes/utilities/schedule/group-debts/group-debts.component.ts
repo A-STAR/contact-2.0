@@ -19,6 +19,7 @@ import { ActionGridComponent } from '@app/shared/components/action-grid/action-g
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { addGridLabel } from '@app/core/utils';
+import { IMetadataTitlebar } from '@app/core/metadata/metadata.interface';
 
 @Component({
   selector: 'app-group-debts',
@@ -41,6 +42,18 @@ export class GroupDebtsComponent implements OnInit {
   };
 
   controls: IDynamicFormControl[];
+
+  titlebar: IMetadataTitlebar = {
+    items: [
+      {
+        name: 'search',
+      },
+      {
+        name: 'exportExcel',
+        permissions: ['LIST_TAB_EXPORT_TO_EXCEL']
+      },
+    ],
+  };
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -94,14 +107,14 @@ export class GroupDebtsComponent implements OnInit {
         gridOnSelect: (row: IFilterGroup) => this.form.form.patchValue({ groups: row && row.id }),
         width: 5
       },
-      {
-        label: 'default.buttons.search',
-        controlName: 'searchBtn',
-        type: 'searchBtn',
-        iconCls: 'fa-search',
-        width: 3,
-        action: () => this.onSearch()
-      }
+      // {
+      //   label: 'default.buttons.search',
+      //   controlName: 'searchBtn',
+      //   type: 'searchBtn',
+      //   iconCls: 'fa-search',
+      //   width: 3,
+      //   action: () => this.onSearch()
+      // }
     ];
   }
 
