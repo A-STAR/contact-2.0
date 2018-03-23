@@ -429,7 +429,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   private exportExcel(): void {
     const grid = this.grid as Grid2Component;
-    const filters = grid.getFilters();
+    const filters = this.getGridFilters();
     const params = grid.getRequestParams();
     const columns = grid.getExportableColumns();
     if (columns) {
