@@ -3,6 +3,7 @@ import { IContextConfig } from '@app/core/context/context.interface';
 export type IMetadataFormValidator<T> = T | IContextConfig;
 
 export enum IMetadataFormControlType {
+  CHECKBOX = 'checkbox',
   GROUP    = 'group',
   PASSWORD = 'password',
   TEXT     = 'text',
@@ -14,6 +15,10 @@ export interface IMetadataFormGenericControl {
   label: string;
   name: string;
   type: IMetadataFormControlType;
+}
+
+export interface IMetadataFormCheckboxControl extends IMetadataFormGenericControl {
+  type: IMetadataFormControlType.CHECKBOX;
 }
 
 export interface IMetadataFormTextControl extends IMetadataFormGenericControl {
@@ -40,7 +45,7 @@ export interface IMetadataFormGroup {
   type: IMetadataFormControlType.GROUP;
 }
 
-export type IMetadataFormControl = IMetadataFormTextControl | IMetadataFormPasswordControl;
+export type IMetadataFormControl = IMetadataFormCheckboxControl | IMetadataFormTextControl | IMetadataFormPasswordControl;
 
 export type IMetadataFormItem = IMetadataFormControl | IMetadataFormGroup;
 

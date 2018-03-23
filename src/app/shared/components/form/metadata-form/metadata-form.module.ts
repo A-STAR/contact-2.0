@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { CheckModule } from '../check/check.module';
 import { InputModule } from '../input/input.module';
 
 import { MetadataFormComponent } from './metadata-form.component';
@@ -17,6 +18,7 @@ import { MetadataFormGroupComponent } from './group/metadata-form-group.componen
     MetadataFormComponent,
   ],
   imports: [
+    CheckModule,
     CommonModule,
     InputModule,
     ReactiveFormsModule,

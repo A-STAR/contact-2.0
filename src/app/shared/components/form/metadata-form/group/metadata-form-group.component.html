@@ -11,6 +11,13 @@
         [items]="item.children"
       ></app-metadata-form-group>
 
+      <!-- Checkbox -->
+      <app-checkbox
+        *ngSwitchCase="'checkbox'"
+        [formControlName]="item.name"
+        [label]="item.label"
+      ></app-checkbox>
+
       <!-- Text -->
       <app-text
         *ngSwitchCase="'text'"
