@@ -3,8 +3,9 @@ import { IContextConfig } from '@app/core/context/context.interface';
 export type IMetadataFormValidator<T> = T | IContextConfig;
 
 export enum IMetadataFormControlType {
-  GROUP = 'group',
-  TEXT = 'text',
+  GROUP    = 'group',
+  PASSWORD = 'password',
+  TEXT     = 'text',
 }
 
 export interface IMetadataFormGenericControl {
@@ -24,12 +25,22 @@ export interface IMetadataFormTextControl extends IMetadataFormGenericControl {
   };
 }
 
+export interface IMetadataFormPasswordControl extends IMetadataFormGenericControl {
+  type: IMetadataFormControlType.PASSWORD;
+  validators: {
+    complexity?: IMetadataFormValidator<number>;
+    maxLength?: IMetadataFormValidator<number>;
+    minLength?: IMetadataFormValidator<number>;
+    required?: IMetadataFormValidator<boolean>;
+  };
+}
+
 export interface IMetadataFormGroup {
   children: IMetadataFormItem[];
   type: IMetadataFormControlType.GROUP;
 }
 
-export type IMetadataFormControl = IMetadataFormTextControl;
+export type IMetadataFormControl = IMetadataFormTextControl | IMetadataFormPasswordControl;
 
 export type IMetadataFormItem = IMetadataFormControl | IMetadataFormGroup;
 

@@ -18,6 +18,22 @@
         [formControlName]="item.name"
         [label]="item.label"
       ></app-text>
+
+      <!-- Password -->
+      <ng-container *ngSwitchCase="'password'">
+        <label>
+          <span class="form-label">
+            {{ item.label | translate }}
+            <b *ngIf="item.required" class="text-danger">*</b>
+          </span>
+          <app-password-input [formControlName]="item.name"></app-password-input>
+        </label>
+      </ng-container>
+
+      <!-- Errors -->
+      <div *ngIf="item.type !== 'group'">
+        {{ getErrors(item) | json }}
+      </div>
     </ng-container>
   </ng-container>
 
