@@ -16,7 +16,7 @@ import { IGridAction } from '@app/shared/components/action-grid/action-grid.inte
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption, INamedValue } from '@app/core/converter/value-converter.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { EmailService } from './email.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -48,7 +48,7 @@ export class EmailComponent implements OnInit {
   private personRole: number;
 
   constructor (
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private cdRef: ChangeDetectorRef,
     private emailService: EmailService,
     private userConstantsService: UserConstantsService,
@@ -63,7 +63,7 @@ export class EmailComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.personRole = Number(this.actionGridFilterService.getAddOption(this.actionData, 'personRole', 0));
+    this.personRole = Number(this.actionGridService.getAddOption(this.actionData, 'personRole', 0));
 
     combineLatest(
       this.userTemplatesService.getTemplates(3, this.personRole),

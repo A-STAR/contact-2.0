@@ -6,7 +6,7 @@ import { IGridActionPayload } from '@app/shared/components/action-grid/action-gr
 import { IFilterPortfolio } from '@app/core/filters/grid-filters.interface';
 import { IOperationResult } from '@app/shared/mass-ops/debt-responsible/debt-responsible.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
 import { GridFiltersService } from '@app/core/filters/grid-filters.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -17,7 +17,7 @@ export class OutsourcingService {
   private baseUrl = '/mass/debts/outsourcing';
 
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private dataService: DataService,
     private gridFiltersService: GridFiltersService,
     private notificationsService: NotificationsService
@@ -28,7 +28,7 @@ export class OutsourcingService {
     return this.dataService
       .update(`${this.baseUrl}/send`, {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData),
+          idData: this.actionGridService.buildRequest(idData),
           actionData: { outPortfolioId: data.id }
         }
       )
@@ -47,7 +47,7 @@ export class OutsourcingService {
     return this.dataService
       .update(`${this.baseUrl}/exclude`, {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData)
+          idData: this.actionGridService.buildRequest(idData)
         }
       )
       .pipe(
@@ -65,7 +65,7 @@ export class OutsourcingService {
     return this.dataService
       .update(`${this.baseUrl}/return`, {},
         {
-         idData: this.actionGridFilterService.buildRequest(idData)
+         idData: this.actionGridService.buildRequest(idData)
         }
       )
       .pipe(

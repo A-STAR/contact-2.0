@@ -94,6 +94,7 @@ export class UserDictionariesService {
   static DICTIONARY_MESSAGE_RECIPIENT_TYPE        = 73;
   static DICTIONARY_AGENT_STATUS                  = 75;
   static DICTIONARY_FORMULA_TYPE                  = 76;
+  static DICTIONARY_PRINT_FILE_FORMAT_CODE        = 77;
   static DICTIONARY_PRINT_SYSTEM_TYPE             = 78;
 
   static USER_DICTIONARY_FETCH         = 'USER_DICTIONARY_FETCH';

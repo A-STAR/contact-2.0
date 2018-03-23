@@ -40,6 +40,7 @@ const label = makeKey('widgets.contactProperty.dialogs.edit.attributes');
 @Component({
   selector: 'app-contact-property-tree-edit',
   templateUrl: './contact-property-tree-edit.component.html',
+  styleUrls: [ './contact-property-tree-edit.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactPropertyTreeEditComponent implements OnInit {
@@ -267,23 +268,12 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     };
 
     return [
-      { controlName: 'code', type: 'text', width: 6, disabled: this.isEditing },
-      {
-        controlName: 'names',
-        type: 'multilanguage',
-        langConfig: {
-          entityAttributeId: EntityTranslationsConstants.SPEC_CONTACT_TREE_NAME,
-          entityId: this.selectedId
-        },
-        createMode: !this.isEditing,
-        required: true,
-        width: 6
-      },
       {
         children: [
           {
-            width: 6,
+            width: 4,
             children: [
+              { controlName: 'code', type: 'text', disabled: this.isEditing },
               { controlName: 'boxColor', type: 'colorpicker' },
               {
                 controlName: 'commentMode',
@@ -296,6 +286,21 @@ export class ContactPropertyTreeEditComponent implements OnInit {
               { controlName: 'promiseMode', ...promiseOptions },
               { controlName: 'paymentMode', ...promiseOptions },
               { controlName: 'callReasonMode', ...modeOptions },
+            ]
+          },
+          {
+            width: 4,
+            children: [
+              {
+                controlName: 'names',
+                type: 'multilanguage',
+                langConfig: {
+                  entityAttributeId: EntityTranslationsConstants.SPEC_CONTACT_TREE_NAME,
+                  entityId: this.selectedId
+                },
+                createMode: !this.isEditing,
+                required: true
+              },
               // TODO(d.maltsev):  required if statusReasonMode equals 2 or 3
               // See: http://confluence.luxbase.int:8080/browse/WEB20-419
               { controlName: 'debtStatusCode', type: 'select', options: debtStatusOptions },
@@ -317,11 +322,6 @@ export class ContactPropertyTreeEditComponent implements OnInit {
                   this.cdRef.markForCheck();
                 })
               },
-            ]
-          },
-          {
-            width: 6,
-            children: [
               { controlName: 'debtReasonMode', ...modeOptions },
               { controlName: 'template', type: 'segmented', ...templateInputOptions },
               { controlName: 'nextCallDays', type: 'segmented', ...nextCallInputOptions },
@@ -332,6 +332,11 @@ export class ContactPropertyTreeEditComponent implements OnInit {
                 // TODO(d.maltsev): check with BA for the rules
                 display: attributes[EntityAttributesService[`DICT_VALUE_${i}`]].isUsed,
               })),
+            ]
+          },
+          {
+            width: 4,
+            children: [
               { controlName: 'isInvalidContact', type: 'checkbox' },
               { controlName: 'addPhone', type: 'checkbox' },
               { controlName: 'isRefusal', type: 'checkbox' },

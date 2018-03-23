@@ -9,7 +9,7 @@ import { IGridActionPayload } from '@app/shared/components/action-grid/action-gr
 import { IVisit, IVisitOperator, IOperationResult } from './visit-prepare.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
@@ -23,7 +23,7 @@ export class VisitPrepareService extends AbstractActionService {
 
   constructor(
     protected actions: Actions,
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     protected store: Store<IAppState>,
@@ -40,7 +40,7 @@ export class VisitPrepareService extends AbstractActionService {
     return this.dataService
       .update(`${this.visitUrl}/prepare`, {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData),
+          idData: this.actionGridService.buildRequest(idData),
           actionData: visit
         }
       )
@@ -51,7 +51,7 @@ export class VisitPrepareService extends AbstractActionService {
     return this.dataService
       .update(`${this.visitUrl}/cancel`, {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData)
+          idData: this.actionGridService.buildRequest(idData)
         }
       )
       .catch(this.notificationsService.deleteError().entity('entities.visit.gen.singular').dispatchCallback());
@@ -66,10 +66,10 @@ export class VisitPrepareService extends AbstractActionService {
   }
 
   getVisitsCount(idData: IGridActionPayload): number {
-    return this.actionGridFilterService.getSelectionCount(idData) || 0;
+    return this.actionGridService.getSelectionCount(idData) || 0;
   }
 
   isFilterAction(idData: IGridActionPayload): boolean {
-    return this.actionGridFilterService.isFilterAction(idData);
+    return this.actionGridService.isFilterAction(idData);
   }
 }

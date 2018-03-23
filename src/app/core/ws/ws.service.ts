@@ -1,37 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { first, publishReplay, refCount } from 'rxjs/operators';
 import * as R from 'ramda';
 
 import { IWSConnection } from './ws.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
+import { ConfigService } from '@app/core/config/config.service';
 
 @Injectable()
 export class WSService {
-  private baseUrl$ = this.http.get('./assets/server/root.json')
-    .pipe(
-      publishReplay(1),
-      refCount()
-    )
-    .map(response => response.ws);
-
   constructor(
-    private http: HttpClient,
+    private configService: ConfigService,
   ) {}
 
-  connect<T>(url: string): Observable<IWSConnection<T>> {
-    return this.baseUrl$
-      .pipe(first())
-      .map(baseUrl => {
-        const listener = new BehaviorSubject<T>(null);
-        return this.createWSConnection(
-          this.open(baseUrl + url, data => listener.next(data)),
-          listener
-        );
-      });
+  connect<T>(url: string): IWSConnection<T> {
+    const baseUrl = this.configService.config.api.ws;
+    const listener = new BehaviorSubject<T>(null);
+    return this.createWSConnection(
+      this.open(baseUrl + url, data => listener.next(data)),
+      listener
+    );
   }
 
   private open(url: string, callback: (data: any) => void): WebSocket {

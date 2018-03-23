@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IGridAction, ICloseAction } from '@app/shared/components/action-grid/action-grid.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DebtService } from '@app/core/debt/debt.service';
 import { RegisterContactOpenService } from './register-contact-open.service';
 
@@ -31,19 +31,19 @@ export class RegisterContactOpenComponent implements OnInit {
   campaignId: number;
 
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private debtService: DebtService,
     private registerContactOpenService: RegisterContactOpenService
   ) { }
 
   ngOnInit(): void {
-    const { debtId, personId } = this.actionGridFilterService.buildRequest(this.actionData.payload);
+    const { debtId, personId } = this.actionGridService.buildRequest(this.actionData.payload);
 
     this.debtId = debtId;
     this.entityId = personId;
 
-    this.entityTypeId = Number(this.actionGridFilterService.getAddOption(this.actionData, 'entityTypeId', 0));
-    this.campaignId = Number(this.actionGridFilterService.getAddOption(this.actionData, 'campaignId', 0));
+    this.entityTypeId = Number(this.actionGridService.getAddOption(this.actionData, 'entityTypeId', 0));
+    this.campaignId = Number(this.actionGridService.getAddOption(this.actionData, 'campaignId', 0));
   }
 
   get canRegisterPhones$(): Observable<boolean> {

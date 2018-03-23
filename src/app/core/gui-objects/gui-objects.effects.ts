@@ -21,11 +21,7 @@ export class GuiObjectsEffects {
         ? this.readGuiObjects()
           .map(guiObjects => ({ type: GuiObjectsService.GUI_OBJECTS_FETCH_SUCCESS, payload: guiObjects }))
           .catch(error => {
-            if (error.status === 401) {
-              this.authService.redirectToLogin();
-            } else {
-              this.router.navigate(['/connection-error']);
-            }
+            this.router.navigate(['/connection-error']);
             return [
               this.notificationService.fetchError()
                 .entity('entities.guiObjects.gen.plural').response(error).action()

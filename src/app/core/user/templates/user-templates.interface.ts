@@ -20,3 +20,8 @@ export interface IUserTemplates {
 export interface IUserTemplatesState {
   templates: IUserTemplates;
 }
+
+export interface IUserLetterTemplate {
+  id: number;
+  name: string;
+}

@@ -93,6 +93,7 @@ export interface IMetadata {
   filters: IMetadataFilter[];
   titlebar?: IMetadataTitlebar;
   defaultAction?: string;
+  selectionAction?: string;
   permits?: string[];
 }
 

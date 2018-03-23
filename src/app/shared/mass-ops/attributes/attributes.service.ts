@@ -7,7 +7,7 @@ import { IGridActionPayload } from '@app/shared/components/action-grid/action-gr
 import { ILookupPortfolio, ILookupTimeZone } from '@app/core/lookup/lookup.interface';
 import { IOperationResult } from '@app/shared/mass-ops/debt-responsible/debt-responsible.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
@@ -24,7 +24,7 @@ export class AttributesService {
   ];
 
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private dataService: DataService,
     private lookupService: LookupService,
     private notificationsService: NotificationsService
@@ -34,7 +34,7 @@ export class AttributesService {
     return this.dataService
       .update('/mass/debts/attributechange', {},
         {
-         idData: this.actionGridFilterService.buildRequest(idData),
+         idData: this.actionGridService.buildRequest(idData),
          actionData: data
         }
       )

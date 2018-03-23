@@ -113,7 +113,8 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   onChange(value: string): void {
-    const newValue = Number(value) || null;
+    const valueAsNumber = Number(value);
+    const newValue = isNaN(valueAsNumber) ? null : valueAsNumber;
     this.update(newValue);
   }
 

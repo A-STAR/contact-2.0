@@ -73,10 +73,46 @@
         }
       },
       "shared": {
+        "address": {
+          "toolbar": {
+            "letter": "Letter"
+          },
+          "letterGeneration": {
+            "title": "Letter Generation",
+            "templateId": "Template",
+            "formatCode": "Format",
+            "regLetter": "Register letter"
+          }
+        },
         "contactRegistration": {
           "cancelDialog": {
             "message": "Are you sure you want to cancel contact registration?",
             "title": "Cancel Contact Registration"
+          },
+          "contactGrid": {
+            "tabs": {
+              "selectFromDebt": {
+                "title": "Select From Linked",
+                "grid": {
+                  "linkTypeCode": "Тип связи",
+                  "personFullName": "ФИО",
+                  "personRole": "Роль"
+                }
+              },
+              "selectFromAll": {
+                "title": "Select From All"
+              },
+              "add": {
+                "title": "Add Manually",
+                "form": {
+                  "firstName": "Имя",
+                  "lastName": "Фамилия",
+                  "middleName": "Отчество",
+                  "linkTypeCode": "Тип связи",
+                  "personTypeCode": "Тип персоны"
+                }
+              }
+            }
           },
           "edit": {
             "dialogs": {
@@ -2874,6 +2910,9 @@
     },
     "formulas": {
       "gen": { "singular": "formula", "plural": "formulas" }
+    },
+    "letters": {
+      "gen": { "singular": "letter", "plural": "letters" }
     }
   },
   "massOperations": {
@@ -3399,7 +3438,8 @@
       "fuchsia": "Fuchsia",
       "orange": "Orange",
       "pink": "Pink",
-      "yellow": "Yellow"
+      "yellow": "Yellow",
+      "lightViolet": "Light violet"
     },
     "dialog": {
       "result": {

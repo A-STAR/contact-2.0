@@ -1,6 +1,12 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
+import { map } from 'rxjs/operators';
 
 import { IViewFormControl, IViewFormData, IViewFormItem } from './view-form.interface';
+
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -8,15 +14,16 @@ import { IViewFormControl, IViewFormData, IViewFormItem } from './view-form.inte
   styleUrls: [ './view-form.component.scss' ],
   templateUrl: './view-form.component.html',
 })
-export class ViewFormComponent implements OnInit {
+export class ViewFormComponent {
   @Input() data: IViewFormData = {};
   @Input() controls: IViewFormControl[] = [];
 
   isLoading = false;
 
-  ngOnInit(): void {
-    // implement data loading for controls
-  }
+  constructor(
+    private userDictionariesService: UserDictionariesService,
+    private valueConverterService: ValueConverterService,
+  ) {}
 
   get items(): any {
     return this.controls.map(control => ({
@@ -29,5 +36,23 @@ export class ViewFormComponent implements OnInit {
     return {
       flexBasis: item.width ? `${100 / 12 * item.width}%` : '100%',
     };
+  }
+
+  getValue(item: IViewFormControl, value: any): Observable<string> {
+    switch (item.type) {
+      case 'date':
+        return of(this.valueConverterService.ISOToLocalDate(value));
+      case 'dict':
+        return item.dictCode
+          ? this.userDictionariesService.getDictionary(item.dictCode).pipe(
+              map(terms => {
+                const term = terms.find(t => t.code === value);
+                return term ? term.name : value;
+              }),
+            )
+          : of('');
+      default:
+        return of(value);
+    }
   }
 }

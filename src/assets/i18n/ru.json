@@ -73,10 +73,46 @@
         }
       },
       "shared": {
+        "address": {
+          "toolbar": {
+            "letter": "Письмо"
+          },
+          "letterGeneration": {
+            "title": "Формирование писем",
+            "templateId": "Шаблон",
+            "formatCode": "Формат",
+            "regLetter": "Регистрировать письмо"
+          }
+        },
         "contactRegistration": {
           "cancelDialog": {
             "message": "Вы действительно хотите отменить регистрацию текущего контакта?",
             "title": "Отмена"
+          },
+          "contactGrid": {
+            "tabs": {
+              "selectFromDebt": {
+                "title": "Выбрать из привязанных к долгу",
+                "grid": {
+                  "linkTypeCode": "Тип связи",
+                  "personFullName": "ФИО",
+                  "personRole": "Роль"
+                }
+              },
+              "selectFromAll": {
+                "title": "Выбрать из всех"
+              },
+              "add": {
+                "title": "Добавить вручную",
+                "form": {
+                  "firstName": "Имя",
+                  "lastName": "Фамилия",
+                  "middleName": "Отчество",
+                  "linkTypeCode": "Тип связи",
+                  "personTypeCode": "Тип персоны"
+                }
+              }
+            }
           },
           "edit": {
             "dialogs": {
@@ -2874,6 +2910,9 @@
     },
     "formulas": {
       "gen": { "singular": "формулы", "plural": "формул" }
+    },
+    "letters": {
+      "gen": { "singular": "письма", "plural": "писем" }
     }
   },
   "massOperations": {
@@ -3399,7 +3438,8 @@
       "fuchsia": "Фуксия",
       "orange": "Оранжевый",
       "pink": "Розовый",
-      "yellow": "Желтый"
+      "yellow": "Желтый",
+      "lightViolet": "Светло-фиолетовый"
     },
     "dialog": {
       "result": {

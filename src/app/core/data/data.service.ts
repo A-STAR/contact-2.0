@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { empty } from 'rxjs/observable/empty';
-import { publishReplay, refCount, finalize, catchError, flatMap } from 'rxjs/operators';
+import { finalize, catchError } from 'rxjs/operators';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
 import { IEntityTranslation } from '../entity/translations/entity-translations.interface';
 import { IQueryParam, IQueryParams } from './data.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
+import { ConfigService } from '@app/core/config/config.service';
 
 interface RequestOptions {
   body?: any;
@@ -29,20 +30,12 @@ export class DataService {
   static METHOD_OPTIONS = 'OPTIONS';
 
   private nRequests$ = new BehaviorSubject<number>(0);
-  private rootUrl$: Observable<string>;
 
   constructor(
     private authService: AuthService,
+    private configService: ConfigService,
     private http: HttpClient
-  ) {
-    this.rootUrl$ = this
-      .readLocal('./assets/server/root.json')
-      .pipe(
-        publishReplay(1),
-        refCount()
-      )
-      .map(response => response.url);
-  }
+  ) {}
 
   get isLoading$(): Observable<boolean> {
     return this.nRequests$
@@ -153,30 +146,27 @@ export class DataService {
     // increase the request counter for the loader
     this.nRequests$.next(this.nRequests$.value + 1);
 
-    return this.validateUrl(url)
-      .pipe(
-        flatMap(rootUrl => {
-          const route = this.createRoute(url, routeParams);
-          const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
+    const rootUrl = this.configService.config.api.http;
+    const route = this.createRoute(url, routeParams);
+    const api = prefix && !route.startsWith(prefix) ? prefix + route : route;
 
-          return this.http.request(method, `${rootUrl}${api}`, {
-            ...options,
-            params: this.prepareHttpParams(options.params),
-            headers
-          });
-        }),
-        catchError(resp => {
-          if (401 === resp.status) {
-            this.authService.dispatchInvalidTokenAction();
-            return empty();
-          }
-          // rethrow the error up the chain
-          return ErrorObservable.create(resp);
-        }),
-        finalize(() => {
-          this.nRequests$.next(this.nRequests$.value - 1);
-        })
-      );
+    return this.http.request(method, `${rootUrl}${api}`, {
+      ...options,
+      params: this.prepareHttpParams(options.params),
+      headers
+    }).pipe(
+      catchError(resp => {
+        if (401 === resp.status) {
+          this.authService.dispatchInvalidTokenAction();
+          return empty();
+        }
+        // rethrow the error up the chain
+        return ErrorObservable.create(resp);
+      }),
+      finalize(() => {
+        this.nRequests$.next(this.nRequests$.value - 1);
+      })
+    );
   }
 
   private prepareHttpParams(params: IQueryParams = {}): HttpParams {
@@ -205,13 +195,6 @@ export class DataService {
       formData.append('properties', properties);
     }
     return formData;
-  }
-
-  private validateUrl(url: string = ''): Observable<string> {
-    if (!url) {
-      return ErrorObservable.create('Error: no url passed to the DataService');
-    }
-    return this.rootUrl$;
   }
 
   private createRoute(url: string, params: object): string {

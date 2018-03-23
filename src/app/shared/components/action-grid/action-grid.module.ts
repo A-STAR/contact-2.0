@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ActionGridFilterModule } from './filter/action-grid-filter.module';
+import { AreaModule } from '@app/shared/components/layout/area/area.module';
 import { ContactLogModule } from '@app/shared/mass-ops/contact-log/contact-log.module';
 import { DebtResponsibleModule } from '@app/shared/mass-ops/debt-responsible/debt-responsible.module';
 import { DebtStatusModule } from '@app/shared/mass-ops/debt-status/debt-status.module';
@@ -21,10 +22,13 @@ import { TitlebarModule } from '../titlebar/titlebar.module';
 import { VisitAddModule } from '@app/shared/mass-ops/visit-add/visit-add.module';
 import { VisitPrepareModule } from '@app/shared/mass-ops/visit-prepare/visit-prepare.module';
 
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
+
 import { ActionGridComponent } from './action-grid.component';
 
 @NgModule({
   imports: [
+    AreaModule,
     CommonModule,
     ContactLogModule,
     DebtStatusModule,
@@ -46,6 +50,7 @@ import { ActionGridComponent } from './action-grid.component';
     VisitPrepareModule,
     RegisterContactOpenModule,
   ],
+  providers: [ ActionGridService ],
   exports: [
     ActionGridComponent,
   ],

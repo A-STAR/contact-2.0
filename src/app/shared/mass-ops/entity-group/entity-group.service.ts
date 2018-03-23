@@ -8,7 +8,7 @@ import { IGridAction } from '@app/shared/components/action-grid/action-grid.inte
 import { IEntityGroup } from '../entity-group/entity-group.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -22,7 +22,7 @@ export class EntityGroupService extends AbstractActionService {
 
   constructor(
     protected actions: Actions,
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     private userPermissionsService: UserPermissionsService,
@@ -49,7 +49,7 @@ export class EntityGroupService extends AbstractActionService {
           groupId
         },
         {
-          idData: this.actionGridFilterService.buildRequest(actionParams.payload)
+          idData: this.actionGridService.buildRequest(actionParams.payload)
         }
       )
       .do(res => {
@@ -63,6 +63,6 @@ export class EntityGroupService extends AbstractActionService {
   }
 
   getEntityTypeId(actionParams: IGridAction): number {
-    return this.actionGridFilterService.getAddOption(actionParams, 'entityTypeId', 0) as number;
+    return this.actionGridService.getAddOption(actionParams, 'entityTypeId', 0) as number;
   }
 }
