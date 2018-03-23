@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
 import { IMassEmail } from './email.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { catchError, tap } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { catchError, tap } from 'rxjs/operators';
 @Injectable()
 export class EmailService {
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
@@ -21,7 +21,7 @@ export class EmailService {
     return this.dataService
       .create('/mass/emails/form', {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData),
+          idData: this.actionGridService.buildRequest(idData),
           actionData: { ...email, personRole }
         }
       )

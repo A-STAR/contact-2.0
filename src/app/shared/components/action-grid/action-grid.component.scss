@@ -1,0 +1,11 @@
+.grid-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+.grid-details {
+  flex-basis: 40%;
+}
+.grid-has-details {
+  flex-basis: 60%;
+}

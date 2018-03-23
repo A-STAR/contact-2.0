@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 
@@ -12,7 +12,7 @@ export class PromiseResolveService {
   private url = '/mass/promises';
 
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private dataService: DataService,
     private notificationsService: NotificationsService,
   ) {}
@@ -21,7 +21,7 @@ export class PromiseResolveService {
     return this.dataService
       .update(`${this.url}/confirm`, {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData)
+          idData: this.actionGridService.buildRequest(idData)
         }
       )
       .do(res => {
@@ -38,7 +38,7 @@ export class PromiseResolveService {
     return this.dataService
       .update(`${this.url}/delete`, {},
         {
-          idData: this.actionGridFilterService.buildRequest(idData)
+          idData: this.actionGridService.buildRequest(idData)
         }
       )
       .do(res => {

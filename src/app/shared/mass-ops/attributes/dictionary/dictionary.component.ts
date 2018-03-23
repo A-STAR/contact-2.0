@@ -17,7 +17,7 @@ import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/ac
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IUserTerm } from '@app/core/user/dictionaries/user-dictionaries.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
+import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { AttributesService } from '../attributes.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -54,7 +54,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
   private permissionsSub: Subscription;
 
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
+    private actionGridService: ActionGridService,
     private attributesService: AttributesService,
     private cdRef: ChangeDetectorRef,
     private userPermissionsService: UserPermissionsService,
@@ -63,7 +63,7 @@ export class DictionaryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.dictCodeNumber = Number(this.actionGridFilterService.getAddOption(this.actionData, 'dictCode', 0));
+    this.dictCodeNumber = Number(this.actionGridService.getAddOption(this.actionData, 'dictCode', 0));
 
     this.title = this.actionName ? labelKey(`${this.actionName}.title`) : labelKey(`changeDefaultAttr.title`);
 
