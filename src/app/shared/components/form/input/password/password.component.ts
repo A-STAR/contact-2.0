@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -14,6 +14,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PasswordComponent implements ControlValueAccessor {
+  @Input() label: string;
+  @Input() required: string;
+
   isDisabled: boolean;
 
   private _value: string;
@@ -30,7 +33,8 @@ export class PasswordComponent implements ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(): void {
+  registerOnTouched(fn: Function): void {
+    this.propagateTouch = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {
@@ -59,5 +63,10 @@ export class PasswordComponent implements ControlValueAccessor {
     this.cdRef.markForCheck();
   }
 
+  onFocusOut(): void {
+    this.propagateTouch();
+  }
+
   private propagateChange: Function = () => {};
+  private propagateTouch: Function = () => {};
 }

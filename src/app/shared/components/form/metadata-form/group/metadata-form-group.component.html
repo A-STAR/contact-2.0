@@ -14,21 +14,18 @@
       <!-- Text -->
       <app-text
         *ngSwitchCase="'text'"
-        [errors]="getErrors(item)"
         [formControlName]="item.name"
         [label]="item.label"
+        [required]="false"
       ></app-text>
 
       <!-- Password -->
-      <ng-container *ngSwitchCase="'password'">
-        <label>
-          <span class="form-label">
-            {{ item.label | translate }}
-            <b *ngIf="item.required" class="text-danger">*</b>
-          </span>
-          <app-password-input [formControlName]="item.name"></app-password-input>
-        </label>
-      </ng-container>
+      <app-password-input
+        *ngSwitchCase="'password'"
+        [formControlName]="item.name"
+        [label]="item.label"
+        [required]="false"
+      ></app-password-input>
 
       <!-- Errors -->
       <div *ngIf="item.type !== 'group'">
