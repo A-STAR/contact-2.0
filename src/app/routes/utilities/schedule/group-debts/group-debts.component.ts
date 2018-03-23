@@ -19,7 +19,6 @@ import { ActionGridComponent } from '@app/shared/components/action-grid/action-g
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { addGridLabel } from '@app/core/utils';
-import { IMetadataTitlebar } from '@app/core/metadata/metadata.interface';
 
 @Component({
   selector: 'app-group-debts',
