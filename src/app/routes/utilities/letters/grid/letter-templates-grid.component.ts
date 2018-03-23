@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -12,8 +12,9 @@ import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { DialogFunctions } from '@app/core/dialog';
+import { DownloaderComponent } from '@app/shared/components/downloader/downloader.component';
 
+import { DialogFunctions } from '@app/core/dialog';
 import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
 @Component({
@@ -23,6 +24,7 @@ import { addGridLabel, combineLatestAnd } from '@app/core/utils';
   templateUrl: './letter-templates-grid.component.html',
 })
 export class LetterTemplatesGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+  @ViewChild(DownloaderComponent) downloader: DownloaderComponent;
 
   private selectedTemplate$ = new BehaviorSubject<ILetterTemplate>(null);
 
@@ -61,6 +63,14 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
         action: () => this.setDialog('removeTemplate'),
         enabled: combineLatestAnd([
           this.canDelete$,
+          this.selectedTemplate$.map(Boolean)
+        ])
+      },
+      {
+        type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD,
+        action: () => this.onExport(),
+        enabled: combineLatestAnd([
+          this.canView$,
           this.selectedTemplate$.map(Boolean)
         ])
       },
@@ -117,6 +127,18 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
     return selectedTemplate ? [ selectedTemplate ] : [];
   }
 
+  get exportUrl(): string {
+    if (this.selectedTemplate) {
+      return `letters/templates/${this.selectedTemplate.id}/file`;
+    }
+  }
+
+  get exportFileName(): string {
+    if (this.selectedTemplate) {
+      return this.selectedTemplate.fileName;
+    }
+  }
+
   onSelect([ template ]: ILetterTemplate[]): void {
     this.selectedTemplate$.next(template);
   }
@@ -133,6 +155,10 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
         this.selectedTemplate$.next(null);
         this.fetch();
       });
+  }
+
+  onExport(): void {
+    this.downloader.download();
   }
 
   private onAdd(): void {

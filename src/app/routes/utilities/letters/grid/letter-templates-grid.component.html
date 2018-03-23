@@ -8,6 +8,12 @@
   (cancel)="onCloseDialog()">
 </app-dialog-action>
 
+<app-downloader
+  entityTranslationKey="entities.letters.gen.plural"
+  [name]="exportFileName"
+  [url]="exportUrl"
+></app-downloader>
+
 <div class="flex vertical">
   <div class="flex-item">
     <app-titlebar [titlebar]="titlebar"></app-titlebar>
