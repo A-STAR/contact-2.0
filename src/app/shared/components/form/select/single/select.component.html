@@ -11,7 +11,7 @@
       #input
       readonly="readonly"
       type="text"
-      class="form-control select-search"
+      [ngClass]="{'form-control select-search': true, disabled: disabled}"
       autocomplete="off"
       [attr.placeholder]="(placeholder || '') | translate"
       [ngModel]="activeLabel | translate"
@@ -24,11 +24,13 @@
       [ngClass]="caretCls"
       (click)="onCaret($event)"
     ></i>
+    <!--
     <i
       *ngIf="!disabled && !required && activeLabel"
-      class="co co-clear select-clear"
+      class="co co-close select-clear"
       (click)="onClear($event)"
     ></i>
+    -->
 
     <ul
       *ngIf="open"

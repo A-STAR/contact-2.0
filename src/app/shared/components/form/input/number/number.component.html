@@ -14,8 +14,10 @@
       (keydown)="onKeyDown($event)"
       (ngModelChange)="onChange($event)"
     />
-    <i class="fa fa-angle-up" (click)="onIncrementClick()"></i>
-    <i class="fa fa-angle-down" (click)="onDecrementClick()"></i>
+    <ng-container *ngIf="!disabled">
+      <i class="fa fa-angle-up" (click)="onIncrementClick()"></i>
+      <i class="fa fa-angle-down" (click)="onDecrementClick()"></i>
+    </ng-container>
   </div>
   <div>
     <span *ngIf="errors">{{ errors | json }}</span>
