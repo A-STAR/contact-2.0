@@ -220,7 +220,7 @@
           </app-simple-grid>
         </ng-template>
       </div>
-      <div class="grid-details" *ngIf="isGridDetails">
+      <div class="grid-details" *ngIf="isGridDetails" [ngClass]="{ 'grid-details-with-footer': hasPagination }">
         <app-contact-log-details
           *ngIf="selectionActionName === 'showContactHistory'"
           [actionData]="selectionActionData"

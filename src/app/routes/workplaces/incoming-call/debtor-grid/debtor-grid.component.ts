@@ -53,7 +53,7 @@ export class DebtorGridComponent implements OnInit, OnDestroy {
     },
     {
       action: 'showContactHistory',
-      params: [ 'personId' ],
+      params: [ 'debtorId' ],
     },
     {
       action: 'debtSetResponsible',

@@ -20,7 +20,8 @@ export class ContactLogDetailsComponent {
 
   @Input()
   set actionData(action: IGridAction) {
-    this.personId = this.actionGridService.buildRequest(action.payload).personId;
+    const payload = this.actionGridService.buildRequest(action.payload);
+    this.entityId = Object.keys(payload).map(key => payload[key])[0];
     this.contacts$ = combineLatest(
             this.userDictionariesService
             .getDictionaries([
@@ -29,7 +30,7 @@ export class ContactLogDetailsComponent {
               UserDictionariesService.DICTIONARY_SMS_STATUS,
               UserDictionariesService.DICTIONARY_EMAIL_STATUS,
             ]),
-            this.contactLogDetailsService.fetchAll(this.personId)
+            this.contactLogDetailsService.fetchAll(this.entityId)
           )
           .map(([dicts, response]) => {
             this.dicts = dicts;
@@ -64,7 +65,7 @@ export class ContactLogDetailsComponent {
     private userDictionariesService: UserDictionariesService,
   ) { }
 
-  private personId: number;
+  private entityId: number;
   contacts$: Observable<any[]>;
 
   private getContactType(item: IContact): IUserTerm[] {

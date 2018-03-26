@@ -215,6 +215,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return this.currentSelectionAction && !!this.selectionActionData;
   }
 
+  get hasPagination(): boolean {
+    return !!this.metadataKey;
+  }
+
   isAttrChangeDictionaryDlg(): boolean {
     return [
       'changeRegionAttr',
