@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs/observable/of';
 import { Observable } from 'rxjs/Observable';
@@ -14,9 +14,8 @@ import { doOnceIf, invert } from '@app/core/utils/index';
 
 @Component({
   selector: 'app-toolbar-2',
-  templateUrl: './toolbar-2.component.html',
   styleUrls: [ './toolbar-2.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './toolbar-2.component.html',
 })
 export class Toolbar2Component {
   @Input() items: IToolbarItem[] = [];
