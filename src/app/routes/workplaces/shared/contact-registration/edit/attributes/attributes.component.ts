@@ -14,7 +14,6 @@ import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, getValue } from '@app/core/utils';
 import { CellValueChangedEvent } from 'ag-grid';
-import { IOutcome } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 
 @Component({
   selector: 'app-contact-registration-attributes',
