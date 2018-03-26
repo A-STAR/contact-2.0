@@ -23,7 +23,21 @@ export class FormsComponent {
         name: 'text',
         type: IMetadataFormControlType.TEXT,
         validators: {
-          maxLength: 20,
+          required: true,
+        },
+      },
+      {
+        disabled: false,
+        display: true,
+        label: 'Password Input',
+        name: 'password',
+        type: IMetadataFormControlType.PASSWORD,
+        validators: {
+          complexity: {
+            type: IContextConfigItemType.CONSTANT,
+            method: IContextByValueBagMethod.HAS,
+            value: 'UserPassword.Complexity.Use',
+          },
           minLength: {
             type: IContextConfigItemType.CONSTANT,
             method: IContextByValueBagMethod.VALUE,

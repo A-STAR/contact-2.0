@@ -11,13 +11,35 @@
         [items]="item.children"
       ></app-metadata-form-group>
 
+      <!-- Checkbox -->
+      <app-checkbox
+        *ngSwitchCase="'checkbox'"
+        [formControlName]="item.name"
+        [label]="item.label"
+      ></app-checkbox>
+
       <!-- Text -->
       <app-text
         *ngSwitchCase="'text'"
-        [errors]="getErrors(item)"
         [formControlName]="item.name"
         [label]="item.label"
+        [required]="false"
       ></app-text>
+
+      <!-- Password -->
+      <app-password-input
+        *ngSwitchCase="'password'"
+        [formControlName]="item.name"
+        [label]="item.label"
+        [required]="false"
+      ></app-password-input>
+
+      <!-- Errors -->
+      <div class="errors">
+        <span *ngIf="item.type !== 'group'">
+          {{ getErrorMessage(item).message | translate:getErrorMessage(item).data }}
+        </span>
+      </div>
     </ng-container>
   </ng-container>
 
