@@ -1,0 +1,17 @@
+@import '../../../../styles/app/variables';
+
+.errors {
+  color: $brand-danger;
+  font-size: 11px;
+  height: 11px;
+  line-height: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .ng-invalid.ng-touched {
+  .form-control {
+    border-bottom-color: $brand-danger;
+  }
+}

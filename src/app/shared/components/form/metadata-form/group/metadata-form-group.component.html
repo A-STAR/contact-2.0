@@ -35,8 +35,10 @@
       ></app-password-input>
 
       <!-- Errors -->
-      <div *ngIf="item.type !== 'group'">
-        {{ getErrorMessage(item).message | translate:getErrorMessage(item).data }}
+      <div class="errors">
+        <span *ngIf="item.type !== 'group'">
+          {{ getErrorMessage(item).message | translate:getErrorMessage(item).data }}
+        </span>
       </div>
     </ng-container>
   </ng-container>

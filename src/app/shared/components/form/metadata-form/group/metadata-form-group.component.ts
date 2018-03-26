@@ -6,6 +6,7 @@ import { IMetadataFormControl, IMetadataFormItem } from '../metadata-form.interf
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-metadata-form-group',
+  styleUrls: [ 'metadata-form-group.component.scss' ],
   templateUrl: 'metadata-form-group.component.html'
 })
 export class MetadataFormGroupComponent {
