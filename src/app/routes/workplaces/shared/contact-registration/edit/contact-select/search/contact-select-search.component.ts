@@ -12,7 +12,9 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 
-import { isEmpty, makeKey, range, addLabelForEntity } from '@app/core/utils';
+import { makeKey, range, addLabelForEntity } from '@app/core/utils';
+
+import { isNil } from 'ramda';
 
 const labelKey = makeKey('routes.workplaces.shared.contactRegistration.contactGrid.tabs.add.form');
 
@@ -25,6 +27,8 @@ const labelKey = makeKey('routes.workplaces.shared.contactRegistration.contactGr
 export class ContactSelectSearchComponent {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   @ViewChild(Grid2Component) grid: Grid2Component;
+
+  private selectedPersonId: number;
 
   controls = [
     { controlName: 'linkTypeCode', type: 'select', dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE },
@@ -51,18 +55,18 @@ export class ContactSelectSearchComponent {
   ) {}
 
   get isValid(): boolean {
-    return !isEmpty(this.grid && this.grid.selected);
+    return !isNil(this.selectedPersonId);
   }
 
   get person(): IContactPerson {
     return {
       ...this.form.serializedValue,
-      personId: this.selectedPerson.id,
+      personId: this.selectedPersonId,
     };
   }
 
-  onSelect(): void {
-    this.cdRef.markForCheck();
+  onSelect(persons: number[]): void {
+    this.selectedPersonId = persons[0];
   }
 
   onRequest(): void {
@@ -75,9 +79,5 @@ export class ContactSelectSearchComponent {
         this.rowCount = response.total;
         this.cdRef.markForCheck();
       });
-  }
-
-  private get selectedPerson(): IContactPerson {
-    return this.grid && this.grid.selected && this.grid.selected[0] as any;
   }
 }

@@ -27,7 +27,7 @@ export class ContactRegistrationPhoneComponent {
   ) {}
 
   get person(): IContactPersonRequest | INewContactPerson {
-    return this.contactForPhone.person;
+    return this.contactForPhone && this.contactForPhone.person;
   }
 
   get canDisplayForm$(): Observable<boolean> {

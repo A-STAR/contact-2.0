@@ -4,7 +4,6 @@ import {
   Component,
   Input,
   OnInit,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { filter, mergeMap } from 'rxjs/operators';
@@ -18,9 +17,7 @@ import { ContactRegistrationService } from '../../../contact-registration.servic
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
-
-import { isEmpty, addLabelForEntity } from '@app/core/utils';
+import { addLabelForEntity } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,13 +28,13 @@ import { isEmpty, addLabelForEntity } from '@app/core/utils';
 export class ContactSelectGridComponent implements OnInit {
   @Input() excludeCurrentPersonId: boolean;
 
-  @ViewChild(Grid2Component) grid: Grid2Component;
-
   columns$ = this.gridService.getColumns([
     { dataType: 3, name: 'personFullName' },
     { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_PERSON_ROLE, name: 'personRole' },
     { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_CONTACT_PERSON_TYPE, name: 'linkTypeCode' },
   ].map(addLabelForEntity('contactPerson')), {});
+
+  person: { personId: number };
 
   rows: ILinkedContactPerson[] = [];
   rowCount = 0;
@@ -55,23 +52,15 @@ export class ContactSelectGridComponent implements OnInit {
   }
 
   get isValid(): boolean {
-    return !isEmpty(this.grid && this.grid.selected);
-  }
-
-  get person(): any {
-    return { personId: this.selectedPerson.personId };
+    return this.person && !!this.person.personId;
   }
 
   ngOnInit(): void {
     this.fetch();
   }
 
-  onSelect(): void {
-    this.cdRef.markForCheck();
-  }
-
-  private get selectedPerson(): ILinkedContactPerson {
-    return this.grid && this.grid.selected && this.grid.selected[0] as any;
+  onSelect(persons: number[]): void {
+    this.person = { personId: persons[0] };
   }
 
   private fetch(): void {

@@ -86,8 +86,8 @@ export class ContractorObjectsGridComponent extends DialogFunctions implements O
 
     this.dictionarySubscription = this.userDictionariesService
       .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_ROLE_ENTITIES)
-      .subscribe(([ firstOpt, secondOpt ]) => {
-        this.typeCodeOptions = [ firstOpt, secondOpt ];
+      .subscribe(([ firstOpt, secondOpt, _, fourOpt ]) => {
+        this.typeCodeOptions = [ firstOpt, secondOpt, fourOpt ];
         this.cdRef.markForCheck();
       });
   }

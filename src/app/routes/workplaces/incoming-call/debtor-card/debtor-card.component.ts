@@ -13,9 +13,10 @@ import { makeKey } from '@app/core/utils';
 const labelKey = makeKey('modules.incomingCall.debtorCard.form');
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
   selector: 'app-incoming-call-debtor-card',
   templateUrl: 'debtor-card.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtorCardComponent implements AfterViewInit, OnDestroy {
   controls = [

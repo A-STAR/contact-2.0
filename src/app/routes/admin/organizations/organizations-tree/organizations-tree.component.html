@@ -21,23 +21,30 @@
   (cancel)="cancelAction()">
 </app-dialog-action>
 
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
-
-<app-tree
-  layout="horizontal"
-  selectionMode="single"
-  [style]="{ height: '400px' }"
-  [dndEnabled]="true"
-  [dblClickEnabled]="canEditOrganization | async"
-  [collapseAdjacentNodes]="true"
-  [expandNodeOnClick]="true"
-  [value]="organizations | async"
-  [selection]="selectedOrganization | async"
-  (changeNodesLocation)="onChangeNodesLocation($event)"
-  (onNodeSelect)="onNodeSelect($event)"
-  (onNodeDblClick)="onNodeEdit($event)"
-  (onNodeExpand)="onNodeSelect($event)">
-</app-tree>
-<span *ngIf="!(canViewOrganization | async)">
-  {{ 'organizations.organizations.errors.view' | translate }}
-</span>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow">
+    <app-tree
+      layout="horizontal"
+      selectionMode="single"
+      [style]="{ height: '100%' }"
+      [dndEnabled]="true"
+      [dblClickEnabled]="canEditOrganization | async"
+      [collapseAdjacentNodes]="true"
+      [expandNodeOnClick]="true"
+      [value]="organizations | async"
+      [selection]="selectedOrganization | async"
+      (changeNodesLocation)="onChangeNodesLocation($event)"
+      (onNodeSelect)="onNodeSelect($event)"
+      (onNodeDblClick)="onNodeEdit($event)"
+      (onNodeExpand)="onNodeSelect($event)">
+    </app-tree>
+  </div>
+  <div class="flex-item">
+    <span *ngIf="!(canViewOrganization | async)">
+      {{ 'organizations.organizations.errors.view' | translate }}
+    </span>
+  </div>
+</div>
