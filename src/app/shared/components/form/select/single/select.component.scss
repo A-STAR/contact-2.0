@@ -1,7 +1,7 @@
 @import '../../../../styles/app/variables.scss';
 
 i.co {
-  font-size: 15px;
+  font-size: 12px;
   width: 1em;
   height: 1em;
 }
@@ -20,7 +20,7 @@ i.co {
 
 .select-caret {
   position: absolute;
-  top: 0.35em;
+  top: 0.55em;
   right: 0.3em;
   transition: transform 400ms ease;
   transform: rotateZ(270deg);
