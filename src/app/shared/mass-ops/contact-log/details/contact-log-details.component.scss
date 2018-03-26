@@ -1,8 +1,8 @@
 @import '../../../styles/app/variables.scss';
 
 .contact-log-detail-container {
-  overflow: hidden;
-  padding-bottom: 72px;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   &:after {
     content: '';
@@ -22,9 +22,9 @@
 }
 
 .contact-log-detail-list {
-  overflow-x: hidden;
   overflow-y: auto;
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0px;
 }
 
 .contact-log-detail-info {
