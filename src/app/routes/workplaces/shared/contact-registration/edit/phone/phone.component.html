@@ -7,6 +7,7 @@
       <app-select
         formControlName="typeCode"
         label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.type"
+        [isRequired]="true"
         [dictCode]="phoneTypeDictCode"
       ></app-select>
     </div>
@@ -18,6 +19,8 @@
         formControlName="phone"
         label="routes.workplaces.shared.contactRegistration.edit.form.phone.form.number"
         [required]="true"
+        [minLength]="10"
+        [maxLength]="11"
       ></app-text>
     </div>
 

@@ -17,7 +17,6 @@ import { IAppState } from '@app/core/state/state.interface';
 import { IDynamicFormControl } from '../../form/dynamic-form/dynamic-form.interface';
 import { IMetadataColumn, IMetadataFilterOperator } from '@app/core/metadata/metadata.interface';
 
-import { ActionGridFilterService } from '@app/shared/components/action-grid/filter/action-grid-filter.service';
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
@@ -42,7 +41,6 @@ export class ActionGridFilterComponent implements OnInit {
   private columnsMetadata: IMetadataColumn[];
 
   constructor(
-    private actionGridFilterService: ActionGridFilterService,
     private cdRef: ChangeDetectorRef,
     private entityAttributesService: EntityAttributesService,
     private store: Store<IAppState>,
@@ -62,8 +60,6 @@ export class ActionGridFilterComponent implements OnInit {
       this.formControls = metadata.filters.controls;
       this.operators = metadata.filters.operators;
       this.columnsMetadata = metadata.columns;
-      // notify subscribers that it has filter
-      this.actionGridFilterService.hasFilter$.next(true);
       this.cdRef.markForCheck();
     });
   }

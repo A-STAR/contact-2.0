@@ -68,22 +68,7 @@ export class GridService {
         const { columns } = metadata;
         const dictionaryIds = this.getDictionaryIdsFromColumns(columns);
         return this.buildColumns(columns, dictionaryIds, renderers)
-          .map(cols => ({ ...metadata, columns: cols as IAGridColumn[] }))
-          // TODO(i.lobanov): remove mock when added in config
-          .map(data => ({
-            ...data,
-            titlebar: {
-              items: [
-                {
-                  name: 'search',
-                },
-                {
-                  name: 'exportExcel',
-                  permissions: ['LIST_TAB_EXPORT_TO_EXCEL']
-                },
-              ]
-            }
-          }));
+          .map(cols => ({ ...metadata, columns: cols as IAGridColumn[] }));
       });
   }
 

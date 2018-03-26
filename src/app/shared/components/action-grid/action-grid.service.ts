@@ -20,6 +20,8 @@ import { compose } from 'ramda';
 @Injectable()
 export class ActionGridService {
 
+  static DefaultSelectionAction = 'showContactHistory';
+
   cbActions: { [key: string]: (action: IGridAction) => any };
 
   private actionPayloads = {

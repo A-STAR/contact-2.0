@@ -217,6 +217,21 @@
     ></app-dialog-multi-select>
   </ng-container>
 
+  <ng-container *ngSwitchCase="'gridselectwrapper'">
+    <label>
+      <span class="form-label">
+        {{ control.label | translate }}
+        <b *ngIf="control.required" class="text-danger">*</b>
+      </span>
+    </label>
+    <app-grid-select
+      [filterType]="control.filterType"
+      [filterParams]="control.filterParams"
+      [formControlName]="control.controlName"
+      [controlDisabled]="control.disabled"
+    ></app-grid-select>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'password'">
     <label>
       <span class="form-label">

@@ -1,3 +1,5 @@
+import { propEq } from 'ramda';
+
 export type FilterConditionType = 'AND' | 'OR' | 'NOT AND' | 'NOT OR';
 
 export type FilterOperatorType = '==' | '!=' | '>=' | '<=' | '>' | '<'
@@ -106,5 +108,23 @@ export class FilterObject {
 
   hasFilter(): boolean {
     return this.filters && this.filters.length > 0;
+  }
+
+  get(name: string): any {
+    let found: any;
+
+    if (propEq('name', name, this)) {
+      found = this.values;
+    } else {
+      this.filters.some(function iter(filter: FilterObject): boolean {
+        if (propEq('name', name, filter)) {
+          found = filter.values;
+          return true;
+        }
+        return Array.isArray(filter.filters) && filter.filters.some(iter);
+      });
+    }
+
+    return found;
   }
 }
