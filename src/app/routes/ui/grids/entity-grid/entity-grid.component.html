@@ -1,0 +1,23 @@
+<app-entity-add-action></app-entity-add-action>
+<app-entity-edit-action></app-entity-edit-action>
+<app-entity-delete-action></app-entity-delete-action>
+<app-entity-refresh-action></app-entity-refresh-action>
+
+<ng-content></ng-content>
+
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar *ngIf="titlebar" [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      *ngIf="columns"
+      [persistenceKey]="persistenceKey"
+      [columns]="columns"
+      [selection]="selectedRows"
+      [rows]="rows"
+      (select)="onSelect($event)"
+      (dblClick)="onEdit($event)"
+    ></app-simple-grid>
+  </div>
+</div>
