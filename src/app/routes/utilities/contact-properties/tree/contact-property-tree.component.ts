@@ -105,13 +105,13 @@ export class ContactPropertyTreeComponent extends DialogFunctions implements OnI
     return this.userPermissionsService.has('CONTACT_TREE_COPY');
   }
 
-  onContactTypeChange(selection: IOption[]): void {
-    this.contactType = Number(selection[0].value);
+  onContactTypeChange(contactType: number): void {
+    this.contactType = Number(contactType);
     this.fetch();
   }
 
-  onTreeTypeChange(selection: IOption[]): void {
-    this.treeType = Number(selection[0].value);
+  onTreeTypeChange(treeType: number): void {
+    this.treeType = Number(treeType);
     this.fetch();
   }
 
