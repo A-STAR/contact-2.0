@@ -1,3 +1,5 @@
+import { IContactTreeAttribute } from '@app/routes/utilities/contact-properties/contact-properties.interface';
+
 export enum IContactRegistrationStatus {
   REGISTRATION = 1,
   PAUSE,
@@ -19,7 +21,7 @@ export enum IContactRegistrationMode {
 
 export interface IOutcome {
   addPhone: number;
-  // attributes: IContactTreeAttribute[];
+  attributes?: IContactTreeAttribute[];
   autoCommentIds: string;
   boxColor: string;
   callReasonMode: number;

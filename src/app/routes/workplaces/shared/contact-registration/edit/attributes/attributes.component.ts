@@ -64,6 +64,7 @@ export class ContactRegistrationAttributesComponent implements OnInit {
       filter(([ params, outcome ]) => Boolean(params) && Boolean(outcome)),
       mergeMap(([ params, outcome ]) => this.attributesService.fetchAll(params.debtId, params.contactType, outcome.id)),
     )
+    .filter(attrs => attrs.some(a => a.disabledValue !== 1))
     .subscribe(attributes => {
       this.attributes = attributes;
       this.cdRef.markForCheck();

@@ -75,6 +75,12 @@ export class EditComponent extends DialogFunctions {
     );
   }
 
+  get displayAttributeTree$(): Observable<boolean> {
+    return this.contactRegistrationService.outcome$.pipe(
+      map(outcome => Boolean(outcome && outcome.attributes && outcome.attributes.length)),
+    );
+  }
+
   get displayAttachmentForm$(): Observable<boolean> {
     return this.contactRegistrationService.outcome$.pipe(
       map(outcome => outcome && [2, 3].includes(outcome.fileAttachMode)),
