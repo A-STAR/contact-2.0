@@ -53,7 +53,6 @@ import { MetadataFormModule } from './components/form/metadata-form/metadata-for
 import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multilanguage/multilanguage.module';
 import { OperatorModule } from './components/operator/operator.module';
-import { PasswordModule } from './components/form/password/password.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
@@ -125,7 +124,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MomentModule,
     MultiLanguageModule,
     OperatorModule,
-    PasswordModule,
     PopupInputModule,
     ProgressbarModule,
     QBuilder2Module,
@@ -205,7 +203,6 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MultiLanguageModule,
     NumericInputComponent,
     OperatorModule,
-    PasswordModule,
     PopupInputModule,
     ProgressbarModule,
     QBuilderComponent,

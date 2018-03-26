@@ -3,15 +3,12 @@ import { Route, RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 
 import { SharedModule } from '../shared/shared.module';
-import { PagesModule } from './pages/pages.module';
 
 import { AuthService } from '../core/auth/auth.service';
 import { PermissionsEffects } from './admin/roles/permissions.effects';
 import { PermissionsService } from './admin/roles/permissions.service';
 
 import { LayoutComponent } from '../layout/layout.component';
-import { LoginComponent } from './pages/login/login.component';
-import { ConnectionErrorComponent } from './pages/connection-error/connection-error.component';
 
 const routes: Route[] = [
   {
@@ -28,16 +25,15 @@ const routes: Route[] = [
       { path: 'help', loadChildren: './ui/ui.module#UIModule' },
     ]
   },
-  { path: 'login', component: LoginComponent },
-  { path: 'logout', component: LoginComponent },
-  { path: 'connection-error', component: ConnectionErrorComponent },
+  { path: 'login', loadChildren: './pages/login/login.module#LoginModule' },
+  { path: 'logout', loadChildren: './pages/login/login.module#LoginModule' },
+  { path: 'connection-error', loadChildren: './pages/connection-error/connection-error.module#ConnectionErrorModule' },
   { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
   imports: [
     EffectsModule.forFeature([PermissionsEffects]),
-    PagesModule,
     RouterModule.forRoot(routes),
     SharedModule,
   ],

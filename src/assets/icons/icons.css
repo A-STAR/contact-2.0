@@ -457,7 +457,7 @@
 .co-m-home:before {
   content: "\e932";
 }
-.co-m-incoming-call:before {
+.co-m-call-incoming:before {
   content: "\e933";
 }
 .co-m-mail:before {

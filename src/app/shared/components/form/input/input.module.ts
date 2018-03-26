@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NumberComponent } from './number/number.component';
+import { PasswordComponent } from './password/password.component';
 import { TextareaComponent } from './textarea/textarea.component';
 import { TextComponent } from './text/text.component';
 
@@ -15,11 +16,13 @@ import { TextComponent } from './text/text.component';
   ],
   exports: [
     NumberComponent,
+    PasswordComponent,
     TextareaComponent,
     TextComponent,
   ],
   declarations: [
     NumberComponent,
+    PasswordComponent,
     TextareaComponent,
     TextComponent,
   ],

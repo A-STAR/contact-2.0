@@ -266,8 +266,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  onSelectionAction(selected: number[]): void {
-    const selection = this.selection.find(r => r[this.rowIdKey] === selected[0]);
+  onSelectionAction(selected: Array<number | T>): void {
+    const selection = this.grid instanceof Grid2Component
+      ? this.selection.find(r => r[this.rowIdKey] === selected[0])
+      : selected[0];
     this.selectionActionData = this.setDialogData({ metadataAction: this.currentSelectionAction, selection });
     this.cdRef.markForCheck();
   }
