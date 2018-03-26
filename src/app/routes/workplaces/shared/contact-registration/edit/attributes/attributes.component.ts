@@ -14,6 +14,7 @@ import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 import { addGridLabel, getValue } from '@app/core/utils';
 import { CellValueChangedEvent } from 'ag-grid';
+import { IOutcome } from '@app/routes/workplaces/shared/contact-registration/contact-registration.interface';
 
 @Component({
   selector: 'app-contact-registration-attributes',
@@ -64,6 +65,7 @@ export class ContactRegistrationAttributesComponent implements OnInit {
       filter(([ params, outcome ]) => Boolean(params) && Boolean(outcome)),
       mergeMap(([ params, outcome ]) => this.attributesService.fetchAll(params.debtId, params.contactType, outcome.id)),
     )
+    .filter(attrs => attrs.some(a => a.disabledValue !== 1))
     .subscribe(attributes => {
       this.attributes = attributes;
       this.cdRef.markForCheck();

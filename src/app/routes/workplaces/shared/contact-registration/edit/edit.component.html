@@ -69,7 +69,10 @@
       <app-contact-registration-status-change [formGroup]="form"></app-contact-registration-status-change>
 
       <!-- Attributes -->
-      <app-contact-registration-attributes></app-contact-registration-attributes>
+      <app-contact-registration-attributes
+        *ngIf="displayAttributesForm$ | async"
+      >
+      </app-contact-registration-attributes>
   </div>
 
   <!-- Buttons -->
