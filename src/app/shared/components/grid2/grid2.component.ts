@@ -10,6 +10,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import { Router, ActivationEnd, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import * as R from 'ramda';
@@ -125,11 +126,15 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   private saveChangesDebounceSub: Subscription;
   private userPermissionsBag: ValueBag;
   private userPermissionsSub: Subscription;
+  private routeChangeSub: Subscription;
 
   private viewportDatasource: ViewPortDatasource;
+  private settingsReseted = false;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private router: Router,
+    private route: ActivatedRoute,
     private contextMenuService: ContextMenuService,
     private notificationService: NotificationsService,
     private settingsService: SettingsService,
@@ -167,6 +172,16 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     if (!this.persistenceKey) {
       console.warn('Please provide the [persistenceKey] or the grid will not be able to save its settings');
     }
+
+    this.routeChangeSub = this.router.events
+      .filter(event => event instanceof ActivationEnd)
+      .filter(event => (event as ActivationEnd).snapshot === this.route.snapshot)
+      .subscribe(_ => {
+        if (this.settingsReseted) {
+          this.gridOptions.api.doLayout();
+          this.settingsReseted = false;
+        }
+      });
 
     this.userPermissionsSub = this.userPermissionsService.bag()
       .subscribe(bag => this.userPermissionsBag = bag);
@@ -223,6 +238,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     this.persistenceClearSub.unsubscribe();
     this.saveChangesDebounceSub.unsubscribe();
     this.userPermissionsSub.unsubscribe();
+    this.routeChangeSub.unsubscribe();
   }
 
   focusNextCell(callback: (cell: GridCellDef) => boolean): GridCellDef {
@@ -702,26 +718,31 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private applyColumnSettings(columns: Column[], settings: IAgridColSetting[]): IAgridColSetting[] {
-    return columns.map((column: Column, index: number) => {
+    const columnsState = columns.map((column: Column, index: number) => {
+      let width = column.getActualWidth(),
+          hide = !column.isVisible();
       const originalIndex = settings.findIndex(col => col.colId === column.getColId());
       // tslint:disable-next-line:no-bitwise
       if (!!~originalIndex) {
-        const { width, hide } = settings[originalIndex];
-        // TODO(i.lobanov): optimize by applying in batch
-        this.gridOptions.columnApi.setColumnVisible(column, !hide);
-        this.gridOptions.columnApi.setColumnWidth(column, width);
-        this.gridOptions.columnApi.moveColumn(column, originalIndex);
+        width = settings[originalIndex].width;
+        hide = settings[originalIndex].hide;
       }
-      return { index, originalIndex, column };
+      return {
+        index,
+        originalIndex,
+        column: {
+          width,
+          hide,
+          colId: column.getColId()
+        },
+      };
     })
-    .sort((a, b) => a.index === b.index ? a.originalIndex - b.originalIndex : a.index - b.index)
-    .map(item => item.column)
-    .map(column => ({
-        width: column.getActualWidth(),
-        hide: !column.isVisible(),
-        colId: column.getColId()
-      })
-    );
+    .sort((a, b) => (a.originalIndex != null ? a.originalIndex : a.index) - (b.originalIndex != null ? b.originalIndex : b.index))
+    .map(item => item.column);
+
+    this.gridOptions.columnApi.setColumnState(columnsState);
+
+    return columnsState;
   }
 
   private setGridOptions(): void {
@@ -874,6 +895,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     // so grid callback fires once
     this.gridOptions.api.setSortModel(null);
     this.gridOptions.api.setFilterModel(null);
+    this.settingsReseted = true;
   }
 
   private saveGridSettings(): void {
