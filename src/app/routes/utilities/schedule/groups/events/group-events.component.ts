@@ -139,6 +139,7 @@ export class GroupEventsComponent extends DialogFunctions implements OnInit, OnD
 
     this.actionSubscription = this.scheduleEventService
       .getAction(ScheduleEventService.MESSAGE_SCHEDULE_EVENT_SAVED)
+      .filter(() => !!this.groupId)
       .subscribe(() => {
         this.fetch();
         this.selectedEvents$.next(this.selectedEvents);
