@@ -1,20 +1,39 @@
 @import "../../../../shared/styles/app/variables";
 
-i {
-  display: block;
-  margin: 8px 4px;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  text-align: center;
-  line-height: 38px;
-  background-color: rgba(0, 0, 0, 0.3);
-}
-
-li span.menu-item {
+li .menu-item {
   padding: 0;
+
+  i {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    font-size: 14px;
+    height: 32px;
+    line-height: 32px;
+    margin: 8px 4px;
+    text-align: center;
+    width: 32px;
+  }
+
   &.disabled {
     opacity: .5;
     pointer-events: none;
+  }
+
+  &:not(.disabled) {
+    .co-call-pause {
+      background-color: #ff0000;
+    }
+
+    .co-call-unpause {
+      background-color: #00aeff;
+    }
+
+    .co-call-transfer {
+      background-color: #00aeff;
+    }
+
+    .co-call-cancel {
+      background-color: #ff0000;
+    }
   }
 }
