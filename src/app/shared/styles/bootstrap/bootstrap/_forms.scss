@@ -164,6 +164,14 @@ output {
   // [converter] extracted textarea& to textarea.form-control
 }
 
+.form-control ~ .input-group-btn {
+  .btn {
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+  }
+}
+
 // Reset height for `textarea`s
 textarea.form-control {
   height: auto;

@@ -8,7 +8,7 @@
 <ul class="flex">
   <li class="flex-item" *ngIf="showHoldCall$ | async">
     <span class="menu-item" [class.disabled]="!(canHoldCall$ | async)" (click)="onHoldCall()">
-      <i class="icon co-pause"></i>
+      <i class="icon co-call-pause"></i>
     </span>
   </li>
   <li class="flex-item" *ngIf="showRetrieveCall$ | async">

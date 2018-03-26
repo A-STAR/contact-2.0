@@ -39,14 +39,20 @@ exports[`ValueEditorComponent should render value editor with typeCode 1 (number
           />
           
     
+          
+          
+          
+      
           <i
             class="fa fa-angle-up"
           />
           
-    
+      
           <i
             class="fa fa-angle-down"
           />
+          
+    
           
   
         </div>
@@ -151,6 +157,7 @@ exports[`ValueEditorComponent should render value editor with typeCode 4 (boolea
             autocomplete="off"
             class="form-control select-search ng-untouched ng-pristine ng-valid"
             ng-reflect-model=""
+            ng-reflect-ng-class="[object Object]"
             placeholder=""
             readonly="readonly"
             type="text"
@@ -165,7 +172,6 @@ exports[`ValueEditorComponent should render value editor with typeCode 4 (boolea
           />
           
     
-          
           
 
     
@@ -268,14 +274,20 @@ exports[`ValueEditorComponent should render value editor with typeCode 5 (float)
           />
           
     
+          
+          
+          
+      
           <i
             class="fa fa-angle-up"
           />
           
-    
+      
           <i
             class="fa fa-angle-down"
           />
+          
+    
           
   
         </div>
@@ -372,6 +384,7 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
             autocomplete="off"
             class="form-control select-search ng-untouched ng-pristine ng-valid"
             ng-reflect-model=""
+            ng-reflect-ng-class="[object Object]"
             placeholder=""
             readonly="readonly"
             type="text"
@@ -386,7 +399,6 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
           />
           
     
-          
           
 
     
@@ -485,6 +497,7 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
             autocomplete="off"
             class="form-control select-search ng-untouched ng-pristine ng-valid"
             ng-reflect-model=""
+            ng-reflect-ng-class="[object Object]"
             placeholder=""
             readonly="readonly"
             type="text"
@@ -499,7 +512,6 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
           />
           
     
-          
           
 
     
@@ -597,6 +609,7 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
             autocomplete="off"
             class="form-control select-search ng-untouched ng-pristine ng-valid"
             ng-reflect-model=""
+            ng-reflect-ng-class="[object Object]"
             placeholder=""
             readonly="readonly"
             type="text"
@@ -611,7 +624,6 @@ exports[`ValueEditorComponent should render value editor with typeCode 6 (dictio
           />
           
     
-          
           
 
     

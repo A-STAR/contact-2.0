@@ -304,6 +304,30 @@
             "value": "Результат"
           }
         }
+      },
+      "letters": {
+        "grid": {
+          "id": "ID",
+          "name": "Название",
+          "fileName": "Имя файла",
+          "recipientTypeCode": "Получатель",
+          "serviceTypeCode": "Тип сервиса",
+          "comment": "Комментарий"
+        },
+        "card": {
+          "name": "Название",
+          "file": "Файл",
+          "recipientTypeCode": "Получатель",
+          "serviceTypeCode": "Тип сервиса",
+          "comment": "Комментарий"
+        },
+        "titlebar": {
+          "title": "Шаблоны писем"
+        },
+        "remove": {
+          "title": "Удаление шаблона",
+          "confirmMessage": "Вы действительно хотите удалить выбранный шаблон?"
+        }
       }
     }
   },
@@ -394,6 +418,7 @@
         "SCHEDULE": "Расписание",
         "FORMULAS": "Формулы",
         "COURTS": "Суды и ФССП",
+        "LETTERS": "Шаблоны писем",
         "WORKPLACES": "Рабочие места",
         "DEBT_LIST": "Список долгов",
         "DEBTOR_CARD": "Карточка должника",
@@ -2888,6 +2913,9 @@
     },
     "letters": {
       "gen": { "singular": "письма", "plural": "писем" }
+    },
+    "letterTemplates": {
+      "gen": { "singular": "шаблона письма", "plural" : "шаблонов писем" }
     }
   },
   "massOperations": {

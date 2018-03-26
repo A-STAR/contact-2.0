@@ -12,6 +12,8 @@ import {
 
 import { ContextService } from '@app/core/context/context.service';
 
+import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-metadata-form',
@@ -66,7 +68,8 @@ export class MetadataFormComponent<T> implements OnInit {
       const value = control.validators[key];
       return typeof value === 'object' && value !== null
         ? c => this.contextService.calculate(value).pipe(
-            map(v => this.getValidator(key, v)(c)),
+            map(v => this.getValidator(key, v)),
+            map(v => v ? v(c) : null),
             first(),
           )
         : c => of(this.getValidator(key, value)(c));
@@ -75,6 +78,8 @@ export class MetadataFormComponent<T> implements OnInit {
 
   private getValidator(key: string, value: any): ValidatorFn {
     switch (key) {
+      case 'complexity':
+        return value ? Validators.compose([ hasDigits, hasLowerCaseChars, hasUpperCaseChars ]) : null;
       case 'required':
         return value ? Validators.required : null;
       case 'minLength':

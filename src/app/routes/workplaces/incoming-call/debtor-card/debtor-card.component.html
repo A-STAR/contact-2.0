@@ -1,3 +1,8 @@
-<app-titlebar [titlebar]="titlebar"></app-titlebar>
-
-<app-view-form [controls]="controls" [data]="data"></app-view-form>
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow" style="overflow-y: scroll;">
+    <app-view-form [controls]="controls" [data]="data"></app-view-form>
+  </div>
+</div>
