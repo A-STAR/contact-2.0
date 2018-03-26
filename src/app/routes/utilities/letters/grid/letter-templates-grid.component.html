@@ -1,0 +1,31 @@
+<app-dialog-action
+  *ngIf="isDialog('removeTemplate')"
+  actionMode="danger"
+  actionTranslationKey="routes.utilities.letters.remove.confirmMessage"
+  actionMessage="default.buttons.remove"
+  titleTranslationKey="routes.utilities.letters.remove.title"
+  (action)="onRemove()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>
+
+<app-downloader
+  entityTranslationKey="entities.letterTemplates.gen.singular"
+  [name]="exportFileName"
+  [url]="exportUrl"
+></app-downloader>
+
+<div class="flex vertical">
+  <div class="flex-item">
+    <app-titlebar [titlebar]="titlebar"></app-titlebar>
+  </div>
+  <div class="flex-item grow">
+    <app-simple-grid
+      persistenceKey="[grid] utilities/letterTemplates"
+      [columns]="columns"
+      [selection]="selection"
+      [rows]="templates"
+      (select)="onSelect($event)"
+      (dblClick)="onEdit($event)"
+    ></app-simple-grid>
+  </div>
+</div>

@@ -304,6 +304,30 @@
             "value": "Result"
           }
         }
+      },
+      "letters": {
+        "grid": {
+          "id": "ID",
+          "name": "Name",
+          "fileName": "File name",
+          "recipientTypeCode": "Recipient",
+          "serviceTypeCode": "Service type",
+          "comment": "Comment"
+        },
+        "card": {
+          "name": "Name",
+          "file": "File",
+          "recipientTypeCode": "Recipient",
+          "serviceTypeCode": "Service type",
+          "comment": "Comment"
+        },
+        "titlebar": {
+          "title": "Letter templates"
+        },
+        "remove": {
+          "title": "Remove template",
+          "confirmMessage": "Do you really want to delete selected template?"
+        }
       }
     }
   },
@@ -394,6 +418,7 @@
         "SCHEDULE": "Schedule",
         "FORMULAS": "Formulas",
         "COURTS": "Coutrs",
+        "LETTERS": "Letter templates",
         "WORKPLACES": "Workplaces",
         "DEBT_LIST": "Debt list",
         "DEBTOR_CARD": "Debtor",
@@ -2888,6 +2913,9 @@
     },
     "letters": {
       "gen": { "singular": "letter", "plural": "letters" }
+    },
+    "letterTemplates": {
+      "gen": { "singular": "letter template", "plural" : "letter templates" }
     }
   },
   "massOperations": {

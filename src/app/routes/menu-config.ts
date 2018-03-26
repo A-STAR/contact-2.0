@@ -107,6 +107,11 @@ export const menuConfig: IMenuConfig = {
     link: '/utilities/courts',
     icon: 'co-legal'
   },
+  letters: {
+    text: 'sidebar.nav.menu.LETTERS',
+    link: '/utilities/letters',
+    icon: 'co-mail'
+  },
 
   // Рабочие места:
   workplaces: {
