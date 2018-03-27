@@ -43,6 +43,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   @Input() config: IDynamicFormConfig;
 
   @Output() onSelect = new EventEmitter<ISelectItemsPayload>();
+  @Output() onSubmit = new EventEmitter<void>();
 
   form: FormGroup;
 
@@ -296,6 +297,10 @@ export class DynamicFormComponent implements OnInit, OnChanges {
    */
   onCtrlValueChange(controlName: string): Observable<any> {
     return this.form.get(controlName).valueChanges;
+  }
+
+  onFormSubmit(): void {
+    this.onSubmit.emit();
   }
 
   markAsPristine(): void {
