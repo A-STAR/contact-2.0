@@ -6,8 +6,8 @@
       </div>
       <div class="panel-body">
         <p class="text-center pv-lg">{{ 'login.please_authenticate' | translate }}</p>
-        <app-metadata-form [config]="config" [data]="data"></app-metadata-form>
-        <button class="btn btn-block btn-primary mt-lg" [disabled]="!canSubmit" (click)="onSubmitClick()">
+        <app-metadata-form [config]="config" [data]="data" (submit)="onSubmit()"></app-metadata-form>
+        <button class="btn btn-block btn-primary mt-lg" [disabled]="!canSubmit" (click)="onSubmit()">
           {{ 'login.login_button' | translate }}
         </button>
       </div>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { of } from 'rxjs/observable/of';
 import { first, map } from 'rxjs/operators';
@@ -32,6 +32,8 @@ export class MetadataFormComponent<T> implements OnInit {
     }
   }
 
+  @Output() submit = new EventEmitter<void>();
+
   private _data: T;
 
   constructor(
@@ -61,6 +63,13 @@ export class MetadataFormComponent<T> implements OnInit {
     });
 
     this.populateForm();
+  }
+
+  onSubmit(event: Event): void {
+    console.log(event);
+    event.preventDefault();
+    event.stopPropagation();
+    this.submit.emit();
   }
 
   private getAsyncValidators(control: IMetadataFormControl): AsyncValidatorFn[] {
