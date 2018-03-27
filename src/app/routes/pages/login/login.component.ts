@@ -50,6 +50,7 @@ export class LoginComponent {
 
   readonly data = {
     login: this.login,
+    remember_login: Boolean(this.login),
   };
 
   constructor(
@@ -63,7 +64,7 @@ export class LoginComponent {
     return formGroup.valid && formGroup.dirty;
   }
 
-  onSubmitClick(): void {
+  onSubmit(): void {
     const { value } = this.form.formGroup;
     this.login = value.remember_login ? value.login : null;
     const { login, password } = value;

@@ -1,7 +1,8 @@
-<form *ngIf="config" [formGroup]="formGroup">
+<form *ngIf="config" [formGroup]="formGroup" (ngSubmit)="onSubmit($event)">
   <app-metadata-form-group
     [editable]="config.editable"
     [formGroup]="formGroup"
     [items]="config.items"
   ></app-metadata-form-group>
+  <button type="submit" style="visibility: hidden;"></button>
 </form>
