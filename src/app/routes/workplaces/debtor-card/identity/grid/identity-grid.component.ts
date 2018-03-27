@@ -25,7 +25,7 @@ import { addGridLabel } from '@app/core/utils';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-identity-grid',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   templateUrl: './identity-grid.component.html',
 })
 export class IdentityGridComponent extends DialogFunctions implements OnInit, OnDestroy {

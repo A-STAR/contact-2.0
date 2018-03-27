@@ -2,7 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { LayoutService } from '@app/layout/layout.service';
 
 @Component({
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-layout',
   styleUrls: [ './layout.component.scss' ],
   templateUrl: './layout.component.html',

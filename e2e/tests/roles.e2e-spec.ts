@@ -4,6 +4,7 @@ import {
   typeIntoDialogInput,
   clickDialogOkButton,
   clickTitleBarButton,
+  clickGridRow,
 } from '../utils/index';
 
 describe('admin/roles', () => {
@@ -18,6 +19,20 @@ describe('admin/roles', () => {
 
   it('should handle add role button click', async done => {
     await clickTitleBarButton('app-roles', 1);
+    await expectToMatchScreenshot();
+    done();
+  });
+
+  it('should handle copy role button click', async done => {
+    await clickGridRow('app-roles', 1);
+    await clickTitleBarButton('app-roles', 2);
+    await expectToMatchScreenshot();
+    done();
+  });
+
+  it('should handle edit role button click', async done => {
+    await clickGridRow('app-roles', 1);
+    await clickTitleBarButton('app-roles', 3);
     await expectToMatchScreenshot();
     done();
   });

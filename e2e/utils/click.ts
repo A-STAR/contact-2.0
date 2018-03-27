@@ -12,3 +12,7 @@ export const clickTitleBarButton = async (selector: string, i: number) => {
 export const clickDialogOkButton = async () => {
   await click('app-dialog button.btn.btn-success');
 };
+
+export const clickGridRow = async (selector: string, i: number) => {
+  await click(`${selector} .ag-body .ag-body-viewport-wrapper .ag-row:nth-child(${i})`);
+};

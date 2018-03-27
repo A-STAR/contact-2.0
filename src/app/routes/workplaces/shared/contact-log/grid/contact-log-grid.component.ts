@@ -22,7 +22,7 @@ import { addGridLabel } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-contact-log-grid',
   templateUrl: './contact-log-grid.component.html',
 })

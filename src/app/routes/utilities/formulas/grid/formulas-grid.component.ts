@@ -18,7 +18,7 @@ import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-formulas-grid',
   templateUrl: './formulas-grid.component.html',
 })

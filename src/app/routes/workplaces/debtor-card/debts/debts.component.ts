@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-debtor-debts',
   templateUrl: 'debts.component.html',
 })

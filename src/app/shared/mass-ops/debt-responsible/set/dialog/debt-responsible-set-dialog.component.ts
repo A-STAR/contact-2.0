@@ -8,7 +8,7 @@ import { DebtResponsibleSetService } from '../debt-responsible-set.service';
 @Component({
   selector: 'app-debt-responsible-set-dialog',
   templateUrl: './debt-responsible-set-dialog.component.html',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   styleUrls: ['./debt-responsible-set-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

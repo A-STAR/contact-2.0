@@ -25,7 +25,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-debtor-action-log',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   templateUrl: './action-log.component.html',
 })
 export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {

@@ -25,7 +25,7 @@ import { makeKey } from '@app/core/utils';
 const label = makeKey('widgets.contact.grid');
 
 @Component({
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-contact-persons-card',
   templateUrl: './contact-persons-card.component.html'
 })

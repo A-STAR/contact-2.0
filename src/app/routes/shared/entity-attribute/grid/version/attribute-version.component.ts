@@ -29,7 +29,7 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-attribute-version',
   templateUrl: './attribute-version.component.html',
 })

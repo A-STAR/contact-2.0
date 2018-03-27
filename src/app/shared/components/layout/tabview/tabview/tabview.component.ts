@@ -24,7 +24,7 @@ import { TabViewTabComponent } from '../tab/tab.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-tabview',
   styleUrls: ['./tabview.component.scss'],
   templateUrl: 'tabview.component.html',

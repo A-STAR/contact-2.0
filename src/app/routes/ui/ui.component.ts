@@ -4,7 +4,7 @@ import { ITab } from '@app/shared/components/layout/tabview/header/header.interf
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-route-ui',
   styleUrls: [ './ui.component.scss' ],
   templateUrl: './ui.component.html'

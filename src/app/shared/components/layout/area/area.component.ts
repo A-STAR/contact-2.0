@@ -8,6 +8,7 @@ import {
   HostListener,
   Input,
   OnDestroy,
+  OnInit,
   QueryList,
   Renderer2,
 } from '@angular/core';
@@ -15,6 +16,7 @@ import {
 import { IAreaLayout, IDragData } from './area.interface';
 
 import { AreaService } from './area.service';
+import { SettingsService } from '@app/core/settings/settings.service';
 
 import { range } from '@app/core/utils';
 
@@ -24,20 +26,21 @@ import { range } from '@app/core/utils';
   styleUrls: [ './area.component.scss' ],
   templateUrl: './area.component.html',
 })
-export class AreaComponent implements AfterViewInit, OnDestroy {
+export class AreaComponent implements OnInit, AfterViewInit, OnDestroy {
   private static MIN_SIZE = 100;
 
   @ContentChildren(AreaComponent, { descendants: false }) _children: QueryList<AreaComponent>;
 
   @HostBinding('style.flex-direction')
   @Input()
-  layout = IAreaLayout.COLUMN;
+  layout: IAreaLayout;
 
   @Input()
   persistenceKey: string;
 
   @Input()
   set initialSize(size: number) {
+    this._initialSize = size;
     this.setSize(size);
   }
 
@@ -47,6 +50,8 @@ export class AreaComponent implements AfterViewInit, OnDestroy {
   private rootPersistenceKey: string;
 
   private dragData: IDragData;
+
+  private _initialSize = 1;
 
   private mouseMoveListener: () => void;
   private mouseUpListener: () => void;
@@ -69,7 +74,17 @@ export class AreaComponent implements AfterViewInit, OnDestroy {
     private areaService: AreaService,
     private elRef: ElementRef,
     private renderer: Renderer2,
+    private settingsService: SettingsService,
   ) {}
+
+  ngOnInit(): void {
+    this.settingsService.onClear$.subscribe(() => {
+      if (this.persistenceKey) {
+        this.areaService.clearState(this.persistenceKey);
+      }
+      this.setSize(this._initialSize);
+    });
+  }
 
   ngAfterViewInit(): void {
     this.children.forEach((c, i) => {

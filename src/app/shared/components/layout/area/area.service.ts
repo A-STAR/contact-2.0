@@ -8,6 +8,10 @@ export class AreaService {
     private persistenceService: PersistenceService,
   ) {}
 
+  clearState(persistenceKey: string): void {
+    this.persistenceService.remove(persistenceKey);
+  }
+
   getState(persistenceKey: string, id: string): number {
     if (id) {
       const state = this.persistenceService.get(persistenceKey);

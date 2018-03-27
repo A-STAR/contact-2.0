@@ -10,7 +10,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
   selector: 'app-debtor-attributes-versions',
   templateUrl: './debtor-attributes-versions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
 })
 export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
   attributeId: number;

@@ -63,7 +63,7 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
   templateUrl: 'action-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: [ './action-grid.component.scss' ],
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   providers: [ ActionGridService ]
 })
 export class ActionGridComponent<T> extends DialogFunctions implements OnInit {

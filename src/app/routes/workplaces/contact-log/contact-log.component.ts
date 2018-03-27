@@ -9,7 +9,7 @@ const label = makeKey('modules.contactLog');
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-contact-log',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   templateUrl: 'contact-log.component.html',
 })
 export class ContactLogComponent {

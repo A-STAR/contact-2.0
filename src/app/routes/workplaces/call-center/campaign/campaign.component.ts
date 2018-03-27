@@ -7,7 +7,7 @@ import { ContactRegistrationService } from '@app/routes/workplaces/shared/contac
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   providers: [
     CampaignService,
     ContactRegistrationService,

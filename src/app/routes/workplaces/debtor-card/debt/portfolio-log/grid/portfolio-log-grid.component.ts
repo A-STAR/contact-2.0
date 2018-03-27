@@ -14,7 +14,7 @@ const label = makeKey('widgets.debt');
 @Component({
   selector: 'app-portfolio-log-grid',
   templateUrl: './portfolio-log-grid.component.html',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfolioLogGridComponent implements OnInit {

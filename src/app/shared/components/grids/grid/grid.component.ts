@@ -36,7 +36,7 @@ import { isEmpty } from '@app/core/utils/index';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-simple-grid',
   styleUrls: [ './grid.component.scss' ],
   templateUrl: './grid.component.html'
