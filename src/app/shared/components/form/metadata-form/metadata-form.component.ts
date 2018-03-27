@@ -66,7 +66,6 @@ export class MetadataFormComponent<T> implements OnInit {
   }
 
   onSubmit(event: Event): void {
-    console.log(event);
     event.preventDefault();
     event.stopPropagation();
     this.submit.emit();
