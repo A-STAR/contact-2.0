@@ -59,9 +59,10 @@ export class LetterTemplateCardComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const { file, ...template } = this.form.serializedUpdates;
     const action = this.templateId
-      ? this.lettersService.update(this.templateId, this.form.serializedUpdates)
-      : this.lettersService.create(this.form.serializedUpdates);
+      ? this.lettersService.update(this.templateId, template, file)
+      : this.lettersService.create(template, file);
 
     action.subscribe(() => {
       this.lettersService.dispatchAction(LettersService.MESSAGE_LETTER_TEMPLATE_SAVED);
@@ -97,7 +98,8 @@ export class LetterTemplateCardComponent implements OnInit {
         controlName: 'file',
         type: 'file',
         fileName: this.template && this.template.fileName,
-        validators: [ maxFileSize(1e3 * maxSize.valueN) ]
+        validators: [ maxFileSize(1e3 * maxSize.valueN) ],
+        required: !this.templateId
       }
     ] as IDynamicFormItem[];
   }

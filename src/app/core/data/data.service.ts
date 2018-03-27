@@ -186,7 +186,7 @@ export class DataService {
     }
     if (body) {
       const payload = file
-        ? { ...body, fileName: file.name }
+        ? { ...body }
         : body;
       const properties = new Blob(
         [ JSON.stringify(payload) ],

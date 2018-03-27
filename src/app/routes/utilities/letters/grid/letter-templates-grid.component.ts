@@ -122,7 +122,7 @@ export class LetterTemplatesGridComponent extends DialogFunctions implements OnI
 
   get exportUrl(): string {
     if (this.selectedTemplate) {
-      return `letters/templates/${this.selectedTemplate.id}/file`;
+      return `/letters/templates/${this.selectedTemplate.id}/file`;
     }
   }
 
