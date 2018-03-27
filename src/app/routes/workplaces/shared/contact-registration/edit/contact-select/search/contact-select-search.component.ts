@@ -42,7 +42,7 @@ export class ContactSelectSearchComponent {
     { dataType: 6, dictCode: UserDictionariesService.DICTIONARY_GENDER, name: 'genderCode' },
     { dataType: 3, name: 'passportNumber' },
     ...range(1, 10).map(i => ({ dataType: 3, name: `stringValue${i}` })),
-  ].map(addLabelForEntity('person')), {});
+  ].map(addLabelForEntity('contactPerson')), {});
 
   rows: IContactPerson[] = [];
   rowCount = 0;
