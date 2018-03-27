@@ -18,7 +18,7 @@ import { combineLatestAnd } from '@app/core/utils/helpers';
 import { DialogFunctions } from '@app/core/dialog';
 
 @Component({
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-terms',
   templateUrl: './terms.component.html'

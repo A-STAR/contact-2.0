@@ -8,7 +8,7 @@ const label = makeKey('modules.debtsProcessing');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-debt-processing',
   templateUrl: './debt-processing.component.html',
 })

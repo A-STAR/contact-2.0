@@ -2,7 +2,7 @@
 
 exports[`SimpleGridComponent should render empty grid 1`] = `
 <div
-  class="full-height"
+  class="full-size"
   id="root0"
   ng-version="5.2.4"
 >

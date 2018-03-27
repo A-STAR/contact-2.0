@@ -26,7 +26,7 @@ import { addGridLabel } from '@app/core/utils';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-statistics',
   styleUrls: ['./statistics.component.scss'],
   templateUrl: './statistics.component.html',

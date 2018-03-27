@@ -19,7 +19,7 @@ import { PermissionsService } from '../permissions.service';
 import { UserPermissionsService } from '../../../../core/user/permissions/user-permissions.service';
 
 @Component({
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-permissions-tree',
   templateUrl: './permissions-tree.component.html',
 })

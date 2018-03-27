@@ -14,7 +14,7 @@ const labelKey = makeKey('modules.incomingCall.debtorCard.form');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-incoming-call-debtor-card',
   templateUrl: 'debtor-card.component.html',
 })

@@ -13,7 +13,7 @@ import { addGridLabel } from '@app/core/utils';
 @Component({
   selector: 'app-component-log-grid',
   templateUrl: './component-log-grid.component.html',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComponentLogGridComponent implements OnInit {

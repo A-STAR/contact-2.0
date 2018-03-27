@@ -33,7 +33,7 @@ import { addGridLabel, combineLatestAnd, combineLatestOr, isEmpty } from '@app/c
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-address-grid',
   templateUrl: './address-grid.component.html',
 })

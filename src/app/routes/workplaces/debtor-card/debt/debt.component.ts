@@ -28,7 +28,7 @@ const label = makeKey('widgets.debt');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-debt-card',
   templateUrl: './debt.component.html',
 })

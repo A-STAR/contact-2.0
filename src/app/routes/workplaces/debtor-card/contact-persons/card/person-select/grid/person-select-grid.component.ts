@@ -22,7 +22,7 @@ import { DialogFunctions } from '@app/core/dialog';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-person-select-grid',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   templateUrl: './person-select-grid.component.html',
 })
 export class PersonSelectGridComponent extends DialogFunctions implements OnInit {

@@ -10,7 +10,7 @@ import { addGridLabel } from '@app/core/utils';
 @Component({
   selector: 'app-debt-responsible-set-grid',
   templateUrl: './debt-responsible-set-grid.component.html',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DebtResponsibleSetGridComponent implements OnInit {

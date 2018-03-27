@@ -26,7 +26,7 @@ import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-pledgor-property-grid',
   templateUrl: './pledgor-property-grid.component.html',
 })

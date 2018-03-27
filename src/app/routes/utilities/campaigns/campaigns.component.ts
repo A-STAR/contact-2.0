@@ -30,7 +30,7 @@ import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interf
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-campaigns',
   templateUrl: './campaigns.component.html',
 })

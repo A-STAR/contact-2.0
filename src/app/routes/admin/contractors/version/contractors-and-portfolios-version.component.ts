@@ -6,7 +6,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-contractors-and-portfolios-version',
   templateUrl: './contractors-and-portfolios-version.component.html',
 })

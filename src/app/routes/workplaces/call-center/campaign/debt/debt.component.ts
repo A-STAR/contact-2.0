@@ -15,7 +15,7 @@ import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height '},
+  host: { class: 'full-size '},
   selector: 'app-call-center-debt',
   templateUrl: 'debt.component.html',
 })

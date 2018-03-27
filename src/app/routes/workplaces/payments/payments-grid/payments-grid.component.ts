@@ -15,7 +15,7 @@ import { ActionGridComponent } from '../../../../shared/components/action-grid/a
 @Component({
   selector: 'app-workplaces-payments-grid',
   templateUrl: './payments-grid.component.html',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentsGridComponent {

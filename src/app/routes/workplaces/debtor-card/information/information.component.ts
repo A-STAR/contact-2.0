@@ -18,7 +18,7 @@ import { PersonComponent } from '@app/routes/workplaces/debtor-card/information/
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-debtor-information',
   templateUrl: './information.component.html',
 })

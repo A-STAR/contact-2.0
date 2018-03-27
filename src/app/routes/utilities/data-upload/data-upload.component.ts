@@ -40,7 +40,7 @@ import { isEmpty, TYPE_CODES } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   providers: [DataUploadService],
   selector: 'app-data-upload',
   styleUrls: ['./data-upload.component.scss'],

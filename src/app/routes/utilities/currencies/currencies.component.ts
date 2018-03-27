@@ -8,7 +8,7 @@ import { CurrenciesService } from './currencies.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-currencies',
   templateUrl: './currencies.component.html',
 })

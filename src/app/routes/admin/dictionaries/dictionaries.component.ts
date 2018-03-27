@@ -5,7 +5,7 @@ import { makeKey } from '../../../core/utils';
 const label = makeKey('dictionaries.tabs');
 
 @Component({
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-dictionaries',
   templateUrl: './dictionaries.component.html',
   styleUrls: ['./dictionaries.component.scss'],

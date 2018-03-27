@@ -5,7 +5,7 @@ import { ScheduleEventService } from '@app/routes/utilities/schedule/events/sche
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-groups',
   templateUrl: './groups.component.html',
 })

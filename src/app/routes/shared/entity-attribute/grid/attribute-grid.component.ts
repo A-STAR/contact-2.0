@@ -29,7 +29,7 @@ import { DateTimeRendererComponent } from '@app/shared/components/grids/renderer
 @Component({
   selector: 'app-entity-attribute-grid',
   templateUrl: './attribute-grid.component.html',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit, OnDestroy {

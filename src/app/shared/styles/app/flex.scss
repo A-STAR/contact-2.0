@@ -6,6 +6,7 @@
   &.vertical {
     flex-direction: column;
     height: 100%;
+    width: 100%;
   }
   &.justify-between {
     justify-content: space-between;
@@ -29,7 +30,8 @@
   }
 }
 
-.full-height {
+.full-size {
   display: block;
   height: 100%;
+  width: 100%;
 }

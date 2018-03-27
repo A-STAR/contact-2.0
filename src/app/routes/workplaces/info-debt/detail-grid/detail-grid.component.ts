@@ -13,7 +13,7 @@ import { Grid2Component } from 'app/shared/components/grid2/grid2.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-info-debt-detail-grid',
   templateUrl: './detail-grid.component.html',
 })

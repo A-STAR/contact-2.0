@@ -13,7 +13,7 @@ import { ActionGridComponent } from '@app/shared/components/action-grid/action-g
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-actions-log',
   templateUrl: './actions-log.component.html',
 })
