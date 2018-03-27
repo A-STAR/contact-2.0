@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { async as Async, TestBed } from '@angular/core/testing';
+import { EmptyObservable } from 'rxjs/observable/EmptyObservable';
 
 import { AreaService } from './area.service';
+import { SettingsService } from '@app/core/settings/settings.service';
 
 import { AreaComponent } from './area.component';
 
@@ -11,6 +13,10 @@ class AreaServiceMock {
   }
   saveState(): void {
   }
+}
+
+class SettingsServiceMock {
+  onClear$ = new EmptyObservable();
 }
 
 @Component({
@@ -56,6 +62,10 @@ describe('AreaComponent', () => {
           {
             provide: AreaService,
             useClass: AreaServiceMock,
+          },
+          {
+            provide: SettingsService,
+            useClass: SettingsServiceMock,
           }
         ],
       })
