@@ -20,7 +20,7 @@ import { combineLatestAnd } from '@app/core/utils/helpers';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-organizations-tree',
   templateUrl: './organizations-tree.component.html',
 })

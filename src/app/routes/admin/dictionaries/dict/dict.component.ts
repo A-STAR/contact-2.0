@@ -19,7 +19,7 @@ import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interf
 import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-dict',
   templateUrl: './dict.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

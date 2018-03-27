@@ -21,7 +21,7 @@ import { addGridLabel, combineLatestAnd } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-payment-grid',
   templateUrl: './payment-grid.component.html',
 })

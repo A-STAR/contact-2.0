@@ -24,7 +24,7 @@ import { addGridLabel } from '@app/core/utils';
 @Component({
   selector: 'app-employment-grid',
   templateUrl: './employment-grid.component.html',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmploymentGridComponent implements OnInit, OnDestroy {

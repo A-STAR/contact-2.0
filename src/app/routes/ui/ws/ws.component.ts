@@ -11,7 +11,7 @@ import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-route-ui-ws',
   templateUrl: './ws.component.html'
 })

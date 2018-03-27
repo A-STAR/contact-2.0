@@ -20,7 +20,7 @@ import { addGridLabel } from '@app/core/utils';
 @Component({
   selector: 'app-contact-persons-grid',
   templateUrl: './contact-persons-grid.component.html',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactPersonsGridComponent implements OnInit, OnDestroy {

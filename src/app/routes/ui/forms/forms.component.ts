@@ -8,7 +8,7 @@ import { IContextConfigItemType, IContextByValueBagMethod } from '@app/core/cont
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-route-ui-forms',
   templateUrl: './forms.component.html'
 })

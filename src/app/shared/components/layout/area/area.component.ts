@@ -31,7 +31,7 @@ export class AreaComponent implements AfterViewInit, OnDestroy {
 
   @HostBinding('style.flex-direction')
   @Input()
-  layout = IAreaLayout.COLUMN;
+  layout: IAreaLayout;
 
   @Input()
   persistenceKey: string;

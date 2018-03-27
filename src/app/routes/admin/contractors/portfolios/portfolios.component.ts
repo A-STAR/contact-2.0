@@ -32,7 +32,7 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-portfolios',
   templateUrl: './portfolios.component.html',
 })

@@ -36,7 +36,7 @@ import { invert } from '@app/core/utils';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   providers: [
     ContactRegistrationService,
   ],

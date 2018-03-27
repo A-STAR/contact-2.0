@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { ITab } from '../../../shared/components/layout/tabview/header/header.interface';
 
 @Component({
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-roles-and-permissions',
   templateUrl: './roles-and-permissions.component.html'
 })

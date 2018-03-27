@@ -18,7 +18,7 @@ import { ActionGridComponent } from '@app/shared/components/action-grid/action-g
   selector: 'app-group-debts',
   templateUrl: './group-debts.component.html',
   styleUrls: ['./group-debts.component.scss'],
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupDebtsComponent implements OnInit {

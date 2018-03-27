@@ -15,7 +15,7 @@ import { ActionGridComponent } from '../../../../shared/components/action-grid/a
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-debt-processing-grid',
   templateUrl: './grid.component.html',
 })

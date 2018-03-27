@@ -6,7 +6,7 @@ import { RoutingService } from '@app/core/routing/routing.service';
 @Component({
   selector: 'app-contractor-attributes',
   templateUrl: './contractor-attributes.component.html',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorAttributesComponent implements OnInit {

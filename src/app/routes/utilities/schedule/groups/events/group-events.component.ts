@@ -27,7 +27,7 @@ import { combineLatestAnd, addGridLabel } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-group-events',
   templateUrl: './group-events.component.html',
 })

@@ -10,7 +10,7 @@ const label = makeKey('widgets.groups.tabs');
 
 @Component({
   selector: 'app-schedule',
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   templateUrl: './schedule.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

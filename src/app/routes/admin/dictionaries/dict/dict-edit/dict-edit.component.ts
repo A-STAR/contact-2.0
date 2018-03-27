@@ -23,7 +23,7 @@ import { toLabeledValues } from '@app/core/utils';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 @Component({
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-dict-edit',
   templateUrl: './dict-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

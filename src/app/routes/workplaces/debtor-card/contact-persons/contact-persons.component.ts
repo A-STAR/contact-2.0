@@ -9,7 +9,7 @@ interface AddressCardRouteParams {
 }
 
 @Component({
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-contact-persons',
   templateUrl: './contact-persons.component.html'
 })

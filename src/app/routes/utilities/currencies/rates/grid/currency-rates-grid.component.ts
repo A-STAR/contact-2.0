@@ -18,7 +18,7 @@ import { DateRendererComponent } from '@app/shared/components/grids/renderers';
 import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-currency-rates-grid',
   templateUrl: './currency-rates-grid.component.html',

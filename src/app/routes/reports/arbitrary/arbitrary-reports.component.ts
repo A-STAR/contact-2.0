@@ -7,7 +7,7 @@ import { ParamGridComponent } from './params/grid/param-grid.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-arbitrary-reports',
   templateUrl: './arbitrary-reports.component.html',
 })

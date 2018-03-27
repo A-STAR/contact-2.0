@@ -14,7 +14,7 @@ const label = makeKey('modules.infoDebt');
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-info-debt',
   templateUrl: 'info-debt.component.html',
 })

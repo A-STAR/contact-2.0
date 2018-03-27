@@ -36,7 +36,7 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   selector: 'app-phone-grid',
   templateUrl: './phone-grid.component.html',
 })

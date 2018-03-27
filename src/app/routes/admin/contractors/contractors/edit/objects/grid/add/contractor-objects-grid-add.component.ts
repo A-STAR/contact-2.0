@@ -19,7 +19,7 @@ import { addGridLabel } from '@app/core/utils';
   selector: 'app-contractor-objects-grid-add',
   templateUrl: './contractor-objects-grid-add.component.html',
   styleUrls: ['./contractor-objects-grid-add.component.scss'],
-  host: { class: 'full-height' },
+  host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractorObjectsGridAddComponent implements OnInit {
