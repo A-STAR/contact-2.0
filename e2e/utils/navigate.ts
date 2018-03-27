@@ -17,7 +17,7 @@ export const navigate = async (path: string) => {
   if (await getUrl() === '/login') {
     await type('app-login form app-text input', 'admin');
     await type('app-login form app-password-input input', 'spring');
-    await click('app-login form button');
+    await click('app-login form button[type="submit"]');
     await pause();
     await goto(path);
   }
