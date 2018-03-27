@@ -79,7 +79,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
       this.lookupService.lookup<ILookupLanguage>('languages'),
       // This is where multilanguage controls get different from other controls.
       // We have to get value not from form but from server api.
-      entityId && entityAttributeId
+      entityId && entityAttributeId && !this.createMode
         ? this.dataService.readTranslations(entityId, entityAttributeId)
         : of(null),
     ).subscribe(([ languages, value ]) => {

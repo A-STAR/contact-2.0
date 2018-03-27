@@ -1,0 +1,9 @@
+<app-dialog-action
+  *ngIf="isDialog('delete')"
+  actionMode="danger"
+  [actionTranslationKey]="grid.translationKey + '.remove.confirmMessage'"
+  actionMessage="default.buttons.remove"
+  [titleTranslationKey]="grid.translationKey + '.remove.title'"
+  (action)="onRemove()"
+  (cancel)="onCloseDialog()">
+</app-dialog-action>

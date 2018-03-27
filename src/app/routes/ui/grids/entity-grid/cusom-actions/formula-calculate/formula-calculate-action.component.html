@@ -1,0 +1,5 @@
+<app-formula-calculate-dialog
+  *ngIf="isDialog('calculateFormula')"
+  [formulaId]="selectedFormulaId"
+  (close)="onCloseDialog()"
+></app-formula-calculate-dialog>
