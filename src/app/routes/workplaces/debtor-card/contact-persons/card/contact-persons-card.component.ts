@@ -6,13 +6,13 @@ import { of } from 'rxjs/observable/of';
 
 import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IContact, IContactLink } from '@app/routes/workplaces/debtor-card/contact-persons/contact-persons.interface';
-import { IEmployment } from '@app/routes/workplaces/debtor-card/employment/employment.interface';
-import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
+import { IContact, IContactLink } from '@app/routes/workplaces/core/contact-persons/contact-persons.interface';
+import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 import { IPerson } from './person-select/person-select.interface';
 
-import { ContactPersonsService } from '@app/routes/workplaces/debtor-card/contact-persons/contact-persons.service';
+import { ContactPersonsService } from '@app/routes/workplaces/core/contact-persons/contact-persons.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';

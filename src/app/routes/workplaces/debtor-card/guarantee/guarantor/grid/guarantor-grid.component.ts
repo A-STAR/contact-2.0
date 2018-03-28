@@ -12,10 +12,10 @@ import { Observable } from 'rxjs/Observable';
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IGuarantor } from '../../guarantee.interface';
+import { IGuarantor } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { GuarantorService } from '../guarantor.service';
+import { GuarantorService } from '@app/routes/workplaces/core/guarantor/guarantor.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';

@@ -6,25 +6,25 @@ import { Observable } from 'rxjs/Observable';
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
-interface AddressCardRouteParams {
-  addressId: number;
-  contactId: number;
+interface PhoneCardRouteParams {
   contactPersonId: number;
+  contactId: number;
+  phoneId: number;
 }
 
 @Component({
-  selector: 'app-debtor-address',
-  templateUrl: './address.component.html'
+  selector: 'app-debtor-phone',
+  templateUrl: './debtor-phone.component.html'
 })
-export class DebtorAddressComponent {
+export class DebtorPhoneComponent {
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
-    private routingService: RoutingService,
+    private routingService: RoutingService
   ) {}
 
-  get addressId$(): Observable<number> {
-    return this.routeParams$.map(params => params.addressId);
+  get phoneId$(): Observable<number> {
+    return this.routeParams$.map(params => params.phoneId);
   }
 
   get entityId$(): Observable<number> {
@@ -32,8 +32,8 @@ export class DebtorAddressComponent {
       .map(([ personId, params ]) => params.contactPersonId || params.contactId || personId);
   }
 
-  get routeParams$(): Observable<AddressCardRouteParams> {
-    return this.route.params as Observable<AddressCardRouteParams>;
+  get routeParams$(): Observable<PhoneCardRouteParams> {
+    return this.route.params as Observable<PhoneCardRouteParams>;
   }
 
   onClose(): void {

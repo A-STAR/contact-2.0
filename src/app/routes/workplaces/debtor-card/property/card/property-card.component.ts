@@ -4,12 +4,12 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first, map, distinctUntilChanged } from 'rxjs/operators';
 
-import { IProperty } from '../property.interface';
+import { IProperty } from '@app/routes/workplaces/core/property/property.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
 import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
-import { PropertyService } from '../property.service';
+import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 

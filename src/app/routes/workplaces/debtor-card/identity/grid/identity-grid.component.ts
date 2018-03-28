@@ -7,11 +7,11 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { IdentityService } from '@app/routes/workplaces/debtor-card/identity/identity.service';
+import { IdentityService } from '@app/routes/workplaces/core/identity/identity.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';

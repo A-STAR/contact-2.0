@@ -10,12 +10,12 @@ import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IPledgor } from '../pledgor.interface';
-import { IPledgeContract } from '../../pledge.interface';
+import { IPledgor } from '@app/routes/workplaces/core/pledgor/pledgor.interface';
+import { IPledgeContract } from '@app/routes/workplaces/core/pledge/pledge.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
-import { PledgorService } from '../../pledgor/pledgor.service';
-import { PledgeService } from '../../pledge.service';
+import { PledgorService } from '@app/routes/workplaces/core/pledgor/pledgor.service';
+import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
