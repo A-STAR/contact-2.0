@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { ObjectsGridModule } from './grid/objects-grid.module';
 import { SharedModule } from '@app/shared/shared.module';
-import { UserGridModule } from './grid/user-grid.module';
 
-import { UsersService } from './users.service';
+import { ObjectsService } from './objects.service';
 
-import { UserGridComponent } from './grid/user-grid.component';
+import { ObjectsGridComponent } from './grid/objects-grid.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: UserGridComponent,
+    component: ObjectsGridComponent,
     data: {
       reuse: true,
     },
@@ -20,12 +20,10 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    ObjectsGridModule,
     RouterModule.forChild(routes),
     SharedModule,
-    UserGridModule
   ],
-  providers: [
-    UsersService,
-  ]
+  providers: [ ObjectsService ],
 })
-export class UsersModule { }
+export class ObjectsModule { }

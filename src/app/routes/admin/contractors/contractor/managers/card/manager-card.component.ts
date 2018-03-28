@@ -18,10 +18,10 @@ import { makeKey } from '@app/core/utils';
 const label = makeKey('contractors.managers.grid');
 
 @Component({
-  selector: 'app-contractor-manager-edit',
-  templateUrl: './manager-edit.component.html'
+  selector: 'app-manager-card',
+  templateUrl: './manager-card.component.html'
 })
-export class ContractorManagerEditComponent implements OnInit {
+export class ManagerCardComponent implements OnInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 

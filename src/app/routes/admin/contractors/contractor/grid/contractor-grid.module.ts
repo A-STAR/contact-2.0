@@ -2,18 +2,17 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import { ContractorManagerEditComponent } from './manager-edit.component';
+import { ContractorGridComponent } from './contractor-grid.component';
 
 @NgModule({
   imports: [
     SharedModule,
   ],
   exports: [
-    ContractorManagerEditComponent
+    ContractorGridComponent
   ],
   declarations: [
-    ContractorManagerEditComponent,
+    ContractorGridComponent,
   ]
 })
-export class ContractorManagerEditModule {
-}
+export class ContractorGridModule {}

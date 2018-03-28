@@ -8,21 +8,21 @@ import {
   Output,
 } from '@angular/core';
 
-import { IObject } from '../../contractor-objects.interface';
+import { IObject } from '../../objects.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { ContractorObjectsService } from '../../contractor-objects.service';
+import { ObjectsService } from '../../objects.service';
 
 import { addGridLabel } from '@app/core/utils';
 
 @Component({
-  selector: 'app-contractor-objects-grid-add',
-  templateUrl: './contractor-objects-grid-add.component.html',
-  styleUrls: ['./contractor-objects-grid-add.component.scss'],
+  selector: 'app-objects-grid-dialog',
+  templateUrl: './objects-grid-dialog.component.html',
+  styleUrls: ['./objects-grid-dialog.component.scss'],
   host: { class: 'full-size' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContractorObjectsGridAddComponent implements OnInit {
+export class ObjectsGridDialogComponent implements OnInit {
   @Input() contractorId: number;
   @Input() typeCode: number;
 
@@ -41,11 +41,11 @@ export class ContractorObjectsGridAddComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private contractorObjectsService: ContractorObjectsService,
+    private objectsService: ObjectsService,
   ) {}
 
   ngOnInit(): void {
-    this.contractorObjectsService.fetchNotAdded(this.contractorId, this.typeCode).subscribe(objects => {
+    this.objectsService.fetchNotAdded(this.contractorId, this.typeCode).subscribe(objects => {
       this.rows = objects;
       this.cdRef.markForCheck();
     });

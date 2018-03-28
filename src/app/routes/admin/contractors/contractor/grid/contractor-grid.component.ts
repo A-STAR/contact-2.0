@@ -26,10 +26,10 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'full-size' },
-  selector: 'app-contractors',
-  templateUrl: './contractors.component.html',
+  selector: 'app-contractor-grid',
+  templateUrl: './contractor-grid.component.html',
 })
-export class ContractorsComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class ContractorGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(SimpleGridComponent) grid: SimpleGridComponent<IContractor>;
 
   titlebar: ITitlebar = {

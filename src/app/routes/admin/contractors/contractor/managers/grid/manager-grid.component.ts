@@ -6,11 +6,11 @@ import { Subscription } from 'rxjs/Subscription';
 import { first } from 'rxjs/operators/first';
 
 import { IAppState } from '@app/core/state/state.interface';
-import { IContractorManager, IActionType } from '../../contractors-and-portfolios.interface';
+import { IContractorManager, IActionType } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
-import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
+import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -23,10 +23,10 @@ import { addGridLabel, combineLatestAnd, isEmpty } from '@app/core/utils';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'full-size' },
-  selector: 'app-contractor-managers',
-  templateUrl: './managers.component.html',
+  selector: 'app-manager-grid',
+  templateUrl: './manager-grid.component.html',
 })
-export class ContractorManagersComponent extends DialogFunctions implements OnDestroy, OnInit {
+export class ManagerGridComponent extends DialogFunctions implements OnDestroy, OnInit {
 
   dialog: string;
 

@@ -19,11 +19,11 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 import { makeKey } from '@app/core/utils';
 
 @Component({
-  selector: 'app-contractor-edit',
-  templateUrl: './contractor-edit.component.html',
+  selector: 'app-contractor-card',
+  templateUrl: './contractor-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractorEditComponent implements OnInit, OnDestroy {
+export class ContractorCardComponent implements OnInit, OnDestroy {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
@@ -109,29 +109,14 @@ export class ContractorEditComponent implements OnInit, OnDestroy {
   }
 
   onManagersClick(): void {
-    this.routingService.navigate([
-      '/admin',
-      'contractors',
-      String(this.contractorId),
-      'managers'
-    ]);
+    this.routingService.navigate(['managers'], this.route);
   }
 
   onAttributesClick(): void {
-    this.routingService.navigate([
-      '/admin',
-      'contractors',
-      String(this.contractorId),
-      'attributes'
-    ]);
+    this.routingService.navigate(['attributes'], this.route);
   }
 
   onObjectsClick(): void {
-    this.routingService.navigate([
-      '/admin',
-      'contractors',
-      String(this.contractorId),
-      'objects'
-    ]);
+    this.routingService.navigate(['objects'], this.route);
   }
 }

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IObject } from './contractor-objects.interface';
+import { IObject } from './objects.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserPermissionsService } from 'app/core/user/permissions/user-permissions.service';
 
 @Injectable()
-export class ContractorObjectsService {
+export class ObjectsService {
   private baseUrl = '/contractors/{contractorId}/objects';
   private errorMessage = 'entities.object.gen.plural';
 

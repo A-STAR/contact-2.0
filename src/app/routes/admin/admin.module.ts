@@ -53,6 +53,14 @@ const routes: Routes = [
         loadChildren: './contractors/contractors-and-portfolios.module#ContractorsAndPortfoliosModule',
       },
       {
+        path: 'contractors/create',
+        loadChildren: './contractors/contractor/card/contractor-card.module#ContractorCardModule',
+      },
+      {
+        path: 'contractors/:contractorId',
+        loadChildren: './contractors/contractor/card/contractor-card.module#ContractorCardModule',
+      },
+      {
         path: '**',
         redirectTo: '',
       },
