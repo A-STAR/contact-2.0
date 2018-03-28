@@ -37,9 +37,6 @@ import { invert } from '@app/core/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: { class: 'full-size' },
-  providers: [
-    ContactRegistrationService,
-  ],
   selector: 'app-debtor',
   templateUrl: './debtor-card-layout.component.html',
 })
