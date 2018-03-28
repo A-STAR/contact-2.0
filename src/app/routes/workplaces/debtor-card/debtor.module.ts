@@ -202,19 +202,19 @@ const routes: Routes = [
       },
       {
         path: 'debt/promise/create',
-        loadChildren: './promise/promise.module#PromiseModule',
+        loadChildren: './promise/promise.module#DebtorPromiseModule',
       },
       {
         path: 'debt/promise/:promiseId',
-        loadChildren: './promise/promise.module#PromiseModule',
+        loadChildren: './promise/promise.module#DebtorPromiseModule',
       },
       {
         path: 'debt/payment/create',
-        loadChildren: './payment/payment.module#PaymentModule',
+        loadChildren: './payment/payment.module#DebtorPaymentModule',
       },
       {
         path: 'debt/payment/:paymentId',
-        loadChildren: './payment/payment.module#PaymentModule',
+        loadChildren: './payment/payment.module#DebtorPaymentModule',
       },
       {
         path: ':attributeId/versions',
