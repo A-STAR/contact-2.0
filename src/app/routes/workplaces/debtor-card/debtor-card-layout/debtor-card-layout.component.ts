@@ -14,10 +14,10 @@ import { first, mergeMap, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEmployment } from '@app/routes/workplaces/debtor-card/employment/employment.interface';
+import { IEmployment } from '@app/routes/workplaces/core/employment/employment.interface';
 import { IPerson } from '../debtor.interface';
 import { IDebt } from '../../debt-processing/debt-processing.interface';
-import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { DebtService } from '@app/core/debt/debt.service';
@@ -41,7 +41,6 @@ import { invert } from '@app/core/utils';
     ContactRegistrationService,
   ],
   selector: 'app-debtor',
-  styleUrls: ['./debtor-card-layout.component.scss'],
   templateUrl: './debtor-card-layout.component.html',
 })
 export class DebtorCardLayoutComponent extends DialogFunctions implements AfterViewInit, OnDestroy {
