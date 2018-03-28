@@ -2,12 +2,16 @@ import * as brace from 'brace';
 
 export class ContextAutocomplete {
 
+  private static ROOT_NODE = {
+    name: 'root',
+  };
+
   private utils: any;
   private nodes: any[];
 
   constructor(context: any[]) {
     this.utils = brace.acequire('ace/autocomplete/util');
-    this.nodes = this.flattenNodes(context);
+    this.nodes = this.flattenNodes(this.mapParents(context, ContextAutocomplete.ROOT_NODE));
   }
 
   getNode(session: any, prefix: string, pos: any): any {
@@ -30,10 +34,17 @@ export class ContextAutocomplete {
     callback(null, completeList.map(item => ({
       name: item.name,
       value: item.name,
-      meta: context ? context.name : 'root',
+      meta: item.parent.name,
       score: Number.MAX_VALUE,
       desc: item.desc
     })));
+  }
+
+  private mapParents(nodes: any[], parent: any): any[] {
+    return nodes.map(node => node.children
+      ? { ...node, children: this.mapParents(node.children, node), parent }
+      : { ...node, parent }
+    );
   }
 
   private flattenNodes(nodes: any[]): any[] {
