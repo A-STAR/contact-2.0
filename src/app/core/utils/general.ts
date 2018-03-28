@@ -155,3 +155,14 @@ export function getTranslations(languages: ILookupLanguage[], translations: IEnt
     })
   );
 }
+
+export function deepFilterAndMap<T extends { children?: T[] }, V>(items: T[],
+  filterKey: string | Function, mapKey: string | Function): V[] {
+    const filterFn = item => (typeof filterKey === 'function' ? filterKey(item) : item[filterKey]);
+    const mapFn = item => (typeof mapKey === 'function' ? mapKey(item) : item[mapKey]);
+    return items.reduce((acc, item) => ([
+      ...acc,
+      ...(item.children && item.children.length ?
+        deepFilterAndMap(item.children, filterKey, mapKey) : filterFn(item) ? [mapFn(item)] : []),
+    ]), []);
+}

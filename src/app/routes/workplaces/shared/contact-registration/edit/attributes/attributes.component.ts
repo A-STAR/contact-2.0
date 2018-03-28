@@ -12,7 +12,7 @@ import { ContactRegistrationService } from '@app/routes/workplaces/shared/contac
 
 import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
-import { addGridLabel, getValue } from '@app/core/utils';
+import { addGridLabel, getValue, deepFilterAndMap, getRawValue } from '@app/core/utils';
 import { CellValueChangedEvent } from 'ag-grid';
 
 @Component({
@@ -24,6 +24,8 @@ import { CellValueChangedEvent } from 'ag-grid';
 export class ContactRegistrationAttributesComponent implements OnInit {
   attributes: IContactTreeAttribute[];
   private editedAttributes: any = {};
+  private emptyMandatoryAttrs: number[] = [];
+  private nonEmptyMandatoryAttrs: number[] = [];
 
   constructor(
     private attributesService: AttributesService,
@@ -61,25 +63,48 @@ export class ContactRegistrationAttributesComponent implements OnInit {
       this.contactRegistrationService.outcome$,
     )
     .pipe(
-      filter(([ params, outcome ]) => Boolean(params) && Boolean(outcome)),
+      filter(([ params, outcome ]) => Boolean(params && outcome)),
       mergeMap(([ params, outcome ]) => this.attributesService.fetchAll(params.debtId, params.contactType, outcome.id)),
     )
     .filter(attrs => attrs.some(a => a.disabledValue !== 1))
     .subscribe(attributes => {
       this.attributes = attributes;
+      this.emptyMandatoryAttrs =  this.getMandatoryAttrs(attributes, true);
+      this.nonEmptyMandatoryAttrs =  this.getMandatoryAttrs(attributes);
       this.cdRef.markForCheck();
     });
   }
 
   onCellValueChanged(event: CellValueChangedEvent): void {
-    this.editedAttributes[event.rowIndex] = {
+    this.editedAttributes[event.data.code] = {
       ...getValue(event.data.typeCode, event.newValue),
       code: event.data.code
     };
   }
 
+  get isValid(): boolean {
+    const mandatoryAttrs = Object.keys(this.editedAttributes)
+      .map(key => this.editedAttributes[key]);
+    // all empty attributes should be filled
+    const allEmptyFilled = mandatoryAttrs
+      .filter(a => this.emptyMandatoryAttrs.includes(a.code) && !!getRawValue(a)).length === this.emptyMandatoryAttrs.length;
+    // and all non empty attributes should have values if touched
+    const allNonEmptyHasValues = mandatoryAttrs
+      .filter(a => this.nonEmptyMandatoryAttrs.includes(a.code))
+      .every(a => !!getRawValue(a));
+    return allEmptyFilled && allNonEmptyHasValues;
+  }
+
   get data(): any {
     return Object.keys(this.editedAttributes).map(key => this.editedAttributes[key]);
+  }
+
+  private getMandatoryAttrs(attributes: IContactTreeAttribute[], isEmpty: boolean = false): number[] {
+    return deepFilterAndMap(
+      attributes,
+      attr => !!attr.mandatory && (isEmpty ? !getRawValue(attr) : !!getRawValue(attr)),
+      'code'
+    );
   }
 
 }
