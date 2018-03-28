@@ -4,12 +4,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@app/shared/shared.module';
 import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
-import { DebtorPaymentComponent } from './payment.component';
+import { DebtorPromiseComponent } from './debtor-promise.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: DebtorPaymentComponent,
+    component: DebtorPromiseComponent,
   }
 ];
 
@@ -20,10 +20,10 @@ const routes: Routes = [
     WorkplacesSharedModule,
   ],
   exports: [
-    RouterModule,
+    RouterModule
   ],
   declarations: [
-    DebtorPaymentComponent,
+    DebtorPromiseComponent
   ],
 })
-export class DebtorPaymentModule {}
+export class DebtorPromiseModule {}

@@ -5,10 +5,10 @@ import { Observable } from 'rxjs/Observable';
 import { DebtorCardService } from '../../../../core/app-modules/debtor-card/debtor-card.service';
 
 @Component({
-  selector: 'app-debtor-payment',
-  templateUrl: './payment.component.html'
+  selector: 'app-debtor-promise',
+  templateUrl: './debtor-promise.component.html'
 })
-export class DebtorPaymentComponent {
+export class DebtorPromiseComponent {
   constructor(
     private debtorCardService: DebtorCardService,
     private route: ActivatedRoute,
@@ -18,11 +18,8 @@ export class DebtorPaymentComponent {
     return this.debtorCardService.selectedDebtId$;
   }
 
-  get paymentId(): number {
-    return this.routeParams.paymentId;
+  get promiseId(): number {
+    return Number(this.route.snapshot.paramMap.get('promiseId'));
   }
 
-  private get routeParams(): any {
-    return (this.route.params as any).value;
-  }
 }

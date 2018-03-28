@@ -66,6 +66,14 @@ const routes: Routes = [
         loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',
       },
       {
+        path: 'phone/create',
+        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
+      },
+      {
+        path: 'phone/:phoneId',
+        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
+      },
+      {
         path: 'contact/create/:contactPersonId/phone/create',
         loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
@@ -82,20 +90,28 @@ const routes: Routes = [
         loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
       {
+        path: 'address/create',
+        loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
+      },
+      {
+        path: 'address/:addressId',
+        loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
+      },
+      {
         path: 'contact/create/:contactPersonId/address/create',
-        loadChildren: './address/address.module#DebtorAddressModule',
+        loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
       },
       {
         path: 'contact/create/:contactPersonId/address/:addressId',
-        loadChildren: './address/address.module#DebtorAddressModule',
+        loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
       },
       {
         path: 'contact/:contactId/:contactPersonId/address/create',
-        loadChildren: './address/address.module#DebtorAddressModule',
+        loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
       },
       {
         path: 'contact/:contactId/:contactPersonId/address/:addressId',
-        loadChildren: './address/address.module#DebtorAddressModule',
+        loadChildren: './debtor-address/debtor-address.module#DebtorAddressModule',
       },
       {
         path: 'contact/create/:contactPersonId/identity/create',
@@ -138,14 +154,6 @@ const routes: Routes = [
         loadChildren: './document/document.module#DocumentModule',
       },
       {
-        path: 'address/create',
-        loadChildren: './address/address.module#DebtorAddressModule',
-      },
-      {
-        path: 'address/:addressId',
-        loadChildren: './address/address.module#DebtorAddressModule',
-      },
-      {
         path: 'email/create',
         loadChildren: './information/email/email.module#EmailModule',
       },
@@ -170,14 +178,6 @@ const routes: Routes = [
         loadChildren: './identity/identity.module#IdentityModule',
       },
       {
-        path: 'phone/create',
-        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
-      },
-      {
-        path: 'phone/:phoneId',
-        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
-      },
-      {
         path: 'debt/create',
         loadChildren: './debt/debt.module#DebtModule',
       },
@@ -191,19 +191,19 @@ const routes: Routes = [
       },
       {
         path: 'debt/promise/create',
-        loadChildren: './promise/promise.module#DebtorPromiseModule',
+        loadChildren: './debtor-promise/debtor-promise.module#DebtorPromiseModule',
       },
       {
         path: 'debt/promise/:promiseId',
-        loadChildren: './promise/promise.module#DebtorPromiseModule',
+        loadChildren: './debtor-promise/debtor-promise.module#DebtorPromiseModule',
       },
       {
         path: 'debt/payment/create',
-        loadChildren: './payment/payment.module#DebtorPaymentModule',
+        loadChildren: './debtor-payment/debtor-payment.module#DebtorPaymentModule',
       },
       {
         path: 'debt/payment/:paymentId',
-        loadChildren: './payment/payment.module#DebtorPaymentModule',
+        loadChildren: './debtor-payment/debtor-payment.module#DebtorPaymentModule',
       },
       {
         path: ':attributeId/versions',

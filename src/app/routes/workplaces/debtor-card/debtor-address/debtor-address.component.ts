@@ -14,7 +14,7 @@ interface AddressCardRouteParams {
 
 @Component({
   selector: 'app-debtor-address',
-  templateUrl: './address.component.html'
+  templateUrl: './debtor-address.component.html'
 })
 export class DebtorAddressComponent {
   constructor(
