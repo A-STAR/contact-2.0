@@ -52,7 +52,12 @@ export class LetterGenerationDialogComponent implements OnInit {
             required: true,
             markAsDirty: true
           },
-          { controlName: 'formatCode', type: 'select', dictCode: UserDictionariesService.DICTIONARY_PRINT_FILE_FORMAT_CODE },
+          {
+            controlName: 'formatCode',
+            type: 'select',
+            dictCode: UserDictionariesService.DICTIONARY_PRINT_FILE_FORMAT_CODE,
+            required: true
+          },
           { controlName: 'regLetter', type: 'checkbox' }
         ];
         this.cdRef.markForCheck();
