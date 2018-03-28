@@ -6,7 +6,7 @@ import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { DebtorGridService } from './debtor-grid.service';
-import { IncomingCallService } from '../incoming-call.service';
+import { IncomingCallService } from '../../incoming-call.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DateRendererComponent, NumberRendererComponent } from '@app/shared/components/grids/renderers';

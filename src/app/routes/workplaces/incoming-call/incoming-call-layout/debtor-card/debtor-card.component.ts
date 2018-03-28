@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { ITitlebar } from '@app/shared/components/titlebar/titlebar.interface';
 
 import { DebtorCardService } from './debtor-card.service';
-import { IncomingCallService } from '../incoming-call.service';
+import { IncomingCallService } from '../../incoming-call.service';
 
 import { makeKey } from '@app/core/utils';
 

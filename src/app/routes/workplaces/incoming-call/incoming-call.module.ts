@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { DebtorCardModule } from './debtor-card/debtor-card.module';
-import { DebtorGridModule } from './debtor-grid/debtor-grid.module';
-import { FilterModule } from './filter/filter.module';
-import { PhoneGridModule } from './phone-grid/phone-grid.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { WorkplacesSharedModule } from '../shared/shared.module';
 
@@ -17,17 +13,26 @@ const routes: Routes = [
     data: {
       reuse: true,
     },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadChildren: './incoming-call-layout/incoming-call-layout.module#IncomingCallLayoutModule',
+      },
+      {
+        path: ':personId/phones/create',
+        loadChildren: './phone-card/phone-card.module#PhoneCardModulee',
+      },
+      {
+        path: ':personId/phones/:phoneId',
+        loadChildren: './phone-card/phone-card.module#PhoneCardModule',
+      }
+    ]
   },
-  { path: ':personId/phones/create', loadChildren: './phone-card/phone-card.module#PhoneCardModule' },
-  { path: ':personId/phones/:phoneId', loadChildren: './phone-card/phone-card.module#PhoneCardModule' },
 ];
 
 @NgModule({
   imports: [
-    DebtorCardModule,
-    DebtorGridModule,
-    FilterModule,
-    PhoneGridModule,
     RouterModule.forChild(routes),
     SharedModule,
     WorkplacesSharedModule,
