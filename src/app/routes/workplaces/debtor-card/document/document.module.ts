@@ -24,4 +24,4 @@ const routes: Routes = [
     DebtorDocumentComponent,
   ],
 })
-export class DebtorDocumentModule {}
+export class DocumentModule {}
