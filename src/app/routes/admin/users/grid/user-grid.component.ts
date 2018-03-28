@@ -19,10 +19,10 @@ import { combineLatestAnd, isEmpty, addGridLabel } from '@app/core/utils';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'full-size' },
-  selector: 'app-users',
-  templateUrl: 'users.component.html',
+  selector: 'app-user-grid',
+  templateUrl: './user-grid.component.html',
 })
-export class UsersComponent implements OnInit, OnDestroy {
+export class UserGridComponent implements OnInit, OnDestroy {
   private _users: Array<IUser> = [];
   private selectedUserId: number;
 
@@ -162,7 +162,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   onEdit(user: IUser): void {
-    this.routingService.navigate([ String(user.id) ], this.route);
+    this.routingService.navigate([ `${user.id}` ], this.route);
   }
 
   onSelect(users: IUser[]): void {

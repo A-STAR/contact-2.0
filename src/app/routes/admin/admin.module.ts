@@ -33,6 +33,14 @@ const routes: Routes = [
         loadChildren: './users/users.module#UsersModule',
       },
       {
+        path: 'users/create',
+        loadChildren: './users/card/user-card.module#UserCardModule',
+      },
+      {
+        path: 'users/:userId',
+        loadChildren: './users/card/user-card.module#UserCardModule',
+      },
+      {
         path: 'organizations',
         loadChildren: './organizations/organizations.module#OrganizationsModule',
       },

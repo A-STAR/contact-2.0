@@ -2,36 +2,30 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
-import { UserEditModule } from './edit/user-edit.module';
+import { UserGridModule } from './grid/user-grid.module';
 
 import { UsersService } from './users.service';
 
-import { UsersComponent } from './users.component';
-import { UserEditComponent } from './edit/user-edit.component';
+import { UserGridComponent } from './grid/user-grid.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: UsersComponent,
+    component: UserGridComponent,
     data: {
       reuse: true,
     },
   },
-  { path: 'create', component: UserEditComponent },
-  { path: ':userId', component: UserEditComponent },
 ];
 
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
     SharedModule,
-    UserEditModule,
+    UserGridModule
   ],
   exports: [
     RouterModule,
-  ],
-  declarations: [
-    UsersComponent,
   ],
   providers: [
     UsersService,

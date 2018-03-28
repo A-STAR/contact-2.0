@@ -27,11 +27,11 @@ import { DialogFunctions } from '@app/core/dialog';
 import { maxFileSize, password } from '@app/core/validators';
 
 @Component({
-  selector: 'app-user-edit',
-  templateUrl: 'user-edit.component.html',
+  selector: 'app-user-card',
+  templateUrl: './user-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserEditComponent extends DialogFunctions {
+export class UserCardComponent extends DialogFunctions {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   controls: Array<IDynamicFormItem>;
