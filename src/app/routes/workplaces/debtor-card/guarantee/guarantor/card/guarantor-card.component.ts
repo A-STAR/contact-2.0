@@ -8,10 +8,10 @@ import { of } from 'rxjs/observable/of';
 import { first } from 'rxjs/operators';
 
 import { IDynamicFormGroup, IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IGuarantor, IGuaranteeContract } from '../../guarantee.interface';
+import { IGuarantor, IGuaranteeContract } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 
-import { GuaranteeService } from '../../guarantee.service';
-import { GuarantorService } from '../../guarantor/guarantor.service';
+import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
+import { GuarantorService } from '@app/routes/workplaces/core/guarantor/guarantor.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';

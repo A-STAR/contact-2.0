@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
-import { IAppState } from '../../../../core/state/state.interface';
+import { IAppState } from '@app/core/state/state.interface';
 import { IIdentityDoc } from './identity.interface';
 
-import { AbstractActionService } from '../../../../core/state/action.service';
-import { DataService } from '../../../../core/data/data.service';
+import { AbstractActionService } from '@app/core/state/action.service';
+import { DataService } from '@app/core/data/data.service';
 
 @Injectable()
 export class IdentityService extends AbstractActionService {

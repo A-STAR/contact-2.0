@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { IPledgorProperty } from './pledgor-property.interface';
 
-import { PropertyService } from '@app/routes/workplaces/debtor-card/property/property.service';
+import { PropertyService } from '@app/routes/workplaces/core/property/property.service';
 
 @Injectable()
 export class PledgorPropertyService {

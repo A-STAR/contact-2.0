@@ -8,14 +8,14 @@ import { of } from 'rxjs/observable/of';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IPledgor } from '../../pledgor.interface';
-import { IPledgeContract } from '../../../pledge.interface';
-import { IPledgorProperty } from '../pledgor-property.interface';
+import { IPledgor } from '@app/routes/workplaces/core/pledgor/pledgor.interface';
+import { IPledgeContract } from '@app/routes/workplaces/core/pledge/pledge.interface';
+import { IPledgorProperty } from '@app/routes/workplaces/core/pledgor-property/pledgor-property.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
-import { PledgeService } from '../../../../pledge/pledge.service';
-import { PledgorService } from '../../../pledgor/pledgor.service';
-import { PledgorPropertyService } from '../pledgor-property.service';
+import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
+import { PledgorService } from '@app/routes/workplaces/core/pledgor/pledgor.service';
+import { PledgorPropertyService } from '@app/routes/workplaces/core/pledgor-property/pledgor-property.service';
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 

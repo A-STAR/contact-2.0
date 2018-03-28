@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { PledgorCardModule } from './card/pledgor-card.module';
 import { PledgorPropertyModule } from './property/pledgor-property.module';
 
-import { PledgorService } from './pledgor.service';
-
 @NgModule({
   imports: [
     PledgorCardModule,
@@ -16,8 +14,5 @@ import { PledgorService } from './pledgor.service';
     PledgorCardModule,
     PledgorPropertyModule,
   ],
-  providers: [
-    PledgorService
-  ]
 })
-export class PledgorModule { }
+export class PledgorModule {}

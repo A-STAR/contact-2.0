@@ -3,12 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IPledgeContract } from '../pledge.interface';
+import { IPledgeContract } from '@app/routes/workplaces/core/pledge/pledge.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { PledgeService } from '../pledge.service';
+import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 

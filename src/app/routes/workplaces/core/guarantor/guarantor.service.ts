@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IAGridRequestParams, IAGridResponse } from '@app/shared/components/grid2/grid2.interface';
-import { IGuarantor } from '../guarantee.interface';
+import { IGuarantor } from '../guarantee/guarantee.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { DataService } from '@app/core/data/data.service';
