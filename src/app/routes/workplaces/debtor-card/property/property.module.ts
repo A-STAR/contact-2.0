@@ -5,8 +5,6 @@ import { SharedModule } from '../../../../shared/shared.module';
 import { PropertyCardModule } from './card/property-card.module';
 import { PropertyGridModule } from './grid/property-grid.module';
 
-import { PropertyService } from './property.service';
-
 @NgModule({
   imports: [
     CommonModule,
@@ -18,8 +16,5 @@ import { PropertyService } from './property.service';
     PropertyCardModule,
     PropertyGridModule
   ],
-  providers: [
-    PropertyService
-  ]
 })
 export class DebtorPropertyModule {}

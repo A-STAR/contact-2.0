@@ -11,11 +11,11 @@ import {
 import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
-import { IPledgor } from '../../pledgor/pledgor.interface';
+import { IPledgor } from '@app/routes/workplaces/core/pledgor/pledgor.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { PledgeService } from '../../pledge.service';
-import { PledgorService } from '../../pledgor/pledgor.service';
+import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
+import { PledgorService } from '@app/routes/workplaces/core/pledgor/pledgor.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';

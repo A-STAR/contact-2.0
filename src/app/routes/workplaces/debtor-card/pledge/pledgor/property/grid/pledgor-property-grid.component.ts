@@ -11,11 +11,11 @@ import {
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 
-import { IPledgorProperty } from '../pledgor-property.interface';
+import { IPledgorProperty } from '@app/routes/workplaces/core/pledgor-property/pledgor-property.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { PledgeService } from '../../../pledge.service';
-import { PledgorPropertyService } from '../pledgor-property.service';
+import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
+import { PledgorPropertyService } from '@app/routes/workplaces/core/pledgor-property/pledgor-property.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 

@@ -4,8 +4,6 @@ import { SharedModule } from '../../../../shared/shared.module';
 import { PledgeCardModule } from './card/pledge-card.module';
 import { PledgeGridModule } from './grid/pledge-grid.module';
 
-import { PledgeService } from './pledge.service';
-
 @NgModule({
   imports: [
     SharedModule,
@@ -16,8 +14,5 @@ import { PledgeService } from './pledge.service';
     PledgeCardModule,
     PledgeGridModule
   ],
-  providers: [
-    PledgeService
-  ]
 })
 export class DebtorPledgeModule {}

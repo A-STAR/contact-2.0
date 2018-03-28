@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { IActionType } from '../../../../../core/app-modules/debtor-card/debtor-card.interface';
-import { IPledgeContract } from '../pledge.interface';
+import { IPledgeContract } from '@app/routes/workplaces/core/pledge/pledge.interface';
 
-import { PledgeService } from '../pledge.service';
+import { PledgeService } from '@app/routes/workplaces/core/pledge/pledge.service';
 import { DebtorCardService } from '../../../../../core/app-modules/debtor-card/debtor-card.service';
 
 @Component({
