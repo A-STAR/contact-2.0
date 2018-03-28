@@ -27,4 +27,4 @@ const routes: Routes = [
   ],
   providers: [],
 })
-export class PhoneModule {}
+export class DebtorPhoneModule {}
