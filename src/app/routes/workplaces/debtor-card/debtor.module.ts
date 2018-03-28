@@ -30,7 +30,7 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        loadChildren: './debtor-card-layout/debtor-card-layout.module#DebtorCardLayout',
+        loadChildren: './debtor-card-layout/debtor-card-layout.module#DebtorCardLayoutModule',
       },
       {
         path: 'guarantee/create',
