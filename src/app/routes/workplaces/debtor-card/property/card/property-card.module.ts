@@ -20,10 +20,10 @@ const routes: Routes = [
     SharedModule,
   ],
   exports: [
-    DebtorPropertyCardComponent,
+    RouterModule,
   ],
   declarations: [
-    RouterModule,
+    DebtorPropertyCardComponent,
   ]
 })
 export class PropertyCardModule {}
