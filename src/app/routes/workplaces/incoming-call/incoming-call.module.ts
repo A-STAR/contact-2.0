@@ -21,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: ':personId/phones/create',
-        loadChildren: './phone-card/phone-card.module#PhoneCardModulee',
+        loadChildren: './phone-card/phone-card.module#PhoneCardModule',
       },
       {
         path: ':personId/phones/:phoneId',
