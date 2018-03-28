@@ -130,9 +130,10 @@ export class PaymentCardComponent implements OnInit {
 
   onSubmit(): void {
     const data: IPayment = this.form.serializedUpdates;
+    const { isConfirmed } = this.form.serializedValue;
     const action = this.paymentId
       ? this.paymentService.update(this.debtId, this.paymentId, data, this.callCenter)
-      : this.paymentService.create(this.debtId, {...data, isCanceled: 0 }, this.callCenter);
+      : this.paymentService.create(this.debtId, {...data, isCanceled: 0, isConfirmed }, this.callCenter);
 
     action.subscribe(() => {
       this.paymentService.dispatchAction(PaymentService.MESSAGE_PAYMENT_SAVED);
