@@ -28,4 +28,4 @@ const routes: Routes = [
     DebtorIdentityComponent
   ]
 })
-export class DebtorIdentityModule {}
+export class IdentityModule {}
