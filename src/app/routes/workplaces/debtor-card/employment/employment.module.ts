@@ -29,4 +29,4 @@ const routes: Routes = [
     DebtorEmploymentComponent
   ],
 })
-export class DebtorEmploymentModule {}
+export class EmploymentModule {}

@@ -26,4 +26,4 @@ const routes: Routes = [
     DebtorPromiseComponent
   ],
 })
-export class DebtorPromiseModule {}
+export class PromiseModule {}
