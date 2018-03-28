@@ -6,9 +6,9 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 
-import { ContactRegistrationService } from '../../shared/contact-registration/contact-registration.service';
+import { ContactRegistrationService } from '../../../shared/contact-registration/contact-registration.service';
 import { DebtService } from '@app/core/debt/debt.service';
-import { IncomingCallService } from '../incoming-call.service';
+import { IncomingCallService } from '../../incoming-call.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 
 import { invert } from '@app/core/utils';

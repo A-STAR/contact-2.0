@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IQueryParams } from '../../../../core/data/data.interface';
+import { IQueryParams } from '@app/core/data/data.interface';
 
-import { DataService } from '../../../../core/data/data.service';
+import { DataService } from '@app/core/data/data.service';
 
 @Injectable()
 export class DebtorGridService {

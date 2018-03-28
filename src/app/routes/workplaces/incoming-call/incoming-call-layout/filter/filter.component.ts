@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
 import { DebtService } from '@app/core/debt/debt.service';
-import { IncomingCallService } from '../incoming-call.service';
+import { IncomingCallService } from '../../incoming-call.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
