@@ -1,28 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ContactLogTabModule } from './contact-log-tab/contact-log-tab.module';
-import { GridModule } from '../../../shared/components/grid/grid.module';
-import { SharedModule } from '../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
-import { ContactPersonsModule } from './contact-persons/contact-persons.module';
-import { DebtModule } from './debt/debt.module';
 import { DebtorActionLogModule } from './action-log/action-log.module';
-import { DebtorAddressModule } from './address/address.module';
 import { DebtorAttributesModule } from './attributes/attributes.module';
-import { DebtorAttributesVersionsModule } from './versions/debtor-attributes-versions.module';
-import { DebtorDebtComponentModule } from './debt-component/debt-component.module';
-import { DebtorDocumentModule } from './document/document.module';
-import { DebtorEmploymentModule } from './employment/employment.module';
-import { DebtorGuaranteeModule } from './guarantee/guarantee.module';
-import { DebtorIdentityModule } from './identity/identity.module';
-import { DebtorPaymentModule } from './payment/payment.module';
-import { DebtorPhoneModule } from './phone/phone.module';
+import { GuaranteeGridModule } from './guarantee/grid/guarantee-grid.module';
 import { DebtorPledgeAttributesModule } from './pledge/attributes/pledge-attributes.module';
-import { DebtorPledgeModule } from './pledge/pledge.module';
-import { DebtorPromiseModule } from './promise/promise.module';
+import { PledgeGridModule } from './pledge/grid/pledge-grid.module';
 import { DebtorPropertyAttributesModule } from './property/attributes/property-attributes.module';
-import { DebtorPropertyModule } from './property/property.module';
+import { PropertyGridModule } from './property/grid/property-grid.module';
 import { DebtsModule } from './debts/debts.module';
 import { InformationModule } from './information/information.module';
 import { RegisterContactModule } from './register-contact/register-contact.module';
@@ -30,23 +17,7 @@ import { WorkplacesSharedModule } from '../shared/shared.module';
 
 import { DebtorService } from './debtor.service';
 
-// import { DebtComponent } from './debt/debt.component';
-// import { DebtorAddressComponent } from './address/address.component';
-// import { DebtorAttributesVersionsComponent } from './versions/debtor-attributes-versions.component';
 import { DebtorComponent } from './debtor.component';
-// import { DebtorContactLogTabComponent } from './contact-log-tab/contact-log-tab.component';
-// import { ContactPersonsComponent } from './contact-persons/contact-persons.component';
-// import { DebtorDebtComponentComponent } from './debt-component/debt-component.component';
-// import { DebtorDocumentComponent } from './document/document.component';
-// import { DebtorEmailCardComponent } from './information/email/card/email-card.component';
-// import { DebtorEmploymentComponent } from './employment/employment.component';
-// import { DebtorGuaranteeCardComponent } from './guarantee/card/guarantee-card.component';
-// import { DebtorIdentityComponent } from './identity/identity.component';
-// import { DebtorPaymentComponent } from './payment/payment.component';
-// import { DebtorPhoneComponent } from './phone/phone.component';
-// import { DebtorPledgeCardComponent } from './pledge/card/pledge-card.component';
-// import { DebtorPromiseComponent } from './promise/promise.component';
-// import { DebtorPropertyCardComponent } from './property/card/property-card.component';
 
 const routes: Routes = [
   {
@@ -255,27 +226,14 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    ContactLogTabModule,
-    DebtModule,
     DebtorActionLogModule,
-    DebtorAddressModule,
     DebtorAttributesModule,
-    DebtorAttributesVersionsModule,
-    ContactPersonsModule,
-    DebtorDebtComponentModule,
-    DebtorDocumentModule,
-    DebtorEmploymentModule,
-    DebtorGuaranteeModule,
-    DebtorIdentityModule,
-    DebtorPaymentModule,
-    DebtorPhoneModule,
+    GuaranteeGridModule,
     DebtorPledgeAttributesModule,
-    DebtorPledgeModule,
-    DebtorPromiseModule,
+    PledgeGridModule,
     DebtorPropertyAttributesModule,
-    DebtorPropertyModule,
+    PropertyGridModule,
     DebtsModule,
-    GridModule,
     InformationModule,
     RegisterContactModule,
     RouterModule.forChild(routes),

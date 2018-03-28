@@ -1,20 +1,29 @@
 import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
-import { ContactPersonsCardModule } from '@app/routes/workplaces/debtor-card/contact-persons/card/contact-persons-card.module';
-import { ContactPersonsGridModule } from '@app/routes/workplaces/debtor-card/contact-persons/grid/contact-persons-grid.module';
+import { ContactPersonsCardModule } from './card/contact-persons-card.module';
+import { ContactPersonsGridModule } from './grid/contact-persons-grid.module';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { ContactPersonsComponent } from './contact-persons.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: ContactPersonsComponent,
+  }
+];
 
 @NgModule({
   imports: [
     ContactPersonsCardModule,
     ContactPersonsGridModule,
+    RouterModule.forChild(routes),
     SharedModule,
   ],
   exports: [
     ContactPersonsGridModule,
-    ContactPersonsComponent,
+    RouterModule,
   ],
   declarations: [
     ContactPersonsComponent,

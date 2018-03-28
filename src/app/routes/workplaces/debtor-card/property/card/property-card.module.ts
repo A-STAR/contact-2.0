@@ -1,20 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
 
-import { SharedModule } from '../../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 
 import { DebtorPropertyCardComponent } from './property-card.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: DebtorPropertyCardComponent,
+  }
+];
 
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule
+    RouterModule.forChild(routes),
+    SharedModule,
   ],
   exports: [
     DebtorPropertyCardComponent,
   ],
   declarations: [
-    DebtorPropertyCardComponent,
+    RouterModule,
   ]
 })
-export class PropertyCardModule { }
+export class PropertyCardModule {}

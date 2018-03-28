@@ -1,21 +1,29 @@
 import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '@app/shared/shared.module';
 import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
 import { DebtorAddressComponent } from './address.component';
 
+const routes: Routes = [
+  {
+    path: '',
+    component: DebtorAddressComponent,
+  }
+];
+
 @NgModule({
   imports: [
+    RouterModule.forChild(routes),
     SharedModule,
     WorkplacesSharedModule,
   ],
   exports: [
-    DebtorAddressComponent
+    RouterModule,
   ],
   declarations: [
-    DebtorAddressComponent
+    DebtorAddressComponent,
   ],
-  providers: [],
 })
-export class DebtorAddressModule { }
+export class DebtorAddressModule {}
