@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@app/shared/shared.module';
 import { WorkplacesSharedModule } from '@app/routes/workplaces/shared/shared.module';
 
-import { DebtorPhoneComponent } from './phone.component';
+import { DebtorPhoneComponent } from './debtor-phone.component';
 
 const routes: Routes = [
   {

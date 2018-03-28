@@ -14,7 +14,7 @@ interface PhoneCardRouteParams {
 
 @Component({
   selector: 'app-debtor-phone',
-  templateUrl: './phone.component.html'
+  templateUrl: './debtor-phone.component.html'
 })
 export class DebtorPhoneComponent {
   constructor(

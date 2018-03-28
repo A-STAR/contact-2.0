@@ -67,19 +67,19 @@ const routes: Routes = [
       },
       {
         path: 'contact/create/:contactPersonId/phone/create',
-        loadChildren: './phone/phone.module#DebtorPhoneModule',
+        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
       {
         path: 'contact/create/:contactPersonId/phone/:phoneId',
-        loadChildren: './phone/phone.module#DebtorPhoneModule',
+        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
       {
         path: 'contact/:contactId/:contactPersonId/phone/create',
-        loadChildren: './phone/phone.module#DebtorPhoneModule',
+        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
       {
         path: 'contact/:contactId/:contactPersonId/phone/:phoneId',
-        loadChildren: './phone/phone.module#DebtorPhoneModule',
+        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
       {
         path: 'contact/create/:contactPersonId/address/create',
@@ -171,11 +171,11 @@ const routes: Routes = [
       },
       {
         path: 'phone/create',
-        loadChildren: './phone/phone.module#DebtorPhoneModule',
+        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
       {
         path: 'phone/:phoneId',
-        loadChildren: './phone/phone.module#DebtorPhoneModule',
+        loadChildren: './debtor-phone/debtor-phone.module#DebtorPhoneModule',
       },
       {
         path: 'debt/create',
