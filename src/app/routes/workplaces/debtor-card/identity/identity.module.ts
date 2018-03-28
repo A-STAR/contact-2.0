@@ -4,8 +4,6 @@ import { IdentityCardModule } from '@app/routes/workplaces/debtor-card/identity/
 import { IdentityGridModule } from '@app/routes/workplaces/debtor-card/identity/grid/identity-grid.module';
 import { SharedModule } from '@app/shared/shared.module';
 
-import { IdentityService } from '@app/routes/workplaces/debtor-card/identity/identity.service';
-
 import { DebtorIdentityComponent } from './identity.component';
 
 @NgModule({
@@ -17,9 +15,8 @@ import { DebtorIdentityComponent } from './identity.component';
     IdentityGridModule,
     DebtorIdentityComponent,
   ],
-  providers: [ IdentityService ],
   declarations: [
     DebtorIdentityComponent
   ]
 })
-export class DebtorIdentityModule { }
+export class DebtorIdentityModule {}

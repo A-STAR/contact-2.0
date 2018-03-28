@@ -7,10 +7,10 @@ import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 
 import { IDynamicFormGroup } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IGuaranteeContract, IGuarantor } from '../guarantee.interface';
+import { IGuaranteeContract, IGuarantor } from '@app/routes/workplaces/core/guarantee/guarantee.interface';
 
-import { GuaranteeService } from '../guarantee.service';
-import { GuarantorService } from '../guarantor/guarantor.service';
+import { GuaranteeService } from '@app/routes/workplaces/core/guarantee/guarantee.service';
+import { GuarantorService } from '@app/routes/workplaces/core/guarantor/guarantor.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';

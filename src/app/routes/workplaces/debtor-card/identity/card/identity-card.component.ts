@@ -4,9 +4,9 @@ import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IIdentityDoc } from '@app/routes/workplaces/debtor-card/identity/identity.interface';
+import { IIdentityDoc } from '@app/routes/workplaces/core/identity/identity.interface';
 
-import { IdentityService } from '@app/routes/workplaces/debtor-card/identity/identity.service';
+import { IdentityService } from '@app/routes/workplaces/core/identity/identity.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
