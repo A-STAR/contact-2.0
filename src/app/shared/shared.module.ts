@@ -213,6 +213,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     RadioGroupModule,
     SelectModule,
     SpinnerModule,
+    ScriptEditorModule,
     TabViewModule,
     TextEditorModule,
     Toolbar2Module,
