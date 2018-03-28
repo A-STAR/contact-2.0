@@ -4,8 +4,6 @@ import { EmploymentCardModule } from '@app/routes/workplaces/debtor-card/employm
 import { EmploymentGridModule } from '@app/routes/workplaces/debtor-card/employment/grid/employment-grid.module';
 import { SharedModule } from '@app/shared/shared.module';
 
-import { EmploymentService } from '@app/routes/workplaces/debtor-card/employment/employment.service';
-
 import { DebtorEmploymentComponent } from './employment.component';
 
 @NgModule({
@@ -14,7 +12,6 @@ import { DebtorEmploymentComponent } from './employment.component';
     EmploymentGridModule,
     SharedModule,
   ],
-  providers: [ EmploymentService ],
   exports: [
     DebtorEmploymentComponent,
     EmploymentGridModule,

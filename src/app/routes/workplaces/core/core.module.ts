@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { ContactPersonsModule } from './contact-persons/contact-persons.module';
 import { DebtsModule } from './debts/debts.module';
 import { PledgeModule } from './pledge/pledge.module';
 import { PledgorModule } from './pledgor/pledgor.module';
@@ -9,6 +10,7 @@ import { PropertyModule } from './property/property.module';
 
 @NgModule({
   imports: [
+    ContactPersonsModule,
     DebtsModule,
     PledgeModule,
     PledgorModule,

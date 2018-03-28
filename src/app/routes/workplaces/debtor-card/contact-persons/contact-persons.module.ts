@@ -4,8 +4,6 @@ import { ContactPersonsCardModule } from '@app/routes/workplaces/debtor-card/con
 import { ContactPersonsGridModule } from '@app/routes/workplaces/debtor-card/contact-persons/grid/contact-persons-grid.module';
 import { SharedModule } from '@app/shared/shared.module';
 
-import { ContactPersonsService } from '@app/routes/workplaces/debtor-card/contact-persons/contact-persons.service';
-
 import { ContactPersonsComponent } from './contact-persons.component';
 
 @NgModule({
@@ -14,13 +12,12 @@ import { ContactPersonsComponent } from './contact-persons.component';
     ContactPersonsGridModule,
     SharedModule,
   ],
-  providers: [ ContactPersonsService ],
   exports: [
     ContactPersonsGridModule,
     ContactPersonsComponent,
   ],
   declarations: [
-    ContactPersonsComponent
+    ContactPersonsComponent,
   ],
 })
 export class ContactPersonsModule {}
