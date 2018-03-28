@@ -7,10 +7,10 @@ import { RoutingService } from '@app/core/routing/routing.service';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'full-size' },
-  selector: 'app-contractors-and-portfolios-version',
-  templateUrl: './contractors-and-portfolios-version.component.html',
+  selector: 'app-versions',
+  templateUrl: './versions.component.html',
 })
-export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestroy {
+export class VersionsComponent implements OnInit, OnDestroy {
   static ENTITY_TYPE_CONTRACTOR = 13;
   static ENTITY_TYPE_PORTFOLIO = 15;
 
@@ -31,10 +31,10 @@ export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestr
         if (params) {
           this.attributeId = Number(params.get('attributeId'));
           if ((this.entityId = Number(params.get('portfolioId')))) {
-            this.entityTypeId = ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_PORTFOLIO;
+            this.entityTypeId = VersionsComponent.ENTITY_TYPE_PORTFOLIO;
           } else {
             this.entityId = Number(params.get('contractorId'));
-            this.entityTypeId = ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_CONTRACTOR;
+            this.entityTypeId = VersionsComponent.ENTITY_TYPE_CONTRACTOR;
           }
         }
       });
@@ -47,7 +47,7 @@ export class ContractorsAndPortfoliosVersionComponent implements OnInit, OnDestr
   }
 
   onBack(): void {
-    const url = this.entityTypeId === ContractorsAndPortfoliosVersionComponent.ENTITY_TYPE_PORTFOLIO
+    const url = this.entityTypeId === VersionsComponent.ENTITY_TYPE_PORTFOLIO
       ? [
         '/admin',
         'contractors',

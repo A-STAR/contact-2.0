@@ -11,12 +11,12 @@ import {
   IContractor,
   IPortfolio,
   IActionType
-} from '../contractors-and-portfolios.interface';
+} from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { IMetadataAction } from '@app/core/metadata/metadata.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITitlebar, TitlebarItemTypeEnum } from '@app/shared/components/titlebar/titlebar.interface';
 
-import { ContractorsAndPortfoliosService } from '../contractors-and-portfolios.service';
+import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -33,10 +33,10 @@ import { ValueBag } from '@app/core/value-bag/value-bag';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'full-size' },
-  selector: 'app-portfolios',
-  templateUrl: './portfolios.component.html',
+  selector: 'app-portfolios-grid',
+  templateUrl: './portfolios-grid.component.html',
 })
-export class PortfoliosComponent extends DialogFunctions implements OnInit, OnDestroy {
+export class PortfoliosGridComponent extends DialogFunctions implements OnInit, OnDestroy {
   @ViewChild(ActionGridComponent) grid: ActionGridComponent<IPortfolio>;
 
   titlebar: ITitlebar = {

@@ -4,10 +4,10 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IContractor, IPortfolio } from '../../contractors-and-portfolios.interface';
+import { IContractor, IPortfolio } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { ContractorsAndPortfoliosService } from '../../contractors-and-portfolios.service';
+import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { addGridLabel, isEmpty } from '@app/core/utils';

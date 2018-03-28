@@ -9,14 +9,14 @@ import {
   ViewChild,
 } from '@angular/core';
 
-import { IPortfolio } from '../../contractors-and-portfolios.interface';
-import { IDynamicFormItem } from '../../../../../shared/components/form/dynamic-form/dynamic-form.interface';
+import { IPortfolio } from '@app/routes/admin/contractors/contractors-and-portfolios.interface';
+import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-import { ValueConverterService } from '../../../../../core/converter/value-converter.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
-import { DynamicFormComponent } from '../../../../../shared/components/form/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey } from '../../../../../core/utils';
+import { makeKey } from '@app/core/utils';
 
 const label = makeKey('portfolios.grid');
 

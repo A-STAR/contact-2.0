@@ -23,11 +23,11 @@ import { makeKey } from '@app/core/utils';
 const label = makeKey('portfolios.grid');
 
 @Component({
-  selector: 'app-portfolio-edit',
-  templateUrl: './portfolio-edit.component.html',
+  selector: 'app-portfolio-card',
+  templateUrl: './portfolio-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PortfolioEditComponent implements OnInit, OnDestroy {
+export class PortfolioCardComponent implements OnInit, OnDestroy {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 

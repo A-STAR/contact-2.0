@@ -3,12 +3,14 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
 
-import { ManagerCardComponent } from './manager-card.component';
+import { ContractorsAndPortfoliosService } from './../../contractors-and-portfolios.service';
+
+import { PortfolioCardComponent } from './portfolio-card.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: ManagerCardComponent,
+    component: PortfolioCardComponent,
     data: {
       reuse: true,
     },
@@ -21,11 +23,11 @@ const routes: Routes = [
     SharedModule,
   ],
   exports: [
-    ManagerCardComponent
+    PortfolioCardComponent
   ],
   declarations: [
-    ManagerCardComponent,
-  ]
+    PortfolioCardComponent,
+  ],
+  providers: [ ContractorsAndPortfoliosService ],
 })
-export class ContractorManagerEditModule {
-}
+export class PortfolioCardModule {}

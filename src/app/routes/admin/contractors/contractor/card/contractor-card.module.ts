@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 
-import { AttributesModule } from './attributes/attributes.module';
-import { ObjectsModule } from './objects/objects.module';
 import { SharedModule } from '@app/shared/shared.module';
 
+import { ContractorsAndPortfoliosService } from './../../contractors-and-portfolios.service';
+
 import { ContractorCardComponent } from './contractor-card.component';
-import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
@@ -59,11 +59,13 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    AttributesModule,
-    ObjectsModule,
+    // AttributesModule,
+    // ManagersModule,
     RouterModule.forChild(routes),
+    // ObjectsModule,
     SharedModule,
   ],
+  providers: [ ContractorsAndPortfoliosService ],
   exports: [
     ContractorCardComponent
   ],

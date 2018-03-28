@@ -1,17 +1,16 @@
-
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
 
 import { ContractorsAndPortfoliosService } from '@app/routes/admin/contractors/contractors-and-portfolios.service';
 
-import { ManagerGridComponent } from './grid/manager-grid.component';
+import { ManagerCardComponent } from './manager-card.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: ManagerGridComponent,
+    component: ManagerCardComponent,
     data: {
       reuse: true,
     },
@@ -23,6 +22,12 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
   ],
+  exports: [
+    ManagerCardComponent
+  ],
+  declarations: [
+    ManagerCardComponent,
+  ],
   providers: [ ContractorsAndPortfoliosService ],
 })
-export class ManagersModule {}
+export class ManagerCardModule {}

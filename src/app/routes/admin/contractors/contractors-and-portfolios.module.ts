@@ -2,9 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { ContractorGridModule } from './contractor/grid/contractor-grid.module';
-import { PortfoliosModule } from './portfolios/portfolios.module';
+import { PortfoliosGridModule } from './portfolios/grid/portfolios-grid.module';
 import { SharedModule } from '@app/shared/shared.module';
-import { ContractorsAndPortfoliosVersionModule } from './version/contractors-and-portfolios-version.module';
 
 import { ContractorsAndPortfoliosService } from './contractors-and-portfolios.service';
 
@@ -23,8 +22,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     ContractorGridModule,
-    PortfoliosModule,
-    ContractorsAndPortfoliosVersionModule,
+    PortfoliosGridModule,
     RouterModule.forChild(routes),
     SharedModule,
   ],
