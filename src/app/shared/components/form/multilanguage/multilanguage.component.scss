@@ -21,11 +21,12 @@
 
 .language-label {
   background-color: #fff;
-  border-top-color: $gray;;
-  border-left-color: $gray;;
-  border-bottom-color: $gray;;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-bottom-color: $gray;
   color: $text;
   cursor: pointer;
+  padding-left: 0;
   position: relative;
 
   > span {

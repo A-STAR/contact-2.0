@@ -1,3 +1,10 @@
 .input-group-btn {
   font-size: inherit;
+
+  .btn {
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    padding-left: 0;
+  }
 }
