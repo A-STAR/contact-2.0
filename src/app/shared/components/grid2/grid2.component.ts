@@ -710,7 +710,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
 
     return this.columns
       .filter(column => !this.columnIds || this.columnIds.includes(column.colId))
-      .filter(column => !!column.label)
+      .map(column => ({...column, label: column.label || column.colId }))
       .map(mapColumns)
       // ES6 sort is not necessarily stable: http://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.sort
       .sort((a, b) => a.index === b.index ? a.originalIndex - b.originalIndex : a.index - b.index)
