@@ -185,11 +185,8 @@ export class DataService {
       formData.append('file', file);
     }
     if (body) {
-      const payload = file
-        ? { ...body, fileName: file.name }
-        : body;
       const properties = new Blob(
-        [ JSON.stringify(payload) ],
+        [ JSON.stringify(body) ],
         { type: 'application/json;charset=UTF-8' }
       );
       formData.append('properties', properties);

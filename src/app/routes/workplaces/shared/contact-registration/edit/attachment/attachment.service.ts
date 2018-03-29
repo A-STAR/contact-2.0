@@ -14,8 +14,9 @@ export class AttachmentService {
   ) {}
 
   create(debtId: number, guid: string, data: Partial<IAttachment>, file: File): Observable<string> {
+    const body = file ? { ...data, fileName: file.name } : data;
     return this.dataService
-      .createMultipart(this.baseUrl, { debtId, guid }, data, file)
+      .createMultipart(this.baseUrl, { debtId, guid }, body, file)
       .map(response => response.data[0].guid);
   }
 
