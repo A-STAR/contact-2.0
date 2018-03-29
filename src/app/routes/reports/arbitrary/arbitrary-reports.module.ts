@@ -7,24 +7,12 @@ import { FieldsModule } from './fields/fields.module';
 import { ParamsModule } from './params/params.module';
 
 import { ArbitraryReportsComponent } from './arbitrary-reports.component';
-import { ReportCardComponent } from './reports/card/report-card.component';
-import { FieldCardComponent } from './fields/card/field-card.component';
-import { ParamCardComponent } from './params/card/param-card.component';
 
 const routes: Routes = [
   {
     path: '',
     component: ArbitraryReportsComponent,
-    data: {
-      reuse: true,
-    },
-  },
-  { path: 'create', component: ReportCardComponent },
-  { path: ':reportId', component: ReportCardComponent },
-  { path: ':reportId/fields/create', component: FieldCardComponent },
-  { path: ':reportId/fields/:fieldId', component: FieldCardComponent },
-  { path: ':reportId/params/create', component: ParamCardComponent },
-  { path: ':reportId/params/:paramId', component: ParamCardComponent },
+  }
 ];
 
 @NgModule({
