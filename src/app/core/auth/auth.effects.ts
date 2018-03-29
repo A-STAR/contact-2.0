@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { UnsafeAction } from '../../core/state/state.interface';
-import { Actions, Effect } from '@ngrx/effects';
+import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { defer } from 'rxjs/observable/defer';
 import { of } from 'rxjs/observable/of';
-import { throttleTime } from 'rxjs/operators';
+import { catchError, map, switchMap, throttleTime } from 'rxjs/operators';
 
 import { IUserParams } from '@app/core/auth/auth.interface';
 
@@ -16,97 +16,108 @@ import { NotificationsService } from '../notifications/notifications.service';
 @Injectable()
 export class AuthEffects {
   @Effect()
-  login$ = this.actions
-    .ofType(AuthService.AUTH_LOGIN)
-    .switchMap((action: UnsafeAction) => {
-      const { login, password } = action.payload;
-      return this.login(login, password);
-    })
-    .switchMap(token => [
-      {
-        type: AuthService.AUTH_CREATE_SESSION,
-        payload: { token }
-      },
-      {
-        type: AuthService.AUTH_LOGIN_SUCCESS
-      }
-    ])
-    .catch(error => {
-      return [
+  login$ = this.actions.pipe(
+    ofType(AuthService.AUTH_LOGIN),
+    // Switching to a disposable stream
+    // Errors on this stream don't affect outer stream
+    // See https://stackoverflow.com/questions/41685519/ngrx-effects-error-handling/41685689
+    switchMap((action: UnsafeAction) => of(action).pipe(
+      switchMap(a => {
+        const { login, password } = a.payload;
+        return this.login(login, password);
+      }),
+      switchMap(token => [
         {
-          type: AuthService.AUTH_DESTROY_SESSION,
-          payload: { redirectToLogin: false }
-        },
-        this.notificationService.error('auth.errors.login').response(error).action(),
-      ];
-    });
-
-  @Effect()
-  refresh$ = this.actions
-    .ofType(AuthService.AUTH_REFRESH)
-    .switchMap(() => {
-      return this.refresh()
-        .map((token: string) => ({
           type: AuthService.AUTH_CREATE_SESSION,
-          payload: { token, redirectAfterLogin: false }
-        }))
-        .catch(error => [
+          payload: { token }
+        },
+        {
+          type: AuthService.AUTH_LOGIN_SUCCESS
+        }
+      ]),
+      catchError(error => {
+        return [
           {
-            type: AuthService.AUTH_DESTROY_SESSION
+            type: AuthService.AUTH_DESTROY_SESSION,
+            payload: { redirectToLogin: false }
           },
-          this.notificationService.error('auth.errors.refresh').response(error).action(),
-        ]);
-    });
+          this.notificationService.error('auth.errors.login').response(error).action(),
+        ];
+      }),
+    )),
+  );
 
   @Effect()
-  logout$ = this.actions
-    .ofType(AuthService.AUTH_LOGOUT)
-    .switchMap(() => {
-      return this.logout()
-        .map(() => ({
+  refresh$ = this.actions.pipe(
+    ofType(AuthService.AUTH_REFRESH),
+    switchMap(action => of(action).pipe(
+      switchMap(() => this.refresh()),
+      map((token: string) => ({
+        type: AuthService.AUTH_CREATE_SESSION,
+        payload: { token, redirectAfterLogin: false }
+      })),
+      catchError(error => [
+        {
           type: AuthService.AUTH_DESTROY_SESSION
-        }))
-        .catch(error => [
-          {
-            type: AuthService.AUTH_DESTROY_SESSION
-          },
-          this.notificationService.error('auth.errors.logout').response(error).action(),
-        ]);
-    });
+        },
+        this.notificationService.error('auth.errors.refresh').response(error).action(),
+      ]),
+    )),
+  );
 
   @Effect()
-    retrieveToken$ = this.actions
-      .ofType(AuthService.AUTH_RETRIEVE_TOKEN)
-      .switchMap((action: UnsafeAction) => {
-        const { token } = action.payload;
-        this.authService.initTokenTimer(token);
-        return [];
-      });
+  logout$ = this.actions.pipe(
+    ofType(AuthService.AUTH_LOGOUT),
+    switchMap(action => of(action).pipe(
+      switchMap(() => this.logout()),
+      map(() => ({
+        type: AuthService.AUTH_DESTROY_SESSION
+      })),
+      catchError(error => [
+        {
+          type: AuthService.AUTH_DESTROY_SESSION
+        },
+        this.notificationService.error('auth.errors.logout').response(error).action(),
+      ]),
+    )),
+  );
 
   @Effect()
-  createSession$ = this.actions
-    .ofType(AuthService.AUTH_CREATE_SESSION)
-    .switchMap((action: UnsafeAction) => {
+  retrieveToken$ = this.actions.pipe(
+    ofType(AuthService.AUTH_RETRIEVE_TOKEN),
+    switchMap((action: UnsafeAction) => {
+      const { token } = action.payload;
+      this.authService.initTokenTimer(token);
+      return [];
+    })
+  );
+
+  @Effect()
+  createSession$ = this.actions.pipe(
+    ofType(AuthService.AUTH_CREATE_SESSION),
+    switchMap((action: UnsafeAction) => {
       const { token } = action.payload;
       this.authService.saveToken(token);
       this.authService.saveLanguage(token);
       this.authService.initTokenTimer(token);
       return [];
-    });
+    }),
+  );
 
   @Effect()
-  destroySession$ = this.actions
-    .ofType(AuthService.AUTH_DESTROY_SESSION)
-    .switchMap(() => {
+  destroySession$ = this.actions.pipe(
+    ofType(AuthService.AUTH_DESTROY_SESSION),
+    switchMap(() => {
       this.authService.removeToken();
       this.authService.clearTokenTimer();
       return [{ type: AuthService.AUTH_GLOBAL_RESET }];
-    });
+    }),
+  );
 
   @Effect()
-  userParams$ = this.actions
-    .ofType(AuthService.USER_FETCH)
-    .switchMap(() => {
+  userParams$ = this.actions.pipe(
+    ofType(AuthService.USER_FETCH),
+    switchMap(() => {
       return this.fetchUserParams()
         .map(params => ({
           type: AuthService.USER_FETCH_SUCCESS,
@@ -117,16 +128,18 @@ export class AuthEffects {
             this.notificationService.error('auth.errors.login').response(error).action(),
           ];
         });
-    });
+    }),
+  );
 
   @Effect()
-  invalidToken$ = this.actions
-    .ofType(AuthService.AUTH_TOKEN_INVALID)
-    .pipe(throttleTime(500))
-    .switchMap(() => {
+  invalidToken$ = this.actions.pipe(
+    ofType(AuthService.AUTH_TOKEN_INVALID),
+    throttleTime(500),
+    switchMap(() => {
       this.authService.removeToken();
       return [ this.notificationService.error('auth.errors.invalidToken').action() ];
-    });
+    })
+  );
 
   @Effect()
   init$ = defer(() => of({
@@ -145,13 +158,19 @@ export class AuthEffects {
   }
 
   private login(login: string, password: string): Observable<string> {
-    return this.dataService.post('/auth/login', {}, { login, password }, this.overrideRequestOptions)
-      .map(response => this.getTokenFromResponse(response));
+    return this.dataService
+      .post('/auth/login', {}, { login, password }, this.overrideRequestOptions)
+      .pipe(
+        map(response => this.getTokenFromResponse(response)),
+      );
   }
 
   private refresh(): Observable<string> {
-    return this.dataService.get('/api/refresh', {}, this.overrideRequestOptions)
-      .map(response => this.getTokenFromResponse(response));
+    return this.dataService
+      .get('/api/refresh', {}, this.overrideRequestOptions)
+      .pipe(
+        map(response => this.getTokenFromResponse(response))
+      );
   }
 
   private logout(): Observable<void> {
