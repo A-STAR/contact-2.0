@@ -8,7 +8,6 @@
 <app-employee-edit
   *ngIf="isDialog('edit')"
   [editedEntity]="editedEntity"
-  [employeeRoleOptions]="employeeRoleOptions$ | async"
   (submit)="onEditSubmit($event)"
   (cancel)="cancelAction()">
 </app-employee-edit>

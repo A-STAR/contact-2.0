@@ -1146,13 +1146,9 @@
     "roles": {
       "title": "Roles",
       "copy": {
-        "title": "Copy role",
-        "originalRoleName": "Original role name",
-        "roleName": "Name",
-        "roleComment": "Comments",
-        "select": {
-          "title": "Select a role"
-        }
+        "title": "Copy role {{ name }}",
+        "name": "Name",
+        "comment": "Commentary"
       },
       "edit": {
         "title": "Edit role: {{ id }}",
@@ -1477,7 +1473,7 @@
         "name": "Name",
         "position": "Position",
         "fullName": "Full name",
-        "roleCode": "Role code",
+        "roleCode": "Role",
         "isInactive": "Inactive"
       },
       "errors": {

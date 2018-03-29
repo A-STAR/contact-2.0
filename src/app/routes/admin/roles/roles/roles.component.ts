@@ -158,7 +158,7 @@ export class RolesComponent extends DialogFunctions implements OnInit, OnDestroy
 
   onCopy(data: any): void {
     const { originalRoleId, ...role } = data;
-    this.permissionsService.copyRole(originalRoleId[0].value, role);
+    this.permissionsService.copyRole(originalRoleId, role);
     this.onSuccess(PermissionsService.ROLE_COPY_SUCCESS);
   }
 

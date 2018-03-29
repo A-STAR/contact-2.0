@@ -1146,13 +1146,9 @@
     "roles": {
       "title": "Роли",
       "copy": {
-        "title": "Копировать роль",
-        "originalRoleName": "Название оригинальной роли",
-        "roleName": "Название",
-        "roleComment": "Комментарий",
-        "select": {
-          "title": "Выберите роль"
-        }
+        "title": "Копировать роль {{ name }}",
+        "name": "Название",
+        "comment": "Комментарий"
       },
       "edit": {
         "title": "Редактирование роли: {{ id }} ",
@@ -1477,7 +1473,7 @@
         "name": "Имя",
         "position": "Должность",
         "fullName": "ФИО",
-        "roleCode": "Код роли",
+        "roleCode": "Роль",
         "isInactive": "Блокирован"
       },
       "errors": {
