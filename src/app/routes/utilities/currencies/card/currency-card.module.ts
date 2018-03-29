@@ -1,13 +1,22 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from '../../../../shared/shared.module';
 
+import { CurrenciesService } from '../currencies.service';
+
 import { CurrencyCardComponent } from './currency-card.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: CurrencyCardComponent,
+  }
+];
 
 @NgModule({
   imports: [
-    CommonModule,
+    RouterModule.forChild(routes),
     SharedModule
   ],
   exports: [
@@ -16,5 +25,8 @@ import { CurrencyCardComponent } from './currency-card.component';
   declarations: [
     CurrencyCardComponent,
   ],
+  providers: [
+    CurrenciesService
+  ]
 })
 export class CurrencyCardModule { }

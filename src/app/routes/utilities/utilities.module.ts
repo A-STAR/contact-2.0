@@ -22,7 +22,7 @@ const routes: Routes = [
       },
       {
         path: 'currencies',
-        loadChildren: './currencies/currencies.module#CurrenciesModule',
+        loadChildren: './currencies/currencies.module#RoutesModule',
       },
       {
         path: 'schedule',
