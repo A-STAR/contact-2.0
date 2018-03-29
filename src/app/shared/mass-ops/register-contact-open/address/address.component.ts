@@ -1,17 +1,15 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IAddress } from '@app/routes/workplaces/shared/address/address.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { AddressService } from '@app/routes/workplaces/shared/address/address.service';
-import { DebtService } from '@app/core/debt/debt.service';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { TickRendererComponent } from '@app/shared/components/grids/renderers';
 
-import { addGridLabel, doOnceIf, isEmpty } from '@app/core/utils';
+import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,7 +37,6 @@ export class AddressGridComponent implements OnInit {
   constructor(
     private addressService: AddressService,
     private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
   ) {}
 
   ngOnInit(): void {
@@ -49,8 +46,8 @@ export class AddressGridComponent implements OnInit {
     });
   }
 
-  get canRegisterSelectedAddress$(): Observable<boolean> {
-    return this.debtService.canRegisterAddressVisit$(this.selectedAddress);
+  get canRegisterSelectedAddress(): boolean {
+    return !!this.selectedAddress;
   }
 
   get selectedAddress(): IAddress {
@@ -66,10 +63,14 @@ export class AddressGridComponent implements OnInit {
 
   onDoubleClick(address: IAddress): void {
     this.selectedAddressId = address.id;
-    doOnceIf(this.canRegisterSelectedAddress$, () => this.action.emit(this.selectedAddressId));
+    if (this.canRegisterSelectedAddress) {
+      this.action.emit(this.selectedAddressId);
+    }
   }
 
   onSubmit(): void {
-    doOnceIf(this.canRegisterSelectedAddress$, () => this.action.emit(this.selectedAddressId));
+    if (this.canRegisterSelectedAddress) {
+      this.action.emit(this.selectedAddressId);
+    }
   }
 }

@@ -3,19 +3,10 @@
 <div class="mb">
 
   <app-button
-    *ngIf="canRegisterSpecial$ | async"
     color="primary"
     type="registerContact"
     label="routes.workplaces.shared.contactRegistration.edit.dialogs.contactType.misc.buttonMisc"
     (click)="onSubmitSpecial()"
-  ></app-button>
-
-  <app-button
-    *ngIf="canRegisterOfficeVisit$ | async"
-    color="primary"
-    type="registerContact"
-    label="routes.workplaces.shared.contactRegistration.edit.dialogs.contactType.misc.buttonOfficeVisit"
-    (click)="onSubmitOfficeVisit()"
   ></app-button>
 
 </div>

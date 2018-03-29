@@ -16,7 +16,7 @@
       color="primary"
       type="registerContact"
       label="routes.workplaces.shared.contactRegistration.edit.dialogs.contactType.address.button"
-      [disabled]="!(canRegisterSelectedAddress$ | async)"
+      [disabled]="!canRegisterSelectedAddress"
       (click)="onSubmit()"
     ></app-button>
   </div>

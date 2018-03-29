@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { IPhone } from '@app/routes/workplaces/shared/phone/phone.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
-import { DebtService } from '@app/core/debt/debt.service';
+
 import { PhoneService } from '@app/routes/workplaces/shared/phone/phone.service';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
-import { addGridLabel, doOnceIf, isEmpty } from '@app/core/utils';
+import { addGridLabel, isEmpty } from '@app/core/utils';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,19 +34,20 @@ export class PhoneGridComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private debtService: DebtService,
     private phoneService: PhoneService,
   ) {}
 
   ngOnInit(): void {
-    this.phoneService.fetchAll(this.entityTypeId, this.entityId, false).subscribe(phones => {
-      this.phones = phones.filter(phone => !phone.isInactive);
-      this.cdRef.markForCheck();
-    });
+    this.phoneService
+      .fetchAll(this.entityTypeId, this.entityId, false)
+      .subscribe(phones => {
+        this.phones = phones.filter(phone => !phone.isInactive);
+        this.cdRef.markForCheck();
+      });
   }
 
-  get canRegisterSelectedPhone$(): Observable<boolean> {
-    return this.debtService.canRegisterIncomingCall$(this.selectedPhone);
+  get canRegisterSelectedPhone(): boolean {
+    return !!this.selectedPhone;
   }
 
   get selectedPhone(): IPhone {
@@ -63,10 +63,14 @@ export class PhoneGridComponent implements OnInit {
 
   onDoubleClick(phone: IPhone): void {
     this.selectedPhoneId = phone.id;
-    doOnceIf(this.canRegisterSelectedPhone$, () => this.action.emit(this.selectedPhoneId));
+    if (this.canRegisterSelectedPhone) {
+      this.action.emit(this.selectedPhoneId);
+    }
   }
 
   onSubmit(): void {
-    doOnceIf(this.canRegisterSelectedPhone$, () => this.action.emit(this.selectedPhoneId));
+    if (this.canRegisterSelectedPhone) {
+      this.action.emit(this.selectedPhoneId);
+    }
   }
 }
