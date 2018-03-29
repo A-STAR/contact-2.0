@@ -34,7 +34,7 @@ const routes: Route[] = [
 @NgModule({
   imports: [
     EffectsModule.forFeature([PermissionsEffects]),
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, { paramsInheritanceStrategy: 'always' }),
     SharedModule,
   ],
   providers: [

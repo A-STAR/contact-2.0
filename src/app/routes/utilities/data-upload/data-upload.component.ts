@@ -22,6 +22,7 @@ import { DataUploaders,
   IDataResponse,
   IRow,
   ICellValue,
+  IColumn,
 } from './data-upload.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 
@@ -352,19 +353,22 @@ export class DataUploadComponent extends DialogFunctions
   private getColumnsFromResponse(
     response: IOpenFileResponse,
   ): Observable<IAGridColumn[]> {
-    const columns = response.columns.map(column => {
-      return {
-        name: column.id,
-        // cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
-        cellRendererFramework: CellRendererComponent,
-        cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
-        dataType: column.typeCode,
-        dictCode: column.dictCode,
-        editable: true,
-        label: column.label,
-        valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
-        valueSetter: (params: any) => this.setCellValue(params),
-      };
+    const validateColumn = this.validateColumns(response.rows);
+    const columns = response.columns
+    .filter(validateColumn)
+    .map(column => {
+        return {
+          name: column.id,
+          // cellRenderer: (params: ICellRendererParams) => this.getCellRenderer(params),
+          cellRendererFramework: CellRendererComponent,
+          cellStyle: (params: ICellRendererParams) => this.getCellStyle(params),
+          dataType: column.typeCode,
+          dictCode: column.dictCode,
+          editable: true,
+          label: column.label,
+          valueGetter: (params: ICellRendererParams) => this.getCellValue(params),
+          valueSetter: (params: any) => this.setCellValue(params),
+        };
     });
     return this.gridService.getColumns(columns, {});
   }
@@ -412,5 +416,9 @@ export class DataUploadComponent extends DialogFunctions
       default:
         return { backgroundColor: '#ffffff', color: '#000000' };
     }
+  }
+
+  private validateColumns(rows: IRow[]): (column: IColumn) => boolean {
+    return column => rows.every(row => row.cells.map(cell => cell.columnId).includes(column.id));
   }
 }
