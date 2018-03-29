@@ -104,6 +104,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   @Input() rows: T[] = [];
   @Input() columnTranslationKey: string;
   @Input() styles: CSSStyleDeclaration;
+  @Input() filterData: any;
 
   @Output() request = new EventEmitter<void>();
   @Output() dblClick = new EventEmitter<T>();
@@ -247,10 +248,6 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     if (this.grid) {
       this.grid.deselectAll();
     }
-  }
-
-  getFiltersForm(): FormGroup {
-    return this.filter && this.filter.form && this.filter.form.form;
   }
 
   onAction(gridAction: IAGridAction): void {

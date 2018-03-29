@@ -31,8 +31,7 @@ import { TYPE_CODES } from '@app/core/utils/value';
 })
 export class ActionGridFilterComponent implements OnInit {
   @Input() metadataKey: string;
-
-  @Output() filter = new EventEmitter<void>();
+  @Input() data: any;
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   formControls: IDynamicFormControl[];
@@ -66,7 +65,7 @@ export class ActionGridFilterComponent implements OnInit {
 
   get filters(): FilterObject {
     const filter = FilterObject.create().and();
-    const data = this.form && this.form.serializedUpdates || {};
+    const data = this.form && this.form.serializedValue || {};
 
     this.operators.forEach(operator => {
       if (this.hasControlValues(data, operator.controls)) {
@@ -79,10 +78,6 @@ export class ActionGridFilterComponent implements OnInit {
       }
     });
     return filter;
-  }
-
-  onFilter(): void {
-    this.filter.emit();
   }
 
   private pickControlValues(data: any, props: any[]): any[] {
