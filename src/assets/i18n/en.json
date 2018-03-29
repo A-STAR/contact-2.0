@@ -1477,7 +1477,7 @@
         "name": "Name",
         "position": "Position",
         "fullName": "Full name",
-        "roleCode": "Role code",
+        "roleCode": "Role",
         "isInactive": "Inactive"
       },
       "errors": {

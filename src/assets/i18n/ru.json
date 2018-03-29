@@ -1477,7 +1477,7 @@
         "name": "Имя",
         "position": "Должность",
         "fullName": "ФИО",
-        "roleCode": "Код роли",
+        "roleCode": "Роль",
         "isInactive": "Блокирован"
       },
       "errors": {
