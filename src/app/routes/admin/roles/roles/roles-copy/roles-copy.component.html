@@ -1,9 +1,9 @@
 <app-dialog (close)="onClose()">
   <div dialog-header>
-    <h3>{{ 'roles.roles.copy.title' | translate }}</h3>
+    <h3>{{ 'roles.roles.copy.title' | translate:role }}</h3>
   </div>
 
-  <app-dynamic-form [controls]="controls" [data]="formData"></app-dynamic-form>
+  <app-dynamic-form *ngIf="controls" [config]="config" [controls]="controls" [data]="{}"></app-dynamic-form>
 
   <div dialog-footer>
     <button class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit()">

@@ -95,7 +95,6 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
 
   constructor(
     private organizationsService: OrganizationsService,
-    private userDictionariesService: UserDictionariesService,
     private userPermissionsService: UserPermissionsService,
   ) {
     super();
@@ -108,9 +107,6 @@ export class EmployeesComponent extends DialogFunctions implements OnInit, OnDes
     ).subscribe((data: [number, IEmployee[]]) => {
       this.editedEntity = data[1].find(employee => employee.userId === data[0]);
     });
-
-    this.employeeRoleOptions$ = this.userDictionariesService
-      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE);
 
     this.hasViewPermission$ = this.userPermissionsService.has('ORGANIZATION_VIEW');
 
