@@ -3,6 +3,7 @@
     *ngIf="formControls"
     [controls]="formControls"
     [data]="data"
+    (onValuesChanges)="onFiltersChanges()"
   >
   </app-dynamic-form>
 </div>

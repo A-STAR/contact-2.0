@@ -8,7 +8,6 @@ import {
   ViewChild,
   OnInit
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, filter, map } from 'rxjs/operators';
@@ -54,6 +53,7 @@ import { Grid2Component } from '@app/shared/components/grid2/grid2.component';
 import { SimpleGridComponent } from '@app/shared/components/grids/grid/grid.component';
 import { TitlebarComponent } from '@app/shared/components/titlebar/titlebar.component';
 
+import { combineLatestAnd } from '@app/core/utils';
 import { DialogFunctions } from '../../../core/dialog';
 import { FilterObject } from '../grid2/filter/grid-filter';
 import { ValueBag } from '@app/core/value-bag/value-bag';
@@ -403,22 +403,22 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   private buildTitlebar(config: IMetadataTitlebar): ITitlebar {
-    // TODO(i.lobanov): mock, remove when titlebar added in config
+    // TODO(i.lobanov): move to action grid service and refactor
     const titlebarItems = {
       refresh: (permissions: string[]) => ({
         type: TitlebarItemTypeEnum.BUTTON_REFRESH,
         action: () => this.onRequest(),
-        enabled: permissions ? this.userPermissionsService.hasAll(permissions) : of(true)
+        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_REFRESH, permissions)
       }),
       search: (permissions: string[]) => ({
         type: TitlebarItemTypeEnum.BUTTON_SEARCH,
         action: () => this.onRequest(),
-        enabled: permissions ? this.userPermissionsService.hasAll(permissions) : of(true)
+        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_SEARCH, permissions)
       }),
       exportExcel: (permissions: string[]) => ({
         type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
         action: () => this.exportExcel(),
-        enabled: permissions ? this.userPermissionsService.hasAll(permissions) : of(true)
+        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL, permissions)
       }),
     };
     return {
@@ -426,6 +426,21 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       items: config.items
         .map(item => titlebarItems[item.name](item.permissions))
     };
+  }
+
+  private isTbItemEnabled$(itemType: TitlebarItemTypeEnum, permissions?: string[]): Observable<boolean> {
+    const conditions = [ permissions ? this.userPermissionsService.hasAll(permissions) : of(true) ];
+    switch (itemType) {
+      case TitlebarItemTypeEnum.BUTTON_SEARCH:
+        conditions.push(this.filter.isValid$);
+        break;
+      case TitlebarItemTypeEnum.BUTTON_REFRESH:
+      case TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL:
+      default:
+        // do nothing
+        break;
+    }
+    return combineLatestAnd(conditions);
   }
 
   private exportExcel(): void {

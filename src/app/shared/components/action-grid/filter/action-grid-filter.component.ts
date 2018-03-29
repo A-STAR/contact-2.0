@@ -2,15 +2,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
   OnInit,
-  Output,
   ViewChild,
-  Input
+  Input,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { Subject } from 'rxjs/Subject';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 import { IAppState } from '@app/core/state/state.interface';
@@ -35,6 +34,7 @@ export class ActionGridFilterComponent implements OnInit {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   formControls: IDynamicFormControl[];
+  isValid$ = new Subject<boolean>();
 
   private operators: IMetadataFilterOperator[] = [];
   private columnsMetadata: IMetadataColumn[];
@@ -47,6 +47,7 @@ export class ActionGridFilterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     combineLatest(
       this.entityAttributesService.getDictValueAttributes(),
       this.store.select(state => state.metadata)
@@ -61,6 +62,14 @@ export class ActionGridFilterComponent implements OnInit {
       this.columnsMetadata = metadata.columns;
       this.cdRef.markForCheck();
     });
+  }
+
+  get isValid(): boolean {
+    return this.form && this.form.isValid;
+  }
+
+  onFiltersChanges(): void {
+    this.isValid$.next(this.isValid);
   }
 
   get filters(): FilterObject {
