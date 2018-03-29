@@ -95,7 +95,7 @@ export class MultiLanguageComponent implements ControlValueAccessor, OnInit, Val
 
       this.value = value || langs.map(l => ({ languageId: l.id, value: null }));
 
-      this.propagateChange(this.value);
+      // this.propagateChange(this.value);
       this.cdRef.markForCheck();
     });
   }
