@@ -50,7 +50,7 @@ const routes: Routes = [
       },
       {
         path: 'formulas',
-        loadChildren: './formulas/formulas.module#FormulasModule',
+        loadChildren: './formulas/formulas.module#RoutesModule',
       },
       {
         path: 'letters',
