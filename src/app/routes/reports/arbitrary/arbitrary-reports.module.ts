@@ -31,3 +31,48 @@ const routes: Routes = [
   ],
 })
 export class ArbitraryReportsModule {}
+
+@NgModule({
+  imports: [
+    RouterModule.forChild([
+      {
+        path: '',
+        children: [
+          {
+            path: '',
+            loadChildren: './arbitrary-reports.module#ArbitraryReportsModule',
+          },
+          {
+            path: 'create',
+            loadChildren: './reports/card/report-card.module#ReportCardModule'
+          },
+          {
+            path: ':reportId',
+            loadChildren: './reports/card/report-card.module#ReportCardModule'
+          },
+          {
+            path: ':reportId/fields/create',
+            loadChildren: './fields/card/field-card.module#FieldCardModule'
+          },
+          {
+            path: ':reportId/fields/:fieldId',
+            loadChildren: './fields/card/field-card.module#FieldCardModule'
+          },
+          {
+            path: ':reportId/params/create',
+            loadChildren: './params/card/param-card.module#ParamCardModule'
+          },
+          {
+            path: ':reportId/params/:paramId',
+            loadChildren: './params/card/param-card.module#ParamCardModule'
+          },
+          {
+            path: '**',
+            redirectTo: ''
+          },
+        ]
+      },
+    ]),
+  ],
+})
+export class RoutesModule {}

@@ -13,7 +13,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: './arbitrary/routes/routes.module#ArbitraryReportsRoutesModule',
+        loadChildren: './arbitrary/arbitrary-reports.module#RoutesModule',
       },
       {
         path: '**',
