@@ -50,8 +50,9 @@ export class DocumentService extends AbstractActionService {
   }
 
   create(entityType: number, entityId: number, document: IDocument, file: File, callCenter: boolean): Observable<void> {
+    const body = file ? { ...document, fileName: file.name } : document;
     return this.dataService
-      .createMultipart(DocumentService.BASE_URL, { entityType, entityId }, document, file, { params: { callCenter } })
+      .createMultipart(DocumentService.BASE_URL, { entityType, entityId }, body, file, { params: { callCenter } })
       .catch(this.notificationsService.createError().entity(this.errSingular).dispatchCallback());
   }
 
@@ -64,8 +65,9 @@ export class DocumentService extends AbstractActionService {
     callCenter: boolean,
   ): Observable<void> {
     const data = { entityType, entityId, documentId };
+    const body = file ? { ...document, fileName: file.name } : document;
     return this.dataService
-      .updateMultipart(`${DocumentService.BASE_URL}/{documentId}`, data, document, file, { params: { callCenter } })
+      .updateMultipart(`${DocumentService.BASE_URL}/{documentId}`, data, body, file, { params: { callCenter } })
       .catch(this.notificationsService.updateError().entity(this.errSingular).dispatchCallback());
   }
 

@@ -38,8 +38,9 @@ export class DataUploader {
 
   openFile(file: File): Observable<IOpenFileResponse> {
     this.fileName = file.name;
+    const body = file ? { fileName: file.name } : {};
     return this.dataService
-      .createMultipart(this.api.openFile, this.buildRequestParams(), {}, file)
+      .createMultipart(this.api.openFile, this.buildRequestParams(), body, file)
       .catch(this.notificationsService.error('modules.dataUpload.errors.openFile').dispatchCallback())
       .pipe(
       map(response => response.data[0]),

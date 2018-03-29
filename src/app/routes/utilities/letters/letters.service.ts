@@ -2,7 +2,6 @@ import { Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
-import { of } from 'rxjs/observable/of';
 
 import { IAppState } from '@app/core/state/state.interface';
 import { ILetterTemplate } from './letters.interface';
@@ -10,6 +9,7 @@ import { ILetterTemplate } from './letters.interface';
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
 @Injectable()
 export class LettersService extends AbstractActionService {
@@ -17,43 +17,38 @@ export class LettersService extends AbstractActionService {
 
   private baseUrl = '/letters/templates';
 
-  readonly canView$ = of(true); // this.userPermissionsService.has('LETTER_TEMPLATE_VIEW');
-  readonly canAdd$ = of(true); // this.userPermissionsService.has('LETTER_TEMPLATE_ADD');
-  readonly canEdit$ = of(true); // this.userPermissionsService.has('LETTER_TEMPLATE_EDIT');
-  readonly canDelete$ = of(true); // this.userPermissionsService.has('LETTER_TEMPLATE_DELETE');
+  readonly canView$ = this.userPermissionsService.has('LETTER_TEMPLATE_VIEW');
+  readonly canAdd$ = this.userPermissionsService.has('LETTER_TEMPLATE_ADD');
+  readonly canEdit$ = this.userPermissionsService.has('LETTER_TEMPLATE_EDIT');
+  readonly canDelete$ = this.userPermissionsService.has('LETTER_TEMPLATE_DELETE');
 
   constructor(
     protected actions: Actions,
     private dataService: DataService,
     private notificationsService: NotificationsService,
     protected store: Store<IAppState>,
+    private userPermissionsService: UserPermissionsService
   ) {
     super();
   }
 
   fetchAll(): Observable<Array<ILetterTemplate>> {
-    // return this.dataService.readAll(this.baseUrl)
-      // .catch(this.notificationsService.fetchError().entity('entities.letterTemplates.gen.plural').dispatchCallback());
-    return of([
-      { id: 1, name: 'Name', fileName: 'fileName', serviceTypeCode: 1, recipientTypeCode: 1, comment: 'comment' }
-    ]);
+    return this.dataService.readAll(this.baseUrl)
+      .catch(this.notificationsService.fetchError().entity('entities.letterTemplates.gen.plural').dispatchCallback());
   }
 
   fetch(templateId: number): Observable<ILetterTemplate> {
-    // return this.dataService.read(`${this.baseUrl}/{templateId}`, { templateId })
-      // .catch(this.notificationsService.fetchError().entity('entities.letterTemplates.gen.singular').dispatchCallback());
-    return of(
-      { id: templateId, name: 'Name', fileName: 'fileName', serviceTypeCode: 1, recipientTypeCode: 1, comment: 'comment' }
-    );
+    return this.dataService.read(`${this.baseUrl}/{templateId}`, { templateId })
+      .catch(this.notificationsService.fetchError().entity('entities.letterTemplates.gen.singular').dispatchCallback());
   }
 
-  create(template: ILetterTemplate): Observable<ILetterTemplate> {
-    return this.dataService.create(this.baseUrl, {}, template)
+  create(template: ILetterTemplate, file: File): Observable<ILetterTemplate> {
+    return this.dataService.createMultipart(this.baseUrl, {}, template, file)
       .catch(this.notificationsService.createError().entity('entities.letterTemplates.gen.singular').dispatchCallback());
   }
 
-  update(templateId: number, template: ILetterTemplate): Observable<any> {
-    return this.dataService.update(`${this.baseUrl}/{templateId}`, { templateId }, template)
+  update(templateId: number, template: ILetterTemplate, file: File): Observable<any> {
+    return this.dataService.updateMultipart(`${this.baseUrl}/{templateId}`, { templateId }, template, file)
       .catch(this.notificationsService.updateError().entity('entities.letterTemplates.gen.singular').dispatchCallback());
   }
 

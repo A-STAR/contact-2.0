@@ -39,11 +39,6 @@ export class GuiObjectsEffects {
   ) {}
 
   private readGuiObjects(): Observable<IGuiObject[]> {
-    return this.dataService.readAll('/guiconfigurations')
-      .map(objects => {
-        objects.find(o => o.name === 'utilities').children
-          .push({ name: 'letters' });
-        return objects;
-      });
+    return this.dataService.readAll('/guiconfigurations');
   }
 }
