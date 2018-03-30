@@ -71,7 +71,6 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
 
   private _currencies: Array<ICurrency> = [];
 
-  private viewPermissionSubscription: Subscription;
   private actionSubscription: Subscription;
   private currencySubscription: Subscription;
 
@@ -100,7 +99,6 @@ export class CurrenciesGridComponent extends DialogFunctions implements OnInit, 
   }
 
   ngOnDestroy(): void {
-    this.viewPermissionSubscription.unsubscribe();
     this.actionSubscription.unsubscribe();
     this.currencySubscription.unsubscribe();
   }

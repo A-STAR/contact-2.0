@@ -1,13 +1,22 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
 
+import { FormulasService } from '../formulas.service';
+
 import { FormulaCardComponent } from './formula-card.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: FormulaCardComponent,
+  }
+];
 
 @NgModule({
   imports: [
-    CommonModule,
+    RouterModule.forChild(routes),
     SharedModule
   ],
   declarations: [
@@ -15,6 +24,9 @@ import { FormulaCardComponent } from './formula-card.component';
   ],
   exports: [
     FormulaCardComponent,
+  ],
+  providers: [
+    FormulasService
   ]
 })
 export class FormulaCardModule { }

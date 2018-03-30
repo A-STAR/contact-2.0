@@ -219,9 +219,11 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
     }
     if (rowCount) {
       if (this.page > this.getPageCount()) {
-        this.page = this.getPageCount() || 1;
+        this.page = this.getPageCount();
         this.onPage.emit(this.page);
-      } else {
+      }
+
+      if (rowCount.currentValue !== rowCount.previousValue && !rowCount.isFirstChange()) {
         this.refreshRowCount();
         if (this.rowCount) {
           this.gridOptions.api.hideOverlay();
@@ -599,7 +601,7 @@ export class Grid2Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private getPageCount(): number {
-    return Math.ceil(this.rowCount / this.pageSize);
+    return Math.max(1, Math.ceil(this.rowCount / this.pageSize));
   }
 
   private getCustomFilter(column: IAGridColumn): any {
