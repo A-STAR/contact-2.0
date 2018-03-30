@@ -39,7 +39,7 @@ export class ActionGridFilterComponent implements OnInit, OnDestroy {
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   formControls: IDynamicFormControl[];
-  isValid$ = new BehaviorSubject<boolean>(false);
+  isValid$ = new BehaviorSubject<boolean>(true);
   values$ = new BehaviorSubject<any>(null);
 
   private operators: IMetadataFilterOperator[] = [];
