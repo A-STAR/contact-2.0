@@ -19,10 +19,11 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 import { addFormLabel } from '@app/core/utils';
 
 @Component({
-  selector: 'app-incoming-call-filter',
-  templateUrl: 'filter.component.html',
-  styleUrls: [ 'filter.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'full-height' },
+  selector: 'app-incoming-call-filter',
+  styleUrls: [ 'filter.component.scss' ],
+  templateUrl: 'filter.component.html',
 })
 export class FilterComponent implements AfterViewInit, OnDestroy {
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
