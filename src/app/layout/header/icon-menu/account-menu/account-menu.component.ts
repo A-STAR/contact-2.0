@@ -1,5 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  ViewChild,
+  OnInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { map, first } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
