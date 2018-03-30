@@ -1,4 +1,9 @@
-<app-dynamic-form [controls]="controls" [data]="{}"></app-dynamic-form>
-
-<app-button color="secondary" type="search" (click)="onSearchClick()"></app-button>
-<app-button [label]="false" type="clear" (click)="onClearClick()"></app-button>
+<div class="flex vertical">
+  <div class="flex-item mt-lg mb-lg">
+    <app-button color="secondary" type="search" (click)="onSearchClick()"></app-button>
+    <app-button [label]="false" type="clear" (click)="onClearClick()"></app-button>
+  </div>
+  <div class="flex-item grow pr-lg" style="overflow-y: auto;">
+    <app-dynamic-form [controls]="controls" [data]="{}"></app-dynamic-form>
+  </div>
+</div>

@@ -2,11 +2,10 @@ import {
   ChangeDetectionStrategy, Component, EventEmitter, Output,
   ViewChild, OnInit, Input, ChangeDetectorRef
 } from '@angular/core';
-import { of } from 'rxjs/observable/of';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 
-// import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
+import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 import { LetterGenerationService } from '@app/routes/workplaces/shared/address/letter-generation/letter-generation.service';
@@ -34,15 +33,12 @@ export class LetterGenerationDialogComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private letterGenerationService: LetterGenerationService
-    // private userTemplatesService: UserTemplatesService
+    private letterGenerationService: LetterGenerationService,
+    private userTemplatesService: UserTemplatesService
   ) { }
 
   ngOnInit(): void {
-    // this.userTemplatesService.getLetterTemplatesForDebt(this.personRole, this.debtId)
-    of([
-      { id: 12, name: '1' }
-    ])
+    this.userTemplatesService.getLetterTemplatesForDebt(this.personRole, this.debtId)
       .subscribe(templates => {
         this.controls = [
           {
