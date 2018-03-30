@@ -3,6 +3,7 @@ import { ICellRendererParams } from 'ag-grid/main';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 import { LookupService } from '@app/core/lookup/lookup.service';
 
@@ -28,13 +29,13 @@ export class LookupRendererComponent implements ICellRendererAngularComp {
 
   get value$(): Observable<string> {
     const { value } = this.params;
-    return this.lookupService
+    return value ? this.lookupService
       .lookup(this.params['lookupKey'])
       .pipe(
         map(lookup => {
-          const item = lookup.find(l => l['id'] === value);
+          const item = lookup.find(l => (l['id'] || l['code']) === value);
           return item ? item['name'] : value;
         }),
-      );
+      ) : of(null);
   }
 }
