@@ -41,6 +41,7 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
 
   rows: IDebtorActionLog[] = [];
   rowCount = 0;
+  filterData: any;
 
   constructor(
     private actionLogService: ActionLogService,
@@ -99,13 +100,7 @@ export class DebtorActionLogComponent implements AfterViewInit, OnDestroy {
       const mStartDate = moment()
         .subtract(days, 'day')
         .set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-      // pass the new value to the control
-      const filterData = { startDate: mStartDate.toDate() };
-      const filterForm = this.grid.getFiltersForm();
-      if (filterForm) {
-        filterForm.patchValue(filterData);
-        this.cdRef.markForCheck();
-      }
+      this.filterData = { startDate: mStartDate.toDate() };
     }
   }
 }

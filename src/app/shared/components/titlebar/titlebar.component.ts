@@ -8,13 +8,11 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { of } from 'rxjs/observable/of';
-import { Observable } from 'rxjs/Observable';
 
 import { IButtonType } from '../button/button.interface';
 import { ITitlebar, ITitlebarItem, TitlebarItemTypeEnum, ITitlebarButton } from './titlebar.interface';
 
-import { doOnceIf, invert } from '@app/core/utils';
+import { doOnceIf } from '@app/core/utils';
 
 @Component({
   selector: 'app-titlebar',
@@ -77,16 +75,12 @@ export class TitlebarComponent implements OnChanges, OnInit {
   }
 
   onClick(item: ITitlebarItem): void {
-    doOnceIf(this.isDisabled(item).map(invert), () => {
+    doOnceIf(item.enabled, () => {
       if (typeof item.action === 'function') {
         item.action();
       }
       this.action.emit(item);
     });
-  }
-
-  isDisabled(item: ITitlebarItem): Observable<boolean> {
-    return item.enabled ? item.enabled.map(enabled => !enabled) : of(false);
   }
 
   /**

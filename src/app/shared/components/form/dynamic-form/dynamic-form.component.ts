@@ -7,12 +7,14 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  OnDestroy,
 } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first, switchMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 
 import {
   IControls,
@@ -37,17 +39,21 @@ import {
   selector: 'app-dynamic-form',
   templateUrl: 'dynamic-form.component.html'
 })
-export class DynamicFormComponent implements OnInit, OnChanges {
+export class DynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() controls: Array<IDynamicFormItem>;
   @Input() data: IValue;
   @Input() config: IDynamicFormConfig;
 
   @Output() onSelect = new EventEmitter<ISelectItemsPayload>();
   @Output() onSubmit = new EventEmitter<void>();
+  @Output() onValuesChanges = new EventEmitter<IValue>();
+  @Output() onStatusChange = new EventEmitter<boolean>();
 
   form: FormGroup;
 
   private flatControls: Array<IDynamicFormControl>;
+  private valuesChangesSub: Subscription;
+  private statusChangeSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -66,6 +72,8 @@ export class DynamicFormComponent implements OnInit, OnChanges {
     if (!config) {
       this.flatControls = this.flattenFormControls(this.controls);
       this.form = this.createForm(this.flatControls);
+      this.valuesChangesSub = this.subOnFormValuesChanges();
+      this.statusChangeSub = this.subOnFormStatusChanges();
       this.populateForm();
       this.cdRef.markForCheck();
       return;
@@ -163,6 +171,7 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       // log('this.controls', this.controls);
       // log('flatControls', this.flatControls);
       this.form = this.createForm(this.flatControls);
+      this.valuesChangesSub = this.subOnFormValuesChanges();
       this.populateForm();
       this.cdRef.markForCheck();
     });
@@ -171,6 +180,15 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.data && this.form) {
       this.populateForm();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.valuesChangesSub) {
+      this.valuesChangesSub.unsubscribe();
+    }
+    if (this.statusChangeSub) {
+      this.statusChangeSub.unsubscribe();
     }
   }
 
@@ -346,6 +364,19 @@ export class DynamicFormComponent implements OnInit, OnChanges {
       }
       return acc;
     }, {});
+  }
+
+  private subOnFormValuesChanges(): Subscription {
+    // TODO(i.lobanov): think about updates only,
+    // also form emits on blur
+    return this.form.valueChanges
+      .subscribe(values => this.onValuesChanges.emit(values));
+  }
+
+  private subOnFormStatusChanges(): Subscription {
+    return this.form.statusChanges
+      .map(statusStr => statusStr === 'VALID')
+      .subscribe(status => this.onStatusChange.emit(status));
   }
 
   private serializeControlValue(value: any, control: IDynamicFormControl): any {
