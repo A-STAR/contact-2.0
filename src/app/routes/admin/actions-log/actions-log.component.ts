@@ -23,6 +23,7 @@ export class ActionsLogComponent implements AfterViewInit {
   rows: IActionLog[] = [];
   rowCount = 0;
   rowIdKey = 'id';
+  filterData: any;
 
   data: any;
 
@@ -59,11 +60,7 @@ export class ActionsLogComponent implements AfterViewInit {
           .endOf('month')
           .toDate(),
       };
-      const filterForm = this.grid.getFiltersForm();
-      if (filterForm) {
-        filterForm.patchValue(filterData);
-        this.cdRef.markForCheck();
-      }
+      this.filterData = filterData;
     }
   }
 }

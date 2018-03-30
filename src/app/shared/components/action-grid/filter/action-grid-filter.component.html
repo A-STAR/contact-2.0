@@ -2,6 +2,9 @@
   <app-dynamic-form
     *ngIf="formControls"
     [controls]="formControls"
+    [data]="data"
+    (onStatusChange)="onFilterStatusChange($event)"
+    (onValuesChanges)="onFilterValuesChanges($event)"
   >
   </app-dynamic-form>
 </div>
