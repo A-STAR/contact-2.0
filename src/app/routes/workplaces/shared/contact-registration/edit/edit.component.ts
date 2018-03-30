@@ -67,45 +67,35 @@ export class EditComponent extends DialogFunctions {
     super();
   }
 
-  get displayContactPersonForm$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome && outcome.changeContactPerson === 1),
-    );
-  }
+  readonly displayContactPersonForm$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && outcome.changeContactPerson === 1),
+  );
 
-  get displayAttributeTree$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
-      map(outcome => Boolean(outcome && outcome.attributes && outcome.attributes.length)),
-    );
-  }
+  readonly canDisplayContactForPhone$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && outcome.addPhone === 1),
+  );
 
-  get displayAttachmentForm$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome && [2, 3].includes(outcome.fileAttachMode)),
-    );
-  }
+  readonly displayAttributeTree = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => Boolean(outcome && outcome.attributes && outcome.attributes.length)),
+  );
 
-  get debtId$(): Observable<number> {
-    return this.contactRegistrationService.debtId$;
-  }
+  readonly displayAttachmentForm$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => outcome && [2, 3].includes(outcome.fileAttachMode)),
+  );
 
-  get personId$(): Observable<number> {
-    return this.contactRegistrationService.personId$;
-  }
+  readonly debtId$ = this.contactRegistrationService.debtId$;
 
-  get contactType$(): Observable<number> {
-    return this.contactRegistrationService.contactType$;
-  }
+  readonly personId$ = this.contactRegistrationService.personId$;
+
+  readonly contactType$ = this.contactRegistrationService.contactType$;
 
   get canSubmit(): boolean {
     return this.form.valid && this.isEntityHasChosen();
   }
 
-  get minAmountPercentMessageParams$(): Observable<{ percent: number }> {
-    return this.contactRegistrationService.limit$.pipe(
+  readonly minAmountPercentMessageParams$ = this.contactRegistrationService.limit$.pipe(
       map(limit => ({ percent: limit && limit.minAmountPercent })),
-    );
-  }
+  );
 
   onSubmit(): void {
     combineLatest(
@@ -160,19 +150,19 @@ export class EditComponent extends DialogFunctions {
   }
 
   private isEntityHasChosen(): boolean {
-    return this.isAttributeTreeValid() || this.isContactValid();
+    return this.isAttributeTreeValid() && this.isContactValid();
   }
 
   private isAttributeTreeValid(): boolean {
-    return this.attributes && this.attributes.isValid;
+    return !this.attributes || this.attributes.isValid;
   }
 
   private isContactForPersonHasChosen(): boolean {
-    return this.contactForPerson && !!this.contactForPerson.person;
+    return !this.contactForPerson || !!this.contactForPerson.person;
   }
 
   private isContactForPhoneHasChosen(): boolean {
-    return this.contactForPhone && !!this.contactForPhone.person;
+    return !this.contactForPhone || !!this.contactForPhone.person;
   }
 
   private isContactValid(): boolean {
