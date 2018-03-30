@@ -8,6 +8,8 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { defaultTo } from 'ramda';
+import { of } from 'rxjs/observable/of';
 
 import { IButtonType } from '../button/button.interface';
 import { ITitlebar, ITitlebarItem, TitlebarItemTypeEnum, ITitlebarButton } from './titlebar.interface';
@@ -56,8 +58,12 @@ export class TitlebarComponent implements OnChanges, OnInit {
   }
 
   ngOnInit(): void {
+    const enabledDefault = defaultTo(of(true));
     this.borderCls = { 'no-border': this.titlebar.suppressBorder === true };
-    this.items = this.titlebar.items || this.items;
+    this.items = (this.titlebar.items || this.items).map(item => ({
+      ...item,
+      enabled: enabledDefault(item.enabled)
+    }));
     this.suppressCenterZone = this.titlebar.suppressCenterZone || false;
     this.title = this.titlebar.title;
   }
