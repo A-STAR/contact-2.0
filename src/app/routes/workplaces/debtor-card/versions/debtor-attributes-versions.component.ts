@@ -52,14 +52,9 @@ export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
+    const debtId = this.route.snapshot.paramMap.get('debtId');
     this.routingService.navigate([
-      '/workplaces',
-      'debtor-card',
-      this.route.snapshot.paramMap.get('debtId')
+      `/workplaces/debtor-card/${debtId}`,
     ]);
   }
 }
-
-
-
-
