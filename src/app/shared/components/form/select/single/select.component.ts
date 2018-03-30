@@ -126,6 +126,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private elRef: ElementRef,
     private lookupService: LookupService,
     private renderer2: Renderer2,
     private sortOptionsPipe: SortOptionsPipe,
@@ -158,7 +159,8 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (!this.input.nativeElement.contains(event.target) && this.open) {
+    // close if target is not inside host (e.g. own caret, input)
+    if (!this.elRef.nativeElement.contains(event.target) && this.open) {
       this.hideOptions();
     }
   }
@@ -244,7 +246,6 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   onCaret(event: MouseEvent): void {
     event.preventDefault();
-    event.stopPropagation();
     if (this.open) {
       this.hideOptions();
     } else {
