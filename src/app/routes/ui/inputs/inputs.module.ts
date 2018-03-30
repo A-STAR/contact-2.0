@@ -9,6 +9,7 @@ import { NumberModule } from './number/number.module';
 import { RadioButtonModule } from './radiobutton/radiobutton.module';
 import { TextModule } from './text/text.module';
 import { TextareaModule } from './textarea/textarea.module';
+import { ScriptEditorModule } from './scripteditor/scripteditor.module';
 
 import { InputsComponent } from './inputs.component';
 
@@ -29,6 +30,7 @@ const routes: Routes = [
     SharedModule,
     TextModule,
     TextareaModule,
+    ScriptEditorModule,
   ],
   declarations: [
     InputsComponent,
