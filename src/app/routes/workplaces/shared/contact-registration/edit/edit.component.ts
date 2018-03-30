@@ -75,7 +75,7 @@ export class EditComponent extends DialogFunctions {
     map(outcome => outcome && outcome.addPhone === 1),
   );
 
-  readonly displayAttributeTree = this.contactRegistrationService.outcome$.pipe(
+  readonly displayAttributeTree$ = this.contactRegistrationService.outcome$.pipe(
     map(outcome => Boolean(outcome && outcome.attributes && outcome.attributes.length)),
   );
 
