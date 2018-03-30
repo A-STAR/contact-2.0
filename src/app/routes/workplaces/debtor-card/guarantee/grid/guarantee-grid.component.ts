@@ -160,7 +160,7 @@ export class GuaranteeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   private onAdd(): void {
-    this.routingService.navigate([ 'guarantee', 'create' ], this.route);
+    this.routingService.navigate([ 'guarantee/create' ], this.route);
   }
 
   private onAddGuarantor(): void {

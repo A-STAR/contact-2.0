@@ -38,10 +38,11 @@ export class DebtorAddressComponent {
 
   onClose(): void {
     const { paramMap } = this.route.snapshot;
-    const contactId = paramMap.get('contactId');
+    const contactId       = paramMap.get('contactId');
     const contactPersonId = paramMap.get('contactPersonId');
+    const debtId          = paramMap.get('debtId');
     this.routingService.navigate([
-      `/workplaces/debtor-card/${paramMap.get('debtId')}`,
+      `/workplaces/debtor-card/${debtId}`,
       ...(contactId ? [ 'contact', contactId ] : []),
       ...(contactPersonId ? [ 'contact', 'create' ] : [])
     ]);

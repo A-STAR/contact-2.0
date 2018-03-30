@@ -26,12 +26,11 @@ export class PortfolioAttributesComponent implements OnInit {
   }
 
   onBack(): void {
+    const { paramMap } = this.route.snapshot;
+    const contractorId = paramMap.get('contractorId');
+    const portfolioId = paramMap.get('portfolioId');
     this.routingService.navigate([
-      '/admin',
-      'contractors',
-      this.route.snapshot.paramMap.get('contractorId'),
-      'portfolios',
-      this.route.snapshot.paramMap.get('portfolioId')
+      `/admin/contractors/${contractorId}/portfolios/${portfolioId}`
     ]);
   }
 }
