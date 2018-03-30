@@ -178,6 +178,10 @@ const routes: Routes = [
         loadChildren: './identity/identity.module#IdentityModule',
       },
       {
+        path: 'debt',
+        loadChildren: './debt/debt.module#DebtModule',
+      },
+      {
         path: 'debt/create',
         loadChildren: './debt/debt.module#DebtModule',
       },
