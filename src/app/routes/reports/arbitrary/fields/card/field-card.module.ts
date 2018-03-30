@@ -1,20 +1,32 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from '@app/shared/shared.module';
 
+import { FieldsService } from '../fields.service';
+
 import { FieldCardComponent } from './field-card.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: FieldCardComponent,
+  }
+];
 
 @NgModule({
   imports: [
-    CommonModule,
-    SharedModule
+    SharedModule,
+    RouterModule.forChild(routes),
   ],
   declarations: [
     FieldCardComponent,
   ],
   exports: [
     FieldCardComponent,
+  ],
+  providers: [
+    FieldsService
   ]
 })
 export class FieldCardModule { }
