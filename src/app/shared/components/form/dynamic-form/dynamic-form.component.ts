@@ -47,11 +47,13 @@ export class DynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   @Output() onSelect = new EventEmitter<ISelectItemsPayload>();
   @Output() onSubmit = new EventEmitter<void>();
   @Output() onValuesChanges = new EventEmitter<IValue>();
+  @Output() onStatusChange = new EventEmitter<boolean>();
 
   form: FormGroup;
 
   private flatControls: Array<IDynamicFormControl>;
   private valuesChangesSub: Subscription;
+  private statusChangeSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -71,6 +73,7 @@ export class DynamicFormComponent implements OnInit, OnChanges, OnDestroy {
       this.flatControls = this.flattenFormControls(this.controls);
       this.form = this.createForm(this.flatControls);
       this.valuesChangesSub = this.subOnFormValuesChanges();
+      this.statusChangeSub = this.subOnFormStatusChanges();
       this.populateForm();
       this.cdRef.markForCheck();
       return;
@@ -183,6 +186,9 @@ export class DynamicFormComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     if (this.valuesChangesSub) {
       this.valuesChangesSub.unsubscribe();
+    }
+    if (this.statusChangeSub) {
+      this.statusChangeSub.unsubscribe();
     }
   }
 
@@ -365,6 +371,12 @@ export class DynamicFormComponent implements OnInit, OnChanges, OnDestroy {
     // also form emits on blur
     return this.form.valueChanges
       .subscribe(values => this.onValuesChanges.emit(values));
+  }
+
+  private subOnFormStatusChanges(): Subscription {
+    return this.form.statusChanges
+      .map(statusStr => statusStr === 'VALID')
+      .subscribe(status => this.onStatusChange.emit(status));
   }
 
   private serializeControlValue(value: any, control: IDynamicFormControl): any {

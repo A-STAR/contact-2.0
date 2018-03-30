@@ -5,11 +5,15 @@ import {
   OnInit,
   ViewChild,
   Input,
+  EventEmitter,
+  Output,
+  OnDestroy,
 } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { first } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Subject } from 'rxjs/Subject';
+import { first } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs/Subscription';
 
 import { FilterObject } from '@app/shared/components/grid2/filter/grid-filter';
 import { IAppState } from '@app/core/state/state.interface';
@@ -28,16 +32,19 @@ import { TYPE_CODES } from '@app/core/utils/value';
   selector: 'app-action-grid-filter',
   templateUrl: './action-grid-filter.component.html'
 })
-export class ActionGridFilterComponent implements OnInit {
+export class ActionGridFilterComponent implements OnInit, OnDestroy {
   @Input() metadataKey: string;
   @Input() data: any;
+  @Output() onChange = new EventEmitter<{ values: any, status: boolean }>();
 
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
   formControls: IDynamicFormControl[];
-  isValid$ = new Subject<boolean>();
+  isValid$ = new BehaviorSubject<boolean>(false);
+  values$ = new BehaviorSubject<any>(null);
 
   private operators: IMetadataFilterOperator[] = [];
   private columnsMetadata: IMetadataColumn[];
+  private changesSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -62,14 +69,32 @@ export class ActionGridFilterComponent implements OnInit {
       this.columnsMetadata = metadata.columns;
       this.cdRef.markForCheck();
     });
+
+    this.changesSub = combineLatest(
+        this.isValid$,
+        this.values$
+      )
+      .map(([ status, values ]) => ({ status, values }))
+      .subscribe(event => this.onChange.emit(event));
+
+  }
+
+  ngOnDestroy(): void {
+    if (this.changesSub) {
+      this.changesSub.unsubscribe();
+    }
   }
 
   get isValid(): boolean {
     return this.form && this.form.isValid;
   }
 
-  onFiltersChanges(): void {
-    this.isValid$.next(this.isValid);
+  onFilterStatusChange($event: boolean): void {
+    this.isValid$.next($event);
+  }
+
+  onFilterValuesChanges($event: any): void {
+    this.values$.next($event);
   }
 
   get filters(): FilterObject {
