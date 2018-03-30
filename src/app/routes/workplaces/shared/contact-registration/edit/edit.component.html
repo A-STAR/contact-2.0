@@ -40,7 +40,7 @@
       <app-contact-registration-auto-comment [formGroup]="form"></app-contact-registration-auto-comment>
 
       <!-- Phone -->
-      <app-contact-registration-phone [formGroup]="form"></app-contact-registration-phone>
+      <app-contact-registration-phone *ngIf="canDisplayContactForPhone$ | async" [formGroup]="form"></app-contact-registration-phone>
 
       <!-- Contact Person -->
       <div *ngIf="displayContactPersonForm$ | async">
