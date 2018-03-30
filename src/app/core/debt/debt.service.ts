@@ -139,7 +139,7 @@ export class DebtService {
   }
 
   openByDebtId(debtId: number): Promise<boolean> {
-    return this.routingService.navigate([ '/workplaces', `debtor-card/${debtId}` ]);
+    return this.routingService.navigate([ `/workplaces/debtor-card/${debtId}` ]);
   }
 
   openIncomingCall(data: any): Promise<boolean> {
