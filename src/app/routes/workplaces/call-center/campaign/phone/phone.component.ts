@@ -35,10 +35,7 @@ export class PhoneComponent {
   }
 
   onClose(): void {
-    this.routingService.navigate([
-      '/workplaces',
-      'call-center',
-      this.route.snapshot.paramMap.get('campaignId')
-    ]);
+    const campaignId = this.route.snapshot.paramMap.get('campaignId');
+    this.routingService.navigate([ `/workplaces/call-center/${campaignId}` ]);
   }
 }

@@ -27,8 +27,7 @@ export class AttributesComponent implements OnInit {
   onBack(): void {
     this.routingService.navigate([
       '/admin',
-      'contractors',
-      String(this.entityId)
+      `contractors/${String(this.entityId)}`,
     ]);
   }
 

@@ -134,11 +134,8 @@ export class DebtorPledgeCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.routingService.navigate([
-      '/workplaces',
-      'debtor-card',
-      this.route.snapshot.paramMap.get('debtId')
-    ]);
+    const debtId = this.route.snapshot.paramMap.get('debtId');
+    this.routingService.navigate([ `/workplaces/debtor-card/${debtId}` ]);
   }
 
   onSubmit(): void {

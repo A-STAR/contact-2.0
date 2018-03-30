@@ -82,12 +82,8 @@ export class DebtComponentCardComponent {
   }
 
   onBack(): void {
-    this.routingService.navigate([
-      '/workplaces',
-      'debtor-card',
-      this.route.snapshot.paramMap.get('debtId'),
-      'debt'
-    ]);
+    const debtId = this.route.snapshot.paramMap.get('debtId');
+    this.routingService.navigate([ `/workplaces/debtor-card/${debtId}`, 'debt' ]);
   }
 
   get canSubmit(): boolean {
