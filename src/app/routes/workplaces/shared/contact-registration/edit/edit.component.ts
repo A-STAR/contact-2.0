@@ -119,6 +119,8 @@ export class EditComponent extends DialogFunctions {
   }
 
   onBack(): void {
+    this.contactRegistrationService.cancelRegistration();
+    this.form.reset();
     this.displayOutcomeTree();
   }
 
