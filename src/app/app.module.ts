@@ -25,7 +25,6 @@ import { NotificationsEffects } from './core/notifications/notifications.effects
 import { SettingsEffects } from '@app/core/settings/settings.effects';
 
 import { CoreModule } from './core/core.module';
-import { LayoutModule } from './layout/layout.module';
 import { RoutesModule } from './routes/routes.module';
 import { SharedModule } from './shared/shared.module';
 
@@ -95,7 +94,6 @@ export function jwtOptionsFactory(configService: ConfigService): any {
         deps: [ ConfigService ],
       },
     }),
-    LayoutModule,
     RoutesModule,
     SharedModule.forRoot(),
     StoreModule.forRoot(reducers, { initialState: getInitialState, metaReducers: [reset] }),
