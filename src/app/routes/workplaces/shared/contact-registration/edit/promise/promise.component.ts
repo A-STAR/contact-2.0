@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, first, map } from 'rxjs/operators';
 import * as moment from 'moment';
@@ -26,46 +25,34 @@ export class ContactRegistrationPromiseComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.canSetPromise$;
-  }
+  readonly canDisplayForm$ = this.contactRegistrationService.canSetPromise$;
 
   get today(): Date {
     return moment().toDate();
   }
 
-  get promiseMinAmount$(): Observable<number> {
-    return this.limitInfo$.pipe(
-      map(([ debt, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent * debt.debtAmount / 100),
-    );
-  }
+  readonly promiseMinAmount$ = this.limitInfo$.pipe(
+    map(([ debt, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent * debt.debtAmount / 100),
+  );
 
-  get promiseMaxAmount$(): Observable<number> {
-    return this.limitInfo$.pipe(
-      map(([ debt ]) => debt.debtAmount),
-    );
-  }
+  readonly promiseMaxAmount$ = this.limitInfo$.pipe(
+    map(([ debt ]) => debt.debtAmount),
+  );
 
-  get promiseMinPercentage$(): Observable<number> {
-    return this.limitInfo$.pipe(
-      map(([ _, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent),
-    );
-  }
+  readonly promiseMinPercentage$ = this.limitInfo$.pipe(
+    map(([ _, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent),
+  );
 
-  get promiseMaxDate$(): Observable<Date> {
-    return this.contactRegistrationService.limit$.pipe(
-      map(limit => {
-        const maxDays = limit && limit.maxDays;
-        return maxDays == null ? null : moment().add(maxDays, 'day').toDate();
-      }),
-    );
-  }
+  readonly promiseMaxDate$ = this.contactRegistrationService.limit$.pipe(
+    map(limit => {
+      const maxDays = limit && limit.maxDays;
+      return maxDays == null ? null : moment().add(maxDays, 'day').toDate();
+    }),
+  );
 
-  get isPromiseAmountDisabled$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
-      map(outcome => !outcome || outcome.promiseMode !== 3),
-    );
-  }
+  readonly isPromiseAmountDisabled$ = this.contactRegistrationService.outcome$.pipe(
+    map(outcome => !outcome || outcome.promiseMode !== 3),
+  );
 
   onPromiseAmountInput(event: Event): void {
     const { value } = event.target as HTMLInputElement;
