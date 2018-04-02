@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../state/state.interface';
@@ -27,6 +27,10 @@ export class LookupService {
   static LOOKUP_FETCH_FAILURE = 'LOOKUP_FETCH_FAILURE';
 
   private _state: ILookupState;
+
+  private readonly state$ = this.store.pipe(
+    select(state => state.lookup)
+  );
 
   constructor(
     private store: Store<IAppState>,
@@ -126,9 +130,5 @@ export class LookupService {
       .filter(slice => slice && slice.status === LookupStatusEnum.LOADED)
       .map(slice => slice.data)
       .distinctUntilChanged();
-  }
-
-  private get state$(): Observable<ILookupState> {
-    return this.store.select(state => state.lookup);
   }
 }

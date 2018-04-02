@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
 import { filter } from 'rxjs/operators/filter';
 import { tap } from 'rxjs/operators/tap';
 
 import { IAppState } from '../state/state.interface';
-import { IGuiObjectsState, IMenuItem, IGuiObject } from './gui-objects.interface';
+import { IMenuItem, IGuiObject } from './gui-objects.interface';
 
 import { menuConfig } from '../../routes/menu-config';
 
@@ -18,6 +18,10 @@ export class GuiObjectsService {
 
   private _guiObjects: Array<IGuiObject>;
   private isFetching = false;
+
+  private readonly state$ = this.store.pipe(
+    select(state => state.guiObjects),
+  );
 
   constructor(private store: Store<IAppState>) {
     // is it really neccessary?
@@ -93,9 +97,5 @@ export class GuiObjectsService {
         }),
         distinctUntilChanged(),
       );
-  }
-
-  private get state$(): Observable<IGuiObjectsState> {
-    return this.store.select(state => state.guiObjects);
   }
 }
