@@ -52,7 +52,7 @@ export class DebtorEmploymentComponent {
     const contactPersonId = paramMap.get('contactPersonId');
     const debtId          = paramMap.get('debtId');
     this.routingService.navigate([
-      `/workplaces/debtor-card/${debtId}`,
+      `/app/workplaces/debtor-card/${debtId}`,
       ...(contactId ? [ 'contact', contactId ] : []),
       ...(contactPersonId ? [ 'contact', 'create' ] : [])
     ]);

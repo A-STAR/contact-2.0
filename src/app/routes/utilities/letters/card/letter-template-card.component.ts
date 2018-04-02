@@ -71,7 +71,7 @@ export class LetterTemplateCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ '/utilities', 'letters' ]);
+    this.routingService.navigate([ '/app/utilities/letters' ]);
   }
 
   private initControls(canEdit: boolean, maxSize: IUserConstant): IDynamicFormItem[] {

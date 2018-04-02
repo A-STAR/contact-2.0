@@ -9,21 +9,25 @@ export class RoutingService {
   ) {}
 
   navigate(segments: string[], route: ActivatedRoute = this.route): Promise<boolean> {
-    const defer = new Promise<boolean>(resolve => this.navigateRecursively(segments, 1, route, resolve));
-    return defer;
+    return this.router.navigate(segments, { relativeTo: route });
   }
 
-  private navigateRecursively(segments: string[], i: number, route: ActivatedRoute, resolve: (state: boolean) => void): void {
-    const segmentsSlice = segments.slice(0, i);
-    const isLastSegment = segmentsSlice.length === segments.length;
-    const url = segmentsSlice.join('/');
+  // navigate(segments: string[], route: ActivatedRoute = this.route): Promise<boolean> {
+  //   const defer = new Promise<boolean>(resolve => this.navigateRecursively(segments, 1, route, resolve));
+  //   return defer;
+  // }
 
-    this.router.navigate([ url ], { replaceUrl: isLastSegment, relativeTo: route }).then(isSucceeded => {
-      if (!isLastSegment) {
-        this.navigateRecursively(segments, i + 1, route, resolve);
-      } else {
-        resolve(isSucceeded);
-      }
-    });
-  }
+  // private navigateRecursively(segments: string[], i: number, route: ActivatedRoute, resolve: (state: boolean) => void): void {
+  //   const segmentsSlice = segments.slice(0, i);
+  //   const isLastSegment = segmentsSlice.length === segments.length;
+  //   const url = segmentsSlice.join('/');
+
+  //   this.router.navigate([ url ], { replaceUrl: isLastSegment, relativeTo: route }).then(isSucceeded => {
+  //     if (!isLastSegment) {
+  //       this.navigateRecursively(segments, i + 1, route, resolve);
+  //     } else {
+  //       resolve(isSucceeded);
+  //     }
+  //   });
+  // }
 }

@@ -143,7 +143,7 @@ export class PortfolioCardComponent implements OnInit, OnDestroy {
   }
 
   onBack(): void {
-    this.routingService.navigate([ '/admin', 'contractors' ]);
+    this.routingService.navigate([ '/app/admin/contractors' ]);
   }
 
   onAttributesClick(): void {

@@ -31,6 +31,6 @@ export class PhoneCardComponent {
   }
 
   onClose(): void {
-    this.router.navigate([ '/workplaces/incoming-call' ]);
+    this.router.navigate([ '/app/workplaces/incoming-call' ]);
   }
 }
