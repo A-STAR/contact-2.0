@@ -62,6 +62,10 @@ const routes: Routes = [
         loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',
       },
       {
+        path: 'contact/:contactId',
+        loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',
+      },
+      {
         path: 'contact/create/:contactPersonId',
         loadChildren: './contact-persons/contact-persons.module#ContactPersonsModule',
       },
