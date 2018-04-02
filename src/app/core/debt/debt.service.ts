@@ -33,36 +33,30 @@ export class DebtService {
     private userPermissionsService: UserPermissionsService
   ) {}
 
-  get canRegisterIncomingCalls$(): Observable<boolean> {
-    return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_INCOMING_CALL);
-  }
+  readonly canRegisterIncomingCalls$ = this.userPermissionsService
+    .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_INCOMING_CALL);
 
   canRegisterIncomingCall$(phone: IPhone): Observable<boolean> {
     return phone && !phone.isInactive ? this.canRegisterIncomingCalls$ : of(false);
   }
 
-  get canRegisterAddressVisits$(): Observable<boolean> {
-    return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_ADDRESS_VISIT);
-  }
+  readonly canRegisterAddressVisits$ = this.userPermissionsService
+    .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_ADDRESS_VISIT);
 
   canRegisterAddressVisit$(address: IAddress): Observable<boolean> {
     return address && !address.isInactive ? this.canRegisterAddressVisits$ : of(false);
   }
 
-  get canRegisterSpecialOrOfficeVisit$(): Observable<boolean> {
-    return this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [
-      DebtService.CONTACT_TYPE_SPECIAL,
-      DebtService.CONTACT_TYPE_OFFICE_VISIT
-    ]);
-  }
+  readonly canRegisterSpecialOrOfficeVisit$ = this.userPermissionsService.containsOne('DEBT_REG_CONTACT_TYPE_LIST', [
+    DebtService.CONTACT_TYPE_SPECIAL,
+    DebtService.CONTACT_TYPE_OFFICE_VISIT
+  ]);
 
-  get canRegisterSpecial$(): Observable<boolean> {
-    return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_SPECIAL);
-  }
+  readonly canRegisterSpecial$ = this.userPermissionsService
+    .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_SPECIAL);
 
-  get canRegisterOfficeVisit$(): Observable<boolean> {
-    return this.userPermissionsService.contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_OFFICE_VISIT);
-  }
+  readonly canRegisterOfficeVisit$ = this.userPermissionsService
+    .contains('DEBT_REG_CONTACT_TYPE_LIST', DebtService.CONTACT_TYPE_OFFICE_VISIT);
 
   get incomingCallSearchParams(): any {
     return this._incomingCallSearchParams$;

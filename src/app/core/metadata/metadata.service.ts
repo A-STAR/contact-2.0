@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 
 import { IAppState } from '../state/state.interface';
@@ -13,6 +13,12 @@ export class MetadataService {
   static METADATA_FETCH_FAILURE = 'METADATA_FETCH_FAILURE';
 
   private state: IMetadataState;
+
+  private readonly state$ = this.store.pipe(
+    select(state => state.metadata),
+    filter(Boolean),
+    distinctUntilChanged()
+  );
 
   constructor(private store: Store<IAppState>) {
     this.state$.subscribe(state => this.state = state);
@@ -34,14 +40,6 @@ export class MetadataService {
       .pipe(
         map(state => state[key]),
         filter(list => list && list.status === MetadataListStatusEnum.LOADED)
-      );
-  }
-
-  private get state$(): Observable<IMetadataState> {
-    return this.store.select(state => state.metadata)
-      .pipe(
-        filter(Boolean),
-        distinctUntilChanged()
       );
   }
 }

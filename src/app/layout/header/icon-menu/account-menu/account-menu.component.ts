@@ -1,5 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  ViewChild,
+  OnInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { map, first } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
@@ -62,14 +69,12 @@ export class AccountMenuComponent extends DialogFunctions implements OnInit {
       });
   }
 
-  get canEditPhoneExtension$(): Observable<boolean> {
-    return combineLatestAnd([
-      this.userPermissionsService.has('PBX_PARAM_AFTER_LOGIN_EDIT'),
-      this.callService.settings$.pipe(
-        map(settings => settings && settings.useIntPhone === 1),
-      ),
-    ]);
-  }
+  readonly canEditPhoneExtension$ = combineLatestAnd([
+    this.userPermissionsService.has('PBX_PARAM_AFTER_LOGIN_EDIT'),
+    this.callService.settings$.pipe(
+      map(settings => settings && settings.useIntPhone === 1),
+    ),
+  ]);
 
   get canSubmitPhoneExtension(): boolean {
     return this.form && this.form.canSubmit;
