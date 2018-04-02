@@ -5,20 +5,20 @@
 
   <div class="pb-lg">
     <app-dynamic-form
-      *ngIf="controls"
+      *ngIf="paramControls"
       [config]="config"
-      [controls]="controls"
+      [controls]="paramControls"
       [data]="{}"
     ></app-dynamic-form>
   </div>
 
   <div class="pb-lg">
-    <app-simple-grid
-      persistenceKey="[grid] utilities/formulas/calculate"
-      [columns]="columns"
-      [rows]="[ result || {} ]"
-      style="height: 10vh"
-    ></app-simple-grid>
+    <app-dynamic-form
+      *ngIf="resultControls"
+      [config]="config"
+      [controls]="resultControls"
+      [data]="result"
+    ></app-dynamic-form>
   </div>
 
   <div dialog-footer>
