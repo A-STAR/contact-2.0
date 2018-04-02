@@ -6,11 +6,8 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import { AceEditorComponent } from 'ng2-ace-editor';
+import { AceEditorDirective } from './ng-ace.directive';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-
-import 'brace/theme/eclipse';
-import 'brace/mode/java';
 
 @Component({
   selector: 'app-script-editor',
@@ -26,19 +23,20 @@ import 'brace/mode/java';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScriptEditorComponent implements ControlValueAccessor, AfterViewInit {
-  @ViewChild(AceEditorComponent) editor: AceEditorComponent;
+  @ViewChild(AceEditorDirective) editor: AceEditorDirective;
 
   @Input() options: any = {};
   @Input() isDisabled = false;
 
   theme = 'eclipse';
-  mode = 'java';
+  mode = 'javascript';
 
   value: string;
 
   ngAfterViewInit(): void {
-    this.editor.setOptions(this.options);
-    this.editor.getEditor().on('focus', () => this.propagateTouch());
+    this.editor.options = {
+    };
+    this.editor.editor.on('focus', () => this.propagateTouch());
   }
 
   writeValue(value: string): void {
