@@ -125,13 +125,13 @@ export class EditComponent extends DialogFunctions {
   private submit(isUnconfirmed: boolean = null): void {
     const { autoComment, ...data } = this.getFormGroupValueRecursively(this.form);
     if (this.isAttributeTreeValid()) {
-      data.attributes = this.attributes.data;
+      data.attributes = this.attributes && this.attributes.data;
     }
     if (this.isContactForPersonHasChosen()) {
-      data.contactPerson = this.contactForPerson.person;
+      data.contactPerson = this.contactForPerson && this.contactForPerson.person;
     }
     if (data.phone && this.isContactForPhoneHasChosen()) {
-      data.phone.person = this.contactForPhone.person;
+      data.phone.person = this.contactForPhone && this.contactForPhone.person;
     }
     if (data.payment) {
       delete data.payment.percentage;
