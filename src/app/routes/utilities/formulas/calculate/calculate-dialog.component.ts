@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
 
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
-import { IFormula, IFormulaResult } from '@app/routes/utilities/formulas/formulas.interface';
+import { IFormulaResult } from '@app/routes/utilities/formulas/formulas.interface';
 
 import { FormulasService } from '@app/routes/utilities/formulas/formulas.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
-
-import { addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-formula-calculate-dialog',
@@ -23,18 +20,17 @@ export class CalculateDialogComponent {
 
   @Output() close = new EventEmitter<void>();
 
-  controls: IDynamicFormItem[] = [
-    { controlName: 'debtId', type: 'number', required: true, width: 6 },
-    { controlName: 'userId', type: 'number', required: true, width: 6 },
-  ];
   config: IDynamicFormConfig = {
     labelKey: 'routes.utilities.formulas.calculate',
   };
-
-  columns: ISimpleGridColumn<IFormula>[] = [
-    { prop: 'type', dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE },
-    { prop: 'value', valueTypeKey: 'type' },
-  ].map(addGridLabel('routes.utilities.formulas.calculate.grid'));
+  paramControls: IDynamicFormItem[] = [
+    { controlName: 'debtId', type: 'number', required: true, width: 6 },
+    { controlName: 'userId', type: 'number', required: true, width: 6 },
+  ];
+  resultControls: IDynamicFormItem[] = [
+    { controlName: 'type', type: 'select', dictCode: UserDictionariesService.DICTIONARY_VARIABLE_TYPE, disabled: true },
+    { controlName: 'value', type: 'textarea', rows: 5, disabled: true },
+  ];
 
   result: IFormulaResult;
 

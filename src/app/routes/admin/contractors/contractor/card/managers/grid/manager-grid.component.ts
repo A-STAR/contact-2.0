@@ -157,10 +157,7 @@ export class ManagerGridComponent extends DialogFunctions implements OnDestroy, 
   }
 
   onBack(): void {
-    this.routingService.navigate([
-      '/admin',
-      'contractors',
-      String(this.contractorId)
+    this.routingService.navigate([ `/app/admin/contractors/${String(this.contractorId)}`
     ]);
   }
 

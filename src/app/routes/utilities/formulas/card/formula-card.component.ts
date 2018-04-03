@@ -64,7 +64,7 @@ export class FormulaCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ '/utilities', 'formulas' ]);
+    this.routingService.navigate([ '/app/utilities/formulas' ]);
   }
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {

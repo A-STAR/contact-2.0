@@ -54,7 +54,7 @@ export class DebtorAttributesVersionsComponent implements OnInit, OnDestroy {
   onBack(): void {
     const debtId = this.route.snapshot.paramMap.get('debtId');
     this.routingService.navigate([
-      `/workplaces/debtor-card/${debtId}`,
+      `/app/workplaces/debtor-card/${debtId}`,
     ]);
   }
 }

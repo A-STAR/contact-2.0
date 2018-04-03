@@ -53,7 +53,8 @@ export class VisitCancelDialogComponent extends DialogFunctions implements OnIni
 
   onOperationResult(result: IOperationResult): void {
     this.visitPrepareService.showOperationNotification(result);
-    this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+    // this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+    this.close.emit({ refresh: false });
   }
 
   onCloseDialog(): void {

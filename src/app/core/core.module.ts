@@ -18,6 +18,7 @@ import { EntityTranslationsService } from './entity/translations/entity-translat
 import { ErrorHandlerService } from './error/error-handler.service';
 import { GridFiltersService } from './filters/grid-filters.service';
 import { GuiObjectsService } from './gui-objects/gui-objects.service';
+import { HelpService } from './help/help.service';
 import { LookupService } from './lookup/lookup.service';
 import { MetadataService } from './metadata/metadata.service';
 import { NotificationsService } from './notifications/notifications.service';
@@ -52,6 +53,7 @@ import { environment } from '../../environments/environment';
     LookupService,
     GridFiltersService,
     GuiObjectsService,
+    HelpService,
     MetadataService,
     NotificationsService,
     PersistenceService,

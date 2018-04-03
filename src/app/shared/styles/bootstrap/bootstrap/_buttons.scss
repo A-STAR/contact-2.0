@@ -22,6 +22,7 @@
   // CRIF: reset horizontal padding from 16px to 12px
   @include button-size($padding-base-vertical, 12px, $font-size-base, $line-height-base, $btn-border-radius-base);
   @include user-select(none);
+  @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
 
   &,
   &:active,

@@ -178,17 +178,8 @@ export class PromiseCardComponent implements AfterViewInit, OnDestroy {
 
   onBack(): void {
     const url = this.callCenter
-      ? [
-        '/workplaces',
-        'call-center',
-        this.route.snapshot.paramMap.get('campaignId'),
-      ]
-      : [
-        '/workplaces',
-        'debtor-card',
-        this.route.snapshot.paramMap.get('debtId'),
-      ];
-
+      ? [ `/app/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}` ]
+      : [ `/app/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}` ];
     this.routingService.navigate(url);
   }
 

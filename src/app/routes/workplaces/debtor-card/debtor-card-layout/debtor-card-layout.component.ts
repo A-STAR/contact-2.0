@@ -37,7 +37,7 @@ import { invert } from '@app/core/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: { class: 'full-size' },
-  selector: 'app-debtor',
+  selector: 'app-debtor-card-layout',
   templateUrl: './debtor-card-layout.component.html',
 })
 export class DebtorCardLayoutComponent extends DialogFunctions implements AfterViewInit, OnDestroy {

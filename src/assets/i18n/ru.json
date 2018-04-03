@@ -299,10 +299,8 @@
           "title": "Проверка",
           "debtId": "ID долга",
           "userId": "ID пользователя",
-          "grid": {
-            "type": "Тип",
-            "value": "Результат"
-          }
+          "type": "Тип",
+          "value": "Результат"
         }
       },
       "letters": {
@@ -345,8 +343,22 @@
     }
   },
   "system": {
-
+    "notifications": {
+      "tasks": {
+        "start": {
+          "success": "Задача отправлена на обработку",
+          "error": "При отправке задачи обработку возникла ошибка"
+        },
+        "finish": {
+          "success": "Выполнено: {{ message }} от {{ createDateTime }}",
+          "error": "Ошибка выполнения: {{ message }} от {{ createDateTime }}"
+        }
+      }
+    }
   },
+
+
+
   "header": {
     "language": "Язык",
     "notifications": "Сообщения",

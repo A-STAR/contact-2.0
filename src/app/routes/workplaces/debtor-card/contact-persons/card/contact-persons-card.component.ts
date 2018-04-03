@@ -167,11 +167,8 @@ export class ContactPersonsCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([
-      '/workplaces',
-      'debtor-card',
-      this.route.snapshot.paramMap.get('debtId')
-    ]);
+    const debtId = this.route.snapshot.paramMap.get('debtId');
+    this.routingService.navigate([ `/app/workplaces/debtor-card/${debtId}` ]);
   }
 
   onSubmit(): void {

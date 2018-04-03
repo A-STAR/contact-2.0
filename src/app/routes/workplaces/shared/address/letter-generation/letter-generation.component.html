@@ -1,3 +1,10 @@
+<app-downloader
+  *ngIf="form"
+  entityTranslationKey="entities.reports.gen.plural"
+  [name]="templateName"
+  [url]="exportUrl"
+></app-downloader>
+
 <app-dialog (close)="onClose()">
   <div dialog-header>
     <h3>{{ 'routes.workplaces.shared.address.letterGeneration.title' | translate }}</h3>

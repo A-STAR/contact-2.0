@@ -36,6 +36,6 @@ export class AddressComponent {
 
   onClose(): void {
     const campaignId = this.route.snapshot.paramMap.get('campaignId');
-    this.routingService.navigate([ `/workplaces/call-center/${campaignId}` ]);
+    this.routingService.navigate([ `/app/workplaces/call-center/${campaignId}` ]);
   }
 }

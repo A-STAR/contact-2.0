@@ -298,11 +298,9 @@
         "calculate": {
           "title": "Calculate",
           "debtId": "Debt ID",
-          "userId": "User Id",
-          "grid": {
-            "type": "Type",
-            "value": "Result"
-          }
+          "userId": "User ID",
+          "type": "Type",
+          "value": "Result"
         }
       },
       "letters": {
@@ -345,8 +343,22 @@
     }
   },
   "system": {
-
+    "notifications": {
+      "tasks": {
+        "start": {
+          "success": "Task sent for processing",
+          "error": "Could not send task for processing"
+        },
+        "finish": {
+          "success": "Completed: {{ message }} от {{ createDateTime }}",
+          "error": "Error: {{ message }} от {{ createDateTime }}"
+        }
+      }
+    }
   },
+
+
+
   "header": {
     "language": "Language",
     "notifications": "Notifications",
