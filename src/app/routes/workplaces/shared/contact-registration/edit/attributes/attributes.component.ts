@@ -78,7 +78,8 @@ export class ContactRegistrationAttributesComponent implements OnInit {
   onCellValueChanged(event: CellValueChangedEvent): void {
     this.editedAttributes[event.data.code] = {
       ...getValue(event.data.typeCode, event.newValue),
-      code: event.data.code
+      code: event.data.code,
+      typeCode: event.data.typeCode
     };
   }
 
