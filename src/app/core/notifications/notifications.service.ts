@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { delay, filter, map, mergeMap, throttleTime } from 'rxjs/operators';
+import * as moment from 'moment';
 
 import { IAppState } from '../state/state.interface';
 import { UnsafeAction } from '@app/core/state/state.interface';
@@ -70,7 +71,7 @@ export class NotificationsService implements OnDestroy {
       statusCode: 3,
     })
     .pipe(
-      delay(5000),
+      delay(2000),
       mergeMap(event => {
         return this.userDictionariesService
           .getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE)
@@ -81,14 +82,14 @@ export class NotificationsService implements OnDestroy {
     )
     .subscribe(({ terms, event }) => {
       const message = terms.find(t => t.code === event.taskTypeCode).name;
+      const { currentLang } = this.translateService;
+      const createDateTime = moment(event.createDateTime).locale(currentLang).format('L HH:mm:ss');
       switch (event.statusCode) {
         case 3:
-          // TODO(d.maltsev): i18n
-          this.info(`Выполнено: ${message} от ${event.createDateTime}`).dispatch();
+          this.info('system.notifications.tasks.success').params({ message, createDateTime }).dispatch();
           break;
         case 4:
-          // TODO(d.maltsev): i18n
-          this.error(`Ошибка выполнения: ${message} от ${event.createDateTime}`).dispatch();
+          this.error('system.notifications.tasks.error').params({ message, createDateTime }).dispatch();
           break;
       }
     });
