@@ -1,18 +1,16 @@
-import { Actions } from '@ngrx/effects';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { throttleTime } from 'rxjs/operators/throttleTime';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { filter } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { delay, filter, map, mergeMap, throttleTime } from 'rxjs/operators';
+import * as moment from 'moment';
 
 import { IAppState } from '../state/state.interface';
-import { UnsafeAction } from '../../core/state/state.interface';
-
-import { AuthService } from '@app/core/auth/auth.service';
-
+import { UnsafeAction } from '@app/core/state/state.interface';
 import {
   IFilters,
   INotification,
@@ -20,10 +18,15 @@ import {
   INotificationActionPayload,
   INotificationsState,
   NotificationTypeEnum,
+  // ITaskStatusNotification,
 } from './notifications.interface';
 
-import { NotificationActionBuilder } from './notification-action-builder';
+import { AuthService } from '@app/core/auth/auth.service';
 import { SettingsService } from '@app/core/settings/settings.service';
+// import { WSService } from '@app/core/ws/ws.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
+import { NotificationActionBuilder } from './notification-action-builder';
 
 @Injectable()
 export class NotificationsService implements OnDestroy {
@@ -36,13 +39,16 @@ export class NotificationsService implements OnDestroy {
   static STORAGE_KEY = 'state/notifications';
 
   private notificationsStateSubscription: Subscription;
+  private taskStatusSubscription: Subscription;
 
   constructor(
     private actions: Actions,
     private authService: AuthService,
     private store: Store<IAppState>,
     private translateService: TranslateService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private userDictionariesService: UserDictionariesService,
+    // private wsService: WSService,
   ) {
     this.notificationsStateSubscription = combineLatest(
       this.state,
@@ -55,10 +61,43 @@ export class NotificationsService implements OnDestroy {
       filter(([ _, user ]) => !!user)
     )
     .subscribe(([ state ]) => this.settingsService.set(NotificationsService.STORAGE_KEY, state));
+
+    // TODO(d.maltsev): remove mock
+    // this.wsService.connect<ITaskStatusNotification>('/wsapi/taskStatus').listen()
+    this.taskStatusSubscription = of({
+      id: 1,
+      taskTypeCode: 1,
+      createDateTime: '2000-01-01T00:00:00',
+      statusCode: 3,
+    })
+    .pipe(
+      delay(2000),
+      mergeMap(event => {
+        return this.userDictionariesService
+          .getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE)
+          .pipe(
+            map(terms => ({ terms, event }))
+          );
+      }),
+    )
+    .subscribe(({ terms, event }) => {
+      const message = terms.find(t => t.code === event.taskTypeCode).name;
+      const { currentLang } = this.translateService;
+      const createDateTime = moment(event.createDateTime).locale(currentLang).format('L HH:mm:ss');
+      switch (event.statusCode) {
+        case 3:
+          this.info('system.notifications.tasks.success').params({ message, createDateTime }).dispatch();
+          break;
+        case 4:
+          this.error('system.notifications.tasks.error').params({ message, createDateTime }).dispatch();
+          break;
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.notificationsStateSubscription.unsubscribe();
+    this.taskStatusSubscription.unsubscribe();
   }
 
   get state(): Observable<INotificationsState> {

@@ -343,8 +343,16 @@
     }
   },
   "system": {
-
+    "notifications": {
+      "tasks": {
+        "success": "Completed: {{ message }} от {{ createDateTime }}",
+        "error": "Error: {{ message }} от {{ createDateTime }}"
+      }
+    }
   },
+
+
+
   "header": {
     "language": "Language",
     "notifications": "Notifications",
