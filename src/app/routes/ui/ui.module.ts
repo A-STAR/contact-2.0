@@ -13,7 +13,11 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'inputs',
+        redirectTo: 'buttons',
+      },
+      {
+        path: 'buttons',
+        loadChildren: './buttons/buttons.module#ButtonsModule',
       },
       {
         path: 'inputs',
