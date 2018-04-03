@@ -11,6 +11,7 @@ import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interf
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
 import { ContactLogService } from '../contact-log.service';
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { RoutingService } from '@app/core/routing/routing.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -89,6 +90,7 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
     private contactLogService: ContactLogService,
     private route: ActivatedRoute,
     private routingService: RoutingService,
@@ -97,7 +99,10 @@ export class ContactLogGridComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.viewPermissionSubscription = this.canView$.subscribe(canView => {
+    this.viewPermissionSubscription = combineLatest(
+      this.canView$,
+      this.contactRegistrationService.completeRegistration$
+    ).subscribe(([canView, _]) => {
       if (canView) {
         this.fetch();
       } else {

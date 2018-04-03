@@ -29,8 +29,12 @@ export class ContactRegistrationService {
   private _mode$    = new BehaviorSubject<IContactRegistrationMode>(IContactRegistrationMode.TREE);
   private _outcome$ = new BehaviorSubject<IOutcome>(null);
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
-
   private status$   = new BehaviorSubject<IContactRegistrationStatus>(null);
+
+  readonly contactPersonChange$ = new BehaviorSubject<boolean>(false);
+  readonly paymentChange$ = new BehaviorSubject<boolean>(false);
+  readonly promiseChange$ = new BehaviorSubject<boolean>(false);
+  readonly completeRegistration$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private dataService: DataService,
@@ -71,10 +75,6 @@ export class ContactRegistrationService {
   readonly contactId$ = this.params$.pipe(map(params => params && params.contactId));
 
   readonly personRole$ = this.params$.pipe(map(params => params && params.personRole));
-
-  readonly contactPersonChange$ = new BehaviorSubject<boolean>(false);
-  readonly paymentChange$ = new BehaviorSubject<boolean>(false);
-  readonly promiseChange$ = new BehaviorSubject<boolean>(false);
 
   get campaignId(): number {
     return this.params && this.params.campaignId;

@@ -133,9 +133,10 @@ export class EditComponent extends DialogFunctions {
     this.contactRegistrationService
       .completeRegistration(this.getSubmitData(data, isUnconfirmed))
       .subscribe(() => {
+        // NOTE: emit changes before cancelling registration
+        this.onCompleteRegistration();
         this.contactRegistrationService.cancelRegistration();
         this.form.reset();
-        this.onCompleteRegistration();
       });
   }
 
@@ -193,6 +194,7 @@ export class EditComponent extends DialogFunctions {
     this.contactRegistrationService.contactPersonChange$.next(this.isContactChanged);
     this.contactRegistrationService.paymentChange$.next(this.isPaymentChanged);
     this.contactRegistrationService.promiseChange$.next(this.isPromiseChanged);
+    this.contactRegistrationService.completeRegistration$.next(true);
   }
 
   private getFormGroupValueRecursively(group: FormGroup): any {
