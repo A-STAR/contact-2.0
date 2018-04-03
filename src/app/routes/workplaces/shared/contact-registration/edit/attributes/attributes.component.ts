@@ -97,7 +97,12 @@ export class ContactRegistrationAttributesComponent implements OnInit {
   }
 
   get data(): any {
-    return Object.keys(this.editedAttributes).map(key => this.editedAttributes[key]);
+    return Object.keys(this.editedAttributes)
+      .map(key => this.editedAttributes[key])
+      .map(attr => {
+        const { typeCode, ...rest} = attr;
+        return rest;
+      });
   }
 
   private getMandatoryAttrs(attributes: IContactTreeAttribute[], isEmpty: boolean = false): number[] {
