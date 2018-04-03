@@ -30,9 +30,9 @@ export class DebtStatusService {
       .pipe(
         tap(response => {
           if (response.success) {
-            this.notificationsService.info().entity('default.dialog.result.message').response(response).dispatch();
+            this.notificationsService.info('system.notifications.tasks.start.success').response(response).dispatch();
           } else {
-            this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(response).dispatch();
+            this.notificationsService.warning('system.notifications.tasks.start.error').response(response).dispatch();
           }
         }),
         catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback()));

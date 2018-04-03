@@ -86,10 +86,10 @@ export class NotificationsService implements OnDestroy {
       const createDateTime = moment(event.createDateTime).locale(currentLang).format('L HH:mm:ss');
       switch (event.statusCode) {
         case 3:
-          this.info('system.notifications.tasks.success').params({ message, createDateTime }).dispatch();
+          this.info('system.notifications.tasks.finish.success').params({ message, createDateTime }).dispatch();
           break;
         case 4:
-          this.error('system.notifications.tasks.error').params({ message, createDateTime }).dispatch();
+          this.error('system.notifications.tasks.finish.error').params({ message, createDateTime }).dispatch();
           break;
       }
     });

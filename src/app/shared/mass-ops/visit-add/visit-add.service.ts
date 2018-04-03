@@ -25,11 +25,11 @@ export class VisitAddService {
           actionData
         }
       )
-      .do(res => {
-        if (res.success) {
-          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
+      .do(response => {
+        if (response.success) {
+          this.notificationsService.info('system.notifications.tasks.start.success').response(response).dispatch();
         } else {
-          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
+          this.notificationsService.warning('system.notifications.tasks.start.error').response(response).dispatch();
         }
       })
       .catch(this.notificationsService.error('errors.default.massOp').entity('entities.massOps.addVisit').dispatchCallback());

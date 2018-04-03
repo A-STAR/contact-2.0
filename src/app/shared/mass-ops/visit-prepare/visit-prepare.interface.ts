@@ -14,10 +14,10 @@ export interface IVisitOperator {
 
 export interface IOperationResult {
   success: boolean;
-  massInfo: {
-    total: number;
-    processed: number;
-  };
+  // massInfo: {
+  //   total: number;
+  //   processed: number;
+  // };
 }
 
 export interface IConfirmOperation {
