@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, map, startWith } from 'rxjs/operators';
 
@@ -9,14 +8,29 @@ import { SettingsService } from '@app/core/settings/settings.service';
 import { LayoutService } from '@app/layout/layout.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
   styleUrls: [ './sidebar.component.scss' ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
+  readonly menuItems$ = combineLatest(
+    this.menuService.menuItems,
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      startWith(null),
+    ),
+    items => items
+  )
+  .pipe(
+    map(items => {
+      const url = '/app/' + this.router.url.split('/').filter(Boolean)[1];
+      const item = items.find(i => i.link === url);
+      return item && item.children || [ item ];
+    }),
+    map(items => items.filter(item => item && item.text)),
+  );
 
-  menuItems$: Observable<any>;
   showTitle = false;
 
   constructor(
@@ -29,23 +43,6 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.showTitle = !this.isCollapsed;
-
-    this.menuItems$ = combineLatest(
-      this.menuService.menuItems,
-      this.router.events.pipe(
-        filter(event => event instanceof NavigationEnd),
-        startWith(null),
-      ),
-      items => items
-    )
-    .pipe(
-      map(items => {
-        const url = '/' + this.router.url.split('/').filter(Boolean)[0];
-        const item = items.find(i => i.link === url);
-        return item && item.children || [ item ];
-      }),
-      map(items => items.filter(item => item && item.text)),
-    );
   }
 
   get isCollapsed(): boolean {

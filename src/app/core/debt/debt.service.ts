@@ -133,11 +133,11 @@ export class DebtService {
   }
 
   openByDebtId(debtId: number): Promise<boolean> {
-    return this.routingService.navigate([ `/workplaces/debtor-card/${debtId}` ]);
+    return this.routingService.navigate([ `/app/workplaces/debtor-card/${debtId}` ]);
   }
 
   openIncomingCall(data: any): Promise<boolean> {
-    return this.routingService.navigate(['workplaces/incoming-call'])
+    return this.routingService.navigate([ '/app/workplaces/incoming-call' ])
       .then(success => success ? (this.incomingCallSearchParams = data) : null);
   }
 }

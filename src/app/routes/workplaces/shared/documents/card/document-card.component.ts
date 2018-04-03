@@ -94,7 +94,7 @@ export class DocumentCardComponent implements OnInit {
 
   onBack(): void {
     const debtId = this.route.snapshot.paramMap.get('debtId');
-    this.routingService.navigate([ `/workplaces/debtor-card/${debtId}` ]);
+    this.routingService.navigate([ `/app/workplaces/debtor-card/${debtId}` ]);
   }
 
   get canSubmit(): boolean {

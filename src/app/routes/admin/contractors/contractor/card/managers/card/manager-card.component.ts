@@ -86,11 +86,6 @@ export class ManagerCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([
-      '/admin',
-      'contractors',
-      String(this.contractorId),
-      'managers'
-    ]);
+    this.routingService.navigate([ `/app/admin/contractors/${String(this.contractorId)}/managers` ]);
   }
 }

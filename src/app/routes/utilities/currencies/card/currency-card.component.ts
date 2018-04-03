@@ -69,7 +69,7 @@ export class CurrencyCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ '/utilities', 'currencies' ]);
+    this.routingService.navigate([ '/app/utilities/currencies' ]);
   }
 
   private initControls(canEdit: boolean): IDynamicFormItem[] {

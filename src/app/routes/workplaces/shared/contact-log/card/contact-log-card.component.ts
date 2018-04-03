@@ -92,14 +92,10 @@ export class ContactLogCardComponent implements OnInit {
   onBack(): void {
     const url = this.callCenter
       ? [
-        '/workplaces',
-        'call-center',
-        this.route.snapshot.paramMap.get('campaignId')
+        `/app/workplaces/call-center/${this.route.snapshot.paramMap.get('campaignId')}`
       ]
       : [
-        '/workplaces',
-        'debtor-card',
-        this.route.snapshot.paramMap.get('debtId')
+        `/workplaces/debtor-card/${this.route.snapshot.paramMap.get('debtId')}`
       ];
     this.routingService.navigate(url);
   }

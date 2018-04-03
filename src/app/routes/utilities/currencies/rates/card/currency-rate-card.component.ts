@@ -66,7 +66,7 @@ export class CurrencyRateCardComponent implements OnInit {
   }
 
   onBack(): void {
-    this.routingService.navigate([ '/utilities', 'currencies' ]);
+    this.routingService.navigate([ '/app/utilities/currencies' ]);
   }
 
   private serializeCurrencyRate(currencyRate: ICurrencyRate): ICurrencyRate {

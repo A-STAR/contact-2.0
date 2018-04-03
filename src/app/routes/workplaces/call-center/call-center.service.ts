@@ -30,7 +30,7 @@ export class CallCenterService {
   }
 
   navigateToCampaign(campaign: ICampaign): void {
-    this.router.navigate([`/workplaces/call-center/${campaign.id}`]);
+    this.router.navigate([`/app/workplaces/call-center/${campaign.id}`]);
   }
 
   private fetchCampaigns(): Observable<ICampaign[]> {
