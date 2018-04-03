@@ -52,8 +52,9 @@ export class ContactRegistrationService {
         mergeMap(([ canLoad, debtId ]) => canLoad ? this.promiseService.getLimit(debtId, true) : of(null)),
       )
       .subscribe(limit => this._limit$.next(limit));
+
     this.attachmentChange$
-      .filter(Boolean)
+      .pipe(filter(Boolean))
       .subscribe(_ => {
         if (this._attachmentChange) {
           this._attachmentChange();
