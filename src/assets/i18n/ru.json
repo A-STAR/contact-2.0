@@ -345,8 +345,14 @@
   "system": {
     "notifications": {
       "tasks": {
-        "success": "Выполнено: {{ message }} от {{ createDateTime }}",
-        "error": "Ошибка выполнения: {{ message }} от {{ createDateTime }}"
+        "start": {
+          "success": "Задача отправлена на обработку",
+          "error": "При отправке задачи обработку возникла ошибка"
+        },
+        "finish": {
+          "success": "Выполнено: {{ message }} от {{ createDateTime }}",
+          "error": "Ошибка выполнения: {{ message }} от {{ createDateTime }}"
+        }
       }
     }
   },

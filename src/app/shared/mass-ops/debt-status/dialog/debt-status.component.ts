@@ -134,7 +134,8 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
 
   onOperationResult(result: IOperationResult): void {
     this.debtResponsibleService.showOperationNotification(result);
-    this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+    // this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+    this.close.emit({ refresh: false });
   }
 
   private buildControls(statusOptions: IOption[], reasonOptions: IOption[]): IDynamicFormControl[] {

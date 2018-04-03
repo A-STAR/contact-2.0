@@ -24,11 +24,11 @@ export class PaymentConfirmService {
           idData: this.actionGridService.buildRequest(idData)
         }
       )
-      .do(res => {
-        if (!res.success) {
-          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
+      .do(response => {
+        if (response.success) {
+          this.notificationsService.info('system.notifications.tasks.start.success').response(response).dispatch();
         } else {
-          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
+          this.notificationsService.warning('system.notifications.tasks.start.error').response(response).dispatch();
         }
       })
       .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').dispatchCallback());
@@ -40,11 +40,11 @@ export class PaymentConfirmService {
           idData: this.actionGridService.buildRequest(idData)
         }
       )
-      .do(res => {
-        if (!res.success) {
-          this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(res).dispatch();
+      .do(response => {
+        if (response.success) {
+          this.notificationsService.info('system.notifications.tasks.start.success').response(response).dispatch();
         } else {
-          this.notificationsService.info().entity('default.dialog.result.message').response(res).dispatch();
+          this.notificationsService.warning('system.notifications.tasks.start.error').response(response).dispatch();
         }
       })
       .catch(this.notificationsService.updateError().entity('entities.managers.gen.singular').dispatchCallback());

@@ -45,9 +45,10 @@ export class PortfolioComponent implements OnInit {
   submit(): void {
     this.attributesService
       .change(this.actionData.payload, { portfolioId: this.selectedPortfolio.id })
-      .subscribe((res) => {
-        const refresh = res.massInfo && !!res.massInfo.processed;
-        this.close.emit({ refresh });
+      .subscribe(() => {
+        // const refresh = res.massInfo && !!res.massInfo.processed;
+        // this.close.emit({ refresh });
+        this.close.emit({ refresh: false });
       });
   }
 

@@ -18,9 +18,10 @@ export class OperatorRejectDialogComponent  {
 
   onReject(): void {
     this.paymentOperatorService.reject(this.actionData.payload)
-      .subscribe(res => {
-        const refresh = res.massInfo && !!res.massInfo.processed;
-        this.close.emit({ refresh });
+      .subscribe(() => {
+        // const refresh = res.massInfo && !!res.massInfo.processed;
+        // this.close.emit({ refresh });
+        this.close.emit({ refresh: false });
       });
   }
 

@@ -345,8 +345,14 @@
   "system": {
     "notifications": {
       "tasks": {
-        "success": "Completed: {{ message }} от {{ createDateTime }}",
-        "error": "Error: {{ message }} от {{ createDateTime }}"
+        "start": {
+          "success": "Task sent for processing",
+          "error": "Could not send task for processing"
+        },
+        "finish": {
+          "success": "Completed: {{ message }} от {{ createDateTime }}",
+          "error": "Error: {{ message }} от {{ createDateTime }}"
+        }
       }
     }
   },

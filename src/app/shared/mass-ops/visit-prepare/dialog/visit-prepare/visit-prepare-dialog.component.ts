@@ -58,7 +58,8 @@ export class VisitPrepareDialogComponent extends DialogFunctions implements OnIn
 
   onOperationResult(result: IOperationResult): void {
     this.visitPrepareService.showOperationNotification(result);
-    this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+    // this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+    this.close.emit({ refresh: false });
   }
 
   onClose(): void {

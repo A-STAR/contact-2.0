@@ -55,9 +55,10 @@ export class OutsourcingSendComponent implements OnInit {
   submit(): void {
     this.outsourcingService
       .send(this.actionData.payload, this.selectedPortfolio)
-      .subscribe((res) => {
-        const refresh = res.massInfo && !!res.massInfo.processed;
-        this.close.emit({ refresh });
+      .subscribe(() => {
+        // const refresh = res.massInfo && !!res.massInfo.processed;
+        // this.close.emit({ refresh });
+        this.close.emit({ refresh: false });
       });
   }
 

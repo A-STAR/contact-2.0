@@ -58,10 +58,10 @@ export class VisitPrepareService extends AbstractActionService {
   }
 
   showOperationNotification(result: IOperationResult): void {
-    if (!result.success) {
-      this.notificationsService.warning().entity('default.dialog.result.messageUnsuccessful').response(result).dispatch();
+    if (result.success) {
+      this.notificationsService.info('system.notifications.tasks.start.success').response(result).dispatch();
     } else {
-      this.notificationsService.info().entity('default.dialog.result.message').response(result).dispatch();
+      this.notificationsService.warning('system.notifications.tasks.start.error').response(result).dispatch();
     }
   }
 
