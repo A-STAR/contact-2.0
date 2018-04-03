@@ -12,7 +12,6 @@ import {
   IContactRegistrationStatus,
   IOutcome,
 } from './contact-registration.interface';
-import { IDebt } from '@app/routes/workplaces/core/debts/debts.interface';
 import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
 
 import { DataService } from '@app/core/data/data.service';
@@ -72,6 +71,10 @@ export class ContactRegistrationService {
   readonly contactId$ = this.params$.pipe(map(params => params && params.contactId));
 
   readonly personRole$ = this.params$.pipe(map(params => params && params.personRole));
+
+  readonly contactPersonChange$ = new BehaviorSubject<boolean>(false);
+  readonly paymentChange$ = new BehaviorSubject<boolean>(false);
+  readonly promiseChange$ = new BehaviorSubject<boolean>(false);
 
   get campaignId(): number {
     return this.params && this.params.campaignId;

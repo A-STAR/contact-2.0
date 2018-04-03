@@ -9,6 +9,7 @@ import { IPayment } from '../payment.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PaymentService } from '../payment.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -107,9 +108,11 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private paymentChangeSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
     private paymentService: PaymentService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
@@ -133,12 +136,20 @@ export class PaymentGridComponent implements OnInit, OnDestroy {
     this.busSubscription = this.paymentService
       .getAction(PaymentService.MESSAGE_PAYMENT_SAVED)
       .subscribe(() => this.fetch());
+
+    this.paymentChangeSub = this.contactRegistrationService
+      .paymentChange$
+      .filter(Boolean)
+      .subscribe(_ => this.fetch());
   }
 
   ngOnDestroy(): void {
     this.selectedPayment$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+    if (this.paymentChangeSub) {
+      this.paymentChangeSub.unsubscribe();
+    }
   }
 
   get debtId(): number {

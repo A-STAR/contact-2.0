@@ -26,6 +26,10 @@ export class EditComponent extends DialogFunctions {
   @ViewChild(ContactRegistrationPhoneComponent) contactForPhone: ContactRegistrationPhoneComponent;
   @ViewChild(ContactSelectComponent) contactForPerson: ContactSelectComponent;
 
+  private isPaymentChanged = false;
+  private isPromiseChanged = false;
+  private isContactChanged = false;
+
   dialog: 'confirm' | 'info';
 
   form = this.formBuilder.group({
@@ -126,28 +130,38 @@ export class EditComponent extends DialogFunctions {
 
   private submit(isUnconfirmed: boolean = null): void {
     const { autoComment, ...data } = this.getFormGroupValueRecursively(this.form);
-    if (this.isAttributeTreeValid()) {
-      data.attributes = this.attributes && this.attributes.data;
-    }
-    if (this.isContactForPersonHasChosen()) {
-      data.contactPerson = this.contactForPerson && this.contactForPerson.person;
-    }
-    if (data.phone && this.isContactForPhoneHasChosen()) {
-      data.phone.person = this.contactForPhone && this.contactForPhone.person;
-    }
-    if (data.payment) {
-      delete data.payment.percentage;
-    }
-    if (data.promise) {
-      data.promise.isUnconfirmed = Number(isUnconfirmed);
-      delete data.promise.percentage;
-    }
     this.contactRegistrationService
-      .completeRegistration(data)
+      .completeRegistration(this.getSubmitData(data, isUnconfirmed))
       .subscribe(() => {
         this.contactRegistrationService.cancelRegistration();
         this.form.reset();
+        this.onCompleteRegistration();
       });
+  }
+
+  private getSubmitData(data: any, isUnconfirmed: boolean): any {
+    const result = {...data };
+    if (this.isAttributeTreeValid()) {
+      result.attributes = this.attributes && this.attributes.data;
+    }
+    if (this.isContactForPersonHasChosen()) {
+      result.contactPerson = this.contactForPerson && this.contactForPerson.person;
+      this.isContactChanged = !!result.contactPerson;
+    }
+    if (result.phone && this.isContactForPhoneHasChosen()) {
+      result.phone.person = this.contactForPhone && this.contactForPhone.person;
+      this.isContactChanged = !!result.phone.person;
+    }
+    if (result.payment) {
+      delete result.payment.percentage;
+      this.isPaymentChanged = true;
+    }
+    if (result.promise) {
+      result.promise.isUnconfirmed = Number(isUnconfirmed);
+      delete result.promise.percentage;
+      this.isPromiseChanged = true;
+    }
+    return result;
   }
 
   private isEntityHasChosen(): boolean {
@@ -173,6 +187,12 @@ export class EditComponent extends DialogFunctions {
   private displayOutcomeTree(): void {
     this.contactRegistrationService.mode = IContactRegistrationMode.TREE;
     this.cdRef.markForCheck();
+  }
+
+  private onCompleteRegistration(): void {
+    this.contactRegistrationService.contactPersonChange$.next(this.isContactChanged);
+    this.contactRegistrationService.paymentChange$.next(this.isPaymentChanged);
+    this.contactRegistrationService.promiseChange$.next(this.isPromiseChanged);
   }
 
   private getFormGroupValueRecursively(group: FormGroup): any {
