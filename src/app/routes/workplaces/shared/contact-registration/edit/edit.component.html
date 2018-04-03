@@ -56,11 +56,7 @@
       <app-contact-registration-refusal [formGroup]="form"></app-contact-registration-refusal>
 
       <!-- Attachments -->
-      <div *ngIf="displayAttachmentForm$ | async">
-        <h3>{{ 'routes.workplaces.shared.contactRegistration.edit.form.attachments.title' | translate }}</h3>
-        <app-contact-registration-attachment></app-contact-registration-attachment>
-        <hr>
-      </div>
+      <app-contact-registration-attachment *ngIf="displayAttachmentForm$ | async"></app-contact-registration-attachment>
 
       <!-- Call Reason -->
       <app-contact-registration-call-reason [formGroup]="form"></app-contact-registration-call-reason>

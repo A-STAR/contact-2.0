@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAttachment, IAttachmentFormData } from './attachment.interface';
@@ -17,6 +16,7 @@ import { isEmpty, addGridLabel } from '@app/core/utils';
 @Component({
   selector: 'app-contact-registration-attachment',
   templateUrl: './attachment.component.html',
+  styleUrls: ['./attachment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
@@ -54,14 +54,10 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
     super();
   }
 
-  get selectedDocument$(): Observable<IAttachment > {
-    return this.selectedDocumentGuid$.map(guid => this.documents.find(document => document.guid === guid));
-  }
+  readonly selectedDocument$ = this.selectedDocumentGuid$.map(guid => this.documents.find(document => document.guid === guid));
 
-  get formDisabled$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$
+  readonly formDisabled$ = this.contactRegistrationService.outcome$
       .map(outcome => outcome.fileAttachMode === 3 && isEmpty(this.documents));
-  }
 
   onSelect(documents: IAttachment[]): void {
     const guid = isEmpty(documents)
@@ -108,6 +104,7 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
 
   private onSuccess(): void {
     this.setDialog();
+    this.contactRegistrationService.onAttachmentChange();
     this.cdRef.markForCheck();
   }
 }

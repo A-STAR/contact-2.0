@@ -195,6 +195,7 @@ export class EditComponent extends DialogFunctions {
     this.contactRegistrationService.paymentChange$.next(this.isPaymentChanged);
     this.contactRegistrationService.promiseChange$.next(this.isPromiseChanged);
     this.contactRegistrationService.completeRegistration$.next(true);
+    this.contactRegistrationService.attachmentChange$.next(true);
   }
 
   private getFormGroupValueRecursively(group: FormGroup): any {

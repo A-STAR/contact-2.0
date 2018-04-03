@@ -16,6 +16,7 @@ import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.inter
 
 import { DataService } from '@app/core/data/data.service';
 import { DebtsService } from '@app/routes/workplaces/core/debts/debts.service';
+import { DocumentService } from '@app/routes/workplaces/shared/documents/document.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -30,15 +31,18 @@ export class ContactRegistrationService {
   private _outcome$ = new BehaviorSubject<IOutcome>(null);
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
   private status$   = new BehaviorSubject<IContactRegistrationStatus>(null);
+  private _attachmentChange: Function;
 
   readonly contactPersonChange$ = new BehaviorSubject<boolean>(false);
   readonly paymentChange$ = new BehaviorSubject<boolean>(false);
   readonly promiseChange$ = new BehaviorSubject<boolean>(false);
   readonly completeRegistration$ = new BehaviorSubject<boolean>(false);
+  readonly attachmentChange$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private dataService: DataService,
     private debtsService: DebtsService,
+    private documentService: DocumentService,
     private notificationsService: NotificationsService,
     private promiseService: PromiseService,
     private userPermissionsService: UserPermissionsService,
@@ -48,6 +52,14 @@ export class ContactRegistrationService {
         mergeMap(([ canLoad, debtId ]) => canLoad ? this.promiseService.getLimit(debtId, true) : of(null)),
       )
       .subscribe(limit => this._limit$.next(limit));
+    this.attachmentChange$
+      .filter(Boolean)
+      .subscribe(_ => {
+        if (this._attachmentChange) {
+          this._attachmentChange();
+          this._attachmentChange = null;
+        }
+      });
   }
 
   set status(status: IContactRegistrationStatus) {
@@ -141,6 +153,10 @@ export class ContactRegistrationService {
     this._outcome$.pipe(map(outcome => outcome && outcome.promiseMode && outcome.promiseMode !== 2)),
     this.userPermissionsService.has('PROMISE_INSUFFICIENT_AMOUNT_ADD'),
   ]);
+
+  onAttachmentChange(): void {
+    this._attachmentChange = () => this.documentService.dispatchAction(DocumentService.MESSAGE_DOCUMENT_SAVED);
+  }
 
   pauseRegistration(): Observable<IContactRegistrationStatus> {
     if (this.status$.value) {
