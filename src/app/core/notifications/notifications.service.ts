@@ -10,9 +10,6 @@ import { filter } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
 import { UnsafeAction } from '../../core/state/state.interface';
-
-import { AuthService } from '@app/core/auth/auth.service';
-
 import {
   IFilters,
   INotification,
@@ -20,10 +17,15 @@ import {
   INotificationActionPayload,
   INotificationsState,
   NotificationTypeEnum,
+  ITaskStatusNotification,
 } from './notifications.interface';
 
-import { NotificationActionBuilder } from './notification-action-builder';
+import { AuthService } from '@app/core/auth/auth.service';
 import { SettingsService } from '@app/core/settings/settings.service';
+import { WSService } from '@app/core/ws/ws.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
+import { NotificationActionBuilder } from './notification-action-builder';
 
 @Injectable()
 export class NotificationsService implements OnDestroy {
@@ -36,13 +38,16 @@ export class NotificationsService implements OnDestroy {
   static STORAGE_KEY = 'state/notifications';
 
   private notificationsStateSubscription: Subscription;
+  private taskStatusSubscription: Subscription;
 
   constructor(
     private actions: Actions,
     private authService: AuthService,
     private store: Store<IAppState>,
     private translateService: TranslateService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private userDictionariesService: UserDictionariesService,
+    private wsService: WSService,
   ) {
     this.notificationsStateSubscription = combineLatest(
       this.state,
@@ -55,10 +60,31 @@ export class NotificationsService implements OnDestroy {
       filter(([ _, user ]) => !!user)
     )
     .subscribe(([ state ]) => this.settingsService.set(NotificationsService.STORAGE_KEY, state));
+
+    this.taskStatusSubscription = combineLatest(
+      this.wsService
+        .connect<ITaskStatusNotification>('/wsapi/taskStatus')
+        .listen(),
+      this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE),
+    )
+    .subscribe(([ event, terms ]) => {
+      const message = terms.find(t => t.code === event.taskTypeCode);
+      switch (event.statusCode) {
+        case 3:
+          // TODO(d.maltsev): i18n
+          this.info(`Выполнено: ${message} от ${event.createDateTime}`).dispatch();
+          break;
+        case 4:
+          // TODO(d.maltsev): i18n
+          this.error(`Ошибка выполнения: ${message} от ${event.createDateTime}`).dispatch();
+          break;
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.notificationsStateSubscription.unsubscribe();
+    this.taskStatusSubscription.unsubscribe();
   }
 
   get state(): Observable<INotificationsState> {

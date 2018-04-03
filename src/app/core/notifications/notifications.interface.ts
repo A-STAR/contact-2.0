@@ -56,3 +56,10 @@ export interface IMessageOptions {
   params?: IMessageParams;
   alert?: boolean;
 }
+
+export interface ITaskStatusNotification {
+  id: number;
+  taskTypeCode: number;
+  createDateTime: string;
+  statusCode: number;
+}
