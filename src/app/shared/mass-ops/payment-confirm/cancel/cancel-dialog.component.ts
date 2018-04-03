@@ -29,10 +29,11 @@ export class PaymentCancelDialogComponent implements OnInit {
 
   onCancelPayments(): void {
     this.paymentConfirmService.paymentsCancel(this.actionData.payload)
-      .subscribe(res => {
-        const refresh = res.massInfo && !!res.massInfo.processed;
+      .subscribe(() => {
+        // const refresh = res.massInfo && !!res.massInfo.processed;
         // NOTE: do not refresh if the total is 0
-        this.close.emit({ refresh });
+        // this.close.emit({ refresh });
+        this.close.emit({ refresh: false });
       });
   }
 

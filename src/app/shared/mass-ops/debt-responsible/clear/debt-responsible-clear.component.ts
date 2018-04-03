@@ -26,7 +26,8 @@ export class DebtResponsibleClearComponent {
 
   onOperationResult(result: IOperationResult): void {
     this.debtResponsibleService.showOperationNotification(result);
-    this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+    // this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+    this.close.emit({ refresh: false });
   }
 
   onCloseDialog(): void {

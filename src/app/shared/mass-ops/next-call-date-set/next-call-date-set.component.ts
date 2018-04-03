@@ -58,7 +58,10 @@ export class NextCallDateSetDialogComponent {
     const typeCode = this.form.getControl('nextCallDate').value;
     const data = Object.assign({}, this.form.serializedUpdates, { typeCode });
     this.nextCallDateSetService.setNextCall(this.actionData.payload, data.nextCallDate)
-      .subscribe((result) => this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed }));
+      .subscribe(() => {
+        this.close.emit({ refresh: false });
+        // this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
+      });
   }
 
   onClose(): void {
