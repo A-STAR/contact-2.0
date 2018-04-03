@@ -22,7 +22,7 @@ const configUrl = '/assets/server/root.json';
 // This isn't pretty but there is no other way to inject values dynamically
 const request = new XMLHttpRequest();
 request.onload = () => {
-  const { response } = request;
+  const response = JSON.parse(request.response);
   if (!response) {
     throw new Error(`
       Could not get config at ${configUrl}.
@@ -51,5 +51,4 @@ request.onload = () => {
 };
 
 request.open('GET', configUrl);
-request.responseType = 'json';
 request.send();
