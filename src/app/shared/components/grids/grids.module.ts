@@ -14,6 +14,7 @@ import { SelectModule } from '@app/shared/components/form/select/select.module';
 import { Toolbar2Module } from '@app/shared/components/toolbar-2/toolbar-2.module';
 
 import { ContextMenuService } from './context-menu/context-menu.service';
+import { GridsDefaultsService } from '@app/shared/components/grids/grids-defaults.service';
 import { GridsService } from './grids.service';
 
 // Grids
@@ -99,6 +100,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
   ],
   providers: [
     ContextMenuService,
+    GridsDefaultsService,
     GridsService,
   ]
 })
