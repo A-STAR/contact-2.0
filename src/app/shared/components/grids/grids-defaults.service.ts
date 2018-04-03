@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { GridApi, ColumnApi, ColDef } from 'ag-grid';
+import { GridApi, ColumnApi } from 'ag-grid';
 import { IGridColumn, IGridLocalSettings } from '@app/shared/components/grids/grids.interface';
 
 import { SettingsService } from '@app/core/settings/settings.service';
