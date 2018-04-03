@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
-import { delay, filter, map, mergeMap, throttleTime } from 'rxjs/operators';
+import { delay, filter, first, map, mergeMap, throttleTime } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { IAppState } from '../state/state.interface';
@@ -76,6 +76,7 @@ export class NotificationsService implements OnDestroy {
         return this.userDictionariesService
           .getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE)
           .pipe(
+            first(),
             map(terms => ({ terms, event }))
           );
       }),
