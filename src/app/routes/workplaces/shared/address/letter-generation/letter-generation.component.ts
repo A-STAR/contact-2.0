@@ -89,7 +89,7 @@ export class LetterGenerationDialogComponent implements OnInit {
     const format = this.formats.find(f => f.value === formatCode);
     const template = this.templates.find(t => t.id === templateId);
     if (template && format) {
-      return `${template.name}.${format.label.toLocaleLowerCase()}_${this.valueConverterService.toLocalDateTime(new Date())}`;
+      return `${template.name}_${this.valueConverterService.toLocalDateTime(new Date())}.${format.label.toLocaleLowerCase()}`;
     }
   }
 
