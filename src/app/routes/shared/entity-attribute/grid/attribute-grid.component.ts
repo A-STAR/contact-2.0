@@ -33,6 +33,7 @@ import { DateTimeRendererComponent } from '@app/shared/components/grids/renderer
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeGridComponent extends DialogFunctions implements OnInit, OnDestroy {
+
   @Input('entityTypeId') set entityTypeId(entityTypeId: number) {
     this.entityTypeId$.next(entityTypeId);
   }
@@ -113,7 +114,7 @@ export class AttributeGridComponent extends DialogFunctions implements OnInit, O
   }
 
   get persistenceKey(): string {
-    return `[grid] attributes/${this.entityTypeId}/${this.entityId}`;
+    return `[grid] attributes/${this.entityTypeId$.value}/${(this.entityId$ || { value: ''}).value}`;
   }
 
   get selectedAttributeCode$(): Observable<number> {
