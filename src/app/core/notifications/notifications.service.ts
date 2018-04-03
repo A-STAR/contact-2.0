@@ -1,15 +1,15 @@
-import { Actions } from '@ngrx/effects';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Actions } from '@ngrx/effects';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { throttleTime } from 'rxjs/operators/throttleTime';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { filter } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { delay, filter, map, mergeMap, throttleTime } from 'rxjs/operators';
 
 import { IAppState } from '../state/state.interface';
-import { UnsafeAction } from '../../core/state/state.interface';
+import { UnsafeAction } from '@app/core/state/state.interface';
 import {
   IFilters,
   INotification,
@@ -17,12 +17,12 @@ import {
   INotificationActionPayload,
   INotificationsState,
   NotificationTypeEnum,
-  ITaskStatusNotification,
+  // ITaskStatusNotification,
 } from './notifications.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { SettingsService } from '@app/core/settings/settings.service';
-import { WSService } from '@app/core/ws/ws.service';
+// import { WSService } from '@app/core/ws/ws.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { NotificationActionBuilder } from './notification-action-builder';
@@ -47,7 +47,7 @@ export class NotificationsService implements OnDestroy {
     private translateService: TranslateService,
     private settingsService: SettingsService,
     private userDictionariesService: UserDictionariesService,
-    private wsService: WSService,
+    // private wsService: WSService,
   ) {
     this.notificationsStateSubscription = combineLatest(
       this.state,
@@ -61,14 +61,26 @@ export class NotificationsService implements OnDestroy {
     )
     .subscribe(([ state ]) => this.settingsService.set(NotificationsService.STORAGE_KEY, state));
 
-    this.taskStatusSubscription = combineLatest(
-      this.wsService
-        .connect<ITaskStatusNotification>('/wsapi/taskStatus')
-        .listen(),
-      this.userDictionariesService.getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE),
+    // TODO(d.maltsev): remove mock
+    // this.wsService.connect<ITaskStatusNotification>('/wsapi/taskStatus').listen()
+    this.taskStatusSubscription = of({
+      id: 1,
+      taskTypeCode: 1,
+      createDateTime: '2000-01-01T00:00:00',
+      statusCode: 3,
+    })
+    .pipe(
+      delay(5000),
+      mergeMap(event => {
+        return this.userDictionariesService
+          .getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE)
+          .pipe(
+            map(terms => ({ terms, event }))
+          );
+      }),
     )
-    .subscribe(([ event, terms ]) => {
-      const message = terms.find(t => t.code === event.taskTypeCode);
+    .subscribe(({ terms, event }) => {
+      const message = terms.find(t => t.code === event.taskTypeCode).name;
       switch (event.statusCode) {
         case 3:
           // TODO(d.maltsev): i18n
