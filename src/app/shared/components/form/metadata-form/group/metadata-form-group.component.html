@@ -19,12 +19,23 @@
         [label]="item.label"
       ></app-checkbox>
 
+      <!-- Date -->
       <app-datepicker
         *ngSwitchCase="'date'"
         [formControlName]="item.name"
         [label]="item.label"
         [required]="false"
       ></app-datepicker>
+
+      <!-- Grid Select -->
+      <app-grid-select
+        *ngSwitchCase="'gridselect'"
+        [filterParams]="item.filterParams"
+        [filterType]="item.filterType"
+        [formControlName]="item.name"
+        [label]="item.label"
+        [required]="false"
+      ></app-grid-select>
 
       <!-- Password -->
       <app-password-input

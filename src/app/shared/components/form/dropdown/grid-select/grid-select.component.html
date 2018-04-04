@@ -1,9 +1,11 @@
 <app-grid-dropdown
   [columns]="gridColumns"
   [controlDisabled]="controlDisabled"
-  [rows]="rows"
-  [ngModel]="selection"
   [labelGetter]="labelGetter"
+  [label]="label"
+  [ngModel]="selection"
+  [required]="required"
+  [rows]="rows"
   [valueGetter]="valueGetter"
   (ngModelChange)="onSelect($event)"
 >

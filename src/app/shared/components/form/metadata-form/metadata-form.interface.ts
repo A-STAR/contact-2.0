@@ -1,16 +1,19 @@
 import { IContextConfig } from '@app/core/context/context.interface';
+import { IDialogMultiSelectFilterType } from '@app/shared/components/form/dialog-multi-select/dialog-multi-select.interface';
+import { IFilterParam } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 export type IMetadataFormValidator<T> = T | IContextConfig;
 
 export enum IMetadataFormControlType {
-  CHECKBOX = 'checkbox',
-  DATE     = 'date',
-  GROUP    = 'group',
-  PASSWORD = 'password',
-  SELECT   = 'select',
-  TEXT     = 'text',
-  TEXTAREA = 'textarea',
+  CHECKBOX   = 'checkbox',
+  DATE       = 'date',
+  GRIDSELECT = 'gridselect',
+  GROUP      = 'group',
+  PASSWORD   = 'password',
+  SELECT     = 'select',
+  TEXT       = 'text',
+  TEXTAREA   = 'textarea',
 }
 
 export interface IMetadataFormGroup {
@@ -35,6 +38,15 @@ export interface IMetadataFormCheckboxControl extends IMetadataFormGenericContro
 
 export interface IMetadataFormDateControl extends IMetadataFormGenericControl {
   type: IMetadataFormControlType.DATE;
+  validators: {
+    required?: IMetadataFormValidator<boolean>;
+  };
+}
+
+export interface IMetadataFormGridSelectControl extends IMetadataFormGenericControl {
+  type: IMetadataFormControlType.GRIDSELECT;
+  filterType: IDialogMultiSelectFilterType;
+  filterParams: IFilterParam;
   validators: {
     required?: IMetadataFormValidator<boolean>;
   };
@@ -80,6 +92,7 @@ export interface IMetadataFormTextareaControl extends IMetadataFormGenericContro
 export type IMetadataFormControl =
   | IMetadataFormCheckboxControl
   | IMetadataFormDateControl
+  | IMetadataFormGridSelectControl
   | IMetadataFormPasswordControl
   | IMetadataFormSelectControl
   | IMetadataFormTextControl

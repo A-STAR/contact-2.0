@@ -20,10 +20,11 @@ import { GridSelectService } from './grid-select.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GridSelectComponent<T> implements OnInit, ControlValueAccessor {
-
-  @Input() filterType: IGridSelectFilterType;
-  @Input() filterParams: any = {};
   @Input() controlDisabled: boolean;
+  @Input() filterParams: any = {};
+  @Input() filterType: IGridSelectFilterType;
+  @Input() label: string;
+  @Input() required: boolean;
 
   rows: T[];
   selection: number;

@@ -57,6 +57,20 @@ export class DebtComponent implements OnInit {
           {
             disabled: true,
             display: true,
+            filterParams: {
+              directionCodes: [ 2 ],
+              statusCodes: [ 1 ],
+            },
+            filterType: 'portfolios',
+            label: 'widgets.debt.grid.portfolioId',
+            name: 'portfolioId',
+            type: IMetadataFormControlType.GRIDSELECT,
+            validators: {},
+            width: 1,
+          },
+          {
+            disabled: true,
+            display: true,
             label: 'widgets.debt.grid.bankId',
             lookupKey: 'contractors',
             name: 'bankId',

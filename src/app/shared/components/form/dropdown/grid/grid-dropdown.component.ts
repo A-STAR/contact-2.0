@@ -25,6 +25,9 @@ import { isEmpty } from '@app/core/utils';
 export class GridDropdownComponent<T> implements ControlValueAccessor {
   @Input() columns: ISimpleGridColumn<T>[];
   @Input() controlClass = 'form-control';
+  @Input() label: string;
+  @Input() required: boolean;
+
   @Input() rows: Array<T>;
 
   @Input()
@@ -46,7 +49,7 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   @Input() labelGetter: ((row: T) => string) | string = () => null;
   @Input() valueGetter: ((row: T) => string) | string = () => null;
 
-  get label(): string {
+  get vLabel(): string {
     const { _selection, labelGetter } = this;
     return _selection
       ? typeof labelGetter === 'function' ? labelGetter(_selection) : _selection[labelGetter]
