@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { CheckModule } from '../check/check.module';
+import { DateTimeModule } from '../datetime/datetime.module';
 import { InputModule } from '../input/input.module';
 import { SelectModule } from '../select/select.module';
 
@@ -21,6 +22,7 @@ import { MetadataFormGroupComponent } from './group/metadata-form-group.componen
   imports: [
     CheckModule,
     CommonModule,
+    DateTimeModule,
     InputModule,
     ReactiveFormsModule,
     SelectModule,

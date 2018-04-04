@@ -5,6 +5,7 @@ export type IMetadataFormValidator<T> = T | IContextConfig;
 
 export enum IMetadataFormControlType {
   CHECKBOX = 'checkbox',
+  DATE     = 'date',
   GROUP    = 'group',
   PASSWORD = 'password',
   SELECT   = 'select',
@@ -26,17 +27,14 @@ export interface IMetadataFormGenericControl {
   width: number;
 }
 
-
 export interface IMetadataFormCheckboxControl extends IMetadataFormGenericControl {
   type: IMetadataFormControlType.CHECKBOX;
   validators: {};
 }
 
-export interface IMetadataFormTextControl extends IMetadataFormGenericControl {
-  type: IMetadataFormControlType.TEXT;
+export interface IMetadataFormDateControl extends IMetadataFormGenericControl {
+  type: IMetadataFormControlType.DATE;
   validators: {
-    maxLength?: IMetadataFormValidator<number>;
-    minLength?: IMetadataFormValidator<number>;
     required?: IMetadataFormValidator<boolean>;
   };
 }
@@ -60,11 +58,21 @@ export interface IMetadataFormSelectControl extends IMetadataFormGenericControl 
   };
 }
 
+export interface IMetadataFormTextControl extends IMetadataFormGenericControl {
+  type: IMetadataFormControlType.TEXT;
+  validators: {
+    maxLength?: IMetadataFormValidator<number>;
+    minLength?: IMetadataFormValidator<number>;
+    required?: IMetadataFormValidator<boolean>;
+  };
+}
+
 export type IMetadataFormControl =
   | IMetadataFormCheckboxControl
-  | IMetadataFormTextControl
+  | IMetadataFormDateControl
   | IMetadataFormPasswordControl
   | IMetadataFormSelectControl
+  | IMetadataFormTextControl
 ;
 
 export type IMetadataFormItem = IMetadataFormControl | IMetadataFormGroup;

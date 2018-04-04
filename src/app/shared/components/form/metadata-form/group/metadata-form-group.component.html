@@ -19,13 +19,12 @@
         [label]="item.label"
       ></app-checkbox>
 
-      <!-- Text -->
-      <app-text
-        *ngSwitchCase="'text'"
+      <app-datepicker
+        *ngSwitchCase="'date'"
         [formControlName]="item.name"
         [label]="item.label"
         [required]="false"
-      ></app-text>
+      ></app-datepicker>
 
       <!-- Password -->
       <app-password-input
@@ -44,6 +43,14 @@
         [lookupKey]="item.lookupKey"
         [required]="false"
       ></app-select>
+
+      <!-- Text -->
+      <app-text
+        *ngSwitchCase="'text'"
+        [formControlName]="item.name"
+        [label]="item.label"
+        [required]="false"
+      ></app-text>
 
       <!-- Errors -->
       <div class="errors">

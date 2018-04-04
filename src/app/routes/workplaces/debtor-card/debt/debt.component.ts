@@ -76,6 +76,24 @@ export class DebtComponent implements OnInit {
         validators: {},
         width: 1,
       },
+      {
+        disabled: false,
+        display: true,
+        label: 'widgets.debt.grid.creditStartDate',
+        name: 'creditStartDate',
+        type: IMetadataFormControlType.DATE,
+        validators: {},
+        width: 1,
+      },
+      {
+        disabled: false,
+        display: true,
+        label: 'widgets.debt.grid.creditEndDate',
+        name: 'creditEndDate',
+        type: IMetadataFormControlType.DATE,
+        validators: {},
+        width: 1,
+      },
     ],
   };
 
