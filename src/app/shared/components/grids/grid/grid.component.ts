@@ -11,7 +11,7 @@ import {
   ViewChild,
   OnInit,
 } from '@angular/core';
-
+import { filter } from 'rxjs/operators';
 import { Router, ActivatedRoute, ActivationEnd } from '@angular/router';
 
 import {
@@ -177,8 +177,10 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit {
     .subscribe( _ => this.resetGridSettings());
 
     this.routeChangeSub = this.router.events
-      .filter(event => event instanceof ActivationEnd)
-      .filter(event => (event as ActivationEnd).snapshot === this.route.snapshot)
+      .pipe(
+        filter(event => event instanceof ActivationEnd),
+        filter(event => (event as ActivationEnd).snapshot === this.route.snapshot),
+      )
       .subscribe(_ => {
         if (this.settingsReseted) {
           this.gridApi.doLayout();

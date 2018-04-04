@@ -22,6 +22,7 @@ import { SettingsService } from '@app/core/settings/settings.service';
 
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
 import { SimpleGridComponent } from './grid.component';
+import { Router, ActivationEnd, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
 
 class TranslateLoaderMock {
   getTranslation(language: string): Observable<any> {
@@ -54,10 +55,15 @@ class ContextMenuServiceMock {
   }
 }
 
+class MockRouter {
+  events = of(new ActivationEnd(new ActivatedRouteSnapshot()));
+}
+
 describe('SimpleGridComponent', () => {
   let fixture: ComponentFixture<SimpleGridComponent<any>>;
 
   beforeEach(Async(() => {
+
     TestBed
       .configureTestingModule({
         declarations: [
@@ -101,7 +107,14 @@ describe('SimpleGridComponent', () => {
       .overrideComponent(SimpleGridComponent, {
         set: {
           providers: [
-            { provide: GridsDefaultsService, useClass: GridsDefaultsServiceMock, }
+            {
+              provide: GridsDefaultsService,
+              useClass: GridsDefaultsServiceMock,
+            },
+            {
+              provide: Router,
+              useClass: MockRouter,
+            }
           ]
         }
       })
