@@ -35,6 +35,16 @@
         [required]="false"
       ></app-password-input>
 
+      <!-- Select -->
+      <app-select
+        *ngSwitchCase="'select'"
+        [dictCode]="item.dictCode"
+        [formControlName]="item.name"
+        [label]="item.label"
+        [lookupKey]="item.lookupKey"
+        [required]="false"
+      ></app-select>
+
       <!-- Errors -->
       <div class="errors">
         <span *ngIf="item.type !== 'group'">

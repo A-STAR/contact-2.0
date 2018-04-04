@@ -1,4 +1,5 @@
 import { IContextConfig } from '@app/core/context/context.interface';
+import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 export type IMetadataFormValidator<T> = T | IContextConfig;
 
@@ -6,7 +7,14 @@ export enum IMetadataFormControlType {
   CHECKBOX = 'checkbox',
   GROUP    = 'group',
   PASSWORD = 'password',
+  SELECT   = 'select',
   TEXT     = 'text',
+}
+
+export interface IMetadataFormGroup {
+  children: IMetadataFormItem[];
+  type: IMetadataFormControlType.GROUP;
+  width: number;
 }
 
 export interface IMetadataFormGenericControl {
@@ -17,6 +25,7 @@ export interface IMetadataFormGenericControl {
   type: IMetadataFormControlType;
   width: number;
 }
+
 
 export interface IMetadataFormCheckboxControl extends IMetadataFormGenericControl {
   type: IMetadataFormControlType.CHECKBOX;
@@ -42,13 +51,21 @@ export interface IMetadataFormPasswordControl extends IMetadataFormGenericContro
   };
 }
 
-export interface IMetadataFormGroup {
-  children: IMetadataFormItem[];
-  type: IMetadataFormControlType.GROUP;
-  width: number;
+export interface IMetadataFormSelectControl extends IMetadataFormGenericControl {
+  dictCode: number;
+  lookupKey: ILookupKey;
+  type: IMetadataFormControlType.SELECT;
+  validators: {
+    required?: IMetadataFormValidator<boolean>;
+  };
 }
 
-export type IMetadataFormControl = IMetadataFormCheckboxControl | IMetadataFormTextControl | IMetadataFormPasswordControl;
+export type IMetadataFormControl =
+  | IMetadataFormCheckboxControl
+  | IMetadataFormTextControl
+  | IMetadataFormPasswordControl
+  | IMetadataFormSelectControl
+;
 
 export type IMetadataFormItem = IMetadataFormControl | IMetadataFormGroup;
 

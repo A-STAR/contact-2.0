@@ -66,6 +66,16 @@ export class DebtComponent implements OnInit {
         validators: {},
         width: 1,
       },
+      {
+        dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
+        disabled: false,
+        display: true,
+        label: 'widgets.debt.grid.creditTypeCode',
+        name: 'creditTypeCode',
+        type: IMetadataFormControlType.SELECT,
+        validators: {},
+        width: 1,
+      },
     ],
   };
 

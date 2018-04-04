@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { CheckModule } from '../check/check.module';
 import { InputModule } from '../input/input.module';
+import { SelectModule } from '../select/select.module';
 
 import { MetadataFormComponent } from './metadata-form.component';
 import { MetadataFormGroupComponent } from './group/metadata-form-group.component';
@@ -22,6 +23,7 @@ import { MetadataFormGroupComponent } from './group/metadata-form-group.componen
     CommonModule,
     InputModule,
     ReactiveFormsModule,
+    SelectModule,
     TranslateModule,
   ],
 })
