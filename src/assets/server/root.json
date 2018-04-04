@@ -3,5 +3,16 @@
   "ws": "ws://localhost:8080",
   "i18n": [
     "/assets/i18n/{lang}.json"
-  ]
+  ],
+  "maps": {
+    "useProvider": "google",
+    "providers": {
+      "google": {
+        "apiKey": "AIzaSyByUIeIkANdXYNGK58qoItJUtLBjPp65P8"
+      },
+      "yandex": {
+        "apiKey": "yandex api key"
+      }
+    }
+  }
 }

@@ -5,4 +5,17 @@ export interface IConfig {
   };
   domains: string[];
   i18n: string[];
+  maps: {
+    useProvider: keyof MapProviders;
+    providers: MapProviders;
+  };
+}
+
+interface MapProviders {
+  google: {
+    apiKey: string;
+  };
+  yandex: {
+    apiKey: string;
+  };
 }
