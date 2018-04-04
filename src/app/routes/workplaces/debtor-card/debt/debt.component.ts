@@ -5,12 +5,16 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first, flatMap, map } from 'rxjs/operators';
 
-import { IContextConfigItemType, IContextByValueBagMethod } from '@app/core/context/context.interface';
+import { IContextConfigItemType, IContextByValueBagMethod, IContextByEntityMethod } from '@app/core/context/context.interface';
 import { IDebt } from '@app/core/app-modules/app-modules.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { ILookupPortfolio } from '@app/core/lookup/lookup.interface';
-import { IMetadataFormConfig, IMetadataFormControlType } from '@app/shared/components/form/metadata-form/metadata-form.interface';
+import {
+  IMetadataFormConfig,
+  IMetadataFormControlType,
+  IMetadataFormItem,
+} from '@app/shared/components/form/metadata-form/metadata-form.interface';
 import { IOption, IOptionSet } from '@app/core/converter/value-converter.interface';
 import { IUserPermission, IUserPermissions } from '@app/core/user/permissions/user-permissions.interface';
 
@@ -24,7 +28,7 @@ import { UserPermissionsService } from '@app/core/user/permissions/user-permissi
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { makeKey, addGridLabel } from '@app/core/utils';
+import { makeKey, addGridLabel, range } from '@app/core/utils';
 
 const label = makeKey('widgets.debt');
 
@@ -48,6 +52,16 @@ export class DebtComponent implements OnInit {
             label: 'widgets.debt.grid.id',
             name: 'id',
             type: IMetadataFormControlType.TEXT,
+            validators: {},
+            width: 1,
+          },
+          {
+            disabled: true,
+            display: true,
+            label: 'widgets.debt.grid.bankId',
+            lookupKey: 'contractors',
+            name: 'bankId',
+            type: IMetadataFormControlType.SELECT,
             validators: {},
             width: 1,
           },
@@ -224,6 +238,34 @@ export class DebtComponent implements OnInit {
             width: 1,
           },
         ],
+        type: IMetadataFormControlType.GROUP,
+        width: 0,
+      },
+      {
+        children: range(1, 4).map(i => ({
+          dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
+          disabled: {
+            type: IContextConfigItemType.PERMISSION,
+            method: IContextByValueBagMethod.HAS,
+            value: `DEBT_DICT${i}_EDIT_LIST`,
+          },
+          display: {
+            type: IContextConfigItemType.ENTITY,
+            method: IContextByEntityMethod.IS_USED,
+            value: EntityAttributesService[`DICT_VALUE_${i}`],
+          },
+          label: `widgets.debt.grid.dict${i}Code`,
+          name: `dict${i}Code`,
+          type: IMetadataFormControlType.SELECT,
+          validators: {
+            required: {
+              type: IContextConfigItemType.ENTITY,
+              method: IContextByEntityMethod.IS_MANDATORY,
+              value: EntityAttributesService[`DICT_VALUE_${i}`],
+            }
+          },
+          width: 1,
+        } as IMetadataFormItem)),
         type: IMetadataFormControlType.GROUP,
         width: 0,
       },

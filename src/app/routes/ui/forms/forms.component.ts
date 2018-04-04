@@ -25,7 +25,7 @@ export class FormsComponent {
         validators: {
           required: true,
         },
-        width: 100,
+        width: 0,
       },
       {
         disabled: false,
@@ -46,7 +46,7 @@ export class FormsComponent {
           },
           required: true,
         },
-        width: 100,
+        width: 0,
       },
       {
         children: [
@@ -59,7 +59,7 @@ export class FormsComponent {
             validators: {
               maxLength: 10,
             },
-            width: 100,
+            width: 0,
           },
           {
             children: [
@@ -70,15 +70,15 @@ export class FormsComponent {
                 name: 'deeplyNestedText',
                 type: IMetadataFormControlType.TEXT,
                 validators: {},
-                width: 100,
+                width: 0,
               },
             ],
             type: IMetadataFormControlType.GROUP,
-            width: 100,
+            width: 0,
           },
         ],
         type: IMetadataFormControlType.GROUP,
-        width: 100,
+        width: 0,
       },
     ],
   };
