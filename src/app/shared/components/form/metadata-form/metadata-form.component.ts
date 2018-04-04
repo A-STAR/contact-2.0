@@ -40,6 +40,14 @@ export class MetadataFormComponent<T> implements OnInit {
     private contextService: ContextService,
   ) {}
 
+  get canSubmit(): boolean {
+    return this.formGroup.valid && this.formGroup.dirty;
+  }
+
+  get data(): T {
+    return this.formGroup.value;
+  }
+
   ngOnInit(): void {
     const flatControls = this.flattenControls(this.config.items);
 
