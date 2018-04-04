@@ -52,8 +52,8 @@ export interface IMetadataFormPasswordControl extends IMetadataFormGenericContro
 }
 
 export interface IMetadataFormSelectControl extends IMetadataFormGenericControl {
-  dictCode: number;
-  lookupKey: ILookupKey;
+  dictCode?: number;
+  lookupKey?: ILookupKey;
   type: IMetadataFormControlType.SELECT;
   validators: {
     required?: IMetadataFormValidator<boolean>;
