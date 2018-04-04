@@ -43,17 +43,7 @@ request.onload = () => {
     },
     domains: [ domain ],
     i18n: response.i18n || [ '/assets/i18n/{lang}.json' ],
-    maps: {
-      useProvider: 'google',
-      providers: {
-        google: {
-          apiKey: 'AIzaSyByUIeIkANdXYNGK58qoItJUtLBjPp65P8'
-        },
-        yandex: {
-          apiKey: 'yandex api key'
-        }
-      }
-    }
+    maps: response.maps
   };
 
   window['__CONFIG__'] = config;

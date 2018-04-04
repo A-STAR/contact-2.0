@@ -5,7 +5,7 @@
     "/assets/i18n/{lang}.json"
   ],
   "maps": {
-    "useProvider": "google",
+    "useProvider": "yandex",
     "providers": {
       "google": {
         "apiKey": "AIzaSyByUIeIkANdXYNGK58qoItJUtLBjPp65P8"
