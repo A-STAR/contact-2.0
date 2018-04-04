@@ -78,7 +78,8 @@ export class ContactRegistrationAttributesComponent implements OnInit {
   onCellValueChanged(event: CellValueChangedEvent): void {
     this.editedAttributes[event.data.code] = {
       ...getValue(event.data.typeCode, event.newValue),
-      code: event.data.code
+      code: event.data.code,
+      typeCode: event.data.typeCode
     };
   }
 
@@ -96,7 +97,12 @@ export class ContactRegistrationAttributesComponent implements OnInit {
   }
 
   get data(): any {
-    return Object.keys(this.editedAttributes).map(key => this.editedAttributes[key]);
+    return Object.keys(this.editedAttributes)
+      .map(key => this.editedAttributes[key])
+      .map(attr => {
+        const { typeCode, ...rest} = attr;
+        return rest;
+      });
   }
 
   private getMandatoryAttrs(attributes: IContactTreeAttribute[], isEmpty: boolean = false): number[] {

@@ -12,11 +12,11 @@ import {
   IContactRegistrationStatus,
   IOutcome,
 } from './contact-registration.interface';
-import { IDebt } from '@app/routes/workplaces/core/debts/debts.interface';
 import { IPromiseLimit } from '@app/routes/workplaces/core/promise/promise.interface';
 
 import { DataService } from '@app/core/data/data.service';
 import { DebtsService } from '@app/routes/workplaces/core/debts/debts.service';
+import { DocumentService } from '@app/routes/workplaces/shared/documents/document.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PromiseService } from '@app/routes/workplaces/core/promise/promise.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
@@ -30,12 +30,19 @@ export class ContactRegistrationService {
   private _mode$    = new BehaviorSubject<IContactRegistrationMode>(IContactRegistrationMode.TREE);
   private _outcome$ = new BehaviorSubject<IOutcome>(null);
   private _params$  = new BehaviorSubject<Partial<IContactRegistrationParams>>(null);
-
   private status$   = new BehaviorSubject<IContactRegistrationStatus>(null);
+  private _attachmentChange: Function;
+
+  readonly contactPersonChange$ = new BehaviorSubject<boolean>(false);
+  readonly paymentChange$ = new BehaviorSubject<boolean>(false);
+  readonly promiseChange$ = new BehaviorSubject<boolean>(false);
+  readonly completeRegistration$ = new BehaviorSubject<boolean>(false);
+  readonly attachmentChange$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private dataService: DataService,
     private debtsService: DebtsService,
+    private documentService: DocumentService,
     private notificationsService: NotificationsService,
     private promiseService: PromiseService,
     private userPermissionsService: UserPermissionsService,
@@ -45,71 +52,64 @@ export class ContactRegistrationService {
         mergeMap(([ canLoad, debtId ]) => canLoad ? this.promiseService.getLimit(debtId, true) : of(null)),
       )
       .subscribe(limit => this._limit$.next(limit));
+
+    this.attachmentChange$
+      .pipe(filter(Boolean))
+      .subscribe(_ => {
+        if (this._attachmentChange) {
+          this._attachmentChange();
+          this._attachmentChange = null;
+        }
+      });
   }
 
   set status(status: IContactRegistrationStatus) {
     this.status$.next(status);
   }
 
-  get shouldConfirm$(): Observable<boolean> {
-    return this.status$.pipe(map(status => status === IContactRegistrationStatus.PAUSE));
-  }
+  readonly shouldConfirm$ = this.status$.pipe(map(status => status === IContactRegistrationStatus.PAUSE));
 
-  get isActive$(): Observable<boolean> {
-    return this._params$.pipe(map(Boolean));
-  }
+  readonly isActive$ = this._params$.pipe(map(Boolean));
 
-  get mode$(): Observable<IContactRegistrationMode> {
-    return this._mode$.asObservable();
-  }
+  readonly mode$ = this._mode$.asObservable();
 
   set mode(mode: IContactRegistrationMode) {
     this._mode$.next(mode);
   }
 
-  get params$(): Observable<Partial<IContactRegistrationParams>> {
-    return this._params$.asObservable();
-  }
+  readonly params$ = this._params$.asObservable();
 
   get params(): Partial<IContactRegistrationParams> {
     return this._params$.value;
   }
 
-  get campaignId$(): Observable<number> {
-    return this.params$.pipe(map(params => params && params.campaignId));
-  }
+  readonly campaignId$ = this.params$.pipe(map(params => params && params.campaignId));
+
+  readonly contactId$ = this.params$.pipe(map(params => params && params.contactId));
+
+  readonly personRole$ = this.params$.pipe(map(params => params && params.personRole));
 
   get campaignId(): number {
     return this.params && this.params.campaignId;
-  }
-
-  get contactId$(): Observable<number> {
-    return this.params$.pipe(map(params => params && params.contactId));
   }
 
   get contactId(): number {
     return this.params && this.params.contactId;
   }
 
-  get contactType$(): Observable<number> {
-    return this.params$.pipe(map(params => params && params.contactType));
-  }
+  readonly contactType$ = this.params$.pipe(map(params => params && params.contactType));
 
   get contactType(): number {
     return this.params && this.params.contactType;
   }
 
-  get debtId$(): Observable<number> {
-    return this.params$.pipe(map(params => params && params.debtId));
-  }
+  readonly debtId$ = this.params$.pipe(map(params => params && params.debtId));
 
   get debtId(): number {
     return this.params && this.params.debtId;
   }
 
-  get guid$(): Observable<string> {
-    return this._guid$.asObservable();
-  }
+  readonly guid$ = this._guid$.asObservable();
 
   get guid(): string {
     return this._guid$.value;
@@ -119,9 +119,7 @@ export class ContactRegistrationService {
     this._guid$.next(guid);
   }
 
-  get outcome$(): Observable<IOutcome> {
-    return this._outcome$.asObservable();
-  }
+  readonly outcome$ = this._outcome$.asObservable();
 
   get outcome(): IOutcome {
     return this._outcome$.value;
@@ -134,41 +132,31 @@ export class ContactRegistrationService {
     }
   }
 
-  get personId$(): Observable<number> {
-    return this.params$.pipe(map(params => params && params.personId));
-  }
+  readonly personId$ = this.params$.pipe(map(params => params && params.personId));
 
   get personId(): number {
     return this.params && this.params.personId;
-  }
-
-  get personRole$(): Observable<number> {
-    return this.params$.pipe(map(params => params && params.personRole));
   }
 
   get personRole(): number {
     return this.params && this.params.personRole;
   }
 
-  get debt$(): Observable<IDebt> {
-    return this.debtId$.pipe(
+  readonly debt$ = this.debtId$.pipe(
       mergeMap(debtId => debtId ? this.debtsService.getDebt(debtId) : of(null)),
-    );
-  }
+  );
 
-  get limit$(): Observable<IPromiseLimit> {
-    return this._limit$.asObservable();
-  }
+  readonly limit$ = this._limit$.asObservable();
 
-  get canSetPromise$(): Observable<boolean> {
-    return this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.promiseMode)));
-  }
+  readonly canSetPromise$ = this._outcome$.pipe(map(outcome => outcome && [2, 3].includes(outcome.promiseMode)));
 
-  get canSetInsufficientPromiseAmount$(): Observable<boolean> {
-    return combineLatestOr([
-      this._outcome$.pipe(map(outcome => outcome && outcome.promiseMode && outcome.promiseMode !== 2)),
-      this.userPermissionsService.has('PROMISE_INSUFFICIENT_AMOUNT_ADD'),
-    ]);
+  readonly canSetInsufficientPromiseAmount$ = combineLatestOr([
+    this._outcome$.pipe(map(outcome => outcome && outcome.promiseMode && outcome.promiseMode !== 2)),
+    this.userPermissionsService.has('PROMISE_INSUFFICIENT_AMOUNT_ADD'),
+  ]);
+
+  onAttachmentChange(): void {
+    this._attachmentChange = () => this.documentService.dispatchAction(DocumentService.MESSAGE_DOCUMENT_SAVED);
   }
 
   pauseRegistration(): Observable<IContactRegistrationStatus> {

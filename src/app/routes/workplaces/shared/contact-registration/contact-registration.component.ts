@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
 import { ContactRegistrationService } from './contact-registration.service';
@@ -18,21 +17,15 @@ export class ContactRegistrationComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  get showDialog$(): Observable<boolean> {
-    return this.contactRegistrationService.shouldConfirm$;
-  }
+  readonly showDialog$ = this.contactRegistrationService.shouldConfirm$;
 
-  get showEdit$(): Observable<boolean> {
-    return this.contactRegistrationService.mode$.pipe(
-      map(mode => mode === IContactRegistrationMode.EDIT),
-    );
-  }
+  readonly showEdit$ = this.contactRegistrationService.mode$.pipe(
+    map(mode => mode === IContactRegistrationMode.EDIT),
+  );
 
-  get showTree$(): Observable<boolean> {
-    return this.contactRegistrationService.mode$.pipe(
-      map(mode => mode === IContactRegistrationMode.TREE),
-    );
-  }
+  readonly showTree$ = this.contactRegistrationService.mode$.pipe(
+    map(mode => mode === IContactRegistrationMode.TREE),
+  );
 
   onConfirm(): void {
     this.contactRegistrationService.status = null;

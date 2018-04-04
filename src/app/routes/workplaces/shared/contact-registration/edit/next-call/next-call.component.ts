@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 
@@ -18,26 +17,20 @@ export class ContactRegistrationNextCallComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
+  readonly canDisplayForm$ = this.contactRegistrationService.outcome$.pipe(
       map(outcome => outcome && [2, 3].includes(outcome.nextCallMode)),
-    );
-  }
+  );
 
-  get isNextCallDateRequired$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
+  readonly isNextCallDateRequired$ = this.contactRegistrationService.outcome$.pipe(
       map(outcome => outcome && outcome.nextCallMode === 3),
-    );
-  }
+  );
 
   get nextCallMinDate(): Date {
     return moment().toDate();
   }
 
-  get nextCallMaxDate$(): Observable<Date> {
-    return this.contactRegistrationService.outcome$.pipe(
+  readonly nextCallMaxDate$ = this.contactRegistrationService.outcome$.pipe(
       map(outcome => outcome && outcome.nextCallDays),
       map(nextCallDays => nextCallDays ? moment().add(nextCallDays, 'day').toDate() : null)
-    );
-  }
+  );
 }

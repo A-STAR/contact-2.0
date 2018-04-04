@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 
@@ -19,7 +18,5 @@ export class DebtorComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  get displayContactRegistration$(): Observable<boolean> {
-    return this.contactRegistrationService.isActive$;
-  }
+  readonly displayContactRegistration$ = this.contactRegistrationService.isActive$;
 }

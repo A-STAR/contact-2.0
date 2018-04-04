@@ -10,6 +10,7 @@ import { IPromise } from '../promise.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { IToolbarItem, ToolbarItemTypeEnum } from '@app/shared/components/toolbar-2/toolbar-2.interface';
 
+import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { PromiseService } from '../promise.service';
 import { RoutingService } from '@app/core/routing/routing.service';
@@ -98,9 +99,11 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
 
   private busSubscription: Subscription;
   private canViewSubscription: Subscription;
+  private promiseChangeSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private contactRegistrationService: ContactRegistrationService,
     private promiseService: PromiseService,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute,
@@ -125,6 +128,10 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     this.busSubscription = this.promiseService
       .getAction(PromiseService.MESSAGE_PROMISE_SAVED)
       .subscribe(() => this.fetch());
+    this.promiseChangeSub = this.contactRegistrationService
+      .promiseChange$
+      .filter(Boolean)
+      .subscribe(_ => this.fetch());
   }
 
   ngOnDestroy(): void {
@@ -132,6 +139,7 @@ export class PromiseGridComponent implements OnInit, OnDestroy {
     this.hasActivePromise$.complete();
     this.busSubscription.unsubscribe();
     this.canViewSubscription.unsubscribe();
+    this.promiseChangeSub.unsubscribe();
   }
 
   onSelect(promises: IPromise[]): void {
