@@ -10,6 +10,7 @@ export enum IMetadataFormControlType {
   PASSWORD = 'password',
   SELECT   = 'select',
   TEXT     = 'text',
+  TEXTAREA = 'textarea',
 }
 
 export interface IMetadataFormGroup {
@@ -67,12 +68,22 @@ export interface IMetadataFormTextControl extends IMetadataFormGenericControl {
   };
 }
 
+export interface IMetadataFormTextareaControl extends IMetadataFormGenericControl {
+  type: IMetadataFormControlType.TEXTAREA;
+  validators: {
+    maxLength?: IMetadataFormValidator<number>;
+    minLength?: IMetadataFormValidator<number>;
+    required?: IMetadataFormValidator<boolean>;
+  };
+}
+
 export type IMetadataFormControl =
   | IMetadataFormCheckboxControl
   | IMetadataFormDateControl
   | IMetadataFormPasswordControl
   | IMetadataFormSelectControl
   | IMetadataFormTextControl
+  | IMetadataFormTextareaControl
 ;
 
 export type IMetadataFormItem = IMetadataFormControl | IMetadataFormGroup;
