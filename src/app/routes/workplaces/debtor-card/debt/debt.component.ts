@@ -5,28 +5,28 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
 import { first, flatMap, map } from 'rxjs/operators';
 
-import { IContextConfigItemType, IContextByValueBagMethod, IContextByEntityMethod } from '@app/core/context/context.interface';
+// import { IContextConfigItemType, IContextByValueBagMethod, IContextByEntityMethod } from '@app/core/context/context.interface';
 import { IDebt } from '@app/core/debt/debt.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 // import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 // import { ILookupPortfolio } from '@app/core/lookup/lookup.interface';
-import {
-  IMetadataFormConfig,
-  IMetadataFormControlType,
-  IMetadataFormItem,
-} from '@app/shared/components/form/metadata-form/metadata-form.interface';
+// import {
+//   IMetadataFormConfig,
+//   IMetadataFormControlType,
+//   IMetadataFormItem,
+// } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 // import { IOption, IOptionSet } from '@app/core/converter/value-converter.interface';
 // import { IUserPermission, IUserPermissions } from '@app/core/user/permissions/user-permissions.interface';
 
 import { DebtService } from '@app/core/debt/debt.service';
 import { DebtorCardService } from '@app/core/app-modules/debtor-card/debtor-card.service';
-import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
+// import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
 // import { LookupService } from '@app/core/lookup/lookup.service';
 import { RoutingService } from '@app/core/routing/routing.service';
-import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+// import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
 
-import { makeKey, /* addGridLabel, */ range } from '@app/core/utils';
+import { makeKey /* , addGridLabel */ /* , range */ } from '@app/core/utils';
 import { MetadataFormComponent } from '@app/shared/components/form/metadata-form/metadata-form.component';
 
 const label = makeKey('widgets.debt');
@@ -39,266 +39,6 @@ const label = makeKey('widgets.debt');
 })
 export class DebtComponent implements OnInit {
   @ViewChild(MetadataFormComponent) form: MetadataFormComponent<IDebt>;
-
-  readonly config: IMetadataFormConfig = {
-    editable: true,
-    items: [
-      {
-        children: [
-          {
-            disabled: true,
-            display: true,
-            label: 'widgets.debt.grid.id',
-            name: 'id',
-            type: IMetadataFormControlType.TEXT,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: true,
-            display: true,
-            filterParams: {
-              directionCodes: [ 2 ],
-              statusCodes: [ 1 ],
-            },
-            filterType: 'portfolios',
-            label: 'widgets.debt.grid.portfolioId',
-            name: 'portfolioId',
-            type: IMetadataFormControlType.GRIDSELECT,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: true,
-            display: true,
-            label: 'widgets.debt.grid.bankId',
-            lookupKey: 'contractors',
-            name: 'bankId',
-            type: IMetadataFormControlType.SELECT,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: {
-              type: IContextConfigItemType.PERMISSION,
-              method: IContextByValueBagMethod.HAS,
-              value: 'DEBT_EDIT',
-            },
-            display: true,
-            label: 'widgets.debt.grid.contract',
-            name: 'contract',
-            type: IMetadataFormControlType.TEXT,
-            validators: {},
-            width: 1,
-          },
-        ],
-        type: IMetadataFormControlType.GROUP,
-        width: 0,
-      },
-      {
-        children: [
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.creditName',
-            name: 'creditName',
-            type: IMetadataFormControlType.TEXT,
-            validators: {},
-            width: 1,
-          },
-          {
-            dictCode: UserDictionariesService.DICTIONARY_PRODUCT_TYPE,
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.creditTypeCode',
-            name: 'creditTypeCode',
-            type: IMetadataFormControlType.SELECT,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.creditStartDate',
-            name: 'creditStartDate',
-            type: IMetadataFormControlType.DATE,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.creditEndDate',
-            name: 'creditEndDate',
-            type: IMetadataFormControlType.DATE,
-            validators: {},
-            width: 1,
-          },
-        ],
-        type: IMetadataFormControlType.GROUP,
-        width: 0,
-      },
-      {
-        children: [
-          {
-            dictCode: UserDictionariesService.DICTIONARY_DEBT_ORIGINATION_REASON,
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.debtReasonCode',
-            name: 'debtReasonCode',
-            type: IMetadataFormControlType.SELECT,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.startDate',
-            name: 'startDate',
-            type: IMetadataFormControlType.DATE,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.dpd',
-            name: 'dpd',
-            type: IMetadataFormControlType.TEXT,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.currencyId',
-            lookupKey: 'currencies',
-            name: 'currencyId',
-            type: IMetadataFormControlType.SELECT,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.debtAmount',
-            name: 'debtAmount',
-            type: IMetadataFormControlType.TEXT,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.totalAmount',
-            name: 'totalAmount',
-            type: IMetadataFormControlType.TEXT,
-            validators: {},
-            width: 1,
-          },
-        ],
-        type: IMetadataFormControlType.GROUP,
-        width: 0,
-      },
-      {
-        children: [
-          {
-            dictCode: UserDictionariesService.DICTIONARY_DEBTOR_STAGE_CODE,
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.stageCode',
-            name: 'stageCode',
-            type: IMetadataFormControlType.SELECT,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.debtDate',
-            name: 'debtDate',
-            type: IMetadataFormControlType.DATE,
-            validators: {},
-            width: 1,
-          },
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.account',
-            name: 'account',
-            type: IMetadataFormControlType.TEXT,
-            validators: {},
-            width: 1,
-          },
-          {
-            dictCode: UserDictionariesService.DICTIONARY_REGIONS,
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.regionCode',
-            name: 'regionCode',
-            type: IMetadataFormControlType.SELECT,
-            validators: {},
-            width: 1,
-          },
-          {
-            dictCode: UserDictionariesService.DICTIONARY_BRANCHES,
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.branchCode',
-            name: 'branchCode',
-            type: IMetadataFormControlType.SELECT,
-            validators: {},
-            width: 1,
-          },
-        ],
-        type: IMetadataFormControlType.GROUP,
-        width: 0,
-      },
-      {
-        children: range(1, 4).map(i => ({
-          dictCode: UserDictionariesService[`DICTIONARY_DEBT_LIST_${i}`],
-          disabled: {
-            type: IContextConfigItemType.PERMISSION,
-            method: IContextByValueBagMethod.HAS,
-            value: `DEBT_DICT${i}_EDIT_LIST`,
-          },
-          display: {
-            type: IContextConfigItemType.ENTITY,
-            method: IContextByEntityMethod.IS_USED,
-            value: EntityAttributesService[`DICT_VALUE_${i}`],
-          },
-          label: `widgets.debt.grid.dict${i}Code`,
-          name: `dict${i}Code`,
-          type: IMetadataFormControlType.SELECT,
-          validators: {
-            required: {
-              type: IContextConfigItemType.ENTITY,
-              method: IContextByEntityMethod.IS_MANDATORY,
-              value: EntityAttributesService[`DICT_VALUE_${i}`],
-            }
-          },
-          width: 1,
-        } as IMetadataFormItem)),
-        type: IMetadataFormControlType.GROUP,
-        width: 0,
-      },
-      {
-        children: [
-          {
-            disabled: false,
-            display: true,
-            label: 'widgets.debt.grid.comment',
-            name: 'comment',
-            type: IMetadataFormControlType.TEXTAREA,
-            validators: {},
-            width: 1,
-          },
-        ],
-        type: IMetadataFormControlType.GROUP,
-        width: 0,
-      },
-    ],
-  };
 
   controls: Array<IDynamicFormItem> = null;
   debt: IDebt;
