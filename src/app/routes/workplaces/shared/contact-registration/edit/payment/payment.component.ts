@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, first, map } from 'rxjs/operators';
 import * as moment from 'moment';
@@ -26,39 +25,29 @@ export class ContactRegistrationPaymentComponent {
     private contactRegistrationService: ContactRegistrationService,
   ) {}
 
-  get canDisplayForm$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
+  readonly canDisplayForm$ = this.contactRegistrationService.outcome$.pipe(
       map(outcome => outcome && [2, 3].includes(outcome.paymentMode))
-    );
-  }
+  );
 
   get today(): Date {
     return moment().toDate();
   }
 
-  get paymentMinAmount$(): Observable<number> {
-    return this.limitInfo$.pipe(
+  readonly paymentMinAmount$ = this.limitInfo$.pipe(
       map(([ debt, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent * debt.debtAmount / 100),
-    );
-  }
+  );
 
-  get paymentMaxAmount$(): Observable<number> {
-    return this.limitInfo$.pipe(
+  readonly paymentMaxAmount$ = this.limitInfo$.pipe(
       map(([ debt ]) => debt.debtAmount),
-    );
-  }
+  );
 
-  get paymentMinPercentage$(): Observable<number> {
-    return this.limitInfo$.pipe(
+  readonly paymentMinPercentage$ = this.limitInfo$.pipe(
       map(([ _, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent),
-    );
-  }
+  );
 
-  get isPaymentAmountDisabled$(): Observable<boolean> {
-    return this.contactRegistrationService.outcome$.pipe(
+  readonly isPaymentAmountDisabled$ = this.contactRegistrationService.outcome$.pipe(
       map(outcome => !outcome || outcome.paymentMode !== 3),
-    );
-  }
+  );
 
   onPaymentAmountInput(event: Event): void {
     const { value } = event.target as HTMLInputElement;

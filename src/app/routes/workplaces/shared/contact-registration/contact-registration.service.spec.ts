@@ -50,6 +50,12 @@ class MockUserPermissionsService {
   }
 }
 
+class MockDocumentService {
+  dispatchAction(actionName: any): void {
+    ///
+  }
+}
+
 describe('ContactRegistrationService', () => {
   let service: ContactRegistrationService;
 
@@ -57,6 +63,7 @@ describe('ContactRegistrationService', () => {
     service = new ContactRegistrationService(
       new MockDataService() as any,
       new MockDebtsService() as any,
+      new MockDocumentService() as any,
       new MockNotificationService() as any,
       new MockPromiseService() as any,
       new MockUserPermissionsService() as any,

@@ -5,10 +5,12 @@ import {
   Input,
   OnInit,
   ViewEncapsulation,
+  OnDestroy,
 } from '@angular/core';
 import { filter, mergeMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ILinkedContactPerson } from '../contact-select.interface';
 
@@ -25,7 +27,7 @@ import { addLabelForEntity } from '@app/core/utils';
   selector: 'app-contact-registration-contact-select-grid',
   templateUrl: 'contact-select-grid.component.html'
 })
-export class ContactSelectGridComponent implements OnInit {
+export class ContactSelectGridComponent implements OnInit, OnDestroy {
   @Input() excludeCurrentPersonId: boolean;
 
   columns$ = this.gridService.getColumns([
@@ -39,6 +41,8 @@ export class ContactSelectGridComponent implements OnInit {
   rows: ILinkedContactPerson[] = [];
   rowCount = 0;
   rowIdKey = 'id';
+
+  private contactRegistrationChangesSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -56,15 +60,19 @@ export class ContactSelectGridComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetch();
+    this.contactRegistrationChangesSub = this.fetch();
+  }
+
+  ngOnDestroy(): void {
+    this.contactRegistrationChangesSub.unsubscribe();
   }
 
   onSelect(persons: number[]): void {
     this.person = { personId: persons[0] };
   }
 
-  private fetch(): void {
-    combineLatest(
+  private fetch(): Subscription {
+    return combineLatest(
       this.contactRegistrationService.guid$,
       this.contactRegistrationService.debtId$,
       this.excludeCurrentPersonId
@@ -72,15 +80,17 @@ export class ContactSelectGridComponent implements OnInit {
         : of(1),
     )
     .pipe(
-      filter(([ guid, debtId, personId ]) => Boolean(guid && debtId && personId)),
+      filter(([ guid, debtId, personId ]) => {
+        return Boolean(guid && debtId && personId);
+      } ),
       mergeMap(([ guid, debtId, personId ]) => {
         return this.contactSelectService.fetchAll(guid, debtId, this.excludeCurrentPersonId ? personId : null);
       })
-    )
-    .subscribe(contacts => {
-      this.rows = contacts;
-      this.rowCount = contacts.length;
-      this.cdRef.markForCheck();
-    });
+    ).subscribe(persons => this.onPersonsFetch(persons));
+  }
+  private onPersonsFetch(persons: ILinkedContactPerson[]): void {
+    this.rows = persons;
+    this.rowCount = persons.length;
+    this.cdRef.markForCheck();
   }
 }
