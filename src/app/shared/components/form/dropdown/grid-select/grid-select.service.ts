@@ -37,6 +37,9 @@ export class GridSelectService {
         { prop: 'startWorkDate', renderer: DateTimeRendererComponent },
         { prop: 'endWorkDate', renderer: DateTimeRendererComponent },
       ].map(addGridLabel('default.filters.portfolios.grid')),
+      // TODO(d.maltsev):
+      // needs refactoring
+      // it's not obvious that lookup endpoint is used here rather than filter endpoint
       fetchCallback: () => this.lookupService.portfolios,
       labelGetter: row => row.name,
       valueGetter: row => row.id,
