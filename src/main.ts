@@ -36,13 +36,16 @@ request.onload = () => {
     `);
   }
 
+  const assets = response.assets || '/assets';
+
   const config: IConfig = {
     api: {
       http: response.url,
       ws: response.ws,
     },
+    assets,
     domains: [ domain ],
-    i18n: response.i18n || [ '/assets/i18n/{lang}.json' ],
+    i18n: (response.i18n || [ 'i18n/{lang}.json' ]).map(path => `${assets}/${path}`),
   };
 
   window['__CONFIG__'] = config;

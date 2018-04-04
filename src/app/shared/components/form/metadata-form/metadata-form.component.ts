@@ -11,6 +11,7 @@ import {
   IMetadataFormItem,
 } from './metadata-form.interface';
 
+import { ConfigService } from '@app/core/config/config.service';
 import { ContextService } from '@app/core/context/context.service';
 
 import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
@@ -41,6 +42,7 @@ export class MetadataFormComponent<T> implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private configService: ConfigService,
     private contextService: ContextService,
     private httpClient: HttpClient,
   ) {}
@@ -59,7 +61,8 @@ export class MetadataFormComponent<T> implements OnInit {
 
   ngOnInit(): void {
     if (typeof this.config === 'string') {
-      const url = `/assets/forms/${this.config}.json`;
+      const { assets } = this.configService.config;
+      const url = `${assets}/forms/${this.config}.json`;
       this.httpClient.get(url).subscribe((config: IMetadataFormConfig) => {
         this.init(config);
       });
