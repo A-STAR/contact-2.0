@@ -3,6 +3,7 @@ export interface IConfig {
     http: string;
     ws: string;
   };
+  assets: string;
   domains: string[];
   i18n: string[];
   maps: {

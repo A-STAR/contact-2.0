@@ -1,24 +1,31 @@
-<div appDropdown>
-  <div #dropdownTrigger>
-    <span [ngClass]="controlClass" [ngStyle]="{ position: 'relative' }" [attr.disabled]="isDisabled || undefined">
-      {{ label }}
-      <i class="caret"></i>
-    </span>
-    <input type="hidden" [ngModel]="value">
+<label class="m0">
+  <span class="form-label">
+    {{ label | translate }}
+    <b *ngIf="required" class="text-danger">*</b>
+  </span>
+
+  <div appDropdown>
+    <div #dropdownTrigger>
+      <span [ngClass]="controlClass" [ngStyle]="{ position: 'relative' }" [attr.disabled]="isDisabled || undefined">
+        {{ vLabel }}
+        <i class="caret"></i>
+      </span>
+      <input type="hidden" [ngModel]="value">
+    </div>
+    <div #dropdownContent class="dropdown">
+      <ng-container *ngIf="!isDisabled">
+        <app-simple-grid
+          [columns]="columns"
+          [rows]="rows"
+          [selection]="selection"
+          (select)="onSelect($event)"
+        ></app-simple-grid>
+        <div class="panel-footer text-right">
+          <button class="btn btn-xs btn-default" [disabled]="!value" (click)="onClearClick()">
+            {{ 'default.buttons.clear' | translate }}
+          </button>
+        </div>
+      </ng-container>
+    </div>
   </div>
-  <div #dropdownContent class="dropdown">
-    <ng-container *ngIf="!isDisabled">
-      <app-simple-grid
-        [columns]="columns"
-        [rows]="rows"
-        [selection]="selection"
-        (select)="onSelect($event)"
-      ></app-simple-grid>
-      <div class="panel-footer text-right">
-        <button class="btn btn-xs btn-default" [disabled]="!value" (click)="onClearClick()">
-          {{ 'default.buttons.clear' | translate }}
-        </button>
-      </div>
-    </ng-container>
-  </div>
-</div>
+</label>

@@ -1,12 +1,25 @@
 import { IContextConfig } from '@app/core/context/context.interface';
+import { IDialogMultiSelectFilterType } from '@app/shared/components/form/dialog-multi-select/dialog-multi-select.interface';
+import { IFilterParam } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
+import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 export type IMetadataFormValidator<T> = T | IContextConfig;
 
 export enum IMetadataFormControlType {
-  CHECKBOX = 'checkbox',
-  GROUP    = 'group',
-  PASSWORD = 'password',
-  TEXT     = 'text',
+  CHECKBOX   = 'checkbox',
+  DATE       = 'date',
+  GRIDSELECT = 'gridselect',
+  GROUP      = 'group',
+  PASSWORD   = 'password',
+  SELECT     = 'select',
+  TEXT       = 'text',
+  TEXTAREA   = 'textarea',
+}
+
+export interface IMetadataFormGroup {
+  children: IMetadataFormItem[];
+  type: IMetadataFormControlType.GROUP;
+  width: number;
 }
 
 export interface IMetadataFormGenericControl {
@@ -15,6 +28,7 @@ export interface IMetadataFormGenericControl {
   label: string;
   name: string;
   type: IMetadataFormControlType;
+  width: number;
 }
 
 export interface IMetadataFormCheckboxControl extends IMetadataFormGenericControl {
@@ -22,11 +36,18 @@ export interface IMetadataFormCheckboxControl extends IMetadataFormGenericContro
   validators: {};
 }
 
-export interface IMetadataFormTextControl extends IMetadataFormGenericControl {
-  type: IMetadataFormControlType.TEXT;
+export interface IMetadataFormDateControl extends IMetadataFormGenericControl {
+  type: IMetadataFormControlType.DATE;
   validators: {
-    maxLength?: IMetadataFormValidator<number>;
-    minLength?: IMetadataFormValidator<number>;
+    required?: IMetadataFormValidator<boolean>;
+  };
+}
+
+export interface IMetadataFormGridSelectControl extends IMetadataFormGenericControl {
+  type: IMetadataFormControlType.GRIDSELECT;
+  filterType: IDialogMultiSelectFilterType;
+  filterParams: IFilterParam;
+  validators: {
     required?: IMetadataFormValidator<boolean>;
   };
 }
@@ -41,12 +62,42 @@ export interface IMetadataFormPasswordControl extends IMetadataFormGenericContro
   };
 }
 
-export interface IMetadataFormGroup {
-  children: IMetadataFormItem[];
-  type: IMetadataFormControlType.GROUP;
+export interface IMetadataFormSelectControl extends IMetadataFormGenericControl {
+  dictCode?: number;
+  lookupKey?: ILookupKey;
+  type: IMetadataFormControlType.SELECT;
+  validators: {
+    required?: IMetadataFormValidator<boolean>;
+  };
 }
 
-export type IMetadataFormControl = IMetadataFormCheckboxControl | IMetadataFormTextControl | IMetadataFormPasswordControl;
+export interface IMetadataFormTextControl extends IMetadataFormGenericControl {
+  type: IMetadataFormControlType.TEXT;
+  validators: {
+    maxLength?: IMetadataFormValidator<number>;
+    minLength?: IMetadataFormValidator<number>;
+    required?: IMetadataFormValidator<boolean>;
+  };
+}
+
+export interface IMetadataFormTextareaControl extends IMetadataFormGenericControl {
+  type: IMetadataFormControlType.TEXTAREA;
+  validators: {
+    maxLength?: IMetadataFormValidator<number>;
+    minLength?: IMetadataFormValidator<number>;
+    required?: IMetadataFormValidator<boolean>;
+  };
+}
+
+export type IMetadataFormControl =
+  | IMetadataFormCheckboxControl
+  | IMetadataFormDateControl
+  | IMetadataFormGridSelectControl
+  | IMetadataFormPasswordControl
+  | IMetadataFormSelectControl
+  | IMetadataFormTextControl
+  | IMetadataFormTextareaControl
+;
 
 export type IMetadataFormItem = IMetadataFormControl | IMetadataFormGroup;
 
