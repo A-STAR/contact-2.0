@@ -1,3 +1,5 @@
-import { animateChild, query } from '@angular/animations';
+import { AnimationMetadata, animateChild, query } from '@angular/animations';
 
-export const withChildren = (selector: string) => query(selector, [ animateChild() ]);
+export function withChildren(selector: string): AnimationMetadata {
+  return query(selector, [ animateChild() ]);
+}
