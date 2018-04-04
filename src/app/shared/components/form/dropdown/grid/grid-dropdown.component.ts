@@ -43,15 +43,21 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
     private cdRef: ChangeDetectorRef,
   ) {}
 
-  @Input() labelGetter: (row: T) => string = () => null;
-  @Input() valueGetter: (row: T) => string = () => null;
+  @Input() labelGetter: ((row: T) => string) | string = () => null;
+  @Input() valueGetter: ((row: T) => string) | string = () => null;
 
   get label(): string {
-    return this._selection ? this.labelGetter(this._selection) : null;
+    const { _selection, labelGetter } = this;
+    return _selection
+      ? typeof labelGetter === 'function' ? labelGetter(_selection) : _selection[labelGetter]
+      : null;
   }
 
   get value(): string {
-    return this._selection ? this.valueGetter(this._selection) : null;
+    const { _selection, valueGetter } = this;
+    return _selection
+      ? typeof valueGetter === 'function' ? valueGetter(_selection) : _selection[valueGetter]
+      : null;
   }
 
   get isDisabled(): boolean {
@@ -63,7 +69,11 @@ export class GridDropdownComponent<T> implements ControlValueAccessor {
   }
 
   writeValue(value: string): void {
-    this._selection = (this.rows || []).find(row => this.valueGetter(row) === value);
+    const { valueGetter } = this;
+    this._selection = (this.rows || []).find(row => {
+      const rowValue = typeof valueGetter === 'function' ? valueGetter(row) : row[valueGetter];
+      return rowValue === value;
+    });
     this.cdRef.markForCheck();
   }
 
