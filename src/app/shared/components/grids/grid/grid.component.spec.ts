@@ -22,7 +22,7 @@ import { SettingsService } from '@app/core/settings/settings.service';
 
 import { GridToolbarComponent } from '../toolbar/toolbar.component';
 import { SimpleGridComponent } from './grid.component';
-import { Router, ActivationEnd, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
+import { Router, ActivationEnd, ActivatedRouteSnapshot } from '@angular/router';
 
 class TranslateLoaderMock {
   getTranslation(language: string): Observable<any> {
