@@ -1,4 +1,4 @@
-<ng-container *ngFor="let item of items">
+<div class="group-item" [ngStyle]="getItemStyle(item.width)" *ngFor="let item of items">
 
   <!-- Form Controls -->
   <ng-container *ngIf="editable" [formGroup]="formGroup">
@@ -6,6 +6,7 @@
 
       <!-- Group -->
       <app-metadata-form-group
+        *ngSwitchCase="'group'"
         [editable]="editable"
         [formGroup]="formGroup"
         [items]="item.children"
@@ -18,13 +19,23 @@
         [label]="item.label"
       ></app-checkbox>
 
-      <!-- Text -->
-      <app-text
-        *ngSwitchCase="'text'"
+      <!-- Date -->
+      <app-datepicker
+        *ngSwitchCase="'date'"
         [formControlName]="item.name"
         [label]="item.label"
         [required]="false"
-      ></app-text>
+      ></app-datepicker>
+
+      <!-- Grid Select -->
+      <app-grid-select
+        *ngSwitchCase="'gridselect'"
+        [filterParams]="item.filterParams"
+        [filterType]="item.filterType"
+        [formControlName]="item.name"
+        [label]="item.label"
+        [required]="false"
+      ></app-grid-select>
 
       <!-- Password -->
       <app-password-input
@@ -33,6 +44,32 @@
         [label]="item.label"
         [required]="false"
       ></app-password-input>
+
+      <!-- Select -->
+      <app-select
+        *ngSwitchCase="'select'"
+        [dictCode]="item.dictCode"
+        [formControlName]="item.name"
+        [label]="item.label"
+        [lookupKey]="item.lookupKey"
+        [required]="false"
+      ></app-select>
+
+      <!-- Text -->
+      <app-text
+        *ngSwitchCase="'text'"
+        [formControlName]="item.name"
+        [label]="item.label"
+        [required]="false"
+      ></app-text>
+
+      <!-- Textarea -->
+      <app-textarea
+        *ngSwitchCase="'textarea'"
+        [formControlName]="item.name"
+        [label]="item.label"
+        [required]="false"
+      ></app-textarea>
 
       <!-- Errors -->
       <div class="errors">
@@ -54,4 +91,4 @@
       </div>
     </label>
   </ng-container>
-</ng-container>
+</div>

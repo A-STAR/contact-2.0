@@ -29,6 +29,12 @@ export class MetadataFormGroupComponent {
   @Input() formGroup: FormGroup;
   @Input() items: IMetadataFormItem[];
 
+  getItemStyle(width: number): Partial<CSSStyleDeclaration> {
+    return width
+      ? { flex: width.toString() }
+      : { flexBasis: '100%' };
+  }
+
   getErrorMessage(control: IMetadataFormControl): any {
     const c = this.formGroup.get(control.name);
     return c.errors && (c.touched || c.dirty)

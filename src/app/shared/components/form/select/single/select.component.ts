@@ -22,13 +22,17 @@ import {
 } from '@angular/forms';
 import * as R from 'ramda';
 import { Subscription } from 'rxjs/Subscription';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 import { ILabeledValue } from '../select.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
+import { IUserPermission } from '@app/core/user/permissions/user-permissions.interface';
 
 import { LookupService } from '@app/core/lookup/lookup.service';
 import { SortOptionsPipe } from '@app/shared/components/form/select/select.pipe';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+import { UserPermissionsService } from '@app/core/user/permissions/user-permissions.service';
+import { of } from 'rxjs/observable/of';
 
 @Component({
   selector: 'app-select',
@@ -53,6 +57,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
 
   @Input() dictCode: number;
   @Input() errors: ValidationErrors;
+  @Input() filterByPermission: string;
   @Input() label: string;
   @Input() lookupKey: ILookupKey;
   @Input() placeholder = '';
@@ -131,8 +136,8 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     private renderer2: Renderer2,
     private sortOptionsPipe: SortOptionsPipe,
     private userDictionariesService: UserDictionariesService,
+    private userPermissionsService: UserPermissionsService,
   ) {
-    this.hideOptions = this.hideOptions.bind(this);
     this.renderer = (option: ILabeledValue) => option.label;
   }
 
@@ -141,12 +146,22 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
       throw new Error('SelectComponent must have either dictCode or lookupKey but not both.');
     }
     if (this.dictCode) {
-      this.optionsSubscription = this.userDictionariesService.getDictionaryAsOptions(this.dictCode)
-        .subscribe(this.onOptionsFetch);
+      this.optionsSubscription = combineLatest(
+        this.userDictionariesService.getDictionaryAsOptions(this.dictCode),
+        this.filterByPermission
+          ? this.userPermissionsService.get([ this.filterByPermission ])
+          : of(null),
+      )
+      .subscribe(([ options, permissions ]) => this.onOptionsFetch(options, permissions));
     }
     if (this.lookupKey) {
-      this.optionsSubscription = this.lookupService.lookupAsOptions(this.lookupKey)
-        .subscribe(this.onOptionsFetch);
+      this.optionsSubscription = combineLatest(
+        this.lookupService.lookupAsOptions(this.lookupKey),
+        this.filterByPermission
+          ? this.userPermissionsService.get([ this.filterByPermission ])
+          : of(null),
+      )
+      .subscribe(([ options, permissions ]) => this.onOptionsFetch(options, permissions));
     }
     this.setDisabledState(this.disabled);
   }
@@ -274,9 +289,20 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     return R.defaultTo(defaultValue)(value);
   }
 
-  private onOptionsFetch = (options: ILabeledValue[]) => {
-    this.options = options;
+  private onOptionsFetch = (options: ILabeledValue[], permissions: IUserPermission[]) => {
+    this.options = this.filterOptions(options, permissions ? permissions[0] : null);
     this.active = this.selectedOption;
     this.cdRef.markForCheck();
+  }
+
+  private filterOptions(options: ILabeledValue[], permission: IUserPermission): ILabeledValue[] {
+    if (!permission || permission.valueS === 'ALL') {
+      return options;
+    }
+    if (!permission.valueS) {
+      return [];
+    }
+    const values = permission.valueS.split(',');
+    return options.filter(option => values.includes(String(option.value)));
   }
 }
