@@ -1,11 +1,11 @@
 import { IConfig } from '@app/core/config/config.interface';
 
-export const load = (configUrl: string) => new Promise(resolve => {
+export const load = (configUrl: string) => new Promise((resolve, reject) => {
   const request = new XMLHttpRequest();
 
   request.onload = () => {
     if (request.status !== 200) {
-      throw new Error(`Could not load config at ${configUrl}`);
+      return reject(`Configuration error. Could not load config at ${configUrl}.`);
     }
 
     try {
@@ -13,7 +13,7 @@ export const load = (configUrl: string) => new Promise(resolve => {
 
       const domain = response.url.match(/:\/\/([^\/]+)/)[1];
       if (!domain) {
-        throw new Error(`Could not extract whitelisted domains from config at ${configUrl}`);
+        return reject(`Configuration error. Could not extract whitelisted domains from config at ${configUrl}.`);
       }
 
       const assets = response.assets || '/assets';
@@ -30,7 +30,7 @@ export const load = (configUrl: string) => new Promise(resolve => {
 
       resolve(config);
     } catch (error) {
-      throw new Error(`Could not parse config at ${configUrl}`);
+      return reject(`Configuration error. Could not parse config at ${configUrl}.`);
     }
   };
 
