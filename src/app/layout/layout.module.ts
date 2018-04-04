@@ -4,6 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { InfoDialogModule } from '../shared/components/dialog/info/info-dialog.module';
 import { SharedModule } from '../shared/shared.module';
 
+import { IDynamicModule } from '@app/core/dynamic-loader/dynamic-loader.interface';
+
 import { AuthService } from '@app/core/auth/auth.service';
 import { LayoutService } from './layout.service';
 
@@ -16,6 +18,15 @@ import { NotificationsComponent } from './header/icon-menu/notifications/notific
 import { IconMenuComponent } from './header/icon-menu/icon-menu.component';
 import { PbxControlsComponent } from './header/icon-menu/pbx-controls/pbx-controls.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { DynamicComponentLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
+
+const modules: IDynamicModule[] = [
+  {
+    componentId: 'licence',
+    path: 'licence',
+    loadChildren: './licence/licence.module#LicenceModule',
+  },
+];
 
 const routes: Routes = [
   {
@@ -36,6 +47,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    DynamicComponentLoaderModule.withModules(modules),
     InfoDialogModule,
     RouterModule.forChild(routes),
     SharedModule,
