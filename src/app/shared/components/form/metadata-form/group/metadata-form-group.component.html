@@ -1,4 +1,4 @@
-<ng-container *ngFor="let item of items">
+<div class="group-item" [ngStyle]="{ flex: item.width }" *ngFor="let item of items">
 
   <!-- Form Controls -->
   <ng-container *ngIf="editable" [formGroup]="formGroup">
@@ -6,6 +6,7 @@
 
       <!-- Group -->
       <app-metadata-form-group
+        *ngSwitchCase="'group'"
         [editable]="editable"
         [formGroup]="formGroup"
         [items]="item.children"
@@ -54,4 +55,4 @@
       </div>
     </label>
   </ng-container>
-</ng-container>
+</div>

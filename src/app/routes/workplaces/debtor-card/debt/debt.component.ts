@@ -9,6 +9,7 @@ import { IDebt } from '@app/core/app-modules/app-modules.interface';
 import { IDynamicFormItem } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { ILookupPortfolio } from '@app/core/lookup/lookup.interface';
+import { IMetadataFormConfig, IMetadataFormControlType } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 import { IOption, IOptionSet } from '@app/core/converter/value-converter.interface';
 import { IUserPermission, IUserPermissions } from '@app/core/user/permissions/user-permissions.interface';
 
@@ -34,6 +35,39 @@ const label = makeKey('widgets.debt');
 })
 export class DebtComponent implements OnInit {
   @ViewChild('form') form: DynamicFormComponent;
+
+  readonly config: IMetadataFormConfig = {
+    editable: true,
+    items: [
+      {
+        disabled: true,
+        display: true,
+        label: 'widgets.debt.grid.id',
+        name: 'id',
+        type: IMetadataFormControlType.TEXT,
+        validators: {},
+        width: 1,
+      },
+      {
+        disabled: false,
+        display: true,
+        label: 'widgets.debt.grid.contract',
+        name: 'contract',
+        type: IMetadataFormControlType.TEXT,
+        validators: {},
+        width: 1,
+      },
+      {
+        disabled: false,
+        display: true,
+        label: 'widgets.debt.grid.creditName',
+        name: 'creditName',
+        type: IMetadataFormControlType.TEXT,
+        validators: {},
+        width: 1,
+      },
+    ],
+  };
 
   controls: Array<IDynamicFormItem> = null;
   debt: IDebt;

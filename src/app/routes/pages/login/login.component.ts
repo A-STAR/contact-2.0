@@ -28,6 +28,7 @@ export class LoginComponent {
         name: 'login',
         type: IMetadataFormControlType.TEXT,
         validators: { required: true, minLength: 2 },
+        width: 100,
       },
       {
         disabled: false,
@@ -36,6 +37,7 @@ export class LoginComponent {
         name: 'password',
         type: IMetadataFormControlType.PASSWORD,
         validators: { required: true },
+        width: 100,
       },
       {
         disabled: false,
@@ -44,6 +46,7 @@ export class LoginComponent {
         name: 'remember_login',
         type: IMetadataFormControlType.CHECKBOX,
         validators: {},
+        width: 100,
       },
     ],
   };

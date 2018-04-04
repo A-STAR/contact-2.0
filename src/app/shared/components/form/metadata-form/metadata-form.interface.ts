@@ -15,6 +15,7 @@ export interface IMetadataFormGenericControl {
   label: string;
   name: string;
   type: IMetadataFormControlType;
+  width: number;
 }
 
 export interface IMetadataFormCheckboxControl extends IMetadataFormGenericControl {
@@ -44,6 +45,7 @@ export interface IMetadataFormPasswordControl extends IMetadataFormGenericContro
 export interface IMetadataFormGroup {
   children: IMetadataFormItem[];
   type: IMetadataFormControlType.GROUP;
+  width: number;
 }
 
 export type IMetadataFormControl = IMetadataFormCheckboxControl | IMetadataFormTextControl | IMetadataFormPasswordControl;

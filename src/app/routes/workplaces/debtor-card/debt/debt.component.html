@@ -11,6 +11,9 @@
       </button>
     </div>
     <div class="pb-lg">
+      <app-metadata-form [config]="config" [data]="debt"></app-metadata-form>
+    </div>
+    <div class="pb-lg">
       <app-dynamic-form #form *ngIf="controls" [controls]="controls" [data]="debt"></app-dynamic-form>
     </div>
   </div>
