@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
 import { InfoDialogModule } from '../shared/components/dialog/info/info-dialog.module';
 import { SharedModule } from '../shared/shared.module';
 
@@ -36,6 +37,14 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    DynamicLoaderModule.withModules(
+      [
+        {
+          path: 'licence',
+          loadChildren: 'app/layout/dynamic-popups/licence/licence.module#LicenceModule',
+        },
+      ]
+    ),
     InfoDialogModule,
     RouterModule.forChild(routes),
     SharedModule,
