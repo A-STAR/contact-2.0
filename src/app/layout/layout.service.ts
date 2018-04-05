@@ -1,16 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { filter } from 'rxjs/operators';
 
 import { ILayoutDimension } from '@app/layout/layout.interface';
 
 @Injectable()
 export class LayoutService {
-
   private _contentDimension$ = new BehaviorSubject<ILayoutDimension>(null);
+  private _url = this.router.url;
 
-  get contentDimension$(): Observable<ILayoutDimension> {
-    return this._contentDimension$.asObservable();
+  readonly contentDimension$ = this._contentDimension$.asObservable();
+
+  constructor(
+    private router: Router,
+  ) {
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+      )
+      .subscribe((event: NavigationEnd) => {
+        this._url = event.urlAfterRedirects;
+      });
+  }
+
+  get url(): string {
+    return this._url;
   }
 
   triggerContentDimensionChange(): void {
