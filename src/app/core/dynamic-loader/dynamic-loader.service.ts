@@ -1,5 +1,7 @@
-import { ComponentFactory, Injectable, Injector } from '@angular/core';
+import { ComponentFactory, Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+
+import { IDynamicModule } from './dynamic-loader.interface';
 
 import { ComponentFactoryService, DYNAMIC_MODULES } from '@app/core/dynamic-loader/component-factory.service';
 
@@ -7,10 +9,10 @@ import { ComponentFactoryService, DYNAMIC_MODULES } from '@app/core/dynamic-load
 export class DynamicLoaderService {
   constructor(
     private componentFactoryService: ComponentFactoryService,
-    private injector: Injector,
+    @Inject(DYNAMIC_MODULES) private modules: IDynamicModule[][],
   ) {}
 
   getComponentFactory<T>(path: string): Observable<ComponentFactory<T>> {
-    return this.componentFactoryService.getComponentFactory(path, this.injector.get(DYNAMIC_MODULES));
+    return this.componentFactoryService.getComponentFactory(path, this.modules);
   }
 }
