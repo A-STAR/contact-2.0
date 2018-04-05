@@ -64,7 +64,8 @@
     "summernote": "^0.8.10",
     "text-mask-addons": "^3.6.0",
     "web-animations-js": "^2.3.1",
-    "zone.js": "^0.8.20"
+    "zone.js": "^0.8.20",
+    "faker": "^4.1.0"
   },
   "devDependencies": {
     "@types/chart.js": "^2.7.6",
@@ -76,7 +77,6 @@
     "@types/node": "^9.4.2",
     "@types/puppeteer": "^1.0.0",
     "@types/ramda": "^0.25.17",
-    "faker": "^4.1.0",
     "jasmine-core": "^2.8.0",
     "jasmine-spec-reporter": "^4.2.1",
     "jest": "^22.1.4",
