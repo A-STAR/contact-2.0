@@ -329,11 +329,8 @@
   ],
   "plugins": [
     {
-      "data": {
-        "gridKey": "contractorId"
-      },
-      "from": "portfolioId",
-      "to": "bankId",
+      "name": "portfolioId",
+      "link": "bankId",
       "type": "link"
     }
   ]

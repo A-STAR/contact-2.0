@@ -49,6 +49,7 @@ export class MetadataFormComponent<T> implements OnInit {
     private configService: ConfigService,
     private contextService: ContextService,
     private httpClient: HttpClient,
+    private metadataFormService: MetadataFormService,
   ) {}
 
   get formConfig(): IMetadataFormConfig {
@@ -146,6 +147,8 @@ export class MetadataFormComponent<T> implements OnInit {
     }, {});
 
     this.formGroup = new FormGroup(controls);
+
+    this.metadataFormService.setPlugins(this.formGroup, config.plugins);
 
     flatControls.forEach(item => {
       if (typeof item.disabled === 'object' && item.disabled !== null) {

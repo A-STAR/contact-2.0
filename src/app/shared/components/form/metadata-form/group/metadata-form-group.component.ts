@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
-import { IMetadataFormControl, IMetadataFormItem } from '../metadata-form.interface';
+import { IMetadataFormControl, IMetadataFormItem, IMetadataFormGridSelectControl } from '../metadata-form.interface';
 
 import { MetadataFormService } from '../metadata-form.service';
 
@@ -48,8 +48,8 @@ export class MetadataFormGroupComponent {
       : { message: null, data: null };
   }
 
-  onGridSelect(event: any): void {
-    this.metadataFormService.onGridSelect(event);
+  onGridSelect(control: IMetadataFormGridSelectControl, event: any): void {
+    this.metadataFormService.onGridSelect(control, event);
   }
 
   private getErrorMessageForControl(c: AbstractControl): any {

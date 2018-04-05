@@ -35,7 +35,7 @@
         [formControlName]="item.name"
         [label]="item.label"
         [required]="false"
-        (select)="onGridSelect($event)"
+        (select)="onGridSelect(item, $event)"
       ></app-grid-select>
 
       <!-- Password -->
