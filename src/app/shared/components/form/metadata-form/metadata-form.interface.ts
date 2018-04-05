@@ -101,7 +101,18 @@ export type IMetadataFormControl =
 
 export type IMetadataFormItem = IMetadataFormControl | IMetadataFormGroup;
 
+export enum IMetadataFormPluginType {
+  LINK = 'link',
+}
+
+export interface IMetadataFormLinkPlugin {
+  type: IMetadataFormPluginType.LINK;
+}
+
+export type IMetadataFormPlugin = IMetadataFormLinkPlugin;
+
 export interface IMetadataFormConfig {
   editable: boolean;
   items: IMetadataFormItem[];
+  plugins: IMetadataFormPlugin[];
 }

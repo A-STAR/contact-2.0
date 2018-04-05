@@ -3,6 +3,8 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 
 import { IMetadataFormControl, IMetadataFormItem } from '../metadata-form.interface';
 
+import { MetadataFormService } from '../metadata-form.service';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-metadata-form-group',
@@ -29,6 +31,10 @@ export class MetadataFormGroupComponent {
   @Input() formGroup: FormGroup;
   @Input() items: IMetadataFormItem[];
 
+  constructor(
+    private metadataFormService: MetadataFormService,
+  ) {}
+
   getItemStyle(width: number): Partial<CSSStyleDeclaration> {
     return width
       ? { flex: width.toString() }
@@ -40,6 +46,10 @@ export class MetadataFormGroupComponent {
     return c.errors && (c.touched || c.dirty)
       ? this.getErrorMessageForControl(c)
       : { message: null, data: null };
+  }
+
+  onGridSelect(event: any): void {
+    this.metadataFormService.onGridSelect(event);
   }
 
   private getErrorMessageForControl(c: AbstractControl): any {

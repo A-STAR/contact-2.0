@@ -13,11 +13,15 @@ import {
 
 import { ConfigService } from '@app/core/config/config.service';
 import { ContextService } from '@app/core/context/context.service';
+import { MetadataFormService } from './metadata-form.service';
 
 import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    MetadataFormService,
+  ],
   selector: 'app-metadata-form',
   templateUrl: 'metadata-form.component.html'
 })

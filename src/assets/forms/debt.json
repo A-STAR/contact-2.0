@@ -326,5 +326,15 @@
       "type": "group",
       "width": 0
     }
+  ],
+  "plugins": [
+    {
+      "data": {
+        "gridKey": "contractorId"
+      },
+      "from": "portfolioId",
+      "to": "bankId",
+      "type": "link"
+    }
   ]
 }
