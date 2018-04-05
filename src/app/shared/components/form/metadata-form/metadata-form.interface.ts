@@ -21,6 +21,7 @@ export enum IMetadataFormControlType {
 
 export interface IMetadataFormGroup {
   children: IMetadataFormItem[];
+  display: IMetadataFormValidator<boolean>;
   type: IMetadataFormControlType.GROUP;
   width: number;
 }
