@@ -10,7 +10,7 @@ import { ROUTES } from '@angular/router';
 
 import { IDynamicModule } from './dynamic-loader.interface';
 
-import { DYNAMIC_COMPONENT, DYNAMIC_MODULES, DynamicComponentLoader } from './dynamic-loader.service';
+import { DYNAMIC_COMPONENT, DYNAMIC_MODULES, DynamicComponentLoaderService } from './dynamic-loader.service';
 
 @NgModule()
 export class DynamicComponentLoaderModule {
@@ -20,7 +20,7 @@ export class DynamicComponentLoaderModule {
     return {
       ngModule: DynamicComponentLoaderModule,
       providers: [
-        DynamicComponentLoader,
+        DynamicComponentLoaderService,
         { provide: NgModuleFactoryLoader, useClass: SystemJsNgModuleLoader },
       ],
     };

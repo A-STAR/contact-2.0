@@ -77,7 +77,6 @@ export function jwtOptionsFactory(configService: ConfigService): any {
     DynamicComponentLoaderModule.withModules(
       [
         {
-          componentId: 'licence',
           path: 'licence',
           loadChildren: 'app/layout/dynamic-popups/licence/licence.module#LicenceModule',
         },

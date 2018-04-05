@@ -12,7 +12,7 @@ import {
 
 import { IPopup } from './popup-outlet.interface';
 
-import { DynamicComponentLoader } from '@app/core/dynamic-loader/dynamic-loader.service';
+import { DynamicComponentLoaderService } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { PopupOutletService } from './popup-outlet.service';
 
 import { fade, fly, withChildren } from '@app/shared/animations';
@@ -38,7 +38,7 @@ export class PopupOutletComponent implements AfterViewInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private dynamicComponentLoader: DynamicComponentLoader,
+    private dynamicComponentLoader: DynamicComponentLoaderService,
     private popupService: PopupOutletService,
   ) {}
 

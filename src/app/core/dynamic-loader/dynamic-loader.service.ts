@@ -12,7 +12,7 @@ export const DYNAMIC_COMPONENT = new InjectionToken<any>('DYNAMIC_COMPONENT');
 export const DYNAMIC_MODULES = new InjectionToken<any>('DYNAMIC_MODULES');
 
 @Injectable()
-export class DynamicComponentLoader {
+export class DynamicComponentLoaderService {
   static manifests: IDynamicModule[] = [];
 
   constructor(
