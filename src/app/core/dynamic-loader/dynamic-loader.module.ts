@@ -10,7 +10,8 @@ import { ROUTES } from '@angular/router';
 
 import { IDynamicModule } from './dynamic-loader.interface';
 
-import { DYNAMIC_COMPONENT, DYNAMIC_MODULES, DynamicLoaderService } from './dynamic-loader.service';
+import { ComponentFactoryService, DYNAMIC_MODULES, DYNAMIC_COMPONENT } from './component-factory.service';
+import { DynamicLoaderService } from './dynamic-loader.service';
 
 @NgModule()
 export class DynamicLoaderModule {
@@ -20,6 +21,7 @@ export class DynamicLoaderModule {
     return {
       ngModule: DynamicLoaderModule,
       providers: [
+        ComponentFactoryService,
         { provide: NgModuleFactoryLoader, useClass: SystemJsNgModuleLoader },
       ],
     };
@@ -39,7 +41,7 @@ export class DynamicLoaderModule {
       providers: [
         DynamicLoaderService,
         { provide: ROUTES, useValue: modules, multi: true },
-        { provide: DYNAMIC_MODULES, useValue: modules, multi: true},
+        { provide: DYNAMIC_MODULES, useValue: modules, multi: true },
       ],
     };
   }
