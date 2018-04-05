@@ -10,7 +10,7 @@ import {
 } from './metadata-form.interface';
 
 import { AbstractPlugin } from './plugins/abstract';
-import { LinkPlugin } from './plugins/link';
+import { LinkGridSelectPlugin } from './plugins/link-gridselect';
 
 @Injectable()
 export class MetadataFormService {
@@ -19,8 +19,8 @@ export class MetadataFormService {
   setPlugins(formGroup: FormGroup, plugins: IMetadataFormPlugin[]): void {
     this.plugins = plugins.map(p => {
       switch (p.type) {
-        case IMetadataFormPluginType.LINK:
-          return new LinkPlugin(formGroup, p);
+        case IMetadataFormPluginType.LINK_GRIDSELECT:
+          return new LinkGridSelectPlugin(formGroup, p);
         default:
           throw new Error('Incorrect plugin name');
       }

@@ -329,9 +329,10 @@
   ],
   "plugins": [
     {
-      "name": "portfolioId",
-      "link": "bankId",
-      "type": "link"
+      "type": "link-gridselect",
+      "from": "portfolioId",
+      "to": "bankId",
+      "key": "contractorId"
     }
   ]
 }
