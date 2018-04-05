@@ -3,7 +3,7 @@
   "ws": "ws://localhost:8080",
   "assets": "/assets",
   "i18n": [
-    "/assets/i18n/{lang}.json"
+    "i18n/{lang}.json"
   ],
   "maps": {
     "useProvider": "yandex",
