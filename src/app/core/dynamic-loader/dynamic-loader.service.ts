@@ -10,7 +10,7 @@ export const DYNAMIC_COMPONENT = new InjectionToken<any>('DYNAMIC_COMPONENT');
 export const DYNAMIC_MODULES = new InjectionToken<any>('DYNAMIC_MODULES');
 
 @Injectable()
-export class DynamicComponentLoaderService {
+export class DynamicLoaderService {
   constructor(
     private loader: NgModuleFactoryLoader,
     private injector: Injector,

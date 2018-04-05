@@ -12,7 +12,7 @@ import {
 
 import { IPopup } from './popup-outlet.interface';
 
-import { DynamicComponentLoaderService } from '@app/core/dynamic-loader/dynamic-loader.service';
+import { DynamicLoaderService } from '@app/core/dynamic-loader/dynamic-loader.service';
 import { PopupOutletService } from './popup-outlet.service';
 
 import { fade, fly, withChildren } from '@app/shared/animations';
@@ -38,7 +38,7 @@ export class PopupOutletComponent implements AfterViewInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private dynamicComponentLoader: DynamicComponentLoaderService,
+    private dynamicLoaderService: DynamicLoaderService,
     private popupService: PopupOutletService,
   ) {}
 
@@ -51,7 +51,7 @@ export class PopupOutletComponent implements AfterViewInit {
       if (popup && popup.outlet === this.name) {
         this.isOpen = true;
         this.cdRef.detectChanges();
-        this.dynamicComponentLoader
+        this.dynamicLoaderService
           .getComponentFactory(popup.id)
           .subscribe(componentFactory => {
             this.current = this.outlet.createComponent(componentFactory, 0);
