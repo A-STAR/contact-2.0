@@ -7,6 +7,6 @@
   [required]="required"
   [rows]="rows"
   [valueGetter]="valueGetter"
-  (ngModelChange)="onSelect($event)"
->
-</app-grid-dropdown>
+  (ngModelChange)="onChange($event)"
+  (select)="onSelect($event)"
+></app-grid-dropdown>

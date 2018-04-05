@@ -1,4 +1,13 @@
-import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, forwardRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
@@ -25,6 +34,8 @@ export class GridSelectComponent<T> implements OnInit, ControlValueAccessor {
   @Input() filterType: IGridSelectFilterType;
   @Input() label: string;
   @Input() required: boolean;
+
+  @Output() select = new EventEmitter<T>();
 
   rows: T[];
   selection: number;
@@ -63,8 +74,12 @@ export class GridSelectComponent<T> implements OnInit, ControlValueAccessor {
     this.propagateChange = fn;
   }
 
-  onSelect(value: number): void {
+  onChange(value: number): void {
     this.propagateChange(value);
+  }
+
+  onSelect(row: T): void {
+    this.select.emit(row);
   }
 
   registerOnTouched(): void {

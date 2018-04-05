@@ -5,6 +5,9 @@ import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
 export type IMetadataFormValidator<T> = T | IContextConfig;
 
+
+// Items:
+
 export enum IMetadataFormControlType {
   CHECKBOX   = 'checkbox',
   DATE       = 'date',
@@ -101,7 +104,47 @@ export type IMetadataFormControl =
 
 export type IMetadataFormItem = IMetadataFormControl | IMetadataFormGroup;
 
+
+// Events:
+
+export enum IMetadataFormEventType {
+  GRIDSELECT,
+}
+
+export interface IMetadataFormGenericEvent {
+  type: IMetadataFormEventType;
+  control: IMetadataFormControl;
+}
+
+export interface IMetadataFormGridSelectEvent extends IMetadataFormGenericEvent {
+  type: IMetadataFormEventType.GRIDSELECT;
+  control: IMetadataFormGridSelectControl;
+  row: { [key: string]: any; };
+}
+
+export type IMetadataFormEvent = IMetadataFormGridSelectEvent;
+
+
+// Plugins:
+
+export enum IMetadataFormPluginType {
+  LINK = 'link',
+}
+
+export interface IMetadataFormGenericPlugin {
+  type: IMetadataFormPluginType;
+  name: string;
+}
+
+export interface IMetadataFormLinkPlugin extends IMetadataFormGenericPlugin {
+  type: IMetadataFormPluginType.LINK;
+  link: string;
+}
+
+export type IMetadataFormPlugin = IMetadataFormLinkPlugin;
+
 export interface IMetadataFormConfig {
   editable: boolean;
   items: IMetadataFormItem[];
+  plugins: IMetadataFormPlugin[];
 }
