@@ -3,6 +3,8 @@ import { Component, HostListener } from '@angular/core';
 import { HelpService } from '@app/core/help/help.service';
 import { LayoutService } from './layout.service';
 
+import { menuConfig } from '@app/routes/menu-config';
+
 @Component({
   host: { class: 'full-size' },
   selector: 'app-layout',
@@ -24,7 +26,15 @@ export class LayoutComponent {
   onKeyPress(event: KeyboardEvent): void {
     const { key } = event;
     if (key === 'F1') {
-      this.helpService.open(0);
+      const menuLinkUrl = this.layoutService.url
+        .split('/')
+        .slice(0, 4)
+        .join('/');
+
+      const itemKey = Object.keys(menuConfig).find(k => menuConfig[k].link === menuLinkUrl);
+      if (itemKey) {
+        this.helpService.open(menuConfig[itemKey].docs);
+      }
       event.preventDefault();
     }
   }

@@ -2,8 +2,13 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class HelpService {
-  open(guiObjectId: number): void {
-    // tslint:disable-next-line:no-console
-    console.log(`STUB: opening help for guiObjectId = ${guiObjectId}`);
+  // TODO(d.maltsev): should be configurable
+  private url = 'https://appserver.luxbase.int/WebContactDoc/ru/index.html';
+
+  open(key: string): void {
+    if (key !== null) {
+      const suffix = key ? `?${key}.htm` : key;
+      window.open(`${this.url}${suffix}`);
+    }
   }
 }
