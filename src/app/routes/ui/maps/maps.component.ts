@@ -26,10 +26,18 @@ export class MapsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  private generateMarkers(count: number = 10): IMarker<IDebtorAddress>[] {
+  onNameChange(value: any, index: number): void {
+    this.markers[index].data.name = value;
+  }
+
+  onAddressChange(value: any, index: number): void {
+    this.markers[index].data.address = value;
+  }
+
+  private generateMarkers(count: number = 5): IMarker<IDebtorAddress>[] {
     return range(1, count).map(_ => ({
-      lat: 54 + random.number({ min: 0, max: 1, precision: 4 }),
-      lng: 37 + random.number({ min: 0, max: 1, precision: 4 }),
+      lat: 55 + random.number({ min: 0, max: 1, precision: 0.0001 }),
+      lng: 37 + random.number({ min: 0, max: 1, precision: 0.0001 }),
       popup: PopupComponent as Type< { data: IDebtorAddress } >,
       data: {
         name: name.findName(),

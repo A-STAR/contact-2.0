@@ -18,8 +18,10 @@ export interface IMapService {
 
 export interface ICreateMarkerResult<T> {
   marker: any;
-  popupRef?: ComponentRef<T>;
+  popupRef?: PopupComponentRefGetter<T>;
 }
+
+export type PopupComponentRefGetter<T> = () => ComponentRef<IMarker<T>>;
 
 export interface IMapOptions {
   el: Element;

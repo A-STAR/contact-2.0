@@ -1,9 +1,9 @@
 import { Injectable, ComponentRef, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { Map, TileLayer, Marker, Icon, Popup } from 'leaflet';
+import { Map, TileLayer, Marker, Icon, Popup, LeafletEvent } from 'leaflet';
 
-import { IMapOptions, ICreateMarkerResult, IMarker } from '@app/shared/components/map/map.interface';
+import { IMapOptions, ICreateMarkerResult, IMarker, PopupComponentRefGetter } from '@app/shared/components/map/map.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { PopupService } from '../../popups/popup.service';
@@ -41,18 +41,36 @@ export class MapYandexService {
     let popupRef;
     const marker = new Marker({ lat: markerDef.lat, lng: markerDef.lng });
     if (markerDef.popup) {
-      popupRef = this.createPopup<T>(marker, markerDef);
+      popupRef = this.createPopup<T>(map, marker, markerDef);
     }
     map.addLayer(marker);
     return { marker, popupRef };
   }
 
-  private createPopup<T>(marker: Marker, markerDef: IMarker<T>): ComponentRef<IMarker<T>> {
+  private createPopup<T>(map: Map, marker: Marker, markerDef: IMarker<T>): PopupComponentRefGetter<T> {
+    let el: HTMLElement, compRef: ComponentRef<IMarker<T>>;
     const popup = new Popup({ closeButton: false }, marker);
-    const {el, compRef } = this.popupService.render<IMarker<T>>(markerDef.popup, markerDef.data);
-    popup.setContent(el);
-    marker.bindPopup(el);
-    return compRef;
+    marker.on('click', (e: LeafletEvent) => {
+      this.zone.run(() => {
+        if (compRef) {
+          compRef.destroy();
+        }
+        const result = this.popupService.render<IMarker<T>>(markerDef.popup, markerDef.data);
+        el = result.el;
+        compRef = result.compRef;
+        popup.setContent(el);
+        popup.setLatLng((e.target as Marker).getLatLng());
+        map.openPopup(popup);
+        compRef.changeDetectorRef.detectChanges();
+      });
+    });
+
+    marker.on('popupclose', _ => {
+      if (compRef) {
+        compRef.destroy();
+      }
+    });
+    return () => compRef;
   }
 
 }

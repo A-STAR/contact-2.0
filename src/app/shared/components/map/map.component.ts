@@ -6,11 +6,11 @@ import {
   ElementRef,
   AfterViewInit,
   Input,
-  ComponentRef,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  DoCheck
 } from '@angular/core';
-import { IMapService, IMarker } from './map.interface';
+import { IMapService, IMarker, PopupComponentRefGetter } from './map.interface';
 
 export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
 
@@ -21,7 +21,7 @@ export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
   styleUrls: ['./map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent<T> implements AfterViewInit {
+export class MapComponent<T> implements AfterViewInit, DoCheck {
   @ViewChild('container') private mapEl: ElementRef;
 
   @Input() markers: IMarker<T>[];
@@ -29,7 +29,7 @@ export class MapComponent<T> implements AfterViewInit {
   @Input() styles: CSSStyleDeclaration;
 
   map: any;
-  private popups: ComponentRef<T>[];
+  private popups: PopupComponentRefGetter<T>[];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService,
@@ -41,7 +41,7 @@ export class MapComponent<T> implements AfterViewInit {
       .init(
         {
           el: this.mapEl.nativeElement,
-          zoom: 18,
+          zoom: 6,
           center: {
             lat: 55.724303,
             lng: 37.609522
@@ -56,11 +56,16 @@ export class MapComponent<T> implements AfterViewInit {
       });
   }
 
+  ngDoCheck(): void {
+    this.detectPopupsChanges();
+  }
+
   detectPopupsChanges(): void {
     if (this.popups && this.popups.length) {
       this.popups
-        .filter(Boolean)
-        .forEach(cmpRef => cmpRef.changeDetectorRef.detectChanges());
+        .map(cmpRef => cmpRef())
+        .filter(cmp => cmp && !cmp.changeDetectorRef['destroyed'])
+        .forEach(cmp => cmp.changeDetectorRef.detectChanges());
     }
   }
 

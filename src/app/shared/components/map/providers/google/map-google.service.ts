@@ -2,7 +2,7 @@ import { Injectable, ComponentRef, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { } from '@types/googlemaps';
 
-import { IMapOptions, IMarker, ICreateMarkerResult } from '../../map.interface';
+import { IMapOptions, IMarker, ICreateMarkerResult, PopupComponentRefGetter } from '../../map.interface';
 import { Libraries } from './maps-google.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
@@ -45,7 +45,8 @@ export class MapGoogleService {
     return { marker, popupRef };
   }
 
-  private createPopup<T>(map: google.maps.Map, marker: google.maps.Marker, markerDef: IMarker<T>): void {
+  private createPopup<T>(map: google.maps.Map, marker: google.maps.Marker,
+      markerDef: IMarker<T>): PopupComponentRefGetter<T> {
     let el: HTMLElement, compRef: ComponentRef<IMarker<T>>;
     const popup = new google.maps.InfoWindow();
     marker.addListener('click', () => {
@@ -58,8 +59,15 @@ export class MapGoogleService {
         compRef = result.compRef;
         popup.setContent(el);
         popup.open(map, marker);
+        compRef.changeDetectorRef.detectChanges();
       });
     });
+    popup.addListener('closeclick', _ => {
+      if (compRef) {
+        compRef.destroy();
+      }
+    });
+    return () => compRef;
   }
 
   private load(onLoad: EventListener, onError: EventListener, libraries: Libraries[] = [ 'drawing' ], ): void {

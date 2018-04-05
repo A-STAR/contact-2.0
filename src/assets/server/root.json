@@ -6,7 +6,7 @@
     "i18n/{lang}.json"
   ],
   "maps": {
-    "useProvider": "yandex",
+    "useProvider": "google",
     "providers": {
       "google": {
         "apiKey": "AIzaSyByUIeIkANdXYNGK58qoItJUtLBjPp65P8"
