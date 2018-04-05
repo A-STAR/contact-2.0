@@ -128,20 +128,21 @@ export type IMetadataFormEvent = IMetadataFormGridSelectEvent;
 // Plugins:
 
 export enum IMetadataFormPluginType {
-  LINK = 'link',
+  LINK_GRIDSELECT = 'link-gridselect',
 }
 
 export interface IMetadataFormGenericPlugin {
   type: IMetadataFormPluginType;
-  name: string;
 }
 
-export interface IMetadataFormLinkPlugin extends IMetadataFormGenericPlugin {
-  type: IMetadataFormPluginType.LINK;
-  link: string;
+export interface IMetadataFormGridSelectLinkPlugin extends IMetadataFormGenericPlugin {
+  type: IMetadataFormPluginType.LINK_GRIDSELECT;
+  from: string;
+  to: string;
+  key: string;
 }
 
-export type IMetadataFormPlugin = IMetadataFormLinkPlugin;
+export type IMetadataFormPlugin = IMetadataFormGridSelectLinkPlugin;
 
 export interface IMetadataFormConfig {
   editable: boolean;
