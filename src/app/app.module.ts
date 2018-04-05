@@ -12,7 +12,6 @@ import { ToasterModule } from 'angular2-toaster';
 import * as R from 'ramda';
 
 import { CoreModule } from './core/core.module';
-import { DynamicComponentLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
 import { RoutesModule } from './routes/routes.module';
 import { SharedModule } from './shared/shared.module';
 
@@ -74,14 +73,6 @@ export function jwtOptionsFactory(configService: ConfigService): any {
     BrowserModule,
     BrowserAnimationsModule,
     CoreModule,
-    DynamicComponentLoaderModule.withModules(
-      [
-        {
-          path: 'licence',
-          loadChildren: 'app/layout/dynamic-popups/licence/licence.module#LicenceModule',
-        },
-      ]
-    ),
     EffectsModule.forRoot([
       AuthEffects,
       CallEffects,

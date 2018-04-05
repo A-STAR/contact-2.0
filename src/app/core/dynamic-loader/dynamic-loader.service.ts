@@ -3,8 +3,6 @@ import { Observable } from 'rxjs/Observable';
 import { fromPromise as ObservableFromPromise } from 'rxjs/observable/fromPromise';
 import { _throw as ObservableThrow } from 'rxjs/observable/throw';
 
-import { IDynamicModule } from './dynamic-loader.interface';
-
 import { flattenArray } from '@app/core/utils';
 
 export const DYNAMIC_COMPONENT = new InjectionToken<any>('DYNAMIC_COMPONENT');
@@ -13,8 +11,6 @@ export const DYNAMIC_MODULES = new InjectionToken<any>('DYNAMIC_MODULES');
 
 @Injectable()
 export class DynamicComponentLoaderService {
-  static manifests: IDynamicModule[] = [];
-
   constructor(
     private loader: NgModuleFactoryLoader,
     private injector: Injector,
