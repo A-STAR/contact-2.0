@@ -1,5 +1,15 @@
-import { Component, Inject, InjectionToken, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
-import { IMapService } from './map.interface';
+import {
+  Component,
+  Inject,
+  InjectionToken,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  Input,
+  ComponentRef,
+  DoCheck
+} from '@angular/core';
+import { IMapService, IMarker } from './map.interface';
 
 export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
 
@@ -9,12 +19,14 @@ export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
   host: { class: 'full-size' },
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterViewInit, DoCheck {
   @ViewChild('container') private mapEl: ElementRef;
 
+  @Input() markers: IMarker[];
   @Input() styles: CSSStyleDeclaration;
 
   map: any;
+  private popups: ComponentRef<IMarker>[];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService,
@@ -34,11 +46,24 @@ export class MapComponent implements AfterViewInit {
       )
       .subscribe((map: any) => {
         this.map = map;
-        this.mapService.createMarker(this.map, {
-          lat: 55.724303,
-          lng: 37.609522
-        });
+        this.addMarkers();
       });
+  }
+
+  ngDoCheck(): void {
+    if (this.popups && this.popups.length) {
+      this.popups
+        .filter(Boolean)
+        .forEach(cmpRef => cmpRef.changeDetectorRef.detectChanges());
+    }
+  }
+
+  addMarkers(): void {
+    if (this.markers && this.markers.length) {
+      this.popups = this.markers
+        .map(marker => this.mapService.createMarker(this.map, marker).popupRef)
+        .filter(Boolean);
+    }
   }
 
 }

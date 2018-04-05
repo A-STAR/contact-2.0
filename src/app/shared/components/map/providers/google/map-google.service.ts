@@ -1,17 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ComponentRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { } from '@types/googlemaps';
 
-import { IMapOptions } from '../../map.interface';
+import { IMapOptions, IMarker, ICreateMarkerResult } from '../../map.interface';
 import { Libraries } from './maps-google.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
+import { PopupService } from '../../popup.service';
+
 
 @Injectable()
 export class MapGoogleService {
   readonly apiKey = this.configService.config.maps.providers.google.apiKey;
   constructor(
     private configService: ConfigService,
+    private popupService: PopupService
   ) {}
 
   init(mapConfig: IMapOptions): Observable<any> {
@@ -29,10 +32,30 @@ export class MapGoogleService {
     );
   }
 
-  createMarker(map: google.maps.Map, latlng: google.maps.LatLng): google.maps.Marker {
-    return  new google.maps.Marker({
-      position: latlng,
+  createMarker(map: google.maps.Map, markerDef: IMarker): ICreateMarkerResult {
+    let popupRef;
+    const marker = new google.maps.Marker({
+      position: { lat: markerDef.lat, lng: markerDef.lng },
       map
+    });
+    if (markerDef.popup) {
+      popupRef = this.createPopup(map, marker, markerDef);
+    }
+    return { marker, popupRef };
+  }
+
+  private createPopup(map: google.maps.Map, marker: google.maps.Marker, markerDef: IMarker): void {
+    let el: HTMLElement, compRef: ComponentRef<IMarker>;
+    const popup = new google.maps.InfoWindow();
+    marker.addListener('click', () => {
+      if (compRef) {
+        compRef.destroy();
+      }
+      const result = this.popupService.render<IMarker>(markerDef.popup, markerDef.data);
+      el = result.el;
+      compRef = result.compRef;
+      popup.setContent(el);
+      popup.open(map, marker);
     });
   }
 
