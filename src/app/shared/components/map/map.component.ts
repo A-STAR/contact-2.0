@@ -7,7 +7,8 @@ import {
   AfterViewInit,
   Input,
   ComponentRef,
-  DoCheck
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import { IMapService, IMarker } from './map.interface';
 
@@ -17,19 +18,22 @@ export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
   selector: 'app-map',
   templateUrl: './map.component.html',
   host: { class: 'full-size' },
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent implements AfterViewInit, DoCheck {
+export class MapComponent<T> implements AfterViewInit {
   @ViewChild('container') private mapEl: ElementRef;
 
-  @Input() markers: IMarker[];
+  @Input() markers: IMarker<T>[];
+
   @Input() styles: CSSStyleDeclaration;
 
   map: any;
-  private popups: ComponentRef<IMarker>[];
+  private popups: ComponentRef<T>[];
 
   constructor(
     @Inject(MAP_SERVICE) private mapService: IMapService,
+    private cdRef: ChangeDetectorRef,
   ) { }
 
   ngAfterViewInit(): void {
@@ -46,11 +50,13 @@ export class MapComponent implements AfterViewInit, DoCheck {
       )
       .subscribe((map: any) => {
         this.map = map;
-        this.addMarkers();
+        this.addMarkers(this.markers);
+        this.detectPopupsChanges();
+        this.cdRef.markForCheck();
       });
   }
 
-  ngDoCheck(): void {
+  detectPopupsChanges(): void {
     if (this.popups && this.popups.length) {
       this.popups
         .filter(Boolean)
@@ -58,10 +64,10 @@ export class MapComponent implements AfterViewInit, DoCheck {
     }
   }
 
-  addMarkers(): void {
-    if (this.markers && this.markers.length) {
-      this.popups = this.markers
-        .map(marker => this.mapService.createMarker(this.map, marker).popupRef)
+  addMarkers(markers: IMarker<T>[]): void {
+    if (markers && markers.length) {
+      this.popups = markers
+        .map(marker => this.mapService.createMarker<T>(this.map, marker).popupRef)
         .filter(Boolean);
     }
   }
