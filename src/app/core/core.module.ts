@@ -37,9 +37,9 @@ import { environment } from '../../environments/environment';
   imports: [
     AppModulesModule,
     DebtModule,
+    DynamicComponentLoaderModule.forRoot(),
     RoutingModule,
     UserModule,
-    DynamicComponentLoaderModule.forRoot(),
   ],
   providers: [
     ActionsLogService,

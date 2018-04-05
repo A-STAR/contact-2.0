@@ -5,7 +5,11 @@ import { _throw as ObservableThrow } from 'rxjs/observable/throw';
 
 import { IDynamicModule } from './dynamic-loader.interface';
 
+import { flattenArray } from '@app/core/utils';
+
 export const DYNAMIC_COMPONENT = new InjectionToken<any>('DYNAMIC_COMPONENT');
+
+export const DYNAMIC_MODULES = new InjectionToken<any>('DYNAMIC_MODULES');
 
 @Injectable()
 export class DynamicComponentLoader {
@@ -16,19 +20,21 @@ export class DynamicComponentLoader {
     private injector: Injector,
   ) { }
 
-  getComponentFactory<T>(componentId: string, injector?: Injector): Observable<ComponentFactory<T>> {
-    const manifest = DynamicComponentLoader.manifests.find(m => m.componentId === componentId);
-    if (!manifest) {
-      return ObservableThrow(`DynamicComponentLoader: Unknown componentId "${componentId}"`);
+  getComponentFactory<T>(path: string, injector?: Injector): Observable<ComponentFactory<T>> {
+    const dynamicModules = this.injector.get(DYNAMIC_MODULES);
+
+    const dynamicModule = flattenArray(dynamicModules).find(m => m.path === path);
+    if (!dynamicModule) {
+      return ObservableThrow(`DynamicComponentLoader: Unknown component "${path}"`);
     }
 
     const p = this.loader
-      .load(manifest.loadChildren)
+      .load(dynamicModule.loadChildren)
       .then(ngModuleFactory => {
         const moduleRef = ngModuleFactory.create(injector || this.injector);
         const dynamicComponentType = moduleRef.injector.get(DYNAMIC_COMPONENT);
         if (!dynamicComponentType) {
-          throw new Error(`DynamicComponentLoader: No provider for component "${componentId}".`);
+          throw new Error(`DynamicComponentLoader: No provider for component "${path}".`);
         }
         return moduleRef.componentFactoryResolver.resolveComponentFactory<T>(dynamicComponentType);
       });

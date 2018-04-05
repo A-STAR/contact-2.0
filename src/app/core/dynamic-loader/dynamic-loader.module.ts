@@ -10,7 +10,7 @@ import { ROUTES } from '@angular/router';
 
 import { IDynamicModule } from './dynamic-loader.interface';
 
-import { DYNAMIC_COMPONENT, DynamicComponentLoader } from './dynamic-loader.service';
+import { DYNAMIC_COMPONENT, DYNAMIC_MODULES, DynamicComponentLoader } from './dynamic-loader.service';
 
 @NgModule()
 export class DynamicComponentLoaderModule {
@@ -26,13 +26,13 @@ export class DynamicComponentLoaderModule {
     };
   }
 
-  // Use in feature modules to indicate paths of lazy loaded popups
-  static withModules(manifests: IDynamicModule[]): ModuleWithProviders {
-    DynamicComponentLoader.manifests.push(...manifests);
+  // Use in feature modules that have dynamically loaded modules
+  static withModules(modules: IDynamicModule[]): ModuleWithProviders {
     return {
       ngModule: DynamicComponentLoaderModule,
       providers: [
-        { provide: ROUTES, useValue: manifests, multi: true },
+        { provide: ROUTES, useValue: modules, multi: true },
+        { provide: DYNAMIC_MODULES, useValue: modules, multi: true},
       ],
     };
   }

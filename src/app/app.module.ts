@@ -11,6 +11,11 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { ToasterModule } from 'angular2-toaster';
 import * as R from 'ramda';
 
+import { CoreModule } from './core/core.module';
+import { DynamicComponentLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
+import { RoutesModule } from './routes/routes.module';
+import { SharedModule } from './shared/shared.module';
+
 import { ConfigService } from '@app/core/config/config.service';
 
 import { AuthEffects } from './core/auth/auth.effects';
@@ -23,10 +28,6 @@ import { LookupEffects } from './core/lookup/lookup.effects';
 import { MetadataEffects } from './core/metadata/metadata.effects';
 import { NotificationsEffects } from './core/notifications/notifications.effects';
 import { SettingsEffects } from '@app/core/settings/settings.effects';
-
-import { CoreModule } from './core/core.module';
-import { RoutesModule } from './routes/routes.module';
-import { SharedModule } from './shared/shared.module';
 
 import { IAppState, UnsafeAction } from './core/state/state.interface';
 import { AppComponent } from './app.component';
@@ -73,6 +74,15 @@ export function jwtOptionsFactory(configService: ConfigService): any {
     BrowserModule,
     BrowserAnimationsModule,
     CoreModule,
+    DynamicComponentLoaderModule.withModules(
+      [
+        {
+          componentId: 'licence',
+          path: 'licence',
+          loadChildren: 'app/layout/dynamic-popups/licence/licence.module#LicenceModule',
+        },
+      ]
+    ),
     EffectsModule.forRoot([
       AuthEffects,
       CallEffects,
