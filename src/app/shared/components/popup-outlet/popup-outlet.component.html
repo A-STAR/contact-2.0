@@ -1,0 +1,9 @@
+<div *ngIf="isOpen" [@popupAnimation] class="popup">
+  <div [@popupContentAnimation] (@popupContentAnimation.done)="onClose($event)" class="popup-content">
+    <span class="popup-close" (click)="close()">
+      <i class="co co-close"></i>
+    </span>
+    <span *ngIf="!isLoaded">Loading...</span>
+    <div #outlet></div>
+  </div>
+</div>

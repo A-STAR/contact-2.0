@@ -1,13 +1,7 @@
-<app-info-dialog *ngIf="isLicenseVisible" titleTranslationKey="header.license.title" (close)="closeLicenseInfo()">
-  <section class="pv-xl">
-    {{ 'header.license.info' | translate }} <em>CRIF-CO-9821-9873-4259-5601</em>.
-  </section>
-</app-info-dialog>
-
 <nav class="flex justify-between">
   <div class="flex flex-item">
     <div class="flex-item">
-      <div class="logo" (click)="showLicenseInfo()">
+      <div class="logo" appPopupOutlet="licence">
         <img src="assets/img/logo/contact-logo-light.svg">
       </div>
     </div>

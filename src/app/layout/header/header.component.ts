@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -6,24 +6,4 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
   templateUrl: './header.component.html',
   styleUrls: [ './header.component.scss' ],
 })
-export class HeaderComponent {
-  private _isLicenseVisible = false;
-
-  constructor(
-    private cdRef: ChangeDetectorRef,
-  ) {}
-
-  get isLicenseVisible(): boolean {
-    return this._isLicenseVisible;
-  }
-
-  showLicenseInfo(): void {
-    this._isLicenseVisible = true;
-    this.cdRef.markForCheck();
-  }
-
-  closeLicenseInfo(): void {
-    this._isLicenseVisible = false;
-    this.cdRef.markForCheck();
-  }
-}
+export class HeaderComponent {}

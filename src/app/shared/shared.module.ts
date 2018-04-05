@@ -55,6 +55,7 @@ import { MomentModule } from './pipes/moment/moment.module';
 import { MultiLanguageModule } from './components/form/multilanguage/multilanguage.module';
 import { OperatorModule } from './components/operator/operator.module';
 import { PopupInputModule } from './components/form/popup-input/popup-input.module';
+import { PopupOutletModule } from './components/popup-outlet/popup-outlet.module';
 import { ProgressbarModule } from './components/progressbar/progressbar.module';
 import { QBuilder2Module } from './components/qbuilder2/qbuilder2.module';
 import { RadioGroupModule } from './components/form/radio-group/radio-group.module';
@@ -127,6 +128,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     MultiLanguageModule,
     OperatorModule,
     PopupInputModule,
+    PopupOutletModule,
     ProgressbarModule,
     QBuilder2Module,
     RadioGroupModule,
@@ -207,6 +209,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     NumericInputComponent,
     OperatorModule,
     PopupInputModule,
+    PopupOutletModule,
     ProgressbarModule,
     QBuilderComponent,
     QBuilder2Module,

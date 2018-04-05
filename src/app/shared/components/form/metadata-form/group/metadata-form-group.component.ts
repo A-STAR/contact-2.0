@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 
-import { IMetadataFormControl, IMetadataFormItem } from '../metadata-form.interface';
+import { IMetadataFormControl, IMetadataFormItem, IMetadataFormGridSelectControl } from '../metadata-form.interface';
+
+import { MetadataFormService } from '../metadata-form.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +31,10 @@ export class MetadataFormGroupComponent {
   @Input() formGroup: FormGroup;
   @Input() items: IMetadataFormItem[];
 
+  constructor(
+    private metadataFormService: MetadataFormService,
+  ) {}
+
   getItemStyle(width: number): Partial<CSSStyleDeclaration> {
     return width
       ? { flex: width.toString() }
@@ -40,6 +46,10 @@ export class MetadataFormGroupComponent {
     return c.errors && (c.touched || c.dirty)
       ? this.getErrorMessageForControl(c)
       : { message: null, data: null };
+  }
+
+  onGridSelect(control: IMetadataFormGridSelectControl, event: any): void {
+    this.metadataFormService.onGridSelect(control, event);
   }
 
   private getErrorMessageForControl(c: AbstractControl): any {

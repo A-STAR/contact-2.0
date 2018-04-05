@@ -81,6 +81,7 @@ export class FormsComponent {
         width: 0,
       },
     ],
+    plugins: [],
   };
 
   readonly data = {
