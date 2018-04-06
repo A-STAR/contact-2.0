@@ -172,11 +172,12 @@ export class MetadataFormComponent<T> implements OnInit {
   }
 
   private toFormValue(data: Partial<T>): any {
-    return Object.keys(data).reduce((acc, key) => {
-      const control = this.formGroup.controls[key];
-      acc[key] = this.deserializeControlValue(control.value, this.flatControls.find(c => c.name === key));
-      return acc;
-    }, {});
+    // return Object.keys(data).reduce((acc, key) => {
+    //   const control = this.formGroup.controls[key];
+    //   acc[key] = this.deserializeControlValue(control.value, this.flatControls.find(c => c.name === key));
+    //   return acc;
+    // }, {});
+    return data;
   }
 
   private fromFormValue(value: any): Partial<T> {
@@ -200,14 +201,14 @@ export class MetadataFormComponent<T> implements OnInit {
     }
   }
 
-  private deserializeControlValue(value: any, control: IMetadataFormControl): any {
-    switch (control.type) {
-      case IMetadataFormControlType.DATE:
-        return value ? this.valueConverterService.fromISO(value) : null;
-      case IMetadataFormControlType.CHECKBOX:
-        return Boolean(value);
-      default:
-        return value;
-    }
-  }
+  // private deserializeControlValue(value: any, control: IMetadataFormControl): any {
+  //   switch (control.type) {
+  //     case IMetadataFormControlType.DATE:
+  //       return value ? this.valueConverterService.fromISO(value) : null;
+  //     case IMetadataFormControlType.CHECKBOX:
+  //       return Boolean(value);
+  //     default:
+  //       return value;
+  //   }
+  // }
 }
