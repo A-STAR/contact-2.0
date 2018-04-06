@@ -51,6 +51,10 @@ const routes: Routes = [
         path: 'ws',
         loadChildren: './ws/ws.module#WSModule',
       },
+      {
+        path: 'maps',
+        loadChildren: './maps/maps.module#MapsModule',
+      },
     ]
   },
 ];

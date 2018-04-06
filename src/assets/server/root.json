@@ -4,5 +4,16 @@
   "assets": "/assets",
   "i18n": [
     "i18n/{lang}.json"
-  ]
+  ],
+  "maps": {
+    "useProvider": "google",
+    "providers": {
+      "google": {
+        "apiKey": "AIzaSyByUIeIkANdXYNGK58qoItJUtLBjPp65P8"
+      },
+      "yandex": {
+        "apiKey": "yandex api key"
+      }
+    }
+  }
 }

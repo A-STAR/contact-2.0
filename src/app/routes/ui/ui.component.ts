@@ -20,5 +20,6 @@ export class UIComponent {
     { link: 'areas', title: 'Areas' },
     { link: 'icons', title: 'Icons' },
     { link: 'ws', title: 'WebSockets' },
+    { link: 'maps', title: 'Maps' },
   ];
 }

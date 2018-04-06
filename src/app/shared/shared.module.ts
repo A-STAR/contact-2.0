@@ -47,6 +47,7 @@ import { ImageUploadModule } from './components/form/image-upload/image-upload.m
 import { InfoDialogModule } from './components/dialog/info/info-dialog.module';
 import { InputModule } from './components/form/input/input.module';
 import { ListModule } from './components/list/list.module';
+import { MapModule } from './components/map/map.module';
 import { MassOpsModule } from './mass-ops/mass-ops.module';
 import { MenuModule } from './components/form/menu/menu.module';
 import { MetadataFormModule } from './components/form/metadata-form/metadata-form.module';
@@ -119,6 +120,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     InputModule,
     ListModule,
+    MapModule,
     MassOpsModule,
     MenuModule,
     MetadataFormModule,
@@ -198,6 +200,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     InfoDialogModule,
     InputModule,
     ListModule,
+    MapModule,
     MassOpsModule,
     MenuModule,
     MetadataFormModule,

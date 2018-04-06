@@ -29,7 +29,8 @@
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/ramda/dist/ramda.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
-        "../node_modules/summernote/dist/summernote.js"
+        "../node_modules/summernote/dist/summernote.js",
+        "../node_modules/leaflet/dist/leaflet.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
