@@ -1,6 +1,6 @@
 {
   "url": "http://localhost:8080",
-  "ws": "ws://localhost:8080",
+  "ws": "wss://localhost:8080",
   "assets": "/assets",
   "i18n": [
     "i18n/{lang}.json"

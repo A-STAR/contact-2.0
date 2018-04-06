@@ -6,7 +6,7 @@ import { IGridActionPayload } from '@app/shared/components/action-grid/action-gr
 import { ActionGridService } from '@app/shared/components/action-grid/action-grid.service';
 import { DataService } from '@app/core/data/data.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class SmsService {
@@ -28,13 +28,6 @@ export class SmsService {
         }
       )
       .pipe(
-        tap(response => {
-          if (response.success) {
-            this.notificationsService.info('system.notifications.tasks.start.success').response(response).dispatch();
-          } else {
-            this.notificationsService.warning('system.notifications.tasks.start.error').response(response).dispatch();
-          }
-        }),
         catchError(this.notificationsService.updateError().entity('entities.sms.gen.plural').dispatchCallback()),
       );
   }

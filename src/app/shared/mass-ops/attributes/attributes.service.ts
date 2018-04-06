@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import { IDebtAttributeChange, DictOperationPerms } from './attributes.interface';
 import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
@@ -27,7 +27,7 @@ export class AttributesService {
     private actionGridService: ActionGridService,
     private dataService: DataService,
     private lookupService: LookupService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
   ) { }
 
   change(idData: IGridActionPayload, data: IDebtAttributeChange): Observable<IOperationResult> {
@@ -39,13 +39,6 @@ export class AttributesService {
         }
       )
       .pipe(
-        tap(response => {
-          if (response.success) {
-            this.notificationsService.info('system.notifications.tasks.start.success').response(response).dispatch();
-          } else {
-            this.notificationsService.warning('system.notifications.tasks.start.error').response(response).dispatch();
-          }
-        }),
         catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback())
       );
   }

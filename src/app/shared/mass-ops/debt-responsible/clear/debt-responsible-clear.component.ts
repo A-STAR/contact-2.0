@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 
 import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IOperationResult } from '../debt-responsible.interface';
 
 import { DebtResponsibleService } from '../debt-responsible.service';
 
@@ -21,11 +20,10 @@ export class DebtResponsibleClearComponent {
 
   onConfirm(): void {
     this.debtResponsibleService.clearResponsible(this.actionData.payload)
-      .subscribe(result => this.onOperationResult(result));
+      .subscribe(() => this.onOperationResult());
   }
 
-  onOperationResult(result: IOperationResult): void {
-    this.debtResponsibleService.showOperationNotification(result);
+  onOperationResult(): void {
     // this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
     this.close.emit({ refresh: false });
   }

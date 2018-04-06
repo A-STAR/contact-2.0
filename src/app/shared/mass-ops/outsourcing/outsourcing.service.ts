@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { tap, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import { IGridActionPayload } from '@app/shared/components/action-grid/action-grid.interface';
 import { IFilterPortfolio } from '@app/core/filters/grid-filters.interface';
@@ -33,14 +33,8 @@ export class OutsourcingService {
         }
       )
       .pipe(
-      tap(response => {
-        if (response.success) {
-          this.notificationsService.info('system.notifications.tasks.start.success').response(response).dispatch();
-        } else {
-          this.notificationsService.warning('system.notifications.tasks.start.error').response(response).dispatch();
-        }
-      }),
-      catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback()));
+        catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback()),
+      );
   }
 
   exclude(idData: IGridActionPayload): Observable<IOperationResult> {
@@ -51,14 +45,8 @@ export class OutsourcingService {
         }
       )
       .pipe(
-      tap(response => {
-        if (response.success) {
-          this.notificationsService.info('system.notifications.tasks.start.success').response(response).dispatch();
-        } else {
-          this.notificationsService.warning('system.notifications.tasks.start.error').response(response).dispatch();
-        }
-      }),
-      catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback()));
+        catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback()),
+      );
   }
 
   return(idData: IGridActionPayload): Observable<IOperationResult> {
@@ -69,14 +57,8 @@ export class OutsourcingService {
         }
       )
       .pipe(
-      tap(response => {
-        if (response.success) {
-          this.notificationsService.info('system.notifications.tasks.start.success').response(response).dispatch();
-        } else {
-          this.notificationsService.warning('system.notifications.tasks.start.error').response(response).dispatch();
-        }
-      }),
-      catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback()));
+        catchError(this.notificationsService.updateError().entity('entities.attribute.gen.plural').dispatchCallback()),
+      );
   }
 
   getOutsourcingPortfolios(): Observable<IFilterPortfolio[]> {

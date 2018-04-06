@@ -58,8 +58,13 @@ export interface IMessageOptions {
 }
 
 export interface ITaskStatusNotification {
-  id: number;
-  taskTypeCode: number;
   createDateTime: string;
+  id: number;
+  massInfo: {
+    created: number;
+    processed: number;
+    total: number;
+  };
   statusCode: number;
+  taskTypeCode: number;
 }
