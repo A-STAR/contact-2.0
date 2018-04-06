@@ -25,7 +25,6 @@ export class ContactSelectCardComponent {
     {
       controlName: 'personTypeCode',
       dictCode: UserDictionariesService.DICTIONARY_PERSON_TYPE,
-      markAsDirty: true,
       required: true,
       type: 'select',
     },
