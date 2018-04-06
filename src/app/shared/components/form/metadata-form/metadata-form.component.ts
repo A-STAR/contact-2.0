@@ -14,6 +14,7 @@ import {
 import { ConfigService } from '@app/core/config/config.service';
 import { ContextService } from '@app/core/context/context.service';
 import { MetadataFormService } from './metadata-form.service';
+import { ValueConverterService } from '@app/core/converter/value-converter.service';
 
 import { hasDigits, hasLowerCaseChars, hasUpperCaseChars } from '@app/core/validators';
 
@@ -52,6 +53,7 @@ export class MetadataFormComponent<T> implements OnInit {
     private contextService: ContextService,
     private httpClient: HttpClient,
     private metadataFormService: MetadataFormService,
+    private valueConverterService: ValueConverterService,
   ) {}
 
   get formConfig(): IMetadataFormConfig {
@@ -170,10 +172,42 @@ export class MetadataFormComponent<T> implements OnInit {
   }
 
   private toFormValue(data: Partial<T>): any {
-    return data;
+    return Object.keys(data).reduce((acc, key) => {
+      const control = this.formGroup.controls[key];
+      acc[key] = this.deserializeControlValue(control.value, this.flatControls.find(c => c.name === key));
+      return acc;
+    }, {});
   }
 
   private fromFormValue(value: any): Partial<T> {
-    return value;
+    return Object.keys(value).reduce((acc, key) => {
+      const control = this.formGroup.controls[key];
+      if (control.dirty) {
+        acc[key] = this.serializeControlValue(control.value, this.flatControls.find(c => c.name === key));
+      }
+      return acc;
+    }, {});
+  }
+
+  private serializeControlValue(value: any, control: IMetadataFormControl): any {
+    switch (control.type) {
+      case IMetadataFormControlType.DATE:
+        return value ? this.valueConverterService.toDateOnly(value) : null;
+      case IMetadataFormControlType.CHECKBOX:
+        return Number(value);
+      default:
+        return value;
+    }
+  }
+
+  private deserializeControlValue(value: any, control: IMetadataFormControl): any {
+    switch (control.type) {
+      case IMetadataFormControlType.DATE:
+        return value ? this.valueConverterService.fromISO(value) : null;
+      case IMetadataFormControlType.CHECKBOX:
+        return Boolean(value);
+      default:
+        return value;
+    }
   }
 }
