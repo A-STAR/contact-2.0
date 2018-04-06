@@ -178,55 +178,59 @@
     ></app-action-grid-filter>
   </div>
 
-  <div class="grid-container">
-    <div class="flex-item grow" [ngClass]="{'grid-has-details': isGridDetails}">
-        <ng-container
-          *ngIf="!isSimple; else simpleGrid"
-        >
-          <app-grid2
-            #grid
-            *ngIf="initialized"
-            [actions]="gridActions$ | async"
-            [columnIds]="columnIds"
-            [columns]="columnsDef"
-            [fullHeight]="fullHeight"
-            [ngClass]="ngClass"
-            [persistenceKey]="persistenceKey"
-            [rowCount]="rowCount"
-            [rowIdKey]="rowIdKey"
-            [rows]="rows"
-            (action)="onAction($event)"
-            (onDblClick)="onDblClick($event)"
-            (onFilter)="onRequest()"
-            (onPage)="onRequest()"
-            (onPageSize)="onRequest()"
-            (onSort)="onRequest()"
-            (onSelect)="onSelect($event)"
-          ></app-grid2>
-        </ng-container>
+  <app-area layout="row" [persistenceKey]="persistenceKey">
+    <app-area [initialSize]="(isGridDetails ? 3 : 1)">
+      <div class="flex-item grow">
+          <ng-container
+            *ngIf="!isSimple; else simpleGrid"
+          >
+            <app-grid2
+              #grid
+              *ngIf="initialized"
+              [actions]="gridActions$ | async"
+              [columnIds]="columnIds"
+              [columns]="columnsDef"
+              [fullHeight]="fullHeight"
+              [ngClass]="ngClass"
+              [persistenceKey]="persistenceKey"
+              [rowCount]="rowCount"
+              [rowIdKey]="rowIdKey"
+              [rows]="rows"
+              (action)="onAction($event)"
+              (onDblClick)="onDblClick($event)"
+              (onFilter)="onRequest()"
+              (onPage)="onRequest()"
+              (onPageSize)="onRequest()"
+              (onSort)="onRequest()"
+              (onSelect)="onSelect($event)"
+            ></app-grid2>
+          </ng-container>
 
-        <ng-template #simpleGrid>
-          <app-simple-grid
-            #grid
-            *ngIf="initialized"
-            [actions]="gridActions$ | async"
-            [persistenceKey]="persistenceKey"
-            [selectionType]="selectionType"
-            [columns]="columns"
-            [rows]="rows"
-            [toolbar]="toolbarItems"
-            (action)="onAction($event)"
-            (select)="onSelect($event)"
-            (dblClick)="onDblClick($event)">
-          </app-simple-grid>
-        </ng-template>
+          <ng-template #simpleGrid>
+            <app-simple-grid
+              #grid
+              *ngIf="initialized"
+              [actions]="gridActions$ | async"
+              [persistenceKey]="persistenceKey"
+              [selectionType]="selectionType"
+              [columns]="columns"
+              [rows]="rows"
+              [toolbar]="toolbarItems"
+              (action)="onAction($event)"
+              (select)="onSelect($event)"
+              (dblClick)="onDblClick($event)">
+            </app-simple-grid>
+          </ng-template>
       </div>
-      <div class="grid-details" *ngIf="isGridDetails" [ngClass]="{ 'grid-details-with-footer': hasPagination }">
+    </app-area>
+    <app-area [initialSize]="(isGridDetails ? 2 : 0)">
+      <div [ngClass]="{ 'grid-details-with-footer': hasPagination }">
         <app-contact-log-details
-          *ngIf="selectionActionName === 'showContactHistory'"
+          *ngIf="isGridDetails && selectionActionName === 'showContactHistory'"
           [actionData]="selectionActionData"
           [rowData]="selection[0]"
         ></app-contact-log-details>
       </div>
-  </div>
+    </app-area>
+  </app-area>
 
