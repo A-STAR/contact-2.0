@@ -102,7 +102,8 @@ export class NotificationsService implements OnDestroy {
               .params({
                 message,
                 createDateTime,
-              }).dispatch();
+              })
+              .dispatch();
             break;
         }
       });
