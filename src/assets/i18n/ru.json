@@ -350,7 +350,7 @@
           "error": "При отправке задачи обработку возникла ошибка"
         },
         "finish": {
-          "success": "Выполнено: {{ message }} от {{ createDateTime }}",
+          "success": "Выполнено: {{ message }} от {{ createDateTime }}: создано {{ created }}, обработано: {{ processed }}, всего {{ total }}",
           "error": "Ошибка выполнения: {{ message }} от {{ createDateTime }}"
         }
       }
