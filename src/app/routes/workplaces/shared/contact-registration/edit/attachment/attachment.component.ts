@@ -12,7 +12,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DialogFunctions } from '@app/core/dialog';
 
 import { isEmpty, addGridLabel } from '@app/core/utils';
-import { filter, map, first } from 'rxjs/operators';
+import { map, first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contact-registration-attachment',
