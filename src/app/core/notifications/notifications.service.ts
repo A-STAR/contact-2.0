@@ -63,6 +63,7 @@ export class NotificationsService implements OnDestroy {
 
     this.authService.currentUser$
       .pipe(
+        mergeMap(() => this.authService.canActivate()),
         filter(Boolean),
         distinctUntilChanged(),
         mergeMap(() => this.wsService.connect<ITaskStatusNotification>('/wsapi/taskStatus').listen()),
