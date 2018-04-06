@@ -49,7 +49,6 @@ export class GridSelectComponent<T> implements OnInit, ControlValueAccessor {
   ) { }
 
   ngOnInit(): void {
-
     this.labelGetter = this.gridSelectService.getLabelGetter(this.filterType);
     this.valueGetter = this.gridSelectService.getValueGetter(this.filterType);
     this.gridColumns = this.gridSelectService.getGridColumns(this.filterType);
@@ -74,17 +73,19 @@ export class GridSelectComponent<T> implements OnInit, ControlValueAccessor {
     this.propagateChange = fn;
   }
 
+  registerOnTouched(fn: Function): void {
+    this.propagateTouch = fn;
+  }
+
   onChange(value: number): void {
     this.propagateChange(value);
   }
 
   onSelect(row: T): void {
     this.select.emit(row);
-  }
-
-  registerOnTouched(): void {
+    this.propagateTouch();
   }
 
   private propagateChange: Function = () => {};
-
+  private propagateTouch: Function = () => {};
 }
