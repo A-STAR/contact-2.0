@@ -19,9 +19,15 @@ export enum IMetadataFormControlType {
   TEXTAREA   = 'textarea',
 }
 
+export enum IMetadataFormGroupType {
+  PLAIN = 'plain',
+  TABS  = 'tabs',
+}
+
 export interface IMetadataFormGroup {
   children: IMetadataFormItem[];
   display: IMetadataFormValidator<boolean>;
+  groupType: IMetadataFormGroupType;
   type: IMetadataFormControlType.GROUP;
   width: number;
 }

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   IMetadataFormConfig,
   IMetadataFormControlType,
+  IMetadataFormGroupType,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 import { IContextConfigItemType, IContextByValueBagMethod } from '@app/core/context/context.interface';
 
@@ -75,11 +76,13 @@ export class FormsComponent {
             ],
             display: true,
             type: IMetadataFormControlType.GROUP,
+            groupType: IMetadataFormGroupType.PLAIN,
             width: 0,
           },
         ],
         display: true,
         type: IMetadataFormControlType.GROUP,
+        groupType: IMetadataFormGroupType.PLAIN,
         width: 0,
       },
     ],
