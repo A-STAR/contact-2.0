@@ -1,6 +1,21 @@
 @import '../../../../styles/app/variables';
 
 :host {
+  display: block;
+  &.bordered {
+    border: 1px solid $gray-light;
+    padding: 5px;
+  }
+}
+
+.group-label {
+  display: block;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+}
+
+.group-items {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

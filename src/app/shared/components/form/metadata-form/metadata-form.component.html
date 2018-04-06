@@ -1,5 +1,6 @@
 <form *ngIf="initialized" [formGroup]="formGroup" (ngSubmit)="onSubmit($event)">
   <app-metadata-form-group
+    groupType="plain"
     [editable]="formConfig.editable"
     [formGroup]="formGroup"
     [items]="formConfig.items"

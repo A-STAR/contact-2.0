@@ -1,0 +1,15 @@
+@import '../../../../styles/app/variables';
+
+:host {
+  display: block;
+}
+
+.errors {
+  color: $brand-danger;
+  font-size: 11px;
+  height: 11px;
+  line-height: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
