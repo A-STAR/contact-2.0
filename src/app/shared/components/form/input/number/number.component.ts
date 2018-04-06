@@ -54,9 +54,17 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   @Input() max: number;
   @Input() positive = false;
   @Input() required = false;
+
+  @Input()
+  set isReadonly(value: boolean) {
+    this.readonly = this.setDefault(value, this.readonly);
+    this.required = this.readonly ? false : this.required;
+  }
+
   @Input()
   set isDisabled(value: boolean) {
     this.disabled = this.setDefault(value, this.disabled);
+    this.required = this.disabled ? false : this.required;
   }
 
   @Input() set step(step: number | string) {
@@ -64,6 +72,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   disabled = false;
+  readonly = false;
   value: number;
 
   private _step = 1;
@@ -133,7 +142,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   onWheel(event: WheelEvent): void {
-    if (!this.disabled) {
+    if (!(this.disabled || this.readonly)) {
       event.preventDefault();
       const value = (this.value || 0) - this._step * Math.sign(event.deltaY);
       if (this.isMinValid(value) && this.isMaxValid(value)) {
@@ -143,7 +152,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   onIncrementClick(): void {
-    if (!this.disabled) {
+    if (!(this.disabled || this.readonly)) {
       const value = (this.value || 0) + this._step;
       if (this.isMinValid(value) && this.isMaxValid(value)) {
         this.update(value);
@@ -152,7 +161,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   onDecrementClick(): void {
-    if (!this.disabled) {
+    if (!(this.disabled || this.readonly)) {
       const value = (this.value || 0) - this._step;
       if (this.isMinValid(value) && this.isMaxValid(value)) {
         this.update(value);
