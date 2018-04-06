@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, first, map, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
+import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
 
@@ -11,7 +13,7 @@ import { ContactRegistrationService } from '@app/routes/workplaces/shared/contac
   selector: 'app-contact-registration-promise',
   templateUrl: 'promise.component.html'
 })
-export class ContactRegistrationPromiseComponent {
+export class ContactRegistrationPromiseComponent implements AfterViewInit, OnDestroy {
   @Input() formGroup: FormGroup;
 
   private limitInfo$ = combineLatest(
@@ -20,16 +22,46 @@ export class ContactRegistrationPromiseComponent {
     this.contactRegistrationService.canSetInsufficientPromiseAmount$,
   );
 
+  private isFullPromiseModeSub: Subscription;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private contactRegistrationService: ContactRegistrationService,
   ) {}
+
+
+  ngAfterViewInit(): void {
+    this.isFullPromiseModeSub = this.fullPromiseMode$
+      .subscribe(_ => {
+        this.formGroup.get('promise.amount').markAsDirty();
+        this.formGroup.get('promise.percentage').markAsDirty();
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.isFullPromiseModeSub) {
+      this.isFullPromiseModeSub.unsubscribe();
+    }
+  }
 
   readonly canDisplayForm$ = this.contactRegistrationService.canSetPromise$;
 
   get today(): Date {
     return moment().toDate();
   }
+
+  readonly fullPromiseMode$ = this.contactRegistrationService.outcome$.pipe(
+    filter(outcome => outcome && outcome.paymentMode === 3),
+    map(Boolean)
+  );
+
+  readonly promiseAmount$ = this.fullPromiseMode$.pipe(
+    switchMap(_ => this.promiseMaxAmount$)
+  );
+
+  readonly promisePercentage$ = this.fullPromiseMode$.pipe(
+    switchMap(_ => of(100))
+  );
 
   readonly promiseMinAmount$ = this.limitInfo$.pipe(
     map(([ debt, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent * debt.debtAmount / 100),

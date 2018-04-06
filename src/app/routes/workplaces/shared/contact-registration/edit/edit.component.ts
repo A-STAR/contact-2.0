@@ -174,11 +174,11 @@ export class EditComponent extends DialogFunctions {
   }
 
   private isContactForPersonHasChosen(): boolean {
-    return !this.contactForPerson || !!this.contactForPerson.person;
+    return !this.contactForPerson || !!this.contactForPerson.isValid;
   }
 
   private isContactForPhoneHasChosen(): boolean {
-    return !this.contactForPhone || !!this.contactForPhone.person;
+    return !this.contactForPhone || !!this.contactForPhone.isValid;
   }
 
   private isContactValid(): boolean {

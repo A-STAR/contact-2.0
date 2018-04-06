@@ -17,7 +17,8 @@
       <app-number
         formControlName="amount"
         label="routes.workplaces.shared.contactRegistration.edit.form.payment.form.amount"
-        [disabled]="isPaymentAmountDisabled$ | async"
+        [isReadonly]="fullPaymentMode$ | async"
+        [ngModel]="paymentAmount$ | async"
         [min]="paymentMinAmount$ | async"
         [max]="paymentMaxAmount$ | async"
         [positive]="true"
@@ -31,7 +32,8 @@
       <app-number
         formControlName="percentage"
         label="routes.workplaces.shared.contactRegistration.edit.form.payment.form.percentage"
-        [disabled]="isPaymentAmountDisabled$ | async"
+        [isReadonly]="fullPaymentMode$ | async"
+        [ngModel]="paymentPercentage$ | async"
         [min]="paymentMinPercentage$ | async"
         [max]="100"
         [positive]="true"

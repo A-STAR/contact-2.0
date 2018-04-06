@@ -24,4 +24,8 @@ export class ContactRegistrationPhoneComponent {
   get person(): IContactPersonRequest | INewContactPerson {
     return this.contactForPhone && this.contactForPhone.person;
   }
+
+  get isValid(): boolean {
+    return this.contactForPhone && this.contactForPhone.isValid;
+  }
 }
