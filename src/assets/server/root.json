@@ -1,6 +1,6 @@
 {
-  "url": "https://appservertest.luxbase.int:4100/contact-back-end",
-  "ws": "wss://appservertest.luxbase.int:4100/contact-back-end",
+  "url": "http://localhost:8080",
+  "ws": "wss://localhost:8080",
   "assets": "/assets",
   "i18n": [
     "i18n/{lang}.json"
