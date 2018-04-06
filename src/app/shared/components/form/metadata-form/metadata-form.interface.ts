@@ -24,23 +24,23 @@ export enum IMetadataFormGroupType {
   TABS  = 'tabs',
 }
 
-export interface IMetadataFormGroup {
-  border: boolean;
-  children: IMetadataFormItem[];
+export interface IMetadataFormGenericItem {
   display: IMetadataFormValidator<boolean>;
-  groupType: IMetadataFormGroupType;
   label: string;
-  type: IMetadataFormControlType.GROUP;
+  type: IMetadataFormControlType;
   width: number;
 }
 
-export interface IMetadataFormGenericControl {
+export interface IMetadataFormGroup extends IMetadataFormGenericItem {
+  border: boolean;
+  children: IMetadataFormItem[];
+  groupType: IMetadataFormGroupType;
+  type: IMetadataFormControlType.GROUP;
+}
+
+export interface IMetadataFormGenericControl extends IMetadataFormGenericItem {
   disabled: IMetadataFormValidator<boolean>;
-  display: IMetadataFormValidator<boolean>;
-  label: string;
   name: string;
-  type: IMetadataFormControlType;
-  width: number;
 }
 
 export interface IMetadataFormCheckboxControl extends IMetadataFormGenericControl {
