@@ -102,13 +102,13 @@ export class DebtService {
       .catch(this.notificationsService.fetchError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 
-  create(personId: number, debt: IDebt): Observable<void> {
+  create(personId: number, debt: Partial<IDebt>): Observable<void> {
     return this.dataService
       .create(this.baseUrl, { personId }, debt)
       .catch(this.notificationsService.createError().entity('entities.debts.gen.singular').dispatchCallback());
   }
 
-  update(personId: number, debtId: number, debt: IDebt): Observable<void> {
+  update(personId: number, debtId: number, debt: Partial<IDebt>): Observable<void> {
     return this.dataService
       .update(this.extUrl, { debtId, personId }, debt)
       .catch(this.notificationsService.updateError().entity('entities.debts.gen.singular').dispatchCallback());

@@ -13,7 +13,7 @@
           "width": 1
         },
         {
-          "disabled": true,
+          "disabled": false,
           "display": true,
           "filterParams": null,
           "filterType": "portfolios",
