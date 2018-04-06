@@ -5,8 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { of } from 'rxjs/observable/of';
-import { delay, filter, first, map, mergeMap, throttleTime } from 'rxjs/operators';
+import { filter, first, map, mergeMap, throttleTime } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { IAppState } from '../state/state.interface';
@@ -18,12 +17,12 @@ import {
   INotificationActionPayload,
   INotificationsState,
   NotificationTypeEnum,
-  // ITaskStatusNotification,
+  ITaskStatusNotification,
 } from './notifications.interface';
 
 import { AuthService } from '@app/core/auth/auth.service';
 import { SettingsService } from '@app/core/settings/settings.service';
-// import { WSService } from '@app/core/ws/ws.service';
+import { WSService } from '@app/core/ws/ws.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { NotificationActionBuilder } from './notification-action-builder';
@@ -48,7 +47,7 @@ export class NotificationsService implements OnDestroy {
     private translateService: TranslateService,
     private settingsService: SettingsService,
     private userDictionariesService: UserDictionariesService,
-    // private wsService: WSService,
+    private wsService: WSService,
   ) {
     this.notificationsStateSubscription = combineLatest(
       this.state,
@@ -62,16 +61,9 @@ export class NotificationsService implements OnDestroy {
     )
     .subscribe(([ state ]) => this.settingsService.set(NotificationsService.STORAGE_KEY, state));
 
-    // TODO(d.maltsev): remove mock
-    // this.wsService.connect<ITaskStatusNotification>('/wsapi/taskStatus').listen()
-    this.taskStatusSubscription = of({
-      id: 1,
-      taskTypeCode: 1,
-      createDateTime: '2000-01-01T00:00:00',
-      statusCode: 3,
-    })
+    this.wsService.connect<ITaskStatusNotification>('/wsapi/taskStatus').listen()
     .pipe(
-      delay(2000),
+      filter(Boolean),
       mergeMap(event => {
         return this.userDictionariesService
           .getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE)
