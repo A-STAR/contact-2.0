@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
 import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
-import { IVisit, IOperationResult, IConfirmOperation } from '../../visit-prepare.interface';
+import { IVisit, IConfirmOperation } from '../../visit-prepare.interface';
 
 import { VisitPrepareService } from '../../visit-prepare.service';
 
@@ -52,12 +52,12 @@ export class VisitPrepareDialogComponent extends DialogFunctions implements OnIn
   }
 
   onCreate(visit: IVisit): void {
-    this.visitPrepareService.prepare(this.actionData.payload, visit)
-      .subscribe(result => this.onOperationResult(result));
+    this.visitPrepareService
+      .prepare(this.actionData.payload, visit)
+      .subscribe(() => this.onOperationResult());
   }
 
-  onOperationResult(result: IOperationResult): void {
-    this.visitPrepareService.showOperationNotification(result);
+  onOperationResult(): void {
     // this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
     this.close.emit({ refresh: false });
   }

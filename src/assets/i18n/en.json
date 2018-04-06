@@ -346,11 +346,10 @@
     "notifications": {
       "tasks": {
         "start": {
-          "success": "Task sent for processing",
-          "error": "Could not send task for processing"
+          "success": "Task sent for processing"
         },
         "finish": {
-          "success": "Completed: {{ message }} от {{ createDateTime }}",
+          "success": "Completed: {{ message }} от {{ createDateTime }}: created {{ created }}, processed: {{ processed }}, total {{ total }}",
           "error": "Error: {{ message }} от {{ createDateTime }}"
         }
       }
