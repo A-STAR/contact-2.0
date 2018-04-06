@@ -25,7 +25,7 @@
           *ngSwitchCase="'date'"
           [formControlName]="item.name"
           [label]="item.label"
-          [required]="false"
+          [required]="isRequired(item) | async"
         ></app-datepicker>
 
         <!-- Grid Select -->
