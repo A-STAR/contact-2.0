@@ -66,11 +66,6 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
     this.selectedDocumentGuid$.next(guid);
   }
 
-  onDoubleClick(document: IAttachment): void {
-    this.selectedDocumentGuid$.next(document.guid);
-    this.setDialog('edit');
-  }
-
   onEditDialogSubmit(event: IAttachmentFormData): void {
     const { file, ...data } = event;
     const { debtId, guid } = this.contactRegistrationService;
