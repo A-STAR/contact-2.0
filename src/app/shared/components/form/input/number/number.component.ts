@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { range } from '@app/core/utils';
+import { defaultTo } from 'ramda';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,11 +55,24 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   @Input() positive = false;
   @Input() required = false;
 
+  @Input()
+  set isReadonly(value: boolean) {
+    this.readonly = this.setDefault(value, this.readonly);
+    this.required = this.readonly ? false : this.required;
+  }
+
+  @Input()
+  set isDisabled(value: boolean) {
+    this.disabled = this.setDefault(value, this.disabled);
+    this.required = this.disabled ? false : this.required;
+  }
+
   @Input() set step(step: number | string) {
     this._step = Number(step);
   }
 
   disabled = false;
+  readonly = false;
   value: number;
 
   private _step = 1;
@@ -128,7 +142,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   onWheel(event: WheelEvent): void {
-    if (!this.disabled) {
+    if (!(this.disabled || this.readonly)) {
       event.preventDefault();
       const value = (this.value || 0) - this._step * Math.sign(event.deltaY);
       if (this.isMinValid(value) && this.isMaxValid(value)) {
@@ -138,7 +152,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   onIncrementClick(): void {
-    if (!this.disabled) {
+    if (!(this.disabled || this.readonly)) {
       const value = (this.value || 0) + this._step;
       if (this.isMinValid(value) && this.isMaxValid(value)) {
         this.update(value);
@@ -147,12 +161,16 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   onDecrementClick(): void {
-    if (!this.disabled) {
+    if (!(this.disabled || this.readonly)) {
       const value = (this.value || 0) - this._step;
       if (this.isMinValid(value) && this.isMaxValid(value)) {
         this.update(value);
       }
     }
+  }
+
+  private setDefault(value: boolean, defaultValue: boolean): boolean {
+    return defaultTo(defaultValue)(value);
   }
 
   private update(value: number): void {

@@ -18,7 +18,8 @@
       <app-number
         formControlName="amount"
         label="routes.workplaces.shared.contactRegistration.edit.form.promise.form.amount"
-        [disabled]="isPromiseAmountDisabled$ | async"
+        [isReadonly]="fullPromiseMode$ | async"
+        [ngModel]="promiseAmount$ | async"
         [min]="promiseMinAmount$ | async"
         [max]="promiseMaxAmount$ | async"
         [positive]="true"
@@ -32,7 +33,8 @@
       <app-number
         formControlName="percentage"
         label="routes.workplaces.shared.contactRegistration.edit.form.promise.form.percentage"
-        [disabled]="isPromiseAmountDisabled$ | async"
+        [isReadonly]="fullPromiseMode$ | async"
+        [ngModel]="promisePercentage$ | async"
         [min]="percentageMinPercentage$ | async"
         [max]="100"
         [positive]="true"
