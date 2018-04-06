@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { range } from '@app/core/utils';
+import { defaultTo } from 'ramda';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,6 +54,10 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   @Input() max: number;
   @Input() positive = false;
   @Input() required = false;
+  @Input()
+  set isDisabled(value: boolean) {
+    this.disabled = this.setDefault(value, this.disabled);
+  }
 
   @Input() set step(step: number | string) {
     this._step = Number(step);
@@ -153,6 +158,10 @@ export class NumberComponent implements ControlValueAccessor, Validator {
         this.update(value);
       }
     }
+  }
+
+  private setDefault(value: boolean, defaultValue: boolean): boolean {
+    return defaultTo(defaultValue)(value);
   }
 
   private update(value: number): void {
