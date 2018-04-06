@@ -23,8 +23,8 @@
   white-space: nowrap;
 }
 
-:host ::ng-deep .ng-invalid.ng-touched {
-  .form-control {
+:host ::ng-deep .group-item {
+  :not(.group-item) .ng-invalid.ng-touched .form-control {
     border-bottom-color: $brand-danger;
   }
 }
