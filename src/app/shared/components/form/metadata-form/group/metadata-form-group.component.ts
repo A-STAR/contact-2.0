@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
@@ -36,9 +36,14 @@ export class MetadataFormGroupComponent {
     timepicker: 'validation.timepicker'
   };
 
+  @HostBinding('class.bordered')
+  @Input()
+  border: boolean;
+
   @Input() editable: boolean;
   @Input() formGroup: FormGroup;
   @Input() items: IMetadataFormItem[];
+  @Input() label: string;
 
   constructor(
     private contextService: ContextService,

@@ -26,7 +26,7 @@ export class FormsComponent {
         validators: {
           required: true,
         },
-        width: 0,
+        width: 1,
       },
       {
         disabled: false,
@@ -47,7 +47,7 @@ export class FormsComponent {
           },
           required: true,
         },
-        width: 0,
+        width: 1,
       },
       {
         children: [
@@ -74,14 +74,18 @@ export class FormsComponent {
                 width: 0,
               },
             ],
+            border: true,
             display: true,
-            type: IMetadataFormControlType.GROUP,
             groupType: IMetadataFormGroupType.PLAIN,
+            label: 'Group 2',
+            type: IMetadataFormControlType.GROUP,
             width: 0,
           },
         ],
+        border: true,
         display: true,
         type: IMetadataFormControlType.GROUP,
+        label: 'Group 1',
         groupType: IMetadataFormGroupType.PLAIN,
         width: 0,
       },
