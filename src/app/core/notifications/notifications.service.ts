@@ -62,50 +62,50 @@ export class NotificationsService implements OnDestroy {
     .subscribe(([ state ]) => this.settingsService.set(NotificationsService.STORAGE_KEY, state));
 
     this.wsService.connect<ITaskStatusNotification>('/wsapi/taskStatus').listen()
-    .pipe(
-      filter(Boolean),
-      mergeMap(event => {
-        return this.userDictionariesService
-          .getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE)
-          .pipe(
-            first(),
-            map(terms => ({ terms, event }))
-          );
-      }),
-    )
-    .subscribe(({ terms, event }) => {
-      const message = terms.find(t => t.code === event.taskTypeCode).name;
-      const { currentLang } = this.translateService;
-      const createDateTime = moment(event.createDateTime).locale(currentLang).format('L HH:mm:ss');
-      switch (event.statusCode) {
-        case 2:
-          this.info('system.notifications.tasks.start.success')
-            .params({
-              message,
-              createDateTime,
-            })
-            .dispatch();
-          break;
-        case 3:
-          this.info('system.notifications.tasks.finish.success')
-            .params({
-              message,
-              createDateTime,
-              created: String(event.massInfo.created),
-              processed: String(event.massInfo.processed),
-              total: String(event.massInfo.total),
-            })
-            .dispatch();
-          break;
-        case 4:
-          this.error('system.notifications.tasks.finish.error')
-            .params({
-              message,
-              createDateTime,
-            }).dispatch();
-          break;
-      }
-    });
+      .pipe(
+        filter(Boolean),
+        mergeMap(event => {
+          return this.userDictionariesService
+            .getDictionary(UserDictionariesService.DICTIONARY_TASK_TYPE)
+            .pipe(
+              first(),
+              map(terms => ({ terms, event }))
+            );
+        }),
+      )
+      .subscribe(({ terms, event }) => {
+        const message = terms.find(t => t.code === event.taskTypeCode).name;
+        const { currentLang } = this.translateService;
+        const createDateTime = moment(event.createDateTime).locale(currentLang).format('L HH:mm:ss');
+        switch (event.statusCode) {
+          case 2:
+            this.info('system.notifications.tasks.start.success')
+              .params({
+                message,
+                createDateTime,
+              })
+              .dispatch();
+            break;
+          case 3:
+            this.info('system.notifications.tasks.finish.success')
+              .params({
+                message,
+                createDateTime,
+                created: String(event.massInfo.created),
+                processed: String(event.massInfo.processed),
+                total: String(event.massInfo.total),
+              })
+              .dispatch();
+            break;
+          case 4:
+            this.error('system.notifications.tasks.finish.error')
+              .params({
+                message,
+                createDateTime,
+              }).dispatch();
+            break;
+        }
+      });
   }
 
   ngOnDestroy(): void {
