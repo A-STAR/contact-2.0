@@ -14,12 +14,12 @@ import { of } from 'rxjs/observable/of';
 import { Validators } from '@angular/forms';
 
 import { IAttribute } from './contact-property-tree-edit.interface';
-import { IAGridWrapperTreeColumn } from '@app/shared/components/gridtree2-wrapper/gridtree2-wrapper.interface';
 import { EntityTranslationsConstants } from '@app/core/entity/translations/entity-translations.interface';
 import { IContactTreeAttribute } from '../../contact-properties.interface';
 import { IDynamicFormItem, IDynamicFormConfig } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { IEntityAttributes } from '@app/core/entity/attributes/entity-attributes.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
+import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 import { ITreeNode } from '@app/shared/components/flowtree/treenode/treenode.interface';
 import { IUserAttributeType } from '@app/core/user/attribute-types/user-attribute-types.interface';
 
@@ -33,9 +33,7 @@ import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/d
 
 import { CheckboxRendererComponent } from '@app/shared/components/grids/renderers';
 
-import { flatten, isEmpty, makeKey, range, TYPE_CODES, valuesToOptions } from '@app/core/utils';
-
-const label = makeKey('widgets.contactProperty.dialogs.edit.attributes');
+import { flatten, isEmpty, range, valuesToOptions, addGridLabel } from '@app/core/utils';
 
 @Component({
   selector: 'app-contact-property-tree-edit',
@@ -65,12 +63,20 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     { isInitialised: false },
   ];
 
-  columns: Array<IAGridWrapperTreeColumn<IAttribute>> = [
-    { dataType: TYPE_CODES.STRING, name: 'code', isDataPath: true },
-    { dataType: TYPE_CODES.STRING, name: 'name' },
-    { dataType: TYPE_CODES.BOOLEAN, name: 'isDisplayed', cellRendererFramework: CheckboxRendererComponent },
-    { dataType: TYPE_CODES.BOOLEAN, name: 'isMandatory', cellRendererFramework: CheckboxRendererComponent },
-  ].map(col => ({ ...col, label: label(col.name)}));
+  columns: Array<ISimpleGridColumn<IAttribute>> = [
+    {
+      prop: 'code', minWidth: 50, maxWidth: 80,
+    },
+    {
+      prop: 'name', minWidth: 150, maxWidth: 200, isGroup: true,
+    },
+    {
+      prop: 'isDisplayed', minWidth: 50, maxWidth: 100, cellRendererFramework: CheckboxRendererComponent
+    },
+    {
+      prop: 'isMandatory', minWidth: 50, maxWidth: 100, cellRendererFramework: CheckboxRendererComponent
+    },
+  ].map(addGridLabel('widgets.contactProperty.dialogs.edit.attributes'));
 
   private attributeTypesChanged = false;
 
@@ -95,7 +101,8 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     )
     .pipe(first())
     .subscribe(([ debtStatusDict, attributes, templates, attributeTypes, data ]) => {
-      this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
+      // this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
+      this.attributeTypes = attributeTypes;
       this.data = {
         ...data,
         autoCommentIds: data && data.autoCommentIds
