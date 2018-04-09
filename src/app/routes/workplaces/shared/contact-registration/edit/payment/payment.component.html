@@ -23,7 +23,7 @@
         [max]="paymentMaxAmount$ | async"
         [positive]="true"
         [required]="true"
-        (input)="onPaymentAmountInput($event)"
+        [precision]="2"
       ></app-number>
     </div>
 
@@ -38,7 +38,7 @@
         [max]="100"
         [positive]="true"
         [required]="true"
-        (input)="onPaymentPercentageInput($event)"
+        [precision]="5"
       ></app-number>
     </div>
 
