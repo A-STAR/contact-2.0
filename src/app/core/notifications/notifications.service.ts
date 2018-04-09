@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { distinctUntilChanged, filter, first, map, mergeMap, throttleTime } from 'rxjs/operators';
+import { filter, first, map, mergeMap, throttleTime } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { IAppState } from '../state/state.interface';
@@ -26,6 +26,7 @@ import { WSService } from '@app/core/ws/ws.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { NotificationActionBuilder } from './notification-action-builder';
+import { IWSConnection } from '@app/core/ws/ws.interface';
 
 @Injectable()
 export class NotificationsService implements OnDestroy {
@@ -61,12 +62,9 @@ export class NotificationsService implements OnDestroy {
     )
     .subscribe(([ state ]) => this.settingsService.set(NotificationsService.STORAGE_KEY, state));
 
-    this.authService.currentUser$
+    this.wsService.connect<ITaskStatusNotification>('/wsapi/taskStatus')
       .pipe(
-        mergeMap(() => this.authService.canActivate()),
-        filter(Boolean),
-        distinctUntilChanged(),
-        mergeMap(() => this.wsService.connect<ITaskStatusNotification>('/wsapi/taskStatus').listen()),
+        mergeMap((connection: IWSConnection<any>) => connection.listen()),
         filter(Boolean),
         mergeMap(event => {
           return this.userDictionariesService
@@ -75,7 +73,7 @@ export class NotificationsService implements OnDestroy {
               first(),
               map(terms => ({ terms, event }))
             );
-        }),
+        })
       )
       .subscribe(({ terms, event }) => {
         const message = terms.find(t => t.code === event.taskTypeCode).name;

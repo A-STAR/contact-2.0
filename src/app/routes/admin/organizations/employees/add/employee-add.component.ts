@@ -1,11 +1,13 @@
-import { Component, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { take } from 'rxjs/operators';
 
 import { IDynamicFormControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IEmployeeUser, IEmployee, IOrganizationsState } from '../../organizations.interface';
+import { IEmployeeUser, IEmployee } from '../../organizations.interface';
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { OrganizationsService } from '../../organizations.service';
+import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 import { TickRendererComponent } from '@app/shared/components/grids/renderers';
@@ -17,9 +19,9 @@ import { addGridLabel } from '@app/core/utils';
   templateUrl: './employee-add.component.html'
 })
 export class EmployeeAddComponent implements OnInit {
-  @Input() employeeRoleOptions: Array<any> = [];
   @Output() submit = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
+
   @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
   private selectedEmployees: Array<IEmployeeUser> = [];
@@ -37,28 +39,32 @@ export class EmployeeAddComponent implements OnInit {
 
   constructor(
     private organizationsService: OrganizationsService,
+    private userDictionariesService: UserDictionariesService,
   ) { }
-
-  get state(): Observable<IOrganizationsState> {
-    return this.organizationsService.state;
-  }
 
   ngOnInit(): void {
     this.notAddedEmployees = this.organizationsService.fetchNotAddedEmployees();
-    this.controls = [
-      {
-        label: 'users.edit.role',
-        controlName: 'roleCode',
-        type: 'select',
-        required: true,
-        options: this.employeeRoleOptions
-      },
-    ];
-    this.formData = {
-      roleCode: [
-        this.employeeRoleOptions[0]
-      ]
-    };
+    this.userDictionariesService
+      .getDictionaryAsOptions(UserDictionariesService.DICTIONARY_EMPLOYEE_ROLE)
+      .pipe(
+        take(1),
+      )
+      .subscribe(options => {
+        this.controls = [
+          {
+            label: 'users.edit.role',
+            controlName: 'roleCode',
+            type: 'select',
+            required: true,
+            options,
+          },
+        ];
+        this.formData = {
+          roleCode: [
+            options[0]
+          ]
+        };
+      });
   }
 
   onSelectEmployees(employees: IEmployeeUser[]): void {
@@ -66,7 +72,7 @@ export class EmployeeAddComponent implements OnInit {
   }
 
   canSubmit(): boolean {
-    return this.selectedEmployees && this.selectedEmployees.length > 0;
+    return this.selectedEmployees && this.selectedEmployees.length > 0 && this.form && this.form.isValid;
   }
 
   onSubmit(): void {

@@ -39,6 +39,7 @@ export class MetadataFormItemComponent {
   @Input() editable: boolean;
   @Input() formGroup: FormGroup;
   @Input() item: IMetadataFormItem;
+  @Input() suppressLabel = false;
 
   constructor(
     private contextService: ContextService,

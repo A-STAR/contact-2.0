@@ -73,6 +73,10 @@ export class AuthService implements CanActivate {
     select(store => store.auth.params),
   );
 
+  readonly validToken$ = this.token$.pipe(
+    map(token => this.isTokenValid(token) ? token : null),
+  );
+
   canActivate(): Observable<boolean> {
     return this.token$.map(token => this.isTokenValid(token) || this.isRetrievedTokenValid());
   }
