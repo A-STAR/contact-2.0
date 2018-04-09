@@ -39,7 +39,7 @@ export class AuthService implements CanActivate {
 
   private tokenTimer = null;
 
-  readonly token$ = this.store.pipe(
+  private readonly token$ = this.store.pipe(
     select(state => state.auth.token),
   );
 
@@ -71,6 +71,10 @@ export class AuthService implements CanActivate {
 
   readonly userParams$ = this.store.pipe(
     select(store => store.auth.params),
+  );
+
+  readonly validToken$ = this.token$.pipe(
+    map(token => this.isTokenValid(token) ? token : null),
   );
 
   canActivate(): Observable<boolean> {

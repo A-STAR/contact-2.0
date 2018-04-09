@@ -19,7 +19,7 @@ export class WSService {
   connect<T>(url: string): Observable<IWSConnection<T>> {
     const baseUrl = this.configService.config.api.ws;
     const listener = new BehaviorSubject<T>(null);
-    return this.authService.token$.pipe(
+    return this.authService.validToken$.pipe(
       filter(Boolean),
       take(1),
       map(token => this.createWSConnection(
