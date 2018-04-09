@@ -66,13 +66,13 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
 
   open = false;
   disabled = false;
+  tempOptions: IMultiSelectOption[] = [];
 
   private _options: IMultiSelectOption[];
   private _required = false;
   private optionsSubscription: Subscription;
   private value: number[] = [];
   private tempValue: number[] = [];
-  private tempOptions: IMultiSelectOption[] = [];
 
   @Input()
   set options(options: IMultiSelectOption[]) {
