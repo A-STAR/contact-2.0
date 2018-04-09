@@ -65,7 +65,7 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions imp
   readonly selectedDocument$ = this.selectedDocumentGuid$.map(guid => this.documents.find(document => document.guid === guid));
 
   readonly isRequired$ = this.contactRegistrationService.outcome$.pipe(
-      map(outcome => outcome.fileAttachMode === 3)
+      map(outcome => outcome && outcome.fileAttachMode === 3)
   );
 
   get isValid(): boolean {
