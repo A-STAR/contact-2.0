@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, AfterViewInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { filter, first, map, switchMap, } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { Subscription } from 'rxjs/Subscription';
 
 import { ContactRegistrationService } from '@app/routes/workplaces/shared/contact-registration/contact-registration.service';
+import { isNumber } from 'util';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +23,10 @@ export class ContactRegistrationPaymentComponent implements AfterViewInit, OnDes
     this.contactRegistrationService.canSetInsufficientPromiseAmount$,
   );
   private isFullPaymentModeSub: Subscription;
+  private amountControl: AbstractControl;
+  private amountControlChangesSub: Subscription;
+  private percentageControl: AbstractControl;
+  private percentageControlChangesSub: Subscription;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -29,16 +34,37 @@ export class ContactRegistrationPaymentComponent implements AfterViewInit, OnDes
   ) {}
 
   ngAfterViewInit(): void {
+    this.amountControl = this.formGroup.get('payment.amount');
+    this.percentageControl = this.formGroup.get('payment.percentage');
+
     this.isFullPaymentModeSub = this.fullPaymentMode$
       .subscribe(_ => {
-        this.formGroup.get('payment.amount').markAsDirty();
-        this.formGroup.get('payment.percentage').markAsDirty();
+        this.amountControl.markAsDirty();
+        this.percentageControl.markAsDirty();
       });
+
+      this.amountControlChangesSub = this.amountControl
+        .valueChanges
+        .distinctUntilChanged()
+        .pipe(filter(v => isNumber(v)))
+        .subscribe(value => this.onPaymentAmountChange(value));
+
+    this.percentageControlChangesSub = this.percentageControl
+        .valueChanges
+        .distinctUntilChanged()
+        .pipe(filter(v => isNumber(v)))
+        .subscribe(value => this.onPaymentPercentageChange(value));
   }
 
   ngOnDestroy(): void {
     if (this.isFullPaymentModeSub) {
       this.isFullPaymentModeSub.unsubscribe();
+    }
+    if (this.amountControlChangesSub) {
+      this.amountControlChangesSub.unsubscribe();
+    }
+    if (this.percentageControlChangesSub) {
+      this.percentageControlChangesSub.unsubscribe();
     }
   }
 
@@ -75,24 +101,26 @@ export class ContactRegistrationPaymentComponent implements AfterViewInit, OnDes
       map(([ _, limit, canSet ]) => canSet ? 0 : limit.minAmountPercent),
   );
 
-  onPaymentAmountInput(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const amount = Number(value);
+  onPaymentAmountChange(amount: number): void {
     this.contactRegistrationService.debt$
       .pipe(first())
-      .subscribe(debt => debt && this.setPaymentAmount(amount, 100.0 * amount / debt.debtAmount));
+      .subscribe(debt => debt && this.setPaymentAmount(null, 100.0 * amount / debt.debtAmount));
   }
 
-  onPaymentPercentageInput(event: Event): void {
-    const { value } = event.target as HTMLInputElement;
-    const percentage = Number(value);
+  onPaymentPercentageChange(percentage: number): void {
     this.contactRegistrationService.debt$
       .pipe(first())
-      .subscribe(debt => debt && this.setPaymentAmount(debt.debtAmount * percentage / 100.0, percentage));
+      .subscribe(debt => debt && this.setPaymentAmount(debt.debtAmount * percentage / 100.0, null));
   }
 
   private setPaymentAmount(amount: number, percentage: number): void {
-    this.formGroup.patchValue({ payment: { amount, percentage } });
+    const data = { promise: { } as any };
+    if (isNumber(amount)) {
+      data.promise.amount = amount;
+    } else if (isNumber(percentage)) {
+      data.promise.percentage = percentage;
+    }
+    this.formGroup.patchValue(data, { emitEvent: false });
     this.cdRef.markForCheck();
   }
 }

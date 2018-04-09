@@ -10,6 +10,7 @@ import {
 import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
 import { range } from '@app/core/utils';
 import { defaultTo } from 'ramda';
+import { isNumber } from 'util';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,6 +55,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   @Input() max: number;
   @Input() positive = false;
   @Input() required = false;
+  @Input() precision = 0;
 
   @Input()
   set isReadonly(value: boolean) {
@@ -86,7 +88,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   ) {}
 
   writeValue(value: number): void {
-    this.value = value;
+    this.value = this.precision && isNumber(value) ? Number(value.toFixed(this.precision)) : value;
     this.cdRef.markForCheck();
   }
 
@@ -106,7 +108,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
     switch (true) {
       case this.required && this.value == null:
         return { required: true };
-      case this.positive && this.value && this.value <= 0:
+      case this.positive && isNumber(this.value) && this.value <= 0:
         return { positive: true };
       case !this.isMinValid(this.value):
         return { min: { minValue: this.min } };
@@ -174,7 +176,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
   }
 
   private update(value: number): void {
-    this.value = value;
+    this.value = this.precision ? Number(value.toFixed(this.precision)) : value;
     this.propagateChange(value);
     this.cdRef.markForCheck();
   }

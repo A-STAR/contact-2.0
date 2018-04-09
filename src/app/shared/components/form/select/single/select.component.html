@@ -1,28 +1,27 @@
 <!-- single-option-select -->
-<label class="m0">
+<label appDropdown class="m0" [disabled]="disabled" (change)="onDropdownToggle()">
 
   <span *ngIf="label" class="form-label">
     {{ label | translate }}
     <b *ngIf="required" class="text-danger">*</b>
   </span>
 
-  <div class="select-container dropdown open" [ngStyle]="styles">
+  <div #dropdownParent class="select-container dropdown open" [ngStyle]="styles">
     <input
       #input
+      #dropdownTrigger
       readonly="readonly"
       type="text"
       [ngClass]="{'form-control select-search': true, disabled: disabled}"
       autocomplete="off"
       [attr.placeholder]="(placeholder || '') | translate"
       [ngModel]="activeLabel | translate"
-      (click)="onInputClick()"
       (ngModelChange)="onInputChange($event)"
     >
     <i
       *ngIf="!disabled"
       class="co co-back select-caret"
       [ngClass]="caretCls"
-      (click)="onCaret($event)"
     ></i>
     <!--
     <i
@@ -33,11 +32,9 @@
     -->
 
     <ul
-      *ngIf="open"
+      #dropdownContent
       class="select-options dropdown-menu"
-      appAlignment
-      [alignTarget]="input"
-      [autoAlign]="autoAlign"
+      style="display: block; z-index: 100000;"
     >
       <li *ngFor="let option of options">
         <div
