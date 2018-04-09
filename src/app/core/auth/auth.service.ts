@@ -39,7 +39,7 @@ export class AuthService implements CanActivate {
 
   private tokenTimer = null;
 
-  private readonly token$ = this.store.pipe(
+  readonly token$ = this.store.pipe(
     select(state => state.auth.token),
   );
 

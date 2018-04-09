@@ -66,7 +66,7 @@ export class CallService {
     ])
     .distinctUntilChanged()
     .filter(Boolean)
-    .map(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
+    .mergeMap(() => this.wsService.connect<IPBXState>('/wsapi/pbx/events'))
     .do(connection => this.wsConnection = connection)
     .flatMap(connection => connection.listen())
     .subscribe(state => this.updatePBXState(state));
@@ -144,7 +144,7 @@ export class CallService {
       this.settings$
         .map(settings => settings && !!settings.usePreview && !!settings.useMakeCall),
       this.pbxState$
-        .map(pbxState => pbxState && pbxState.lineStatus === PBXStateEnum.PBX_NOCALL),
+        .map(pbxState => pbxState && [ PBXStateEnum.PBX_NOCALL, null ].includes(pbxState.lineStatus)),
     ]);
   }
 
