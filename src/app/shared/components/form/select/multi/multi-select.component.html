@@ -1,4 +1,4 @@
-<label class="m0">
+<label appDropdown [disabled]="disabled" (change)="onDropdownToggle($event)" class="m0">
 
   <span *ngIf="label" class="form-label">
     {{ label | translate }}
@@ -6,26 +6,25 @@
   </span>
 
   <div
+    #dropdownParent
     class="select-container dropdown open"
     [ngStyle]="styles"
-    >
-
+  >
     <input
       #input
+      #dropdownTrigger
       type="text"
       class="form-control select-search"
       autocomplete="off"
       [attr.placeholder]="(placeholder || '') | translate"
       [disabled]="disabled"
       [ngModel]="selectionLabel"
-      (click)="onInputClick()"
       (ngModelChange)="onInputChange()"
     >
     <i
       *ngIf="!disabled"
       class="co co-back select-caret"
       [ngClass]="{ 'up': open }"
-      (click)="onCaret($event)"
     ></i>
 
     <!--
@@ -37,12 +36,10 @@
     -->
 
     <ul
+      #dropdownContent
       #list
-      *ngIf="open"
       class="select-options dropdown-menu"
-      appAlignment
-      [alignTarget]="input"
-      [autoAlign]="autoAlign"
+      style="display: block; z-index: 100000;"
     >
       <li class="select-item" *ngFor="let option of tempOptions; trackBy: trackByFn">
         <app-checkbox

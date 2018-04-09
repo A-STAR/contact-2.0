@@ -3,9 +3,11 @@ import {
   ContentChild,
   Directive,
   ElementRef,
+  EventEmitter,
   Input,
   OnInit,
   OnDestroy,
+  Output,
   Renderer2,
 } from '@angular/core';
 
@@ -19,6 +21,8 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
 
   @Input() disabled = false;
   @Input() fitWidthToContent = false;
+
+  @Output() change = new EventEmitter<boolean>();
 
   @ContentChild('dropdownContent') content: ElementRef;
   @ContentChild('dropdownParent') parent: ElementRef;
@@ -77,6 +81,8 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
 
     this.outsideClickListener = this.createOutsideClickListener();
     this.outsideScrollListener = this.createOutsideScrollListener();
+
+    this.change.emit(true);
   }
 
   private collapse(): void {
@@ -84,6 +90,8 @@ export class DropdownDirective implements OnInit, AfterContentInit, OnDestroy {
     this.removeListener(this.outsideClickListener);
     this.removeListener(this.outsideScrollListener);
     this.renderer.removeChild(document.body, this.contentElement);
+
+    this.change.emit(false);
   }
 
   private getPosition(): any {

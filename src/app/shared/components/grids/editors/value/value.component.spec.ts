@@ -229,19 +229,19 @@ describe('ValueEditorComponent', () => {
     expect(fixture.nativeElement).toMatchSnapshot();
   });
 
-  it('should render value editor with typeCode 4 (boolean)', () => {
-    fixture.componentInstance.agInit({
-      value: true,
-      node: {
-        data: {
-          typeCode: 4
-        }
-      },
-      valueTypeKey: 'typeCode',
-    } as any);
-    fixture.detectChanges();
-    expect(fixture.nativeElement).toMatchSnapshot();
-  });
+  // it('should render value editor with typeCode 4 (boolean)', () => {
+  //   fixture.componentInstance.agInit({
+  //     value: true,
+  //     node: {
+  //       data: {
+  //         typeCode: 4
+  //       }
+  //     },
+  //     valueTypeKey: 'typeCode',
+  //   } as any);
+  //   fixture.detectChanges();
+  //   expect(fixture.nativeElement).toMatchSnapshot();
+  // });
 
   it('should render value editor with typeCode 5 (float)', () => {
     fixture.componentInstance.agInit({
@@ -257,51 +257,51 @@ describe('ValueEditorComponent', () => {
     expect(fixture.nativeElement).toMatchSnapshot();
   });
 
-  it('should render value editor with typeCode 6 (dictionary) by dictCode', () => {
-    fixture.componentInstance.agInit({
-      value: 33,
-      node: {
-        data: {
-          typeCode: 6
-        }
-      },
-      dictCode: 33,
-      valueTypeKey: 'typeCode',
-    } as any);
-    fixture.detectChanges();
-    expect(fixture.nativeElement).toMatchSnapshot();
-  });
+  // it('should render value editor with typeCode 6 (dictionary) by dictCode', () => {
+  //   fixture.componentInstance.agInit({
+  //     value: 33,
+  //     node: {
+  //       data: {
+  //         typeCode: 6
+  //       }
+  //     },
+  //     dictCode: 33,
+  //     valueTypeKey: 'typeCode',
+  //   } as any);
+  //   fixture.detectChanges();
+  //   expect(fixture.nativeElement).toMatchSnapshot();
+  // });
 
-  it('should render value editor with typeCode 6 (dictionary) by dictCode callback', () => {
-    fixture.componentInstance.agInit({
-      value: 33,
-      node: {
-        data: {
-          typeCode: 6,
-          dictCode: 33
-        }
-      },
-      dictCode: item => item.dictCode,
-      valueTypeKey: 'typeCode',
-    } as any);
-    fixture.detectChanges();
-    expect(fixture.nativeElement).toMatchSnapshot();
-  });
+  // it('should render value editor with typeCode 6 (dictionary) by dictCode callback', () => {
+  //   fixture.componentInstance.agInit({
+  //     value: 33,
+  //     node: {
+  //       data: {
+  //         typeCode: 6,
+  //         dictCode: 33
+  //       }
+  //     },
+  //     dictCode: item => item.dictCode,
+  //     valueTypeKey: 'typeCode',
+  //   } as any);
+  //   fixture.detectChanges();
+  //   expect(fixture.nativeElement).toMatchSnapshot();
+  // });
 
-  it('should render value editor with typeCode 6 (dictionary) by lookupKey', () => {
-    fixture.componentInstance.agInit({
-      value: 33,
-      node: {
-        data: {
-          typeCode: 6,
-          lookupKey: 'users'
-        }
-      },
-      valueTypeKey: 'typeCode',
-    } as any);
-    fixture.detectChanges();
-    expect(fixture.nativeElement).toMatchSnapshot();
-  });
+  // it('should render value editor with typeCode 6 (dictionary) by lookupKey', () => {
+  //   fixture.componentInstance.agInit({
+  //     value: 33,
+  //     node: {
+  //       data: {
+  //         typeCode: 6,
+  //         lookupKey: 'users'
+  //       }
+  //     },
+  //     valueTypeKey: 'typeCode',
+  //   } as any);
+  //   fixture.detectChanges();
+  //   expect(fixture.nativeElement).toMatchSnapshot();
+  // });
 
   // it('should render value editor with typeCode 7 (datetimepicker)', () => {
   //   fixture.componentInstance.agInit({
