@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { IAttachment, IAttachmentFormData } from './attachment.interface';
@@ -12,6 +12,7 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
 import { DialogFunctions } from '@app/core/dialog';
 
 import { isEmpty, addGridLabel } from '@app/core/utils';
+import { map, first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contact-registration-attachment',
@@ -19,7 +20,7 @@ import { isEmpty, addGridLabel } from '@app/core/utils';
   styleUrls: ['./attachment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
+export class ContactRegistrationAttachmentsComponent extends DialogFunctions implements OnInit {
   private selectedDocumentGuid$ = new BehaviorSubject<string>(null);
 
   toolbarItems: IToolbarItem[] = [
@@ -45,6 +46,7 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
   documents: IAttachment[] = [];
 
   dialog: 'edit' | 'delete';
+  private _isRequired: boolean;
 
   constructor(
     private attachmentService: AttachmentService,
@@ -54,10 +56,22 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
     super();
   }
 
+  ngOnInit(): void {
+    this.isRequired$
+      .pipe(first())
+      .subscribe(isRequired => this._isRequired = isRequired);
+  }
+
   readonly selectedDocument$ = this.selectedDocumentGuid$.map(guid => this.documents.find(document => document.guid === guid));
 
-  readonly formDisabled$ = this.contactRegistrationService.outcome$
-      .map(outcome => outcome.fileAttachMode === 3 && isEmpty(this.documents));
+  readonly isRequired$ = this.contactRegistrationService.outcome$.pipe(
+      map(outcome => outcome.fileAttachMode === 3)
+  );
+
+  get isValid(): boolean {
+    return this._isRequired ? !isEmpty(this.documents) : true;
+  }
+
 
   onSelect(documents: IAttachment[]): void {
     const guid = isEmpty(documents)
@@ -91,10 +105,6 @@ export class ContactRegistrationAttachmentsComponent extends DialogFunctions {
         this.documents = this.documents.filter(document => document.guid !== fileGuid);
         this.onSuccess();
       });
-  }
-
-  onNextClick(): void {
-    //
   }
 
   private onSuccess(): void {
