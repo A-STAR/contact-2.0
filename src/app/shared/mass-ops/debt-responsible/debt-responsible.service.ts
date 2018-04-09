@@ -48,12 +48,4 @@ export class DebtResponsibleService {
       )
       .catch(this.notificationsService.deleteError().entity('entities.operator.gen.singular').dispatchCallback());
   }
-
-  showOperationNotification(result: IOperationResult): void {
-    if (!result.success) {
-      this.notificationsService.warning('system.notifications.tasks.start.error').response(result).dispatch();
-    } else {
-      this.notificationsService.info('system.notifications.tasks.start.success').response(result).dispatch();
-    }
-  }
 }

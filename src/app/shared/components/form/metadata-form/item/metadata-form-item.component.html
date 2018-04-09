@@ -1,0 +1,93 @@
+<ng-container *ngIf="editable" [formGroup]="formGroup">
+  <ng-container [ngSwitch]="item.type">
+
+    <!-- Group -->
+    <app-metadata-form-group
+      *ngSwitchCase="'group'"
+      [border]="item.border"
+      [editable]="editable"
+      [formGroup]="formGroup"
+      [groupType]="item.groupType"
+      [items]="item.children"
+      [label]="item.label"
+    ></app-metadata-form-group>
+
+    <!-- Checkbox -->
+    <app-checkbox
+      *ngSwitchCase="'checkbox'"
+      [formControlName]="item.name"
+      [label]="item.label"
+    ></app-checkbox>
+
+    <!-- Date -->
+    <app-datepicker
+      *ngSwitchCase="'date'"
+      [formControlName]="item.name"
+      [label]="item.label"
+      [required]="false"
+    ></app-datepicker>
+
+    <!-- Grid Select -->
+    <app-grid-select
+      *ngSwitchCase="'gridselect'"
+      [filterParams]="item.filterParams"
+      [filterType]="item.filterType"
+      [formControlName]="item.name"
+      [label]="item.label"
+      [required]="isRequired(item) | async"
+      (select)="onGridSelect(item, $event)"
+    ></app-grid-select>
+
+    <!-- Password -->
+    <app-password-input
+      *ngSwitchCase="'password'"
+      [formControlName]="item.name"
+      [label]="item.label"
+      [required]="isRequired(item) | async"
+    ></app-password-input>
+
+    <!-- Select -->
+    <app-select
+      *ngSwitchCase="'select'"
+      [dictCode]="item.dictCode"
+      [formControlName]="item.name"
+      [label]="item.label"
+      [lookupKey]="item.lookupKey"
+      [isRequired]="isRequired(item) | async"
+    ></app-select>
+
+    <!-- Text -->
+    <app-text
+      *ngSwitchCase="'text'"
+      [formControlName]="item.name"
+      [label]="item.label"
+      [required]="isRequired(item) | async"
+    ></app-text>
+
+    <!-- Textarea -->
+    <app-textarea
+      *ngSwitchCase="'textarea'"
+      [formControlName]="item.name"
+      [label]="item.label"
+      [required]="isRequired(item) | async"
+    ></app-textarea>
+  </ng-container>
+
+  <!-- Errors -->
+  <div *ngIf="item.type !== 'group'" class="errors">
+    {{ getErrorMessage(item).message | translate:getErrorMessage(item).data }}
+  </div>
+</ng-container>
+
+<!-- Plain controls -->
+<ng-container *ngIf="!editable">
+  <label class="m0">
+    <div *ngIf="label" class="form-label">
+      {{ label }}
+    </div>
+    <div>
+      {{ item.name }}
+    </div>
+  </label>
+</ng-container>
+

@@ -1,4 +1,9 @@
-<h3>{{ 'routes.workplaces.shared.contactRegistration.edit.form.attachments.title' | translate }}</h3>
+<h3>
+  {{ 'routes.workplaces.shared.contactRegistration.edit.form.attachments.title' | translate }}
+  <span class="form-label">
+    <b *ngIf="isRequired$ | async" class="text-danger">*</b>
+  </span>
+</h3>
 
 <app-contact-registration-attachment-edit
   *ngIf="isDialog('edit')"

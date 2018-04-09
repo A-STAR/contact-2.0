@@ -14,11 +14,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { ICloseAction, IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
 import { IDebtStatusDictionaries } from '../debt-status.interface';
 import { IDynamicFormControl, IDynamicFormSelectControl } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
-import { IOperationResult } from '../../debt-responsible/debt-responsible.interface';
 import { IOption } from '@app/core/converter/value-converter.interface';
 import { IUserConstant } from '@app/core/user/constants/user-constants.interface';
 
-import { DebtResponsibleService } from '../../debt-responsible/debt-responsible.service';
 import { DebtStatusService } from '../debt-status.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
@@ -53,7 +51,6 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
   constructor(
     private cdRef: ChangeDetectorRef,
     private debtStatusService: DebtStatusService,
-    private debtResponsibleService: DebtResponsibleService,
     private userConstantsService: UserConstantsService,
     private userDictionariesService: UserDictionariesService
   ) { }
@@ -125,15 +122,14 @@ export class DebtStatusComponent implements OnInit, OnDestroy {
   submit(): void {
     this.debtStatusService
       .change(this.actionData.payload, this.form.serializedUpdates)
-      .subscribe(result => this.onOperationResult(result));
+      .subscribe(() => this.onOperationResult());
   }
 
   cancel(): void {
     this.close.emit();
   }
 
-  onOperationResult(result: IOperationResult): void {
-    this.debtResponsibleService.showOperationNotification(result);
+  onOperationResult(): void {
     // this.close.emit({ refresh: result.massInfo && !!result.massInfo.processed });
     this.close.emit({ refresh: false });
   }

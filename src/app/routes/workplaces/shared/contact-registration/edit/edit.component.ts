@@ -166,7 +166,11 @@ export class EditComponent extends DialogFunctions {
   }
 
   private isEntityHasChosen(): boolean {
-    return this.isAttributeTreeValid() && this.isContactValid();
+    return this.isAttributeTreeValid() && this.isContactValid() && this.attachmentsValid();
+  }
+
+  private attachmentsValid(): boolean {
+    return !this.attachments || this.attachments.isValid;
   }
 
   private isAttributeTreeValid(): boolean {
