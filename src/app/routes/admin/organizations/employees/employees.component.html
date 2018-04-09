@@ -1,6 +1,5 @@
 <app-employee-add
   *ngIf="isDialog('create')"
-  [employeeRoleOptions]="employeeRoleOptions$ | async"
   (submit)="onAddSubmit($event)"
   (cancel)="cancelAction()">
 </app-employee-add>
