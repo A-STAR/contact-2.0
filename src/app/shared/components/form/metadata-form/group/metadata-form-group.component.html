@@ -1,4 +1,4 @@
-<span *ngIf="label" class="group-label">
+<span *ngIf="label && !suppressLabel" class="group-label">
   {{ label }}
 </span>
 
@@ -22,12 +22,13 @@
   <!-- Tabbed Group -->
   <ng-container *ngSwitchCase="'tabs'">
     <app-tabview>
-      <app-tabview-tab *ngFor="let item of items" [title]="item.label">
+      <app-tabview-tab *ngFor="let item of items; let i = index;" [title]="item.label || 'Tab ' + (i + 1)">
         <div *ngIf="isDisplayed(item) | async" [ngStyle]="getItemStyle(item.width)" class="group-item">
           <app-metadata-form-item
             [editable]="editable"
             [formGroup]="formGroup"
             [item]="item"
+            [suppressLabel]="true"
           ></app-metadata-form-item>
         </div>
       </app-tabview-tab>
