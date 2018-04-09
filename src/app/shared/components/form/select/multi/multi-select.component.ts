@@ -5,7 +5,6 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
-  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -31,6 +30,8 @@ import { LookupService } from '@app/core/lookup/lookup.service';
 import { SortOptionsPipe } from '@app/shared/components/form/select/select.pipe';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
+import { DropdownDirective } from '@app/shared/components/dropdown/dropdown.directive';
+
 @Component({
   selector: 'app-multi-select',
   styleUrls: ['./multi-select.component.scss'],
@@ -50,9 +51,6 @@ import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictio
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSelectComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
-  @ViewChild('input') input: ElementRef;
-  @ViewChild('list') list: ElementRef;
-
   @Input() dictCode: number;
   @Input() errors: ValidationErrors;
   @Input() label: string;
@@ -62,10 +60,13 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
 
   @Output() select = new EventEmitter<number[]>();
 
+  @ViewChild('input') input: ElementRef;
+  @ViewChild('list') list: ElementRef;
+  @ViewChild(DropdownDirective) dropdown: DropdownDirective;
+
   open = false;
   disabled = false;
 
-  private _autoAlign = false;
   private _options: IMultiSelectOption[];
   private _required = false;
   private optionsSubscription: Subscription;
@@ -86,15 +87,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
 
   get options(): IMultiSelectOption[] {
     return this._options || [];
-  }
-
-  @Input()
-  set autoAlign(autoAlign: boolean) {
-    this._autoAlign = this.setDefault(autoAlign, this._autoAlign);
-  }
-
-  get autoAlign(): boolean {
-    return this._autoAlign;
   }
 
   @Input()
@@ -134,16 +126,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   ngOnDestroy(): void {
     if (this.optionsSubscription) {
       this.optionsSubscription.unsubscribe();
-    }
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    if (this.open
-      && !this.input.nativeElement.contains(event.target)
-      && this.list
-      && !this.list.nativeElement.contains(event.target)) {
-      this.hideOptions();
     }
   }
 
@@ -205,17 +187,6 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     }
   }
 
-  onInputClick(): void {
-    if (this.disabled) {
-      return;
-    }
-    if (!this.open) {
-      this.showOptions();
-    } else {
-      this.hideOptions();
-    }
-  }
-
   onInputChange(): void {
     this.renderer.setProperty(this.input.nativeElement, 'value', this.selectionLabel);
   }
@@ -245,18 +216,18 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     this.select.emit(this.value);
   }
 
-  onCaret(event: MouseEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    if (this.open) {
-      this.hideOptions();
-    } else {
-      this.showOptions();
-    }
-  }
-
   trackByFn(option: IMultiSelectOption): number {
     return option.value;
+  }
+
+  onDropdownToggle(open: boolean): void {
+    if (open) {
+      // Copy source values and options before editing
+      this.tempValue = [...this.value];
+      this.tempOptions = this.options.map(o => ({ ...o }));
+      this.open = true;
+    }
+    this.cdRef.markForCheck();
   }
 
   propagateTouched: Function = () => {};
@@ -264,15 +235,8 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   private propagateChange: Function = () => {};
 
   private hideOptions(): void {
-    this.open = false;
+    this.dropdown.close();
     this.propagateTouched();
-  }
-
-  private showOptions(): void {
-    // Copy source values and options before editing
-    this.tempValue = [...this.value];
-    this.tempOptions = this.options.map(o => ({ ...o }));
-    this.open = true;
   }
 
   private setDefault(value: boolean, defaultValue: boolean): boolean {
@@ -282,5 +246,4 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
   private onOptionsFetch = (options: IMultiSelectOption[]) => {
     this.options = options;
   }
-
 }

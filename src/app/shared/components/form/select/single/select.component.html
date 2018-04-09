@@ -1,5 +1,5 @@
 <!-- single-option-select -->
-<label appDropdown [disabled]="disabled" class="m0">
+<label appDropdown class="m0" [disabled]="disabled" (change)="onDropdownToggle()">
 
   <span *ngIf="label" class="form-label">
     {{ label | translate }}

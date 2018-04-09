@@ -204,6 +204,10 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     return this.dropdown.opened ? 'up' : '';
   }
 
+  onDropdownToggle(): void {
+    this.cdRef.markForCheck();
+  }
+
   onInputChange(label: string): void {
     const option = this.options.find(o => o.label === label);
     this.selectedValue = option ? option.value : null;
