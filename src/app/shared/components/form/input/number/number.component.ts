@@ -106,7 +106,7 @@ export class NumberComponent implements ControlValueAccessor, Validator {
     switch (true) {
       case this.required && this.value == null:
         return { required: true };
-      case this.positive && this.value && this.value <= 0:
+      case this.positive && isNumber(this.value) && this.value <= 0:
         return { positive: true };
       case !this.isMinValid(this.value):
         return { min: { minValue: this.min } };
