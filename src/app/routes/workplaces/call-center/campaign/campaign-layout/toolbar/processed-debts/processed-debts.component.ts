@@ -101,6 +101,7 @@ export class ProcessedDebtsComponent implements OnInit, OnDestroy {
         debtId: params.debtId,
         personId: params.personId,
         personRole: 1,
+        campaignId: params.campaignId
       });
       this.close.emit();
     }
