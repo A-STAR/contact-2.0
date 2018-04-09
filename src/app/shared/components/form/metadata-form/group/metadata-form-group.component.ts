@@ -43,6 +43,7 @@ export class MetadataFormGroupComponent {
   @Input() groupType: IMetadataFormGroupType;
   @Input() items: IMetadataFormItem[];
   @Input() label: string;
+  @Input() suppressLabel = false;
 
   constructor(
     private contextService: ContextService,
