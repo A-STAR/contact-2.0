@@ -72,7 +72,7 @@ export class ParticipantsAddComponent implements OnInit, OnDestroy {
     return this.grid.selection.length > 0;
   }
 
-  onSelectParticipants(): void {
-
+  onSelect(): void {
+    this.cdRef.markForCheck();
   }
 }
