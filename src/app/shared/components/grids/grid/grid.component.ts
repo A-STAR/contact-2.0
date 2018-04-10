@@ -231,6 +231,10 @@ export class SimpleGridComponent<T> implements OnChanges, OnDestroy, OnInit, Con
     this.propagateTouch = fn;
   }
 
+  onTouch(): void {
+    this.propagateTouch();
+  }
+
   validate(): any {
     switch (true) {
       case this.selection == null || !this.selection.length && this.required:

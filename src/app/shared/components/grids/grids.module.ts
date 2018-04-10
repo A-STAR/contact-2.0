@@ -44,6 +44,7 @@ import {
 // Misc Components
 import { GridToolbarComponent } from './toolbar/toolbar.component';
 import { EmptyOverlayComponent } from './overlays/empty/empty.component';
+import { FSMCheckboxRendererComponent } from '@app/shared/components/grids/renderers/fsm-checkbox/fsm-checkbox.component';
 
 @NgModule({
   imports: [
@@ -56,6 +57,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
       DictRendererComponent,
       HtmlRendererComponent,
       EmptyOverlayComponent,
+      FSMCheckboxRendererComponent,
       LookupRendererComponent,
       NumberRendererComponent,
       TickRendererComponent,
@@ -75,6 +77,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
   ],
   exports: [
     CheckboxRendererComponent,
+    FSMCheckboxRendererComponent,
     SimpleGridComponent,
   ],
   declarations: [
@@ -85,6 +88,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
     DateTimeRendererComponent,
     DictRendererComponent,
     EmptyOverlayComponent,
+    FSMCheckboxRendererComponent,
     GridToolbarComponent,
     HtmlRendererComponent,
     LookupRendererComponent,
@@ -97,6 +101,7 @@ import { EmptyOverlayComponent } from './overlays/empty/empty.component';
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
   entryComponents: [
     CheckboxRendererComponent,
+    FSMCheckboxRendererComponent,
   ],
   providers: [
     ContextMenuService,

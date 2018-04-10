@@ -7,3 +7,4 @@ export * from './general';
 export * from './helpers';
 export * from './tree';
 export * from './value';
+export * from './fsm';

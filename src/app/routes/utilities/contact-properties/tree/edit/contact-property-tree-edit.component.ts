@@ -31,9 +31,18 @@ import { UserTemplatesService } from '@app/core/user/templates/user-templates.se
 
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { CheckboxRendererComponent } from '@app/shared/components/grids/renderers';
+import { flatten, isEmpty, range, valuesToOptions, addGridLabel, FSM } from '@app/core/utils';
+import { FSMCheckboxRendererComponent } from '@app/shared/components/grids/renderers/fsm-checkbox/fsm-checkbox.component';
+import { ICellRendererParams, RowNode } from 'ag-grid';
 
-import { flatten, isEmpty, range, valuesToOptions, addGridLabel } from '@app/core/utils';
+enum ContactPropertyTree {
+  VISIBLE_MANDATORY = 'VISIBLE_MANDATORY',
+  VISIBLE_OPTIONAL = 'VISIBLE_OPTIONAL',
+  HIDDEN_MANDATORY = 'HIDDEN_MANDATORY',
+  HIDDEN_OPTIONAL = 'HIDDEN_OPTIONAL',
+  HIDDEN_DISABLED = 'HIDDEN_DISABLED',
+  VISIBLE_DISABLED = 'VISIBLE_DISABLED',
+}
 
 @Component({
   selector: 'app-contact-property-tree-edit',
@@ -71,13 +80,16 @@ export class ContactPropertyTreeEditComponent implements OnInit {
       prop: 'name', minWidth: 150, maxWidth: 200, isGroup: true,
     },
     {
-      prop: 'isDisplayed', minWidth: 50, maxWidth: 100, cellRendererFramework: CheckboxRendererComponent
+      prop: 'isDisplayed', minWidth: 50, maxWidth: 100, renderer: FSMCheckboxRendererComponent,
+      rendererParams: { onAction: (params, value) => this.onAction(params, value) }
     },
     {
-      prop: 'isMandatory', minWidth: 50, maxWidth: 100, cellRendererFramework: CheckboxRendererComponent
+      prop: 'isMandatory', minWidth: 50, maxWidth: 100, renderer: FSMCheckboxRendererComponent,
+      rendererParams: { onAction: (params, value) => this.onAction(params, value) }
     },
   ].map(addGridLabel('widgets.contactProperty.dialogs.edit.attributes'));
 
+  private fsm: FSM<ContactPropertyTree>;
   private attributeTypesChanged = false;
 
   constructor(
@@ -87,7 +99,9 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     private userAttributeTypesService: UserAttributeTypesService,
     private userDictionariesService: UserDictionariesService,
     private userTemplatesService: UserTemplatesService,
-  ) {}
+  ) {
+    this.fsm = this.createFSM();
+  }
 
   ngOnInit(): void {
     combineLatest(
@@ -101,8 +115,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     )
     .pipe(first())
     .subscribe(([ debtStatusDict, attributes, templates, attributeTypes, data ]) => {
-      // this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
-      this.attributeTypes = attributeTypes;
+      this.attributeTypes = this.convertToNodes(attributeTypes, data ? data.attributes : []);
       this.data = {
         ...data,
         autoCommentIds: data && data.autoCommentIds
@@ -127,16 +140,13 @@ export class ContactPropertyTreeEditComponent implements OnInit {
         const hasChildren = children && children.length > 0;
         const attributeDataItem = attributeData ? attributeData.find(item => item.code === attribute.code) : null;
         return {
-          data: {
             ...data,
             isMandatory: !!attributeDataItem && !!attributeDataItem.mandatory,
             isDisplayed: !!attributeDataItem,
-          },
-          ...(hasChildren ? { children: this.convertToNodes(children, attributeDataItem && attributeDataItem.children) } : {}),
-          expanded: hasChildren,
+            ...(hasChildren ? { children: this.convertToNodes(children, attributeDataItem && attributeDataItem.children) } : {}),
         };
       })
-      .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+      .sort((a, b) => a.sortOrder - b.sortOrder);
   }
 
   get canSubmit(): boolean {
@@ -230,21 +240,76 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     this.attributeTypes = this.updateMandatoryField(this.attributeTypes, codes[codes.length - 1], event.newValue);
   }
 
+  createFSM(): FSM<ContactPropertyTree> {
+    const fsm = new FSM<ContactPropertyTree>(ContactPropertyTree.VISIBLE_MANDATORY);
+
+    fsm.from(ContactPropertyTree.VISIBLE_MANDATORY).to(ContactPropertyTree.HIDDEN_OPTIONAL, ContactPropertyTree.VISIBLE_OPTIONAL);
+
+    fsm.from(ContactPropertyTree.VISIBLE_OPTIONAL).to(ContactPropertyTree.VISIBLE_MANDATORY);
+
+    fsm.from(ContactPropertyTree.HIDDEN_OPTIONAL).to(ContactPropertyTree.VISIBLE_MANDATORY);
+    fsm.from(ContactPropertyTree.HIDDEN_DISABLED).to(ContactPropertyTree.HIDDEN_OPTIONAL);
+    fsm.from(ContactPropertyTree.HIDDEN_OPTIONAL).to(ContactPropertyTree.HIDDEN_DISABLED);
+
+    fsm.on(ContactPropertyTree.VISIBLE_MANDATORY, (from: ContactPropertyTree, node: RowNode) => {
+      this.displayParents(node);
+      console.log('State was: ' + from);
+    });
+
+    fsm.on(ContactPropertyTree.VISIBLE_OPTIONAL, (from: ContactPropertyTree, node: RowNode) => {
+      this.hideChildren(node);
+      console.log('State was: ' + from);
+    });
+
+    fsm.on(ContactPropertyTree.VISIBLE_DISABLED, (from: ContactPropertyTree, node: RowNode) => {
+      this.hideMandatory(node);
+      console.log('State was: ' + from);
+    });
+
+    return fsm;
+  }
+
+  displayParents(node: RowNode): void {
+    console.log('Display parents for node: ' + node.getRowIndexString());
+  }
+
+  hideChildren(node: RowNode): void {
+    console.log('Hide children for node: ' + node.getRowIndexString());
+  }
+
+  hideMandatory(node: RowNode): void {
+    console.log('Hide mandatory for node: ' + node.getRowIndexString());
+  }
+
+  onAction(params: ICellRendererParams, value: any): any {
+    if (params.data.disabledValue === 1) {
+      this.fsm.go(ContactPropertyTree.VISIBLE_DISABLED, params.node);
+    }
+
+    if (params.colDef.field === 'isMandatory') {
+      this.fsm.go(value ? ContactPropertyTree.HIDDEN_OPTIONAL : ContactPropertyTree.HIDDEN_DISABLED, params.node);
+    }
+
+    if (params.colDef.field === 'isDisplayed') {
+      this.fsm.go(value ? ContactPropertyTree.VISIBLE_MANDATORY : ContactPropertyTree.VISIBLE_OPTIONAL, params.node);
+    }
+  }
+
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
   }
 
   onCellValueChanged(event: any): void {
-    this.attributeTypesChanged = true;
-    switch (event.colDef.field) {
-      case 'isDisplayed':
-        this.onIsDisplayedChange(event);
-        break;
-      case 'isMandatory':
-        this.onIsMandatoryChange(event);
-        break;
-    }
-    this.cdRef.markForCheck();
+    // this.attributeTypesChanged = true;
+    // switch (event.colDef.field) {
+    //   case 'isDisplayed':
+    //     this.onIsDisplayedChange(event);
+    //     break;
+    //   case 'isMandatory':
+    //     this.onIsMandatoryChange(event);
+    //     break;
+    // }
+    // this.cdRef.markForCheck();
   }
 
   private buildControls(
