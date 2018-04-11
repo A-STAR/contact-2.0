@@ -14,6 +14,7 @@ import {
   IMetadataFormFlatConfig,
   IMetadataFormItem,
   IMetadataFormValidator,
+  IFormContextConfigOperator,
 } from './metadata-form.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
@@ -115,7 +116,7 @@ export class MetadataFormComponent<T> implements OnInit {
 
     this.flatControls.forEach(item => {
       if (typeof item.disabled === 'object' && item.disabled !== null) {
-        if (item.disabled['operator']) {
+        if (item.disabled['operator'] === IFormContextConfigOperator.EQUALS) {
           const disabled = item.disabled as IFormContextConfig;
           this.formGroup.get(disabled.field).valueChanges
             .subscribe((value: any) => this.disable(item.name, String(value) === String(disabled.value)));
@@ -145,7 +146,7 @@ export class MetadataFormComponent<T> implements OnInit {
     return Object.keys(control.validators || {}).map(key => {
       const value = control.validators[key];
       if (typeof value === 'object' && value !== null) {
-        if (value['operator']) {
+        if (value['operator'] === IFormContextConfigOperator.EQUALS) {
           return c => this.formGroup.get(value.field).valueChanges.pipe(
             map(v => String(v) === String(value)),
             map(v => this.getValidator(key, v)),
@@ -213,6 +214,9 @@ export class MetadataFormComponent<T> implements OnInit {
   }
 
   private fromFormValue(value: any): Partial<T> {
+    // TODO(d.maltsev):
+    // check whether the control is displayed
+    // or automatically disable it if it's not displayed
     return Object.keys(value).reduce((acc, key) => {
       const control = this.formGroup.controls[key];
       if (control.dirty) {
@@ -246,7 +250,7 @@ export class MetadataFormComponent<T> implements OnInit {
 
   private calculateContextValue(validator: IMetadataFormValidator<any>): Observable<boolean> {
     if (typeof validator === 'object' && validator !== null) {
-      if (validator['operator']) {
+      if (validator['operator'] === IFormContextConfigOperator.EQUALS) {
         return this.formGroup.get(validator.field).valueChanges.pipe(
           map(v => String(v) === String(validator.value)),
           map(Boolean),

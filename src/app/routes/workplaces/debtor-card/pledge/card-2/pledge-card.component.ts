@@ -1,6 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import {
+  IContextByEntityMethod,
+  IContextByValueBagMethod,
+  IContextConfigItemType,
+  IContextConfigOperator,
+} from '@app/core/context/context.interface';
+
+import {
   IMetadataFormConfig,
   IMetadataFormControlType,
   IMetadataFormTextControl,
@@ -104,7 +111,11 @@ export class PledgeCardComponent {
       },
       {
         disabled: false,
-        display: true,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
         label: 'Отчество',
         name: 'middleName',
         type: IMetadataFormControlType.TEXT,
@@ -113,7 +124,11 @@ export class PledgeCardComponent {
       },
       {
         disabled: false,
-        display: true,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
         label: 'Дата рождения',
         name: 'birthDate',
         type: IMetadataFormControlType.DATE,
@@ -122,7 +137,11 @@ export class PledgeCardComponent {
       },
       {
         disabled: false,
-        display: true,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
         label: 'Место рождения',
         name: 'birthPlace',
         type: IMetadataFormControlType.TEXT,
@@ -132,7 +151,11 @@ export class PledgeCardComponent {
       {
         dictCode: UserDictionariesService.DICTIONARY_GENDER,
         disabled: false,
-        display: true,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
         label: 'Пол',
         name: 'genderCode',
         type: IMetadataFormControlType.SELECT,
@@ -142,7 +165,11 @@ export class PledgeCardComponent {
       {
         dictCode: UserDictionariesService.DICTIONARY_FAMILY_STATUS,
         disabled: false,
-        display: true,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
         label: 'Семейное положение',
         name: 'familyStatusCode',
         type: IMetadataFormControlType.SELECT,
@@ -152,7 +179,11 @@ export class PledgeCardComponent {
       {
         dictCode: UserDictionariesService.DICTIONARY_EDUCATION,
         disabled: false,
-        display: true,
+        display: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
         label: 'Образование',
         name: 'educationCode',
         type: IMetadataFormControlType.SELECT,
@@ -161,7 +192,22 @@ export class PledgeCardComponent {
       },
       ...range(1, 10).map(i => ({
         disabled: false,
-        display: true,
+        display: {
+          type: IContextConfigItemType.GROUP,
+          operator: IContextConfigOperator.AND,
+          children: [
+            {
+              type: IContextConfigItemType.ENTITY,
+              method: IContextByEntityMethod.IS_USED,
+              value: 363 + i,
+            },
+            {
+              type: IContextConfigItemType.CONSTANT,
+              method: IContextByValueBagMethod.CONTAINS,
+              value: [ 'Person.Individual.AdditionalAttribute.List', 363 + i ],
+            }
+          ],
+        },
         label: `Строковый атрибут ${i}`,
         name: `stringValue${i}`,
         type: IMetadataFormControlType.TEXT,
@@ -229,7 +275,11 @@ export class PledgeCardComponent {
         lookupKey: 'currencies',
         name: 'currencyId',
         type: IMetadataFormControlType.SELECT,
-        validators: {},
+        validators: {
+          // TODO(d.maltsev): add (`and`, `or`) operators to form context
+          // RODO(d.maltsev): add `equals` method to form context
+          required: true,
+        },
         width: 0,
       },
     ],
