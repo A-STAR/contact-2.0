@@ -2,8 +2,9 @@
   <app-metadata-form-group
     groupType="plain"
     [editable]="formConfig.editable"
+    [flatConfig]="flatConfig"
     [formGroup]="formGroup"
     [items]="formConfig.items"
   ></app-metadata-form-group>
-  <button type="submit" style="visibility: hidden;"></button>
+  <button type="submit" style="left: -9999px; position: absolute; visibility: hidden;"></button>
 </form>

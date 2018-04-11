@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { IdentityCardModule } from '@app/routes/workplaces/debtor-card/identity/card/identity-card.module';
+import { IdentityCardModule } from './card/identity-card.module';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { DebtorIdentityComponent } from './identity.component';

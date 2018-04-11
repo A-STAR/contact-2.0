@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { EmploymentCardModule } from '@app/routes/workplaces/debtor-card/employment/card/employment-card.module';
+import { EmploymentCardModule } from './card/employment-card.module';
 import { SharedModule } from '@app/shared/shared.module';
 
 import { DebtorEmploymentComponent } from './employment.component';

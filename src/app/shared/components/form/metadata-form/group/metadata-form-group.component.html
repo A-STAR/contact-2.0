@@ -11,6 +11,7 @@
         <div *ngIf="isDisplayed(item) | async" [ngStyle]="getItemStyle(item.width)" class="group-item">
           <app-metadata-form-item
             [editable]="editable"
+            [flatConfig]="flatConfig"
             [formGroup]="formGroup"
             [item]="item"
           ></app-metadata-form-item>
@@ -26,6 +27,7 @@
         <div *ngIf="isDisplayed(item) | async" [ngStyle]="getItemStyle(item.width)" class="group-item">
           <app-metadata-form-item
             [editable]="editable"
+            [flatConfig]="flatConfig"
             [formGroup]="formGroup"
             [item]="item"
             [suppressLabel]="true"

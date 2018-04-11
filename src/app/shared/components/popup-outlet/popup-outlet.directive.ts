@@ -1,6 +1,6 @@
 import { Directive, HostListener, Input } from '@angular/core';
 
-import { PopupOutletService } from './popup-outlet.service';
+import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
 @Directive({
   selector: '[appPopupOutlet]'
