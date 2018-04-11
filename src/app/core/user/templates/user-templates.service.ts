@@ -69,10 +69,10 @@ export class UserTemplatesService {
 
   getLetterTemplatesForDebt(
     recipientTypeCode: number,
-    debtId: number,
+    debtsId: number,
   ): Observable<IUserLetterTemplate[]> {
     const url = '/lookup/templates/letters/recipientsTypeCode/{recipientTypeCode}';
-    return this.dataService.readAll(url, { recipientTypeCode }, { params: { debtId } });
+    return this.dataService.readAll(url, { recipientTypeCode }, { params: { debtsId } });
   }
 
   /**
