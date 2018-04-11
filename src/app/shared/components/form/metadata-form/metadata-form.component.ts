@@ -4,11 +4,13 @@ import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn, Validators } fro
 import { of } from 'rxjs/observable/of';
 import { first, map } from 'rxjs/operators';
 
+import { IContextConfig } from '@app/core/context/context.interface';
 import {
   IMetadataFormConfig,
   IMetadataFormControl,
   IMetadataFormControlType,
   IMetadataFormItem,
+  IFormContextConfig,
 } from './metadata-form.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
@@ -108,9 +110,15 @@ export class MetadataFormComponent<T> implements OnInit {
 
     this.flatControls.forEach(item => {
       if (typeof item.disabled === 'object' && item.disabled !== null) {
-        this.contextService
-          .calculate(item.disabled)
-          .subscribe((d: boolean) => this.disable(item.name, d));
+        if (item.disabled['operator']) {
+          const disabled = item.disabled as IFormContextConfig;
+          this.formGroup.get(disabled.field).valueChanges
+            .subscribe((value: any) => this.disable(item.name, String(value) === String(disabled.value)));
+        } else {
+          this.contextService
+            .calculate(item.disabled as IContextConfig)
+            .subscribe((d: boolean) => this.disable(item.name, d));
+        }
       }
     });
 

@@ -4,9 +4,11 @@ import {
   IMetadataFormConfig,
   IMetadataFormControlType,
   IMetadataFormTextControl,
+  IFormContextConfigOperator,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
+
 import { range } from '@app/core/utils';
 
 @Component({
@@ -88,7 +90,11 @@ export class PledgeCardComponent {
         width: 0,
       },
       {
-        disabled: false,
+        disabled: {
+          field: 'typeCode',
+          operator: IFormContextConfigOperator.EQUALS,
+          value: 1,
+        },
         display: true,
         label: 'Имя',
         name: 'firstName',
