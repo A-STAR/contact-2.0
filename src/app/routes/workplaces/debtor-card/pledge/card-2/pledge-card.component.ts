@@ -90,12 +90,12 @@ export class PledgeCardComponent {
         width: 0,
       },
       {
-        disabled: {
+        disabled: false,
+        display: {
           field: 'typeCode',
           operator: IFormContextConfigOperator.EQUALS,
           value: 1,
         },
-        display: true,
         label: 'Имя',
         name: 'firstName',
         type: IMetadataFormControlType.TEXT,

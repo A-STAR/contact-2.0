@@ -1,16 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { first, map } from 'rxjs/operators';
 
 import { IContextConfig } from '@app/core/context/context.interface';
 import {
+  IFormContextConfig,
   IMetadataFormConfig,
   IMetadataFormControl,
   IMetadataFormControlType,
+  IMetadataFormFlatConfig,
   IMetadataFormItem,
-  IFormContextConfig,
+  IMetadataFormValidator,
 } from './metadata-form.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
@@ -43,6 +46,8 @@ export class MetadataFormComponent<T> implements OnInit {
   }
 
   @Output() submit = new EventEmitter<void>();
+
+  flatConfig: IMetadataFormFlatConfig;
 
   private _config: IMetadataFormConfig;
   private _data: Partial<T>;
@@ -122,6 +127,14 @@ export class MetadataFormComponent<T> implements OnInit {
       }
     });
 
+    this.flatConfig = this.flatControls.reduce((acc, control) => ({
+      ...acc,
+      [control.name]: {
+        display: this.calculateContextValue(control.display),
+        required: this.calculateContextValue(control.validators['required']),
+      },
+    }), {});
+
     this.populateForm();
 
     this.initialized = true;
@@ -131,13 +144,24 @@ export class MetadataFormComponent<T> implements OnInit {
   private getAsyncValidators(control: IMetadataFormControl): AsyncValidatorFn[] {
     return Object.keys(control.validators || {}).map(key => {
       const value = control.validators[key];
-      return typeof value === 'object' && value !== null
-        ? c => this.contextService.calculate(value).pipe(
+      if (typeof value === 'object' && value !== null) {
+        if (value['operator']) {
+          return c => this.formGroup.get(value.field).valueChanges.pipe(
+            map(v => String(v) === String(value)),
             map(v => this.getValidator(key, v)),
             map(v => v ? v(c) : null),
             first(),
-          )
-        : c => of(this.getValidator(key, value)(c));
+          );
+        } else {
+          return c => this.contextService.calculate(value).pipe(
+            map(v => this.getValidator(key, v)),
+            map(v => v ? v(c) : null),
+            first(),
+          );
+        }
+      } else {
+        return c => of(this.getValidator(key, value)(c));
+      }
     });
   }
 
@@ -219,4 +243,21 @@ export class MetadataFormComponent<T> implements OnInit {
   //       return value;
   //   }
   // }
+
+  private calculateContextValue(validator: IMetadataFormValidator<any>): Observable<boolean> {
+    if (typeof validator === 'object' && validator !== null) {
+      if (validator['operator']) {
+        return this.formGroup.get(validator.field).valueChanges.pipe(
+          map(v => String(v) === String(validator.value)),
+          map(Boolean),
+        );
+      } else {
+        return this.contextService.calculate(validator).pipe(
+          map(Boolean),
+        );
+      }
+    } else {
+      return of(validator);
+    }
+  }
 }
