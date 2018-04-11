@@ -49,17 +49,29 @@
 
       <!-- Phones -->
       <app-tabview-tab title="Телефоны">
-        Телефоны
+        <app-phone-grid
+          [contactType]="1"
+          [debtId]="1"
+          [personId]="4"
+          [personRole]="1"
+        ></app-phone-grid>
       </app-tabview-tab>
 
       <!-- Addresses -->
       <app-tabview-tab title="Адреса">
-        Адреса
+        <app-address-grid
+          [debtId]="1"
+          [personId]="4"
+          [personRole]="1"
+        ></app-address-grid>
       </app-tabview-tab>
 
       <!-- Documents -->
       <app-tabview-tab title="Документы">
-        Документы
+        <app-document-grid
+          [entityType]="19"
+          [entityId]="1"
+        ></app-document-grid>
       </app-tabview-tab>
     </app-tabview>
   </div>
