@@ -47,7 +47,7 @@ const routes: Routes = [
       },
       {
         path: 'pledge/create',
-        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        loadChildren: './pledge/card-2/pledge-card.module#PledgeCardModule',
       },
       {
         path: 'pledge/:contractId/pledgor/add',
