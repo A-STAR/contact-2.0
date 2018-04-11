@@ -153,15 +153,6 @@ export class PledgeCardComponent {
         validators: {},
         width: 0,
       },
-      {
-        disabled: false,
-        display: true,
-        label: 'Комментарий',
-        name: 'comment',
-        type: IMetadataFormControlType.TEXTAREA,
-        validators: {},
-        width: 0,
-      },
       ...range(1, 10).map(i => ({
         disabled: false,
         display: true,
@@ -171,6 +162,15 @@ export class PledgeCardComponent {
         validators: {},
         width: 0,
       }) as IMetadataFormTextControl),
+      {
+        disabled: false,
+        display: true,
+        label: 'Комментарий',
+        name: 'comment',
+        type: IMetadataFormControlType.TEXTAREA,
+        validators: {},
+        width: 0,
+      },
     ],
     plugins: [],
   };
