@@ -25,7 +25,9 @@ export class PledgeCardComponent {
         label: 'Номер договора',
         name: 'contractNumber',
         type: IMetadataFormControlType.TEXT,
-        validators: {},
+        validators: {
+          required: true,
+        },
         width: 0,
       },
       {
@@ -69,7 +71,9 @@ export class PledgeCardComponent {
         label: 'Тип',
         name: 'typeCode',
         type: IMetadataFormControlType.SELECT,
-        validators: {},
+        validators: {
+          required: true,
+        },
         width: 0,
       },
       {
@@ -78,7 +82,9 @@ export class PledgeCardComponent {
         label: 'Фамилия/Название',
         name: 'lastName',
         type: IMetadataFormControlType.TEXT,
-        validators: {},
+        validators: {
+          required: true,
+        },
         width: 0,
       },
       {
@@ -187,7 +193,9 @@ export class PledgeCardComponent {
         label: 'Тип имущества',
         name: 'propertyType',
         type: IMetadataFormControlType.SELECT,
-        validators: {},
+        validators: {
+          required: true,
+        },
         width: 0,
       },
       {
