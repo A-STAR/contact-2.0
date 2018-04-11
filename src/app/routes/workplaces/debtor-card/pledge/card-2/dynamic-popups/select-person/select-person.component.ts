@@ -12,6 +12,7 @@ import { range } from '@app/core/utils';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pledge-card-select-person',
+  styleUrls: [ 'select-person.component.scss' ],
   templateUrl: 'select-person.component.html'
 })
 export class SelectPersonComponent implements OnInit {
