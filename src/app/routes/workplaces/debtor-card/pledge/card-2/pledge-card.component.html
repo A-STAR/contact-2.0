@@ -39,12 +39,16 @@
 
       <!-- Identifications -->
       <app-tabview-tab title="Удостоверения личности">
-        Удостоверения личности
+        <app-identity-grid
+          [personId]="4"
+        ></app-identity-grid>
       </app-tabview-tab>
 
       <!-- Employment -->
       <app-tabview-tab title="Трудоустройство">
-        Трудоустройство
+        <app-employment-grid
+          [personId]="4"
+        ></app-employment-grid>
       </app-tabview-tab>
 
       <!-- Phones -->
