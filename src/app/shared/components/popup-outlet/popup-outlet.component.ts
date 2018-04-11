@@ -10,10 +10,10 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { IPopup } from './popup-outlet.interface';
+import { IPopup } from '@app/core/dynamic-loader/popup-outlet.interface';
 
 import { DynamicLoaderService } from '@app/core/dynamic-loader/dynamic-loader.service';
-import { PopupOutletService } from './popup-outlet.service';
+import { PopupOutletService } from '@app/core/dynamic-loader/popup-outlet.service';
 
 import { fade, fly, withChildren } from '@app/shared/animations';
 

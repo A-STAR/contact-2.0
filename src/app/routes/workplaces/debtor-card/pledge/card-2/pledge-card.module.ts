@@ -20,8 +20,8 @@ const routes: Routes = [
     RouterModule,
   ],
   imports: [
-    SharedModule,
     RouterModule.forChild(routes),
+    SharedModule,
   ]
 })
 export class PledgeCardModule {}

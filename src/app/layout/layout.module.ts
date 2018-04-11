@@ -43,7 +43,17 @@ const routes: Routes = [
           path: 'licence',
           loadChildren: 'app/layout/dynamic-popups/licence/licence.module#LicenceModule',
         },
-      ]
+        {
+          path: 'select-property',
+          // tslint:disable-next-line:max-line-length
+          loadChildren: 'app/routes/workplaces/debtor-card/pledge/card-2/dynamic-popups/select-property/select-property.module#SelectPropertyModule',
+        },
+        {
+          path: 'select-person',
+          // tslint:disable-next-line:max-line-length
+          loadChildren: 'app/routes/workplaces/debtor-card/pledge/card-2/dynamic-popups/select-person/select-person.module#SelectPersonModule',
+        },
+      ],
     ),
     InfoDialogModule,
     RouterModule.forChild(routes),
