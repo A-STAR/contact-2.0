@@ -332,11 +332,15 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       : null;
   }
 
-  onExcelFilterSubmit(event: IGridControlValue): void {
-    this.excelFilter = FilterObject.create()
-      .setList(event.guid)
-      .setName(event.columnId)
-      .setOperator('IN');
+  onExcelFilterSubmit(event: IGridControlValue[]): void {
+    this.excelFilter = FilterObject.create().and();
+    event.forEach(item => {
+      const f = FilterObject.create()
+        .setList(item.guid)
+        .setName(item.columnId)
+        .setOperator('IN');
+      this.excelFilter.addFilter(f);
+    });
     this.displayExcelFilter = false;
     this.cdRef.markForCheck();
   }
