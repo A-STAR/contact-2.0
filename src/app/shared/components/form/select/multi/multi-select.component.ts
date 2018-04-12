@@ -205,6 +205,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     this.options = [...this.tempOptions];
     this.propagateChange(this.value);
     this.select.emit(this.value);
+    this.cdRef.markForCheck();
   }
 
   onClear(event: MouseEvent): void {
@@ -214,6 +215,7 @@ export class MultiSelectComponent implements ControlValueAccessor, Validator, On
     this.options = this.tempOptions.map(o => ({ ...o, checked: false }));
     this.propagateChange(this.value);
     this.select.emit(this.value);
+    this.cdRef.markForCheck();
   }
 
   trackByFn(option: IMultiSelectOption): number {
