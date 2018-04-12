@@ -34,7 +34,6 @@ export class GridControlComponent implements OnInit, ControlValueAccessor {
   @ViewChild('file') file: ElementRef;
 
   columnOptions = [];
-
   total: number;
 
   private columnId: string;
