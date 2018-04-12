@@ -224,6 +224,7 @@ export class SelectComponent implements ControlValueAccessor, Validator, OnInit,
     this.select.emit(option.value);
 
     this.dropdown.close();
+    this.cdRef.markForCheck();
   }
 
   onClear(event: MouseEvent): void {

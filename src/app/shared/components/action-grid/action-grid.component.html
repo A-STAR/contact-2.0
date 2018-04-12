@@ -179,6 +179,7 @@
 
     <app-action-grid-excel-filter
       *ngIf="displayExcelFilter"
+      [columns]="columnsDef"
       (submit)="onExcelFilterSubmit()"
       (close)="onExcelFilterClose()"
     ></app-action-grid-excel-filter>

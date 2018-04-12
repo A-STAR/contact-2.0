@@ -3,6 +3,14 @@
     <h3>Excel Filtering</h3>
   </div>
 
+  <div>
+    <input #file type="file"/>
+    <app-select [options]="columnOptions" (select)="onColumnSelect($event)"></app-select>
+    <!--
+    <pre>{{ columns | json }}</pre>
+    -->
+  </div>
+
   <div dialog-footer>
     <app-button type="ok" (click)="onSubmit()"></app-button>
     <app-button type="close" (click)="onClose()"></app-button>
