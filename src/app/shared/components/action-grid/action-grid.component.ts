@@ -21,7 +21,7 @@ import {
   IGridAction,
   IActionGridAction,
 } from './action-grid.interface';
-import { IGridControl } from './excel-filter/excel-filter.interface';
+import { IGridControlValue } from './excel-filter/excel-filter.interface';
 import {
   IAGridAction,
   IAGridRequestParams,
@@ -332,8 +332,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       : null;
   }
 
-  onExcelFilterSubmit(event: IGridControl): void {
-    this.excelFilter = FilterObject.create().setOperator('IN').setList(event.guid);
+  onExcelFilterSubmit(event: IGridControlValue): void {
+    this.excelFilter = FilterObject.create()
+      .setList(event.guid)
+      .setName(event.columnId)
+      .setOperator('IN');
     this.displayExcelFilter = false;
     this.cdRef.markForCheck();
   }
