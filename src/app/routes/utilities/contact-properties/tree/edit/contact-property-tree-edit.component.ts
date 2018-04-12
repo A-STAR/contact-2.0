@@ -33,26 +33,8 @@ import { UserTemplatesService } from '@app/core/user/templates/user-templates.se
 import { ActionCheckboxRendererComponent } from '@app/shared/components/grids/renderers';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
-import { flatten, isEmpty, range, valuesToOptions, addGridLabel, FSM } from '@app/core/utils';
+import { flatten, isEmpty, range, valuesToOptions, addGridLabel } from '@app/core/utils';
 
-// tslint:disable:no-bitwise
-
-enum Inputs {
-  VISIBLE = 0b10,
-  HIDDEN = 0b00,
-  MANDATORY = 0b01,
-  OPTIONAL = 0b00,
-}
-
-enum State {
-  VISIBLE_MANDATORY = Inputs.VISIBLE | Inputs.MANDATORY,
-  VISIBLE_OPTIONAL = Inputs.VISIBLE | Inputs.OPTIONAL,
-  HIDDEN_MANDATORY = Inputs.HIDDEN | Inputs.MANDATORY,
-  HIDDEN_OPTIONAL = Inputs.HIDDEN | Inputs.OPTIONAL,
-  INITIAL = 9999,
-}
-
-// tslint:enable:no-bitwise
 
 @Component({
   selector: 'app-contact-property-tree-edit',
@@ -91,16 +73,51 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     },
     {
       prop: 'isDisplayed', minWidth: 50, maxWidth: 100, renderer: ActionCheckboxRendererComponent,
-      rendererParams: { onAction: (params, value) => this.onAction(params, value) }
+      rendererParams: {
+        config: {
+          props: ['isDisplayed', 'isMandatory'],
+          masks: [
+            {
+              mask: '1101',
+              action: _ => '00'
+            },
+            {
+              mask: '0001',
+              action: _ => '11'
+            },
+            {
+              mask: '0010',
+              action: _ => '11'
+            }
+          ]
+        }
+      }
     },
     {
       prop: 'isMandatory', minWidth: 50, maxWidth: 100, renderer: ActionCheckboxRendererComponent,
-      rendererParams: { onAction: (params, value) => this.onAction(params, value), isDisplayed: row => row.disabledValue !== 1 }
+      rendererParams: {
+        isDisplayed: row => row.disabledValue !== 1,
+        config: {
+          props: ['isDisplayed', 'isMandatory'],
+          masks: [
+            {
+              mask: '1101',
+              action: _ => '00'
+            },
+            {
+              mask: '0001',
+              action: _ => '11'
+            },
+            {
+              mask: '0010',
+              action: _ => '11'
+            }
+          ]
+        }
+      }
     },
   ].map(addGridLabel('widgets.contactProperty.dialogs.edit.attributes'));
 
-  private fsm: FSM<State>;
-  private getNextState: any;
   private attributeTypesChanged = false;
 
   constructor(
@@ -110,9 +127,7 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     private userAttributeTypesService: UserAttributeTypesService,
     private userDictionariesService: UserDictionariesService,
     private userTemplatesService: UserTemplatesService,
-  ) {
-    this.fsm = this.createFSM();
-  }
+  ) {}
 
   ngOnInit(): void {
     combineLatest(
@@ -186,87 +201,6 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  createFSM(): FSM<State> {
-    const fsm = new FSM<State>(State.INITIAL);
-
-    fsm.from(State.HIDDEN_OPTIONAL).to(
-      State.HIDDEN_OPTIONAL,
-      State.VISIBLE_MANDATORY
-    );
-
-    fsm.from(State.HIDDEN_MANDATORY).to(
-      State.HIDDEN_OPTIONAL,
-      State.HIDDEN_MANDATORY
-    );
-
-    fsm.from(State.VISIBLE_OPTIONAL).to(
-      State.HIDDEN_OPTIONAL,
-      State.VISIBLE_OPTIONAL,
-      State.VISIBLE_MANDATORY
-    );
-
-    fsm.from(State.VISIBLE_MANDATORY).to(
-      State.HIDDEN_OPTIONAL,
-      State.VISIBLE_OPTIONAL,
-      State.VISIBLE_MANDATORY
-    );
-
-    fsm.from(State.INITIAL).toAny(State);
-
-    this.getNextState = fsm
-      .on(State.VISIBLE_MANDATORY, (from: State, params: ICellRendererParams) => {
-        if (from === State.HIDDEN_MANDATORY || from === State.HIDDEN_OPTIONAL) {
-          this.displayParents(params);
-        }
-      })
-      .on(State.VISIBLE_OPTIONAL, (from: State, params: ICellRendererParams) => {
-        if (from === State.HIDDEN_OPTIONAL) {
-          this.displayParents(params);
-        }
-      })
-      .on(State.HIDDEN_OPTIONAL, (from: State, params: ICellRendererParams) => {
-        if (from === State.VISIBLE_OPTIONAL || from === State.VISIBLE_MANDATORY) {
-          this.hideChildren(params);
-        }
-        if (from === State.VISIBLE_MANDATORY) {
-          this.changeMandatory(params, false);
-        }
-      })
-      .on(State.HIDDEN_MANDATORY, (from: State, params: ICellRendererParams) => {
-        if (from === State.VISIBLE_MANDATORY) {
-          this.hideChildren(params);
-        }
-      })
-      .on(State.VISIBLE_MANDATORY, (from: State, params: ICellRendererParams) => {
-        if (from === State.HIDDEN_OPTIONAL) {
-          this.changeMandatory(params, true);
-        }
-      })
-      .transformState((from: State, input: {params: any, value: number}) => {
-        const fields = ['isDisplayed', 'isMandatory'];
-        const state = parseInt(
-            Object.keys(input.params.data)
-              .filter(key => fields.includes(key))
-              .sort()
-              .reduce<string>((acc, c) => acc + Number((c === input.params.colDef.field ?
-                  input.value : input.params.data[c])), ''),
-          2);
-        return fsm.canGo(state) ? state : this.selectState(from, state);
-      });
-
-    return fsm;
-  }
-
-  selectState(from: State, to: State): State {
-    if ((from === State.VISIBLE_MANDATORY || from === State.INITIAL) && to === State.HIDDEN_MANDATORY) {
-      return State.HIDDEN_OPTIONAL;
-    } else if ((from === State.HIDDEN_OPTIONAL || from === State.INITIAL) &&
-        (to === State.HIDDEN_MANDATORY || to === State.VISIBLE_OPTIONAL)) {
-      return State.VISIBLE_MANDATORY;
-    }
-    return to;
-  }
-
   displayParents(params: ICellRendererParams): void {
     let { node } = params;
     const column = params.columnApi.getColumn('isDisplayed');
@@ -287,23 +221,6 @@ export class ContactPropertyTreeEditComponent implements OnInit {
       }
     };
     hide(node);
-  }
-
-  changeMandatory(params: ICellRendererParams, value: boolean): void {
-    const { node } = params;
-    const column = params.columnApi.getColumn('isMandatory');
-    node.setDataValue(column, value);
-  }
-
-  onAction(params: ICellRendererParams, value: boolean): boolean {
-
-    const nextState = this.getNextState({ params, value });
-
-    if (this.fsm.canGo(nextState)) {
-      this.fsm.go(nextState, params);
-      return true;
-    }
-    return false;
   }
 
   onTabSelect(tabIndex: number): void {

@@ -69,6 +69,16 @@ export interface IGridLocalSettingsColumn {
   width: number;
 }
 
+export interface IActionCheckboxRendererConfig {
+  props: string[];
+  masks: {
+    mask: string,
+    action: (state: number) => string;
+    emitForParents?: boolean;
+    emitForChildren?: boolean;
+  }[];
+}
+
 export interface IGridLocalSettings {
   columns: IGridLocalSettingsColumn[];
   sortModel: any;
