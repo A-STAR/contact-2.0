@@ -176,6 +176,12 @@
       [metadataKey]="metadataKey"
       [data]="filterData"
     ></app-action-grid-filter>
+
+    <app-action-grid-excel-filter
+      *ngIf="displayExcelFilter"
+      (submit)="onExcelFilterSubmit()"
+      (close)="onExcelFilterClose()"
+    ></app-action-grid-excel-filter>
   </div>
 
   <div class="grid-container">

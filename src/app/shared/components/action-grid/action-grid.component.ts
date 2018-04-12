@@ -129,8 +129,10 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
 
   dialog: string;
   dialogData: IGridAction;
+  displayExcelFilter = false;
   selectionActionData: IGridAction;
   selectionActionName: string;
+
   gridActions$: Observable<IMetadataAction[]>;
   titlebar$: Observable<ITitlebar>;
 
@@ -328,6 +330,16 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       : null;
   }
 
+  onExcelFilterSubmit(): void {
+    this.displayExcelFilter = false;
+    this.cdRef.markForCheck();
+  }
+
+  onExcelFilterClose(): void {
+    this.displayExcelFilter = false;
+    this.cdRef.markForCheck();
+  }
+
   get initialized(): boolean {
     return this._initialized;
   }
@@ -408,23 +420,29 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       refresh: (permissions: string[]) => ({
         type: TitlebarItemTypeEnum.BUTTON_REFRESH,
         action: () => this.onRequest(),
-        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_REFRESH, permissions)
+        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_REFRESH, permissions),
       }),
       search: (permissions: string[]) => ({
         type: TitlebarItemTypeEnum.BUTTON_SEARCH,
         action: () => this.onRequest(),
-        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_SEARCH, permissions)
+        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_SEARCH, permissions),
       }),
       exportExcel: (permissions: string[]) => ({
         type: TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL,
         action: () => this.exportExcel(),
-        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL, permissions)
+        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL, permissions),
+      }),
+      filterFromExcel: (permissions: string[]) => ({
+        type: TitlebarItemTypeEnum.BUTTON_UPLOAD,
+        action: () => this.filterFromExcel(),
+        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_UPLOAD, permissions),
       }),
     };
     return {
       title: config.title,
       items: config.items
-        .map(item => titlebarItems[item.name](item.permissions))
+        .concat([{ name: 'filterFromExcel', permissions: null }])
+        .map(item => titlebarItems[item.name](item.permissions)),
     };
   }
 
@@ -441,6 +459,11 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         break;
     }
     return combineLatestAnd(conditions);
+  }
+
+  private filterFromExcel(): void {
+    this.displayExcelFilter = true;
+    this.cdRef.markForCheck();
   }
 
   private exportExcel(): void {
