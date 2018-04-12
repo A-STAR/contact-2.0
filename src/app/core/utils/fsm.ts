@@ -81,6 +81,10 @@ export class FSM<T> {
     return this._canGo(this.currentState, state);
   }
 
+  transformState(callback: (from: T, input: any) => T): (this: FSM<T>, input: any) => T {
+    return input => callback.call(this, this.currentState, input);
+  }
+
   private _canGo(from: T, to: T): boolean {
     return from === to || this._validTransition(from, to);
   }
@@ -103,6 +107,38 @@ export class FSM<T> {
        cb.call(this, old, event);
     });
   }
+}
+
+export class FSMGroup<T> extends FSM<T> {
+  constructor(
+    startState: T,
+    private parent: FSM<T> = null,
+    private children: FSM<T>[] = []
+  ) {
+      super(startState);
+  }
+
+  on(state: T, callback: (from?: T, event?: any) => any): FSM<T> {
+    this.children.forEach(child => child.on(state, callback));
+    super.on(state, callback);
+    return this;
+  }
+
+  reset(): void {
+    this.children.forEach(child => child.reset());
+    super.reset();
+  }
+
+  is(state: T): boolean {
+    return super.is(state) && this.children.every(child => child.is(state));
+  }
+
+  from(...states: T[]): Transitions<T> {
+    this.children.forEach(child => child.from(...states));
+    return super.from(...states);
+  }
+
+
 }
 
 

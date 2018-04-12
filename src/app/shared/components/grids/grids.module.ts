@@ -22,6 +22,7 @@ import { SimpleGridComponent } from './grid/grid.component';
 
 // Renderers
 import {
+  ActionCheckboxRendererComponent,
   CallbackRendererComponent,
   CheckboxRendererComponent,
   DateRendererComponent,
@@ -44,11 +45,11 @@ import {
 // Misc Components
 import { GridToolbarComponent } from './toolbar/toolbar.component';
 import { EmptyOverlayComponent } from './overlays/empty/empty.component';
-import { FSMCheckboxRendererComponent } from '@app/shared/components/grids/renderers/fsm-checkbox/fsm-checkbox.component';
 
 @NgModule({
   imports: [
     AgGridModule.withComponents([
+      ActionCheckboxRendererComponent,
       CallbackRendererComponent,
       CheckboxRendererComponent,
       DateRendererComponent,
@@ -57,7 +58,6 @@ import { FSMCheckboxRendererComponent } from '@app/shared/components/grids/rende
       DictRendererComponent,
       HtmlRendererComponent,
       EmptyOverlayComponent,
-      FSMCheckboxRendererComponent,
       LookupRendererComponent,
       NumberRendererComponent,
       TickRendererComponent,
@@ -77,10 +77,11 @@ import { FSMCheckboxRendererComponent } from '@app/shared/components/grids/rende
   ],
   exports: [
     CheckboxRendererComponent,
-    FSMCheckboxRendererComponent,
+    ActionCheckboxRendererComponent,
     SimpleGridComponent,
   ],
   declarations: [
+    ActionCheckboxRendererComponent,
     CallbackRendererComponent,
     CheckboxRendererComponent,
     DateRendererComponent,
@@ -88,7 +89,6 @@ import { FSMCheckboxRendererComponent } from '@app/shared/components/grids/rende
     DateTimeRendererComponent,
     DictRendererComponent,
     EmptyOverlayComponent,
-    FSMCheckboxRendererComponent,
     GridToolbarComponent,
     HtmlRendererComponent,
     LookupRendererComponent,
@@ -100,8 +100,8 @@ import { FSMCheckboxRendererComponent } from '@app/shared/components/grids/rende
   ],
   // TODO(d.maltsev): remove entryComponents when all grids are moved into GridsModule
   entryComponents: [
+    ActionCheckboxRendererComponent,
     CheckboxRendererComponent,
-    FSMCheckboxRendererComponent,
   ],
   providers: [
     ContextMenuService,

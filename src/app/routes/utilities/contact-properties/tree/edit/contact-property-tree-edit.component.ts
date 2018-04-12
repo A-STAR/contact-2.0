@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { ICellRendererParams, RowNode } from 'ag-grid';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { first } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
@@ -29,20 +30,29 @@ import { UserAttributeTypesService } from '@app/core/user/attribute-types/user-a
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 import { UserTemplatesService } from '@app/core/user/templates/user-templates.service';
 
+import { ActionCheckboxRendererComponent } from '@app/shared/components/grids/renderers';
 import { DynamicFormComponent } from '@app/shared/components/form/dynamic-form/dynamic-form.component';
 
 import { flatten, isEmpty, range, valuesToOptions, addGridLabel, FSM } from '@app/core/utils';
-import { FSMCheckboxRendererComponent } from '@app/shared/components/grids/renderers/fsm-checkbox/fsm-checkbox.component';
-import { ICellRendererParams, RowNode } from 'ag-grid';
 
-enum ContactPropertyTree {
-  VISIBLE_MANDATORY = 'VISIBLE_MANDATORY',
-  VISIBLE_OPTIONAL = 'VISIBLE_OPTIONAL',
-  HIDDEN_MANDATORY = 'HIDDEN_MANDATORY',
-  HIDDEN_OPTIONAL = 'HIDDEN_OPTIONAL',
-  HIDDEN_DISABLED = 'HIDDEN_DISABLED',
-  VISIBLE_DISABLED = 'VISIBLE_DISABLED',
+// tslint:disable:no-bitwise
+
+enum Inputs {
+  VISIBLE = 0b10,
+  HIDDEN = 0b00,
+  MANDATORY = 0b01,
+  OPTIONAL = 0b00,
 }
+
+enum State {
+  VISIBLE_MANDATORY = Inputs.VISIBLE | Inputs.MANDATORY,
+  VISIBLE_OPTIONAL = Inputs.VISIBLE | Inputs.OPTIONAL,
+  HIDDEN_MANDATORY = Inputs.HIDDEN | Inputs.MANDATORY,
+  HIDDEN_OPTIONAL = Inputs.HIDDEN | Inputs.OPTIONAL,
+  INITIAL = 9999,
+}
+
+// tslint:enable:no-bitwise
 
 @Component({
   selector: 'app-contact-property-tree-edit',
@@ -80,16 +90,17 @@ export class ContactPropertyTreeEditComponent implements OnInit {
       prop: 'name', minWidth: 150, maxWidth: 200, isGroup: true,
     },
     {
-      prop: 'isDisplayed', minWidth: 50, maxWidth: 100, renderer: FSMCheckboxRendererComponent,
+      prop: 'isDisplayed', minWidth: 50, maxWidth: 100, renderer: ActionCheckboxRendererComponent,
       rendererParams: { onAction: (params, value) => this.onAction(params, value) }
     },
     {
-      prop: 'isMandatory', minWidth: 50, maxWidth: 100, renderer: FSMCheckboxRendererComponent,
-      rendererParams: { onAction: (params, value) => this.onAction(params, value) }
+      prop: 'isMandatory', minWidth: 50, maxWidth: 100, renderer: ActionCheckboxRendererComponent,
+      rendererParams: { onAction: (params, value) => this.onAction(params, value), isDisplayed: row => row.disabledValue !== 1 }
     },
   ].map(addGridLabel('widgets.contactProperty.dialogs.edit.attributes'));
 
-  private fsm: FSM<ContactPropertyTree>;
+  private fsm: FSM<State>;
+  private getNextState: any;
   private attributeTypesChanged = false;
 
   constructor(
@@ -175,141 +186,128 @@ export class ContactPropertyTreeEditComponent implements OnInit {
     this.cancel.emit();
   }
 
-  updateDisplayedField(nodes: any[], code: number, value: boolean): any[] {
-    return nodes.reduce((acc, node) => {
-      const isMatch = node.data.code === code;
-      const { isDisplayed, isMandatory } = node.data;
-      return [
-        ...acc,
-        {
-          ...node,
-          data: {
-            ...node.data,
-            isDisplayed: isMatch ? value : isDisplayed,
-            isMandatory: isMatch ? isMandatory && value : isMandatory,
-          },
-          ...(node.children ? { children: this.updateDisplayedField(node.children, code, value) } : {}),
+  createFSM(): FSM<State> {
+    const fsm = new FSM<State>(State.INITIAL);
+
+    fsm.from(State.HIDDEN_OPTIONAL).to(
+      State.HIDDEN_OPTIONAL,
+      State.VISIBLE_MANDATORY
+    );
+
+    fsm.from(State.HIDDEN_MANDATORY).to(
+      State.HIDDEN_OPTIONAL,
+      State.HIDDEN_MANDATORY
+    );
+
+    fsm.from(State.VISIBLE_OPTIONAL).to(
+      State.HIDDEN_OPTIONAL,
+      State.VISIBLE_OPTIONAL,
+      State.VISIBLE_MANDATORY
+    );
+
+    fsm.from(State.VISIBLE_MANDATORY).to(
+      State.HIDDEN_OPTIONAL,
+      State.VISIBLE_OPTIONAL,
+      State.VISIBLE_MANDATORY
+    );
+
+    fsm.from(State.INITIAL).toAny(State);
+
+    this.getNextState = fsm
+      .on(State.VISIBLE_MANDATORY, (from: State, params: ICellRendererParams) => {
+        if (from === State.HIDDEN_MANDATORY || from === State.HIDDEN_OPTIONAL) {
+          this.displayParents(params);
         }
-      ];
-    }, []);
-  }
-
-  onIsDisplayedChange(event: any): void {
-    const codes = event.data.code;
-    this.attributeTypes = this.updateDisplayedField(this.attributeTypes, codes[codes.length - 1], event.newValue);
-
-    // TODO(d.maltsev): traverse the tree and update ancestors' and descendants' attributes
-    // this.attributeTypesChanged = true;
-    // node.data.isDisplayed = value;
-    // if (!value && node.data.isMandatory) {
-    //   node.data.isMandatory = false;
-    // }
-    // if (traverseUp && !!node.parent) {
-    //   const isParentDisplayed = node.parent.children.reduce((acc, child) => acc || !!child.data.isDisplayed, false);
-    //   this.onIsDisplayedChange(isParentDisplayed, node.parent, true, false);
-    // }
-    // if (traverseDown && !!node.children) {
-    //   node.children.forEach(child => this.onIsDisplayedChange(value, child, false, true));
-    // }
-    // if (traverseUp && traverseDown) {
-    //   this.cdRef.markForCheck();
-    // }
-  }
-
-  updateMandatoryField(nodes: any[], code: number, value: boolean): any[] {
-    return nodes.reduce((acc, node) => {
-      const isMatch = node.data.code === code;
-      const { isDisplayed, isMandatory } = node.data;
-      return [
-        ...acc,
-        {
-          ...node,
-          data: {
-            ...node.data,
-            isMandatory: isMatch ? value : isMandatory,
-            isDisplayed: isMatch ? isDisplayed || value : isDisplayed,
-          },
-          ...(node.children ? { children: this.updateMandatoryField(node.children, code, value) } : {}),
+      })
+      .on(State.VISIBLE_OPTIONAL, (from: State, params: ICellRendererParams) => {
+        if (from === State.HIDDEN_OPTIONAL) {
+          this.displayParents(params);
         }
-      ];
-    }, []);
-  }
-
-  onIsMandatoryChange(event: any): void {
-    const codes = event.data.code;
-    this.attributeTypes = this.updateMandatoryField(this.attributeTypes, codes[codes.length - 1], event.newValue);
-  }
-
-  createFSM(): FSM<ContactPropertyTree> {
-    const fsm = new FSM<ContactPropertyTree>(ContactPropertyTree.VISIBLE_MANDATORY);
-
-    fsm.from(ContactPropertyTree.VISIBLE_MANDATORY).to(ContactPropertyTree.HIDDEN_OPTIONAL, ContactPropertyTree.VISIBLE_OPTIONAL);
-
-    fsm.from(ContactPropertyTree.VISIBLE_OPTIONAL).to(ContactPropertyTree.VISIBLE_MANDATORY);
-
-    fsm.from(ContactPropertyTree.HIDDEN_OPTIONAL).to(ContactPropertyTree.VISIBLE_MANDATORY);
-    fsm.from(ContactPropertyTree.HIDDEN_DISABLED).to(ContactPropertyTree.HIDDEN_OPTIONAL);
-    fsm.from(ContactPropertyTree.HIDDEN_OPTIONAL).to(ContactPropertyTree.HIDDEN_DISABLED);
-
-    fsm.on(ContactPropertyTree.VISIBLE_MANDATORY, (from: ContactPropertyTree, node: RowNode) => {
-      this.displayParents(node);
-      console.log('State was: ' + from);
-    });
-
-    fsm.on(ContactPropertyTree.VISIBLE_OPTIONAL, (from: ContactPropertyTree, node: RowNode) => {
-      this.hideChildren(node);
-      console.log('State was: ' + from);
-    });
-
-    fsm.on(ContactPropertyTree.VISIBLE_DISABLED, (from: ContactPropertyTree, node: RowNode) => {
-      this.hideMandatory(node);
-      console.log('State was: ' + from);
-    });
+      })
+      .on(State.HIDDEN_OPTIONAL, (from: State, params: ICellRendererParams) => {
+        if (from === State.VISIBLE_OPTIONAL || from === State.VISIBLE_MANDATORY) {
+          this.hideChildren(params);
+        }
+        if (from === State.VISIBLE_MANDATORY) {
+          this.changeMandatory(params, false);
+        }
+      })
+      .on(State.HIDDEN_MANDATORY, (from: State, params: ICellRendererParams) => {
+        if (from === State.VISIBLE_MANDATORY) {
+          this.hideChildren(params);
+        }
+      })
+      .on(State.VISIBLE_MANDATORY, (from: State, params: ICellRendererParams) => {
+        if (from === State.HIDDEN_OPTIONAL) {
+          this.changeMandatory(params, true);
+        }
+      })
+      .transformState((from: State, input: {params: any, value: number}) => {
+        const fields = ['isDisplayed', 'isMandatory'];
+        const state = parseInt(
+            Object.keys(input.params.data)
+              .filter(key => fields.includes(key))
+              .sort()
+              .reduce<string>((acc, c) => acc + Number((c === input.params.colDef.field ?
+                  input.value : input.params.data[c])), ''),
+          2);
+        return fsm.canGo(state) ? state : this.selectState(from, state);
+      });
 
     return fsm;
   }
 
-  displayParents(node: RowNode): void {
-    console.log('Display parents for node: ' + node.getRowIndexString());
+  selectState(from: State, to: State): State {
+    if ((from === State.VISIBLE_MANDATORY || from === State.INITIAL) && to === State.HIDDEN_MANDATORY) {
+      return State.HIDDEN_OPTIONAL;
+    } else if ((from === State.HIDDEN_OPTIONAL || from === State.INITIAL) &&
+        (to === State.HIDDEN_MANDATORY || to === State.VISIBLE_OPTIONAL)) {
+      return State.VISIBLE_MANDATORY;
+    }
+    return to;
   }
 
-  hideChildren(node: RowNode): void {
-    console.log('Hide children for node: ' + node.getRowIndexString());
+  displayParents(params: ICellRendererParams): void {
+    let { node } = params;
+    const column = params.columnApi.getColumn('isDisplayed');
+    while (node.parent && node.data) {
+      node.setDataValue(column, true);
+      node = node.parent;
+    }
   }
 
-  hideMandatory(node: RowNode): void {
-    console.log('Hide mandatory for node: ' + node.getRowIndexString());
+  hideChildren(params: ICellRendererParams): void {
+    const { node } = params;
+    const column = params.columnApi.getColumn('isDisplayed');
+    const hide = (rowNode: RowNode) => {
+      if (rowNode.childrenAfterGroup && rowNode.childrenAfterGroup.length) {
+        rowNode.childrenAfterGroup.forEach(
+          n => n.childrenAfterGroup && n.childrenAfterGroup.length ? hide(n) : n.setDataValue(column, false)
+        );
+      }
+    };
+    hide(node);
   }
 
-  onAction(params: ICellRendererParams, value: any): any {
-    if (params.data.disabledValue === 1) {
-      this.fsm.go(ContactPropertyTree.VISIBLE_DISABLED, params.node);
-    }
+  changeMandatory(params: ICellRendererParams, value: boolean): void {
+    const { node } = params;
+    const column = params.columnApi.getColumn('isMandatory');
+    node.setDataValue(column, value);
+  }
 
-    if (params.colDef.field === 'isMandatory') {
-      this.fsm.go(value ? ContactPropertyTree.HIDDEN_OPTIONAL : ContactPropertyTree.HIDDEN_DISABLED, params.node);
-    }
+  onAction(params: ICellRendererParams, value: boolean): boolean {
 
-    if (params.colDef.field === 'isDisplayed') {
-      this.fsm.go(value ? ContactPropertyTree.VISIBLE_MANDATORY : ContactPropertyTree.VISIBLE_OPTIONAL, params.node);
+    const nextState = this.getNextState({ params, value });
+
+    if (this.fsm.canGo(nextState)) {
+      this.fsm.go(nextState, params);
+      return true;
     }
+    return false;
   }
 
   onTabSelect(tabIndex: number): void {
     this.tabs[tabIndex].isInitialised = true;
-  }
-
-  onCellValueChanged(event: any): void {
-    // this.attributeTypesChanged = true;
-    // switch (event.colDef.field) {
-    //   case 'isDisplayed':
-    //     this.onIsDisplayedChange(event);
-    //     break;
-    //   case 'isMandatory':
-    //     this.onIsMandatoryChange(event);
-    //     break;
-    // }
-    // this.cdRef.markForCheck();
   }
 
   private buildControls(

@@ -4,12 +4,16 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-grid-checkbox-renderer',
+  selector: 'app-grid-action-checkbox-renderer',
   template: `<app-checkbox *ngIf="isShown" [ngModel]="value" (ngModelChange)="onChange($event)"></app-checkbox>`,
 })
-export class FSMCheckboxRendererComponent implements ICellRendererAngularComp {
+export class ActionCheckboxRendererComponent implements ICellRendererAngularComp {
   private params: ICellRendererParams;
-  private onAction: any;
+  private onAction: (params: ICellRendererParams, value: boolean) => boolean;
+
+  constructor(
+
+  ) {}
 
   value: boolean;
   isShown = true;
@@ -18,8 +22,7 @@ export class FSMCheckboxRendererComponent implements ICellRendererAngularComp {
     this.params = params;
     this.value = params.value;
     this.onAction = params.onAction;
-    this.onAction(this.params, this.value);
-    // this.isShown = typeof params.isDisplayed === 'function' ? params.isDisplayed(params.data) : true;
+    this.isShown = typeof params.isDisplayed === 'function' ? params.isDisplayed(params.data) : true;
   }
 
   refresh(): boolean {
@@ -27,7 +30,8 @@ export class FSMCheckboxRendererComponent implements ICellRendererAngularComp {
   }
 
   onChange(value: boolean): void {
-    this.onAction(this.params, value);
-    // this.params.node.setDataValue(this.params.column, value);
+    if (this.onAction(this.params, value)) {
+      this.params.node.setDataValue(this.params.column, value);
+    }
   }
 }
