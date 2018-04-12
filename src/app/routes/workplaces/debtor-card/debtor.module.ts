@@ -47,7 +47,7 @@ const routes: Routes = [
       },
       {
         path: 'pledge/create',
-        loadChildren: './pledge/card/pledge-card.module#PledgeCardModule',
+        loadChildren: './pledge/card-2/pledge-card.module#PledgeCardModule',
       },
       {
         path: 'pledge/:contractId/pledgor/add',
@@ -119,35 +119,35 @@ const routes: Routes = [
       },
       {
         path: 'contact/create/:contactPersonId/identity/create',
-        loadChildren: './identity/identity.module#IdentityModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/identity.module#IdentityModule',
       },
       {
         path: 'contact/create/:contactPersonId/identity/:identityId',
-        loadChildren: './identity/identity.module#IdentityModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/identity.module#IdentityModule',
       },
       {
         path: 'contact/:contactId/:contactPersonId/identity/create',
-        loadChildren: './identity/identity.module#IdentityModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/identity.module#IdentityModule',
       },
       {
         path: 'contact/:contactId/:contactPersonId/identity/:identityId',
-        loadChildren: './identity/identity.module#IdentityModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/identity.module#IdentityModule',
       },
       {
         path: 'contact/create/:contactPersonId/employment/create',
-        loadChildren: './employment/employment.module#EmploymentModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
       },
       {
         path: 'contact/create/:contactPersonId/employment/:employmentId',
-        loadChildren: './employment/employment.module#EmploymentModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
       },
       {
         path: 'contact/:contactId/:contactPersonId/employment/create',
-        loadChildren: './employment/employment.module#EmploymentModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
       },
       {
         path: 'contact/:contactId/:contactPersonId/employment/:employmentId',
-        loadChildren: './employment/employment.module#EmploymentModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
       },
       {
         path: 'document/create',
@@ -167,19 +167,19 @@ const routes: Routes = [
       },
       {
         path: 'employment/create',
-        loadChildren: './employment/employment.module#EmploymentModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
       },
       {
         path: 'employment/:employmentId',
-        loadChildren: './employment/employment.module#EmploymentModule',
+        loadChildren: 'app/routes/workplaces/shared/employment/employment.module#EmploymentModule',
       },
       {
         path: 'identity/create',
-        loadChildren: './identity/identity.module#IdentityModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/identity.module#IdentityModule',
       },
       {
         path: 'identity/:identityId',
-        loadChildren: './identity/identity.module#IdentityModule',
+        loadChildren: 'app/routes/workplaces/shared/identity/identity.module#IdentityModule',
       },
       {
         path: 'debt',

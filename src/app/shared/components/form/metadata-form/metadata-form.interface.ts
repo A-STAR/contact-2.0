@@ -1,9 +1,21 @@
+import { Observable } from 'rxjs/Observable';
+
 import { IContextConfig } from '@app/core/context/context.interface';
 import { IDialogMultiSelectFilterType } from '@app/shared/components/form/dialog-multi-select/dialog-multi-select.interface';
 import { IFilterParam } from '@app/shared/components/form/dynamic-form/dynamic-form.interface';
 import { ILookupKey } from '@app/core/lookup/lookup.interface';
 
-export type IMetadataFormValidator<T> = T | IContextConfig;
+export enum IFormContextConfigOperator {
+  EQUALS = 'equals'
+}
+
+export interface IFormContextConfig {
+  field: string;
+  operator: IFormContextConfigOperator;
+  value: any;
+}
+
+export type IMetadataFormValidator<T> = T | IContextConfig | IFormContextConfig;
 
 
 // Items:
@@ -157,4 +169,16 @@ export interface IMetadataFormConfig {
   editable: boolean;
   items: IMetadataFormItem[];
   plugins: IMetadataFormPlugin[];
+}
+
+
+// Observable Params
+
+export interface IMetadataFormParams {
+  display: Observable<boolean>;
+  required: Observable<boolean>;
+}
+
+export interface IMetadataFormFlatConfig {
+  [key: string]: IMetadataFormParams;
 }

@@ -59,6 +59,7 @@ export class TextComponent implements ControlValueAccessor, Validator, AfterView
 
   setDisabledState(disabled: boolean): void {
     this.disabled = disabled;
+    this.cdRef.markForCheck();
   }
 
   validate(): any {

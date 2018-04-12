@@ -2,15 +2,13 @@ import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { map } from 'rxjs/operators';
 
 import {
-  IMetadataFormItem,
-  IMetadataFormValidator,
+  IMetadataFormFlatConfig,
   IMetadataFormGroupType,
+  IMetadataFormItem,
+  IMetadataFormControlType,
 } from '../metadata-form.interface';
-
-import { ContextService } from '@app/core/context/context.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,32 +37,22 @@ export class MetadataFormGroupComponent {
   border: boolean;
 
   @Input() editable: boolean;
+  @Input() flatConfig: IMetadataFormFlatConfig;
   @Input() formGroup: FormGroup;
   @Input() groupType: IMetadataFormGroupType;
   @Input() items: IMetadataFormItem[];
   @Input() label: string;
   @Input() suppressLabel = false;
 
-  constructor(
-    private contextService: ContextService,
-  ) {}
-
   isDisplayed(item: IMetadataFormItem): Observable<boolean> {
-    // TODO(d.maltsev): should be readonly property for each control
-    return this.calculateContextValue(item.display);
+    return item.type === IMetadataFormControlType.GROUP
+      ? of(true)
+      : this.flatConfig[item.name].display;
   }
 
   getItemStyle(width: number): Partial<CSSStyleDeclaration> {
     return width
       ? { flex: width.toString() }
       : { flexBasis: '100%' };
-  }
-
-  private calculateContextValue(validator: IMetadataFormValidator<any>): Observable<boolean> {
-    return typeof validator === 'object' && validator !== null
-      ? this.contextService.calculate(validator).pipe(
-          map(Boolean),
-        )
-      : of(validator);
   }
 }

@@ -12,6 +12,7 @@ import { IDynamicModule } from './dynamic-loader.interface';
 
 import { ComponentFactoryService, DYNAMIC_MODULES, DYNAMIC_COMPONENT } from './component-factory.service';
 import { DynamicLoaderService } from './dynamic-loader.service';
+import { PopupOutletService } from './popup-outlet.service';
 
 @NgModule()
 export class DynamicLoaderModule {
@@ -22,6 +23,7 @@ export class DynamicLoaderModule {
       ngModule: DynamicLoaderModule,
       providers: [
         ComponentFactoryService,
+        PopupOutletService,
         { provide: NgModuleFactoryLoader, useClass: SystemJsNgModuleLoader },
       ],
     };
