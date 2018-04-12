@@ -1,0 +1,6 @@
+<div (focusOut)="onFocusOut()">
+  <input #file type="file"/>
+  <app-select [options]="columnOptions" (select)="onColumnSelect($event)"></app-select>
+  {{ total }}
+  <app-button type="upload" (click)="onUpload()"></app-button>
+</div>

@@ -3,12 +3,11 @@
     <h3>Excel Filtering</h3>
   </div>
 
-  <div>
-    <input #file type="file"/>
-    <app-select [options]="columnOptions" (select)="onColumnSelect($event)"></app-select>
-    <!--
-    <pre>{{ columns | json }}</pre>
-    -->
+  <div [formGroup]="formGroup">
+    <app-action-grid-excel-filter-guid-control
+      formControlName="control"
+      [columns]="columns"
+    ></app-action-grid-excel-filter-guid-control>
   </div>
 
   <div dialog-footer>
