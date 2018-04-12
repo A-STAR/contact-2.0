@@ -180,7 +180,7 @@
     <app-action-grid-excel-filter
       *ngIf="displayExcelFilter"
       [columns]="columnsDef"
-      (submit)="onExcelFilterSubmit()"
+      (submit)="onExcelFilterSubmit($event)"
       (close)="onExcelFilterClose()"
     ></app-action-grid-excel-filter>
   </div>

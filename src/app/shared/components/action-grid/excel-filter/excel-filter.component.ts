@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
+import { IGridControl } from './excel-filter.interface';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-action-grid-excel-filter',
@@ -10,15 +12,14 @@ export class ExcelFilterComponent {
   @Input() columns: any[] = [];
 
   @Output() close = new EventEmitter<void>();
-  @Output() submit = new EventEmitter<void>();
+  @Output() submit = new EventEmitter<IGridControl>();
 
   formGroup = new FormGroup({
     control: new FormControl(null),
   });
 
   onSubmit(): void {
-    console.log(this.formGroup.value);
-    this.submit.emit();
+    this.submit.emit(this.formGroup.value.control);
   }
 
   onClose(): void {

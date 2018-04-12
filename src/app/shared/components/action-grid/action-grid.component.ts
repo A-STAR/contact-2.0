@@ -21,6 +21,7 @@ import {
   IGridAction,
   IActionGridAction,
 } from './action-grid.interface';
+import { IGridControl } from './excel-filter/excel-filter.interface';
 import {
   IAGridAction,
   IAGridRequestParams,
@@ -126,6 +127,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private defaultActionName: string;
   private currentDefaultAction: IMetadataAction;
   private currentSelectionAction: IMetadataAction;
+  private excelFilter: FilterObject;
 
   dialog: string;
   dialogData: IGridAction;
@@ -330,7 +332,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       : null;
   }
 
-  onExcelFilterSubmit(): void {
+  onExcelFilterSubmit(event: IGridControl): void {
+    this.excelFilter = FilterObject.create().setOperator('IN').setList(event.guid);
     this.displayExcelFilter = false;
     this.cdRef.markForCheck();
   }
@@ -383,6 +386,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     const filters = (this.grid as Grid2Component).getFilters();
     if (this.filter) {
       filters.addFilter(this.filter.filters);
+    }
+    if (this.excelFilter) {
+      filters.addFilter(this.excelFilter);
     }
     return filters;
   }
