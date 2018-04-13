@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { IAppState } from '@app/core/state/state.interface';
 import { IAddress } from './address.interface';
 import { IAddressMarkData } from './grid/mark/mark.interface';
+import { IMarkerIconConfig } from '@app/shared/components/map/providers/google/maps-google.interface';
 
 import { AbstractActionService } from '@app/core/state/action.service';
 import { DataService } from '@app/core/data/data.service';
@@ -88,5 +89,25 @@ export class AddressService extends AbstractActionService {
     return this.dataService
       .create('/persons/{personId}/addresses/{addressId}/visits', { personId, addressId }, visit, { params: { callCenter } })
       .catch(this.notificationsService.updateError().entity(`${this.entity}.singular`).dispatchCallback());
+  }
+
+  getIconConfig(address: IAddress): IMarkerIconConfig {
+    const config = {
+      typeCodes: [
+        // NOTE: colors without hash
+        // Inactive color, char determined by typeCode
+        { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
+        { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
+        { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
+        { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
+        { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
+      ]
+    };
+    return address.isInactive ? {
+      ...config.typeCodes[address.typeCode],
+      ...config.typeCodes[0],
+      } : {
+      ...config.typeCodes[address.typeCode]
+    };
   }
 }
