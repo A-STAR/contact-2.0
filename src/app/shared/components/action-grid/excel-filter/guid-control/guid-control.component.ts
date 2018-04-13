@@ -24,6 +24,7 @@ interface IGuidControlValue {
   columnId: string;
   fileName: string;
   guid: string;
+  state: IGuidControlState;
   total: number;
 }
 
@@ -49,33 +50,45 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
 
   @Output() remove = new EventEmitter<void>();
 
-  @ViewChild('file') file: ElementRef;
+  @ViewChild('fileInput') fileInput: ElementRef;
 
   columnOptions = [];
 
-  private state = IGuidControlState.NO_FILE;
-
-  private value: IGuidControlValue;
+  private value: IGuidControlValue = {
+    columnId: null,
+    fileName: null,
+    guid: null,
+    state: IGuidControlState.NO_FILE,
+    total: null,
+  };
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private excelFilterService: ExcelFilterService,
   ) {}
 
-  get hasFileToUpload(): boolean {
-    return this.state === IGuidControlState.HAS_FILE_TO_UPLOAD;
+  get fileName(): string {
+    return this.value.fileName;
   }
 
-  get ready(): boolean {
-    return this.state === IGuidControlState.READY;
+  get hasNoFile(): boolean {
+    return this.value.state === IGuidControlState.NO_FILE;
+  }
+
+  get hasFileToUpload(): boolean {
+    return this.value.state === IGuidControlState.HAS_FILE_TO_UPLOAD;
+  }
+
+  get isReady(): boolean {
+    return this.value.state === IGuidControlState.READY;
   }
 
   get selectedColumn(): string {
-    return this.value && this.value.columnId;
+    return this.value.columnId;
   }
 
   get total(): number {
-    return this.value && this.value.total;
+    return this.value.total;
   }
 
   ngOnInit(): void {
@@ -86,14 +99,13 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
   }
 
   validate(): any {
-    return this.value && this.value.total
+    return this.isReady
       ? null
       : { required: true };
   }
 
   writeValue(value: IGuidControlValue): void {
-    this.value = value;
-    this.cdRef.markForCheck();
+    this.updateValue(value || {}, false);
   }
 
   registerOnChange(fn: Function): void {
@@ -105,31 +117,15 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
   }
 
   onColumnSelect(columnId: any): void {
-    this.value = { ...this.value, columnId };
+    this.updateValue({ columnId });
   }
 
   onFileChange(): void {
-    // TODO: save file name
-    this.state = IGuidControlState.HAS_FILE_TO_UPLOAD;
-    this.cdRef.markForCheck();
-  }
-
-  onUpload(): void {
-    const file = (this.file.nativeElement as HTMLInputElement).files[0];
-    const typeCode = this.columns.find(c => c.colId === this.value.columnId).dataType;
-    this.excelFilterService
-      .uploadExcel(file, typeCode)
-      .subscribe(response => {
-        const { guid, total } = response;
-        this.value = {
-          ...this.value,
-          guid,
-          total,
-        };
-        this.state = IGuidControlState.READY;
-        this.propagateChange(this.value);
-        this.cdRef.markForCheck();
-      });
+    this.updateValue({
+      fileName: this.file.name,
+      state: IGuidControlState.HAS_FILE_TO_UPLOAD,
+    });
+    this.upload();
   }
 
   onRemove(): void {
@@ -138,6 +134,35 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
 
   onFocusOut(): void {
     this.propagateTouch();
+  }
+
+  private upload(): void {
+    const typeCode = this.columns.find(c => c.colId === this.value.columnId).dataType;
+    this.excelFilterService
+      .uploadExcel(this.file, typeCode)
+      .subscribe(response => {
+        const { guid, total } = response;
+        this.updateValue({
+          guid,
+          total,
+          state: IGuidControlState.READY,
+        });
+      });
+  }
+
+  private updateValue(value: Partial<IGuidControlValue>, propagate: boolean = true): void {
+    this.value = {
+      ...this.value,
+      ...value,
+    };
+    if (propagate) {
+      this.propagateChange(this.value);
+    }
+    this.cdRef.markForCheck();
+  }
+
+  private get file(): File {
+    return (this.fileInput.nativeElement as HTMLInputElement).files[0];
   }
 
   private propagateChange: Function = () => {};

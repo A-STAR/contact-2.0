@@ -333,8 +333,9 @@
     "components": {
       "actionGrid": {
         "excelFilter": {
+          "chooseFile": "Choose File",
           "title": "Excel Filtering",
-          "total": "Total"
+          "total": "(processed: {{ n }})"
         }
       },
       "grids": {

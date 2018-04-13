@@ -333,8 +333,9 @@
     "components": {
       "actionGrid": {
         "excelFilter": {
+          "chooseFile": "Выберите файл",
           "title": "Фильтрация по Excel-файлу",
-          "total": "Всего"
+          "total": "(обработано: {{ n }})"
         }
       },
       "grids": {
