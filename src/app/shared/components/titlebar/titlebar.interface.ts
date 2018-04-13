@@ -13,6 +13,7 @@ export enum TitlebarItemTypeEnum {
   BUTTON_DOWNLOAD         = 'download',
   BUTTON_EDIT             = 'edit',
   BUTTON_EMAIL            = 'email',
+  BUTTON_FILTER           = 'filter',
   BUTTON_DOWNLOAD_EXCEL   = 'downloadExcel',
   BUTTON_MASS             = 'mass',
   BUTTON_MOVE             = 'move',
@@ -38,6 +39,7 @@ export type ITitlebarAction = (item?: ITitlebarElement) => void;
 export interface ITitlebarElement {
   action?: ITitlebarAction;
   align?: 'right' | 'left';
+  classes?: Observable<string>;
   enabled?: Observable<boolean>;
   title?: string;
   children?: ITitlebarElement[];

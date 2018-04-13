@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ButtonModule } from '@app/shared/components/button/button.module';
 import { DialogModule } from '@app/shared/components/dialog/dialog.module';
@@ -25,6 +26,7 @@ import { ExcelFilterComponent } from './excel-filter.component';
     GuidControlModule,
     ReactiveFormsModule,
     SelectModule,
+    TranslateModule,
   ],
   providers: [
     ExcelFilterService,

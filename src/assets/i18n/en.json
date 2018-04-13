@@ -331,6 +331,14 @@
   },
   "shared": {
     "components": {
+      "actionGrid": {
+        "excelFilter": {
+          "chooseFile": "Choose File",
+          "title": "Excel Filtering",
+          "total": "(processed: {{ n }})",
+          "uploadError": "Could not upload file"
+        }
+      },
       "grids": {
         "overlays": {
           "empty": "No Data"
@@ -3221,6 +3229,7 @@
       "email": "Email",
       "exportToExcel": "Export",
       "excel": "Export",
+      "filter": "Filter",
       "loadFromExcel": "Load from Excel",
       "move": "Move",
       "next": "Next",

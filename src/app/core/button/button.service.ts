@@ -24,6 +24,7 @@ export class ButtonService {
     email:            { icon: 'co co-mail',                 label: 'default.buttons.email'            },
     edit:             { icon: 'co co-edit',                 label: 'default.buttons.edit'             },
     exportToExcel:    { icon: 'co co-download-excel',       label: 'default.buttons.exportToExcel'    },
+    filter:           { icon: 'co co-filter',               label: 'default.buttons.filter'           },
     info:             { icon: 'co co-info-o',               label: 'default.buttons.info'             },
     loadFromExcel:    { icon: 'co co-data-upload',          label: 'default.buttons.loadFromExcel'    },
     move:             { icon: 'co co-move',                 label: 'default.buttons.move'             },

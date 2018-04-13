@@ -331,6 +331,14 @@
   },
   "shared": {
     "components": {
+      "actionGrid": {
+        "excelFilter": {
+          "chooseFile": "Выберите файл",
+          "title": "Фильтрация по Excel-файлу",
+          "total": "(обработано: {{ n }})",
+          "uploadError": "При загрузке файла произошла ошибка"
+        }
+      },
       "grids": {
         "overlays": {
           "empty": "Нет данных"
@@ -3221,6 +3229,7 @@
       "email": "Email",
       "exportToExcel": "Выгрузка",
       "excel": "Выгрузка",
+      "filter": "Фильтр",
       "loadFromExcel": "Загрузить из Excel",
       "move": "Переместить",
       "next": "Далее",

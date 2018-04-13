@@ -35,9 +35,10 @@ export class TitlebarComponent implements OnChanges, OnInit {
     [TitlebarItemTypeEnum.BUTTON_CHANGE_STATUS]: { iconCls: 'co-change-status', title: 'Изменить статус' },
     [TitlebarItemTypeEnum.BUTTON_DELETE]: { iconCls: 'co-delete', title: 'Удалить' },
     [TitlebarItemTypeEnum.BUTTON_DEBT_CARD]: { iconCls: 'co-debt-list', title: 'Карточка должника' },
-    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
     [TitlebarItemTypeEnum.BUTTON_DOWNLOAD]: { iconCls: 'co-download', title: 'Выгрузить' },
     [TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL]: { iconCls: 'co-download-excel', title: 'Выгрузить в Excel' },
+    [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
+    [TitlebarItemTypeEnum.BUTTON_FILTER]: { iconCls: 'co-filter', title: 'default.buttons.filter' },
     [TitlebarItemTypeEnum.BUTTON_MOVE]: { iconCls: 'co-move', title: 'Переместить' },
     [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'co-refresh', title: 'Обновить' },
     [TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT]: { iconCls: 'co-contact-registration', title: 'Зарегистрировать контакт' },
@@ -58,11 +59,13 @@ export class TitlebarComponent implements OnChanges, OnInit {
   }
 
   ngOnInit(): void {
+    const classesDefault = defaultTo(of(''));
     const enabledDefault = defaultTo(of(true));
     this.borderCls = { 'no-border': this.titlebar.suppressBorder === true };
     this.items = (this.titlebar.items || this.items).map(item => ({
       ...item,
-      enabled: enabledDefault(item.enabled)
+      classes: classesDefault(item.classes),
+      enabled: enabledDefault(item.enabled),
     }));
     this.suppressCenterZone = this.titlebar.suppressCenterZone || false;
     this.title = this.titlebar.title;

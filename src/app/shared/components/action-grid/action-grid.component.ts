@@ -42,6 +42,7 @@ import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interfa
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
+import { ExcelFilteringService } from './excel-filtering.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -60,12 +61,15 @@ import { FilterObject } from '../grid2/filter/grid-filter';
 import { ValueBag } from '@app/core/value-bag/value-bag';
 
 @Component({
-  selector: 'app-action-grid',
-  templateUrl: 'action-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: [ './action-grid.component.scss' ],
   host: { class: 'full-size' },
-  providers: [ ActionGridService ]
+  providers: [
+    ActionGridService,
+    ExcelFilteringService,
+  ],
+  selector: 'app-action-grid',
+  styleUrls: [ './action-grid.component.scss' ],
+  templateUrl: 'action-grid.component.html',
 })
 export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   /**
@@ -127,7 +131,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private defaultActionName: string;
   private currentDefaultAction: IMetadataAction;
   private currentSelectionAction: IMetadataAction;
-  private excelFilter: FilterObject;
+  private excelFilter$ = new BehaviorSubject<FilterObject>(null);
 
   dialog: string;
   dialogData: IGridAction;
@@ -333,15 +337,17 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onExcelFilterSubmit(event: IGridControlValue[]): void {
-    this.excelFilter = FilterObject.create().and();
+    const excelFilter = FilterObject.create().and();
     event.forEach(item => {
       const f = FilterObject.create()
         .setList(item.guid)
         .setName(item.columnId)
         .setOperator('IN');
-      this.excelFilter.addFilter(f);
+      excelFilter.addFilter(f);
     });
+    this.excelFilter$.next(excelFilter);
     this.displayExcelFilter = false;
+    this.onRequest();
     this.cdRef.markForCheck();
   }
 
@@ -394,8 +400,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     if (this.filter) {
       filters.addFilter(this.filter.filters);
     }
-    if (this.excelFilter) {
-      filters.addFilter(this.excelFilter);
+    if (this.excelFilter$.value) {
+      filters.addFilter(this.excelFilter$.value);
     }
     return filters;
   }
@@ -445,16 +451,20 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         action: () => this.exportExcel(),
         enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL, permissions),
       }),
-      filterFromExcel: (permissions: string[]) => ({
-        type: TitlebarItemTypeEnum.BUTTON_UPLOAD,
-        action: () => this.filterFromExcel(),
-        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_UPLOAD, permissions),
+      filter: (permissions: string[]) => ({
+        type: TitlebarItemTypeEnum.BUTTON_FILTER,
+        action: () => this.openFilter(),
+        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_FILTER, permissions),
+        classes: this.excelFilter$.pipe(
+          map(excelFilter => excelFilter && excelFilter.hasFilter()),
+          map(active => active ? 'button-active' : null)
+        ),
       }),
     };
     return {
       title: config.title,
       items: config.items
-        .concat([{ name: 'filterFromExcel', permissions: null }])
+        .concat([{ name: 'filter', permissions: null }])
         .map(item => titlebarItems[item.name](item.permissions)),
     };
   }
@@ -474,7 +484,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return combineLatestAnd(conditions);
   }
 
-  private filterFromExcel(): void {
+  private openFilter(): void {
     this.displayExcelFilter = true;
     this.cdRef.markForCheck();
   }

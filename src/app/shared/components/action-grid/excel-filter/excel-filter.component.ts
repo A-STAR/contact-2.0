@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray } from '@angular/forms';
 
 import { IGridControl } from './excel-filter.interface';
+import { ExcelFilteringService } from '@app/shared/components/action-grid/excel-filtering.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,39 +15,42 @@ export class ExcelFilterComponent {
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<IGridControl[]>();
 
-  formGroup = this.formBuilder.group({
-    filters: this.formBuilder.array([
-      this.initFilter(),
-    ]),
-  });
+  readonly formGroup = this.excelFilteringService.formGroup;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private excelFilteringService: ExcelFilteringService,
   ) {}
+
+  get canSubmit(): boolean {
+    return this.formGroup.valid;
+  }
+
+  get canClear(): boolean {
+    return (this.formGroup.controls.filters as FormArray).length > 0;
+  }
 
   get controls(): any {
     return (this.formGroup.controls.filters as FormArray).controls;
   }
 
+  onAdd(): void {
+    this.excelFilteringService.add();
+  }
+
+  onRemove(i: number): void {
+    this.excelFilteringService.remove(i);
+  }
+
   onSubmit(): void {
-    this.submit.emit(this.formGroup.value.filters.map(f => f.control));
+    this.submit.emit(this.excelFilteringService.value);
   }
 
   onClose(): void {
     this.close.emit();
   }
 
-  onAdd(): void {
-    this.formGroup.controls['filters']['push'](this.initFilter());
-  }
-
-  onRemove(i: number): void {
-    this.formGroup.controls['filters']['removeAt'](i);
-  }
-
-  private initFilter(): FormGroup {
-    return this.formBuilder.group({
-      control: this.formBuilder.control(null),
-    });
+  onClear(): void {
+    this.excelFilteringService.clear();
+    this.submit.emit([]);
   }
 }
