@@ -39,6 +39,7 @@ export type ITitlebarAction = (item?: ITitlebarElement) => void;
 export interface ITitlebarElement {
   action?: ITitlebarAction;
   align?: 'right' | 'left';
+  classes?: Observable<string>;
   enabled?: Observable<boolean>;
   title?: string;
   children?: ITitlebarElement[];

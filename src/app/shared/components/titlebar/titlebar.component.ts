@@ -59,11 +59,13 @@ export class TitlebarComponent implements OnChanges, OnInit {
   }
 
   ngOnInit(): void {
+    const classesDefault = defaultTo(of(''));
     const enabledDefault = defaultTo(of(true));
     this.borderCls = { 'no-border': this.titlebar.suppressBorder === true };
     this.items = (this.titlebar.items || this.items).map(item => ({
       ...item,
-      enabled: enabledDefault(item.enabled)
+      classes: classesDefault(item.classes),
+      enabled: enabledDefault(item.enabled),
     }));
     this.suppressCenterZone = this.titlebar.suppressCenterZone || false;
     this.title = this.titlebar.title;

@@ -54,6 +54,10 @@
     text-align: right;
     color: $form-toolbar-icon-color;
   }
+
+  .button-active {
+    color: $brand-danger;
+  }
 }
 
 .icon {

@@ -132,6 +132,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private currentDefaultAction: IMetadataAction;
   private currentSelectionAction: IMetadataAction;
   private excelFilter: FilterObject;
+  private excelFilterActive$ = new BehaviorSubject<boolean>(false);
 
   dialog: string;
   dialogData: IGridAction;
@@ -345,6 +346,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         .setOperator('IN');
       this.excelFilter.addFilter(f);
     });
+    this.excelFilterActive$.next(event && event.length > 0);
     this.displayExcelFilter = false;
     this.onRequest();
     this.cdRef.markForCheck();
@@ -454,6 +456,9 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         type: TitlebarItemTypeEnum.BUTTON_FILTER,
         action: () => this.openFilter(),
         enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_FILTER, permissions),
+        classes: this.excelFilterActive$.pipe(
+          map(active => active ? 'button-active' : null)
+        ),
       }),
     };
     return {
