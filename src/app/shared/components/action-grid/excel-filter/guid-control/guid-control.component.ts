@@ -3,9 +3,11 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   forwardRef,
   Input,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -27,10 +29,11 @@ import { ExcelFilterService } from '../excel-filter.service';
 export class GridControlComponent implements OnInit, ControlValueAccessor {
   @Input() columns: any[] = [];
 
+  @Output() remove = new EventEmitter<void>();
+
   @ViewChild('file') file: ElementRef;
 
   columnOptions = [];
-
   total: number;
 
   private columnId: string;
@@ -74,6 +77,10 @@ export class GridControlComponent implements OnInit, ControlValueAccessor {
         this.total = total;
         this.cdRef.markForCheck();
       });
+  }
+
+  onRemove(): void {
+    this.remove.emit();
   }
 
   onFocusOut(): void {

@@ -4,10 +4,18 @@
   </div>
 
   <div [formGroup]="formGroup">
-    <app-action-grid-excel-filter-guid-control
-      formControlName="control"
-      [columns]="columns"
-    ></app-action-grid-excel-filter-guid-control>
+    <div formArrayName="filters" class="mb">
+      <div *ngFor="let control of controls; let i = index;">
+        <div [formGroupName]="i">
+          <app-action-grid-excel-filter-guid-control
+            formControlName="control"
+            [columns]="columns"
+            (remove)="onRemove(i)"
+          ></app-action-grid-excel-filter-guid-control>
+        </div>
+      </div>
+    </div>
+    <app-button type="add" (click)="onAdd()"></app-button>
   </div>
 
   <div dialog-footer>
