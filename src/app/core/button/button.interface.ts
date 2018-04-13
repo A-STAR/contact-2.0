@@ -26,6 +26,7 @@ export type IButtonType =
   'edit' |
   'email' |
   'exportToExcel' |
+  'filter' |
   'info' |
   'loadFromExcel' |
   'move' |
