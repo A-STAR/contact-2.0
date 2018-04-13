@@ -20,11 +20,12 @@ export class ExcelFilteringService {
   }
 
   add(): void {
-    this.formGroup.controls['filters']['push'](this.initFilter());
+    const filter = this.initFilter();
+    this.filtersArray.push(filter);
   }
 
   remove(i: number): void {
-    this.formGroup.controls['filters']['removeAt'](i);
+    this.filtersArray.removeAt(i);
   }
 
   clear(): void {
@@ -36,7 +37,7 @@ export class ExcelFilteringService {
   }
 
   private get filtersArray(): FormArray {
-    return this.formGroup.controls['filters'] as FormArray;
+    return this.formGroup.get('filters') as FormArray;
   }
 
   private initFilter(): FormGroup {

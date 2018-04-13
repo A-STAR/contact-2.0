@@ -335,7 +335,8 @@
         "excelFilter": {
           "chooseFile": "Choose File",
           "title": "Excel Filtering",
-          "total": "(processed: {{ n }})"
+          "total": "(processed: {{ n }})",
+          "uploadError": "Could not upload file"
         }
       },
       "grids": {
