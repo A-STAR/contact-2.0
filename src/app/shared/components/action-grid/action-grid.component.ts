@@ -131,8 +131,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   private defaultActionName: string;
   private currentDefaultAction: IMetadataAction;
   private currentSelectionAction: IMetadataAction;
-  private excelFilter: FilterObject;
-  private excelFilterActive$ = new BehaviorSubject<boolean>(false);
+  private excelFilter$ = new BehaviorSubject<FilterObject>(null);
 
   dialog: string;
   dialogData: IGridAction;
@@ -338,15 +337,15 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   }
 
   onExcelFilterSubmit(event: IGridControlValue[]): void {
-    this.excelFilter = FilterObject.create().and();
+    const excelFilter = FilterObject.create().and();
     event.forEach(item => {
       const f = FilterObject.create()
         .setList(item.guid)
         .setName(item.columnId)
         .setOperator('IN');
-      this.excelFilter.addFilter(f);
+      excelFilter.addFilter(f);
     });
-    this.excelFilterActive$.next(event && event.length > 0);
+    this.excelFilter$.next(excelFilter);
     this.displayExcelFilter = false;
     this.onRequest();
     this.cdRef.markForCheck();
@@ -401,8 +400,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     if (this.filter) {
       filters.addFilter(this.filter.filters);
     }
-    if (this.excelFilter) {
-      filters.addFilter(this.excelFilter);
+    if (this.excelFilter$.value) {
+      filters.addFilter(this.excelFilter$.value);
     }
     return filters;
   }
@@ -456,7 +455,8 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         type: TitlebarItemTypeEnum.BUTTON_FILTER,
         action: () => this.openFilter(),
         enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_FILTER, permissions),
-        classes: this.excelFilterActive$.pipe(
+        classes: this.excelFilter$.pipe(
+          map(excelFilter => excelFilter && excelFilter.hasFilter()),
           map(active => active ? 'button-active' : null)
         ),
       }),
