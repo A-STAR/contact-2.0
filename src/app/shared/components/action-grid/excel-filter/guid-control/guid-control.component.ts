@@ -14,10 +14,17 @@ import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } fro
 
 import { ExcelFilterService } from '../excel-filter.service';
 
-enum GuidControlState {
+enum IGuidControlState {
   NO_FILE            = 'no-file',
   HAS_FILE_TO_UPLOAD = 'has-file-to-upload',
   READY              = 'ready',
+}
+
+interface IGuidControlValue {
+  columnId: string;
+  fileName: string;
+  guid: string;
+  total: number;
 }
 
 @Component({
@@ -45,10 +52,10 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
   @ViewChild('file') file: ElementRef;
 
   columnOptions = [];
-  state = GuidControlState.NO_FILE;
-  total: number;
 
-  private columnId: string;
+  private state = IGuidControlState.NO_FILE;
+
+  private value: IGuidControlValue;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -56,11 +63,19 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
   ) {}
 
   get hasFileToUpload(): boolean {
-    return this.state === GuidControlState.HAS_FILE_TO_UPLOAD;
+    return this.state === IGuidControlState.HAS_FILE_TO_UPLOAD;
   }
 
   get ready(): boolean {
-    return this.state === GuidControlState.READY;
+    return this.state === IGuidControlState.READY;
+  }
+
+  get selectedColumn(): string {
+    return this.value && this.value.columnId;
+  }
+
+  get total(): number {
+    return this.value && this.value.total;
   }
 
   ngOnInit(): void {
@@ -71,13 +86,14 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
   }
 
   validate(): any {
-    return this.total
+    return this.value && this.value.total
       ? null
       : { required: true };
   }
 
-  writeValue(): void {
-    //
+  writeValue(value: IGuidControlValue): void {
+    this.value = value;
+    this.cdRef.markForCheck();
   }
 
   registerOnChange(fn: Function): void {
@@ -89,24 +105,29 @@ export class GuidControlComponent implements OnInit, ControlValueAccessor, Valid
   }
 
   onColumnSelect(columnId: any): void {
-    this.columnId = columnId;
+    this.value = { ...this.value, columnId };
   }
 
   onFileChange(): void {
-    this.state = GuidControlState.HAS_FILE_TO_UPLOAD;
+    // TODO: save file name
+    this.state = IGuidControlState.HAS_FILE_TO_UPLOAD;
     this.cdRef.markForCheck();
   }
 
   onUpload(): void {
     const file = (this.file.nativeElement as HTMLInputElement).files[0];
-    const typeCode = this.columns.find(c => c.colId === this.columnId).dataType;
+    const typeCode = this.columns.find(c => c.colId === this.value.columnId).dataType;
     this.excelFilterService
       .uploadExcel(file, typeCode)
       .subscribe(response => {
         const { guid, total } = response;
-        this.total = total;
-        this.state = GuidControlState.READY;
-        this.propagateChange({ guid, columnId: this.columnId });
+        this.value = {
+          ...this.value,
+          guid,
+          total,
+        };
+        this.state = IGuidControlState.READY;
+        this.propagateChange(this.value);
         this.cdRef.markForCheck();
       });
   }
