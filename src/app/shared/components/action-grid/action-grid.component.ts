@@ -450,16 +450,16 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
         action: () => this.exportExcel(),
         enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL, permissions),
       }),
-      filterFromExcel: (permissions: string[]) => ({
-        type: TitlebarItemTypeEnum.BUTTON_UPLOAD,
-        action: () => this.filterFromExcel(),
-        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_UPLOAD, permissions),
+      filter: (permissions: string[]) => ({
+        type: TitlebarItemTypeEnum.BUTTON_FILTER,
+        action: () => this.openFilter(),
+        enabled: this.isTbItemEnabled$(TitlebarItemTypeEnum.BUTTON_FILTER, permissions),
       }),
     };
     return {
       title: config.title,
       items: config.items
-        .concat([{ name: 'filterFromExcel', permissions: null }])
+        .concat([{ name: 'filter', permissions: null }])
         .map(item => titlebarItems[item.name](item.permissions)),
     };
   }
@@ -479,7 +479,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
     return combineLatestAnd(conditions);
   }
 
-  private filterFromExcel(): void {
+  private openFilter(): void {
     this.displayExcelFilter = true;
     this.cdRef.markForCheck();
   }

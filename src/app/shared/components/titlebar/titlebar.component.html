@@ -27,7 +27,7 @@
             <button
               class="icon"
               [disabled]="!(item.enabled | async)"
-              [title]="getTitle(item)"
+              [title]="getTitle(item) | translate"
               (click)="item.action()"
             >
               <i class="co" [ngClass]="getIconCls(item)" aria-hidden="true"></i>

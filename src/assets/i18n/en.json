@@ -3228,6 +3228,7 @@
       "email": "Email",
       "exportToExcel": "Export",
       "excel": "Export",
+      "filter": "Filter",
       "loadFromExcel": "Load from Excel",
       "move": "Move",
       "next": "Next",

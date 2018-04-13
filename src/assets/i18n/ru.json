@@ -3228,6 +3228,7 @@
       "email": "Email",
       "exportToExcel": "Выгрузка",
       "excel": "Выгрузка",
+      "filter": "Фильтр",
       "loadFromExcel": "Загрузить из Excel",
       "move": "Переместить",
       "next": "Далее",
