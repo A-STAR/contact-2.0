@@ -1,0 +1,11 @@
+<app-dialog [styles]="{ width: '80%' }" (close)="onCancel()">
+  <div dialog-header>
+    <h3>{{ 'widgets.address.dialogs.map.title' | translate }}</h3>
+  </div>
+  <div style="height: 75vh;">
+    <app-map [markers]="markers" [options]="options"></app-map>
+  </div>
+  <div dialog-footer>
+    <app-button type="back" (click)="onCancel()"></app-button>
+  </div>
+</app-dialog>

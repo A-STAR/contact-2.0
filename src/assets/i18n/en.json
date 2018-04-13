@@ -1812,6 +1812,9 @@
           "title": "Mark for Visit",
           "confirmMessage": "Invalid address. Are you sure you want to proceed?"
         },
+        "map": {
+          "title": "Addresses"
+        },
         "mark": {
           "title": "Mark for Visit",
           "grid": {
@@ -3225,6 +3228,7 @@
       "exportToExcel": "Export",
       "excel": "Export",
       "loadFromExcel": "Load from Excel",
+      "map": "Map",
       "move": "Move",
       "next": "Next",
       "now": "Now",

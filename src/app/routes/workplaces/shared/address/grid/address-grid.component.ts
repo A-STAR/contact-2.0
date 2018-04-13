@@ -120,6 +120,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.selectedAddress$.map(address => address && !address.isInactive)
   ]);
 
+  readonly canViewMap$ = this.selectedAddress$.map(address => Boolean(address && address.longitude && address.latitude));
+
   toolbarItems: IToolbarItem[] = [
     {
       type: ToolbarItemTypeEnum.BUTTON_ADD,
@@ -156,6 +158,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
           action: () => this.onMarkClick()
         },
       ]
+    },
+    {
+      type: ToolbarItemTypeEnum.BUTTON_MAP,
+      enabled: this.canViewMap$,
+      action: () => this.setDialog('map')
     },
     {
       type: ToolbarItemTypeEnum.BUTTON_REGISTER_CONTACT,

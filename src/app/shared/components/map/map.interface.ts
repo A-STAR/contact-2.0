@@ -14,6 +14,13 @@ export interface IMapConfig {
 export interface IMapService {
   init(mapConfig: IMapOptions): Observable<any>;
   createMarker<T>(map: any, markerDef: IMarker<T>): ICreateMarkerResult<T>;
+  getIconConfig<T extends { typeCode: number, isInactive: number | boolean }>(entity: T): IMarkerIconConfig;
+}
+
+export interface IMarkerIconConfig {
+  char?: string;
+  fillColor?: string;
+  textColor?: string;
 }
 
 export interface ICreateMarkerResult<T> {
@@ -24,7 +31,7 @@ export interface ICreateMarkerResult<T> {
 export type PopupComponentRefGetter<T> = () => ComponentRef<IMarker<T>>;
 
 export interface IMapOptions {
-  el: Element;
+  el?: Element;
   zoom?: number;
   center?: { lat: number, lng: number };
 }

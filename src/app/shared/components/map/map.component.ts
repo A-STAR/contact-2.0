@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef,
   DoCheck
 } from '@angular/core';
-import { IMapService, IMarker, PopupComponentRefGetter } from './map.interface';
+import { IMapService, IMarker, PopupComponentRefGetter, IMapOptions } from './map.interface';
 
 export const MAP_SERVICE = new InjectionToken<IMapService>('MAP_SERVICE');
 
@@ -25,6 +25,7 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
   @ViewChild('container') private mapEl: ElementRef;
 
   @Input() markers: IMarker<T>[];
+  @Input() options: IMapOptions;
 
   @Input() styles: CSSStyleDeclaration;
 
@@ -37,15 +38,18 @@ export class MapComponent<T> implements AfterViewInit, DoCheck {
   ) { }
 
   ngAfterViewInit(): void {
+    const options = this.options || {
+      zoom: 6,
+      center: {
+        lat: 55.724303,
+        lng: 37.609522
+      }
+    };
     this.mapService
       .init(
         {
           el: this.mapEl.nativeElement,
-          zoom: 6,
-          center: {
-            lat: 55.724303,
-            lng: 37.609522
-          }
+          ...options,
         }
       )
       .subscribe((map: any) => {

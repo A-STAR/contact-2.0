@@ -3,7 +3,13 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Map, TileLayer, Marker, Icon, Popup, LeafletEvent } from 'leaflet';
 
-import { IMapOptions, ICreateMarkerResult, IMarker, PopupComponentRefGetter } from '@app/shared/components/map/map.interface';
+import {
+  IMapOptions,
+  ICreateMarkerResult,
+  IMarker,
+  PopupComponentRefGetter,
+  IMarkerIconConfig
+} from '@app/shared/components/map/map.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { PopupService } from '../../popups/popup.service';
@@ -45,6 +51,11 @@ export class MapYandexService {
     }
     map.addLayer(marker);
     return { marker, popupRef };
+  }
+
+  getIconConfig(): IMarkerIconConfig {
+    // TODO(i.lobanov): implement;
+    return {};
   }
 
   private createPopup<T>(map: Map, marker: Marker, markerDef: IMarker<T>): PopupComponentRefGetter<T> {
