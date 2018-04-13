@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { filter, map, take } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { tryCatch } from 'ramda';
 
 import { IWSConnection } from './ws.interface';
@@ -19,9 +19,10 @@ export class WSService {
   connect<T>(url: string): Observable<IWSConnection<T>> {
     const baseUrl = this.configService.config.api.ws;
     const listener = new BehaviorSubject<T>(null);
+    // TODO: close previous connection when new token emits
     return this.authService.validToken$.pipe(
       filter(Boolean),
-      take(1),
+      distinctUntilChanged(),
       map(token => this.createWSConnection(
         this.open(baseUrl + url, token, data => listener.next(data)),
         listener
