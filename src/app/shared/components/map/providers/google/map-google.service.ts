@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { } from '@types/googlemaps';
 
 import { IMapOptions, IMarker, ICreateMarkerResult, PopupComponentRefGetter } from '../../map.interface';
-import { Libraries } from './maps-google.interface';
+import { Libraries, IMarkerIconConfig } from './maps-google.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { PopupService } from '../../popups/popup.service';
@@ -37,12 +37,18 @@ export class MapGoogleService {
     let popupRef;
     const marker = new google.maps.Marker({
       position: { lat: markerDef.lat, lng: markerDef.lng },
-      map
+      map,
+      icon: markerDef.iconConfig ? this.createMarkerIcon(markerDef.iconConfig) : undefined
     });
     if (markerDef.popup) {
       popupRef = this.createPopup<T>(map, marker, markerDef);
     }
     return { marker, popupRef };
+  }
+
+  createMarkerIcon(config: IMarkerIconConfig): string {
+    const chartsUrl = 'https://chart.googleapis.com/chart?';
+    return `${chartsUrl}chs=d_map_pin_letter_withshadow&chld=${config.char}|${config.fillColor}|${config.textColor}`;
   }
 
   private createPopup<T>(map: google.maps.Map, marker: google.maps.Marker,
