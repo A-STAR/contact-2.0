@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
+import { SharedModule } from '@app/shared/shared.module';
 
 import { AddressGridMapComponent } from './map.component';
 
 @NgModule({
   imports: [
-    CommonModule
+    SharedModule
   ],
   declarations: [AddressGridMapComponent],
   exports: [ AddressGridMapComponent ],

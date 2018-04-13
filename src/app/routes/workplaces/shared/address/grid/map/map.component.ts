@@ -7,11 +7,15 @@ import {
   ChangeDetectorRef,
   Output,
   EventEmitter,
+  ViewChild,
+  TemplateRef,
 } from '@angular/core';
 
 import { IAddress } from '../../address.interface';
 import { IMapOptions, IMarker, IMapService } from '@app/shared/components/map/map.interface';
 import { MAP_SERVICE } from '@app/shared/components/map/map.component';
+
+import { PopupComponent } from '@app/shared/components/map/popups/popup.component';
 
 @Component({
   selector: 'app-address-grid-map',
@@ -22,6 +26,7 @@ import { MAP_SERVICE } from '@app/shared/components/map/map.component';
 export class AddressGridMapComponent implements OnInit {
   @Input() address: IAddress;
   @Output() cancel = new EventEmitter<void>();
+  @ViewChild('addressPopup') tpl: TemplateRef<IAddress>;
 
   options: IMapOptions;
   markers: IMarker<IAddress>[];
@@ -45,7 +50,9 @@ export class AddressGridMapComponent implements OnInit {
       lat: this.address.latitude,
       lng: this.address.longitude,
       iconConfig: this.mapService.getIconConfig(this.address),
-      data: this.address
+      data: this.address,
+      popup: PopupComponent,
+      tpl: this.tpl
     }];
 
     this.cdRef.markForCheck();

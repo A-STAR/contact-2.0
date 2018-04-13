@@ -39,6 +39,8 @@ export class TitlebarComponent implements OnChanges, OnInit {
     [TitlebarItemTypeEnum.BUTTON_DOWNLOAD_EXCEL]: { iconCls: 'co-download-excel', title: 'Выгрузить в Excel' },
     [TitlebarItemTypeEnum.BUTTON_EDIT]: { iconCls: 'co-edit', title: 'Редактировать' },
     [TitlebarItemTypeEnum.BUTTON_FILTER]: { iconCls: 'co-filter', title: 'default.buttons.filter' },
+    //  TODO(i.lobanov): replace when icon is ready
+    [TitlebarItemTypeEnum.BUTTON_MAP]: { iconCls: 'co-image', title: 'default.buttons.map' },
     [TitlebarItemTypeEnum.BUTTON_MOVE]: { iconCls: 'co-move', title: 'Переместить' },
     [TitlebarItemTypeEnum.BUTTON_REFRESH]: { iconCls: 'co-refresh', title: 'Обновить' },
     [TitlebarItemTypeEnum.BUTTON_REGISTER_CONTACT]: { iconCls: 'co-contact-registration', title: 'Зарегистрировать контакт' },

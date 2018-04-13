@@ -8,7 +8,6 @@ import {
   Output,
   OnDestroy,
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -63,7 +62,11 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private _debtId$ = new BehaviorSubject<number>(null);
   private _personId$ = new BehaviorSubject<number>(null);
 
-  private _selectedAddressId$ = new BehaviorSubject<number>(null);
+  private _selectedAddress$ = new BehaviorSubject<IAddress>(null);
+
+  readonly selectedAddress$ = this._selectedAddress$
+  // TODO(i.lobanov): remove mock
+  .map(address => ({...address, latitude: 54, longitude: 37}));
 
   readonly debtId$ = this._debtId$;
   readonly personId$ = this._personId$;
@@ -120,7 +123,8 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.selectedAddress$.map(address => address && !address.isInactive)
   ]);
 
-  readonly canViewMap$ = this.selectedAddress$.map(address => Boolean(address && address.longitude && address.latitude));
+  readonly canViewMap$ = this.selectedAddress$
+    .map(address => Boolean(address && address.longitude && address.latitude));
 
   toolbarItems: IToolbarItem[] = [
     {
@@ -275,7 +279,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onMarkClick(): void {
-    this.addressService.check(this._personId$.value, this._selectedAddressId$.value)
+    this.addressService.check(this._personId$.value, this._selectedAddress$.value.id)
       .subscribe(result => this.setDialog(result ? 'markConfirm' : 'mark'));
   }
 
@@ -284,7 +288,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onMarkDialogSubmit(data: IAddressMarkData): void {
-    this.addressService.markForVisit(this._personId$.value, this._selectedAddressId$.value, data, this.callCenter)
+    this.addressService.markForVisit(this._personId$.value, this._selectedAddress$.value.id, data, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -293,25 +297,25 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onSelect(addresses: IAddress[]): void {
-    const addressId = isEmpty(addresses)
+    const address = isEmpty(addresses)
       ? null
-      : addresses[0].id;
-    this._selectedAddressId$.next(addressId);
+      : addresses[0];
+    this._selectedAddress$.next(address);
   }
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.addressService.block(this.entityType, this._personId$.value, this._selectedAddressId$.value, this.callCenter, code)
+    this.addressService.block(this.entityType, this._personId$.value, this._selectedAddress$.value.id, this.callCenter, code)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.addressService.unblock(this.entityType, this._personId$.value, this._selectedAddressId$.value, this.callCenter)
+    this.addressService.unblock(this.entityType, this._personId$.value, this._selectedAddress$.value.id, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(this.entityType, this._personId$.value, this._selectedAddressId$.value, this.callCenter)
+    this.addressService.delete(this.entityType, this._personId$.value, this._selectedAddress$.value.id, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -327,14 +331,6 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     this.selectedAddress$
       .pipe(first())
       .subscribe(address => this.register.emit(address));
-  }
-
-  get selectedAddressId$(): Observable<number> {
-    return this._selectedAddressId$;
-  }
-
-  get selectedAddress$(): Observable<IAddress> {
-    return this._selectedAddressId$.map(id => this._addresses.find(address => address.id === id));
   }
 
   private get isDebtOpen(): boolean {

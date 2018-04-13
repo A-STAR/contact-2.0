@@ -24,7 +24,7 @@ export class ButtonService {
     exportToExcel:    { icon: 'fa fa-file-excel-o',     label: 'default.buttons.exportToExcel'    },
     info:             { icon: 'fa fa-info',             label: 'default.buttons.info'             },
     loadFromExcel:    { icon: 'fa fa-file-excel-o',     label: 'default.buttons.loadFromExcel'    },
-    map:              { icon: 'fa fa-map',              label: 'default.buttons.map'              },
+    map:              { icon: 'fa fa-map-marker',       label: 'default.buttons.map'              },
     move:             { icon: 'fa fa-share',            label: 'default.buttons.move'             },
     next:             { icon: 'fa fa-arrow-right',      label: 'default.buttons.next'             },
     ok:               { icon: 'fa fa-check',            label: 'default.buttons.ok'               },

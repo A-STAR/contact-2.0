@@ -2,10 +2,13 @@
   <div dialog-header>
     <h3>{{ 'widgets.address.dialogs.map.title' | translate }}</h3>
   </div>
-  <div style="height: 75vh;">
-    <app-map [markers]="markers" [options]="options"></app-map>
-  </div>
+  <app-map [markers]="markers" [options]="options" [styles]="{ height: '75vh' }"></app-map>
   <div dialog-footer>
     <app-button type="back" (click)="onCancel()"></app-button>
   </div>
 </app-dialog>
+<ng-template #addressPopup let-data="data">
+  <div class="col-xs-12">
+    <span class="text-left">{{ data.fullAddress }}</span>
+  </div>
+</ng-template>

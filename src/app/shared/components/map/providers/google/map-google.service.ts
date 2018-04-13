@@ -12,6 +12,10 @@ import { PopupService } from '../../popups/popup.service';
 @Injectable()
 export class MapGoogleService {
   readonly apiKey = this.configService.config.maps.providers.google.apiKey;
+
+  private libraryEl: HTMLScriptElement;
+  private dynamicIconBaseUrl = 'https://chart.googleapis.com/chart?';
+
   constructor(
     private configService: ConfigService,
     private popupService: PopupService,
@@ -47,8 +51,7 @@ export class MapGoogleService {
   }
 
   createMarkerIcon(config: IMarkerIconConfig): string {
-    const chartsUrl = 'https://chart.googleapis.com/chart?';
-    return `${chartsUrl}chs=d_map_pin_letter_withshadow&chld=${config.char}|${config.fillColor}|${config.textColor}`;
+    return `${this.dynamicIconBaseUrl}chst=d_map_pin_letter&chld=${config.char}%7C${config.fillColor}%7C${config.textColor}`;
   }
 
   getIconConfig<T extends { typeCode: number, isInactive: number | boolean }>(entity: T): IMarkerIconConfig {
@@ -95,13 +98,17 @@ export class MapGoogleService {
   }
 
   private load(onLoad: EventListener, onError: EventListener, libraries: Libraries[] = [ 'drawing' ], ): void {
-    this.unload(onLoad, onError);
-    const scriptEl = document.createElement('script');
-    scriptEl.id = 'google-maps-library';
-    scriptEl.src = `https://maps.googleapis.com/maps/api/js?key=${this.apiKey}&libraries=${libraries.join()}`;
-    scriptEl.addEventListener('load', onLoad);
-    scriptEl.addEventListener('error', onError);
-    document.body.appendChild(scriptEl);
+    if (!this.libraryEl) {
+      this.unload(onLoad, onError);
+      this.libraryEl = document.createElement('script');
+      this.libraryEl.id = 'google-maps-library';
+      this.libraryEl.src = `https://maps.googleapis.com/maps/api/js?key=${this.apiKey}&libraries=${libraries.join()}`;
+      this.libraryEl.addEventListener('load', onLoad);
+      this.libraryEl.addEventListener('error', onError);
+      document.body.appendChild(this.libraryEl);
+    } else {
+      onLoad(null);
+    }
   }
 
   private unload(onLoad: EventListener, onError: EventListener): void {
