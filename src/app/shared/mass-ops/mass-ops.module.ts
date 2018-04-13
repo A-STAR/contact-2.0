@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { AddressModule } from './address/address.module';
 import { AttributesModule } from './attributes/attributes.module';
 import { ContactLogModule } from './contact-log/contact-log.module';
 import { DebtResponsibleModule } from './debt-responsible/debt-responsible.module';
@@ -22,6 +23,7 @@ import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
 
 @NgModule({
   imports: [
+    AddressModule,
     AttributesModule,
     CommonModule,
     ContactLogModule,
@@ -41,6 +43,7 @@ import { MassOperationsService } from '@app/shared/mass-ops/mass-ops.service';
     VisitPrepareModule,
   ],
   exports: [
+    AddressModule,
     AttributesModule,
     ContactLogModule,
     DebtResponsibleModule,

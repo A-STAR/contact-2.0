@@ -1,0 +1,8 @@
+<app-dialog [styles]="{ width: '80%' }" (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'massOperations.address.title' | translate:entityType }}</h3>
+  </div>
+  <div class="address-map-container">
+    <app-map markers="[markers]"></app-map>
+  </div>
+</app-dialog>

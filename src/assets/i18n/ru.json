@@ -2926,6 +2926,9 @@
     }
   },
   "massOperations": {
+    "addresses": {
+      "title": "Адреса для {{ entityType }}"
+    },
     "visitAdd": {
       "title": "Установка отметки необходимости выезда, {{ count }} адресов",
       "purposeCode": "Цель выезда",

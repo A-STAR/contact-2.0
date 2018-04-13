@@ -2926,6 +2926,9 @@
     }
   },
   "massOperations": {
+    "addresses": {
+      "title": "Addresses for {{ entityType }}"
+    },
     "visitAdd": {
       "title": "Setting a visit note, {{ count }} addresses",
       "purposeCode": "Purpose of visit",
