@@ -32,7 +32,6 @@ export interface IMapOptions {
 export interface IMarker<T> {
   lat: number;
   lng: number;
-  iconConfig?: any;
   data?: T;
   popup?: Type<{ data: T }>;
 }
