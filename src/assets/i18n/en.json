@@ -353,11 +353,14 @@
   "system": {
     "notifications": {
       "tasks": {
+        "created": "created {{ n }}",
+        "processed": "processed {{ n }}",
+        "total": "total {{ n }}",
         "start": {
           "success": "Task sent for processing"
         },
         "finish": {
-          "success": "Completed: {{ message }} от {{ createDateTime }}: created {{ created }}, processed: {{ processed }}, total {{ total }}",
+          "success": "Completed: {{ message }} от {{ createDateTime }}: {{ info }}",
           "error": "Error: {{ message }} от {{ createDateTime }}"
         }
       }

@@ -89,13 +89,15 @@ export class NotificationsService implements OnDestroy {
               .dispatch();
             break;
           case 3:
+            const info = Object.keys(event.massInfo)
+              .filter(key => event.massInfo[key])
+              .map(key => this.translateService.instant(`system.notifications.tasks.${key}`, { n: String(event.massInfo[key]) }))
+              .join(', ');
             this.info('system.notifications.tasks.finish.success')
               .params({
                 message,
                 createDateTime,
-                created: String(event.massInfo.created),
-                processed: String(event.massInfo.processed),
-                total: String(event.massInfo.total),
+                info,
               })
               .dispatch();
             break;
