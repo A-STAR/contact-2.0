@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray } from '@angular/forms';
 
 import { IGridControl } from './excel-filter.interface';
+import { ExcelFilteringService } from '@app/shared/components/action-grid/excel-filtering.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,14 +15,10 @@ export class ExcelFilterComponent {
   @Output() close = new EventEmitter<void>();
   @Output() submit = new EventEmitter<IGridControl[]>();
 
-  formGroup = this.formBuilder.group({
-    filters: this.formBuilder.array([
-      this.initFilter(),
-    ]),
-  });
+  readonly formGroup = this.excelFilteringService.formGroup;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private excelFilteringService: ExcelFilteringService,
   ) {}
 
   get canSubmit(): boolean {
@@ -33,7 +30,7 @@ export class ExcelFilterComponent {
   }
 
   onSubmit(): void {
-    this.submit.emit(this.formGroup.value.filters.map(f => f.control));
+    this.submit.emit(this.excelFilteringService.value);
   }
 
   onClose(): void {
@@ -41,16 +38,10 @@ export class ExcelFilterComponent {
   }
 
   onAdd(): void {
-    this.formGroup.controls['filters']['push'](this.initFilter());
+    this.excelFilteringService.add();
   }
 
   onRemove(i: number): void {
-    this.formGroup.controls['filters']['removeAt'](i);
-  }
-
-  private initFilter(): FormGroup {
-    return this.formBuilder.group({
-      control: this.formBuilder.control(null),
-    });
+    this.excelFilteringService.remove(i);
   }
 }

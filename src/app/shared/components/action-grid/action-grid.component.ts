@@ -42,6 +42,7 @@ import { IToolbarItem } from '@app/shared/components/toolbar-2/toolbar-2.interfa
 import { ISimpleGridColumn } from '@app/shared/components/grids/grid/grid.interface';
 
 import { EntityAttributesService } from '@app/core/entity/attributes/entity-attributes.service';
+import { ExcelFilteringService } from './excel-filtering.service';
 import { GridService } from '@app/shared/components/grid/grid.service';
 import { NotificationsService } from '@app/core/notifications/notifications.service';
 import { UserConstantsService } from '@app/core/user/constants/user-constants.service';
@@ -60,12 +61,15 @@ import { FilterObject } from '../grid2/filter/grid-filter';
 import { ValueBag } from '@app/core/value-bag/value-bag';
 
 @Component({
-  selector: 'app-action-grid',
-  templateUrl: 'action-grid.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: [ './action-grid.component.scss' ],
   host: { class: 'full-size' },
-  providers: [ ActionGridService ]
+  providers: [
+    ActionGridService,
+    ExcelFilteringService,
+  ],
+  selector: 'app-action-grid',
+  styleUrls: [ './action-grid.component.scss' ],
+  templateUrl: 'action-grid.component.html',
 })
 export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
   /**
