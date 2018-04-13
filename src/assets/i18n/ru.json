@@ -331,6 +331,12 @@
   },
   "shared": {
     "components": {
+      "actionGrid": {
+        "excelFilter": {
+          "title": "Фильтрация по Excel-файлу",
+          "total": "Всего"
+        }
+      },
       "grids": {
         "overlays": {
           "empty": "Нет данных"

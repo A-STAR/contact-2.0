@@ -24,6 +24,10 @@ export class ExcelFilterComponent {
     private formBuilder: FormBuilder,
   ) {}
 
+  get canSubmit(): boolean {
+    return this.formGroup.valid;
+  }
+
   get controls(): any {
     return (this.formGroup.controls.filters as FormArray).controls;
   }

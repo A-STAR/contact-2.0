@@ -331,6 +331,12 @@
   },
   "shared": {
     "components": {
+      "actionGrid": {
+        "excelFilter": {
+          "title": "Excel Filtering",
+          "total": "Total"
+        }
+      },
       "grids": {
         "overlays": {
           "empty": "No Data"

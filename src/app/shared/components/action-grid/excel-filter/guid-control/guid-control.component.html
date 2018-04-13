@@ -1,7 +1,7 @@
 <div (focusOut)="onFocusOut()">
-  <input #file type="file" style="display: inline-block;"/>
   <app-select [options]="columnOptions" (select)="onColumnSelect($event)" style="display: inline-block;"></app-select>
-  <span *ngIf="!!total">Всего: {{ total }}</span>
-  <app-button *ngIf="!total" type="upload" (click)="onUpload()"></app-button>
-  <app-button *ngIf="!!total" type="delete" (click)="onRemove()"></app-button>
+  <input #file type="file" style="display: inline-block; width: 320px;" (change)="onFileChange()"/>
+  <span *ngIf="ready">{{ 'shared.components.actionGrid.excelFilter.total' | translate }}: {{ total }}</span>
+  <app-button *ngIf="hasFileToUpload" type="upload" (click)="onUpload()"></app-button>
+  <app-button type="delete" (click)="onRemove()"></app-button>
 </div>
