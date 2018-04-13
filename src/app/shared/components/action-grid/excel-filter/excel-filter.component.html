@@ -20,6 +20,6 @@
 
   <div dialog-footer>
     <app-button type="ok" [disabled]="!canSubmit" (click)="onSubmit()"></app-button>
-    <app-button type="clear" (click)="onClear()"></app-button>
+    <app-button type="clear" [disabled]="!canSubmit || !canClear" (click)="onClear()"></app-button>
   </div>
 </app-dialog>

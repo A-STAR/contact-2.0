@@ -25,6 +25,10 @@ export class ExcelFilterComponent {
     return this.formGroup.valid;
   }
 
+  get canClear(): boolean {
+    return (this.formGroup.controls.filters as FormArray).length > 0;
+  }
+
   get controls(): any {
     return (this.formGroup.controls.filters as FormArray).controls;
   }
