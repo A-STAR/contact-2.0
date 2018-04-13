@@ -5,7 +5,7 @@
 
   <div [formGroup]="formGroup">
     <div formArrayName="filters" class="mb">
-      <div *ngFor="let control of formGroup.controls.filters.controls; let i = index;">
+      <div *ngFor="let control of controls; let i = index;">
         <div [formGroupName]="i">
           <app-action-grid-excel-filter-guid-control
             formControlName="control"

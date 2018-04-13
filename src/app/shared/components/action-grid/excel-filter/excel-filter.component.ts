@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 import { IGridControl } from './excel-filter.interface';
 
@@ -23,6 +23,10 @@ export class ExcelFilterComponent {
   constructor(
     private formBuilder: FormBuilder,
   ) {}
+
+  get controls(): any {
+    return (this.formGroup.controls.filters as FormArray).controls;
+  }
 
   onSubmit(): void {
     this.submit.emit(this.formGroup.value.filters.map(f => f.control));
