@@ -29,6 +29,14 @@ export class ExcelFilterComponent {
     return (this.formGroup.controls.filters as FormArray).controls;
   }
 
+  onAdd(): void {
+    this.excelFilteringService.add();
+  }
+
+  onRemove(i: number): void {
+    this.excelFilteringService.remove(i);
+  }
+
   onSubmit(): void {
     this.submit.emit(this.excelFilteringService.value);
   }
@@ -37,11 +45,8 @@ export class ExcelFilterComponent {
     this.close.emit();
   }
 
-  onAdd(): void {
-    this.excelFilteringService.add();
-  }
-
-  onRemove(i: number): void {
-    this.excelFilteringService.remove(i);
+  onClear(): void {
+    this.excelFilteringService.clear();
+    this.submit.emit([]);
   }
 }

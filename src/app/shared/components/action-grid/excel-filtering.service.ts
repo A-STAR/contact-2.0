@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 import { IGridControl } from './excel-filter/excel-filter.interface';
 
@@ -25,6 +25,18 @@ export class ExcelFilteringService {
 
   remove(i: number): void {
     this.formGroup.controls['filters']['removeAt'](i);
+  }
+
+  clear(): void {
+    this.formGroup.reset();
+    for (let i = 0; i < this.filtersArray.length; i++) {
+      this.remove(i);
+    }
+    this.add();
+  }
+
+  private get filtersArray(): FormArray {
+    return this.formGroup.controls['filters'] as FormArray;
   }
 
   private initFilter(): FormGroup {
