@@ -51,7 +51,7 @@ export class MapGoogleService {
     return `${chartsUrl}chs=d_map_pin_letter_withshadow&chld=${config.char}|${config.fillColor}|${config.textColor}`;
   }
 
-  getIconConfig<T extends { typeCode: number, isInactive: number }>(entity: T): IMarkerIconConfig {
+  getIconConfig<T extends { typeCode: number, isInactive: number | boolean }>(entity: T): IMarkerIconConfig {
     const config = [
         // NOTE: colors without hash
         // Inactive color, char determined by typeCode
@@ -78,7 +78,7 @@ export class MapGoogleService {
         if (compRef) {
           compRef.destroy();
         }
-        const result = this.popupService.render<IMarker<T>>(markerDef.popup, markerDef.data);
+        const result = this.popupService.render<IMarker<T>>(markerDef.popup, markerDef.data, markerDef.tpl);
         el = result.el;
         compRef = result.compRef;
         popup.setContent(el);

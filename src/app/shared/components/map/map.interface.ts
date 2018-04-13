@@ -1,4 +1,4 @@
-import { Provider, ComponentRef, Type } from '@angular/core';
+import { Provider, ComponentRef, Type, TemplateRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { LatLngLiteral } from 'leaflet';
 
@@ -41,7 +41,8 @@ export interface IMarker<T> {
   lng: number;
   iconConfig?: any;
   data?: T;
-  popup?: Type<{ data: T }>;
+  popup?: Type<{ context: any }>;
+  tpl?: TemplateRef<T>;
 }
 
 export type ILatLng = LatLngLiteral | google.maps.LatLng;

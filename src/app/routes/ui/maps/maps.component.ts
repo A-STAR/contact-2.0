@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Type } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Type, ViewChild, TemplateRef } from '@angular/core';
 import { random, name, address } from 'faker';
 import { IDebtorAddress } from '@app/routes/ui/maps/maps.interface';
 import { IMarker } from '@app/shared/components/map/map.interface';
@@ -16,6 +16,8 @@ import { range } from '@app/core/utils';
 export class MapsComponent implements OnInit {
 
   markers: IMarker<IDebtorAddress>[];
+  @ViewChild('tpl')
+  tpl: TemplateRef<IDebtorAddress>;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -38,7 +40,8 @@ export class MapsComponent implements OnInit {
     return range(1, count).map(_ => ({
       lat: 55 + random.number({ min: 0, max: 1, precision: 0.0001 }),
       lng: 37 + random.number({ min: 0, max: 1, precision: 0.0001 }),
-      popup: PopupComponent as Type< { data: IDebtorAddress } >,
+      popup: PopupComponent as Type< { context: { data: IDebtorAddress } } >,
+      tpl: this.tpl,
       data: {
         name: name.findName(),
         address: address.streetAddress()

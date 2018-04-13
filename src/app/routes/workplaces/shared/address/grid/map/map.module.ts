@@ -7,6 +7,7 @@ import { AddressGridMapComponent } from './map.component';
   imports: [
     CommonModule
   ],
-  declarations: [AddressGridMapComponent]
+  declarations: [AddressGridMapComponent],
+  exports: [ AddressGridMapComponent ],
 })
 export class AddressGridMapModule { }
