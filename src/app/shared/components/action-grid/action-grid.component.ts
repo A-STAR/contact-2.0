@@ -346,6 +346,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
       this.excelFilter.addFilter(f);
     });
     this.displayExcelFilter = false;
+    this.onRequest();
     this.cdRef.markForCheck();
   }
 
