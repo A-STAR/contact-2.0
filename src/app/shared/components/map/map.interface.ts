@@ -14,7 +14,7 @@ export interface IMapConfig {
 export interface IMapService {
   init(mapConfig: IMapOptions): Observable<any>;
   createMarker<T>(map: any, markerDef: IMarker<T>): ICreateMarkerResult<T>;
-  getIconConfig<T extends IIconConfigParam>(entity: T): IMarkerIconConfig;
+  getIconConfig<T extends IIconConfigParam>(configKey: string, entity: T): IMarkerIconConfig;
   createBounds(latlngs?: any): any;
 }
 

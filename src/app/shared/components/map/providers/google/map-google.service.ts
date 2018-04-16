@@ -19,6 +19,37 @@ import { PopupService } from '../../popups/popup.service';
 export class MapGoogleService implements IMapService {
   readonly apiKey = this.configService.config.maps.providers.google.apiKey;
 
+  private static ICON_CONFIGS = {
+    singleAddress: [
+      // NOTE: colors without hash
+      // Inactive color, char determined by typeCode
+      { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
+      { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
+      { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
+    ],
+    addressByPerson: [
+      // NOTE: colors without hash
+      // Inactive color, char determined by typeCode
+      { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
+      { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
+      { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
+    ],
+    addressByContact: [
+      // TODO(i.lobanov): implement logic
+      // NOTE: colors without hash
+      // Inactive color, char determined by typeCode
+      { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
+      { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
+      { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
+    ]
+  };
+
   private libraryEl: HTMLScriptElement;
   private dynamicIconBaseUrl = 'https://chart.googleapis.com/chart?';
 
@@ -67,26 +98,21 @@ export class MapGoogleService implements IMapService {
     }%7C${config.fillColor}%7C${config.textColor}`;
   }
 
-  getIconConfig<T extends { typeCode: number; isInactive: number | boolean }>(
+  getIconConfig<T extends { typeCode: number; isInactive: number | boolean }>(configKey: string,
     entity: T,
   ): IMarkerIconConfig {
-    const config = [
-      // NOTE: colors without hash
-      // Inactive color, char determined by typeCode
-      { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
-      { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
-      { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
-      { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
-      { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
-    ];
-    return entity.isInactive
+    if (MapGoogleService.ICON_CONFIGS[configKey]) {
+      return entity.isInactive
       ? {
-          ...config[entity.typeCode],
-          ...config[0],
+          ...MapGoogleService.ICON_CONFIGS[configKey][entity.typeCode],
+          ...MapGoogleService.ICON_CONFIGS[configKey][0],
         }
       : {
-          ...config[entity.typeCode],
+          ...MapGoogleService.ICON_CONFIGS[configKey][entity.typeCode],
         };
+    } else {
+      throw new Error(`No icon config for <${configKey}> was found!`);
+    }
   }
 
   createBounds(latlngs?: any[]): any {

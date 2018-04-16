@@ -49,7 +49,7 @@ export class AddressGridMapComponent implements OnInit {
     this.markers = [{
       lat: this.address.latitude,
       lng: this.address.longitude,
-      iconConfig: this.mapService.getIconConfig(this.address),
+      iconConfig: this.mapService.getIconConfig('singleAddress', this.address),
       data: this.address,
       popup: PopupComponent,
       tpl: this.tpl
