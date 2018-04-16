@@ -157,6 +157,12 @@
   (close)="onCloseAction($event)"
 ></app-open-register-contact>
 
+<app-address-dialog
+  *ngIf="isDialog('mapAddressView')"
+  [actionData]="dialogData"
+  (close)="onCloseAction($event)"
+></app-address-dialog>
+
 <!-- TODO(d.maltsev): what is entityTranslationKey? -->
 <app-downloader
   #downloader

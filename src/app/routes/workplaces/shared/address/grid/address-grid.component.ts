@@ -62,12 +62,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   private _debtId$ = new BehaviorSubject<number>(null);
   private _personId$ = new BehaviorSubject<number>(null);
 
-  private _selectedAddress$ = new BehaviorSubject<IAddress>(null);
-
-  readonly selectedAddress$ = this._selectedAddress$
-  // TODO(i.lobanov): remove mock
-  .map(address => ({...address, latitude: 54, longitude: 37}));
-
+  readonly selectedAddress$ = new BehaviorSubject<IAddress>(null);
   readonly debtId$ = this._debtId$;
   readonly personId$ = this._personId$;
 
@@ -279,7 +274,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onMarkClick(): void {
-    this.addressService.check(this._personId$.value, this._selectedAddress$.value.id)
+    this.addressService.check(this._personId$.value, this.selectedAddress$.value.id)
       .subscribe(result => this.setDialog(result ? 'markConfirm' : 'mark'));
   }
 
@@ -288,7 +283,7 @@ export class AddressGridComponent implements OnInit, OnDestroy {
   }
 
   onMarkDialogSubmit(data: IAddressMarkData): void {
-    this.addressService.markForVisit(this._personId$.value, this._selectedAddress$.value.id, data, this.callCenter)
+    this.addressService.markForVisit(this._personId$.value, this.selectedAddress$.value.id, data, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
@@ -300,22 +295,22 @@ export class AddressGridComponent implements OnInit, OnDestroy {
     const address = isEmpty(addresses)
       ? null
       : addresses[0];
-    this._selectedAddress$.next(address);
+    this.selectedAddress$.next(address);
   }
 
   onBlockDialogSubmit(inactiveReasonCode: number | Array<{ value: number }>): void {
     const code = Array.isArray(inactiveReasonCode) ? inactiveReasonCode[0].value : inactiveReasonCode;
-    this.addressService.block(this.entityType, this._personId$.value, this._selectedAddress$.value.id, this.callCenter, code)
+    this.addressService.block(this.entityType, this._personId$.value, this.selectedAddress$.value.id, this.callCenter, code)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onUnblockDialogSubmit(): void {
-    this.addressService.unblock(this.entityType, this._personId$.value, this._selectedAddress$.value.id, this.callCenter)
+    this.addressService.unblock(this.entityType, this._personId$.value, this.selectedAddress$.value.id, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
   onRemoveDialogSubmit(): void {
-    this.addressService.delete(this.entityType, this._personId$.value, this._selectedAddress$.value.id, this.callCenter)
+    this.addressService.delete(this.entityType, this._personId$.value, this.selectedAddress$.value.id, this.callCenter)
       .subscribe(() => this.onSubmitSuccess());
   }
 
