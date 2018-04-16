@@ -562,7 +562,7 @@ export class ActionGridComponent<T> extends DialogFunctions implements OnInit {
             && permissions.contains('EMAIL_SINGLE_FORM_PERSON_ROLE_LIST', Number(personRole));
       },
       mapAddressView: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
-        permissions.notEmpty('MAP_ADDRESS_VIEW') : selection.length && permissions.has('MAP_ADDRESS_VIEW'),
+        permissions.has('MAP_ADDRESS_VIEW') : selection.length && permissions.has('MAP_ADDRESS_VIEW'),
       // TODO(d.maltsev, i.kibisov): pass entityTypeId
       objectAddToGroup: (actionType: MetadataActionType, selection) => actionType === MetadataActionType.ALL ?
         permissions.contains('ADD_TO_GROUP_ENTITY_LIST', 19) : selection.length

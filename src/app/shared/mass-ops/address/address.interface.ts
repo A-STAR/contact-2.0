@@ -23,5 +23,12 @@ export interface IAddressByContact extends IAddressResponce, IContact {
   distance: number;
   comment: string;
   userId: number;
+  typeCode?: number;
+  isInactive?: boolean;
+}
+
+export interface IAddressData<T> {
+  entityType: 'person' | 'contact';
+  data: T[];
 }
 
