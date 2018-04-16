@@ -1,16 +1,22 @@
 import { Injectable, ComponentRef, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { } from '@types/googlemaps';
+import {} from '@types/googlemaps';
 
-import { IMapOptions, IMarker, ICreateMarkerResult, PopupComponentRefGetter, IMarkerIconConfig } from '../../map.interface';
+import {
+  IMapOptions,
+  IMarker,
+  ICreateMarkerResult,
+  PopupComponentRefGetter,
+  IMarkerIconConfig,
+  IMapService,
+} from '../../map.interface';
 import { Libraries } from './maps-google.interface';
 
 import { ConfigService } from '@app/core/config/config.service';
 import { PopupService } from '../../popups/popup.service';
 
-
 @Injectable()
-export class MapGoogleService {
+export class MapGoogleService implements IMapService {
   readonly apiKey = this.configService.config.maps.providers.google.apiKey;
 
   private libraryEl: HTMLScriptElement;
@@ -23,7 +29,7 @@ export class MapGoogleService {
   ) {}
 
   init(mapConfig: IMapOptions): Observable<any> {
-    return Observable.create((observer) =>
+    return Observable.create(observer =>
       this.load(
         _ => {
           observer.next(this.initMap(mapConfig));
@@ -32,17 +38,22 @@ export class MapGoogleService {
         e => {
           observer.error(`Couldn't load google-maps library:\n ${e}`);
           observer.complete();
-        }
-      )
+        },
+      ),
     );
   }
 
-  createMarker<T>(map: google.maps.Map, markerDef: IMarker<T>): ICreateMarkerResult<T> {
+  createMarker<T>(
+    map: google.maps.Map,
+    markerDef: IMarker<T>,
+  ): ICreateMarkerResult<T> {
     let popupRef;
     const marker = new google.maps.Marker({
       position: { lat: markerDef.lat, lng: markerDef.lng },
       map,
-      icon: markerDef.iconConfig ? this.createMarkerIcon(markerDef.iconConfig) : undefined
+      icon: markerDef.iconConfig
+        ? this.createMarkerIcon(markerDef.iconConfig)
+        : undefined,
     });
     if (markerDef.popup) {
       popupRef = this.createPopup<T>(map, marker, markerDef);
@@ -51,29 +62,42 @@ export class MapGoogleService {
   }
 
   createMarkerIcon(config: IMarkerIconConfig): string {
-    return `${this.dynamicIconBaseUrl}chst=d_map_pin_letter&chld=${config.char}%7C${config.fillColor}%7C${config.textColor}`;
+    return `${this.dynamicIconBaseUrl}chst=d_map_pin_letter&chld=${
+      config.char
+    }%7C${config.fillColor}%7C${config.textColor}`;
   }
 
-  getIconConfig<T extends { typeCode: number, isInactive: number | boolean }>(entity: T): IMarkerIconConfig {
+  getIconConfig<T extends { typeCode: number; isInactive: number | boolean }>(
+    entity: T,
+  ): IMarkerIconConfig {
     const config = [
-        // NOTE: colors without hash
-        // Inactive color, char determined by typeCode
-        { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
-        { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
-        { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
-        { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
-        { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
+      // NOTE: colors without hash
+      // Inactive color, char determined by typeCode
+      { fillColor: 'dde6e9', textColor: '131e26' }, // Gray fill, black textColor
+      { fillColor: '37bc9b', char: 'R', textColor: 'd8d5e2' }, // Green fill, white textColor
+      { fillColor: 'fa8080', char: 'A', textColor: 'd8d5e2' }, // Red fill, white textColor
+      { fillColor: '23b7e5', char: 'W', textColor: 'd8d5e2' }, // Blue fill, white textColor
+      { fillColor: 'fad732', char: 'E', textColor: '3a3f51' }, // Yellow fill, dark gray textColor
     ];
-    return entity.isInactive ? {
-      ...config[entity.typeCode],
-      ...config[0],
-      } : {
-      ...config[entity.typeCode]
-    };
+    return entity.isInactive
+      ? {
+          ...config[entity.typeCode],
+          ...config[0],
+        }
+      : {
+          ...config[entity.typeCode],
+        };
   }
 
-  private createPopup<T>(map: google.maps.Map, marker: google.maps.Marker,
-      markerDef: IMarker<T>): PopupComponentRefGetter<T> {
+  createBounds(latlngs?: any[]): any {
+    return new google.maps.LatLngBounds(...(latlngs || []));
+  }
+
+  private createPopup<T>(
+    map: google.maps.Map,
+    marker: google.maps.Marker,
+    markerDef: IMarker<T>,
+  ): PopupComponentRefGetter<T> {
     let el: HTMLElement, compRef: ComponentRef<IMarker<T>>;
     const popup = new google.maps.InfoWindow();
     marker.addListener('click', () => {
@@ -81,7 +105,11 @@ export class MapGoogleService {
         if (compRef) {
           compRef.destroy();
         }
-        const result = this.popupService.render<IMarker<T>>(markerDef.popup, markerDef.data, markerDef.tpl);
+        const result = this.popupService.render<IMarker<T>>(
+          markerDef.popup,
+          markerDef.data,
+          markerDef.tpl,
+        );
         el = result.el;
         compRef = result.compRef;
         popup.setContent(el);
@@ -97,12 +125,18 @@ export class MapGoogleService {
     return () => compRef;
   }
 
-  private load(onLoad: EventListener, onError: EventListener, libraries: Libraries[] = [ 'drawing' ], ): void {
+  private load(
+    onLoad: EventListener,
+    onError: EventListener,
+    libraries: Libraries[] = ['drawing'],
+  ): void {
     if (!this.libraryEl) {
       this.unload(onLoad, onError);
       this.libraryEl = document.createElement('script');
       this.libraryEl.id = 'google-maps-library';
-      this.libraryEl.src = `https://maps.googleapis.com/maps/api/js?key=${this.apiKey}&libraries=${libraries.join()}`;
+      this.libraryEl.src = `https://maps.googleapis.com/maps/api/js?key=${
+        this.apiKey
+      }&libraries=${libraries.join()}`;
       this.libraryEl.addEventListener('load', onLoad);
       this.libraryEl.addEventListener('error', onError);
       document.body.appendChild(this.libraryEl);
@@ -123,7 +157,5 @@ export class MapGoogleService {
   private initMap(config: IMapOptions): any {
     const { el, ...options } = config;
     return new google.maps.Map(el, options);
-
   }
-
 }
