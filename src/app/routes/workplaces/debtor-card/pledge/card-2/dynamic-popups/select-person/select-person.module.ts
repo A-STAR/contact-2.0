@@ -3,8 +3,6 @@ import { NgModule } from '@angular/core';
 import { DynamicLoaderModule } from '@app/core/dynamic-loader/dynamic-loader.module';
 import { SharedModule } from '@app/shared/shared.module';
 
-import { SelectPersonService } from './select-person.service';
-
 import { SelectPersonComponent } from './select-person.component';
 import { SelectPersonFilterComponent } from './filter/select-person-filter.component';
 import { SelectPersonGridComponent } from './grid/select-person-grid.component';
@@ -18,9 +16,6 @@ import { SelectPersonGridComponent } from './grid/select-person-grid.component';
     SelectPersonComponent,
     SelectPersonFilterComponent,
     SelectPersonGridComponent,
-  ],
-  providers: [
-    SelectPersonService,
   ],
 })
 export class SelectPersonModule {}
