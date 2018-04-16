@@ -30,6 +30,7 @@ import { DebtAmountModule } from './components/form/debt-amount/debt-amount.modu
 import { DialogModule } from './components/dialog/dialog.module';
 import { DialogMultiSelectModule } from './components/form/dialog-multi-select/dialog-multi-select.module';
 import { DialogActionModule } from './components/dialog-action/dialog-action.module';
+import { DictionaryModule } from './pipes/dictionary/dictionary.module';
 import { DownloaderModule } from './components/downloader/downloader.module';
 import { DropdownModule } from './components/dropdown/dropdown.module';
 import { DropdownInputModule } from './components/form/dropdown/dropdown-input.module';
@@ -103,6 +104,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
+    DictionaryModule,
     DownloaderModule,
     DropdownModule,
     DropdownInputModule,
@@ -182,6 +184,7 @@ import { QBuilderComponent } from './components/qbuilder/qbuilder.component';
     DebtAmountModule,
     DialogActionModule,
     DialogMultiSelectModule,
+    DictionaryModule,
     DownloaderModule,
     DropdownModule,
     DropdownInputModule,
