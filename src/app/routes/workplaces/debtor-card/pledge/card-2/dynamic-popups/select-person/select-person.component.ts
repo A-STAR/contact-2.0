@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { PledgeCardService } from '../../pledge-card.service';
 import { SelectPersonService } from './select-person.service';
 
 @Component({
@@ -12,11 +13,15 @@ import { SelectPersonService } from './select-person.service';
   templateUrl: 'select-person.component.html'
 })
 export class SelectPersonComponent {
+  constructor(
+    private pledgeCardService: PledgeCardService,
+  ) {}
+
   onClose(): void {
     //
   }
 
   onSubmit(): void {
-    //
+    this.pledgeCardService.selectPerson();
   }
 }

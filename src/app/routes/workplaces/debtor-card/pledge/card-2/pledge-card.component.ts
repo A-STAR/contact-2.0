@@ -14,6 +14,7 @@ import {
   IFormContextConfigOperator,
 } from '@app/shared/components/form/metadata-form/metadata-form.interface';
 
+import { PledgeCardService } from './pledge-card.service';
 import { UserDictionariesService } from '@app/core/user/dictionaries/user-dictionaries.service';
 
 import { range } from '@app/core/utils';
@@ -22,7 +23,7 @@ import { range } from '@app/core/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'full-size' },
   selector: 'app-pledge-card',
-  templateUrl: 'pledge-card.component.html'
+  templateUrl: 'pledge-card.component.html',
 })
 export class PledgeCardComponent {
   readonly contractForm: IMetadataFormConfig = {
@@ -285,4 +286,10 @@ export class PledgeCardComponent {
     ],
     plugins: [],
   };
+
+  constructor(
+    private pledgeCardService: PledgeCardService,
+  ) {
+    this.pledgeCardService.person$.subscribe(console.log);
+  }
 }

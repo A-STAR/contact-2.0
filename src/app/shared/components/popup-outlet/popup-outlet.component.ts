@@ -47,12 +47,13 @@ export class PopupOutletComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.popupService.popup.subscribe((popup: IPopup) => {
-      if (popup && popup.outlet === this.name) {
+    this.popupService.data.subscribe((popup: IPopup) => {
+      if (popup) {
+        const { id, modules, injector } = popup;
         this.isOpen = true;
         this.cdRef.detectChanges();
         this.dynamicLoaderService
-          .getComponentFactory(popup.id)
+          .getComponentFactory(modules, id, injector)
           .subscribe(componentFactory => {
             this.current = this.outlet.createComponent(componentFactory, 0);
             this.cdRef.markForCheck();
