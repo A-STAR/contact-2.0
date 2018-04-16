@@ -12,7 +12,6 @@ import {
 import { map } from 'rxjs/operators/map';
 
 import {
-  IAddressByPerson,
   IAddressByContact,
 } from '@app/shared/mass-ops/address/address.interface';
 import { IGridAction } from '@app/shared/components/action-grid/action-grid.interface';
@@ -22,25 +21,22 @@ import { MAP_SERVICE } from '@app/shared/components/map/map.component';
 import { AddressService } from '../address.service';
 
 import { PopupComponent } from '@app/shared/components/map/popups/popup.component';
-import { tap } from 'rxjs/operators/tap';
 
 @Component({
-  selector: 'app-address-dialog',
-  templateUrl: './address-dialog.component.html',
+  selector: 'app-map-contact',
+  templateUrl: './contact.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./address-dialog.component.scss'],
+  styleUrls: ['./contact.component.scss'],
 })
-export class AddressDialogComponent implements OnInit {
+export class ContactComponent implements OnInit {
   @Input() actionData: IGridAction;
   @Output() close = new EventEmitter<void>();
 
-  @ViewChild('tpl') tpl: TemplateRef<IAddressByPerson | IAddressByContact>;
+  @ViewChild('tpl') tpl: TemplateRef<IAddressByContact>;
 
   dialog: string;
-  markers: IMarker<IAddressByPerson | IAddressByContact>[];
+  markers: IMarker<IAddressByContact>[];
   options: IMapOptions = { fitToData: true, zoom: 8 };
-
-  entityType = { entityType: 'persons' };
 
   constructor(
     private addressService: AddressService,
@@ -49,16 +45,17 @@ export class AddressDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.addressService
-      .getAddresses(this.actionData)
+      .getAddressesByContacts(this.actionData.payload)
       .pipe(
-        tap(response => { this.entityType.entityType = response.entityType; }),
         map(response =>
-          response.data.map(address => ({
-            lat: address.latitude,
-            lng: address.longitude,
-            iconConfig: this.mapService.getIconConfig(
-              this.toIconConfigParam(response.entityType, address)
-            ),
+          response.map(address => ({
+            lat: address.contactLatitude,
+            lng: address.contactLongitude,
+            iconConfig: this.mapService.getIconConfig('addressByContact', {
+              ...address,
+              typeCode: (address as IAddressByContact).contactType,
+              isInactive: false
+            }),
             data: address,
             popup: PopupComponent,
             tpl: this.tpl,
@@ -74,13 +71,5 @@ export class AddressDialogComponent implements OnInit {
 
   onClose(): void {
     this.close.emit();
-  }
-
-  private toIconConfigParam(entityType: string, address: IAddressByContact | IAddressByPerson): any {
-    return entityType === 'contact' ? {
-      ...address,
-      typeCode: (address as IAddressByContact).contactType,
-      isInactive: false,
-    } : address as IAddressByPerson;
   }
 }

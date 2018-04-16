@@ -5,14 +5,14 @@ interface IAddressResponce {
   personId: number;
   personFullName: string;
   fullAddress: string;
-  latitude: number;
-  longitude: number;
 }
 
 export interface IAddressByPerson extends IAddressResponce {
   typeCode: number;
   statusCode: number;
   isInactive: number;
+  latitude: number;
+  longitude: number;
 }
 
 export interface IAddressByContact extends IAddressResponce, IContact {
@@ -25,10 +25,5 @@ export interface IAddressByContact extends IAddressResponce, IContact {
   userId: number;
   typeCode?: number;
   isInactive?: boolean;
-}
-
-export interface IAddressData<T> {
-  entityType: 'person' | 'contact';
-  data: T[];
 }
 

@@ -1,0 +1,17 @@
+<app-dialog [styles]="{ width: '80%' }" (close)="onClose()">
+  <div dialog-header>
+    <h3>{{ 'massOperations.addressesByContacts.title' | translate }}</h3>
+  </div>
+  <div class="contact-map-container" *ngIf="markers && options">
+    <app-map [markers]="markers" [options]="options" [styles]="{ height: '600px' }"></app-map>
+  </div>
+</app-dialog>
+
+<ng-template #tpl let-data="data">
+  <h5>{{ 'massOperations.addressesByContacts.personFullName' | translate }}</h5>
+  <span>{{ data.personFullName }}</span>
+  <h5>{{ 'massOperations.addressesByContacts.fullAddress' | translate }}</h5>
+  <span>{{ data.fullAddress }}</span>
+  <h5>{{ 'massOperations.addressesByContacts.contactType' | translate }}</h5>
+  <span>{{ data.contactType | dict:21 }}</span>
+</ng-template>

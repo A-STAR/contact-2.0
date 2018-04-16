@@ -2940,8 +2940,14 @@
     }
   },
   "massOperations": {
-    "addresses": {
-      "title": "Addresses for {{ entityType }}"
+    "addressesByPersons": {
+      "title": "View addresses"
+    },
+    "addressesByContacts": {
+      "title": "View contact registrations",
+      "personFullName": "Person Full Name",
+      "contactType": "Contact Type",
+      "fullAddress": "Address"
     },
     "visitAdd": {
       "title": "Setting a visit note, {{ count }} addresses",
@@ -3388,6 +3394,7 @@
         "emailCreate": "Mass Emails",
         "loadDebtResponsible": "Load debt responsible",
         "mapAddressView": "View addresses on map",
+        "mapContactView": "View contact registrations on map",
         "objectAddToGroup": "Add to group",
         "objectChangeColor": "Change color",
         "openDebtCard": "Open debt card",
